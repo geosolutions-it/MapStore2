@@ -129,6 +129,7 @@ export default ({
                         value={settings.storyTitleFontSize}
                         onChange={event => onUpdateSettings("storyTitleFontSize", event.value)}
                         options={storyTitleFontSizes}
+                        clearable={false}
                     />
                 </div>
             </div>
