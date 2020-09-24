@@ -23,10 +23,10 @@ const circleCut = (layer, circleCutPrecomposeCallback, postcomposeCallback) => {
     layer.on('postcompose', postcomposeCallback);
 };
 
-const EffectSupport = ({ map, layer: layerId, type, getSize, getHeight, circleCutProp }) => {
+const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleCutProp }) => {
     const verticalCutPrecomposeCallback = useCallback((event) => {
         let ctx = event.context;
-        const width = getSize();
+        const width = getWidth();
         ctx.save();
         ctx.beginPath();
         ctx.rect(width, 0, ctx.canvas.width - width, ctx.canvas.height);
@@ -82,13 +82,12 @@ const EffectSupport = ({ map, layer: layerId, type, getSize, getHeight, circleCu
             default:
                 break;
             }
-            // TODO: Remove 'map.render()' and do on the swipe button change listener and mousemove change listener
+            map.render();
             return () => {
                 layer.un('precompose', verticalCutPrecomposeCallback);
                 layer.un('precompose', horizontalCutPrecomposeCallback);
                 layer.un('precompose', circleCutPrecomposeCallback);
                 layer.un('postcompose', postcomposeCallback);
-
                 map.render();
             };
         }

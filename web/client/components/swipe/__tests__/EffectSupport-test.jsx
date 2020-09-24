@@ -50,14 +50,14 @@ describe("EffectSupport", () => {
         setTimeout(done);
     });
 
-    it('should call getSize when effect type is cut-vertical', (done) => {
+    it('should call getWidth when effect type is cut-vertical', (done) => {
         const sizeMethods = {
-            getSize: () => 500,
+            getWidth: () => 500,
             getHeight: () => 250,
             getMousePosition: () => [0, 0]
         };
 
-        const spyGetSize = expect.spyOn(sizeMethods, 'getSize');
+        const spyGetWidth = expect.spyOn(sizeMethods, 'getWidth');
         const spyGetHeight = expect.spyOn(sizeMethods, 'getHeight');
         const spyGetMousePosition = expect.spyOn(sizeMethods, 'getMousePosition');
 
@@ -68,7 +68,7 @@ describe("EffectSupport", () => {
             map={map}
             layer="layer-1"
             type="cut-vertical"
-            getSize={sizeMethods.getSize}
+            getWidth={sizeMethods.getWidth}
             getHeight={sizeMethods.getHeight}
             circleCutProp={{
                 getMousePosition: sizeMethods.getMousePosition,
@@ -80,7 +80,7 @@ describe("EffectSupport", () => {
         const ctx = canvas.getContext('2d');
         layer.listeners_.precompose[0]({context: ctx});
 
-        expect(spyGetSize).toHaveBeenCalled();
+        expect(spyGetWidth).toHaveBeenCalled();
         expect(spyGetHeight).toNotHaveBeenCalled();
         expect(spyGetMousePosition).toNotHaveBeenCalled();
         done();
@@ -88,12 +88,12 @@ describe("EffectSupport", () => {
 
     it('should call getHeight when effect type is cut-horizontal', (done) => {
         const sizeMethods = {
-            getSize: () => 500,
+            getWidth: () => 500,
             getHeight: () => 250,
             getMousePosition: () => [0, 0]
         };
 
-        const spyGetSize = expect.spyOn(sizeMethods, 'getSize');
+        const spyGetWidth = expect.spyOn(sizeMethods, 'getWidth');
         const spyGetHeight = expect.spyOn(sizeMethods, 'getHeight');
         const spyGetMousePosition = expect.spyOn(sizeMethods, 'getMousePosition');
 
@@ -104,7 +104,7 @@ describe("EffectSupport", () => {
             map={map}
             layer="layer-1"
             type="cut-horizontal"
-            getSize={sizeMethods.getSize}
+            getWidth={sizeMethods.getWidth}
             getHeight={sizeMethods.getHeight}
             circleCutProp={{
                 getMousePosition: sizeMethods.getMousePosition,
@@ -116,7 +116,7 @@ describe("EffectSupport", () => {
         const ctx = canvas.getContext('2d');
         layer.listeners_.precompose[0]({context: ctx});
 
-        expect(spyGetSize).toNotHaveBeenCalled();
+        expect(spyGetWidth).toNotHaveBeenCalled();
         expect(spyGetHeight).toHaveBeenCalled();
         expect(spyGetMousePosition).toNotHaveBeenCalled();
         done();
@@ -124,12 +124,12 @@ describe("EffectSupport", () => {
 
     it('should call getMousePosition when effect type is circle', (done) => {
         const sizeMethods = {
-            getSize: () => 500,
+            getWidth: () => 500,
             getHeight: () => 250,
             getMousePosition: () => [0, 0]
         };
 
-        const spyGetSize = expect.spyOn(sizeMethods, 'getSize');
+        const spyGetWidth = expect.spyOn(sizeMethods, 'getWidth');
         const spyGetHeight = expect.spyOn(sizeMethods, 'getHeight');
         const spyGetMousePosition = expect.spyOn(sizeMethods, 'getMousePosition');
 
@@ -140,7 +140,7 @@ describe("EffectSupport", () => {
             map={map}
             layer="layer-1"
             type="circle"
-            getSize={sizeMethods.getSize}
+            getWidth={sizeMethods.getWidth}
             getHeight={sizeMethods.getHeight}
             circleCutProp={{
                 getMousePosition: sizeMethods.getMousePosition,
@@ -152,7 +152,7 @@ describe("EffectSupport", () => {
         const ctx = canvas.getContext('2d');
         layer.listeners_.precompose[0]({context: ctx, frameState: {pixelRatio: 1}});
 
-        expect(spyGetSize).toNotHaveBeenCalled();
+        expect(spyGetWidth).toNotHaveBeenCalled();
         expect(spyGetHeight).toNotHaveBeenCalled();
         expect(spyGetMousePosition).toHaveBeenCalled();
         done();
