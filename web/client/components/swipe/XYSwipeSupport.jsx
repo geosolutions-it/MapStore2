@@ -5,47 +5,31 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
 
 import EffectSupport from './EffectSupport';
 
-let width;
-let height;
+const DraggableSlider = ({ type, map, widthRef, heightRef }) => {
 
-const sizeHandler = {
-    setWidth: (s) => {
-        width = s;
-    },
-    getWidth: () => {
-        return width;
-    },
-    setHeight: (s) => {
-        height = s;
-    },
-    getHeight: () => {
-        return height;
-    }
-};
-
-const onDragVerticalHandler = (e, ui, map) => {
-    sizeHandler.setWidth(sizeHandler.getWidth() + ui.deltaX);
-    map.render();
-};
-
-const onDragHorizontalHandler = (e, ui, map) => {
-    sizeHandler.setHeight(sizeHandler.getHeight() + ui.deltaY);
-    map.render();
-};
-
-const DraggableSlider = ({ type, map }) => {
     useEffect(() => {
         type === "cut-vertical"
-            ? sizeHandler.setWidth(map.getProperties().size[0] / 2)
-            : sizeHandler.setHeight(map.getProperties().size[1] / 2);
+            ? widthRef.current = map.getProperties().size[0] / 2
+            : heightRef.current = map.getProperties().size[1] / 2;
     }, []);
+
+    const onDragVerticalHandler = (e, ui) => {
+        widthRef.current += ui.deltaX;
+        map.render();
+    };
+
+    const onDragHorizontalHandler = (e, ui) => {
+        heightRef.current += ui.deltaY;
+        map.render();
+    };
+
     if (type === "cut-horizontal") {
-        return (<Draggable axis="y" bounds="parent" onDrag={(e, ui) => onDragHorizontalHandler(e, ui, map)}>
+        return (<Draggable axis="y" bounds="parent" onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}>
             <div className="mapstore-swipe-slider" style={{
                 height: "12px",
                 top: `${map.getProperties().size[1] / 2}px`,
@@ -57,7 +41,7 @@ const DraggableSlider = ({ type, map }) => {
     }
 
     return (
-        <Draggable axis="x" bounds="parent" onDrag={(e, ui) => onDragVerticalHandler(e, ui, map)}>
+        <Draggable axis="x" bounds="parent" onDrag={(e, ui) => onDragVerticalHandler(e, ui)}>
             <div className="mapstore-swipe-slider" style={{
                 height: "100%",
                 top: '0px',
@@ -71,18 +55,22 @@ const DraggableSlider = ({ type, map }) => {
 
 // Allow swiping in the horizontal or vertical direction
 const XYSwipeSupport = ({ map, layer, type = "cut-vertical" }) => {
+    const heightRef = useRef();
+    const widthRef = useRef();
     if (layer) {
         return (
             <>
                 <DraggableSlider
+                    heightRef={heightRef}
+                    widthRef={widthRef}
                     map={map}
                     type={type} />
                 <EffectSupport
                     map={map}
                     layer={layer}
                     type={type}
-                    getWidth={sizeHandler.getWidth}
-                    getHeight={sizeHandler.getHeight} />
+                    getWidth={() => widthRef.current}
+                    getHeight={() => heightRef.current} />
             </>);
     }
     return null;
