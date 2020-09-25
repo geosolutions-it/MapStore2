@@ -18,6 +18,7 @@ import EffectSupport from '../EffectSupport';
 describe("EffectSupport", () => {
     let layer;
     let map;
+    let useEffectOriginal = React.useEffect;
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div><div id="map"></div>';
         layer = new VectorLayer({
@@ -39,6 +40,10 @@ describe("EffectSupport", () => {
             layers: [layer],
             target: 'map'
         });
+
+        // Mock useEffect implementation to run given callback synchronously
+        React.useEffect = f => f();
+
         setTimeout(done);
     });
 
@@ -47,6 +52,7 @@ describe("EffectSupport", () => {
         document.body.innerHtml = '';
         layer = null;
         map = null;
+        React.useEffect = useEffectOriginal;
         setTimeout(done);
     });
 
@@ -60,9 +66,6 @@ describe("EffectSupport", () => {
         const spyGetWidth = expect.spyOn(sizeMethods, 'getWidth');
         const spyGetHeight = expect.spyOn(sizeMethods, 'getHeight');
         const spyGetMousePosition = expect.spyOn(sizeMethods, 'getMousePosition');
-
-        // Mock useEffect implementation to run given callback synchronously
-        React.useEffect = f => f();
 
         ReactDOM.render(<EffectSupport
             map={map}
@@ -97,9 +100,6 @@ describe("EffectSupport", () => {
         const spyGetHeight = expect.spyOn(sizeMethods, 'getHeight');
         const spyGetMousePosition = expect.spyOn(sizeMethods, 'getMousePosition');
 
-        // Mock useEffect implementation to run given callback synchronously
-        React.useEffect = f => f();
-
         ReactDOM.render(<EffectSupport
             map={map}
             layer="layer-1"
@@ -132,9 +132,6 @@ describe("EffectSupport", () => {
         const spyGetWidth = expect.spyOn(sizeMethods, 'getWidth');
         const spyGetHeight = expect.spyOn(sizeMethods, 'getHeight');
         const spyGetMousePosition = expect.spyOn(sizeMethods, 'getMousePosition');
-
-        // Mock useEffect implementation to run given callback synchronously
-        React.useEffect = f => f();
 
         ReactDOM.render(<EffectSupport
             map={map}
