@@ -30,7 +30,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
  * @param {object} proxy webpack-devserver custom proxy configuration object
  * @returns a webpack configuration object
  */
-module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
+module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix, prodPlugins = [], alias = {}, proxy, devPlugins = []) => ({
     entry: assign({
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
@@ -72,7 +72,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin(),
         extractThemesPlugin
-    ].concat(prod && prodPlugins || []),
+    ].concat(prod ? prodPlugins : devPlugins),
     resolve: {
         extensions: [".js", ".jsx"],
         alias: assign({}, {
