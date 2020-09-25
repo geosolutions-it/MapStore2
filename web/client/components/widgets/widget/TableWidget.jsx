@@ -65,7 +65,7 @@ module.exports = getWidgetFilterRenderers(({
             <FeatureGrid
                 emptyRowsView={() => <EmptyRowsView loading={loading} />}
                 gridEvents={gridEvents}
-                sortable={false}
+                sortable
                 defaultSize={false}
                 columnSettings={columnSettings}
                 pageEvents={pageEvents}
