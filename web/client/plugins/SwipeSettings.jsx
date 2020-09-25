@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 
 // TODO: UI configuration in TOC
 const MapSwipeSettingsPanel = () => {
-    return (<div />);
+    return (<div id="mapstore-swipe-settings" />);
 };
 
 export default connect(null, {})(MapSwipeSettingsPanel);
