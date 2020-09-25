@@ -20,9 +20,10 @@ module.exports = require('../../build/buildConfig')(
         'mapstore': path.join(paths.code[0], "app")
     },
     {
-        'themes/default': path.join(paths.code[0], "themes", "default", "theme.less"),
+        'themes/default': path.join(paths.framework, "themes", "default", "theme.less"),
         ...mapstoreConfig.themes.reduce((acc, name) => ({
-            ['themes/' + name]: path.join(paths.code[0], "themes", name, "theme.less")
+            ...acc,
+            ['themes/' + name]: path.join(paths.base, "themes", name, "theme.less")
         }), {})
     },
     paths,
