@@ -14,14 +14,23 @@ const { compose, branch, withPropsOnChange} = require('recompose');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-    moveNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
+    moveNode, showSettings, hideSettings, updateSettings,
+    showLayerSwipeSettings, hideLayerSwipeSettings, updateNode, removeNode,
     browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
 const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {error} = require('../actions/notifications');
-const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
+const {
+    groupsSelector,
+    layersSelector,
+    selectedNodesSelector,
+    layerFilterSelector,
+    layerSettingSelector,
+    layerSwipeSettingsSelector,
+    layerMetadataSelector,
+    wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector, currentLocaleLanguageSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
@@ -77,6 +86,7 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         layerSettingSelector,
+        layerSwipeSettingsSelector,
         layerMetadataSelector,
         wfsDownloadSelector,
         mapSelector,
@@ -92,10 +102,11 @@ const tocSelector = createSelector(
         isCesium,
         userSelector,
         isLocalizedLayerStylesEnabledSelector
-    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
+    ], (enabled, groups, settings, swipeSettings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
         enabled,
         groups,
         settings,
+        swipeSettings,
         layerMetadata,
         wfsdownload,
         currentZoomLvl: map && map.zoom,
@@ -155,6 +166,7 @@ class LayerTree extends React.Component {
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
+        swipeSettings: PropTypes.object,
         layerMetadata: PropTypes.object,
         wfsdownload: PropTypes.object,
         metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func]),
@@ -197,6 +209,7 @@ class LayerTree extends React.Component {
         activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
         activateLayerInfoTool: PropTypes.bool,
+        activateSwipeOnLayer: PropTypes.bool,
         maxDepth: PropTypes.number,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
@@ -232,7 +245,9 @@ class LayerTree extends React.Component {
         layerNodeComponent: PropTypes.func,
         groupNodeComponent: PropTypes.func,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
-        onLayerInfo: PropTypes.func
+        onLayerInfo: PropTypes.func,
+        onShowSwipeSettings: PropTypes.func,
+        onHideLayerSwipeSettings: PropTypes.func
     };
 
     static contextTypes = {
@@ -274,6 +289,7 @@ class LayerTree extends React.Component {
         activateWidgetTool: false,
         activateLayerFilterTool: false,
         activateLayerInfoTool: true,
+        activateSwipeOnLayer: false,
         maxDepth: 3,
         visibilityCheckType: "glyph",
         settingsOptions: {
@@ -314,7 +330,9 @@ class LayerTree extends React.Component {
         catalogActive: false,
         refreshLayerVersion: () => {},
         metadataTemplate: null,
-        onLayerInfo: () => {}
+        onLayerInfo: () => {},
+        onShowSwipeSettings: () => {},
+        onHideLayerSwipeSettings: () => {}
     };
 
     getNoBackgroundLayers = (group) => {
@@ -388,6 +406,7 @@ class LayerTree extends React.Component {
                             selectedGroups={this.props.selectedGroups}
                             generalInfoFormat={this.props.generalInfoFormat}
                             settings={this.props.settings}
+                            swipeSettings={this.props.swipeSettings}
                             layerMetadata={this.props.layerMetadata}
                             wfsdownload={this.props.wfsdownload}
                             metadataTemplate={this.props.metadataTemplate}
@@ -406,7 +425,8 @@ class LayerTree extends React.Component {
                                 activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool,
                                 activateLayerFilterTool: this.props.activateLayerFilterTool,
-                                activateLayerInfoTool: this.props.activateLayerInfoTool
+                                activateLayerInfoTool: this.props.activateLayerInfoTool,
+                                activateSwipeOnLayer: this.props.activateSwipeOnLayer
                             }}
                             options={{
                                 modalOptions: {},
@@ -477,7 +497,9 @@ class LayerTree extends React.Component {
                                 onGetMetadataRecord: this.props.onGetMetadataRecord,
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler,
-                                onLayerInfo: this.props.onLayerInfo
+                                onLayerInfo: this.props.onLayerInfo,
+                                onShowSwipeSettings: this.props.onShowSwipeSettings,
+                                onHideLayerSwipeSettings: this.props.onHideLayerSwipeSettings
                             }}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
@@ -560,7 +582,16 @@ const securityEnhancer = withPropsOnChange(
 const checkPluginsEnhancer = branch(
     ({ checkPlugins = true }) => checkPlugins,
     withPropsOnChange(
-        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool", "activateSettingsTool", "FeatureEditor", "activateLayerInfoTool"],
+        [
+            "items",
+            "activateAddLayerButton",
+            "activateAddGroupButton",
+            "activateLayerFilterTool",
+            "activateSettingsTool",
+            "FeatureEditor",
+            "activateLayerInfoTool",
+            "activateSwipeOnLayer"
+        ],
         ({
             items = [],
             activateAddLayerButton = true,
@@ -569,7 +600,8 @@ const checkPluginsEnhancer = branch(
             activateSettingsTool = true,
             activateLayerFilterTool = true,
             activateWidgetTool = true,
-            activateLayerInfoTool = true
+            activateLayerInfoTool = true,
+            activateSwipeOnLayer = true
         }) => ({
             activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "MetadataExplorer" }) || false, // requires MetadataExplorer (Catalog)
             activateAddGroupButton: activateAddGroupButton && !!find(items, { name: "AddGroup" }) || false,
@@ -579,7 +611,8 @@ const checkPluginsEnhancer = branch(
             // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approach
             // the button should hide if also widgets plugins is not available. Maybe is a good idea to merge the two plugins
             activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) && !!find(items, { name: "Widgets" }),
-            activateLayerInfoTool: activateLayerInfoTool && !!find(items, { name: "LayerInfo" }) || false
+            activateLayerInfoTool: activateLayerInfoTool && !!find(items, { name: "LayerInfo" }) || false,
+            activateSwipeOnLayer: activateSwipeOnLayer && !!find(items, { name: "Swipe" }) || false
         })
     )
 );
@@ -818,7 +851,9 @@ const TOCPlugin = connect(tocSelector, {
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion,
-    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false)
+    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false),
+    onShowSwipeSettings: showLayerSwipeSettings,
+    onHideLayerSwipeSettings: hideLayerSwipeSettings
 })(compose(
     securityEnhancer,
     checkPluginsEnhancer
