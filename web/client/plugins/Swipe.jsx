@@ -15,7 +15,7 @@ import { getSelectedLayer, layerSwipeSettingsSelector } from '../selectors/layer
 import { createPlugin } from '../utils/PluginsUtils';
 
 import SwipeSettings from './SwipeSettings';
-import XYSwipeSupport from '../components/swipe/XYSwipeSupport';
+import XYSwipeSupport from '../components/map/openlayers/swipe/XYSwipeSupport';
 
 const Support = ({ map, layer, active }) => {
     return <XYSwipeSupport map={map} layer={layer} active={active} />;
