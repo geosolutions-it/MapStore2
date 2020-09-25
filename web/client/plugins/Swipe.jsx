@@ -31,7 +31,12 @@ const swipeSupportSelector = createSelector([
 
 const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);
 
-const SwipePlugin = createPlugin(
+/**
+ * Swipe. Add to the TOC the possibility to select a layer for Swipe.
+ * @memberof plugins
+ * @requires plugins.Swipe
+ */
+export default createPlugin(
     'Swipe',
     {
         component: SwipeSettings,
@@ -46,5 +51,3 @@ const SwipePlugin = createPlugin(
         }
     }
 );
-
-export default SwipePlugin;
