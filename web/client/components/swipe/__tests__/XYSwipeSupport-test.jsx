@@ -43,8 +43,8 @@ describe("XYSwipeSupport", () => {
         expect(swiper).toNotExist();
     });
 
-    it("should render vertical swiper as default", () => {
-        ReactDOM.render(<XYSwipeSupport map={map} layer="test-layer-id" />, document.getElementById("container"));
+    it("should render vertical swiper as default when tool is active", () => {
+        ReactDOM.render(<XYSwipeSupport active map={map} layer="test-layer-id" />, document.getElementById("container"));
         const swiper = document.getElementsByClassName("mapstore-swipe-slider")[0];
         expect(swiper).toExist();
         expect(swiper.style.cursor).toBe("col-resize");
@@ -54,8 +54,8 @@ describe("XYSwipeSupport", () => {
         expect(swiper.style.height).toBe("100%");
     });
 
-    it("should render horizontal swiper when type is 'cut-horizontal'", () => {
-        ReactDOM.render(<XYSwipeSupport map={map} type="cut-horizontal" layer="test-layer-id" />, document.getElementById("container"));
+    it("should render horizontal swiper when type is 'cut-horizontal' when tool is active", () => {
+        ReactDOM.render(<XYSwipeSupport active map={map} type="cut-horizontal" layer="test-layer-id" />, document.getElementById("container"));
         const swiper = document.getElementsByClassName("mapstore-swipe-slider")[0];
         expect(swiper).toExist();
         expect(swiper.style.cursor).toBe("row-resize");

@@ -12,14 +12,14 @@ const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {
     refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_NODE,
-    updateLayerDimension, CHANGE_LAYER_PARAMS, updateSettingsParams, UPDATE_SETTINGS
+    updateLayerDimension, CHANGE_LAYER_PARAMS, updateSettingsParams, UPDATE_SETTINGS, selectNode, HIDE_LAYER_SWIPE_SETTINGS
 } = require('../../actions/layers');
 const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
 const {
     testEpic
 } = require('./epicTestUtils');
 
-const { refresh, updateDimension, updateSettingsParamsEpic } = require('../layers');
+const { refresh, updateDimension, updateSettingsParamsEpic, resetLayerSwipeSettingsEpic } = require('../layers');
 const rootEpic = combineEpics(refresh);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -221,5 +221,27 @@ describe('layers Epics', () => {
                 });
                 done();
             }, state);
+    });
+
+    it('reset activation of layer swipe tool if it was active', done => {
+        const state = {
+            layers: {
+                swipeSettings: {
+                    active: true,
+                    node: 'layerId',
+                    nodeType: 'layer'
+                }
+            }
+        };
+
+        testEpic(
+            resetLayerSwipeSettingsEpic,
+            1,
+            selectNode('layerId', 'layer', false),
+            actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toEqual(HIDE_LAYER_SWIPE_SETTINGS);
+                done();
+            }, state, done);
     });
 });

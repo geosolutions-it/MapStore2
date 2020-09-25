@@ -60,7 +60,8 @@ class Toolbar extends React.Component {
             onHideLayerMetadata: () => {},
             onShow: () => {},
             onLayerInfo: () => {},
-            onShowSwipeSettings: () => {}
+            onShowSwipeSettings: () => {},
+            onHideLayerSwipeSettings: () => {}
         },
         maxDepth: 3,
         text: {
@@ -334,7 +335,7 @@ class Toolbar extends React.Component {
                             key="layerSwipe"
                             placement="top"
                             overlay={<Tooltip id="layer-tooltip-swipe">Layer swipe settings</Tooltip>}>
-                            <Button key="layer-swipe" bsStyle={this.props.swipeSettings.active ? "success" : "primary"} className="square-button-md" onClick={() => this.showSwipeSettings(status)}>
+                            <Button key="layer-swipe" bsStyle={this.props?.swipeSettings?.active ? "success" : "primary"} className="square-button-md" onClick={() => this.showSwipeSettings(status)}>
                                 <Glyphicon glyph="transfer" />
                             </Button>
                         </OverlayTrigger>}
@@ -408,7 +409,7 @@ class Toolbar extends React.Component {
     showSwipeSettings = (status) => {
         const { swipeSettings, onToolsActions, selectedLayers } = this.props;
         if (!swipeSettings.active && (status === 'LAYER')) {
-            onToolsActions.onShowSwipeSettings(selectedLayers[0].id, 'layers');
+            onToolsActions.onShowSwipeSettings(selectedLayers[0].id, 'layer');
         } else {
             onToolsActions.onHideLayerSwipeSettings();
         }

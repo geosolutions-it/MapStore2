@@ -18,7 +18,7 @@ import EffectSupport from '../EffectSupport';
 describe("EffectSupport", () => {
     let layer;
     let map;
-    let useEffectOriginal = React.useEffect;
+
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div><div id="map"></div>';
         layer = new VectorLayer({
@@ -42,8 +42,7 @@ describe("EffectSupport", () => {
         });
 
         // Mock useEffect implementation to run given callback synchronously
-        React.useEffect = f => f();
-
+        expect.spyOn(React, "useEffect").andCall(f => f());
         setTimeout(done);
     });
 
@@ -52,7 +51,6 @@ describe("EffectSupport", () => {
         document.body.innerHtml = '';
         layer = null;
         map = null;
-        React.useEffect = useEffectOriginal;
         setTimeout(done);
     });
 

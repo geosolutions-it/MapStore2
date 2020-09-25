@@ -11,7 +11,7 @@ const {
     getLayerFromName, getLayerFromId, layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
     layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector,
-    getLayersWithDimension, elementSelector, queryableSelectedLayersSelector
+    getLayersWithDimension, elementSelector, queryableSelectedLayersSelector, layerSwipeSettingsSelector
 } = require('../layers');
 
 describe('Test layers selectors', () => {
@@ -772,5 +772,19 @@ describe('Test layers selectors', () => {
             }
         };
         expect(queryableSelectedLayersSelector(state)).toEqual(queryableSelectedLayers);
+    });
+
+    it('should test layerSwipeSettingsSelector', () => {
+        const state = {
+            layers: {
+                swipeSettings: {
+                    active: true,
+                    node: '',
+                    nodeType: ''
+                }
+            }
+        };
+
+        expect(layerSwipeSettingsSelector(state)).toEqual(state.layers.swipeSettings);
     });
 });

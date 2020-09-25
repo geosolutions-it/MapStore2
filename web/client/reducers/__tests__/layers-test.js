@@ -7,7 +7,8 @@
  */
 var expect = require('expect');
 var layers = require('../layers');
-const { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP } = require('../../actions/layers');
+const { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP,
+    SHOW_LAYER_SWIPE_SETTINGS, HIDE_LAYER_SWIPE_SETTINGS } = require('../../actions/layers');
 
 
 describe('Test the layers reducer', () => {
@@ -646,6 +647,20 @@ describe('Test the layers reducer', () => {
         expect(state.settings.options).toEqual({opacity: 0.5, size: 500});
     });
 
+    it('should make layer swipe active', () => {
+        const action = {
+            type: SHOW_LAYER_SWIPE_SETTINGS,
+            node: "node1",
+            nodeType: "layer"
+        };
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.swipeSettings).toExist();
+        expect(state.swipeSettings.active).toBe(true);
+        expect(state.swipeSettings.node).toBe("node1");
+        expect(state.swipeSettings.nodeType).toBe("layer");
+    });
+
     it('hide settings', () => {
         const action = {
             type: "HIDE_SETTINGS"
@@ -657,6 +672,18 @@ describe('Test the layers reducer', () => {
         expect(state.settings.node).toNotExist();
         expect(state.settings.nodeType).toNotExist();
         expect(state.settings.options).toEqual({});
+    });
+
+    it('should deactivate layer swipe', () => {
+        const action = {
+            type: HIDE_LAYER_SWIPE_SETTINGS
+        };
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.swipeSettings).toExist();
+        expect(state.swipeSettings.active).toBe(false);
+        expect(state.swipeSettings.node).toNotExist();
+        expect(state.swipeSettings.nodeType).toNotExist();
     });
 
     it('update settings', () => {
