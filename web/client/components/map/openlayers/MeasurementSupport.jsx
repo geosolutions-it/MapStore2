@@ -109,10 +109,10 @@ export default class MeasurementSupport extends React.Component {
             (newProps.measurement.geomType && (newProps.measurement.lineMeasureEnabled || newProps.measurement.areaMeasureEnabled || newProps.measurement.bearingMeasureEnabled) && !this.props.enabled && newProps.enabled) ) {
             this.restoreDrawState();
             this.addDrawInteraction(newProps);
-            // this.measureLayer.setVisible(true);
-            // this.showHideMeasureTooltips('');
+            this.measureLayer.setVisible(true);
+            this.showHideMeasureTooltips('');
         }
-        if (!newProps.measurement.geomType) {
+        if (!newProps.measurement.geomType && !newProps.measurement?.exportToAnnotation) {
             this.removeDrawInteraction();
             this.removeMeasureTooltips();
             this.removeSegmentLengthOverlays();
@@ -131,12 +131,11 @@ export default class MeasurementSupport extends React.Component {
                 this.source.clear();
                 this.source = null;
             }
+        } else if (!newProps.measurement.geomType && newProps.measurement?.exportToAnnotation) {
+            this.measureLayer.setVisible(false);
+            this.showHideMeasureTooltips('none');
+            this.removeDrawInteraction();
         }
-        // else if (!newProps.measurement.geomType && newProps.measurement?.exportToAnnotation) {
-        //     this.measureLayer.setVisible(false);
-        //     this.showHideMeasureTooltips('none');
-        //     this.removeDrawInteraction();
-        // }
         let oldFt = this.props.measurement.features;
         let newFt = newProps.measurement.features;
         /**
@@ -150,12 +149,12 @@ export default class MeasurementSupport extends React.Component {
         }
     }
 
-    // showHideMeasureTooltips = (display) => {
-    //     const textLabelElements = document.getElementsByClassName("ol-overlay-container");
-    //     for (let i = 0; i < textLabelElements.length; i++) {
-    //         textLabelElements[i].style.display = display;
-    //     }
-    // }
+    showHideMeasureTooltips = (display) => {
+        const textLabelElements = document.getElementsByClassName("ol-overlay-container");
+        for (let i = 0; i < textLabelElements.length; i++) {
+            textLabelElements[i].style.display = display;
+        }
+    }
 
 
     getLength = (coords, props) => {

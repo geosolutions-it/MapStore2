@@ -10,14 +10,15 @@ import Rx from 'rxjs';
 import uuidv1 from 'uuid/v1';
 
 import {convertMeasuresToGeoJSON} from '../utils/MeasurementUtils';
-import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, setMeasurementConfig} from '../actions/measurement';
-import {addLayer} from '../actions/layers';
+import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, SET_ANNOTATION_MEASUREMENT, setMeasurementConfig, changeMeasurement} from '../actions/measurement';
+import {addLayer, changeLayerProperties} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
-import {toggleControl, SET_CONTROL_PROPERTY} from '../actions/controls';
+import {toggleControl, setControlProperty, SET_CONTROL_PROPERTY} from '../actions/controls';
 import {closeFeatureGrid} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {showCoordinateEditorSelector} from '../selectors/controls';
 import {newAnnotation, setEditingFeature} from '../actions/annotations';
+import {getGeomTypeSelected} from '../utils/MeasurementUtils';
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -34,7 +35,8 @@ export const addAnnotationFromMeasureEpic = (action$) =>
             return Rx.Observable.of(
                 toggleControl('annotations', null),
                 newAnnotation(),
-                setMeasurementConfig("exportToAnnotation", false),
+                setMeasurementConfig("exportToAnnotation", true),
+                // setMeasurementConfig("exportToAnnotation", false),
                 setEditingFeature(newFeature)
             );
         });
@@ -57,7 +59,17 @@ export const addAsLayerEpic = (action$) =>
 
 export const openMeasureEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY)
-        .filter((action) => action.control === "measure" && action.value && showCoordinateEditorSelector(store.getState()))
+        .filter((action) => action.control === "measure" && action.value)
         .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
+            const showCoordinateEditor = showCoordinateEditorSelector(store.getState());
+            return showCoordinateEditor ? Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker()) :
+                Rx.Observable.of(changeLayerProperties('annotations', {visibility: false}));
+        });
+
+export const setMeasureStateFromAnnotationEpic = (action$) =>
+    action$.ofType(SET_ANNOTATION_MEASUREMENT)
+        .switchMap(({features}) => {
+            return Rx.Observable.of(changeMeasurement({geomType: getGeomTypeSelected(features)}),
+                setControlProperty("measure", "enabled", true),
+                setControlProperty("annotations", "enabled", false));
         });

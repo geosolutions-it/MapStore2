@@ -13,7 +13,7 @@ const Message = require('../components/I18N/Message');
 const PropTypes = require('prop-types');
 
 const {Glyphicon} = require('react-bootstrap');
-const {on, toggleControl, setControlProperty} = require('../actions/controls');
+const {on, toggleControl} = require('../actions/controls');
 const {createSelector} = require('reselect');
 const isEmtpy = require('lodash/isEmpty');
 
@@ -28,7 +28,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
 } = require('../actions/annotations');
 
 const {selectFeatures} = require('../actions/draw');
-const {setAnnotationMeasurement, changeMeasurement} = require('../actions/measurement');
+const {setAnnotationMeasurement} = require('../actions/measurement');
 
 const { zoomToExtent } = require('../actions/map');
 
@@ -77,9 +77,7 @@ const commonEditorActions = {
     onConfirmClose: confirmCloseAnnotations,
     onConfirmRemove: confirmRemoveAnnotation,
     onDownload: download,
-    onSetControlProperty: setControlProperty,
-    onSetAnnotationMeasurement: setAnnotationMeasurement,
-    toggleMeasure: changeMeasurement
+    onSetAnnotationMeasurement: setAnnotationMeasurement
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
     {

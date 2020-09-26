@@ -137,7 +137,7 @@ class MeasureComponent extends React.Component {
         withReset: true,
         lineGlyph: "1-measure-length",
         areaGlyph: "1-measure-area",
-        bearingGlyph: "1-bearing",
+        bearingGlyph: "1-measure-bearing",
         showButtonsLabels: true,
         lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
         areaLabel: <Message msgId="measureComponent.areaLabel"/>,

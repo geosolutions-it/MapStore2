@@ -18,7 +18,6 @@ const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
 const { isFunction, isEmpty, head } = require('lodash');
 const {getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
-const {getGeomTypeSelected} = require('../../../utils/MeasurementUtils');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 const PluginsUtils = require('../../../utils/PluginsUtils');
@@ -205,7 +204,7 @@ class AnnotationsEditor extends React.Component {
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         textRotationStep: PropTypes.number,
-        onSetControlProperty: PropTypes.func
+        onSetAnnotationMeasurement: PropTypes.func
     };
 
     static defaultProps = {
@@ -444,13 +443,11 @@ class AnnotationsEditor extends React.Component {
                 {
                     editMeasure && <Button className="btn btn-primary" onClick={()=> {
                         const editProperties = this.props.editing?.properties;
+                        // Excluding geometry of type Point as they are labels of measurement
                         const features = editProperties?.type === 'Measure' && this.props.editing.features.filter(f=> f.geometry.type !== 'Point');
                         this.props.onSetAnnotationMeasurement(features, editProperties.id);
-                        this.props.toggleMeasure({geomType: getGeomTypeSelected(features)}); // TODO convert to epic all 3
-                        this.props.onSetControlProperty("measure", "enabled", true);
-                        this.props.onSetControlProperty("annotations", "enabled", false);
                     }}>
-                       Edit Measurement <Glyphicon glyph={this.props.editing?.properties?.iconGlyph} style={{fontSize: 'inherit'}}/>
+                       Edit Measurement &nbsp;<Glyphicon glyph={this.props.editing?.properties?.iconGlyph} style={{fontSize: 'inherit'}}/>
                     </Button>
                 }
             </div>
