@@ -27,7 +27,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
 const {validateCoordsArray, getAvailableStyler, convertGeoJSONToInternalModel, addIds, validateFeature,
     getComponents, updateAllStyles, getBaseCoord} = require('../utils/AnnotationsUtils');
 const {set} = require('../utils/ImmutableUtils');
-const {head, findIndex, isNil, slice, castArray} = require('lodash');
+const {head, findIndex, isNil, slice, castArray, get} = require('lodash');
 
 const uuid = require('uuid');
 
@@ -352,7 +352,7 @@ function annotations(state = { validationErrors: {} }, action) {
             return state;
         }
         const feature = set('features', action.feature.features.map(x => set('properties.canEdit', false, x)), action.feature);
-        const newFeature = set('newFeature', true, set('properties.canEdit', false, set('tempFeatures', feature.features, feature)));
+        const newFeature = set('newFeature', get(action.feature, "newFeature", true), set('properties.canEdit', false, set('tempFeatures', feature.features, feature)));
         const newState = set('editing', newFeature, state);
         return assign({}, newState, {
             coordinateEditorEnabled: false,

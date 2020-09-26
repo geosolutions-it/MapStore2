@@ -85,6 +85,7 @@ export default class MeasurementSupport extends React.Component {
      * we assume that only valid features are passed to the draw tools
      */
     UNSAFE_componentWillReceiveProps(newProps) {
+
         if (this.measureTooltipElements && newProps.measurement.showLabel !== this.props.measurement.showLabel) {
             for (let i = 0; i < this.measureTooltipElements.length; ++i) {
                 if (this.measureTooltipElements[i]) {
@@ -108,6 +109,8 @@ export default class MeasurementSupport extends React.Component {
             (newProps.measurement.geomType && (newProps.measurement.lineMeasureEnabled || newProps.measurement.areaMeasureEnabled || newProps.measurement.bearingMeasureEnabled) && !this.props.enabled && newProps.enabled) ) {
             this.restoreDrawState();
             this.addDrawInteraction(newProps);
+            // this.measureLayer.setVisible(true);
+            // this.showHideMeasureTooltips('');
         }
         if (!newProps.measurement.geomType) {
             this.removeDrawInteraction();
@@ -129,6 +132,11 @@ export default class MeasurementSupport extends React.Component {
                 this.source = null;
             }
         }
+        // else if (!newProps.measurement.geomType && newProps.measurement?.exportToAnnotation) {
+        //     this.measureLayer.setVisible(false);
+        //     this.showHideMeasureTooltips('none');
+        //     this.removeDrawInteraction();
+        // }
         let oldFt = this.props.measurement.features;
         let newFt = newProps.measurement.features;
         /**
@@ -136,11 +144,18 @@ export default class MeasurementSupport extends React.Component {
          * then update the stae with only the new measures calculated
          */
         if (newProps.measurement.updatedByUI && !isEqual(oldFt, newFt)) {
-            this.updateFeatures(newProps);
+            this.restoreMeasurementState(newProps);
         } else if (newProps.measurement.updatedByUI && !isEqual(this.props.uom, newProps.uom)) {
             this.updateMeasures(newProps);
         }
     }
+
+    // showHideMeasureTooltips = (display) => {
+    //     const textLabelElements = document.getElementsByClassName("ol-overlay-container");
+    //     for (let i = 0; i < textLabelElements.length; i++) {
+    //         textLabelElements[i].style.display = display;
+    //     }
+    // }
 
 
     getLength = (coords, props) => {
@@ -157,6 +172,18 @@ export default class MeasurementSupport extends React.Component {
     }
 
     render() {
+        console.log("this.measureTooltipElements", this.measureTooltipElements);
+        console.log("this.measureTooltipsLength", this.measureTooltipsLength);
+        console.log("this.segmentOverlayElements", this.segmentOverlayElements);
+        console.log("this.segmentOverlaysLength", this.segmentOverlaysLength);
+        console.log("this.segmentOverlays", this.segmentOverlays);
+        console.log("this.segmentLengths", this.segmentLengths);
+        console.log("this.textLabels", this.textLabels);
+        console.log("this.measureLayer", this.measureLayer);
+        console.log("this.source", this.source);
+        console.log("this.helpTooltip", this.helpTooltip);
+        console.log("this.measureTooltips", this.measureTooltips);
+        console.log("this.outputValues", this.outputValues);
         return null;
     }
 
@@ -324,6 +351,10 @@ export default class MeasurementSupport extends React.Component {
             }
             return this.formatLengthValue(value, props.uom, true, props.measurement.trueBearing);
         };
+
+        this.outputValues = this.outputValues || [];
+        this.segmentOverlayElements = this.segmentOverlayElements || [];
+        this.textLabels = this.textLabels || [];
 
         for (let i = 0; i < this.outputValues.length; ++i) {
             if (!this.outputValues[i]) continue;
@@ -752,7 +783,6 @@ export default class MeasurementSupport extends React.Component {
 
             this.curPolygonLength = undefined;
             this.curLineStringLength = undefined;
-
             this.discardDrawState();
         });
 
@@ -761,6 +791,7 @@ export default class MeasurementSupport extends React.Component {
 
         this.drawInteraction = draw;
         this.measureLayer = this.vector;
+        // this.props.setMeasurementConfig("measureLayer", this.measureLayer);
     };
 
     removeLastSegment = () => {
@@ -981,5 +1012,16 @@ export default class MeasurementSupport extends React.Component {
 
         this.segmentOverlays = [];
         this.segmentOverlayElements = [];
+    }
+
+    /**
+     * Restore measurement state from props and redraw measurement
+     */
+    restoreMeasurementState = (props) => {
+        Promise.all(props.measurement.features.map((feature = {})=>{
+            this.addFeature(feature);
+        })).then(()=>{
+            this.updateFeatures(props);
+        });
     }
 }

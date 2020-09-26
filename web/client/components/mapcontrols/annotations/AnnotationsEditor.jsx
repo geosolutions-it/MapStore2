@@ -13,11 +13,12 @@ const Portal = require('../../misc/Portal');
 const GeometryEditor = require('./GeometryEditor');
 const Manager = require('../../style/vector/Manager');
 const Message = require('../../I18N/Message');
-const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, ControlLabel } = require('react-bootstrap');
+const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, ControlLabel, Button } = require('react-bootstrap');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
 const { isFunction, isEmpty, head } = require('lodash');
 const {getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
+const {getGeomTypeSelected} = require('../../../utils/MeasurementUtils');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 const PluginsUtils = require('../../../utils/PluginsUtils');
@@ -203,7 +204,8 @@ class AnnotationsEditor extends React.Component {
         defaultShapeFillColor: PropTypes.string,
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
-        textRotationStep: PropTypes.number
+        textRotationStep: PropTypes.number,
+        onSetControlProperty: PropTypes.func
     };
 
     static defaultProps = {
@@ -416,10 +418,12 @@ class AnnotationsEditor extends React.Component {
         if (items.length === 0) {
             return null;
         }
+        const editMeasure = this.props.editing?.properties?.type === "Measure" || false;
+        console.log("editing?.properties?.type", editing);
         return (<div className={"mapstore-annotations-info-viewer-items" + (this.props.styling ? " mapstore-annotations-info-viewer-styler" : "")}>
             <div>
                 {items}
-                {editing && <FeaturesList
+                {editing && !editMeasure && <FeaturesList
                     editing={this.props.editing}
                     selected={this.props.selected}
                     onAddGeometry={this.props.onAddGeometry}
@@ -436,6 +440,18 @@ class AnnotationsEditor extends React.Component {
                     drawing={this.props.drawing}
                     onUnselectFeature={this.props.onResetCoordEditor}
                 />
+                }
+                {
+                    editMeasure && <Button className="btn btn-primary" onClick={()=> {
+                        const editProperties = this.props.editing?.properties;
+                        const features = editProperties?.type === 'Measure' && this.props.editing.features.filter(f=> f.geometry.type !== 'Point');
+                        this.props.onSetAnnotationMeasurement(features, editProperties.id);
+                        this.props.toggleMeasure({geomType: getGeomTypeSelected(features)}); // TODO convert to epic all 3
+                        this.props.onSetControlProperty("measure", "enabled", true);
+                        this.props.onSetControlProperty("annotations", "enabled", false);
+                    }}>
+                       Edit Measurement <Glyphicon glyph={this.props.editing?.properties?.iconGlyph} style={{fontSize: 'inherit'}}/>
+                    </Button>
                 }
             </div>
         </div>);

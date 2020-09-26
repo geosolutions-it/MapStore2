@@ -89,7 +89,8 @@ class MeasureComponent extends React.Component {
         onMount: PropTypes.func,
         onUpdateOptions: PropTypes.func,
         showCoordinateEditor: PropTypes.bool,
-        isCoordinateEditorEnabled: PropTypes.bool
+        isCoordinateEditorEnabled: PropTypes.bool,
+        onSetMeasurementConfig: PropTypes.func
     };
 
     static contextTypes = {
@@ -134,7 +135,7 @@ class MeasureComponent extends React.Component {
         isCoordinateEditorEnabled: true,
         showLengthAndBearingLabel: false,
         withReset: true,
-        lineGlyph: "1-measure-lenght",
+        lineGlyph: "1-measure-length",
         areaGlyph: "1-measure-area",
         bearingGlyph: "1-bearing",
         showButtonsLabels: true,
@@ -288,6 +289,8 @@ class MeasureComponent extends React.Component {
             coords = (get(feature, geomType.indexOf('polygon') !== -1 ? 'geometry.coordinates[0]' : 'geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
         }
 
+        const {exportToAnnotation = false, geomTypeSelected = []} = this.props.measurement;
+
         return (
             <BorderLayout
                 id={this.props.id}
@@ -304,6 +307,7 @@ class MeasureComponent extends React.Component {
                                     [
                                         {
                                             glyph: this.props.lineGlyph,
+                                            disabled: exportToAnnotation && !geomTypeSelected.includes('LineString'),
                                             active: !!this.props.lineMeasureEnabled,
                                             bsStyle: this.props.lineMeasureEnabled ? 'success' : 'primary',
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
@@ -311,6 +315,7 @@ class MeasureComponent extends React.Component {
                                         },
                                         {
                                             active: !!this.props.areaMeasureEnabled,
+                                            disabled: exportToAnnotation && !geomTypeSelected.includes('Polygon'),
                                             bsStyle: this.props.areaMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.areaGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea"),
@@ -318,6 +323,7 @@ class MeasureComponent extends React.Component {
                                         },
                                         {
                                             visible: !this.props.disableBearing,
+                                            disabled: exportToAnnotation && !geomTypeSelected.includes('Bearing'),
                                             active: !!this.props.bearingMeasureEnabled,
                                             bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.bearingGlyph,
@@ -350,7 +356,7 @@ class MeasureComponent extends React.Component {
                                     [
                                         {
                                             glyph: 'ext-json',
-                                            disabled: (this.props.measurement.features || []).length === 0,
+                                            disabled: (this.props.measurement.features || []).length === 0 || exportToAnnotation,
                                             visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showExportToGeoJSON,
                                             tooltip: <Message msgId="measureComponent.exportToGeoJSON"/>,
                                             onClick: () => {
@@ -366,7 +372,7 @@ class MeasureComponent extends React.Component {
                                         {
                                             glyph: '1-layer',
                                             visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsLayer,
-                                            disabled: (this.props.measurement.features || []).length === 0,
+                                            disabled: (this.props.measurement.features || []).length === 0 || exportToAnnotation,
                                             tooltip: <Message msgId="measureComponent.addAsLayer"/>,
                                             onClick: () => this.props.onAddAsLayer(
                                                 this.props.measurement.features,
@@ -375,13 +381,17 @@ class MeasureComponent extends React.Component {
                                             )
                                         },
                                         {
-                                            glyph: 'comment',
-                                            tooltip: <Message msgId="measureComponent.addAsAnnotation"/>,
-                                            onClick: () => this.props.onAddAnnotation(
-                                                this.props.measurement.features,
-                                                this.props.measurement.textLabels,
-                                                this.props.uom
-                                            ),
+                                            glyph: exportToAnnotation ? 'floppy-disk' : 'comment',
+                                            tooltip: <Message msgId={exportToAnnotation ? "measureComponent.saveMeasure" : "measureComponent.addAsAnnotation"}/>,
+                                            onClick: () => {
+                                                this.props.onAddAnnotation(
+                                                    this.props.measurement.features,
+                                                    this.props.measurement.textLabels,
+                                                    this.props.uom,
+                                                    !exportToAnnotation,
+                                                    this.props.measurement.id
+                                                );
+                                            },
                                             disabled: (this.props.measurement.features || []).length === 0,
                                             visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsAnnotation
                                         }

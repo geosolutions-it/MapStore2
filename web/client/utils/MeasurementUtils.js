@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import {round, flatten} from 'lodash';
+import {round, flatten, startCase, uniq, get} from 'lodash';
 import uuidv1 from 'uuid/v1';
 
 import {getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES} from '../utils/AnnotationsUtils';
@@ -18,6 +18,23 @@ const getFormattedValue = (uom, value) => ({
     "area": round(convertUom(value, "sqm", uom.area.label) || 0, 2) + " " + uom.area.label,
     "bearing": getFormattedBearingValue(round(value || 0, 6)).toString()
 });
+
+const getMeasurementProps = (features) =>{
+    const geomTypes = uniq(features.map(f=> f.properties?.values[0]?.type || ''));
+    if (geomTypes.length > 1) {
+        return {title: 'Multiple Measurement', iconGlyph: 'geometry-collection'};
+    }
+    return {title: 'Measure ' + startCase(geomTypes[0]), iconGlyph: '1-measure-' + geomTypes[0]};
+};
+
+export const getGeomTypeSelected = (features = []) =>{
+    return uniq(features.map(f=> {
+        if (f.geometry.type === "LineString" && f.properties?.values[0]?.type === 'bearing') {
+            return 'Bearing';
+        }
+        return f.geometry.type;
+    }));
+};
 
 const STYLE_TEXT_LABEL = {
     offsetY: 1,
@@ -58,7 +75,8 @@ const convertGeometryToGeoJSON = (feature, uom, measureValueStyle) => {
             id: uuidv1(),
             isValidFeature: true,
             geometryGeodesic: feature.geometry.type === 'LineString' ? {type: "LineString", coordinates: transformLineToArcs(feature.geometry.coordinates)} : null,
-            useGeodesicLines: feature.geometry.type === 'LineString'
+            useGeodesicLines: feature.geometry.type === 'LineString',
+            values: feature.properties?.values || []
         },
         style: [{
             ...DEFAULT_ANNOTATIONS_STYLES[feature.geometry.type],
@@ -91,6 +109,7 @@ const convertGeometryToGeoJSON = (feature, uom, measureValueStyle) => {
 };
 
 export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels, uom, id, description, measureValueStyle) => {
+    const measureProps = getMeasurementProps(geometricFeatures);
     return {
         type: "FeatureCollection",
         features: [
@@ -118,7 +137,10 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels, uom, id,
         ],
         properties: {
             id,
-            description
+            description,
+            title: measureProps.title,
+            type: 'Measure',
+            iconGlyph: measureProps.iconGlyph
         },
         style: {}
     };

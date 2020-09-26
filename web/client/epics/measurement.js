@@ -10,7 +10,7 @@ import Rx from 'rxjs';
 import uuidv1 from 'uuid/v1';
 
 import {convertMeasuresToGeoJSON} from '../utils/MeasurementUtils';
-import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER} from '../actions/measurement';
+import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, setMeasurementConfig} from '../actions/measurement';
 import {addLayer} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
 import {toggleControl, SET_CONTROL_PROPERTY} from '../actions/controls';
@@ -24,13 +24,17 @@ export const addAnnotationFromMeasureEpic = (action$) =>
         .switchMap((a) => {
             // transform measure feature into geometry collection
             // add feature property to manage text annotation with value and uom
-            const {features, textLabels, uom} = a;
-            const id = uuidv1();
-            const newFeature = convertMeasuresToGeoJSON(features, textLabels, uom, id, 'Annotations created from measurements', STYLE_TEXT);
+            const {features, textLabels, uom, save, id = uuidv1()} = a;
+            // const id = id ? uuidv1() : features[0].properties?.id;
+            const newFeature = {
+                ...convertMeasuresToGeoJSON(features, textLabels, uom, id, 'Annotations created from measurements', STYLE_TEXT),
+                newFeature: save
+            };
 
             return Rx.Observable.of(
                 toggleControl('annotations', null),
                 newAnnotation(),
+                setMeasurementConfig("exportToAnnotation", false),
                 setEditingFeature(newFeature)
             );
         });

@@ -692,6 +692,7 @@
             "trueBearingLabel": "True bearing",
             "formula": "Formula for distance calculation",
             "showLabel": "Show measurement label",
+            "saveMeasure": "Save measurement to annotation",
             "addAsAnnotation": "Add as annotation",
             "newMeasure": "New annotation",
             "selectTool": "Select a measurement tool",

@@ -13,7 +13,7 @@ const assign = require('object-assign');
 const {createSelector} = require('reselect');
 const Message = require('./locale/Message');
 const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, addAsLayer, init,
-    setCurrentFeature} = require('../actions/measurement');
+    setCurrentFeature, setMeasurementConfig} = require('../actions/measurement');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
@@ -100,7 +100,8 @@ const Measure = connect(
         onChangeCurrentFeature: setCurrentFeature,
         onClose: toggleMeasureTool,
         onMount: (showCoordinateEditor) => setControlProperty("measure", "showCoordinateEditor", showCoordinateEditor),
-        onAddAsLayer: addAsLayer
+        onAddAsLayer: addAsLayer,
+        onSetMeasurementConfig: setMeasurementConfig
     }, null, {pure: false})(MeasureDialog);
 
 module.exports = {

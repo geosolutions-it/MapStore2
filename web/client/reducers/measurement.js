@@ -17,12 +17,15 @@ const {
     CHANGE_FORMAT,
     CHANGE_COORDINATES,
     UPDATE_MEASURES,
-    INIT
+    INIT,
+    SET_MEASUREMENT_CONFIG,
+    SET_ANNOTATION_MEASUREMENT
 } = require('../actions/measurement');
 const {TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {set} = require('../utils/ImmutableUtils');
+const {getGeomTypeSelected} = require('../utils/MeasurementUtils');
 const {isPolygon} = require('../utils/openlayers/DrawUtils');
-const {dropRight} = require('lodash');
+const {dropRight, isEmpty} = require('lodash');
 
 const assign = require('object-assign');
 const defaultState = {
@@ -68,7 +71,8 @@ function measurement(state = defaultState, action) {
             currentFeature: state.features && state.features.length || 0,
             len: 0,
             area: 0,
-            bearing: 0
+            bearing: 0,
+            ...(action.geomType === null && {exportToAnnotation: false})
         });
     }
     case CHANGE_MEASUREMENT_STATE: {
@@ -128,11 +132,34 @@ function measurement(state = defaultState, action) {
     }
     case CHANGED_GEOMETRY: {
         let {features} = action;
+        const geomTypeSelected = getGeomTypeSelected(features);
         return {
             ...state,
             features,
+            geomTypeSelected,
             updatedByUI: false,
-            isDrawing: false
+            isDrawing: false,
+            ...(isEmpty(features) && {exportToAnnotation: false})
+        };
+    }
+    case SET_MEASUREMENT_CONFIG: {
+        let {property, value} = action;
+        return {
+            ...state,
+            [property]: value
+        };
+    }
+    case SET_ANNOTATION_MEASUREMENT: {
+        let {features} = action;
+        const geomTypeSelected = getGeomTypeSelected(features);
+        return {
+            ...state,
+            features,
+            geomTypeSelected,
+            updatedByUI: true,
+            isDrawing: false,
+            exportToAnnotation: true,
+            id: action.id
         };
     }
     case SET_TEXT_LABELS: {
@@ -148,10 +175,11 @@ function measurement(state = defaultState, action) {
         };
     }
     case TOGGLE_CONTROL: {
+        const {id, ...newState} = state;
         // TODO: remove this when the controls will be able to be mutually exclusive
         if (action.control === 'info') {
             return {
-                ...state,
+                ...newState,
                 len: 0,
                 area: 0,
                 bearing: 0,
@@ -166,7 +194,7 @@ function measurement(state = defaultState, action) {
         }
         if (action.control === 'measure') {
             return {
-                ...state,
+                ...newState,
                 geomType: "",
                 lineMeasureEnabled: false,
                 areaMeasureEnabled: false,
