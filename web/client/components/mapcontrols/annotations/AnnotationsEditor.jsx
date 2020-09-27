@@ -418,7 +418,7 @@ class AnnotationsEditor extends React.Component {
             return null;
         }
         const editMeasure = this.props.editing?.properties?.type === "Measure" || false;
-        console.log("editing?.properties?.type", editing);
+
         return (<div className={"mapstore-annotations-info-viewer-items" + (this.props.styling ? " mapstore-annotations-info-viewer-styler" : "")}>
             <div>
                 {items}
@@ -441,7 +441,7 @@ class AnnotationsEditor extends React.Component {
                 />
                 }
                 {
-                    editMeasure && <Button className="btn btn-primary" onClick={()=> {
+                    editMeasure && <Button className="btn btn-primary measure" onClick={()=> {
                         const editProperties = this.props.editing?.properties;
                         // Excluding geometry of type Point as they are labels of measurement
                         const features = editProperties?.type === 'Measure' && this.props.editing.features.filter(f=> f.geometry.type !== 'Point');

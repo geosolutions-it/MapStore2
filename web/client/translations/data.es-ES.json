@@ -696,6 +696,7 @@
             "newMeasure": "Nueva anotación",
             "selectTool": "Seleccione una herramienta de medición",
             "exportToGeoJSON": "Exportar a GeoJSON",
+            "saveMeasure": "Guardar la medición en la anotación",
             "resetTooltip": "Medidas claras",
             "addAsLayer": "Agregar como capa"
         },

@@ -696,6 +696,7 @@
             "newMeasure": "Nuova annotazione",
             "selectTool": "Seleziona uno strumento di misura",
             "exportToGeoJSON": "Esporta in GeoJSON",
+            "saveMeasure": "Salva la misurazione nell'annotazione",
             "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello"
         },

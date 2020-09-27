@@ -45,15 +45,7 @@ const FeaturesList = (props) => {
     };
     return (
         <>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                backgroundColor: '#ffffff',
-                position: 'sticky',
-                top: 0,
-                zIndex: 10
-            }}>
+            <div className={'geometries-toolbar'}>
                 <ControlLabel><Message msgId={"annotations.geometries"}/></ControlLabel>
                 <Toolbar
                     btnDefaultProps={{

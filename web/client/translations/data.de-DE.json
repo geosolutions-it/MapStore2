@@ -696,6 +696,7 @@
             "newMeasure": "Neue Anmerkung",
             "selectTool": "Wählen Sie ein Messwerkzeug aus",
             "exportToGeoJSON": "Export nach GeoJSON",
+            "saveMeasure": "Speichern Sie die Messung in einer Anmerkung",
             "resetTooltip": "Klare Maßnahmen",
             "addAsLayer": "Als Ebene hinzufügen"
         },

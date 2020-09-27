@@ -32,7 +32,6 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
 
 const uuidv1 = require('uuid/v1');
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
-const {changeMeasurement} = require('../actions/measurement');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
 const {head, findIndex, castArray, isArray, find, isUndefined, values} = require('lodash');
@@ -265,8 +264,7 @@ module.exports = (viewer) => ({
                     changeDrawingStatus("drawOrEdit", CONFIRM_REMOVE_ANNOTATION, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
                 ]);
             }
-            const annotationFeatures = annotationsLayerSelector(store.getState()).features;
-            const newFeatures = annotationFeatures.filter(f => f.properties.id !== action.id);
+            const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);
             return Rx.Observable.from([
                 updateNode('annotations', 'layer', {
                     features: newFeatures

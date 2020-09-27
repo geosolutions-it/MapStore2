@@ -14,7 +14,9 @@ const {
     changeFormatMeasurement,
     resetGeometry,
     updateMeasures,
-    init
+    init,
+    setAnnotationMeasurement,
+    setMeasurementConfig
 } = require('../../actions/measurement');
 const {RESET_CONTROLS, setControlProperty} = require('../../actions/controls');
 
@@ -127,6 +129,33 @@ describe('Test the measurement reducer', () => {
         expect(state.len).toEqual(12430);
         expect(state.area).toEqual(0);
         expect(state.geomType).toEqual("LineString");
+    });
+    it('SET_ANNOTATION_MEASUREMENT', () => {
+        let state = measurement({
+            geomType: "LineString",
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            len: 0,
+            area: 700
+        }, setAnnotationMeasurement([{type: 'Feature', geometry: {type: 'LineString'}}], 1));
+        expect(state.features).toEqual([{type: 'Feature', geometry: {type: 'LineString'}}]);
+        expect(state.geomTypeSelected).toEqual(['LineString']);
+        expect(state.updatedByUI).toBe(true);
+        expect(state.exportToAnnotation).toBe(true);
+        expect(state.id).toEqual(1);
+        expect(state.geomType).toEqual("LineString");
+    });
+    it('SET_MEASUREMENT_CONFIG', () => {
+        let state = measurement({
+            geomType: "LineString",
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            len: 0,
+            area: 700
+        }, setMeasurementConfig("exportToAnnotation", true));
+        expect(state.exportToAnnotation).toBe(true);
     });
 
 });

@@ -20,7 +20,7 @@ const getFormattedValue = (uom, value) => ({
 });
 
 const getMeasurementProps = (features) =>{
-    const geomTypes = uniq(features.map(f=> f.properties?.values[0]?.type || ''));
+    const geomTypes = uniq(features.map(f=> get(f, "properties.values[0].type", '')));
     if (geomTypes.length > 1) {
         return {title: 'Multiple Measurement', iconGlyph: 'geometry-collection'};
     }
@@ -29,7 +29,7 @@ const getMeasurementProps = (features) =>{
 
 export const getGeomTypeSelected = (features = []) =>{
     return uniq(features.map(f=> {
-        if (f.geometry.type === "LineString" && f.properties?.values[0]?.type === 'bearing') {
+        if (f.geometry.type === "LineString" && get(f, "properties.values[0].type", '') === 'bearing') {
             return 'Bearing';
         }
         return f.geometry.type;

@@ -89,8 +89,7 @@ class MeasureComponent extends React.Component {
         onMount: PropTypes.func,
         onUpdateOptions: PropTypes.func,
         showCoordinateEditor: PropTypes.bool,
-        isCoordinateEditorEnabled: PropTypes.bool,
-        onSetMeasurementConfig: PropTypes.func
+        isCoordinateEditorEnabled: PropTypes.bool
     };
 
     static contextTypes = {
@@ -289,7 +288,7 @@ class MeasureComponent extends React.Component {
             coords = (get(feature, geomType.indexOf('polygon') !== -1 ? 'geometry.coordinates[0]' : 'geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
         }
 
-        const {exportToAnnotation = false, geomTypeSelected = []} = this.props.measurement;
+        const {exportToAnnotation = false, geomTypeSelected = []} = this.props.measurement || {};
 
         return (
             <BorderLayout

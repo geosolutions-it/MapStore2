@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 import uuidv1 from 'uuid/v1';
 
-import {convertMeasuresToGeoJSON} from '../utils/MeasurementUtils';
+import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../utils/MeasurementUtils';
 import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, SET_ANNOTATION_MEASUREMENT, setMeasurementConfig, changeMeasurement} from '../actions/measurement';
 import {addLayer, changeLayerProperties} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
@@ -18,7 +18,6 @@ import {closeFeatureGrid} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {showCoordinateEditorSelector} from '../selectors/controls';
 import {newAnnotation, setEditingFeature} from '../actions/annotations';
-import {getGeomTypeSelected} from '../utils/MeasurementUtils';
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -26,7 +25,6 @@ export const addAnnotationFromMeasureEpic = (action$) =>
             // transform measure feature into geometry collection
             // add feature property to manage text annotation with value and uom
             const {features, textLabels, uom, save, id = uuidv1()} = a;
-            // const id = id ? uuidv1() : features[0].properties?.id;
             const newFeature = {
                 ...convertMeasuresToGeoJSON(features, textLabels, uom, id, 'Annotations created from measurements', STYLE_TEXT),
                 newFeature: save
@@ -69,7 +67,7 @@ export const openMeasureEpic = (action$, store) =>
 export const setMeasureStateFromAnnotationEpic = (action$) =>
     action$.ofType(SET_ANNOTATION_MEASUREMENT)
         .switchMap(({features}) => {
-            return Rx.Observable.of(changeMeasurement({geomType: getGeomTypeSelected(features)}),
+            return Rx.Observable.of(changeMeasurement({geomType: getGeomTypeSelected(features)?.[0]}),
                 setControlProperty("measure", "enabled", true),
                 setControlProperty("annotations", "enabled", false));
         });

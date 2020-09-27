@@ -149,14 +149,6 @@ export default class MeasurementSupport extends React.Component {
         }
     }
 
-    showHideMeasureTooltips = (display) => {
-        const textLabelElements = document.getElementsByClassName("ol-overlay-container");
-        for (let i = 0; i < textLabelElements.length; i++) {
-            textLabelElements[i].style.display = display;
-        }
-    }
-
-
     getLength = (coords, props) => {
         if (props.measurement.geomType === 'Bearing' && coords.length > 1) {
             // calculate the azimuth as base for bearing information
@@ -171,18 +163,6 @@ export default class MeasurementSupport extends React.Component {
     }
 
     render() {
-        console.log("this.measureTooltipElements", this.measureTooltipElements);
-        console.log("this.measureTooltipsLength", this.measureTooltipsLength);
-        console.log("this.segmentOverlayElements", this.segmentOverlayElements);
-        console.log("this.segmentOverlaysLength", this.segmentOverlaysLength);
-        console.log("this.segmentOverlays", this.segmentOverlays);
-        console.log("this.segmentLengths", this.segmentLengths);
-        console.log("this.textLabels", this.textLabels);
-        console.log("this.measureLayer", this.measureLayer);
-        console.log("this.source", this.source);
-        console.log("this.helpTooltip", this.helpTooltip);
-        console.log("this.measureTooltips", this.measureTooltips);
-        console.log("this.outputValues", this.outputValues);
         return null;
     }
 
@@ -1022,5 +1002,12 @@ export default class MeasurementSupport extends React.Component {
         })).then(()=>{
             this.updateFeatures(props);
         });
+    }
+
+    showHideMeasureTooltips = (display) => {
+        const textLabelElements = document.getElementsByClassName("ol-overlay-container");
+        for (let i = 0; i < textLabelElements.length; i++) {
+            textLabelElements[i].style.display = display;
+        }
     }
 }
