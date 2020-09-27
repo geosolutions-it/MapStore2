@@ -315,13 +315,13 @@ describe("test the SearchBar", () => {
     });
 
     it('test showOptions false, only address tool visible', () => {
-        ReactDOM.render(<SearchBar showOptions={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
-        let reset = document.getElementsByClassName("glyphicon-search")[0];
-        let cog = document.getElementsByClassName("glyphicon-cog");
-        let zoom = document.getElementsByClassName("glyphicon-zoom-to");
-        expect(reset).toExist();
-        expect(cog.length).toBe(0);
-        expect(zoom.length).toBe(0);
+        ReactDOM.render(<SearchBar splitTools showOptions={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let menu = document.getElementsByClassName("glyphicon-menu-hamburger");
+        let search = document.getElementsByClassName("glyphicon-search");
+        let options = document.getElementsByClassName("glyphicon-cog");
+        expect(menu.length).toBe(0);
+        expect(search.length).toBe(1);
+        expect(options.length).toBe(0);
     });
 
     it('test default coordinate format from localConfig', () => {
