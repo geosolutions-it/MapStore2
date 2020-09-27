@@ -286,7 +286,7 @@ export default class MeasurementSupport extends React.Component {
         this.source.addFeatures(geometries.filter(g => !!g).map(geometry => new Feature({geometry})));
         const tempTextLabels = [...this.textLabels];
         newFeatures.map((newFeature) => {
-            const isBearing = !!newFeature.properties.values.find(val=>val.type === 'bearing');
+            const isBearing = !!newFeature.properties?.values?.find(val=>val.type === 'bearing');
             newFeature.geometry = newFeature.geometry || {};
             const isPolygon = newFeature.geometry.type === "Polygon";
             const sliceVal = (isPolygon || isBearing) ? 0 : 1;
@@ -324,6 +324,10 @@ export default class MeasurementSupport extends React.Component {
             }
             return this.formatLengthValue(value, props.uom, true, props.measurement.trueBearing);
         };
+
+        this.outputValues = this.outputValues || [];
+        this.segmentOverlayElements = this.segmentOverlayElements || [];
+        this.textLabels = this.textLabels || [];
 
         for (let i = 0; i < this.outputValues.length; ++i) {
             if (!this.outputValues[i]) continue;
