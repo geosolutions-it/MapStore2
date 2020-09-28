@@ -278,6 +278,11 @@
             display: table-cell;
             vertical-align: middle;
         }
+        .coordinateRow.aeronautical{
+            .input-group-addon {
+                padding: 4px 6px;
+            }
+        }
     }
     .mapstore-annotations-info-viewer-items {
         padding: 8px;
@@ -447,8 +452,11 @@
                 .input-group {
                     flex: 1;
                     padding: 4px 0;
-                    margin-right: 8px;
+                    margin-right: 2px;
                     .form-group{
+                        input#intl-numeric{
+                            float: unset;
+                        }
                         .minutes, .degrees {
                             min-width: 45px;
                             flex: 1;
@@ -457,7 +465,7 @@
                         .seconds {
                             display: flex;
                             flex: 1;
-                            min-width: 75px;
+                            min-width: 80px;
                         }
                     }
                 }
