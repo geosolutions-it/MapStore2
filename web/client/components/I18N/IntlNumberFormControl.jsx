@@ -9,7 +9,15 @@ const PropTypes = require('prop-types');
 const React = require('react');
 require('./css/formControlIntl.css');
 const NumericInput = require("react-numeric-input");
-
+/**
+ * Localized Numeric Input. It provides an numeric input value that uses
+ * separators (eg. ",",".") as they are used in the current selected language from context.
+ * @prop {string|number} value a numeric value
+ * @prop {string|number] defaultValue a value to use as default
+ * @prop {function} onChange handler of change event. the argument of this handler is the current value inserted.
+ * @prop {number} step the step when you click on arrows (up, down) of the input
+ * @prop {function} onBlur event handler on blur event
+ */
 class IntlNumberFormControl extends React.Component {
 
     static propTypes = {
