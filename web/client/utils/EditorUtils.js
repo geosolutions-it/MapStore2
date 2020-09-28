@@ -10,8 +10,10 @@ import { ContentState, EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 
+import { customGetEntityId, customEntityTransform } from './GeoStoryUtils';
+
 export const htmlToDraftJSEditorState = (html = '') => {
-    const contentBlock = htmlToDraft(html);
+    const contentBlock = htmlToDraft(html, null, customGetEntityId);
     const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
 
     return EditorState.createWithContent(contentState);
@@ -21,7 +23,7 @@ export const draftJSEditorStateToHtml = (editorState, emptyPlaceholder = '') => 
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     // it can happen that first block is empty, i.e. there is a carriage return
     const rawText = blocks.length === 1 ? convertToRaw(editorState.getCurrentContent()).blocks[0].text : true;
-    const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    const html = draftToHtml(convertToRaw(editorState.getCurrentContent()), null, null, customEntityTransform);
 
     return rawText ? html : emptyPlaceholder;
 };
