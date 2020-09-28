@@ -258,7 +258,7 @@
     }
 }
 
-.ms-modal-quill-container {
+.ms-details-quill-editor {
     min-height: 300px;
 
     .quill {
@@ -296,6 +296,46 @@
         }
     }
 
+}
+
+.ms-details-draftjs-editor {
+    min-height: 300px;
+    padding: 4px;
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .ms-text-editor-main {
+        flex-grow: 1;
+    }
+    .rdw-link-modal {
+        height: auto;
+    }
+    .ms-text-editor-main {
+        flex-grow: 1;
+        flex-basis: 0;
+
+        .rdw-image-left {
+            display: flex;
+            justify-content: left;
+            float: left;
+        }
+        .rdw-image-right {
+            display: flex;
+            justify-content: left;
+            float: right;
+        }
+        .rdw-image-center {
+            display: flex;
+            justify-content: left;
+            float: none;
+        }
+        .rdw-image-alignment {
+            z-index: 1
+        }
+    }
 }
 
 .modal-fixed {

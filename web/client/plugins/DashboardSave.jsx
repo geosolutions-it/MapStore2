@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
+import { compose, withProps } from 'recompose';
 import { createSelector } from 'reselect';
 import {Glyphicon} from 'react-bootstrap';
 import Message from '../components/I18N/Message';
@@ -32,6 +32,9 @@ const SaveBaseDialog = compose(
         (data, user, loading, errors ) => ({ data, user, loading, errors })
     ), {
         onSave: saveDashboard
+    }),
+    withProps({
+        category: "DASHBOARD"
     }),
     handleSaveModal
 )(require('../components/resources/modals/Save'));
@@ -80,7 +83,10 @@ export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
         {
             onClose: () => triggerSaveAs(false)
         }
-        ))(SaveBaseDialog),
+        ),
+        withProps({
+            isNewResource: true
+        }))(SaveBaseDialog),
     reducers: {dashboard},
     options: {
         disablePluginIf: "{!!(state('browser') && state('browser').mobile)}"

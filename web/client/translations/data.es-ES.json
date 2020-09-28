@@ -449,7 +449,9 @@
                 "delete": "Eliminar hoja de detalles",
                 "titleUnsavedChanges": "¿Estás seguro de cerrar sin guardar los cambios?",
                 "sureToClose": "¿Estás seguro de cerrar sin guardar los cambios?",
-                "fieldsChanged": "Algunos campos han sido modificados"
+                "fieldsChanged": "Algunos campos han sido modificados",
+                "showAtStartup": "Mostrar al inicio",
+                "showAsModal": "Mostrar como modal"
             },
             "errors": {
                 "loading": {

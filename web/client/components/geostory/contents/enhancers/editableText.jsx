@@ -8,9 +8,7 @@
 import React from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+import { EditorState, Modifier, RichUtils } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
 
@@ -18,12 +16,11 @@ import {
     EMPTY_CONTENT,
     SectionTypes,
     ContentTypes,
-    customGetEntityId,
-    customEntityTransform,
     DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
 
 import LayoutComponent from '../texteditor/CustomEditorLink';
 import getLinkDecorator from '../texteditor/getLinkDecorator';
+import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../../utils/EditorUtils';
 
 /**
  * HOC that adds WYSIWYG editor to a content. The editor will replace the component when activated, and it will be activated again when
@@ -34,6 +31,94 @@ import getLinkDecorator from '../texteditor/getLinkDecorator';
  *    - `html`: the html with the editing have to be initialized.
  *
  */
+export const withEditorBase = compose(
+    withProps(({ sections = []}) => {
+        // flatten out the story sections adding to them columns as if they were also sections such that
+        // both sections and columns can be scrolled to
+        const availableStorySections = sections.reduce((availableSections, section) => {
+            const s = [];
+            s.push(section);
+            if (section.type === SectionTypes.PARAGRAPH || section.type === SectionTypes.IMMERSIVE) {
+                const contents = section.contents;
+                contents.forEach((c) => {
+                    if (c.type === ContentTypes.COLUMN) {
+                        s.push(c);
+                    }
+                });
+            }
+
+            return [...availableSections, ...s];
+
+        }, []);
+        return {
+            availableStorySections
+        };
+
+    }),
+    // default properties for editor
+    withProps(({ availableStorySections = [], storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor", toolbar = {}}) => {
+        const fonts = storyFonts.length > 0 ? storyFonts : DEFAULT_FONT_FAMILIES;
+        return ({
+            editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
+            stripPastedStyles: true,
+            placeholder,
+            toolbarStyle,
+            toolbar: {
+                // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
+                options: ['fontFamily', 'blockType', 'fontSize', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
+                fontFamily: {
+                    options: fonts,
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: undefined
+                },
+                link: {
+                    inDropdown: false,
+                    className: undefined,
+                    component: (props) => <LayoutComponent {...props} availableStorySections={availableStorySections} />,
+                    popupClassName: undefined,
+                    dropdownClassName: undefined,
+                    showOpenOptionOnHover: true,
+                    defaultTargetOption: '_self',
+                    options: ['link', 'unlink'],
+                    link: { icon: undefined, className: undefined },
+                    unlink: { icon: undefined, className: undefined },
+                    linkCallback: undefined,
+                    getLinkDecorator
+                },
+                blockType: {
+                    inDropdown: true,
+                    options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: undefined
+                },
+                inline: {
+                    options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
+                    bold: { className: `${className}-toolbar-btn` },
+                    italic: { className: `${className}-toolbar-btn` },
+                    underline: { className: `${className}-toolbar-btn` },
+                    strikethrough: { className: `${className}-toolbar-btn` },
+                    code: { className: `${className}-toolbar-btn` }
+                },
+                textAlign: {
+                    left: { className: `${className}-toolbar-btn` },
+                    center: { className: `${className}-toolbar-btn` },
+                    right: { className: `${className}-toolbar-btn` },
+                    justify: { className: `${className}-toolbar-btn` }
+                },
+                colorPicker: { className: `${className}-toolbar-btn` },
+                remove: { className: `${className}-toolbar-btn` },
+                ...toolbar
+            },
+            toolbarClassName: `${className}-toolbar`,
+            wrapperClassName: `${className}-wrapper`,
+            editorClassName: `${className}-main`
+        });
+    }),
+    renderComponent(Editor)
+);
+
 export default compose(
     withState('contentEditing', 'setContentEditing', false),
     withState('editorState', 'onEditorStateChange'),
@@ -43,11 +128,10 @@ export default compose(
                 setContentEditing(false);
                 bubblingTextEditing(false);
             } else {
-                const contentBlock = htmlToDraft(html, null, customGetEntityId);
-                let contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-                let editorState = EditorState.createWithContent(contentState);
+                let editorState = htmlToDraftJSEditorState(html);
                 // Updating blockType for TITLES when opening an empty text editor
-                if ( sectionType === SectionTypes.TITLE && RichUtils.getCurrentBlockType(editorState) === "unstyled") {
+                if (sectionType === SectionTypes.TITLE && RichUtils.getCurrentBlockType(editorState) === "unstyled") {
+                    let contentState = editorState.getCurrentContent();
                     contentState = Modifier.setBlockType(contentState, EditorState.createWithContent(contentState).getSelection(), "header-one");
                     editorState = EditorState.createWithContent(contentState);
                 }
@@ -63,12 +147,8 @@ export default compose(
             lifecycle({
                 componentWillUnmount() {
                     const {editorState, save = () => {}} = this.props;
-                    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-                    // it can happen that first block is empty, i.e. there is a carriage return
-                    const rawText = blocks.length === 1 ? convertToRaw(editorState.getCurrentContent()).blocks[0].text : true;
-                    const html = draftToHtml(convertToRaw(editorState.getCurrentContent()), null, null, customEntityTransform);
                     // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
-                    save(rawText ? html : EMPTY_CONTENT);
+                    save(draftJSEditorStateToHtml(editorState, EMPTY_CONTENT));
                 }
             }),
             withHandlers({
@@ -76,91 +156,7 @@ export default compose(
                     toggleEditing(false);
                 }
             }),
-            withProps(({ sections = []}) => {
-                // flatten out the story sections adding to them columns as if they were also sections such that
-                // both sections and columns can be scrolled to
-                const availableStorySections = sections.reduce((availableSections, section) => {
-                    const s = [];
-                    s.push(section);
-                    if (section.type === SectionTypes.PARAGRAPH || section.type === SectionTypes.IMMERSIVE) {
-                        const contents = section.contents;
-                        contents.forEach((c) => {
-                            if (c.type === ContentTypes.COLUMN) {
-                                s.push(c);
-                            }
-                        });
-                    }
-
-                    return [...availableSections, ...s];
-
-                }, []);
-                return {
-                    availableStorySections
-                };
-
-            }),
-            // default properties for editor
-            withProps(({ availableStorySections = [], storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => {
-                const fonts = storyFonts.length > 0 ? storyFonts : DEFAULT_FONT_FAMILIES;
-                return ({
-                    editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
-                    stripPastedStyles: true,
-                    placeholder,
-                    toolbarStyle,
-                    toolbar: {
-                        // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
-                        options: ['fontFamily', 'blockType', 'fontSize', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
-                        fontFamily: {
-                            options: fonts,
-                            className: undefined,
-                            component: undefined,
-                            dropdownClassName: undefined
-                        },
-                        link: {
-                            inDropdown: false,
-                            className: undefined,
-                            component: (props) => <LayoutComponent {...props} availableStorySections={availableStorySections} />,
-                            popupClassName: undefined,
-                            dropdownClassName: undefined,
-                            showOpenOptionOnHover: true,
-                            defaultTargetOption: '_self',
-                            options: ['link', 'unlink'],
-                            link: { icon: undefined, className: undefined },
-                            unlink: { icon: undefined, className: undefined },
-                            linkCallback: undefined,
-                            getLinkDecorator
-                        },
-                        blockType: {
-                            inDropdown: true,
-                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
-                            className: undefined,
-                            component: undefined,
-                            dropdownClassName: undefined
-                        },
-                        inline: {
-                            options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
-                            bold: { className: `${className}-toolbar-btn` },
-                            italic: { className: `${className}-toolbar-btn` },
-                            underline: { className: `${className}-toolbar-btn` },
-                            strikethrough: { className: `${className}-toolbar-btn` },
-                            code: { className: `${className}-toolbar-btn` }
-                        },
-                        textAlign: {
-                            left: { className: `${className}-toolbar-btn` },
-                            center: { className: `${className}-toolbar-btn` },
-                            right: { className: `${className}-toolbar-btn` },
-                            justify: { className: `${className}-toolbar-btn` }
-                        },
-                        colorPicker: { className: `${className}-toolbar-btn` },
-                        remove: { className: `${className}-toolbar-btn` },
-                        ...toolbar
-                    },
-                    toolbarClassName: `${className}-toolbar`,
-                    wrapperClassName: `${className}-wrapper`,
-                    editorClassName: `${className}-main`
-                });
-            }),
-            renderComponent(Editor)
+            withEditorBase
         )
     )
 );

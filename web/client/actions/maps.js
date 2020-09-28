@@ -458,11 +458,12 @@ function closeDetailsPanel() {
  * @memberof actions.maps
  * @return {action}        type `DETAILS_LOADED`
 */
-function detailsLoaded(mapId, detailsUri) {
+function detailsLoaded(mapId, detailsUri, detailsSettings) {
     return {
         type: DETAILS_LOADED,
         mapId,
-        detailsUri
+        detailsUri,
+        detailsSettings
     };
 }
 /**

@@ -116,8 +116,8 @@
               "legendPreview": "Vorschau"
             },
             "enableLocalizedLayerStyles": {
-                "label": "Schakel gelokaliseerde stijl in",
-                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+                "label": "Lokalisierten Stil aktivieren",
+                "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
             }
         },
         "longitude": "Lon",
@@ -449,7 +449,9 @@
                 "delete": "Löschen Sie das Detailblatt",
                 "titleUnsavedChanges": "Sind Sie sicher, dass Sie schließen wollen, ohne Ihre Änderungen zu speichern?",
                 "sureToClose": "Sind Sie sicher, dass Sie schließen wollen, ohne Ihre Änderungen zu speichern?",
-                "fieldsChanged": "Einige Felder wurden geändert"
+                "fieldsChanged": "Einige Felder wurden geändert",
+                "showAtStartup": "Beim Start anzeigen",
+                "showAsModal": "Als modal anzeigen"
             },
             "errors": {
                 "loading": {
@@ -1377,8 +1379,8 @@
             },
             "backgroundAlreadyAdded": "Zur Hintergrundauswahl hinzugefügt",
             "enableLocalizedLayerStyles": {
-                "label": "Schakel gelokaliseerde stijlen in",
-                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+                "label": "Lokalisierten Stil aktivieren",
+                "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
             }
         },
         "uploader": {

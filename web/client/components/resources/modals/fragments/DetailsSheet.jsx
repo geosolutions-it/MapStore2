@@ -7,32 +7,23 @@
  */
 
 import React from 'react';
-import Spinner from 'react-spinkit';
-import ReactQuill from 'react-quill';
-import { isNil } from 'lodash';
 
 import ResizableModal from '../../../misc/ResizableModal';
 import Portal from '../../../misc/Portal';
 import Message from '../../../I18N/Message';
 
-import 'react-quill/dist/quill.snow.css';
+import DetailsViewer from './DetailsViewer';
 
 export default ({
+    children,
     loading = false,
     show = false,
     readOnly = false,
     title,
     detailsText,
-    modules = {
-        toolbar: [
-            [{ 'size': ['small', false, 'large', 'huge'] }, 'bold', 'italic', 'underline', 'blockquote'],
-            [{ 'list': 'bullet' }, { 'align': [] }],
-            [{ 'color': [] }, { 'background': [] }, 'clean'], ['image', 'link']
-        ]
-    },
+    bodyClassName,
     onClose = () => {},
-    onSave = () => {},
-    onUpdate = () => {}
+    onSave = () => {}
 }) => {
     return (
         <Portal>
@@ -43,19 +34,12 @@ export default ({
                     title={<Message msgId="map.details.title" msgParams={{ name: title }} />}
                     show={show}
                 >
-                    <div className="ms-detail-body">
-                        {loading ?
-                            <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> :
-                            isNil(detailsText) ?
-                                <div className="ql-editor"><Message msgId="maps.feedback.noDetailsAvailable"/></div> :
-                                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailsText || '' }}/>
-                        }
-                    </div>
+                    <DetailsViewer className="ms-detail-body" textContainerClassName="ql-editor" loading={loading} detailsText={detailsText}/>
                 </ResizableModal>
             ) : (<ResizableModal
                 show={show}
                 title={<Message msgId="map.details.title" msgParams={{ name: title }} />}
-                bodyClassName="ms-modal-quill-container"
+                bodyClassName={bodyClassName}
                 size="lg"
                 clickOutEnabled={false}
                 showFullscreen
@@ -68,17 +52,7 @@ export default ({
                     text: <Message msgId="map.details.save" />,
                     onClick: () => onSave(detailsText)
                 }]}>
-                <div id="ms-details-editor">
-                    <ReactQuill
-                        bounds={"#ms-details-editor"}
-                        value={detailsText || '<p><br></p>'}
-                        onChange={(details) => {
-                            if (details && details !== '<p><br></p>') {
-                                onUpdate(details);
-                            }
-                        }}
-                        modules={modules} />
-                </div>
+                {children}
             </ResizableModal>)}
         </Portal>
     );

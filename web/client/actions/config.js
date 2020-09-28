@@ -17,6 +17,7 @@ const MAP_INFO_LOADED = 'MAP_INFO_LOADED';
 const MAP_INFO_LOAD_ERROR = 'MAP_INFO_LOAD_ERROR';
 const MAP_SAVE_ERROR = 'MAP:MAP_SAVE_ERROR';
 const MAP_SAVED = 'MAP:MAP_SAVED';
+const RESET_MAP_SAVE_ERROR = 'MAP:RESET_MAP_SAVE_ERROR';
 
 /**
  * Configure the viewer to display the map
@@ -99,6 +100,8 @@ const mapSaveError = error => ({type: MAP_SAVE_ERROR, error});
 
 const mapSaved = (resourceId) => ({type: MAP_SAVED, resourceId});
 
+const resetMapSaveError = () => ({type: RESET_MAP_SAVE_ERROR});
+
 module.exports = {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
@@ -110,6 +113,7 @@ module.exports = {
     MAP_INFO_LOAD_ERROR,
     MAP_SAVE_ERROR,
     MAP_SAVED,
+    RESET_MAP_SAVE_ERROR,
     loadNewMap,
     loadMapConfig,
     loadMapInfo,
@@ -119,5 +123,6 @@ module.exports = {
     mapInfoLoadError,
     mapInfoLoadStart,
     mapSaveError,
-    mapSaved
+    mapSaved,
+    resetMapSaveError
 };

@@ -214,5 +214,10 @@ describe("test the SearchResultList", () => {
         const button = document.getElementById('open-gfi');
         expect(button).toExist();
         expect(button.getAttribute('disabled')).toBe('');
+
+        TestUtils.Simulate.mouseOver(button);
+
+        const tooltip = document.getElementById('tooltip-open-gfi');
+        expect(tooltip).toExist();
     });
 });

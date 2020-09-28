@@ -8,6 +8,8 @@
 import expect from 'expect';
 
 import defaultSettingsTabs, { getStyleTabPlugin } from '../defaultSettingsTabs';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 const BASE_STYLE_TEST_DATA = {
     settings: {},
@@ -70,5 +72,50 @@ describe('TOCItemsSettings - getStyleTabPlugin', () => {
             const items = defaultSettingsTabs(BASE_STYLE_TEST_DATA);
             expect(items.length).toBe(1);
         }
+    });
+});
+
+describe('TOCItemsSettings - getStyleTabPlugin rendered items', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
+        setTimeout(done);
+    });
+
+    it('getStyleTabPlugin with StyleEditor toolbar and cfg configuration', () => {
+        const DEFAULT_TEST_PARAMS = {
+            ...BASE_STYLE_TEST_DATA,
+            items: [{
+                ToolbarComponent: ({ enableSetDefaultStyle }) => (
+                    <div className="test-toolbar">
+                        {enableSetDefaultStyle ? 'enableSetDefaultStyle' : ''}
+                    </div>
+                ),
+                cfg: {
+                    enableSetDefaultStyle: true
+                },
+                items: [],
+                name: 'StyleEditor',
+                plugin: () => <div></div>,
+                priority: 1,
+                target: 'style'
+            }]
+        };
+
+        const Toolbar = getStyleTabPlugin(DEFAULT_TEST_PARAMS).toolbarComponent;
+        expect(Toolbar).toBeTruthy();
+
+        ReactDOM.render(<Toolbar />, document.getElementById('container'));
+
+        const toolbarNode = document.querySelector('.test-toolbar');
+
+        expect(toolbarNode).toBeTruthy();
+        expect(toolbarNode.innerHTML).toBe('enableSetDefaultStyle');
+
     });
 });

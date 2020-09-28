@@ -449,7 +449,9 @@
                 "delete": "Delete details sheet",
                 "titleUnsavedChanges": "Are you sure to close without save your changes?",
                 "sureToClose": "Are you sure to close without save your changes?",
-                "fieldsChanged": "Some attributes has been changed"
+                "fieldsChanged": "Some attributes has been changed",
+                "showAtStartup": "Show at startup",
+                "showAsModal": "Show as modal"
             },
             "errors": {
                 "loading": {

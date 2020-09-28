@@ -32,7 +32,7 @@ describe('DetailsSheet component', () => {
         const onCloseSpy = expect.spyOn(handlers, 'onClose');
         const onSaveSpy = expect.spyOn(handlers, 'onSave');
 
-        ReactDOM.render(<DetailsSheet show onClose={handlers.onClose} onSave={handlers.onSave}/>, document.getElementById('container'));
+        ReactDOM.render(<DetailsSheet show onClose={handlers.onClose} onSave={handlers.onSave}><div id="ms-details-editor"/></DetailsSheet>, document.getElementById('container'));
 
         const detailsEditor = document.getElementById('ms-details-editor');
         expect(detailsEditor).toExist();
