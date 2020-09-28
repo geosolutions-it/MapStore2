@@ -219,7 +219,6 @@ describe('measurement epics', () => {
             NUMBER_OF_ACTIONS, [
                 setAnnotationMeasurement([{type: 'Feature', geometry: {type: "LineString"}, properties: {id: 1}}], 1)
             ], actions => {
-                console.log(JSON.stringify(actions));
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 expect(actions[1].type).toBe("SET_CONTROL_PROPERTY");
                 expect(actions[1].control).toBe("measure");
