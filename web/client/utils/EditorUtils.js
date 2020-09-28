@@ -12,7 +12,7 @@ import htmlToDraft from 'html-to-draftjs';
 
 // customGetEntityId is a utility function used by html-to-draftjs library in order
 // to create anhor tag chunks
-const customGetEntityId = (node) => {
+export const customGetEntityId = (node) => {
     let entityId = undefined;
     if (
         node instanceof HTMLAnchorElement
@@ -57,7 +57,7 @@ const customGetEntityId = (node) => {
 
 // customEntityTransform is a utility function used by draftjs-to-html inorder to create html from
 // entities in draftjs
-const customEntityTransform = (entity, text) => {
+export const customEntityTransform = (entity, text) => {
     if (entity.type === 'MENTION') {
         return `< href="${entity.data.url}" class="wysiwyg-mention" data-mention data-value="${entity.data.value}">${text}</a>`;
     }
