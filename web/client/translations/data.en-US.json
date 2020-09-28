@@ -1077,6 +1077,7 @@
             "deleteFeature": "Delete this feature",
             "undoDeleteFeature": "Are you sure to delete this feature?",
             "enableEdit": "Enable edit",
+            "editMeasurement": "Edit Measurement",
             "title": "Annotations",
             "zoomTo": "Zoom to annotation",
             "zoomToGeometry": "Zoom to geometry",

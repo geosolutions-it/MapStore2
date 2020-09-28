@@ -366,7 +366,6 @@ class Annotations extends React.Component {
             defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
             defaultStyles={this.props.defaultStyles}
             textRotationStep={this.props.textRotationStep}
-            toggleControl={this.props.toggleControl}
         />;
     };
 

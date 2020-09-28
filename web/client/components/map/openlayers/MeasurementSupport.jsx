@@ -85,7 +85,6 @@ export default class MeasurementSupport extends React.Component {
      * we assume that only valid features are passed to the draw tools
      */
     UNSAFE_componentWillReceiveProps(newProps) {
-
         if (this.measureTooltipElements && newProps.measurement.showLabel !== this.props.measurement.showLabel) {
             for (let i = 0; i < this.measureTooltipElements.length; ++i) {
                 if (this.measureTooltipElements[i]) {
@@ -109,10 +108,8 @@ export default class MeasurementSupport extends React.Component {
             (newProps.measurement.geomType && (newProps.measurement.lineMeasureEnabled || newProps.measurement.areaMeasureEnabled || newProps.measurement.bearingMeasureEnabled) && !this.props.enabled && newProps.enabled) ) {
             this.restoreDrawState();
             this.addDrawInteraction(newProps);
-            this.measureLayer.setVisible(true);
-            this.showHideMeasureTooltips('');
         }
-        if (!newProps.measurement.geomType && !newProps.measurement?.exportToAnnotation) {
+        if (!newProps.measurement.geomType) {
             this.removeDrawInteraction();
             this.removeMeasureTooltips();
             this.removeSegmentLengthOverlays();
@@ -131,10 +128,6 @@ export default class MeasurementSupport extends React.Component {
                 this.source.clear();
                 this.source = null;
             }
-        } else if (!newProps.measurement.geomType && newProps.measurement?.exportToAnnotation) {
-            this.measureLayer.setVisible(false);
-            this.showHideMeasureTooltips('none');
-            this.removeDrawInteraction();
         }
         let oldFt = this.props.measurement.features;
         let newFt = newProps.measurement.features;
@@ -143,11 +136,12 @@ export default class MeasurementSupport extends React.Component {
          * then update the stae with only the new measures calculated
          */
         if (newProps.measurement.updatedByUI && !isEqual(oldFt, newFt)) {
-            this.restoreMeasurementState(newProps);
+            this.updateFeatures(newProps);
         } else if (newProps.measurement.updatedByUI && !isEqual(this.props.uom, newProps.uom)) {
             this.updateMeasures(newProps);
         }
     }
+
 
     getLength = (coords, props) => {
         if (props.measurement.geomType === 'Bearing' && coords.length > 1) {
@@ -292,7 +286,7 @@ export default class MeasurementSupport extends React.Component {
         this.source.addFeatures(geometries.filter(g => !!g).map(geometry => new Feature({geometry})));
         const tempTextLabels = [...this.textLabels];
         newFeatures.map((newFeature) => {
-            const isBearing = !!newFeature.properties.values.find(val=>val.type === 'bearing');
+            const isBearing = !!newFeature.properties?.values?.find(val=>val.type === 'bearing');
             newFeature.geometry = newFeature.geometry || {};
             const isPolygon = newFeature.geometry.type === "Polygon";
             const sliceVal = (isPolygon || isBearing) ? 0 : 1;
@@ -762,6 +756,7 @@ export default class MeasurementSupport extends React.Component {
 
             this.curPolygonLength = undefined;
             this.curLineStringLength = undefined;
+
             this.discardDrawState();
         });
 
@@ -770,7 +765,6 @@ export default class MeasurementSupport extends React.Component {
 
         this.drawInteraction = draw;
         this.measureLayer = this.vector;
-        // this.props.setMeasurementConfig("measureLayer", this.measureLayer);
     };
 
     removeLastSegment = () => {
@@ -991,23 +985,5 @@ export default class MeasurementSupport extends React.Component {
 
         this.segmentOverlays = [];
         this.segmentOverlayElements = [];
-    }
-
-    /**
-     * Restore measurement state from props and redraw measurement
-     */
-    restoreMeasurementState = (props) => {
-        Promise.all(props.measurement.features.map((feature = {})=>{
-            this.addFeature(feature);
-        })).then(()=>{
-            this.updateFeatures(props);
-        });
-    }
-
-    showHideMeasureTooltips = (display) => {
-        const textLabelElements = document.getElementsByClassName("ol-overlay-container");
-        for (let i = 0; i < textLabelElements.length; i++) {
-            textLabelElements[i].style.display = display;
-        }
     }
 }

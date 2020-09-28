@@ -33,8 +33,7 @@ export const addAnnotationFromMeasureEpic = (action$) =>
             return Rx.Observable.of(
                 toggleControl('annotations', null),
                 newAnnotation(),
-                setMeasurementConfig("exportToAnnotation", true),
-                // setMeasurementConfig("exportToAnnotation", false),
+                setMeasurementConfig("exportToAnnotation", false),
                 setEditingFeature(newFeature)
             );
         });

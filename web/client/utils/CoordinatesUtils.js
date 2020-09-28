@@ -60,7 +60,7 @@ function isXY(list) {
 }
 function traverseCoords(coordinates, callback) {
     if (isXY(coordinates)) return callback(coordinates);
-    return isArray(coordinates) && coordinates.map(function(coord) { return traverseCoords(coord, callback); });
+    return coordinates.map(function(coord) { return traverseCoords(coord, callback); });
 }
 const getProjUrl = (EPSG) => {
     return `http://spatialreference.org/ref/epsg/${EPSG}/proj4/`;

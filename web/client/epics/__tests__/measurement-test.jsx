@@ -107,7 +107,7 @@ describe('measurement epics', () => {
                 expect(actions[1].type).toBe("ANNOTATIONS:NEW");
                 expect(actions[2].type).toBe("MEASUREMENT:SET_MEASUREMENT_CONFIG");
                 expect(actions[2].property).toBe("exportToAnnotation");
-                expect(actions[2].value).toBe(true);
+                expect(actions[2].value).toBe(false);
                 expect(actions[3].type).toBe("ANNOTATIONS:SET_EDITING_FEATURE");
                 expect(actions[3].feature.features).toBeTruthy();
                 expect(actions[3].feature.features.length).toBe(4);
@@ -219,6 +219,7 @@ describe('measurement epics', () => {
             NUMBER_OF_ACTIONS, [
                 setAnnotationMeasurement([{type: 'Feature', geometry: {type: "LineString"}, properties: {id: 1}}], 1)
             ], actions => {
+                console.log(JSON.stringify(actions));
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 expect(actions[1].type).toBe("SET_CONTROL_PROPERTY");
                 expect(actions[1].control).toBe("measure");

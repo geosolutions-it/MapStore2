@@ -1073,6 +1073,7 @@
             "zoomTo": "Zoom a la anotación",
             "zoomToGeometry": "Zoom a geometría",
             "removeGeometry": "Eliminar",
+            "editMeasurement": "Editar medida",
             "hide": "Ocultar anotación",
             "show": "Mostrar anotación",
             "tabCoordinates": "Coordenadas",

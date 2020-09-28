@@ -1085,6 +1085,7 @@
             "deleteFeature": "Supprimer cet objet",
             "undoDeleteFeature": "Êtes-vous sûr de supprimer cet objet ?",
             "title": "Annotations",
+            "editMeasurement": "Modifier la mesure",
             "insertText": "Veuillez insérer l'annotation de texte",
             "downloadtooltip": "Télécharger les annotations",
             "downloadcurrenttooltip": "Télécharger l'annotation courante",

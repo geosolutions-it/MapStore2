@@ -1085,6 +1085,7 @@
             "cancelModalGeom": "Annulla",
             "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
+            "editMeasurement": "Modifica misurazione",
             "insertText": "Inserisci il testo dell'annotatzione",
             "downloadtooltip": "Esporta annotazioni",
             "downloadcurrenttooltip": "Esporta annotazione corrente",

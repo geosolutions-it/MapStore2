@@ -138,8 +138,8 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels, uom, id,
         properties: {
             id,
             description,
-            title: measureProps.title,
             type: 'Measure',
+            title: measureProps.title,
             iconGlyph: measureProps.iconGlyph
         },
         style: {}

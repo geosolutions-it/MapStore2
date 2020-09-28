@@ -1070,6 +1070,7 @@
             "empty": "Noch keine Anmerkungen, klicken Sie auf [+], um Anmerkungen hinzuzufügen",
             "geometries": "Geometrien",
             "enableEdit": "Bearbeiten aktivieren",
+            "editMeasurement": "Messung bearbeiten",
             "zoomTo": "Zur Anmerkung zoomen",
             "zoomToGeometry": "Auf Geometrie zoomen",
             "removeGeometry": "Entfernen",

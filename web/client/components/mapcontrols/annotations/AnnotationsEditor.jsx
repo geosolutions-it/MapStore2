@@ -110,6 +110,7 @@ const {getComponents, coordToArray, validateCoords} = require('../../../utils/An
  * @prop {string} defaultShapeSize default symbol shape size in px
  * @prop {object} defaultStyles object with default symbol styles
  * @prop {number} textRotationStep rotation step of text styler
+ * @prop {function} onSetAnnotationMeasurement triggered on click of edit measurement button when annotation is of type 'Measure'
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -417,12 +418,12 @@ class AnnotationsEditor extends React.Component {
         if (items.length === 0) {
             return null;
         }
-        const editMeasure = this.props.editing?.properties?.type === "Measure" || false;
+        const isEditMeasure = this.props.editing?.properties?.type === "Measure" || false;
 
         return (<div className={"mapstore-annotations-info-viewer-items" + (this.props.styling ? " mapstore-annotations-info-viewer-styler" : "")}>
             <div>
                 {items}
-                {editing && !editMeasure && <FeaturesList
+                {editing && !isEditMeasure && <FeaturesList
                     editing={this.props.editing}
                     selected={this.props.selected}
                     onAddGeometry={this.props.onAddGeometry}
@@ -441,13 +442,13 @@ class AnnotationsEditor extends React.Component {
                 />
                 }
                 {
-                    editMeasure && <Button className="btn btn-primary measure" onClick={()=> {
+                    isEditMeasure && <Button className="btn btn-primary measure" onClick={()=> {
                         const editProperties = this.props.editing?.properties;
                         // Excluding geometry of type Point as they are labels of measurement
                         const features = editProperties?.type === 'Measure' && this.props.editing.features.filter(f=> f.geometry.type !== 'Point');
                         this.props.onSetAnnotationMeasurement(features, editProperties.id);
                     }}>
-                       Edit Measurement &nbsp;<Glyphicon glyph={this.props.editing?.properties?.iconGlyph} style={{fontSize: 'inherit'}}/>
+                        <Message msgId="annotations.editMeasurement"/>&nbsp;<Glyphicon glyph={this.props.editing?.properties?.iconGlyph} style={{fontSize: 'inherit'}}/>
                     </Button>
                 }
             </div>

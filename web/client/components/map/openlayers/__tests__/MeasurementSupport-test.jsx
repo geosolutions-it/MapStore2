@@ -640,4 +640,63 @@ describe('Openlayers MeasurementSupport', () => {
         expect(cmp.outputValues.length).toBe(1);
         expect(map.getOverlays().getLength()).toBe(savedOverlayCount);
     });
+    it('test removeInteraction and measurement state on geomType change', () => {
+        const spyOnchangeGeometry = expect.spyOn(testHandlers, 'changeGeometry');
+        const spyOnsetTextLabels = expect.spyOn(testHandlers, 'setTextLabels');
+
+        let cmp = renderMeasurement();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLabel: true
+            },
+            uom
+        });
+
+        const feature = new Feature({
+            geometry: new LineString([[10.0, 15.0], [10.0, 15.0]]),
+            name: 'My line 1'
+        });
+        const savedOverlayCount = map.getOverlays().getLength();
+        const savedInteractionsCount = map.getInteractions().getLength();
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature
+        });
+        cmp.sketchFeature.getGeometry().setCoordinates([[10.0, 15.0], [10.0, 10.0]]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([11.0, 25.0]);
+        expect(map.getOverlays().getLength()).toBe(savedOverlayCount + 3);
+        expect(map.getInteractions().getLength()).toBe(savedInteractionsCount);
+        expect(map.getLayers().getLength()).toBe(1);
+
+        // On geomtype null
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: null,
+                updatedByUI: false,
+                features: ['test'],
+                textLabels: ['test']
+            },
+            uom
+        });
+        expect(cmp.drawInteraction).toBe(null);
+        expect(cmp.sketchFeature).toBe(null);
+        expect(map.getInteractions().getLength()).toBe(savedInteractionsCount - 1);
+        expect(cmp.measureTooltips.length).toBe(0);
+        expect(cmp.measureTooltipElements.length).toBe(0);
+        expect(cmp.outputValues.length).toBe(0);
+        expect(cmp.segmentOverlays.length).toBe(0);
+        expect(cmp.segmentOverlayElements.length).toBe(0);
+        expect(map.getOverlays().getLength()).toBe(0);
+        expect(cmp.textLabels).toEqual([]);
+        expect(cmp.segmentLengths).toEqual([]);
+        expect(map.getLayers().getLength()).toBe(0);
+        expect(cmp.vector).toBe(null);
+        expect(cmp.measureLayer).toBe(null);
+        expect(cmp.source).toBe(null);
+        expect(spyOnchangeGeometry.calls[0].arguments[0]).toEqual([]);
+        expect(spyOnsetTextLabels.calls[0].arguments[0]).toEqual([]);
+    });
 });
