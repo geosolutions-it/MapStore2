@@ -9,7 +9,8 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const Choice = require('./Choice');
-const {Grid, Row, Col, FormControl, Button, Glyphicon} = require('react-bootstrap');
+const {Grid, Row, Col, Button, Glyphicon} = require('react-bootstrap');
+const IntlNumberFormControl = require('../I18N/IntlNumberFormControl');
 
 class Font extends React.Component {
     static propTypes = {
@@ -40,8 +41,8 @@ class Font extends React.Component {
         this.props.onChangeFamily(family);
     };
 
-    onChangeSize = (e) => {
-        this.props.onChangeSize(parseFloat(e.target.value));
+    onChangeSize = (val) => {
+        this.props.onChangeSize(parseInt(val, 10));
     };
 
     render() {
@@ -58,7 +59,7 @@ class Font extends React.Component {
                             selected={this.props.family}/>
                     </Col>
                     <Col xs={3}>
-                        <FormControl ref="size" type="number" value={this.props.size} onChange={this.onChangeSize}/>
+                        <IntlNumberFormControl ref="size" type="number" value={this.props.size} min={0} precision={0} onChange={this.onChangeSize}/>
                     </Col>
                     <Col xs={2}>
                         <Button bsStyle="primary" bsSize="small" active={this.props.bold} onClick={this.toggleBold}><Glyphicon glyph="bold"/></Button>

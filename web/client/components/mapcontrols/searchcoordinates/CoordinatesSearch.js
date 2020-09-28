@@ -144,7 +144,7 @@ const CoordinatesSearch = ({
 
     return (
         <div className="coordinateEditor" style={{flexWrap: format === "decimal" ? "nowrap" : "wrap" }}>
-            <Row className="entryRow">
+            <Row className={`entryRow ${format}`}>
                 <FormGroup>
                     <InputGroup >
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.latitude"/></InputGroup.Addon>
@@ -165,7 +165,7 @@ const CoordinatesSearch = ({
                     </InputGroup>
                 </FormGroup>
             </Row>
-            <Row className="entryRow">
+            <Row className={`entryRow ${format}`}>
                 <FormGroup>
                     <InputGroup>
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.longitude"/></InputGroup.Addon>
