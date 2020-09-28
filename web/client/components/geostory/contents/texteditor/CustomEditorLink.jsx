@@ -53,7 +53,7 @@ class MSLinkOptions extends Component {
                     </span>
                     <DropdownOption
                         active
-                        value={externalLinkOption}
+                        value={{value: externalLinkOption, label: externalLinkOption}}
                         key={externalLinkOption}
                     >
             External Link
