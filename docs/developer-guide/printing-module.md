@@ -42,7 +42,7 @@ This fork uses the same configuration files of the original library to define th
 This files is in the directory `resources/geoserver/print`, and they will be copied in `WEB-INF/classes` in the final `war` file.
 
 * `config.yml`: The main file that configures the layout. More information about this configuration file in the [original documentaiton](http://www.mapfish.org/doc/print/configuration.html)
-* `print_header,png`: The header, referred in `config.yml`
+* `print_header.png`: The header, referred in `config.yml`
 * `Arrow_north_CFCF.svg` the north indicator, referred in `config.yml`
 
 ## Troubleshooting
@@ -103,11 +103,11 @@ If, for any reason, you can not modify the proxy configuration, MapStore printin
 A useful trick can be to set as a relative URL (relative to MapStore) to make it work in any context (only for MapStore).
 
 ```bash
-JAVA_OPTS= "$JAVA_OPTS -DPRINT_BASE_URL=pdf/info.json"
+JAVA_OPTS= "$JAVA_OPTS -DPRINT_BASE_URL=pdf"
 ```
 
 or you can use the absolute URL:
 
 ```bash
-JAVA_OPTS= "$JAVA_OPTS -DPRINT_BASE_URL=https://example.com/mapstore/pdf/info.json"
+JAVA_OPTS= "$JAVA_OPTS -DPRINT_BASE_URL=https://example.com/mapstore/pdf"
 ```

@@ -111,6 +111,8 @@ const {getComponents, coordToArray, validateCoords} = require('../../../utils/An
  * @prop {object} defaultStyles object with default symbol styles
  * @prop {number} textRotationStep rotation step of text styler
  * @prop {function} onSetAnnotationMeasurement triggered on click of edit measurement button when annotation is of type 'Measure'
+ * @prop {function} onFilterMarker triggered when marker/glyph name is specified for filtering
+ * @prop {object[]} annotations list of annotations
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -205,7 +207,9 @@ class AnnotationsEditor extends React.Component {
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         textRotationStep: PropTypes.number,
-        onSetAnnotationMeasurement: PropTypes.func
+        onSetAnnotationMeasurement: PropTypes.func,
+        onFilterMarker: PropTypes.func,
+        annotations: PropTypes.array
     };
 
     static defaultProps = {
@@ -220,7 +224,8 @@ class AnnotationsEditor extends React.Component {
         maxZoom: 18,
         format: "decimal",
         pointType: "marker",
-        stylerType: "marker"
+        stylerType: "marker",
+        annotations: []
     };
     /**
     @prop {object} removing object to remove, it is also a flag that means we are currently asking for removing an annotation / geometry. Toggles visibility of the confirm dialog
@@ -233,7 +238,7 @@ class AnnotationsEditor extends React.Component {
     };
 
     getConfig = () => {
-        return assign({}, defaultConfig, this.props.config);
+        return {...defaultConfig, ...this.props.config, onFilterMarker: this.props.onFilterMarker};
     };
 
     getBodyItems = (editing) => {
@@ -337,6 +342,7 @@ class AnnotationsEditor extends React.Component {
                             }, {
                                 glyph: 'trash',
                                 tooltipId: "annotations.remove",
+                                disabled: !this.props.annotations.length,
                                 visible: !this.props.selected,
                                 onClick: () => {
                                     this.setState({removing: this.props.id});
@@ -350,8 +356,12 @@ class AnnotationsEditor extends React.Component {
                             {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
+                                disabled: Object.keys(this.validate()).length !== 0,
                                 visible: !this.props.selected,
-                                onClick: () => { this.props.onDownload(this.props.editing); }
+                                onClick: () => {
+                                    const {newFeature, ...features} = this.props.editing;
+                                    this.props.onDownload(features);
+                                }
                             }
                         ]} />
                 </Col>
@@ -460,7 +470,7 @@ class AnnotationsEditor extends React.Component {
             .filter(field => this.getConfig().fields.filter(f => f.name === field).length === 0).map(field => this.renderErrorOn(field))) : null;
     };
 
-    renderModals = (editing) => {
+    renderModals = () => {
         if (this.props.closing) {
             return (<Portal><ConfirmDialog
                 show
@@ -529,7 +539,7 @@ class AnnotationsEditor extends React.Component {
                 <Message msgId="annotations.undoDeleteFeature" />
             </ConfirmDialog></Portal>);
         } else if (this.state.removing || this.props.removing) {
-            return (<ConfirmDialog
+            return (<Portal><ConfirmDialog
                 show
                 modal
                 onClose={()=>{
@@ -549,8 +559,8 @@ class AnnotationsEditor extends React.Component {
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
                 closeText={<Message msgId="annotations.cancel" />}>
                 {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
-                    <Message msgId="annotations.removeannotation" msgParams={{title: editing?.properties?.title}}/>}
-            </ConfirmDialog>);
+                    <Message msgId="annotations.removeannotation" msgParams={{title: this.props?.feature?.properties?.title}}/>}
+            </ConfirmDialog></Portal>);
         }
         return null;
     }
@@ -572,7 +582,7 @@ class AnnotationsEditor extends React.Component {
                 <div style={{flex: 1}}>
                     {this.renderButtons(editing)}
                     {this.renderError(editing)}
-                    {this.renderModals(editing)}
+                    {this.renderModals()}
                     {this.renderBody(editing)}
                 </div>
                 {!isEmpty(this.props.selected) &&

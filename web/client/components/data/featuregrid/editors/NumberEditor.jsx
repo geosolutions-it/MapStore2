@@ -9,6 +9,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {isNumber} from 'lodash';
+import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 
 const parsers = {
     "int": v => parseInt(v, 10),
@@ -77,22 +78,22 @@ export default class NumberEditor extends React.Component {
     }
 
     render() {
-        return (<input
+        return (<IntlNumberFormControl
             {...this.props.inputProps}
             style={!this.state.validated || this.state.isValid ? {} : {
                 borderColor: 'red'
             }}
             value={this.state.inputText}
-            ref={this.inputRef}
+            ref={(input)=>{this.inputRef = input;}}
             type="number"
             min={this.props.minValue}
             max={this.props.maxValue}
             className="form-control"
             defaultValue={this.props.value}
-            onChange={(e) => {
+            onChange={(val) => {
                 this.setState({
-                    inputText: e.target.value,
-                    isValid: this.validateTextValue(e.target.value),
+                    inputText: val,
+                    isValid: this.validateTextValue(val),
                     validated: true
                 });
             }}

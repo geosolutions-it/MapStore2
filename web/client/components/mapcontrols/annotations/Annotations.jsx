@@ -323,7 +323,7 @@ class Annotations extends React.Component {
                                 },
                                 {
                                     glyph: 'download',
-                                    disabled: !(this.props.annotations && this.props.annotations.length > 0),
+                                    disabled: !(annotationsPresent),
                                     tooltip: <Message msgId="annotations.downloadtooltip"/>,
                                     visible: this.props.mode === "list",
                                     onClick: () => { this.props.onDownload(); }
@@ -366,6 +366,7 @@ class Annotations extends React.Component {
             defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
             defaultStyles={this.props.defaultStyles}
             textRotationStep={this.props.textRotationStep}
+            annotations={this.props.annotations}
         />;
     };
 

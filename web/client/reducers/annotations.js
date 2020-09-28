@@ -21,7 +21,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT,
-    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS, SET_DEFAULT_STYLE, LOADING, CHANGE_GEOMETRY_TITLE
+    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS, SET_DEFAULT_STYLE, LOADING, CHANGE_GEOMETRY_TITLE, FILTER_MARKER
 } = require('../actions/annotations');
 
 const {validateCoordsArray, getAvailableStyler, convertGeoJSONToInternalModel, addIds, validateFeature,
@@ -339,12 +339,14 @@ function annotations(state = { validationErrors: {} }, action) {
             newState = set(`editing.features[${ftChangedIndex}]`, selected, newState);
         }
         newState = set(`editing.tempFeatures`, newState.editing.features, newState);
+        newState = {...newState, editing: {...newState.editing, properties: {...newState.editing.properties, ...newState.editedFields}}};
 
         return assign({}, newState, {
             coordinateEditorEnabled: false,
             drawing: false,
             unsavedGeometry: false,
-            selected: null
+            selected: null,
+            config: {...newState.config, filter: ''}
         });
     }
     case SET_EDITING_FEATURE: {
@@ -358,7 +360,8 @@ function annotations(state = { validationErrors: {} }, action) {
             coordinateEditorEnabled: false,
             drawing: false,
             unsavedGeometry: false,
-            selected: null
+            selected: null,
+            config: {...newState.config, filter: ''}
         });
     }
     case TOGGLE_DELETE_FT_MODAL: {
@@ -429,7 +432,7 @@ function annotations(state = { validationErrors: {} }, action) {
             originalStyle: null
         });
     case CONFIRM_REMOVE_ANNOTATION:
-        const features = state.editing.features.filter(feature=> feature.properties.id !== action.id);
+        const features = state.editing?.features?.filter(feature=> feature.properties.id !== action.id) || [];
         const delSelectedFeature = state?.selected?.properties?.id === action.id || false;
         return assign({}, state, {
             removing: null,
@@ -527,7 +530,8 @@ function annotations(state = { validationErrors: {} }, action) {
             originalStyle: null,
             selected: null,
             filter: null,
-            unsavedChanges: false
+            unsavedChanges: false,
+            editedFields: {}
         });
     case TOGGLE_ADD: {
         const type = action.featureType || state.featureType;
@@ -643,6 +647,9 @@ function annotations(state = { validationErrors: {} }, action) {
         return set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
             "loading", action.value, state
         ));
+    }
+    case FILTER_MARKER: {
+        return {...state, config: {...state.config, filter: action.filter}};
     }
     default:
         return state;

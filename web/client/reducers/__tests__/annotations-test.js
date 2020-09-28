@@ -44,7 +44,8 @@ const {
     setEditingFeature,
     setDefaultStyle,
     loading,
-    changeGeometryTitle
+    changeGeometryTitle,
+    filterMarker
 } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -682,11 +683,15 @@ describe('Test the annotations reducer', () => {
         };
         const state = annotations({
             editing: featureColl,
-            selected: feature
+            selected: feature,
+            editedFields: {title: 'Title1'}
         }, addNewFeature(feature));
         expect(state.editing.features[0].properties.isText).toBe(true);
         expect(state.editing.features[0].geometry.coordinates[0]).toBe(1);
         expect(state.editing.features[0].geometry.coordinates[1]).toBe(2);
+        expect(state.editing.properties).toBeTruthy();
+        expect(state.editing.properties.id).toBe('1asdfads');
+        expect(state.editing.properties.title).toBe('Title1');
         expect(state.selected).toBe(null);
     });
 
@@ -1611,5 +1616,12 @@ describe('Test the annotations reducer', () => {
             selected: {properties: {id: '1', geometryTitle: ""}}}, changeGeometryTitle("New title"));
         expect(state.selected).toBeTruthy();
         expect(state.selected.properties.geometryTitle).toBe('New title');
+    });
+    it('Change marker filter option', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, filterMarker("glass"));
+        expect(state.config).toBeTruthy();
+        expect(state.config.filter).toBe('glass');
     });
 });

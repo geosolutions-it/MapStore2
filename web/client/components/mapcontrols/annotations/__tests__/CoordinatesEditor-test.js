@@ -216,13 +216,12 @@ describe("test the CoordinatesEditor Panel", () => {
             {lat: 6, lon: 6 },
             { lat: 15, lon: 10 }
         ], undefined, undefined, undefined);
-
         input.value = "";
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.click(submit);
+
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
-
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("coords", [[10, "" ], [6, 6 ], [6, 6]]);
         expect(spyOnChange).toHaveBeenCalled();
         expect(spyOnChange.calls.length).toBe(2);

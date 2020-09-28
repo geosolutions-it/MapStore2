@@ -153,13 +153,17 @@ describe('GeometryDetails', () => {
             type: "Polygon"
         };
 
+        const actions = {
+            onChangeDrawingStatus: () =>{}
+        };
         let type = "BBOX";
-
+        const spyOnChangeDrawingStatus = expect.spyOn(actions, "onChangeDrawingStatus");
         const geometryDetails = ReactDOM.render(
             <GeometryDetails
                 geometry={geometry}
                 projection="EPSG:900913"
-                type={type}/>,
+                type={type}
+                onChangeDrawingStatus={actions.onChangeDrawingStatus}/>,
             document.getElementById("container")
         );
 
@@ -189,6 +193,15 @@ describe('GeometryDetails', () => {
             expect(mainValue.length + decimals.length <= 10 && mainValue.length + decimals.length >= 7).toBeTruthy();
             expect(mainValue.length <= 4).toBeTruthy(); // can be ranged from 180 to -180
             expect(decimals.length === 6).toBeTruthy(); // always must be 6 digits
+            input.value = 10;
+            ReactTestUtils.Simulate.change(input);
+            expect(spyOnChangeDrawingStatus).toHaveBeenCalled();
+            expect(spyOnChangeDrawingStatus.calls[0].arguments[0]).toBe('replace');
+            const geometryOutput = spyOnChangeDrawingStatus.calls[0].arguments[3];
+            expect(geometryOutput[0].type).toBe('Polygon');
+            expect(geometryOutput[0].coordinates).toBeTruthy();
+            expect(geometryOutput[0].coordinates[0].length).toBe(5);
+
         });
     });
 });

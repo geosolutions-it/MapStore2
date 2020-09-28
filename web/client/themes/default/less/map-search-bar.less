@@ -185,6 +185,7 @@ div.MapSearchBar .form-control:focus {
             }
             input {
                 font-family: inherit;
+                float: unset;
             }
             .degrees, .minutes {
                 display: flex;
@@ -275,5 +276,11 @@ div.MapSearchBar .form-control:focus {
                 background-color: @ms2-color-background
             }
         }
+    }
+}
+
+#map-search-bar{
+    .aeronautical .react-numeric-input{
+        width: 100%;
     }
 }
