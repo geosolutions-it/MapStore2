@@ -3,6 +3,13 @@
 
 In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to create widgets from the layers added to the map. Widgets are components such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide the user the opportunity to analyze information more effectively.
 
+!!! Note
+    Some widgets (in maps or in dashboards) need some WPS back-end support to work:
+
+    - `chart` and `counter` widgets need the WPS Process `gs:Aggregate` to work.
+    - The map widgets (dashboards) needs the process `gs:Bounds` to  zoom to
+    filtered data, if connected to a table.
+
 ## Add a Widget
 
 Once at least one layer is present in the map (see [Catalog](catalog.md) section for more information about adding layers), it is possible to create a widget by selecting that layer in the [TOC](toc.md) and by clicking on the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button from the [Layer Toolbar](toc.md#toolbar-options) or from the [Attribute Table](attributes-table.md). Performing these operations the *Widget* panel appears:

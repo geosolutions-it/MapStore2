@@ -6,55 +6,43 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {bindActionCreators} = require('redux');
-const {connect} = require('react-redux');
-const {loadMaps, updateMapMetadata, deleteMap, createThumbnail,
-    updateDetails, deleteDetails, saveDetails, toggleDetailsSheet, toggleGroupProperties, toggleUnsavedChanges, setDetailsChanged,
-    deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating,
-    backDetails, undoDetails, updateAttribute} = require('../../actions/maps');
-const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../../actions/currentMap');
-const {mapTypeSelector} = require('../../selectors/maptype');
-const {showMapDetailsSelector} = require('../../selectors/maps.js');
-const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
+import { compose, defaultProps, withHandlers } from 'recompose';
+import { deleteMap, reloadMaps, updateAttribute, invalidateFeaturedMaps, showDetailsSheet, hideDetailsSheet } from '../../actions/maps'; // TODO: externalize
+import { userSelector } from '../../selectors/security';
+import { createSelector } from 'reselect';
+import { connect } from 'react-redux';
+import resourceGrid from '../../components/resources/enhancers/resourceGrid';
+import withShareTool from '../../components/resources/enhancers/withShareTool';
+import { success } from '../../actions/notifications';
+import ResourceGrid from '../../components/resources/ResourceGrid';
 
-const MapsGrid = connect((state) => {
-    return {
-        bsSize: "small",
-        currentMap: state.currentMap,
-        showMapDetails: showMapDetailsSelector(state),
-        loading: state.maps && state.maps.loading,
-        mapType: mapTypeSelector(state)
-    };
-}, dispatch => {
-    return {
-        loadMaps: (...params) => dispatch(loadMaps(...params)),
-        updateMapMetadata: (...params) => dispatch(updateMapMetadata(...params)),
-        editMap: (...params) => dispatch(editMap(...params)),
-        saveMap: (...params) => dispatch(saveMap(...params)),
-        removeThumbnail: (...params) => dispatch(removeThumbnail(...params)),
-        onDisplayMetadataEdit: (...params) => dispatch(onDisplayMetadataEdit(...params)),
-        resetUpdating: (...params) => dispatch(resetUpdating(...params)),
-        saveAll: (...params) => dispatch(saveAll(...params)),
-        updateCurrentMap: (...params) => dispatch(updateCurrentMap(...params)),
-        errorCurrentMap: (...params) => dispatch(errorCurrentMap(...params)),
-        thumbnailError: (...params) => dispatch(thumbnailError(...params)),
-        createThumbnail: (...params) => dispatch(createThumbnail(...params)),
-        deleteThumbnail: (...params) => dispatch(deleteThumbnail(...params)),
-        deleteMap: (...params) => dispatch(deleteMap(...params)),
-        resetCurrentMap: (...params) => dispatch(resetCurrentMap(...params)),
-        onUpdateAttribute: (...params) => dispatch(updateAttribute(...params)),
-        detailsSheetActions: bindActionCreators({
-            onBackDetails: backDetails,
-            onUndoDetails: undoDetails,
-            onToggleDetailsSheet: toggleDetailsSheet,
-            onToggleGroupProperties: toggleGroupProperties,
-            onToggleUnsavedChangesModal: toggleUnsavedChanges,
-            onsetDetailsChanged: setDetailsChanged,
-            onUpdateDetails: updateDetails,
-            onSaveDetails: saveDetails,
-            onDeleteDetails: deleteDetails
-        }, dispatch)
-    };
-})(require('../../components/maps/MapGrid'));
-
-module.exports = withShareTool(MapsGrid);
+export default compose(
+    connect(createSelector(userSelector, user => ({ user })), {
+        onDelete: deleteMap,
+        reloadMaps,
+        onShowSuccessNotification: () => success({ title: "success", message: "resources.successSaved" }),
+        invalidateFeaturedMaps,
+        onUpdateAttribute: updateAttribute,
+        onShowDetailsSheet: showDetailsSheet,
+        onHideDetailsSheet: hideDetailsSheet
+    }),
+    withHandlers({
+        onSaveSuccess: (props) => () => {
+            if (props.reloadMaps) {
+                props.reloadMaps();
+            }
+            if (props.invalidateFeaturedMaps) {
+                props.invalidateFeaturedMaps();
+            }
+            if (props.onShowSuccessNotification) {
+                props.onShowSuccessNotification();
+            }
+        }
+    }),
+    resourceGrid,
+    // add and configure share tool panel
+    compose(
+        defaultProps({ shareOptions: { embedPanel: false } }),
+        withShareTool
+    )
+)(ResourceGrid);

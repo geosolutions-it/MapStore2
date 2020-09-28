@@ -12,6 +12,13 @@ const {AutocompleteCombobox} = require('../../../misc/AutocompleteCombobox');
 const {getParsedUrl} = require('../../../../utils/ConfigUtils');
 const {createPagedUniqueAutompleteStream} = require('../../../../observables/autocomplete');
 
+/**
+ * Editor for FeatureGrid, used for strings with auto-complete
+ *
+ * @name AutocompleteEditor
+ * @memberof components.data.featuregrid.editors
+ * @type {Object}
+ */
 class AutocompleteEditor extends AttributeEditor {
     static propTypes = {
         column: PropTypes.object,

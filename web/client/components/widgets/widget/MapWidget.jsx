@@ -27,7 +27,8 @@ module.exports = ({
     confirmDelete = false,
     loading = false,
     onDelete = () => {},
-    headerStyle
+    headerStyle,
+    env
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
@@ -47,6 +48,7 @@ module.exports = ({
                 hookRegister={hookRegister}
                 layers={map && map.layers}
                 options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
+                env={env}
             />
         </BorderLayout>
 

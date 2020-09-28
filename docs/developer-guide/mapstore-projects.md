@@ -17,24 +17,20 @@ that is the project entry point.
 
 Editing **app.jsx** you can start using your own configuration files and add custom behaviours and look and
 feel to your project, in particular:
- * you can add your own translation files
+
+ * You can **add your own translation files**. Setting an array of paths in the `translationsPath`, the resources will be loaded in cascade from every directory of the array. So you can keep all the original translations from MapStore (first element of the array) and add your own files in the directory `translations`, overriding original values of the json or adding new ones (for instance, for your custom plugins). The files in the new directory must follow the same naming convention of the files in the oridinal directory.
 
 ```javascript
 ConfigUtils.setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './translations']);
 
 ```
- * Use your own configuration file for plugins:
+ * **Use your own configuration file** for plugins and other configurations. You can copy the original `localConfig.json` in the root of the project and configure the application to load it (instead of the default one, located in `MapStore2/web/client/localConfig.json`).
 
 ```javascript
 ConfigUtils.setLocalConfigurationFile('localConfig.json');
 
 ```
- * Use your own configuration:
 
-```javascript
-ConfigUtils.setLocalConfigurationFile('localConfig.json');
-
-```
  * Configure your own pages:
 
 ```javascript

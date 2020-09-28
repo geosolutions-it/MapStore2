@@ -8,7 +8,7 @@
 import { testEpic } from './epicTestUtils';
 import { saveUserSessionEpicCreator, autoSaveSessionEpicCreator, loadUserSessionEpicCreator } from "../usersession";
 import { saveUserSession, loadUserSession,
-    USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION, USER_SESSION_LOADED } from "../../actions/usersession";
+    USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION, USER_SESSION_LOADED, userSessionStartSaving, userSessionStopSaving } from "../../actions/usersession";
 import expect from "expect";
 import {Providers} from  "../../api/usersession";
 import {Observable} from "rxjs";
@@ -67,34 +67,43 @@ describe('usersession Epics', () => {
         }, initialState, done);
     });
     it('start and stop user session save', (done) => {
-        const store = testEpic(autoSaveSessionEpicCreator(10, () => ({type: 'END'}), 'START', 'STOP', 10, ), (action) => action.type !== "END", {type: 'START'}, (actions) => {
-            expect(actions[0].type).toBe(SAVE_USER_SESSION);
-            expect(actions[actions.length - 1].type).toBe("EPIC_COMPLETED");
-        }, initialState, done, true);
+        const store = testEpic(
+            autoSaveSessionEpicCreator(10, () => ({type: 'END'})),
+            (action) => action.type !== "END",
+            userSessionStartSaving(), (actions) => {
+                expect(actions[0].type).toBe(SAVE_USER_SESSION);
+                expect(actions[actions.length - 1].type).toBe("EPIC_COMPLETED");
+            }, initialState, done, true);
         setTimeout(() => {
-            store.dispatch({ type: 'STOP' });
+            store.dispatch(userSessionStopSaving());
         }, 100);
     });
     it('disable autoSave do not allow session saving', (done) => {
-        const store = testEpic(autoSaveSessionEpicCreator(10, () => ({ type: 'END' }), 'START', 'STOP', 10), (action) => action.type !== "END", { type: 'START' }, (actions) => {
-            expect(actions[0].type).toBe("EPIC_COMPLETED");
-        }, { ...initialState, usersession: { autoSave: false } }, done, true);
+        const store = testEpic(
+            autoSaveSessionEpicCreator(10, () => ({ type: 'END' })),
+            (action) => action.type !== "END", [userSessionStartSaving(), userSessionStopSaving()],
+            (actions) => {
+                expect(actions[0].type).toBe("EPIC_COMPLETED");
+            }, { ...initialState, usersession: { autoSave: false } }, done, true);
         setTimeout(() => {
             store.dispatch({ type: 'STOP' });
         }, 100);
     });
     it('start, stop and restart user session save', (done) => {
         let count = 0;
-        const store = testEpic(autoSaveSessionEpicCreator(10, () => ({type: 'END' + (count++)}), 'START', 'STOP'), (action) => action.type !== "END1", {type: 'START'}, (actions) => {
-            expect(actions[0].type).toBe(SAVE_USER_SESSION);
-            expect(actions[actions.length - 1].type).toBe("EPIC_COMPLETED");
-        }, initialState, done, true);
+        const store = testEpic(
+            autoSaveSessionEpicCreator(10, () => ({type: 'END' + (count++)})),
+            (action) => action.type !== "END1",
+            userSessionStartSaving(), (actions) => {
+                expect(actions[0].type).toBe(SAVE_USER_SESSION);
+                expect(actions[actions.length - 1].type).toBe("EPIC_COMPLETED");
+            }, initialState, done, true);
         setTimeout(() => {
-            store.dispatch({ type: 'STOP' });
+            store.dispatch(userSessionStopSaving());
             setTimeout(() => {
-                store.dispatch({ type: 'START' });
+                store.dispatch(userSessionStartSaving());
                 setTimeout(() => {
-                    store.dispatch({ type: 'STOP' });
+                    store.dispatch(userSessionStopSaving());
                 }, 100);
             }, 50);
         }, 100);
@@ -107,4 +116,5 @@ describe('usersession Epics', () => {
             expect(actions[1].session).toExist();
         }, initialState, done);
     });
+
 });

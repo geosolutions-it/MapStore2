@@ -1,0 +1,151 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>it.geosolutions.mapstore</groupId>
+  <artifactId>mapstore-print</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>MapStore 2 - Printing extension bundle</name>
+  <url>http://www.geo-solutions.it</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mapstore2.version>DEV</mapstore2.version>
+  </properties>
+
+  <dependencies>
+    <!-- mapfish-print -->
+    <dependency>
+        <groupId>org.mapfish.print</groupId>
+        <artifactId>print-lib</artifactId>
+        <version>geosolutions-2.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>org.mapfish.geo</groupId>
+        <artifactId>mapfish-geo-lib</artifactId>
+        <version>1.2.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>mapstore-printing</finalName>
+    <plugins>
+        <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/mapstore-printing/WEB-INF/lib</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+                <execution>
+                    <id>application-context</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/mapstore-printing/WEB-INF/classes</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../web/src/printing</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+            <execution>
+                <id>create-distribution</id>
+                <phase>package</phase>
+                <goals>
+                <goal>single</goal>
+                </goals>
+                <configuration>
+                <finalName>mapstore-printing</finalName>
+                <appendAssemblyId>false</appendAssemblyId>
+                <descriptors>
+                    <descriptor>assembly/mapstore-printing.xml</descriptor>
+                </descriptors>
+                </configuration>
+            </execution>
+            </executions>
+        </plugin>
+    </plugins>
+  </build>
+    <repositories>
+        <!-- GeoSolutions -->
+        <repository>
+            <id>geosolutions</id>
+            <name>GeoSolutions Repository</name>
+            <url>https://maven.geo-solutions.it</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- Apache -->
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- JBoss -->
+        <repository>
+            <id>jboss-repo</id>
+            <name>JBoss Maven2 Repository</name>
+            <url>http://repository.jboss.com/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- Spring -->
+        <repository>
+            <id>spring-release</id>
+            <name>Spring Portfolio Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-external</id>
+            <name>Spring Portfolio External Repository</name>
+            <url>http://maven.springframework.org/external</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>osgeo</id>
+            <name>Open Source Geospatial Foundation Repository</name>
+            <url>https://repo.osgeo.org/repository/release/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>

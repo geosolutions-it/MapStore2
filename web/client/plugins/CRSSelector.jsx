@@ -12,6 +12,7 @@ const assign = require('object-assign');
 const { Glyphicon, Dropdown, Button: ButtonRB, ListGroupItem } = require('react-bootstrap');
 const tooltip = require('../components/misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);
+const Message = require('../components/I18N/Message');
 const {changeMapCrs} = require('../actions/map');
 const {setInputValue} = require('../actions/crsselector');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -94,7 +95,7 @@ class Selector extends React.Component {
                 bsRole="toggle"
                 bsStyle="primary"
                 className="map-footer-btn"
-                tooltip="Select projection"
+                tooltip={<Message msgId="showCrsSelector"/>}
                 tooltipPosition="top">
                 <Glyphicon glyph="crs" />
             </Button>

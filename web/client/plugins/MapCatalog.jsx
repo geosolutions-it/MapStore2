@@ -9,7 +9,7 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { createSelector, createStructuredSelector } from 'reselect';
+import { createStructuredSelector } from 'reselect';
 
 import { toggleControl } from '../actions/controls';
 import {
@@ -19,7 +19,7 @@ import {
     deleteMap
 } from '../actions/mapcatalog';
 import { mapTypeSelector } from '../selectors/maptype';
-import { userSelector, isLoggedIn } from '../selectors/security';
+import { userSelector } from '../selectors/security';
 import {
     triggerReloadValueSelector,
     filterReloadDelaySelector
@@ -75,6 +75,7 @@ const MapCatalogComponent = ({
                     `context/${map.contextName}/${map.id}` :
                     `viewer/${mapType}/${map.id}`
                 }
+                toggleCatalog={() => onToggleControl()}
                 shareApi/>
         </DockPanel>
     );
@@ -101,12 +102,6 @@ export default createPlugin('MapCatalog', {
             text: <Message msgId="mapCatalog.title" />,
             icon: <Glyphicon glyph="maps-catalog" />,
             action: () => toggleControl('mapCatalog', 'enabled'),
-            selector: createSelector(
-                isLoggedIn,
-                (loggedIn) => ({
-                    style: loggedIn ? {} : { display: "none" }
-                })
-            ),
             priority: 2,
             doNotHide: true
         }

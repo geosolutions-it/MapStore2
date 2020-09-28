@@ -8,13 +8,13 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Grid, Row, Col, FormGroup, ControlLabel, FormControl, MenuItem, DropdownButton: DropdownButtonRB, Glyphicon: GlyphiconRB} = require('react-bootstrap');
+const {FormGroup, ControlLabel, MenuItem, DropdownButton: DropdownButtonRB, Glyphicon: GlyphiconRB} = require('react-bootstrap');
 const Select = require('react-select').default;
 
 const tooltip = require('../../misc/enhancers/tooltip');
 const Glyphicon = tooltip(GlyphiconRB);
 const DropdownButton = tooltip(DropdownButtonRB);
-const {head, isNaN, get} = require('lodash');
+const {head, isNaN, get, isEmpty} = require('lodash');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
@@ -44,6 +44,7 @@ const MeasureEditor = require('./MeasureEditor');
  * @prop {string} type of the feature (Polygon, LineString, Point, Circle, Text)
  * @prop {string} mapProjection crs of the map
  * @prop {string} isDraggable tells if the coordinate row is draggable
+ * @prop {string} renderer flag to determine the rendering component
  *
 */
 class CoordinatesEditor extends React.Component {
@@ -69,7 +70,9 @@ class CoordinatesEditor extends React.Component {
         type: PropTypes.string,
         isDraggable: PropTypes.bool,
         isMouseEnterEnabled: PropTypes.bool,
-        isMouseLeaveEnabled: PropTypes.bool
+        isMouseLeaveEnabled: PropTypes.bool,
+        showLengthAndBearingLabel: PropTypes.bool,
+        renderer: PropTypes.string
     };
 
     static contextTypes = {
@@ -108,12 +111,6 @@ class CoordinatesEditor extends React.Component {
         type: "Point"
     };
 
-    getValidationStateText = (text) => {
-        if (!text) {
-            return "error";
-        }
-        return null; // "success"
-    }
     getValidationStateRadius = (radius) => {
         const r = parseFloat(radius);
         if (isNaN(r)) {
@@ -123,8 +120,8 @@ class CoordinatesEditor extends React.Component {
     }
 
     renderCircle() {
-        return (<Row style={{flex: 1, overflowY: 'auto'}}>
-            <Col xs={12}>
+        return (<div style={{flex: 1, overflowY: 'auto', padding: "0 10px"}}>
+            <div>
                 <FormGroup validationState={this.getValidationStateRadius(this.props.properties.radius)}>
                     <ControlLabel><Message msgId="annotations.editor.radius"/></ControlLabel>
                     <MeasureEditor
@@ -146,35 +143,25 @@ class CoordinatesEditor extends React.Component {
                         step={1}
                         type="number"/>
                 </FormGroup>
-            </Col>
-        </Row>);
+            </div>
+        </div>);
     }
-    renderText() {
-        return (<Row style={{flex: 1, overflowY: 'auto'}}>
-            <Col xs={12}>
-                <FormGroup validationState={this.getValidationStateText(this.props.properties.valueText)}>
-                    <ControlLabel><Message msgId="annotations.editor.text"/></ControlLabel>
-                    <FormControl
-                        value={this.props.properties.valueText}
-                        name="text"
-                        placeholder="text value"
-                        onChange={e => {
-                            const valueText = e.target.value;
-                            if (this.isValid(this.props.components, valueText )) {
-                                this.props.onChangeText(valueText, this.props.components.map(coordToArray));
-                            } else if (valueText !== "") {
-                                this.props.onChangeText(valueText, this.props.components.map(coordToArray));
-                            } else {
-                                this.props.onChangeText("", this.props.components.map(coordToArray));
-                                this.props.onSetInvalidSelected("text", this.props.components.map(coordToArray));
-                            }
-                        }}
-                        type="text"/>
-                </FormGroup>
-            </Col>
-        </Row>);
+
+    renderLabelTexts = (index, textValues) =>{
+        const {textLabels, featurePropValue} = textValues;
+        if (this.props.type === "Polygon") {
+            return !isEmpty(textLabels) && textLabels[index].text;
+        }
+        return index !== 0 ?
+            !isEmpty(textLabels) ? textLabels[index - 1].text :
+                !isEmpty(featurePropValue) && featurePropValue[0].formattedValue :
+            null;
     }
+
     render() {
+        const feature = this.props.features[this.props.currentFeature || 0];
+        const textLabels = get(feature, "geometry.textLabels", []);
+        const featurePropValue = get(feature, "properties.values", []);
         const {componentsValidation, type} = this.props;
         const actualComponents = [...this.props.components];
         const actualValidComponents = actualComponents.filter(validateCoords);
@@ -219,12 +206,10 @@ class CoordinatesEditor extends React.Component {
                 }
             }
         ];
-        const toolbarVisible = !!buttons.filter(b => b.visible).length;
         return (
-            <Grid fluid style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-                <Row style={{display: 'flex', alignItems: 'center', marginBottom: 8}}>
-                    <Col xs={toolbarVisible ? 6 : 12}>
-                        <h5><Message msgId={"annotations.editor.title." + this.props.type}/></h5>
+            <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+                <div className={"measure-feature-selector"}>
+                    <div>
                         {this.props.showFeatureSelector ? <Select
                             value={this.props.currentFeature}
                             options={[
@@ -249,39 +234,36 @@ class CoordinatesEditor extends React.Component {
                                 }
                             ].filter(f => !!f)}
                             onChange={e => this.props.onChangeCurrentFeature(e?.value)}/> : null}
-                    </Col>
-                    <Col xs={6}>
+                    </div>
+                    <div>
                         <Toolbar
                             btnGroupProps={{ className: 'pull-right' }}
                             btnDefaultProps={{ className: 'square-button-md no-border'}}
                             buttons={buttons}/>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
                 {this.props.type === "Circle" && this.renderCircle()}
-                {this.props.type === "Text" && this.renderText()}
                 {
-                    this.props.type === "Circle" && <Row style={{flex: 1, overflowY: 'auto'}}>
-                        <Col xs={12}>
+                    this.props.type === "Circle" && <div style={{flex: 1, overflowY: 'auto', paddingLeft: 10, marginTop: 10}}>
+                        <div>
                             <ControlLabel><Message msgId={"annotations.editor.center"}/></ControlLabel>
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                 }
-                {!(!this.props.components || this.props.components.length === 0) &&
-                     <Row style={{flex: 1, overflowY: 'auto'}}>
-                         <Col xs={5} xsOffset={1}>
-                             <Message msgId="annotations.editor.lat"/>
-                         </Col>
-                         <Col xs={5}>
-                             <Message msgId="annotations.editor.lon"/>
-                         </Col>
-                         <Col xs={1}/>
-                     </Row>}
-                <Row style={{flex: 1, flexBasis: 'auto', overflowY: 'auto', overflowX: 'hidden'}}>
-                    {this.props.components.map((component, idx) => <CoordinatesRow
+                <div className={"coordinates-row-container"}>
+                    {this.props.components.map((component, idx) =><>
+                        {this.props.showLengthAndBearingLabel && <div className={'label-texts'}>
+                            <span>
+                                {this.renderLabelTexts(idx, {textLabels, featurePropValue})}
+                            </span>
+                        </div>
+                        }
+                    <CoordinatesRow
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
                         sortId={idx}
                         key={idx + " key"}
+                        renderer={this.props.renderer}
                         isDraggable={this.props.isDraggable}
                         isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
                         showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
@@ -333,13 +315,15 @@ class CoordinatesEditor extends React.Component {
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
                             }
-                        }}/>)}
-                </Row>
+                        }}/>
+                        </>
+                    )}
+                </div>
                 {(!this.props.components || this.props.components.length === 0) &&
-                     <Row><Col xs={12} className="text-center" style={{padding: 15, paddingBottom: 30}}>
-                         <i><Message msgId="annotations.editor.addByClick"/></i>
-                     </Col></Row>}
-            </Grid>
+                    <div className="text-center" style={{padding: 15, paddingBottom: 30}}>
+                        <i><Message msgId="annotations.editor.addByClick"/></i>
+                    </div>}
+            </div>
         );
     }
     validateCoordinates = (components = this.props.components, remove = false, idx) => {

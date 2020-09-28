@@ -69,6 +69,8 @@ const tocItemsSettingsSelector = createSelector([
  * @prop cfg.enableIFrameModule {bool} enable iframe in template editor of feature info, default true
  * @prop cfg.hideTitleTranslations {bool} if true hide the title translations tool
  * @prop cfg.showTooltipOptions {bool} if true, it shows tooltip section
+ * @prop cfg.initialActiveTab {string} tab that will be enabled initially when the settings are opened. Possible values:
+ * 'general' (General tab), 'display' (Display tab), 'style' (Style tab), 'feature' (Feature info tab).
  * @example
  * {
  *   "name": "TOCItemsSettings",

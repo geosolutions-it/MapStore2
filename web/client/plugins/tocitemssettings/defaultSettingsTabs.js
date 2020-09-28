@@ -144,7 +144,7 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
     // get Higher priority plugin that satisfies requirements.
     const candidatePluginItems =
             sortBy(filter([...items], { target: 'style' }), ["priority"]) // find out plugins with target panel 'style' and sort by priority
-                .filter(({selector}) => selector ? selector(props) : true); // filter out items that do not have the correct requirements.
+                .filter(({selector}) => selector ? selector({...props, element}) : true); // filter out items that do not have the correct requirements.
     // TODO: to complete externalization of these items, we need to
     // move handlers, Component creation and configuration on the plugins, delegating also action dispatch.
     const thematicPlugin = head(filter(candidatePluginItems, {name: "ThematicLayer"}));
@@ -184,14 +184,15 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
     const item = head(candidatePluginItems);
     // StyleEditor case TODO: externalize `onClose` trigger (delegating action dispatch) and components creation to make the two plugins independent
     if (item && item.plugin) {
+        const cfg = item.cfg || item.plugin.cfg;
         return {
             // This is connected on TOCItemsSettings close, not on StyleEditor unmount
             // to prevent re-initialization on each tab switch.
             onClose: () => onToggleStyleEditor(null, false),
-            Component: getConfiguredPlugin({ ...item, cfg: { ...(item.cfg || item.plugin.cfg || {}), active: true } }, loadedPlugins, <LoadingView width={100} height={100} />),
+            Component: getConfiguredPlugin({ ...item, cfg: { ...(cfg || {}), active: true } }, loadedPlugins, <LoadingView width={100} height={100} />),
             toolbarComponent: item.ToolbarComponent
                 && (
-                    item.plugin.cfg && defaultProps(item.plugin.cfg)(item.ToolbarComponent) || item.ToolbarComponent
+                    cfg && defaultProps(cfg)(item.ToolbarComponent) || item.ToolbarComponent
                 )
         };
     }

@@ -7,15 +7,32 @@
  */
 
 const expect = require('expect');
-
-const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW } = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint } = require('../../actions/mapInfo');
-const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic, identifyEditLayerFeaturesEpic, hideMarkerOnIdentifyClose, onUpdateFeatureInfoClickPoint } = require('../identify').default;
+const { LOCATION_CHANGE } = require('connected-react-router');
+const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW, UNREGISTER_EVENT_LISTENER, REGISTER_EVENT_LISTENER} = require('../../actions/map');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint, purgeMapInfoResults } = require('../../actions/mapInfo');
+const { REMOVE_MAP_POPUP } = require('../../actions/mapPopups');
+const { TEXT_SEARCH_CANCEL_ITEM } = require('../../actions/search');
+const {
+    getFeatureInfoOnFeatureInfoClick,
+    zoomToVisibleAreaEpic,
+    onMapClick,
+    closeFeatureAndAnnotationEditing,
+    handleMapInfoMarker,
+    featureInfoClickOnHighligh,
+    closeFeatureInfoOnCatalogOpenEpic,
+    identifyEditLayerFeaturesEpic,
+    hideMarkerOnIdentifyClose,
+    onUpdateFeatureInfoClickPoint,
+    removePopupOnLocationChangeEpic,
+    removePopupOnUnregister,
+    setMapTriggerEpic
+} = require('../identify').default;
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
 const { registerHook, GET_COORDINATES_FROM_PIXEL_HOOK, GET_PIXEL_FROM_COORDINATES_HOOK } = require('../../utils/MapUtils');
 const { setControlProperties } = require('../../actions/controls');
 const { BROWSE_DATA } = require('../../actions/layers');
+const { configureMap } = require('../../actions/config');
 
 const TEST_MAP_STATE = {
     present: {
@@ -343,10 +360,10 @@ describe('identify Epics', () => {
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
-                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a2.type).toBe(GET_VECTOR_INFO);
+                expect(a1.type).toBe(GET_VECTOR_INFO);
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a2.reqId).toExist();
+                expect(a2.request).toExist();
                 expect(a3).toExist();
                 expect(a3.type).toBe(LOAD_FEATURE_INFO);
                 done();
@@ -543,8 +560,11 @@ describe('identify Epics', () => {
     it('onMapClick triggers featureinfo when selected', done => {
         registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
         registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
-        testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
-            expect(action.type === FEATURE_INFO_CLICK);
+        const NUM_ACTIONS = 2;
+        testEpic(onMapClick, NUM_ACTIONS, [clickOnMap({latlng: {lat: 8, lng: 8}})], (actions) => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toEqual(FEATURE_INFO_CLICK);
+            expect(actions[1].type).toEqual(TEXT_SEARCH_CANCEL_ITEM);
             done();
         }, {
             mapInfo: {
@@ -558,6 +578,7 @@ describe('identify Epics', () => {
             }
         });
     });
+
     it('onMapClick do not trigger when mapinfo is not enabled', done => {
         registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
         registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
@@ -836,6 +857,95 @@ describe('identify Epics', () => {
                     projection: PROJECTION
                 }
             }
+        });
+    });
+    describe("removePopupOnLocationChangeEpic", () => {
+        it('removePopupOnLocationChangeEpic with purgeMapInfoResults as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(addTimeoutEpic(removePopupOnLocationChangeEpic, 50), NUM_ACTIONS, purgeMapInfoResults(), (actions) => {
+                expect(actions.length).toBe(1);
+                const [{type}] = actions;
+                expect(type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+        });
+        it('checks that all works with some popups with purgeMapInfoResults as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(removePopupOnLocationChangeEpic, NUM_ACTIONS, purgeMapInfoResults(), (actions) => {
+                expect(actions.length).toBe(1);
+                const [{id, type}] = actions;
+                expect(type).toBe(REMOVE_MAP_POPUP);
+                expect(id).toBe("id");
+                done();
+            }, {
+                mapPopups: {
+                    popups: [{id: "id"}]
+                }
+            });
+        });
+        it('removePopupOnLocationChangeEpic with LOCATION_CHANGE as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(addTimeoutEpic(removePopupOnLocationChangeEpic, 50), NUM_ACTIONS, {type: LOCATION_CHANGE}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{type}] = actions;
+                expect(type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+        });
+        it('checks that all works with some popups with LOCATION_CHANGE as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(removePopupOnLocationChangeEpic, NUM_ACTIONS, {type: LOCATION_CHANGE}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{id, type}] = actions;
+                expect(type).toBe(REMOVE_MAP_POPUP);
+                expect(id).toBe("id");
+                done();
+            }, {
+                mapPopups: {
+                    popups: [{id: "id"}]
+                }
+            });
+        });
+    });
+    describe("removePopupOnUnregister", () => {
+        it('checks that all works with no popups', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(addTimeoutEpic(removePopupOnUnregister, 50), NUM_ACTIONS, {type: UNREGISTER_EVENT_LISTENER}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{type}] = actions;
+                expect(type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+        });
+        it('checks that all works with some popups', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(removePopupOnUnregister, NUM_ACTIONS, {type: UNREGISTER_EVENT_LISTENER}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{id, type}] = actions;
+                expect(type).toBe(REMOVE_MAP_POPUP);
+                expect(id).toBe("id");
+                done();
+            }, {
+                mapPopups: {
+                    popups: [{id: "id"}]
+                }
+            });
+        });
+    });
+    describe('setMapTriggerEpic', () => {
+        it('should register event if hover is trigger in mapInfo', (done) => {
+            const epicResponse = actions => {
+                expect(actions[0].type).toBe(REGISTER_EVENT_LISTENER);
+                done();
+            };
+            testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {mapInfo: {configuration: {trigger: 'hover'}}});
+        });
+        it('should unregister event if no mapInfo or no trigger is present in mapInfo', (done) => {
+            const epicResponse = actions => {
+                expect(actions[0].type).toBe(UNREGISTER_EVENT_LISTENER);
+                done();
+            };
+            testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {});
         });
     });
 });

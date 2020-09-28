@@ -11,15 +11,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mapstore2.version>DEV</mapstore2.version>
+    <tomcat.version>7.0.86</tomcat.version>
   </properties>
 
   <dependencies>
     <!-- MapStore backend -->
-    <dependency>
-      <groupId>it.geosolutions.mapstore</groupId>
-      <artifactId>mapstore-backend</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
+
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
     <!-- ================================================================ -->
@@ -37,12 +34,6 @@
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
-    <!-- mapfish-print -->
-    <dependency>
-      <groupId>org.mapfish.print</groupId>
-      <artifactId>print-lib</artifactId>
-      <version>geosolutions-2.0-SNAPSHOT</version>
-    </dependency>
 
     <dependency>
       <groupId>org.geotools</groupId>
@@ -58,11 +49,6 @@
       <groupId>com.vividsolutions</groupId>
       <artifactId>jts</artifactId>
       <version>1.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mapfish.geo</groupId>
-      <artifactId>mapfish-geo-lib</artifactId>
-      <version>1.2.0</version>
     </dependency>
     <dependency>
       <groupId>javax.media</groupId>
@@ -396,21 +382,151 @@
             </configuration>
         </plugin>
         <plugin>
-          <groupId>org.eclipse.jetty</groupId>
-          <artifactId>jetty-maven-plugin</artifactId>
-          <version>9.2.11.v20150529</version>
-          <configuration>
-                <systemProperties>
-                    <systemProperty>
-                        <name>log4j.configuration</name>
-                        <value>log4j-test.properties</value>
-                    </systemProperty>
-                </systemProperties>
+            <groupId>org.apache.tomcat.maven</groupId>
+            <artifactId>tomcat7-maven-plugin</artifactId>
+            <version>2.2</version>
+            <configuration>
+                <path>/mapstore</path>
+                <port>8080</port>
             </configuration>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-core</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-util</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-coyote</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jdbc</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-dbcp</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-servlet-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jsp-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jasper</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jasper-el</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-el-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-catalina</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-tribes</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-catalina-ha</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-annotations-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-juli</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-logging-juli</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-logging-log4j</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+            </dependencies>
         </plugin>
     </plugins>
   </build>
   <profiles>
+    <profile>
+      <id>printing</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>rename-context</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                        <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                        <overWrite>true</overWrite>
+                        <sourceFile>src/printing/applicationContext-print.xml</sourceFile>
+                        <destinationFile>target/mapstore/WEB-INF/classes/applicationContext-print.xml</destinationFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+       </build>
+       <dependencies>
+        <!-- mapfish-print -->
+        <dependency>
+            <groupId>org.mapfish.print</groupId>
+            <artifactId>print-lib</artifactId>
+            <version>geosolutions-2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapfish.geo</groupId>
+            <artifactId>mapfish-geo-lib</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+       </dependencies>
+    </profile>
     <profile>
         <id>serveronly</id>
         <properties>

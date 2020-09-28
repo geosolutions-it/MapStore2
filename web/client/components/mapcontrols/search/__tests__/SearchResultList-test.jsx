@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const SearchResultList = require('../SearchResultList');
-const SearchResult = require('../SearchResult');
-const TestUtils = require('react-dom/test-utils');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SearchResultList from '../SearchResultList';
+import SearchResult from '../SearchResult';
+import TestUtils from 'react-dom/test-utils';
 
 const results = [{
     id: "ID",
@@ -148,5 +148,76 @@ describe("test the SearchResultList", () => {
         expect(spy).toHaveBeenCalledWith(items[0], mapConfig);
     });
 
+    it('test showGFI button is enabled when openFeatureInfoButton=true', () => {
+        const tb = ReactDOM.render(<SearchResultList results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: {
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                options: {
+                    typeName: 'layerName'
+                },
+                launchInfoPanel: 'single_layer',
+                openFeatureInfoButtonEnabled: true
+            }
+        }]} layers={[{id: 'layerId', name: 'layerName', visibility: true}]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+        const button = document.getElementById('open-gfi');
+        expect(button).toExist();
+        expect(button.getAttribute('disabled')).toBe(null);
+    });
 
+    it('test showGFI button is not present when openFeatureButtonEnabled=false', () => {
+        const tb = ReactDOM.render(<SearchResultList results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: {
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                options: {
+                    typeName: 'layerName'
+                },
+                launchInfoPanel: 'single_layer',
+                openFeatureInfoButtonEnabled: false
+            }
+        }]} layers={[{id: 'layerId', name: 'layerName', visibility: true}]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+        const button = document.getElementById('open-gfi');
+        expect(button).toNotExist();
+    });
+
+    it('test showGFI button is disabled when openFeatureButtonEnabled=true and the target layer is not visible', () => {
+        const tb = ReactDOM.render(<SearchResultList results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: {
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                options: {
+                    typeName: 'layerName'
+                },
+                launchInfoPanel: 'single_layer',
+                openFeatureInfoButtonEnabled: true
+            }
+        }]} layers={[{id: 'layerId', name: 'layerName', visibility: false}]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+        const button = document.getElementById('open-gfi');
+        expect(button).toExist();
+        expect(button.getAttribute('disabled')).toBe('');
+
+        TestUtils.Simulate.mouseOver(button);
+
+        const tooltip = document.getElementById('tooltip-open-gfi');
+        expect(tooltip).toExist();
+    });
 });

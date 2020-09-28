@@ -606,6 +606,14 @@ describe('FilterUtils', () => {
         expect(base.indexOf('viewParams="a:b"') > 0).toBeTruthy();
         expect(FilterUtils.getGetFeatureBase(version, null, false, "application/json", { cql_filter: "a:b" }).indexOf('viewParams="a:b"') > 0).toBeFalsy();
     });
+    it('getGetFeatureBase excludes xsi:schemaLocation when option noSchemaLocation=true', () => {
+        const version = "2.0";
+        // use noSchemaLocation
+        const base = FilterUtils.getGetFeatureBase(version, null, false, "application/json", { noSchemaLocation: true });
+        expect(base.indexOf('xsi:schemaLocation=') >= 0).toBeFalsy();
+        // default includes
+        expect(FilterUtils.getGetFeatureBase(version, null, false, "application/json", {}).indexOf('xsi:schemaLocation=') > 0).toBeTruthy();
+    });
     it('Check for undefined or null values for string and number and list in ogc filter', () => {
         let filterObj = {
             filterFields: [{
@@ -800,6 +808,22 @@ describe('FilterUtils', () => {
         expect(filter).toEqual(expected);
         expect(filterNoFields1).toEqual(expected);
         expect(filterNoFields2).toEqual(expected);
+    });
+    it('Check with filter type of list in filterFields', () => {
+        let filterObj = {
+            filterFields: [{
+                attribute: "attribute1",
+                groupId: 1,
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "list",
+                value: "value1"
+            }]
+        };
+        let expected = '<wfs:GetFeature service="WFS" version="2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeNames="ft_name_test" srsName="EPSG:4326"><fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>attribute1</fes:ValueReference><fes:Literal>value1</fes:Literal></fes:PropertyIsEqualTo></fes:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
+        expect(filter).toEqual(expected);
     });
     it('Check SimpleFilterField ogc', () => {
         let filterObj = {

@@ -18,6 +18,8 @@ import connectMap, {withLocalMapState, withMapEditingAndLocalMapState} from '../
 import emptyState from '../../components/misc/enhancers/emptyState';
 import { resourcesSelector } from '../../selectors/geostory';
 import { SectionTypes } from '../../utils/GeoStoryUtils';
+import withMediaVisibilityContainer from '../../components/geostory/common/enhancers/withMediaVisibilityContainer';
+import autoMapType from '../../components/map/enhancers/autoMapType';
 
 const image = branch(
     ({resourceId}) => resourceId,
@@ -36,25 +38,34 @@ const image = branch(
             glyph: "picture"
         })
     )
-)(Image);
+)(withMediaVisibilityContainer(Image));
 
 const map = compose(
     branch(
         ({ resourceId }) => resourceId,
         connectMap,
     ),
+    autoMapType,
     withLocalMapState,
     withMapEditingAndLocalMapState
-)(Map);
+)(withMediaVisibilityContainer(Map));
 
 const video = branch(
     ({resourceId}) => resourceId,
     compose(
         connect(createSelector(resourcesSelector, (resources) => ({resources}))),
         withProps(
-            ({ resources, resourceId: id }) => {
+            ({ resources, resourceId: id, autoplay }) => {
                 const resource = find(resources, { id }) || {};
-                return resource.data;
+                const { autoplay: resourceAutoplay, ...resourceData } = resource.data || {};
+                return {
+                    ...resourceData,
+                    // prioritize autoplay of content
+                    // instead of one from resource
+                    autoplay: autoplay !== undefined
+                        ? autoplay
+                        : resourceAutoplay
+                };
             }
         )
     ),
@@ -64,7 +75,7 @@ const video = branch(
             glyph: "play"
         })
     )
-)(Video);
+)(withMediaVisibilityContainer(Video));
 
 const mediaTypesMap = {
     image,
@@ -77,7 +88,7 @@ const MediaViewer = ({ type, ...props }) => {
     if (!Media) {
         return null;
     }
-    return <Media { ...props }/>;
+    return <Media type={type} { ...props }/>;
 };
 
 export default MediaViewer;

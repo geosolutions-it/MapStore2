@@ -247,6 +247,15 @@
 
     docma.on('render', function (currentRoute) {
 
+        // CUSTOMIZATION: workaround to fix hash links that was not working anymore
+        setTimeout(function() {
+            var old = window.location.hash;
+            window.location.hash = "";
+            window.location.hash = old;
+        }, 200);
+
+        // end of workaround
+
         $('[data-toggle="tooltip"]').tooltip({
             container: 'body',
             placement: 'bottom'

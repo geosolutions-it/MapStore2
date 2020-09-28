@@ -7,6 +7,9 @@
 */
 
 const expect = require('expect');
+const axios = require('axios');
+const MockAdapter = require('axios-mock-adapter');
+const {find} = require('lodash');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
@@ -18,20 +21,22 @@ const {configureMap} = require('../../actions/config');
 const {CLOSE_IDENTIFY} = require('../../actions/mapInfo');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, startDrawing, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
-    resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION
+    resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION,
+    loadDefaultStyles, LOADING, SET_DEFAULT_STYLE, toggleVisibilityAnnotation
 } = require('../../actions/annotations');
 const {TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY} = require('../../actions/controls');
+const {STYLE_POINT_MARKER} = require('../../utils/AnnotationsUtils');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic
 );
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -182,11 +187,30 @@ const annotationsLayerWithPointFeatureAndSymbol = {
         }
     ]
 };
+
+const triangleSvg = `<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg
+    id="triangle"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="1.1"
+    x="0px"
+    y="0px"
+    class="svg-triangle"
+    width="64px"
+    height="64px"
+    viewBox="0 0 100 100">
+  <polygon points="50,0 100,100 0,100"/>
+</svg>
+`;
+
 describe('annotations Epics', () => {
     let store;
+    let mockAxios;
     const defaultState = {
         annotations: {
-            config: {multiGeometry: false},
+            config: {multiGeometry: false, defaultPointType: 'symbol'},
             editing: {
                 style: {},
                 features: [ft],
@@ -218,10 +242,12 @@ describe('annotations Epics', () => {
     };
     beforeEach(() => {
         store = mockStore(defaultState);
+        mockAxios = new MockAdapter(axios);
     });
 
     afterEach(() => {
         epicMiddleware.replaceEpic(rootEpic);
+        mockAxios.restore();
     });
 
     it('set style', (done) => {
@@ -419,7 +445,7 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = confirmRemoveAnnotation('1');
+        const action = confirmRemoveAnnotation('1', 'features');
         store.dispatch(action);
     });
     it('remove annotation geometry', (done) => {
@@ -430,7 +456,7 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = confirmRemoveAnnotation('geometry');
+        const action = confirmRemoveAnnotation('1', 'geometry');
         store.dispatch(action);
     });
 
@@ -451,7 +477,26 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = confirmRemoveAnnotation('geometry');
+        const action = confirmRemoveAnnotation('1', 'geometry');
+        store.dispatch(action);
+    });
+    it('toggle annotation visibility', (done) => {
+        const tempStore = mockStore({
+            layers: {
+                flat: [
+                    {id: "annotations", features: [{properties: {id: '1'}}]}
+                ]
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[0].type).toBe("ANNOTATIONS:VISIBILITY");
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                done();
+            }
+        });
+        const action = toggleVisibilityAnnotation('1');
         store.dispatch(action);
     });
     it('save annotation', (done) => {
@@ -861,22 +906,6 @@ describe('annotations Epics', () => {
 
         store.dispatch(action);
     });
-    it('openEditorEpic', (done) => {
-        let action = openEditor("1");
-
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 4) {
-                expect(actions[1].type).toBe(CLOSE_IDENTIFY);
-                expect(actions[2].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[3].type).toBe(SHOW_ANNOTATION);
-                done();
-            }
-        });
-
-        store.dispatch(action);
-    });
-
     it('should safely start drawing annotation when no annotation config provided', (done) => {
         store = mockStore({
             annotations: {
@@ -896,5 +925,56 @@ describe('annotations Epics', () => {
         const action = startDrawing();
         store.dispatch(action);
     });
+    it('openEditorEpic', (done) => {
+        let action = openEditor("1");
 
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 4) {
+                expect(actions[1].type).toBe(CLOSE_IDENTIFY);
+                expect(actions[2].type).toBe(SET_CONTROL_PROPERTY);
+                expect(actions[3].type).toBe(SHOW_ANNOTATION);
+                done();
+            }
+        });
+
+        store.dispatch(action);
+    });
+    it('default styles are loaded on loadDefaultStyles', (done) => {
+        store = mockStore({
+            annotations: {}
+        });
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 5) {
+                try {
+                    expect(actions[1].type).toBe(LOADING);
+                    expect(actions[1].value).toBe(true);
+                    expect(actions[2].type).toBe(SET_DEFAULT_STYLE);
+                    expect(actions[3].type).toBe(SET_DEFAULT_STYLE);
+
+                    const styleActions = actions.slice(2, 4);
+                    const symbol = find(styleActions, {path: 'POINT.symbol'});
+                    const marker = find(styleActions, {path: 'POINT.marker'});
+                    expect(symbol).toExist();
+                    expect(symbol.style).toExist();
+                    expect(symbol.style.size).toBe(24);
+                    expect(symbol.style.fillColor).toBe('#0000FF');
+                    expect(symbol.style.color).toBe('#00FF00');
+                    expect(marker).toExist();
+                    expect(marker.style).toExist();
+                    expect(marker.style).toEqual(STYLE_POINT_MARKER);
+
+                    expect(actions[4].type).toBe(LOADING);
+                    expect(actions[4].value).toBe(false);
+
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }
+        });
+        mockAxios.onGet('/path/to/symbols/triangle.svg').reply(200, triangleSvg);
+        store.dispatch(loadDefaultStyles('triangle', 24, '#0000FF', '#00FF00', '/path/to/symbols/'));
+    });
 });

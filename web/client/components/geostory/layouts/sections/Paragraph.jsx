@@ -7,9 +7,15 @@
  */
 import React from "react";
 import AddBar from '../../common/AddBar';
-import { SectionTypes, Modes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
 
 import SectionContents from "../../contents/SectionContents";
+
+const size = (pullRight) => ({
+    id: 'size',
+    filterOptions: ({ value }) => value !== 'full',
+    pullRight
+});
 
 
 /**
@@ -29,7 +35,10 @@ export default ({
     viewWidth,
     viewHeight,
     expandableMedia,
-    mediaViewer
+    mediaViewer,
+    contentToolbar,
+    sectionType,
+    storyFonts
 }) => (
     <section
         className="ms-section ms-section-paragraph"
@@ -48,10 +57,16 @@ export default ({
             sectionId={id}
             viewWidth={viewWidth}
             viewHeight={viewHeight}
+            sectionType={sectionType}
             contentProps={{
                 expandable: expandableMedia,
-                mediaViewer
+                mediaViewer,
+                contentToolbar,
+                overrideTools: {
+                    [ContentTypes.TEXT]: [size(true), 'remove']
+                }
             }}
+            storyFonts={storyFonts}
         />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}
@@ -61,6 +76,13 @@ export default ({
                 tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add(`sections`, id, SectionTypes.TITLE);
+                }
+            },
+            {
+                glyph: 'story-banner-section',
+                tooltipId: 'geostory.addBannerSection',
+                onClick: () => {
+                    add('sections', id, SectionTypes.BANNER);
                 }
             },
             {

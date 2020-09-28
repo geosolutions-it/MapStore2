@@ -308,6 +308,84 @@ describe('search Epics', () => {
         expect(zoomToExtentAction.extent.length).toEqual(4);
     });
 
+    it('searchItemSelected epic with a service with openFeatureInfoButtonEnabled=false', () => {
+        let action = selectSearchItem({
+            "id": "Feature_1",
+            "type": "Feature",
+            "bbox": [125, 10, 126, 11],
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[100, 10], [100, 20]]
+            },
+            "properties": {
+                "name": "Dinagat Islands"
+            },
+            "__SERVICE__": {
+                launchInfoPanel: "single_layer",
+                openFeatureInfoButtonEnabled: false,
+                options: {
+                    typeName: "gs:layername"
+                }
+            }
+        }, {
+            size: {
+                width: 200,
+                height: 200
+            },
+            projection: "EPSG:4326"
+        });
+        store.dispatch( action );
+
+        let actions = store.getActions();
+        let expectedActions = [ZOOM_TO_EXTENT, TEXT_SEARCH_ADD_MARKER, SHOW_MAPINFO_MARKER, FEATURE_INFO_CLICK];
+        let actionsType = actions.map(a => a.type);
+
+        expectedActions.forEach((a) => {
+            expect(actionsType.indexOf(a)).toNotBe(-1);
+        });
+    });
+
+    it('searchItemSelected epic with a service with openFeatureInfoButtonEnabled=true', () => {
+        let action = selectSearchItem({
+            "id": "Feature_1",
+            "type": "Feature",
+            "bbox": [125, 10, 126, 11],
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[100, 10], [100, 20]]
+            },
+            "properties": {
+                "name": "Dinagat Islands"
+            },
+            "__SERVICE__": {
+                launchInfoPanel: "single_layer",
+                openFeatureInfoButtonEnabled: true,
+                options: {
+                    typeName: "gs:layername"
+                }
+            }
+        }, {
+            size: {
+                width: 200,
+                height: 200
+            },
+            projection: "EPSG:4326"
+        });
+        store.dispatch( action );
+
+        let actions = store.getActions();
+        let expectedActions = [ZOOM_TO_EXTENT, TEXT_SEARCH_ADD_MARKER, SHOW_MAPINFO_MARKER];
+        let actionsType = actions.map(a => a.type);
+
+        expectedActions.forEach((a) => {
+            expect(actionsType.indexOf(a)).toNotBe(-1);
+        });
+
+        let featureInfoClickAction = actions.filter(m => m.type === FEATURE_INFO_CLICK);
+        expect(featureInfoClickAction).toExist();
+        expect(featureInfoClickAction.length).toBe(0);
+    });
+
     it('zoomAndAddPointEpic ADD addiditonalLayer and zoom to point', () => {
         let action = zoomAndAddPoint({x: 1, y: 0}, 10, "EPSG:4326");
         store.dispatch( action );
@@ -515,5 +593,4 @@ describe('search Epics', () => {
             done();
         }, {layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, queryable: true, type: "wms"}]}});
     });
-
 });

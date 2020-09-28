@@ -85,6 +85,25 @@ const Api = {
             return searchAndPaginate(json, startPosition, maxRecords, text, url);
         });
     },
+    getCapabilities: (url) => {
+        const cached = capabilitiesCache[url];
+        if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+            return new Promise((resolve) => {
+                resolve(cached.data);
+            });
+        }
+        return axios.get(parseUrl(url)).then((response) => {
+            let json;
+            xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+                json = result;
+            });
+            capabilitiesCache[url] = {
+                timestamp: new Date().getTime(),
+                data: json
+            };
+            return json;
+        });
+    },
     textSearch: function(url, startPosition, maxRecords, text) {
         return Api.getRecords(url, startPosition, maxRecords, text);
     },

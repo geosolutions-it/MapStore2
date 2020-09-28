@@ -116,7 +116,7 @@ module.exports = {
             sortable,
             key: desc.name,
             width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
-            name: desc.name,
+            name: columnSettings[desc.name] && columnSettings[desc.name].label || desc.name,
             resizable,
             editable,
             filterable,
@@ -215,11 +215,11 @@ module.exports = {
         const needPages = (nPs[1] - nPs[0] + 1);
         let fts = get(result, "features", []);
         if (fts.length !== needPages * size) {
-            fts = fts.concat(fill(Array(needPages * size - fts.length), false));
+            fts = fts.concat(fill(Array(needPages * size - fts.length > 0 ? needPages * size - fts.length : fts.length ), false));
         }
         let oldPages = pages;
         let oldFeatures = features;
-        // Cached page should be less than the max of maxStoredPages or the number of page needed to fill the visible are of the grid
+        // Cached page should be less than the max of maxStoredPages or the number of page needed to fill the visible area of the grid
         const nSpaces = oldPages.length + needPages - Math.max(maxStoredPages, (endPage - startPage + 1));
         if (nSpaces > 0) {
             const firstRow = startPage * size;

@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
-import { compose, getContext, defaultProps, withHandlers, withStateHandlers} from 'recompose';
+import { compose, getContext, defaultProps, withHandlers, withStateHandlers } from 'recompose';
 
 
 import LocaleUtils from '../../../utils/LocaleUtils';
@@ -16,6 +16,20 @@ import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import withConfirm from '../../misc/withConfirm';
+
+function getImageDimensions(src, callback) {
+    const img = new Image();
+    img.onload = () => {
+        callback({
+            imgWidth: img.naturalWidth,
+            imgHeight: img.naturalHeight
+        });
+    };
+    img.onerror = () => {
+        callback({});
+    };
+    img.src = src;
+}
 
 const form = [
     {
@@ -63,7 +77,8 @@ const form = [
 const enhance = compose(
     defaultProps({
         confirmTitle: <Message msgId = "mediaEditor.mediaform.confirmExitTitle"/>,
-        confirmContent: <Message msgId = "mediaEditor.mediaform.confirmExitContent"/>
+        confirmContent: <Message msgId = "mediaEditor.mediaform.confirmExitContent"/>,
+        getImageDimensionsFunc: getImageDimensions
     }),
     withStateHandlers(
         ({selectedItem = {}, editing}) => ({
@@ -71,7 +86,7 @@ const enhance = compose(
             confirmPredicate: false
         }),
         {
-            setProperties: () => (properties) => ({properties, confirmPredicate: true})
+            setProperties: (state) => (properties) => ({properties: {...state.properties, ...properties}, confirmPredicate: true})
         }),
     withHandlers({
         onClick: ({setAddingMedia, setEditingMedia, editing}) => () => {
@@ -88,7 +103,8 @@ export default enhance(({
     onClick = () => {},
     setProperties = () => {},
     onSave = () => {},
-    messages
+    messages,
+    getImageDimensionsFunc
 }) => (
     <BorderLayout
         className="ms-imageForm"
@@ -119,7 +135,10 @@ export default enhance(({
                         tooltipId: "mediaEditor.mediaPicker.save",
                         disabled: !properties.src || !properties.title,
                         onClick: () => {
-                            onSave(properties);
+                            getImageDimensionsFunc(properties.src,
+                                (dimensions) =>
+                                    onSave({ ...properties, ...dimensions })
+                            );
                         }
                     }]} />
             </div>

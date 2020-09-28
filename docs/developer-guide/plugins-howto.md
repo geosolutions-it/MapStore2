@@ -27,19 +27,35 @@ export const SamplePlugin = SampleComponent;
 // the Plugin postfix is mandatory, avoid bugs by calling all your descriptors
 // <Something>Plugin
 ```
-Being a component with a name (**Sample** in our case) you can include it in your project editing its *plugins.js* file:
+Being a component with a name (**Sample** in our case) you can include it in your project by creating a *plugins.js* file:
 
 ### js/plugins.js
 ```javascript
 module.exports = {
     plugins: {
         ...
-        SamplePlugin: require('../plugins/Sample'),
+        SamplePlugin: require('./plugins/Sample'),
         ...
     }
 };
+
 ```
-**Note** that SamplePlugin in plugins.js must be called with the same name used when exporting it
+
+**Note** that SamplePlugin in plugins.js must be called with the same name used when exporting it.
+
+Include the plugin.js from your app.jsx either replacing the plugins import from the product or extending it:
+
+### js/app.jsx
+```javascript
+...
+
+const m2Plugins = require('@mapstore/product/plugins');
+const customPlugins = require('./plugins');
+const allPlugins = {...m2Plugins, plugins: {...customPlugins.plugins, ...m2Plugins.plugins}};
+require('@mapstore/product/main')(appConfig, allPlugins);
+
+
+```
 
 Then you have to configure it properly so that is enabled in one or more [application modes](../application-modes) / [pages](../application-pages):
 
@@ -55,8 +71,10 @@ Then you have to configure it properly so that is enabled in one or more [applic
 ```
 
 Note: to enable a plugin you need to do two things:
+
  - require it in the plugins.js file
  - configure it in localConfig.json (remove the Plugins suffix here)
+
 If one is missing, the plugin won't appear.
 To globally remove a plugin from your project the preferred way is removing it from plugins.js, because this will reduce the global javascript size of your application.
 
@@ -317,7 +335,7 @@ export const epics = sampleEpics;
 ```
 
 ## Plugins that are containers of other plugins
-It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dinamically configure their items / tools from the configuration.
+It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dynamically configure their items / tools from the configuration.
 
 In addition to those "user defined" containers, there is always a **root container**. When no container is specified for a plugin, it will be included in the root container.
 
@@ -449,13 +467,14 @@ To customize a plugin style and behaviour a JSON object can be used instead, spe
 ```
 
 ### Dynamic configuration
-Configuration can also dinamically change when the application state changes. This is accomplished by using expressions in configuration values. An expression is a value of the following form:
+Configuration can also dynamically change when the application state changes. This is accomplished by using expressions in configuration values. An expression is a value of the following form:
 
 ```javascript
 "property: "{expression}"
 ```
 
 The expression itself is javascript code (supported by the browser, babel transpiled code is not supported here) where you can use the following variables:
+
  * *request*: **request URL** parsed by the [url library](https://www.npmjs.com/package/url)
  * *context*: anything defined in **plugins.js requires section**
  * *state*: a function usable to extract values from the **application state** (e.g. state('map.present.zoom' to get current zoom))
@@ -498,6 +517,7 @@ The default monitored state is:
 
 ### Container configuration
 Each plugin can define a list of supported containers, but it's the plugin system that decides which ones will be used at runtime based on:
+
  * container existance: if a container is not configured, it will not be used (obviously)
  * between the existing ones, the ones with the highest priority property value will be chosen; note that a plugin can be included in more than one container if they have the same priority
 
@@ -557,7 +577,8 @@ We can change containers relation like this:
 
 This will force the plugin system to choose Container1 instead of Container3, and will override the name property.
 
-There is also a set of options to (dinamically) add/exclude containers:
+There is also a set of options to (dynamically) add/exclude containers:
+
  * **showIn**: can be used to add a plugin to a container or more than one, in addition to the default one (it is an array of container plugin names)
  * **hideFrom**: can be used to exclude a plugin from a given container or more than one (it is an array of container plugin names)
  * **doNotHide**: can be used to show a plugin in the root container, in addition to the default one
@@ -645,7 +666,7 @@ export const SamplePlugin = assign(SampleComponent, {
 
 With this configuration the sample plugin will be shown in both Container and ContainerOther plugins (they have the same priority, so both are picked).
 
-We can change this using showIn or hideFrom in localConfig.json:
+We can change this using `showIn` or `hideFrom` in `localConfig.json`:
 #### localConfig.json
 ```javascript
 {
@@ -702,7 +723,7 @@ We can also add the plugin to the root container, using the doNotHide property (
 ```
 
 ### Conditionally disabling plugins
-Dinamyc expression can also be used to enable a plugin only when a specific application state is met, using the **disablePluginIf** property.
+Dynamyc expression can also be used to enable a plugin only when a specific application state is met, using the **disablePluginIf** property.
 
 ```javascript
 {
@@ -726,6 +747,7 @@ The plugin will be disabled in 3D mode.
 You can lazy load your plugins (load them on demand), but only if you define a loading mechanism for your plugin. This is expecially useful for plugins that include big external libraries.
 
 A lazy loaded plugin is not defined by its component, but with a lazy descriptor with:
+
  * a **loadPlugin** function that loads the plugin code and calls the given **resolve** when the plugin is loaded
  * an **enabler** function that triggers plugin loading on a specific state change
 
@@ -748,11 +770,13 @@ module.exports = {
 ## Testing plugins
 As we already mentioned a plugin is a collection of entities that should already have unit tests (components, reducers, actions, selectors, epics).
 We can limit plugins testing to testing the interactions between these different entities, for example:
+
  * connection of the redux state to the plugins properties
  * epics that are related to the plugin lifecycle
  * containment relations between plugins
 
 To ease writing a plugin unit test, an helper is available (pluginsTestUtils) that can be used to:
+
   * create a plugin connected with a redux store (**getPluginForTest**), initialized with plugin's defined reducers and epics, and with a given initial state
   * get access to the redux store
   * get access to the list of actions dispatched to the store

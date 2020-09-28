@@ -7,22 +7,22 @@
 */
 
 import React from 'react';
-import { FormGroup, Glyphicon, Row, Col } from 'react-bootstrap';
-import { isNumber } from 'lodash';
+import {FormGroup, Glyphicon, MenuItem} from 'react-bootstrap';
+import {isEmpty, some, isUndefined} from 'lodash';
 
-import CoordinateEntry from '../../misc/coordinateeditors/CoordinateEntry';
 import Message from '../../I18N/Message';
-import DropdownToolbarOptions from '../../misc/toolbar/DropdownToolbarOptions';
-import Toolbar from '../../misc/toolbar/Toolbar';
+import SearchBarMenu from './SearchBarMenu';
 
 import SearchBarBase from '../../search/SearchBarBase';
 import SearchBarInput from '../../search/SearchBarInput';
 import SearchBarToolbar from '../../search/SearchBarToolbar';
 
 import { defaultSearchWrapper } from '../../search/SearchBarUtils';
+import BookmarkSelect, {BookmarkOptions} from "../searchbookmarkconfig/BookmarkSelect";
+import CoordinatesSearch, {CoordinateOptions} from "../searchcoordinates/CoordinatesSearch";
 
 export default ({
-    activeSearchTool = 'addressSearch',
+    activeSearchTool: activeTool = 'addressSearch',
     removeIcon = '1-close',
     searchIcon = 'search',
     isSearchClickable = true,
@@ -30,24 +30,6 @@ export default ({
     searchText = '',
     maxResults = 15,
     searchOptions,
-    aeronauticalOptions = {
-        seconds: {
-            decimals: 4,
-            step: 0.0001
-        }
-    },
-    constraintsCoordEditor = {
-        decimal: {
-            lat: {
-                min: -90,
-                max: 90
-            },
-            lon: {
-                min: -180,
-                max: 180
-            }
-        }
-    },
     loading,
     delay,
     blurResetDelay,
@@ -56,6 +38,7 @@ export default ({
     selectedItems = [],
     defaultZoomLevel = 12,
     enabledSearchServicesConfig = false,
+    enabledSearchBookmarkConfig = false,
     error,
     format = 'decimal',
     placeholder,
@@ -63,6 +46,7 @@ export default ({
     showOptions = true,
     showAddressSearchOption = true,
     showCoordinatesSearchOption = true,
+    showBookMarkSearchOption = true,
     onSearch,
     onSearchReset,
     onSearchTextChange,
@@ -73,47 +57,16 @@ export default ({
     onChangeFormat = () => {},
     onToggleControl = () => {},
     onZoomToPoint = () => {},
-    onPurgeResults
+    onClearBookmarkSearch = () => {},
+    onPurgeResults,
+    items = [],
+    ...props
 }) => {
+
     const search = defaultSearchWrapper({searchText, selectedItems, searchOptions, maxResults, onSearch, onSearchReset});
 
     const clearSearch = () => {
         onSearchReset();
-    };
-
-    const clearCoordinates = () => {
-        onClearCoordinatesSearch({owner: "search"});
-        onChangeCoord("lat", "");
-        onChangeCoord("lon", "");
-    };
-
-    const zoomToPoint = () => {
-        onZoomToPoint({
-            x: parseFloat(coordinate.lon),
-            y: parseFloat(coordinate.lat)
-        }, defaultZoomLevel, "EPSG:4326");
-    };
-
-    const getActiveTool = () => {
-        let activeTool = activeSearchTool;
-        if (showAddressSearchOption && !showCoordinatesSearchOption) {
-            activeTool = "addressSearch";
-        }
-        if (!showAddressSearchOption && showCoordinatesSearchOption) {
-            activeTool = "coordinatesSearch";
-        }
-        return activeTool;
-    };
-
-    const areValidCoordinates = () => isNumber(coordinate.lon) && isNumber(coordinate.lat);
-
-    const changeCoord = (coord, value) => {
-        let val = isNaN(parseFloat(value)) ? "" : parseFloat(value);
-
-        onChangeCoord(coord, val);
-        if (!areValidCoordinates()) {
-            onClearCoordinatesSearch({owner: "search"});
-        }
     };
 
     const getError = (e) => {
@@ -123,34 +76,78 @@ export default ({
         return null;
     };
 
-    let activeTool = getActiveTool();
     let searchMenuOptions = [];
-    if (showAddressSearchOption && showCoordinatesSearchOption) {
-        searchMenuOptions.push({
-            active: activeTool === "addressSearch",
-            onClick: () => {
+    if (showAddressSearchOption) {
+        searchMenuOptions.push(
+            <MenuItem active={activeTool === "addressSearch"} onClick={()=>{
                 onClearCoordinatesSearch({owner: "search"});
+                onClearBookmarkSearch("selected");
                 onChangeActiveSearchTool("addressSearch");
-            },
-            glyph: searchIcon,
-            text: <Message msgId="search.addressSearch"/>
-        });
-        searchMenuOptions.push({
-            active: activeTool === "coordinatesSearch",
-            onClick: () => {
-                if (searchText !== undefined && searchText !== "") {
-                    clearSearch();
-                }
-                onChangeActiveSearchTool("coordinatesSearch");
-            },
-            glyph: "search-coords",
-            text: <Message msgId="search.coordinatesSearch"/>
-        });
+            }}
+            >
+                <Glyphicon glyph={searchIcon}/> <Message msgId="search.addressSearch"/>
+            </MenuItem>);
     }
+    if (showCoordinatesSearchOption) {
+        searchMenuOptions.push(
+            <CoordinateOptions.coordinatesMenuItem
+                activeTool={activeTool}
+                searchText={searchText}
+                clearSearch={clearSearch}
+                onChangeActiveSearchTool={onChangeActiveSearchTool}
+                onClearBookmarkSearch={onClearBookmarkSearch}
+            />);
+    }
+
+    let searchByBookmarkConfig;
+    if (showBookMarkSearchOption && !isEmpty(items)) {
+        const {allowUser, bookmarkSearchConfig: config} = props.bookmarkConfig || {};
+        const [item] = items;
+        if (some(items, "menuItem")) {
+            const BookmarkMenuItem = item.menuItem;
+            searchMenuOptions.push(<BookmarkMenuItem/>);
+        }
+        if (some(items, "bookmarkConfig")) {
+            searchByBookmarkConfig = {
+                ...item.bookmarkConfig(onToggleControl, enabledSearchBookmarkConfig, activeTool),
+                ...(!allowUser && {visible: false})
+            };
+        }
+        // Reset activeTool when no valid permission for bookmark
+        if (!allowUser && config?.bookmarks?.length === 0 && activeTool === "bookmarkSearch") {
+            onChangeActiveSearchTool("addressSearch");
+        }
+    }
+
+    const getConfigButtons = () => {
+        if (activeTool === "addressSearch") {
+            return {
+                onClick: () => {
+                    if (!enabledSearchServicesConfig) {
+                        onToggleControl("searchservicesconfig");
+                    }
+                },
+                glyph: "cog",
+                className: "square-button-md no-border ",
+                tooltip: <Message msgId="search.searchservicesbutton"/>,
+                tooltipPosition: "bottom",
+                bsStyle: "default",
+                pullRight: true,
+                visible: showOptions && activeTool === "addressSearch"
+            };
+        } else if (showOptions) {
+            if (activeTool === "coordinatesSearch") {
+                return CoordinateOptions.coordinateFormatChange(format, onChangeFormat, showOptions, activeTool);
+            } else if (activeTool === "bookmarkSearch") {
+                return searchByBookmarkConfig;
+            }
+        }
+        return {};
+    };
 
     return (<SearchBarBase>
         <FormGroup>
-            <div className="input-group">
+            <div className="input-group" style={{display: "flex"}}>
                 {selectedItems && selectedItems.map((item, index) =>
                     <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
                 )}
@@ -167,151 +164,58 @@ export default ({
                     onSearchTextChange={onSearchTextChange}
                     onCancelSelectedItem={onCancelSelectedItem}
                     onPurgeResults={onPurgeResults}/>
-                {activeTool !== "addressSearch" && showCoordinatesSearchOption &&
-                    <div className="coordinateEditor">
-                        <Row className="entryRow">
-                            <Col xs={3} className="coordinateLabel">
-                                <Message msgId="latitude"/>
-                            </Col>
-                            <Col xs={9}>
-                                <CoordinateEntry
-                                    format={format}
-                                    aeronauticalOptions={aeronauticalOptions}
-                                    coordinate="lat"
-                                    idx={1}
-                                    value={coordinate.lat}
-                                    constraints={constraintsCoordEditor}
-                                    onChange={(dd) => changeCoord("lat", dd)}
-                                    onKeyDown={(e) => {
-                                        if (areValidCoordinates() && e.keyCode === 13) {
-                                            zoomToPoint();
-                                        }
-                                    }}
-                                />
-                            </Col>
-                        </Row>
-                        <Row className="entryRow">
-                            <Col xs={3} className="coordinateLabel">
-                                <Message msgId="longitude"/>
-                            </Col>
-                            <Col xs={9}>
-                                <CoordinateEntry
-                                    format={format}
-                                    aeronauticalOptions={aeronauticalOptions}
-                                    coordinate="lon"
-                                    idx={2}
-                                    value={coordinate.lon}
-                                    constraints={constraintsCoordEditor}
-                                    onChange={(dd) => changeCoord("lon", dd)}
-                                    onKeyDown={(e) => {
-                                        if (areValidCoordinates() && e.keyCode === 13) {
-                                            zoomToPoint();
-                                        }
-                                    }}
-                                />
-                            </Col>
-                        </Row>
-                    </div>
+                {activeTool === "coordinatesSearch" && showCoordinatesSearchOption &&
+                    <CoordinatesSearch format={format} defaultZoomLevel={defaultZoomLevel} onClearCoordinatesSearch={onClearCoordinatesSearch} />
+                }
+                {
+                    activeTool === "bookmarkSearch" && showBookMarkSearchOption &&
+                        <BookmarkSelect mapInitial={props.mapInitial}/>
                 }
                 <SearchBarToolbar
                     splitTools={false}
-                    loading={loading}
-                    toolbarButtons={[{
-                        glyph: removeIcon,
-                        className: "square-button-md no-border",
-                        bsStyle: "default",
-                        pullRight: true,
-                        visible: activeTool === "addressSearch" &&
-                            (searchText !== "" || selectedItems && selectedItems.length > 0) ||
-                            activeTool === "coordinatesSearch" && (isNumber(coordinate.lon) || isNumber(coordinate.lat)),
-                        onClick: () => {
-                            if (activeTool === "addressSearch") {
-                                clearSearch();
-                            } else {
-                                clearCoordinates();
-                            }
-                        }
-                    }, {
-                        glyph: searchIcon,
-                        className: "square-button-md no-border " +
+                    toolbarButtons={[{...getConfigButtons()},
+                        {
+                            glyph: removeIcon,
+                            className: "square-button-md no-border",
+                            bsStyle: "default",
+                            pullRight: true,
+                            loading: !isUndefined(loading) && loading,
+                            visible: activeTool === "addressSearch" &&
+                            (searchText !== "" || selectedItems && selectedItems.length > 0),
+                            onClick: () => {
+                                if (activeTool === "addressSearch") {
+                                    clearSearch();
+                                }
+                            },
+                            ...(activeTool === "coordinatesSearch" &&
+                                CoordinateOptions.removeIcon(activeTool, coordinate, onClearCoordinatesSearch, onChangeCoord))
+                        }, {
+                            glyph: searchIcon,
+                            className: "square-button-md no-border " +
                             (isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
-                        bsStyle: "default",
-                        pullRight: true,
-                        visible: activeTool === "addressSearch" &&
-                            (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools) ||
-                            activeTool === "coordinatesSearch",
-                        onClick: () => {
-                            if (activeTool === "coordinatesSearch" && areValidCoordinates()) {
-                                zoomToPoint();
-                            }
-                            if (isSearchClickable) {
-                                search();
-                            }
-                        }
-                    }, {
-                        tooltip: getError(error),
-                        tooltipPosition: "bottom",
-                        className: "square-button-md no-border",
-                        glyph: "warning-sign",
-                        bsStyle: "danger",
-                        glyphClassName: "searcherror",
-                        visible: !!error,
-                        onClick: clearSearch
-                    }, {
-                        buttonConfig: {
-                            title: <Glyphicon glyph="menu-hamburger"/>,
-                            tooltipId: "search.changeSearchInputField",
+                            bsStyle: "default",
+                            pullRight: true,
+                            tooltipPosition: "bottom",
+                            visible: activeTool === "addressSearch" &&
+                            (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools),
+                            onClick: () => isSearchClickable && search(),
+                            ...(activeTool === "coordinatesSearch" &&
+                                CoordinateOptions.searchIcon(activeTool, coordinate, onZoomToPoint, defaultZoomLevel)),
+                            ...(activeTool === "bookmarkSearch" &&
+                                    BookmarkOptions.searchIcon(activeTool, props))
+                        }, {
+                            tooltip: getError(error),
                             tooltipPosition: "bottom",
                             className: "square-button-md no-border",
-                            pullRight: true
-                        },
-                        menuOptions: [
-                            ...searchMenuOptions, {
-                                onClick: () => {
-                                    if (!enabledSearchServicesConfig) {
-                                        onToggleControl("searchservicesconfig");
-                                    }
-                                },
-                                glyph: "cog",
-                                text: <Message msgId="search.searchservicesbutton"/>
-                            }
-                        ],
-                        visible: showOptions,
-                        Element: DropdownToolbarOptions
-                    }]}
-                >
-                    {
-                        showOptions && activeTool === "coordinatesSearch" ? <Toolbar
-                            btnGroupProps = {{ className: 'btn-group-menu-options-format'}}
-                            transitionProps = {null}
-                            btnDefaultProps = {{ className: 'square-button-md', bsStyle: 'primary' }}
-                            buttons={[
-                                {
-                                    buttonConfig: {
-                                        title: <Glyphicon glyph="cog"/>,
-                                        tooltipId: "search.changeSearchInputField",
-                                        tooltipPosition: "bottom",
-                                        className: "square-button-md no-border",
-                                        pullRight: true
-                                    },
-                                    menuOptions: [
-                                        {
-                                            active: format === "decimal",
-                                            onClick: () => onChangeFormat("decimal"),
-                                            text: <Message msgId="search.decimal"/>
-                                        }, {
-                                            active: format === "aeronautical",
-                                            onClick: () => onChangeFormat("aeronautical"),
-                                            text: <Message msgId="search.aeronautical"/>
-                                        }
-                                    ],
-                                    visible: showOptions && activeTool === "coordinatesSearch",
-                                    Element: DropdownToolbarOptions
-                                }
-                            ]}
-                        /> : null
-                    }
-                </SearchBarToolbar>
+                            glyph: "warning-sign",
+                            bsStyle: "danger",
+                            glyphClassName: "searcherror",
+                            visible: !!error,
+                            onClick: clearSearch
+                        }, {
+                            renderButton: <SearchBarMenu disabled={showOptions} menuItems={searchMenuOptions} />
+                        }]}
+                />
             </div>
         </FormGroup>
     </SearchBarBase>);

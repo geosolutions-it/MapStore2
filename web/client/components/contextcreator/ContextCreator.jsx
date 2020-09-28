@@ -14,7 +14,7 @@ import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
 import ConfigurePlugins from './ConfigurePluginsStep';
 import ConfigureMap from './ConfigureMapStep';
-
+import {CONTEXT_TUTORIALS} from '../../actions/contextcreator';
 /**
  * Filters plugins and applies overrides.
  * The resulting array will filter the pluginsConfig returning only the ones present in viewerPlugins.
@@ -75,11 +75,14 @@ export const pluginsFilterOverride = (pluginsConfigs, viewerPlugins) => {
 
 export default class ContextCreator extends React.Component {
     static propTypes = {
+        user: PropTypes.object,
         loading: PropTypes.bool,
         loadFlags: PropTypes.object,
         isValidContextName: PropTypes.bool,
         contextNameChecked: PropTypes.bool,
         curStepId: PropTypes.string,
+        tutorialStatus: PropTypes.string,
+        tutorialStep: PropTypes.string,
         newContext: PropTypes.object,
         resource: PropTypes.object,
         pluginsConfig: PropTypes.object,
@@ -91,6 +94,7 @@ export default class ContextCreator extends React.Component {
         editedCfg: PropTypes.string,
         isCfgValidated: PropTypes.bool,
         cfgError: PropTypes.object,
+        mapTemplates: PropTypes.array,
         parsedTemplate: PropTypes.object,
         editedTemplate: PropTypes.object,
         fileDropStatus: PropTypes.string,
@@ -114,7 +118,9 @@ export default class ContextCreator extends React.Component {
         mapType: PropTypes.string,
         showReloadConfirm: PropTypes.bool,
         showDialog: PropTypes.object,
+        onInit: PropTypes.func,
         onSetStep: PropTypes.func,
+        onShowTutorial: PropTypes.func,
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func,
         onSaveTemplate: PropTypes.func,
@@ -139,7 +145,8 @@ export default class ContextCreator extends React.Component {
         onShowBackToPageConfirmation: PropTypes.func,
         showBackToPageConfirmation: PropTypes.bool,
         backToPageDestRoute: PropTypes.string,
-        backToPageConfirmationMessage: PropTypes.string
+        backToPageConfirmationMessage: PropTypes.string,
+        tutorials: PropTypes.object
     };
 
     static contextTypes = {
@@ -179,23 +186,34 @@ export default class ContextCreator extends React.Component {
             "ScaleBox",
             "Toolbar",
             "MapLoading",
-            "Identify",
+            {
+                "name": "Identify",
+                "overrides": {
+                    "cfg": {
+                        showEdit: false
+                    }
+                }
+            },
             "Locate",
             "ZoomIn",
             "ZoomOut",
             "ZoomAll",
             "Annotations",
             "MapImport",
+            "MapExport",
             "Undo",
             "Redo",
-            "Expander"
+            "Expander",
+            "FilterLayer"
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
         isCfgValidated: false,
         curStepId: 'general-settings',
         saveDestLocation: '/context-manager',
+        onInit: () => { },
         onSetStep: () => { },
+        onShowTutorial: () => { },
         onChangeAttribute: () => { },
         onReloadConfirm: () => { },
         uploadEnabled: false,
@@ -203,10 +221,23 @@ export default class ContextCreator extends React.Component {
         onShowBackToPageConfirmation: () => { },
         showBackToPageConfirmation: false,
         backToPageDestRoute: '/context-manager',
-        backToPageConfirmationMessage: 'contextCreator.undo'
+        backToPageConfirmationMessage: 'contextCreator.undo',
+        tutorials: CONTEXT_TUTORIALS
     };
 
+    componentDidMount() {
+        this.props.onInit({
+            tutorials: this.props.tutorials
+        });
+    }
+
     render() {
+        const extraToolbarButtons = (stepId) => this.props.tutorials[stepId] ? [{
+            id: 'show-tutorial',
+            onClick: () => this.props.onShowTutorial(stepId),
+            label: 'contextCreator.showTutorial'
+        }] : [];
+
         return (
             <Stepper
                 loading={this.props.loading && this.props.loadFlags.contextSaving}
@@ -220,6 +251,7 @@ export default class ContextCreator extends React.Component {
                 steps={[{
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
+                    extraToolbarButtons: extraToolbarButtons('general-settings'),
                     disableNext: !this.props.resource.name || !this.props.resource.name.length ||
                         !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length ||
                         this.props.loading || !this.props.isValidContextName || !this.props.contextNameChecked,
@@ -235,7 +267,7 @@ export default class ContextCreator extends React.Component {
                 }, {
                     id: 'configure-map',
                     label: 'contextCreator.configureMap.label',
-                    extraToolbarButtons: [{
+                    extraToolbarButtons: [...extraToolbarButtons('configure-map'), {
                         id: "map-reload",
                         onClick: () => this.props.onReloadConfirm(true),
                         label: 'contextCreator.configureMap.reload'
@@ -256,14 +288,18 @@ export default class ContextCreator extends React.Component {
                 }, {
                     id: 'configure-plugins',
                     label: 'contextCreator.configurePlugins.label',
+                    extraToolbarButtons: extraToolbarButtons('configure-plugins'),
                     disableNext: !this.props.allAvailablePlugins.filter(
                         plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length ||
                         !!this.props.cfgError ||
                         !this.props.isCfgValidated,
                     component:
                         <ConfigurePlugins
+                            user={this.props.user}
                             loading={this.props.loading}
                             loadFlags={this.props.loadFlags}
+                            tutorialMode={this.props.tutorialStatus === 'run'}
+                            tutorialStep={this.props.tutorialStep}
                             allPlugins={this.props.allAvailablePlugins}
                             editedPlugin={this.props.editedPlugin}
                             editedCfg={this.props.editedCfg}
@@ -274,7 +310,7 @@ export default class ContextCreator extends React.Component {
                             showDescriptionTooltip={this.props.showPluginDescriptionTooltip}
                             descriptionTooltipDelay={this.props.pluginDescriptionTooltipDelay}
                             showDialog={this.props.showDialog}
-                            mapTemplates={this.props.newContext.templates}
+                            mapTemplates={this.props.mapTemplates}
                             parsedTemplate={this.props.parsedTemplate}
                             editedTemplate={this.props.editedTemplate}
                             fileDropStatus={this.props.fileDropStatus}

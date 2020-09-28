@@ -7,13 +7,14 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Row, Col, FormControl} = require('react-bootstrap');
+const {Row, Col} = require('react-bootstrap');
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const I18N = require('../../I18N/I18N');
 
 const assign = require('object-assign');
 
 const CoordinatesUtils = require("../../../utils/CoordinatesUtils");
+const IntlNumberFormControl = require("../../I18N/IntlNumberFormControl");
 
 
 class GeometryDetails extends React.Component {
@@ -153,24 +154,26 @@ class GeometryDetails extends React.Component {
         return (
             <div>
                 <div className="detail-field-title">{name}</div>
-                <FormControl
+                <IntlNumberFormControl
                     style={{minWidth: '105px', margin: 'auto'}}
                     type="number"
                     id={"queryform_bbox_" + name}
-                    step={!this.isWGS84() ? 1 : this.getStep(this.props.zoom)}
-                    defaultValue={this.roundValue(value, !this.isWGS84() ? 100 : 1000000)}
-                    onChange={(evt) => this.onUpdateBBOX(evt.target.value, name)}/>
+                    step={this.getStep(this.props.zoom)}
+                    defaultValue={this.roundValue(value, 1000000)}
+                    onChange={(val) => this.onUpdateBBOX(val, name)}/>
             </div>
         );
     };
     renderCircleField = (value, name) => {
+        // radius should have 2 decimals if uom of projections is meter (EPSG:3857)
+        // all other cases it must have at least 6 decimals because coords are converted to EPSG:4326
         return (
-            <FormControl
+            <IntlNumberFormControl
                 type="number"
                 id={"queryform_circle_" + name}
-                defaultValue={this.roundValue(value, !this.isWGS84() || name === 'radius' ? 100 : 1000000)}
+                defaultValue={this.roundValue(value, name === 'radius' && !this.isWGS84() ? 100 : 1000000)}
                 step={this.getStepCircle(this.props.zoom, name)}
-                onChange={(evt) => this.onUpdateCircle(evt.target.value, name)}/>
+                onChange={(val) => this.onUpdateCircle(val, name)}/>
         );
     };
 
@@ -323,7 +326,7 @@ class GeometryDetails extends React.Component {
         for (let prop in this.extent) {
             if (prop) {
                 let coordinateInput = document.getElementById("queryform_bbox_" + prop);
-                coordinateInput.value = this.roundValue(this.extent[prop], !this.isWGS84() ? 100 : 1000000);
+                coordinateInput.value = this.roundValue(this.extent[prop], 1000000);
                 this.onUpdateBBOX(this.extent[prop], prop);
             }
         }

@@ -2,7 +2,7 @@
     border: none;
     @media (min-width: 768px) {
         & {
-            width: 400px;
+            width: 550px;
         }
     }
     .input-link {
@@ -52,5 +52,22 @@
         padding: 0 8px;
         border: 1px solid transparent;
         .shadow-soft;
+        overflow-x: auto;
+        max-height: 210px;
+        scrollbar-width: thin;
+    }
+    .mapstore-switch-panel::-webkit-scrollbar { width: 8px; background: #fff; }
+    .mapstore-switch-panel::-webkit-scrollbar-thumb { background: #c5c5c5; }
+}
+
+#share-container {
+    .coordinateRow > div:first-child{
+        display: none;
+    }
+    .degrees, .minutes, .seconds {
+        flex: 1;
+    }
+    .aeronautical span.react-numeric-input{
+        width: 100%;
     }
 }

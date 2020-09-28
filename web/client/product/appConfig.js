@@ -69,7 +69,25 @@ module.exports = {
         component: require('./pages/GeoStory').default
     }, {
         name: "geostory",
+        path: "/geostory/:gid/section/:sectionId",
+        component: require('./pages/GeoStory').default
+    }, {
+        name: "geostory",
+        path: "/geostory/:gid/section/:sectionId/column/:columnId",
+        component: require('./pages/GeoStory').default
+    }, {
+        name: "geostory",
         path: "/geostory/shared/:gid",
+        component: require('./pages/GeoStory').default
+    },
+    {
+        name: "geostory",
+        path: "/geostory/shared/:gid/section/:sectionId",
+        component: require('./pages/GeoStory').default
+    },
+    {
+        name: "geostory",
+        path: "/geostory/shared/:gid/section/:sectionId/column/:columnId",
         component: require('./pages/GeoStory').default
     }],
     initialState: {

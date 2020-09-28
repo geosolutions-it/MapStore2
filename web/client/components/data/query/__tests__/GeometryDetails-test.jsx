@@ -31,8 +31,8 @@ describe('GeometryDetails', () => {
         let geometry = {
             center: {
                 srs: "EPSG:900913",
-                x: -1761074.344349588,
-                y: 5852757.632510748
+                x: -1764074.344349588,
+                y: 5854757.632510748
             },
             projection: "EPSG:900913",
             radius: 836584.05,
@@ -66,6 +66,13 @@ describe('GeometryDetails', () => {
         let panelBodyRows = pb.getElementsByClassName('row');
         expect(panelBodyRows).toExist();
         expect(panelBodyRows.length).toBe(3);
+
+        const inputs = document.querySelectorAll('input');
+        expect(inputs.length).toBe(3);
+        // checking number of decimals
+        expect(inputs[0].value.substring(inputs[0].value.indexOf(".") + 1).length).toBe(6); // "-15.846949"
+        expect(inputs[1].value.substring(inputs[1].value.indexOf(".") + 1).length).toBe(6); // "46.462377"
+        expect(inputs[2].value.substring(inputs[2].value.indexOf(".") + 1).length).toBe(2); // "6114748.17"
 
         expect(pb.childNodes.length).toBe(1);
     });
@@ -137,22 +144,26 @@ describe('GeometryDetails', () => {
     it('creates the GeometryDetails component with BBOX selection', () => {
         let geometry = {
             extent: [
-                -1335833.8895192828,
-                5212046.6457833825,
-                -543239.115071175,
-                5785158.045300978
+                -12080719.446415536,
+                3035467.26726092,
+                -11112109.423985783,
+                6146760.066580733
             ],
             projection: "EPSG:900913",
             type: "Polygon"
         };
 
+        const actions = {
+            onChangeDrawingStatus: () =>{}
+        };
         let type = "BBOX";
-
+        const spyOnChangeDrawingStatus = expect.spyOn(actions, "onChangeDrawingStatus");
         const geometryDetails = ReactDOM.render(
             <GeometryDetails
                 geometry={geometry}
                 projection="EPSG:900913"
-                type={type}/>,
+                type={type}
+                onChangeDrawingStatus={actions.onChangeDrawingStatus}/>,
             document.getElementById("container")
         );
 
@@ -172,5 +183,25 @@ describe('GeometryDetails', () => {
         let panelBodyRows = pb.getElementsByClassName('row');
         expect(panelBodyRows).toExist();
         expect(panelBodyRows.length).toBe(3);
+
+        const panelBodyInputs = pb.querySelectorAll('input');
+        expect(panelBodyInputs.length).toBe(4);
+
+        [...panelBodyInputs].forEach(input => {
+            const [mainValue, decimals] = input.value.split('.');
+
+            expect(mainValue.length + decimals.length <= 10 && mainValue.length + decimals.length >= 7).toBeTruthy();
+            expect(mainValue.length <= 4).toBeTruthy(); // can be ranged from 180 to -180
+            expect(decimals.length === 6).toBeTruthy(); // always must be 6 digits
+            input.value = 10;
+            ReactTestUtils.Simulate.change(input);
+            expect(spyOnChangeDrawingStatus).toHaveBeenCalled();
+            expect(spyOnChangeDrawingStatus.calls[0].arguments[0]).toBe('replace');
+            const geometryOutput = spyOnChangeDrawingStatus.calls[0].arguments[3];
+            expect(geometryOutput[0].type).toBe('Polygon');
+            expect(geometryOutput[0].coordinates).toBeTruthy();
+            expect(geometryOutput[0].coordinates[0].length).toBe(5);
+
+        });
     });
 });

@@ -20,7 +20,7 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
-const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING, toggleSyncWms} = require('../actions/wfsquery');
+const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent, CLICK_ON_MAP} = require('../actions/map');
 const {projectionSelector} = require('../selectors/map');
@@ -326,13 +326,6 @@ module.exports = {
 
                 return selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : []);
             }),
-    toggleSyncOnEdit: (action$, store) =>
-        action$.ofType(TOGGLE_MODE)
-            .filter(() => modeSelector(store.getState()) === MODES.EDIT)
-            .flatMap(() => Rx.Observable.merge(
-                Rx.Observable.of(...(isSyncWmsActive(store.getState()) ? [toggleSyncWms()] : [])),
-                action$.ofType(TOGGLE_MODE, CLOSE_FEATURE_GRID, LOCATION_CHANGE).take(1).flatMap(() => Rx.Observable.of(toggleSyncWms()))
-            )),
     activateTemporaryChangesEpic: (action$) =>
         action$.ofType(ACTIVATE_TEMPORARY_CHANGES)
             .flatMap(({activated}) => Rx.Observable.of(
@@ -688,7 +681,7 @@ module.exports = {
         action$.ofType(OPEN_FEATURE_GRID)
             // need to finalize the flow before listen the next open event to avoid
             // to catch open feature info triggered by this flow or advanced search
-            .exhaustMap(() =>
+            .switchMap(() =>
                 Rx.Observable.race(
                     action$.ofType(FEATURE_INFO_CLICK).take(1),
                     action$.ofType(CLOSE_FEATURE_GRID).take(1)

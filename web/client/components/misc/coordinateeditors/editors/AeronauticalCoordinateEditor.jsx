@@ -11,6 +11,7 @@ const PropTypes = require('prop-types');
 const {compose} = require('recompose');
 const { FormGroup, FormControl } = require('react-bootstrap');
 const {isNil} = require('lodash');
+const IntlNumberFormControl = require('../../../I18N/IntlNumberFormControl');
 
 /**
  * This component renders a coordiante inpout for aetronautical degrees
@@ -121,20 +122,21 @@ class AeronauticalCoordinateEditor extends React.Component {
             top: 0,
             overflow: "visible",
             zIndex: 3,
-            left: -13,
+            left: -25,
             width: 0,
             height: 0
         };
         const {step: stepSeconds} = this.props.aeronauticalOptions.seconds;
         return (
             <FormGroup style={{display: "inline-flex"}}>
-                <div style={{width: 40, display: 'flex'}}>
-                    <FormControl
+                <div className={"degrees"} style={{width: 40, display: 'flex'}}>
+                    <IntlNumberFormControl
                         key={this.props.coordinate + "degree"}
                         value={this.props.degrees}
                         placeholder="d"
-                        onChange={e => this.onChange("degrees", parseInt(e.target.value, 10))}
+                        onChange={val => this.onChange("degrees", parseInt(val, 10))}
                         step={1}
+                        size={3}
                         max={this.props.maxDegrees}
                         min={-1}
                         onKeyDown={(event) => {
@@ -145,12 +147,16 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&deg;</span>
                 </div>
-                <div style={{width: 40, display: 'flex' }}>
-                    <FormControl
+
+                <div className={"minutes"} style={{width: 40, display: 'flex' }}>
+                    <IntlNumberFormControl
                         key={this.props.coordinate + "minutes"}
                         placeholder={"m"}
+                        size={3}
                         value={this.props.minutes}
-                        onChange={e => this.onChange("minutes", parseInt(e.target.value, 10))}
+                        onChange={val => {
+                            this.onChange("minutes", parseInt(val, 10));
+                        }}
                         max={60}
                         min={-1}
                         onKeyDown={(event) => {
@@ -163,13 +169,14 @@ class AeronauticalCoordinateEditor extends React.Component {
                     <span style={labelStyle}>&prime;</span>
                 </div>
                 <div className="seconds" style={{display: 'flex'}}>
-                    <FormControl
+                    <IntlNumberFormControl
                         key={this.props.coordinate + "seconds"}
                         value={this.props.seconds}
                         placeholder="s"
-                        onChange={e => this.onChange("seconds", parseFloat(e.target.value))}
+                        onChange={val => this.onChange("seconds", parseFloat(val))}
                         step={stepSeconds}
                         max={60}
+                        // size={5}
                         onKeyDown={(event) => {
                             this.verifyOnKeyDownEvent(event);
                         }}
@@ -179,13 +186,13 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&Prime;</span>
                 </div>
-                <div >
+                <div className={"direction-select"}>
 
                     <FormControl
                         componentClass="select" placeholder="select"
                         value={this.props.direction}
                         onChange={e => this.onChange("direction", e.target.value)}
-                        style={{ width: 40, paddingLeft: 4, paddingRight: 4 }}>
+                        style={{ paddingLeft: 4, paddingRight: 4, flex: "1 1 0%" }}>
                         {this.props.directions.map((d) => <option key={d} value={d}>{d}</option>)}
                     </FormControl>
                 </div>

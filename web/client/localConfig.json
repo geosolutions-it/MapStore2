@@ -49,7 +49,10 @@
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
       {"name": "geostorymode", "path": "geostory.mode"},
-      {"name": "featuregridmode", "path": "featuregrid.mode"}],
+      {"name": "featuregridmode", "path": "featuregrid.mode"},
+      {"name": "userrole", "path": "security.user.role"},
+      {"name": "printEnabled", "path": "print.capabilities"}
+    ],
     "userSessions": {
       "enabled": true
     },
@@ -61,7 +64,6 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
-          "format": "decimal",
           "defaultTextAnnotation": "New"
         },
         "maptype": {
@@ -277,7 +279,7 @@
             },
             "FeedbackMask"
         ],
-        "desktop": [ "Details",
+        "desktop": ["Details",
           {
             "name": "Map",
             "cfg": {
@@ -303,12 +305,18 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", {
+            "name": "Annotations",
+            "cfg": {
+              "allowEdit": true
+            }
+          },
             {
               "name": "Share",
               "cfg": {
                 "advancedSettings": {
-                  "bbox": true
+                  "bbox": true,
+                  "centerAndZoom": true
                 }
               }
             },
@@ -462,7 +470,7 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
             "WidgetsTray",
             "Timeline",
             "Playback",
@@ -699,7 +707,7 @@
             "cfg": {
               "allowClicksThruHole": false,
               "containerPosition": "header",
-              "preset": "geostory_tutorial"
+              "preset": "geostory_view_tutorial"
             }
           },
           "Login",
@@ -738,7 +746,8 @@
             "cfg": {
               "embedPanel": false,
               "advancedSettings": {
-                "homeButton": true
+                "homeButton": true,
+                "sectionId": true
               }
             }
           }
@@ -756,6 +765,7 @@
           "Language",
           "NavMenu",
           "Attribution",
+          "Tutorial",
           {
               "name": "ContextCreator",
               "cfg": {

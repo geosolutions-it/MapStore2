@@ -15,6 +15,7 @@ const PropTypes = require('prop-types');
 const {Glyphicon} = require('react-bootstrap');
 const {on, toggleControl} = require('../actions/controls');
 const {createSelector} = require('reselect');
+const isEmtpy = require('lodash/isEmpty');
 
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
@@ -23,8 +24,10 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
     highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
-    setErrorSymbol
+    setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles, changeGeometryTitle, filterMarker
 } = require('../actions/annotations');
+
+const {selectFeatures} = require('../actions/draw');
 
 const { zoomToExtent } = require('../actions/map');
 
@@ -63,14 +66,17 @@ const commonEditorActions = {
     onStartDrawing: startDrawing,
     onDeleteGeometry: removeAnnotationGeometry,
     onZoom: zoomToExtent,
+    onSelectFeature: selectFeatures,
     onChangeRadius: changeRadius,
     onSetInvalidSelected: setInvalidSelected,
     onChangeText: changeText,
+    onChangeGeometryTitle: changeGeometryTitle,
     onCancelRemove: cancelRemoveAnnotation,
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,
     onConfirmRemove: confirmRemoveAnnotation,
-    onDownload: download
+    onDownload: download,
+    onFilterMarker: filterMarker
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
     {
@@ -97,15 +103,19 @@ const Annotations = connect(panelSelector, {
     onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
     onToggleUnsavedGeometryModal: toggleUnsavedGeometryModal,
     onConfirmRemove: confirmRemoveAnnotation,
+    onToggleVisibility: toggleVisibilityAnnotation,
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,
     onAdd: newAnnotation,
+    onEdit: editAnnotation,
     onHighlight: highlight,
     onCleanHighlight: cleanHighlight,
     onDetail: showAnnotation,
     onFilter: filterAnnotations,
     onDownload: download,
-    onLoadAnnotations: loadAnnotations
+    onZoom: zoomToExtent,
+    onLoadAnnotations: loadAnnotations,
+    onLoadDefaultStyles: loadDefaultStyles
 })(require('../components/mapcontrols/annotations/Annotations'));
 
 const ContainerDimensions = require('react-container-dimensions').default;
@@ -146,7 +156,7 @@ class AnnotationsPanel extends React.Component {
         closeGlyph: "1-close",
 
         // side panel properties
-        width: 660,
+        width: 330,
         dockProps: {
             dimMode: "none",
             size: 0.30,
@@ -163,6 +173,7 @@ class AnnotationsPanel extends React.Component {
                 { ({ width }) =>
                     <span className="ms-annotations-panel react-dock-no-resize ms-absolute-dock ms-side-panel">
                         <Dock
+                            fluid
                             dockStyle={this.props.dockStyle} {...this.props.dockProps}
                             isVisible={this.props.active}
                             size={this.props.width / width > 1 ? 1 : this.props.width / width} >
@@ -194,7 +205,10 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   * If an odd number of values is inserted then they are added again to reach an even number of values
   * for more information see [this page](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
   * @prop {string} symbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root)
-  * @prop {string} defaultShape the default symbol used when switching to the symbol styler from marker styler
+  * @prop {string} defaultShape the default symbol used when switching for the symbol styler
+  * @prop {string} defaultShapeStrokeColor default symbol stroke color
+  * @prop {string} defaultShapeFillColor default symbol fill color
+  * @prop {string} defaultShapeSize default symbol shape size in px
   * @class Annotations
   * @memberof plugins
   * @static
@@ -202,10 +216,12 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
 
 const annotationsSelector = createSelector([
     state => (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false,
-    state => mapLayoutValuesSelector(state, {height: true})
-], (active, dockStyle) => ({
+    state => mapLayoutValuesSelector(state, {height: true}),
+    annotationsListSelector
+], (active, dockStyle, list) => ({
     active,
-    dockStyle
+    dockStyle,
+    width: !isEmtpy(list?.selected) ? 660 : 330
 }));
 
 const AnnotationsPlugin = connect(annotationsSelector, {

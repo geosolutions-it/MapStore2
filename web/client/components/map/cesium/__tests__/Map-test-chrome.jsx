@@ -46,6 +46,24 @@ describe('CesiumMap', () => {
         expect(ReactDOM.findDOMNode(map).id).toBe('map');
     });
 
+    it('renders a map on an external window', () => {
+        const popup = window.open("", "", "width=300,height=300,left=200,top=200");
+        try {
+            const container = document.createElement("div");
+            popup.document.body.appendChild(container);
+            const Comp = () => {
+                return ReactDOM.createPortal(<CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11} document={popup.document}
+                />, container);
+            };
+            ReactDOM.render(<Comp/>, document.getElementById("container"));
+            const map = popup.document.getElementById("map");
+            expect(map).toExist();
+            expect(map.querySelectorAll(".cesium-viewer").length).toBe(1);
+        } finally {
+            popup.close();
+        }
+    });
+
     it('creates multiple maps for different containers', () => {
         const container = ReactDOM.render(
 

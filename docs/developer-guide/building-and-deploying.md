@@ -75,38 +75,26 @@ In particular:
 
 ## Index of main npm scripts
 
-* download dependencies and init developer environment
+| Command                  | Description                                                  |
+|--------------------------|--------------------------------------------------------------|
+| `npm install`            | download dependencies and init developer environment         |
+| `npm start`              | start development instance                                   |
+| `npm run examples`       | start development instance with examples                     |
+| `npm run compile`        | run single build / bundling                                  |
+| `npm test`               | run test suite once                                          |
+| `npm run continuoustest` | run continuous test suite running (useful during developing) |
+| `npm run lint`           | run ESLint checks                                            |
+| `npm run mvntest`        | run tests from Maven                                         |
+| `npm run travis`         | run the test build used for travis                           |
 
-`npm install`
+## Including the printing engine in your build
 
-* start development instance
+The [printing module](printing-module.md) is not included in official builds by default.
 
-`npm start`
+To build your own version of MapStore with the this module, you can use the **printing** profile running the build script:
 
-* start development instance with examples
+```sh
+./build.sh [version_identifier] printing
+```
 
-`npm run examples`
-
-* run test suite once
-
-`npm test`
-
-* run continuous test suite running
-
-`npm run continuoustest`
-
-* run single build / bundling
-
-`npm run compile`
-
-* run ESLint checks
-
-`npm run lint`
-
-* run tests from Maven
-
-`npm run mvntest`
-
-* build for travis
-
-`npm run travis`
+For more information or troubleshooting about the printing module you can see the [dedicated section](printing-module.md)

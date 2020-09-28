@@ -1,9 +1,12 @@
 const { isArray } = require('lodash');
 
 function template(str = "", data = {}) {
-    return str.replace(/(?!(\{?[zyx]?\}))\{*([\w_]+)*\}/g, function() {
+    return str.replace(/(\{(.*?)\})/g, function() {
         let st = arguments[0];
-        let key = arguments[1] ? arguments[1] : arguments[2];
+        let key = arguments[2] ? arguments[2] : arguments[1];
+        if (["x", "y", "z"].includes(key)) {
+            return arguments[0];
+        }
         let value = data[key];
 
         if (value === undefined) {

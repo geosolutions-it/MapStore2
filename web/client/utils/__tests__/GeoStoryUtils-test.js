@@ -29,7 +29,10 @@ import {
     scrollToContent,
     testRegex,
     isWebPageSection,
-    getWebPageComponentHeight
+    getWebPageComponentHeight,
+    parseHashUrlScrollUpdate,
+    createWebFontLoaderConfig,
+    extractFontNames
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -117,7 +120,8 @@ describe("GeoStory Utils", () => {
         expect(SectionTypes).toEqual({
             TITLE: "title",
             PARAGRAPH: "paragraph",
-            IMMERSIVE: "immersive"
+            IMMERSIVE: "immersive",
+            BANNER: 'banner'
         });
     });
     it("test isMediaSection", () => {
@@ -198,13 +202,30 @@ describe("GeoStory Utils", () => {
             expect(content.type).toBe(ContentTypes.TEXT);
             expect(content.size).toBe("large");
             expect(content.align).toBe("center");
-            expect(content.theme).toBe("bright");
+            expect(content.theme).toBe("");
             const background = data.contents[0].background;
             expect(background.theme).toBe(undefined);
             expect(background.fit).toBe("cover");
             expect(background.size).toBe("full");
             expect(background.align).toBe("center");
 
+        });
+        it("SectionTypes.BANNER", () => {
+            const data = getDefaultSectionTemplate(SectionTypes.BANNER);
+            expect(data.id).toExist();
+            expect(data.id.length).toBe(uuid().length);
+            expect(data.type).toBe(SectionTypes.BANNER);
+            expect(data.title).toBe("geostory.builder.defaults.titleBanner");
+            expect(data.cover).toBe(false);
+            expect(isArray(data.contents)).toBe(true);
+            const content = data.contents[0];
+            expect(content.id).toExist();
+            expect(content.id.length).toBe(uuid().length);
+            const background = data.contents[0].background;
+            expect(background.theme).toBe(undefined);
+            expect(background.fit).toBe("cover");
+            expect(background.size).toBe("full");
+            expect(background.align).toBe("center");
         });
         it("SectionTypes.PARAGRAPH", () => {
             const data = getDefaultSectionTemplate(SectionTypes.PARAGRAPH);
@@ -378,5 +399,117 @@ describe("GeoStory Utils", () => {
         expect(getWebPageComponentHeight('medium', 1000)).toBe(600);
         expect(getWebPageComponentHeight('large', 1000)).toBe(800);
         expect(getWebPageComponentHeight('full', 1000)).toBe(1000);
+    });
+    describe("parseHashUrlScrollUpdate", () => {
+        it('initial without shared', () => {
+            const url = 'host/#/geostory/111';
+            const hash = '#/geostory/111';
+            const storyId = 111;
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/section/222');
+        });
+        it('initial without shared with slash after storyId', () => {
+            const url = 'host/#/geostory/111/';
+            const hash = '#/geostory/111/';
+            const storyId = 111;
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/section/222');
+        });
+        it('initial with shared', () => {
+            const url = 'host/#/geostory/shared/111';
+            const hash = '#/geostory/shared/111';
+            const storyId = 111;
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/section/222');
+        });
+        it('initial with shared with slash after storyId', () => {
+            const url = 'host/#/geostory/shared/111/';
+            const hash = '#/geostory/shared/111/';
+            const storyId = 111;
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/section/222');
+        });
+        it('only sectionId is changed without columnId provided', () => {
+            const url = 'host/#/geostory/111/section/222';
+            const hash = '#/geostory/111/section/222';
+            const storyId = 111;
+            const newSectionId = '333';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, newSectionId)).toBe('host/#/geostory/111/section/333');
+        });
+        it('changes to the new sectionId if previous sectionId and columnId are existed', () => {
+            const url = 'host/#/geostory/111/section/222/column/333';
+            const hash = '#/geostory/111/section/222/column/333';
+            const storyId = 111;
+            const newSectionId = '444';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, newSectionId)).toBe('host/#/geostory/111/section/444');
+        });
+        it('adds new columnId whithout previous columnId existed', () => {
+            const url = 'host/#/geostory/111/section/222';
+            const hash = '#/geostory/111/section/222';
+            const storyId = 111;
+            const newColumnId = '333';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe('host/#/geostory/111/section/222/column/333');
+        });
+        it('adds new columnId with previous columnId existed', () => {
+            const url = 'host/#/geostory/111/section/222/column/333';
+            const hash = '#/geostory/111/section/222/column/333';
+            const storyId = 111;
+            const newColumnId = '444';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe('host/#/geostory/111/section/222/column/444');
+        });
+        it('returns url if new columnId without sectionId existing with shared', () => {
+            const url = 'host/#/geostory/shared/111/';
+            const hash = '#/geostory/shared/111/';
+            const storyId = 111;
+            const newColumnId = '444';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe(url);
+        });
+        it('returns null if no new sectionId or columnId', () => {
+            const url = 'host/#/geostory/shared/111/';
+            const hash = '#/geostory/shared/111/';
+            const storyId = 111;
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, null)).toBe(null);
+        });
+    });
+
+    it('returns a config for webfontloader', () => {
+        const fontFamilyConf = [
+            {
+                family: "fam1",
+                src: "link-fam1"
+            },
+            {
+                family: "fam2",
+                src: "link-fam2"
+            },
+            {
+                family: "fam3",
+                safe: true
+            }
+        ];
+
+        const noop = () => {};
+
+        expect(createWebFontLoaderConfig(fontFamilyConf, noop, noop)).toEqual({
+            active: noop,
+            inactive: noop,
+            custom: {
+                families: ["fam1", "fam2"],
+                urls: ["link-fam1", "link-fam2"]
+            }
+        });
+    });
+    it('returns an array of font names', () => {
+        const fontFamilies = [
+            {
+                family: "fam1",
+                src: "link-fam1"
+            },
+            {
+                family: "fam2",
+                src: "link-fam2"
+            }
+        ];
+        expect(extractFontNames(fontFamilies)).toEqual(["fam1", "fam2"]);
     });
 });

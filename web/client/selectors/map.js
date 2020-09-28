@@ -33,6 +33,7 @@ const mapInfoSelector = state => get(mapSelector(state), "info");
 const mapInfoLoadingSelector = state => get(mapSelector(state), "loadingInfo", false);
 const mapSaveErrorsSelector = state => get(mapSelector(state), "mapSaveErrors");
 const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "details");
+const mapInfoDetailsSettingsFromIdSelector = state => get(mapInfoSelector(state), "detailsSettings");
 const mapIsEditableSelector = state => {
     const mapInfoCanEdit = get(mapInfoSelector(state), 'canEdit');
     if (mapInfoCanEdit === undefined) {
@@ -92,7 +93,7 @@ const mapVersionSelector = (state) => state.map && state.map.present && state.ma
  */
 const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
 
-const mouseMoveListenerSelector = (state) => get(state, 'map.present.eventListeners.mousemove', []);
+const mouseMoveListenerSelector = (state) => get(mapSelector(state), 'eventListeners.mousemove', []);
 
 const isMouseMoveActiveSelector = (state) => !!mouseMoveListenerSelector(state).length;
 
@@ -102,6 +103,7 @@ const isMouseMoveIdentifyActiveSelector = (state) =>  mouseMoveListenerSelector(
 
 module.exports = {
     mapInfoDetailsUriFromIdSelector,
+    mapInfoDetailsSettingsFromIdSelector,
     mapSelector,
     scalesSelector,
     projectionSelector,

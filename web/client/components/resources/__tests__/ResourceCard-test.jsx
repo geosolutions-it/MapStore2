@@ -125,4 +125,20 @@ describe('This test for ResourceCard', () => {
         expect(spyonDelete.calls.length).toEqual(1);
 
     });
+
+    it('test resource with icon', () => {
+        const resource = {
+            canEdit: true,
+            name: "test",
+            description: "testDescription",
+            icon: '1-map'
+        };
+
+        ReactDOM.render(<ResourceCard resource={resource}/>, document.getElementById('container'));
+
+        const icon = document.querySelector('.map-thumb-description + div');
+        expect(icon).toExist();
+        const glyph = icon.getElementsByClassName('glyphicon-1-map')[0];
+        expect(glyph).toExist();
+    });
 });

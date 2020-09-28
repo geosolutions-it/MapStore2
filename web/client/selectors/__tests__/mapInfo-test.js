@@ -21,7 +21,8 @@ const {
     highlightStyleSelector,
     itemIdSelector,
     filterNameListSelector,
-    overrideParamsSelector
+    overrideParamsSelector,
+    mapTriggerSelector
 } = require('../mapInfo');
 
 const QUERY_PARAMS = {
@@ -338,5 +339,12 @@ describe('Test mapinfo selectors', () => {
             set('mapInfo.responses[0].layerMetadata.features[0].geometry.type', "Polygon", STATE_HIGHLIGHT)
         ).features[0].style.radius).toNotExist();
     });
-
+    it('test mapTriggerSelector', () => {
+        // when no mapInfo object is not present in state
+        expect(mapTriggerSelector({})).toBe('click');
+        // when no trigger in the configuration
+        expect(mapTriggerSelector({mapInfo: { configuration: {} }})).toBe('click');
+        // when mapInfo is present
+        expect(mapTriggerSelector({mapInfo: { configuration: { trigger: 'hover' } }})).toBe('hover');
+    });
 });

@@ -33,11 +33,12 @@ const Button = tooltip(ButtonRB);
  */
 function CustomThemePicker({
     themeStyle,
+    disableBackgroundPicker = false,
     disableBackgroundAlpha,
     disableTextColor,
     disableShadow,
     onChange = () => {},
-    onOpen,
+    onOpen = () => {},
     placement
 }) {
 
@@ -52,33 +53,35 @@ function CustomThemePicker({
 
     return (
         <>
-        <div className="ms-custom-theme-picker-field">
-            <div><Message msgId="geostory.customizeTheme.backgroundColorLabel"/></div>
-            <div>
-                <ColorSelector
-                    placement={placement}
-                    key={backgroundColor}
-                    onOpen={onOpen}
-                    color={backgroundColor}
-                    format={!disableBackgroundAlpha ? 'rgb' : 'hex'}
-                    disableAlpha={disableBackgroundAlpha}
-                    presetColors={[]}
-                    onChangeColor={(newBackgroundColor) => {
-                        const borderColor = tinycolor(newBackgroundColor).isLight()
-                            ? tinycolor(newBackgroundColor).darken(10).toHexString()
-                            : tinycolor(newBackgroundColor).lighten(15).toHexString();
-                        const readableTextColor = !disableTextColor && !themeStyle?.color && {
-                            color: tinycolor.mostReadable(newBackgroundColor, ['#000000', '#ffffff'], { includeFallbackColors: true }).toHexString()
-                        };
-                        onChange({
-                            ...themeStyle,
-                            backgroundColor: newBackgroundColor,
-                            borderColor,
-                            ...(!disableTextColor && readableTextColor)
-                        });
-                    }}/>
+        {!disableBackgroundPicker && (
+            <div className="ms-custom-theme-picker-field">
+                <div><Message msgId="geostory.customizeTheme.backgroundColorLabel"/></div>
+                <div>
+                    <ColorSelector
+                        placement={placement}
+                        key={backgroundColor}
+                        onOpen={onOpen}
+                        color={backgroundColor}
+                        format={!disableBackgroundAlpha ? 'rgb' : 'hex'}
+                        disableAlpha={disableBackgroundAlpha}
+                        presetColors={[]}
+                        onChangeColor={(newBackgroundColor) => {
+                            const borderColor = tinycolor(newBackgroundColor).isLight()
+                                ? tinycolor(newBackgroundColor).darken(10).toHexString()
+                                : tinycolor(newBackgroundColor).lighten(15).toHexString();
+                            const readableTextColor = !disableTextColor && !themeStyle?.color && {
+                                color: tinycolor.mostReadable(newBackgroundColor, ['#000000', '#ffffff'], { includeFallbackColors: true }).toHexString()
+                            };
+                            onChange({
+                                ...themeStyle,
+                                backgroundColor: newBackgroundColor,
+                                borderColor,
+                                ...(!disableTextColor && readableTextColor)
+                            });
+                        }}/>
+                </div>
             </div>
-        </div>
+        )}
         {!disableTextColor &&
         <div className="ms-custom-theme-picker-field">
             <div>

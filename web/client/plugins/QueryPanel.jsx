@@ -279,6 +279,7 @@ class QueryPanel extends React.Component {
                 open={this.props.querypanelEnabled}
                 sidebar={this.renderQueryPanel()}
                 sidebarClassName="query-form-panel-container"
+                touch={false}
                 styles={{
                     sidebar: {
                         ...this.props.layout,

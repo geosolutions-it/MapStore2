@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ReactTestUtils = require('react-dom/test-utils');
-var Display = require('../Display');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const ReactTestUtils = require('react-dom/test-utils');
+const expect = require('expect');
 
-var expect = require('expect');
+const Display = require('../Display');
 
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {
@@ -45,7 +45,7 @@ describe('test Layer Properties Display module component', () => {
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
         expect(inputs.length).toBe(1);
-        expect(inputs[0].getAttribute('type')).toBe('number');
+        ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].value).toBe('100');
     });
     it('tests Display component for wms', () => {
@@ -71,7 +71,7 @@ describe('test Layer Properties Display module component', () => {
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
         expect(inputs.length).toBe(6);
-        expect(inputs[0].getAttribute('type')).toBe('number');
+        ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].value).toBe('70');
         inputs[1].click();
         expect(spy.calls.length).toBe(1);
@@ -112,11 +112,17 @@ describe('test Layer Properties Display module component', () => {
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(6);
-        expect(labels[2].innerText).toBe("layerProperties.legendOptions.title");
-        expect(labels[3].innerText).toBe("layerProperties.legendOptions.legendWidth");
-        expect(labels[4].innerText).toBe("layerProperties.legendOptions.legendHeight");
-        expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendPreview");
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
+        const legendWidth = inputs[4];
+        const legendHeight = inputs[5];
+        // Default legend values
+        expect(legendWidth.value).toBe('12');
+        expect(legendHeight.value).toBe('12');
+        expect(labels.length).toBe(7);
+        expect(labels[3].innerText).toBe("layerProperties.legendOptions.title");
+        expect(labels[4].innerText).toBe("layerProperties.legendOptions.legendWidth");
+        expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendHeight");
+        expect(labels[6].innerText).toBe("layerProperties.legendOptions.legendPreview");
     });
 
     it('tests Layer Properties Legend component events', () => {
@@ -160,15 +166,14 @@ describe('test Layer Properties Display module component', () => {
         // With valid values
         legendWidth.value = 20;
         ReactTestUtils.Simulate.change(legendWidth);
-        ReactTestUtils.Simulate.blur(legendWidth);
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[0].arguments[0]).toEqual({ legendOptions: { legendWidth: 20, legendHeight: 15 } });
+
         legendHeight.value = 20;
         ReactTestUtils.Simulate.change(legendHeight);
-        ReactTestUtils.Simulate.blur(legendHeight);
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[2].arguments[0]).toEqual({ legendOptions: { legendWidth: 20, legendHeight: 20 } });
-        expect(spy.calls.length).toBe(4);
+        expect(spy.calls[1].arguments[0]).toEqual({ legendOptions: { legendWidth: 20, legendHeight: 20 } });
+        expect(spy.calls.length).toBe(2);
 
         // Check value in img src
         params = new URLSearchParams(img[0].src);
@@ -178,15 +183,13 @@ describe('test Layer Properties Display module component', () => {
         // With Invalid values
         legendWidth.value = 1.2;
         ReactTestUtils.Simulate.change(legendWidth);
-        ReactTestUtils.Simulate.blur(legendWidth);
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[4].arguments[0]).toEqual({ legendOptions: { legendWidth: 1, legendHeight: 20 } });
+        expect(spy.calls[2].arguments[0]).toEqual({ legendOptions: { legendWidth: 1, legendHeight: 20 } });
         legendHeight.value = 25.2;
         ReactTestUtils.Simulate.change(legendHeight);
-        ReactTestUtils.Simulate.blur(legendHeight);
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[6].arguments[0]).toEqual({ legendOptions: { legendWidth: 1, legendHeight: 25 } });
-        expect(spy.calls.length).toBe(8);
+        expect(spy.calls[3].arguments[0]).toEqual({ legendOptions: { legendWidth: 1, legendHeight: 25 } });
+        expect(spy.calls.length).toBe(4);
 
         // If either of the value is invalid, take default width and height
         params = new URLSearchParams(img[0].src);

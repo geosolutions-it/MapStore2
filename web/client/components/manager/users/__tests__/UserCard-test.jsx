@@ -73,8 +73,8 @@ describe("Test UserCard Component", () => {
         let comp = ReactDOM.render(
             <UserCard user={enabledUser} />, document.getElementById("container"));
         expect(comp).toExist();
-        let items = document.querySelectorAll('#container .gridcard .user-data-container > div');
-        let renderName = items[1];
+        let items = document.querySelectorAll('#container .gridcard .user-data-container .user-card-info-container > div');
+        let renderName = items[0];
         expect(renderName.innerHTML).toBe(enabledUser.name);
     });
 });

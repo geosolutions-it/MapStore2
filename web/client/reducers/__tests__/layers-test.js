@@ -883,6 +883,30 @@ describe('Test the layers reducer', () => {
         expect(newgroup1.id).toNotBe(newgroup2.id);
     });
 
+    it('use controlled options on add group', () => {
+        const options = {
+            id: 'uniq_id',
+            title: 'Group Title',
+            name: 'uniq_id'
+        };
+        const state = layers(
+            {
+                groups: [{
+                    id: 'group1',
+                    nodes: []
+                }]
+            },
+            addGroup(options.title, 'group1', options)
+        );
+        expect(state).toExist();
+        expect(state.groups.length).toBe(1);
+        expect(state.groups[0].nodes.length).toBe(1);
+        const newNode = state.groups[0].nodes[0];
+        expect(newNode.id).toBe(options.id);
+        expect(newNode.title).toBe(options.title);
+        expect(newNode.name).toBe(options.name);
+    });
+
     it('move groups when two are with the same title', () => {
         const action = moveNode('groupid1.groupid2', 'Default', 0);
         const state = layers({

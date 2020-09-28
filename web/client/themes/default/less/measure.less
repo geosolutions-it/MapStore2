@@ -16,3 +16,60 @@
         margin-top: 0;
     }
 }
+
+#measure-panel {
+    .measure-feature-selector {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        justify-content: space-between;
+        padding: 12px 0 12px 18px;
+        .Select-input > input {
+            width: 100%!important;
+        }
+        .Select-menu-outer{
+            z-index: 3;
+        }
+    }
+    .coordinates-row-container {
+        flex: 1 1 auto;
+        overflow: hidden auto;
+        padding: 10px;
+        .glyphicon-menu-hamburger{
+            font-size: 14px;
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+    .coordinateRow {
+        .coordinate {
+            display: flex;
+            flex: 1 1 0%;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            .input-group {
+                flex: 1 1 0%;
+                padding: 4px 0px;
+                margin-right: 8px;
+                .form-group {
+                    .react-numeric-input{
+                        font-size: @font-size-small;
+                        #intl-numeric{
+                          float: unset;
+                        }
+                    }
+                    .degrees, .minutes {
+                        min-width: 45px;
+                        flex: 1;
+                        display: flex;
+                    }
+                    .seconds {
+                        flex: 1;
+                        display: flex;
+                        min-width: 75px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -18,7 +18,7 @@ Accessing this panel the user can perform the following main operations:
 
 * Create [Widgets](widgets.md), with the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
 
-* Zoom to features, with the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button 
+* Zoom to features, with the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button
 
 !!!warning
     When GeoServer is set to strict CITE compliance for WFS (by default), the feature grid do not work correctly.
@@ -46,16 +46,21 @@ Through the **Quit edit mode** button <img src="../img/button/quit-edit-mode-but
 
 ### Create new features
 
-Once the *Edit mode* is enabled it is possible to create a new feature by clicking on the the **Add New Feature** button <img src="../img/button/add-new-feature-icon.jpg" class="ms-docbutton"/>. After that it the user fill out the fields:
+Once the *Edit mode* is enabled it is possible to create a new feature by clicking on the **Add New Feature** button <img src="../img/button/add-new-feature-icon.jpg" class="ms-docbutton"/>. After clicking on it the user can fill out the fields and edit the geometry of the new feature:
 
 <img src="../img/attributes-table/add-new-feature-attributes.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-Editing a text field, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides some suggestion such as the *type* field so that the user can choose the value from a dropdown menu. The *Missing geometry* exclamation point <img src="../img/button/missing-geometry-exclamation-point.jpg" class="ms-docbutton"/> in the second column of the *Attribute Table* means that the feature doesn't have a geometry yet. It's possible to add it later or draw it on the map before saving:
+To edit attributes MapStore provides some input fields based on the attribute type, that forces the user to insert a valid value. If the attribute is of type `text`, MapStore will also show a dropdown menu with the list of the existing values for that attribute to allow a quick selection.
+
+!!! note
+    the dropdown menu is available only if the server provides the WPS process `gs:PageUnique`
+
+The *Missing geometry* exclamation point <img src="../img/button/missing-geometry-exclamation-point.jpg" class="ms-docbutton"/> in the second column of the *Attribute Table* means that the feature doesn't have a geometry yet. It's possible to add it later or draw it on the map before saving:
 
 <img src="../img/attributes-table/missing-geometry.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 In order to save the changes made until now, there's the <img src="../img/button/save-changes.jpg" class="ms-docbutton"/> button, whereas to undo the changes there's the <img src="../img/button/cancel-changes.jpg" class="ms-docbutton"/> button. <br>
-Once a new record is created, it's possible to draw a geometry for it, by clicking on the <img src="../img/button/add-shape-icon.jpg" class="ms-docbutton"/> button that appears once that feature is selected. The process of drawing a new geometry is a little different depending on the layer type: 
+Once a new record is created, it's possible to draw a geometry for it, by clicking on the <img src="../img/button/add-shape-icon.jpg" class="ms-docbutton"/> button that appears once that feature is selected. The process of drawing a new geometry is a little different depending on the layer type:
 
 * For *Polygons* and *Multipolygons* layers, each click on the map add a new vertex (the minimum is 3). Once the vertex are set, it is possible to change the shape by creating new vertices or dragging the existing ones:
 
@@ -73,11 +78,11 @@ The user is always allowed to delete the drawn shape through the <img src="../im
 
 ### Editing and removing existing features
 
-In order to update an existing feature, it is necessary to start the *Editing session* by clicking the *Edit mode* icon <img src="../img/button/editing-button.jpg" class="ms-docbutton"/> button. If the goal is to update the Attribute Table records, the user can simply select them and type the desired text into the input field. However, it is also possible to modify the geometries associated with a record by moving the existent vertices and/or creating new ones directly from the map. 
+In order to update an existing feature, it is necessary to start the *Editing session* by clicking the *Edit mode* icon <img src="../img/button/editing-button.jpg" class="ms-docbutton"/> button. If the goal is to update the Attribute Table records, the user can simply select them and type the desired text into the input field. However, it is also possible to modify the geometries associated with a record by moving the existent vertices and/or creating new ones directly from the map.
 
 <img src="../img/attributes-table/update-polygon-shape.gif" class="ms-docimage"/>
 
-With a click on **Save changes** <img src="../img/button/save-changes.jpg" class="ms-docbutton"/> these changes will be persistent.<br> In order to delete an existing feature, the user can always, in *Edit mode*, select that feature and click on the <img src="../img/button/delete-features-button.jpg" class="ms-docbutton" /> button. 
+With a click on **Save changes** <img src="../img/button/save-changes.jpg" class="ms-docbutton"/> these changes will be persistent.<br> In order to delete an existing feature, the user can always, in *Edit mode*, select that feature and click on the <img src="../img/button/delete-features-button.jpg" class="ms-docbutton" /> button.
 
 ## Set filters
 

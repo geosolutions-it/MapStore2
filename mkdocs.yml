@@ -19,10 +19,13 @@ extra:
   repo_icon: 'github'
   social:
     - type: 'github'
+      icon: 'fontawesome/brands/github'
       link: 'https://github.com/geosolutions-it'
     - type: 'twitter'
+      icon: 'fontawesome/brands/twitter'
       link: 'https://twitter.com/geosolutions_it'
     - type: 'linkedin'
+      icon: 'fontawesome/brands/linkedin'
       link: 'https://it.linkedin.com/company/geosolutions-s-a-s-'
 extra_javascript:
   - 'https://code.jquery.com/jquery-3.3.1.min.js'
@@ -74,6 +77,23 @@ pages:
       - Overview: 'user-guide/exploring-dashboards.md'
       - Adding widgets: 'user-guide/adding-widgets.md'
       - Connecting widgets: 'user-guide/connecting-widgets.md'
+    - Exploring Stories:
+      - Overview: 'user-guide/exploring-stories.md'
+      - Story Settings: 'user-guide/story-setting.md'
+      - Title Section: 'user-guide/title-section.md'
+      - Banner Section: 'user-guide/banner-section.md'
+      - Paragraph Section: 'user-guide/paragraph-section.md'
+      - Immersive Section: 'user-guide/immersive-section.md'
+      - Media Section: 'user-guide/media-section.md'
+      - Web Page section: 'user-guide/web-section.md'
+      - Text Editor Toolbar: 'user-guide/text-editor-toolbar.md'
+      - Image Toolbar: 'user-guide/content-image-toolbar.md'
+      - Video Toolbar: 'user-guide/content-video-toolbar.md'
+      - Map Toolbar: 'user-guide/content-map-toolbar.md'
+      - Web Page Toolbar: 'user-guide/content-web-toolbar.md'
+      - Media Editor: 'user-guide/media-editor-window.md'
+      - Configue the map: 'user-guide/configure-map.md'
+
   - Developer Guide:
     - Requirements: 'developer-guide/requirements.md'
     - Quick Setup and Run: 'developer-guide/index.md'
@@ -88,6 +108,9 @@ pages:
       - Internationalization: 'developer-guide/internationalization.md'
       - Custom dependencies: 'developer-guide/custom-dependencies.md'
       - Styling and theming: 'developer-guide/customize-theme.md'
+      - Application tutorial: 'developer-guide/application-tutorial.md'
+      - Working with Extensions: 'developer-guide/extensions.md'
+      - Printing Module: 'developer-guide/printing-module.md'
       - FAQ: 'developer-guide/dev-faq.md'
     - Guidelines:
       - Code Conventions: 'developer-guide/code-conventions.md'
@@ -99,13 +122,13 @@ pages:
       - Writing Plugins: 'developer-guide/plugins-howto.md'
       - Writing Epics: 'developer-guide/writing-epics.md'
       - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
-      - Implement User Sessions: 'developer-guide/user-sessions.md'
     - Configuration:
       - Configuration Files: 'developer-guide/configuration-files.md'
       - Application Configuration: 'developer-guide/local-config.md'
       - Configuring plugins: 'developer-guide/plugins-documentation.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
+      - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - users:

@@ -40,7 +40,8 @@ const Message = require('../components/I18N/Message');
 require('./print/print.css');
 
 /**
- * Print plugin. This plugin allows to print current map view.
+ * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
+ * Please look at mapstore documentation about how to add and configure the printing module in your installation.
  *
  * @class Print
  * @memberof plugins
@@ -464,7 +465,7 @@ module.exports = {
         enabler: (state) => state.print && state.print.enabled || state.toolbar && state.toolbar.active === 'print'
     },
     {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
+        disablePluginIf: "{state('mapType') === 'cesium' || !state('printEnabled')}",
         Toolbar: {
             name: 'print',
             position: 7,

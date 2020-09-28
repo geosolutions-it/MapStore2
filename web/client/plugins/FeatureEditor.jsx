@@ -48,7 +48,7 @@ const Dock = connect(createSelector(
   * @prop {object} cfg.customEditorsOptions Set of options used to connect the custom editors to the featuregrid. It contains a set of
   * `rules`.
   * Each rule in the `rules` array contains:
-  * - `editor`: the string name of the editor. For more information about custom editors and their specific props (`editorProps`), see {@link api/framework#components.data.featuregrid.Editors}
+  * - `editor`: the string name of the editor. For more information about custom editors and their specific props (`editorProps`), see {@link api/framework#components.data.featuregrid.editors.customEditors}
   * - `regex`: An object with 2 regular expression, `attribute` and `typeName` that have to match with the specific attribute name and feature type name.
   * - `editorProps`: the properties to pass to the specific editor.
   * Example:
@@ -73,7 +73,6 @@ const Dock = connect(createSelector(
   *    }]
   *}
   * ```
-  * For more information about custom editors, see {@link api/framework#components.data.featuregrid.Editors}
   * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
   * @prop {boolean} cfg.virtualScroll default true. Activates virtualScroll. When false the grid uses normal pagination
   * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache

@@ -45,7 +45,10 @@ export default ({
     onAddService = () => {},
     onDeleteService = () => {},
     onChangeCatalogMode = () => {},
-    isLocalizedLayerStylesEnabled
+    selectedService,
+    isLocalizedLayerStylesEnabled,
+    tileSizeOptions = [256],
+    layerOptions
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout
@@ -77,6 +80,9 @@ export default ({
                 onToggleTemplate={onToggleTemplate}
                 onToggleThumbnail={onToggleThumbnail}
                 isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                tileSizeOptions={tileSizeOptions}
+                currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}
+                selectedService={selectedService}
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>

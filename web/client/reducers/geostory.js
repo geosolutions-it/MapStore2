@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
+import { get, isString, isNumber, findIndex, find, isPlainObject, isArray, castArray, uniqBy } from "lodash";
 import { set, unset, arrayUpdate, compose,
     arrayDelete } from '../utils/ImmutableUtils';
 import { getEffectivePath, MediaTypes } from '../utils/GeoStoryUtils';
@@ -31,8 +31,11 @@ import {
     UPDATE,
     UPDATE_CURRENT_PAGE,
     UPDATE_SETTING,
-    REMOVE_RESOURCE
+    REMOVE_RESOURCE,
+    SET_PENDING_CHANGES,
+    SET_UPDATE_URL_SCROLL
 } from '../actions/geostory';
+
 
 /**
  * Return the index of the where to place an item.
@@ -85,7 +88,8 @@ let INITIAL_STATE = {
     focusedContent: {},
     currentPage: {},
     settings: {},
-    oldSettings: {}
+    oldSettings: {},
+    updateUrlOnScroll: false
 };
 
 /**
@@ -96,6 +100,7 @@ let INITIAL_STATE = {
  * @param state the application state
  * @param {string} state.mode the mode ('view' or 'edit')
  * @param {object} state.currentStory the current story.
+ * @param {boolean} state.updateUrlOnScroll should update URL on scroll
  *
  * @example
  * {
@@ -237,6 +242,13 @@ export default (state = INITIAL_STATE, action) => {
     case SET_CURRENT_STORY: {
         let defaultSettings = state.defaultSettings || {};
         let settings = action.story.settings || defaultSettings;
+        const existingFontFamilies = settings?.theme?.fontFamilies || [];
+
+        // make sure to add fonts loaded from GeoStory useEffect hook when setting the current story
+        const fontFamilies = state.currentStory?.settings?.theme?.fontFamilies;
+        if (fontFamilies && fontFamilies.length > 0) {
+            settings = set('theme.fontFamilies', uniqBy([...fontFamilies, ...existingFontFamilies], "family"), settings);
+        }
         return set('currentStory', {...action.story, settings}, state);
     }
     case SELECT_CARD: {
@@ -288,8 +300,14 @@ export default (state = INITIAL_STATE, action) => {
         let { element: newElement } = action;
         const path = getEffectivePath(`currentStory.${rawPath}`, state);
         const oldElement = get(state, path);
-        if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
+
+        // NOTE: isObject vs isPlainObject are different
+        if (isPlainObject(oldElement) && isPlainObject(newElement) && mode === "merge") {
             newElement = { ...oldElement, ...newElement };
+        }
+
+        if (isArray(oldElement) && isArray(newElement) && mode === "merge") {
+            newElement = [ ...oldElement, ...newElement ];
         }
         return set(path, newElement, state);
     }
@@ -320,6 +338,12 @@ export default (state = INITIAL_STATE, action) => {
         const {status, target, selector = "", hideContent = false, path} = action;
         const focusedContent = status ? {target, selector, hideContent, path} : undefined;
         return set(`focusedContent`, focusedContent, state);
+    }
+    case SET_PENDING_CHANGES: {
+        return set(`pendingChanges`, action.value, state);
+    }
+    case SET_UPDATE_URL_SCROLL: {
+        return set(`updateUrlOnScroll`, action.value, state);
     }
     default:
         return state;

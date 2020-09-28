@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Rx from 'rxjs';
+
 import { error, success } from '../actions/notifications';
 import { SAVE_USER_SESSION, LOAD_USER_SESSION, REMOVE_USER_SESSION, USER_SESSION_REMOVED,
     USER_SESSION_START_SAVING, USER_SESSION_STOP_SAVING,
@@ -14,6 +15,8 @@ import { SAVE_USER_SESSION, LOAD_USER_SESSION, REMOVE_USER_SESSION, USER_SESSION
 import { LOCATION_CHANGE } from "connected-react-router";
 import UserSession from "../api/usersession";
 import {loadMapConfig} from "../actions/config";
+import {LOGOUT} from '../actions/security';
+
 import {userSelector} from '../selectors/security';
 import { wrapStartStop } from '../observables/epics';
 import {originalConfigSelector, userSessionNameSelector, userSessionIdSelector,
@@ -50,7 +53,12 @@ export const saveUserSessionEpicCreator = (sessionSelector = userSessionToSaveSe
         const session = sessionSelector(state);
         const id = idSelector(state);
         const name = nameSelector(state);
-        const userName = userSelector(state).name;
+        const userName = userSelector(state)?.name;
+        // no behaviour defined for not logged users defied yet
+        // SAVE_USER_SESSION should not be triggered in this case.
+        if (!userName) {
+            return Rx.Observable.empty();
+        }
         return writeSession(id, name, userName, session).switchMap(rid => {
             return Rx.Observable.of(
                 userSessionSaved(rid, session)
@@ -78,16 +86,15 @@ export const saveUserSessionEpicCreator = (sessionSelector = userSessionToSaveSe
  * It can be started and stopped by two specific actions (configurable).
  * @param {number} frequency interval between saves (in milliseconds)
  * @param {function} finalAction optional action creator emitted after stop
- * @param {string} startAction the action type that will start saving of the user sessions
- * @param {string} endAction the action type that will stop saving of the user sessions
  */
-export const autoSaveSessionEpicCreator = (frequency, finalAction, startAction = USER_SESSION_START_SAVING, endAction = USER_SESSION_STOP_SAVING) =>
-    (action$, store) => action$.ofType(startAction)
+export const autoSaveSessionEpicCreator = (frequency, finalAction) =>
+    (action$, store) => action$.ofType(USER_SESSION_START_SAVING)
         .switchMap(() =>
             Rx.Observable.interval(frequency || userSessionSaveFrequencySelector(store.getState()))
                 .filter(() => isAutoSaveEnabled(store.getState()))
                 .switchMap(() => Rx.Observable.of(saveUserSession()))
-                .takeUntil(action$.ofType(endAction)).concat(finalAction ? Rx.Observable.of(finalAction()) : Rx.Observable.empty())
+                .takeUntil(action$.ofType(USER_SESSION_STOP_SAVING))
+                .concat(finalAction ? Rx.Observable.of(finalAction()) : Rx.Observable.empty())
         );
 
 /**
@@ -153,5 +160,7 @@ export const reloadOriginalConfigEpic = (action$, { getState = () => { } } = {})
     });
 
 export const stopSaveSessionEpic = (action$) =>
-    action$.ofType(USER_SESSION_REMOVED, LOCATION_CHANGE)
-        .switchMap(() => Rx.Observable.of(userSessionStopSaving()));
+    // when auto save is activated
+    action$.ofType(USER_SESSION_START_SAVING).switchMap(() =>
+        action$.ofType(USER_SESSION_REMOVED, LOCATION_CHANGE, LOGOUT)
+            .switchMap(() => Rx.Observable.of(userSessionStopSaving())));
