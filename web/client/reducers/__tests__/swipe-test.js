@@ -16,8 +16,6 @@ it('should make swipe active', () => {
         active: true
     };
     const state = swipe({}, action);
-    expect(state).toExist();
-    expect(state.active).toExist();
     expect(state.active).toBe(true);
 });
 
@@ -27,7 +25,5 @@ it('should deactivate swipe', () => {
         active: false
     };
     const state = swipe({}, action);
-    expect(state).toExist();
-    expect(state.active).toExist();
     expect(state.active).toBe(false);
 });

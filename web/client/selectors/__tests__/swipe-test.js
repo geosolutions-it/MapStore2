@@ -12,15 +12,11 @@ import { layerSwipeSettingsSelector} from '../swipe';
 describe('SWIPE SELECTORS', () => {
     it('should test layerSwipeSettingsSelector', () => {
         const state = {
-            layers: {
-                swipeSettings: {
-                    active: true,
-                    node: '',
-                    nodeType: ''
-                }
+            swipe: {
+                active: true
             }
         };
 
-        expect(layerSwipeSettingsSelector(state)).toEqual(state.layers.swipeSettings);
+        expect(layerSwipeSettingsSelector(state)).toEqual(state.swipe);
     });
 });
