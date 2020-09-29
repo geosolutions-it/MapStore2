@@ -10,15 +10,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { getSelectedLayer, layerSwipeSettingsSelector } from '../selectors/layers';
+import { getSelectedLayer } from '../selectors/layers';
+import { layerSwipeSettingsSelector } from '../selectors/swipe';
+import swipe from '../reducers/swipe';
+import * as epics from '../epics/swipe';
 
 import { createPlugin } from '../utils/PluginsUtils';
 
 import SwipeSettings from './SwipeSettings';
-import XYSwipeSupport from '../components/map/openlayers/swipe/XYSwipeSupport';
+import SliderSwipeSupport from '../components/map/openlayers/swipe/SliderSwipeSupport';
 
 const Support = ({ map, layer, active }) => {
-    return <XYSwipeSupport map={map} layer={layer} active={active} />;
+    return <SliderSwipeSupport map={map} layer={layer} active={active} />;
 };
 
 const swipeSupportSelector = createSelector([
@@ -39,6 +42,9 @@ const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);
 export default createPlugin(
     'Swipe',
     {
+        options: {
+            disablePluginIf: "{state('mapType') === 'leaflet' || state('mapType') === 'cesium'}"
+        },
         component: SwipeSettings,
         containers: {
             TOC: {
@@ -48,6 +54,10 @@ export default createPlugin(
                 name: "Swipe",
                 Tool: MapSwipeSupport
             }
-        }
+        },
+        reducers: {
+            swipe
+        },
+        epics
     }
 );

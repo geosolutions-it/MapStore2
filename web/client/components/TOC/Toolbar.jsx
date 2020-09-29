@@ -60,8 +60,7 @@ class Toolbar extends React.Component {
             onHideLayerMetadata: () => {},
             onShow: () => {},
             onLayerInfo: () => {},
-            onShowSwipeSettings: () => {},
-            onHideLayerSwipeSettings: () => {}
+            onSetSwipeActive: () => {}
         },
         maxDepth: 3,
         text: {
@@ -407,11 +406,11 @@ class Toolbar extends React.Component {
     }
 
     showSwipeSettings = (status) => {
-        const { swipeSettings, onToolsActions, selectedLayers } = this.props;
+        const { swipeSettings, onToolsActions } = this.props;
         if (!swipeSettings.active && (status === 'LAYER')) {
-            onToolsActions.onShowSwipeSettings(selectedLayers[0].id, 'layer');
+            onToolsActions.onSetSwipeActive(true);
         } else {
-            onToolsActions.onHideLayerSwipeSettings();
+            onToolsActions.onSetSwipeActive(false);
         }
     }
 

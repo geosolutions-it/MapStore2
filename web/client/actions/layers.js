@@ -36,8 +36,6 @@ const FILTER_LAYERS = 'LAYERS:FILTER_LAYERS';
 const SHOW_LAYER_METADATA = 'LAYERS:SHOW_LAYER_METADATA';
 const HIDE_LAYER_METADATA = 'LAYERS:HIDE_LAYER_METADATA';
 const UPDATE_SETTINGS_PARAMS = 'LAYERS:UPDATE_SETTINGS_PARAMS';
-const SHOW_LAYER_SWIPE_SETTINGS = 'LAYERS:SHOW_LAYER_SWIPE_SETTINGS';
-const HIDE_LAYER_SWIPE_SETTINGS = 'LAYERS:HIDE_LAYER_SWIPE_SETTINGS';
 
 function showSettings(node, nodeType, options) {
     return {
@@ -53,21 +51,6 @@ function hideSettings() {
         type: HIDE_SETTINGS
     };
 }
-
-function showLayerSwipeSettings(node, nodeType) {
-    return {
-        type: SHOW_LAYER_SWIPE_SETTINGS,
-        node: node,
-        nodeType: nodeType
-    };
-}
-
-function hideLayerSwipeSettings() {
-    return {
-        type: HIDE_LAYER_SWIPE_SETTINGS
-    };
-}
-
 
 function updateSettings(options) {
     return {
@@ -351,8 +334,6 @@ module.exports = {
     download,
     updateSettingsParams,
     addGroup,
-    showLayerSwipeSettings,
-    hideLayerSwipeSettings,
     CHANGE_LAYER_PROPERTIES,
     CHANGE_LAYER_PARAMS,
     CHANGE_GROUP_PROPERTIES,
@@ -382,7 +363,5 @@ module.exports = {
     FILTER_LAYERS,
     SHOW_LAYER_METADATA,
     HIDE_LAYER_METADATA,
-    UPDATE_SETTINGS_PARAMS,
-    SHOW_LAYER_SWIPE_SETTINGS,
-    HIDE_LAYER_SWIPE_SETTINGS
+    UPDATE_SETTINGS_PARAMS
 };

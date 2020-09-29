@@ -19,9 +19,7 @@ var {
     ADD_LAYER,
     REMOVE_LAYER,
     SHOW_SETTINGS,
-    SHOW_LAYER_SWIPE_SETTINGS,
     HIDE_SETTINGS,
-    HIDE_LAYER_SWIPE_SETTINGS,
     UPDATE_SETTINGS,
     REFRESH_LAYERS,
     UPDATE_LAYERS_DIMENSION,
@@ -47,8 +45,6 @@ var {
     removeLayer,
     showSettings,
     hideSettings,
-    showLayerSwipeSettings,
-    hideLayerSwipeSettings,
     updateSettings,
     refreshLayers,
     updateLayerDimension,
@@ -242,24 +238,10 @@ describe('Test correctness of the layers actions', () => {
         expect(action.options).toEqual({opacity: 0.5});
     });
 
-    it('toggle on layer swipe settings', () => {
-        const action = showLayerSwipeSettings("node1", "layer");
-        expect(action).toExist();
-        expect(action.type).toBe(SHOW_LAYER_SWIPE_SETTINGS);
-        expect(action.node).toBe("node1");
-        expect(action.nodeType).toBe("layer");
-    });
-
     it('hide settings', () => {
         const action = hideSettings();
         expect(action).toExist();
         expect(action.type).toBe(HIDE_SETTINGS);
-    });
-
-    it('hide layer swipe settings', () => {
-        const action = hideLayerSwipeSettings();
-        expect(action).toExist();
-        expect(action.type).toBe(HIDE_LAYER_SWIPE_SETTINGS);
     });
 
     it('update settings', () => {

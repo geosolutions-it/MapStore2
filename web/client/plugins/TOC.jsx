@@ -14,10 +14,10 @@ const { compose, branch, withPropsOnChange} = require('recompose');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-    moveNode, showSettings, hideSettings, updateSettings,
-    showLayerSwipeSettings, hideLayerSwipeSettings, updateNode, removeNode,
+    moveNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
     browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
+const { setActive } = require('../actions/swipe');
 const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
@@ -28,9 +28,9 @@ const {
     selectedNodesSelector,
     layerFilterSelector,
     layerSettingSelector,
-    layerSwipeSettingsSelector,
     layerMetadataSelector,
     wfsDownloadSelector} = require('../selectors/layers');
+const { layerSwipeSettingsSelector } = require('../selectors/swipe');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector, currentLocaleLanguageSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
@@ -246,8 +246,7 @@ class LayerTree extends React.Component {
         groupNodeComponent: PropTypes.func,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         onLayerInfo: PropTypes.func,
-        onShowSwipeSettings: PropTypes.func,
-        onHideLayerSwipeSettings: PropTypes.func
+        onSetSwipeActive: PropTypes.func
     };
 
     static contextTypes = {
@@ -331,8 +330,7 @@ class LayerTree extends React.Component {
         refreshLayerVersion: () => {},
         metadataTemplate: null,
         onLayerInfo: () => {},
-        onShowSwipeSettings: () => {},
-        onHideLayerSwipeSettings: () => {}
+        onSetSwipeActive: () => {}
     };
 
     getNoBackgroundLayers = (group) => {
@@ -498,8 +496,7 @@ class LayerTree extends React.Component {
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler,
                                 onLayerInfo: this.props.onLayerInfo,
-                                onShowSwipeSettings: this.props.onShowSwipeSettings,
-                                onHideLayerSwipeSettings: this.props.onHideLayerSwipeSettings
+                                onSetSwipeActive: this.props.onSetSwipeActive
                             }}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
@@ -852,8 +849,7 @@ const TOCPlugin = connect(tocSelector, {
     onNewWidget: () => createWidget(),
     refreshLayerVersion,
     onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false),
-    onShowSwipeSettings: showLayerSwipeSettings,
-    onHideLayerSwipeSettings: hideLayerSwipeSettings
+    onSetSwipeActive: setActive
 })(compose(
     securityEnhancer,
     checkPluginsEnhancer

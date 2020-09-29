@@ -12,13 +12,12 @@ const {
     REFRESH_LAYERS,
     UPDATE_LAYERS_DIMENSION,
     UPDATE_SETTINGS_PARAMS,
-    SELECT_NODE,
     layersRefreshed,
     updateNode,
     updateSettings,
     layersRefreshError,
-    changeLayerParams, hideLayerSwipeSettings } = require('../actions/layers');
-const {getLayersWithDimension, layerSettingSelector, layerSwipeSettingsSelector} = require('../selectors/layers');
+    changeLayerParams } = require('../actions/layers');
+const {getLayersWithDimension, layerSettingSelector} = require('../selectors/layers');
 
 const { setControlProperty } = require('../actions/controls');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
@@ -157,25 +156,8 @@ const updateSettingsParamsEpic = (action$, store) =>
             );
         });
 
-/**
- * Ensures that swipeSettings active is changed back to false when a layer is deselected in TOC
- * @memberof epics.layers
- * @param {external:Observable} action$ manages `SELECT_NODE`
- * @return {external:Observable}
- */
-const resetLayerSwipeSettingsEpic = (action$, store) =>
-    action$.ofType(SELECT_NODE)
-        .switchMap(() => {
-            const state = store.getState();
-            const swipeSettings = layerSwipeSettingsSelector(state);
-            return swipeSettings.active
-                ? Rx.Observable.of(hideLayerSwipeSettings())
-                : Rx.Observable.empty();
-        });
-
 module.exports = {
     refresh,
     updateDimension,
-    updateSettingsParamsEpic,
-    resetLayerSwipeSettingsEpic
+    updateSettingsParamsEpic
 };

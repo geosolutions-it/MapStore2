@@ -12,9 +12,9 @@ import expect from 'expect';
 import Map from 'ol/Map';
 import View from 'ol/View';
 
-import XYSwipeSupport from '../XYSwipeSupport';
+import SliderSwipeSupport from '../SliderSwipeSupport';
 
-describe("XYSwipeSupport", () => {
+describe("SliderSwipeSupport", () => {
     let map;
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div><div id="map"></div>';
@@ -38,13 +38,13 @@ describe("XYSwipeSupport", () => {
 
     it("should not render any slider when no layer is selected", () => {
         // No layer prop is passed to XYSwipeSupport
-        ReactDOM.render(<XYSwipeSupport map={map} />, document.getElementById("container"));
+        ReactDOM.render(<SliderSwipeSupport map={map} />, document.getElementById("container"));
         const swiper = document.getElementsByClassName("mapstore-swipe-slider")[0];
         expect(swiper).toNotExist();
     });
 
     it("should render vertical swiper as default when tool is active", () => {
-        ReactDOM.render(<XYSwipeSupport active map={map} layer="test-layer-id" />, document.getElementById("container"));
+        ReactDOM.render(<SliderSwipeSupport active map={map} layer="test-layer-id" />, document.getElementById("container"));
         const swiper = document.getElementsByClassName("mapstore-swipe-slider")[0];
         expect(swiper).toExist();
         expect(swiper.style.cursor).toBe("col-resize");
@@ -55,7 +55,7 @@ describe("XYSwipeSupport", () => {
     });
 
     it("should render horizontal swiper when type is 'cut-horizontal' when tool is active", () => {
-        ReactDOM.render(<XYSwipeSupport active map={map} type="cut-horizontal" layer="test-layer-id" />, document.getElementById("container"));
+        ReactDOM.render(<SliderSwipeSupport active map={map} type="cut-horizontal" layer="test-layer-id" />, document.getElementById("container"));
         const swiper = document.getElementsByClassName("mapstore-swipe-slider")[0];
         expect(swiper).toExist();
         expect(swiper.style.cursor).toBe("row-resize");

@@ -9,8 +9,7 @@
 var { LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
     TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, MOVE_NODE, ADD_LAYER, REMOVE_LAYER, ADD_GROUP,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR,
-    LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA,
-    SHOW_LAYER_SWIPE_SETTINGS, HIDE_LAYER_SWIPE_SETTINGS
+    LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
 } = require('../actions/layers');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -373,23 +372,6 @@ function layers(state = { flat: [] }, action) {
         return assign({}, state, {
             settings: settings
         });
-    }
-
-    case SHOW_LAYER_SWIPE_SETTINGS: {
-        const swipeSettings = assign({}, state.swipeSettings, {
-            active: true,
-            node: action.node,
-            nodeType: action.nodeType
-        });
-        return assign({}, state, { swipeSettings });
-    }
-    case HIDE_LAYER_SWIPE_SETTINGS: {
-        const swipeSettings = assign({}, state.swipeSettings, {
-            active: false,
-            node: null,
-            nodeType: null
-        });
-        return assign({}, state, { swipeSettings });
     }
 
     case UPDATE_SETTINGS: {

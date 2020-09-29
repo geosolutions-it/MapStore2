@@ -54,7 +54,7 @@ const DraggableSlider = ({ type, map, widthRef, heightRef }) => {
 };
 
 // Allow swiping in the horizontal or vertical direction
-const XYSwipeSupport = ({ map, layer, type = "cut-vertical", active }) => {
+const SliderSwipeSupport = ({ map, layer, type = "cut-vertical", active }) => {
     const heightRef = useRef();
     const widthRef = useRef();
     if (layer && active) {
@@ -76,4 +76,4 @@ const XYSwipeSupport = ({ map, layer, type = "cut-vertical", active }) => {
     return null;
 };
 
-export default XYSwipeSupport;
+export default SliderSwipeSupport;
