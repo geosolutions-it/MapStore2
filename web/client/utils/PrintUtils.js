@@ -428,9 +428,18 @@ const PrintUtils = {
                 }
                 const matrixSet = tileMatrixSet["ows:Identifier"];
                 const matrixIds = PrintUtils.getWMTSMatrixIds(layer, tileMatrixSet);
-
+                const baseURL = (PrintUtils.normalizeUrl(castArray(layer.url)[0]));
+                let dimensionParams = {};
+                if (baseURL.indexOf('{Style}') >= 0) {
+                    dimensionParams = {
+                        "dimensions": ["Style"],
+                        "params": {
+                            "STYLE": layer.style
+                        }
+                    };
+                }
                 return {
-                    "baseURL": encodeURI(PrintUtils.normalizeUrl(castArray(layer.url)[0])),
+                    "baseURL": encodeURI(baseURL),
                     // "dimensions": isEmpty(layer.dimensions) && layer.dimensions || null,
 
 
@@ -442,12 +451,12 @@ const PrintUtils = {
                     })),
                     // rest parameter style is not included
                     // so simulate with dimensions and params
-
+                    ...dimensionParams,
                     "matrixIds": matrixIds,
                     "matrixSet": matrixSet,
-                    "style": layer.style || '',
+                    "style": layer.style,
                     "name": layer.name,
-                    "requestEncoding": layer.requestEncoding,
+                    "requestEncoding": layer.requestEncoding === "RESTful" ? "REST" : layer.requestEncoding,
                     "opacity": layer.opacity || 1.0,
                     "version": layer.version || "1.0.0"
                 };
