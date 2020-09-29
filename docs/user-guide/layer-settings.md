@@ -134,6 +134,83 @@ The editor is easy to approach thanks also to the following functions:
 !!!warning
     The *autocomplete* and the *color picker* functions are available only in the CSS editor.
 
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) also allows to edit the layers style using the **Visual edior**.
+It is accessible by clicking on the <img src="../img/button/visual_editor_style_button.jpg" class="ms-docbutton"/> button. The page that opens allows the user to customize the style through the symbolizers, witch can be: **Mark**, **Icon**, **Line**, **Fill** and **Text**. 
+
+<img src="../img/layer-settings/visual_editor_style.jpg" class="ms-docimage"  style="max-width:500px;">
+
+Different styles methods can be used for each symbolizers: by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, present on the panel of each symbolizers, the editor can choose between:
+
+* **Simple style**
+
+* **Classification style**
+
+* **Pattern mark style**
+
+* **Patter icon style**
+
+### Simple style
+
+The Simple style is the default one usable for each simbolizers. 
+
+#### Mark
+
+Mark type allows to choose the icons of the layer: clicking on the <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button a mark panel appears. During the style editing a preview placed on top of the styler form shows a preview of the edited style:
+
+<img src="../img/layer-settings/mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+The mark can have different `Shape`, `Color`, `Stroke` with different `Color` and `Width` and custimizable `Radius` and `Rotation`. 
+
+### Icon 
+
+With Icon panel, opening by clicking on <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button, the editor is allowed to add an image as an icon, through its *URL*, and customized the icon `Opacity`, `Size` and `Rotation` angle:
+
+<img src="../img/layer-settings/icon_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+### Line
+
+Line types allows to customize the lines of the layer: clicking on the <img src="../img/button/add_line_button.jpg" class="ms-docbutton"/> button a line panel appears: 
+
+<img src="../img/layer-settings/line_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+The editor can change a `Stroke color`, a `Stroke width`, a `Line style` (*continuous*, *dashed*, etc), the `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). En example can be the following one:
+
+<img src="../img/layer-settings/ex_line_style.gif" class="ms-docimage">
+
+### Fill
+
+With Icon panel, opening by clicking on <img src="../img/button/add_fill_button.jpg" class="ms-docbutton"/> button, the editor is allowed to customize the `Fill color`, the `Outline color` and the `Outline width`:
+
+<img src="../img/layer-settings/ex_fill_style.gif" class="ms-docimage">
+
+### Text
+
+The text types display a formatted text on a layer: clicking on the <img src="../img/button/add_text_button.jpg" class="ms-docbutton"/> button a text panel appears: 
+
+<img src="../img/layer-settings/text_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+The editor is allowed to edit or choose the attribute of the `Label`, customized the `Font` (*DejaVu Sans*, *Serif*, etc , choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Weight` (*Normal* or *Bold*) and select the desire `Halo color` and `Halo weight`. You can also choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one:
+
+<img src="../img/layer-settings/ex_text_style.gif" class="ms-docimage">
+
+Different styles methods can be used for each symbolizers: by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, present on the panel of each symbolizers, the editor can choose between:
+
+* **Simple style**
+
+* **Classification style**
+
+* **Pattern mark style**
+
+* **Patter icon style**
+
+## Classification style
+
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to classify the mark style by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button. Choosing the <img src="../img/button/classification_style_button.jpg" class="ms-docbutton"/> options from the dropdown menu a classification panel opens: 
+
+<img src="../img/layer-settings/classify_mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+It this case the editor is allowed to choose a `Color ramp` and `Reverse order` of the color, the `Attribute` with which to classify the level, the `Method` (*Quantile*, *Equal interval* and *Natural breaks*), the `Intervals` (px) and the `Opacity` (%).
+
 ## Feature Info Form
 
 Through the last section of the layer settings panel, it is possible to decide the information format that appears querying a layer with the [Identify Tool](side-bar.md#identify-tool):
