@@ -5,13 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import React from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { EditorState, Modifier, RichUtils } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
 
-import { EMPTY_CONTENT, SectionTypes, DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
+import {
+    EMPTY_CONTENT,
+    SectionTypes,
+    ContentTypes,
+    DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
+
+import LayoutComponent from '../texteditor/CustomEditorLink';
+import getLinkDecorator from '../texteditor/getLinkDecorator';
 import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../../utils/EditorUtils';
 
 /**
@@ -24,8 +32,31 @@ import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../../
  *
  */
 export const withEditorBase = compose(
+    withProps(({ sections = []}) => {
+        // flatten out the story sections adding to them columns as if they were also sections such that
+        // both sections and columns can be scrolled to
+        const availableStorySections = sections.reduce((availableSections, section) => {
+            const s = [];
+            s.push(section);
+            if (section.type === SectionTypes.PARAGRAPH || section.type === SectionTypes.IMMERSIVE) {
+                const contents = section.contents;
+                contents.forEach((c) => {
+                    if (c.type === ContentTypes.COLUMN) {
+                        s.push(c);
+                    }
+                });
+            }
+
+            return [...availableSections, ...s];
+
+        }, []);
+        return {
+            availableStorySections
+        };
+
+    }),
     // default properties for editor
-    withProps(({ storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor", toolbar = {}}) => {
+    withProps(({ availableStorySections = [], storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor", toolbar = {}}) => {
         const fonts = storyFonts.length > 0 ? storyFonts : DEFAULT_FONT_FAMILIES;
         return ({
             editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
@@ -44,7 +75,7 @@ export const withEditorBase = compose(
                 link: {
                     inDropdown: false,
                     className: undefined,
-                    component: undefined,
+                    component: (props) => <LayoutComponent {...props} availableStorySections={availableStorySections} />,
                     popupClassName: undefined,
                     dropdownClassName: undefined,
                     showOpenOptionOnHover: true,
@@ -52,7 +83,8 @@ export const withEditorBase = compose(
                     options: ['link', 'unlink'],
                     link: { icon: undefined, className: undefined },
                     unlink: { icon: undefined, className: undefined },
-                    linkCallback: undefined
+                    linkCallback: undefined,
+                    getLinkDecorator
                 },
                 blockType: {
                     inDropdown: true,
