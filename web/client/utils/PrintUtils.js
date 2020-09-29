@@ -13,8 +13,11 @@ const {optionsToVendorParams} = require('./VendorParamsUtils');
 const AnnotationsUtils = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
 const {getLayerConfig} = require('./TileConfigProvider').default;
+const { extractValidBaseURL } = require('./TileProviderUtils');
+const WMTSUtils = require('./WMTSUtils');
+
 const {get} = require("ol/proj");
-const {isArray, filter, find, isEmpty, toNumber, random} = require('lodash');
+const { isArray, filter, find, isEmpty, toNumber, castArray} = require('lodash');
 const { getFeature } = require('../api/WFS');
 const {generateEnvString} = require('./LayerLocalizationUtils');
 
@@ -24,7 +27,7 @@ const defaultScales = MapUtils.getGoogleMercatorScales(0, 21);
 
 const assign = require('object-assign');
 
-// Non è detto che sia uniforme!!
+// Try to guess geomType, getting the first type available.
 const getGeomType = function(layer) {
     return layer.features && layer.features[0] && layer.features[0].geometry ? layer.features[0].geometry.type :
         layer.features && layer.features[0].features && layer.features[0].style && layer.features[0].style.type ? layer.features[0].style.type : undefined;
@@ -417,23 +420,38 @@ const PrintUtils = {
             })
         },
         wmts: {
-            map: (layer) => ({
-                "baseURL": layer.capabilitiesURL,
-                "dimensions": isEmpty(layer.dimensions) && layer.dimensions || null,
-                "format": layer.format || "image/png",
-                "type": "WMTS",
-                "layer": layer.name,
-                "customParams ": SecurityUtils.addAuthenticationParameter(layer.capabilitiesURL, assign({
-                    "TRANSPARENT": true
-                })),
-                "matrixIds": PrintUtils.getWMTSMatrixIds(layer),
-                "matrixSet": CoordinatesUtils.normalizeSRS(layer.srs || 'EPSG:3857', layer.allowedSRS),
-                "style": layer.style || '',
-                "name": layer.name,
-                "requestEncoding": layer.requestEncoding,
-                "opacity": layer.opacity || 1.0,
-                "version": layer.version || "1.0.0"
-            })
+            map: (layer) => {
+                const SRS = "EPSG:3857";
+                const tileMatrixSet = WMTSUtils.getMatrixIds(layer.tileMatrixSet, SRS)[0]; // TODO: use spec SRS.
+                if (!tileMatrixSet) {
+                    throw Error("tile matrix not found for pdf EPSG" + SRS);
+                }
+                const matrixSet = tileMatrixSet["ows:Identifier"];
+                const matrixIds = PrintUtils.getWMTSMatrixIds(layer, tileMatrixSet);
+
+                return {
+                    "baseURL": encodeURI(PrintUtils.normalizeUrl(castArray(layer.url)[0])),
+                    // "dimensions": isEmpty(layer.dimensions) && layer.dimensions || null,
+
+
+                    "format": layer.format || "image/png",
+                    "type": "WMTS",
+                    "layer": layer.name,
+                    "customParams ": SecurityUtils.addAuthenticationParameter(layer.capabilitiesURL, assign({
+                        "TRANSPARENT": true
+                    })),
+                    // rest parameter style is not included
+                    // so simulate with dimensions and params
+
+                    "matrixIds": matrixIds,
+                    "matrixSet": matrixSet,
+                    "style": layer.style || '',
+                    "name": layer.name,
+                    "requestEncoding": layer.requestEncoding,
+                    "opacity": layer.opacity || 1.0,
+                    "version": layer.version || "1.0.0"
+                };
+            }
         },
         tileprovider: {
             map: (layer) => ({
@@ -442,33 +460,41 @@ const PrintUtils = {
         }
     },
     getTileProviderLayerSpec: (layer) => {
-        const layerConfig = getLayerConfig(layer.provider, layer)[1];
+
+        const [providerURL, layerConfig] = getLayerConfig(layer.provider, layer);
         if (!isEmpty(layerConfig)) {
-            let baseURL = layerConfig && layerConfig.url;
-            if (baseURL.indexOf("{s}") > 0) {
-                const subdomains = layerConfig && layerConfig.subdomains;
-                baseURL = baseURL.replace("{s}", typeof subdomains === "string" ? subdomains : subdomains[random(0, subdomains.length - 1)]);
+            let validURL = extractValidBaseURL({...layerConfig, url: layerConfig?.url ?? providerURL});
+            if (!validURL) {
+                throw Error("No base URL found for this layer");
             }
+            // transform in xyz format for mapfish-print.
+            const firstBracketIndex = validURL.indexOf('{');
+            const baseURL = validURL.slice(0, firstBracketIndex);
+            const pathSection = validURL.slice(firstBracketIndex);
+            const pathFormat = pathSection
+                .replace("{x}", "${x}")
+                .replace("{y}", "${y}")
+                .replace("{z}", "${z}");
             return {
-                "baseURL": baseURL.indexOf('{z}') > 0 ? baseURL.substring(0, baseURL.indexOf('{z}') - 1) : baseURL,
+                baseURL,
+                path_format: pathFormat,
                 "type": 'xyz',
-                "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
-                "tileSize": [256, 256],
-                "resolutions": MapUtils.getResolutions(),
                 "extension": baseURL.split('.').pop() || "png",
-                "opacity": 1
+                "opacity": layer.opacity || 1.0,
+                "tileSize": [256, 256],
+                "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
+                "resolutions": MapUtils.getResolutions()
             };
         }
         return {};
     },
-    getWMTSMatrixIds: (layer) => {
+    getWMTSMatrixIds: (layer, tileMatrixSet) => {
         let modifiedTileMatrixSet = [];
         const srs = CoordinatesUtils.normalizeSRS(layer.srs || 'EPSG:3857', layer.allowedSRS);
         const projection = get(srs);
         const identifierText = "ows:Identifier";
         const metersPerUnit = projection.getMetersPerUnit();
         const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
-        const [tileMatrixSet] =  layer.tileMatrixSet.filter(tile=> tile[identifierText] === srs);
 
         tileMatrixSet && tileMatrixSet.TileMatrix.map(tileMatrix => {
             const identifier = tileMatrix[identifierText];
