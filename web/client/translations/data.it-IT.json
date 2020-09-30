@@ -28,6 +28,10 @@
         "collapse": "Collassa",
         "expand": "Espandi",
         "Forbidden": "Vietato",
+        "layerNameChangeError": {
+            "title": "Errore di modifica del nome",
+            "message": "Il livello non è stato ricaricato con un nome modificato"
+        },
         "version": {
             "label": "Versione"
         },

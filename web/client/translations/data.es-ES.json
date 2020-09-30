@@ -28,6 +28,10 @@
         "collapse": "Colapso",
         "expand": "Expandir",
         "Forbidden": "Prohibido",
+        "layerNameChangeError": {
+            "title": "Error de cambio de nombre",
+            "message": "La capa no se pudo recargar con un nombre cambiado"
+        },
         "version": {
             "label": "Versión"
         },

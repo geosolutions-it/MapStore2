@@ -121,6 +121,7 @@ const tocSelector = createSelector(
         generalInfoFormat,
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
+        updatableLayersCount: layers.filter(l => l.group !== 'background' && (l.type === 'wms' || l.type === 'wmts')).length,
         selectedGroups: selectedNodes.map(n => LayersUtils.getNode(groups, n)).filter(n => n && n.nodes),
         mapName,
         filteredGroups: addFilteredAttributesGroups(groups, [
@@ -246,7 +247,8 @@ class LayerTree extends React.Component {
         groupNodeComponent: PropTypes.func,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         onLayerInfo: PropTypes.func,
-        onSetSwipeActive: PropTypes.func
+        onSetSwipeActive: PropTypes.func,
+        updatableLayersCount: PropTypes.number
     };
 
     static contextTypes = {
@@ -353,7 +355,6 @@ class LayerTree extends React.Component {
                 selectedNodes={this.props.selectedNodes}
                 onSelect={this.props.activateToolsContainer ? this.props.onSelectNode : null}/>);
     }
-
     getDefaultLayer = () => {
         const LayerNode = this.props.layerNodeComponent || DefaultLayer;
         return (
@@ -423,7 +424,7 @@ class LayerTree extends React.Component {
                                 activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool,
                                 activateLayerFilterTool: this.props.activateLayerFilterTool,
-                                activateLayerInfoTool: this.props.activateLayerInfoTool,
+                                activateLayerInfoTool: this.props.updatableLayersCount > 0 && this.props.activateLayerInfoTool,
                                 activateSwipeOnLayer: this.props.activateSwipeOnLayer
                             }}
                             options={{

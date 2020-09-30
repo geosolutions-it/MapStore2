@@ -27,6 +27,10 @@
         "showMore": "Zeig mehr...",
         "collapse": "Kollabiert",
         "Forbidden": "Verboten",
+        "layerNameChangeError": {
+            "title": "Namensänderungsfehler",
+            "message": "Die Ebene konnte nicht mit einem geänderten Namen neu geladen werden"
+        },
         "expand": "Erweitern",
         "version": {
             "label": "Version"

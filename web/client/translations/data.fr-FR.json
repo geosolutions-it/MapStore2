@@ -28,6 +28,10 @@
         "collapse": "réduire",
         "expand": "étendre",
         "Forbidden": "Interdit",
+        "layerNameChangeError": {
+            "title": "Erreur de changement de nom",
+            "message": "Échec du rechargement de la couche avec un nom modifié"
+        },
         "version": {
             "label": "Version"
         },

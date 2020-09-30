@@ -28,6 +28,10 @@
         "collapse": "Collapse",
         "expand": "Expand",
         "Forbidden": "Forbidden",
+        "layerNameChangeError": {
+            "title": "Name change error",
+            "message": "The layer failed to reload with a changed name"
+        },
         "version": {
             "label": "Version"
         },
