@@ -333,7 +333,7 @@ class Toolbar extends React.Component {
                         <OverlayTrigger
                             key="layerSwipe"
                             placement="top"
-                            overlay={<Tooltip id="layer-tooltip-swipe">Layer swipe settings</Tooltip>}>
+                            overlay={<Tooltip id="layer-tooltip-swipe"><Message msgId="toc.compareTool" /></Tooltip>}>
                             <Button key="layer-swipe" bsStyle={this.props?.swipeSettings?.active ? "success" : "primary"} className="square-button-md" onClick={() => this.showSwipeSettings(status)}>
                                 <Glyphicon glyph="transfer" />
                             </Button>
