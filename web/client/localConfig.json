@@ -305,7 +305,7 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", {
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Swipe", {
             "name": "Annotations",
             "cfg": {
               "allowEdit": true

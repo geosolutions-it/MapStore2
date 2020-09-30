@@ -516,6 +516,7 @@
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
             "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
+            "compareTool": "Compare tool",
             "filterIconEnabled": "Disable layer filter",
             "filterIconDisabled": "Enable layer filter",
             "refreshOptions": {

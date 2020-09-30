@@ -21,6 +21,7 @@ const onToolsActions = {
     onRemove: () => {},
     onClear: () => {},
     onSettings: () => {},
+    onSetSwipeActive: () => {},
     onUpdateSettings: () => {},
     onRetrieveLayerData: () => {},
     onHideSettings: () => {},
@@ -129,6 +130,42 @@ describe('TOC Toolbar', () => {
         TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
         expect(removeModal).toExist();
+    });
+
+    it('should render map swipe toggle button and call toggle on when swipe.active is false', () => {
+        const spySwipeSettings = expect.spyOn(onToolsActions, 'onSetSwipeActive');
+        const selectedLayers = [{
+            id: 'l001',
+            title: 'layer001',
+            name: 'layer001name',
+            bbox: {
+                bounds: {
+                    maxx: 10,
+                    maxy: 9,
+                    minx: -10,
+                    miny: -9
+                }, crs: 'EPSG:4326'
+            },
+            search: {
+                url: 'l001url'
+            }
+        }];
+
+        const cmp = ReactDOM.render(<Toolbar
+            swipeSettings={{active: false }}
+            activateTool={{ activateToolsContainer: true, activateSwipeOnLayer: true }}
+            selectedLayers={selectedLayers}
+            onToolsActions={onToolsActions}/>, document.getElementById("container"));
+
+        const modal = document.getElementsByClassName('modal-dialog').item(0);
+        expect(modal).toNotExist();
+
+        const el = ReactDOM.findDOMNode(cmp);
+        expect(el).toExist();
+        const btn = el.getElementsByClassName("btn");
+        expect(btn.length).toBe(1);
+        TestUtils.Simulate.click(btn[0]);
+        expect(spySwipeSettings).toHaveBeenCalled();
     });
 
     it('layer single selection (no search)', () => {

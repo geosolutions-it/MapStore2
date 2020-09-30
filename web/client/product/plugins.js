@@ -107,6 +107,7 @@ module.exports = {
         SharePlugin: require('../plugins/Share'),
         SnapshotPlugin: require('../plugins/Snapshot'),
         StyleEditorPlugin: require('../plugins/StyleEditor'),
+        SwipePlugin: require('../plugins/Swipe').default,
         TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings').default,
         TOCPlugin: require('../plugins/TOC'),
         ThematicLayerPlugin: require('../plugins/ThematicLayer'),

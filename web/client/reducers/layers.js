@@ -372,6 +372,7 @@ function layers(state = { flat: [] }, action) {
             settings: settings
         });
     }
+
     case UPDATE_SETTINGS: {
         const options = assign({},
             state.settings && state.settings.options,
