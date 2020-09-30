@@ -15,6 +15,7 @@ const {colorToHexStr} = require("./ColorUtils");
 const {getLayerConfig} = require('./TileConfigProvider').default;
 const { extractValidBaseURL } = require('./TileProviderUtils');
 const WMTSUtils = require('./WMTSUtils');
+const {guessFormat} = require('./TMSUtils');
 
 const {get} = require("ol/proj");
 const { isArray, filter, find, isEmpty, toNumber, castArray} = require('lodash');
@@ -420,13 +421,13 @@ const PrintUtils = {
             })
         },
         wmts: {
-            map: (layer) => {
-                const SRS = "EPSG:3857";
-                const tileMatrixSet = WMTSUtils.getMatrixIds(layer.tileMatrixSet, SRS)[0]; // TODO: use spec SRS.
+            map: (layer, spec) => {
+                const SRS =  spec.projection;
+                const { tileMatrixSet, tileMatrixSetName} = WMTSUtils.getTileMatrix(layer, SRS); // TODO: use spec SRS.
+                // const matrixIds = WMTSUtils.getMatrixIds(layer.matrixIds, tileMatrixSet || SRS);
                 if (!tileMatrixSet) {
                     throw Error("tile matrix not found for pdf EPSG" + SRS);
                 }
-                const matrixSet = tileMatrixSet["ows:Identifier"];
                 const matrixIds = PrintUtils.getWMTSMatrixIds(layer, tileMatrixSet);
                 const baseURL = (PrintUtils.normalizeUrl(castArray(layer.url)[0]));
                 let dimensionParams = {};
@@ -453,50 +454,72 @@ const PrintUtils = {
                     // so simulate with dimensions and params
                     ...dimensionParams,
                     "matrixIds": matrixIds,
-                    "matrixSet": matrixSet,
+                    "matrixSet": tileMatrixSetName,
                     "style": layer.style,
                     "name": layer.name,
                     "requestEncoding": layer.requestEncoding === "RESTful" ? "REST" : layer.requestEncoding,
-                    "opacity": layer.opacity || 1.0,
+                    "opacity": layer.opacity || layer.opacity === 0 ? 0 : 1.0,
                     "version": layer.version || "1.0.0"
                 };
             }
         },
         tileprovider: {
-            map: (layer) => ({
-                ...PrintUtils.getTileProviderLayerSpec(layer)
-            })
-        }
-    },
-    getTileProviderLayerSpec: (layer) => {
+            map: (layer) => {
 
-        const [providerURL, layerConfig] = getLayerConfig(layer.provider, layer);
-        if (!isEmpty(layerConfig)) {
-            let validURL = extractValidBaseURL({...layerConfig, url: layerConfig?.url ?? providerURL});
-            if (!validURL) {
-                throw Error("No base URL found for this layer");
+                const [providerURL, layerConfig] = getLayerConfig(layer.provider, layer);
+                if (!isEmpty(layerConfig)) {
+                    let validURL = extractValidBaseURL({ ...layerConfig, url: layerConfig?.url ?? providerURL });
+                    if (!validURL) {
+                        throw Error("No base URL found for this layer");
+                    }
+                    // transform in xyz format for mapfish-print.
+                    const firstBracketIndex = validURL.indexOf('{');
+                    const baseURL = validURL.slice(0, firstBracketIndex);
+                    const pathSection = validURL.slice(firstBracketIndex);
+                    const pathFormat = pathSection
+                        .replace("{x}", "${x}")
+                        .replace("{y}", "${y}")
+                        .replace("{z}", "${z}");
+                    return {
+                        baseURL,
+                        path_format: pathFormat,
+                        "type": 'xyz',
+                        "extension": baseURL.split('.').pop() || "png",
+                        "opacity": layer.opacity || layer.opacity === 0 ? 0 : 1.0,
+                        "tileSize": [256, 256],
+                        "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
+                        "resolutions": MapUtils.getResolutions()
+                    };
+                }
+                return {};
             }
-            // transform in xyz format for mapfish-print.
-            const firstBracketIndex = validURL.indexOf('{');
-            const baseURL = validURL.slice(0, firstBracketIndex);
-            const pathSection = validURL.slice(firstBracketIndex);
-            const pathFormat = pathSection
-                .replace("{x}", "${x}")
-                .replace("{y}", "${y}")
-                .replace("{z}", "${z}");
-            return {
-                baseURL,
-                path_format: pathFormat,
-                "type": 'xyz',
-                "extension": baseURL.split('.').pop() || "png",
-                "opacity": layer.opacity || 1.0,
-                "tileSize": [256, 256],
-                "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
-                "resolutions": MapUtils.getResolutions()
-            };
+        },
+        tms: {
+            map: (layer) => {
+                // layer.tileMapService is like tileMapUrl, but with the layer name in the tail.
+                // e.g. "https://server.org/gwc/service/tms/1.0.0" - "https://server.org/gwc/service/tms/1.0.0/workspace%3Alayer@EPSG%3A3857@png"
+                const layerName = layer.tileMapUrl.split(layer.tileMapService + "/")[1];
+                return {
+                    type: 'tms',
+                    opacity: layer.opacity || layer.opacity === 0 ? 0 : 1.0,
+                    layer: layerName,
+                    // baseURL for mapfish print required to remove the version
+                    baseURL: layer.tileMapService.substring(0, layer.tileMapService.lastIndexOf("/1.0.0")),
+                    tileSize: layer.tileSize,
+                    format: guessFormat(layer.tileMapUrl),
+                    "maxExtent": [
+                        -20037508.3392,
+                        -20037508.3392,
+                        20037508.3392,
+                        20037508.3392
+                    ],
+                    resolutions: layer.tileSets.map(({resolution}) => resolution)
+
+                };
+            }
         }
-        return {};
     },
+
     getWMTSMatrixIds: (layer, tileMatrixSet) => {
         let modifiedTileMatrixSet = [];
         const srs = CoordinatesUtils.normalizeSRS(layer.srs || 'EPSG:3857', layer.allowedSRS);
