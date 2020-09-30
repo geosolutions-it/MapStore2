@@ -12,7 +12,7 @@ const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {
     refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_NODE,
-    updateLayerDimension, CHANGE_LAYER_PARAMS, updateSettingsParams, UPDATE_SETTINGS```
+    updateLayerDimension, CHANGE_LAYER_PARAMS, updateSettingsParams, UPDATE_SETTINGS
 } = require('../../actions/layers');
 const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
 const {
