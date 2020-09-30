@@ -27,6 +27,7 @@ function tileXYZToOpenlayersOptions(options) {
     });
     let source = new XYZ(sourceOpt);
     let olOpt = assign({}, {
+        msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility !== false,
         zIndex: options.zIndex,

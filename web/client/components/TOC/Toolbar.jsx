@@ -59,7 +59,8 @@ class Toolbar extends React.Component {
             onGetMetadataRecord: () => {},
             onHideLayerMetadata: () => {},
             onShow: () => {},
-            onLayerInfo: () => {}
+            onLayerInfo: () => {},
+            onSetSwipeActive: () => {}
         },
         maxDepth: 3,
         text: {
@@ -115,7 +116,8 @@ class Toolbar extends React.Component {
             includeDeleteButtonInSettings: false,
             activateMetedataTool: true,
             activateLayerFilterTool: true,
-            activateLayerInfoTool: true
+            activateLayerInfoTool: true,
+            activateSwipeOnLayer: false
         },
         options: {
             modalOptions: {},
@@ -327,6 +329,15 @@ class Toolbar extends React.Component {
                             </Button>
                         </OverlayTrigger>
                         : null}
+                    {this.props.activateTool.activateSwipeOnLayer && (status === 'LAYER') &&
+                        <OverlayTrigger
+                            key="layerSwipe"
+                            placement="top"
+                            overlay={<Tooltip id="layer-tooltip-swipe"><Message msgId="toc.compareTool" /></Tooltip>}>
+                            <Button key="layer-swipe" bsStyle={this.props?.swipeSettings?.active ? "success" : "primary"} className="square-button-md" onClick={() => this.showSwipeSettings(status)}>
+                                <Glyphicon glyph="transfer" />
+                            </Button>
+                        </OverlayTrigger>}
                 </ReactCSSTransitionGroup>
                 <ConfirmModal
                     ref="removelayer"
@@ -391,6 +402,15 @@ class Toolbar extends React.Component {
             }
         } else {
             this.props.onToolsActions.onHideSettings();
+        }
+    }
+
+    showSwipeSettings = (status) => {
+        const { swipeSettings, onToolsActions } = this.props;
+        if (!swipeSettings.active && (status === 'LAYER')) {
+            onToolsActions.onSetSwipeActive(true);
+        } else {
+            onToolsActions.onSetSwipeActive(false);
         }
     }
 

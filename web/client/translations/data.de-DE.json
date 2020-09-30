@@ -516,6 +516,7 @@
             "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration vom Server",
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
             "epsgNotSupported": "KBS {epsg} wird für das Zoomen auf den Layer nicht unterstützt",
+            "compareTool": "Tool vergleichen",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
             "refreshOptions": {
