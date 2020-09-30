@@ -17,7 +17,7 @@ const { extractValidBaseURL } = require('./TileProviderUtils');
 const WMTSUtils = require('./WMTSUtils');
 const {guessFormat} = require('./TMSUtils');
 
-const {get} = require("ol/proj");
+const { get: getProjection } = require("ol/proj");
 const { isArray, filter, find, isEmpty, toNumber, castArray} = require('lodash');
 const { getFeature } = require('../api/WFS');
 const {generateEnvString} = require('./LayerLocalizationUtils');
@@ -429,7 +429,7 @@ const PrintUtils = {
                     throw Error("tile matrix not found for pdf EPSG" + SRS);
                 }
                 const matrixIds = PrintUtils.getWMTSMatrixIds(layer, tileMatrixSet);
-                const baseURL = (PrintUtils.normalizeUrl(castArray(layer.url)[0]));
+                const baseURL = PrintUtils.normalizeUrl(castArray(layer.url)[0]);
                 let dimensionParams = {};
                 if (baseURL.indexOf('{Style}') >= 0) {
                     dimensionParams = {
@@ -484,7 +484,7 @@ const PrintUtils = {
                         baseURL,
                         path_format: pathFormat,
                         "type": 'xyz',
-                        "extension": baseURL.split('.').pop() || "png",
+                        "extension": validURL.split('.').pop() || "png",
                         "opacity": layer.opacity || layer.opacity === 0 ? 0 : 1.0,
                         "tileSize": [256, 256],
                         "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
@@ -514,6 +514,7 @@ const PrintUtils = {
                         20037508.3392
                     ],
                     resolutions: layer.tileSets.map(({resolution}) => resolution)
+                    // letters: ... to implement
 
                 };
             }
@@ -523,7 +524,7 @@ const PrintUtils = {
     getWMTSMatrixIds: (layer, tileMatrixSet) => {
         let modifiedTileMatrixSet = [];
         const srs = CoordinatesUtils.normalizeSRS(layer.srs || 'EPSG:3857', layer.allowedSRS);
-        const projection = get(srs);
+        const projection = getProjection(srs);
         const identifierText = "ows:Identifier";
         const metersPerUnit = projection.getMetersPerUnit();
         const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
