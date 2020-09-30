@@ -21,7 +21,13 @@ MapStore projects also allow to use the `printing` profile to include this modul
 
 ### Adding to an existing MapStore
 
-If you have an existing and deployed instance of MapStore and you want to add the printing module, you can build only the printing extension as a zip running `mvn clean install -Pprintingbundle`. The zip bundle will created in `printing/target/mapstore-printing.zip`. You can extract this zip file in `webapps/mapstore` directory of your java container (or copy manually the files in the same directories).
+If you have an existing and deployed instance of MapStore and you want to add the printing module, you can build only the printing extension as a zip running `mvn clean install -Pprintingbundle`. The zip bundle will created in `printing/target/mapstore-printing.zip`. 
+You can copy the content of this zip bundle into `webapps/mapstore` directory of your java container (e.g. Tomcat) following the same directory structure: 
+
+- files from zip directory `WEB-INF/classes` must be placed in `webapps/mapstore/WEB-INF/classes` 
+- files from zip directory `WEB-INF/lib` must be placed in `webapps/mapstore/WEB-INF/lib` 
+
+Then restart your java container.
 
 ## Configuring the print
 
