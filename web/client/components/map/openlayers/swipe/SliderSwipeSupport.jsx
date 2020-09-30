@@ -53,7 +53,13 @@ const DraggableSlider = ({ type, map, widthRef, heightRef }) => {
     );
 };
 
-// Allow swiping in the horizontal or vertical direction
+/**
+ * Implementation of Horiziontal/Vertical slider swipe for OpenLayers. 
+ * @props {string} [type="cut-vertical"] the type of the swipe. Can be "cut-vertical" or "cut-horizontal"
+ * @props {boolean} active activates the tool (if a layer is present)
+ * @props {object} map the map object
+ * @props {layer} the layer object
+ */
 const SliderSwipeSupport = ({ map, layer, type = "cut-vertical", active }) => {
     const heightRef = useRef();
     const widthRef = useRef();
