@@ -11,7 +11,7 @@ import {createSink} from 'recompose';
 import expect from 'expect';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import editableText, { withEditorBase } from '../editableText';
+import editableText, {withGeoStoryEditor} from '../editableText';
 import { EMPTY_CONTENT } from '../../../../../utils/GeoStoryUtils';
 
 describe('editableText enhancer', () => {
@@ -96,99 +96,99 @@ describe('editableText enhancer', () => {
         }));
         ReactDOM.render(<Sink save={actions.save} />, document.getElementById("container"));
     });
-    describe('withEditorBase HOC', () => {
-        it('should enhance wysiwyg component with list of flattened out sections', () => {
-            const sections = [
-                {
-                    "type": "title",
-                    "id": "id-1"
-                },
-                {
-                    "id": "id-2",
-                    "type": "immersive",
-                    "contents": [
-                        {
-                            "id": "id-2-1",
-                            "type": "column"
-                        }
-                    ]
-                },
-                {
-                    "id": "id-3",
-                    "type": "paragraph",
-                    "contents": [
-                        {
-                            "id": "id-3-1",
-                            "type": "column",
-                            "contents": []
-                        }
-                    ]
-                },
-                {
-                    "id": "id-4",
-                    "type": "paragraph",
-                    "contents": [
-                        {
-                            "id": "id-4-1",
-                            "type": "column"
-                        }
-                    ]
-                }
-            ];
 
-            const flattenedSections = [
-                {
-                    "type": "title",
-                    "id": "id-1"
-                },
-                {
-                    "id": "id-2",
-                    "type": "immersive",
-                    "contents": [
-                        {
-                            "id": "id-2-1",
-                            "type": "column"
-                        }
-                    ]
-                },
-                {
-                    "id": "id-2-1",
-                    "type": "column"
-                },
-                {
-                    "id": "id-3",
-                    "type": "paragraph",
-                    "contents": [
-                        {
-                            "id": "id-3-1",
-                            "type": "column",
-                            "contents": []
-                        }
-                    ]
-                },
-                {
-                    "id": "id-3-1",
-                    "type": "column",
-                    "contents": []
-                },
-                {
-                    "id": "id-4",
-                    "type": "paragraph",
-                    "contents": [
-                        {
-                            "id": "id-4-1",
-                            "type": "column"
-                        }
-                    ]
-                },
-                {
-                    "id": "id-4-1",
-                    "type": "column"
-                }
-            ];
-            const rendered = ReactDOM.render(withEditorBase()({sections}), document.getElementById("container"));
-            const m = ReactTestUtils.findAllInRenderedTree(rendered, (c) => !!c?.props?.availableStorySections);
-            expect(m[0].props.availableStorySections).toEqual(flattenedSections);
-        });
+    it('flattened out sections are properly generated', () => {
+        const sections = [
+            {
+                "type": "title",
+                "id": "id-1"
+            },
+            {
+                "id": "id-2",
+                "type": "immersive",
+                "contents": [
+                    {
+                        "id": "id-2-1",
+                        "type": "column"
+                    }
+                ]
+            },
+            {
+                "id": "id-3",
+                "type": "paragraph",
+                "contents": [
+                    {
+                        "id": "id-3-1",
+                        "type": "column",
+                        "contents": []
+                    }
+                ]
+            },
+            {
+                "id": "id-4",
+                "type": "paragraph",
+                "contents": [
+                    {
+                        "id": "id-4-1",
+                        "type": "column"
+                    }
+                ]
+            }
+        ];
+
+        const flattenedSections = [
+            {
+                "type": "title",
+                "id": "id-1"
+            },
+            {
+                "id": "id-2",
+                "type": "immersive",
+                "contents": [
+                    {
+                        "id": "id-2-1",
+                        "type": "column"
+                    }
+                ]
+            },
+            {
+                "id": "id-2-1",
+                "type": "column"
+            },
+            {
+                "id": "id-3",
+                "type": "paragraph",
+                "contents": [
+                    {
+                        "id": "id-3-1",
+                        "type": "column",
+                        "contents": []
+                    }
+                ]
+            },
+            {
+                "id": "id-3-1",
+                "type": "column",
+                "contents": []
+            },
+            {
+                "id": "id-4",
+                "type": "paragraph",
+                "contents": [
+                    {
+                        "id": "id-4-1",
+                        "type": "column"
+                    }
+                ]
+            },
+            {
+                "id": "id-4-1",
+                "type": "column"
+            }
+        ];
+        const Sink = withGeoStoryEditor(createSink(() => {}));
+        const rendered = ReactDOM.render(<Sink sections={sections}/>, document.getElementById("container"));
+        const m = ReactTestUtils.findAllInRenderedTree(rendered, (c) => !!c?.props?.availableStorySections);
+        expect(m[0].props.availableStorySections).toEqual(flattenedSections);
     });
 });
