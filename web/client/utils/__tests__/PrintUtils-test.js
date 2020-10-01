@@ -10,7 +10,6 @@ import { find } from 'lodash';
 
 import PrintUtils from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
-import TileConfigProvider from '../TileConfigProvider';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
 import { poi as TMS110_1 } from '../../test-resources/layers/tms';
 import { BasemapAT, NASAGIBS, NLS_CUSTOM_URL } from '../../test-resources/layers/tileprovider';
