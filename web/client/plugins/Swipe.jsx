@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import { getSelectedLayer } from '../selectors/layers';
-import { layerSwipeSettingsSelector } from '../selectors/swipe';
+import { layerSwipeSettingsSelector, swipeModeSettingsSelector } from '../selectors/swipe';
 import swipe from '../reducers/swipe';
 import * as epics from '../epics/swipe';
 
@@ -20,16 +20,18 @@ import { createPlugin } from '../utils/PluginsUtils';
 import SwipeSettings from './SwipeSettings';
 import SliderSwipeSupport from '../components/map/openlayers/swipe/SliderSwipeSupport';
 
-const Support = ({ map, layer, active }) => {
-    return <SliderSwipeSupport map={map} layer={layer} active={active} />;
+const Support = ({ map, layer, active, swipeModeSettings }) => {
+    return <SliderSwipeSupport map={map} layer={layer} active={active} type={swipeModeSettings.direction} />;
 };
 
 const swipeSupportSelector = createSelector([
     getSelectedLayer,
-    layerSwipeSettingsSelector
-], (layer, swipeSettings) => ({
+    layerSwipeSettingsSelector,
+    swipeModeSettingsSelector
+], (layer, swipeSettings, swipeModeSettings) => ({
     layer: layer?.id,
-    active: swipeSettings.active || false
+    active: swipeSettings.active || false,
+    swipeModeSettings
 }));
 
 const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);

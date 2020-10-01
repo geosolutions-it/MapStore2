@@ -32,12 +32,12 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
         ctx.rect(width, 0, ctx.canvas.width - width, ctx.canvas.height);
         ctx.strokeStyle = 'rgba(0,0,0,0.5)';
         ctx.clip();
-    }, [ layerId ]);
+    }, [ layerId, type ]);
 
     const postcomposeCallback = useCallback((event) => {
         let ctx = event.context;
         ctx.restore();
-    }, [ layerId ]);
+    }, [ layerId, type ]);
 
     const horizontalCutPrecomposeCallback = useCallback((event) => {
         let ctx = event.context;
@@ -46,7 +46,7 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
         ctx.beginPath();
         ctx.rect(0, height, ctx.canvas.width, ctx.canvas.height - height);
         ctx.clip();
-    }, [ layerId ]);
+    }, [ layerId, type ]);
 
     const circleCutPrecomposeCallback = useCallback((event) => {
         let ctx = event.context;
@@ -63,7 +63,7 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
             ctx.stroke();
         }
         ctx.clip();
-    }, [ layerId ]);
+    }, [ layerId, type ]);
 
     useEffect(() => {
         const layers = map.getLayers().getArray();
@@ -92,7 +92,7 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
             };
         }
         return () => map.render();
-    }, [ layerId ]);
+    }, [ layerId, type ]);
     return null;
 };
 

@@ -21,7 +21,7 @@ const onToolsActions = {
     onRemove: () => {},
     onClear: () => {},
     onSettings: () => {},
-    onSetSwipeActive: () => {},
+    onSetActive: () => {},
     onUpdateSettings: () => {},
     onRetrieveLayerData: () => {},
     onHideSettings: () => {},
@@ -133,7 +133,7 @@ describe('TOC Toolbar', () => {
     });
 
     it('should render map swipe toggle button and call toggle on when swipe.active is false', () => {
-        const spySwipeSettings = expect.spyOn(onToolsActions, 'onSetSwipeActive');
+        const spySetActive = expect.spyOn(onToolsActions, 'onSetActive');
         const selectedLayers = [{
             id: 'l001',
             title: 'layer001',
@@ -165,7 +165,7 @@ describe('TOC Toolbar', () => {
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(1);
         TestUtils.Simulate.click(btn[0]);
-        expect(spySwipeSettings).toHaveBeenCalled();
+        expect(spySetActive).toHaveBeenCalled();
     });
 
     it('layer single selection (no search)', () => {

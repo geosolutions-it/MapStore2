@@ -83,7 +83,8 @@ const ResizableModal = ({
     fade = false,
     fitContent,
     modalClassName = '',
-    dialogClassName = ''
+    dialogClassName = '',
+    enableFooter = true
 }) => {
     const sizeClassName = sizes[size] || '';
     const fullscreenClassName = showFullscreen && fullscreenState === 'expanded' && fullscreen.className[fullscreenType] || '';
@@ -118,15 +119,17 @@ const ResizableModal = ({
                 <div role="body" className={bodyClassName}>
                     {children}
                 </div>
-                <div style={{display: 'flex'}} role="footer">
-                    <div className="ms-resizable-modal-loading-spinner-container">
-                        {loading ? <LoadingSpinner/> : null}
+                {enableFooter && (
+                    <div style={{display: 'flex'}} role="footer">
+                        <div className="ms-resizable-modal-loading-spinner-container">
+                            {loading ? <LoadingSpinner/> : null}
+                        </div>
+                        <div className="ms-resizable-modal-loading-text">
+                            {loading ? loadingText : null}
+                        </div>
+                        <Toolbar buttons={buttons}/>
                     </div>
-                    <div className="ms-resizable-modal-loading-text">
-                        {loading ? loadingText : null}
-                    </div>
-                    <Toolbar buttons={buttons}/>
-                </div>
+                )}
             </Dialog>
         </div>) : null;
     return fade ?

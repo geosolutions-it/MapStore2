@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {ButtonGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const {ButtonGroup, Button, Glyphicon, Tooltip, DropdownButton, MenuItem} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
@@ -16,6 +16,16 @@ const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayerMetadataModal = require('./fragments/LayerMetadataModal');
 const Proj4js = require('proj4').default;
 const Message = require('../I18N/Message');
+const tooltip = require('../misc/enhancers/tooltip');
+
+const DropdownButtonT = tooltip(DropdownButton);
+const swipeToolButtonConfig = {
+    title: <Glyphicon glyph="transfer"/>,
+    tooltipId: "toc.compareTool",
+    tooltipPosition: "top",
+    className: "square-button-md no-border",
+    pullRight: true
+};
 
 class Toolbar extends React.Component {
 
@@ -60,7 +70,8 @@ class Toolbar extends React.Component {
             onHideLayerMetadata: () => {},
             onShow: () => {},
             onLayerInfo: () => {},
-            onSetSwipeActive: () => {}
+            onSetActive: () => {},
+            onSetSwipeMode: () => {}
         },
         maxDepth: 3,
         text: {
@@ -330,14 +341,14 @@ class Toolbar extends React.Component {
                         </OverlayTrigger>
                         : null}
                     {this.props.activateTool.activateSwipeOnLayer && (status === 'LAYER') &&
-                        <OverlayTrigger
-                            key="layerSwipe"
-                            placement="top"
-                            overlay={<Tooltip id="layer-tooltip-swipe"><Message msgId="toc.compareTool" /></Tooltip>}>
-                            <Button key="layer-swipe" bsStyle={this.props?.swipeSettings?.active ? "success" : "primary"} className="square-button-md" onClick={() => this.showSwipeSettings(status)}>
-                                <Glyphicon glyph="transfer" />
-                            </Button>
-                        </OverlayTrigger>}
+                        <DropdownButtonT
+                            bsStyle={this.props?.swipeSettings?.active ? "success" : "primary"}
+                            noCaret {...swipeToolButtonConfig}>
+                            <MenuItem active={this.props.swipeSettings.mode === "swipe"} onClick={() => this.showSwipeTools(status, "swipe")}>Swipe</MenuItem>
+                            <MenuItem active={this.props.swipeSettings.mode === "spy"} onClick={() => this.showSwipeTools(status, "spy")}>SpyGlass</MenuItem>
+                            <MenuItem onClick={() => this.showConfiguration(status)}>Configure</MenuItem>
+                        </DropdownButtonT>
+                    }
                 </ReactCSSTransitionGroup>
                 <ConfirmModal
                     ref="removelayer"
@@ -405,12 +416,20 @@ class Toolbar extends React.Component {
         }
     }
 
-    showSwipeSettings = (status) => {
+    showSwipeTools = (status, mode) => {
+        const { onToolsActions } = this.props;
+        if (status === 'LAYER') {
+            onToolsActions.onSetActive(true);
+            onToolsActions.onSetSwipeMode(mode);
+        }
+    }
+
+    showConfiguration = (status) => {
         const { swipeSettings, onToolsActions } = this.props;
-        if (!swipeSettings.active && (status === 'LAYER')) {
-            onToolsActions.onSetSwipeActive(true);
+        if (!swipeSettings.configuring && (status === 'LAYER')) {
+            onToolsActions.onSetActive(true, "configuring");
         } else {
-            onToolsActions.onSetSwipeActive(false);
+            onToolsActions.onSetActive(false, "configuring");
         }
     }
 

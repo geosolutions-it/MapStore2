@@ -29,6 +29,6 @@ describe('SwipePlugin', () => {
     it('shows SwipePlugin', () => {
         const { Plugin } = getPluginForTest(SwipePlugin, {});
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('mapstore-swipe-settings')).toExist();
+        expect(document.querySelector('.mapstore-swipe-settings')).toExist();
     });
 });
