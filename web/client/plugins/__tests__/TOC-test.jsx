@@ -185,6 +185,89 @@ describe('TOCPlugin Plugin', () => {
         expect(layerNode02.innerHTML).toBe('title_02');
         expect(layerNodeDummy.innerHTML).toBe('dummy');
     });
+    it('Update layer title and description button', () => {
+        const { Plugin } = getPluginForTest(TOCPlugin, {
+            layers: {
+                groups: [{
+                    expanded: true,
+                    id: 'Default',
+                    name: 'Default',
+                    nodes: [ 'layer_01', 'layer_02', 'layer_03' ],
+                    title: 'Default'
+                }],
+                flat: [{
+                    id: 'layer_01',
+                    title: 'title_01',
+                    type: 'tileprovider'
+                }, {
+                    id: 'layer_02',
+                    title: 'title_02',
+                    type: 'wmts'
+                }, {
+                    id: 'layer_03',
+                    title: 'title_03',
+                    type: 'wms',
+                    group: 'background'
+                }]
+            },
+            maptype: {
+                mapType: 'openlayers'
+            },
+            security: {
+                user: {
+                    role: 'ADMIN'
+                }
+            }
+        });
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin items={[{name: 'MetadataExplorer'}, {name: 'AddGroup'}, {name: 'LayerInfo'}]}/>, document.getElementById("container"));
+        const tocHead = document.getElementsByClassName('mapstore-toc-head')[0];
+        expect(tocHead).toExist();
+        const buttons = tocHead.getElementsByTagName('button');
+        expect(buttons.length).toBe(3);
+    });
+    it('Update layer title and description button is hidden when there are no valid layers for updating', () => {
+        const { Plugin } = getPluginForTest(TOCPlugin, {
+            layers: {
+                groups: [{
+                    expanded: true,
+                    id: 'Default',
+                    name: 'Default',
+                    nodes: [ 'layer_01', 'layer_02', 'layer_03' ],
+                    title: 'Default'
+                }],
+                flat: [{
+                    id: 'layer_01',
+                    title: 'title_01',
+                    type: 'tileprovider'
+                }, {
+                    id: 'layer_02',
+                    title: 'title_02',
+                    type: 'wmts',
+                    group: 'background'
+                }, {
+                    id: 'layer_03',
+                    title: 'title_03',
+                    type: 'wms',
+                    group: 'background'
+                }]
+            },
+            maptype: {
+                mapType: 'openlayers'
+            },
+            security: {
+                user: {
+                    role: 'ADMIN'
+                }
+            }
+        });
+        const WrappedPlugin = dndContext(Plugin);
+        ReactDOM.render(<WrappedPlugin items={[{name: 'MetadataExplorer'}, {name: 'AddGroup'}, {name: 'LayerInfo'}]}/>, document.getElementById("container"));
+        const tocHead = document.getElementsByClassName('mapstore-toc-head')[0];
+        expect(tocHead).toExist();
+        const buttons = tocHead.getElementsByTagName('button');
+        expect(buttons.length).toBe(2);
+    });
     describe('render items from other plugins', () => {
         const TOOL_BUTTON_SELECTOR = '.btn-group button';
         const SELECTED_LAYER_STATE = {

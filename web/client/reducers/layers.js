@@ -8,7 +8,8 @@
 
 var { LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
     TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, MOVE_NODE, ADD_LAYER, REMOVE_LAYER, ADD_GROUP,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA,
+    EDIT_LAYER_NAME, LAYER_NAME_IS_BEING_CHECKED, LAYER_NAME_CHANGE_ERROR
 } = require('../actions/layers');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -358,7 +359,10 @@ function layers(state = { flat: [] }, action) {
             options: action.options
         });
         return assign({}, state, {
-            settings: settings
+            settings: settings,
+            editLayerName: false,
+            layerNameIsBeingChecked: false,
+            layerNameChangeError: false
         });
     }
     case HIDE_SETTINGS: {
@@ -369,7 +373,10 @@ function layers(state = { flat: [] }, action) {
             options: {}
         });
         return assign({}, state, {
-            settings: settings
+            settings: settings,
+            editLayerName: false,
+            layerNameIsBeingChecked: false,
+            layerNameChangeError: false
         });
     }
 
@@ -470,6 +477,24 @@ function layers(state = { flat: [] }, action) {
         return assign({}, state, {
             layerMetadata
         });
+    }
+    case EDIT_LAYER_NAME: {
+        return {
+            ...state,
+            editLayerName: action.edit
+        };
+    }
+    case LAYER_NAME_IS_BEING_CHECKED: {
+        return {
+            ...state,
+            layerNameIsBeingChecked: action.isBeingChecked
+        };
+    }
+    case LAYER_NAME_CHANGE_ERROR: {
+        return {
+            ...state,
+            layerNameChangeError: action.error
+        };
     }
     default:
         return state;

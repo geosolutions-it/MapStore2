@@ -32,7 +32,11 @@ class General extends React.Component {
         nodeType: PropTypes.string,
         pluginCfg: PropTypes.object,
         showTooltipOptions: PropTypes.bool,
-        allowNew: PropTypes.bool
+        allowNew: PropTypes.bool,
+        layerNameIsBeingChecked: PropTypes.bool,
+        editingLayerName: PropTypes.bool,
+        layerNameChangeError: PropTypes.bool,
+        onEditLayerName: PropTypes.func
     };
 
     static contextTypes = {
@@ -45,7 +49,11 @@ class General extends React.Component {
         nodeType: 'layers',
         showTooltipOptions: true,
         pluginCfg: {},
-        allowNew: false
+        allowNew: false,
+        layerNameIsBeingChecked: false,
+        editingLayerName: false,
+        layerNameChangeError: false,
+        onEditLayerName: () => {}
     };
 
     state = {layerName: ''};
@@ -104,16 +112,26 @@ class General extends React.Component {
                         }
                         )}
                     </FormGroup>)}
-                    <FormGroup>
+                    <FormGroup validationState={this.props.layerNameChangeError && !this.props.layerNameIsBeingChecked ? 'error' : null}>
                         <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
                         <InputGroup>
                             <FormControl
                                 value={this.state.layerName || ''}
                                 key="name"
                                 type="text"
+                                disabled={!this.props.editingLayerName}
                                 onChange={evt => this.setState({layerName: evt.target.value})} />
-                            <InputGroup.Addon className="btn" onClick={() => this.updateEntry('name', {target: {value: this.state.layerName}})}>
-                                <Glyphicon glyph="refresh"/>
+                            <InputGroup.Addon className="btn" onClick={() => {
+                                if (this.props.editingLayerName) {
+                                    this.updateEntry('name', {target: {value: this.state.layerName}});
+                                } else {
+                                    this.props.onEditLayerName(true);
+                                }
+                            }}>
+                                {this.props.layerNameIsBeingChecked ?
+                                    <Spinner noFadeIn style={{width: '18px', height: '18px'}} spinnerName="circle"/> :
+                                    <Glyphicon glyph={this.props.editingLayerName ? "ok" : "pencil"}/>
+                                }
                             </InputGroup.Addon>
                         </InputGroup>
                     </FormGroup>
