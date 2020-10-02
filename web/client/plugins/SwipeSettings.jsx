@@ -25,7 +25,7 @@ const swipeTypeOptions = [{
     value: 'cut-vertical'
 }];
 
-const SpyRadiusConfiguration = ({spyModeSettings}) => {
+const SpyRadiusConfiguration = () => {
     return (<div className="mapstore-swipe-settings-spy">
         <h4>Radius</h4>
         <div className="mapstore-slider with-tooltip">
