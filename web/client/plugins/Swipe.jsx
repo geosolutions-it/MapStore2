@@ -34,7 +34,7 @@ const swipeSupportSelector = createSelector([
 ], (layer, swipeSettings) => ({
     layer: layer?.id,
     active: swipeSettings.active || false,
-    mode: "spy", // TODO: use UI configuration
+    mode: "swipe", // TODO: use UI configuration
     radius: "80", // TODO: use UI configuration
     sliderType: "cut-vertical" // TODO: use UI configuration
 }));
