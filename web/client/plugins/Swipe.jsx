@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import { getSelectedLayer } from '../selectors/layers';
-import { layerSwipeSettingsSelector, swipeModeSettingsSelector } from '../selectors/swipe';
+import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
 import swipe from '../reducers/swipe';
 import * as epics from '../epics/swipe';
 
@@ -19,19 +19,26 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 import SwipeSettings from './SwipeSettings';
 import SliderSwipeSupport from '../components/map/openlayers/swipe/SliderSwipeSupport';
+import SpyGlassSupport from '../components/map/openlayers/swipe/SpyGlassSupport';
 
-const Support = ({ map, layer, active, swipeModeSettings }) => {
+export const Support = ({ mode, map, layer, active, swipeModeSettings, spyModeSettings }) => {
+    if (mode === "spy") {
+        return <SpyGlassSupport map={map} layer={layer} active={active} radius={spyModeSettings.radius} />;
+    }
     return <SliderSwipeSupport map={map} layer={layer} active={active} type={swipeModeSettings.direction} />;
 };
 
 const swipeSupportSelector = createSelector([
     getSelectedLayer,
     layerSwipeSettingsSelector,
-    swipeModeSettingsSelector
-], (layer, swipeSettings, swipeModeSettings) => ({
+    swipeModeSettingsSelector,
+    spyModeSettingsSelector
+], (layer, swipeSettings, swipeModeSettings, spyModeSettings) => ({
     layer: layer?.id,
     active: swipeSettings.active || false,
-    swipeModeSettings
+    swipeModeSettings,
+    spyModeSettings,
+    mode: swipeSettings?.mode || "swipe"
 }));
 
 const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);
