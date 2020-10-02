@@ -29,14 +29,17 @@ const FeaturesList = (props) => {
         onStartDrawing,
         onAddText,
         onStyleGeometry,
-        styling,
-        setTabValue
+        setTabValue,
+        isMeasureEditDisabled,
+        onSetAnnotationMeasurement,
+        showPopupWarning,
+        setPopupWarning
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);
 
     const onClickGeometry = (type, style) => {
-        styling && onStyleGeometry();
+        onStyleGeometry(false);
         onAddGeometry(type);
         type === "Text" && onAddText();
         onSetStyle(style);
@@ -53,7 +56,17 @@ const FeaturesList = (props) => {
                     }}
                     buttons={[
                         {
+                            glyph: editing?.properties?.iconGlyph,
+                            visible: !isMeasureEditDisabled,
+                            disabled: !isValidFeature,
+                            onClick: () => {
+                                showPopupWarning ? setPopupWarning(true) : onSetAnnotationMeasurement();
+                            },
+                            tooltip: <Message msgId="annotations.editMeasurement" />
+                        },
+                        {
                             glyph: 'point-plus',
+                            visible: isMeasureEditDisabled,
                             disabled: !isValidFeature,
                             onClick: () => {
                                 const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}];
@@ -63,6 +76,7 @@ const FeaturesList = (props) => {
                         },
                         {
                             glyph: 'polyline-plus',
+                            visible: isMeasureEditDisabled,
                             disabled: !isValidFeature,
                             onClick: () => {
                                 const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: true, id: uuidv1()}]
@@ -73,6 +87,7 @@ const FeaturesList = (props) => {
                         },
                         {
                             glyph: 'polygon-plus',
+                            visible: isMeasureEditDisabled,
                             disabled: !isValidFeature,
                             onClick: () => {
                                 const style = [
@@ -83,6 +98,7 @@ const FeaturesList = (props) => {
                         },
                         {
                             glyph: 'font-add',
+                            visible: isMeasureEditDisabled,
                             disabled: !isValidFeature,
                             onClick: () => {
                                 const style = [
@@ -93,6 +109,7 @@ const FeaturesList = (props) => {
                         },
                         {
                             glyph: '1-circle-add',
+                            visible: isMeasureEditDisabled,
                             disabled: !isValidFeature,
                             onClick: () => {
                                 const style = [
@@ -121,7 +138,7 @@ const FeaturesList = (props) => {
  * @function
  *
  */
-const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature, setTabValue, styling, onStyleGeometry}) => {
+const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature, setTabValue, isMeasureEditDisabled, onStyleGeometry}) => {
     const type = getGeometryType(feature);
     const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
@@ -136,8 +153,8 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                     onUnselectFeature();
                 } else {
                     onSelectFeature([feature]);
-                    setTabValue('coordinates');
-                    styling && onStyleGeometry();
+                    setTabValue(isMeasureEditDisabled ? 'coordinates' : 'style');
+                    onStyleGeometry(!isMeasureEditDisabled);
                 }
             } }
         >
@@ -179,4 +196,16 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
         </div>
     );
 };
+
+FeaturesList.defaultProps = {
+    onAddGeometry: () => {},
+    onSetStyle: () => {},
+    onStartDrawing: () => {},
+    onAddText: () => {},
+    onStyleGeometry: () => {},
+    onSetAnnotationMeasurement: () => {},
+    onSelectFeature: () => {},
+    isMeasureEditDisabled: true
+};
+
 module.exports = FeaturesList;

@@ -456,9 +456,11 @@ describe("test the MeasureComponent", () => {
         const buttons = document.querySelectorAll('button');
         expect(buttons.length).toBe(7);
         expect(buttons[0].disabled).toBe(false);
+        expect(buttons[1].disabled).toBe(false);
+        expect(buttons[2].disabled).toBe(false);
         expect(buttons[3].disabled).toBe(false);
-        expect(buttons[4].disabled).toBe(true);
-        expect(buttons[5].disabled).toBe(true);
+        expect(buttons[4].disabled).toBe(false);
+        expect(buttons[5].disabled).toBe(true); // Add as layer button
         expect(buttons[6].disabled).toBe(false);
         expect(buttons[6].childNodes[0].className).toContain('floppy-disk');
 

@@ -696,7 +696,7 @@
             "newMeasure": "Nuova annotazione",
             "selectTool": "Seleziona uno strumento di misura",
             "exportToGeoJSON": "Esporta in GeoJSON",
-            "saveMeasure": "Salva la misurazione nell'annotazione",
+            "saveMeasure": "Salva le misure nell'annotazione",
             "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello"
         },
@@ -1070,6 +1070,9 @@
             "geometries": "Geometrie",
             "enableEdit": "Abilita modifica",
             "tabCoordinates": "Coordinate",
+            "warning": "Avvertimento!",
+            "measureWarningText": "La navigazione per modificare il pannello di misurazione rimuoverà qualsiasi stile applicato",
+            "notShowAgain": "Non mostrare più questo messaggio",
             "tabStyle": "Stile",
             "zoomTo": "Zoom sull'annotazione",
             "zoomToGeometry": "Zoom sulla geometria",

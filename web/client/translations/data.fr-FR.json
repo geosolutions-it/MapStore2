@@ -696,7 +696,7 @@
             "newMeasure": "Nouvelle annotation",
             "selectTool": "Sélectionnez un outil de mesure",
             "exportToGeoJSON": "Exporter vers GeoJSON",
-            "saveMeasure": "Enregistrer la mesure dans l'annotation",
+            "saveMeasure": "Enregistrer les mesures dans l'annotation",
             "resetTooltip": "Effacer les mesures",
             "addAsLayer": "Ajouter comme couche"
         },
@@ -1075,6 +1075,9 @@
             "hide": "Masquer l'annotation",
             "show": "Afficher l'annotation",
             "tabCoordinates": "Coordonnés",
+            "warning": "Avertissement!",
+            "measureWarningText": "Naviguer pour modifier le panneau de mesure supprimera tout style appliqué",
+            "notShowAgain": "Ne plus afficher ce message",
             "tabStyle": "Style",
             "filter": "Filtrer les annotations...",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition des annotations ?",

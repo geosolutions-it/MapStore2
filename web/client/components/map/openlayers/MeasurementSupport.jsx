@@ -128,6 +128,7 @@ export default class MeasurementSupport extends React.Component {
                 this.source.clear();
                 this.source = null;
             }
+            newProps.measurement.exportToAnnotation && newProps.changeMeasurement({geomType: "LineString"});
         }
         let oldFt = this.props.measurement.features;
         let newFt = newProps.measurement.features;
@@ -287,7 +288,6 @@ export default class MeasurementSupport extends React.Component {
         const tempTextLabels = [...this.textLabels];
         newFeatures.map((newFeature) => {
             const isBearing = !!newFeature.properties?.values?.find(val=>val.type === 'bearing');
-            newFeature.geometry = newFeature.geometry || {};
             const isPolygon = newFeature.geometry.type === "Polygon";
             const sliceVal = (isPolygon || isBearing) ? 0 : 1;
             const coordinates = isPolygon ? newFeature.geometry.coordinates[0] : newFeature.geometry.coordinates;
@@ -524,6 +524,8 @@ export default class MeasurementSupport extends React.Component {
             this.sketchFeature = evt.feature;
             this.drawing = true;
 
+            this.textId = this.props.measurement?.features?.length || 0;
+
             if (!this.textLabels) {
                 this.textLabels = [];
             }
@@ -581,7 +583,9 @@ export default class MeasurementSupport extends React.Component {
                                 };
                                 this.textLabels[this.segmentOverlays.length - i - 1] = {
                                     text,
-                                    position: pointObjectToArray(reproject(segments[i], getProjectionCode(this.props.map), 'EPSG:4326'))
+                                    position: pointObjectToArray(reproject(segments[i], getProjectionCode(this.props.map), 'EPSG:4326')),
+                                    type: this.props.measurement.geomType,
+                                    textId: this.textId
                                 };
                             }
                         }
@@ -614,7 +618,9 @@ export default class MeasurementSupport extends React.Component {
                             text: overlayText,
                             position: pointObjectToArray(reproject(
                                 midpoint(lastSegment[0], lastSegment[1], true), getProjectionCode(this.props.map), 'EPSG:4326'
-                            ))
+                            )),
+                            type: this.props.measurement.geomType,
+                            textId: this.textId
                         };
                         this.segmentLengths[this.segmentOverlays.length - 1] = {
                             value: lastSegmentLength,
@@ -729,12 +735,8 @@ export default class MeasurementSupport extends React.Component {
                 this.segmentOverlayElements.splice(this.segmentOverlays.length - 2, 1);
                 this.segmentOverlays.splice(this.segmentOverlays.length - 2, 1);
             }
-            // this.props.setTextLabels(this.textLabels);
-            const labelsLength = this.textLabels.length;
-            newFeature.geometry = newFeature.geometry || {};
-            newFeature.geometry.coordinates = newFeature.geometry.coordinates || [];
-            const coordinatesLength = newFeature.geometry.coordinates.length;
-            newFeature.geometry.textLabels = this.textLabels.slice(labelsLength - (newFeature.geometry.type === "Polygon" ? 3 : coordinatesLength - 1), labelsLength);
+            const geomType = newFeature.properties.values[0]?.type === 'bearing' ? "Bearing" : newFeature.geometry.type;
+            newFeature.geometry.textLabels = this.textLabels.filter(label => label.type === geomType && label.textId === this.textId).map(({textId, type, ...textLabel})=> textLabel);
             this.props.changeGeometry([...currentFeatures, newFeature]);
             this.props.setTextLabels([...this.textLabels]);
 

@@ -256,7 +256,8 @@ describe('Openlayers MeasurementSupport', () => {
                 lineMeasureEnabled: true,
                 updatedByUI: true,
                 showLabel: true,
-                showLengthAndBearingLabel: true
+                showLengthAndBearingLabel: true,
+                features: prevMeasurementFeature
             },
             uom: {
                 length: {unit: 'km', label: 'km'},
@@ -270,8 +271,8 @@ describe('Openlayers MeasurementSupport', () => {
         expect(cmp.textLabels.length).toBe(2);
 
         expect(spyOnSetTextLabels).toHaveBeenCalled();
-        expect(spyOnSetTextLabels.calls[0].arguments[0].length).toBe(2);
-        expect(spyOnSetTextLabels.calls[0].arguments[0].map(({text}) => text.includes('km')).reduce(
+        expect(spyOnSetTextLabels.calls[1].arguments[0].length).toBe(2);
+        expect(spyOnSetTextLabels.calls[1].arguments[0].map(({text}) => text.includes('km')).reduce(
             (result, value) => result && value,
             true
         )).toBe(true);
@@ -412,6 +413,10 @@ describe('Openlayers MeasurementSupport', () => {
         expect(changedFeatures[0].geometry.textLabels).toExist();
         expect(changedFeatures[0].geometry.textLabels[0].text).toBe("4.99 m | S 0° 0' 0'' E");
         expect(changedFeatures[0].geometry.textLabels[1].text).toBe("5.09 m | S 11° 18' 35'' E");
+        expect(cmp.textLabels.length).toBe(2);
+        expect(cmp.textLabels[0].type).toBe("LineString");
+        expect(cmp.textLabels[0].textId).toBe(0);
+
 
         // Text label display when drawing line with true bearing
         cmp = renderMeasurement({
@@ -420,7 +425,28 @@ describe('Openlayers MeasurementSupport', () => {
                 lineMeasureEnabled: true,
                 updatedByUI: false,
                 showLengthAndBearingLabel: true,
-                trueBearing: {measureTrueBearing: true}
+                trueBearing: {measureTrueBearing: true},
+                features: [{
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [[0, 1], [10, 20]]
+                    },
+                    "properties": {
+                        "name": "My line",
+                        "values": [
+                            {
+                                "value": 10.087,
+                                "formattedValue": "10.09 m",
+                                "position": [
+                                    0.00014373044545912343,
+                                    0.0003144103494347836
+                                ],
+                                "type": "length"
+                            }
+                        ]
+                    }
+                }]
             },
             uom
         });
@@ -446,12 +472,17 @@ describe('Openlayers MeasurementSupport', () => {
                 name: 'My line'
             })
         });
+
         expect(spyOnChangeGeometry).toHaveBeenCalled();
         changedFeatures = spyOnChangeGeometry.calls[1].arguments[0];
         expect(spyOnChangeGeometry).toHaveBeenCalled();
-        expect(changedFeatures[0].geometry.textLabels).toExist();
-        expect(changedFeatures[0].geometry.textLabels[0].text).toBe("4.99 m | 180° T");
-        expect(changedFeatures[0].geometry.textLabels[1].text).toBe("5.09 m | 168° T");
+        expect(changedFeatures[1].geometry.textLabels).toExist();
+        expect(changedFeatures[1].geometry.textLabels[0].text).toBe("4.99 m | 180° T");
+        expect(changedFeatures[1].geometry.textLabels[1].text).toBe("5.09 m | 168° T");
+        expect(cmp.textLabels.length).toBe(4);
+        expect(cmp.textLabels[2].type).toBe("LineString");
+        expect(cmp.textLabels[2].textId).toBe(1);
+
     });
     it('test showLengthAndBearingLabel', ()=>{
         const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
@@ -500,7 +531,8 @@ describe('Openlayers MeasurementSupport', () => {
                 geomType: "LineString",
                 lineMeasureEnabled: true,
                 updatedByUI: false,
-                showLengthAndBearingLabel: false
+                showLengthAndBearingLabel: false,
+                features: changedFeatures
             },
             uom
         });
@@ -528,9 +560,9 @@ describe('Openlayers MeasurementSupport', () => {
         });
         expect(spyOnChangeGeometry).toHaveBeenCalled();
         changedFeatures = spyOnChangeGeometry.calls[1].arguments[0];
-        expect(changedFeatures[0].geometry.textLabels).toExist();
-        expect(changedFeatures[0].geometry.textLabels[0].text).toBe("4.99 m");
-        expect(changedFeatures[0].geometry.textLabels[1].text).toBe("5.09 m");
+        expect(changedFeatures[1].geometry.textLabels).toExist();
+        expect(changedFeatures[1].geometry.textLabels[0].text).toBe("4.99 m");
+        expect(changedFeatures[1].geometry.textLabels[1].text).toBe("5.09 m");
     });
 
     it('test drawInteraction callbacks for a distance (Bearing)', () => {

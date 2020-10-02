@@ -8,9 +8,9 @@
 
 import expect from 'expect';
 import { addTimeoutEpic, testEpic } from './epicTestUtils';
-import { addAnnotationFromMeasureEpic, addAsLayerEpic, openMeasureEpic, setMeasureStateFromAnnotationEpic } from '../measurement';
+import { addAnnotationFromMeasureEpic, addAsLayerEpic, openMeasureEpic, setMeasureStateFromAnnotationEpic, closeMeasureEpics } from '../measurement';
 import {addAnnotation, addAsLayer, setAnnotationMeasurement} from '../../actions/measurement';
-import {setControlProperty} from '../../actions/controls';
+import {setControlProperty, toggleControl} from '../../actions/controls';
 
 describe('measurement epics', () => {
     const testData = {
@@ -228,6 +228,30 @@ describe('measurement epics', () => {
                 expect(actions[2].control).toBe("annotations");
                 expect(actions[2].property).toBe("enabled");
                 expect(actions[2].value).toBe(false);
+                done();
+            }, state);
+    });
+    it('test closeMeasureEpics', (done) => {
+        const NUMBER_OF_ACTIONS = 2;
+        const state = {
+            controls: {
+                measure: {
+                    showCoordinateEditor: true,
+                    enabled: false
+                }
+            }
+        };
+
+        testEpic(
+            addTimeoutEpic(closeMeasureEpics, 10),
+            NUMBER_OF_ACTIONS, [
+                toggleControl('measure', null)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                expect(actions[0].type).toBe("ANNOTATIONS:CLEAN_HIGHLIGHT");
+                expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
+                expect(actions[1].newProperties).toEqual({"visibility": true});
+                expect(actions[1].layer).toBe("annotations");
                 done();
             }, state);
     });

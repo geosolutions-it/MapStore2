@@ -45,7 +45,7 @@ const {
     setDefaultStyle,
     loading,
     changeGeometryTitle,
-    filterMarker
+    filterMarker, initPlugin, hideMeasureWarning, toggleShowAgain
 } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -336,7 +336,7 @@ describe('Test the annotations reducer', () => {
             selected: selected,
             editing: {
                 features: [selected]
-            }}, toggleStyle());
+            }}, toggleStyle(false));
         expect(annotationsState.styling).toBe(false);
         annotationsState.selected.style.map(s => {
             expect(s.highlight).toBe(true);
@@ -368,7 +368,7 @@ describe('Test the annotations reducer', () => {
             selected: selected,
             editing: {
                 features: [selected]
-            }}, toggleStyle());
+            }}, toggleStyle(true));
         expect(annotationsState.styling).toBe(true);
         annotationsState.selected.style.map(s => {
             expect(s.highlight).toBe(false);
@@ -1623,5 +1623,25 @@ describe('Test the annotations reducer', () => {
         }, filterMarker("glass"));
         expect(state.config).toBeTruthy();
         expect(state.config.filter).toBe('glass');
+    });
+    it('Hide measure warning', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, hideMeasureWarning());
+        expect(state.showPopupWarning).toBe(false);
+    });
+    it('Init plugin', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, initPlugin());
+        expect(state.showPopupWarning).toBeTruthy();
+        expect(state.showPopupWarning).toBe(true);
+    });
+    it('toggleShowAgain', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, toggleShowAgain(false));
+        expect(state.showAgain).toBeTruthy();
+        expect(state.showAgain).toBe(true);
     });
 });

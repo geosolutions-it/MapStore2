@@ -16,7 +16,8 @@ const {
     updateMeasures,
     init,
     setAnnotationMeasurement,
-    setMeasurementConfig
+    setMeasurementConfig,
+    setCurrentFeature
 } = require('../../actions/measurement');
 const {RESET_CONTROLS, setControlProperty} = require('../../actions/controls');
 
@@ -157,5 +158,17 @@ describe('Test the measurement reducer', () => {
         }, setMeasurementConfig("exportToAnnotation", true));
         expect(state.exportToAnnotation).toBe(true);
     });
-
+    it('SET_CURRENT_FEATURE', () => {
+        let state = measurement({
+            geomType: "LineString",
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            len: 0,
+            area: 700,
+            features: ["1", "2"],
+            currentFeature: 4
+        }, setCurrentFeature());
+        expect(state.currentFeature).toBe(2);
+    });
 });

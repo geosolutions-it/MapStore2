@@ -25,7 +25,7 @@ const {TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY} = require('../actio
 const {set} = require('../utils/ImmutableUtils');
 const {getGeomTypeSelected} = require('../utils/MeasurementUtils');
 const {isPolygon} = require('../utils/openlayers/DrawUtils');
-const {dropRight, isEmpty} = require('lodash');
+const {dropRight, isEmpty, findIndex, isNumber} = require('lodash');
 
 const assign = require('object-assign');
 const defaultState = {
@@ -56,6 +56,7 @@ const defaultState = {
 function measurement(state = defaultState, action) {
     switch (action.type) {
     case CHANGE_MEASUREMENT_TOOL: {
+        const currentFeatureIndex = findIndex(state.features, (f)=> ((f.properties.values[0] || {}).type === 'bearing' ? 'Bearing' : f.geometry.type) === action.geomType);
         return assign({}, state, {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
@@ -68,11 +69,10 @@ function measurement(state = defaultState, action) {
                     disabled: true
                 }
             },
-            currentFeature: state.features && state.features.length || 0,
+            currentFeature: currentFeatureIndex !== -1 ? currentFeatureIndex : state.features?.length || 0,
             len: 0,
             area: 0,
-            bearing: 0,
-            ...(action.geomType === null && {exportToAnnotation: false})
+            bearing: 0
         });
     }
     case CHANGE_MEASUREMENT_STATE: {
@@ -171,7 +171,7 @@ function measurement(state = defaultState, action) {
     case SET_CURRENT_FEATURE: {
         return {
             ...state,
-            currentFeature: action.featureIndex
+            currentFeature: isNumber(action.featureIndex) ? action.featureIndex : state.features.length
         };
     }
     case TOGGLE_CONTROL: {

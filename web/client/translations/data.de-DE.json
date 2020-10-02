@@ -696,7 +696,7 @@
             "newMeasure": "Neue Anmerkung",
             "selectTool": "Wählen Sie ein Messwerkzeug aus",
             "exportToGeoJSON": "Export nach GeoJSON",
-            "saveMeasure": "Speichern Sie die Messung in einer Anmerkung",
+            "saveMeasure": "Speichern Sie die Messungen in Anmerkungen",
             "resetTooltip": "Klare Maßnahmen",
             "addAsLayer": "Als Ebene hinzufügen"
         },
@@ -1077,6 +1077,9 @@
             "hide": "Anmerkung ausblenden",
             "show": "Anmerkung anzeigen",
             "tabCoordinates": "Koordinaten",
+            "warning": "Warnung!",
+            "measureWarningText": "Wenn Sie zum Bearbeiten des Messfelds navigieren, werden alle angewendeten Stile entfernt",
+            "notShowAgain": "Diese Nachricht nicht mehr anzeigen",
             "tabStyle": "Stil",
             "filter": "Notizen / Zeichnungen filtern...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",

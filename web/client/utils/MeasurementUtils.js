@@ -13,6 +13,8 @@ import {getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES} from '../uti
 import {convertUom, getFormattedBearingValue, validateFeatureCoordinates} from './MeasureUtils';
 import {transformLineToArcs} from './CoordinatesUtils';
 
+export const MEASURE_TYPE = 'Measure';
+
 const getFormattedValue = (uom, value) => ({
     "length": round(convertUom(value, "m", uom.length.label) || 0, 2) + " " + uom.length.label,
     "area": round(convertUom(value, "sqm", uom.area.label) || 0, 2) + " " + uom.area.label,
@@ -24,7 +26,7 @@ const getMeasurementProps = (features) =>{
     if (geomTypes.length > 1) {
         return {title: 'Multiple Measurement', iconGlyph: 'geometry-collection'};
     }
-    return {title: 'Measure ' + startCase(geomTypes[0]), iconGlyph: '1-measure-' + geomTypes[0]};
+    return {title: MEASURE_TYPE + ' ' + startCase(geomTypes[0]), iconGlyph: '1-measure-' + geomTypes[0]};
 };
 
 export const getGeomTypeSelected = (features = []) =>{
@@ -138,7 +140,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels, uom, id,
         properties: {
             id,
             description,
-            type: 'Measure',
+            type: MEASURE_TYPE,
             title: measureProps.title,
             iconGlyph: measureProps.iconGlyph
         },

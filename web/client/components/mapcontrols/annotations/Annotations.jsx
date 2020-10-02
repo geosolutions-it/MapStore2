@@ -146,7 +146,8 @@ class Annotations extends React.Component {
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
-        textRotationStep: PropTypes.number
+        textRotationStep: PropTypes.number,
+        measurementAnnotationEdit: PropTypes.bool
     };
 
     static contextTypes = {
@@ -367,6 +368,7 @@ class Annotations extends React.Component {
             defaultStyles={this.props.defaultStyles}
             textRotationStep={this.props.textRotationStep}
             annotations={this.props.annotations}
+            measurementAnnotationEdit={this.props.measurementAnnotationEdit}
         />;
     };
 

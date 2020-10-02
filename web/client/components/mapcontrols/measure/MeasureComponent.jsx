@@ -288,7 +288,7 @@ class MeasureComponent extends React.Component {
             coords = (get(feature, geomType.indexOf('polygon') !== -1 ? 'geometry.coordinates[0]' : 'geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
         }
 
-        const {exportToAnnotation = false, geomTypeSelected = []} = this.props.measurement || {};
+        const {exportToAnnotation = false} = this.props.measurement || {};
 
         return (
             <BorderLayout
@@ -306,7 +306,6 @@ class MeasureComponent extends React.Component {
                                     [
                                         {
                                             glyph: this.props.lineGlyph,
-                                            disabled: exportToAnnotation && !geomTypeSelected.includes('LineString'),
                                             active: !!this.props.lineMeasureEnabled,
                                             bsStyle: this.props.lineMeasureEnabled ? 'success' : 'primary',
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
@@ -314,7 +313,6 @@ class MeasureComponent extends React.Component {
                                         },
                                         {
                                             active: !!this.props.areaMeasureEnabled,
-                                            disabled: exportToAnnotation && !geomTypeSelected.includes('Polygon'),
                                             bsStyle: this.props.areaMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.areaGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea"),
@@ -322,7 +320,6 @@ class MeasureComponent extends React.Component {
                                         },
                                         {
                                             visible: !this.props.disableBearing,
-                                            disabled: exportToAnnotation && !geomTypeSelected.includes('Bearing'),
                                             active: !!this.props.bearingMeasureEnabled,
                                             bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.bearingGlyph,
@@ -355,7 +352,7 @@ class MeasureComponent extends React.Component {
                                     [
                                         {
                                             glyph: 'ext-json',
-                                            disabled: (this.props.measurement.features || []).length === 0 || exportToAnnotation,
+                                            disabled: (this.props.measurement.features || []).length === 0,
                                             visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showExportToGeoJSON,
                                             tooltip: <Message msgId="measureComponent.exportToGeoJSON"/>,
                                             onClick: () => {
