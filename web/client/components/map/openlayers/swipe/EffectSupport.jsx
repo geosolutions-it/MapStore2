@@ -63,7 +63,7 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
             ctx.stroke();
         }
         ctx.clip();
-    }, [ layerId, type ]);
+    }, [ layerId, type, circleCutProp ]);
 
     useEffect(() => {
         const layers = map.getLayers().getArray();
@@ -92,7 +92,7 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
             };
         }
         return () => map.render();
-    }, [ layerId, type ]);
+    }, [ layerId, type, circleCutProp ]);
     return null;
 };
 

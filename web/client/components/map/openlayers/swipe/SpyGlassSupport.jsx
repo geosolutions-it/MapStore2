@@ -22,12 +22,12 @@ const SpyGlassSupport = ({ layer, map, active, radius }) => {
     const mousemoveCallback = useCallback((event) => {
         mousePosition.current = map.getEventPixel(event);
         map.render();
-    }, [ layer ]);
+    }, [ layer, radius ]);
 
     const mouseoutCallback = useCallback(() => {
         mousePosition.current = null;
         map.render();
-    }, [ layer ]);
+    }, [ layer, radius ]);
 
     useEffect(() => {
         const container = map.getTargetElement();

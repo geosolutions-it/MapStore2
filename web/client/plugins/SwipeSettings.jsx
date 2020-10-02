@@ -25,19 +25,19 @@ const swipeTypeOptions = [{
     value: 'cut-vertical'
 }];
 
-const SpyRadiusConfiguration = () => {
+const SpyRadiusConfiguration = ({spyModeSettings, onSetSpyToolRadius}) => {
     return (<div className="mapstore-swipe-settings-spy">
         <h4>Radius</h4>
         <div className="mapstore-slider with-tooltip">
             <Slider
                 tooltips
                 step={1}
-                start={[4000]}
+                start={[spyModeSettings.radius]}
                 range={{
-                    'min': [2000],
-                    'max': [10000]
+                    'min': [50],
+                    'max': [80]
                 }}
-                onChange={() => {}}
+                onChange={(value) => onSetSpyToolRadius(value[0])}
             />
         </div>
     </div>);
