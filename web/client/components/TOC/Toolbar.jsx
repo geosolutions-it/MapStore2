@@ -346,7 +346,7 @@ class Toolbar extends React.Component {
                             noCaret {...swipeToolButtonConfig}>
                             <MenuItem active={this.props.swipeSettings.mode === "swipe"} onClick={() => this.showSwipeTools(status, "swipe")}>Swipe</MenuItem>
                             <MenuItem active={this.props.swipeSettings.mode === "spy"} onClick={() => this.showSwipeTools(status, "spy")}>SpyGlass</MenuItem>
-                            <MenuItem onClick={() => this.showConfiguration(status)}>Configure</MenuItem>
+                            <MenuItem onClick={() => this.showConfiguration(status)}><Message msgId="toc.configureTool" /></MenuItem>
                         </DropdownButtonT>
                     }
                 </ReactCSSTransitionGroup>

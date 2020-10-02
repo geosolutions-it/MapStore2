@@ -517,6 +517,10 @@
             "refreshError": "Erreur lors de la mise à jour des couches : ",
             "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
             "compareTool": "Comparer l'outil",
+            "configureTool": "Configurer",
+            "configuration": "{tool} configuration",
+            "direction": "{tool} direction",
+            "radius": "Rayon",
             "filterIconEnabled": "Désactiver le filtre de couche",
             "filterIconDisabled": "Activer le filtre de couche",
             "refreshOptions": {

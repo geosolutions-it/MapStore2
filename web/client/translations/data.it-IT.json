@@ -517,6 +517,10 @@
             "refreshError": "Errore di aggiornamento sui layer: ",
             "epsgNotSupported": "CRS {epsg} non supportato per zoom al layer",
             "compareTool": "Strumento di confronto",
+            "configureTool": "Configura",
+            "configuration": "{tool} configurazione",
+            "direction": "{tool} direzione",
+            "radius": "Raggio",
             "filterIconEnabled": "Disattiva il filtro",
             "filterIconDisabled": "Attiva il filtro",
             "refreshOptions": {

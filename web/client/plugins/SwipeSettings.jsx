@@ -13,6 +13,7 @@ import Slider from 'react-nouislider';
 import { createSelector } from 'reselect';
 import {find} from 'lodash';
 
+import Message from '../components/I18N/Message';
 import DockabePanel from '../components/misc/panels/DockablePanel';
 import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
 const { setActive, setSwipeToolDirection, setSpyToolRadius } = require('../actions/swipe');
@@ -27,7 +28,7 @@ const swipeTypeOptions = [{
 
 const SpyRadiusConfiguration = ({spyModeSettings, onSetSpyToolRadius}) => {
     return (<div className="mapstore-swipe-settings-spy">
-        <h4>Radius</h4>
+        <h4><Message msgId="toc.radius" /></h4>
         <div className="mapstore-slider with-tooltip">
             <Slider
                 tooltips
@@ -45,7 +46,7 @@ const SpyRadiusConfiguration = ({spyModeSettings, onSetSpyToolRadius}) => {
 
 const SwipeTypeConfiguration = ({swipeModeSettings, onSetSwipeToolDirection}) => {
     return (<div className="mapstore-swipe-settings-slider">
-        <h4>Slider type</h4>
+        <h4><Message msgId="toc.direction" msgParams={{tool: "Swipe"}} /></h4>
         <Select
             onChange={({value}) => onSetSwipeToolDirection(value)}
             clearable={false}
@@ -67,7 +68,9 @@ export const SwipeSettings = (
     }) => {
     return (<div className="mapstore-swipe-settings">
         <DockabePanel
-            title={toolMode === "spy" ? "Spyglass configuration" : "Swipe configuration"}
+            title={toolMode === "spy"
+                ? <Message msgId="toc.configuration" msgParams={{tool: 'Spyglass'}} />
+                : <Message msgId="toc.configuration" msgParams={{tool: 'Swipe'}} />}
             open={active && configuring}
             onClose={() => onSetConfigurationActive(false, "configuring")}
             enableFooter={false}
