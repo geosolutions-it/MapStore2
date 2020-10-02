@@ -22,6 +22,7 @@ const onToolsActions = {
     onClear: () => {},
     onSettings: () => {},
     onSetActive: () => {},
+    onSetSwipeMode: () => {},
     onUpdateSettings: () => {},
     onRetrieveLayerData: () => {},
     onHideSettings: () => {},
@@ -132,7 +133,7 @@ describe('TOC Toolbar', () => {
         expect(removeModal).toExist();
     });
 
-    it('should render map swipe toggle button and call toggle on when swipe.active is false', () => {
+    it('should render dropdown with swipe button that sets swipe active', () => {
         const spySetActive = expect.spyOn(onToolsActions, 'onSetActive');
         const selectedLayers = [{
             id: 'l001',
@@ -162,10 +163,9 @@ describe('TOC Toolbar', () => {
 
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
-        const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(1);
-        TestUtils.Simulate.click(btn[0]);
-        expect(spySetActive).toHaveBeenCalled();
+        const swipeToolDropdownBtns = el.getElementsByTagName('a');
+        TestUtils.Simulate.click(swipeToolDropdownBtns[0]); // Swipe
+        expect(spySetActive).toHaveBeenCalledWith(true);
     });
 
     it('layer single selection (no search)', () => {

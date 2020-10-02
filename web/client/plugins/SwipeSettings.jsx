@@ -54,7 +54,7 @@ const SwipeTypeConfiguration = ({swipeModeSettings, onSetSwipeToolDirection}) =>
     </div>);
 };
 
-const MapSwipeSettingsPanel = (
+export const SwipeSettings = (
     {
         active,
         configuring,
@@ -101,4 +101,4 @@ export default connect(selector, {
     onSetConfigurationActive: setActive,
     onSetSwipeToolDirection: setSwipeToolDirection,
     onSetSpyToolRadius: setSpyToolRadius
-})(MapSwipeSettingsPanel);
+})(SwipeSettings);

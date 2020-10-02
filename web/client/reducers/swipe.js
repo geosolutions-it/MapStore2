@@ -26,7 +26,7 @@ export default (state = {}, action) => {
     }
     case SET_SPY_TOOL_RADIUS: {
         const newSpySetting = {
-            ...state.swipe,
+            ...state.spy,
             radius: action.radius
         };
         return assign({}, state, {spy: newSpySetting});
