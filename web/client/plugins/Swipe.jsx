@@ -19,9 +19,13 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 import SwipeSettings from './SwipeSettings';
 import SliderSwipeSupport from '../components/map/openlayers/swipe/SliderSwipeSupport';
+import SpyGlassSupport from '../components/map/openlayers/swipe/SpyGlassSupport';
 
-const Support = ({ map, layer, active }) => {
-    return <SliderSwipeSupport map={map} layer={layer} active={active} />;
+export const Support = ({ mode, map, layer, active, radius, sliderType }) => {
+    if (mode === "spy") {
+        return <SpyGlassSupport map={map} layer={layer} active={active} radius={radius} />;
+    }
+    return <SliderSwipeSupport map={map} layer={layer} active={active} type={sliderType} />;
 };
 
 const swipeSupportSelector = createSelector([
@@ -29,7 +33,10 @@ const swipeSupportSelector = createSelector([
     layerSwipeSettingsSelector
 ], (layer, swipeSettings) => ({
     layer: layer?.id,
-    active: swipeSettings.active || false
+    active: swipeSettings.active || false,
+    mode: "swipe", // TODO: use UI configuration
+    radius: "80", // TODO: use UI configuration
+    sliderType: "cut-vertical" // TODO: use UI configuration
 }));
 
 const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);
