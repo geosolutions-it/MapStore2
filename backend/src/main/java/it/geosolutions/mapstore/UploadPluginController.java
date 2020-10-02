@@ -267,7 +267,7 @@ public class UploadPluginController {
             int remove = -1;
             for (int count = 0; count < plugins.size(); count++) {
                 JsonNode node = plugins.get(count);
-                if (json.get("name").asText().equals(node.get("value").get("name").asText())) {
+                if (json.get("name").asText().equals(node.get("name").asText())) {
                     remove = count;
                 }
             }
