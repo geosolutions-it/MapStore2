@@ -220,4 +220,26 @@ describe("test the SearchResultList", () => {
         const tooltip = document.getElementById('tooltip-open-gfi');
         expect(tooltip).toExist();
     });
+
+    it('test item.id is used as key', () => {
+        const tb = ReactDOM.render(<SearchResultList results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: {
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                options: {
+                    typeName: 'layerName'
+                }
+            }
+        }]} layers={[{id: 'layerId', name: 'layerName', visibility: true}]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+
+        const searchResultEl = TestUtils.findRenderedComponentWithType(tb, SearchResult);
+        expect(searchResultEl).toExist();
+        expect(searchResultEl._reactInternalFiber.key).toBe('ID');
+    });
 });
