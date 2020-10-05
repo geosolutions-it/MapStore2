@@ -32,31 +32,8 @@ import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../../
  *
  */
 export const withEditorBase = compose(
-    withProps(({ sections = []}) => {
-        // flatten out the story sections adding to them columns as if they were also sections such that
-        // both sections and columns can be scrolled to
-        const availableStorySections = sections.reduce((availableSections, section) => {
-            const s = [];
-            s.push(section);
-            if (section.type === SectionTypes.PARAGRAPH || section.type === SectionTypes.IMMERSIVE) {
-                const contents = section.contents;
-                contents.forEach((c) => {
-                    if (c.type === ContentTypes.COLUMN) {
-                        s.push(c);
-                    }
-                });
-            }
-
-            return [...availableSections, ...s];
-
-        }, []);
-        return {
-            availableStorySections
-        };
-
-    }),
     // default properties for editor
-    withProps(({ availableStorySections = [], storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor", toolbar = {}}) => {
+    withProps(({ storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor", toolbar = {}}) => {
         const fonts = storyFonts.length > 0 ? storyFonts : DEFAULT_FONT_FAMILIES;
         return ({
             editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
@@ -75,7 +52,7 @@ export const withEditorBase = compose(
                 link: {
                     inDropdown: false,
                     className: undefined,
-                    component: (props) => <LayoutComponent {...props} availableStorySections={availableStorySections} />,
+                    component: undefined,
                     popupClassName: undefined,
                     dropdownClassName: undefined,
                     showOpenOptionOnHover: true,
@@ -83,8 +60,7 @@ export const withEditorBase = compose(
                     options: ['link', 'unlink'],
                     link: { icon: undefined, className: undefined },
                     unlink: { icon: undefined, className: undefined },
-                    linkCallback: undefined,
-                    getLinkDecorator
+                    linkCallback: undefined
                 },
                 blockType: {
                     inDropdown: true,
@@ -119,6 +95,62 @@ export const withEditorBase = compose(
     renderComponent(Editor)
 );
 
+export const withGeoStoryEditor = compose(
+    lifecycle({
+        componentWillUnmount() {
+            const {editorState, save = () => {}} = this.props;
+            // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
+            save(draftJSEditorStateToHtml(editorState, EMPTY_CONTENT));
+        }
+    }),
+    withHandlers({
+        onBlur: ({toggleEditing = () => {}}) => () => {
+            toggleEditing(false);
+        }
+    }),
+    withProps(({ sections = []}) => {
+        // flatten out the story sections adding to them columns as if they were also sections such that
+        // both sections and columns can be scrolled to
+        const availableStorySections = sections.reduce((availableSections, section) => {
+            const s = [];
+            s.push(section);
+            if (section.type === SectionTypes.PARAGRAPH || section.type === SectionTypes.IMMERSIVE) {
+                const contents = section.contents;
+                contents.forEach((c) => {
+                    if (c.type === ContentTypes.COLUMN) {
+                        s.push(c);
+                    }
+                });
+            }
+
+            return [...availableSections, ...s];
+
+        }, []);
+        return {
+            availableStorySections
+        };
+    }),
+    withProps(({ availableStorySections = [] }) => ({
+        toolbar: {
+            link: {
+                inDropdown: false,
+                className: undefined,
+                component: (props) => <LayoutComponent {...props} availableStorySections={availableStorySections} />,
+                popupClassName: undefined,
+                dropdownClassName: undefined,
+                showOpenOptionOnHover: true,
+                defaultTargetOption: '_self',
+                options: ['link', 'unlink'],
+                link: { icon: undefined, className: undefined },
+                unlink: { icon: undefined, className: undefined },
+                linkCallback: undefined,
+                getLinkDecorator
+            }
+        }
+    })),
+    withEditorBase
+);
+
 export default compose(
     withState('contentEditing', 'setContentEditing', false),
     withState('editorState', 'onEditorStateChange'),
@@ -143,20 +175,6 @@ export default compose(
     }),
     branch(
         ({contentEditing}) => !!contentEditing,
-        compose(
-            lifecycle({
-                componentWillUnmount() {
-                    const {editorState, save = () => {}} = this.props;
-                    // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
-                    save(draftJSEditorStateToHtml(editorState, EMPTY_CONTENT));
-                }
-            }),
-            withHandlers({
-                onBlur: ({toggleEditing = () => {}}) => () => {
-                    toggleEditing(false);
-                }
-            }),
-            withEditorBase
-        )
+        withGeoStoryEditor
     )
 );
