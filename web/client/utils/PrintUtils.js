@@ -243,7 +243,7 @@ const PrintUtils = {
         wms: {
             map: (layer, spec) => ({
                 "baseURL": PrintUtils.normalizeUrl(layer.url) + '?',
-                "opacity": layer.opacity || 1.0,
+                "opacity": layer.opacity || (layer.opacity === 0 ? 0 : 1.0),
                 "singleTile": false,
                 "type": "WMS",
                 "layers": [
@@ -300,7 +300,7 @@ const PrintUtils = {
             map: (layer, spec) => ({
                 type: 'Vector',
                 name: layer.name,
-                "opacity": layer.opacity || 1.0,
+                "opacity": layer.opacity || (layer.opacity === 0 ? 0 : 1.0),
                 styleProperty: "ms_style",
                 styles: {
                     1: PrintUtils.toOpenLayers2Style(layer, layer.style),
@@ -323,7 +323,7 @@ const PrintUtils = {
             map: (layer) => ({
                 type: 'Vector',
                 name: layer.name,
-                "opacity": layer.opacity || 1.0,
+                "opacity": layer.opacity || (layer.opacity === 0 ? 0 : 1.0),
                 styleProperty: "ms_style",
                 styles: {
                     1: PrintUtils.toOpenLayers2Style(layer, layer.style),
@@ -341,9 +341,9 @@ const PrintUtils = {
             )
         },
         osm: {
-            map: () => ({
+            map: (layer = {}) => ({
                 "baseURL": "http://a.tile.openstreetmap.org/",
-                "opacity": 1,
+                "opacity": layer.opacity || (layer.opacity === 0 ? 0 : 1.0),
                 "singleTile": false,
                 "type": "OSM",
                 "maxExtent": [
@@ -381,9 +381,9 @@ const PrintUtils = {
             })
         },
         mapquest: {
-            map: () => ({
+            map: (layer = {}) => ({
                 "baseURL": "http://otile1.mqcdn.com/tiles/1.0.0/map/",
-                "opacity": 1,
+                "opacity": layer.opacity || (layer.opacity === 0 ? 0 : 1.0),
                 "singleTile": false,
                 "type": "OSM",
                 "maxExtent": [
@@ -458,7 +458,7 @@ const PrintUtils = {
                     "style": layer.style,
                     "name": layer.name,
                     "requestEncoding": layer.requestEncoding === "RESTful" ? "REST" : layer.requestEncoding,
-                    "opacity": layer.opacity || layer.opacity === 0 ? 0 : 1.0,
+                    "opacity": layer.opacity || (layer.opacity === 0 ? 0 : 1.0),
                     "version": layer.version || "1.0.0"
                 };
             }
@@ -485,7 +485,7 @@ const PrintUtils = {
                         path_format: pathFormat,
                         "type": 'xyz',
                         "extension": validURL.split('.').pop() || "png",
-                        "opacity": layer.opacity || layer.opacity === 0 ? 0 : 1.0,
+                        "opacity": layer.opacity || (layer.opacity === 0 ? 0 : 1.0),
                         "tileSize": [256, 256],
                         "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
                         "resolutions": MapUtils.getResolutions()
@@ -501,7 +501,7 @@ const PrintUtils = {
                 const layerName = layer.tileMapUrl.split(layer.tileMapService + "/")[1];
                 return {
                     type: 'tms',
-                    opacity: layer.opacity || layer.opacity === 0 ? 0 : 1.0,
+                    opacity: layer.opacity || (layer.opacity === 0 ? 0 : 1.0),
                     layer: layerName,
                     // baseURL for mapfish print required to remove the version
                     baseURL: layer.tileMapService.substring(0, layer.tileMapService.lastIndexOf("/1.0.0")),
