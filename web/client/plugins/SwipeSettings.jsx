@@ -32,11 +32,11 @@ const SpyRadiusConfiguration = ({spyModeSettings, onSetSpyToolRadius}) => {
         <div className="mapstore-slider with-tooltip">
             <Slider
                 tooltips
-                step={1}
+                step={10}
                 start={[spyModeSettings.radius]}
                 range={{
-                    'min': [50],
-                    'max': [80]
+                    'min': [20],
+                    'max': [100]
                 }}
                 onChange={(value) => onSetSpyToolRadius(value[0])}
             />
@@ -46,7 +46,7 @@ const SpyRadiusConfiguration = ({spyModeSettings, onSetSpyToolRadius}) => {
 
 const SwipeTypeConfiguration = ({swipeModeSettings, onSetSwipeToolDirection}) => {
     return (<div className="mapstore-swipe-settings-slider">
-        <h4><Message msgId="toc.direction" msgParams={{tool: "Swipe"}} /></h4>
+        <h4><Message msgId="toc.direction" /></h4>
         <Select
             onChange={({value}) => onSetSwipeToolDirection(value)}
             clearable={false}
@@ -57,7 +57,6 @@ const SwipeTypeConfiguration = ({swipeModeSettings, onSetSwipeToolDirection}) =>
 
 export const SwipeSettings = (
     {
-        active,
         configuring,
         toolMode,
         swipeModeSettings,
@@ -69,13 +68,14 @@ export const SwipeSettings = (
     return (<div className="mapstore-swipe-settings">
         <DockabePanel
             title={toolMode === "spy"
-                ? <Message msgId="toc.configuration" msgParams={{tool: 'Spyglass'}} />
-                : <Message msgId="toc.configuration" msgParams={{tool: 'Swipe'}} />}
-            open={active && configuring}
+                ? <Message msgId="toc.spyconfiguration" />
+                : <Message msgId="toc.swipeconfiguration" />}
+            open={configuring}
             onClose={() => onSetConfigurationActive(false, "configuring")}
             enableFooter={false}
             draggable
             size="xs"
+            dialogClassName=" mapstore-swipe-settings-modal"
             glyph="transfer">
             {toolMode === "spy"
                 ? <SpyRadiusConfiguration
@@ -93,7 +93,6 @@ const selector = createSelector([
     swipeModeSettingsSelector,
     spyModeSettingsSelector
 ], (swipeSettings, swipeModeSettings, spyModeSettings) => ({
-    active: swipeSettings?.active || false,
     configuring: swipeSettings?.configuring || false,
     toolMode: swipeSettings?.mode || "swipe",
     swipeModeSettings,

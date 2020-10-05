@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {ButtonGroup, Button, Glyphicon, Tooltip, DropdownButton, MenuItem} = require('react-bootstrap');
+const {ButtonGroup, Button, Glyphicon, Tooltip, SplitButton, MenuItem} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
@@ -18,8 +18,8 @@ const Proj4js = require('proj4').default;
 const Message = require('../I18N/Message');
 const tooltip = require('../misc/enhancers/tooltip');
 
-const DropdownButtonT = tooltip(DropdownButton);
-const swipeToolButtonConfig = {
+const SplitButtonT = tooltip(SplitButton);
+const splitToolButtonConfig = {
     title: <Glyphicon glyph="transfer"/>,
     tooltipId: "toc.compareTool",
     tooltipPosition: "top",
@@ -341,13 +341,25 @@ class Toolbar extends React.Component {
                         </OverlayTrigger>
                         : null}
                     {this.props.activateTool.activateSwipeOnLayer && (status === 'LAYER') &&
-                        <DropdownButtonT
+                        <SplitButtonT
+                            onClick={() => this.showSwipeTools(status)}
                             bsStyle={this.props?.swipeSettings?.active ? "success" : "primary"}
-                            noCaret {...swipeToolButtonConfig}>
-                            <MenuItem active={this.props.swipeSettings.mode === "swipe"} onClick={() => this.showSwipeTools(status, "swipe")}>Swipe</MenuItem>
-                            <MenuItem active={this.props.swipeSettings.mode === "spy"} onClick={() => this.showSwipeTools(status, "spy")}>SpyGlass</MenuItem>
-                            <MenuItem onClick={() => this.showConfiguration(status)}><Message msgId="toc.configureTool" /></MenuItem>
-                        </DropdownButtonT>
+                            {...splitToolButtonConfig}>
+                            <MenuItem
+                                active={this.props.swipeSettings.mode === "swipe"}
+                                onClick={() => this.props.onToolsActions.onSetSwipeMode("swipe")}>
+                                <Glyphicon glyph="vert-dashed"/><Message msgId="toc.swipe" />
+                            </MenuItem>
+                            <MenuItem
+                                active={this.props.swipeSettings.mode === "spy"}
+                                onClick={() => this.props.onToolsActions.onSetSwipeMode("spy")}>
+                                <Glyphicon glyph="search" /><Message msgId="toc.spyGlass" />
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => this.showConfiguration(status)}>
+                                <Glyphicon glyph="cog" /><Message msgId="toc.configureTool" />
+                            </MenuItem>
+                        </SplitButtonT>
                     }
                 </ReactCSSTransitionGroup>
                 <ConfirmModal
@@ -416,11 +428,12 @@ class Toolbar extends React.Component {
         }
     }
 
-    showSwipeTools = (status, mode) => {
-        const { onToolsActions } = this.props;
-        if (status === 'LAYER') {
+    showSwipeTools = (status) => {
+        const { swipeSettings, onToolsActions } = this.props;
+        if (!swipeSettings.active && (status === 'LAYER')) {
             onToolsActions.onSetActive(true);
-            onToolsActions.onSetSwipeMode(mode);
+        } else {
+            onToolsActions.onSetActive(false);
         }
     }
 

@@ -163,8 +163,9 @@ describe('TOC Toolbar', () => {
 
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
-        const swipeToolDropdownBtns = el.getElementsByTagName('a');
-        TestUtils.Simulate.click(swipeToolDropdownBtns[0]); // Swipe
+        const splitDropdownBtn = el.getElementsByClassName('dropdown')[0];
+        const toggleSwipeBtn = splitDropdownBtn.getElementsByClassName('btn')[0];
+        TestUtils.Simulate.click(toggleSwipeBtn);
         expect(spySetActive).toHaveBeenCalledWith(true);
     });
 

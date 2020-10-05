@@ -26,7 +26,6 @@ describe('SwipeSettings', () => {
 
     it('should render configuration UI for swipe', () => {
         const props = {
-            active: true,
             configuring: true,
             toolMode: "swipe",
             swipeModeSettings: { direction: "cut-vertical"}
@@ -40,7 +39,6 @@ describe('SwipeSettings', () => {
 
     it('should render configuration UI for spy', () => {
         const props = {
-            active: true,
             configuring: true,
             toolMode: "spy",
             spyModeSettings: { radius: 80}
