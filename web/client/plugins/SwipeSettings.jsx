@@ -75,6 +75,7 @@ export const SwipeSettings = (
             enableFooter={false}
             draggable
             size="xs"
+            bodyClassName="mapstore-swipe-setiings-modal-body"
             dialogClassName=" mapstore-swipe-settings-modal"
             glyph="transfer">
             {toolMode === "spy"
