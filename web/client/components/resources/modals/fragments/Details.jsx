@@ -74,7 +74,7 @@ export default ({
                         newDetailsText = savedDetailsText;
                     }
 
-                    onUpdateLinkedResource('details', newDetailsText, 'DETAILS');
+                    onUpdateLinkedResource('details', newDetailsText || 'NODATA', 'DETAILS');
                 }}>
                 <Editor {...editorProps} editorState={editorState} onUpdateEditorState={setEditorState}/>
             </DetailsSheet>

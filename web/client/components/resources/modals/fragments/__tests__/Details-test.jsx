@@ -134,4 +134,26 @@ describe('Details component', () => {
         expect(onUpdateLinkedResourceSpy).toHaveBeenCalled();
         expect(onUpdateLinkedResourceSpy.calls[0].arguments).toEqual(['details', 'text', 'DETAILS']);
     });
+    it('saved text is NODATA if onSave saves with empty string and there is no savedDetailsText', () => {
+        const handlers = {
+            onUpdateLinkedResource: () => {}
+        };
+        const onUpdateLinkedResourceSpy = expect.spyOn(handlers, 'onUpdateLinkedResource');
+
+        ReactDOM.render(<Details showDetailsSheet editorState={htmlToDraftJSEditorState('')} onUpdateLinkedResource={handlers.onUpdateLinkedResource}/>, document.getElementById('container'));
+        const detailsSheet = document.getElementsByClassName('ms-details-sheet')[0];
+        expect(detailsSheet).toExist();
+        const sheetModal = document.getElementsByClassName('modal-fixed')[0];
+        expect(sheetModal).toExist();
+        const sheetModalFooter = sheetModal.getElementsByClassName('modal-footer')[0];
+        expect(sheetModalFooter).toExist();
+        const buttons = sheetModalFooter.getElementsByTagName('button');
+        expect(buttons).toExist();
+        expect(buttons.length).toBe(2);
+
+        TestUtils.Simulate.click(buttons[1]);
+
+        expect(onUpdateLinkedResourceSpy).toHaveBeenCalled();
+        expect(onUpdateLinkedResourceSpy.calls[0].arguments).toEqual(['details', 'NODATA', 'DETAILS']);
+    });
 });
