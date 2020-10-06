@@ -48,6 +48,7 @@ const SwipeTypeConfiguration = ({swipeModeSettings, onSetSwipeToolDirection}) =>
     return (<div className="mapstore-swipe-settings-slider">
         <h4><Message msgId="toc.direction" /></h4>
         <Select
+            styles={{ menuPortal: base => ({ ...base, zIndex: 3100 }) }}
             onChange={({value}) => onSetSwipeToolDirection(value)}
             clearable={false}
             value={find(swipeTypeOptions, ['value', swipeModeSettings.direction])}

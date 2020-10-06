@@ -14,11 +14,19 @@
 
 .mapstore-swipe-settings {
 
+    .ms-resizable-modal {
+        .modal-content {
+            overflow: visible;
+
+        &.ms-xs {
+            min-height: 22%;
+            height: auto;
+            width: 25%;
+            }
+        }
+    }
+
     .mapstore-swipe-settings-modal {
-        min-height: 22% !important;
-        height: auto !important;
-        width: 25% !important;
-        overflow: visible !important;
 
         /* Enable showing of select dropdown */
         .modal-body {
@@ -32,7 +40,7 @@
                 }
 
                 .ms2-border-layout-body {
-                    overflow: visible !important;
+                    overflow-y: visible !important;
                 }
             }
         }
@@ -42,10 +50,6 @@
         position: relative;
         padding: 0 17.5px;
         overflow-y: visible;
-
-        .Select-menu-outer {
-            z-index: 3100 !important;
-        }
     }
 
     .mapstore-swipe-settings-spy {
