@@ -40,17 +40,31 @@ describe('SwipePlugin', () => {
     it('shows SwipePlugin', () => {
         const { Plugin } = getPluginForTest(SwipePlugin, {});
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('mapstore-swipe-settings')).toExist();
+        expect(document.querySelector('.mapstore-swipe-settings')).toExist();
     });
 
     describe('Support', () => {
         it('should add SliderSwipeSupport as default', () => {
-            ReactDOM.render(<Support active map={map} layer="test-layer-id" />, document.getElementById("container"));
+            const props = {
+                active: true,
+                map,
+                layer: "test-layer-id",
+                swipeModeSettings: {direction: "cut-vertical"}
+            };
+
+            ReactDOM.render(<Support {...props} />, document.getElementById("container"));
             const swiper = document.getElementsByClassName("mapstore-swipe-slider")[0];
             expect(swiper).toExist();
         });
         it('should add SpyGlassSupport', () => {
-            ReactDOM.render(<Support active mode="spy" map={map} layer="test-layer-id" />, document.getElementById("container"));
+            const props = {
+                mode: "spy",
+                active: true,
+                map,
+                layer: "test-layer-id",
+                spyModeSettings: {radius: 80}
+            };
+            ReactDOM.render(<Support {...props} />, document.getElementById("container"));
             const swiper = document.getElementsByClassName("mapstore-swipe-slider")[0];
 
             // the slider from SliderSwipe should not be there

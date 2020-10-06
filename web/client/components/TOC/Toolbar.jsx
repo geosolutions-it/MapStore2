@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {ButtonGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const {ButtonGroup, Button, Glyphicon, Tooltip } = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
@@ -16,6 +16,7 @@ const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayerMetadataModal = require('./fragments/LayerMetadataModal');
 const Proj4js = require('proj4').default;
 const Message = require('../I18N/Message');
+const SwipeButton = require('./swipe/SwipeButton');
 
 class Toolbar extends React.Component {
 
@@ -60,7 +61,8 @@ class Toolbar extends React.Component {
             onHideLayerMetadata: () => {},
             onShow: () => {},
             onLayerInfo: () => {},
-            onSetSwipeActive: () => {}
+            onSetActive: () => {},
+            onSetSwipeMode: () => {}
         },
         maxDepth: 3,
         text: {
@@ -330,14 +332,11 @@ class Toolbar extends React.Component {
                         </OverlayTrigger>
                         : null}
                     {this.props.activateTool.activateSwipeOnLayer && (status === 'LAYER') &&
-                        <OverlayTrigger
-                            key="layerSwipe"
-                            placement="top"
-                            overlay={<Tooltip id="layer-tooltip-swipe"><Message msgId="toc.compareTool" /></Tooltip>}>
-                            <Button key="layer-swipe" bsStyle={this.props?.swipeSettings?.active ? "success" : "primary"} className="square-button-md" onClick={() => this.showSwipeSettings(status)}>
-                                <Glyphicon glyph="transfer" />
-                            </Button>
-                        </OverlayTrigger>}
+                    <SwipeButton
+                        status={status}
+                        onToolsActions={this.props.onToolsActions}
+                        swipeSettings={this.props.swipeSettings} />
+                    }
                 </ReactCSSTransitionGroup>
                 <ConfirmModal
                     ref="removelayer"
@@ -402,15 +401,6 @@ class Toolbar extends React.Component {
             }
         } else {
             this.props.onToolsActions.onHideSettings();
-        }
-    }
-
-    showSwipeSettings = (status) => {
-        const { swipeSettings, onToolsActions } = this.props;
-        if (!swipeSettings.active && (status === 'LAYER')) {
-            onToolsActions.onSetSwipeActive(true);
-        } else {
-            onToolsActions.onSetSwipeActive(false);
         }
     }
 

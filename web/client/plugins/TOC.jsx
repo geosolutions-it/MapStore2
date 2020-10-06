@@ -17,7 +17,7 @@ const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
     moveNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
     browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
-const { setActive } = require('../actions/swipe');
+const { setActive, setMode } = require('../actions/swipe');
 const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
@@ -246,7 +246,8 @@ class LayerTree extends React.Component {
         groupNodeComponent: PropTypes.func,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         onLayerInfo: PropTypes.func,
-        onSetSwipeActive: PropTypes.func
+        onSetActive: PropTypes.func,
+        onSetSwipeMode: PropTypes.func
     };
 
     static contextTypes = {
@@ -330,7 +331,8 @@ class LayerTree extends React.Component {
         refreshLayerVersion: () => {},
         metadataTemplate: null,
         onLayerInfo: () => {},
-        onSetSwipeActive: () => {}
+        onSetActive: () => {},
+        onSetSwipeMode: () => {}
     };
 
     getNoBackgroundLayers = (group) => {
@@ -496,7 +498,8 @@ class LayerTree extends React.Component {
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler,
                                 onLayerInfo: this.props.onLayerInfo,
-                                onSetSwipeActive: this.props.onSetSwipeActive
+                                onSetActive: this.props.onSetActive,
+                                onSetSwipeMode: this.props.onSetSwipeMode
                             }}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
@@ -849,7 +852,8 @@ const TOCPlugin = connect(tocSelector, {
     onNewWidget: () => createWidget(),
     refreshLayerVersion,
     onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false),
-    onSetSwipeActive: setActive
+    onSetActive: setActive,
+    onSetSwipeMode: setMode
 })(compose(
     securityEnhancer,
     checkPluginsEnhancer

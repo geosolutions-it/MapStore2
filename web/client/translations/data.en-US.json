@@ -517,6 +517,13 @@
             "refreshError": "Error updating layers: ",
             "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "compareTool": "Compare tool",
+            "configureTool": "Configure",
+            "spyconfiguration": "Spyglass configuration",
+            "swipeconfiguration": "Swipe configuration",
+            "swipe": "Swipe",
+            "spyGlass": "Spy glass",
+            "direction": "Swipe direction",
+            "radius": "Radius",
             "filterIconEnabled": "Disable layer filter",
             "filterIconDisabled": "Enable layer filter",
             "refreshOptions": {
