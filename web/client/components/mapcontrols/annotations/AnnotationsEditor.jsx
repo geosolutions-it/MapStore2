@@ -115,6 +115,11 @@ const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
  * @prop {function} onFilterMarker triggered when marker/glyph name is specified for filtering
  * @prop {object[]} annotations list of annotations
  * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features
+ * @prop {function} onHideMeasureWarning triggered when warning is ignored with "Don't show again" flag
+ * @prop {boolean} showAgain flag for checkbox on the measure annotation popup warning
+ * @prop {boolean} showPopupWarning flag to show warning modal on navigating to measurement panel from annotation
+ * @prop {function} onToggleShowAgain triggered when interacting with the checkbox on measure annotation warning popup
+ * @prop {function} onInitPlugin triggered when annotation editor is mounted
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -828,8 +833,8 @@ class AnnotationsEditor extends React.Component {
     hideWarning = () => {
         if (this.props.showAgain) {
             localStorage.setItem("showPopupWarning", false);
+            this.props.onHideMeasureWarning();
         }
-        this.props.onHideMeasureWarning();
         this.setPopupWarning(false);
     }
 }

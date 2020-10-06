@@ -1635,7 +1635,8 @@ describe('Test the annotations reducer', () => {
             config: {"config1": 1}
         }, initPlugin());
         expect(state.showPopupWarning).toBeTruthy();
-        expect(state.showPopupWarning).toBe(true);
+        const showPopupWarning = localStorage?.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true;
+        expect(state.showPopupWarning).toBe(showPopupWarning);
     });
     it('toggleShowAgain', ()=>{
         const state = annotations({

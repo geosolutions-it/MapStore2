@@ -380,6 +380,7 @@ describe("test the AnnotationsEditor Panel", () => {
             onHideMeasureWarning={actions.onHideMeasureWarning}
             onSelectFeature={actions.onHideMeasureWarning}
             measurementAnnotationEdit
+            showAgain
             editing={{
                 properties: feature,
                 features: [{
