@@ -457,6 +457,38 @@ describe('PrintUtils', () => {
         expect(rgb).toBe("rgb(255, 255, 255)");
     });
     describe('specCreators', () => {
+        describe('opacity', () => {
+            const testBase = {
+                wms: layer,
+                wmts: KVP1,
+                vector: vectorLayer,
+                tms: TMS110_1,
+                tileprovider: BasemapAT,
+                osm: {
+                    "group": "background",
+                    "source": "osm",
+                    "name": "mapnik",
+                    "title": "Open Street Map",
+                    "type": "osm",
+                    "visibility": true,
+                    "singleTile": false,
+                    "dimensions": [],
+                    "id": "mapnik__0",
+                    "loading": false,
+                    "loadingError": false
+                }
+            };
+            it('check opacity for all layers to be 1 for undefined, therwise its value', () => {
+                Object.keys(PrintUtils.specCreators).map( k => {
+                    const fun = PrintUtils.specCreators[k].map;
+                    // 0 must remain
+                    expect(fun({ ...(testBase[k] || {}), opacity: 0 }, { projection: "EPSG:900913" }).opacity).toEqual(0);
+                    expect(fun({ ...(testBase[k] || {}), opacity: 0.5 }, { projection: "EPSG:900913" }).opacity).toEqual(0.5);
+                    expect(fun({ ...(testBase[k] || {}), opacity: undefined }, { projection: "EPSG:900913" }).opacity).toEqual(1);
+
+                } );
+            });
+        });
         describe('WMTS', () => {
             const checkMatrixIds = (layerSpec, tileMatrixSet) => layerSpec.matrixIds.map((mid, index) => {
                 const tileMatrixEntry = tileMatrixSet.TileMatrix[index];
