@@ -40,7 +40,8 @@ export const loadMediaEditorDataEpic = (action$, store) =>
     // final version should get mediaType and sourceId from settings, for show (ok for LOAD_MEDIA)
     // now we have only one type/source, so I trigger directly the load of it
     action$.ofType(SHOW, LOAD_MEDIA)
-        .switchMap(() => {
+        .switchMap((action) => {
+            console.log(action);
             return mediaAPI("geostory").load(store) // store is required for local data (e.g. local geostory data)
                 .switchMap(results => {
                     const sId = sourceIdSelector(store.getState());
