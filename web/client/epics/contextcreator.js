@@ -119,15 +119,6 @@ export const saveContextResource = (action$, store) => action$
         };
 
         return (resource && resource.id ? updateResource : createResource)(newResource)
-            .catch(({status, data}) => Rx.Observable.of(error({
-                title: 'contextCreator.saveErrorNotification.titleContext',
-                message: saveContextErrorStatusToMessage(status),
-                position: "tc",
-                autoDismiss: 5,
-                values: {
-                    data
-                }
-            }), loading(false, 'contextSaving')))
             .switchMap(rid => Rx.Observable.merge(
                 // LOCATION_CHANGE triggers notifications clear, need to work around that
                 // can't wait for CLEAR_NOTIFICATIONS, because either in firefox notification action doesn't trigger
@@ -145,6 +136,15 @@ export const saveContextResource = (action$, store) => action$
                     loading(false, 'contextSaving')
                 ),
             ))
+            .catch(({status, data}) => Rx.Observable.of(error({
+                title: 'contextCreator.saveErrorNotification.titleContext',
+                message: saveContextErrorStatusToMessage(status),
+                position: "tc",
+                autoDismiss: 5,
+                values: {
+                    data
+                }
+            }), loading(false, 'contextSaving')))
             .startWith(loading(true, 'contextSaving'));
     });
 
