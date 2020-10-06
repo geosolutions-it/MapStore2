@@ -29,7 +29,8 @@ import {
     updateSetting,
     removeResource,
     setPendingChanges,
-    updateUrlOnScroll
+    updateUrlOnScroll,
+    updateMediaEditorSettings
 } from '../../actions/geostory';
 import geostory from '../../reducers/geostory';
 import {
@@ -422,5 +423,32 @@ describe('geostory reducer', () => {
     it('updateUrlOnScroll', () => {
         expect(updateUrlOnScrollSelector( { geostory: geostory(undefined, updateUrlOnScroll(true)) } )).toBeTruthy();
         expect(updateUrlOnScrollSelector( { geostory: geostory(undefined, updateUrlOnScroll(false)) } )).toBeFalsy();
+    });
+    it('should update mediaEditorSettings width updateMediaEditorSettings', () => {
+        const mediaEditorSettings = {
+            sourceId: 'geostory',
+            mediaTypes: {
+                image: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                video: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                map: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                }
+            },
+            sources: {
+                geostory: {
+                    name: 'Current story',
+                    type: 'geostory'
+                }
+            }
+        };
+        const state = geostory(undefined, updateMediaEditorSettings(mediaEditorSettings));
+        expect(state.mediaEditorSettings).toBe(mediaEditorSettings);
     });
 });
