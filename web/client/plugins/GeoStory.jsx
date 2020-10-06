@@ -121,6 +121,40 @@ GeoStory.defaultProps = {
  * @memberof plugins
  * @prop {numeric} cfg.interceptionTime default 100, the debounce before calculations of currentPage active section
  * @prop {object[]} cfg.fontFamilies: A list of objects with font family names and sources where to load them from e.g. [{"family": "Comic sans", "src": "link to source"}]
+ * @prop {object} cfg.mediaEditorSettings settings for media editor services divided by media type
+ * @prop {string} cfg.mediaEditorSettings.sourceId selected service identifier used when the modal shows up
+ * @prop {object} cfg.mediaEditorSettings.mediaTypes configuration of source options for each media type: image, video and map
+ * @prop {object} cfg.mediaEditorSettings.sources definition of sources
+ * @example
+ * // example of mediaEditorSettings configuration with only the geostory service
+ * {
+ *   "name": "GeoStory",
+ *   "cfg": {
+ *     "mediaEditorSettings": {
+ *       "sourceId": "geostory",
+ *       "mediaTypes": {
+ *         "image": {
+ *           "defaultSource": "geostory",
+ *           "sources": ["geostory"]
+ *         },
+ *         "video": {
+ *           "defaultSource": "geostory",
+ *           "sources": ["geostory"]
+ *         },
+ *         "map": {
+ *           "defaultSource": "geostory",
+ *           "sources": ["geostory"]
+ *         }
+ *       },
+ *       "sources": {
+ *         "geostory": {
+ *           "name": "Current story",
+ *           "type": "geostory"
+ *         }
+ *       }
+ *     }
+ *   }
+ * }
  */
 export default createPlugin("GeoStory", {
     component: connect(

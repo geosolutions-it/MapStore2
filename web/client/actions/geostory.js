@@ -240,4 +240,4 @@ export const setPendingChanges = value => ({type: SET_PENDING_CHANGES, value});
  */
 export const updateUrlOnScroll = value => ({type: SET_UPDATE_URL_SCROLL, value});
 
-export const updateMediaEditorSettings = mediaEditorSettings => ({ type: UPDATE_MEDIA_EDITOR_SETTINGS, mediaEditorSettings })
+export const updateMediaEditorSettings = mediaEditorSettings => ({ type: UPDATE_MEDIA_EDITOR_SETTINGS, mediaEditorSettings });
