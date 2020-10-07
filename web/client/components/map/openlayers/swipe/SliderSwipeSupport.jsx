@@ -12,18 +12,42 @@ import EffectSupport from './EffectSupport';
 
 const VSlider = ({ type, map, widthRef }) => {
 
+    const childRef = useRef(null);
+
+    const fakeDrag = () => {
+        const clickEvent = new MouseEvent("mousedown", {
+            bubbles: true,
+            cancelable: true,
+            x: 0,
+            y: 0
+          });
+        // const clickEvent = document.createEvent('MouseEvents');
+        // clickEvent.initEvent("mousedown", true, true);
+        childRef.current.dispatchEvent(clickEvent);
+    };
+
+    const onWindowResize = () => {
+        fakeDrag();
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', onWindowResize);
+    }, [ type ]);
+
     useEffect(() => {
         widthRef.current = map.getProperties().size[0] / 2;
     }, [ type ]);
 
     const onDragVerticalHandler = (e, ui) => {
+        console.log("UI", ui);
+        console.log("EVENT", e);
         widthRef.current += ui.deltaX;
         map.render();
     };
 
     return (
         <Draggable axis="x" bounds="parent" onDrag={(e, ui) => onDragVerticalHandler(e, ui)}>
-            <div className="mapstore-swipe-slider" style={{
+            <div ref={childRef} className="mapstore-swipe-slider" style={{
                 height: "100%",
                 top: '0px',
                 left: `${map.getProperties().size[0] / 2}px`,
