@@ -25,7 +25,8 @@ const resetLayerSwipeSettingsEpic = (action$, store) =>
             const state = store.getState();
             const swipeSettings = layerSwipeSettingsSelector(state);
             const selectedLayer = getSelectedLayer(state);
-            return ((swipeSettings.active && selectedLayer === undefined) || nodeType === 'group')
+            return (
+                (swipeSettings.active && selectedLayer === undefined) || (swipeSettings.active && nodeType === 'group'))
                 ? Rx.Observable.of(setActive(false))
                 : Rx.Observable.empty();
         });

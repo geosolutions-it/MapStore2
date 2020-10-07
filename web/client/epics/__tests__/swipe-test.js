@@ -32,6 +32,11 @@ describe('SWIPE EPICS', () => {
             }, state, done);
     });
     it('reset activation of layer swipe tool selected nodeType is group', done => {
+        const state = {
+            swipe: {
+                active: true
+            }
+        };
         testEpic(
             resetLayerSwipeSettingsEpic,
             1,
@@ -41,6 +46,6 @@ describe('SWIPE EPICS', () => {
                 expect(actions[0].type).toEqual(SET_ACTIVE);
                 expect(actions[0].active).toEqual(false);
                 done();
-            }, {}, done);
+            }, state, done);
     });
 });
