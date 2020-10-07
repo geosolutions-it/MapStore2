@@ -10,6 +10,35 @@
     position: absolute;
     z-index: 100;
     background-color: @ms2-color-primary;
+
+    .ms-vertical-swipe-slider-arrows {
+        position: absolute;
+        z-index: 99;
+        background-color: transparent;
+        width: 74px;
+        height: 52px;
+        left: -33px;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 2px;
+        align-items: center;
+        color: white;
+    }
+
+    .ms-horizontal-swipe-slider-arrows {
+        position: absolute;
+        z-index: 99;
+        background-color: transparent;
+        height: 74px;
+        width: 52px;
+        top: -33px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 2px 0;
+        align-items: center;
+        color: white;
+    }
 }
 
 .mapstore-swipe-settings {
