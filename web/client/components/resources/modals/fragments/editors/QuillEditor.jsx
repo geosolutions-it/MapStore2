@@ -28,9 +28,7 @@ const Editor = ({
             bounds={"#ms-details-editor"}
             value={editorState || '<p><br></p>'}
             onChange={(details) => {
-                if (details && details !== '<p><br></p>') {
-                    onUpdateEditorState(details);
-                }
+                onUpdateEditorState(details);
             }}
             modules={modules} />
     </div>
