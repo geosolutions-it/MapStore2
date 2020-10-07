@@ -7,7 +7,7 @@
 */
 import React, {useState, useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
-const {Glyphicon, Button} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 
 import EffectSupport from './EffectSupport';
 
@@ -43,12 +43,12 @@ const VSlider = ({ type, map, widthRef }) => {
                         // subtract half of the arrows height i.e 52px so that top stops at center
                         top: `${(map.getProperties().size[1] / 2) - 26}px`
                     }}>
-                        <Button className="square-button-md">
+                        <div className="ms-slider-arrows">
                             <Glyphicon glyph="chevron-left" />
-                        </Button>
-                        <Button className="square-button-md">
+                        </div>
+                        <div className="ms-slider-arrows">
                             <Glyphicon glyph="chevron-right" />
-                        </Button>
+                        </div>
                     </div>
                 )}
             </div>
@@ -86,12 +86,12 @@ const HSlider = ({ type, map, heightRef }) => {
                     // subtract half of the arrows width i.e 52px so that left stops at center
                     left: `${(map.getProperties().size[0] / 2) - 26}px`
                 }}>
-                    <Button className="square-button-md">
+                    <div className="ms-slider-arrows">
                         <Glyphicon glyph="chevron-up" />
-                    </Button>
-                    <Button className="square-button-md">
+                    </div>
+                    <div className="ms-slider-arrows">
                         <Glyphicon glyph="chevron-down" />
-                    </Button>
+                    </div>
                 </div>
             )}
         </div>
