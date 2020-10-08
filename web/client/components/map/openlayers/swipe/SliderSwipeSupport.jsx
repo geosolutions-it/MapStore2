@@ -5,29 +5,18 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import React, {useEffect, useRef } from 'react';
+import React, {useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 
 import EffectSupport from './EffectSupport';
 
 const VSlider = ({ type, map, widthRef }) => {
 
-    const childRef = useRef(null);
-
-    const fakeDrag = () => {
-        const clickEvent = new MouseEvent("mousedown", {
-            bubbles: true,
-            cancelable: true,
-            x: 0,
-            y: 0
-          });
-        // const clickEvent = document.createEvent('MouseEvents');
-        // clickEvent.initEvent("mousedown", true, true);
-        childRef.current.dispatchEvent(clickEvent);
-    };
+    const [pos, setPos] = useState();
 
     const onWindowResize = () => {
-        fakeDrag();
+        setPos({x: 0, y: 0});
+        widthRef.current = map.getProperties().size[0] / 2;
     };
 
     useEffect(() => {
@@ -39,15 +28,16 @@ const VSlider = ({ type, map, widthRef }) => {
     }, [ type ]);
 
     const onDragVerticalHandler = (e, ui) => {
-        console.log("UI", ui);
-        console.log("EVENT", e);
         widthRef.current += ui.deltaX;
+        setPos({x: ui.x, y: ui.y});
         map.render();
     };
 
     return (
-        <Draggable axis="x" bounds="parent" onDrag={(e, ui) => onDragVerticalHandler(e, ui)}>
-            <div ref={childRef} className="mapstore-swipe-slider" style={{
+        <Draggable
+            position={pos}
+            bounds="parent" onDrag={(e, ui) => onDragVerticalHandler(e, ui)}>
+            <div className="mapstore-swipe-slider" style={{
                 height: "100%",
                 top: '0px',
                 left: `${map.getProperties().size[0] / 2}px`,
@@ -60,15 +50,29 @@ const VSlider = ({ type, map, widthRef }) => {
 
 const HSlider = ({ type, map, heightRef }) => {
 
+    const [pos, setPos] = useState();
+
+    const onWindowResize = () => {
+        setPos({x: 0, y: 0});
+        heightRef.current = map.getProperties().size[1] / 2;
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', onWindowResize);
+    }, [ type ]);
+
     useEffect(() => {
         heightRef.current = map.getProperties().size[1] / 2;
     }, [ type ]);
 
     const onDragHorizontalHandler = (e, ui) => {
         heightRef.current += ui.deltaY;
+        setPos({x: ui.x, y: ui.y});
         map.render();
     };
-    return (<Draggable axis="y" bounds="parent" onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}>
+    return (<Draggable
+        position={pos}
+        bounds="parent" onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}>
         <div className="mapstore-swipe-slider" style={{
             height: "12px",
             top: `${map.getProperties().size[1] / 2}px`,
