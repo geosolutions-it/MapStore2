@@ -113,14 +113,13 @@ export const withGeoStoryEditor = compose(
         // both sections and columns can be scrolled to
         const availableStorySections = sections.reduce((availableSections, section) => {
             const s = [];
-            s.push(section);
-            if (section.type === SectionTypes.PARAGRAPH || section.type === SectionTypes.IMMERSIVE) {
+            if (section.type === SectionTypes.IMMERSIVE) {
                 const contents = section.contents;
                 contents.forEach((c) => {
-                    if (c.type === ContentTypes.COLUMN) {
-                        s.push(c);
-                    }
+                    s.push(c);
                 });
+            } else {
+                s.push(section);
             }
 
             return [...availableSections, ...s];
