@@ -111,7 +111,9 @@
                 "right": "Right",
                 "left": "Left",
                 "bottom": "Bottom",
-                "top": "Top"
+                "top": "Top",
+                "editLayerName": "Edit layer name",
+                "confirmLayerName": "Confirm layer name change"
             },
             "legendOptions": {
               "title": "Legend",

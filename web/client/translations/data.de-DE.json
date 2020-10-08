@@ -111,7 +111,9 @@
                 "right": "Recht",
                 "left": "Links",
                 "bottom": "Bottom",
-                "top": "Oben"
+                "top": "Oben",
+                "editLayerName": "Layernamen bearbeiten",
+                "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens"
             },
             "legendOptions": {
               "title": "Legende",

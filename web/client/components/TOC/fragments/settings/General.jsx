@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Spinner = require('react-spinkit');
-const { FormControl, FormGroup, ControlLabel, InputGroup, Col, Glyphicon } = require('react-bootstrap');
+const { FormControl, FormGroup, ControlLabel, InputGroup, Col } = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const { SimpleSelect } = require('react-selectize');
 const { isString, isObject, find } = require('lodash');
@@ -19,6 +19,8 @@ require('react-selectize/themes/index.css');
 const { Grid } = require('react-bootstrap');
 const { createFromSearch, flattenGroups } = require('../../../../utils/TOCUtils');
 const TOCUtils = require('../../../../utils/TOCUtils');
+
+const LayerNameEditField = require('./LayerNameEditField').default;
 
 /**
  * General Settings form for layer
@@ -48,20 +50,6 @@ class General extends React.Component {
         pluginCfg: {},
         allowNew: false
     };
-
-    state = {layerName: '', editingLayerName: false, waitingForLayerLoading: false, waitingForLayerLoad: false, layerError: null};
-
-    componentDidMount() {
-        this.setState({layerName: this.props.element.name});
-    }
-
-    componentDidUpdate() {
-        if (this.state.waitingForLayerLoading && this.props.element.loading) {
-            this.setState({waitingForLayerLoading: false, waitingForLayerLoad: true});
-        } else if (this.state.waitingForLayerLoad && !this.props.element.loading) {
-            this.setState({waitingForLayerLoad: false, layerError: this.props.element.loadingError, editingLayerName: !!this.props.element.loadingError});
-        }
-    }
 
     render() {
         const locales = LocaleUtils.getSupportedLocales();
@@ -113,38 +101,10 @@ class General extends React.Component {
                         }
                         )}
                     </FormGroup>)}
-                    <FormGroup validationState={this.state.layerError && !this.state.waitingForLayerLoad && !this.state.waitingForLayerLoading ? 'error' : null}>
-                        <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
-                        <InputGroup>
-                            <FormControl
-                                value={this.state.layerName || ''}
-                                key="name"
-                                type="text"
-                                disabled={!this.state.editingLayerName}
-                                onChange={evt => this.setState({layerName: evt.target.value})} />
-                            <InputGroup.Addon className="btn" onClick={() => {
-                                if (this.state.editingLayerName) {
-                                    if (this.state.layerName !== this.props.element.name) {
-                                        this.updateEntry('name', {target: {value: this.state.layerName}});
-                                        if (this.props.enableLayerNameEditFeedback) {
-                                            this.setState({waitingForLayerLoading: true});
-                                        } else {
-                                            this.setState({editingLayerName: false});
-                                        }
-                                    } else {
-                                        this.setState({editingLayerName: false});
-                                    }
-                                } else {
-                                    this.setState({editingLayerName: true});
-                                }
-                            }}>
-                                {this.state.waitingForLayerLoading || this.state.waitingForLayerLoad ?
-                                    <Spinner noFadeIn style={{width: '18px', height: '18px'}} spinnerName="circle"/> :
-                                    <Glyphicon glyph={this.state.editingLayerName ? "ok" : "pencil"}/>
-                                }
-                            </InputGroup.Addon>
-                        </InputGroup>
-                    </FormGroup>
+                    <LayerNameEditField
+                        element={this.props.element}
+                        enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
+                        onUpdateEntry={this.updateEntry.bind(null)}/>
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :

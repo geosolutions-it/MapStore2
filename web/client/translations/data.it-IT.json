@@ -111,7 +111,9 @@
                 "right": "Destra",
                 "left": "Sinistra",
                 "bottom": "Sotto",
-                "top": "Sopra"
+                "top": "Sopra",
+                "editLayerName": "Modifica il nome del livello",
+                "confirmLayerName": "Conferma la modifica del nome del livello"
             },
             "legendOptions": {
               "title": "Legenda",

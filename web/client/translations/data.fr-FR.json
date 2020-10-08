@@ -111,7 +111,9 @@
                 "right": "Droite",
                 "left": "Gauche",
                 "bottom": "Bas",
-                "top": "Haut"
+                "top": "Haut",
+                "editLayerName": "Modifier le nom du calque",
+                "confirmLayerName": "Confirmer le changement de nom du calque"
             },
             "legendOptions": {
               "title": "Légende",
