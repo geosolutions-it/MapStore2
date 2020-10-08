@@ -13,20 +13,19 @@ import {createSelector} from 'reselect';
 import { compose, defaultProps, withPropsOnChange, getContext} from 'recompose';
 import { createPlugin } from '../utils/PluginsUtils';
 import LayersUtils from '../utils/LayersUtils';
-import {hideSettings, updateSettings, updateNode, updateSettingsParams, editLayerName} from '../actions/layers';
+import {hideSettings, updateSettings, updateNode, updateSettingsParams} from '../actions/layers';
 import {getLayerCapabilities} from '../actions/layerCapabilities';
 import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
 import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } from '../selectors/controls';
-import {layerSettingSelector, layersSelector, groupsSelector, elementSelector, editLayerNameSelector, layerNameIsBeingCheckedSelector, layerNameChangeErrorSelector} from '../selectors/layers';
+import {layerSettingSelector, layersSelector, groupsSelector, elementSelector} from '../selectors/layers';
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
 import {currentLocaleSelector, currentLocaleLanguageSelector} from '../selectors/locale';
 import {isAdminUserSelector} from '../selectors/security';
 import {isLocalizedLayerStylesEnabledSelector} from '../selectors/localizedLayerStyles';
 import {setControlProperty} from '../actions/controls';
 import {toggleStyleEditor} from '../actions/styleeditor';
-import {basicError} from '../utils/NotificationUtils';
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
@@ -40,11 +39,8 @@ const tocItemsSettingsSelector = createSelector([
     originalSettingsSelector,
     activeTabSettingsSelector,
     elementSelector,
-    isLocalizedLayerStylesEnabledSelector,
-    editLayerNameSelector,
-    layerNameIsBeingCheckedSelector,
-    layerNameChangeErrorSelector
-], (settings, layers, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled, editingLayerName, layerNameIsBeingChecked, layerNameChangeError) => ({
+    isLocalizedLayerStylesEnabledSelector
+], (settings, layers, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled) => ({
     settings,
     element,
     groups,
@@ -55,10 +51,7 @@ const tocItemsSettingsSelector = createSelector([
     initialSettings,
     originalSettings,
     activeTab,
-    isLocalizedLayerStylesEnabled,
-    editingLayerName,
-    layerNameIsBeingChecked,
-    layerNameChangeError
+    isLocalizedLayerStylesEnabled
 }));
 
 /**
@@ -97,17 +90,12 @@ const TOCItemsSettingsPlugin = compose(
         onUpdateInitialSettings: setControlProperty.bind(null, 'layersettings', 'initialSettings'),
         onSetTab: setControlProperty.bind(null, 'layersettings', 'activeTab'),
         onUpdateParams: updateSettingsParams,
-        onToggleStyleEditor: toggleStyleEditor,
-        onEditLayerName: editLayerName,
-        onShowLayerNameChangeErrorNotification: basicError.bind(null, {
-            title: 'layerNameChangeError.title',
-            message: 'layerNameChangeError.message',
-            autoDismiss: 5
-        })
+        onToggleStyleEditor: toggleStyleEditor
     }),
     updateSettingsLifecycle,
     defaultProps({
-        getDimension: LayersUtils.getDimension
+        getDimension: LayersUtils.getDimension,
+        enableLayerNameEditFeedback: true
     }),
     getContext({
         loadedPlugins: PropTypes.object

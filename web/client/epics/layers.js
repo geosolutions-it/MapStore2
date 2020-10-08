@@ -17,12 +17,8 @@ const {
     updateNode,
     updateSettings,
     layersRefreshError,
-    changeLayerParams,
-    setLayerNameIsBeingChecked,
-    setLayerNameChangeError,
-    editLayerName
-} = require('../actions/layers');
-const {getLayersWithDimension, layerSettingSelector, getLayerFromId, layerNameChangeErrorSelector} = require('../selectors/layers');
+    changeLayerParams } = require('../actions/layers');
+const {getLayersWithDimension, layerSettingSelector, getLayerFromId} = require('../selectors/layers');
 
 const { setControlProperty } = require('../actions/controls');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
@@ -144,8 +140,6 @@ const updateSettingsParamsEpic = (action$, store) =>
             const initialSettings = initialSettingsSelector(state);
             const orig = originalSettingsSelector(state);
             const layer = settings?.nodeType === 'layers' ? getLayerFromId(state, settings?.node) : null;
-            const layerNameHasChanged = newParams.name && layer && layer.name !== newParams.name;
-            const layerNameChangeError = layerNameChangeErrorSelector(state);
 
             let originalSettings = { ...(orig || {}) };
             // TODO one level only storage of original settings for the moment
@@ -161,24 +155,15 @@ const updateSettingsParamsEpic = (action$, store) =>
                     settings.node,
                     settings.nodeType,
                     { ...settings.options, ...newParams }
-                )] : []),
-                ...(layerNameHasChanged ?
-                    [setLayerNameIsBeingChecked(true)] :
-                    !layerNameChangeError ?
-                        [editLayerName(false)] :
-                        [basicError({
-                            title: 'layerNameChangeError.title',
-                            message: 'layerNameChangeError.message',
-                            autoDismiss: 5
-                        })]),
-            ).concat(layerNameHasChanged ?
+                )] : [])
+            ).concat(newParams.name && layer && layer.name !== newParams.name ?
                 action$.ofType(LAYER_LOAD).filter(({layerId}) => layerId === layer?.id).take(1).flatMap(({error}) => error ?
                     Rx.Observable.of(basicError({
                         title: 'layerNameChangeError.title',
                         message: 'layerNameChangeError.message',
                         autoDismiss: 5
-                    }), setLayerNameIsBeingChecked(false), setLayerNameChangeError(true)) :
-                    Rx.Observable.of(editLayerName(false), setLayerNameChangeError(false), setLayerNameIsBeingChecked(false))) :
+                    })) :
+                    Rx.Observable.empty()) :
                 Rx.Observable.empty());
         });
 

@@ -36,9 +36,6 @@ const FILTER_LAYERS = 'LAYERS:FILTER_LAYERS';
 const SHOW_LAYER_METADATA = 'LAYERS:SHOW_LAYER_METADATA';
 const HIDE_LAYER_METADATA = 'LAYERS:HIDE_LAYER_METADATA';
 const UPDATE_SETTINGS_PARAMS = 'LAYERS:UPDATE_SETTINGS_PARAMS';
-const EDIT_LAYER_NAME = 'LAYERS:EDIT_LAYER_NAME';
-const LAYER_NAME_IS_BEING_CHECKED = 'LAYERS:LAYER_NAME_IS_BEING_CHECKED';
-const LAYER_NAME_CHANGE_ERROR = 'LAYERS:LAYER_NAME_CHANGE_ERROR';
 
 function showSettings(node, nodeType, options) {
     return {
@@ -305,36 +302,14 @@ function updateSettingsParams(newParams, update) {
     };
 }
 
-function editLayerName(edit) {
-    return {
-        type: EDIT_LAYER_NAME,
-        edit
-    };
-}
-
-function setLayerNameIsBeingChecked(isBeingChecked) {
-    return {
-        type: LAYER_NAME_IS_BEING_CHECKED,
-        isBeingChecked
-    };
-}
-
-function setLayerNameChangeError(error) {
-    return {
-        type: LAYER_NAME_CHANGE_ERROR,
-        error
-    };
-}
-
 module.exports = {
     changeLayerProperties, changeLayerParams, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
     updateNode, moveNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
     layersRefreshed, layersRefreshError, refreshLayerVersion, updateLayerDimension, browseData, clearLayers, selectNode, filterLayers, showLayerMetadata,
-    hideLayerMetadata, download, updateSettingsParams, addGroup, editLayerName, setLayerNameIsBeingChecked, setLayerNameChangeError,
+    hideLayerMetadata, download, updateSettingsParams, addGroup,
     CHANGE_LAYER_PROPERTIES, CHANGE_LAYER_PARAMS, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, MOVE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
     ADD_GROUP,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_LAYERS_DIMENSION, BROWSE_DATA, DOWNLOAD,
-    CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA, UPDATE_SETTINGS_PARAMS, EDIT_LAYER_NAME, LAYER_NAME_IS_BEING_CHECKED,
-    LAYER_NAME_CHANGE_ERROR
+    CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA, UPDATE_SETTINGS_PARAMS
 };

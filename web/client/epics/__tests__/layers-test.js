@@ -12,8 +12,7 @@ const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {
     refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_NODE,
-    updateLayerDimension, CHANGE_LAYER_PARAMS, updateSettingsParams, UPDATE_SETTINGS, layerLoad,
-    EDIT_LAYER_NAME, LAYER_NAME_CHANGE_ERROR, LAYER_NAME_IS_BEING_CHECKED
+    updateLayerDimension, CHANGE_LAYER_PARAMS, updateSettingsParams, UPDATE_SETTINGS, layerLoad
 } = require('../../actions/layers');
 const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
 const { SHOW_NOTIFICATION } = require('../../actions/notifications');
@@ -256,10 +255,10 @@ describe('layers Epics', () => {
 
         testEpic(
             updateSettingsParamsEpic,
-            7,
+            3,
             [updateSettingsParams({name: 'layerName_changed'}, true), layerLoad('layerId')],
             actions => {
-                expect(actions.length).toBe(7);
+                expect(actions.length).toBe(3);
                 expect(actions[0].type).toBe(UPDATE_SETTINGS);
                 expect(actions[0].options).toEqual({name: 'layerName_changed'});
                 expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
@@ -270,14 +269,6 @@ describe('layers Epics', () => {
                 expect(actions[2].node).toEqual('layerId');
                 expect(actions[2].nodeType).toEqual('layers');
                 expect(actions[2].options).toEqual({opacity: 1, name: 'layerName_changed'});
-                expect(actions[3].type).toBe(LAYER_NAME_IS_BEING_CHECKED);
-                expect(actions[3].isBeingChecked).toBe(true);
-                expect(actions[4].type).toBe(EDIT_LAYER_NAME);
-                expect(actions[4].edit).toBe(false);
-                expect(actions[5].type).toBe(LAYER_NAME_CHANGE_ERROR);
-                expect(actions[5].error).toBe(false);
-                expect(actions[6].type).toBe(LAYER_NAME_IS_BEING_CHECKED);
-                expect(actions[6].isBeingChecked).toBe(false);
             }, state, done);
     });
 
@@ -312,10 +303,10 @@ describe('layers Epics', () => {
 
         testEpic(
             updateSettingsParamsEpic,
-            7,
+            4,
             [updateSettingsParams({name: 'layerName_changed'}, true), layerLoad('layerId', true)],
             actions => {
-                expect(actions.length).toBe(7);
+                expect(actions.length).toBe(4);
                 expect(actions[0].type).toBe(UPDATE_SETTINGS);
                 expect(actions[0].options).toEqual({name: 'layerName_changed'});
                 expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
@@ -326,14 +317,8 @@ describe('layers Epics', () => {
                 expect(actions[2].node).toEqual('layerId');
                 expect(actions[2].nodeType).toEqual('layers');
                 expect(actions[2].options).toEqual({opacity: 1, name: 'layerName_changed'});
-                expect(actions[3].type).toBe(LAYER_NAME_IS_BEING_CHECKED);
-                expect(actions[3].isBeingChecked).toBe(true);
-                expect(actions[4].type).toBe(SHOW_NOTIFICATION);
-                expect(actions[4].level).toBe('error');
-                expect(actions[5].type).toBe(LAYER_NAME_IS_BEING_CHECKED);
-                expect(actions[5].isBeingChecked).toBe(false);
-                expect(actions[6].type).toBe(LAYER_NAME_CHANGE_ERROR);
-                expect(actions[6].error).toBe(true);
+                expect(actions[3].type).toBe(SHOW_NOTIFICATION);
+                expect(actions[3].level).toBe('error');
             }, state, done);
     });
 });

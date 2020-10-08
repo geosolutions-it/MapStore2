@@ -148,24 +148,6 @@ const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(state) || {
  */
 const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(defaultQueryableFilter);
 
-/**
- * Returns the state of layer name editing in General settings
- * @param {object} state
- */
-const editLayerNameSelector = state => state?.layers?.editLayerName;
-
-/**
- * Returns the state for layer name checking when it has been changed in General settings
- * @param {object} state
- */
-const layerNameIsBeingCheckedSelector = state => state?.layers?.layerNameIsBeingChecked;
-
-/**
- * Returns if an error has occured after layer name change was applied
- * @param {object} state
- */
-const layerNameChangeErrorSelector = state => state?.layers?.layerNameChangeError;
-
 module.exports = {
     getLayerFromName,
     layersSelector,
@@ -190,8 +172,5 @@ module.exports = {
     centerToMarkerSelector,
     elementSelector,
     selectedLayerLoadingErrorSelector,
-    queryableSelectedLayersSelector,
-    editLayerNameSelector,
-    layerNameIsBeingCheckedSelector,
-    layerNameChangeErrorSelector
+    queryableSelectedLayersSelector
 };

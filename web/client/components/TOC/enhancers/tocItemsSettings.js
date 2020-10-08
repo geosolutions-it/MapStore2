@@ -59,24 +59,19 @@ const settingsLifecycle = compose(
                 onUpdateInitialSettings({});
             }
         },
-        onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { }, layerNameChangeError = false, onShowLayerNameChangeErrorNotification = () => { } }) => (tabsCloseActions = []) => {
-            if (!layerNameChangeError) {
-                if (isArray(tabsCloseActions)) {
-                    tabsCloseActions.forEach(tabOnClose => {
-                        if (isFunction(tabOnClose)) {
-                            tabOnClose();
-                        }
-                    });
-                }
-                onHideSettings();
-                onShowAlertModal(false);
-                // clean up internal settings state
-                onUpdateOriginalSettings({});
-                onUpdateInitialSettings({});
-            } else {
-                onShowLayerNameChangeErrorNotification();
-                onShowAlertModal(false);
+        onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { } }) => (tabsCloseActions = []) => {
+            if (isArray(tabsCloseActions)) {
+                tabsCloseActions.forEach(tabOnClose => {
+                    if (isFunction(tabOnClose)) {
+                        tabOnClose();
+                    }
+                });
             }
+            onHideSettings();
+            onShowAlertModal(false);
+            // clean up internal settings state
+            onUpdateOriginalSettings({});
+            onUpdateInitialSettings({});
         }
     }),
     lifecycle({
