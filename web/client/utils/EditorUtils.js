@@ -97,10 +97,14 @@ export const htmlToDraftJSEditorState = (html = '') => {
 };
 
 export const draftJSEditorStateToHtml = (editorState, emptyPlaceholder = '') => {
-    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-    // it can happen that first block is empty, i.e. there is a carriage return
-    const rawText = blocks.length === 1 ? convertToRaw(editorState.getCurrentContent()).blocks[0].text : true;
-    const html = draftToHtml(convertToRaw(editorState.getCurrentContent()), null, null, customEntityTransform);
+    if (editorState) {
+        const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+        // it can happen that first block is empty, i.e. there is a carriage return
+        const rawText = blocks.length === 1 ? convertToRaw(editorState.getCurrentContent()).blocks[0].text : true;
+        const html = draftToHtml(convertToRaw(editorState.getCurrentContent()), null, null, customEntityTransform);
 
-    return rawText ? html : emptyPlaceholder;
+        return rawText ? html : emptyPlaceholder;
+    }
+
+    return emptyPlaceholder;
 };

@@ -67,7 +67,7 @@ module.exports = class extends React.Component {
 
     render() {
         return (<div
-            style={{width: "100%", height: "100%"}}
+            style={{width: "100%", height: "100%", overflowX: 'auto'}}
             onTouchMove={this.onTouchMove}
             onTouchStart={this.onTouchStart}
             onTouchEnd={this.onTouchEnd}>

@@ -85,7 +85,12 @@ const resourceGrid = compose(
             setLoadingResource(false);
         }
     }),
-    mapProps(({loading, loadingResource, ...other}) => ({...other, loading: loading || loadingResource || false }))
+    mapProps(({loading, loadingResource, loadedResource, ...other}) => ({
+        ...other,
+        loadedResource,
+        loading: loading || loadingResource || false,
+        detailsText: loadedResource?.linkedResources?.details?.data === 'NODATA' ? undefined : loadedResource?.linkedResources?.details?.data
+    }))
 );
 
 module.exports = resourceGrid;

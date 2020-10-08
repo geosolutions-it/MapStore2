@@ -10,35 +10,16 @@ import Draggable from 'react-draggable';
 
 import EffectSupport from './EffectSupport';
 
-const DraggableSlider = ({ type, map, widthRef, heightRef }) => {
+const VSlider = ({ type, map, widthRef }) => {
 
     useEffect(() => {
-        type === "cut-vertical"
-            ? widthRef.current = map.getProperties().size[0] / 2
-            : heightRef.current = map.getProperties().size[1] / 2;
-    }, []);
+        widthRef.current = map.getProperties().size[0] / 2;
+    }, [ type ]);
 
     const onDragVerticalHandler = (e, ui) => {
         widthRef.current += ui.deltaX;
         map.render();
     };
-
-    const onDragHorizontalHandler = (e, ui) => {
-        heightRef.current += ui.deltaY;
-        map.render();
-    };
-
-    if (type === "cut-horizontal") {
-        return (<Draggable axis="y" bounds="parent" onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}>
-            <div className="mapstore-swipe-slider" style={{
-                height: "12px",
-                top: `${map.getProperties().size[1] / 2}px`,
-                left: "0px",
-                width: '100%',
-                cursor: "row-resize"
-            }}></div>
-        </Draggable>);
-    }
 
     return (
         <Draggable axis="x" bounds="parent" onDrag={(e, ui) => onDragVerticalHandler(e, ui)}>
@@ -51,6 +32,27 @@ const DraggableSlider = ({ type, map, widthRef, heightRef }) => {
             }}></div>
         </Draggable>
     );
+};
+
+const HSlider = ({ type, map, heightRef }) => {
+
+    useEffect(() => {
+        heightRef.current = map.getProperties().size[1] / 2;
+    }, [ type ]);
+
+    const onDragHorizontalHandler = (e, ui) => {
+        heightRef.current += ui.deltaY;
+        map.render();
+    };
+    return (<Draggable axis="y" bounds="parent" onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}>
+        <div className="mapstore-swipe-slider" style={{
+            height: "12px",
+            top: `${map.getProperties().size[1] / 2}px`,
+            left: "0px",
+            width: '100%',
+            cursor: "row-resize"
+        }}></div>
+    </Draggable>);
 };
 
 /**
@@ -66,11 +68,8 @@ const SliderSwipeSupport = ({ map, layer, type = "cut-vertical", active }) => {
     if (layer && active) {
         return (
             <>
-                <DraggableSlider
-                    heightRef={heightRef}
-                    widthRef={widthRef}
-                    map={map}
-                    type={type} />
+            {type === "cut-vertical" && (<VSlider widthRef={widthRef} map={map} type={type} />)}
+            {type === "cut-horizontal" && (<HSlider heightRef={heightRef} map={map} type={type} />)}
                 <EffectSupport
                     map={map}
                     layer={layer}

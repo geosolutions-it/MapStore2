@@ -11,8 +11,12 @@ import PropTypes from 'prop-types';
 import {Button, Col, ControlLabel, FormControl as FC, FormGroup, Glyphicon, OverlayTrigger, Tooltip} from "react-bootstrap";
 import Message from "../../I18N/Message";
 import {inRange} from 'lodash';
+import * as NumberFormControl from '../../I18N/IntlNumberFormControl';
+
 import localizedProps from '../../misc/enhancers/localizedProps';
 const FormControl = localizedProps('placeholder')(FC);
+const IntlNumberFormControl = localizedProps('placeholder')(NumberFormControl);
+
 
 const validate = (bookmark = {}) =>{
     const {options = {}, title = ''} = bookmark;
@@ -27,8 +31,7 @@ const AddNewBookmark = (props) => {
     const {onPropertyChange, bookmark = {}, bbox: currentBBox} = props;
     const {options: bboxAttributes = {}, title, layerVisibilityReload = false} = bookmark;
 
-    const onChange = (event) => {
-        const {value, name} = event.target;
+    const onChange = (value, name) => {
         const options = {...bookmark.options,  [name]: parseFloat(value)};
         onPropertyChange("bookmark", {...bookmark, options});
     };
@@ -112,13 +115,13 @@ const AddNewBookmark = (props) => {
                 <div className={"field-top-bottom"}>
                     <FormGroup validationState={validateFunc("north")}>
                         <ControlLabel><Message msgId={"search.b_bbox_north"}/></ControlLabel>
-                        <FormControl
+                        <IntlNumberFormControl
                             placeholder="search.b_bbox_north_placeholder"
                             min={-90} max={90}
                             name={"north"}
                             type="number"
-                            onChange={onChange}
-                            value={bboxAttributes.north || ""}
+                            onChange={(v)=>onChange(v, 'north')}
+                            value={bboxAttributes.north}
                         />
                     </FormGroup>
                 </div>
@@ -126,26 +129,26 @@ const AddNewBookmark = (props) => {
                     <div className={"field-left-right"}>
                         <FormGroup validationState={validateFunc("west")}>
                             <ControlLabel><Message msgId={"search.b_bbox_west"}/></ControlLabel>
-                            <FormControl
+                            <IntlNumberFormControl
                                 placeholder="search.b_bbox_west_placeholder"
                                 min={-180} max={180}
                                 name={"west"}
                                 type="number"
-                                onChange={onChange}
-                                value={bboxAttributes.west || ""}
+                                onChange={(v)=>onChange(v, 'west')}
+                                value={bboxAttributes.west}
                             />
                         </FormGroup>
                     </div>
                     <div className={"field-left-right"}>
                         <FormGroup validationState={validateFunc("east")}>
                             <ControlLabel><Message msgId={"search.b_bbox_east"}/></ControlLabel>
-                            <FormControl
+                            <IntlNumberFormControl
                                 placeholder="search.b_bbox_east_placeholder"
                                 min={-180} max={180}
                                 name={"east"}
                                 type="number"
-                                onChange={onChange}
-                                value={bboxAttributes.east || ""}
+                                onChange={(v)=>onChange(v, 'east')}
+                                value={bboxAttributes.east}
                             />
                         </FormGroup>
                     </div>
@@ -153,13 +156,13 @@ const AddNewBookmark = (props) => {
                 <div className={"field-top-bottom"}>
                     <FormGroup validationState={validateFunc("south")}>
                         <ControlLabel><Message msgId={"search.b_bbox_south"}/></ControlLabel>
-                        <FormControl
+                        <IntlNumberFormControl
                             placeholder="search.b_bbox_south_placeholder"
                             min={-90} max={90}
                             name={"south"}
                             type="number"
-                            onChange={onChange}
-                            value={bboxAttributes.south || ""}
+                            onChange={(v)=>onChange(v, 'south')}
+                            value={bboxAttributes.south}
                         />
                     </FormGroup>
                 </div>

@@ -18,13 +18,14 @@ import highlightIcon from './highlight.png';
 const markers = MarkerUtils.markers.extra;
 const extraMarker = markers.icons[0];
 const extraMarkerShadow = markers.icons[1];
+const anchorYSize = markers.size[1];
 
 const glyphs = MarkerUtils.getGlyphs('fontawesome');
 
 
-const getHighlightStyle = ({highlight, rotation = 0}) => (highlight ? [new Style({
+const getHighlightStyle = ({highlight, rotation = 0}, size) => (highlight ? [new Style({
     image: new Icon({
-        anchor: [ 0.5, (markers.size[1] + 18) * 2 ],
+        anchor: [ 0.5, size ],
         rotation,
         anchorXUnits: 'fraction',
         anchorYUnits: 'pixels',
@@ -62,8 +63,7 @@ export default {
                     offsetY: -markers.size[1] * 2 / 3,
                     fill: new Fill({color: '#FFFFFF'})
                 })
-
-            })].concat(getHighlightStyle(options.style));
+            })].concat(getHighlightStyle(options.style, (anchorYSize + 15) * 2));
         }
     },
     standard: {
@@ -91,7 +91,9 @@ export default {
                     })
                 }), markerStyle[0]];
             }
-            return markerStyle.concat(getHighlightStyle(style));
+            let size = isArray(style.size) ? style.size[1] : isNumber(style.size) ? style.size : 0;
+            size = size > 32 ? size + (size * 0.75) : (anchorYSize + 10);
+            return markerStyle.concat(getHighlightStyle(style, size));
         }
     },
     html: {

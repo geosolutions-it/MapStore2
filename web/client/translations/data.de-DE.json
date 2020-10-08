@@ -521,6 +521,13 @@
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
             "epsgNotSupported": "KBS {epsg} wird für das Zoomen auf den Layer nicht unterstützt",
             "compareTool": "Tool vergleichen",
+            "configureTool": "Konfigurieren",
+            "spyconfiguration": "Spyglass Konfiguration",
+            "swipeconfiguration": "Swipe-Konfiguration",
+            "swipe": "Wischen Sie",
+            "spyGlass": "Spion Glas",
+            "direction": "Wischen sie richtung",
+            "radius": "Radius",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
             "refreshOptions": {
