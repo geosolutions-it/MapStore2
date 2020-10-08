@@ -128,7 +128,6 @@ export default class MeasurementSupport extends React.Component {
                 this.source.clear();
                 this.source = null;
             }
-            newProps.measurement.exportToAnnotation && newProps.changeMeasurement({geomType: "LineString"});
         }
         let oldFt = this.props.measurement.features;
         let newFt = newProps.measurement.features;
@@ -748,9 +747,11 @@ export default class MeasurementSupport extends React.Component {
                     this.measureTooltipElements[this.measureTooltipElements.length - 2].className = 'tooltip tooltip-static';
                     this.measureTooltips[this.measureTooltipElements.length - 2].setOffset([0, -7]);
                 }
-                for (let i = 0; i < this.segmentOverlayElements.length; ++i) {
-                    if (this.segmentOverlayElements[i]) {
-                        this.segmentOverlayElements[i].className = 'segment-overlay segment-overlay-static';
+                if (this.segmentOverlayElements) {
+                    for (let i = 0; i < this.segmentOverlayElements.length; ++i) {
+                        if (this.segmentOverlayElements[i]) {
+                            this.segmentOverlayElements[i].className = 'segment-overlay segment-overlay-static';
+                        }
                     }
                 }
             }

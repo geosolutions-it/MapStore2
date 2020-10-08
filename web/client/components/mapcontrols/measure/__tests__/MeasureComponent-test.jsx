@@ -64,6 +64,7 @@ describe("test the MeasureComponent", () => {
         const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
+                geomType={'Polygon'}
                 toggleMeasure={(data) => {
                     newMeasureState = data;
                 }}
@@ -474,5 +475,48 @@ describe("test the MeasureComponent", () => {
         expect(spyOnAddAnnotation.calls[0].arguments[2]).toEqual(uom);
         expect(spyOnAddAnnotation.calls[0].arguments[3]).toBe(false);
         expect(spyOnAddAnnotation.calls[0].arguments[4]).toBe(1);
+    });
+
+    it("test Measurement default", () =>{
+        let measurement = {
+            lineMeasureEnabled: true,
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[1, 2], [2, 5]]
+                },
+                properties: {}
+            }],
+            textLabels: [{position: [1, 1], text: "1,714 m"}],
+            id: 1,
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent
+                measurement={measurement}
+                format="decimal"
+                isDraggable
+                useSingleFeature
+                lineMeasureEnabled
+                showAddAsAnnotation
+            />, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+        const toolbar = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-toolbar");
+        const toolBarGroup = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-group");
+        expect(toolbar).toExist();
+        expect(toolBarGroup.length).toBe(3);
+
+        const buttons = document.querySelectorAll('button');
+        expect(buttons.length).toBe(7);
+        // By default LineString is selected
+        expect(buttons[0].className).toContain('active');
+
+        // Restrict unselect of the geometry
+        TestUtils.Simulate.click(buttons[0]);
+        expect(buttons[0].className).toContain('active');
     });
 });

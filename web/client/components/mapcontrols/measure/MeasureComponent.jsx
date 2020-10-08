@@ -19,6 +19,7 @@ const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUt
 const {convertMeasuresToGeoJSON} = require('../../../utils/MeasurementUtils');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
+const OverlayTriggerCustom = require('../../misc/OverlayTriggerCustom').default;
 const BorderLayout = require('../../layout/BorderLayout');
 const CoordinatesEditor = require('../annotations/CoordinatesEditor');
 require('./measure.css');
@@ -152,27 +153,21 @@ class MeasureComponent extends React.Component {
         onAddAsLayer: () => {}
     };
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (!nextProps.geomType) {
+            this.props.toggleMeasure({
+                geomType: 'LineString'
+            });
+        }
+    }
+
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
     }
 
-    onLineClick = () => {
-        this.props.toggleMeasure({
-            geomType: 'LineString'
-        });
-    };
-
-    onAreaClick = () => {
-        this.props.toggleMeasure({
-            geomType: 'Polygon'
-        });
-    };
-
-    onBearingClick = () => {
-        this.props.toggleMeasure({
-            geomType: 'Bearing'
-        });
-    };
+    onGeomClick = (geomType) => {
+        this.props.geomType !== geomType && this.props.toggleMeasure({geomType});
+    }
 
     onResetClick = () => {
         this.props.toggleMeasure({
@@ -309,14 +304,14 @@ class MeasureComponent extends React.Component {
                                             active: !!this.props.lineMeasureEnabled,
                                             bsStyle: this.props.lineMeasureEnabled ? 'success' : 'primary',
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
-                                            onClick: () => this.onLineClick()
+                                            onClick: () => this.onGeomClick('LineString')
                                         },
                                         {
                                             active: !!this.props.areaMeasureEnabled,
                                             bsStyle: this.props.areaMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.areaGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea"),
-                                            onClick: () => this.onAreaClick()
+                                            onClick: () => this.onGeomClick('Polygon')
                                         },
                                         {
                                             visible: !this.props.disableBearing,
@@ -324,7 +319,7 @@ class MeasureComponent extends React.Component {
                                             bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.bearingGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, this.isTrueBearing() ? "measureComponent.MeasureTrueBearing" : "measureComponent.MeasureBearing"),
-                                            onClick: () => this.onBearingClick()
+                                            onClick: () => this.onGeomClick('Bearing')
                                         }
                                     ]
                                 }/>
@@ -374,7 +369,8 @@ class MeasureComponent extends React.Component {
                                                 this.props.measurement.features,
                                                 this.props.measurement.textLabels,
                                                 this.props.uom
-                                            )
+                                            ),
+                                            customOverlayTrigger: OverlayTriggerCustom
                                         },
                                         {
                                             glyph: exportToAnnotation ? 'floppy-disk' : 'comment',
