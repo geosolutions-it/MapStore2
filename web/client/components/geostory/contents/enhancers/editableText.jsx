@@ -15,7 +15,6 @@ import { branch, compose, renderComponent, withHandlers, withProps, withState, l
 import {
     EMPTY_CONTENT,
     SectionTypes,
-    ContentTypes,
     DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
 
 import LayoutComponent from '../texteditor/CustomEditorLink';
