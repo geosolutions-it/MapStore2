@@ -21,6 +21,9 @@ const VSlider = ({ type, map, widthRef }) => {
 
     useEffect(() => {
         window.addEventListener('resize', onWindowResize);
+        return () => {
+            window.removeEventListener('resize', onWindowResize);
+        };
     }, [ type ]);
 
     useEffect(() => {
@@ -36,7 +39,8 @@ const VSlider = ({ type, map, widthRef }) => {
     return (
         <Draggable
             position={pos}
-            bounds="parent" onDrag={(e, ui) => onDragVerticalHandler(e, ui)}>
+            bounds="parent"
+            onDrag={(e, ui) => onDragVerticalHandler(e, ui)}>
             <div className="mapstore-swipe-slider" style={{
                 height: "100%",
                 top: '0px',
@@ -59,6 +63,9 @@ const HSlider = ({ type, map, heightRef }) => {
 
     useEffect(() => {
         window.addEventListener('resize', onWindowResize);
+        return () => {
+            window.removeEventListener('resize', onWindowResize);
+        };
     }, [ type ]);
 
     useEffect(() => {
@@ -72,7 +79,8 @@ const HSlider = ({ type, map, heightRef }) => {
     };
     return (<Draggable
         position={pos}
-        bounds="parent" onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}>
+        bounds="parent"
+        onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}>
         <div className="mapstore-swipe-slider" style={{
             height: "12px",
             top: `${map.getProperties().size[1] / 2}px`,
