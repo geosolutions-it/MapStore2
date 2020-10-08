@@ -7,6 +7,7 @@
 */
 import React, {useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
+const {Glyphicon} = require('react-bootstrap');
 
 import EffectSupport from './EffectSupport';
 
@@ -25,6 +26,7 @@ const VSlider = ({ type, map, widthRef }) => {
             window.removeEventListener('resize', onWindowResize);
         };
     }, [ type ]);
+    const [showArrows, setShowArrows] = useState(true);
 
     useEffect(() => {
         widthRef.current = map.getProperties().size[0] / 2;
@@ -40,14 +42,30 @@ const VSlider = ({ type, map, widthRef }) => {
         <Draggable
             position={pos}
             bounds="parent"
-            onDrag={(e, ui) => onDragVerticalHandler(e, ui)}>
+            onStart={() => setShowArrows(false)}
+            onDrag={(e, ui) => onDragVerticalHandler(e, ui)}
+            onStop={() => setShowArrows(true)}>
             <div className="mapstore-swipe-slider" style={{
                 height: "100%",
                 top: '0px',
                 left: `${map.getProperties().size[0] / 2}px`,
-                width: "12px",
+                width: "8px",
                 cursor: "col-resize"
-            }}></div>
+            }}>
+                {showArrows && (
+                    <div className="ms-vertical-swipe-slider-arrows" style={{
+                        // subtract half of the arrows height i.e 52px so that top stops at center
+                        top: `${(map.getProperties().size[1] / 2) - 26}px`
+                    }}>
+                        <div className="ms-slider-arrows">
+                            <Glyphicon glyph="chevron-left" />
+                        </div>
+                        <div className="ms-slider-arrows">
+                            <Glyphicon glyph="chevron-right" />
+                        </div>
+                    </div>
+                )}
+            </div>
         </Draggable>
     );
 };
@@ -67,6 +85,7 @@ const HSlider = ({ type, map, heightRef }) => {
             window.removeEventListener('resize', onWindowResize);
         };
     }, [ type ]);
+    const [showArrows, setShowArrows] = useState(true);
 
     useEffect(() => {
         heightRef.current = map.getProperties().size[1] / 2;
@@ -80,14 +99,30 @@ const HSlider = ({ type, map, heightRef }) => {
     return (<Draggable
         position={pos}
         bounds="parent"
-        onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}>
+        onStart={() => setShowArrows(false)}
+        onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}
+        onStop={() => setShowArrows(true)}>
         <div className="mapstore-swipe-slider" style={{
-            height: "12px",
+            height: "8px",
             top: `${map.getProperties().size[1] / 2}px`,
             left: "0px",
             width: '100%',
             cursor: "row-resize"
-        }}></div>
+        }}>
+            {showArrows && (
+                <div className="ms-horizontal-swipe-slider-arrows" style={{
+                    // subtract half of the arrows width i.e 52px so that left stops at center
+                    left: `${(map.getProperties().size[0] / 2) - 26}px`
+                }}>
+                    <div className="ms-slider-arrows">
+                        <Glyphicon glyph="chevron-up" />
+                    </div>
+                    <div className="ms-slider-arrows">
+                        <Glyphicon glyph="chevron-down" />
+                    </div>
+                </div>
+            )}
+        </div>
     </Draggable>);
 };
 
