@@ -156,6 +156,7 @@ const updateSettingsParamsEpic = (action$, store) =>
                     settings.nodeType,
                     { ...settings.options, ...newParams }
                 )] : [])
+            // this handles errors due to name changes
             ).concat(newParams.name && layer && layer.name !== newParams.name ?
                 action$.ofType(LAYER_LOAD).filter(({layerId}) => layerId === layer?.id).take(1).flatMap(({error}) => error ?
                     Rx.Observable.of(basicError({
