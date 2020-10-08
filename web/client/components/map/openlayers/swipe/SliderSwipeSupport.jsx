@@ -14,10 +14,17 @@ import EffectSupport from './EffectSupport';
 const VSlider = ({ type, map, widthRef }) => {
 
     const [pos, setPos] = useState();
+    const [showArrows, setShowArrows] = useState(true);
 
     const onWindowResize = () => {
         setPos({x: 0, y: 0});
         widthRef.current = map.getProperties().size[0] / 2;
+    };
+
+    const onDragVerticalHandler = (e, ui) => {
+        widthRef.current += ui.deltaX;
+        setPos({x: ui.x, y: ui.y});
+        map.render();
     };
 
     useEffect(() => {
@@ -26,17 +33,10 @@ const VSlider = ({ type, map, widthRef }) => {
             window.removeEventListener('resize', onWindowResize);
         };
     }, [ type ]);
-    const [showArrows, setShowArrows] = useState(true);
 
     useEffect(() => {
         widthRef.current = map.getProperties().size[0] / 2;
     }, [ type ]);
-
-    const onDragVerticalHandler = (e, ui) => {
-        widthRef.current += ui.deltaX;
-        setPos({x: ui.x, y: ui.y});
-        map.render();
-    };
 
     return (
         <Draggable
@@ -73,10 +73,17 @@ const VSlider = ({ type, map, widthRef }) => {
 const HSlider = ({ type, map, heightRef }) => {
 
     const [pos, setPos] = useState();
+    const [showArrows, setShowArrows] = useState(true);
 
     const onWindowResize = () => {
         setPos({x: 0, y: 0});
         heightRef.current = map.getProperties().size[1] / 2;
+    };
+
+    const onDragHorizontalHandler = (e, ui) => {
+        heightRef.current += ui.deltaY;
+        setPos({x: ui.x, y: ui.y});
+        map.render();
     };
 
     useEffect(() => {
@@ -85,17 +92,11 @@ const HSlider = ({ type, map, heightRef }) => {
             window.removeEventListener('resize', onWindowResize);
         };
     }, [ type ]);
-    const [showArrows, setShowArrows] = useState(true);
 
     useEffect(() => {
         heightRef.current = map.getProperties().size[1] / 2;
     }, [ type ]);
 
-    const onDragHorizontalHandler = (e, ui) => {
-        heightRef.current += ui.deltaY;
-        setPos({x: ui.x, y: ui.y});
-        map.render();
-    };
     return (<Draggable
         position={pos}
         bounds="parent"
