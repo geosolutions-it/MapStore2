@@ -50,6 +50,8 @@ const symbolErrorsSelector = (state) => get(state, "annotations.symbolErrors", [
 const modeSelector = (state) => editingSelector(state) && 'editing' || annotationsLayerSelector(state) && currentSelector(state) && 'detail' || 'list';
 const defaultStylesSelector = state => state.annotations.defaultStyles;
 const loadingSelector = state => state.annotations.loading;
+const showAgainSelector = (state) => get(state, "annotations.showAgain", false);
+const showPopupWarningSelector = (state) => get(state, "annotations.showPopupWarning", true);
 
 const annotationsInfoSelector = (state) => (assign({}, {
     symbolErrors: symbolErrorsSelector(state),
@@ -80,7 +82,9 @@ const annotationsInfoSelector = (state) => (assign({}, {
     unsavedChanges: unsavedChangesSelector(state),
     unsavedGeometry: unsavedGeometrySelector(state),
     unsavedStyle: unsavedStyleSelector(state),
-    symbolList: symbolListSelector(state)
+    symbolList: symbolListSelector(state),
+    showAgain: showAgainSelector(state),
+    showPopupWarning: showPopupWarningSelector(state)
 }) );
 
 const annotationsSelector = (state) => ({
