@@ -141,7 +141,7 @@ export const withLocationClickInEdit = branch(({editMap, map: {mapLocationsEnabl
                 update("currentMapLocation", "");
             }
         }),
-        withPropsOnChange(["popups", "layers", "currentMapLocation"], ({ layers = [], update = () => {}, currentMapLocation = "", mapInfoControlTrack }) => {
+        withPropsOnChange(["popups", "layers", "currentMapLocation"], ({ sections = [], layers = [], update = () => {}, currentMapLocation = "", mapInfoControlTrack }) => {
             const locationsLayer = getLayer('locations', layers);
             const locationFeatures = locationsLayer && locationsLayer.features[0].features || [];
             const currentLocationData = head(locationFeatures.filter((location) => location.id === currentMapLocation));
@@ -164,6 +164,7 @@ export const withLocationClickInEdit = branch(({editMap, map: {mapLocationsEnabl
 
             const component = () => (
                 <LocationPopoverEditor
+                    sections={sections}
                     currentLocationData={currentLocationData}
                     update={(pathToHtml, html) => {
                         const path = `map.layers[{"id": "locations"}].features[{"id": "locFeatureCollection"}].features[{"id": "${currentMapLocation}"}].properties.${pathToHtml}`;

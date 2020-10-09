@@ -39,7 +39,8 @@ export default compose(
     update,
     mapType = "leaflet", // default for when map MediaViewer is not connected to redux
     currentMapLocation,
-    mapInfoControlTrack
+    mapInfoControlTrack,
+    sections
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
@@ -123,6 +124,7 @@ export default compose(
             mapType={mapType}
             currentMapLocation={currentMapLocation}
             mapInfoControlTrack={mapInfoControlTrack}
+            sections={sections}
         />
         {expandable && !editMap &&
         <Button

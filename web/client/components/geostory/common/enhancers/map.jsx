@@ -16,7 +16,7 @@ import uuid from "uuid";
 import {show} from '../../../../actions/mapEditor';
 
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
-import {resourcesSelector, getCurrentFocusedContentEl, isFocusOnContentSelector} from '../../../../selectors/geostory';
+import {resourcesSelector, getCurrentFocusedContentEl, isFocusOnContentSelector, sectionsSelector} from '../../../../selectors/geostory';
 
 
 import Message from '../../../I18N/Message';
@@ -35,9 +35,11 @@ export default compose(
         createSelector(
             resourcesSelector,
             isFocusOnContentSelector,
-            (resources, isContentFocused) => ({
+            sectionsSelector,
+            (resources, isContentFocused, sections) => ({
                 resources,
-                isContentFocused
+                isContentFocused,
+                sections
             }))),
     withProps(
         ({ resources, resourceId, map = {}}) => {
