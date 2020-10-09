@@ -19,6 +19,34 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2020.02.00 to 2020.03.00
+
+### App structure review
+
+- New structure of arguments in web/client/stores/StandardStore.js
+```js
+const appStore = (
+    {
+        initialState = {
+            defaultState: {},
+            mobile: {}
+        },
+        appReducers = {},
+        appEpics = {},
+        rootReducerFunc = ({ state, action, allReducers }) => allReducers(state, action)
+    },
+    plugins = {},
+    storeOpts = {}
+) {
+  ...
+```
+
+- Moved standard epics, standard reducers and standard rootReducer function from web/client/stores/StandardStore.js to a separated file web/client/stores/defaultOptions.js
+
+- web/client/product/main.jsx has been updated to new import and export (removed require and exports.module)
+
+- loading extensions functionalities inside StandardApp has been moved to an specific withExtensions HOC.
+
 ## Migration from 2020.01.00 to 2020.02.00
 
 ### Translation files
