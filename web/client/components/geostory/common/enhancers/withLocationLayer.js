@@ -212,36 +212,40 @@ export const withLocationClick = branch(({editMap, map: { mapLocationsEnabled = 
 
                 const intersectingFeature = getIntersectingFeature(layers, "locations", options);
 
-                const responses = [
-                    {
-                        format: "HTML",
-                        layerMetadata: {
-                            featureInfo: {},
-                            features: [],
-                            featuresCrs: map.projection,
-                            title: "Locations",
-                            viewer: {}
-                        },
-                        queryParams: {
-                            lat: point.latlng.lat,
-                            lng: point.latlng.lng
-                        },
-                        response: `<body><p>${intersectingFeature[0].properties.html}</p></body>`
-                    }
-                ];
+                if (intersectingFeature[0]) {
+                    const responses = [
+                        {
+                            format: "HTML",
+                            layerMetadata: {
+                                featureInfo: {},
+                                features: [],
+                                featuresCrs: map.projection,
+                                title: "Locations",
+                                viewer: {}
+                            },
+                            queryParams: {
+                                lat: point.latlng.lat,
+                                lng: point.latlng.lng
+                            },
+                            response: `<body><p>${intersectingFeature[0]?.properties?.html}</p></body>`
+                        }
+                    ];
 
-                const requests = [{}];
-                const validator = getValidator("HTML");
-                const validResponses = validator.getValidResponses(responses, true);
+                    const requests = [{}];
+                    const validator = getValidator("HTML");
+                    const validResponses = validator.getValidResponses(responses, true);
 
-                const component = () => (<MapInfoViewer
-                    responses={responses} requests={requests}
-                    validResponses={validResponses}
-                    showEmptyMessageGFI
-                    missingResponses={(requests || []).length - (responses || []).length} />);
+                    const component = () => (<MapInfoViewer
+                        responses={responses} requests={requests}
+                        validResponses={validResponses}
+                        showEmptyMessageGFI
+                        missingResponses={(requests || []).length - (responses || []).length} />);
 
-                const popups = [{position: { coordinates: point.rawPos }, id: uuidv1() }];
-                return {popups: popups.map((popup) => ({...popup, component}))};
+                    const popups = [{position: { coordinates: point.rawPos }, id: uuidv1() }];
+                    return {popups: popups.map((popup) => ({...popup, component}))};
+
+                }
+                return {popups: []};
             },
             onPopupClose: () => () => ({popups: []})
         }),

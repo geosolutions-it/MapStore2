@@ -5,14 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { branch, compose, withHandlers, withPropsOnChange } from 'recompose';
 
 import { EMPTY_CONTENT, Modes, SectionTypes } from '../../../utils/GeoStoryUtils';
 import localizedProps from '../../misc/enhancers/localizedProps';
 import editableText from './enhancers/editableText';
 
-const Text = ({ placeholder, placeholderTag = 'p', id, toggleEditing = () => {}, html, mode}) => {
+const Text = ({ placeholder, placeholderTag = 'p', id, toggleEditing = () => {}, html, mode, keepOpen = false}) => {
+    useEffect(() => {
+        if (keepOpen && mode === Modes.EDIT) {
+            toggleEditing(true, html === EMPTY_CONTENT ? "" : html);
+        }
+    }, []);
+
     return (
         <div className="ms-text-wrapper">
             {   // content => render it

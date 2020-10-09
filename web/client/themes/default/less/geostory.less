@@ -117,6 +117,52 @@
     max-height: 200px;
     overflow-y: scroll;
 
+    .msSideGrid {
+        position: relative;
+        /*
+        we should not use bootstrap components inside our custom component
+        in particular Row and Col because their behaviors rely on the screen page width
+        */
+        .msSideGrid {
+            margin: 8px;
+            width: ~"calc(100% - 16px)";
+        }
+        .row {
+            margin: 0;
+        }
+        .col-xs-12 {
+            padding: 0;
+        }
+
+        .mapstore-side-card.ms-highlight {
+            outline: 2px solid @ms-story-highlight;
+        }
+        /* removing transition because it was slowing down the change of color text */
+        .mapstore-side-card {
+            transition: none;
+        }
+        .ms-dragging {
+            cursor: grab;
+            & > div {
+                opacity: 0.1;
+            }
+        }
+        .ms-over:not(.ms-dragging) {
+            &.ms-above {
+                & > div {
+                    padding-bottom: @square-btn-medium-size;
+                    border-bottom: 2px solid @ms2-color-primary;
+                }
+            }
+            &.ms-below {
+                & > div {
+                    padding-top: @square-btn-medium-size;
+                    border-top: 2px solid @ms2-color-primary;
+                }
+            }
+        }
+    }
+
     .ms-geostory-map-locations-item {
         border-bottom: 1px solid #dddddd;
         padding: 10px;
@@ -1132,6 +1178,22 @@
             .ol-zoom {
                 top: 50px;
                 left: 6px;
+            }
+
+            .ms-locations-popup-editor {
+                width: 400px;
+                height: 200px;
+
+                .ms-text-placeholder, .ms-text-editor-wrapper {
+                    height: 100%;
+                }
+
+                .ms-text-wrapper {
+                    height: 100%;
+                    & > div {
+                        height: 100%;
+                    }
+                }
             }
         }
         &.ms-media-video {

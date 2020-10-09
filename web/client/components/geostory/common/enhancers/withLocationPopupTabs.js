@@ -19,7 +19,7 @@ const withDefaultTabs = withProps((props) => ({
         title: 'Popup',
         visible: true,
         Component: () => {
-            return (<div style={{width: '400px', height: '200px'}}><Text {...props} allowBlur={false} mode="edit" /></div>);
+            return (<div className="ms-locations-popup-editor"><Text {...props} allowBlur={false} keepOpen mode="edit" /></div>);
         }
     }]
 }));

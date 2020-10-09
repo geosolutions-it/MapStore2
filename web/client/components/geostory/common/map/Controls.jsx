@@ -11,19 +11,15 @@ import {Form, FormGroup, ControlLabel} from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import Select from "react-select";
 import {isNil} from "lodash";
-const {Glyphicon} = require('react-bootstrap');
+const {Glyphicon, Button} = require('react-bootstrap');
 import uuid from "uuid";
-const enhanceTooltip = require('../../../misc/enhancers/tooltip');
-import { applyDefaults } from '../../../../utils/GeoStoryUtils';
+import { applyDefaults, EMPTY_CONTENT } from '../../../../utils/GeoStoryUtils';
 import { getLayer } from '../../../../utils/LayersUtils';
 
 import SwitchButton from '../../../misc/switch/SwitchButton';
-import GeneralButton from '../../../misc/GeneralButton';
 import LocationsList from './LocationList';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import FeatureInfoFormatSelector from '../../../misc/FeatureInfoFormatSelector';
-
-const Glyph = enhanceTooltip(Glyphicon);
 
 const SelectLocalized = localizedProps(["placeholder", "options"])(Select);
 
@@ -114,7 +110,7 @@ export const Controls = ({
             <ControlLabel><Message msgId="geostory.mapEditor.locations"/></ControlLabel>
             <div className="ms-geostory-map-controls-switch-add">
                 {options.mapLocationsEnabled && (
-                    <GeneralButton id="add-location" onClick={
+                    <Button bsStyle="light" onClick={
                         () => {
                             const id = uuid();
                             const locationFeature = {
@@ -128,7 +124,7 @@ export const Controls = ({
                                 properties: {
                                     canEdit: false,
                                     isValidFeature: true,
-                                    html: "",
+                                    html: EMPTY_CONTENT,
                                     locationName: "New Location"
                                 },
                                 geometry: {
@@ -141,8 +137,8 @@ export const Controls = ({
 
                         }
                     } className="square-button-sm no-border">
-                        <Glyph glyph="plus" />
-                    </GeneralButton>
+                        <Glyphicon glyph="plus" />
+                    </Button>
                 )}
                 <SwitchButton
                     onChange={() => {
