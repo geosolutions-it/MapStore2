@@ -1,11 +1,6 @@
 FROM tomcat:8.5-jdk8-openjdk
 MAINTAINER geosolutions<info@geo-solutions.it>
 
-# Install utilities
-RUN  apk update \
-     && apk add vim \
-     && rm -rf /var/cache/apk/*
-
 # Tomcat specific options
 ENV CATALINA_BASE "$CATALINA_HOME"
 ENV JAVA_OPTS="${JAVA_OPTS}  -Xms512m -Xmx512m -XX:MaxPermSize=128m"
