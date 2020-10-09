@@ -2,7 +2,7 @@ The Story Settings panel allows the editor to customize the theme of the story a
 
 The Story settings panel is available in Edit Mode and it can be opened by clicking on the **Settings** button <img src="../img/button/setting-button.jpg" class="ms-docbutton"/>.
 
-<img src="../img/story-setting/story-setting-1.jpg" class="ms-docimage" style="max-width:400px"/>
+<img src="../img/story-setting/story-settings-2.jpg" class="ms-docimage" style="max-width:400px"/>
 
 ## Story Theme
 
@@ -16,15 +16,15 @@ The editor can customize the different components of the story through the follo
 
 <img src="../img/story-setting/font_family.gif" class="ms-docimage"/>
 
-* The **Overlay** to choose the default background and text color of the *contents* present in the [Title Section](title-section.md#content) and in the [Immersive Section](immersive-section.md#content) as well: clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker appears to allow selecting the desired color:
+* The **Overlay** to choose the default background and text color of overlay *contents* present in the [Title Section](title-section.md#content) and in the [Immersive Section](immersive-section.md#content) as well: clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker appears to allow selecting the desired color:
 
 <img src="../img/story-setting/overlay.gif" class="ms-docimage"/>
 
-* The *Shadow* of the *contents* present in the [Title Section](title-section.md#content) and in the [Immersive Section](immersive-section.md#content): enabling or disabling the shadow:
+* The *Shadow* of overlay *contents* present in the [Title Section](title-section.md#content) and in the [Immersive Section](immersive-section.md#content): enabling or disabling the shadow:
 
 <img src="../img/story-setting/shadow.gif" class="ms-docimage"/>
 
-* The **Links** to choose the default color of the hyperlink that may be present in the *Text Contents*: clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker appears to allow selecting the desired color:
+* The color of **Links**. The story editor can choose the default color of the hyperlink that may be present in the *Text Contents*: clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker appears to allow selecting the desired color:
 
 <img src="../img/story-setting/links.gif" class="ms-docimage"/>
 
@@ -36,7 +36,7 @@ In the top bar of the story, if the editor enables them, the following component
 
 * The **Title** of the story, the default value is the title given to the story's resource in MapStore.
 
-* The *Font Size* of the title: clicking on the search bar a dropdown menu opens to allow selecting the desired size (*14 px*, *16 px*, *18 px*, *24 px*, *28 px*).
+* The **Font Size** of the title: clicking on the search bar a dropdown menu opens to allow selecting the desired size (*14 px*, *16 px*, *18 px*, *24 px*, *28 px*).
 
 * The story **Logo**, that can be for example an image that represents your organization or something connected to the story itself.
 

@@ -23,7 +23,7 @@ By default, as soon as a Paragraph is added, an empty text content is already pr
 
 * Delete the *Paragraph  Section* through the **Remove** button <img src="../img/button/remove2.jpg" class="ms-docbutton"/>
 
-The editor can write a test clicking on the text content and customize it through the [Text Editor Toolbar](text-editor-toolbar.md). A possible result of adding and formatting the text can be the following:
+The editor can write a text by clicking on the text content and customize it through the [Text Editor Toolbar](text-editor-toolbar.md). A possible result of adding and formatting the text can be the following:
 
 <img src="../img/paragraph-section/text_content.jpg" class="ms-docimage"/>
 
@@ -53,6 +53,4 @@ A map added inside the paragraph section can be customized through the [Map Cont
 
 Adding a web page content, the Web Page Windows opens allowing the user to add the URL of an extenal web page. A web page added inside the paragraph section can be customized through the [Web Page Content Toolbar](content-web-toolbar.md). Below is an example of a medium, center-aligned web content, just below a map one:
 
-<img src="../img/paragraph-section/map-web.jpg" class="ms-docimage"/>
-
-
+<img src="../img/paragraph-section/map-web5.jpg" class="ms-docimage"/>
