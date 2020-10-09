@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {ButtonGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const {ButtonGroup, Button, Glyphicon, Tooltip } = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
@@ -16,6 +16,7 @@ const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayerMetadataModal = require('./fragments/LayerMetadataModal');
 const Proj4js = require('proj4').default;
 const Message = require('../I18N/Message');
+const SwipeButton = require('./swipe/SwipeButton');
 
 class Toolbar extends React.Component {
 
@@ -59,7 +60,9 @@ class Toolbar extends React.Component {
             onGetMetadataRecord: () => {},
             onHideLayerMetadata: () => {},
             onShow: () => {},
-            onLayerInfo: () => {}
+            onLayerInfo: () => {},
+            onSetActive: () => {},
+            onSetSwipeMode: () => {}
         },
         maxDepth: 3,
         text: {
@@ -115,7 +118,8 @@ class Toolbar extends React.Component {
             includeDeleteButtonInSettings: false,
             activateMetedataTool: true,
             activateLayerFilterTool: true,
-            activateLayerInfoTool: true
+            activateLayerInfoTool: true,
+            activateSwipeOnLayer: false
         },
         options: {
             modalOptions: {},
@@ -327,6 +331,12 @@ class Toolbar extends React.Component {
                             </Button>
                         </OverlayTrigger>
                         : null}
+                    {this.props.activateTool.activateSwipeOnLayer && (status === 'LAYER') &&
+                    <SwipeButton
+                        status={status}
+                        onToolsActions={this.props.onToolsActions}
+                        swipeSettings={this.props.swipeSettings} />
+                    }
                 </ReactCSSTransitionGroup>
                 <ConfirmModal
                     ref="removelayer"

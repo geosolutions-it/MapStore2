@@ -62,7 +62,7 @@ describe('MeasurementUtils', () => {
         expect(geoJson.features.length).toBe(2);
         expect(geoJson.features[0].type).toBe('Feature');
         expect(geoJson.features[0].geometry).toExist();
-        expect(geoJson.features[0].geometry.type).toBe('MultiPoint');
+        expect(geoJson.features[0].geometry.type).toBe('LineString');
         expect(geoJson.features[0].geometry.coordinates).toEqual(features[0].geometry.coordinates);
         expect(geoJson.features[0].properties).toExist();
         expect(geoJson.features[0].properties.geometryGeodesic).toExist();

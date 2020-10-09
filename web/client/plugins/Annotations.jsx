@@ -24,7 +24,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
     highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
-    setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles, changeGeometryTitle
+    setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles, changeGeometryTitle, filterMarker
 } = require('../actions/annotations');
 
 const {selectFeatures} = require('../actions/draw');
@@ -75,7 +75,8 @@ const commonEditorActions = {
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,
     onConfirmRemove: confirmRemoveAnnotation,
-    onDownload: download
+    onDownload: download,
+    onFilterMarker: filterMarker
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
     {

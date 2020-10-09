@@ -1,6 +1,6 @@
 export default {
     OpenStreetMap: {
-        url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         options: {
             maxZoom: 19,
             maxNativeZoom: 19,
@@ -158,7 +158,7 @@ export default {
         }
     },
     Thunderforest: {
-        url: '//{s}.tile.thunderforest.com/{variant}/{z}/{x}/{y}.png',
+        url: 'https://{s}.tile.thunderforest.com/{variant}/{z}/{x}/{y}.png',
         options: {
             maxNativeZoom: 18,
             attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, {attribution.OpenStreetMap}',
@@ -223,7 +223,7 @@ export default {
         }
     },
     MapBox: {
-        url: '//api.tiles.mapbox.com/v4/{source}/{z}/{x}/{y}.png?access_token={accessToken}',
+        url: 'https://api.tiles.mapbox.com/v4/{source}/{z}/{x}/{y}.png?access_token={accessToken}',
         options: {
             maxNativeZoom: 18,
             attribution:
@@ -292,7 +292,7 @@ export default {
         }
     },
     Esri: {
-        url: '//server.arcgisonline.com/ArcGIS/rest/services/{variant}/MapServer/tile/{z}/{y}/{x}',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/{variant}/MapServer/tile/{z}/{y}/{x}',
         options: {
             maxNativeZoom: 18,
             variant: 'World_Street_Map',
@@ -416,7 +416,7 @@ export default {
              * envirionments.
              */
         url:
-                '//{s}.{base}.maps.cit.api.here.com/maptile/2.1/' +
+                'https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/' +
                 'maptile/{mapID}/{variant}/{z}/{x}/{y}/256/png8?' +
                 'app_id={app_id}&app_code={app_code}',
         options: {
@@ -521,7 +521,7 @@ export default {
         }
     },
     CartoDB: {
-        url: '//{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}.png',
+        url: 'https://{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}.png',
         options: {
             attribution: '{attribution.OpenStreetMap} &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
             subdomains: ['a', 'b', 'c', 'd'],
@@ -558,7 +558,7 @@ export default {
         }
     },
     BasemapAT: {
-        url: '//maps{s}.wien.gv.at/basemap/{variant}/normal/google3857/{z}/{y}/{x}.{format}',
+        url: 'https://maps{s}.wien.gv.at/basemap/{variant}/normal/google3857/{z}/{y}/{x}.{format}',
         options: {
             maxZoom: 19,
             maxNativeZoom: 19,
@@ -587,7 +587,7 @@ export default {
         }
     },
     NASAGIBS: {
-        url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}9/{z}/{y}/{x}.{format}',
+        url: 'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}9/{z}/{y}/{x}.{format}',
         options: {
             attribution:
                     '<span>Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System ' +
@@ -607,7 +607,7 @@ export default {
             ModisTerraTrueColorCR: 'MODIS_Terra_CorrectedReflectance_TrueColor',
             ModisTerraBands367CR: 'MODIS_Terra_CorrectedReflectance_Bands367',
             ViirsEarthAtNight2012: {
-                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}8/{z}/{y}/{x}.{format}',
+                url: 'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}8/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'VIIRS_CityLights_2012',
                     maxZoom: 8,
@@ -615,7 +615,7 @@ export default {
                 }
             },
             ModisTerraLSTDay: {
-                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}7/{z}/{y}/{x}.{format}',
+                url: 'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}7/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'MODIS_Terra_Land_Surface_Temp_Day',
                     format: 'png',
@@ -625,7 +625,7 @@ export default {
                 }
             },
             ModisTerraSnowCover: {
-                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}8/{z}/{y}/{x}.{format}',
+                url: 'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}8/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'MODIS_Terra_Snow_Cover',
                     format: 'png',
@@ -635,7 +635,7 @@ export default {
                 }
             },
             ModisTerraAOD: {
-                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}6/{z}/{y}/{x}.{format}',
+                url: 'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}6/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'MODIS_Terra_Aerosol',
                     format: 'png',
@@ -645,7 +645,7 @@ export default {
                 }
             },
             ModisTerraChlorophyll: {
-                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}7/{z}/{y}/{x}.{format}',
+                url: 'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}7/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'MODIS_Terra_Chlorophyll_A',
                     format: 'png',
@@ -658,7 +658,7 @@ export default {
     },
     NLS: {
         // Maps from http://maps.nls.uk/geo/explore/
-        url: '//nls-{s}.tileserver.com/{variant}/{z}/{x}/{y}.jpg',
+        url: 'https://nls-{s}.tileserver.com/{variant}/{z}/{x}/{y}.jpg',
         options: {
             attribution: '<a href="http://geo.nls.uk/maps/">National Library of Scotland Historic Maps</a>',
             bounds: [[49.6, -12], [61.7, 3]],

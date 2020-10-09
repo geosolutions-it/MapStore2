@@ -449,7 +449,9 @@
                 "delete": "Löschen Sie das Detailblatt",
                 "titleUnsavedChanges": "Sind Sie sicher, dass Sie schließen wollen, ohne Ihre Änderungen zu speichern?",
                 "sureToClose": "Sind Sie sicher, dass Sie schließen wollen, ohne Ihre Änderungen zu speichern?",
-                "fieldsChanged": "Einige Felder wurden geändert"
+                "fieldsChanged": "Einige Felder wurden geändert",
+                "showAtStartup": "Beim Start anzeigen",
+                "showAsModal": "Als modal anzeigen"
             },
             "errors": {
                 "loading": {
@@ -514,6 +516,14 @@
             "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration vom Server",
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
             "epsgNotSupported": "KBS {epsg} wird für das Zoomen auf den Layer nicht unterstützt",
+            "compareTool": "Tool vergleichen",
+            "configureTool": "Konfigurieren",
+            "spyconfiguration": "Spyglass Konfiguration",
+            "swipeconfiguration": "Swipe-Konfiguration",
+            "swipe": "Wischen Sie",
+            "spyGlass": "Spion Glas",
+            "direction": "Wischen sie richtung",
+            "radius": "Radius",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
             "refreshOptions": {

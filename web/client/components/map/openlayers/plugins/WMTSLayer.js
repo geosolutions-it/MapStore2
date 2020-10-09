@@ -136,6 +136,7 @@ const createLayer = options => {
     const wmtsSource = new WMTS(wmtsOptions);
     const Layer = isVector ? VectorTileLayer : TileLayer;
     const wmtsLayer = new Layer({
+        msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,
         zIndex: options.zIndex,
         maxResolution,

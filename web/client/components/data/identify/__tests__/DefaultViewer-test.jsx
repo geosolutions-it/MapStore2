@@ -128,6 +128,15 @@ describe('DefaultViewer', () => {
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(1);
         expect(dom.getElementsByClassName("panel").length).toBe(2);
+
+        // Desktop view
+        const gfiViewer = document.querySelector('.mapstore-identify-viewer');
+        const alertInfo = document.querySelector('.alert-info');
+        const swipeableView = document.querySelector('.swipeable-view');
+        expect(gfiViewer).toBeTruthy();
+        expect(gfiViewer.childNodes.length).toBe(2);
+        expect(gfiViewer.childNodes[0]).toEqual(swipeableView);
+        expect(gfiViewer.childNodes[1]).toEqual(alertInfo);
     });
 
     it('creates the DefaultViewer component with Identify floating', () => {
@@ -229,5 +238,34 @@ describe('DefaultViewer', () => {
         expect(header).toBeTruthy();
         expect(header.innerText).toBe('Layer1');
         expect(panel.length).toBe(1);
+    });
+
+    it('test DefaultViewer component in mobile view', () => {
+        const responses = [{
+            response: "no features were found",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "B",
+            layerMetadata: {
+                title: 'Layer1'
+            }
+        }];
+        // Mobile view
+        ReactDOM.render(
+            <DefaultViewer isMobile responses={responses} header={SwipeHeader}/>,
+            document.getElementById("container")
+        );
+
+        const mobileContainer = document.getElementById('container');
+        let gfiViewer = mobileContainer.querySelector('.mapstore-identify-viewer');
+        let alertInfo = mobileContainer.querySelector('.alert-info');
+        let swipeableView = mobileContainer.querySelector('.swipeable-view');
+        expect(gfiViewer).toBeTruthy();
+        expect(gfiViewer.childNodes.length).toBe(2);
+        expect(gfiViewer.childNodes[0]).toEqual(alertInfo);
+        expect(gfiViewer.childNodes[1]).toEqual(swipeableView);
+
     });
 });

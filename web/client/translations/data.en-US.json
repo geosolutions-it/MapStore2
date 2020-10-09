@@ -449,7 +449,9 @@
                 "delete": "Delete details sheet",
                 "titleUnsavedChanges": "Are you sure to close without save your changes?",
                 "sureToClose": "Are you sure to close without save your changes?",
-                "fieldsChanged": "Some attributes has been changed"
+                "fieldsChanged": "Some attributes has been changed",
+                "showAtStartup": "Show at startup",
+                "showAsModal": "Show as modal"
             },
             "errors": {
                 "loading": {
@@ -514,6 +516,14 @@
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
             "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
+            "compareTool": "Compare tool",
+            "configureTool": "Configure",
+            "spyconfiguration": "Spyglass configuration",
+            "swipeconfiguration": "Swipe configuration",
+            "swipe": "Swipe",
+            "spyGlass": "Spy glass",
+            "direction": "Swipe direction",
+            "radius": "Radius",
             "filterIconEnabled": "Disable layer filter",
             "filterIconDisabled": "Enable layer filter",
             "refreshOptions": {

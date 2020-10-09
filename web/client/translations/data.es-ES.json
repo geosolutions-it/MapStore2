@@ -449,7 +449,9 @@
                 "delete": "Eliminar hoja de detalles",
                 "titleUnsavedChanges": "¿Estás seguro de cerrar sin guardar los cambios?",
                 "sureToClose": "¿Estás seguro de cerrar sin guardar los cambios?",
-                "fieldsChanged": "Algunos campos han sido modificados"
+                "fieldsChanged": "Algunos campos han sido modificados",
+                "showAtStartup": "Mostrar al inicio",
+                "showAsModal": "Mostrar como modal"
             },
             "errors": {
                 "loading": {
@@ -514,6 +516,14 @@
             "refreshMessage": "Recargue la configuración de las capas WMS a partir del servidor(es)",
             "refreshError": "Error actualizando las capas: ",
             "epsgNotSupported": "CRS {epsg} no es compatible con el zoom a la capa",
+            "compareTool": "Comparar herramienta",
+            "configureTool": "Configurar",
+            "spyconfiguration": "Configuración del catalejo",
+            "swipeconfiguration": "Configuración de deslizamiento",
+            "swipe": "Golpe fuerte",
+            "spyGlass": "Vidrio espía",
+            "direction": "Golpe fuerte dirección",
+            "radius": "Radio",
             "filterIconEnabled": "Deshabilitar filtro de capa",
             "filterIconDisabled": "Habilitar filtro de capa",
             "refreshOptions": {

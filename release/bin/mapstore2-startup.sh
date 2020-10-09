@@ -10,11 +10,10 @@ chmod +x bin/*.sh
 
 # Set local JAVA_HOME
 PRGDIR=`pwd`
-if [ -z "$JAVA_HOME" ]; then
-    export JAVA_HOME="$PRGDIR/jre/linux"
-    export JRE_HOME="$PRGDIR/jre/linux"
-    chmod +x jre/linux/bin/*
-fi
+
+export JAVA_HOME="$PRGDIR/jre/linux"
+export JRE_HOME="$PRGDIR/jre/linux"
+chmod +x jre/linux/bin/*
 
 echo "Welcome to MapStore2!"
 

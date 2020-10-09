@@ -449,7 +449,9 @@
                 "delete": "Elimina dettagli",
                 "titleUnsavedChanges": "Sicuro di chiudere senza salvare?",
                 "sureToClose": "Sicuro di chiudere senza salvare?",
-                "fieldsChanged": "Alcuni dati sono cambiati"
+                "fieldsChanged": "Alcuni dati sono cambiati",
+                "showAtStartup": "Mostra all'avvio",
+                "showAsModal": "Mostra come modale"
             },
             "errors": {
                 "loading": {
@@ -514,6 +516,14 @@
             "refreshMessage": "Ricarica la configurazione dei layer WMS dai rispettivi server",
             "refreshError": "Errore di aggiornamento sui layer: ",
             "epsgNotSupported": "CRS {epsg} non supportato per zoom al layer",
+            "compareTool": "Strumento di confronto",
+            "configureTool": "Configura",
+            "spyconfiguration": "Configurazione del cannocchiale",
+            "swipeconfiguration": "Configurazione swipe",
+            "swipe": "Swipe",
+            "spyGlass": "Vetro spia",
+            "direction": "Swipe direzione",
+            "radius": "Raggio",
             "filterIconEnabled": "Disattiva il filtro",
             "filterIconDisabled": "Attiva il filtro",
             "refreshOptions": {
@@ -697,7 +707,7 @@
             "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello"
         },
-        "search":{
+        "search": {
             "layerMustBeVisible": "Il livello di destinazione è inattivo",
             "decimal": "Decimali",
             "aeronautical": "Aeronautiche",

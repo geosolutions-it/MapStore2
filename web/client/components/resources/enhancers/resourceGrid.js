@@ -80,12 +80,17 @@ const resourceGrid = compose(
         onHideDetailsSheet: ({ setShowDetailsSheet = () => { } }) => () => {
             setShowDetailsSheet(false);
         },
-        onResourceLoad: ({ setLoadedResource = () => { }, setLoadingResource = () => { } }) => (resource) => {
-            setLoadedResource(resource);
+        onResourceLoad: ({ setLoadedResource = () => { }, setLoadingResource = () => { } }) => (resource, linkedResources) => {
+            setLoadedResource({...resource, linkedResources});
             setLoadingResource(false);
         }
     }),
-    mapProps(({loading, loadingResource, ...other}) => ({...other, loading: loading || loadingResource || false }))
+    mapProps(({loading, loadingResource, loadedResource, ...other}) => ({
+        ...other,
+        loadedResource,
+        loading: loading || loadingResource || false,
+        detailsText: loadedResource?.linkedResources?.details?.data === 'NODATA' ? undefined : loadedResource?.linkedResources?.details?.data
+    }))
 );
 
 module.exports = resourceGrid;

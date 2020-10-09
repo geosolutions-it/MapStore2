@@ -46,7 +46,7 @@ module.exports = ({
     category = 'MAP',
     resources = [],
     resource,
-    loadedResource,
+    detailsText,
     id,
     style,
     bottom,
@@ -121,7 +121,7 @@ module.exports = ({
                 show={showDetailsSheet}
                 readOnly
                 title={resource?.name || resource?.metadata?.name}
-                detailsText={loadedResource?.detailsText}
+                detailsText={detailsText}
                 onClose={onHideDetailsSheet}/>
         </Grid>
     );
