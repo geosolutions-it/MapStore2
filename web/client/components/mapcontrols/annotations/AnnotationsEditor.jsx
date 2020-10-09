@@ -112,6 +112,7 @@ const {getComponents, coordToArray, validateCoords} = require('../../../utils/An
  * @prop {number} textRotationStep rotation step of text styler
  * @prop {function} onFilterMarker triggered when marker/glyph name is specified for filtering
  * @prop {object[]} annotations list of annotations
+ * @prop {function} onGeometryHighlight triggered onMouseEnter and onMouseLeave of the geometry card
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -207,7 +208,8 @@ class AnnotationsEditor extends React.Component {
         defaultStyles: PropTypes.object,
         textRotationStep: PropTypes.number,
         onFilterMarker: PropTypes.func,
-        annotations: PropTypes.array
+        annotations: PropTypes.array,
+        onGeometryHighlight: PropTypes.func
     };
 
     static defaultProps = {
@@ -445,6 +447,7 @@ class AnnotationsEditor extends React.Component {
                     onSelectFeature={this.props.onSelectFeature}
                     drawing={this.props.drawing}
                     onUnselectFeature={this.props.onResetCoordEditor}
+                    onGeometryHighlight={this.props.onGeometryHighlight}
                 />
                 }
             </div>

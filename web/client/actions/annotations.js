@@ -58,6 +58,7 @@ const LOAD_DEFAULT_STYLES = 'ANNOTATIONS:LOAD_DEFAULT_STYLES';
 const LOADING = 'ANNOTATIONS:LOADING';
 const CHANGE_GEOMETRY_TITLE = 'ANNOTATIONS:CHANGE_GEOMETRY_TITLE';
 const FILTER_MARKER = 'ANNOTATIONS:FILTER_MARKER';
+const GEOMETRY_HIGHLIGHT = 'ANNOTATIONS:GEOMETRY_HIGHLIGHT';
 
 const updateSymbols = (symbols = []) => ({
     type: UPDATE_SYMBOLS,
@@ -388,6 +389,12 @@ const filterMarker = (filter) => ({
     filter
 });
 
+const geometryHighlight = (id, state) => ({
+    type: GEOMETRY_HIGHLIGHT,
+    id,
+    state
+});
+
 module.exports = {
     SHOW_ANNOTATION,
     EDIT_ANNOTATION,
@@ -462,5 +469,6 @@ module.exports = {
     LOAD_DEFAULT_STYLES, loadDefaultStyles,
     LOADING, loading,
     CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
-    FILTER_MARKER, filterMarker
+    FILTER_MARKER, filterMarker,
+    GEOMETRY_HIGHLIGHT, geometryHighlight
 };

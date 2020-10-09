@@ -129,7 +129,7 @@ const FeaturesList = (props) => {
  * @function
  *
  */
-const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature, setTabValue, styling, onStyleGeometry}) => {
+const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature, setTabValue, styling, onStyleGeometry, onGeometryHighlight}) => {
     const type = getGeometryType(feature);
     const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
@@ -139,6 +139,8 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
     return (
         <div
             className={cs('geometry-card', {'ms-selected': unselect})}
+            onMouseEnter={() => !unselect && onGeometryHighlight(properties.id)}
+            onMouseLeave={() => !unselect && onGeometryHighlight(properties.id, false)}
             onClick={() =>{
                 if (unselect) {
                     onUnselectFeature();

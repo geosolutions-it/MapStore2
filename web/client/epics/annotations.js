@@ -27,7 +27,7 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR,
-    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES
+    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES, GEOMETRY_HIGHLIGHT
 } = require('../actions/annotations');
 
 const uuidv1 = require('uuid/v1');
@@ -690,6 +690,31 @@ module.exports = (viewer) => ({
                 transformToFeatureCollection: true,
                 addClickCallback: true
             }, assign({}, style, {highlight: false}));
+            return Rx.Observable.of( changeDrawingStatus("clean"), action);
+        }),
+    highlightGeometryEpic: (action$, {getState}) => action$.ofType(GEOMETRY_HIGHLIGHT)
+        .switchMap(({id = '', state: highlight = true}) => {
+            const state = getState();
+            const editing = state.annotations.editing;
+            let action;
+            let ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === id);
+            console.log("ftChangedIndex", ftChangedIndex);
+            console.log("id", id);
+            console.log("editing.features", editing.features[0].properties.id);
+            const selectedGeoJSON = editing.features[ftChangedIndex];
+            const styleChanged = castArray(selectedGeoJSON.style).map(s => ({...s, highlight}));
+            const multiGeometry = multiGeometrySelector(state);
+            const style = editing.style;
+            action = changeDrawingStatus("drawOrEdit", "", "annotations", [
+                set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing)], {
+                featureProjection: "EPSG:4326",
+                stopAfterDrawing: !multiGeometry,
+                editEnabled: false,
+                drawEnabled: false,
+                selectEnabled: true,
+                transformToFeatureCollection: true
+            }, assign({}, style, {highlight: false}));
+
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
     editCircleFeatureEpic: (action$, {getState}) => action$.ofType(DRAWING_FEATURE)

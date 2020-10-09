@@ -80,7 +80,8 @@ const {
     LOADING, loading,
     TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
     CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
-    FILTER_MARKER, filterMarker
+    FILTER_MARKER, filterMarker,
+    GEOMETRY_HIGHLIGHT, geometryHighlight
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -392,5 +393,12 @@ describe('Test correctness of the annotations actions', () => {
         const result = filterMarker('glass');
         expect(result.type).toBe(FILTER_MARKER);
         expect(result.filter).toBe('glass');
+    });
+
+    it('geometryHighlight ', () => {
+        const result = geometryHighlight('1', false);
+        expect(result.type).toBe(GEOMETRY_HIGHLIGHT);
+        expect(result.id).toBe('1');
+        expect(result.state).toBe(false);
     });
 });
