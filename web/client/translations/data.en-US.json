@@ -28,6 +28,10 @@
         "collapse": "Collapse",
         "expand": "Expand",
         "Forbidden": "Forbidden",
+        "layerNameChangeError": {
+            "title": "Name change error",
+            "message": "The layer failed to reload with a changed name"
+        },
         "version": {
             "label": "Version"
         },
@@ -107,7 +111,9 @@
                 "right": "Right",
                 "left": "Left",
                 "bottom": "Bottom",
-                "top": "Top"
+                "top": "Top",
+                "editLayerName": "Edit layer name",
+                "confirmLayerName": "Confirm layer name change"
             },
             "legendOptions": {
               "title": "Legend",

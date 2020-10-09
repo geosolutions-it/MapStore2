@@ -28,6 +28,10 @@
         "collapse": "réduire",
         "expand": "étendre",
         "Forbidden": "Interdit",
+        "layerNameChangeError": {
+            "title": "Erreur de changement de nom",
+            "message": "Échec du rechargement de la couche avec un nom modifié"
+        },
         "version": {
             "label": "Version"
         },
@@ -107,7 +111,9 @@
                 "right": "Droite",
                 "left": "Gauche",
                 "bottom": "Bas",
-                "top": "Haut"
+                "top": "Haut",
+                "editLayerName": "Modifier le nom du calque",
+                "confirmLayerName": "Confirmer le changement de nom du calque"
             },
             "legendOptions": {
               "title": "Légende",
