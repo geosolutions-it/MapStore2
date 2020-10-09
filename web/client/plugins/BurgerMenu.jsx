@@ -140,7 +140,13 @@ class BurgerMenu extends React.Component {
             />);
     }
 }
-
+/**
+ * Menu button that can contain other plugins entries.
+ * Usually rendered inside <plugins.Omnibar>
+ * @name BurgerMenu
+ * @class
+ * @memberof plugins
+ */
 module.exports = createPlugin(
     'BurgerMenu',
     {

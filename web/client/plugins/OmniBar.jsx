@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,7 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const PropTypes = require('prop-types');
 require('./omnibar/omnibar.css');
 const assign = require('object-assign');
 const ToolsContainer = require('./containers/ToolsContainer');
@@ -62,6 +61,13 @@ class OmniBar extends React.Component {
     }
 }
 
+/**
+ * Generic bar that can contains other plugins.
+ * used for SearchBar, BurgerMenu, Login, both in map or home page.
+ * @name OmniBar
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     OmniBarPlugin: assign(
         OmniBar,

@@ -1,4 +1,4 @@
-/**
+/*
 * Copyright 2019, GeoSolutions Sas.
 * All rights reserved.
 *
@@ -97,7 +97,9 @@ const AddGroupPlugin = connect((state) => ({
 })(AddGroup);
 
 /**
- * AddGrouo. Add to the TOC the possibility to add layer group.
+ * AddGroup. Add to the TOC the possibility to add layer group.
+ * @name AddGroup
+ * @class
  * @memberof plugins
  * @requires plugins.TOC
  */

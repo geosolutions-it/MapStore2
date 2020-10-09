@@ -212,14 +212,17 @@
           "jsapi": "web/client/jsapi/MapStore2.js",
             "plugins": [
                 "web/client/plugins/index.jsdoc",
+                "web/client/plugins/AddGroup.jsx",
                 "web/client/plugins/Annotations.jsx",
                 "web/client/plugins/AutoMapUpdate.jsx",
                 "web/client/plugins/BackgroundSelector.jsx",
                 "web/client/plugins/BackgroundSwitcher.jsx",
+                "web/client/plugins/BurgerMenu.jsx",
                 "web/client/plugins/CreateNewMap.jsx",
                 "web/client/plugins/ContentTabs.jsx",
                 "web/client/plugins/CRSSelector.jsx",
                 "web/client/plugins/Dashboard.jsx",
+                "web/client/plugins/Details.jsx",
                 "web/client/plugins/DrawerMenu.jsx",
                 "web/client/plugins/FeaturedMaps.jsx",
                 "web/client/plugins/FeatureEditor.jsx",
@@ -271,7 +274,6 @@
                 "web/client/plugins/WidgetsTray.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx",
-
                 "web/client/product/pages/index.jsdoc",
                 "web/client/product/pages/RulesManager.jsx",
 

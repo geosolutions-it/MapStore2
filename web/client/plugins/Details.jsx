@@ -25,6 +25,7 @@ import {createPlugin} from '../utils/PluginsUtils';
 /**
  * Details plugin used for fetching details of the map
  * @class
+ * @name Details
  * @memberof plugins
  */
 

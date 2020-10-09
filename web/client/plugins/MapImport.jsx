@@ -34,6 +34,7 @@ const {mapTypeSelector} = require('../selectors/maptype');
  *     - GPX
  * @memberof plugins
  * @name MapImport
+ * @class
  */
 module.exports = {
     MapImportPlugin: assign({loadPlugin: (resolve) => {
