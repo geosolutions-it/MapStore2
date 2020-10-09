@@ -702,16 +702,11 @@ module.exports = (viewer) => ({
         .switchMap(({id = '', state: highlight = true}) => {
             const state = getState();
             const editing = state.annotations.editing;
-            let action;
-            let ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === id);
-            console.log("ftChangedIndex", ftChangedIndex);
-            console.log("id", id);
-            console.log("editing.features", editing.features[0].properties.id);
+            const ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === id);
             const selectedGeoJSON = editing.features[ftChangedIndex];
             const styleChanged = castArray(selectedGeoJSON.style).map(s => ({...s, highlight}));
             const multiGeometry = multiGeometrySelector(state);
-            const style = editing.style;
-            action = changeDrawingStatus("drawOrEdit", "", "annotations", [
+            const action = changeDrawingStatus("drawOrEdit", "", "annotations", [
                 set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing)], {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
@@ -719,7 +714,7 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 selectEnabled: true,
                 transformToFeatureCollection: true
-            }, assign({}, style, {highlight: false}));
+            }, assign({}, editing.style, {highlight: false}));
 
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
