@@ -15,6 +15,8 @@ const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../a
 const {set} = require('../utils/ImmutableUtils');
 const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
 const {ANNOTATION_TYPE} = require('../utils/AnnotationsUtils');
+const {MEASURE_TYPE} = require('../utils/MeasurementUtils');
+const {changeMeasurement} = require('../actions/measurement');
 const {error} = require('../actions/notifications');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {isFeatureGridOpen} = require('../selectors/featuregrid');
@@ -204,14 +206,17 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 transformToFeatureCollection: true
             };
-            // parsing styles searching for missing symbols, therefore updating it with a missing symbol
-            return Rx.Observable.from([
+            const isMeasureType = feature.properties?.type === MEASURE_TYPE || false;
+            let actions = [
                 changeLayerProperties('annotations', {visibility: false}),
                 changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {
                     highlight: false
                 })),
                 hideMapinfoMarker()
-            ]);
+            ];
+            actions = isMeasureType ? actions.concat(changeMeasurement({geomType: null})) : actions;
+            // parsing styles searching for missing symbols, therefore updating it with a missing symbol
+            return Rx.Observable.from(actions);
         }),
     newAnnotationEpic: (action$) => action$.ofType(NEW_ANNOTATION)
         .switchMap(() => {
@@ -394,12 +399,13 @@ module.exports = (viewer) => ({
         }),
     restoreStyleEpic: (action$, store) => action$.ofType(RESTORE_STYLE)
         .switchMap( () => {
-            const {style, ...feature} = store.getState().annotations.editing;
+            const {styling, editing} = store.getState().annotations;
+            const {style, ...feature} = editing;
             return Rx.Observable.from([
                 changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [feature], {}, style),
                 setStyle(store.getState().annotations.originalStyle),
                 getSelectDrawStatus(store.getState()),
-                toggleStyle()
+                toggleStyle(!styling)
             ]
             );
         }),

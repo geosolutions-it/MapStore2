@@ -56,10 +56,19 @@ const measurementSelector = (state) => {
     } || {};
 };
 
+/**
+ * Get current geometry type of the measurement tool
+ * @memberof selectors.measurement
+ * @param  {object} state the state
+ * @return {boolean} geomType of the measurement
+ */
+const geomTypeSelector = (state) => state?.measurement?.geomType;
+
 module.exports = {
     measurementSelector,
     getValidFeatureSelector,
     isCoordinateEditorEnabledSelector,
     showAddAsAnnotationSelector,
-    isTrueBearingEnabledSelector
+    isTrueBearingEnabledSelector,
+    geomTypeSelector
 };

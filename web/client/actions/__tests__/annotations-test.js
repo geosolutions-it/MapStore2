@@ -81,7 +81,10 @@ const {
     TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
     CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
     FILTER_MARKER, filterMarker,
-    GEOMETRY_HIGHLIGHT, geometryHighlight
+    GEOMETRY_HIGHLIGHT, geometryHighlight,
+    INIT_PLUGIN, initPlugin,
+    TOGGLE_SHOW_AGAIN, toggleShowAgain,
+    HIDE_MEASURE_WARNING, hideMeasureWarning
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -394,11 +397,22 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.type).toBe(FILTER_MARKER);
         expect(result.filter).toBe('glass');
     });
-
     it('geometryHighlight ', () => {
         const result = geometryHighlight('1', false);
         expect(result.type).toBe(GEOMETRY_HIGHLIGHT);
         expect(result.id).toBe('1');
         expect(result.state).toBe(false);
+    });
+    it('initPlugin ', () => {
+        const result = initPlugin();
+        expect(result.type).toBe(INIT_PLUGIN);
+    });
+    it('toggleShowAgain ', () => {
+        const result = toggleShowAgain('glass');
+        expect(result.type).toBe(TOGGLE_SHOW_AGAIN);
+    });
+    it('hideMeasureWarning ', () => {
+        const result = hideMeasureWarning();
+        expect(result.type).toBe(HIDE_MEASURE_WARNING);
     });
 });

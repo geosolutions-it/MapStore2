@@ -18,16 +18,20 @@ const CHANGE_COORDINATES = 'MEASUREMENT:CHANGE_COORDINATES';
 const ADD_MEASURE_AS_ANNOTATION = 'MEASUREMENT:ADD_MEASURE_AS_ANNOTATION';
 const UPDATE_MEASURES = 'MEASUREMENT:UPDATE_MEASURES';
 const INIT = 'MEASUREMENT:INIT';
+const SET_MEASUREMENT_CONFIG = 'MEASUREMENT:SET_MEASUREMENT_CONFIG';
+const SET_ANNOTATION_MEASUREMENT = 'MEASUREMENT:SET_ANNOTATION_MEASUREMENT';
 
 /**
  * trigger the epic to add the measure feature into an annotation.
 */
-function addAnnotation(features, textLabels, uom) {
+function addAnnotation(features, textLabels, uom, save, id) {
     return {
         type: ADD_MEASURE_AS_ANNOTATION,
         features,
         textLabels,
-        uom
+        uom,
+        save,
+        id
     };
 }
 
@@ -42,6 +46,14 @@ function toggleMeasurement(measurement) {
 function changeMeasurement(measurement) {
     return (dispatch) => {
         dispatch(toggleMeasurement(measurement));
+    };
+}
+
+function setAnnotationMeasurement(features, id) {
+    return {
+        type: SET_ANNOTATION_MEASUREMENT,
+        features,
+        id
     };
 }
 
@@ -65,6 +77,15 @@ function changeGeometry(features) {
         features
     };
 }
+
+function setMeasurementConfig(property, value) {
+    return {
+        type: SET_MEASUREMENT_CONFIG,
+        property,
+        value
+    };
+}
+
 /**
  * sets text label descriptions to be used during GeoJSON or layer export
  * @param {object[]} textLabels text label object
@@ -160,5 +181,7 @@ module.exports = {
     init, INIT,
     changeMeasurement,
     toggleMeasurement,
-    changeMeasurementState
+    changeMeasurementState,
+    setMeasurementConfig, SET_MEASUREMENT_CONFIG,
+    setAnnotationMeasurement, SET_ANNOTATION_MEASUREMENT
 };

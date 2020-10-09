@@ -214,8 +214,12 @@ describe('annotations Epics', () => {
             editing: {
                 style: {},
                 features: [ft],
-                type: "FeatureCollection"
+                type: "FeatureCollection",
+                properties: {
+                    id: "is a point"
+                }
             },
+            styling: false,
             drawingText: {
                 drawing: true
             },

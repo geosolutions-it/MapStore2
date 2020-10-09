@@ -133,6 +133,8 @@ describe('Test the mapInfo reducer', () => {
 
         let state = mapInfo({requests: [{}], configuration: {}}, testAction);
         expect(state.responses).toExist();
+        expect(state.loaded).toBe(true);
+        expect(state.index).toBe(1);
         expect(state.responses.length).toBe(2);
         expect(state.responses[1].response).toExist();
         expect(state.responses[1].response.features.length).toBe(1);
@@ -143,6 +145,8 @@ describe('Test the mapInfo reducer', () => {
         state = mapInfo({requests: [{}], configuration: {trigger: "hover"}}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
+        expect(state.loaded).toBe(true);
+        expect(state.index).toBe(0);
         expect(state.responses[0].response).toExist();
         expect(state.responses[0].response.features.length).toBe(1);
         expect(state.responses[0].format).toBe('JSON');

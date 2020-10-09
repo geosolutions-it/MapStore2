@@ -288,7 +288,15 @@
         padding: 8px;
         height: ~'calc(100% - 50px)';
         overflow: auto;
-
+        .geometries-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
         .geometry-card {
             .shadow-soft;
             display: flex;

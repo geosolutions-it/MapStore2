@@ -42,6 +42,14 @@ describe("test FeatureList component", () => {
         expect(container.innerText).toContain('annotations.addGeometry');
     });
 
+    it('test render with measurement annotation properties', () => {
+        ReactDOM.render(<FeaturesList isMeasureEditDisabled={false}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+        const buttons = container.querySelectorAll("button");
+        expect(buttons.length).toBe(1);
+    });
+
     it('test render with feature card', () => {
         const editing = {
             features: [{
@@ -88,6 +96,7 @@ describe("test FeatureList component", () => {
         const testHandlers = {
             onSelectFeature: () => {},
             onUnselectFeature: () => {},
+            onStyleGeometry: () => {},
             onZoom: () => {},
             onDeleteGeometry: () => {},
             setTabValue: () => {}
@@ -95,10 +104,12 @@ describe("test FeatureList component", () => {
         const spyOnSelectFeature = expect.spyOn(testHandlers, "onSelectFeature");
         const spyOnZoom = expect.spyOn(testHandlers, "onZoom");
         const spyOnDeleteGeometry = expect.spyOn(testHandlers, "onDeleteGeometry");
+        const spyOnStyleGeometry = expect.spyOn(testHandlers, "onStyleGeometry");
         ReactDOM.render(
             <FeaturesList editing={editing}
                 onSelectFeature={testHandlers.onSelectFeature}
                 onUnselectFeature={testHandlers.onUnselectFeature}
+                onStyleGeometry={testHandlers.onStyleGeometry}
                 onZoom={testHandlers.onZoom}
                 onDeleteGeometry={testHandlers.onDeleteGeometry}
                 setTabValue={testHandlers.setTabValue}
@@ -115,6 +126,8 @@ describe("test FeatureList component", () => {
         TestUtils.Simulate.click(featureCard[0]);
         expect(spyOnSelectFeature).toHaveBeenCalled();
         expect(spyOnSelectFeature.calls[0].arguments[0]).toEqual(editing.features);
+        expect(spyOnStyleGeometry).toHaveBeenCalled();
+        expect(spyOnStyleGeometry.calls[0].arguments[0]).toBe(false);
 
         // OnZoomGeometry
         TestUtils.Simulate.click(buttons[5]);
