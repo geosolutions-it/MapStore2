@@ -358,7 +358,10 @@ function layers(state = { flat: [] }, action) {
             options: action.options
         });
         return assign({}, state, {
-            settings: settings
+            settings: settings,
+            editLayerName: false,
+            layerNameIsBeingChecked: false,
+            layerNameChangeError: false
         });
     }
     case HIDE_SETTINGS: {
@@ -369,9 +372,13 @@ function layers(state = { flat: [] }, action) {
             options: {}
         });
         return assign({}, state, {
-            settings: settings
+            settings: settings,
+            editLayerName: false,
+            layerNameIsBeingChecked: false,
+            layerNameChangeError: false
         });
     }
+
     case UPDATE_SETTINGS: {
         const options = assign({},
             state.settings && state.settings.options,

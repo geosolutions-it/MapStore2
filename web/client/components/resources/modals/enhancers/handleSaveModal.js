@@ -24,7 +24,7 @@ export default compose(
         renderNothing
     ),
     branch(
-        ({ isMapSaveAs }) => !isMapSaveAs,
+        ({ isNewResource }) => !isNewResource,
         compose(
             handleDetailsDownload,
             branch(

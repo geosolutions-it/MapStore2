@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const INIT_PLUGIN = 'ANNOTATIONS:INIT_PLUGIN';
 const EDIT_ANNOTATION = 'ANNOTATIONS:EDIT';
 const OPEN_EDITOR = 'ANNOTATIONS:OPEN_EDITOR';
 const SHOW_ANNOTATION = 'ANNOTATIONS:SHOW';
@@ -57,6 +58,13 @@ const SET_DEFAULT_STYLE = 'ANNOTATIONS:SET_DEFAULT_STYLE';
 const LOAD_DEFAULT_STYLES = 'ANNOTATIONS:LOAD_DEFAULT_STYLES';
 const LOADING = 'ANNOTATIONS:LOADING';
 const CHANGE_GEOMETRY_TITLE = 'ANNOTATIONS:CHANGE_GEOMETRY_TITLE';
+const FILTER_MARKER = 'ANNOTATIONS:FILTER_MARKER';
+const HIDE_MEASURE_WARNING = 'ANNOTATIONS:HIDE_MEASURE_WARNING';
+const TOGGLE_SHOW_AGAIN = 'ANNOTATIONS:TOGGLE_SHOW_AGAIN';
+
+const initPlugin = () => ({
+    type: INIT_PLUGIN
+});
 
 const updateSymbols = (symbols = []) => ({
     type: UPDATE_SYMBOLS,
@@ -218,9 +226,10 @@ function toggleAdd(featureType) {
         featureType
     };
 }
-function toggleStyle() {
+function toggleStyle(styling) {
     return {
-        type: TOGGLE_STYLE
+        type: TOGGLE_STYLE,
+        styling
     };
 }
 function restoreStyle() {
@@ -382,6 +391,19 @@ const loading = (value, name = "loading") => ({
     value
 });
 
+const filterMarker = (filter) => ({
+    type: FILTER_MARKER,
+    filter
+});
+
+const hideMeasureWarning = () => ({
+    type: HIDE_MEASURE_WARNING
+});
+
+const toggleShowAgain = () => ({
+    type: TOGGLE_SHOW_AGAIN
+});
+
 module.exports = {
     SHOW_ANNOTATION,
     EDIT_ANNOTATION,
@@ -455,5 +477,9 @@ module.exports = {
     SET_DEFAULT_STYLE, setDefaultStyle,
     LOAD_DEFAULT_STYLES, loadDefaultStyles,
     LOADING, loading,
-    CHANGE_GEOMETRY_TITLE, changeGeometryTitle
+    CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
+    FILTER_MARKER, filterMarker,
+    TOGGLE_SHOW_AGAIN, toggleShowAgain,
+    HIDE_MEASURE_WARNING, hideMeasureWarning,
+    INIT_PLUGIN, initPlugin
 };

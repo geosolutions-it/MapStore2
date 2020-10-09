@@ -65,9 +65,16 @@ export default ({
                     onHideDetailsSheet();
                 }}
                 onSave={editorText => {
+                    let newDetailsText = editorStateToDetailsText(editorText);
+
                     onHideDetailsSheet();
                     setDetailsBackup();
-                    onUpdateLinkedResource('details', editorStateToDetailsText(editorText), 'DETAILS');
+
+                    if (!newDetailsText || newDetailsText === '<p><br></p>') {
+                        newDetailsText = savedDetailsText;
+                    }
+
+                    onUpdateLinkedResource('details', newDetailsText || 'NODATA', 'DETAILS');
                 }}>
                 <Editor {...editorProps} editorState={editorState} onUpdateEditorState={setEditorState}/>
             </DetailsSheet>

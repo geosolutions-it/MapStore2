@@ -44,7 +44,8 @@ const {
     setEditingFeature,
     setDefaultStyle,
     loading,
-    changeGeometryTitle
+    changeGeometryTitle,
+    filterMarker, initPlugin, hideMeasureWarning, toggleShowAgain
 } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -335,7 +336,7 @@ describe('Test the annotations reducer', () => {
             selected: selected,
             editing: {
                 features: [selected]
-            }}, toggleStyle());
+            }}, toggleStyle(false));
         expect(annotationsState.styling).toBe(false);
         annotationsState.selected.style.map(s => {
             expect(s.highlight).toBe(true);
@@ -367,7 +368,7 @@ describe('Test the annotations reducer', () => {
             selected: selected,
             editing: {
                 features: [selected]
-            }}, toggleStyle());
+            }}, toggleStyle(true));
         expect(annotationsState.styling).toBe(true);
         annotationsState.selected.style.map(s => {
             expect(s.highlight).toBe(false);
@@ -682,11 +683,15 @@ describe('Test the annotations reducer', () => {
         };
         const state = annotations({
             editing: featureColl,
-            selected: feature
+            selected: feature,
+            editedFields: {title: 'Title1'}
         }, addNewFeature(feature));
         expect(state.editing.features[0].properties.isText).toBe(true);
         expect(state.editing.features[0].geometry.coordinates[0]).toBe(1);
         expect(state.editing.features[0].geometry.coordinates[1]).toBe(2);
+        expect(state.editing.properties).toBeTruthy();
+        expect(state.editing.properties.id).toBe('1asdfads');
+        expect(state.editing.properties.title).toBe('Title1');
         expect(state.selected).toBe(null);
     });
 
@@ -1611,5 +1616,32 @@ describe('Test the annotations reducer', () => {
             selected: {properties: {id: '1', geometryTitle: ""}}}, changeGeometryTitle("New title"));
         expect(state.selected).toBeTruthy();
         expect(state.selected.properties.geometryTitle).toBe('New title');
+    });
+    it('Change marker filter option', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, filterMarker("glass"));
+        expect(state.config).toBeTruthy();
+        expect(state.config.filter).toBe('glass');
+    });
+    it('Hide measure warning', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, hideMeasureWarning());
+        expect(state.showPopupWarning).toBe(false);
+    });
+    it('Init plugin', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, initPlugin());
+        const showPopupWarning = localStorage?.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true;
+        expect(state.showPopupWarning).toBe(showPopupWarning);
+    });
+    it('toggleShowAgain', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, toggleShowAgain(false));
+        expect(state.showAgain).toBeTruthy();
+        expect(state.showAgain).toBe(true);
     });
 });

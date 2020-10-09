@@ -84,6 +84,10 @@
             }
         }
     }
+
+    a:hover {
+        cursor: pointer;
+    }
 }
 .ms-geostory-map-controls {
     padding-top: 8px;
@@ -127,6 +131,12 @@
             }
         }
 
+        /* fixes issue #5904  */
+        .dropzone-thumbnail-container {
+            .btn-group {
+                z-index: 0;
+            }
+        }
     }
     .ms-story-empty-content-parent {
         display: contents;
@@ -971,7 +981,9 @@
                         font-size: 12px;
                     }
                     .rdw-link-modal {
-                        overflow-y: auto;
+                        height: auto;
+                        max-height: 235px;
+                        overflow-y: visible;
 
                     }
                     .rdw-link-modal-btn {
@@ -982,6 +994,10 @@
                     .rdw-link-modal-input{
                         margin-bottom: 10px;
                     }
+
+                    .ms-rdw-link-options-dropdown {
+                        width: 100%;
+                      }
                 }
 
                 /*

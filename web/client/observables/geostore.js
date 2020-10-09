@@ -8,7 +8,7 @@
 
 import { Observable } from 'rxjs';
 import uuid from 'uuid/v1';
-import { includes, isNil, omit, isArray, isObject, get } from 'lodash';
+import { includes, isNil, omit, isArray, isObject, get, find } from 'lodash';
 import GeoStoreDAO from '../api/GeoStoreDAO';
 
 const createLinkedResourceURL = (id, tail = "") => `rest/geostore/data/${id}${tail}`;
@@ -114,14 +114,15 @@ const createLinkedResource = (id, attributeName, linkedResource, permission, API
  */
 const updateLinkedResource = (id, attributeName, linkedResource, permission, API = GeoStoreDAO) =>
     Observable.defer(
-        () => API.getResourceAttribute(id, attributeName)
-    ).pluck('data')
-        .switchMap(
-            attributeValue => getResourceIdFromURL(attributeValue)
+        () => API.getResourceAttributes(id)
+    )
+        .switchMap(attributes => {
+            const attributeValue = find(attributes, {name: attributeName})?.value;
+            return getResourceIdFromURL(attributeValue)
                 ? updateOrDeleteLinkedResource(id, attributeName, linkedResource, getResourceIdFromURL(attributeValue), permission, API)
-                : createLinkedResource(id, attributeName, linkedResource, permission, API)
-        ).catch(
-        /* if the attribute doesn't exists or if the linked resource update gave an error
+                : createLinkedResource(id, attributeName, linkedResource, permission, API);
+        }).catch(
+        /* If the linked resource update gave an error
          * you have to create a new resource for the linked resource, provided it has valid data.
          * This error can occur if:
          *  - The resource is new
@@ -130,9 +131,7 @@ const updateLinkedResource = (id, attributeName, linkedResource, permission, API
          *  - The resource is not writable by the user. It happens when a user changes the permission of a resource and doesn't update
          *    the resource permission.
          */
-            (e) => linkedResource && linkedResource.data && linkedResource.data !== 'NODATA' ?
-                createLinkedResource(id, attributeName, linkedResource, permission, API, e) :
-                Observable.of(-1)
+            (e) => createLinkedResource(id, attributeName, linkedResource, permission, API, e)
         );
 /**
  * Updates the permission of the linkedResources that are not modified.

@@ -30,7 +30,7 @@ export default mapPropsStream(props$ => {
                         ...(props.linkedResources || {}),
                         details: {
                             category: 'DETAILS',
-                            data: detailsText
+                            data: detailsText || 'NODATA'
                         }
                     };
 

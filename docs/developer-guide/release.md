@@ -27,6 +27,7 @@ Replacing:
 
 ```
 - [ ] Create an issue with this checklist in the release milestone.
+- [ ] Verify if it is needed to release a new version of http-proxy or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process)
 - [ ] If major release (YYYY.XX.00), create a branch `YYYY.XX.xx`  (`xx` is really `xx`, example: 2018.01.xx)
 - [ ]  If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy by updating the `branch` parameter in the build configuration page to `YYYY.XX.xx`
 - [ ] Fix pom.xml to stable versions ( no -SNAPSHOT in release).

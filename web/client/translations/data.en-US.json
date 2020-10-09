@@ -28,6 +28,10 @@
         "collapse": "Collapse",
         "expand": "Expand",
         "Forbidden": "Forbidden",
+        "layerNameChangeError": {
+            "title": "Name change error",
+            "message": "The layer failed to reload with a changed name"
+        },
         "version": {
             "label": "Version"
         },
@@ -107,7 +111,9 @@
                 "right": "Right",
                 "left": "Left",
                 "bottom": "Bottom",
-                "top": "Top"
+                "top": "Top",
+                "editLayerName": "Edit layer name",
+                "confirmLayerName": "Confirm layer name change"
             },
             "legendOptions": {
               "title": "Legend",
@@ -516,6 +522,14 @@
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
             "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
+            "compareTool": "Compare tool",
+            "configureTool": "Configure",
+            "spyconfiguration": "Spyglass configuration",
+            "swipeconfiguration": "Swipe configuration",
+            "swipe": "Swipe",
+            "spyGlass": "Spy glass",
+            "direction": "Swipe direction",
+            "radius": "Radius",
             "filterIconEnabled": "Disable layer filter",
             "filterIconDisabled": "Enable layer filter",
             "refreshOptions": {
@@ -692,6 +706,7 @@
             "trueBearingLabel": "True bearing",
             "formula": "Formula for distance calculation",
             "showLabel": "Show measurement label",
+            "saveMeasure": "Save measurements to annotation",
             "addAsAnnotation": "Add as annotation",
             "newMeasure": "New annotation",
             "selectTool": "Select a measurement tool",
@@ -1076,6 +1091,7 @@
             "deleteFeature": "Delete this feature",
             "undoDeleteFeature": "Are you sure to delete this feature?",
             "enableEdit": "Enable edit",
+            "editMeasurement": "Edit measurement",
             "title": "Annotations",
             "zoomTo": "Zoom to annotation",
             "zoomToGeometry": "Zoom to geometry",
@@ -1083,6 +1099,9 @@
             "hide": "Hide annotation",
             "show": "Show annotation",
             "tabCoordinates": "Coordinates",
+            "warning": "Warning!",
+            "measureWarningText": "Navigating to edit measurement panel will remove any styling applied",
+            "notShowAgain": "Don't show this message again",
             "tabStyle": "Style",
             "insertText": "Please insert the text annotation",
             "downloadtooltip": "Download annotations",

@@ -41,7 +41,7 @@ export default createPlugin('SaveAs', {
             onResetMapSaveError: resetMapSaveError
         }),
         withProps({
-            isMapSaveAs: true
+            isNewResource: true
         }))(SaveBaseDialog),
     containers: {
         BurgerMenu: {

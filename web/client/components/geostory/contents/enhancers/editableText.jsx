@@ -5,13 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import React from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { EditorState, Modifier, RichUtils } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
 
-import { EMPTY_CONTENT, SectionTypes, DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
+import {
+    EMPTY_CONTENT,
+    SectionTypes,
+    ContentTypes,
+    DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
+
+import LayoutComponent from '../texteditor/CustomEditorLink';
+import getLinkDecorator from '../texteditor/getLinkDecorator';
 import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../../utils/EditorUtils';
 
 /**
@@ -87,6 +95,62 @@ export const withEditorBase = compose(
     renderComponent(Editor)
 );
 
+export const withGeoStoryEditor = compose(
+    lifecycle({
+        componentWillUnmount() {
+            const {editorState, save = () => {}} = this.props;
+            // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
+            save(draftJSEditorStateToHtml(editorState, EMPTY_CONTENT));
+        }
+    }),
+    withHandlers({
+        onBlur: ({toggleEditing = () => {}}) => () => {
+            toggleEditing(false);
+        }
+    }),
+    withProps(({ sections = []}) => {
+        // flatten out the story sections adding to them columns as if they were also sections such that
+        // both sections and columns can be scrolled to
+        const availableStorySections = sections.reduce((availableSections, section) => {
+            const s = [];
+            s.push(section);
+            if (section.type === SectionTypes.PARAGRAPH || section.type === SectionTypes.IMMERSIVE) {
+                const contents = section.contents;
+                contents.forEach((c) => {
+                    if (c.type === ContentTypes.COLUMN) {
+                        s.push(c);
+                    }
+                });
+            }
+
+            return [...availableSections, ...s];
+
+        }, []);
+        return {
+            availableStorySections
+        };
+    }),
+    withProps(({ availableStorySections = [] }) => ({
+        toolbar: {
+            link: {
+                inDropdown: false,
+                className: undefined,
+                component: (props) => <LayoutComponent {...props} availableStorySections={availableStorySections} />,
+                popupClassName: undefined,
+                dropdownClassName: undefined,
+                showOpenOptionOnHover: true,
+                defaultTargetOption: '_self',
+                options: ['link', 'unlink'],
+                link: { icon: undefined, className: undefined },
+                unlink: { icon: undefined, className: undefined },
+                linkCallback: undefined,
+                getLinkDecorator
+            }
+        }
+    })),
+    withEditorBase
+);
+
 export default compose(
     withState('contentEditing', 'setContentEditing', false),
     withState('editorState', 'onEditorStateChange'),
@@ -111,20 +175,6 @@ export default compose(
     }),
     branch(
         ({contentEditing}) => !!contentEditing,
-        compose(
-            lifecycle({
-                componentWillUnmount() {
-                    const {editorState, save = () => {}} = this.props;
-                    // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
-                    save(draftJSEditorStateToHtml(editorState, EMPTY_CONTENT));
-                }
-            }),
-            withHandlers({
-                onBlur: ({toggleEditing = () => {}}) => () => {
-                    toggleEditing(false);
-                }
-            }),
-            withEditorBase
-        )
+        withGeoStoryEditor
     )
 );

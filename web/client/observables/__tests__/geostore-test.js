@@ -149,7 +149,11 @@ describe('geostore observables for resources management', () => {
                 }
             };
             const DummyAPI = {
-                getResourceAttribute: () => Promise.reject({status: 404}),
+                getResourceAttributes: () => Promise.resolve([{
+                    name: 'details',
+                    type: 'STRING',
+                    value: 'rest/geostore/data/134'
+                }]),
                 putResourceMetadataAndAttributes: () => Promise.resolve(10),
                 putResource: () => Promise.resolve(10),
                 createResource: ({name}) => name.search(/10-thumbnail/) !== -1 ? done(new Error('createResource for thumbnail is called!')) : Promise.resolve(11),
@@ -180,7 +184,11 @@ describe('geostore observables for resources management', () => {
             let createResourceThumbnail = false;
 
             const DummyAPI = {
-                getResourceAttribute: () => Promise.reject({status: 404}),
+                getResourceAttributes: () => Promise.resolve([{
+                    name: 'details',
+                    type: 'STRING',
+                    value: 'rest/geostore/data/134'
+                }]),
                 putResourceMetadataAndAttributes: () => Promise.resolve(10),
                 putResource: () => Promise.resolve(10),
                 createResource: ({name}) => {

@@ -278,12 +278,25 @@
             display: table-cell;
             vertical-align: middle;
         }
+        .coordinateRow.aeronautical{
+            .input-group-addon {
+                padding: 4px 6px;
+            }
+        }
     }
     .mapstore-annotations-info-viewer-items {
         padding: 8px;
         height: ~'calc(100% - 50px)';
         overflow: auto;
-
+        .geometries-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
         .geometry-card {
             .shadow-soft;
             display: flex;
@@ -328,6 +341,7 @@
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     overflow-x: hidden;
+                    width: 150px;
                 }
 
                 > * * {
@@ -446,8 +460,11 @@
                 .input-group {
                     flex: 1;
                     padding: 4px 0;
-                    margin-right: 8px;
+                    margin-right: 2px;
                     .form-group{
+                        input#intl-numeric{
+                            float: unset;
+                        }
                         .minutes, .degrees {
                             min-width: 45px;
                             flex: 1;
@@ -456,7 +473,7 @@
                         .seconds {
                             display: flex;
                             flex: 1;
-                            min-width: 75px;
+                            min-width: 80px;
                         }
                     }
                 }
@@ -720,4 +737,13 @@
     align-items: center;
     font-weight: 600;
     padding: 10px;
+}
+
+.marker-container{
+    .marker-icon, .marker-shape {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 4px 0;
+    }
 }

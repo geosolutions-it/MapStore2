@@ -110,6 +110,7 @@ pages:
       - Styling and theming: 'developer-guide/customize-theme.md'
       - Application tutorial: 'developer-guide/application-tutorial.md'
       - Working with Extensions: 'developer-guide/extensions.md'
+      - Printing Module: 'developer-guide/printing-module.md'
       - FAQ: 'developer-guide/dev-faq.md'
     - Guidelines:
       - Code Conventions: 'developer-guide/code-conventions.md'

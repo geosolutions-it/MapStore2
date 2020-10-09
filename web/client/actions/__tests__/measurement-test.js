@@ -16,7 +16,10 @@ const {
     init, INIT,
     changeGeometry, CHANGED_GEOMETRY,
     changeCoordinates, CHANGE_COORDINATES,
-    updateMeasures, UPDATE_MEASURES
+    updateMeasures, UPDATE_MEASURES,
+    addAnnotation, ADD_MEASURE_AS_ANNOTATION,
+    setMeasurementConfig, SET_MEASUREMENT_CONFIG,
+    setAnnotationMeasurement, SET_ANNOTATION_MEASUREMENT
 } = require('../measurement');
 const feature = {type: "Feature", geometry: {
     coordinates: [],
@@ -84,7 +87,7 @@ describe('Test correctness of measurement actions', () => {
         expect(retval.type).toBe(CHANGE_FORMAT);
         expect(retval.format).toEqual(format);
     });
-    it('Test addAnnotation action creator', () => {
+    it('Test changeCoordinates action creator', () => {
         const coordinates = [[1, 2], [2, 5]];
         const retval = changeCoordinates(coordinates);
         expect(retval).toExist();
@@ -96,5 +99,29 @@ describe('Test correctness of measurement actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_MEASURES);
         expect(retval.measures).toEqual({len: 0});
+    });
+    it('Test addAnnotation action creator', () => {
+        const retval = addAnnotation([{type: 'Feature'}], [{position: [1, 1], text: '1,111 m'}], {area: {}, length: {}}, false, 1);
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_MEASURE_AS_ANNOTATION);
+        expect(retval.features).toEqual([{type: 'Feature'}]);
+        expect(retval.textLabels).toEqual([{position: [1, 1], text: '1,111 m'}]);
+        expect(retval.uom).toEqual({area: {}, length: {}});
+        expect(retval.save).toBe(false);
+        expect(retval.id).toBe(1);
+    });
+    it('Test setMeasurementConfig action creator', () => {
+        const retval = setMeasurementConfig("prop", 'value');
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_MEASUREMENT_CONFIG);
+        expect(retval.property).toBe('prop');
+        expect(retval.value).toBe('value');
+    });
+    it('Test setAnnotationMeasurement action creator', () => {
+        const retval = setAnnotationMeasurement([{type: 'Feature'}], 1);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_ANNOTATION_MEASUREMENT);
+        expect(retval.features).toEqual([{type: 'Feature'}]);
+        expect(retval.id).toBe(1);
     });
 });

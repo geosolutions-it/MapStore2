@@ -13,6 +13,7 @@ import TileLayer from 'ol/layer/Tile';
 Layers.registerType('osm', {
     create: (options) => {
         return new TileLayer({
+            msId: options.id,
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility,
             zIndex: options.zIndex,

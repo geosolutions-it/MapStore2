@@ -1,4 +1,4 @@
-FROM tomcat:7.0.92-jre7-alpine
+FROM tomcat:8.5-jdk8-openjdk
 MAINTAINER geosolutions<info@geo-solutions.it>
 
 # Install utilities
