@@ -13,19 +13,65 @@ const service = {
     url,
     type
 };
-const expect = require('expect');
-const LayersUtils = require('../../utils/LayersUtils');
-const {
-    addLayersMapViewerUrl, ADD_LAYERS_FROM_CATALOGS, textSearch, TEXT_SEARCH, getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
-    focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
-    changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
-    changeServiceProperty, CHANGE_SERVICE_PROPERTY, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
-    SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT,
-    TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING,
+import expect from 'expect';
+import LayersUtils from '../../utils/LayersUtils';
+
+import {
+    addLayersMapViewerUrl,
+    ADD_LAYERS_FROM_CATALOGS,
+    textSearch,
+    TEXT_SEARCH,
+    getRecords,
+    addLayerError,
+    addLayer,
+    ADD_LAYER_ERROR,
+    changeCatalogFormat,
+    CHANGE_CATALOG_FORMAT,
+    changeSelectedService,
+    CHANGE_SELECTED_SERVICE,
+    focusServicesList,
+    FOCUS_SERVICES_LIST,
+    changeCatalogMode,
+    CHANGE_CATALOG_MODE,
+    changeTitle,
+    CHANGE_TITLE,
+    changeUrl,
+    CHANGE_URL,
+    changeType,
+    CHANGE_TYPE,
+    addService,
+    ADD_SERVICE,
+    addCatalogService,
+    ADD_CATALOG_SERVICE,
+    resetCatalog,
+    RESET_CATALOG,
+    changeServiceProperty,
+    CHANGE_SERVICE_PROPERTY,
+    deleteCatalogService,
+    DELETE_CATALOG_SERVICE,
+    deleteService,
+    DELETE_SERVICE,
+    savingService,
+    SAVING_SERVICE,
+    DESCRIBE_ERROR,
+    initCatalog,
+    CATALOG_INITED,
+    changeText,
+    CHANGE_TEXT,
+    TOGGLE_ADVANCED_SETTINGS,
+    toggleAdvancedSettings,
+    TOGGLE_THUMBNAIL,
+    toggleThumbnail,
+    TOGGLE_TEMPLATE,
+    toggleTemplate,
+    CHANGE_METADATA_TEMPLATE,
+    changeMetadataTemplate,
+    SET_LOADING,
     recordsNotFound
-} = require('../catalog');
-const { CHANGE_LAYER_PROPERTIES, ADD_LAYER } = require('../layers');
-const { SHOW_NOTIFICATION } = require('../notifications');
+} from '../catalog';
+
+import { CHANGE_LAYER_PROPERTIES, ADD_LAYER } from '../layers';
+import { SHOW_NOTIFICATION } from '../notifications';
 describe('Test correctness of the catalog actions', () => {
 
     it('addLayersMapViewerUrl', () => {

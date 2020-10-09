@@ -7,10 +7,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const UPDATE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:UPDATE_ADDITIONAL_LAYER';
-const UPDATE_OPTIONS_BY_OWNER = 'ADDITIONALLAYER:UPDATE_OPTIONS_BY_OWNER';
-const REMOVE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:REMOVE_ADDITIONAL_LAYER';
-const REMOVE_ALL_ADDITIONAL_LAYERS = 'ADDITIONALLAYER:REMOVE_ALL_ADDITIONAL_LAYERS';
+export const UPDATE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:UPDATE_ADDITIONAL_LAYER';
+export const UPDATE_OPTIONS_BY_OWNER = 'ADDITIONALLAYER:UPDATE_OPTIONS_BY_OWNER';
+export const REMOVE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:REMOVE_ADDITIONAL_LAYER';
+export const REMOVE_ALL_ADDITIONAL_LAYERS = 'ADDITIONALLAYER:REMOVE_ALL_ADDITIONAL_LAYERS';
 
 /**
  * Add/updated an additional layer to the list.
@@ -23,7 +23,7 @@ const REMOVE_ALL_ADDITIONAL_LAYERS = 'ADDITIONALLAYER:REMOVE_ALL_ADDITIONAL_LAYE
  *                         eg: in case of actionType = `override` object options will be merged with the layer object with same id
  * @return {object} of type `UPDATE_ADDITIONAL_LAYER` with id, owner, actionType, settings and options
  */
-const updateAdditionalLayer = (id, owner, actionType = 'override', options) => {
+export const updateAdditionalLayer = (id, owner, actionType = 'override', options) => {
     return {
         type: UPDATE_ADDITIONAL_LAYER,
         id,
@@ -40,7 +40,7 @@ const updateAdditionalLayer = (id, owner, actionType = 'override', options) => {
  * @param {array|object} options an array of options or an object with key equal to ids, eg: [ {style: 'generic'}, {style: ''} ] | { firstLayerId: {style: 'generic'}, secondLayerId: {style: ''} }
  * @return {object} of type `UPDATE_OPTIONS_BY_OWNER` with owner and options
  */
-const updateOptionsByOwner = (owner, options) => {
+export const updateOptionsByOwner = (owner, options) => {
     return {
         type: UPDATE_OPTIONS_BY_OWNER,
         owner,
@@ -56,7 +56,7 @@ const updateOptionsByOwner = (owner, options) => {
  * @param {object} identifier and object with id or owner keys, eg: { id: 'firstLayerId', ower: 'myplugin' }
  * @return {object} of type `REMOVE_ADDITIONAL_LAYER` id and owner
  */
-const removeAdditionalLayer = ({id, owner} = {}) => {
+export const removeAdditionalLayer = ({id, owner} = {}) => {
     return {
         type: REMOVE_ADDITIONAL_LAYER,
         id,
@@ -68,7 +68,7 @@ const removeAdditionalLayer = ({id, owner} = {}) => {
  * @memberof actions.additionallayers
  * @return {object} of type `REMOVE_ALL_ADDITIONAL_LAYERS`
  */
-const removeAllAdditionalLayers = () => ({
+export const removeAllAdditionalLayers = () => ({
     type: REMOVE_ALL_ADDITIONAL_LAYERS
 });
 
@@ -78,10 +78,3 @@ const removeAllAdditionalLayers = () => ({
  * It can be used to preview changes of the layers.
  * @name actions.additionallayers
  */
-
-module.exports = {
-    UPDATE_ADDITIONAL_LAYER, updateAdditionalLayer,
-    REMOVE_ADDITIONAL_LAYER, removeAdditionalLayer,
-    REMOVE_ALL_ADDITIONAL_LAYERS, removeAllAdditionalLayers,
-    UPDATE_OPTIONS_BY_OWNER, updateOptionsByOwner
-};

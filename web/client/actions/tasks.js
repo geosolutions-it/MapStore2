@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const TASK_STARTED = 'TASK_STARTED';
-const TASK_SUCCESS = 'TASK_SUCCESS';
-const TASK_ERROR = 'TASK_ERROR';
+export const TASK_STARTED = 'TASK_STARTED';
+export const TASK_SUCCESS = 'TASK_SUCCESS';
+export const TASK_ERROR = 'TASK_ERROR';
 
-function taskSuccess(result, name, actionPayload) {
+export function taskSuccess(result, name, actionPayload) {
     return {
         type: TASK_SUCCESS,
         result,
@@ -18,14 +18,14 @@ function taskSuccess(result, name, actionPayload) {
     };
 }
 
-function taskStarted(name) {
+export function taskStarted(name) {
     return {
         type: TASK_STARTED,
         name
     };
 }
 
-function taskError(error, name, actionPayload) {
+export function taskError(error, name, actionPayload) {
     return {
         type: TASK_ERROR,
         error,
@@ -34,7 +34,7 @@ function taskError(error, name, actionPayload) {
     };
 }
 
-function startTask(task, taskPayload, name, actionPayload) {
+export function startTask(task, taskPayload, name, actionPayload) {
     return (dispatch) => {
         dispatch(taskStarted(name));
         task(taskPayload, (result) => {
@@ -45,5 +45,3 @@ function startTask(task, taskPayload, name, actionPayload) {
     };
 }
 
-
-module.exports = {TASK_STARTED, TASK_SUCCESS, TASK_ERROR, startTask, taskSuccess, taskError, taskStarted};

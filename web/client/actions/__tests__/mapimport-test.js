@@ -6,17 +6,27 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
-    SET_LAYERS, setLayers,
-    ON_ERROR, onError,
-    LOADING, setLoading,
-    ON_SELECT_LAYER, onSelectLayer,
-    ON_LAYER_ADDED, onLayerAdded,
-    UPDATE_BBOX, updateBBox,
-    ON_SUCCESS, onSuccess,
-    ON_SHAPE_ERROR, onShapeError
-} = require('../mapimport');
+import expect from 'expect';
+
+import {
+    SET_LAYERS,
+    setLayers,
+    ON_ERROR,
+    onError,
+    LOADING,
+    setLoading,
+    ON_SELECT_LAYER,
+    onSelectLayer,
+    ON_LAYER_ADDED,
+    onLayerAdded,
+    UPDATE_BBOX,
+    updateBBox,
+    ON_SUCCESS,
+    onSuccess,
+    ON_SHAPE_ERROR,
+    onShapeError
+} from '../mapimport';
+
 describe('map import actions', () => {
     it('onSuccess', () => {
         const action = onSuccess("message");

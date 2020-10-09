@@ -5,22 +5,34 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
 
-const {
-    setEditing, SET_EDITING,
-    setEditorAvailable, SET_EDITOR_AVAILABLE,
-    triggerShowConnections, SHOW_CONNECTIONS,
-    triggerSave, TRIGGER_SAVE_MODAL,
-    saveDashboard, SAVE_DASHBOARD,
-    dashboardSaveError, SAVE_ERROR,
-    dashboardSaved, DASHBOARD_SAVED,
-    loadDashboard, LOAD_DASHBOARD,
-    resetDashboard, DASHBOARD_RESET,
-    dashboardLoaded, DASHBOARD_LOADED,
-    dashboardLoading, DASHBOARD_LOADING,
-    dashboardLoadError, DASHBOARD_LOAD_ERROR
-} = require('../dashboard');
+import {
+    setEditing,
+    SET_EDITING,
+    setEditorAvailable,
+    SET_EDITOR_AVAILABLE,
+    triggerShowConnections,
+    SHOW_CONNECTIONS,
+    triggerSave,
+    TRIGGER_SAVE_MODAL,
+    saveDashboard,
+    SAVE_DASHBOARD,
+    dashboardSaveError,
+    SAVE_ERROR,
+    dashboardSaved,
+    DASHBOARD_SAVED,
+    loadDashboard,
+    LOAD_DASHBOARD,
+    resetDashboard,
+    DASHBOARD_RESET,
+    dashboardLoaded,
+    DASHBOARD_LOADED,
+    dashboardLoading,
+    DASHBOARD_LOADING,
+    dashboardLoadError,
+    DASHBOARD_LOAD_ERROR
+} from '../dashboard';
 
 describe('Test correctness of the dashboard actions', () => {
     it('setEditing', () => {

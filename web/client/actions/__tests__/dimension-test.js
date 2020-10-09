@@ -7,11 +7,14 @@
  */
 
 
-var expect = require('expect');
-const {
-    updateLayerDimensionData, UPDATE_LAYER_DIMENSION_DATA,
-    setCurrentTime, SET_CURRENT_TIME
-} = require('../dimension');
+import expect from 'expect';
+
+import {
+    updateLayerDimensionData,
+    UPDATE_LAYER_DIMENSION_DATA,
+    setCurrentTime,
+    SET_CURRENT_TIME
+} from '../dimension';
 
 describe('dimension actions', () => {
     it('updateLayerDimensionData', () => {

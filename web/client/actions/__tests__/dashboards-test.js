@@ -5,18 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-const {
-    setDashboardsAvailable, SET_DASHBOARDS_AVAILABLE,
-    searchDashboards, SEARCH_DASHBOARDS,
-    dashboardsLoading, LOADING,
-    dashboardListLoaded, DASHBOARDS_LIST_LOADED,
-    deleteDashboard, DELETE_DASHBOARD,
-    dashboardDeleted, DASHBOARD_DELETED,
-    reloadDashboards, RELOAD
+import expect from 'expect';
 
+import {
+    setDashboardsAvailable,
+    SET_DASHBOARDS_AVAILABLE,
+    searchDashboards,
+    SEARCH_DASHBOARDS,
+    dashboardsLoading,
+    LOADING,
+    dashboardListLoaded,
+    DASHBOARDS_LIST_LOADED,
+    deleteDashboard,
+    DELETE_DASHBOARD,
+    dashboardDeleted,
+    DASHBOARD_DELETED,
+    reloadDashboards,
+    RELOAD
+} from '../dashboards';
 
-} = require('../dashboards');
 describe('dashboards (browse) actions', () => {
     it('setDashboardsAvailable', () => {
         const retval = setDashboardsAvailable(true);

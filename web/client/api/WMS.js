@@ -5,20 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../libs/ajax');
-const ConfigUtils = require('../utils/ConfigUtils');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
 
 const urlUtil = require('url');
 const assign = require('object-assign');
-
 const xml2js = require('xml2js');
+const {isArray, castArray, get} = require('lodash');
+
+const axios = require('../libs/ajax');
+const ConfigUtils = require('../utils/ConfigUtils');
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const _ = require('lodash');
 
 const capabilitiesCache = {};
 
-const {isArray, castArray, get} = require('lodash');
 
-const parseUrl = (urls) => {
+export const parseUrl = (urls) => {
     const url = (isArray(urls) && urls || urls.split(','))[0];
     const parsed = urlUtil.parse(url, true);
     return urlUtil.format(assign({}, parsed, {search: null}, {
@@ -48,7 +49,7 @@ const parseUrl = (urls) => {
  * }
  *
  */
-const extractCredits = attribution => {
+export const extractCredits = attribution => {
     const title = attribution && attribution.Title;
     const logo = attribution.LogoURL && {
         ...(get(attribution, 'LogoURL.$') || {}),
@@ -63,17 +64,16 @@ const extractCredits = attribution => {
     };
 };
 
-const _ = require('lodash');
 
-const flatLayers = (root) => {
+export const flatLayers = (root) => {
     return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
         return previous.concat(flatLayers(current)).concat(current.Layer && current.Name ? [current] : []);
     }, []) : root.Name && [root] || [];
 };
-const getOnlineResource = (c) => {
+export const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };
-const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
+export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
     const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Capability;
     const service = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Service;
     const onlineResource = getOnlineResource(root);
@@ -95,178 +95,189 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
     };
 };
 
+export const getDimensions = (layer) => {
+    return castArray(layer.Dimension || layer.dimension || []).map((dim, index) => {
+        const extent = (layer.Extent && castArray(layer.Extent)[index] || layer.extent && castArray(layer.extent)[index]);
+        return {
+            name: dim.$.name,
+            units: dim.$.units,
+            unitSymbol: dim.$.unitSymbol,
+            "default": dim.$.default || (extent && extent.$.default),
+            values: dim._ && dim._.split(',') || extent && extent._ && extent._.split(',')
+        };
+    });
+};
+export const getCapabilities = (url, raw) => {
+    const parsed = urlUtil.parse(url, true);
+    const getCapabilitiesUrl = urlUtil.format(assign({}, parsed, {
+        query: assign({
+            service: "WMS",
+            version: "1.1.1",
+            request: "GetCapabilities"
+        }, parsed.query)
+    }));
+    return new Promise((resolve) => {
+        require.ensure(['../utils/ogc/WMS'], () => {
+            const {unmarshaller} = require('../utils/ogc/WMS');
+            resolve(axios.get(parseUrl(getCapabilitiesUrl)).then((response) => {
+                if (raw) {
+                    let json;
+                    xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+                        json = result;
+                    });
+                    return json;
+                }
+                let json = unmarshaller.unmarshalString(response.data);
+                return json && json.value;
+            }));
+        });
+    });
+};
+export const describeLayer = (url, layers, options = {}) => {
+    const parsed = urlUtil.parse(url, true);
+    const describeLayerUrl = urlUtil.format(assign({}, parsed, {
+        query: assign({
+            service: "WMS",
+            version: "1.1.1",
+            layers: layers,
+            request: "DescribeLayer"
+        },
+        parsed.query,
+        options.query || {})
+    }));
+    return new Promise((resolve) => {
+        require.ensure(['../utils/ogc/WMS'], () => {
+            const {unmarshaller} = require('../utils/ogc/WMS');
+            resolve(axios.get(parseUrl(describeLayerUrl)).then((response) => {
+                let json = unmarshaller.unmarshalString(response.data);
+                return json && json.value && json.value.layerDescription && json.value.layerDescription[0];
+
+            }));
+        });
+    });
+};
+export const getRecords = (url, startPosition, maxRecords, text) => {
+    const cached = capabilitiesCache[url];
+    if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+        return new Promise((resolve) => {
+            resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
+        });
+    }
+    return axios.get(parseUrl(url)).then((response) => {
+        let json;
+        xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+            json = result;
+        });
+        capabilitiesCache[url] = {
+            timestamp: new Date().getTime(),
+            data: json
+        };
+        return searchAndPaginate(json, startPosition, maxRecords, text);
+    });
+};
+export const describeLayers = (url, layers) => {
+    const parsed = urlUtil.parse(url, true);
+    const describeLayerUrl = urlUtil.format(assign({}, parsed, {
+        query: assign({
+            service: "WMS",
+            version: "1.1.1",
+            layers: layers,
+            request: "DescribeLayer"
+        }, parsed.query)
+    }));
+    return axios.get(parseUrl(describeLayerUrl)).then((response) => {
+        let decriptions;
+        xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+            decriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
+        });
+        decriptions = Array.isArray(decriptions) ? decriptions : [decriptions];
+        // make it compatible with json format of describe layer
+        return decriptions.map(desc => ({
+            ...desc && desc.$ || {},
+            layerName: desc && desc.$ && desc.$.name,
+            query: {
+                ...desc && desc.query && desc.query.$ || {}
+            }
+        }));
+    });
+};
+export const textSearch = (url, startPosition, maxRecords, text) => {
+    return getRecords(url, startPosition, maxRecords, text);
+};
+export const parseLayerCapabilities = (capabilities, layer, lyrs) => {
+    const layers = castArray(lyrs || _.get(capabilities, "capability.layer.layer"));
+    return layers.reduce((previous, capability) => {
+        if (previous) {
+            return previous;
+        }
+        if (!capability.name && capability.layer) {
+            return parseLayerCapabilities(capabilities, layer, castArray(capability.layer));
+        } else if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2) {
+            return layer.name === capability.name && capability;
+        } else if (capability.name && capability.name.split(":").length === 2) {
+            return (layer.name === capability.name.split(":")[1]) && capability;
+        } else if (layer.name.split(":").length === 2) {
+            return layer.name.split(":")[1] === capability.name && capability;
+        }
+        return layer.name === capability.name && capability;
+    }, null);
+};
+export const getBBox = (record, bounds) => {
+    let layer = record;
+    let bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+    while (!bbox && layer.Layer && layer.Layer.length) {
+        layer = layer.Layer[0];
+        bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+    }
+    if (!bbox) {
+        bbox = {
+            westBoundLongitude: -180.0,
+            southBoundLatitude: -90.0,
+            eastBoundLongitude: 180.0,
+            northBoundLatitude: 90.0
+        };
+    }
+    const catalogBounds = {
+        extent: [
+            bbox.westBoundLongitude || bbox.minx,
+            bbox.southBoundLatitude || bbox.miny,
+            bbox.eastBoundLongitude || bbox.maxx,
+            bbox.northBoundLatitude || bbox.maxy
+        ],
+        crs: "EPSG:4326"
+    };
+    if (bounds) {
+        return {
+            crs: catalogBounds.crs,
+            bounds: {
+                minx: catalogBounds.extent[0],
+                miny: catalogBounds.extent[1],
+                maxx: catalogBounds.extent[2],
+                maxy: catalogBounds.extent[3]
+            }
+        };
+    }
+    return catalogBounds;
+};
+export const reset = () => {
+    Object.keys(capabilitiesCache).forEach(key => {
+        delete capabilitiesCache[key];
+    });
+};
+
+
 const Api = {
     flatLayers,
     parseUrl,
-    getDimensions: function(layer) {
-        return castArray(layer.Dimension || layer.dimension || []).map((dim, index) => {
-            const extent = (layer.Extent && castArray(layer.Extent)[index] || layer.extent && castArray(layer.extent)[index]);
-            return {
-                name: dim.$.name,
-                units: dim.$.units,
-                unitSymbol: dim.$.unitSymbol,
-                "default": dim.$.default || (extent && extent.$.default),
-                values: dim._ && dim._.split(',') || extent && extent._ && extent._.split(',')
-            };
-        });
-    },
-    getCapabilities: function(url, raw) {
-        const parsed = urlUtil.parse(url, true);
-        const getCapabilitiesUrl = urlUtil.format(assign({}, parsed, {
-            query: assign({
-                service: "WMS",
-                version: "1.1.1",
-                request: "GetCapabilities"
-            }, parsed.query)
-        }));
-        return new Promise((resolve) => {
-            require.ensure(['../utils/ogc/WMS'], () => {
-                const {unmarshaller} = require('../utils/ogc/WMS');
-                resolve(axios.get(parseUrl(getCapabilitiesUrl)).then((response) => {
-                    if (raw) {
-                        let json;
-                        xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
-                            json = result;
-                        });
-                        return json;
-                    }
-                    let json = unmarshaller.unmarshalString(response.data);
-                    return json && json.value;
-                }));
-            });
-        });
-    },
-    describeLayer: function(url, layers, options = {}) {
-        const parsed = urlUtil.parse(url, true);
-        const describeLayerUrl = urlUtil.format(assign({}, parsed, {
-            query: assign({
-                service: "WMS",
-                version: "1.1.1",
-                layers: layers,
-                request: "DescribeLayer"
-            },
-            parsed.query,
-            options.query || {})
-        }));
-        return new Promise((resolve) => {
-            require.ensure(['../utils/ogc/WMS'], () => {
-                const {unmarshaller} = require('../utils/ogc/WMS');
-                resolve(axios.get(parseUrl(describeLayerUrl)).then((response) => {
-                    let json = unmarshaller.unmarshalString(response.data);
-                    return json && json.value && json.value.layerDescription && json.value.layerDescription[0];
-
-                }));
-            });
-        });
-    },
-    getRecords: function(url, startPosition, maxRecords, text) {
-        const cached = capabilitiesCache[url];
-        if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
-            return new Promise((resolve) => {
-                resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
-            });
-        }
-        return axios.get(parseUrl(url)).then((response) => {
-            let json;
-            xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
-                json = result;
-            });
-            capabilitiesCache[url] = {
-                timestamp: new Date().getTime(),
-                data: json
-            };
-            return searchAndPaginate(json, startPosition, maxRecords, text);
-        });
-    },
-    describeLayers: function(url, layers) {
-        const parsed = urlUtil.parse(url, true);
-        const describeLayerUrl = urlUtil.format(assign({}, parsed, {
-            query: assign({
-                service: "WMS",
-                version: "1.1.1",
-                layers: layers,
-                request: "DescribeLayer"
-            }, parsed.query)
-        }));
-        return axios.get(parseUrl(describeLayerUrl)).then((response) => {
-            let decriptions;
-            xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
-                decriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
-            });
-            decriptions = Array.isArray(decriptions) ? decriptions : [decriptions];
-            // make it compatible with json format of describe layer
-            return decriptions.map(desc => ({
-                ...desc && desc.$ || {},
-                layerName: desc && desc.$ && desc.$.name,
-                query: {
-                    ...desc && desc.query && desc.query.$ || {}
-                }
-            }));
-        });
-    },
-    textSearch: function(url, startPosition, maxRecords, text) {
-        return Api.getRecords(url, startPosition, maxRecords, text);
-    },
-    parseLayerCapabilities: function(capabilities, layer, lyrs) {
-        const layers = castArray(lyrs || _.get(capabilities, "capability.layer.layer"));
-        return layers.reduce((previous, capability) => {
-            if (previous) {
-                return previous;
-            }
-            if (!capability.name && capability.layer) {
-                return this.parseLayerCapabilities(capabilities, layer, castArray(capability.layer));
-            } else if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2) {
-                return layer.name === capability.name && capability;
-            } else if (capability.name && capability.name.split(":").length === 2) {
-                return (layer.name === capability.name.split(":")[1]) && capability;
-            } else if (layer.name.split(":").length === 2) {
-                return layer.name.split(":")[1] === capability.name && capability;
-            }
-            return layer.name === capability.name && capability;
-        }, null);
-    },
-    getBBox: function(record, bounds) {
-        let layer = record;
-        let bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
-        while (!bbox && layer.Layer && layer.Layer.length) {
-            layer = layer.Layer[0];
-            bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
-        }
-        if (!bbox) {
-            bbox = {
-                westBoundLongitude: -180.0,
-                southBoundLatitude: -90.0,
-                eastBoundLongitude: 180.0,
-                northBoundLatitude: 90.0
-            };
-        }
-        const catalogBounds = {
-            extent: [
-                bbox.westBoundLongitude || bbox.minx,
-                bbox.southBoundLatitude || bbox.miny,
-                bbox.eastBoundLongitude || bbox.maxx,
-                bbox.northBoundLatitude || bbox.maxy
-            ],
-            crs: "EPSG:4326"
-        };
-        if (bounds) {
-            return {
-                crs: catalogBounds.crs,
-                bounds: {
-                    minx: catalogBounds.extent[0],
-                    miny: catalogBounds.extent[1],
-                    maxx: catalogBounds.extent[2],
-                    maxy: catalogBounds.extent[3]
-                }
-            };
-        }
-        return catalogBounds;
-    },
-    reset: () => {
-        Object.keys(capabilitiesCache).forEach(key => {
-            delete capabilitiesCache[key];
-        });
-    }
+    getDimensions,
+    getCapabilities,
+    describeLayer,
+    getRecords,
+    describeLayers,
+    textSearch,
+    parseLayerCapabilities,
+    getBBox,
+    reset
 };
 
-module.exports = Api;
+export default Api;

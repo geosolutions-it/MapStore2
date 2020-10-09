@@ -6,14 +6,21 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
-    CHANGE_DRAWING_STATUS, changeDrawingStatus,
-    END_DRAWING, endDrawing, drawSupportReset,
-    geometryChanged, GEOMETRY_CHANGED,
-    drawStopped, DRAW_SUPPORT_STOPPED,
-    setCurrentStyle, SET_CURRENT_STYLE
-} = require('../draw');
+import expect from 'expect';
+
+import {
+    CHANGE_DRAWING_STATUS,
+    changeDrawingStatus,
+    END_DRAWING,
+    endDrawing,
+    drawSupportReset,
+    geometryChanged,
+    GEOMETRY_CHANGED,
+    drawStopped,
+    DRAW_SUPPORT_STOPPED,
+    setCurrentStyle,
+    SET_CURRENT_STYLE
+} from '../draw';
 
 describe('Test correctness of the draw actions', () => {
 
