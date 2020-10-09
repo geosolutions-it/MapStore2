@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {UPDATE_MAP_LAYOUT, updateMapLayout} = require('../maplayout');
+import expect from 'expect';
+
+import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../maplayout';
 
 describe('Test map layout actions', () => {
     it('updateMapLayout', () => {

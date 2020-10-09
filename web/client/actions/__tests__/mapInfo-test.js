@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
+import expect from 'expect';
+
+import {
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
@@ -17,8 +18,10 @@ var {
     GET_VECTOR_INFO,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
-    FEATURE_INFO_CLICK, featureInfoClick,
-    TOGGLE_EMPTY_MESSAGE_GFI, toggleEmptyMessageGFI,
+    FEATURE_INFO_CLICK,
+    featureInfoClick,
+    TOGGLE_EMPTY_MESSAGE_GFI,
+    toggleEmptyMessageGFI,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,
@@ -28,12 +31,17 @@ var {
     getVectorInfo,
     toggleMapInfoState,
     updateCenterToMarker,
-    TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
-    CHANGE_FORMAT, changeFormat,
-    CHANGE_PAGE, changePage,
-    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
-    SET_MAP_TRIGGER, setMapTrigger
-} = require('../mapInfo');
+    TOGGLE_SHOW_COORD_EDITOR,
+    toggleShowCoordinateEditor,
+    CHANGE_FORMAT,
+    changeFormat,
+    CHANGE_PAGE,
+    changePage,
+    TOGGLE_HIGHLIGHT_FEATURE,
+    toggleHighlightFeature,
+    SET_MAP_TRIGGER,
+    setMapTrigger
+} from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
 

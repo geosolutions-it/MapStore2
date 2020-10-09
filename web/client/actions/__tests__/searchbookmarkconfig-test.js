@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     SET_SEARCH_BOOKMARK_CONFIG,
     RESET_BOOKMARK_CONFIG,
     UPDATE_BOOKMARK,
@@ -16,7 +17,7 @@ const {
     resetBookmarkConfig,
     updateBookmark,
     filterBookmarks
-} = require('../searchbookmarkconfig');
+} from '../searchbookmarkconfig';
 
 describe('Test correctness of the searchbookmarkconfig actions', () => {
 

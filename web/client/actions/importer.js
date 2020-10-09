@@ -5,52 +5,52 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var API = require('../api/geoserver/Importer');
-const Workspaces = require('../api/geoserver/Workspaces');
-const {configureMap} = require('./config');
-const {isString} = require('lodash');
+import API from '../api/geoserver/Importer';
 
-const assign = require('object-assign');
-const IMPORTS_LOADING = 'IMPORTS_LOADING';
-const IMPORTS_CREATION_ERROR = 'IMPORTS_CREATION_ERROR';
-const IMPORT_CREATED = 'IMPORT_CREATED';
+import Workspaces from '../api/geoserver/Workspaces';
+import { configureMap } from './config';
+import { isString } from 'lodash';
+import assign from 'object-assign';
+export const IMPORTS_LOADING = 'IMPORTS_LOADING';
+export const IMPORTS_CREATION_ERROR = 'IMPORTS_CREATION_ERROR';
+export const IMPORT_CREATED = 'IMPORT_CREATED';
 
-const IMPORTS_TASK_CREATED = 'IMPORTS_TASK_CREATED';
-const IMPORTS_TASK_LOADED = 'IMPORTS_TASK_LOADED';
-const IMPORTS_TASK_LOAD_ERROR = 'IMPORTS_TASK_LOAD_ERROR';
-const IMPORTS_TASK_UPDATED = 'IMPORTS_TASK_UPDATED';
-const IMPORTS_TASK_DELETE = 'IMPORTS_TASK_DELETE';
-const IMPORTS_TASK_CREATION_ERROR = 'IMPORTS_TASK_CREATION_ERROR';
+export const IMPORTS_TASK_CREATED = 'IMPORTS_TASK_CREATED';
+export const IMPORTS_TASK_LOADED = 'IMPORTS_TASK_LOADED';
+export const IMPORTS_TASK_LOAD_ERROR = 'IMPORTS_TASK_LOAD_ERROR';
+export const IMPORTS_TASK_UPDATED = 'IMPORTS_TASK_UPDATED';
+export const IMPORTS_TASK_DELETE = 'IMPORTS_TASK_DELETE';
+export const IMPORTS_TASK_CREATION_ERROR = 'IMPORTS_TASK_CREATION_ERROR';
 
-const LAYER_LOADED = 'LAYER_LOADED';
-const LAYER_UPDATED = 'LAYER_UPDATED';
+export const LAYER_LOADED = 'LAYER_LOADED';
+export const LAYER_UPDATED = 'LAYER_UPDATED';
 
-const IMPORTS_TRANSFORM_LOAD = 'IMPORTS_TRANSFORM_LOAD';
-const IMPORTS_TRANSFORM_LOAD_ERROR = 'IMPORTS_TRANSFORM_LOAD_ERROR';
-const IMPORTS_TRANSFORM_CHANGE = 'IMPORTS_TRANSFORM_CHANGE';
+export const IMPORTS_TRANSFORM_LOAD = 'IMPORTS_TRANSFORM_LOAD';
+export const IMPORTS_TRANSFORM_LOAD_ERROR = 'IMPORTS_TRANSFORM_LOAD_ERROR';
+export const IMPORTS_TRANSFORM_CHANGE = 'IMPORTS_TRANSFORM_CHANGE';
 
-const IMPORTS_TRANSFORM_DELETE = 'IMPORTS_TRANSFORM_DELETE';
-const IMPORTS_TRANSFORM_UPDATED = 'IMPORTS_TRANSFORM_UPDATED';
+export const IMPORTS_TRANSFORM_DELETE = 'IMPORTS_TRANSFORM_DELETE';
+export const IMPORTS_TRANSFORM_UPDATED = 'IMPORTS_TRANSFORM_UPDATED';
 
-const IMPORTS_FILE_UPLOADED = 'IMPORTS_FILE_UPLOADED';
-const IMPORTS_UPLOAD_PROGRESS = 'IMPORTS_UPLOAD_PROGRESS';
+export const IMPORTS_FILE_UPLOADED = 'IMPORTS_FILE_UPLOADED';
+export const IMPORTS_UPLOAD_PROGRESS = 'IMPORTS_UPLOAD_PROGRESS';
 
-const IMPORTS_LIST_LOADED = 'IMPORTS_LIST_LOADED';
-const IMPORTS_LIST_LOAD_ERROR = 'IMPORTS_LIST_LOAD_ERROR';
-const TASK_PROGRESS_UPDATED = 'TASK_PROGRESS_UPDATED';
+export const IMPORTS_LIST_LOADED = 'IMPORTS_LIST_LOADED';
+export const IMPORTS_LIST_LOAD_ERROR = 'IMPORTS_LIST_LOAD_ERROR';
+export const TASK_PROGRESS_UPDATED = 'TASK_PROGRESS_UPDATED';
 
-const IMPORT_LOADED = 'IMPORT_LOADED';
-const IMPORT_LOAD_ERROR = 'IMPORT_LOAD_ERROR';
-const IMPORT_RUN_SUCCESS = 'IMPORT_RUN_SUCCESS';
-const IMPORT_RUN_ERROR = 'IMPORT_RUN_ERROR';
-const IMPORT_DELETE = 'IMPORT_DELETE';
-const IMPORT_DELETE_ERROR = 'IMPORT_DELETE_ERROR';
+export const IMPORT_LOADED = 'IMPORT_LOADED';
+export const IMPORT_LOAD_ERROR = 'IMPORT_LOAD_ERROR';
+export const IMPORT_RUN_SUCCESS = 'IMPORT_RUN_SUCCESS';
+export const IMPORT_RUN_ERROR = 'IMPORT_RUN_ERROR';
+export const IMPORT_DELETE = 'IMPORT_DELETE';
+export const IMPORT_DELETE_ERROR = 'IMPORT_DELETE_ERROR';
 
-const IMPORTER_WORKSPACE_SELECTED = 'IMPORTER_WORKSPACE_SELECTED';
-const IMPORTER_WORKSPACE_LOADED = 'IMPORTER_WORKSPACE_LOADED';
-const IMPORTER_WORKSPACE_CREATED = 'IMPORTER_WORKSPACE_CREATED';
-const IMPORTER_WORKSPACE_CREATION_ERROR = 'IMPORTER_WORKSPACE_CREATION_ERROR';
-const IMPORTER_WORKSPACE_STATUS_CHANGE = 'IMPORTER_WORKSPACE_STATUS_CHANGE';
+export const IMPORTER_WORKSPACE_SELECTED = 'IMPORTER_WORKSPACE_SELECTED';
+export const IMPORTER_WORKSPACE_LOADED = 'IMPORTER_WORKSPACE_LOADED';
+export const IMPORTER_WORKSPACE_CREATED = 'IMPORTER_WORKSPACE_CREATED';
+export const IMPORTER_WORKSPACE_CREATION_ERROR = 'IMPORTER_WORKSPACE_CREATION_ERROR';
+export const IMPORTER_WORKSPACE_STATUS_CHANGE = 'IMPORTER_WORKSPACE_STATUS_CHANGE';
 /** *****************/
 /* UTILITY         */
 /** *****************/
@@ -60,7 +60,7 @@ const IMPORTER_WORKSPACE_STATUS_CHANGE = 'IMPORTER_WORKSPACE_STATUS_CHANGE';
  * The match is by state, data.file.format and data.file.name
  * (also regex allowed for file name).
  */
-const matchPreset = function(preset, task) {
+export const matchPreset = function(preset, task) {
     if (preset.state && preset.state !== task.state) {
         return false;
     }
@@ -83,7 +83,7 @@ const matchPreset = function(preset, task) {
     return true;
 };
 // for the moment supports only dataStore.name with only one change
-const applyPlaceholders = function(preset, model) {
+export const applyPlaceholders = function(preset, model) {
 
     let replaceTargetWorkspace = function(el) {
         if (isString(el)) {
@@ -109,14 +109,14 @@ const applyPlaceholders = function(preset, model) {
 /* ACTION CREATORS */
 /** *****************/
 
-function loading(details, isLoading = true) {
+export function loading(details, isLoading = true) {
     return {
         type: IMPORTS_LOADING,
         loading: isLoading,
         details: details
     };
 }
-function loadError(e) {
+export function loadError(e) {
     return {
         type: IMPORTS_LIST_LOAD_ERROR,
         error: e
@@ -124,20 +124,20 @@ function loadError(e) {
 }
 
 /** IMPORT **/
-function importCretationError(e) {
+export function importCretationError(e) {
     return {
         type: IMPORTS_CREATION_ERROR,
         error: e
     };
 }
-function importCreated(importObj) {
+export function importCreated(importObj) {
     return {
         type: IMPORT_CREATED,
         "import": importObj
     };
 }
 
-function importTaskCreated(importId, tasks) {
+export function importTaskCreated(importId, tasks) {
     return {
         type: IMPORTS_TASK_CREATED,
         importId: importId,
@@ -145,7 +145,7 @@ function importTaskCreated(importId, tasks) {
     };
 }
 
-function importTaskUpdated(task, importId, taskId) {
+export function importTaskUpdated(task, importId, taskId) {
     return {
         type: IMPORTS_TASK_UPDATED,
         task,
@@ -154,7 +154,7 @@ function importTaskUpdated(task, importId, taskId) {
     };
 }
 
-function importTaskDeleted(importId, taskId) {
+export function importTaskDeleted(importId, taskId) {
     return {
         type: IMPORTS_TASK_DELETE,
         importId,
@@ -162,48 +162,48 @@ function importTaskDeleted(importId, taskId) {
     };
 }
 
-function importsLoaded(imports) {
+export function importsLoaded(imports) {
     return {
         type: IMPORTS_LIST_LOADED,
         imports: imports
     };
 }
 
-function importLoaded(importObj) {
+export function importLoaded(importObj) {
     return {
         type: IMPORT_LOADED,
         "import": importObj
     };
 }
-function importLoadError(e) {
+export function importLoadError(e) {
     return {
         type: IMPORT_LOAD_ERROR,
         "error": e
     };
 }
 
-function importRunSuccess(importId) {
+export function importRunSuccess(importId) {
     return {
         type: IMPORT_RUN_SUCCESS,
         importId
     };
 }
 
-function importRunError(importId, error) {
+export function importRunError(importId, error) {
     return {
         type: IMPORT_RUN_ERROR,
         importId,
         error
     };
 }
-function importDeleted(id) {
+export function importDeleted(id) {
     return {
         type: IMPORT_DELETE,
         id: id
     };
 }
 
-function importDeleteError(id, e) {
+export function importDeleteError(id, e) {
     return {
         type: IMPORT_DELETE_ERROR,
         error: e,
@@ -213,26 +213,26 @@ function importDeleteError(id, e) {
 
 /** TASKS **/
 
-function importTaskLoaded(task) {
+export function importTaskLoaded(task) {
     return {
         type: IMPORTS_TASK_LOADED,
         task: task
     };
 }
-function importTaskLoadError(e) {
+export function importTaskLoadError(e) {
     return {
         type: IMPORTS_TASK_LOAD_ERROR,
         task: e
     };
 }
-function importTaskCreationError(e) {
+export function importTaskCreationError(e) {
     return {
         type: IMPORTS_TASK_CREATION_ERROR,
         error: e
     };
 }
 
-function layerLoaded(importId, taskId, layer) {
+export function layerLoaded(importId, taskId, layer) {
     return {
         type: LAYER_LOADED,
         importId,
@@ -241,7 +241,7 @@ function layerLoaded(importId, taskId, layer) {
     };
 }
 
-function layerUpdated(importId, taskId, layer) {
+export function layerUpdated(importId, taskId, layer) {
     return {
         type: LAYER_LOADED,
         importId,
@@ -249,7 +249,7 @@ function layerUpdated(importId, taskId, layer) {
         layer
     };
 }
-function taskProgressUpdated(importId, taskId, info) {
+export function taskProgressUpdated(importId, taskId, info) {
     return {
         type: TASK_PROGRESS_UPDATED,
         importId,
@@ -258,7 +258,7 @@ function taskProgressUpdated(importId, taskId, info) {
     };
 }
 /** TRANSFORMS **/
-function transformLoaded(importId, taskId, transformId, transform) {
+export function transformLoaded(importId, taskId, transformId, transform) {
     return {
         type: IMPORTS_TRANSFORM_LOAD,
         importId,
@@ -268,14 +268,14 @@ function transformLoaded(importId, taskId, transformId, transform) {
     };
 }
 
-function editTransform(transform) {
+export function editTransform(transform) {
     return {
         type: IMPORTS_TRANSFORM_CHANGE,
         transform
     };
 }
 
-function transformLoadError(importId, taskId, transformId, error) {
+export function transformLoadError(importId, taskId, transformId, error) {
     return {
         type: IMPORTS_TRANSFORM_LOAD_ERROR,
         importId,
@@ -284,7 +284,7 @@ function transformLoadError(importId, taskId, transformId, error) {
         error
     };
 }
-function transformDeleted(importId, taskId, transformId) {
+export function transformDeleted(importId, taskId, transformId) {
     return {
         type: IMPORTS_TRANSFORM_DELETE,
         importId,
@@ -292,7 +292,7 @@ function transformDeleted(importId, taskId, transformId) {
         transformId
     };
 }
-function transformUpdated(importId, taskId, transformId, transform) {
+export function transformUpdated(importId, taskId, transformId, transform) {
     return {
         type: IMPORTS_TRANSFORM_UPDATED,
         importId,
@@ -302,14 +302,14 @@ function transformUpdated(importId, taskId, transformId, transform) {
     };
 }
 /** FILE UPLOAD **/
-function fileUploaded(files) {
+export function fileUploaded(files) {
     return {
         type: IMPORTS_FILE_UPLOADED,
         "files": files
     };
 }
 
-function uploadProgress(progress) {
+export function uploadProgress(progress) {
     return {
         type: IMPORTS_UPLOAD_PROGRESS,
         progress: progress
@@ -317,26 +317,26 @@ function uploadProgress(progress) {
 }
 
 /** WORKSPACES **/
-function selectWorkSpace(workspace) {
+export function selectWorkSpace(workspace) {
     return {
         type: IMPORTER_WORKSPACE_SELECTED,
         workspace: workspace
     };
 }
-function workspacesLoaded(workspaces) {
+export function workspacesLoaded(workspaces) {
     return {
         type: IMPORTER_WORKSPACE_LOADED,
         workspaces: workspaces
     };
 }
 
-function workspaceCreated(name) {
+export function workspaceCreated(name) {
     return {
         type: IMPORTER_WORKSPACE_CREATED,
         name
     };
 }
-function workspaceCreationError(name, error) {
+export function workspaceCreationError(name, error) {
     return {
         type: IMPORTER_WORKSPACE_CREATION_ERROR,
         name,
@@ -348,7 +348,7 @@ function workspaceCreationError(name, error) {
 /** *****************/
 
 /** IMPORT **/
-function createImport(geoserverRestURL, body = {}) {
+export function createImport(geoserverRestURL, body = {}) {
     return (dispatch) => {
         dispatch(loading());
         let options = {
@@ -365,7 +365,7 @@ function createImport(geoserverRestURL, body = {}) {
         });
     };
 }
-function loadImports(geoserverRestURL) {
+export function loadImports(geoserverRestURL) {
     return (dispatch) => {
         dispatch(loading());
         API.getImports(geoserverRestURL).then((response) => {
@@ -378,7 +378,7 @@ function loadImports(geoserverRestURL) {
     };
 }
 
-function loadImport(geoserverRestURL, importId) {
+export function loadImport(geoserverRestURL, importId) {
     return (dispatch) => {
         dispatch(loading({importId: importId}));
         API.loadImport(geoserverRestURL, importId).then((response) => {
@@ -390,7 +390,7 @@ function loadImport(geoserverRestURL, importId) {
         });
     };
 }
-function deleteImport(geoserverRestURL, importId) {
+export function deleteImport(geoserverRestURL, importId) {
     return (dispatch) => {
         dispatch(loading({importId: importId, message: "deleting"}));
         API.deleteImport(geoserverRestURL, importId).then(() => {
@@ -403,7 +403,7 @@ function deleteImport(geoserverRestURL, importId) {
     };
 }
 
-function runImport(geoserverRestURL, importId) {
+export function runImport(geoserverRestURL, importId) {
     return (dispatch, getState) => {
         dispatch(loading({importId}));
         API.runImport(geoserverRestURL, importId).then(() => {
@@ -422,7 +422,7 @@ function runImport(geoserverRestURL, importId) {
 }
 /** LAYER **/
 
-function loadLayer(geoserverRestURL, importId, taskId) {
+export function loadLayer(geoserverRestURL, importId, taskId) {
     return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}));
         return API.loadLayer(geoserverRestURL, importId, taskId).then((response) => {
@@ -431,7 +431,7 @@ function loadLayer(geoserverRestURL, importId, taskId) {
         });
     };
 }
-function updateLayer(geoserverRestURL, importId, taskId, layer) {
+export function updateLayer(geoserverRestURL, importId, taskId, layer) {
     return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}));
 
@@ -442,7 +442,7 @@ function updateLayer(geoserverRestURL, importId, taskId, layer) {
     };
 }
 /** TASKS **/
-function loadTask(geoserverRestURL, importId, taskId) {
+export function loadTask(geoserverRestURL, importId, taskId) {
     return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId}));
         API.loadTask(geoserverRestURL, importId, taskId).then((response) => {
@@ -455,7 +455,7 @@ function loadTask(geoserverRestURL, importId, taskId) {
         });
     };
 }
-function updateUI(geoserverRestURL, importId, taskId) {
+export function updateUI(geoserverRestURL, importId, taskId) {
     return (dispatch, getState) => {
         let state = getState && getState() && getState().importer;
         if (state && state.selectedImport && state.selectedImport.id === importId && state.selectedTask && state.selectedTask.id === taskId) {
@@ -470,7 +470,7 @@ function updateUI(geoserverRestURL, importId, taskId) {
         }
     };
 }
-function updateTask(geoserverRestURL, importId, taskId, body, element, message = "updating") {
+export function updateTask(geoserverRestURL, importId, taskId, body, element, message = "updating") {
     return (dispatch) => {
         let opts = {
             headers: {
@@ -487,7 +487,7 @@ function updateTask(geoserverRestURL, importId, taskId, body, element, message =
     };
 }
 
-function deleteTask(geoserverRestURL, importId, taskId) {
+export function deleteTask(geoserverRestURL, importId, taskId) {
     return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, message: "deleting"}));
         return API.deleteTask(geoserverRestURL, importId, taskId).then(() => {
@@ -498,7 +498,7 @@ function deleteTask(geoserverRestURL, importId, taskId) {
     };
 }
 
-function updateProgress(geoserverRestURL, importId, taskId) {
+export function updateProgress(geoserverRestURL, importId, taskId) {
     return (dispatch) => {
         return API.getTaskProgress(geoserverRestURL, importId, taskId).then((response) => {
             dispatch(taskProgressUpdated(importId, taskId, response.data));
@@ -506,7 +506,7 @@ function updateProgress(geoserverRestURL, importId, taskId) {
     };
 }
 /** TRANFORMS **/
-function loadTransform(geoserverRestURL, importId, taskId, transformId) {
+export function loadTransform(geoserverRestURL, importId, taskId, transformId) {
     return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}));
         return API.loadTransform(geoserverRestURL, importId, taskId, transformId).then((response) => {
@@ -516,7 +516,7 @@ function loadTransform(geoserverRestURL, importId, taskId, transformId) {
         }).catch((e) => {transformLoadError(importId, taskId, transformId, e); });
     };
 }
-function deleteTransform(geoserverRestURL, importId, taskId, transformId) {
+export function deleteTransform(geoserverRestURL, importId, taskId, transformId) {
     return (dispatch, getState) => {
         dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}));
         return API.deleteTransform(geoserverRestURL, importId, taskId, transformId).then(() => {
@@ -531,7 +531,7 @@ function deleteTransform(geoserverRestURL, importId, taskId, transformId) {
     };
 }
 
-function updateTransform(geoserverRestURL, importId, taskId, transformId, transform) {
+export function updateTransform(geoserverRestURL, importId, taskId, transformId, transform) {
     return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}));
         return API.updateTransform(geoserverRestURL, importId, taskId, transformId, transform).then((response) => {
@@ -544,7 +544,7 @@ function updateTransform(geoserverRestURL, importId, taskId, transformId, transf
     };
 }
 /** PRESETS **/
-function applyPreset(geoserverRestURL, importId, task, preset) {
+export function applyPreset(geoserverRestURL, importId, task, preset) {
 
     return (dispatch) => {
         const applyChange = (element, change) => { // TODO better as an action
@@ -571,7 +571,7 @@ function applyPreset(geoserverRestURL, importId, task, preset) {
         }
     };
 }
-function applyPresets(geoserverRestURL, importId, tasks, presets) {
+export function applyPresets(geoserverRestURL, importId, tasks, presets) {
     return (dispatch) => {
         if (tasks) {
             tasks.forEach( (task) => {
@@ -597,7 +597,7 @@ function applyPresets(geoserverRestURL, importId, tasks, presets) {
     };
 }
 
-function loadWorkspaces(geoserverRestURL) {
+export function loadWorkspaces(geoserverRestURL) {
     return (dispatch) => {
         Workspaces.getWorkspaces(geoserverRestURL).then((result) => {
             dispatch(workspacesLoaded(result.workspaces.workspace));
@@ -605,7 +605,7 @@ function loadWorkspaces(geoserverRestURL) {
     };
 }
 
-function createWorkspace(geoserverRestURL, name, datastores = []) {
+export function createWorkspace(geoserverRestURL, name, datastores = []) {
     return (dispatch) => {
         dispatch(loading());
         Workspaces.createWorkspace(geoserverRestURL, name).then(() => {
@@ -638,7 +638,7 @@ function createWorkspace(geoserverRestURL, name, datastores = []) {
     };
 }
 
-function dismissWorkspaceCreationStatus() {
+export function dismissWorkspaceCreationStatus() {
     return {
         type: IMPORTER_WORKSPACE_STATUS_CHANGE,
         state: null
@@ -646,7 +646,7 @@ function dismissWorkspaceCreationStatus() {
 }
 
 /** UPLOAD **/
-function uploadImportFiles(geoserverRestURL, importId, files, presets) {
+export function uploadImportFiles(geoserverRestURL, importId, files, presets) {
     return (dispatch, getState) => {
         dispatch(loading({importId: importId, uploadingFiles: files}));
         let progressOpts = {
@@ -676,7 +676,7 @@ function uploadImportFiles(geoserverRestURL, importId, files, presets) {
 }
 
 /** STYLER **/
-function loadStylerTool(geoserverRestURL, importId, taskId) {
+export function loadStylerTool(geoserverRestURL, importId, taskId) {
     return (dispatch, getState) => {
         return API.loadLayer(geoserverRestURL, importId, taskId).then((layerResponse) => {
             let layer = layerResponse && layerResponse.data && layerResponse.data.layer;
@@ -719,46 +719,3 @@ function loadStylerTool(geoserverRestURL, importId, taskId) {
 
     };
 }
-
-module.exports = {
-    loadImports, createImport, uploadImportFiles,
-    loadImport, runImport, deleteImport,
-    updateTask, deleteTask, loadTask,
-    updateProgress,
-    loadLayer, updateLayer,
-    loadTransform, updateTransform, deleteTransform, editTransform,
-    loadStylerTool,
-    loadWorkspaces,
-    createWorkspace,
-    selectWorkSpace,
-    dismissWorkspaceCreationStatus,
-    IMPORTS_LOADING,
-    IMPORTS_LIST_LOADED,
-    IMPORTS_LIST_LOAD_ERROR,
-    IMPORT_CREATED,
-    IMPORT_LOADED,
-    IMPORT_RUN_SUCCESS,
-    IMPORT_RUN_ERROR,
-    IMPORT_DELETE,
-    IMPORT_DELETE_ERROR,
-    IMPORTS_TASK_CREATED,
-    IMPORTS_TASK_CREATION_ERROR,
-    IMPORTS_TASK_LOADED,
-    IMPORTS_TASK_UPDATED,
-    TASK_PROGRESS_UPDATED,
-    LAYER_LOADED,
-    LAYER_UPDATED,
-    IMPORTS_TRANSFORM_LOAD,
-    IMPORTS_TRANSFORM_UPDATED,
-    IMPORTS_TRANSFORM_CHANGE,
-    IMPORTS_TRANSFORM_DELETE,
-    IMPORTS_TRANSFORM_LOAD_ERROR,
-    IMPORTS_TASK_DELETE,
-    IMPORTS_FILE_UPLOADED,
-    IMPORTS_UPLOAD_PROGRESS,
-    IMPORTER_WORKSPACE_SELECTED,
-    IMPORTER_WORKSPACE_LOADED,
-    IMPORTER_WORKSPACE_CREATED,
-    IMPORTER_WORKSPACE_CREATION_ERROR,
-    IMPORTER_WORKSPACE_STATUS_CHANGE
-};

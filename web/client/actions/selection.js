@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const CHANGE_SELECTION_STATE = 'CHANGE_SELECTION_STATE';
+export const CHANGE_SELECTION_STATE = 'CHANGE_SELECTION_STATE';
 
-function changeSelectionState(selectionState) {
+export function changeSelectionState(selectionState) {
     return {
         type: CHANGE_SELECTION_STATE,
         geomType: selectionState.geomType,
@@ -16,8 +16,3 @@ function changeSelectionState(selectionState) {
         polygon: selectionState.polygon
     };
 }
-
-module.exports = {
-    CHANGE_SELECTION_STATE,
-    changeSelectionState
-};

@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const { exportMap, EXPORT_MAP} = require('../mapexport');
+import expect from 'expect';
+
+import { exportMap, EXPORT_MAP } from '../mapexport';
 
 describe('mapExport actions', () => {
 

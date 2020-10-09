@@ -6,11 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
-    TOGGLE_FULLSCREEN,
-    toggleFullscreen
-} = require('../fullscreen');
+import expect from 'expect';
+
+import { TOGGLE_FULLSCREEN, toggleFullscreen } from '../fullscreen';
 
 describe('Test correctness of the fullscreen actions', () => {
     it('toggleFullscreen', () => {

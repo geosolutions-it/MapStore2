@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const assign = require('object-assign');
-const {
+import expect from 'expect';
+
+import assign from 'object-assign';
+
+import {
     GETGROUPS,
     STATUS_SUCCESS,
     STATUS_ERROR,
@@ -24,8 +26,9 @@ const {
     STATUS_DELETED,
     searchUsers,
     SEARCHUSERS
-} = require('../usergroups');
-let GeoStoreDAO = require('../../api/GeoStoreDAO');
+} from '../usergroups';
+
+import GeoStoreDAO from '../../api/GeoStoreDAO';
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
 describe('Test correctness of the usergroups actions', () => {
