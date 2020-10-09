@@ -10,11 +10,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {DropdownList} = require('react-widgets');
 const Message = require('../../../I18N/Message');
-const {Grid, Row, Col, FormGroup, ControlLabel, FormControl, Checkbox} = require('react-bootstrap');
+const {Grid, Row, Col, FormGroup, ControlLabel, Checkbox} = require('react-bootstrap');
 const {clamp, isNil, isNumber} = require('lodash');
 const Legend = require('../legend/Legend');
+const IntlNumberFormControl = require('../../../I18N/IntlNumberFormControl');
 const InfoPopover = require('../../../widgets/widget/InfoPopover');
-
 require('react-widgets/lib/less/react-widgets.less');
 
 module.exports = class extends React.Component {
@@ -74,9 +74,7 @@ module.exports = class extends React.Component {
         }
     }
 
-    onChange = (event) =>{
-        const value = event.target.value;
-        const name = event.target.name;
+    onChange = (name, value) =>{
         if (name === 'opacity') {
             const opacity = value && clamp(Math.round(value), 0, 100);
             this.setState({opacity, ...this.state});
@@ -167,13 +165,13 @@ module.exports = class extends React.Component {
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel>{this.props.opacityText} %</ControlLabel>
-                            <FormControl
+                            <IntlNumberFormControl
                                 type="number"
                                 min={0}
                                 max={100}
                                 name={"opacity"}
                                 value={this.state.opacity}
-                                onChange={this.onChange}/>
+                                onChange={(val)=> this.onChange("opacity", val)}/>
                         </FormGroup>
                     </Col>
                 </Row>
@@ -212,13 +210,13 @@ module.exports = class extends React.Component {
                         <Col xs={12} sm={6} className="first-selectize">
                             <FormGroup validationState={this.getValidationState("legendWidth")}>
                                 <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
-                                <FormControl
+                                <IntlNumberFormControl
                                     value={this.state.legendOptions.legendWidth}
                                     name="legendWidth"
                                     type="number"
                                     min={12}
                                     max={1000}
-                                    onChange={this.onChange}
+                                    onChange={(val)=> this.onChange("legendWidth", val)}
                                     onKeyPress={(e)=> e.key === "-" && e.preventDefault()}
                                     onBlur={this.onBlur}
                                 />
@@ -227,13 +225,13 @@ module.exports = class extends React.Component {
                         <Col xs={12} sm={6} className="second-selectize">
                             <FormGroup validationState={this.getValidationState("legendHeight")}>
                                 <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
-                                <FormControl
+                                <IntlNumberFormControl
                                     value={this.state.legendOptions.legendHeight}
                                     name="legendHeight"
                                     type="number"
                                     min={12}
                                     max={1000}
-                                    onChange={this.onChange}
+                                    onChange={(val)=> this.onChange("legendHeight", val)}
                                     onKeyPress={(e)=> e.key === "-" && e.preventDefault()}
                                     onBlur={this.onBlur}
                                 />

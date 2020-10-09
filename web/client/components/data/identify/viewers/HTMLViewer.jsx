@@ -23,7 +23,7 @@ class HTMLViewer extends React.Component {
     }
 
     render() {
-        let response = this.props.response;
+        let response = this.props.response || '';
         // gets css rules from the response and removes which are related to body tag.
         let styleMatch = regexpStyle.exec(response);
         let style = styleMatch && styleMatch.length === 2 ? regexpStyle.exec(response)[1] : "";

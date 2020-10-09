@@ -28,6 +28,10 @@
         "collapse": "réduire",
         "expand": "étendre",
         "Forbidden": "Interdit",
+        "layerNameChangeError": {
+            "title": "Erreur de changement de nom",
+            "message": "Échec du rechargement de la couche avec un nom modifié"
+        },
         "version": {
             "label": "Version"
         },
@@ -107,7 +111,9 @@
                 "right": "Droite",
                 "left": "Gauche",
                 "bottom": "Bas",
-                "top": "Haut"
+                "top": "Haut",
+                "editLayerName": "Modifier le nom du calque",
+                "confirmLayerName": "Confirmer le changement de nom du calque"
             },
             "legendOptions": {
               "title": "Légende",
@@ -516,6 +522,14 @@
             "refreshMessage": "Rechargez la configuration des couches WMS à partir du(des) serveur(s)",
             "refreshError": "Erreur lors de la mise à jour des couches : ",
             "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
+            "compareTool": "Comparer l'outil",
+            "configureTool": "Configurer",
+            "spyconfiguration": "Configuration de Spyglass",
+            "swipeconfiguration": "Configuration du balayage",
+            "swipe": "Glisser",
+            "spyGlass": "Verre espion",
+            "direction": "Glisser direction",
+            "radius": "Rayon",
             "filterIconEnabled": "Désactiver le filtre de couche",
             "filterIconDisabled": "Activer le filtre de couche",
             "refreshOptions": {
@@ -696,6 +710,7 @@
             "newMeasure": "Nouvelle annotation",
             "selectTool": "Sélectionnez un outil de mesure",
             "exportToGeoJSON": "Exporter vers GeoJSON",
+            "saveMeasure": "Enregistrer les mesures dans l'annotation",
             "resetTooltip": "Effacer les mesures",
             "addAsLayer": "Ajouter comme couche"
         },
@@ -1074,6 +1089,9 @@
             "hide": "Masquer l'annotation",
             "show": "Afficher l'annotation",
             "tabCoordinates": "Coordonnés",
+            "warning": "Avertissement!",
+            "measureWarningText": "Naviguer pour modifier le panneau de mesure supprimera tout style appliqué",
+            "notShowAgain": "Ne plus afficher ce message",
             "tabStyle": "Style",
             "filter": "Filtrer les annotations...",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition des annotations ?",
@@ -1084,6 +1102,7 @@
             "deleteFeature": "Supprimer cet objet",
             "undoDeleteFeature": "Êtes-vous sûr de supprimer cet objet ?",
             "title": "Annotations",
+            "editMeasurement": "Modifier la mesure",
             "insertText": "Veuillez insérer l'annotation de texte",
             "downloadtooltip": "Télécharger les annotations",
             "downloadcurrenttooltip": "Télécharger l'annotation courante",

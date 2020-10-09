@@ -46,7 +46,7 @@ export const layerInfoSetupLayersEpic = (action$, store) => action$
         return Observable.of(
             loading(true),
             setError(),
-            setLayers(layers.filter(({type}) => type === 'wms' || type === 'wmts').map(layer => ({
+            setLayers(layers.filter(({type, group}) => (type === 'wms' || type === 'wmts') && group !== 'background').map(layer => ({
                 layerObj: layer,
                 ...extractLayerData(layer),
                 selected: false,

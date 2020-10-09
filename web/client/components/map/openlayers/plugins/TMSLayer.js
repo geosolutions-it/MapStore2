@@ -46,6 +46,7 @@ function tileXYZToOpenlayersOptions(options = {}) {
         }));
     }
     let olOpt = {
+        msId: options.id,
         extent: options.bbox && [minx, miny, maxx, maxy],
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility !== false,
