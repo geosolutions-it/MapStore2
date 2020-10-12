@@ -213,7 +213,7 @@ class MapPlugin extends React.Component {
         zoomControl: false,
         mapLoadingMessage: "map.loading",
         loadingSpinner: true,
-        tools: ["measurement", "locate", "scalebar", "draw", "highlight", "popup"],
+        tools: ["measurement", "scalebar", "draw", "highlight", "popup"],
         options: {},
         mapOptions: {},
         fonts: ['FontAwesome'],
@@ -360,7 +360,7 @@ class MapPlugin extends React.Component {
         // Tools passed by other plugins
         const toolsFromItems = this.props.items
             .filter(({Tool}) => !!Tool)
-            .map(({Tool, name}) => <Tool key={name} />);
+            .map(({Tool, name}) => <Tool key={name} mapType={this.props.mapType} />);
 
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);

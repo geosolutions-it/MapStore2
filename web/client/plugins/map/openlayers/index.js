@@ -14,7 +14,6 @@ module.exports = {
     LMap: require('../../../components/map/openlayers/Map').default,
     Layer: require('../../../components/map/openlayers/Layer').default,
     Feature: require('../../../components/map/openlayers/Feature').default,
-    Locate: require('../../../components/map/openlayers/Locate').default,
     MeasurementSupport: addFormatNumber(require('../../../components/map/openlayers/MeasurementSupport').default),
     Overview: require('../../../components/map/openlayers/Overview').default,
     ScaleBar: require('../../../components/map/openlayers/ScaleBar').default,

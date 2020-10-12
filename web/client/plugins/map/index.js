@@ -15,7 +15,7 @@ const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures, setTextLabels, changeMeasurement} = require('../../actions/measurement');
 const {measurementSelector} = require('../../selectors/measurement');
 const {changeSelectionState} = require('../../actions/selection');
-const {changeLocateState, onLocateError} = require('../../actions/locate');
+
 const {changeDrawingStatus, endDrawing, setCurrentStyle, geometryChanged, drawStopped, selectFeatures, drawingFeatures} = require('../../actions/draw');
 const {updateHighlighted} = require('../../actions/highlight');
 const {warning} = require('../../actions/notifications');
@@ -66,14 +66,6 @@ module.exports = (mapType, actions) => {
         changeMeasurement
     })(components.MeasurementSupport || Empty);
 
-    const Locate = connect((state) => ({
-        status: state.locate && state.locate.state,
-        messages: state.locale && state.locale.messages ? state.locale.messages.locate : undefined
-    }), {
-        changeLocateState,
-        onLocateError
-    })(components.Locate || Empty);
-
     const DrawSupport = connect((state) =>
         state.draw || {}, {
         onChangeDrawingStatus: changeDrawingStatus,
@@ -113,7 +105,6 @@ module.exports = (mapType, actions) => {
         Feature: components.Feature || Empty,
         tools: {
             measurement: MeasurementSupport,
-            locate: Locate,
             overview: components.Overview || Empty,
             scalebar: components.ScaleBar || Empty,
             draw: DrawSupport,
