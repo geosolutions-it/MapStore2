@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
+import expect from 'expect';
+
+import {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
     CHANGE_MOUSE_POINTER,
@@ -47,10 +48,9 @@ var {
     unRegisterEventListener,
     mouseMove,
     mouseOut
-} = require('../map');
-const {
-    SHOW_NOTIFICATION
-} = require('../notifications');
+} from '../map';
+
+import { SHOW_NOTIFICATION } from '../notifications';
 
 describe('Test correctness of the map actions', () => {
 

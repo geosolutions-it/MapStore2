@@ -6,14 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
-    TOGGLE_CONTROL, toggleControl,
-    SET_CONTROL_PROPERTY, setControlProperty,
-    SET_CONTROL_PROPERTIES, setControlProperties,
-    RESET_CONTROLS, resetControls,
+import expect from 'expect';
+
+import {
+    TOGGLE_CONTROL,
+    toggleControl,
+    SET_CONTROL_PROPERTY,
+    setControlProperty,
+    SET_CONTROL_PROPERTIES,
+    setControlProperties,
+    RESET_CONTROLS,
+    resetControls,
     on
-} = require('../controls');
+} from '../controls';
 
 describe('Test correctness of the controls actions', () => {
 

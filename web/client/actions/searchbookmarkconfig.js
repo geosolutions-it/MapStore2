@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const SET_SEARCH_BOOKMARK_CONFIG = 'SET_SEARCH_BOOKMARK_CONFIG';
-const RESET_BOOKMARK_CONFIG = 'RESET_BOOKMARK_CONFIG';
-const UPDATE_BOOKMARK = 'UPDATE_BOOKMARK';
-const FILTER_BOOKMARKS = 'FILTER_BOOKMARKS';
+export const SET_SEARCH_BOOKMARK_CONFIG = 'SET_SEARCH_BOOKMARK_CONFIG';
+export const RESET_BOOKMARK_CONFIG = 'RESET_BOOKMARK_CONFIG';
+export const UPDATE_BOOKMARK = 'UPDATE_BOOKMARK';
+export const FILTER_BOOKMARKS = 'FILTER_BOOKMARKS';
 
 /**
 * Sets a property
@@ -18,7 +18,7 @@ const FILTER_BOOKMARKS = 'FILTER_BOOKMARKS';
 * @param {string|number|boolean|object} value the value to set or to check for toggling
 * @return {object} of type `SET_SEARCH_BOOKMARK_CONFIG` with property and value params
 */
-function setSearchBookmarkConfig(property, value) {
+export function setSearchBookmarkConfig(property, value) {
     return {
         type: SET_SEARCH_BOOKMARK_CONFIG,
         property,
@@ -31,7 +31,7 @@ function setSearchBookmarkConfig(property, value) {
  * @memberof actions.searchbookmarkconfig
  * @return {object} of type `RESET_BOOKMARK_CONFIG` with property and value params
  */
-function resetBookmarkConfig() {
+export function resetBookmarkConfig() {
     return {
         type: RESET_BOOKMARK_CONFIG
     };
@@ -44,7 +44,7 @@ function resetBookmarkConfig() {
  * @param {number} idx the value to set
  * @return {object} of type `UPDATE_BOOKMARK` with property and value params
  */
-function updateBookmark(bookmark, idx = -1) {
+export function updateBookmark(bookmark, idx = -1) {
     return {
         type: UPDATE_BOOKMARK,
         bookmark,
@@ -58,7 +58,7 @@ function updateBookmark(bookmark, idx = -1) {
  * @param {string} filter the property to set
  * @return {object} of type `FILTER_BOOKMARKS` with property and value params
  */
-function filterBookmarks(filter) {
+export function filterBookmarks(filter) {
     return {
         type: FILTER_BOOKMARKS,
         filter
@@ -69,13 +69,3 @@ function filterBookmarks(filter) {
 * Actions for search
 * @name actions.bookmarkconfig
 */
-module.exports = {
-    SET_SEARCH_BOOKMARK_CONFIG,
-    RESET_BOOKMARK_CONFIG,
-    UPDATE_BOOKMARK,
-    FILTER_BOOKMARKS,
-    setSearchBookmarkConfig,
-    resetBookmarkConfig,
-    updateBookmark,
-    filterBookmarks
-};

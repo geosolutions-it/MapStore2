@@ -6,17 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const assign = require('object-assign');
-const {
+import expect from 'expect';
+
+import assign from 'object-assign';
+
+import {
     USERMANAGER_GETUSERS,
     getUsers,
-    editUser, USERMANAGER_EDIT_USER,
-    changeUserMetadata, USERMANAGER_EDIT_USER_DATA,
-    saveUser, USERMANAGER_UPDATE_USER,
-    deleteUser, USERMANAGER_DELETE_USER
-} = require('../users');
-let GeoStoreDAO = require('../../api/GeoStoreDAO');
+    editUser,
+    USERMANAGER_EDIT_USER,
+    changeUserMetadata,
+    USERMANAGER_EDIT_USER_DATA,
+    saveUser,
+    USERMANAGER_UPDATE_USER,
+    deleteUser,
+    USERMANAGER_DELETE_USER
+} from '../users';
+
+import GeoStoreDAO from '../../api/GeoStoreDAO';
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
 describe('Test correctness of the users actions', () => {

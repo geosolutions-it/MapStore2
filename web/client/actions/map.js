@@ -6,30 +6,31 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {error} = require('./notifications');
-const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
-const CLICK_ON_MAP = 'CLICK_ON_MAP';
-const CHANGE_MOUSE_POINTER = 'CHANGE_MOUSE_POINTER';
-const CHANGE_ZOOM_LVL = 'CHANGE_ZOOM_LVL';
-const PAN_TO = 'PAN_TO';
-const ZOOM_TO_EXTENT = 'ZOOM_TO_EXTENT';
-const ZOOM_TO_POINT = 'ZOOM_TO_POINT';
-const CHANGE_MAP_CRS = 'CHANGE_MAP_CRS';
-const CHANGE_MAP_SCALES = 'CHANGE_MAP_SCALES';
-const CHANGE_MAP_STYLE = 'CHANGE_MAP_STYLE';
-const CHANGE_ROTATION = 'CHANGE_ROTATION';
-const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
-const UPDATE_VERSION = 'UPDATE_VERSION';
-const INIT_MAP = 'INIT_MAP';
-const RESIZE_MAP = 'RESIZE_MAP';
-const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
-const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
-const REGISTER_EVENT_LISTENER = 'REGISTER_EVENT_LISTENER';
-const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
-const MOUSE_MOVE = 'MOUSE_MOVE';
-const MOUSE_OUT = 'MOUSE_OUT';
+import { error } from './notifications';
 
-function errorLoadingFont(err = {family: ""}) {
+export const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
+export const CLICK_ON_MAP = 'CLICK_ON_MAP';
+export const CHANGE_MOUSE_POINTER = 'CHANGE_MOUSE_POINTER';
+export const CHANGE_ZOOM_LVL = 'CHANGE_ZOOM_LVL';
+export const PAN_TO = 'PAN_TO';
+export const ZOOM_TO_EXTENT = 'ZOOM_TO_EXTENT';
+export const ZOOM_TO_POINT = 'ZOOM_TO_POINT';
+export const CHANGE_MAP_CRS = 'CHANGE_MAP_CRS';
+export const CHANGE_MAP_SCALES = 'CHANGE_MAP_SCALES';
+export const CHANGE_MAP_STYLE = 'CHANGE_MAP_STYLE';
+export const CHANGE_ROTATION = 'CHANGE_ROTATION';
+export const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
+export const UPDATE_VERSION = 'UPDATE_VERSION';
+export const INIT_MAP = 'INIT_MAP';
+export const RESIZE_MAP = 'RESIZE_MAP';
+export const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
+export const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
+export const REGISTER_EVENT_LISTENER = 'REGISTER_EVENT_LISTENER';
+export const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
+export const MOUSE_MOVE = 'MOUSE_MOVE';
+export const MOUSE_OUT = 'MOUSE_OUT';
+
+export function errorLoadingFont(err = {family: ""}) {
     return error({
         title: "warning",
         message: "map.errorLoadingFont",
@@ -46,7 +47,7 @@ function errorLoadingFont(err = {family: ""}) {
  * @param {number} zoom level to zoom to
  * @param {string} crs of the point
 */
-function zoomToPoint(pos, zoom, crs) {
+export function zoomToPoint(pos, zoom, crs) {
     return {
         type: ZOOM_TO_POINT,
         pos,
@@ -55,7 +56,7 @@ function zoomToPoint(pos, zoom, crs) {
     };
 }
 
-function changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions) {
+export function changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions) {
     return {
         type: CHANGE_MAP_VIEW,
         center,
@@ -68,21 +69,21 @@ function changeMapView(center, zoom, bbox, size, mapStateSource, projection, vie
     };
 }
 
-function changeMapCrs(crs) {
+export function changeMapCrs(crs) {
     return {
         type: CHANGE_MAP_CRS,
         crs: crs
     };
 }
 
-function changeMapScales(scales) {
+export function changeMapScales(scales) {
     return {
         type: CHANGE_MAP_SCALES,
         scales: scales
     };
 }
 
-function clickOnMap(point, layer) {
+export function clickOnMap(point, layer) {
     return {
         type: CLICK_ON_MAP,
         point: point,
@@ -90,14 +91,14 @@ function clickOnMap(point, layer) {
     };
 }
 
-function changeMousePointer(pointerType) {
+export function changeMousePointer(pointerType) {
     return {
         type: CHANGE_MOUSE_POINTER,
         pointer: pointerType
     };
 }
 
-function changeZoomLevel(zoomLvl, mapStateSource) {
+export function changeZoomLevel(zoomLvl, mapStateSource) {
     return {
         type: CHANGE_ZOOM_LVL,
         zoom: zoomLvl,
@@ -111,7 +112,7 @@ function changeZoomLevel(zoomLvl, mapStateSource) {
  * @memberof actions.map
  * @param {object} center as {x, y, crs}
 */
-function panTo(center) {
+export function panTo(center) {
     return {
         type: PAN_TO,
         center
@@ -125,7 +126,7 @@ function panTo(center) {
  * @param {string} crs related the extent
  * @param {number} maxZoom the max zoom limit
 */
-function zoomToExtent(extent, crs, maxZoom) {
+export function zoomToExtent(extent, crs, maxZoom) {
     return {
         type: ZOOM_TO_EXTENT,
         extent,
@@ -134,7 +135,7 @@ function zoomToExtent(extent, crs, maxZoom) {
     };
 }
 
-function changeRotation(rotation, mapStateSource) {
+export function changeRotation(rotation, mapStateSource) {
     return {
         type: CHANGE_ROTATION,
         rotation,
@@ -142,33 +143,33 @@ function changeRotation(rotation, mapStateSource) {
     };
 }
 
-function changeMapStyle(style, mapStateSource) {
+export function changeMapStyle(style, mapStateSource) {
     return {
         type: CHANGE_MAP_STYLE,
         style,
         mapStateSource
     };
 }
-function updateVersion(version) {
+export function updateVersion(version) {
     return {
         type: UPDATE_VERSION,
         version
     };
 }
 
-function initMap(disableFeedbackMask) {
+export function initMap(disableFeedbackMask) {
     return {
         type: INIT_MAP,
         disableFeedbackMask
     };
 }
 
-function resizeMap() {
+export function resizeMap() {
     return {
         type: RESIZE_MAP
     };
 }
-function changeMapLimits({restrictedExtent, crs, minZoom}) {
+export function changeMapLimits({restrictedExtent, crs, minZoom}) {
     return {
         type: CHANGE_MAP_LIMITS,
         restrictedExtent,
@@ -177,7 +178,7 @@ function changeMapLimits({restrictedExtent, crs, minZoom}) {
     };
 }
 
-function setMapResolutions(resolutions) {
+export function setMapResolutions(resolutions) {
     return {
         type: SET_MAP_RESOLUTIONS,
         resolutions
@@ -191,7 +192,7 @@ function setMapResolutions(resolutions) {
  * @param {string} eventName the event name. One of ``pointermove`,
  * @param {string} toolName an identifier for the tool
  */
-const registerEventListener = (eventName, toolName) => ({
+export const registerEventListener = (eventName, toolName) => ({
     type: REGISTER_EVENT_LISTENER,
     eventName,
     toolName
@@ -202,7 +203,7 @@ const registerEventListener = (eventName, toolName) => ({
  * @param {string} eventName the event name. One of ``pointermove`,
  * @param {string} toolName an identifier for the tool
  */
-const unRegisterEventListener = (eventName, toolName) => ({
+export const unRegisterEventListener = (eventName, toolName) => ({
     type: UNREGISTER_EVENT_LISTENER,
     eventName,
     toolName
@@ -212,7 +213,7 @@ const unRegisterEventListener = (eventName, toolName) => ({
  * Triggered on mouse move. (only if some tool is registered on this event. See `registerEventListener`).
  * @param {object} position the position of the mouse on the map.
  */
-const mouseMove = (position) => ({
+export const mouseMove = (position) => ({
     type: MOUSE_MOVE,
     position
 });
@@ -220,7 +221,7 @@ const mouseMove = (position) => ({
 /**
  * Triggered when the mouse goes out from the map
  */
-const mouseOut = () => ({
+export const mouseOut = () => ({
     type: MOUSE_OUT
 });
 
@@ -228,47 +229,3 @@ const mouseOut = () => ({
  * Actions for map
  * @name actions.map
  */
-module.exports = {
-    CHANGE_MAP_VIEW,
-    CLICK_ON_MAP,
-    CHANGE_MOUSE_POINTER,
-    CHANGE_ZOOM_LVL,
-    PAN_TO,
-    ZOOM_TO_EXTENT,
-    CHANGE_MAP_CRS,
-    CHANGE_MAP_SCALES,
-    CHANGE_MAP_STYLE,
-    CHANGE_ROTATION,
-    ZOOM_TO_POINT,
-    CREATION_ERROR_LAYER,
-    UPDATE_VERSION,
-    INIT_MAP,
-    RESIZE_MAP,
-    CHANGE_MAP_LIMITS,
-    SET_MAP_RESOLUTIONS,
-    REGISTER_EVENT_LISTENER,
-    UNREGISTER_EVENT_LISTENER,
-    MOUSE_MOVE,
-    MOUSE_OUT,
-    changeMapView,
-    clickOnMap,
-    changeMousePointer,
-    changeZoomLevel,
-    changeMapCrs,
-    changeMapScales,
-    zoomToExtent,
-    panTo,
-    changeMapStyle,
-    changeRotation,
-    zoomToPoint,
-    errorLoadingFont,
-    updateVersion,
-    initMap,
-    resizeMap,
-    changeMapLimits,
-    setMapResolutions,
-    registerEventListener,
-    unRegisterEventListener,
-    mouseMove,
-    mouseOut
-};

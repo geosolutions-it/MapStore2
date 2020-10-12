@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {isFunction} = require('lodash');
+import expect from 'expect';
 
-const {
+import { isFunction } from 'lodash';
+
+import {
     EDIT_ANNOTATION,
     REMOVE_ANNOTATION,
     CONFIRM_REMOVE_ANNOTATION,
@@ -32,14 +33,22 @@ const {
     HIGHLIGHT,
     CLEAN_HIGHLIGHT,
     FILTER_ANNOTATIONS,
-    addText, ADD_TEXT,
-    CHANGE_FORMAT, changeFormat,
-    changedProperties, CHANGED_PROPERTIES,
-    toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
-    startDrawing, START_DRAWING,
-    toggleUnsavedChangesModal, TOGGLE_CHANGES_MODAL,
-    setUnsavedStyle, UNSAVED_STYLE,
-    setUnsavedChanges, UNSAVED_CHANGES,
+    addText,
+    ADD_TEXT,
+    CHANGE_FORMAT,
+    changeFormat,
+    changedProperties,
+    CHANGED_PROPERTIES,
+    toggleUnsavedStyleModal,
+    TOGGLE_STYLE_MODAL,
+    startDrawing,
+    START_DRAWING,
+    toggleUnsavedChangesModal,
+    TOGGLE_CHANGES_MODAL,
+    setUnsavedStyle,
+    UNSAVED_STYLE,
+    setUnsavedChanges,
+    UNSAVED_CHANGES,
     editAnnotation,
     removeAnnotation,
     confirmRemoveAnnotation,
@@ -85,7 +94,7 @@ const {
     INIT_PLUGIN, initPlugin,
     TOGGLE_SHOW_AGAIN, toggleShowAgain,
     HIDE_MEASURE_WARNING, hideMeasureWarning
-} = require('../annotations');
+} from '../annotations';
 
 describe('Test correctness of the annotations actions', () => {
     it('edit annotation', (done) => {

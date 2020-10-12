@@ -6,23 +6,37 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     IMPORTS_LOADING,
-    loadImports, IMPORTS_LIST_LOADED,
-    loadImport, IMPORT_LOADED,
-    createImport, IMPORT_CREATED,
-    deleteImport, IMPORT_DELETE,
-    runImport, IMPORT_RUN_SUCCESS,
-    loadLayer, LAYER_LOADED,
+    loadImports,
+    IMPORTS_LIST_LOADED,
+    loadImport,
+    IMPORT_LOADED,
+    createImport,
+    IMPORT_CREATED,
+    deleteImport,
+    IMPORT_DELETE,
+    runImport,
+    IMPORT_RUN_SUCCESS,
+    loadLayer,
+    LAYER_LOADED,
     updateLayer,
-    loadTask, IMPORTS_TASK_LOADED,
-    updateTask, IMPORTS_TASK_UPDATED,
-    deleteTask, IMPORTS_TASK_DELETE,
-    loadTransform, IMPORTS_TRANSFORM_LOAD,
-    updateTransform, IMPORTS_TRANSFORM_UPDATED,
-    editTransform, IMPORTS_TRANSFORM_CHANGE,
-    deleteTransform, IMPORTS_TRANSFORM_DELETE,
+    loadTask,
+    IMPORTS_TASK_LOADED,
+    updateTask,
+    IMPORTS_TASK_UPDATED,
+    deleteTask,
+    IMPORTS_TASK_DELETE,
+    loadTransform,
+    IMPORTS_TRANSFORM_LOAD,
+    updateTransform,
+    IMPORTS_TRANSFORM_UPDATED,
+    editTransform,
+    IMPORTS_TRANSFORM_CHANGE,
+    deleteTransform,
+    IMPORTS_TRANSFORM_DELETE,
     loadStylerTool,
     selectWorkSpace,
     loadWorkspaces,
@@ -30,8 +44,11 @@ const {
     IMPORTER_WORKSPACE_LOADED,
     IMPORTER_WORKSPACE_SELECTED,
     IMPORTER_WORKSPACE_CREATED,
-    dismissWorkspaceCreationStatus, IMPORTER_WORKSPACE_STATUS_CHANGE} = require('../importer');
-const {MAP_CONFIG_LOADED} = require('../config');
+    dismissWorkspaceCreationStatus,
+    IMPORTER_WORKSPACE_STATUS_CHANGE
+} from '../importer';
+
+import { MAP_CONFIG_LOADED } from '../config';
 
 /* This utility function runs a serie of test on an action creator
    with multiple dispatch inside

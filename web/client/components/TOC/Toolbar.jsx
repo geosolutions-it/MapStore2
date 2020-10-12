@@ -207,7 +207,7 @@ class Toolbar extends React.Component {
                             key="layerInfo"
                             placement="top"
                             overlay={<Tooltip id="toc-tooltip-layerInfo">{this.props.text.layerInfoTooltip}</Tooltip>}>
-                            <Button key="addLayer" bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onLayerInfo}>
+                            <Button key="layerInfo" bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onLayerInfo}>
                                 <Glyphicon glyph="layer-info" />
                             </Button>
                         </OverlayTrigger>

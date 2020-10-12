@@ -6,11 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
-    MAP_TYPE_CHANGED,
-    changeMapType
-} = require('../maptype');
+import expect from 'expect';
+
+import { MAP_TYPE_CHANGED, changeMapType } from '../maptype';
 
 describe('Test correctness of the maptype actions', () => {
 

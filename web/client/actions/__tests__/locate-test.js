@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {CHANGE_LOCATE_STATE, changeLocateState} = require('../locate');
+import expect from 'expect';
+
+import { CHANGE_LOCATE_STATE, changeLocateState } from '../locate';
 
 describe('Test correctness of the locate actions', () => {
 
