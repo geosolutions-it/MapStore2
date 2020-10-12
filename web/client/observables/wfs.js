@@ -79,7 +79,7 @@ export const getPagination = (filterObj = {}, options = {}) =>
         && {
             startIndex: options.startIndex,
             maxFeatures: options.maxFeatures
-        };
+};
 		
 const createFeatureCollection = (features) => (
     {
@@ -92,6 +92,37 @@ const createFeatureCollection = (features) => (
         features: features
     }
 );
+
+const filterFeatures = (feature, filterFields) => {
+
+    for (let i = 0; i < filterFields.length; i++) {
+        if (feature.properties[filterFields[i].attribute] === undefined ) {
+            return false;
+        }
+        if (filterFields[i].type === "string" &&
+            !feature.properties[filterFields[i].attribute].toLowerCase().includes(filterFields[i].value.toLowerCase())) {
+            return false;
+        }
+
+        if (filterFields[i].type === "number" && !feature.properties[filterFields[i].attribute].includes(filterFields[i].value)) {
+            return false;
+        }
+
+        if (filterFields[i].type === "date") {
+
+            let dateFeature = new Date(feature.properties[filterFields[i].attribute]);
+            let dateFilter = new Date(filterFields[i].value.startDate);
+
+            if (dateFeature.getFullYear() !== dateFilter.getFullYear() ||
+                dateFeature.getMonth() !== dateFilter.getMonth() ||
+                dateFeature.getDay() !== dateFilter.getDay() ) {
+                return false;
+            }
+        }
+
+    }
+    return true;
+};
 
 const getFeaturesFiltered = (features, filterObj) => {
     if (filterObj.filterFields && filterObj.filterFields.length !== 0) {
@@ -107,42 +138,6 @@ const getFeaturesFiltered = (features, filterObj) => {
 
 };
 
-const filterFeatures = (feature, filterFields) => { 
-
-    for (let i = 0; i< filterFields.length; i++) {
-        if (feature.properties[filterFields[i].attribute] === undefined ) {
-
-            return false;
-
-        }
-        if (filterFields[i].type === "string" &&
-            !feature.properties[filterFields[i].attribute].toLowerCase().includes(filterFields[i].value.toLowerCase())) {
-
-            return false;
-
-        }
-
-        if (filterFields[i].type === "number" && !feature.properties[filterFields[i].attribute].includes(filterFields[i].value)) {
-
-            return false;
-        }
-
-        if (filterFields[i].type === "date") {
-
-            let dateFeature = new Date(feature.properties[filterFields[i].attribute]);
-            let dateFilter = new Date(filterFields[i].value.startDate);
-
-            if (dateFeature.getFullYear() !== dateFilter.getFullYear() ||
-                dateFeature.getMonth() !== dateFilter.getMonth() ||
-                dateFeature.getDay() !== dateFilter.getDay() ) {
-
-                return false;
-            }
-        }
-
-    }
-    return true;
-};		
 /**
  * Get Features in json format. Intercepts request with 200 errors and workarounds GEOS-7233 if `totalFeatures` is passed
  * @param {string} searchUrl URL of WFS service

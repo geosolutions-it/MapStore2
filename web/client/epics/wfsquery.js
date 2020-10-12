@@ -193,7 +193,7 @@ export const wfsQueryEpic = (action$, store) =>
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions, action.reason))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
-                    .concat(Rx.Observable.of(featureLoading(false)),Rx.Observable.of(layerLoad(layer.id)))
+                    .concat(Rx.Observable.of(featureLoading(false)), Rx.Observable.of(layerLoad(layer.id)))
             ).takeUntil(action$.ofType(UPDATE_QUERY));
         });
 
