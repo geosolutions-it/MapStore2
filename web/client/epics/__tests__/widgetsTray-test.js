@@ -15,9 +15,9 @@ const { SHOW_NOTIFICATION } = require('../../actions/notifications');
 const { rangeDataLoaded, setCollapsed, SET_COLLAPSED } = require('../../actions/timeline');
 const { deleteWidget, insertWidget, toggleCollapseAll, updateWidgetProperty, TOGGLE_COLLAPSE_ALL } = require('../../actions/widgets');
 
-const timeline = require('../../reducers/timeline');
-const dimension = require('../../reducers/dimension');
-const widgets = require('../../reducers/widgets');
+const timeline = require('../../reducers/timeline').default;
+const dimension = require('../../reducers/dimension').default;
+const widgets = require('../../reducers/widgets').default;
 // TEST DATA
 const T1 = '2016-01-01T00:00:00.000Z';
 const T2 = '2016-02-01T00:00:00.000Z';

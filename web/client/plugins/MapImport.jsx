@@ -82,7 +82,7 @@ module.exports = {
         }
     }),
     reducers: {
-        mapimport: require('../reducers/mapimport'),
-        style: require('../reducers/style')
+        mapimport: require('../reducers/mapimport').default,
+        style: require('../reducers/style').default
     }
 };

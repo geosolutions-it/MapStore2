@@ -9,10 +9,10 @@ const assign = require('object-assign');
 
 const {mapConfigHistory, createHistory} = require('../utils/MapHistoryUtils');
 
-const map = mapConfigHistory(require('../reducers/map'));
+const map = mapConfigHistory(require('../reducers/map')).default;
 
-const layers = require('../reducers/layers');
-const mapConfig = require('../reducers/config');
+const layers = require('../reducers/layers').default;
+const mapConfig = require('../reducers/config').default;
 
 const DebugUtils = require('../utils/DebugUtils').default;
 const {combineEpics, combineReducers} = require('../utils/PluginsUtils');
@@ -42,13 +42,13 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
     const history = storeOpts.noRouter ? null : require('./History').default;
     const allReducers = combineReducers(plugins, {
         ...appReducers,
-        localConfig: require('../reducers/localConfig'),
-        locale: require('../reducers/locale'),
+        localConfig: require('../reducers/localConfig').default,
+        locale: require('../reducers/locale').default,
         locales: () => {return null; },
-        browser: require('../reducers/browser'),
-        controls: require('../reducers/controls'),
+        browser: require('../reducers/browser').default,
+        controls: require('../reducers/controls').default,
         theme: require('../reducers/theme').default,
-        help: require('../reducers/help'),
+        help: require('../reducers/help').default,
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         mapConfigRawData: () => null,

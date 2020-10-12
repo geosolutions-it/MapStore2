@@ -190,5 +190,5 @@ module.exports = {
             glyph: "import"
         }
     }),
-    reducers: {importer: require('../../reducers/importer')}
+    reducers: {importer: require('../../reducers/importer').default}
 };

@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const query = require('../query');
-const {TOGGLE_LAYER_FILTER} = require('../../actions/wfsquery');
-const { reset
-} = require('../../actions/queryform');
+import expect from 'expect';
+
+import query from '../query';
+import { TOGGLE_LAYER_FILTER } from '../../actions/wfsquery';
+import { reset } from '../../actions/queryform';
 
 describe('Test the query reducer', () => {
     it('Test QUERY_FORM_RESET to skip query', () => {

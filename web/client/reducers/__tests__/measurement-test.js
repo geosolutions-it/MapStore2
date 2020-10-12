@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
-const measurement = require('../measurement');
-const {
+import expect from 'expect';
+
+import measurement from '../measurement';
+
+import {
     toggleMeasurement,
     changeUom,
     changeCoordinates,
@@ -18,8 +20,9 @@ const {
     setAnnotationMeasurement,
     setMeasurementConfig,
     setCurrentFeature
-} = require('../../actions/measurement');
-const {RESET_CONTROLS, setControlProperty} = require('../../actions/controls');
+} from '../../actions/measurement';
+
+import { RESET_CONTROLS, setControlProperty } from '../../actions/controls';
 
 describe('Test the measurement reducer', () => {
 

@@ -6,17 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     NEW_VECTOR_RULE,
     SELECT_VECTOR_RULE,
     REMOVE_VECTOR_RULE,
     SET_VECTORSTYLE_PARAMETER,
     SET_VECTOR_LAYER,
     SET_VECTOR_RULE_PARAMETER
-} = require('../actions/vectorstyler');
-const { STYLER_RESET } = require('../actions/styler');
-const assign = require('object-assign');
-const {isObject, findIndex} = require('lodash');
+} from '../actions/vectorstyler';
+
+import { STYLER_RESET } from '../actions/styler';
+import assign from 'object-assign';
+import { isObject, findIndex } from 'lodash';
 const baseStyle = {
     Point: {
         type: "Point",
@@ -132,4 +133,4 @@ function vectorstyler(state = initialSpec, action) {
     }
 }
 
-module.exports = vectorstyler;
+export default vectorstyler;

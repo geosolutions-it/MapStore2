@@ -7,13 +7,9 @@
 */
 
 
-const expect = require('expect');
-const {
-    mapTypeSelector,
-    isCesium,
-    isOpenlayers,
-    isLeaflet
-} = require('../maptype');
+import expect from 'expect';
+
+import { mapTypeSelector, isCesium, isOpenlayers, isLeaflet } from '../maptype';
 
 describe('Test maptype', () => {
     it('test mapTypeSelector default', () => {

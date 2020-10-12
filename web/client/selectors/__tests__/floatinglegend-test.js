@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {legendSizeSelector, legendExpandedSelector} = require('../floatinglegend');
+import expect from 'expect';
+
+import { legendSizeSelector, legendExpandedSelector } from '../floatinglegend';
 
 describe('Test floatinglegend selectors', () => {
     it('test legendSizeSelector', () => {

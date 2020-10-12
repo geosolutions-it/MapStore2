@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     GETGROUPS,
     SEARCHUSERS,
     EDITGROUP,
@@ -14,8 +14,9 @@ const {
     DELETEGROUP,
     UPDATEGROUP,
     SEARCHTEXTCHANGED
-} = require('../actions/usergroups');
-const assign = require('object-assign');
+} from '../actions/usergroups';
+
+import assign from 'object-assign';
 function usergroups(state = {
     start: 0,
     limit: 12
@@ -122,4 +123,4 @@ function usergroups(state = {
         return state;
     }
 }
-module.exports = usergroups;
+export default usergroups;

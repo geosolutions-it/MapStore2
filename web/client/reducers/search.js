@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     TEXT_SEARCH_RESULTS_LOADED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
@@ -21,10 +21,10 @@ const {
     CHANGE_SEARCH_TOOL,
     CHANGE_FORMAT,
     CHANGE_COORD
-} = require('../actions/search');
-const {RESET_CONTROLS} = require('../actions/controls');
+} from '../actions/search';
 
-const assign = require('object-assign');
+import { RESET_CONTROLS } from '../actions/controls';
+import assign from 'object-assign';
 /**
  * Manages the state of the map search with it's results
  * The properties represent the shape of the state
@@ -135,4 +135,4 @@ function search(state = null, action) {
     }
 }
 
-module.exports = search;
+export default search;

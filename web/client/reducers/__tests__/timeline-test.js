@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const timeline = require('../timeline');
-const {rangeDataLoaded, selectLayer, timeDataLoading, setCollapsed, setMapSync} = require('../../actions/timeline');
-const { isCollapsed, isMapSync } = require('../../selectors/timeline');
-const expect = require('expect');
+import timeline from '../timeline';
+
+import { rangeDataLoaded, selectLayer, timeDataLoading, setCollapsed, setMapSync } from '../../actions/timeline';
+import { isCollapsed, isMapSync } from '../../selectors/timeline';
+import expect from 'expect';
 
 describe('Test the timeline reducer', () => {
     it('change the layer histogram and rangedata', () => {

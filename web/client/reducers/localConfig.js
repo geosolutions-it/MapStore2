@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {LOCAL_CONFIG_LOADED} = require('../actions/localConfig');
+import { LOCAL_CONFIG_LOADED } from '../actions/localConfig';
 
-const assign = require('object-assign');
-const ConfigUtils = require('../utils/ConfigUtils');
+import assign from 'object-assign';
+import ConfigUtils from '../utils/ConfigUtils';
 const initialState = ConfigUtils.getDefaults();
 function controls(state = initialState, action) {
     switch (action.type) {
@@ -20,4 +20,4 @@ function controls(state = initialState, action) {
     }
 }
 
-module.exports = controls;
+export default controls;

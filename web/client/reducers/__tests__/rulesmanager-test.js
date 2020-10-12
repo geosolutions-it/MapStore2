@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var rulesmanager = require('../rulesmanager');
+import expect from 'expect';
+
+import rulesmanager from '../rulesmanager';
 
 describe('test rules manager reducer', () => {
 

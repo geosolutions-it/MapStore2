@@ -1,7 +1,6 @@
 
-const {get} = require('lodash');
+import { get } from 'lodash';
 
-module.exports = {
-    pathnameSelector: (state) => get(state, "router.location.pathname") || "/",
-    searchSelector: (state) => get(state, "router.location.search") || ""
-};
+
+export const pathnameSelector = (state) => get(state, "router.location.pathname") || "/";
+export const searchSelector = (state) => get(state, "router.location.search") || "";

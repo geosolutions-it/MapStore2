@@ -5,13 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-const rasterstyler = require('../rasterstyler');
-const {
-    SET_RASTERSTYLE_PARAMETER,
-    SET_RASTER_LAYER
-} = require('../../actions/rasterstyler');
+import rasterstyler from '../rasterstyler';
+import { SET_RASTERSTYLE_PARAMETER, SET_RASTER_LAYER } from '../../actions/rasterstyler';
 
 describe('Test the rasterstyler reducer', () => {
     it('set a rasterstyle parameter', () => {

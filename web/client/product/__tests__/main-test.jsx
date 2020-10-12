@@ -79,7 +79,7 @@ describe('standard application runner', () => {
     it('testing default appStore plus some extra reducers', () => {
         let defaultConfig = {
             appReducers: {
-                catalog: require("../../reducers/catalog")
+                catalog: require("../../reducers/catalog").default
             }
         };
         mainApp(defaultConfig, {plugins: {}}, (config) => {
@@ -97,7 +97,7 @@ describe('standard application runner', () => {
     it('testing appStore overridng default reducers', () => {
         let defaultConfig = {
             baseReducers: {
-                catalog: require("../../reducers/catalog")
+                catalog: require("../../reducers/catalog").default
             }
         };
         mainApp(defaultConfig, {plugins: {}}, (config) => {

@@ -6,9 +6,14 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {CHANGE_DRAWING_STATUS, SET_CURRENT_STYLE, GEOMETRY_CHANGED, DRAW_SUPPORT_STOPPED} = require('../actions/draw');
+import {
+    CHANGE_DRAWING_STATUS,
+    SET_CURRENT_STYLE,
+    GEOMETRY_CHANGED,
+    DRAW_SUPPORT_STOPPED
+} from '../actions/draw';
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
 const initialState = {
     drawStatus: null,
@@ -43,4 +48,4 @@ function draw(state = initialState, action) {
     }
 }
 
-module.exports = draw;
+export default draw;

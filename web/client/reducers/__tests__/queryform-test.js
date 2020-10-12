@@ -5,18 +5,26 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const queryform = require('../queryform');
+import expect from 'expect';
 
-const {featureCollection} = require('../../test-resources/featureCollectionZone.js');
-const {
-    UPDATE_FILTER_FIELD_OPTIONS, SET_AUTOCOMPLETE_MODE, TOGGLE_AUTOCOMPLETE_MENU,
+import queryform from '../queryform';
+import { featureCollection } from '../../test-resources/featureCollectionZone.js';
+
+import {
+    UPDATE_FILTER_FIELD_OPTIONS,
+    SET_AUTOCOMPLETE_MODE,
+    TOGGLE_AUTOCOMPLETE_MENU,
     loadFilter,
-    expandCrossLayerFilterPanel, setCrossLayerFilterParameter, resetCrossLayerFilter,
-    addCrossLayerFilterField, updateCrossLayerFilterField, removeCrossLayerFilterField,
+    expandCrossLayerFilterPanel,
+    setCrossLayerFilterParameter,
+    resetCrossLayerFilter,
+    addCrossLayerFilterField,
+    updateCrossLayerFilterField,
+    removeCrossLayerFilterField,
     changeSpatialFilterValue
-} = require('../../actions/queryform');
-const {END_DRAWING, CHANGE_DRAWING_STATUS} = require('../../actions/draw');
+} from '../../actions/queryform';
+
+import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../../actions/draw';
 
 describe('Test the queryform reducer', () => {
 

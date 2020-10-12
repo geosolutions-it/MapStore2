@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {UPDATE_MAP_LAYOUT} = require('../actions/maplayout');
-const assign = require('object-assign');
+import { UPDATE_MAP_LAYOUT } from '../actions/maplayout';
+
+import assign from 'object-assign';
 
 function mapLayout(state = { layout: {}, boundingMapRect: {} }, action) {
     switch (action.type) {
@@ -20,4 +21,4 @@ function mapLayout(state = { layout: {}, boundingMapRect: {} }, action) {
     }
 }
 
-module.exports = mapLayout;
+export default mapLayout;
