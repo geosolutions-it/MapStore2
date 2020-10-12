@@ -249,7 +249,7 @@ module.exports = {
         }
     }),
     reducers: {
-        annotations: require('../reducers/annotations')
+        annotations: require('../reducers/annotations').default
     },
     epics: require('../epics/annotations')(AnnotationsInfoViewer)
 };

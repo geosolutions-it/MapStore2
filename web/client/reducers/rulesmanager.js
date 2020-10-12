@@ -9,7 +9,7 @@
 import assign from 'object-assign';
 
 import wk from 'wellknown';
-import { isEmpty, head, value, uniq, concat } from 'lodash';
+import { isEmpty, head, uniq, concat } from 'lodash';
 
 import {
     RULES_SELECTED,
@@ -81,12 +81,11 @@ function rulesmanager(state = defaultState, action) {
         const existingRules = state.selectedRules || [];
         if (action.unselect) {
             return assign({}, state, {
-                selectedRules: value(existingRules.filter(
-                    rule => !head(newRules.filter(unselected => unselected.id === rule.id))))
+                selectedRules: existingRules.filter(
+                    rule => !head(newRules.filter(unselected => unselected.id === rule.id)))
             });
         }
-        return assign({}, state, {
-            selectedRules: value(uniq(concat(existingRules, newRules), rule => rule.id))});
+        return assign({}, state, { selectedRules: uniq(concat(existingRules, newRules), rule => rule.id)});
     }
     case UPDATE_FILTERS_VALUES: {
         const filtersValues = state.filtersValues || {};
@@ -106,9 +105,9 @@ function rulesmanager(state = defaultState, action) {
     case LOADING:
         return assign({}, state, {loading: action.loading});
     case SET_FILTER: {
-        const {key, val} = action;
-        if (val) {
-            return assign({}, state, {filters: {...state.filters, [key]: val}});
+        const {key, value} = action;
+        if (value) {
+            return assign({}, state, {filters: {...state.filters, [key]: value}});
         }
         const {[key]: omit, ...newFilters} = state.filters;
         return assign({}, state, {filters: newFilters});

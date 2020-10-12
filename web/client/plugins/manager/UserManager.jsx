@@ -121,6 +121,6 @@ module.exports = {
                 glyph: "1-user-mod"
             }}),
     reducers: {
-        users: require('../../reducers/users')
+        users: require('../../reducers/users').default
     }
 };

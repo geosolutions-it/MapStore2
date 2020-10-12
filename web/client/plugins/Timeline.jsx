@@ -303,7 +303,7 @@ module.exports = {
         }
     }),
     reducers: {
-        dimension: require('../reducers/dimension'),
+        dimension: require('../reducers/dimension').default,
         timeline: require('../reducers/timeline').default
     },
     epics: require('../epics/timeline')

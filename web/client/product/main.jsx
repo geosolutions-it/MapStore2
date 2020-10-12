@@ -59,10 +59,10 @@ module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
         const appStore = require('../stores/StandardStore').bind(null,
             initialState,
             baseReducers || {
-                maptype: require('../reducers/maptype'),
-                maps: require('../reducers/maps'),
-                maplayout: require('../reducers/maplayout'),
-                version: require('../reducers/version'),
+                maptype: require('../reducers/maptype').default,
+                maps: require('../reducers/maps').default,
+                maplayout: require('../reducers/maplayout').default,
+                version: require('../reducers/version').default,
                 mapPopups: require('../reducers/mapPopups').default,
                 ...appReducers
             },

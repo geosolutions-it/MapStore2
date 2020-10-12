@@ -186,8 +186,8 @@ const MapStore2 = {
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
         const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {
-            security: require('../reducers/security'),
-            version: require('../reducers/version')
+            security: require('../reducers/security').default,
+            version: require('../reducers/version').default
         }, {
             jsAPIEpic: actionTrigger.epic,
             ...(options.epics || {})

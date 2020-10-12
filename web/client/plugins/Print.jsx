@@ -486,5 +486,5 @@ module.exports = {
             doNotHide: true
         }
     }),
-    reducers: {print: require('../reducers/print')}
+    reducers: {print: require('../reducers/print').default}
 };

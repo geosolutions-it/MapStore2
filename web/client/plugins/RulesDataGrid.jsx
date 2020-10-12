@@ -74,5 +74,5 @@ const RulesDataGridPlugin = connect(
 )(RulesDataGrid);
 module.exports = {
     RulesDataGridPlugin,
-    reducers: {rulesmanager: require('../reducers/rulesmanager')}
+    reducers: {rulesmanager: require('../reducers/rulesmanager').default}
 };

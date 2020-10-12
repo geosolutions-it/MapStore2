@@ -426,12 +426,12 @@ module.exports = {
         onResolutionsChange: setMapResolutions
     })(MapPlugin),
     reducers: {
-        map: require('../reducers/map'),
-        layers: require('../reducers/layers'),
-        draw: require('../reducers/draw'),
-        highlight: require('../reducers/highlight'),
-        maptype: require('../reducers/maptype'),
-        additionallayers: require('../reducers/additionallayers')
+        map: require('../reducers/map').default,
+        layers: require('../reducers/layers').default,
+        draw: require('../reducers/draw').default,
+        highlight: require('../reducers/highlight').default,
+        maptype: require('../reducers/maptype').default,
+        additionallayers: require('../reducers/additionallayers').default
     },
     epics: require('../epics/map')
 };

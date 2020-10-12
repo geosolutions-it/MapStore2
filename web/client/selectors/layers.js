@@ -13,7 +13,6 @@ import LayersUtils from '../utils/LayersUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
-import { defaultQueryableFilter } from '../utils/MapInfoUtils';
 import { get, head, isEmpty, find, isObject, isArray, castArray } from 'lodash';
 import { flattenGroups } from '../utils/TOCUtils';
 
@@ -133,7 +132,7 @@ export const elementSelector = (state) => {
 * @param {object} state the state
 * @return {array} the queriable layers
 */
-export const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
+export const queryableLayersSelector = state => layersSelector(state).filter(MapInfoUtils.defaultQueryableFilter);
 /**
  * Return loading error state for selected layer
  * @param {object} state the state
@@ -145,4 +144,4 @@ export const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(stat
  * @param {object} state the state
  * @return {array} the queriable selected layers
  */
-export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(defaultQueryableFilter);
+export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(MapInfoUtils.defaultQueryableFilter);

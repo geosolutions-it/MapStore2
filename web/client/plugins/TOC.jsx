@@ -890,8 +890,8 @@ module.exports = {
         }
     }),
     reducers: {
-        queryform: require('../reducers/queryform'),
-        query: require('../reducers/query')
+        queryform: require('../reducers/queryform').default,
+        query: require('../reducers/query').default
     },
     // TODO: remove this dependency, it is needed only to use getMetadataRecordById and related actions that can be moved in the TOC
     epics: require("../epics/catalog").default(API)
