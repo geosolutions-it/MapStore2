@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     setEditorAvailable,
     setEditing,
     triggerShowConnections,
@@ -15,9 +16,11 @@ const {
     dashboardLoaded,
     dashboardSaved,
     dashboardSaveError,
-    dashboardLoading } = require('../../actions/dashboard');
-const { insertWidget, updateWidget, deleteWidget } = require('../../actions/widgets');
-const dashboard = require('../dashboard');
+    dashboardLoading
+} from '../../actions/dashboard';
+
+import { insertWidget, updateWidget, deleteWidget } from '../../actions/widgets';
+import dashboard from '../dashboard';
 describe('Test the dashboard reducer', () => {
     it('setEditorAvailable action', () => {
         const state = dashboard({}, setEditorAvailable( true ));

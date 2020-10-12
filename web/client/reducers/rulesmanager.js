@@ -6,17 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const assign = require('object-assign');
-const wk = require('wellknown');
-const {isEmpty} = require("lodash");
+import assign from 'object-assign';
 
-const { RULES_SELECTED, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
-    LOADING, EDIT_RULE, SET_FILTER, CLEAN_EDITING, RULE_SAVED} = require('../actions/rulesmanager');
-const {
-    CHANGE_DRAWING_STATUS
-} = require('../actions/draw');
+import wk from 'wellknown';
+import { isEmpty, head, value, uniq, concat } from 'lodash';
 
-const _ = require('lodash');
+import {
+    RULES_SELECTED,
+    OPTIONS_LOADED,
+    UPDATE_FILTERS_VALUES,
+    LOADING,
+    EDIT_RULE,
+    SET_FILTER,
+    CLEAN_EDITING,
+    RULE_SAVED
+} from '../actions/rulesmanager';
+
+import { CHANGE_DRAWING_STATUS } from '../actions/draw';
 const defaultState = {
     services: {
         WFS: [
@@ -75,12 +81,12 @@ function rulesmanager(state = defaultState, action) {
         const existingRules = state.selectedRules || [];
         if (action.unselect) {
             return assign({}, state, {
-                selectedRules: _(existingRules).filter(
-                    rule => !_.head(newRules.filter(unselected => unselected.id === rule.id))).value()
+                selectedRules: value(existingRules.filter(
+                    rule => !head(newRules.filter(unselected => unselected.id === rule.id))))
             });
         }
         return assign({}, state, {
-            selectedRules: _(existingRules).concat(newRules).uniq(rule => rule.id).value()});
+            selectedRules: value(uniq(concat(existingRules, newRules), rule => rule.id))});
     }
     case UPDATE_FILTERS_VALUES: {
         const filtersValues = state.filtersValues || {};
@@ -100,9 +106,9 @@ function rulesmanager(state = defaultState, action) {
     case LOADING:
         return assign({}, state, {loading: action.loading});
     case SET_FILTER: {
-        const {key, value} = action;
-        if (value) {
-            return assign({}, state, {filters: {...state.filters, [key]: value}});
+        const {key, val} = action;
+        if (val) {
+            return assign({}, state, {filters: {...state.filters, [key]: val}});
         }
         const {[key]: omit, ...newFilters} = state.filters;
         return assign({}, state, {filters: newFilters});
@@ -146,4 +152,4 @@ function rulesmanager(state = defaultState, action) {
     }
 }
 
-module.exports = rulesmanager;
+export default rulesmanager;

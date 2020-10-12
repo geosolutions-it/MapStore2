@@ -7,10 +7,11 @@
  */
 
 
-const expect = require('expect');
-const tutorial = require('../tutorial');
+import expect from 'expect';
 
-const {
+import tutorial from '../tutorial';
+
+import {
     START_TUTORIAL,
     INIT_TUTORIAL,
     SETUP_TUTORIAL,
@@ -19,7 +20,7 @@ const {
     RESET_TUTORIAL,
     CLOSE_TUTORIAL,
     TOGGLE_TUTORIAL
-} = require('../../actions/tutorial');
+} from '../../actions/tutorial';
 
 describe('Test the tutorial reducer', () => {
 

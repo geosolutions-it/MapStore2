@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     isCollapsed,
     hasLayers,
     isVisible,
@@ -16,13 +17,13 @@ const {
     itemsSelector,
     rangeDataSelector,
     multidimOptionsSelectorCreator
-} = require('../timeline');
-const { set, compose } = require('../../utils/ImmutableUtils');
+} from '../timeline';
 
-const timeline = require('../../reducers/timeline');
-const { rangeDataLoaded } = require('../../actions/timeline');
-const dimension = require('../../reducers/dimension');
-const { updateLayerDimensionData } = require('../../actions/dimension');
+import { set, compose } from '../../utils/ImmutableUtils';
+import timeline from '../../reducers/timeline';
+import { rangeDataLoaded } from '../../actions/timeline';
+import dimension from '../../reducers/dimension';
+import { updateLayerDimensionData } from '../../actions/dimension';
 
 const T1 = '2016-01-01T00:00:00.000Z';
 const T2 = '2016-02-01T00:00:00.000Z';

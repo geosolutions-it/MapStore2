@@ -7,16 +7,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {
+import {
     updateAdditionalLayer,
     updateOptionsByOwner,
     removeAdditionalLayer,
     removeAllAdditionalLayers
-} = require('../../actions/additionallayers');
+} from '../../actions/additionallayers';
 
-const additionallayers = require('../additionallayers');
+import additionallayers from '../additionallayers';
 
 describe('Test additional layers reducer', () => {
 

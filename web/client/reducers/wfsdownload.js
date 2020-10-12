@@ -5,7 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {DOWNLOAD_OPTIONS_CHANGE, DOWNLOAD_FEATURES, DOWNLOAD_FINISHED, FORMAT_OPTIONS_FETCH, FORMAT_OPTIONS_UPDATE} = require('../actions/wfsdownload');
+import {
+    DOWNLOAD_OPTIONS_CHANGE,
+    DOWNLOAD_FEATURES,
+    DOWNLOAD_FINISHED,
+    FORMAT_OPTIONS_FETCH,
+    FORMAT_OPTIONS_UPDATE
+} from '../actions/wfsdownload';
 
 /**
  * reducer for wfsdownload
@@ -58,4 +64,4 @@ function wfsdownload( state = {downloadOptions: {singlePage: true}}, action) {
     }
 }
 
-module.exports = wfsdownload;
+export default wfsdownload;

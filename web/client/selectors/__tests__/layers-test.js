@@ -6,13 +6,27 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
-    getLayerFromName, getLayerFromId, layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
-    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector,
-    currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector,
-    getLayersWithDimension, elementSelector, queryableSelectedLayersSelector
-} = require('../layers');
+import expect from 'expect';
+
+import {
+    getLayerFromName,
+    getLayerFromId,
+    layersSelector,
+    layerSelectorWithMarkers,
+    groupsSelector,
+    selectedNodesSelector,
+    layerFilterSelector,
+    layerSettingSelector,
+    layerMetadataSelector,
+    wfsDownloadSelector,
+    backgroundControlsSelector,
+    currentBackgroundSelector,
+    tempBackgroundSelector,
+    centerToMarkerSelector,
+    getLayersWithDimension,
+    elementSelector,
+    queryableSelectedLayersSelector
+} from '../layers';
 
 describe('Test layers selectors', () => {
     it('test getLayerFromName', () => {

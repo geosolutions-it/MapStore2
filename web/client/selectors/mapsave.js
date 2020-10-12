@@ -6,21 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const MapUtils = require('../utils/MapUtils');
-const {mapSelector} = require('./map');
-const {createStructuredSelector} = require('reselect');
-const {servicesSelector, selectedServiceSelector} = require('./catalog');
-const {getFloatingWidgets, getCollapsedState, getFloatingWidgetsLayout} = require('./widgets');
-const { mapInfoConfigurationSelector } = require('./mapInfo');
-const { currentTimeSelector, offsetTimeSelector } = require('./dimension');
-const { selectedLayerSelector } = require('./timeline');
-const { layersSelector, groupsSelector } = require('../selectors/layers');
-const { backgroundListSelector } = require('../selectors/backgroundselector');
-const { textSearchConfigSelector, bookmarkSearchConfigSelector } = require('./searchconfig');
+import MapUtils from '../utils/MapUtils';
+
+import { mapSelector } from './map';
+import { createStructuredSelector } from 'reselect';
+import { servicesSelector, selectedServiceSelector } from './catalog';
+import { getFloatingWidgets, getCollapsedState, getFloatingWidgetsLayout } from './widgets';
+import { mapInfoConfigurationSelector } from './mapInfo';
+import { currentTimeSelector, offsetTimeSelector } from './dimension';
+import { selectedLayerSelector } from './timeline';
+import { layersSelector, groupsSelector } from '../selectors/layers';
+import { backgroundListSelector } from '../selectors/backgroundselector';
+import { textSearchConfigSelector, bookmarkSearchConfigSelector } from './searchconfig';
 
 const customSaveHandlers = {};
 
-const registerCustomSaveHandler = (section, handler) => {
+export const registerCustomSaveHandler = (section, handler) => {
     if (handler) {
         customSaveHandlers[section] = handler;
     } else {
@@ -28,7 +29,7 @@ const registerCustomSaveHandler = (section, handler) => {
     }
 };
 
-const basicMapOptionsToSaveSelector = createStructuredSelector({
+export const basicMapOptionsToSaveSelector = createStructuredSelector({
     catalogServices: createStructuredSelector({
         services: servicesSelector,
         selectedService: selectedServiceSelector
@@ -48,7 +49,7 @@ const basicMapOptionsToSaveSelector = createStructuredSelector({
     })
 });
 
-const mapOptionsToSaveSelector = (state) => {
+export const mapOptionsToSaveSelector = (state) => {
     const customState = Object.keys(customSaveHandlers).reduce((acc, fragment) => {
         return {
             ...acc,
@@ -63,7 +64,7 @@ const mapOptionsToSaveSelector = (state) => {
  * @param {object} state the application state
  * @return the map to save
  */
-const mapSaveSelector = state => {
+export const mapSaveSelector = state => {
     const map = mapSelector(state);
     const layers = layersSelector(state);
     const groups = groupsSelector(state);
@@ -79,7 +80,7 @@ const mapSaveSelector = state => {
  * @param {object} state
  * @returns {boolean} true if there are pending changes to save.
  */
-const mapHasPendingChangesSelector = state => {
+export const mapHasPendingChangesSelector = state => {
     const updatedMap = mapSaveSelector(state);
     const currentMap = mapSelector(state) || {};
     const { canEdit } = currentMap.info || {};
@@ -87,4 +88,3 @@ const mapHasPendingChangesSelector = state => {
     return (canEdit || !currentMap.mapId) && !MapUtils.compareMapChanges(mapConfigRawData, updatedMap);
 };
 
-module.exports = { mapSaveSelector, mapOptionsToSaveSelector, mapHasPendingChangesSelector, registerCustomSaveHandler};

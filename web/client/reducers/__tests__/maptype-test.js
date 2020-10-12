@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const maptype = require('../maptype');
-const {changeMapType} = require('../../actions/maptype');
+import expect from 'expect';
+
+import maptype from '../maptype';
+import { changeMapType } from '../../actions/maptype';
 
 describe('Test the maptype reducer', () => {
     it('set a maptype', () => {

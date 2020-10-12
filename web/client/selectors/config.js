@@ -6,8 +6,4 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const loadAfterThemeSelector = (state) => state.localConfig && state.localConfig.loadAfterTheme;
-
-module.exports = {
-    loadAfterThemeSelector
-};
+export const loadAfterThemeSelector = (state) => state.localConfig && state.localConfig.loadAfterTheme;

@@ -1,26 +1,42 @@
-const { get, head } = require('lodash');
-const {createSelector} = require('reselect');
-const { createShallowSelector } = require('../utils/ReselectUtils');
-const { reprojectBbox } = require('../utils/CoordinatesUtils');
-const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
-const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector, layersWithTimeDataSelector, layerDimensionDataSelectorCreator } = require('../selectors/dimension');
-const { mapSelector, projectionSelector } = require('../selectors/map');
-const {getLayerFromId} = require('../selectors/layers');
-const rangeSelector = state => get(state, 'timeline.range');
-const rangeDataSelector = state => get(state, 'timeline.rangeData');
+import { get, head } from 'lodash';
+import { createSelector } from 'reselect';
+import { createShallowSelector } from '../utils/ReselectUtils';
+import { reprojectBbox } from '../utils/CoordinatesUtils';
+
+import {
+    timeIntervalToSequence,
+    timeIntervalToIntervalSequence,
+    analyzeIntervalInRange,
+    isTimeDomainInterval
+} from '../utils/TimeUtils';
+
+import {
+    timeDataSelector,
+    currentTimeSelector,
+    offsetTimeSelector,
+    layerDimensionRangeSelector,
+    layersWithTimeDataSelector,
+    layerDimensionDataSelectorCreator
+} from '../selectors/dimension';
+
+import { mapSelector, projectionSelector } from '../selectors/map';
+import { getLayerFromId } from '../selectors/layers';
+
+export const rangeSelector = state => get(state, 'timeline.range');
+export const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
 // items
 const MAX_ITEMS = 50;
 
-const isCollapsed = state => get(state, 'timeline.settings.collapsed');
+export const isCollapsed = state => get(state, 'timeline.settings.collapsed');
 
-const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
+export const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
 
 /**
  * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
  * @return the flag of sync of the timeline with the map viewport
  */
-const isMapSync = state => get(state, 'timeline.settings.mapSync'); // TODO: get live filter enabled flag
+export const isMapSync = state => get(state, 'timeline.settings.mapSync'); // TODO: get live filter enabled flag
 /**
  * Converts the list of timestamps into timeline items.
  * If a timestamp is a start/end/resolution, and items in viewRange are less than MAX_ITEMS, returns tha array of items,
@@ -30,7 +46,7 @@ const isMapSync = state => get(state, 'timeline.settings.mapSync'); // TODO: get
  * @param {object} viewRange start/end object representing the date range of the view
  * @returns {array[object]} items to pass to timeline.
  */
-const timeStampToItems = (ISOString, viewRange) => {
+export const timeStampToItems = (ISOString, viewRange) => {
     const [start, end, duration] = ISOString.split("/");
     if (duration && duration !== "0") {
         // prevent overflows, indicating only the count of items in the interval
@@ -66,7 +82,7 @@ const timeStampToItems = (ISOString, viewRange) => {
  * @param {object} range start/end object representing the range of the view
  * @returns {array[object]} items to pass to timeline.
  */
-const valuesToItems = (values, range) => (values || []).reduce((acc, ISOString) => [...acc, ...timeStampToItems(ISOString, range)], []).filter(v => v && v.start);
+export const valuesToItems = (values, range) => (values || []).reduce((acc, ISOString) => [...acc, ...timeStampToItems(ISOString, range)], []).filter(v => v && v.start);
 
 /**
  * Converts range data into items.If values are present, it returns values' items, otherwise it will return histogram items.
@@ -74,7 +90,7 @@ const valuesToItems = (values, range) => (values || []).reduce((acc, ISOString) 
  * @param {object} range start/stop object representing the range of the view
  * @returns {array[object]} items to pass to timeline.
  */
-const rangeDataToItems = (rangeData = {}, range) => {
+export const rangeDataToItems = (rangeData = {}, range) => {
     if (rangeData.domain && rangeData.domain.values) {
         return valuesToItems(rangeData.domain.values, range);
     }
@@ -101,7 +117,7 @@ const rangeDataToItems = (rangeData = {}, range) => {
  * @param {object} range start/end object that represent the view range
  * @param {object} rangeData object that contains domain or histogram
  */
-const getTimeItems = (data = {}, range, rangeData) => {
+export const getTimeItems = (data = {}, range, rangeData) => {
     if (data && data.values || data && data.domain && !isTimeDomainInterval(data.domain)) {
         return valuesToItems(data.values || data.domain.split(','), range);
     } else if (rangeData && rangeData.histogram) {
@@ -116,7 +132,7 @@ const getTimeItems = (data = {}, range, rangeData) => {
  * @param {object} state the state
  * @return {object[]} items to show in the timeline in the [visjs timeline data object format](http://visjs.org/docs/timeline/#Data_Format)
  */
-const itemsSelector = createShallowSelector(
+export const itemsSelector = createShallowSelector(
     timeDataSelector,
     rangeSelector,
     rangeDataSelector,
@@ -132,28 +148,28 @@ const itemsSelector = createShallowSelector(
             .reduce((acc, layerItems) => [...acc, ...layerItems], [])]
     )
 );
-const loadingSelector = state => get(state, "timeline.loading");
-const selectedLayerSelector = state => get(state, "timeline.selectedLayer");
+export const loadingSelector = state => get(state, "timeline.loading");
+export const selectedLayerSelector = state => get(state, "timeline.selectedLayer");
 
-const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
-const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
-const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && head(selectedLayerData(state).dimensions.filter((x) => x.name === "time"));
-const selectedLayerUrl = state => get(selectedLayerTimeDimensionConfiguration(state), "source.url");
+export const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
+export const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
+export const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && head(selectedLayerData(state).dimensions.filter((x) => x.name === "time"));
+export const selectedLayerUrl = state => get(selectedLayerTimeDimensionConfiguration(state), "source.url");
 
-const currentTimeRangeSelector = createSelector(
+export const currentTimeRangeSelector = createSelector(
     currentTimeSelector,
     offsetTimeSelector,
     (start, end) => ({ start, end })
 );
-const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
+export const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
 
 /**
  * Select layers visible in the timeline
  */
-const timelineLayersSelector = layersWithTimeDataSelector; // TODO: allow exclusion.
+export const timelineLayersSelector = layersWithTimeDataSelector; // TODO: allow exclusion.
 
-const hasLayers = createSelector(timelineLayersSelector, (layers = []) => layers.length > 0);
-const isVisible = state => !isCollapsed(state) && hasLayers(state);
+export const hasLayers = createSelector(timelineLayersSelector, (layers = []) => layers.length > 0);
+export const isVisible = state => !isCollapsed(state) && hasLayers(state);
 
 
 /**
@@ -163,7 +179,7 @@ const isVisible = state => !isCollapsed(state) && hasLayers(state);
  * @param {string} layerId The layer ID
  * @returns a selector for multidimensional requests options (`bbox`)
  */
-const multidimOptionsSelectorCreator = layerId => state => {
+export const multidimOptionsSelectorCreator = layerId => state => {
     const { bbox: viewport } = mapSelector(state) || {};
     if (!viewport ) {
         return {};
@@ -204,25 +220,4 @@ const multidimOptionsSelectorCreator = layerId => state => {
         bbox: `${minx},${miny},${maxx},${maxy},${crs}`
     };
 
-};
-
-module.exports = {
-    isVisible,
-    isCollapsed,
-    currentTimeRangeSelector,
-    timelineLayersSelector,
-    hasLayers,
-    itemsSelector,
-    rangeSelector,
-    isAutoSelectEnabled,
-    loadingSelector,
-    selectedLayerSelector,
-    selectedLayerData,
-    selectedLayerTimeDimensionConfiguration,
-    selectedLayerDataRangeSelector,
-    selectedLayerName,
-    selectedLayerUrl,
-    rangeDataSelector,
-    isMapSync,
-    multidimOptionsSelectorCreator
 };

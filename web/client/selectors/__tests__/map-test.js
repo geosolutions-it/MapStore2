@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     mapSelector,
     projectionSelector,
     mapVersionSelector,
@@ -23,7 +24,8 @@ const {
     isMouseMoveActiveSelector,
     isMouseMoveCoordinatesActiveSelector,
     isMouseMoveIdentifyActiveSelector
-} = require('../map');
+} from '../map';
+
 const center = {x: 1, y: 1};
 let state = {
     map: {center: center},

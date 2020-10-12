@@ -6,11 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const assign = require('object-assign');
-const _ = require('lodash');
-const {createSelector} = require('reselect');
+import assign from 'object-assign';
 
-const rulesSelector = (state) => {
+import _ from 'lodash';
+import { createSelector } from 'reselect';
+
+export const rulesSelector = (state) => {
     if (!state.rulesmanager || !state.rulesmanager.rules) {
         return [];
     }
@@ -30,7 +31,7 @@ const rulesSelector = (state) => {
     });
 };
 
-const optionsSelector = (state) => {
+export const optionsSelector = (state) => {
     const stateOptions = state.rulesmanager && state.rulesmanager.options || {};
     const options = {};
     options.roles = stateOptions.roles;
@@ -43,15 +44,15 @@ const optionsSelector = (state) => {
     options.layersCount = stateOptions.layersCount || 0;
     return options;
 };
-const EMPTY_FILTERS = {};
-const filterSelector = (state) => state.rulesmanager && state.rulesmanager.filters || EMPTY_FILTERS;
-const selectedRules = (state) => state.rulesmanager && state.rulesmanager.selectedRules || [];
-const activeRuleSelector = (state) => state.rulesmanager && state.rulesmanager.activeRule;
-const servicesConfigSel = (state) => state.rulesmanager && state.rulesmanager.services;
-const servicesSelector = createSelector(servicesConfigSel, (services) => ( services && Object.keys(services).map(service => ({value: service, label: service}))
+export const EMPTY_FILTERS = {};
+export const filterSelector = (state) => state.rulesmanager && state.rulesmanager.filters || EMPTY_FILTERS;
+export const selectedRules = (state) => state.rulesmanager && state.rulesmanager.selectedRules || [];
+export const activeRuleSelector = (state) => state.rulesmanager && state.rulesmanager.activeRule;
+export const servicesConfigSel = (state) => state.rulesmanager && state.rulesmanager.services;
+export const servicesSelector = createSelector(servicesConfigSel, (services) => ( services && Object.keys(services).map(service => ({value: service, label: service}))
 ));
-const targetPositionSelector = (state) => state.rulesmanager && state.rulesmanager.targetPosition || EMPTY_FILTERS;
-const rulesEditorToolbarSelector = createSelector(selectedRules, targetPositionSelector, (sel, {offsetFromTop}) => {
+export const targetPositionSelector = (state) => state.rulesmanager && state.rulesmanager.targetPosition || EMPTY_FILTERS;
+export const rulesEditorToolbarSelector = createSelector(selectedRules, targetPositionSelector, (sel, {offsetFromTop}) => {
     return {
         showAdd: sel.length === 0,
         showEdit: sel.length === 1,
@@ -61,23 +62,8 @@ const rulesEditorToolbarSelector = createSelector(selectedRules, targetPositionS
         showCache: sel.length === 0
     };
 });
-const isRulesManagerConfigured = state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins.rulesmanager;
-const isEditorActive = state => state.rulesmanager && !!state.rulesmanager.activeRule;
-const triggerLoadSel = state => state.rulesmanager && state.rulesmanager.triggerLoad;
-const isLoading = state => state.rulesmanager && state.rulesmanager.loading;
-const geometryStateSel = state => state.rulesmanager && state.rulesmanager.geometryState;
-module.exports = {
-    rulesSelector,
-    optionsSelector,
-    selectedRules,
-    filterSelector,
-    servicesSelector,
-    rulesEditorToolbarSelector,
-    isEditorActive,
-    activeRuleSelector,
-    servicesConfigSel,
-    triggerLoadSel,
-    isLoading,
-    isRulesManagerConfigured,
-    geometryStateSel
-};
+export const isRulesManagerConfigured = state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins.rulesmanager;
+export const isEditorActive = state => state.rulesmanager && !!state.rulesmanager.activeRule;
+export const triggerLoadSel = state => state.rulesmanager && state.rulesmanager.triggerLoad;
+export const isLoading = state => state.rulesmanager && state.rulesmanager.loading;
+export const geometryStateSel = state => state.rulesmanager && state.rulesmanager.geometryState;
