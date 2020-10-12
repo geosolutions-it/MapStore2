@@ -165,7 +165,7 @@ describe('geostory reducer', () => {
     });
     describe('remove', () => {
         const STATE_STORY = geostory(undefined, setCurrentStory(TEST_STORY));
-        it.skip('as entry', () => {
+        it('as entry', () => {
             const SECTION_ID = TEST_STORY.sections[0].id;
             const CONTENT_ID = TEST_STORY.sections[0].contents[0].id;
             const pathToContentHtml = `sections[{"id":"${SECTION_ID}"}].contents[{"id":"${CONTENT_ID}"}].html`;

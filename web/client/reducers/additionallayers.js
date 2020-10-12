@@ -7,13 +7,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     UPDATE_ADDITIONAL_LAYER,
     REMOVE_ADDITIONAL_LAYER,
     UPDATE_OPTIONS_BY_OWNER,
     REMOVE_ALL_ADDITIONAL_LAYERS
-} = require('../actions/additionallayers');
-const { head, pickBy, identity, isObject, isArray } = require('lodash');
+} from '../actions/additionallayers';
+
+import { head, pickBy, identity, isObject, isArray } from 'lodash';
 
 function additionallayers(state = [], action) {
     switch (action.type) {
@@ -56,4 +57,4 @@ function additionallayers(state = [], action) {
     }
 }
 
-module.exports = additionallayers;
+export default additionallayers;

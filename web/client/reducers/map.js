@@ -6,15 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
-    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, PAN_TO,
-    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT,
-    RESIZE_MAP, CHANGE_MAP_LIMITS, SET_MAP_RESOLUTIONS,
-    TOGGLE_UNSAVED_MAP_CHANGES_DIALOG, REGISTER_EVENT_LISTENER, UNREGISTER_EVENT_LISTENER} = require('../actions/map');
+import {
+    CHANGE_MAP_VIEW,
+    CHANGE_MOUSE_POINTER,
+    CHANGE_ZOOM_LVL,
+    CHANGE_MAP_CRS,
+    CHANGE_MAP_SCALES,
+    PAN_TO,
+    CHANGE_MAP_STYLE,
+    CHANGE_ROTATION,
+    UPDATE_VERSION,
+    ZOOM_TO_POINT,
+    RESIZE_MAP,
+    CHANGE_MAP_LIMITS,
+    SET_MAP_RESOLUTIONS,
+    REGISTER_EVENT_LISTENER,
+    UNREGISTER_EVENT_LISTENER
+} from '../actions/map';
 
-var assign = require('object-assign');
-var MapUtils = require('../utils/MapUtils');
-var CoordinatesUtils = require('../utils/CoordinatesUtils');
+import assign from 'object-assign';
+import MapUtils from '../utils/MapUtils';
+import CoordinatesUtils from '../utils/CoordinatesUtils';
 
 function mapConfig(state = {eventListeners: {}}, action) {
     switch (action.type) {
@@ -110,9 +122,6 @@ function mapConfig(state = {eventListeners: {}}, action) {
     case UPDATE_VERSION: {
         return assign({}, state, {version: action.version});
     }
-    case TOGGLE_UNSAVED_MAP_CHANGES_DIALOG: {
-        return assign({}, state, { showUnsavedMapChangesDialog: !(state && state.showUnsavedMapChangesDialog) });
-    }
     case REGISTER_EVENT_LISTENER: {
         return assign({}, state,
             {eventListeners: assign({}, state.eventListeners || {},
@@ -133,4 +142,4 @@ function mapConfig(state = {eventListeners: {}}, action) {
     }
 }
 
-module.exports = mapConfig;
+export default mapConfig;

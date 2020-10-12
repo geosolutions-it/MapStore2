@@ -5,10 +5,10 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
+import expect from 'expect';
 
-const searchconfig = require('../searchconfig');
-const {SET_SEARCH_CONFIG_PROP, RESET_SEARCH_CONFIG, UPDATE_SERVICE} = require('../../actions/searchconfig');
+import searchconfig from '../searchconfig';
+import { SET_SEARCH_CONFIG_PROP, RESET_SEARCH_CONFIG, UPDATE_SERVICE } from '../../actions/searchconfig';
 
 describe('Test the searchconfig reducer', () => {
     it('Map config loaded with textSearchConfig', () => {

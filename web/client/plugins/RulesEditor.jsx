@@ -88,7 +88,7 @@ const Plugin = connect(
 module.exports = {
     RulesEditorPlugin: Plugin,
     reducers: {
-        rulesmanager: require('../reducers/rulesmanager')
+        rulesmanager: require('../reducers/rulesmanager').default
     },
     epics: require("../epics/rulesmanager")
 };

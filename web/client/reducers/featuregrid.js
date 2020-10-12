@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const assign = require("object-assign");
-const {head, get} = require("lodash");
-const {
+import assign from 'object-assign';
+
+import { head, get } from 'lodash';
+
+import {
     SELECT_FEATURES,
     DESELECT_FEATURES,
     TOGGLE_FEATURES_SELECTION,
@@ -21,7 +23,8 @@ const {
     CLEAR_CHANGES,
     CHANGE_PAGE,
     DOCK_SIZE_FEATURES,
-    SET_LAYER, TOGGLE_TOOL,
+    SET_LAYER,
+    TOGGLE_TOOL,
     CUSTOMIZE_ATTRIBUTE,
     SET_SELECTION_OPTIONS,
     TOGGLE_MODE,
@@ -42,18 +45,12 @@ const {
     GRID_QUERY_RESULT,
     LOAD_MORE_FEATURES,
     SET_UP,
-    SET_TIME_SYNC,
-    ENABLE_GEOMETRY_FILTER
-} = require('../actions/featuregrid');
-const {
-    FEATURE_TYPE_LOADED,
-    QUERY_CREATE
-} = require('../actions/wfsquery');
-const {
-    CHANGE_DRAWING_STATUS
-} = require('../actions/draw');
+    SET_TIME_SYNC
+} from '../actions/featuregrid';
 
-const uuid = require('uuid');
+import { FEATURE_TYPE_LOADED, QUERY_CREATE } from '../actions/wfsquery';
+import { CHANGE_DRAWING_STATUS } from '../actions/draw';
+import uuid from 'uuid';
 
 const emptyResultsState = {
     advancedFilters: {},
@@ -394,12 +391,9 @@ function featuregrid(state = emptyResultsState, action) {
     case SET_TIME_SYNC: {
         return assign({}, state, {timeSync: action.value});
     }
-    case ENABLE_GEOMETRY_FILTER: {
-        return assign({}, state, {geometryFilterEnabled: action.enable});
-    }
     default:
         return state;
     }
 }
 
-module.exports = featuregrid;
+export default featuregrid;

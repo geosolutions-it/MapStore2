@@ -6,13 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {
-    CHANGE_HELP_STATE,
-    CHANGE_HELP_TEXT,
-    CHANGE_HELPWIN_VIZ
-} = require('../actions/help');
+import { CHANGE_HELP_STATE, CHANGE_HELP_TEXT, CHANGE_HELPWIN_VIZ } from '../actions/help';
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
 function help(state = null, action) {
     switch (action.type) {
@@ -35,4 +31,4 @@ function help(state = null, action) {
     }
 }
 
-module.exports = help;
+export default help;

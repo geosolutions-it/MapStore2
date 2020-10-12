@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const globeswitcher = require('../globeswitcher');
-const {changeMapType} = require('../../actions/maptype');
-const {updateLast2dMapType} = require('../../actions/globeswitcher');
+import expect from 'expect';
+
+import globeswitcher from '../globeswitcher';
+import { changeMapType } from '../../actions/maptype';
+import { updateLast2dMapType } from '../../actions/globeswitcher';
 
 describe('Test the globeswitcher reducer', () => {
     it('check to store last 2d map type', () => {

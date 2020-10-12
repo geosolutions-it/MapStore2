@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {get} = require('lodash');
+import { get } from 'lodash';
 
 /**
  * selects additionallayers state
@@ -21,8 +21,4 @@ const {get} = require('lodash');
  * @param  {object} state the state
  * @return {array} array of layers items eg: [{ id: 'layerId', actionType: 'override', options: {}, owner: 'myplugin' }]
  */
-const additionalLayersSelector = state => get(state, 'additionallayers') || [];
-
-module.exports = {
-    additionalLayersSelector
-};
+export const additionalLayersSelector = state => get(state, 'additionallayers') || [];

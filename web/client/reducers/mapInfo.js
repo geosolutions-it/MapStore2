@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
     LOAD_FEATURE_INFO,
@@ -31,15 +31,13 @@ const {
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
     SET_MAP_TRIGGER
-} = require('../actions/mapInfo');
-const {
-    MAP_CONFIG_LOADED
-} = require('../actions/config');
-const {RESET_CONTROLS} = require('../actions/controls');
+} from '../actions/mapInfo';
 
-const assign = require('object-assign');
-const {findIndex, isUndefined, isEmpty} = require('lodash');
-const {getValidator} = require('../utils/MapInfoUtils');
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import { RESET_CONTROLS } from '../actions/controls';
+import assign from 'object-assign';
+import { findIndex, isUndefined, isEmpty } from 'lodash';
+import { getValidator } from '../utils/MapInfoUtils';
 
 /**
  * Identifies when to update a index when the display information trigger is click (GFI panel)
@@ -455,4 +453,4 @@ function mapInfo(state = initState, action) {
     }
 }
 
-module.exports = mapInfo;
+export default mapInfo;

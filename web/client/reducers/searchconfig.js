@@ -5,12 +5,11 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-var {
-    SET_SEARCH_CONFIG_PROP, RESET_SEARCH_CONFIG,
-    UPDATE_SERVICE} = require('../actions/searchconfig');
-var {RESET_CONTROLS} = require('../actions/controls');
-var {MAP_CONFIG_LOADED} = require('../actions/config');
-const assign = require('object-assign');
+import { SET_SEARCH_CONFIG_PROP, RESET_SEARCH_CONFIG, UPDATE_SERVICE } from '../actions/searchconfig';
+
+import { RESET_CONTROLS } from '../actions/controls';
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import assign from 'object-assign';
 
 function searchconfig(state = null, action) {
     switch (action.type) {
@@ -42,4 +41,4 @@ function searchconfig(state = null, action) {
     }
 }
 
-module.exports = searchconfig;
+export default searchconfig;

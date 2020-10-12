@@ -6,29 +6,30 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const { head, get, isObject} = require('lodash');
-const { getLayerFromId} = require('./layers');
-const {findGeometryProperty} = require('../utils/ogc/WFS/base');
-const {currentLocaleSelector} = require('../selectors/locale');
-const {isSimpleGeomType} = require('../utils/MapUtils');
-const {toChangesMap} = require('../utils/FeatureGridUtils');
-const { layerDimensionSelectorCreator } = require('./dimension');
-const {userRoleSelector} = require('./security');
-const {isCesium} = require('./maptype');
+import { head, get, isObject } from 'lodash';
+
+import { getLayerFromId } from './layers';
+import { findGeometryProperty } from '../utils/ogc/WFS/base';
+import { currentLocaleSelector } from './locale';
+import { isSimpleGeomType } from '../utils/MapUtils';
+import { toChangesMap } from '../utils/FeatureGridUtils';
+import { layerDimensionSelectorCreator } from './dimension';
+import { userRoleSelector } from './security';
+import { isCesium } from './maptype';
+import { attributesSelector, describeSelector } from './query';
 
 
-const getLayerById = getLayerFromId;
-const getTitle = (layer = {}) => layer.title || layer.name;
-const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
-const chartDisabledSelector = state => get(state, "featuregrid.chartDisabled", false);
-const getCustomAttributeSettings = (state, att) => get(state, `featuregrid.attributes[${att.name || att.attribute}]`);
-const { attributesSelector, describeSelector } = require('./query');
-const selectedFeaturesSelector = state => state && state.featuregrid && state.featuregrid.select;
-const changesSelector = state => state && state.featuregrid && state.featuregrid.changes;
-const newFeaturesSelector = state => state && state.featuregrid && state.featuregrid.newFeatures;
-const selectedFeatureSelector = state => head(selectedFeaturesSelector(state));
+export const getLayerById = getLayerFromId;
+export const getTitle = (layer = {}) => layer.title || layer.name;
+export const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
+export const chartDisabledSelector = state => get(state, "featuregrid.chartDisabled", false);
+export const getCustomAttributeSettings = (state, att) => get(state, `featuregrid.attributes[${att.name || att.attribute}]`);
+export const selectedFeaturesSelector = state => state && state.featuregrid && state.featuregrid.select;
+export const changesSelector = state => state && state.featuregrid && state.featuregrid.changes;
+export const newFeaturesSelector = state => state && state.featuregrid && state.featuregrid.newFeatures;
+export const selectedFeatureSelector = state => head(selectedFeaturesSelector(state));
 
-const geomTypeSelectedFeatureSelector = state => {
+export const geomTypeSelectedFeatureSelector = state => {
     let desc = describeSelector(state);
     if (desc) {
         const geomDesc = findGeometryProperty(desc);
@@ -38,7 +39,7 @@ const geomTypeSelectedFeatureSelector = state => {
 };
 
 
-const hasGeometrySelectedFeature = (state) => {
+export const hasGeometrySelectedFeature = (state) => {
     let ft = selectedFeatureSelector(state);
     if (ft) {
         let changes = toChangesMap(changesSelector(state));
@@ -62,137 +63,123 @@ const hasGeometrySelectedFeature = (state) => {
     return false;
 };
 
-const notSupportedGeometries = ['Geometry', 'GeometryCollection'];
+export const notSupportedGeometries = ['Geometry', 'GeometryCollection'];
 
-const hasSupportedGeometry = state => head(notSupportedGeometries.filter(g => geomTypeSelectedFeatureSelector(state) === g)) ? false : true;
-const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;
-const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeaturesSelector(state).length > 0;
-const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
-const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLayerIdSelector(state)), "params");
-const selectedLayerSelector = state => getLayerById(state, selectedLayerIdSelector(state));
-const editingAllowedRolesSelector = state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]);
-const canEditSelector = state => state && state.featuregrid && state.featuregrid.canEdit;
+export const hasSupportedGeometry = state => head(notSupportedGeometries.filter(g => geomTypeSelectedFeatureSelector(state) === g)) ? false : true;
+export const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;
+export const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeaturesSelector(state).length > 0;
+export const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
+export const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLayerIdSelector(state)), "params");
+export const selectedLayerSelector = state => getLayerById(state, selectedLayerIdSelector(state));
+export const editingAllowedRolesSelector = state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]);
+export const canEditSelector = state => state && state.featuregrid && state.featuregrid.canEdit;
 /**
  * selects featuregrid state
  * @name featuregrid
  * @memberof selectors
  * @static
  */
-module.exports = {
-    /**
-   * selects the state of featuregrid open
-   * @memberof selectors.featuregrid
-   * @param  {object}  state applications state
-   * @return {Boolean}       true if the featuregrid is open, false otherwise
-   */
-    isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
-    getAttributeFilters,
-    /**
-   * get a filter for an attribute
-   * @memberof selectors.featuregrid
-   * @param  {object} state Application's state
-   * @param  {string} name  The name of the attribute
-   * @return {object}       The filter for the attribute
-   */
-    getAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
-    selectedLayerIdSelector,
-    getCustomAttributeSettings,
-    /**
-   * Get's the title of the selected layer
-   * @memberof selectors.featuregrid
-   * @param  {object} state the application's state
-   * @return {startDrawingFeature} the title of the current selected layer
-   */
-    getTitleSelector: state => {
-        const title = getTitle(getLayerById(state, selectedLayerIdSelector(state)));
-        return isObject(title) ? title[currentLocaleSelector(state)] || title.default || '' : title;
-    },
-    getCustomizedAttributes: state => {
-        return (attributesSelector(state) || []).map(att => {
-            const custom = getCustomAttributeSettings(state, att);
-            if (custom) {
-                return {
-                    ...att,
-                    ...custom
-                };
-            }
-            return att;
-        });
-    },
-    modeSelector: state => state && state.featuregrid && state.featuregrid.mode,
-    selectedFeaturesSelector,
-    selectedFeatureSelector,
-    selectedFeaturesCount: state => (selectedFeaturesSelector(state) || []).length,
-    changesSelector,
-    toChangesMap,
-    changesMapSelector: state => toChangesMap(changesSelector(state)),
-    hasChangesSelector,
-    hasGeometrySelector: state => hasGeometrySelectedFeature(state),
-    newFeaturesSelector,
-    hasNewFeaturesSelector,
-    showAgainSelector: state => get(state, "featuregrid.showAgain", false),
-    /**
-     * determines if the time sync button should be shown
-     */
-    showTimeSync: state => {
-        const showEnabled = get(state, "featuregrid.showTimeSync", false);
-        if (showEnabled) {
-            const layerId = selectedLayerIdSelector(state);
-            return layerDimensionSelectorCreator({id: layerId}, 'time')(state);
+
+
+/**
+ * selects the state of featuregrid open
+ * @memberof selectors.featuregrid
+ * @param  {object}  state applications state
+ * @return {Boolean}       true if the featuregrid is open, false otherwise
+ */
+export const isFeatureGridOpen = state => state && state.featuregrid && state.featuregrid.open;
+
+/**
+ * get a filter for an attribute
+ * @memberof selectors.featuregrid
+ * @param  {object} state Application's state
+ * @param  {string} name  The name of the attribute
+ * @return {object}       The filter for the attribute
+ */
+export const getAttributeFilter = (state, name) => get(getAttributeFilters(state), name);
+/**
+ * Get's the title of the selected layer
+ * @memberof selectors.featuregrid
+ * @param  {object} state the application's state
+ * @return {startDrawingFeature} the title of the current selected layer
+ */
+export const getTitleSelector = state => {
+    const title = getTitle(getLayerById(state, selectedLayerIdSelector(state)));
+    return isObject(title) ? title[currentLocaleSelector(state)] || title.default || '' : title;
+};
+export const getCustomizedAttributes = state => {
+    return (attributesSelector(state) || []).map(att => {
+        const custom = getCustomAttributeSettings(state, att);
+        if (custom) {
+            return {
+                ...att,
+                ...custom
+            };
         }
-        return null;
-    },
-    timeSyncActive: state => get(state, "featuregrid.timeSync", false),
-    showPopoverSyncSelector: state => get(state, "featuregrid.showPopoverSync", true),
-    isSavingSelector: state => state && state.featuregrid && state.featuregrid.saving,
-    editingAllowedRolesSelector,
-    isSavedSelector: state => state && state.featuregrid && state.featuregrid.saved,
-    isDrawingSelector: state => state && state.featuregrid && state.featuregrid.drawing,
-    geomTypeSelectedFeatureSelector,
-    chartDisabledSelector,
-    hasNewFeaturesOrChanges: state => hasNewFeaturesSelector(state) || hasChangesSelector(state),
-    isSimpleGeomSelector: state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state)),
-    canEditSelector,
-    /**
-     * check if the feature geometry is supported for editing
-     * @function
-     * @memberof selectors.featuregrid
-     * @param  {object}  state applications state
-     * @return {boolean}       true if the geometry is supported, false otherwise
-     */
-    hasSupportedGeometry,
-    getDockSize: state => state.featuregrid && state.featuregrid.dockSize,
-    /**
-     * get selected layer name
-     * @function
-     * @memberof selectors.featuregrid
-     * @param  {object}  state applications state
-     * @return {string}       name of selected layer
-     */
-    selectedLayerNameSelector: state => {
-        const layer = getLayerById(state, selectedLayerIdSelector(state));
-        return layer && layer.name || '';
+        return att;
+    });
+};
+export const modeSelector = state => state && state.featuregrid && state.featuregrid.mode;
+export const selectedFeaturesCount = state => (selectedFeaturesSelector(state) || []).length;
+export const changesMapSelector = state => toChangesMap(changesSelector(state));
+export const hasGeometrySelector = state => hasGeometrySelectedFeature(state);
+export const showAgainSelector = state => get(state, "featuregrid.showAgain", false);
+/**
+ * determines if the time sync button should be shown
+ */
+export const showTimeSync = state => {
+    const showEnabled = get(state, "featuregrid.showTimeSync", false);
+    if (showEnabled) {
+        const layerId = selectedLayerIdSelector(state);
+        return layerDimensionSelectorCreator({id: layerId}, 'time')(state);
+    }
+    return null;
+};
+export const timeSyncActive = state => get(state, "featuregrid.timeSync", false);
+export const showPopoverSyncSelector = state => get(state, "featuregrid.showPopoverSync", true);
+export const isSavingSelector = state => state && state.featuregrid && state.featuregrid.saving;
+export const isSavedSelector = state => state && state.featuregrid && state.featuregrid.saved;
+export const isDrawingSelector = state => state && state.featuregrid && state.featuregrid.drawing;
 
-    },
-    /**
-     * Returns well known vendor params of the selected layer to be used in feature grid.
-     * returns an object that contains `viewParams` and `cqlFilter` getting them from the params object of the layer
-     */
-    queryOptionsSelector: state => {
-        const params = selectedLayerParamsSelector(state);
-        const viewParams = params && (params.VIEWPARAMS || params.viewParams || params.viewparams);
-        const cqlFilter = params && (params.CQL_FILTER || params.cqlFilter || params.cql_filter);
-        return {
-            viewParams,
-            cqlFilter
-        };
-    },
-    isEditingAllowedSelector: state => {
-        const role = userRoleSelector(state);
-        const editingAllowedRoles = editingAllowedRolesSelector(state) || ['ADMIN'];
-        const canEdit = canEditSelector(state);
+export const hasNewFeaturesOrChanges = state => hasNewFeaturesSelector(state) || hasChangesSelector(state);
+export const isSimpleGeomSelector = state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state));
+/**
+ * check if the feature geometry is supported for editing
+ * @function
+ * @memberof selectors.featuregrid
+ * @param  {object}  state applications state
+ * @return {boolean}       true if the geometry is supported, false otherwise
+ */
+export const getDockSize = state => state.featuregrid && state.featuregrid.dockSize;
+/**
+ * get selected layer name
+ * @function
+ * @memberof selectors.featuregrid
+ * @param  {object}  state applications state
+ * @return {string}       name of selected layer
+ */
+export const selectedLayerNameSelector = state => {
+    const layer = getLayerById(state, selectedLayerIdSelector(state));
+    return layer && layer.name || '';
 
-        return (editingAllowedRoles.indexOf(role) !== -1 || canEdit) && !isCesium(state);
-    },
-    selectedLayerSelector
+};
+/**
+ * Returns well known vendor params of the selected layer to be used in feature grid.
+ * returns an object that contains `viewParams` and `cqlFilter` getting them from the params object of the layer
+ */
+export const queryOptionsSelector = state => {
+    const params = selectedLayerParamsSelector(state);
+    const viewParams = params && (params.VIEWPARAMS || params.viewParams || params.viewparams);
+    const cqlFilter = params && (params.CQL_FILTER || params.cqlFilter || params.cql_filter);
+    return {
+        viewParams,
+        cqlFilter
+    };
+};
+export const isEditingAllowedSelector = state => {
+    const role = userRoleSelector(state);
+    const editingAllowedRoles = editingAllowedRolesSelector(state) || ['ADMIN'];
+    const canEdit = canEditSelector(state);
+
+    return (editingAllowedRoles.indexOf(role) !== -1 || canEdit) && !isCesium(state);
 };

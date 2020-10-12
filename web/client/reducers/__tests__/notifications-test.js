@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-const {show, hide, clear} = require('../../actions/notifications');
-const notifications = require('../notifications');
+import expect from 'expect';
+
+import { show, hide, clear } from '../../actions/notifications';
+import notifications from '../notifications';
 describe('Test the notifications reducer', () => {
     it('add notification', () => {
         let state = notifications([], show({title: "test", uid: 1}));

@@ -10,7 +10,7 @@ import expect from 'expect';
 import mediaEditor, {DEFAULT_STATE} from '../mediaEditor';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-const {
+import {
     chooseMedia,
     hide,
     loadMediaSuccess,
@@ -21,7 +21,7 @@ const {
     setMediaType,
     show,
     updateItem
-} = require('../../actions/mediaEditor');
+} from '../../actions/mediaEditor';
 
 describe('Test the mediaEditor reducer', () => {
 
