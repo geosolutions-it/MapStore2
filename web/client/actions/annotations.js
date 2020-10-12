@@ -61,6 +61,7 @@ export const CHANGE_GEOMETRY_TITLE = 'ANNOTATIONS:CHANGE_GEOMETRY_TITLE';
 export const FILTER_MARKER = 'ANNOTATIONS:FILTER_MARKER';
 export const HIDE_MEASURE_WARNING = 'ANNOTATIONS:HIDE_MEASURE_WARNING';
 export const TOGGLE_SHOW_AGAIN = 'ANNOTATIONS:TOGGLE_SHOW_AGAIN';
+export const GEOMETRY_HIGHLIGHT = 'ANNOTATIONS:GEOMETRY_HIGHLIGHT';
 
 export const initPlugin = () => ({
     type: INIT_PLUGIN
@@ -394,6 +395,13 @@ export const loading = (value, name = "loading") => ({
 export const filterMarker = (filter) => ({
     type: FILTER_MARKER,
     filter
+});
+
+
+export const geometryHighlight = (id, state) => ({
+    type: GEOMETRY_HIGHLIGHT,
+    id,
+    state
 });
 
 export const hideMeasureWarning = () => ({
