@@ -22,7 +22,8 @@ class MarkerType extends React.Component {
         pointType: PropTypes.string,
         options: PropTypes.array,
         onChangeType: PropTypes.func,
-        width: PropTypes.number
+        width: PropTypes.number,
+        selectComponent: PropTypes.node
     };
 
     static defaultProps = {
@@ -39,6 +40,7 @@ class MarkerType extends React.Component {
     };
 
     render() {
+        const SelectComponent = this.props.selectComponent || Select;
         return (
             <div>
                 <Row>
@@ -46,12 +48,12 @@ class MarkerType extends React.Component {
                         <strong><Message msgId="draw.marker.type"/></strong>
                     </Col>
                     <Col xs={6} style={{ position: 'static' }}>
-                        <Select
+                        <SelectComponent
                             clearable={false}
                             options={this.props.options}
                             value={this.props.pointType || 'marker'}
                             onChange={(option) => {
-                                const pointType = option && option.value;
+                                const pointType = option && option.value || option;
                                 this.props.onChangeType(this.props.style.id, pointType);
                             }}
                         />

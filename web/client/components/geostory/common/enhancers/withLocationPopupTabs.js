@@ -10,6 +10,21 @@ import { compose, withProps } from 'recompose';
 import Text from '../../contents/Text';
 
 import withControllableState from '../../../misc/enhancers/withControllableState';
+import Manager from '../../../style/vector/Manager';
+import config from '../../../mapcontrols/annotations/AnnotationsConfig';
+
+import {DropdownList} from 'react-widgets';
+
+const styleSelectComponent = (props) => {
+    const { options, value, onChange } = props;
+    return (
+        <DropdownList
+            key="format-dropdown"
+            value={value}
+            data={options.map(opt => opt.value)}
+            onChange={onChange} />
+    );
+};
 
 const withDefaultTabs = withProps((props) => ({
     tabs: props.tabs || [{
@@ -20,6 +35,23 @@ const withDefaultTabs = withProps((props) => ({
         visible: true,
         Component: () => {
             return (<div className="ms-locations-popup-editor"><Text {...props} allowBlur={false} keepOpen mode="edit" /></div>);
+        }
+    },
+    {
+        id: 'popup-style-editor',
+        titleId: 'popup-style-editor',
+        tooltipId: 'popup-style-editor',
+        title: 'Style',
+        visible: true,
+        Component: () => {
+            return (
+                <div className="ms-locations-popup-editor">
+                    <Manager
+                        selectComponent={styleSelectComponent}
+                        markersOptions={{...config}}
+                        style={props.currentLocationData.style} />
+                </div>
+            );
         }
     }]
 }));
