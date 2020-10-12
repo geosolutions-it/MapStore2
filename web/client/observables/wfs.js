@@ -101,6 +101,20 @@ export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
         query: params
     });
 
+
+    if (layer.type === 'vector') {
+        return Rx.Observable.defer(() => new Promise((resolve) => {
+            if(!layer.originalFeatures || layer.originalFeatures[0].properties.contextDescriptionName !== layer.features[0].properties.contextDescriptionName){
+                layer.originalFeatures = layer.features;
+            }
+            let features =  createFeatureCollection(layer.originalFeatures);
+            let featuresFiltered = getFeaturesFiltered(features, filterObj);
+            if(featuresFiltered){
+                layer.features = featuresFiltered.features;
+            }
+            resolve(featuresFiltered);
+        }));
+    }
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
             timeout: 60000,
@@ -198,3 +212,67 @@ export default {
     describeFeatureType,
     getLayerWFSCapabilities
 };
+
+const createFeatureCollection = (features) => (
+    {
+        crs: {type: "name", properties: {name: "urn:ogc:def:crs:EPSG::4326"}},
+        numberMatched: features.length,
+        numberReturned: features.length,
+        timeStamp: "2020-07-20T11:36:20.118Z",
+        totalFeatures: features.length,
+        type: 'FeatureCollection',
+        features: features
+    }
+)
+
+const getFeaturesFiltered = (features, filterObj) =>{
+    if(filterObj.filterFields && filterObj.filterFields.length !== 0) {
+        const featuresFiltered = features.features.filter(feature => filterFeatures(feature, filterObj.filterFields));
+
+        features.features = featuresFiltered;
+        features.numberMatched = featuresFiltered.length;
+        features.numberReturned = featuresFiltered.length;
+        features.totalFeatures = featuresFiltered.length;
+        return features;
+    }
+    return features;
+
+}
+
+const filterFeatures = (feature, filterFields) =>{
+
+    for(let i = 0; i< filterFields.length; i++){
+        if(feature.properties[filterFields[i].attribute] === undefined ){
+
+            return false;
+
+        }
+        if(filterFields[i].type === "string" &&
+            !feature.properties[filterFields[i].attribute].toLowerCase().includes(filterFields[i].value.toLowerCase())){
+
+            return false;
+
+        }
+
+        if(filterFields[i].type === "number" && !feature.properties[filterFields[i].attribute].includes(filterFields[i].value)){
+
+            return false;
+        }
+
+        if(filterFields[i].type === "date"){
+
+            let dateFeature = new Date(feature.properties[filterFields[i].attribute]);
+            let dateFilter = new Date(filterFields[i].value.startDate);
+
+            if(dateFeature.getFullYear() !== dateFilter.getFullYear() ||
+                dateFeature.getMonth() !== dateFilter.getMonth() ||
+                dateFeature.getDay() !== dateFilter.getDay() ){
+
+                return false;
+            }
+        }
+
+    }
+    return true;
+}
+
