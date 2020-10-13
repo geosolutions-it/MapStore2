@@ -189,6 +189,6 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {crsselector: require('../reducers/crsselector')},
+    reducers: {crsselector: require('../reducers/crsselector').default},
     epics: {}
 };

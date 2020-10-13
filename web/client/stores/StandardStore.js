@@ -9,7 +9,7 @@ const assign = require('object-assign');
 
 const {mapConfigHistory, createHistory} = require('../utils/MapHistoryUtils');
 
-const map = mapConfigHistory(require('../reducers/map')).default;
+const map = mapConfigHistory(require('../reducers/map').default);
 
 const layers = require('../reducers/layers').default;
 const mapConfig = require('../reducers/config').default;

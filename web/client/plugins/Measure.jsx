@@ -117,6 +117,6 @@ module.exports = {
             action: () => setControlProperty("measure", "enabled", true)
         }
     }),
-    reducers: {measurement: require('../reducers/measurement')},
+    reducers: {measurement: require('../reducers/measurement').default},
     epics: require('../epics/measurement')
 };
