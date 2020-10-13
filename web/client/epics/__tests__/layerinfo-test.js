@@ -87,6 +87,13 @@ describe('layerinfo epics', () => {
             title: 'layer3 title',
             description: 'layer3 description',
             type: 'tileprovider'
+        }, {
+            id: 'layer4',
+            name: 'layer4 name',
+            title: 'layer4 title',
+            description: 'layer4 description',
+            type: 'wms',
+            group: 'background'
         }];
 
         testEpic(layerInfoSetupLayersEpic, 4, setControlProperty('layerinfo', 'enabled', true), actions => {

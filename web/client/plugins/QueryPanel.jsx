@@ -454,9 +454,9 @@ const QueryPanelPlugin = connect(tocSelector, {
 module.exports = {
     QueryPanelPlugin,
     reducers: {
-        queryform: require('../reducers/queryform'),
-        query: require('../reducers/query'),
-        layerFilter: require('../reducers/layerFilter')
+        queryform: require('../reducers/queryform').default,
+        query: require('../reducers/query').default,
+        layerFilter: require('../reducers/layerFilter').default
     },
     epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform'), ...layerFilterEpics}
 };

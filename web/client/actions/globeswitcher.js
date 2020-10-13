@@ -7,8 +7,8 @@
  */
 
 
-const TOGGLE_3D = "TOGGLE_3D";
-const UPDATE_LAST_2D_MAPTYPE = "UPDATE_LAST_2D_MAPTYPE";
+export const TOGGLE_3D = "TOGGLE_3D";
+export const UPDATE_LAST_2D_MAPTYPE = "UPDATE_LAST_2D_MAPTYPE";
 /**
  * Emitted when 3d map have to be toggled
  * @memberof actions.globeswitcher
@@ -21,7 +21,7 @@ const UPDATE_LAST_2D_MAPTYPE = "UPDATE_LAST_2D_MAPTYPE";
  * }
  * ```
  */
-function toggle3d(enable, originalMapType) {
+export function toggle3d(enable, originalMapType) {
     return {
         type: TOGGLE_3D,
         enable,
@@ -40,19 +40,14 @@ function toggle3d(enable, originalMapType) {
  * }
  * ```
  */
-function updateLast2dMapType(mapType) {
+export function updateLast2dMapType(mapType) {
     return {
         type: UPDATE_LAST_2D_MAPTYPE,
         mapType
     };
 }
+
 /**
  * Actions for Globe Switcher Plugin.
  * @name actions.globeswitcher
  */
-module.exports = {
-    toggle3d,
-    updateLast2dMapType,
-    UPDATE_LAST_2D_MAPTYPE,
-    TOGGLE_3D
-};

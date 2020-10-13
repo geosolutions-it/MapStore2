@@ -7,8 +7,14 @@
 */
 
 
-const { APPLIED_FILTER, STORE_CURRENT_APPLIED_FILTER, INIT_LAYER_FILTER, DISCARD_CURRENT_FILTER} = require("../actions/layerFilter");
-const { QUERY_FORM_RESET} = require('../actions/queryform');
+import {
+    APPLIED_FILTER,
+    STORE_CURRENT_APPLIED_FILTER,
+    INIT_LAYER_FILTER,
+    DISCARD_CURRENT_FILTER
+} from '../actions/layerFilter';
+
+import { QUERY_FORM_RESET } from '../actions/queryform';
 const initialState = {};
 
 function layerFilter(state = initialState, action) {
@@ -33,4 +39,4 @@ function layerFilter(state = initialState, action) {
     }
 }
 
-module.exports = layerFilter;
+export default layerFilter;

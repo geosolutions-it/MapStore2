@@ -5,10 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
 
-var {TASK_STARTED, TASK_SUCCESS, TASK_ERROR } = require('../../actions/tasks');
-var tasks = require('../tasks');
+import { TASK_STARTED, TASK_SUCCESS, TASK_ERROR } from '../../actions/tasks';
+import tasks from '../tasks';
 
 describe('Test the tasks reducer', () => {
 

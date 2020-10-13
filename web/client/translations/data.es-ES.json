@@ -28,6 +28,10 @@
         "collapse": "Colapso",
         "expand": "Expandir",
         "Forbidden": "Prohibido",
+        "layerNameChangeError": {
+            "title": "Error de cambio de nombre",
+            "message": "La capa no se pudo recargar con un nombre cambiado"
+        },
         "version": {
             "label": "Versión"
         },
@@ -105,7 +109,9 @@
                 "right": "Derecha",
                 "left": "Izquierda",
                 "bottom": "Bottom",
-                "top": "Cima"
+                "top": "Cima",
+                "editLayerName": "Editar el nombre de la capa",
+                "confirmLayerName": "Confirmar cambio de nombre de capa"
             },
             "legendOptions": {
               "title": "Leyenda",
@@ -704,6 +710,7 @@
             "newMeasure": "Nueva anotación",
             "selectTool": "Seleccione una herramienta de medición",
             "exportToGeoJSON": "Exportar a GeoJSON",
+            "saveMeasure": "Guarde las medidas en la anotación",
             "resetTooltip": "Medidas claras",
             "addAsLayer": "Agregar como capa"
         },
@@ -1080,9 +1087,13 @@
             "zoomTo": "Zoom a la anotación",
             "zoomToGeometry": "Zoom a geometría",
             "removeGeometry": "Eliminar",
+            "editMeasurement": "Editar medida",
             "hide": "Ocultar anotación",
             "show": "Mostrar anotación",
             "tabCoordinates": "Coordenadas",
+            "warning": "¡Advertencia!",
+            "measureWarningText": "Navegar para editar el panel de medidas eliminará cualquier estilo aplicado",
+            "notShowAgain": "No volver a mostrar este mensaje",
             "tabStyle": "Estilo",
             "filter": "Filtrar las anotaciones...",
             "titleUndoGeom": "La geometría ha cambiado",

@@ -85,8 +85,8 @@ module.exports = createPlugin(
             }
         },
         reducers: {
-            shapefile: require('../reducers/shapefile'),
-            style: require('../reducers/style')
+            shapefile: require('../reducers/shapefile').default,
+            style: require('../reducers/style').default
         }
     }
 );

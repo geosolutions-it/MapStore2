@@ -356,8 +356,8 @@ module.exports = {
             }
         }),
     reducers: {
-        styler: require('../reducers/styler'),
-        vectorstyler: require('../reducers/vectorstyler'),
-        rasterstyler: require('../reducers/rasterstyler')
+        styler: require('../reducers/styler').default,
+        vectorstyler: require('../reducers/vectorstyler').default,
+        rasterstyler: require('../reducers/rasterstyler').default
     }
 };

@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     ADD_FILTER_FIELD,
     ADD_GROUP_FIELD,
     REMOVE_FILTER_FIELD,
@@ -26,7 +27,6 @@ const {
     ZONE_SEARCH,
     ZONE_SEARCH_ERROR,
     ZONE_FILTER,
-    // OPEN_MENU,
     ZONE_CHANGE,
     ZONES_RESET,
     SHOW_GENERATED_FILTER,
@@ -48,7 +48,6 @@ const {
     changeDwithinValue,
     resetZones,
     zoneChange,
-    //  openMenu,
     zoneSearch,
     zoneSearchError,
     zoneFilter,
@@ -79,7 +78,7 @@ const {
     removeSimpleFilterField,
     removeAllSimpleFilterFields,
     changeSpatialFilterValue
-} = require('../queryform');
+} from '../queryform';
 
 describe('Test correctness of the queryform actions', () => {
 

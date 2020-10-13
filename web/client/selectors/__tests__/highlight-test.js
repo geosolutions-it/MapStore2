@@ -6,11 +6,19 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
-    selectedFeatures, filteredspatialObject, filteredspatialObjectCoord,
-    filteredGeometry, filteredSpatialObjectId, filteredSpatialObjectCrs,
-    filteredspatialObjectType, filteredFeatures, highlighedFeatures} = require('../highlight');
+import expect from 'expect';
+
+import {
+    selectedFeatures,
+    filteredspatialObject,
+    filteredspatialObjectCoord,
+    filteredGeometry,
+    filteredSpatialObjectId,
+    filteredSpatialObjectCrs,
+    filteredspatialObjectType,
+    filteredFeatures,
+    highlighedFeatures
+} from '../highlight';
 
 const idFt1 = "idFt1";
 const idFt2 = "idFt2";

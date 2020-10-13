@@ -8,26 +8,44 @@
 
 import expect from 'expect';
 
-const {
-    setCreationStep, SET_CREATION_STEP,
-    clearContextCreator, CLEAR_CONTEXT_CREATOR,
-    changeAttribute, CHANGE_ATTRIBUTE,
-    contextSaved, CONTEXT_SAVED,
-    saveNewContext, SAVE_CONTEXT,
-    enableUploadPlugin, ENABLE_UPLOAD_PLUGIN,
-    uploadPlugin, UPLOAD_PLUGIN,
-    uploadPluginError, UPLOAD_PLUGIN_ERROR,
-    pluginUploaded, PLUGIN_UPLOADED,
-    pluginUploading, UPLOADING_PLUGIN,
-    uninstallPlugin, UNINSTALL_PLUGIN,
-    uninstallPluginError, UNINSTALL_PLUGIN_ERROR,
-    pluginUninstalled, PLUGIN_UNINSTALLED,
-    pluginUninstalling, UNINSTALLING_PLUGIN,
-    showBackToPageConfirmation, BACK_TO_PAGE_SHOW_CONFIRMATION,
-    loadExtensions, LOAD_EXTENSIONS,
-    addPluginToUpload, ADD_PLUGIN_TO_UPLOAD,
-    removePluginToUpload, REMOVE_PLUGIN_TO_UPLOAD
-} = require('../contextcreator');
+import {
+    setCreationStep,
+    SET_CREATION_STEP,
+    clearContextCreator,
+    CLEAR_CONTEXT_CREATOR,
+    changeAttribute,
+    CHANGE_ATTRIBUTE,
+    contextSaved,
+    CONTEXT_SAVED,
+    saveNewContext,
+    SAVE_CONTEXT,
+    enableUploadPlugin,
+    ENABLE_UPLOAD_PLUGIN,
+    uploadPlugin,
+    UPLOAD_PLUGIN,
+    uploadPluginError,
+    UPLOAD_PLUGIN_ERROR,
+    pluginUploaded,
+    PLUGIN_UPLOADED,
+    pluginUploading,
+    UPLOADING_PLUGIN,
+    uninstallPlugin,
+    UNINSTALL_PLUGIN,
+    uninstallPluginError,
+    UNINSTALL_PLUGIN_ERROR,
+    pluginUninstalled,
+    PLUGIN_UNINSTALLED,
+    pluginUninstalling,
+    UNINSTALLING_PLUGIN,
+    showBackToPageConfirmation,
+    BACK_TO_PAGE_SHOW_CONFIRMATION,
+    loadExtensions,
+    LOAD_EXTENSIONS,
+    addPluginToUpload,
+    ADD_PLUGIN_TO_UPLOAD,
+    removePluginToUpload,
+    REMOVE_PLUGIN_TO_UPLOAD
+} from '../contextcreator';
 
 describe('contextcreator actions', () => {
     it('setCreationStep', () => {

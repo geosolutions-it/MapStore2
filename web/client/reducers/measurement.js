@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {
+import {
     CHANGE_MEASUREMENT_TOOL,
     CHANGE_MEASUREMENT_STATE,
     CHANGE_UOM,
@@ -17,14 +17,17 @@ const {
     CHANGE_FORMAT,
     CHANGE_COORDINATES,
     UPDATE_MEASURES,
-    INIT
-} = require('../actions/measurement');
-const {TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY} = require('../actions/controls');
-const {set} = require('../utils/ImmutableUtils');
-const {isPolygon} = require('../utils/openlayers/DrawUtils');
-const {dropRight} = require('lodash');
+    INIT,
+    SET_MEASUREMENT_CONFIG,
+    SET_ANNOTATION_MEASUREMENT
+} from '../actions/measurement';
 
-const assign = require('object-assign');
+import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY } from '../actions/controls';
+import { set } from '../utils/ImmutableUtils';
+import { getGeomTypeSelected } from '../utils/MeasurementUtils';
+import { isPolygon } from '../utils/openlayers/DrawUtils';
+import { dropRight, isEmpty, findIndex, isNumber } from 'lodash';
+import assign from 'object-assign';
 const defaultState = {
     lineMeasureEnabled: true,
     geomType: "LineString",
@@ -53,6 +56,7 @@ const defaultState = {
 function measurement(state = defaultState, action) {
     switch (action.type) {
     case CHANGE_MEASUREMENT_TOOL: {
+        const currentFeatureIndex = findIndex(state.features, (f)=> ((f.properties.values[0] || {}).type === 'bearing' ? 'Bearing' : f.geometry.type) === action.geomType);
         return assign({}, state, {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
@@ -65,7 +69,7 @@ function measurement(state = defaultState, action) {
                     disabled: true
                 }
             },
-            currentFeature: state.features && state.features.length || 0,
+            currentFeature: currentFeatureIndex !== -1 ? currentFeatureIndex : state.features?.length || 0,
             len: 0,
             area: 0,
             bearing: 0
@@ -128,11 +132,34 @@ function measurement(state = defaultState, action) {
     }
     case CHANGED_GEOMETRY: {
         let {features} = action;
+        const geomTypeSelected = getGeomTypeSelected(features);
         return {
             ...state,
             features,
+            geomTypeSelected,
             updatedByUI: false,
-            isDrawing: false
+            isDrawing: false,
+            ...(isEmpty(features) && {exportToAnnotation: false})
+        };
+    }
+    case SET_MEASUREMENT_CONFIG: {
+        let {property, value} = action;
+        return {
+            ...state,
+            [property]: value
+        };
+    }
+    case SET_ANNOTATION_MEASUREMENT: {
+        let {features} = action;
+        const geomTypeSelected = getGeomTypeSelected(features);
+        return {
+            ...state,
+            features,
+            geomTypeSelected,
+            updatedByUI: true,
+            isDrawing: false,
+            exportToAnnotation: true,
+            id: action.id
         };
     }
     case SET_TEXT_LABELS: {
@@ -144,14 +171,15 @@ function measurement(state = defaultState, action) {
     case SET_CURRENT_FEATURE: {
         return {
             ...state,
-            currentFeature: action.featureIndex
+            currentFeature: isNumber(action.featureIndex) ? action.featureIndex : state.features.length
         };
     }
     case TOGGLE_CONTROL: {
+        const {id, ...newState} = state;
         // TODO: remove this when the controls will be able to be mutually exclusive
         if (action.control === 'info') {
             return {
-                ...state,
+                ...newState,
                 len: 0,
                 area: 0,
                 bearing: 0,
@@ -166,7 +194,7 @@ function measurement(state = defaultState, action) {
         }
         if (action.control === 'measure') {
             return {
-                ...state,
+                ...newState,
                 geomType: "",
                 lineMeasureEnabled: false,
                 areaMeasureEnabled: false,
@@ -256,4 +284,4 @@ function measurement(state = defaultState, action) {
     }
 }
 
-module.exports = measurement;
+export default measurement;

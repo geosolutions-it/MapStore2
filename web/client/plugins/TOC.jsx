@@ -121,6 +121,7 @@ const tocSelector = createSelector(
         generalInfoFormat,
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
+        updatableLayersCount: layers.filter(l => l.group !== 'background' && (l.type === 'wms' || l.type === 'wmts')).length,
         selectedGroups: selectedNodes.map(n => LayersUtils.getNode(groups, n)).filter(n => n && n.nodes),
         mapName,
         filteredGroups: addFilteredAttributesGroups(groups, [
@@ -246,6 +247,8 @@ class LayerTree extends React.Component {
         groupNodeComponent: PropTypes.func,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         onLayerInfo: PropTypes.func,
+        onSetSwipeActive: PropTypes.func,
+        updatableLayersCount: PropTypes.number,
         onSetActive: PropTypes.func,
         onSetSwipeMode: PropTypes.func
     };
@@ -355,7 +358,6 @@ class LayerTree extends React.Component {
                 selectedNodes={this.props.selectedNodes}
                 onSelect={this.props.activateToolsContainer ? this.props.onSelectNode : null}/>);
     }
-
     getDefaultLayer = () => {
         const LayerNode = this.props.layerNodeComponent || DefaultLayer;
         return (
@@ -425,7 +427,7 @@ class LayerTree extends React.Component {
                                 activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool,
                                 activateLayerFilterTool: this.props.activateLayerFilterTool,
-                                activateLayerInfoTool: this.props.activateLayerInfoTool,
+                                activateLayerInfoTool: this.props.updatableLayersCount > 0 && this.props.activateLayerInfoTool,
                                 activateSwipeOnLayer: this.props.activateSwipeOnLayer
                             }}
                             options={{
@@ -888,8 +890,8 @@ module.exports = {
         }
     }),
     reducers: {
-        queryform: require('../reducers/queryform'),
-        query: require('../reducers/query')
+        queryform: require('../reducers/queryform').default,
+        query: require('../reducers/query').default
     },
     // TODO: remove this dependency, it is needed only to use getMetadataRecordById and related actions that can be moved in the TOC
     epics: require("../epics/catalog").default(API)

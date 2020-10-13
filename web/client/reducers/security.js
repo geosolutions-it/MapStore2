@@ -6,14 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAIL, RESET_ERROR, REFRESH_SUCCESS, SESSION_VALID } = require('../actions/security');
-const { SET_CONTROL_PROPERTY } = require('../actions/controls');
-const { USERMANAGER_UPDATE_USER } = require('../actions/users');
+import {
+    LOGIN_SUCCESS,
+    LOGIN_FAIL,
+    LOGOUT,
+    CHANGE_PASSWORD_SUCCESS,
+    CHANGE_PASSWORD_FAIL,
+    RESET_ERROR,
+    REFRESH_SUCCESS,
+    SESSION_VALID
+} from '../actions/security';
 
-const SecurityUtils = require('../utils/SecurityUtils');
-
-const assign = require('object-assign');
-const {cloneDeep, head} = require('lodash');
+import { SET_CONTROL_PROPERTY } from '../actions/controls';
+import { USERMANAGER_UPDATE_USER } from '../actions/users';
+import SecurityUtils from '../utils/SecurityUtils';
+import assign from 'object-assign';
+import { cloneDeep, head } from 'lodash';
 
 function security(state = {user: null, errorCause: null}, action) {
     switch (action.type) {
@@ -96,4 +104,4 @@ function security(state = {user: null, errorCause: null}, action) {
     }
 }
 
-module.exports = security;
+export default security;

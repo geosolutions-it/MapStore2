@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const assign = require('object-assign');
-const {head} = require('lodash');
-const urlUtil = require('url');
+import assign from 'object-assign';
+
+import { head } from 'lodash';
+import urlUtil from 'url';
 
 
-const getBaseCatalogUrl = (url) => {
+export const getBaseCatalogUrl = (url) => {
     return url && url.substring(0, url.lastIndexOf("/"));
 };
 /**
@@ -19,7 +20,7 @@ const getBaseCatalogUrl = (url) => {
  * records:
  *
  */
-const cswToCatalogSelector = (catalog) => {
+export const cswToCatalogSelector = (catalog) => {
     let result = catalog.result;
     let searchOptions = catalog.searchOptions;
     if (result && result.records) {
@@ -116,4 +117,3 @@ const cswToCatalogSelector = (catalog) => {
     }
     return null;
 };
-module.exports = {cswToCatalogSelector};

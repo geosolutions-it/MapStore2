@@ -6,12 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
-    CHANGE_VERSION,
-    changeVersion,
-    loadVersion
-} = require('../version');
+import expect from 'expect';
+
+import { CHANGE_VERSION, changeVersion, loadVersion } from '../version';
 
 describe('Test correctness of the version actions', () => {
 

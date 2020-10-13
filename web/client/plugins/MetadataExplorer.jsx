@@ -271,6 +271,6 @@ module.exports = {
             doNotHide: true
         }
     }),
-    reducers: {catalog: require('../reducers/catalog')},
+    reducers: {catalog: require('../reducers/catalog').default},
     epics: require("../epics/catalog").default(API)
 };

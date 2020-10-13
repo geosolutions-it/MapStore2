@@ -20,6 +20,8 @@ const { Grid } = require('react-bootstrap');
 const { createFromSearch, flattenGroups } = require('../../../../utils/TOCUtils');
 const TOCUtils = require('../../../../utils/TOCUtils');
 
+const LayerNameEditField = require('./LayerNameEditField').default;
+
 /**
  * General Settings form for layer
  */
@@ -32,7 +34,8 @@ class General extends React.Component {
         nodeType: PropTypes.string,
         pluginCfg: PropTypes.object,
         showTooltipOptions: PropTypes.bool,
-        allowNew: PropTypes.bool
+        allowNew: PropTypes.bool,
+        enableLayerNameEditFeedback: PropTypes.bool
     };
 
     static contextTypes = {
@@ -98,15 +101,10 @@ class General extends React.Component {
                         }
                         )}
                     </FormGroup>)}
-                    <FormGroup>
-                        <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
-                        <FormControl
-                            defaultValue={this.props.element.name || ''}
-                            key="name"
-                            type="text"
-                            disabled
-                            onBlur={this.updateEntry.bind(null, "name")} />
-                    </FormGroup>
+                    <LayerNameEditField
+                        element={this.props.element}
+                        enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
+                        onUpdateEntry={this.updateEntry.bind(null)}/>
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :

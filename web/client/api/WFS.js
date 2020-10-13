@@ -9,7 +9,7 @@ import axios from '../libs/ajax';
 import urlUtil from 'url';
 import assign from 'object-assign';
 
-const toDescribeURL = (url, typeName) => {
+export const toDescribeURL = (url, typeName) => {
     const parsed = urlUtil.parse(url, true);
     return urlUtil.format(
         {

@@ -5,14 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-var geostories = require('../geostories');
-const {
-    setGeostoriesAvailable,
-    geostoriesListLoaded,
-    geostoriesLoading
-} = require('../../actions/geostories');
+import geostories from '../geostories';
+import { setGeostoriesAvailable, geostoriesListLoaded, geostoriesLoading } from '../../actions/geostories';
 
 
 describe('Test the geostories reducer', () => {

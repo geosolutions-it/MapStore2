@@ -6,15 +6,16 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {
+import {
     isLocalizedLayerStylesEnabledSelector,
     isLocalizedLayerStylesEnabledDashboardsSelector,
     localizedLayerStylesNameSelector,
     localizedLayerStylesEnvSelector
-} = require('../localizedLayerStyles');
-const {currentLocaleLanguageSelector} = require('../locale');
+} from '../localizedLayerStyles';
+
+import { currentLocaleLanguageSelector } from '../locale';
 
 const givenName = 'example';
 const givenState = {

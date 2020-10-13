@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var layers = require('../layers');
-const { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP } = require('../../actions/layers');
+import expect from 'expect';
+
+import layers from '../layers';
+import { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP } from '../../actions/layers';
 
 
 describe('Test the layers reducer', () => {

@@ -318,7 +318,7 @@ module.exports = {
     }),
     epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
     reducers: {
-        search: require('../reducers/search'),
-        mapInfo: require('../reducers/mapInfo')
+        search: require('../reducers/search').default,
+        mapInfo: require('../reducers/mapInfo').default
     }
 };

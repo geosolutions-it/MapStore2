@@ -12,12 +12,12 @@ var { createStore, combineReducers } = require('redux');
 var { changeBrowserProperties} = require('../../actions/browser');
 var ConfigUtils = require('../../utils/ConfigUtils');
 var Localized = require('../../components/I18N/Localized');
-var browser = require('../../reducers/browser');
 var {Modal, Grid, Row, Col} = require('react-bootstrap');
 const Button = require('../../components/misc/Button').default;
+var browser = require('../../reducers/browser').default;
 var LMap = require('../../components/map/leaflet/Map');
 var LLayer = require('../../components/map/leaflet/Layer');
-var mouseposition = require('../../reducers/mousePosition');
+var mouseposition = require('../../reducers/mousePosition').default;
 var {changeMousePosition} = require('../../actions/mousePosition');
 var store = createStore(combineReducers({browser, mouseposition}));
 

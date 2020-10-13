@@ -6,11 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
-    SET_COOKIE_VISIBILITY, setCookieVisibility,
-    SET_MORE_DETAILS_VISIBILITY, setMoreDetailsVisibility
-} = require('../cookie');
+import expect from 'expect';
+
+import {
+    SET_COOKIE_VISIBILITY,
+    setCookieVisibility,
+    SET_MORE_DETAILS_VISIBILITY,
+    setMoreDetailsVisibility
+} from '../cookie';
 
 
 describe('Test correctness of the cookies actions', () => {

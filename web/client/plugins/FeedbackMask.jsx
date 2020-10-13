@@ -79,7 +79,7 @@ const FeedbackMaskPlugin = compose(
 module.exports = {
     FeedbackMaskPlugin,
     reducers: {
-        feedbackMask: require('../reducers/feedbackMask')
+        feedbackMask: require('../reducers/feedbackMask').default
     },
     epics: require('../epics/feedbackMask')
 };

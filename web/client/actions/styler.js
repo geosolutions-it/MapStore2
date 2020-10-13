@@ -6,28 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const STYLE_SAVED = 'STYLER_STYLE_SAVED';
-const SET_STYLER_LAYER = 'SET_STYLER_LAYER';
-const STYLE_SAVE_ERROR = 'STYLE_SAVE_ERROR';
-const STYLER_RESET = 'STYLER_RESET';
+export const STYLE_SAVED = 'STYLER_STYLE_SAVED';
+export const SET_STYLER_LAYER = 'SET_STYLER_LAYER';
+export const STYLE_SAVE_ERROR = 'STYLE_SAVE_ERROR';
+export const STYLER_RESET = 'STYLER_RESET';
 
-const {getLayer} = require('../api/geoserver/Layers');
-const {saveStyle} = require('../api/geoserver/Styles');
+import { getLayer } from '../api/geoserver/Layers';
+import { saveStyle } from '../api/geoserver/Styles';
 
-function setStylerLayer(layer) {
+export  function setStylerLayer(layer) {
     return {
         type: SET_STYLER_LAYER,
         layer
     };
 }
-function styleSaved(name, style) {
+export  function styleSaved(name, style) {
     return {
         type: STYLE_SAVED,
         name,
         style
     };
 }
-function styleSaveError(layer, style, error) {
+export  function styleSaveError(layer, style, error) {
     return {
         type: STYLE_SAVE_ERROR,
         layer,
@@ -35,13 +35,13 @@ function styleSaveError(layer, style, error) {
         error
     };
 }
-function reset(layer) {
+export  function reset(layer) {
     return {
         type: STYLER_RESET,
         layer
     };
 }
-function saveLayerDefaultStyle(geoserverBaseUrl, layerName, style) {
+export  function saveLayerDefaultStyle(geoserverBaseUrl, layerName, style) {
     return (dispatch) => {
         return getLayer(geoserverBaseUrl, layerName).then((layer) => {
             saveStyle(geoserverBaseUrl, layer.defaultStyle && layer.defaultStyle.name, style).then(()=> {
@@ -52,11 +52,3 @@ function saveLayerDefaultStyle(geoserverBaseUrl, layerName, style) {
 
     };
 }
-module.exports = {
-    STYLE_SAVED,
-    STYLER_RESET,
-    SET_STYLER_LAYER,
-    saveLayerDefaultStyle,
-    setStylerLayer,
-    reset
-};

@@ -6,10 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
-    ON_TAB_SELECTED,
-    SET_TABS_HIDDEN
-} = require('../actions/contenttabs');
+import { ON_TAB_SELECTED, SET_TABS_HIDDEN } from '../actions/contenttabs';
 
 function contenttabs(state = {selected: "maps"}, action) {
     switch (action.type) {
@@ -33,4 +30,4 @@ function contenttabs(state = {selected: "maps"}, action) {
     }
 }
 
-module.exports = contenttabs;
+export default contenttabs;

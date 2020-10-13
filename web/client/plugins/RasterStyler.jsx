@@ -281,5 +281,5 @@ module.exports = {
                 exclusive: true
             }
         }),
-    reducers: {rasterstyler: require('../reducers/rasterstyler')}
+    reducers: {rasterstyler: require('../reducers/rasterstyler').default}
 };

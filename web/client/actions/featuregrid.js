@@ -6,80 +6,80 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const SET_UP = 'FEATUREGRID:SET_UP';
-const SELECT_FEATURES = 'FEATUREGRID:SELECT_FEATURES';
-const DESELECT_FEATURES = 'FEATUREGRID:DESELECT_FEATURES';
-const CLEAR_SELECTION = 'FEATUREGRID:CLEAR_SELECTION';
-const SET_SELECTION_OPTIONS = 'FEATUREGRID:SET_SELECTION_OPTIONS';
-const TOGGLE_MODE = 'FEATUREGRID:TOGGLE_MODE';
-const TOGGLE_FEATURES_SELECTION = 'FEATUREGRID:TOGGLE_FEATURES_SELECTION';
-const FEATURES_MODIFIED = 'FEATUREGRID:FEATURES_MODIFIED';
-const CREATE_NEW_FEATURE = "FEATUREGRID:NEW_FEATURE";
-const SAVE_CHANGES = 'FEATUREGRID:SAVE_CHANGES';
-const SAVING = 'FEATUREGRID:SAVING';
-const START_EDITING_FEATURE = 'FEATUREGRID:START_EDITING_FEATURE';
-const START_DRAWING_FEATURE = 'FEATUREGRID:START_DRAWING_FEATURE';
-const DELETE_GEOMETRY = "FEATUREGRID:DELETE_GEOMETRY";
-const DELETE_GEOMETRY_FEATURE = "FEATUREGRID:DELETE_GEOMETRY_FEATURE";
-const SAVE_SUCCESS = "FEATUREGRID:SAVE_SUCCESS";
-const CLEAR_CHANGES = "FEATUREGRID:CLEAR_CHANGES";
-const SAVE_ERROR = "FEATUREGRID:SAVE_ERROR";
-const DELETE_SELECTED_FEATURES = "FEATUREGRID:DELETE_SELECTED_FEATURES";
-const DELETE_SELECTED_FEATURES_CONFIRM = "FEATUREGRID:DELETE_SELECTED_FEATURES_CONFIRM";
-const SET_FEATURES = 'SET_FEATURES';
-const SORT_BY = 'FEATUREGRID:SORT_BY';
-const SET_LAYER = 'FEATUREGRID:SET_LAYER';
-const UPDATE_FILTER = 'QUERY:UPDATE_FILTER';
-const CHANGE_PAGE = 'FEATUREGRID:CHANGE_PAGE';
-const GEOMETRY_CHANGED = 'FEATUREGRID:GEOMETRY_CHANGED';
-const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
-const TOGGLE_TOOL = 'FEATUREGRID:TOGGLE_TOOL';
-const CUSTOMIZE_ATTRIBUTE = 'FEATUREGRID:CUSTOMIZE_ATTRIBUTE';
-const CLOSE_FEATURE_GRID_CONFIRM = 'ASK_CLOSE_FEATURE_GRID_CONFIRM';
-const OPEN_FEATURE_GRID = 'FEATUREGRID:OPEN_GRID';
-const CLOSE_FEATURE_GRID = 'FEATUREGRID:CLOSE_GRID';
-const CLEAR_CHANGES_CONFIRMED = 'FEATUREGRID:CLEAR_CHANGES_CONFIRMED';
-const FEATURE_GRID_CLOSE_CONFIRMED = 'FEATUREGRID:FEATURE_GRID_CLOSE_CONFIRMED';
-const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
-const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
-const ACTIVATE_TEMPORARY_CHANGES = 'FEATUREGRID:ACTIVATE_TEMPORARY_CHANGES';
-const DEACTIVATE_GEOMETRY_FILTER = 'FEATUREGRID:DEACTIVATE_GEOMETRY_FILTER';
-const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
-const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
-const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
-const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
-const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
-const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
+export const SET_UP = 'FEATUREGRID:SET_UP';
+export const SELECT_FEATURES = 'FEATUREGRID:SELECT_FEATURES';
+export const DESELECT_FEATURES = 'FEATUREGRID:DESELECT_FEATURES';
+export const CLEAR_SELECTION = 'FEATUREGRID:CLEAR_SELECTION';
+export const SET_SELECTION_OPTIONS = 'FEATUREGRID:SET_SELECTION_OPTIONS';
+export const TOGGLE_MODE = 'FEATUREGRID:TOGGLE_MODE';
+export const TOGGLE_FEATURES_SELECTION = 'FEATUREGRID:TOGGLE_FEATURES_SELECTION';
+export const FEATURES_MODIFIED = 'FEATUREGRID:FEATURES_MODIFIED';
+export const CREATE_NEW_FEATURE = "FEATUREGRID:NEW_FEATURE";
+export const SAVE_CHANGES = 'FEATUREGRID:SAVE_CHANGES';
+export const SAVING = 'FEATUREGRID:SAVING';
+export const START_EDITING_FEATURE = 'FEATUREGRID:START_EDITING_FEATURE';
+export const START_DRAWING_FEATURE = 'FEATUREGRID:START_DRAWING_FEATURE';
+export const DELETE_GEOMETRY = "FEATUREGRID:DELETE_GEOMETRY";
+export const DELETE_GEOMETRY_FEATURE = "FEATUREGRID:DELETE_GEOMETRY_FEATURE";
+export const SAVE_SUCCESS = "FEATUREGRID:SAVE_SUCCESS";
+export const CLEAR_CHANGES = "FEATUREGRID:CLEAR_CHANGES";
+export const SAVE_ERROR = "FEATUREGRID:SAVE_ERROR";
+export const DELETE_SELECTED_FEATURES = "FEATUREGRID:DELETE_SELECTED_FEATURES";
+export const DELETE_SELECTED_FEATURES_CONFIRM = "FEATUREGRID:DELETE_SELECTED_FEATURES_CONFIRM";
+export const SET_FEATURES = 'SET_FEATURES';
+export const SORT_BY = 'FEATUREGRID:SORT_BY';
+export const SET_LAYER = 'FEATUREGRID:SET_LAYER';
+export const UPDATE_FILTER = 'QUERY:UPDATE_FILTER';
+export const CHANGE_PAGE = 'FEATUREGRID:CHANGE_PAGE';
+export const GEOMETRY_CHANGED = 'FEATUREGRID:GEOMETRY_CHANGED';
+export const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
+export const TOGGLE_TOOL = 'FEATUREGRID:TOGGLE_TOOL';
+export const CUSTOMIZE_ATTRIBUTE = 'FEATUREGRID:CUSTOMIZE_ATTRIBUTE';
+export const CLOSE_FEATURE_GRID_CONFIRM = 'ASK_CLOSE_FEATURE_GRID_CONFIRM';
+export const OPEN_FEATURE_GRID = 'FEATUREGRID:OPEN_GRID';
+export const CLOSE_FEATURE_GRID = 'FEATUREGRID:CLOSE_GRID';
+export const CLEAR_CHANGES_CONFIRMED = 'FEATUREGRID:CLEAR_CHANGES_CONFIRMED';
+export const FEATURE_GRID_CLOSE_CONFIRMED = 'FEATUREGRID:FEATURE_GRID_CLOSE_CONFIRMED';
+export const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
+export const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
+export const ACTIVATE_TEMPORARY_CHANGES = 'FEATUREGRID:ACTIVATE_TEMPORARY_CHANGES';
+export const DEACTIVATE_GEOMETRY_FILTER = 'FEATUREGRID:DEACTIVATE_GEOMETRY_FILTER';
+export const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
+export const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
+export const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
+export const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
+export const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
+export const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
 
-const MODES = {
+export const MODES = {
     EDIT: "EDIT",
     VIEW: "VIEW"
 };
-const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
-const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
-const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
-const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
-const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
-const SET_TIME_SYNC = "FEATUREGRID:SET_TIME_SYNC";
+export const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
+export const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
+export const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
+export const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
+export const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
+export const SET_TIME_SYNC = "FEATUREGRID:SET_TIME_SYNC";
 
-function toggleShowAgain() {
+export function toggleShowAgain() {
     return {
         type: TOGGLE_SHOW_AGAIN_FLAG
     };
 }
-function hideSyncPopover() {
+export function hideSyncPopover() {
     return {
         type: HIDE_SYNC_POPOVER
     };
 }
-function fatureGridQueryResult(features, pages) {
+export function fatureGridQueryResult(features, pages) {
     return {
         type: GRID_QUERY_RESULT,
         features, pages
     };
 }
 
-function storeAdvancedSearchFilter(filterObj) {
+export function storeAdvancedSearchFilter(filterObj) {
     return {
         type: STORE_ADVANCED_SEARCH_FILTER,
         filterObj
@@ -87,23 +87,23 @@ function storeAdvancedSearchFilter(filterObj) {
 }
 
 
-function initPlugin(options = {}) {
+export function initPlugin(options = {}) {
     return {
         type: INIT_PLUGIN,
         options
     };
 }
-function clearChangeConfirmed() {
+export function clearChangeConfirmed() {
     return {
         type: CLEAR_CHANGES_CONFIRMED
     };
 }
-function closeFeatureGridConfirmed() {
+export function closeFeatureGridConfirmed() {
     return {
         type: FEATURE_GRID_CLOSE_CONFIRMED
     };
 }
-function selectFeatures(features, append) {
+export function selectFeatures(features, append) {
     return {
         type: SELECT_FEATURES,
         features,
@@ -115,111 +115,111 @@ function selectFeatures(features, append) {
  * Configures some options for the feature grid
  * @param {object} options options to set up
  */
-function setUp(options) {
+export function setUp(options) {
     return {
         type: SET_UP,
         options
     };
 }
-function geometryChanged(features) {
+export function geometryChanged(features) {
     return {
         type: GEOMETRY_CHANGED,
         features
     };
 }
-function startEditingFeature() {
+export function startEditingFeature() {
     return {
         type: START_EDITING_FEATURE
     };
 }
-function startDrawingFeature() {
+export function startDrawingFeature() {
     return {
         type: START_DRAWING_FEATURE
     };
 }
-function deselectFeatures(features) {
+export function deselectFeatures(features) {
     return {
         type: DESELECT_FEATURES,
         features
     };
 }
 
-function deleteGeometry() {
+export function deleteGeometry() {
     return {
         type: DELETE_GEOMETRY
     };
 }
-function deleteGeometryFeature(features) {
+export function deleteGeometryFeature(features) {
     return {
         type: DELETE_GEOMETRY_FEATURE,
         features
     };
 }
-function clearSelection() {
+export function clearSelection() {
     return {
         type: CLEAR_SELECTION
     };
 }
-function toggleSelection(features) {
+export function toggleSelection(features) {
     return {
         type: TOGGLE_FEATURES_SELECTION,
         features
     };
 }
-function setSelectionOptions({multiselect = false} = {}) {
+export function setSelectionOptions({multiselect = false} = {}) {
     return {
         type: SET_SELECTION_OPTIONS,
         multiselect
     };
 
 }
-function setFeatures(features) {
+export function setFeatures(features) {
     return {
         type: SET_FEATURES,
         features: features
     };
 }
 
-function dockSizeFeatures(dockSize) {
+export function dockSizeFeatures(dockSize) {
     return {
         type: DOCK_SIZE_FEATURES,
         dockSize: dockSize
     };
 }
-function sort(sortBy, sortOrder) {
+export function sort(sortBy, sortOrder) {
     return {
         type: SORT_BY,
         sortBy,
         sortOrder
     };
 }
-function changePage(page, size) {
+export function changePage(page, size) {
     return {
         type: CHANGE_PAGE,
         page,
         size
     };
 }
-function setLayer(id) {
+export function setLayer(id) {
     return {
         type: SET_LAYER,
         id
     };
 }
-function updateFilter(update) {
+export function updateFilter(update) {
     return {
         type: UPDATE_FILTER,
         update
     };
 }
-function toggleTool(tool, value) {
+export function toggleTool(tool, value) {
     return {
         type: TOGGLE_TOOL,
         tool,
         value
     };
 }
-function customizeAttribute(name, key, value) {
+export function customizeAttribute(name, key, value) {
     return {
         type: CUSTOMIZE_ATTRIBUTE,
         name,
@@ -227,127 +227,127 @@ function customizeAttribute(name, key, value) {
         value
     };
 }
-function toggleEditMode() {
+export function toggleEditMode() {
     return {
         type: TOGGLE_MODE,
         mode: MODES.EDIT
     };
 }
-function toggleViewMode() {
+export function toggleViewMode() {
     return {
         type: TOGGLE_MODE,
         mode: MODES.VIEW
     };
 }
-function featureModified(features, updated) {
+export function featureModified(features, updated) {
     return {
         type: FEATURES_MODIFIED,
         features,
         updated
     };
 }
-function createNewFeatures(features) {
+export function createNewFeatures(features) {
     return {
         type: CREATE_NEW_FEATURE,
         features
     };
 }
-function saveChanges() {
+export function saveChanges() {
     return {
         type: SAVE_CHANGES
     };
 }
-function saveSuccess() {
+export function saveSuccess() {
     return {
         type: SAVE_SUCCESS
     };
 }
-function deleteFeaturesConfirm() {
+export function deleteFeaturesConfirm() {
     return {
         type: DELETE_SELECTED_FEATURES_CONFIRM
     };
 }
-function deleteFeatures() {
+export function deleteFeatures() {
     return {
         type: DELETE_SELECTED_FEATURES
     };
 }
-function featureSaving() {
+export function featureSaving() {
     return {
         type: SAVING
     };
 }
-function clearChanges() {
+export function clearChanges() {
     return {
         type: CLEAR_CHANGES
     };
 }
-function saveError() {
+export function saveError() {
     return {
         type: SAVE_ERROR
     };
 }
-function closeFeatureGridConfirm() {
+export function closeFeatureGridConfirm() {
     return {
         type: CLOSE_FEATURE_GRID_CONFIRM
     };
 }
-function closeFeatureGrid() {
+export function closeFeatureGrid() {
     return {
         type: CLOSE_FEATURE_GRID
     };
 }
-function openFeatureGrid() {
+export function openFeatureGrid() {
     return {
         type: OPEN_FEATURE_GRID
     };
 }
 
-function disableToolbar(disabled) {
+export function disableToolbar(disabled) {
     return {
         type: DISABLE_TOOLBAR,
         disabled
     };
 }
-function setPermission(permission) {
+export function setPermission(permission) {
     return {
         type: SET_PERMISSION,
         permission
     };
 }
-function openAdvancedSearch() {
+export function openAdvancedSearch() {
     return {
         type: OPEN_ADVANCED_SEARCH
     };
 }
-function zoomAll() {
+export function zoomAll() {
     return {
         type: ZOOM_ALL
     };
 }
-function startSyncWMS() {
+export function startSyncWMS() {
     return {
         type: START_SYNC_WMS
     };
 }
-function sizeChange(size, dockProps) {
+export function sizeChange(size, dockProps) {
     return {
         type: SIZE_CHANGE,
         size,
         dockProps
     };
 }
-const moreFeatures = (pages) => {
+export const moreFeatures = (pages) => {
     return {
         type: LOAD_MORE_FEATURES,
         pages
     };
 };
-const activateTemporaryChanges = (activated) => ({
+export const activateTemporaryChanges = (activated) => ({
     type: ACTIVATE_TEMPORARY_CHANGES,
     activated
 });
-const deactivateGeometryFilter = (deactivated) => ({
+export const deactivateGeometryFilter = (deactivated) => ({
     type: DEACTIVATE_GEOMETRY_FILTER,
     deactivated
 });
@@ -356,84 +356,7 @@ const deactivateGeometryFilter = (deactivated) => ({
  * Enables/Disables time sync for feature grid.
  * @param {boolean} value time sync to set
  */
-const setTimeSync = value => ({
+export const setTimeSync = value => ({
     type: SET_TIME_SYNC,
     value
 });
-
-module.exports = {
-    SELECT_FEATURES,
-    DESELECT_FEATURES,
-    CLEAR_SELECTION,
-    TOGGLE_FEATURES_SELECTION,
-    SET_SELECTION_OPTIONS,
-    SET_FEATURES,
-    FEATURES_MODIFIED,
-    CREATE_NEW_FEATURE,
-    SAVE_CHANGES,
-    CLEAR_CHANGES,
-    SAVE_SUCCESS,
-    SAVE_ERROR,
-    DELETE_SELECTED_FEATURES_CONFIRM,
-    DELETE_SELECTED_FEATURES,
-    DOCK_SIZE_FEATURES,
-    SORT_BY,
-    CHANGE_PAGE,
-    SET_LAYER,
-    TOGGLE_TOOL,
-    CUSTOMIZE_ATTRIBUTE,
-    TOGGLE_MODE,
-    MODES,
-    SAVING,
-    SET_PERMISSION, setPermission,
-    START_EDITING_FEATURE, startEditingFeature,
-    START_DRAWING_FEATURE, startDrawingFeature,
-    GEOMETRY_CHANGED, geometryChanged,
-    DELETE_GEOMETRY, deleteGeometry,
-    DELETE_GEOMETRY_FEATURE, deleteGeometryFeature,
-    CLEAR_CHANGES_CONFIRMED, clearChangeConfirmed,
-    CLOSE_FEATURE_GRID, closeFeatureGrid,
-    OPEN_FEATURE_GRID, openFeatureGrid,
-    CLOSE_FEATURE_GRID_CONFIRM, closeFeatureGridConfirm,
-    FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
-    SET_UP, setUp,
-    DISABLE_TOOLBAR, disableToolbar,
-    OPEN_ADVANCED_SEARCH, openAdvancedSearch,
-    ZOOM_ALL, zoomAll,
-    UPDATE_FILTER, updateFilter,
-    SIZE_CHANGE, sizeChange,
-    setLayer,
-    selectFeatures,
-    deselectFeatures,
-    setSelectionOptions,
-    clearSelection,
-    toggleSelection,
-    setFeatures,
-    featureModified,
-    createNewFeatures,
-    saveChanges,
-    featureSaving,
-    clearChanges,
-    saveSuccess,
-    saveError,
-    deleteFeaturesConfirm,
-    deleteFeatures,
-    dockSizeFeatures,
-    sort,
-    changePage,
-    toggleTool,
-    customizeAttribute,
-    toggleEditMode,
-    toggleViewMode,
-    initPlugin, INIT_PLUGIN,
-    hideSyncPopover, HIDE_SYNC_POPOVER,
-    toggleShowAgain, TOGGLE_SHOW_AGAIN_FLAG,
-    START_SYNC_WMS, startSyncWMS,
-    STOP_SYNC_WMS,
-    storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,
-    moreFeatures, LOAD_MORE_FEATURES,
-    activateTemporaryChanges, ACTIVATE_TEMPORARY_CHANGES,
-    deactivateGeometryFilter, DEACTIVATE_GEOMETRY_FILTER,
-    fatureGridQueryResult, GRID_QUERY_RESULT,
-    setTimeSync, SET_TIME_SYNC
-};

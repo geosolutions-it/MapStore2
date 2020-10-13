@@ -6,10 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const mapimport = require('../mapimport');
-const { setLayers, onSelectLayer, onError, setLoading, onLayerAdded, updateBBox, onSuccess } = require('../../actions/mapimport');
+import ReactDOM from 'react-dom';
+
+import expect from 'expect';
+import mapimport from '../mapimport';
+
+import {
+    setLayers,
+    onSelectLayer,
+    onError,
+    setLoading,
+    onLayerAdded,
+    updateBBox,
+    onSuccess
+} from '../../actions/mapimport';
+
 const L1 = {name: "L1"};
 const L2 = { name: "L2" };
 const W1 = {name: "TEST", "message": "M1"};

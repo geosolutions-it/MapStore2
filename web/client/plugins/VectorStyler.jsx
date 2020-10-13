@@ -297,6 +297,6 @@ module.exports = {
             }
         }),
     reducers: {
-        vectorstyler: require('../reducers/vectorstyler')
+        vectorstyler: require('../reducers/vectorstyler').default
     }
 };

@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     loadFields,
     fieldsLoaded,
     fieldsError,
@@ -18,8 +19,9 @@ const {
     cancelDirty,
     setInvalidInput,
     resetInvalidInput
-} = require('../../actions/thematic');
-const thematic = require('../thematic');
+} from '../../actions/thematic';
+
+import thematic from '../thematic';
 
 const layer = {
     name: 'mylayer',

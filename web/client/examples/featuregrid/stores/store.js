@@ -15,12 +15,12 @@ const {clearChanges, setPermission, toggleTool} = require('../../../actions/feat
 const {hasChangesSelector, hasNewFeaturesSelector} = require('../../../selectors/featuregrid');
 module.exports = (plugins) => {
     var reducers = {
-        map: require('../../../reducers/map'),
-        mapConfig: require('../../../reducers/config'),
-        locale: require('../../../reducers/locale'),
-        controls: require('../../../reducers/controls'),
-        layers: require('../../../reducers/controls'),
-        query: require('../../../reducers/query')
+        map: require('../../../reducers/map').default,
+        mapConfig: require('../../../reducers/config').default,
+        locale: require('../../../reducers/locale').default,
+        controls: require('../../../reducers/controls').default,
+        layers: require('../../../reducers/controls').default,
+        query: require('../../../reducers/query').default
     };
     return require('../../../stores/StandardStore')({}, reducers, {
         featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic,
