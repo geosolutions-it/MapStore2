@@ -9,7 +9,7 @@ The Paragraph Section allows to insert a textual content to the story. The story
 
 * **Media Content** <img src="../img/button/add-media-content.jpg" class="ms-docbutton"/> to open the Media Editor to add an image, a map or a video.
 
-* **Web Page Content** <img src="../img/button/web-page-button.jpg" class="ms-docbutton"/> to add an external web page 
+* **Web Page Content** <img src="../img/button/web_page_button.jpg" class="ms-docbutton"/> to add an external web page 
 
 ## Text Content
 
