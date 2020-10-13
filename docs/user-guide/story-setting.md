@@ -20,11 +20,11 @@ The editor can customize the different components of the story through the follo
 
 <img src="../img/story-setting/overlay.gif" class="ms-docimage"/>
 
-* The *Shadow* of overlay *contents* present in the [Title Section](title-section.md#content) and in the [Immersive Section](immersive-section.md#content): enabling or disabling the shadow:
+* The *Shadow* of overlay *contents* present in the [Title Section](title-section.md#content) and in the [Immersive Section](immersive-section.md#content): to enable or disable the shadow:
 
 <img src="../img/story-setting/shadow.gif" class="ms-docimage"/>
 
-* The color of **Links**. The story editor can choose the default color of the hyperlink that may be present in the *Text Contents*: clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker appears to allow selecting the desired color:
+* The color of **Links**. The story editor can choose the default color of the hyperlink that may be present in the *Text Contents*.
 
 <img src="../img/story-setting/links.gif" class="ms-docimage"/>
 
