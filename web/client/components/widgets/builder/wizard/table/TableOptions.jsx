@@ -8,7 +8,8 @@
 const React = require('react');
 const { isGeometryType } = require('../../../../../utils/ogc/WFS/base');
 const { uniq, castArray, includes } = require('lodash');
-const { Row, Col, Form, Button } = require('react-bootstrap');
+const { Row, Col, Form } = require('react-bootstrap');
+const Button = require('../../../../misc/Button').default;
 const Message = require('../../../../I18N/Message');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
 const noAttributes = require('../common/noAttributesEmptyView');

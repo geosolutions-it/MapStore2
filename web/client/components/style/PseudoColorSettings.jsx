@@ -8,12 +8,13 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Grid, Row, Col, Button} = require('react-bootstrap');
+const {Grid, Row, Col} = require('react-bootstrap');
 
 const Combobox = require('react-widgets').Combobox;
 
 const ColorMapGrid = require('./ColorMapGrid');
 
+const Button = require('../misc/Button').default;
 const Message = require('../I18N/Message');
 
 class PseudoColorSettings extends React.Component {

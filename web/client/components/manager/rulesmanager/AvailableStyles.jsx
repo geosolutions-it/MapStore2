@@ -10,7 +10,8 @@ const StylesList = require('./StylesList');
 const Message = require("../../I18N/Message");
 const Filter = require("../../misc/Filter");
 const Portal = require("../../misc/Portal");
-const {Col, Button, ButtonGroup} = require("react-bootstrap");
+const {Col, ButtonGroup} = require("react-bootstrap");
+const Button = require('../../misc/Button').default;
 const ResizableModal = require("../../misc/ResizableModal");
 const BorderLayout = require("../../layout/BorderLayout");
 

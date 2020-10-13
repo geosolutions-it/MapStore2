@@ -12,7 +12,8 @@ import {connect} from 'react-redux';
 
 import Message from '../components/I18N/Message';
 import NewMapDialog from '../components/misc/NewMapDialog';
-import {ButtonToolbar, Button as ButtonB, SplitButton as SplitButtonB, MenuItem, Grid, Col, Glyphicon} from 'react-bootstrap';
+import {ButtonToolbar, SplitButton as SplitButtonB, MenuItem, Grid, Col, Glyphicon} from 'react-bootstrap';
+import ButtonB from '../components/misc/Button';
 import tooltip from '../components/misc/enhancers/tooltip';
 
 import {showNewMapDialog, createNewMap} from '../actions/createnewmap';

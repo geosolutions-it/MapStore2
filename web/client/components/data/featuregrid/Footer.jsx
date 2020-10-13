@@ -1,7 +1,8 @@
 const React = require('react');
 const Message = require('../../I18N/Message');
-const {Button, Glyphicon, Grid, Row, Col} = require('react-bootstrap');
+const {Glyphicon, Grid, Row, Col} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
+const Button = require('../../misc/Button').default;
 const {toPage} = require('../../../utils/FeatureGridUtils');
 
 module.exports = (props = {

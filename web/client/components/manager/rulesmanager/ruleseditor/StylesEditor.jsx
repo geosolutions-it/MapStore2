@@ -6,12 +6,13 @@
 * LICENSE file in the root directory of this source tree.
 */
 const React = require('react');
-const {Grid, Row, Col, Button, Glyphicon} = require('react-bootstrap');
+const {Grid, Row, Col, Glyphicon} = require('react-bootstrap');
 
 const filterEnhancer = require("../enhancers/filterstyles");
 const DefaultStyle = filterEnhancer(require("../DefaultStyle"));
 const AvailableStyles = filterEnhancer(require("../AvailableStyles"));
 
+const Button = require('../../../misc/Button').default;
 const StylesList = require("../StylesList");
 const Message = require("../../../I18N/Message");
 

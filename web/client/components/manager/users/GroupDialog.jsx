@@ -8,9 +8,10 @@
 
 const React = require('react');
 const UsersTable = require('./UsersTable');
-const {Alert, Tabs, Tab, Button, Glyphicon, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const {Alert, Tabs, Tab, Glyphicon, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 const PropTypes = require('prop-types');
 
+const Button = require('../../../components/misc/Button').default;
 const Dialog = require('../../../components/misc/Dialog');
 const assign = require('object-assign');
 const Message = require('../../../components/I18N/Message');

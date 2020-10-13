@@ -8,7 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {isObject, head, isArray, trim } from 'lodash';
-import {Image, Button as ButtonRB, Glyphicon} from 'react-bootstrap';
+import {Image, Glyphicon} from 'react-bootstrap';
 
 import {
     buildSRSMap,
@@ -28,6 +28,7 @@ import SharingLinks from './SharingLinks';
 import SideCard from '../misc/cardgrids/SideCard';
 import Toolbar from '../misc/toolbar/Toolbar';
 import tooltip from '../misc/enhancers/tooltip';
+import ButtonRB from '../misc/Button';
 const Button = tooltip(ButtonRB);
 import AddTMS from './buttons/AddTMS';
 import AddTileProvider from './buttons/AddTileProvider';

@@ -10,9 +10,10 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 
-const {Grid, Row, Col, Panel, PanelGroup, Button, Glyphicon} = require('react-bootstrap');
+const {Grid, Row, Col, Panel, PanelGroup, Glyphicon} = require('react-bootstrap');
 
 const Combobox = require('react-widgets').Combobox;
+const Button = require('../components/misc/Button').default;
 
 const {getWindowSize} = require('../utils/AgentUtils');
 const {setRasterStyleParameter, setRasterLayer} = require('../actions/rasterstyler');

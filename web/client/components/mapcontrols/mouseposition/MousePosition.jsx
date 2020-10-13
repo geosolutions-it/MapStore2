@@ -8,8 +8,9 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const proj4js = require('proj4').default;
-const {Glyphicon, Button, Label} = require('react-bootstrap');
+const {Glyphicon, Label} = require('react-bootstrap');
 const CopyToClipboard = require('react-copy-to-clipboard');
+const Button = require('../../misc/Button').default;
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const MousePositionLabelDMS = require('./MousePositionLabelDMS');
 const MousePositionLabelYX = require('./MousePositionLabelYX');

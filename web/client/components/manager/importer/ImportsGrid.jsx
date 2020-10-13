@@ -10,7 +10,8 @@ const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const ImporterUtils = require('../../../utils/ImporterUtils');
-const {Table, Glyphicon, Button, Label, Tooltip} = require('react-bootstrap');
+const {Table, Glyphicon, Label, Tooltip} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const {findIndex} = require('lodash');
 

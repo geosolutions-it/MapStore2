@@ -13,7 +13,8 @@ const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const {isAnnotation} = require('../../../utils/AnnotationsUtils');
 let { toVectorStyle } = require('../../../utils/StyleUtils');
-const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
+const { Grid, Row, Col, Alert, ButtonToolbar} = require('react-bootstrap');
 
 const {Promise} = require('es6-promise');
 

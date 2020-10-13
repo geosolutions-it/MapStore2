@@ -10,10 +10,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
-const { Button } = require('react-bootstrap');
 const { isLoggedIn } = require('../../selectors/security');
 
 const Message = require('../../components/I18N/Message');
+const Button = require('../../components/misc/Button').default;
 
 class EmptyDashboards extends React.Component {
     static propTypes = {

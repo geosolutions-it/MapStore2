@@ -9,7 +9,7 @@
 import React, { useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
-import { Glyphicon, FormControl as FormControlRB, FormGroup, Button as ButtonRB } from 'react-bootstrap';
+import { Glyphicon, FormControl as FormControlRB, FormGroup } from 'react-bootstrap';
 import Fields from './Fields';
 import uuidv1 from 'uuid/v1';
 import Toolbar from '../misc/toolbar/Toolbar';
@@ -23,6 +23,7 @@ import Message from '../I18N/Message';
 import getBlocks from './config/blocks';
 import Rule from './Rule';
 import InfoPopover from '../widgets/widget/InfoPopover';
+import ButtonRB from '../misc/Button';
 
 const Button = tooltip(ButtonRB);
 const FormControl = localizedProps('placeholder')(FormControlRB);

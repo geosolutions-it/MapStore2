@@ -9,7 +9,8 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Form, FormGroup, FormControl, Glyphicon: GlyphiconRB, Button} = require('react-bootstrap');
+const {Form, FormGroup, FormControl, Glyphicon: GlyphiconRB} = require('react-bootstrap');
+const Button = require('../misc/Button').default;
 const tooltip = require('../misc/enhancers/tooltip');
 const Glyphicon = tooltip(GlyphiconRB);
 const {padStart, isNil} = require('lodash');

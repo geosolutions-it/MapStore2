@@ -7,7 +7,8 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {Button, Glyphicon, Col} = require('react-bootstrap');
+const {Glyphicon, Col} = require('react-bootstrap');
+const Button = require('../../components/misc/Button').default;
 const Message = require('../../components/I18N/Message');
 const MoreDetails = require('./MoreDetails');
 /**

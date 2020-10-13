@@ -8,8 +8,8 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 
-const {Button} = require('react-bootstrap');
 const {isEqual} = require('lodash');
+const Button = require('../../misc/Button').default;
 const Modal = require('../../misc/Modal');
 const { checkOperatorValidity, setupCrossLayerFilterDefaults, isCrossLayerFilterValid, isFilterEmpty} = require('../../../utils/FilterUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');

@@ -7,9 +7,10 @@
  */
 
 import React from 'react';
-import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
 import { every } from 'lodash';
 
+import Button from '../misc/Button';
 import TransferColumnCardList from '../misc/transfer/TransferColumnCardList';
 import Loader from '../misc/Loader';
 import Message from '../I18N/Message';

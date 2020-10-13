@@ -11,9 +11,9 @@ var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var I18N = require('../I18N/I18N');
 var ListGroupItem = BootstrapReact.ListGroupItem;
-var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 var Tooltip = BootstrapReact.Tooltip;
+const Button = require('../misc/Button').default;
 const OverlayTrigger = require('../misc/OverlayTrigger');
 var {isFunction} = require('lodash');
 

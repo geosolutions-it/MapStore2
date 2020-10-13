@@ -8,7 +8,8 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Button, Col, Grid, Row, Image, Glyphicon, Table, Panel, Alert} = require('react-bootstrap');
+const {Col, Grid, Row, Image, Glyphicon, Table, Panel, Alert} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const {DateFormat} = require('../../I18N/I18N');
 require("./css/snapshot.css");
 

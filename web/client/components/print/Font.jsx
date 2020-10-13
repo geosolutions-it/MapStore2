@@ -9,7 +9,8 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const Choice = require('./Choice');
-const {Grid, Row, Col, Button, Glyphicon} = require('react-bootstrap');
+const {Grid, Row, Col, Glyphicon} = require('react-bootstrap');
+const Button = require('../misc/Button').default;
 const IntlNumberFormControl = require('../I18N/IntlNumberFormControl');
 
 class Font extends React.Component {

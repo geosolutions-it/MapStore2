@@ -8,7 +8,8 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Panel, ButtonToolbar, Button, Tooltip} = require('react-bootstrap');
+const {Panel, ButtonToolbar, Tooltip} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const ComboField = require('./ComboField');
 const NumberField = require('./NumberField');

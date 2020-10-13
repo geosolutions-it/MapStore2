@@ -7,7 +7,8 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Panel, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const {Panel, Glyphicon, Tooltip} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 const {Message} = require('../../I18N/I18N');

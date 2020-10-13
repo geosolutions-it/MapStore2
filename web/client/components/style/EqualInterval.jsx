@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {findDOMNode} = require('react-dom');
-const {Grid, Row, Col, Button, Popover, Label, Overlay} = require('react-bootstrap');
+const {Grid, Row, Col, Popover, Label, Overlay} = require('react-bootstrap');
 
 const Combobox = require('react-widgets').Combobox;
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
@@ -22,6 +22,7 @@ const colorsSchema = require("./EqualIntervalComponents/ColorRamp");
 const colors = require("./EqualIntervalComponents/ExtendColorBrewer");
 
 const Message = require('../I18N/Message');
+const Button = require('../misc/Button').default;
 
 class EqualInterval extends React.Component {
     static propTypes = {

@@ -8,8 +8,9 @@
 import React, {useState} from 'react';
 import Spinner from "react-spinkit";
 
-import { FormGroup, Button, Form, Col } from "react-bootstrap";
+import { FormGroup, Form, Col } from "react-bootstrap";
 
+import Button from '../misc/Button';
 import BorderLayout from "../layout/BorderLayout";
 import Message from "../I18N/Message";
 

@@ -8,7 +8,8 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Panel, Button, Glyphicon} = require('react-bootstrap');
+const {Panel, Glyphicon} = require('react-bootstrap');
+const Button = require('../Button').default;
 const SwitchButton = require('./SwitchButton');
 const SwitchToolbar = require('./SwitchToolbar').default;
 const Toolbar = require('../toolbar/Toolbar');

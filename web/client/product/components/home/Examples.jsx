@@ -8,7 +8,8 @@
 const React = require('react');
 
 const I18N = require('../../../components/I18N/I18N');
-const {Panel, Button, Carousel, CarouselItem} = require('react-bootstrap');
+const {Panel, Carousel, CarouselItem} = require('react-bootstrap');
+const Button = require('../../../components/misc/Button').default;
 
 const carouselImages = {
     viewer: require('../../assets/img/Viewer.jpg'),

@@ -5,9 +5,10 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 
-const {Grid, Row, Glyphicon, Alert, Button} = require('react-bootstrap');
+const {Grid, Row, Glyphicon, Alert} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const Dialog = require('../components/misc/Dialog');
+const Button = require('../components/misc/Button').default;
 
 const Combobox = require('react-widgets').Combobox;
 const {head} = require('lodash');

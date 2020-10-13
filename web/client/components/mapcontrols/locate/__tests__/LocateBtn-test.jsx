@@ -74,7 +74,7 @@ describe("test the Locate Button", () => {
         // check if the button was correctly disabled
         const button = ReactTestUtils.findRenderedDOMComponentWithTag(component, "button");
         expect(button).toExist();
-        expect(button.disabled).toEqual(true);
+        expect(button.classList.contains('disabled')).toEqual(true);
     });
 
 });

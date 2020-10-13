@@ -17,7 +17,8 @@ const Filter = require('../../misc/Filter');
 const Loader = require('../../misc/Loader');
 const uuidv1 = require('uuid/v1');
 
-const {Glyphicon, Button} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const BorderLayout = require('../../layout/BorderLayout');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const SideGrid = require('../../misc/cardgrids/SideGrid');

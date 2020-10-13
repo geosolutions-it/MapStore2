@@ -7,8 +7,9 @@
 */
 
 const React = require('react');
-const {Row, Col, Button} = require('react-bootstrap');
+const {Row, Col} = require('react-bootstrap');
 const Loader = require('./Loader');
+const Button = require('../misc/Button').default;
 const Message = require("../I18N/Message");
 
 /**

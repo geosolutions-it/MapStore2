@@ -7,10 +7,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {NavDropdown, Button, Glyphicon, MenuItem} = require('react-bootstrap');
+const {NavDropdown, Glyphicon, MenuItem} = require('react-bootstrap');
 const {connect} = require("react-redux");
 const {partial} = require('lodash');
 const Message = require('../locale/Message');
+const Button = require('../../components/misc/Button').default;
 
 class OmniBarMenu extends React.Component {
     static propTypes = {

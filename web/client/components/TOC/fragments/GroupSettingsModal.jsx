@@ -12,7 +12,8 @@ const General = require('./settings/General');
 const Dialog = require('../../misc/Dialog');
 const Portal = require('../../misc/Portal');
 const Message = require('../../I18N/Message');
-const {Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
+const {Glyphicon, Tabs, Tab} = require('react-bootstrap');
 const assign = require('object-assign');
 
 require("./css/settingsModal.css");

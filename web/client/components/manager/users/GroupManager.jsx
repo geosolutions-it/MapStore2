@@ -9,7 +9,9 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 // const Message = require('../I18N/Message');
-const {ListGroup, ListGroupItem, Button, Glyphicon} = require('react-bootstrap');
+const {ListGroup, ListGroupItem, Glyphicon} = require('react-bootstrap');
+
+const Button = require('../../misc/Button').default;
 
 class GroupManager extends React.Component {
     static propTypes = {

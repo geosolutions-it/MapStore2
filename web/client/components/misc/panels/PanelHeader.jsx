@@ -7,7 +7,9 @@
  */
 
 const React = require('react');
-const {Button, Glyphicon, Grid, Row, Col} = require('react-bootstrap');
+const {Glyphicon, Grid, Row, Col} = require('react-bootstrap');
+
+const Button = require('../Button').default;
 
 /* eslint-disable */
 const fullscreenGlyph = {

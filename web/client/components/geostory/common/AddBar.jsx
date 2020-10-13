@@ -8,8 +8,9 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Glyphicon, Button } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 
+import Button from '../../misc/Button';
 import ToolbarPopover from './ToolbarPopover';
 
 import Toolbar from '../../misc/toolbar/Toolbar';

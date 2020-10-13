@@ -11,8 +11,9 @@ const PropTypes = require('prop-types');
 const SharingLink = require('./SharingLink');
 const Message = require('../I18N/Message');
 
-const {Popover, Button, Glyphicon} = require('react-bootstrap');
+const {Popover, Glyphicon} = require('react-bootstrap');
 
+const Button = require('../misc/Button').default;
 const OverlayTrigger = require('../misc/OverlayTrigger');
 
 class SharingLinks extends React.Component {

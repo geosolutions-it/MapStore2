@@ -7,7 +7,8 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
+const {Glyphicon, Tooltip} = require('react-bootstrap');
+const Button = require('../../components/misc/Button').default;
 const OverlayTrigger = require('../../components/misc/OverlayTrigger');
 const Sidebar = require('react-sidebar').default;
 const { Resizable } = require('react-resizable');

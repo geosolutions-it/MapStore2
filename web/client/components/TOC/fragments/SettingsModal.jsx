@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
+const {Glyphicon, Tabs, Tab} = require('react-bootstrap');
 const {isNil} = require('lodash');
 
 require("./css/settingsModal.css");
@@ -21,6 +21,7 @@ const WMSStyle = require('./settings/WMSStyle');
 const Elevation = require('./settings/Elevation');
 const FeatureInfoFormat = require('./settings/FeatureInfoFormat');
 const Portal = require('../../misc/Portal');
+const Button = require('../../misc/Button').default;
 const assign = require('object-assign');
 const Message = require('../../I18N/Message');
 const LayersUtils = require('../../../utils/LayersUtils');

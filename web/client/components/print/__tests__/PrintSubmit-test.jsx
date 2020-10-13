@@ -42,7 +42,7 @@ describe("Test the PrintSubmit component", () => {
         const node = ReactDOM.findDOMNode(cmp);
         expect(node).toExist();
         expect(node.tagName.toLowerCase()).toBe('button');
-        expect(node.disabled).toExist();
+        expect(node.classList.contains('disabled')).toBe(true);
     });
 
     it('creates component loading', () => {

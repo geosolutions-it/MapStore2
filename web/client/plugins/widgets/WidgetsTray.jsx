@@ -12,7 +12,8 @@ const { compose, withProps, withState, lifecycle, mapPropsStream } = require('re
 const { createSelector } = require('reselect');
 const tooltip = require('../../components/misc/enhancers/tooltip');
 
-const { Glyphicon, Button: BButton } = require('react-bootstrap');
+const { Glyphicon } = require('react-bootstrap');
+const BButton = require('../../components/misc/Button').default;
 const Button = tooltip(BButton);
 const { getVisibleFloatingWidgets } = require('../../selectors/widgets');
 const { toggleCollapseAll, toggleTray } = require('../../actions/widgets');

@@ -7,7 +7,8 @@
  */
 
 import React from 'react';
-import {Button, ButtonToolbar, Label} from 'react-bootstrap';
+import {ButtonToolbar, Label} from 'react-bootstrap';
+import Button from '../misc/Button';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
 import CloseButton from '../buttons/CloseButton';

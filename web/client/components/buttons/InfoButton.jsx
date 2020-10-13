@@ -8,9 +8,9 @@ const PropTypes = require('prop-types');
  */
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
-var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 var ImageButton = require('./ImageButton');
+const Button = require('../misc/Button').default;
 const Dialog = require('../misc/Dialog');
 require('./css/infoButton.css');
 const assign = require('object-assign');

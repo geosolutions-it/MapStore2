@@ -11,8 +11,9 @@ const React = require('react');
 const assign = require('object-assign');
 
 const ScaleBox = require("../mapcontrols/scale/ScaleBox");
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 
+const Button = require('../misc/Button').default;
 const PrintUtils = require('../../utils/PrintUtils');
 
 let PMap;

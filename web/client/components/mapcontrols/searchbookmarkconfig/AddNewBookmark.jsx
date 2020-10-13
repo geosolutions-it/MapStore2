@@ -8,7 +8,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Col, ControlLabel, FormControl as FC, FormGroup, Glyphicon, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Col, ControlLabel, FormControl as FC, FormGroup, Glyphicon, OverlayTrigger, Tooltip} from "react-bootstrap";
+import Button from '../../misc/Button';
 import Message from "../../I18N/Message";
 import {inRange} from 'lodash';
 import * as NumberFormControl from '../../I18N/IntlNumberFormControl';

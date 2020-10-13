@@ -25,7 +25,8 @@ const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../selectors/playback');
 
-const { Button: ButtonRB, Glyphicon } = require('react-bootstrap');
+const { Glyphicon } = require('react-bootstrap');
+const ButtonRB = require('../components/misc/Button').default;
 const tooltip = require('../components/misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);
 

@@ -10,7 +10,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 // const Message = require('../I18N/Message');
 const GridCard = require('../../misc/GridCard');
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
+const Button = require('../../../components/misc/Button').default;
 const Message = require('../../../components/I18N/Message');
 
 

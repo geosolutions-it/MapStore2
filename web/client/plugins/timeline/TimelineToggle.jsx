@@ -9,7 +9,8 @@ const React = require('react');
 const Rx = require('rxjs');
 const Message = require('../../components/I18N/Message');
 
-const { Button: RButton, Glyphicon } = require('react-bootstrap');
+const { Glyphicon } = require('react-bootstrap');
+const RButton = require('../../components/misc/Button').default;
 const { setCollapsed } = require('../../actions/timeline');
 const { isCollapsed, hasLayers } = require('../../selectors/timeline');
 

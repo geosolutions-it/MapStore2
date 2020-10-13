@@ -8,10 +8,11 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const {connect} = require('react-redux');
-const {Button, Grid, Glyphicon} = require('react-bootstrap');
+const {Grid, Glyphicon} = require('react-bootstrap');
 const {editGroup} = require('../../actions/usergroups');
 const {getUserGroups, groupSearchTextChanged} = require('../../actions/usergroups');
 const SearchBar = require("../../components/search/SearchBar").default;
+const Button = require('../../components/misc/Button').default;
 const GroupsGrid = require('./users/GroupGrid');
 const GroupDialog = require('./users/GroupDialog');
 const GroupDeleteConfirm = require('./users/GroupDeleteConfirm');

@@ -7,7 +7,8 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Col, Row, Form, FormGroup, FormControl, Button} = require('react-bootstrap');
+const {Col, Row, Form, FormGroup, FormControl} = require('react-bootstrap');
+const Button = require('../../../components/misc/Button').default;
 const I18N = require('../../../components/I18N/I18N');
 
 const googleGroups = require('../../assets/img/groups_logo.png');
