@@ -16,6 +16,7 @@ const VSlider = ({ type, map, widthRef }) => {
     const [pos, setPos] = useState();
     const [showArrows, setShowArrows] = useState(true);
 
+    // reset the slider positon to prevent misalignment between handler and cut positions
     const onWindowResize = () => {
         setPos({x: 0, y: 0});
         widthRef.current = map.getProperties().size[0] / 2;
