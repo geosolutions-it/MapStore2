@@ -121,6 +121,7 @@ const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
  * @prop {function} onToggleShowAgain triggered when interacting with the checkbox on measure annotation warning popup
  * @prop {function} onInitPlugin triggered when annotation editor is mounted
  * @prop {function} onGeometryHighlight triggered onMouseEnter and onMouseLeave of the geometry card
+ * @prop {function} onUnSelectFeature triggered on unselecting a geometry card
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -224,7 +225,8 @@ class AnnotationsEditor extends React.Component {
         showPopupWarning: PropTypes.bool,
         onToggleShowAgain: PropTypes.func,
         onInitPlugin: PropTypes.func,
-        onGeometryHighlight: PropTypes.func
+        onGeometryHighlight: PropTypes.func,
+        onUnSelectFeature: PropTypes.func
     };
 
     static defaultProps = {
@@ -469,7 +471,7 @@ class AnnotationsEditor extends React.Component {
                     onStyleGeometry={this.props.onStyleGeometry}
                     onSelectFeature={this.props.onSelectFeature}
                     drawing={this.props.drawing}
-                    onUnselectFeature={this.props.onResetCoordEditor}
+                    onUnselectFeature={this.props.onUnSelectFeature}
                     onGeometryHighlight={this.props.onGeometryHighlight}
                     isMeasureEditDisabled={this.isMeasureEditDisabled()}
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}

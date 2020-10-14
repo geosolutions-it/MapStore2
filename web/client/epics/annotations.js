@@ -29,7 +29,7 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR,
-    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES, GEOMETRY_HIGHLIGHT
+    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES, GEOMETRY_HIGHLIGHT, UNSELECT_FEATURE
 } = require('../actions/annotations');
 
 const uuidv1 = require('uuid/v1');
@@ -575,7 +575,7 @@ module.exports = (viewer) => ({
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
-    onBackToEditingFeatureEpic: (action$, {getState}) => action$.ofType( RESET_COORD_EDITOR, CONFIRM_DELETE_FEATURE )
+    onBackToEditingFeatureEpic: (action$, {getState}) => action$.ofType( RESET_COORD_EDITOR, CONFIRM_DELETE_FEATURE, UNSELECT_FEATURE )
         .switchMap(({}) => {
             const state = getState();
             const feature = state.annotations.editing;

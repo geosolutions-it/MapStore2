@@ -25,7 +25,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
     highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
     setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles, changeGeometryTitle, filterMarker, toggleShowAgain, hideMeasureWarning,
-    initPlugin, geometryHighlight
+    initPlugin, geometryHighlight, unSelectFeature
 } = require('../actions/annotations');
 
 const {selectFeatures} = require('../actions/draw');
@@ -83,7 +83,8 @@ const commonEditorActions = {
     onSetAnnotationMeasurement: setAnnotationMeasurement,
     onHideMeasureWarning: hideMeasureWarning,
     onToggleShowAgain: toggleShowAgain,
-    onInitPlugin: initPlugin
+    onInitPlugin: initPlugin,
+    onUnSelectFeature: unSelectFeature
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
     {
