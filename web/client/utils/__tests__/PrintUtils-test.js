@@ -534,7 +534,7 @@ describe('PrintUtils', () => {
                 expect(layerSpec.version).toBe("1.0.0");
             });
         });
-        describe.only('tileprovider', () => {
+        describe('tileprovider', () => {
             it('BasemapAT', () => {
                 const testLayer = BasemapAT;
                 const layerSpec = PrintUtils.specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
