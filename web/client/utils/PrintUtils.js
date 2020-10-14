@@ -473,7 +473,7 @@ const PrintUtils = {
         },
         tileprovider: {
             map: (layer) => {
-
+                // details here: http://www.mapfish.org/doc/print/protocol.html#xyz
                 const [providerURL, layerConfig] = getLayerConfig(layer.provider, layer);
                 if (!isEmpty(layerConfig)) {
                     let validURL = extractValidBaseURL({ ...layerConfig, url: layerConfig?.url ?? providerURL });
@@ -488,6 +488,7 @@ const PrintUtils = {
                         .replace("{x}", "${x}")
                         .replace("{y}", "${y}")
                         .replace("{z}", "${z}");
+                    // TODO: support bounds
                     return {
                         baseURL,
                         path_format: pathFormat,
@@ -496,7 +497,33 @@ const PrintUtils = {
                         "opacity": getOpacity(layer),
                         "tileSize": [256, 256],
                         "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
-                        "resolutions": MapUtils.getResolutions()
+                        "resolutions": [
+                            156543.03390625,
+                            78271.516953125,
+                            39135.7584765625,
+                            19567.87923828125,
+                            9783.939619140625,
+                            4891.9698095703125,
+                            2445.9849047851562,
+                            1222.9924523925781,
+                            611.4962261962891,
+                            305.74811309814453,
+                            152.87405654907226,
+                            76.43702827453613,
+                            38.218514137268066,
+                            19.109257068634033,
+                            9.554628534317017,
+                            4.777314267158508,
+                            2.388657133579254,
+                            1.194328566789627,
+                            0.5971642833948135
+                        ].filter( (_, i) => {
+                            let isIncluded = true;
+                            if (layerConfig.maxNativeZoom) {
+                                isIncluded = isIncluded && i <= layerConfig.maxNativeZoom;
+                            }
+                            return isIncluded;
+                        })
                     };
                 }
                 return {};
