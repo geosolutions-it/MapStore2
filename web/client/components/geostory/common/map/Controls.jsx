@@ -118,10 +118,13 @@ export const Controls = ({
                                 type: "Feature",
                                 style: [{
                                     highlight: false,
-                                    iconColor: "blue",
-                                    iconGlyph: "marker"
+                                    iconColor: "yellow",
+                                    iconGlyph: "comment",
+                                    iconShape: "circle",
+                                    id
                                 }],
                                 properties: {
+                                    id,
                                     canEdit: false,
                                     isValidFeature: true,
                                     html: EMPTY_CONTENT,

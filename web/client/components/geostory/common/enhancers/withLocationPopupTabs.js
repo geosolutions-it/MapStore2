@@ -34,7 +34,11 @@ const withDefaultTabs = withProps((props) => ({
         title: 'Popup',
         visible: true,
         Component: () => {
-            return (<div className="ms-locations-popup-editor"><Text {...props} allowBlur={false} keepOpen mode="edit" /></div>);
+            const update = (pathToHtml, html) => {
+                const path = `map.layers[{"id": "locations"}].features[{"id": "locFeatureCollection"}].features[{"id": "${props.currentMapLocation}"}].properties.${pathToHtml}`;
+                props.update(path, html);
+            };
+            return (<div className="ms-locations-popup-editor"><Text {...props} update={update} allowBlur={false} keepOpen mode="edit" /></div>);
         }
     },
     {
@@ -44,11 +48,51 @@ const withDefaultTabs = withProps((props) => ({
         title: 'Style',
         visible: true,
         Component: () => {
+            const path = `map.layers[{"id": "locations"}].features[{"id": "locFeatureCollection"}].features[{"id": "${props.currentMapLocation}"}].style`;
+
+            const symbolList = [
+                {
+                    label: "Triangle",
+                    symbolUrl: "product/assets/symbols/triangle.svg?_t=0.5599318810949812",
+                    value: "triangle"
+                },
+                {
+                    label: "Map Pin Marked",
+                    symbolUrl: "product/assets/symbols/map-pin-marked.svg?_t=0.7977083047551663",
+                    value: "map-pin-marked"
+                }
+            ];
+
+            const defaultStyles = {
+                POINT: {
+                    marker: {
+                        iconColor: "blue",
+                        iconGlyph: "comment",
+                        iconShape: "square"
+                    },
+                    symbol: {
+                        anchorXUnits: "fraction",
+                        anchorYUnits: "fraction",
+                        color: "#000000",
+                        fillColor: "#000000",
+                        fillOpacity: 1,
+                        iconAnchor: [0.5, 0.5],
+                        opacity: 1,
+                        shape: "triangle",
+                        size: 64,
+                        symbolUrl: "product/assets/symbols/triangle.svg",
+                        symbolUrlCustomized: "blob:http://localhost:8081/3deee860-ae2f-473d-9da5-1e5756c53556"
+                    }
+                }
+            };
             return (
                 <div className="ms-locations-popup-editor">
                     <Manager
                         selectComponent={styleSelectComponent}
                         markersOptions={{...config}}
+                        symbolList={symbolList}
+                        defaultStyles={defaultStyles}
+                        onChangeStyle={(newStyles) => props.update(path, newStyles)}
                         style={props.currentLocationData.style} />
                 </div>
             );

@@ -166,11 +166,9 @@ export const withLocationClickInEdit = branch(({editMap, map: {mapLocationsEnabl
                 <LocationPopoverEditor
                     sections={sections}
                     currentLocationData={currentLocationData}
-                    update={(pathToHtml, html) => {
-                        const path = `map.layers[{"id": "locations"}].features[{"id": "locFeatureCollection"}].features[{"id": "${currentMapLocation}"}].properties.${pathToHtml}`;
-                        update(path, html);
-                    }}
                     html={currentLocationData?.properties?.html}
+                    update={update}
+                    currentMapLocation={currentMapLocation}
                 />);
 
             return {popups: [{component, position: { coordinates: currentLocationData.geometry.rawPos }, id: uuidv1() }]};
