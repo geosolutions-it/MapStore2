@@ -1,6 +1,0 @@
-{
-  "upstream": "geosolutions-it/MapStore2",
-  "targetBranchChoices": ["2020.02.xx"],
-  "targetPRLabels": ["backport"],
-  "prTitle": "Backport for {targetBranch} - {commitMessages}"
-}
