@@ -62,7 +62,7 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
         describe('integrations', () => {
             it('disablePermission options hides the permission (compatibility with system that do not use GeoStore)', () => {
                 const storeState = stateMocker(DUMMY_ACTION, toggleControl('mapSaveAs', 'enabled'));
-                const { Plugin } = getPluginForTest(MapSaveAs, storeState);
+                const { Plugin } = getPluginForTest(MapSaveAs, {...storeState, security: {user: {role: 'ADMIN'}}});
                 ReactDOM.render(<Plugin disablePermission />, document.getElementById("container"));
                 expect(document.querySelector('.modal-fixed')).toBeTruthy();
                 expect(document.querySelector('.permissions-table')).toBeFalsy();

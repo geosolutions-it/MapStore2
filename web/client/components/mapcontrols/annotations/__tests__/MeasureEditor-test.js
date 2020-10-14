@@ -76,6 +76,7 @@ describe('MeasureEditor component', () => {
         const container = document.getElementById('container');
 
         const el = container.querySelector('input');
+        ReactTestUtils.Simulate.focus(el);
         el.value = "1";
         ReactTestUtils.Simulate.change(el);
         ReactDOM.render(<MeasureEditor onChange={actions.onChange} displayUom="km" value={1000} />, document.getElementById("container"));

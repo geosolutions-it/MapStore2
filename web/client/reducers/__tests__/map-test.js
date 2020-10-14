@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const {round} = require('lodash');
+import expect from 'expect';
 
-var mapConfig = require('../map');
-const { changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS } = require('../../actions/map');
+import { round } from 'lodash';
+import mapConfig from '../map';
+import { changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS } from '../../actions/map';
 
 describe('Test the map reducer', () => {
     it('returns original state on unrecognized action', () => {

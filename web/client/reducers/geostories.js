@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { MAPS_LIST_LOADING } = require('../actions/maps');
-const { LOCATION_CHANGE } = require('connected-react-router');
+import { MAPS_LIST_LOADING } from '../actions/maps';
 
-const { GEOSTORIES_LIST_LOADED, SET_GEOSTORIES_AVAILABLE, LOADING } = require('../actions/geostories');
-const {set} = require('../utils/ImmutableUtils');
-const { castArray } = require('lodash');
+import { LOCATION_CHANGE } from 'connected-react-router';
+import { GEOSTORIES_LIST_LOADED, SET_GEOSTORIES_AVAILABLE, LOADING } from '../actions/geostories';
+import { set } from '../utils/ImmutableUtils';
+import { castArray } from 'lodash';
 
 function geostories(state = {
     enabled: false,
@@ -56,4 +56,4 @@ function geostories(state = {
     }
 }
 
-module.exports = geostories;
+export default geostories;

@@ -6,9 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {CHANGE_SNAPSHOT_STATE, SNAPSHOT_ERROR, SNAPSHOT_READY, SNAPSHOT_ADD_QUEUE, SNAPSHOT_REMOVE_QUEUE} = require('../actions/snapshot');
+import {
+    CHANGE_SNAPSHOT_STATE,
+    SNAPSHOT_ERROR,
+    SNAPSHOT_READY,
+    SNAPSHOT_ADD_QUEUE,
+    SNAPSHOT_REMOVE_QUEUE
+} from '../actions/snapshot';
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
 function snapshot(state = null, action) {
     switch (action.type) {
@@ -59,4 +65,4 @@ function snapshot(state = null, action) {
 
 }
 
-module.exports = snapshot;
+export default snapshot;

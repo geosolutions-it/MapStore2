@@ -6,12 +6,14 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {metadataSourceSelector,
+import {
+    metadataSourceSelector,
     modalParamsSelector,
     backgroundListSelector,
-    isDeletedIdSelector} = require('../backgroundselector');
+    isDeletedIdSelector
+} from '../backgroundselector';
 
 const backgrounds = [{id: '1', thumbId: 10}, {id: '2', thumbnail: {url: 'url', data: 'binary'}}];
 const modalParams = {editing: true, loading: true};

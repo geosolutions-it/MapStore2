@@ -55,6 +55,7 @@ class Section extends React.Component {
         mediaViewer: PropTypes.func,
         contentToolbar: PropTypes.func,
         inView: PropTypes.bool,
+        sections: PropTypes.array,
         storyFonts: PropTypes.array
     };
 
@@ -71,6 +72,7 @@ class Section extends React.Component {
         viewWidth: 0,
         mode: Modes.VIEW,
         expandableMedia: false,
+        sections: [],
         storyFonts: []
     };
 
@@ -102,6 +104,7 @@ class Section extends React.Component {
                 mediaViewer={this.props.mediaViewer}
                 contentToolbar={this.props.contentToolbar}
                 inView={this.props.inView}
+                sections={this.props.sections}
                 storyFonts={this.props.storyFonts}
             />
         );

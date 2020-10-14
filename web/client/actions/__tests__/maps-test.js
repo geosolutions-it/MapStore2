@@ -6,32 +6,51 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-const assign = require('object-assign');
-const axios = require("../../libs/ajax");
-const MockAdapter = require("axios-mock-adapter");
-const {
-    deleteMap, DELETE_MAP,
-    saveResourceDetails, SAVE_RESOURCE_DETAILS,
-    doNothing, DO_NOTHING,
-    setUnsavedChanged, SET_UNSAVED_CHANGES,
-    openDetailsPanel, OPEN_DETAILS_PANEL,
-    closeDetailsPanel, CLOSE_DETAILS_PANEL,
-    MAP_UPDATING, mapUpdating,
-    DETAILS_LOADED, detailsLoaded,
-    ATTRIBUTE_UPDATED, attributeUpdated,
-    THUMBNAIL_ERROR, thumbnailError,
-    TOGGLE_DETAILS_EDITABILITY, toggleDetailsEditability,
-    MAPS_SEARCH_TEXT_CHANGED, mapsSearchTextChanged,
-    MAPS_LIST_LOAD_ERROR, loadError,
-    MAP_ERROR, mapError,
-    METADATA_CHANGED, metadataChanged,
-    setShowMapDetails, SHOW_DETAILS,
-    updateAttribute,
-    SAVE_MAP_RESOURCE, saveMapResource
-} = require('../maps');
+import expect from 'expect';
 
-let GeoStoreDAO = require('../../api/GeoStoreDAO');
+import assign from 'object-assign';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+
+import {
+    deleteMap,
+    DELETE_MAP,
+    saveResourceDetails,
+    SAVE_RESOURCE_DETAILS,
+    doNothing,
+    DO_NOTHING,
+    setUnsavedChanged,
+    SET_UNSAVED_CHANGES,
+    openDetailsPanel,
+    OPEN_DETAILS_PANEL,
+    closeDetailsPanel,
+    CLOSE_DETAILS_PANEL,
+    MAP_UPDATING,
+    mapUpdating,
+    DETAILS_LOADED,
+    detailsLoaded,
+    ATTRIBUTE_UPDATED,
+    attributeUpdated,
+    THUMBNAIL_ERROR,
+    thumbnailError,
+    TOGGLE_DETAILS_EDITABILITY,
+    toggleDetailsEditability,
+    MAPS_SEARCH_TEXT_CHANGED,
+    mapsSearchTextChanged,
+    MAPS_LIST_LOAD_ERROR,
+    loadError,
+    MAP_ERROR,
+    mapError,
+    METADATA_CHANGED,
+    metadataChanged,
+    setShowMapDetails,
+    SHOW_DETAILS,
+    updateAttribute,
+    SAVE_MAP_RESOURCE,
+    saveMapResource
+} from '../maps';
+
+import GeoStoreDAO from '../../api/GeoStoreDAO';
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
 const BASE_URL = 'base/web/client/test-resources/geostore/';

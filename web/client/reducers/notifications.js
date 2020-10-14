@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {SHOW_NOTIFICATION, HIDE_NOTIFICATION, CLEAR_NOTIFICATIONS} = require('../actions/notifications');
+import { SHOW_NOTIFICATION, HIDE_NOTIFICATION, CLEAR_NOTIFICATIONS } from '../actions/notifications';
+
 /**
  * Manages the notifications.
  * @memberof reducers
@@ -41,4 +42,4 @@ function notifications(state = [], action = {}) {
         return state;
     }
 }
-module.exports = notifications;
+export default notifications;

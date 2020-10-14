@@ -54,10 +54,9 @@ const SaveBaseDialog = compose(
             onClose();
             onResetMapSaveError(); // reset errors when closing the modal
         },
-        onSave: ({map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, saveMap, isNewResource, user, contextResource}) => resource => {
+        onSave: ({map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, saveMap, isNewResource, contextResource}) => resource => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
                 backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
-            const owner = {"owner": user && user.name || null};
             const {metadata, data, attributes, id, ...others} = resource;
             let updates;
             if (!isNewResource) {
@@ -69,7 +68,7 @@ const SaveBaseDialog = compose(
                         ...attributes,
                         context: contextResource?.id || attributes.context
                     },
-                    metadata: {attributes: {...owner}, ...metadata},
+                    metadata: {attributes: null, ...metadata},
                     ...others
                 };
             }

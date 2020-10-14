@@ -5,9 +5,10 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const {head} = require('lodash');
-const {mapSelector} = require('./map');
-const {parseLayoutValue} = require('../utils/MapUtils');
+import { head } from 'lodash';
+
+import { mapSelector } from './map';
+import { parseLayoutValue } from '../utils/MapUtils';
 
 /**
  * selects map layout state
@@ -24,7 +25,7 @@ const {parseLayoutValue} = require('../utils/MapUtils');
  * @return {object} the layout of the map
  */
 
-const mapLayoutSelector = (state) => state.maplayout && state.maplayout.layout || {};
+export const mapLayoutSelector = (state) => state.maplayout && state.maplayout.layout || {};
 
 /**
  * Get map layout bounds left, top, bottom and right
@@ -33,7 +34,7 @@ const mapLayoutSelector = (state) => state.maplayout && state.maplayout.layout |
  * @param  {object} state the state
  * @return {object} boundingMapRect {left, top, bottom, right}
  */
-const boundingMapRectSelector = (state) => state.maplayout && state.maplayout.boundingMapRect || {};
+export const boundingMapRectSelector = (state) => state.maplayout && state.maplayout.boundingMapRect || {};
 
 /**
  * Retrieve only specific attribute from map layout
@@ -43,7 +44,7 @@ const boundingMapRectSelector = (state) => state.maplayout && state.maplayout.bo
  * @param  {object} attributes attributes to retrieve, bool {left: true}
  * @return {object} selected attributes of layout of the map
  */
-const mapLayoutValuesSelector = (state, attributes = {}) => {
+export const mapLayoutValuesSelector = (state, attributes = {}) => {
     const layout = mapLayoutSelector(state);
     return layout && Object.keys(layout).filter(key =>
         attributes[key]).reduce((a, key) => ({...a, [key]: layout[key]}),
@@ -58,7 +59,7 @@ const mapLayoutValuesSelector = (state, attributes = {}) => {
  * @param  {array} conditions array of object, [{ key: 'left', value: 300 }, { key: 'right', value: 0, type: 'not' }]
  * @return {boolean} returns true if the layout attributes match with the provided conditions
  */
-const checkConditionsSelector = (state, conditions = []) => {
+export const checkConditionsSelector = (state, conditions = []) => {
     const layout = mapLayoutSelector(state);
     const check = !!head(conditions.filter(c => layout[c.key]).map(c => {
         if (c.type === 'not') {
@@ -76,7 +77,7 @@ const checkConditionsSelector = (state, conditions = []) => {
  * @param  {object} state the state
  * @return {boolean} returns true if right panels are open
  */
-const rightPanelOpenSelector = state => {
+export const rightPanelOpenSelector = state => {
     // need to remove 658 and manage it from the state with all dafault layout variables
     return checkConditionsSelector(state, [{ key: 'right', value: 658 }]);
 };
@@ -87,7 +88,7 @@ const rightPanelOpenSelector = state => {
  * @param  {object} state the state
  * @return {boolean} returns true if bottom panel is open
  */
-const bottomPanelOpenSelector = state => {
+export const bottomPanelOpenSelector = state => {
     // need to remove 30 and manage it from the state with all dafault layout variables
     return checkConditionsSelector(state, [{ key: 'bottom', value: 30, type: 'not' }]);
 };
@@ -98,7 +99,7 @@ const bottomPanelOpenSelector = state => {
  * @returns {object} object with `left,bottom,right,top` properties, in pixels, containing the map layout
  */
 
-const mapPaddingSelector = state => {
+export const mapPaddingSelector = state => {
     const map = mapSelector(state);
     const boundingMapRect = boundingMapRectSelector(state);
     return boundingMapRect && map && map.size && {
@@ -107,14 +108,4 @@ const mapPaddingSelector = state => {
         right: parseLayoutValue(boundingMapRect.right, map.size.width),
         top: parseLayoutValue(boundingMapRect.top, map.size.height)
     };
-};
-
-module.exports = {
-    mapLayoutSelector,
-    mapLayoutValuesSelector,
-    checkConditionsSelector,
-    rightPanelOpenSelector,
-    bottomPanelOpenSelector,
-    boundingMapRectSelector,
-    mapPaddingSelector
 };

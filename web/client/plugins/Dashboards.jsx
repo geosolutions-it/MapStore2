@@ -133,6 +133,6 @@ module.exports = {
     }),
     epics: require('../epics/dashboards'),
     reducers: {
-        dashboards: require('../reducers/dashboards')
+        dashboards: require('../reducers/dashboards').default
     }
 };

@@ -66,7 +66,7 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, isLoadedResponseSelector, (index, loaded) => ({ index, loaded })),
+        createSelector(indexSelector, isLoadedResponseSelector, (state) =>state.browser && state.browser.mobile, (index, loaded, isMobile) => ({ index, loaded, isMobile })),
         {
             setIndex: changePage
         }
@@ -259,6 +259,6 @@ module.exports = {
             position: 3
         }
     }),
-    reducers: {mapInfo: require('../reducers/mapInfo')},
+    reducers: {mapInfo: require('../reducers/mapInfo').default},
     epics: require('../epics/identify').default
 };

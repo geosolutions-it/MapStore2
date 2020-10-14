@@ -8,8 +8,9 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {FormGroup, FormControl} = require('react-bootstrap');
+const {FormGroup} = require('react-bootstrap');
 const {capitalize} = require('lodash');
+const IntlNumberFormControl = require('../../../I18N/IntlNumberFormControl');
 
 /**
  This component renders a coordiante inpout for decimal degrees
@@ -51,24 +52,24 @@ class DecimalCoordinateEditor extends React.Component {
         return (
             <FormGroup
                 validationState={this[validateNameFunc](value)}>
-                <FormControl
+                <IntlNumberFormControl
                     key={coordinate}
                     value={value}
                     placeholder={coordinate}
-                    onChange={e => {
+                    onChange={val => {
                         // when inserting 4eee5 as number here it comes "" that makes the re-render fail
-                        if (e.target.value === "") {
+                        if (val === "") {
                             onChange("");
                         }
-                        if (this[validateNameFunc](e.target.value) === null) {
-                            onChange(e.target.value);
+                        if (this[validateNameFunc](val) === null) {
+                            onChange(val);
                         }
                     }}
-                    onKeyDown={(event) => {
-                        this.verifyOnKeyDownEvent(event);
-                    }}
+                    onKeyDown={this.verifyOnKeyDownEvent}
                     step={1}
-                    type="number"/>
+                    validateNameFunc={this[validateNameFunc]}
+                    type="number"
+                />
             </FormGroup>
         );
     }
@@ -85,7 +86,7 @@ class DecimalCoordinateEditor extends React.Component {
         if (event.keyCode === 13) {
             event.preventDefault();
             event.stopPropagation();
-            this.props.onKeyDown();
+            this.props.onKeyDown(event);
         }
     };
 
@@ -105,8 +106,10 @@ class DecimalCoordinateEditor extends React.Component {
         const lat = parseFloat(latitude);
         if (isNaN(lat) || lat < min || lat > max ) {
             return "error";
+            // return true;
         }
         return null; // "success"
+        // return false; // "success"
     }
 }
 

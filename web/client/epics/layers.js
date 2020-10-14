@@ -8,12 +8,22 @@
 
 const Rx = require('rxjs');
 const Api = require('../api/WMS');
-const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, UPDATE_SETTINGS_PARAMS, layersRefreshed, updateNode, updateSettings, layersRefreshError, changeLayerParams } = require('../actions/layers');
-const {getLayersWithDimension, layerSettingSelector} = require('../selectors/layers');
+const {
+    REFRESH_LAYERS,
+    UPDATE_LAYERS_DIMENSION,
+    UPDATE_SETTINGS_PARAMS,
+    LAYER_LOAD,
+    layersRefreshed,
+    updateNode,
+    updateSettings,
+    layersRefreshError,
+    changeLayerParams } = require('../actions/layers');
+const {getLayersWithDimension, layerSettingSelector, getLayerFromId} = require('../selectors/layers');
 
 const { setControlProperty } = require('../actions/controls');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
 
+const { basicError } = require('../utils/NotificationUtils');
 const LayersUtils = require('../utils/LayersUtils');
 
 
@@ -129,6 +139,7 @@ const updateSettingsParamsEpic = (action$, store) =>
             const settings = layerSettingSelector(state);
             const initialSettings = initialSettingsSelector(state);
             const orig = originalSettingsSelector(state);
+            const layer = settings?.nodeType === 'layers' ? getLayerFromId(state, settings?.node) : null;
 
             let originalSettings = { ...(orig || {}) };
             // TODO one level only storage of original settings for the moment
@@ -145,7 +156,16 @@ const updateSettingsParamsEpic = (action$, store) =>
                     settings.nodeType,
                     { ...settings.options, ...newParams }
                 )] : [])
-            );
+            // this handles errors due to name changes
+            ).concat(newParams.name && layer && layer.name !== newParams.name ?
+                action$.ofType(LAYER_LOAD).filter(({layerId}) => layerId === layer?.id).take(1).flatMap(({error}) => error ?
+                    Rx.Observable.of(basicError({
+                        title: 'layerNameChangeError.title',
+                        message: 'layerNameChangeError.message',
+                        autoDismiss: 5
+                    })) :
+                    Rx.Observable.empty()) :
+                Rx.Observable.empty());
         });
 
 module.exports = {

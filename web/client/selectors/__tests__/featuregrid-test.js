@@ -6,9 +6,11 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const assign = require('object-assign');
-const {
+import expect from 'expect';
+
+import assign from 'object-assign';
+
+import {
     isFeatureGridOpen,
     hasChangesSelector,
     getTitleSelector,
@@ -35,7 +37,7 @@ const {
     queryOptionsSelector,
     showTimeSync,
     timeSyncActive
-} = require('../featuregrid');
+} from '../featuregrid';
 
 const idFt1 = "idFt1";
 const idFt2 = "idFt2";
@@ -62,11 +64,10 @@ let feature2 = {
         someProp: "someValue"
     }
 };
-const featuregrid = require('../../reducers/featuregrid');
-const { setUp, setTimeSync } = require('../../actions/featuregrid');
-
-const dimension = require('../../reducers/dimension');
-const { updateLayerDimensionData } = require('../../actions/dimension');
+import featuregrid from '../../reducers/featuregrid';
+import { setUp, setTimeSync } from '../../actions/featuregrid';
+import dimension from '../../reducers/dimension';
+import { updateLayerDimensionData } from '../../actions/dimension';
 
 let initialState = {
     query: {

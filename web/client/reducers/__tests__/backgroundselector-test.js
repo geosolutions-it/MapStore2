@@ -5,16 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const backgroundselector = require('../backgroundselector');
-const {
+import expect from 'expect';
+
+import backgroundselector from '../backgroundselector';
+
+import {
     CREATE_BACKGROUNDS_LIST,
     ADD_BACKGROUND,
     UPDATE_BACKGROUND_THUMBNAIL,
     BACKGROUNDS_CLEAR,
     REMOVE_BACKGROUND,
     CLEAR_MODAL_PARAMETERS
-} = require('../../actions/backgroundselector');
+} from '../../actions/backgroundselector';
 
 describe('Test the backgroundSelector reducer', () => {
     it('trigger add background action ', () => {

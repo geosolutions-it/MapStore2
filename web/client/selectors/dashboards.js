@@ -6,12 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = {
-    searchTextSelector: state => state && state.dashboards && state.dashboards.searchText,
-    searchParamsSelector: state => state && state.dashboards && state.dashboards.options && state.dashboards.options.params,
-    resultsSelector: state => state && state.dashboards && state.dashboards.results,
-    totalCountSelector: state => state && state.dashboards && state.dashboards.totalCount,
-    isLoadingSelector: state => state && state.dashboards && state.dashboards.loading,
-    areDashboardsAvailable: state => state && state.dashboards && state.dashboards.available,
-    isEditDialogOpen: state => state && state.dashboards && state.dashboards.showModal && state.dashboards.showModal.edit
-};
+
+export const searchTextSelector = state => state && state.dashboards && state.dashboards.searchText;
+export const searchParamsSelector = state => state && state.dashboards && state.dashboards.options && state.dashboards.options.params;
+export const resultsSelector = state => state && state.dashboards && state.dashboards.results;
+export const totalCountSelector = state => state && state.dashboards && state.dashboards.totalCount;
+export const isLoadingSelector = state => state && state.dashboards && state.dashboards.loading;
+export const areDashboardsAvailable = state => state && state.dashboards && state.dashboards.available;
+export const isEditDialogOpen = state => state && state.dashboards && state.dashboards.showModal && state.dashboards.showModal.edit;

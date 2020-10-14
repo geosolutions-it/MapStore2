@@ -6,10 +6,11 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const assign = require('object-assign');
-const {get} = require('lodash');
+import assign from 'object-assign';
 
-const rulesSelector = (state) => {
+import { get } from 'lodash';
+
+export const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
         return [];
     }
@@ -29,10 +30,10 @@ const rulesSelector = (state) => {
     });
 };
 
-const userSelector = (state) => state && state.security && state.security.user;
-const userGroupSecuritySelector = (state) => get(state, "security.user.groups.group");
-const userRoleSelector = (state) => userSelector(state) && userSelector(state).role;
-const userParamsSelector = (state) => {
+export const userSelector = (state) => state && state.security && state.security.user;
+export const userGroupSecuritySelector = (state) => get(state, "security.user.groups.group");
+export const userRoleSelector = (state) => userSelector(state) && userSelector(state).role;
+export const userParamsSelector = (state) => {
     const user = userSelector(state);
     return {
         id: user.id,
@@ -40,14 +41,7 @@ const userParamsSelector = (state) => {
     };
 };
 
-module.exports = {
-    rulesSelector,
-    userSelector,
-    userParamsSelector,
-    isLoggedIn: state => state && state.security && state.security.user,
-    userRoleSelector,
-    securityTokenSelector: state => state.security && state.security.token,
-    userGroupSecuritySelector,
-    isAdminUserSelector: (state) => userRoleSelector(state) === "ADMIN",
-    isUserSelector: (state) => userRoleSelector(state) === "USER"
-};
+export const isLoggedIn = state => state && state.security && state.security.user;
+export const securityTokenSelector = state => state.security && state.security.token;
+export const isAdminUserSelector = (state) => userRoleSelector(state) === "ADMIN";
+export const isUserSelector = (state) => userRoleSelector(state) === "USER";

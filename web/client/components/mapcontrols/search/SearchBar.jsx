@@ -213,6 +213,7 @@ export default ({
                             visible: !!error,
                             onClick: clearSearch
                         }, {
+                            visible: showOptions,
                             renderButton: <SearchBarMenu disabled={showOptions} menuItems={searchMenuOptions} />
                         }]}
                 />

@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const highlight = require('../highlight');
-const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
+import expect from 'expect';
+
+import highlight from '../highlight';
+import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
 
 
 describe('Test the highlight reducer', () => {

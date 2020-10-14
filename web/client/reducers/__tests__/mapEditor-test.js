@@ -9,10 +9,7 @@ import expect from 'expect';
 
 import mapEditor, {DEFAULT_STATE} from '../mapEditor';
 
-const {
-    hide,
-    show
-} = require('../../actions/mapEditor');
+import { hide, show } from '../../actions/mapEditor';
 
 describe('Test the mapEditor reducer', () => {
     it('HIDE', () => {

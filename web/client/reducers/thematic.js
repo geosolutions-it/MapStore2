@@ -6,12 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { LOAD_FIELDS, FIELDS_LOADED, FIELDS_ERROR, LOAD_CLASSIFICATION,
-    CLASSIFICATION_LOADED, CLASSIFICATION_ERROR,
-    CHANGE_CONFIGURATION, CHANGE_DIRTY,
-    CHANGE_INPUT_VALIDITY} = require('../actions/thematic');
-const { HIDE_SETTINGS } = require('../actions/layers');
-const assign = require('object-assign');
+import {
+    LOAD_FIELDS,
+    FIELDS_LOADED,
+    FIELDS_ERROR,
+    LOAD_CLASSIFICATION,
+    CLASSIFICATION_LOADED,
+    CLASSIFICATION_ERROR,
+    CHANGE_CONFIGURATION,
+    CHANGE_DIRTY,
+    CHANGE_INPUT_VALIDITY
+} from '../actions/thematic';
+
+import { HIDE_SETTINGS } from '../actions/layers';
+import assign from 'object-assign';
 
 const initialState = {
     loadingFields: false,
@@ -102,4 +110,4 @@ function thematic(state = initialState, action) {
     }
 }
 
-module.exports = thematic;
+export default thematic;

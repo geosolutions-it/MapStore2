@@ -1,0 +1,99 @@
+/*
+* Copyright 2020, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+.mapstore-swipe-slider {
+    position: absolute;
+    z-index: 100;
+    background-color: @ms2-color-primary;
+
+    .ms-vertical-swipe-slider-arrows {
+        position: absolute;
+        z-index: 99;
+        background-color: transparent;
+        width: 74px;
+        height: 52px;
+        left: -33px;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 2px;
+        align-items: center;
+        color: white;
+    }
+
+    .ms-horizontal-swipe-slider-arrows {
+        position: absolute;
+        z-index: 99;
+        background-color: transparent;
+        height: 74px;
+        width: 52px;
+        top: -33px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 2px 0;
+        align-items: center;
+        color: white;
+    }
+
+    .ms-slider-arrows {
+        height: @square-btn-medium-size;
+        width: @square-btn-medium-size;
+        padding: 0;
+        color: @ms2-color-primary;
+        background-color: #ffffff;
+        border: 1px solid @ms2-color-primary;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.mapstore-swipe-settings {
+
+    .ms-resizable-modal {
+        .modal-content {
+            overflow: visible;
+
+        &.ms-xs {
+            min-height: 22%;
+            height: auto;
+            width: 25%;
+            }
+        }
+    }
+
+    .mapstore-swipe-settings-modal {
+
+        /* Enable showing of select dropdown */
+        .modal-body {
+            overflow: visible;
+
+            .mapstore-swipe-setiings-modal-body {
+                overflow: visible;
+        
+                & > div {
+                    overflow: visible !important;
+                }
+
+                .ms2-border-layout-body {
+                    overflow-y: visible !important;
+                }
+            }
+        }
+    }
+
+    .mapstore-swipe-settings-slider {
+        position: relative;
+        padding: 0 17.5px;
+        overflow-y: visible;
+    }
+
+    .mapstore-swipe-settings-spy {
+        padding: 15px 17.5px;
+    }
+}

@@ -43,5 +43,5 @@ module.exports = {
             doNotHide: true
         }
     }),
-    reducers: {help: require('../reducers/help')}
+    reducers: {help: require('../reducers/help').default}
 };

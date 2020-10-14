@@ -6,15 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
-    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA, USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER,
-    USERMANAGER_GETGROUPS, USERS_SEARCH_TEXT_CHANGED
-} = require('../actions/users');
+import {
+    USERMANAGER_GETUSERS,
+    USERMANAGER_EDIT_USER,
+    USERMANAGER_EDIT_USER_DATA,
+    USERMANAGER_UPDATE_USER,
+    USERMANAGER_DELETE_USER,
+    USERMANAGER_GETGROUPS,
+    USERS_SEARCH_TEXT_CHANGED
+} from '../actions/users';
 
-const {UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED} = require('../actions/usergroups');
-const assign = require('object-assign');
-
-const {findIndex} = require('lodash');
+import { UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED } from '../actions/usergroups';
+import assign from 'object-assign';
+import { findIndex } from 'lodash';
 /**
  * Reducer for a user
  * * It contains the following parts:
@@ -150,4 +154,4 @@ function users(state = {
         return state;
     }
 }
-module.exports = users;
+export default users;

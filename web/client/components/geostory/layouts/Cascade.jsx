@@ -175,6 +175,7 @@ const Cascade = ({
                                 storyTheme={storyTheme}
                                 mediaViewer={mediaViewer}
                                 contentToolbar={contentToolbar}
+                                sections={sections}
                                 storyFonts={storyFonts}
                             />
                         );

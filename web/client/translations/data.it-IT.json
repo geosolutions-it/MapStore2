@@ -28,6 +28,10 @@
         "collapse": "Collassa",
         "expand": "Espandi",
         "Forbidden": "Vietato",
+        "layerNameChangeError": {
+            "title": "Errore di modifica del nome",
+            "message": "Il livello non è stato ricaricato con un nome modificato"
+        },
         "version": {
             "label": "Versione"
         },
@@ -107,7 +111,9 @@
                 "right": "Destra",
                 "left": "Sinistra",
                 "bottom": "Sotto",
-                "top": "Sopra"
+                "top": "Sopra",
+                "editLayerName": "Modifica il nome del livello",
+                "confirmLayerName": "Conferma la modifica del nome del livello"
             },
             "legendOptions": {
               "title": "Legenda",
@@ -516,6 +522,14 @@
             "refreshMessage": "Ricarica la configurazione dei layer WMS dai rispettivi server",
             "refreshError": "Errore di aggiornamento sui layer: ",
             "epsgNotSupported": "CRS {epsg} non supportato per zoom al layer",
+            "compareTool": "Strumento di confronto",
+            "configureTool": "Configura",
+            "spyconfiguration": "Configurazione del cannocchiale",
+            "swipeconfiguration": "Configurazione swipe",
+            "swipe": "Swipe",
+            "spyGlass": "Vetro spia",
+            "direction": "Swipe direzione",
+            "radius": "Raggio",
             "filterIconEnabled": "Disattiva il filtro",
             "filterIconDisabled": "Attiva il filtro",
             "refreshOptions": {
@@ -696,6 +710,7 @@
             "newMeasure": "Nuova annotazione",
             "selectTool": "Seleziona uno strumento di misura",
             "exportToGeoJSON": "Esporta in GeoJSON",
+            "saveMeasure": "Salva le misure nell'annotazione",
             "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello"
         },
@@ -1069,6 +1084,9 @@
             "geometries": "Geometrie",
             "enableEdit": "Abilita modifica",
             "tabCoordinates": "Coordinate",
+            "warning": "Avvertimento!",
+            "measureWarningText": "La navigazione per modificare il pannello di misurazione rimuoverà qualsiasi stile applicato",
+            "notShowAgain": "Non mostrare più questo messaggio",
             "tabStyle": "Stile",
             "zoomTo": "Zoom sull'annotazione",
             "zoomToGeometry": "Zoom sulla geometria",
@@ -1084,6 +1102,7 @@
             "cancelModalGeom": "Annulla",
             "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
+            "editMeasurement": "Modifica misurazione",
             "insertText": "Inserisci il testo dell'annotatzione",
             "downloadtooltip": "Esporta annotazioni",
             "downloadcurrenttooltip": "Esporta annotazione corrente",

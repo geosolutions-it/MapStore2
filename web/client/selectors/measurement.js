@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const { isOpenlayers } = require('../selectors/maptype');
-const { showCoordinateEditorSelector } = require('../selectors/controls');
-const { set } = require('../utils/ImmutableUtils');
-const { validateFeatureCoordinates } = require('../utils/MeasureUtils');
+import { isOpenlayers } from '../selectors/maptype';
+
+import { showCoordinateEditorSelector } from '../selectors/controls';
+import { set } from '../utils/ImmutableUtils';
+import { validateFeatureCoordinates } from '../utils/MeasureUtils';
 
 /**
  * selects measurement state
@@ -24,8 +25,8 @@ const { validateFeatureCoordinates } = require('../utils/MeasureUtils');
  * @param  {object} state the state
  * @return {boolean} the showCoordinateEditor in the state
  */
-const isCoordinateEditorEnabledSelector = (state) => showCoordinateEditorSelector(state) && !state.measurement.isDrawing && isOpenlayers(state);
-const showAddAsAnnotationSelector = (state) => state && state.measurement && state.measurement.showAddAsAnnotation;
+export const isCoordinateEditorEnabledSelector = (state) => showCoordinateEditorSelector(state) && !state.measurement.isDrawing && isOpenlayers(state);
+export const showAddAsAnnotationSelector = (state) => state && state.measurement && state.measurement.showAddAsAnnotation;
 
 /**
  * selects the trueBearing object from state
@@ -33,7 +34,7 @@ const showAddAsAnnotationSelector = (state) => state && state.measurement && sta
  * @param  {object} state the state
  * @return {object} the trueBearing in the state
  */
-const isTrueBearingEnabledSelector = (state) => state && state.measurement && state.measurement.trueBearing && state.measurement.trueBearing.measureTrueBearing;
+export const isTrueBearingEnabledSelector = (state) => state && state.measurement && state.measurement.trueBearing && state.measurement.trueBearing.measureTrueBearing;
 
 /**
  * validating feature that can contain invalid coordinates
@@ -41,7 +42,7 @@ const isTrueBearingEnabledSelector = (state) => state && state.measurement && st
  * if the number of valid coords is < min for that geomType then
  * return empty coordinates
 */
-const getValidFeatureSelector = (state) => {
+export const getValidFeatureSelector = (state) => {
     let feature = state.measurement.feature || {};
     if (feature.geometry) {
         feature = set("geometry.coordinates", validateFeatureCoordinates(feature.geometry || {}), feature);
@@ -49,17 +50,17 @@ const getValidFeatureSelector = (state) => {
     return feature;
 };
 
-const measurementSelector = (state) => {
+export const measurementSelector = (state) => {
     return state.measurement && {
         ...state.measurement,
         feature: getValidFeatureSelector(state)
     } || {};
 };
 
-module.exports = {
-    measurementSelector,
-    getValidFeatureSelector,
-    isCoordinateEditorEnabledSelector,
-    showAddAsAnnotationSelector,
-    isTrueBearingEnabledSelector
-};
+/**
+ * Get current geometry type of the measurement tool
+ * @memberof selectors.measurement
+ * @param  {object} state the state
+ * @return {boolean} geomType of the measurement
+ */
+export const geomTypeSelector = (state) => state?.measurement?.geomType;

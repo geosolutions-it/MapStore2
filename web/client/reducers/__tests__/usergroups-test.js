@@ -5,13 +5,23 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-const usergroups = require('../usergroups');
-const {
-    GETGROUPS, EDITGROUP, EDITGROUPDATA,
-    SEARCHTEXTCHANGED, SEARCHUSERS, UPDATEGROUP, DELETEGROUP, STATUS_SUCCESS, STATUS_LOADING, STATUS_SAVED, STATUS_ERROR
-} = require('../../actions/usergroups');
+import usergroups from '../usergroups';
+
+import {
+    GETGROUPS,
+    EDITGROUP,
+    EDITGROUPDATA,
+    SEARCHTEXTCHANGED,
+    SEARCHUSERS,
+    UPDATEGROUP,
+    DELETEGROUP,
+    STATUS_SUCCESS,
+    STATUS_LOADING,
+    STATUS_SAVED,
+    STATUS_ERROR
+} from '../../actions/usergroups';
 
 describe('Test the usergroups reducer', () => {
     it('default loading', () => {

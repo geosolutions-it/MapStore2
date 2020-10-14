@@ -5,15 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-const users = require('../users');
-const {
-    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA,
-    USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER, USERMANAGER_GETGROUPS
-} = require('../../actions/users');
+import users from '../users';
 
-const {UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED} = require('../../actions/usergroups');
+import {
+    USERMANAGER_GETUSERS,
+    USERMANAGER_EDIT_USER,
+    USERMANAGER_EDIT_USER_DATA,
+    USERMANAGER_UPDATE_USER,
+    USERMANAGER_DELETE_USER,
+    USERMANAGER_GETGROUPS
+} from '../../actions/users';
+
+import { UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED } from '../../actions/usergroups';
 
 describe('Test the users reducer', () => {
     it('default loading', () => {

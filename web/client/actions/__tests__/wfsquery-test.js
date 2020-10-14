@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
+import expect from 'expect';
+
+import {
     LAYER_SELECTED_FOR_SEARCH,
     FEATURE_TYPE_SELECTED,
     FEATURE_TYPE_ERROR,
@@ -34,7 +35,7 @@ var {
     query,
     resetQuery,
     toggleLayerFilter
-} = require('../wfsquery');
+} from '../wfsquery';
 
 describe('wfsquery actions', () => {
     it('layerSelectedForSearch', () => {

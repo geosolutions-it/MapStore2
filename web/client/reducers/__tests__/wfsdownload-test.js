@@ -5,11 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {
-    onDownloadOptionChange, downloadFeatures, onDownloadFinished, onFormatOptionsFetch, updateFormats} = require('../../actions/wfsdownload');
-const wfsdownload = require('../wfsdownload');
+import {
+    onDownloadOptionChange,
+    downloadFeatures,
+    onDownloadFinished,
+    onFormatOptionsFetch,
+    updateFormats
+} from '../../actions/wfsdownload';
 
-const expect = require('expect');
+import wfsdownload from '../wfsdownload';
+import expect from 'expect';
 
 describe('Test the wfsdownload reducer', () => {
     it('downloadFeatures', () => {

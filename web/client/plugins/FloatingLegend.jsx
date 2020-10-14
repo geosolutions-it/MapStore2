@@ -125,6 +125,6 @@ module.exports = {
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}"
     }),
     reducers: {
-        floatinglegend: require('../reducers/floatinglegend')
+        floatinglegend: require('../reducers/floatinglegend').default
     }
 };

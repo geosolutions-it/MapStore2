@@ -70,8 +70,7 @@ describe("Test the Font component", () => {
         const cmp = ReactDOM.render(<Font onChangeSize={changeHandler}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
-        ReactTestUtils.Simulate.change(node.getElementsByTagName('input')[0]);
-
+        ReactTestUtils.Simulate.change(node.getElementsByTagName('input')[0], {target: {value: 10}});
         expect(called).toBe(true);
     });
 

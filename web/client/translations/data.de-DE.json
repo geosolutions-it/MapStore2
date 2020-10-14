@@ -27,6 +27,10 @@
         "showMore": "Zeig mehr...",
         "collapse": "Kollabiert",
         "Forbidden": "Verboten",
+        "layerNameChangeError": {
+            "title": "Namensänderungsfehler",
+            "message": "Die Ebene konnte nicht mit einem geänderten Namen neu geladen werden"
+        },
         "expand": "Erweitern",
         "version": {
             "label": "Version"
@@ -107,7 +111,9 @@
                 "right": "Recht",
                 "left": "Links",
                 "bottom": "Bottom",
-                "top": "Oben"
+                "top": "Oben",
+                "editLayerName": "Layernamen bearbeiten",
+                "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens"
             },
             "legendOptions": {
               "title": "Legende",
@@ -516,6 +522,14 @@
             "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration vom Server",
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
             "epsgNotSupported": "KBS {epsg} wird für das Zoomen auf den Layer nicht unterstützt",
+            "compareTool": "Tool vergleichen",
+            "configureTool": "Konfigurieren",
+            "spyconfiguration": "Spyglass Konfiguration",
+            "swipeconfiguration": "Swipe-Konfiguration",
+            "swipe": "Wischen Sie",
+            "spyGlass": "Spion Glas",
+            "direction": "Wischen sie richtung",
+            "radius": "Radius",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
             "refreshOptions": {
@@ -696,6 +710,7 @@
             "newMeasure": "Neue Anmerkung",
             "selectTool": "Wählen Sie ein Messwerkzeug aus",
             "exportToGeoJSON": "Export nach GeoJSON",
+            "saveMeasure": "Speichern Sie die Messungen in Anmerkungen",
             "resetTooltip": "Klare Maßnahmen",
             "addAsLayer": "Als Ebene hinzufügen"
         },
@@ -1069,12 +1084,16 @@
             "empty": "Noch keine Anmerkungen, klicken Sie auf [+], um Anmerkungen hinzuzufügen",
             "geometries": "Geometrien",
             "enableEdit": "Bearbeiten aktivieren",
+            "editMeasurement": "Messung bearbeiten",
             "zoomTo": "Zur Anmerkung zoomen",
             "zoomToGeometry": "Auf Geometrie zoomen",
             "removeGeometry": "Entfernen",
             "hide": "Anmerkung ausblenden",
             "show": "Anmerkung anzeigen",
             "tabCoordinates": "Koordinaten",
+            "warning": "Warnung!",
+            "measureWarningText": "Wenn Sie zum Bearbeiten des Messfelds navigieren, werden alle angewendeten Stile entfernt",
+            "notShowAgain": "Diese Nachricht nicht mehr anzeigen",
             "tabStyle": "Stil",
             "filter": "Notizen / Zeichnungen filtern...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",

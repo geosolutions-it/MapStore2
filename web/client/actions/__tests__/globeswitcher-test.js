@@ -6,13 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
-    toggle3d,
-    updateLast2dMapType,
-    TOGGLE_3D,
-    UPDATE_LAST_2D_MAPTYPE
-} = require('../globeswitcher');
+import expect from 'expect';
+
+import { toggle3d, updateLast2dMapType, TOGGLE_3D, UPDATE_LAST_2D_MAPTYPE } from '../globeswitcher';
 
 describe('Test correctness of the maptype actions', () => {
 

@@ -52,6 +52,6 @@ module.exports = {
         }
     }),
     reducers: {
-        version: require('../reducers/version')
+        version: require('../reducers/version').default
     }
 };

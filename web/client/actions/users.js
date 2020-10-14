@@ -6,17 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const USERMANAGER_GETUSERS = 'USERMANAGER_GETUSERS';
-const USERMANAGER_EDIT_USER = 'USERMANAGER_EDIT_USER';
-const USERMANAGER_EDIT_USER_DATA = 'USERMANAGER_EDIT_USER_DATA';
-const USERMANAGER_UPDATE_USER = 'USERMANAGER_UPDATE_USER';
-const USERMANAGER_DELETE_USER = 'USERMANAGER_DELETE_USER';
-const USERMANAGER_GETGROUPS = 'USERMANAGER_GETGROUPS';
-const USERS_SEARCH_TEXT_CHANGED = 'USERS_SEARCH_TEXT_CHANGED';
+export const USERMANAGER_GETUSERS = 'USERMANAGER_GETUSERS';
+export const USERMANAGER_EDIT_USER = 'USERMANAGER_EDIT_USER';
+export const USERMANAGER_EDIT_USER_DATA = 'USERMANAGER_EDIT_USER_DATA';
+export const USERMANAGER_UPDATE_USER = 'USERMANAGER_UPDATE_USER';
+export const USERMANAGER_DELETE_USER = 'USERMANAGER_DELETE_USER';
+export const USERMANAGER_GETGROUPS = 'USERMANAGER_GETGROUPS';
+export const USERS_SEARCH_TEXT_CHANGED = 'USERS_SEARCH_TEXT_CHANGED';
 
-const API = require('../api/GeoStoreDAO');
-const {get, assign} = require('lodash');
-function getUsersloading(text, start, limit) {
+import API from '../api/GeoStoreDAO';
+import { get, assign } from 'lodash';
+export function getUsersloading(text, start, limit) {
     return {
         type: USERMANAGER_GETUSERS,
         status: "loading",
@@ -25,7 +25,7 @@ function getUsersloading(text, start, limit) {
         limit
     };
 }
-function getUsersSuccess(text, start, limit, users, totalCount) {
+export function getUsersSuccess(text, start, limit, users, totalCount) {
     return {
         type: USERMANAGER_GETUSERS,
         status: "success",
@@ -37,7 +37,7 @@ function getUsersSuccess(text, start, limit, users, totalCount) {
 
     };
 }
-function getUsersError(text, start, limit, error) {
+export function getUsersError(text, start, limit, error) {
     return {
         type: USERMANAGER_GETUSERS,
         status: "error",
@@ -47,7 +47,7 @@ function getUsersError(text, start, limit, error) {
         error
     };
 }
-function getUsers(searchText, options) {
+export function getUsers(searchText, options) {
     let params = options && options.params;
     let start;
     let limit;
@@ -91,7 +91,7 @@ function getUsers(searchText, options) {
     };
 }
 
-function getGroupsSuccess(groups) {
+export function getGroupsSuccess(groups) {
     return {
         type: USERMANAGER_GETGROUPS,
         status: "success",
@@ -99,14 +99,14 @@ function getGroupsSuccess(groups) {
     };
 }
 
-function getGroupsError(error) {
+export function getGroupsError(error) {
     return {
         type: USERMANAGER_GETGROUPS,
         status: "error",
         error
     };
 }
-function getGroups(user) {
+export function getGroups(user) {
     return (dispatch) => {
         dispatch({
             type: USERMANAGER_GETGROUPS,
@@ -121,7 +121,7 @@ function getGroups(user) {
 
 }
 
-function editUserLoading(user) {
+export function editUserLoading(user) {
     return {
         type: USERMANAGER_EDIT_USER,
         status: "loading",
@@ -129,7 +129,7 @@ function editUserLoading(user) {
     };
 }
 
-function editUserSuccess(userLoaded) {
+export function editUserSuccess(userLoaded) {
     return {
         type: USERMANAGER_EDIT_USER,
         status: "success",
@@ -137,7 +137,7 @@ function editUserSuccess(userLoaded) {
     };
 }
 
-function editUserError(user, error) {
+export function editUserError(user, error) {
     return {
         type: USERMANAGER_EDIT_USER,
         status: "error",
@@ -146,13 +146,13 @@ function editUserError(user, error) {
     };
 }
 
-function editNewUser(user) {
+export function editNewUser(user) {
     return {
         type: USERMANAGER_EDIT_USER,
         user: user
     };
 }
-function editUser(user, options = {params: {includeattributes: true}} ) {
+export function editUser(user, options = {params: {includeattributes: true}} ) {
     return (dispatch, getState) => {
         let state = getState && getState();
         if (state) {
@@ -188,7 +188,7 @@ function editUser(user, options = {params: {includeattributes: true}} ) {
     };
 }
 
-function savingUser(user) {
+export function savingUser(user) {
     return {
         type: USERMANAGER_UPDATE_USER,
         status: "saving",
@@ -196,7 +196,7 @@ function savingUser(user) {
     };
 }
 
-function savedUser(userDetails) {
+export function savedUser(userDetails) {
     return {
         type: USERMANAGER_UPDATE_USER,
         status: "saved",
@@ -204,7 +204,7 @@ function savedUser(userDetails) {
     };
 }
 
-function saveError(user, error) {
+export function saveError(user, error) {
     return {
         type: USERMANAGER_UPDATE_USER,
         status: "error",
@@ -213,7 +213,7 @@ function saveError(user, error) {
     };
 }
 
-function creatingUser(user) {
+export function creatingUser(user) {
     return {
         type: USERMANAGER_UPDATE_USER,
         status: "creating",
@@ -221,7 +221,7 @@ function creatingUser(user) {
     };
 }
 
-function userCreated(id, user) {
+export function userCreated(id, user) {
     return {
         type: USERMANAGER_UPDATE_USER,
         status: "created",
@@ -229,7 +229,7 @@ function userCreated(id, user) {
     };
 }
 
-function createError(user, error) {
+export function createError(user, error) {
     return {
         type: USERMANAGER_UPDATE_USER,
         status: "error",
@@ -238,7 +238,7 @@ function createError(user, error) {
     };
 }
 
-function saveUser(user, options = {}) {
+export function saveUser(user, options = {}) {
     return (dispatch) => {
         // remove lastError before save
         let newUser = assign({}, {...user});
@@ -271,7 +271,7 @@ function saveUser(user, options = {}) {
 
     };
 }
-function changeUserMetadata(key, newValue) {
+export function changeUserMetadata(key, newValue) {
     return {
         type: USERMANAGER_EDIT_USER_DATA,
         key,
@@ -279,21 +279,21 @@ function changeUserMetadata(key, newValue) {
     };
 }
 
-function deletingUser(id) {
+export function deletingUser(id) {
     return {
         type: USERMANAGER_DELETE_USER,
         status: "deleting",
         id
     };
 }
-function deleteUserSuccess(id) {
+export function deleteUserSuccess(id) {
     return {
         type: USERMANAGER_DELETE_USER,
         status: "deleted",
         id
     };
 }
-function deleteUserError(id, error) {
+export function deleteUserError(id, error) {
     return {
         type: USERMANAGER_DELETE_USER,
         status: "error",
@@ -302,14 +302,14 @@ function deleteUserError(id, error) {
     };
 }
 
-function closeDelete(status, id) {
+export function closeDelete(status, id) {
     return {
         type: USERMANAGER_DELETE_USER,
         status,
         id
     };
 }
-function deleteUser(id, status = "confirm") {
+export function deleteUser(id, status = "confirm") {
     if (status === "confirm" || status === "cancelled") {
         return closeDelete(status, id);
     } else if ( status === "delete") {
@@ -326,19 +326,9 @@ function deleteUser(id, status = "confirm") {
     return () => {};
 }
 
-function usersSearchTextChanged(text) {
+export function usersSearchTextChanged(text) {
     return {
         type: USERS_SEARCH_TEXT_CHANGED,
         text
     };
 }
-
-module.exports = {
-    getUsers, USERMANAGER_GETUSERS,
-    editUser, USERMANAGER_EDIT_USER,
-    changeUserMetadata, USERMANAGER_EDIT_USER_DATA,
-    saveUser, USERMANAGER_UPDATE_USER,
-    deleteUser, USERMANAGER_DELETE_USER,
-    getGroups, USERMANAGER_GETGROUPS,
-    usersSearchTextChanged, USERS_SEARCH_TEXT_CHANGED
-};

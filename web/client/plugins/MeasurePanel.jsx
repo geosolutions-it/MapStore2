@@ -62,5 +62,5 @@ module.exports = {
             priority: 2
         }
     }),
-    reducers: {measurement: require('../reducers/measurement')}
+    reducers: {measurement: require('../reducers/measurement').default}
 };

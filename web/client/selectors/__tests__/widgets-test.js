@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { DEFAULT_TARGET } = require('../../actions/widgets');
-const expect = require('expect');
-const {
+import { DEFAULT_TARGET } from '../../actions/widgets';
+
+import expect from 'expect';
+
+import {
     getFloatingWidgets,
     getFloatingWidgetsLayout,
     getDashboardWidgets,
@@ -23,8 +25,9 @@ const {
     availableDependenciesForEditingWidgetSelector,
     returnToFeatureGridSelector,
     isTrayEnabled
-} = require('../widgets');
-const {set} = require('../../utils/ImmutableUtils');
+} from '../widgets';
+
+import { set } from '../../utils/ImmutableUtils';
 describe('widgets selectors', () => {
     it('getFloatingWidgets', () => {
         const state = set(`widgets.containers[${DEFAULT_TARGET}].widgets`, [{title: "TEST"}], {});

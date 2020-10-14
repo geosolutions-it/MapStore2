@@ -44,9 +44,9 @@ module.exports = {
     },
     baseReducers: {
         mode: (state = 'embedded') => state,
-        version: require('../reducers/version'),
-        maplayout: require('../reducers/maplayout'),
-        searchconfig: require('../reducers/searchconfig')
+        version: require('../reducers/version').default,
+        maplayout: require('../reducers/maplayout').default,
+        searchconfig: require('../reducers/searchconfig').default
     },
     baseEpics: {
         updateMapLayoutEpic,

@@ -6,13 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
-    STYLER_RESET,
-    SET_STYLER_LAYER,
-    setStylerLayer,
-    reset
-} = require('../styler');
+import expect from 'expect';
+
+import { STYLER_RESET, SET_STYLER_LAYER, setStylerLayer, reset } from '../styler';
 
 describe('Test correctness of the rasterstyle actions', () => {
 

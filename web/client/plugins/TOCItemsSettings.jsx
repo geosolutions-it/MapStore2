@@ -94,7 +94,8 @@ const TOCItemsSettingsPlugin = compose(
     }),
     updateSettingsLifecycle,
     defaultProps({
-        getDimension: LayersUtils.getDimension
+        getDimension: LayersUtils.getDimension,
+        enableLayerNameEditFeedback: true
     }),
     getContext({
         loadedPlugins: PropTypes.object

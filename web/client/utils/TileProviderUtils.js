@@ -40,7 +40,17 @@ function getUrls(opt = {}) {
     return ['a', 'b', 'c'].map( c => template(url.replace("{s}", c), opt));
 }
 
+/**
+ * extracts one valid URL from the options provided, replacing variant, format etc...
+ * options must contain `url` entry to replace.
+ *
+ */
+const extractValidBaseURL = (options) => {
+    let urls = options.url.match(/(\{s\})/) ? getUrls(options) : [template(options.url, options)];
+    return urls[0];
+};
 module.exports = {
+    extractValidBaseURL,
     getUrls,
     template
 };
