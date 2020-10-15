@@ -22,7 +22,9 @@ This is a list of things to check if you want to update from a previous version 
 ## Migration from 2020.02.00 to 2020.03.00
 
 ### App structure review
+From this version some base components of MapStore App (`StandardApp`, `StandardStore`...) has been restructured and better organized. Here a list of the breaking change you can find in a depending project
 
+- `web/client/product/main.jsx` has been updated to new `import` and `export` syntax (removed `require` and `exports.module`). So if you are importing it (usually in your `app.jsx`) you have to use the `import` syntax or use `require(...).default` in your project. The same for the other files.
 - New structure of arguments in web/client/stores/StandardStore.js
 ```js
 const appStore = (
