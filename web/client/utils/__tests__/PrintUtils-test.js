@@ -550,9 +550,10 @@ describe('PrintUtils', () => {
                 expect(layerSpec.tileSize).toExist();
                 expect(layerSpec.resolutions).toExist();
                 expect(layerSpec.extension).toBe("png");
+                expect(layerSpec.resolutions.length).toBe(19);
 
             });
-            it('BasemapAT', () => {
+            it('NASAGIBS', () => {
                 const testLayer = NASAGIBS;
                 const layerSpec = PrintUtils.specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
                 expect(layerSpec.type).toEqual("xyz");
@@ -567,6 +568,7 @@ describe('PrintUtils', () => {
                 expect(layerSpec.tileSize).toExist();
                 expect(layerSpec.resolutions).toExist();
                 expect(layerSpec.extension).toBe("jpg");
+                expect(layerSpec.resolutions.length).toBe(9);
 
             });
             it('tileprovider with custom URL', () => {
@@ -584,6 +586,7 @@ describe('PrintUtils', () => {
                 expect(layerSpec.tileSize).toExist();
                 expect(layerSpec.resolutions).toExist();
                 expect(layerSpec.extension).toBe("jpg");
+                expect(layerSpec.resolutions.length).toBe(19);
 
             });
         });
