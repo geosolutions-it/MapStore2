@@ -144,6 +144,45 @@ describe('Test the mediaEditor reducer', () => {
         state = mediaEditor(state, {type: LOCATION_CHANGE});
         expect(state).toEqual(DEFAULT_STATE);
     });
+    it('should keep the current custom settings on LOCATION_CHANGE', () => {
+        const mediaEditorSettings = {
+            sourceId: 'geostory',
+            mediaTypes: {
+                image: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                video: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                map: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                }
+            },
+            sources: {
+                geostory: {
+                    name: 'Current story',
+                    type: 'geostory'
+                }
+            }
+        };
+        let state = mediaEditor(undefined, show('owner', mediaEditorSettings));
+        expect(state.settings.mediaTypes).toEqual(mediaEditorSettings.mediaTypes);
+        expect(state.settings.sources).toEqual(mediaEditorSettings.sources);
+        state = mediaEditor(state, {type: LOCATION_CHANGE});
+
+        const { settings: defaultStateSettings, ...defaultState } = DEFAULT_STATE;
+        const { settings: newStateSettings, ...newState } = state;
+
+        expect(newStateSettings.mediaTypes).toEqual(mediaEditorSettings.mediaTypes);
+        expect(newStateSettings.sources).toEqual(mediaEditorSettings.sources);
+
+        expect(defaultState).toEqual(newState);
+        expect(defaultStateSettings.mediaType).toEqual(newStateSettings.mediaType);
+        expect(defaultStateSettings.sourceId).toEqual(newStateSettings.sourceId);
+    });
     it('UPDATE_ITEM with mode replace', () => {
         const map = {
             id: "resId",
