@@ -126,8 +126,8 @@ compose(
 module.exports = {
     BackgroundSelectorPlugin,
     reducers: {
-        controls: require('../reducers/controls'),
-        backgroundSelector: require('../reducers/backgroundselector')
+        controls: require('../reducers/controls').default,
+        backgroundSelector: require('../reducers/backgroundselector').default
     },
     epics: require('../epics/backgroundselector')
 };

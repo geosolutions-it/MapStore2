@@ -1,5 +1,5 @@
-const expect = require('expect');
-const { CHANGE_CRS_INPUT_VALUE, setInputValue} = require('../crsselector');
+import expect from 'expect';
+import { CHANGE_CRS_INPUT_VALUE, setInputValue } from '../crsselector';
 
 describe('Test crsselector actions', () => {
     it('test input value action', () => {

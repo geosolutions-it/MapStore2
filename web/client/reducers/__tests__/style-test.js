@@ -5,12 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-const style = require('../style');
-const {
-    SET_STYLE_PARAMETER
-} = require('../../actions/style');
+import style from '../style';
+import { SET_STYLE_PARAMETER } from '../../actions/style';
 
 describe('Test the style reducer', () => {
     it('set a style parameter', () => {

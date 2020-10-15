@@ -6,11 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
-    SET_STYLE_PARAMETER,
-    setStyleParameter
-} = require('../style');
+import expect from 'expect';
+
+import { SET_STYLE_PARAMETER, setStyleParameter } from '../style';
 
 describe('Test correctness of the style actions', () => {
 

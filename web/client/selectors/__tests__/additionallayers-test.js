@@ -7,10 +7,9 @@
 */
 
 
-const expect = require('expect');
-const {
-    additionalLayersSelector
-} = require('../additionallayers');
+import expect from 'expect';
+
+import { additionalLayersSelector } from '../additionallayers';
 
 const state = {
     additionallayers: [

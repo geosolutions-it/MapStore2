@@ -166,4 +166,47 @@ describe("test FeatureList component", () => {
         TestUtils.Simulate.click(featureCard[0]);
         expect(spyOnUnselectFeature).toHaveBeenCalled();
     });
+
+    it('test geometry highlight', () => {
+        let props = {
+            editing: {
+                features: [{
+                    type: "Feature",
+                    properties: {id: '1', isValidFeature: true, geometryTitle: 'Polygon'},
+                    geometry: {type: "Polygon"}
+                }]
+            },
+            selected: {properties: {id: '1'}}
+        };
+        const testHandlers = {
+            onGeometryHighlight: () => {}
+        };
+        const spyOnGeometryHighlight = expect.spyOn(testHandlers, "onGeometryHighlight");
+        ReactDOM.render(<FeaturesList {...props} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
+        let container = document.getElementById('container');
+        expect(container).toBeTruthy();
+
+        let featureCard = document.getElementsByClassName('geometry-card');
+        expect(featureCard).toBeTruthy();
+
+        TestUtils.Simulate.mouseEnter(featureCard[0]);
+        expect(spyOnGeometryHighlight).toNotHaveBeenCalled();
+
+        // When geometry card is not selected
+        props = {...props, selected: {...props.selected, properties: {id: 2}}};
+        ReactDOM.render(<FeaturesList {...props} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
+        container = document.getElementById('container');
+        featureCard = document.getElementsByClassName('geometry-card');
+        // OnMouseEnter
+        TestUtils.Simulate.mouseEnter(featureCard[0]);
+        expect(spyOnGeometryHighlight).toHaveBeenCalled();
+        expect(spyOnGeometryHighlight.calls[0].arguments[0]).toBe('1');
+
+        // OnMouseLeave
+        TestUtils.Simulate.mouseLeave(featureCard[0]);
+        expect(spyOnGeometryHighlight).toHaveBeenCalled();
+        expect(spyOnGeometryHighlight.calls[1].arguments[0]).toBe('1');
+        expect(spyOnGeometryHighlight.calls[1].arguments[1]).toBe(false);
+
+    });
 });

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     CHANGE_CATALOG_FORMAT,
@@ -29,15 +29,13 @@ const {
     TOGGLE_THUMBNAIL,
     TOGGLE_TEMPLATE,
     TOGGLE_ADVANCED_SETTINGS
-} = require('../actions/catalog');
-const {
-    MAP_CONFIG_LOADED
-} = require('../actions/config');
-const { set } = require('../utils/ImmutableUtils');
+} from '../actions/catalog';
 
-const {isNil} = require('lodash');
-const assign = require('object-assign');
-const uuid = require('uuid');
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import { set } from '../utils/ImmutableUtils';
+import { isNil } from 'lodash';
+import assign from 'object-assign';
+import uuid from 'uuid';
 
 const emptyService = {
     url: "",
@@ -212,4 +210,4 @@ function catalog(state = {
     }
 }
 
-module.exports = catalog;
+export default catalog;

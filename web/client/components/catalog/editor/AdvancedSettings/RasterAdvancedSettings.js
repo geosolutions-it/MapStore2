@@ -29,7 +29,7 @@ export default ({
     ...props
 }) => {
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
-    return (<CommonAdvancedSettings service={service} {...props}>
+    return (<CommonAdvancedSettings onChangeServiceProperty={onChangeServiceProperty} service={service} {...props}>
         <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
             <Col xs={6}>
                 <ControlLabel>Format</ControlLabel>

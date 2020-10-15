@@ -6,8 +6,13 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {SET_COOKIE_VISIBILITY, SET_MORE_DETAILS_VISIBILITY, SET_DETAILS_COOKIE_HTML} = require('../actions/cookie');
-const assign = require('object-assign');
+import {
+    SET_COOKIE_VISIBILITY,
+    SET_MORE_DETAILS_VISIBILITY,
+    SET_DETAILS_COOKIE_HTML
+} from '../actions/cookie';
+
+import assign from 'object-assign';
 
 function cookie(state = {
     html: {}
@@ -27,4 +32,4 @@ function cookie(state = {
     }
 }
 
-module.exports = cookie;
+export default cookie;

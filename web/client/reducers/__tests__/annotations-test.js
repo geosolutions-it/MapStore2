@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const annotations = require('../annotations');
-const {DEFAULT_ANNOTATIONS_STYLES} = require('../../utils/AnnotationsUtils');
-const {isEmpty, round} = require('lodash');
-const {set} = require('../../utils/ImmutableUtils');
+import expect from 'expect';
+
+import annotations from '../annotations';
+import { DEFAULT_ANNOTATIONS_STYLES } from '../../utils/AnnotationsUtils';
+import { isEmpty, round } from 'lodash';
+import { set } from '../../utils/ImmutableUtils';
 
 const testFeatures = {
     point1: {
@@ -27,17 +28,40 @@ const testFeatures = {
     }
 };
 
-const {
-    REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION,
-    EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
-    VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
-    NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
-    FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
-    toggleDeleteFtModal, confirmDeleteFeature,
-    addText, setUnsavedChanges, setUnsavedStyle,
-    toggleUnsavedChangesModal, toggleUnsavedGeometryModal, toggleUnsavedStyleModal, changedProperties,
-    setInvalidSelected, addNewFeature, resetCoordEditor, changeText, changeRadius, changeSelected,
-    highlightPoint, changeFormat,
+import {
+    REMOVE_ANNOTATION,
+    CONFIRM_REMOVE_ANNOTATION,
+    CANCEL_REMOVE_ANNOTATION,
+    EDIT_ANNOTATION,
+    CANCEL_EDIT_ANNOTATION,
+    SAVE_ANNOTATION,
+    TOGGLE_ADD,
+    VALIDATION_ERROR,
+    REMOVE_ANNOTATION_GEOMETRY,
+    NEW_ANNOTATION,
+    SHOW_ANNOTATION,
+    CANCEL_SHOW_ANNOTATION,
+    FILTER_ANNOTATIONS,
+    CLOSE_ANNOTATIONS,
+    CONFIRM_CLOSE_ANNOTATIONS,
+    CANCEL_CLOSE_ANNOTATIONS,
+    toggleDeleteFtModal,
+    confirmDeleteFeature,
+    addText,
+    setUnsavedChanges,
+    setUnsavedStyle,
+    toggleUnsavedChangesModal,
+    toggleUnsavedGeometryModal,
+    toggleUnsavedStyleModal,
+    changedProperties,
+    setInvalidSelected,
+    addNewFeature,
+    resetCoordEditor,
+    changeText,
+    changeRadius,
+    changeSelected,
+    highlightPoint,
+    changeFormat,
     toggleStyle,
     setStyle,
     updateSymbols,
@@ -45,12 +69,15 @@ const {
     setDefaultStyle,
     loading,
     changeGeometryTitle,
-    filterMarker, initPlugin, hideMeasureWarning, toggleShowAgain
-} = require('../../actions/annotations');
-const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
-const {drawingFeatures, selectFeatures} = require('../../actions/draw');
+    filterMarker,
+    initPlugin,
+    hideMeasureWarning,
+    toggleShowAgain
+} from '../../actions/annotations';
 
-const {toggleControl} = require('../../actions/controls');
+import { PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
+import { drawingFeatures, selectFeatures } from '../../actions/draw';
+import { toggleControl } from '../../actions/controls';
 
 const testAllProperty = (state, checkState) => {
     Object.keys(state).forEach( s => {

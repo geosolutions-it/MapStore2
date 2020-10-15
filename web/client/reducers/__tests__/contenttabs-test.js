@@ -6,13 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {
-    onTabSelected
-} = require('../../actions/contenttabs');
-
-const contenttabs = require('../contenttabs');
+import { onTabSelected } from '../../actions/contenttabs';
+import contenttabs from '../contenttabs';
 
 describe('Test contenttabs reducer', () => {
 

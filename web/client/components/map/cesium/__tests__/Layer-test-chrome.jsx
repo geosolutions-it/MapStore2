@@ -27,7 +27,7 @@ require('../plugins/MarkerLayer');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 
-window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
+window.CESIUM_BASE_URL = "node_modules/cesium/Build/Cesium";
 
 describe('Cesium layer', () => {
     let map;

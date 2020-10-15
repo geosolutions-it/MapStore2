@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {isFunction} = require('lodash');
+import expect from 'expect';
 
-const {
+import { isFunction } from 'lodash';
+
+import {
     EDIT_ANNOTATION,
     REMOVE_ANNOTATION,
     CONFIRM_REMOVE_ANNOTATION,
@@ -32,14 +33,22 @@ const {
     HIGHLIGHT,
     CLEAN_HIGHLIGHT,
     FILTER_ANNOTATIONS,
-    addText, ADD_TEXT,
-    CHANGE_FORMAT, changeFormat,
-    changedProperties, CHANGED_PROPERTIES,
-    toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
-    startDrawing, START_DRAWING,
-    toggleUnsavedChangesModal, TOGGLE_CHANGES_MODAL,
-    setUnsavedStyle, UNSAVED_STYLE,
-    setUnsavedChanges, UNSAVED_CHANGES,
+    addText,
+    ADD_TEXT,
+    CHANGE_FORMAT,
+    changeFormat,
+    changedProperties,
+    CHANGED_PROPERTIES,
+    toggleUnsavedStyleModal,
+    TOGGLE_STYLE_MODAL,
+    startDrawing,
+    START_DRAWING,
+    toggleUnsavedChangesModal,
+    TOGGLE_CHANGES_MODAL,
+    setUnsavedStyle,
+    UNSAVED_STYLE,
+    setUnsavedChanges,
+    UNSAVED_CHANGES,
     editAnnotation,
     removeAnnotation,
     confirmRemoveAnnotation,
@@ -81,10 +90,11 @@ const {
     TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
     CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
     FILTER_MARKER, filterMarker,
+    GEOMETRY_HIGHLIGHT, geometryHighlight,
     INIT_PLUGIN, initPlugin,
     TOGGLE_SHOW_AGAIN, toggleShowAgain,
     HIDE_MEASURE_WARNING, hideMeasureWarning
-} = require('../annotations');
+} from '../annotations';
 
 describe('Test correctness of the annotations actions', () => {
     it('edit annotation', (done) => {
@@ -395,6 +405,12 @@ describe('Test correctness of the annotations actions', () => {
         const result = filterMarker('glass');
         expect(result.type).toBe(FILTER_MARKER);
         expect(result.filter).toBe('glass');
+    });
+    it('geometryHighlight ', () => {
+        const result = geometryHighlight('1', false);
+        expect(result.type).toBe(GEOMETRY_HIGHLIGHT);
+        expect(result.id).toBe('1');
+        expect(result.state).toBe(false);
     });
     it('initPlugin ', () => {
         const result = initPlugin();

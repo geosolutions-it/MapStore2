@@ -6,17 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const SET_STYLE_PARAMETER = 'SET_STYLE_PARAMETER';
+export const SET_STYLE_PARAMETER = 'SET_STYLE_PARAMETER';
 
-function setStyleParameter(name, value) {
+export function setStyleParameter(name, value) {
     return {
         type: SET_STYLE_PARAMETER,
         name,
         value
     };
 }
-
-module.exports = {
-    SET_STYLE_PARAMETER,
-    setStyleParameter
-};

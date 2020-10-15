@@ -8,14 +8,20 @@
 
 import expect from 'expect';
 
-const {
-    searchContexts, SEARCH_CONTEXTS,
-    contextsLoading, LOADING,
-    contextsListLoaded, CONTEXTS_LIST_LOADED,
-    deleteContext, DELETE_CONTEXT,
-    contextDeleted, CONTEXT_DELETED,
-    reloadContexts, RELOAD_CONTEXTS
-} = require('../contextmanager');
+import {
+    searchContexts,
+    SEARCH_CONTEXTS,
+    contextsLoading,
+    LOADING,
+    contextsListLoaded,
+    CONTEXTS_LIST_LOADED,
+    deleteContext,
+    DELETE_CONTEXT,
+    contextDeleted,
+    CONTEXT_DELETED,
+    reloadContexts,
+    RELOAD_CONTEXTS
+} from '../contextmanager';
 
 describe('contextmanager actions', () => {
     it('searchContexts', () => {

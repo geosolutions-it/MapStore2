@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { MAPS_LIST_LOADING } = require('../actions/maps');
-const { LOCATION_CHANGE } = require('connected-react-router');
+import { MAPS_LIST_LOADING } from '../actions/maps';
 
-const { DASHBOARDS_LIST_LOADED, SET_DASHBOARDS_AVAILABLE, LOADING } = require('../actions/dashboards');
-const {set} = require('../utils/ImmutableUtils');
-const { castArray } = require('lodash');
+import { LOCATION_CHANGE } from 'connected-react-router';
+import { DASHBOARDS_LIST_LOADED, SET_DASHBOARDS_AVAILABLE, LOADING } from '../actions/dashboards';
+import { set } from '../utils/ImmutableUtils';
+import { castArray } from 'lodash';
 
 function dashboards(state = {
     enabled: false,
@@ -56,4 +56,4 @@ function dashboards(state = {
     }
 }
 
-module.exports = dashboards;
+export default dashboards;

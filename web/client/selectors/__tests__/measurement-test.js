@@ -7,19 +7,21 @@
 */
 
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     isCoordinateEditorEnabledSelector,
     showAddAsAnnotationSelector,
     measurementSelector,
     getValidFeatureSelector
-} = require('../measurement');
-const {
+} from '../measurement';
+
+import {
     polyFeatureNotClosedInvalid,
     polyFeatureNotClosed,
     lineFeature3,
     lineFeatureWithoutGeom
-} = require('../../test-resources/drawsupport/features');
+} from '../../test-resources/drawsupport/features';
 
 describe('Test maptype', () => {
     it('test isCoordinateEditorEnabledSelector', () => {

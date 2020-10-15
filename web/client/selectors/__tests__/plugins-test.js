@@ -6,9 +6,10 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const { isPageConfigured } = require('../plugins');
-const {set} = require('lodash');
+import expect from 'expect';
+
+import { isPageConfigured } from '../plugins';
+import { set } from 'lodash';
 
 describe('Test page selector', () => {
     it('test isImporterConfigured default', () => {

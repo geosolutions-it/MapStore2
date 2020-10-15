@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { MAPS_LIST_LOADING, FEATURED_MAPS_SET_ENABLED, INVALIDATE_FEATURED_MAPS } = require('../actions/maps');
+import { MAPS_LIST_LOADING, FEATURED_MAPS_SET_ENABLED, INVALIDATE_FEATURED_MAPS } from '../actions/maps';
 
-const {set} = require('../utils/ImmutableUtils');
+import { set } from '../utils/ImmutableUtils';
 
 function featuredmaps(state = {}, action) {
     switch (action.type) {
@@ -27,4 +27,4 @@ function featuredmaps(state = {}, action) {
         return state;
     }
 }
-module.exports = featuredmaps;
+export default featuredmaps;

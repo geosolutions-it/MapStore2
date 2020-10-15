@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {
+import {
     FIELDS_LOADED,
     FIELDS_ERROR,
     LOAD_FIELDS,
@@ -29,7 +29,7 @@ const {
     cancelDirty,
     setInvalidInput,
     resetInvalidInput
-} = require('../thematic');
+} from '../thematic';
 
 const layer = {
     name: 'mylayer',

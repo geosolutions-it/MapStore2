@@ -5,12 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const TOGGLE_CONTROL = 'TOGGLE_CONTROL';
-const SET_CONTROL_PROPERTY = 'SET_CONTROL_PROPERTY';
-const SET_CONTROL_PROPERTIES = 'SET_CONTROL_PROPERTIES';
-const RESET_CONTROLS = 'RESET_CONTROLS';
+export const TOGGLE_CONTROL = 'TOGGLE_CONTROL';
+export const SET_CONTROL_PROPERTY = 'SET_CONTROL_PROPERTY';
+export const SET_CONTROL_PROPERTIES = 'SET_CONTROL_PROPERTIES';
+export const RESET_CONTROLS = 'RESET_CONTROLS';
 
-const { fromPairs, chunk } = require('lodash');
+import { fromPairs, chunk } from 'lodash';
+
+/**
+ export * Actions for controls. Provide a simple generic functionality to toggle a generic
+ * control property.
+ * @name actions.controls
+ */
+
 
 /**
  * Toggle a control property
@@ -19,7 +26,7 @@ const { fromPairs, chunk } = require('lodash');
  * @param  {boolean|number|string|object} [property] the property to override
  * @return {object} action of type `TOGGLE_CONTROL`, control, and property
  */
-function toggleControl(control, property) {
+export function toggleControl(control, property) {
     return {
         type: TOGGLE_CONTROL,
         control,
@@ -27,7 +34,7 @@ function toggleControl(control, property) {
     };
 }
 
-function on(action, condition, elseAction) {
+export function on(action, condition, elseAction) {
     return {
         type: 'IF:' + action.type,
         condition,
@@ -45,7 +52,7 @@ function on(action, condition, elseAction) {
  * @param {boolean} [toggle]  if true, the reducer will toggle the property of the control only if is equal to the value parameter
  * @return {object} of type `SET_CONTROL_PROPERTY` with control, property, value and toggle params
  */
-function setControlProperty(control, property, value, toggle) {
+export function setControlProperty(control, property, value, toggle) {
     return {
         type: SET_CONTROL_PROPERTY,
         control,
@@ -65,7 +72,7 @@ function setControlProperty(control, property, value, toggle) {
  * @example
  * setControlProperties('metadataexplorer', 'enabled', true, 'group', 'newgroup')
  */
-function setControlProperties(control, ...properties) {
+export function setControlProperties(control, ...properties) {
     return {
         type: SET_CONTROL_PROPERTIES,
         control,
@@ -79,17 +86,9 @@ function setControlProperties(control, ...properties) {
  * @param {string[]} [skip=[]] a list of tools to skip
  * @return {object} action of type `RESET_CONTROLS`
  */
-function resetControls(skip = []) {
+export function resetControls(skip = []) {
     return {
         type: RESET_CONTROLS,
         skip
     };
 }
-/**
- * Actions for controls. Provide a simple generic functionality to toggle a generic
- * control property.
- * @name actions.controls
- */
-module.exports = {
-    TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, RESET_CONTROLS,
-    toggleControl, on, setControlProperty, setControlProperties, resetControls};

@@ -6,23 +6,23 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const HIGHLIGHT_STATUS = 'HIGHLIGHT_STATUS';
-const UPDATE_HIGHLIGHTED = 'UPDATE_HIGHLIGHTED';
-const SET_HIGHLIGHT_FEATURES_PATH = 'HIGHLIGHT:SET_HIGHLIGHT_FEATURES_PATH';
+export const HIGHLIGHT_STATUS = 'HIGHLIGHT_STATUS';
+export const UPDATE_HIGHLIGHTED = 'UPDATE_HIGHLIGHTED';
+export const SET_HIGHLIGHT_FEATURES_PATH = 'HIGHLIGHT:SET_HIGHLIGHT_FEATURES_PATH';
 
-function highlightStatus(status) {
+export function highlightStatus(status) {
     return {
         type: HIGHLIGHT_STATUS,
         status
     };
 }
-function setHighlightFeaturesPath(featuresPath) {
+export function setHighlightFeaturesPath(featuresPath) {
     return {
         type: SET_HIGHLIGHT_FEATURES_PATH,
         featuresPath
     };
 }
-function updateHighlighted(features, status) {
+export function updateHighlighted(features, status) {
     return {
         type: UPDATE_HIGHLIGHTED,
         features,
@@ -30,8 +30,3 @@ function updateHighlighted(features, status) {
     };
 }
 
-module.exports = {
-    HIGHLIGHT_STATUS, highlightStatus,
-    UPDATE_HIGHLIGHTED, updateHighlighted,
-    SET_HIGHLIGHT_FEATURES_PATH, setHighlightFeaturesPath
-};

@@ -1,9 +1,9 @@
-const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME, SET_OFFSET_TIME, MOVE_TIME } = require('../actions/dimension');
-const { REMOVE_NODE } = require('../actions/layers');
-const { RESET_CONTROLS } = require('../actions/controls');
-const { set } = require('../utils/ImmutableUtils');
-const moment = require('moment');
-const {mapValues, pickBy } = require('lodash');
+import { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME, SET_OFFSET_TIME, MOVE_TIME } from '../actions/dimension';
+import { REMOVE_NODE } from '../actions/layers';
+import { RESET_CONTROLS } from '../actions/controls';
+import { set } from '../utils/ImmutableUtils';
+import moment from 'moment';
+import { mapValues, pickBy } from 'lodash';
 
 /**
  * Provide state for current time and dimension info.
@@ -32,7 +32,7 @@ const {mapValues, pickBy } = require('lodash');
  * @param {action} action
  * @example
  */
-module.exports = (state = {}, action) => {
+export default (state = {}, action) => {
     switch (action.type) {
     case UPDATE_LAYER_DIMENSION_DATA: {
         return set(`data[${action.dimension}][${action.layerId}]`, action.data, state);

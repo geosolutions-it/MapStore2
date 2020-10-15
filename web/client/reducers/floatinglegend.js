@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { RESIZE_LEGEND, EXPAND_LEGEND } = require('../actions/floatinglegend');
+import { RESIZE_LEGEND, EXPAND_LEGEND } from '../actions/floatinglegend';
 
-const {set} = require('../utils/ImmutableUtils');
+import { set } from '../utils/ImmutableUtils';
 /**
  * Manages the state of the floatinglegend
  * The properties represent the shape of the state
@@ -31,4 +31,4 @@ function floatinglegend(state = {}, action) {
         return state;
     }
 }
-module.exports = floatinglegend;
+export default floatinglegend;

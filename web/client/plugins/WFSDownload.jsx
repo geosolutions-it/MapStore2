@@ -75,6 +75,6 @@ module.exports = {
     )(DownloadDialog),
     epics: require('../epics/wfsdownload'),
     reducers: {
-        wfsdownload: require('../reducers/wfsdownload')
+        wfsdownload: require('../reducers/wfsdownload').default
     }
 };

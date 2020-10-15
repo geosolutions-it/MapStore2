@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     SET_LAYERS,
     ON_ERROR,
     ON_SELECT_LAYER,
@@ -16,11 +16,11 @@ const {
     ON_SUCCESS,
     ON_SHAPE_ERROR,
     ON_LAYER_SKIPPED
-} = require('../actions/mapimport');
-const {uniqWith} = require('lodash');
-const {TOGGLE_CONTROL} = require('../actions/controls');
+} from '../actions/mapimport';
 
-const assign = require('object-assign');
+import { uniqWith } from 'lodash';
+import { TOGGLE_CONTROL } from '../actions/controls';
+import assign from 'object-assign';
 
 const initialState = {
     layers: null,
@@ -87,4 +87,4 @@ function mapimport(state = initialState, action) {
     }
 }
 
-module.exports = mapimport;
+export default mapimport;

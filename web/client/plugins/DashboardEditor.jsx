@@ -143,7 +143,7 @@ const Plugin = connect(
 module.exports = {
     DashboardEditorPlugin: Plugin,
     reducers: {
-        dashboard: require('../reducers/dashboard')
+        dashboard: require('../reducers/dashboard').default
     },
     epics: require('../epics/dashboard')
 };

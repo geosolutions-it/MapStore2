@@ -163,7 +163,7 @@ module.exports = {
         }
     }),
     reducers: {
-        tutorial: require('../reducers/tutorial')
+        tutorial: require('../reducers/tutorial').default
     },
     epics
 };
