@@ -93,40 +93,9 @@ const createFeatureCollection = (features) => (
     }
 );
 
-const filterFeatures = (feature, filterFields) => {
-
-    for (let i = 0; i < filterFields.length; i++) {
-        if (feature.properties[filterFields[i].attribute] === undefined ) {
-            return false;
-        }
-        if (filterFields[i].type === "string" &&
-            !feature.properties[filterFields[i].attribute].toLowerCase().includes(filterFields[i].value.toLowerCase())) {
-            return false;
-        }
-
-        if (filterFields[i].type === "number" && !feature.properties[filterFields[i].attribute].includes(filterFields[i].value)) {
-            return false;
-        }
-
-        if (filterFields[i].type === "date") {
-
-            let dateFeature = new Date(feature.properties[filterFields[i].attribute]);
-            let dateFilter = new Date(filterFields[i].value.startDate);
-
-            if (dateFeature.getFullYear() !== dateFilter.getFullYear() ||
-                dateFeature.getMonth() !== dateFilter.getMonth() ||
-                dateFeature.getDay() !== dateFilter.getDay() ) {
-                return false;
-            }
-        }
-
-    }
-    return true;
-};
-
 const getFeaturesFiltered = (features, filterObj) => {
     if (filterObj.filterFields && filterObj.filterFields.length !== 0) {
-        const featuresFiltered = features.features.filter(feature => filterFeatures(feature, filterObj.filterFields));
+        const featuresFiltered = features.features.filter(FilterUtils.createFeatureFilter(filterObj));
 
         features.features = featuresFiltered;
         features.numberMatched = featuresFiltered.length;
@@ -162,14 +131,8 @@ export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
 
     if (layer.type === 'vector') {
         return Rx.Observable.defer(() => new Promise((resolve) => {
-            if (!layer.originalFeatures || layer.originalFeatures[0].properties.contextDescriptionName !== layer.features[0].properties.contextDescriptionName) {
-                layer.originalFeatures = layer.features;
-            }
-            let features = createFeatureCollection(layer.originalFeatures);
+            let features = createFeatureCollection(layer.features);
             let featuresFiltered = getFeaturesFiltered(features, filterObj);
-            if (featuresFiltered) {
-                layer.features = featuresFiltered.features;
-            }
             resolve(featuresFiltered);
         }));
     }
