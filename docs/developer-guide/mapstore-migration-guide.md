@@ -47,7 +47,7 @@ const appStore = (
 
 - web/client/product/main.jsx has been updated to new import and export (removed require and exports.module)
 
-- loading extensions functionalities inside StandardApp has been moved to an specific withExtensions HOC.
+- loading extensions functionalities inside StandardApp has been moved to an specific withExtensions HOC, so if you are not using `main.js` but directly `StandardApp` and you need extensions you need to add this HOC to your StandardApp 
 
 ## Migration from 2020.01.00 to 2020.02.00
 
