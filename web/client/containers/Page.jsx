@@ -18,7 +18,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer'));
+}))(require('../components/plugins/PluginsContainer').default);
 
 class Page extends React.Component {
     static propTypes = {

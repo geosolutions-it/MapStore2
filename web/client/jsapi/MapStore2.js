@@ -8,7 +8,13 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const StandardApp = require('../components/app/StandardApp');
+const StandardApp = require('../components/app/StandardApp').default;
+const {
+    standardReducers,
+    standardEpics,
+    standardRootReducerFunc
+} = require('../stores/defaultOptions');
+
 const LocaleUtils = require('../utils/LocaleUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {connect} = require('react-redux');
@@ -185,12 +191,19 @@ const MapStore2 = {
         }))(require('../components/app/StandardContainer'));
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
-        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {
-            security: require('../reducers/security').default,
-            version: require('../reducers/version').default
-        }, {
-            jsAPIEpic: actionTrigger.epic,
-            ...(options.epics || {})
+        const appStore = require('../stores/StandardStore').default.bind(null, {
+            initialState: initialState || {},
+            appReducers: {
+                security: require('../reducers/security'),
+                version: require('../reducers/version'),
+                ...standardReducers
+            },
+            appEpics: {
+                jsAPIEpic: actionTrigger.epic,
+                ...(options.epics || {}),
+                ...standardEpics
+            },
+            rootReducerFunc: standardRootReducerFunc
         });
         const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {

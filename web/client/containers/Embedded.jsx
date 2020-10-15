@@ -22,7 +22,7 @@ const PluginsContainer = connect((state) => ({
         layerSettings: state.layers.settings
     }),
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer'));
+}))(require('../components/plugins/PluginsContainer').default);
 
 class Embedded extends React.Component {
     static propTypes = {

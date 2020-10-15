@@ -13,7 +13,7 @@ const Debug = require('../development/Debug');
 const Localized = require('../I18N/Localized');
 
 const assign = require('object-assign');
-const PluginsContainer = require('../plugins/PluginsContainer');
+const PluginsContainer = require('../plugins/PluginsContainer').default;
 const Theme = connect((state) => ({
     theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id
 }), {}, (stateProps, dispatchProps, ownProps) => {

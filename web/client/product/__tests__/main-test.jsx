@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
-const mainApp = require('../main');
+const mainApp = require('../main').default;
 const expect = require('expect');
 const assign = require('object-assign');
 const ConfigUtils = require('../../utils/ConfigUtils');
@@ -66,9 +66,8 @@ describe('standard application runner', () => {
     it('testing default appStore', () => {
         let defaultConfig;
         mainApp(defaultConfig, {plugins: {}}, (config) => {
-            expect(config.appStore).toExist();
-            const state = config.appStore().getState();
-            const reducersKeys = Object.keys(state);
+            expect(config.appReducers).toBeTruthy();
+            const reducersKeys = Object.keys(config.appReducers);
             expect(includes(reducersKeys, "maptype")).toBe(true);
             expect(includes(reducersKeys, "maps")).toBe(true);
             expect(includes(reducersKeys, "maplayout")).toBe(true);
@@ -83,9 +82,8 @@ describe('standard application runner', () => {
             }
         };
         mainApp(defaultConfig, {plugins: {}}, (config) => {
-            expect(config.appStore).toExist();
-            const state = config.appStore().getState();
-            const reducersKeys = Object.keys(state);
+            expect(config.appReducers).toBeTruthy();
+            const reducersKeys = Object.keys(config.appReducers);
             expect(includes(reducersKeys, "maptype")).toBe(true);
             expect(includes(reducersKeys, "maps")).toBe(true);
             expect(includes(reducersKeys, "maplayout")).toBe(true);
@@ -101,9 +99,8 @@ describe('standard application runner', () => {
             }
         };
         mainApp(defaultConfig, {plugins: {}}, (config) => {
-            expect(config.appStore).toExist();
-            const state = config.appStore().getState();
-            const reducersKeys = Object.keys(state);
+            expect(config.appReducers).toBeTruthy();
+            const reducersKeys = Object.keys(config.appReducers);
             expect(includes(reducersKeys, "maptype")).toBe(false);
             expect(includes(reducersKeys, "maps")).toBe(false);
             expect(includes(reducersKeys, "maplayout")).toBe(false);
