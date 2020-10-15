@@ -42,6 +42,12 @@ export const standardEpics = {
     ...configEpics
 };
 
+/**
+ * default `rootReducerFunc` for MapStore
+ * - Adds history for map (separating `map` from `layers` state)
+ * - Adds `mapInitialConfig`
+ * - Allow to override the state with `mapInitialConfig` and `mapConfigRawData`
+ */
 export const standardRootReducerFunc = ({
     state,
     action,
