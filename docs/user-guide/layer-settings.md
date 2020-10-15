@@ -55,7 +55,9 @@ Through the second section of the layer settings panel it is possible to change 
 
 In particular, the user is allowed to:
 
-* Set the rendering image format (choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif`)
+* Set the rendering image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif` 
+
+* Set the layer tile size: choosing between `256` or `512`
 
 * Set the opacity value of the layer (in %)
 
@@ -70,6 +72,9 @@ In particular, the user is allowed to:
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.
+
+!!!Warning
+    The *Format* and *Layer tile size* options are available only for the layer added by CSW and WMS services. 
 
 ## Style
 
