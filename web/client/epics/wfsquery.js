@@ -100,8 +100,8 @@ export const featureTypeSelectedEpic = (action$, store) =>
                 return Rx.Observable.of(changeSpatialAttribute(geometry));
             }
 
-            const setedLayer = selectedLayerSelector(state);
-            if (setedLayer.type === 'vector') {
+            const selectedLayer = selectedLayerSelector(state);
+            if (selectedLayer.type === 'vector') {
                 return Rx.Observable.defer( () =>axios.get(action.url))
                     .map((response) => {
 
@@ -174,7 +174,7 @@ export const wfsQueryEpic = (action$, store) =>
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             // getSelected Layer and merge layerFilter and cql_filter in params  with action filter
             const layer = getSelectedLayer(store.getState()) || {};
-            const setedLayer = selectedLayerSelector(state);
+            const selectedLayer = selectedLayerSelector(state);
 
             const {layerFilter, params} = layer;
             const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
