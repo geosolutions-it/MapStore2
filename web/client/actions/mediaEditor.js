@@ -22,6 +22,8 @@ export const SHOW = "MEDIA_EDITOR:SHOW";
 export const UPDATE_ITEM = "MEDIA_EDITOR:UPDATE_ITEM";
 export const IMPORT_IN_LOCAL = "MEDIA_EDITOR:IMPORT_IN_LOCAL";
 export const REMOVE_MEDIA = "MEDIA_EDITOR:REMOVE_MEDIA";
+export const LOADING_SELECTED_MEDIA = "MEDIA_EDITOR:LOADING_SELECTED_MEDIA";
+export const LOADING_MEDIA_LIST = "MEDIA_EDITOR:LOADING_MEDIA_LIST";
 
 import {SourceTypes} from '../utils/MediaEditorUtils';
 // RESOURCE FORMAT :
@@ -137,3 +139,7 @@ export const importInLocal = ({resource, sourceType = SourceTypes.GEOSTORY, owne
 });
 
 export const removeMedia = (mediaType, owner = "geostory") => ({type: REMOVE_MEDIA, mediaType, owner});
+
+export const loadingSelectedMedia = (loading) => ({ type: LOADING_SELECTED_MEDIA, loading });
+
+export const loadingMediaList = () => ({ type: LOADING_MEDIA_LIST });

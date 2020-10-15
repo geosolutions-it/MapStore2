@@ -18,7 +18,9 @@ import {
     UPDATE_ITEM,
     SET_MEDIA_SERVICE,
     SET_MEDIA_TYPE,
-    SHOW
+    SHOW,
+    LOADING_SELECTED_MEDIA,
+    LOADING_MEDIA_LIST
 } from '../actions/mediaEditor';
 import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set, unset} from '../utils/ImmutableUtils';
@@ -96,7 +98,10 @@ export default (state = DEFAULT_STATE, action) => {
     // set adding media state (to toggle add/select in media selectors)
     case LOAD_MEDIA_SUCCESS: {
         const {resultData, params, mediaType, sourceId} = action;
-        return set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }, state);
+        return compose(
+            set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }),
+            set('loadingList', false)
+        )(state);
     }
     case UPDATE_ITEM: {
         const {item, mode} = action;
@@ -147,6 +152,10 @@ export default (state = DEFAULT_STATE, action) => {
                 mediaType: DEFAULT_STATE.settings.mediaType
             }
         };
+    case LOADING_SELECTED_MEDIA:
+        return set('loadingSelected', action.loading, state);
+    case LOADING_MEDIA_LIST:
+        return set('loadingList', true, state);
     default:
         return state;
     }

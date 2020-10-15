@@ -121,7 +121,7 @@ const updateMediaSection = (store, path) => action$ =>
             }  else {
             // if the resource is new, add it to the story resources list
                 resourceId = uuid();
-                actions = [...actions, addResource(resourceId, mediaType, resource)];
+                actions = [...actions, addResource(resourceId, mediaType, resource.data ? resource.data : resource)];
             }
             let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
             actions = [...actions, update(`${path}`, media, "merge" ), hide()];

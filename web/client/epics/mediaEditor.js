@@ -7,7 +7,7 @@
  */
 import {Observable} from 'rxjs';
 import uuid from 'uuid';
-import {findKey, get} from 'lodash';
+import findKey from 'lodash/findKey';
 
 import {
     loadMedia,
@@ -24,7 +24,12 @@ import {
     ADDING_MEDIA,
     EDITING_MEDIA,
     IMPORT_IN_LOCAL,
-    REMOVE_MEDIA
+    REMOVE_MEDIA,
+    SET_MEDIA_TYPE,
+    SET_MEDIA_SERVICE,
+    SELECT_ITEM,
+    loadingSelectedMedia,
+    loadingMediaList
 } from '../actions/mediaEditor';
 
 import { HIDE, SAVE, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
@@ -36,37 +41,39 @@ import {SourceTypes} from '../utils/MediaEditorUtils';
 import mediaAPI from '../api/media';
 
 export const loadMediaEditorDataEpic = (action$, store) =>
-    // TODO: NOW IS TRIGGERED ON SHOW because we can not select the source and the media type yet.
-    // final version should get mediaType and sourceId from settings, for show (ok for LOAD_MEDIA)
-    // now we have only one type/source, so I trigger directly the load of it
-    action$.ofType(SHOW, LOAD_MEDIA)
-        .switchMap(() => {
-            return mediaAPI("geostory").load(store) // store is required for local data (e.g. local geostory data)
-                .switchMap(results => {
-                    const sId = sourceIdSelector(store.getState());
-                    // We need to create the actions to remove the resource for a media type presents in the state
-                    // when the api responds nothing for that type.
-                    // So first of all we create empty result foreach mediaType preset in mediaEditor state.
-                    // After we override this with the data from the api response.
-                    const oldResources = Object.keys(get(store.getState(), "mediaEditor.data", {}));
-                    const updateActions = oldResources.reduce((acc, type) =>
-                        ({...acc, [type]: loadMediaSuccess({
-                            mediaType: type,
-                            sourceId: sId,
-                            params: {type},
-                            resultData: {resources: [], totalCount: 0}})})
-                    , {});
-                    return (Object.keys(updateActions).length > 0 || results) && Observable.from(
-                        Object.values((results || []).reduce((acc, r) =>
-                            ({...acc, [r.mediaType]: loadMediaSuccess({
-                                mediaType: r.mediaType,
-                                sourceId: r.sourceId,
-                                params: {mediaType: r.mediaType},
-                                resultData: {resources: r.resources, totalCount: r.totalCount}
-                            })}), {...updateActions})
-                        )) || Observable.empty();
+    action$.ofType(SHOW, LOAD_MEDIA, SET_MEDIA_TYPE, SET_MEDIA_SERVICE)
+        .switchMap((action) => {
+            const state = store.getState();
+            const sourceId = action.sourceId || sourceIdSelector(state);
+            const mediaType = action.mediaType || currentMediaTypeSelector(state);
+            const pageSize = 10;
+            const params = {
+                ...action.params,
+                page: action.params?.page ? action.params.page : 1,
+                pageSize
+            };
+            return mediaAPI(sourceId).load(
+                store, // store is required for local data (e.g. local geostory data)
+                {
+                    mediaType,
+                    sourceId,
+                    params
                 }
-                );
+            )
+                .switchMap(resultData => {
+                    return resultData
+                        ? Observable.of(loadMediaSuccess({
+                            mediaType,
+                            sourceId,
+                            params: {
+                                ...params,
+                                mediaType
+                            },
+                            resultData
+                        }))
+                        :  Observable.empty();
+                })
+                .startWith(loadingMediaList());
         });
 
 /**
@@ -229,4 +236,31 @@ export const removeMediaEpic = (action$, store) =>
                     return Observable.of(
                         loadMedia(undefined, currentMediaTypeSelector(store.getState()), SourceTypes.GEOSTORY));
                 });
+        });
+
+export const updateSelectedItem = (action$, store) =>
+    action$.ofType(SELECT_ITEM)
+        .switchMap(() => {
+            const state = store.getState();
+            const selectedItem = selectedItemSelector(state);
+            const sourceId = sourceIdSelector(state);
+            return mediaAPI(sourceId).getData(store, { selectedItem })
+                .switchMap((response) => {
+                    return response === null
+                        ? Observable.of(
+                            loadingSelectedMedia(false)
+                        )
+                        : Observable.of(
+                            updateItem({ ...selectedItem, data: { ...response }}, 'replace'),
+                            loadingSelectedMedia(false)
+                        );
+                })
+                .catch(() => {
+                    return Observable.of(
+                        loadingSelectedMedia(false)
+                    );
+                })
+                .startWith(
+                    loadingSelectedMedia(true)
+                );
         });

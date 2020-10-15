@@ -7,10 +7,15 @@
  */
 
 import * as geostory from './geostory';
+import * as geostore from './geostore';
 
-const registry = {
-    "geostory": geostory
+let registry = {
+    'geostory': geostory,
+    'geostoreMap': geostore
 };
 
+export const registerMediaAPI = (key, api) => {
+    registry[key] = api;
+};
 
 export default (sourceType) => registry[sourceType]; // TODO: support other kinds of media types and sources

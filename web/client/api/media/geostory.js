@@ -12,7 +12,7 @@ import uuid from 'uuid';
 import { addResource, editResource, removeResource } from '../../actions/geostory';
 import { resourcesSelector } from '../../selectors/geostory';
 import { selectedIdSelector } from '../../selectors/mediaEditor';
-import { SourceTypes } from '../../utils/MediaEditorUtils';
+import { filterResources } from '../../utils/GeoStoryUtils';
 /**
  * API to save in local resources. All the methods must implement the same interface.
  * TODO: bring the interface documentation into mediaAPI
@@ -75,17 +75,20 @@ export const edit = (mediaType, source, data, store) => {
      * }]
      * ```
      */
-export const load = (store) => {
-    const resources = resourcesSelector(store.getState());
-    const separatedResourcesPerType = resources.length ? groupBy(resourcesSelector(store.getState()), "type") : {};
-    return Object.keys(separatedResourcesPerType).length && Observable.of(
-        Object.keys(separatedResourcesPerType).map(mediaType => ({
-            resources: separatedResourcesPerType[mediaType],
-            sourceId: SourceTypes.GEOSTORY,
-            mediaType,
-            totalCount: separatedResourcesPerType[mediaType].length
-        }))
-    ) || Observable.of(null);
+export const load = (store, { mediaType, params }) => {
+    const geoStoryResources = resourcesSelector(store.getState());
+    const separatedResourcesPerType = geoStoryResources.length ? groupBy(resourcesSelector(store.getState()), "type") : {};
+    const { page, pageSize } = params;
+    const start = 0;
+    const end = page * pageSize;
+    const filterText = params.q || '';
+    const resources = filterResources(separatedResourcesPerType[mediaType] || [], filterText);
+    return Observable.of({
+        resources: resources.filter((resource, idx) => {
+            return idx >= start && idx < end;
+        }),
+        totalCount: resources.length
+    });
 };
 
 /**
@@ -109,3 +112,5 @@ export const remove = (mediaType, store) => {
         }
     ).map(() => ({id, type: mediaType}));
 };
+
+export const getData = () => Observable.of(null);
