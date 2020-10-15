@@ -45,7 +45,6 @@ const appStore = (
 
 - Moved standard epics, standard reducers and standard rootReducer function from web/client/stores/StandardStore.js to a separated file web/client/stores/defaultOptions.js
 
-- web/client/product/main.jsx has been updated to new import and export (removed require and exports.module)
 
 - loading extensions functionalities inside StandardApp has been moved to an specific withExtensions HOC, so if you are not using `main.js` but directly `StandardApp` and you need extensions you need to add this HOC to your StandardApp 
 
