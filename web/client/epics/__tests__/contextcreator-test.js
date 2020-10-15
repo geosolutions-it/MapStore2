@@ -879,6 +879,24 @@ describe('contextcreator epics', () => {
             map: {}
         }, done);
     });
+    it('saveContextResource with an error', (done) => {
+        mockAxios.onPost().reply(404);
+        const startActions = [saveNewContext("/")];
+        testEpic(saveContextResource, 3, startActions, actions => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[1].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[1].level).toBe('error');
+            expect(actions[2].type).toBe(LOADING);
+        }, {
+            contextcreator: {
+                resource: {
+                    name: 'context'
+                }
+            },
+            map: {}
+        }, done);
+    });
     it('editTemplateEpic with id', (done) => {
         mockAxios.onGet().reply(200, 'data');
         const startActions = [editTemplate(1)];
