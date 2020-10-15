@@ -240,7 +240,7 @@ export const withLocationClick = branch(({editMap, map: { mapLocationsEnabled = 
                         showEmptyMessageGFI
                         missingResponses={(requests || []).length - (responses || []).length} />);
 
-                    const popups = [{position: { coordinates: point.rawPos }, id: uuidv1() }];
+                    const popups = [{position: { coordinates: intersectingFeature[0]?.geometry?.rawPos }, id: uuidv1() }];
                     return {popups: popups.map((popup) => ({...popup, component}))};
 
                 }
