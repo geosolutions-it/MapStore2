@@ -1670,7 +1670,8 @@
                 "noLegendDescription": "El mapa conectado no tiene capas para mostrar en la leyenda",
                 "nodatainviewport": "Sin datos en la ventana gráfica actual",
                 "timeoutExpired": "El servicio tardó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
-                "genericError": "Hubo un error durante la recuperación de datos"
+                "genericError": "Hubo un error durante la recuperación de datos",
+                "genericErrorWithMessage": "Hubo un error durante la recuperación de datos: \"{message}\""
             },
             "builder": {
                 "header": {

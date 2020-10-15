@@ -10,6 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const {createSink} = require('recompose');
 const expect = require('expect');
+const {isString} = require('lodash');
 const wpsChart = require('../wpsChart');
 
 describe('wpsChart enhancer', () => {
@@ -61,6 +62,32 @@ describe('wpsChart enhancer', () => {
                 aggregateFunction: "Count",
                 aggregationAttribute: "test",
                 groupByAttributes: "test"
+            }
+        };
+        ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+    });
+    it('wpsChart with time as object', (done) => {
+        const Sink = wpsChart(createSink( ({data, loading} = {}) => {
+            if (!loading) {
+                expect(data).toExist();
+                expect(data.length).toBe(2);
+                expect(data[0].year).toExist();
+                expect(isString(data[0].year)).toBe(true);
+                expect(data[1].year).toExist();
+                expect(isString(data[1].year)).toBe(true);
+                done();
+            }
+        }));
+        const props = {
+            layer: {
+                name: "test",
+                url: 'base/web/client/test-resources/widgetbuilder/aggregate2',
+                wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate2',
+                search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate2'}},
+            options: {
+                aggregateFunction: "Count",
+                aggregationAttribute: "name",
+                groupByAttributes: "year"
             }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
