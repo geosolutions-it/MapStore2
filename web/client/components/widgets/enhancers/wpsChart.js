@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 const {compose, withProps} = require('recompose');
-const {isObject} = require('lodash');
+const {isObject, isNil} = require('lodash');
 const wpsAggregate = require('../../../observables/wps/aggregate');
 const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
 const Rx = require('rxjs');
@@ -15,10 +15,10 @@ const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [
         ...GroupByAttributes.reduce((a, p, i) => {
             let value = res[i];
             if (isObject(value)) {
-                if (value.time) {
+                if (!isNil(value.time)) {
                     value = (new Date(value.time)).toISOString();
                 } else {
-                    value = JSON.stringify(value.time);
+                    throw new Error('Unknown response format from server');
                 }
             }
             return {
