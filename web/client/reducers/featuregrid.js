@@ -77,7 +77,10 @@ const emptyResultsState = {
     drawing: false,
     newFeatures: [],
     features: [],
-    dockSize: 0.35
+    dockSize: 0.35,
+    customEditorsOptions: {
+        "rules": []
+    }
 };
 const isSameFeature = (f1, f2) => f2 === f1 || (f1.id !== undefined && f1.id !== null && f1.id === f2.id);
 const isPresent = (f1, features = []) => features.filter( f2 => isSameFeature(f1, f2)).length > 0;
