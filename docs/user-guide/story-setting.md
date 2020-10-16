@@ -12,7 +12,7 @@ The editor can customize the different components of the story through the follo
 
 <img src="../img/story-setting/theme.gif" class="ms-docimage"/>
 
- * The *Font Family* to choose the default text font present in the whole story: clicking on the search bar a dropdown menu opens to allow selecting the desired font (*Inherit*, *Arial*, *Georgia*, *Impact*, *Tahoma*, *Time New Roman*, *Verdana*): 
+ * The *Font Family* to choose the default text font present in the whole story: clicking on the search bar a dropdown menu opens to allow selecting the desired font (*Inherit*, *Arial*, *Georgia*, *Impact*, *Tahoma*, *Time New Roman*, *Verdana*). The default list of Font Families can be customized in the MapStore configuration file.
 
 <img src="../img/story-setting/font_family.gif" class="ms-docimage"/>
 
