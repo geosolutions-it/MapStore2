@@ -216,6 +216,7 @@ const FeatureDock = (props = {
 };
 const selector = createSelector(
     state => get(state, "featuregrid.open"),
+    state => get(state, "featuregrid.customEditorsOptions"),
     state => get(state, "queryform.autocompleteEnabled"),
     state => wfsURLSelector(state),
     state => typeNameSelector(state),
@@ -233,8 +234,9 @@ const selector = createSelector(
     createStructuredSelector(paginationInfo),
     state => get(state, 'featuregrid.pages'),
     state => get(state, 'featuregrid.pagination.size'),
-    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters, pagination, pages, size) => ({
+    (open, customEditorsOptions, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters, pagination, pages, size) => ({
         open,
+        customEditorsOptions,
         autocompleteEnabled,
         url,
         typeName,

@@ -45,7 +45,8 @@ import {
     GRID_QUERY_RESULT,
     LOAD_MORE_FEATURES,
     SET_UP,
-    SET_TIME_SYNC
+    SET_TIME_SYNC,
+    UPDATE_EDITORS_OPTIONS
 } from '../actions/featuregrid';
 
 import { FEATURE_TYPE_LOADED, QUERY_CREATE } from '../actions/wfsquery';
@@ -184,6 +185,8 @@ function featuregrid(state = emptyResultsState, action) {
     case SET_SELECTION_OPTIONS: {
         return assign({}, state, {multiselect: action.multiselect});
     }
+    case UPDATE_EDITORS_OPTIONS:
+        return assign({}, state, { customEditorsOptions: action.payload });
     case SET_UP: {
         return assign({}, state, action.options || {});
     }
