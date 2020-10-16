@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     temporaryIdSelector,
     templateIdSelector,
     statusStyleSelector,
@@ -29,7 +30,7 @@ const {
     selectedStyleFormatSelector,
     editorMetadataSelector,
     selectedStyleMetadataSelector
-} = require('../styleeditor');
+} from '../styleeditor';
 
 describe('Test styleeditor selector', () => {
     it('test temporaryIdSelector', () => {

@@ -6,52 +6,51 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-const assign = require('object-assign');
-const axios = require("../../libs/ajax");
-const MockAdapter = require("axios-mock-adapter");
-const {
-    toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
-    toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
-    toggleUnsavedChanges, TOGGLE_UNSAVED_CHANGES,
-    deleteMap, DELETE_MAP,
-    updateDetails, UPDATE_DETAILS,
-    saveDetails, SAVE_DETAILS,
-    deleteDetails, DELETE_DETAILS,
-    setDetailsChanged, SET_DETAILS_CHANGED,
-    saveResourceDetails, SAVE_RESOURCE_DETAILS,
-    backDetails, BACK_DETAILS,
-    undoDetails, UNDO_DETAILS,
-    doNothing, DO_NOTHING,
-    setUnsavedChanged, SET_UNSAVED_CHANGES,
-    openDetailsPanel, OPEN_DETAILS_PANEL,
-    closeDetailsPanel, CLOSE_DETAILS_PANEL,
-    MAP_UPDATING, mapUpdating,
-    DETAILS_LOADED, detailsLoaded,
-    PERMISSIONS_UPDATED, permissionsUpdated,
-    loadPermissions,
-    PERMISSIONS_LIST_LOADING, PERMISSIONS_LIST_LOADED,
-    ATTRIBUTE_UPDATED, attributeUpdated,
-    SAVE_MAP, saveMap,
-    DISPLAY_METADATA_EDIT, onDisplayMetadataEdit,
-    RESET_UPDATING, resetUpdating,
-    THUMBNAIL_ERROR, thumbnailError,
-    TOGGLE_DETAILS_EDITABILITY, toggleDetailsEditability,
-    MAPS_SEARCH_TEXT_CHANGED, mapsSearchTextChanged,
-    MAPS_LIST_LOAD_ERROR, loadError,
-    MAP_ERROR, mapError, updatePermissions,
-    MAP_METADATA_UPDATED, mapMetadataUpdated,
-    METADATA_CHANGED, metadataChanged,
-    setShowMapDetails, SHOW_DETAILS,
-    updateAttribute, saveAll,
-    SAVE_MAP_RESOURCE, saveMapResource,
-    FEATURED_MAPS_SET_LATEST_RESOURCE, setFeaturedMapsLatestResource,
-    updateMapMetadata, RESET_CURRENT_MAP
-} = require('../maps');
+import expect from 'expect';
 
-const { SHOW_NOTIFICATION } = require('../notifications');
+import assign from 'object-assign';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
 
-let GeoStoreDAO = require('../../api/GeoStoreDAO');
+import {
+    deleteMap,
+    DELETE_MAP,
+    saveResourceDetails,
+    SAVE_RESOURCE_DETAILS,
+    doNothing,
+    DO_NOTHING,
+    setUnsavedChanged,
+    SET_UNSAVED_CHANGES,
+    openDetailsPanel,
+    OPEN_DETAILS_PANEL,
+    closeDetailsPanel,
+    CLOSE_DETAILS_PANEL,
+    MAP_UPDATING,
+    mapUpdating,
+    DETAILS_LOADED,
+    detailsLoaded,
+    ATTRIBUTE_UPDATED,
+    attributeUpdated,
+    THUMBNAIL_ERROR,
+    thumbnailError,
+    TOGGLE_DETAILS_EDITABILITY,
+    toggleDetailsEditability,
+    MAPS_SEARCH_TEXT_CHANGED,
+    mapsSearchTextChanged,
+    MAPS_LIST_LOAD_ERROR,
+    loadError,
+    MAP_ERROR,
+    mapError,
+    METADATA_CHANGED,
+    metadataChanged,
+    setShowMapDetails,
+    SHOW_DETAILS,
+    updateAttribute,
+    SAVE_MAP_RESOURCE,
+    saveMapResource
+} from '../maps';
+
+import GeoStoreDAO from '../../api/GeoStoreDAO';
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
 const BASE_URL = 'base/web/client/test-resources/geostore/';
@@ -110,106 +109,11 @@ describe('Test correctness of the maps actions', () => {
             }
         });
     });
-    it('saveAll - with metadataMap, without thumbnail', (done) => {
-        const resourceId = 1;
-        // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
-        const retFun = saveAll({}, {name: "name"}, null, null, null, resourceId, {});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            switch (count) {
-            case 0: expect(action.type).toBe(MAP_UPDATING); break;
-            case 1: expect(action.type).toBe("NONE"); break;
-            default: done();
-            }
-            count++;
-        }, () => {});
-    });
-    it('saveAll - without metadataMap, without thumbnail', (done) => {
-        const resourceId = 1;
-        // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
-        const retFun = saveAll({}, null, null, null, null, resourceId, {});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            switch (count) {
-            case 0: expect(action.type).toBe(MAP_UPDATING); break;
-            case 1: expect(action.type).toBe("NONE"); break;
-            default: done();
-            }
-            count++;
-        }, () => {});
-    });
-    it('saveAll - without metadataMap, without thumbnail, detailsChanged', (done) => {
-        const resourceId = 1;
-        // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
-        const retFun = saveAll({}, null, null, null, null, resourceId, {});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            switch (count) {
-            case 0: expect(action.type).toBe(MAP_UPDATING); break;
-            case 1: expect(action.type).toBe("NONE"); break;
-            case 2: expect(action.type).toBe(SAVE_RESOURCE_DETAILS); done(); break;
-            default: done();
-            }
-            count++;
-        }, () => ({currentMap: {
-            detailsChanged: true
-        }}
-        ));
-    });
-    it('updatePermissions with securityRules list & without', (done) => {
-        const securityRules = {
-            SecurityRuleList: {
-                RuleCount: 1,
-                SecurityRule: [{
-                    canRead: true,
-                    canWrite: true,
-                    user: {
-                        id: 1
-                    }
-                }]
-            }
-        };
-        const resourceId = 1;
-        const retFun = updatePermissions(resourceId, securityRules);
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            switch (count) {
-            // TODO: this should return PERMISSIONS_UPDATED
-            case 0: expect(action.type).toBe(PERMISSIONS_UPDATED); break;
-            default: done();
-            }
-            count++;
-            done();
-        });
-        const retFun2 = updatePermissions(-1, securityRules);
-        expect(retFun).toExist();
-        let count2 = 0;
-        retFun2((action) => {
-            switch (count2) {
-            case 0: expect(action.type).toBe(THUMBNAIL_ERROR); break;
-            default: done();
-            }
-            count2++;
-            done();
-        });
-    });
     it('mapUpdating', () => {
         let resourceId = 13;
         var retval = mapUpdating(resourceId);
         expect(retval).toExist();
         expect(retval.type).toBe(MAP_UPDATING);
-        expect(retval.resourceId).toBe(resourceId);
-    });
-
-    it('permissionsUpdated', () => {
-        let resourceId = 13;
-        var retval = permissionsUpdated(resourceId, null);
-        expect(retval).toExist();
-        expect(retval.type).toBe(PERMISSIONS_UPDATED);
         expect(retval.resourceId).toBe(resourceId);
     });
 
@@ -236,37 +140,6 @@ describe('Test correctness of the maps actions', () => {
         expect(retval.error.status).toBe(error.status);
     });
 
-    it('resetUpdating', () => {
-        let resourceId = 1;
-        let retval = resetUpdating(resourceId);
-        expect(retval).toExist();
-        expect(retval.type).toBe(RESET_UPDATING);
-        expect(retval.resourceId).toBe(resourceId);
-    });
-
-    it('onDisplayMetadataEdit', () => {
-        let dispMetadataValue = true;
-        let retval = onDisplayMetadataEdit(dispMetadataValue);
-        expect(retval).toExist();
-        expect(retval.type).toBe(DISPLAY_METADATA_EDIT);
-        expect(retval.displayMetadataEditValue).toBe(dispMetadataValue);
-    });
-
-    it('saveMap', () => {
-        let thumbnail = "myThumnbnailUrl";
-        let resourceId = 13;
-        let map = {
-            thumbnail: thumbnail,
-            id: 123,
-            canWrite: true
-        };
-        var retval = saveMap(map, resourceId);
-        expect(retval).toExist();
-        expect(retval.type).toBe(SAVE_MAP);
-        expect(retval.resourceId).toBe(resourceId);
-        expect(retval.map).toBe(map);
-    });
-
     it('mapsSearchTextChanged', () => {
         const a = mapsSearchTextChanged("TEXT");
         expect(a.type).toBe(MAPS_SEARCH_TEXT_CHANGED);
@@ -288,15 +161,6 @@ describe('Test correctness of the maps actions', () => {
         expect(a.error).toBe(error);
         expect(a.resourceId).toBe(resourceId);
     });
-    it('mapMetadataUpdated', () => {
-        const a = mapMetadataUpdated("resourceId", "newName", "newDescription", "result", "error");
-        expect(a.type).toBe(MAP_METADATA_UPDATED);
-        expect(a.resourceId).toBe("resourceId");
-        expect(a.newName).toBe("newName");
-        expect(a.newDescription).toBe("newDescription");
-        expect(a.result).toBe("result");
-        expect(a.error).toBe("error");
-    });
     it('mapMetadatachanged', () => {
         const prop = "name";
         const value = "newName";
@@ -308,37 +172,12 @@ describe('Test correctness of the maps actions', () => {
         expect(a.value).toBe(value);
     });
 
-    it('toggleDetailsSheet', () => {
-        const detailsSheetReadOnly = true;
-        const a = toggleDetailsSheet(detailsSheetReadOnly);
-        expect(a.type).toBe(TOGGLE_DETAILS_SHEET);
-        expect(a.detailsSheetReadOnly).toBeTruthy();
-
-    });
     it('setShowMapDetails', () => {
         const showMapDetails = true;
         const action = setShowMapDetails(showMapDetails);
         expect(action.type).toBe(SHOW_DETAILS);
         expect(action.showMapDetails).toBe(showMapDetails);
 
-    });
-    it('toggleGroupProperties', () => {
-        const a = toggleGroupProperties();
-        expect(a.type).toBe(TOGGLE_GROUP_PROPERTIES);
-    });
-    it('toggleUnsavedChanges', () => {
-        const a = toggleUnsavedChanges();
-        expect(a.type).toBe(TOGGLE_UNSAVED_CHANGES);
-    });
-    it('updateDetails', () => {
-        const detailsText = "<p>some value</p>";
-        const originalDetails = "<p>old value</p>";
-        const doBackup = true;
-        const a = updateDetails(detailsText, doBackup, originalDetails);
-        expect(a.doBackup).toBeTruthy();
-        expect(a.detailsText).toBe(detailsText);
-        expect(a.originalDetails).toBe(originalDetails);
-        expect(a.type).toBe(UPDATE_DETAILS);
     });
     it('deleteMap', () => {
         const resourceId = 1;
@@ -352,32 +191,6 @@ describe('Test correctness of the maps actions', () => {
         expect(a.resourceId).toBe(resourceId);
         expect(a.type).toBe(DELETE_MAP);
         expect(a.options).toBe(options);
-    });
-    it('saveDetails', () => {
-        const detailsText = "<p>some detailsText</p>";
-        const a = saveDetails(detailsText);
-        expect(a.type).toBe(SAVE_DETAILS);
-        expect(a.detailsText).toBe(detailsText);
-    });
-    it('deleteDetails', () => {
-        const a = deleteDetails();
-        expect(a.type).toBe(DELETE_DETAILS);
-    });
-    it('setDetailsChanged', () => {
-        const detailsChanged = true;
-        const a = setDetailsChanged(detailsChanged);
-        expect(a.type).toBe(SET_DETAILS_CHANGED);
-        expect(a.detailsChanged).toBe(detailsChanged);
-    });
-    it('backDetails', () => {
-        const backupDetails = true;
-        const a = backDetails(backupDetails);
-        expect(a.type).toBe(BACK_DETAILS);
-        expect(a.backupDetails).toBe(backupDetails);
-    });
-    it('undoDetails', () => {
-        const a = undoDetails();
-        expect(a.type).toBe(UNDO_DETAILS);
     });
     it('setUnsavedChanged', () => {
         const value = true;
@@ -414,47 +227,6 @@ describe('Test correctness of the maps actions', () => {
         const a = saveMapResource(resource);
         expect(a.type).toBe(SAVE_MAP_RESOURCE);
         expect(a.resource).toBe(resource);
-    });
-    it('updateMapMetadata', (done) => {
-        mockAxios.onPut().reply(200);
-        let actions = [];
-        const dispatch = a => {
-            actions.push(a);
-            // when finished, check and done
-            if (a.type === RESET_CURRENT_MAP) {
-                expect(actions[0].type).toBe(MAP_METADATA_UPDATED);
-                expect(actions[1].type).toBe(SHOW_NOTIFICATION);
-                done();
-
-            }
-        };
-        updateMapMetadata(2, "test", "desc", () => {}, {})(dispatch);
-    });
-    it('setFeaturedMapsLatestResource', () => {
-        const resource = {
-            id: 1
-        };
-        const a = setFeaturedMapsLatestResource(resource);
-        expect(a.type).toBe(FEATURED_MAPS_SET_LATEST_RESOURCE);
-        expect(a.resource).toBe(resource);
-    });
-    it('loadPermissions error', done => {
-        const NOT_EXISTING = "UNKNOWN_RESOURCE";
-        loadPermissions(NOT_EXISTING)(action => {
-            switch (action.type) {
-            case PERMISSIONS_LIST_LOADED:
-                expect(action.permissions).toBe(null);
-                expect(action.mapId).toBe(NOT_EXISTING);
-                done();
-                break;
-            case PERMISSIONS_LIST_LOADING:
-                expect(action.mapId).toBe(NOT_EXISTING);
-                break;
-            default:
-                done(`${action.type} action triggered, not expected`);
-                break;
-            }
-        });
     });
 
 });

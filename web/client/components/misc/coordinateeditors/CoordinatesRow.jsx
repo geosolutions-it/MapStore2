@@ -8,13 +8,14 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Row, Col, Glyphicon, Button, InputGroup} = require('react-bootstrap');
+const {Glyphicon, InputGroup} = require('react-bootstrap');
 const Toolbar = require('../toolbar/Toolbar');
 const draggableComponent = require('../enhancers/draggableComponent');
 const CoordinateEntry = require('./CoordinateEntry');
 const Message = require('../../I18N/Message');
 const {isEqual, isNumber} = require('lodash');
 const DropdownToolbarOptions = require('../toolbar/DropdownToolbarOptions');
+const OverlayTriggerCustom = require('../../misc/OverlayTriggerCustom').default;
 
 class CoordinatesRow extends React.Component {
     static propTypes = {
@@ -32,18 +33,21 @@ class CoordinatesRow extends React.Component {
         customClassName: PropTypes.string,
         isDraggable: PropTypes.bool,
         isDraggableEnabled: PropTypes.bool,
-        showLabels: PropTypes.bool,
+        showLabels: PropTypes.bool, // Remove it
         showDraggable: PropTypes.bool,
+        showToolButtons: PropTypes.bool,
         removeVisible: PropTypes.bool,
         formatVisible: PropTypes.bool,
-        removeEnabled: PropTypes.bool
+        removeEnabled: PropTypes.bool,
+        renderer: PropTypes.string
     };
 
     static defaultProps = {
-        showLabels: false,
+        showLabels: false, // Remove it
         formatVisible: false,
         onMouseEnter: () => {},
-        onMouseLeave: () => {}
+        onMouseLeave: () => {},
+        showToolButtons: true
     };
 
     constructor(props) {
@@ -67,7 +71,10 @@ class CoordinatesRow extends React.Component {
         this.setState({...this.state, [coord]: parseFloat(val)}, ()=>{
             const changeLat = parseFloat(this.state.lat) !== parseFloat(this.props.component.lat);
             const changeLon = parseFloat(this.state.lon) !== parseFloat(this.props.component.lon);
-            this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon)});
+            this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon)}, ()=> {
+                // Auto save on coordinate change for annotations
+                this.props.renderer === "annotations" &&  this.props.onSubmit(this.props.idx, this.state);
+            });
         });
     };
 
@@ -77,7 +84,6 @@ class CoordinatesRow extends React.Component {
 
     render() {
         const {idx} = this.props;
-        // drag button must be a button in order to show the disabled state
         const toolButtons = [
             {
                 visible: this.props.removeVisible,
@@ -85,7 +91,8 @@ class CoordinatesRow extends React.Component {
                 glyph: 'trash',
                 onClick: () => {
                     this.props.onRemove(idx);
-                }
+                },
+                customOverlayTrigger: OverlayTriggerCustom
             },
             {
                 buttonConfig: {
@@ -112,22 +119,26 @@ class CoordinatesRow extends React.Component {
                 glyph: "ok",
                 disabled: this.state.disabledApplyChange,
                 tooltipId: 'identifyCoordinateApplyChanges',
-                onClick: this.onSubmit
+                onClick: this.onSubmit,
+                visible: this.props.renderer !== "annotations",
+                customOverlayTrigger: OverlayTriggerCustom
             }
         ];
+
+        // drag button cannot be a button since IE/Edge doesn't support drag operation on button
         const dragButton = (
-            <div><Button
-                disabled={!this.props.isDraggableEnabled}
-                className="square-button-md no-border btn btn-default"
-                style={{display: "flex", cursor: this.props.isDraggableEnabled && 'grab'}}>
+            <div role="button" className="square-button-md no-border btn btn-default"
+                style={{display: "table",
+                    color: !this.props.isDraggableEnabled && "#999999",
+                    pointerEvents: !this.props.isDraggableEnabled ? "none" : "auto",
+                    cursor: this.props.isDraggableEnabled && 'grab' }}>
                 <Glyphicon
                     glyph="menu-hamburger"
-                    style={{pointerEvents: !this.props.isDraggableEnabled ? "none" : "auto"}}
                 />
-            </Button></div>);
+            </div>);
 
         return (
-            <Row className={`coordinateRow ${this.props.format || ""} ${this.props.customClassName || ""}`} onMouseEnter={() => {
+            <div className={`coordinateRow ${this.props.format || ""} ${this.props.customClassName || ""}`} onMouseEnter={() => {
                 if (this.props.onMouseEnter && this.props.component.lat && this.props.component.lon) {
                     this.props.onMouseEnter(this.props.component);
                 }
@@ -136,12 +147,12 @@ class CoordinatesRow extends React.Component {
                     this.props.onMouseLeave();
                 }
             }}>
-                <Col>
+                <div style={{cursor: this.props.isDraggableEnabled ? 'grab' : "not-allowed"}}>
                     {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
-                </Col>
+                </div>
                 <div className="coordinate lat">
                     <InputGroup>
-                        {this.props.showLabels && <InputGroup.Addon><Message msgId="latitude"/></InputGroup.Addon>}
+                        <InputGroup.Addon><Message msgId="latitude"/></InputGroup.Addon>
                         <CoordinateEntry
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
@@ -165,7 +176,7 @@ class CoordinatesRow extends React.Component {
                         />
                     </InputGroup>
                     <InputGroup>
-                        {this.props.showLabels && <InputGroup.Addon><Message msgId="longitude"/></InputGroup.Addon>}
+                        <InputGroup.Addon><Message msgId="longitude"/></InputGroup.Addon>
                         <CoordinateEntry
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
@@ -189,13 +200,14 @@ class CoordinatesRow extends React.Component {
                         />
                     </InputGroup>
                 </div>
-                <div key="tools">
+                {this.props.showToolButtons && <div key="tools">
                     <Toolbar
-                        btnGroupProps={{ className: 'tools' }}
-                        btnDefaultProps={{ className: 'square-button-md no-border'}}
+                        btnGroupProps={{className: 'tools'}}
+                        btnDefaultProps={{className: 'square-button-md no-border'}}
                         buttons={toolButtons}/>
                 </div>
-            </Row>
+                }
+            </div>
         );
     }
 }

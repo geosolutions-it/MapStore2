@@ -8,7 +8,7 @@
 const React = require('react');
 const {find} = require('lodash');
 const PropTypes = require('prop-types');
-const {Row, Col, Panel, Glyphicon, FormControl} = require('react-bootstrap');
+const {Row, Col, Panel, Glyphicon} = require('react-bootstrap');
 
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
@@ -22,6 +22,7 @@ const ZoneField = require('./ZoneField');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const I18N = require('../../I18N/I18N');
+const IntlNumberFormControl = require("../../I18N/IntlNumberFormControl");
 
 class SpatialFilter extends React.Component {
     static propTypes = {
@@ -124,13 +125,13 @@ class SpatialFilter extends React.Component {
                 <I18N.Message msgId={"queryform.spatialfilter.dwithin_label"}/>
             </Col>
             <Col xs={6}>
-                <FormControl
+                <IntlNumberFormControl
                     type="number"
                     min="0"
                     defaultValue="0"
                     disabled={!this.props.spatialField.geometry}
                     id={"queryform_dwithin_field"}
-                    onChange={(evt) => this.props.actions.onChangeDwithinValue(evt.target.value, name)}/>
+                    onChange={(val) => this.props.actions.onChangeDwithinValue(val, name)}/>
             </Col>
         </Row>);
     };

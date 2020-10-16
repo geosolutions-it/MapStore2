@@ -1,77 +1,99 @@
-const React = require('react');
-const {Row, Col} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
-const { isNil } = require('lodash');
-const Toolbar = require('../../../misc/toolbar/Toolbar');
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const Message = require('../../../I18N/Message');
-const { NO_DETAILS_AVAILABLE } = require('../../../../actions/maps');
+import React from 'react';
+import { Row, Col } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
+import { isNil } from 'lodash';
+import Toolbar from '../../../misc/toolbar/Toolbar';
+
+import Message from '../../../I18N/Message';
 
 
-module.exports = ({
-    saving,
-    hideGroupProperties,
+export default ({
+    loading = false,
+    showPreview = false,
     editDetailsDisabled,
     detailsText,
-    detailsBackup,
-    onToggleGroupProperties = () => { },
-    onUndoDetails = () => { },
-    onToggleDetailsSheet = () => { },
-    onUpdateDetails = () => { }
+    settings = {},
+    canUndo = false,
+    onShowPreview = () => {},
+    onHidePreview = () => {},
+    onUndo = () => {},
+    onShowDetailsSheet = () => {},
+    onUpdate = () => {},
+    onUpdateResource = () => {},
+    onDelete = () => {}
 }) => {
     return (
-        <div className={"ms-section" + (hideGroupProperties ? ' ms-transition' : '')}>
+        <div className={"ms-section" + (showPreview ? ' ms-transition' : '')}>
             <div className="mapstore-block-width">
                 <Row>
                     <Col xs={6}>
                         <div className="m-label">
-                            {detailsText === "" ? <Message msgId="map.details.add" /> : <Message msgId="map.details.rowTitle" />}
+                            {!loading && isNil(detailsText) ? <Message msgId="map.details.add" /> : <Message msgId="map.details.rowTitle" />}
                         </div>
                     </Col>
                     <Col xs={6}>
                         <div className="ms-details-sheet">
                             <div className="pull-right">
-                                {saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : null}
-                                {isNil(detailsText) ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : <Toolbar
+                                {loading ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : null}
+                                {!loading && <Toolbar
                                     btnDefaultProps={{ className: 'square-button-md no-border' }}
                                     buttons={[
                                         {
-                                            glyph: !hideGroupProperties ? 'eye-close' : 'eye-open',
+                                            glyph: showPreview ? 'eye-open' : 'eye-close',
                                             visible: !!detailsText,
-                                            onClick: () => { onToggleGroupProperties(); },
-                                            disabled: saving,
-                                            tooltipId: !hideGroupProperties ? "map.details.showPreview" : "map.details.hidePreview"
+                                            onClick: () => showPreview ? onHidePreview() : onShowPreview(),
+                                            disabled: loading,
+                                            tooltipId: !showPreview ? "map.details.showPreview" : "map.details.hidePreview"
                                         }, {
                                             glyph: 'undo',
                                             tooltipId: "map.details.undo",
-                                            visible: !!detailsBackup,
-                                            onClick: () => { onUndoDetails(detailsBackup); },
-                                            disabled: saving
+                                            visible: canUndo,
+                                            onClick: () => onUndo(),
+                                            disabled: loading
                                         }, {
                                             glyph: 'pencil-add',
                                             tooltipId: "map.details.add",
                                             visible: !detailsText,
                                             onClick: () => {
-                                                onToggleDetailsSheet(false);
+                                                onShowDetailsSheet();
+                                                onUpdate();
                                             },
-                                            disabled: saving
+                                            disabled: loading
                                         }, {
                                             glyph: 'pencil',
                                             tooltipId: "map.details.edit",
                                             visible: !!detailsText && !editDetailsDisabled,
                                             onClick: () => {
-                                                onToggleDetailsSheet(false);
-                                                if (detailsText) {
-                                                    onUpdateDetails(detailsText, true);
-                                                }
+                                                onShowDetailsSheet();
+                                                onUpdate(detailsText);
                                             },
-                                            disabled: saving
+                                            disabled: loading
+                                        }, {
+                                            glyph: 'new-window',
+                                            tooltipId: 'map.details.showAsModal',
+                                            visible: !!detailsText,
+                                            bsStyle: settings.showAsModal ? 'success' : 'default',
+                                            onClick: () => onUpdateResource('attributes.detailsSettings.showAsModal', !settings.showAsModal)
+                                        }, {
+                                            glyph: 'pushpin',
+                                            tooltipId: 'map.details.showAtStartup',
+                                            visible: !!detailsText,
+                                            bsStyle: settings.showAtStartup ? 'success' : 'default',
+                                            onClick: () => onUpdateResource('attributes.detailsSettings.showAtStartup', !settings.showAtStartup)
                                         }, {
                                             glyph: 'trash',
                                             tooltipId: "map.details.delete",
                                             visible: !!detailsText,
-                                            onClick: () => { this.props.detailsSheetActions.onDeleteDetails(); },
-                                            disabled: saving
+                                            onClick: () => onDelete(),
+                                            disabled: loading
                                         }]} />}
                             </div>
                         </div>
@@ -79,7 +101,7 @@ module.exports = ({
                 </Row>
             </div>
             {detailsText && <div className="ms-details-preview-container">
-                {detailsText !== NO_DETAILS_AVAILABLE ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: detailsText }} />
+                {detailsText !== '' ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: detailsText }} />
                     : <div className="ms-details-preview"> <Message msgId="maps.feedback.noDetailsAvailable" /></div>}
             </div>}
         </div>

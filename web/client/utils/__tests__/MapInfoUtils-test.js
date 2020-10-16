@@ -368,7 +368,40 @@ describe('MapInfoUtils', () => {
                 "format": "TEXT"
             },
             {
+                "response": {
+                    "crs": null,
+                    "features": [],
+                    "totalFeatures": "unknown",
+                    "type": "FeatureCollection"
+                },
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "TEXT"
+            },
+            {
                 "response": "no features were found",
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "TEXT"
+            },
+            {
+                "response": "Results for FeatureType 'https://gs-stable.geo-solutions.it/geoserver/geoserver:ny_poi'",
                 "queryParams": {
                     "lat": 43.95229339335166,
                     "lng": 10.726776123046875
@@ -383,20 +416,27 @@ describe('MapInfoUtils', () => {
             },
             undefined
         ];
+        const floatingToolEnabled = true;
 
         let validator = getValidator();
         let validResponses = validator.getValidResponses(response);
-        expect(validResponses.length).toBe(1);
+        let validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
+        expect(validResponses.length).toBe(2);
+        expect(validResponsesFloatingTool.length).toBe(1);
 
         // Validate format 'PROPERTIES'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
         validResponses = validator.getValidResponses(response);
-        expect(validResponses.length).toBe(1);
+        validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
+        expect(validResponses.length).toBe(2);
+        expect(validResponsesFloatingTool.length).toBe(1);
 
         // Validate format 'JSON'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
         validResponses = validator.getValidResponses(response);
-        expect(validResponses.length).toBe(1);
+        validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
+        expect(validResponses.length).toBe(2);
+        expect(validResponsesFloatingTool.length).toBe(1);
     });
 
     it('getNoValidResponses for vector layer', ()=>{

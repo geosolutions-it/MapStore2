@@ -51,7 +51,9 @@ export default ({
     update = () => {},
     remove = () => {},
     bubblingTextEditing = () => {},
-    storyTheme
+    storyTheme,
+    sections = [],
+    storyFonts
 }) =>
     (<div className={className}>
         {contents.reduce(( rendered = [], { id, ...props }) => {
@@ -72,8 +74,10 @@ export default ({
                     {...contentProps}
                     {...props}
                     storyTheme={storyTheme}
+                    storyFonts={storyFonts}
                     bubblingTextEditing={bubblingTextEditing}
-                    tools={tools && tools[props.type]} />)];
+                    tools={tools && tools[props.type]}
+                    sections={sections} />)];
             if (mode === Modes.EDIT && addButtons.length > 0) {
                 content.push(
                     <AddBar

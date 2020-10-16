@@ -8,6 +8,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 
 import  MapSaveAs from '../SaveAs';
 import { getPluginForTest } from './pluginsTestUtils';
@@ -31,8 +32,8 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
         setTimeout(done);
     });
 
+    const DUMMY_ACTION = { type: "DUMMY_ACTION" };
     describe('MapSaveAs', () => {
-        const DUMMY_ACTION = { type: "DUMMY_ACTION" };
         it('hidden by default, visibility of the button', () => {
             const { Plugin, containers } = getPluginForTest(MapSaveAs, stateMocker(DUMMY_ACTION), {
                 BurgerMenuPlugin: {}
@@ -61,7 +62,7 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
         describe('integrations', () => {
             it('disablePermission options hides the permission (compatibility with system that do not use GeoStore)', () => {
                 const storeState = stateMocker(DUMMY_ACTION, toggleControl('mapSaveAs', 'enabled'));
-                const { Plugin } = getPluginForTest(MapSaveAs, storeState);
+                const { Plugin } = getPluginForTest(MapSaveAs, {...storeState, security: {user: {role: 'ADMIN'}}});
                 ReactDOM.render(<Plugin disablePermission />, document.getElementById("container"));
                 expect(document.querySelector('.modal-fixed')).toBeTruthy();
                 expect(document.querySelector('.permissions-table')).toBeFalsy();
@@ -70,5 +71,18 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
                 expect(document.querySelector('.permissions-table')).toBeTruthy();
             });
         });
+        it('title is editable', () => {
+            const storeState = stateMocker(DUMMY_ACTION, toggleControl('mapSaveAs', 'enabled'));
+            const { Plugin } = getPluginForTest(MapSaveAs, storeState);
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            const modal = document.getElementsByClassName('modal-fixed')[0];
+            expect(modal).toExist();
+            const inputEl = modal.getElementsByTagName('input')[1];
+            expect(inputEl).toExist();
+            inputEl.value = 'f';
+            TestUtils.Simulate.change(inputEl);
+            expect(inputEl.value).toBe('f');
+        });
     });
+
 });

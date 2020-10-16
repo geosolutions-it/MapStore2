@@ -30,12 +30,12 @@ const {omit} = require('lodash');
  */
 module.exports = branch(
     ({tooltip, tooltipId} = {}) => tooltip || tooltipId,
-    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, args, ...props} = {}) => (<OverlayTrigger
+    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, args, customOverlayTrigger: CustomOverlayTrigger = OverlayTrigger, ...props} = {}) => (<CustomOverlayTrigger
         trigger={tooltipTrigger}
         id={idDropDown}
         key={keyProp}
         placement={tooltipPosition}
-        overlay={<Tooltip id={"tooltip-" + {keyProp}}>{tooltipId ? <Message msgId={tooltipId} msgParams={{data: args}} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),
+        overlay={<Tooltip id={"tooltip-" + keyProp}>{tooltipId ? <Message msgId={tooltipId} msgParams={{data: args}} /> : tooltip}</Tooltip>}><Wrapped {...props}/></CustomOverlayTrigger>),
     // avoid to pass non needed props
     (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip"]))}>{props.children}</Wrapped>
 );

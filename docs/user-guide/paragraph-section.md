@@ -9,19 +9,23 @@ The Paragraph Section allows to insert a textual content to the story. The story
 
 * **Media Content** <img src="../img/button/add-media-content.jpg" class="ms-docbutton"/> to open the Media Editor to add an image, a map or a video.
 
-* **Web Page Content** <img src="../img/button/web-page-button.jpg" class="ms-docbutton"/> to add an external web page 
+* **Web Page Content** <img src="../img/button/web_page_button.jpg" class="ms-docbutton"/> to add an external web page 
 
 ## Text Content
 
-By default, as soon as a Paragraph is added, an empty text content is already present as a placeholder:
+By default, as soon as a Paragraph is added, an empty text content is already present as a placeholder and the content toolbar allows to:
 
 <img src="../img/paragraph-section/paragraph-section.jpg" class="ms-docimage"/>
 
-With a click on the text area, it is possible to write the text and customize it through the [Text Editor Toolbar](text-editor-toolbar.md).  A possible result of adding and formatting the text can be the following: 
+* Change the size of the text content: clicking on the **Change Size** button <img src="../img/button/change_size2.jpg" class="ms-docbutton"/> a dropdown menu appears to allow selecting between *Small*, *Medium* or *Full* size: 
 
-<img src="../img/paragraph-section/p-text-content.jpg" class="ms-docimage"/>
+<img src="../img/paragraph-section/paragraphe-size.jpg" class="ms-docimage"/>
 
-The user can delete the text content with the Remove button  <img src="../img/button/remove2.jpg" class="ms-docbutton"/>.
+* Delete the *Paragraph  Section* through the **Remove** button <img src="../img/button/remove2.jpg" class="ms-docbutton"/>
+
+The editor can write a text by clicking on the text content and customize it through the [Text Editor Toolbar](text-editor-toolbar.md). A possible result of adding and formatting the text can be the following:
+
+<img src="../img/paragraph-section/text_content.jpg" class="ms-docimage"/>
 
 ## Media Content
 
@@ -49,4 +53,4 @@ A map added inside the paragraph section can be customized through the [Map Cont
 
 Adding a web page content, the Web Page Windows opens allowing the user to add the URL of an extenal web page. A web page added inside the paragraph section can be customized through the [Web Page Content Toolbar](content-web-toolbar.md). Below is an example of a medium, center-aligned web content, just below a map one:
 
-<img src="../img/paragraph-section/map-web.jpg" class="ms-docimage"/>
+<img src="../img/paragraph-section/map-web5.jpg" class="ms-docimage"/>

@@ -8,25 +8,22 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const ConfirmDialog = require('../../misc/ConfirmDialog');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-const LineThumb = require('../../../components/style/thumbGeoms/LineThumb.jsx');
-const CircleThumb = require('../../../components/style/thumbGeoms/CircleThumb.jsx');
-const MultiGeomThumb = require('../../../components/style/thumbGeoms/MultiGeomThumb.jsx');
-const PolygonThumb = require('../../../components/style/thumbGeoms/PolygonThumb.jsx');
-const {head} = require('lodash');
+const bbox = require('@turf/bbox');
+const {head, countBy, values, isUndefined, keys} = require('lodash');
 const assign = require('object-assign');
 const Filter = require('../../misc/Filter');
 const Loader = require('../../misc/Loader');
 const uuidv1 = require('uuid/v1');
 
-const {Grid, Col, Row, Glyphicon, Button} = require('react-bootstrap');
+const {Glyphicon, Button} = require('react-bootstrap');
 const BorderLayout = require('../../layout/BorderLayout');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const SideGrid = require('../../misc/cardgrids/SideGrid');
+const {getGeometryGlyphInfo} = require('../../../utils/AnnotationsUtils');
 
-const SelecAnnotationsFile = require("./SelectAnnotationsFile");
+const SelectAnnotationsFile = require("./SelectAnnotationsFile");
 
 const defaultConfig = require('./AnnotationsConfig');
 
@@ -71,6 +68,8 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onCancelClose triggered when the user cancels closing
  * @prop {function} onConfirmClose triggered when the user confirms closing
  * @prop {function} onAdd triggered when the user clicks on the new annotation button
+ * @prop {function} onEdit triggered when the user clicks on the annotation card into annotation viewer
+ * @prop {function} onZoom triggered when the user zooms to an annotation
  * @prop {function} onHighlight triggered when the mouse hovers an annotation card
  * @prop {function} onCleanHighlight triggered when the mouse is out of any annotation card
  * @prop {function} onDetail triggered when the user clicks on an annotation card
@@ -79,11 +78,13 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onSetErrorSymbol set a flag in the state to say if the default symbols exists
  * @prop {function} onDownload triggered when the user clicks on the download annotations button
  * @prop {function} onUpdateSymbols triggered when user click on refresh icon of the symbols addon
+ * @prop {function} onToggleVisibility triggered when user click on annotation visibility icon
  * @prop {boolean} symbolErrors errors related to the symbols
  * @prop {object[]} lineDashOptions list of options for dashed lines
  * @prop {string} symbolsPath path to the svg folder
  * @prop {object[]} symbolList list of symbols
  * @prop {string} defaultShape default Shape
+ * @prop {number} maxZoom max zoom for annotation (default 18)
  * @prop {string} defaultShapeStrokeColor default symbol stroke color
  * @prop {string} defaultShapeFillColor default symbol fill color
  * @prop {string} defaultShapeSize default symbol shape size in px
@@ -97,7 +98,6 @@ class Annotations extends React.Component {
         id: PropTypes.string,
         styling: PropTypes.bool,
         toggleControl: PropTypes.func,
-
         loading: PropTypes.bool,
         closing: PropTypes.bool,
         showUnsavedChangesModal: PropTypes.bool,
@@ -116,6 +116,7 @@ class Annotations extends React.Component {
         onCancelEdit: PropTypes.func,
         onCancelStyle: PropTypes.func,
         onAdd: PropTypes.func,
+        onZoom: PropTypes.func,
         onHighlight: PropTypes.func,
         onCleanHighlight: PropTypes.func,
         onDetail: PropTypes.func,
@@ -132,17 +133,21 @@ class Annotations extends React.Component {
         onLoadAnnotations: PropTypes.func,
         onUpdateSymbols: PropTypes.func,
         onSetErrorSymbol: PropTypes.func,
+        onToggleVisibility: PropTypes.func,
+        onEdit: PropTypes.func,
         symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
         defaultShape: PropTypes.string,
         symbolsPath: PropTypes.string,
+        maxZoom: PropTypes.number,
         defaultShapeSize: PropTypes.number,
         defaultShapeFillColor: PropTypes.string,
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
-        textRotationStep: PropTypes.number
+        textRotationStep: PropTypes.number,
+        measurementAnnotationEdit: PropTypes.bool
     };
 
     static contextTypes = {
@@ -157,8 +162,9 @@ class Annotations extends React.Component {
         onUpdateSymbols: () => {},
         onSetErrorSymbol: () => {},
         onLoadAnnotations: () => {},
-        onLoadDefaultStyles: () => {},
-        annotations: []
+        annotations: [],
+        maxZoom: 18,
+        onLoadDefaultStyles: () => {}
     };
     state = {
         selectFile: false
@@ -173,15 +179,27 @@ class Annotations extends React.Component {
         return assign({}, defaultConfig, this.props.config);
     };
 
-    renderFieldValue = (field, annotation) => {
-        const fieldValue = annotation.properties[field.name] || '';
-        switch (field.type) {
-        case 'html':
-            return <span dangerouslySetInnerHTML={{__html: fieldValue} }/>;
-        default:
-            return fieldValue;
+    getGeomsThumbnail(geometry) {
+        let glyph;
+        const geoms =  geometry?.features.reduce((p, c) => {
+            if (c.properties && c.properties.isCircle) {
+                return {...p, "Circle": true};
+            }
+            if (c.properties && c.properties.isText) {
+                return {...p, "Text": true};
+            }
+            return {...p, [c.geometry.type]: true};
+        }, {"Circle": false, "Text": false});
+
+        if (countBy(values(geoms))?.true > 1) {
+            glyph = "geometry-collection";
+        } else {
+            const type = keys(geoms).find(key => geoms[key] === true);
+            glyph = getGeometryGlyphInfo(type)?.glyph;
         }
-    };
+
+        return <Glyphicon glyph={glyph}/>;
+    }
 
     renderField = (field, annotation) => {
         return (<div className={"mapstore-annotations-panel-card-" + field.name}>
@@ -189,53 +207,89 @@ class Annotations extends React.Component {
         </div>);
     };
 
-    renderThumbnail = ({style, featureType, geometry, properties = {}}) => {
-        const markerStyle = style.MultiPoint || style.Point || style.iconGlyph && style;
-        const marker = markerStyle ? this.getConfig().getMarkerFromStyle(markerStyle) : {};
-        if (featureType === "LineString" || featureType === "MultiLineString" ) {
-            return (<span className={"mapstore-annotations-panel-card"}>
-                <LineThumb styleRect={style[featureType]}/>
+    renderFieldValue = (field, annotation) => {
+        const fieldValue = annotation.properties[field.name] || '';
+        if (field.type === 'html') {
+            // Return the text content of the first child of the html string (to prevent collating all texts into a single word)
+            return (new DOMParser).parseFromString(fieldValue, "text/html").documentElement.lastElementChild
+                ?.firstChild
+                ?.textContent || '';
+        }
+        return fieldValue;
+    };
+
+    renderThumbnail = ({featureType, geometry, properties = {}}) => {
+        if (properties?.type === "Measure") {
+            return (<span className={"mapstore-annotations-panel-card" }>
+                <Glyphicon glyph={"1-ruler"}/>
+            </span>);
+        } else if (featureType === "LineString" || featureType === "MultiLineString" ) {
+            return (<span className={"mapstore-annotations-panel-card" }>
+                <Glyphicon glyph={"polyline"}/>;
             </span>);
         }
         if (featureType === "Polygon" || featureType === "MultiPolygon" ) {
             return (<span className={"mapstore-annotations-panel-card"}>
-                <PolygonThumb styleRect={style[featureType]}/>
+                <Glyphicon glyph={"polygon"}/>;
             </span>);
         }
         if (featureType === "Circle") {
             return (<span className={"mapstore-annotations-panel-card"}>
-                <CircleThumb styleRect={style[featureType]}/>
+                <Glyphicon glyph={"1-circle"}/>;
             </span>);
         }
         if (featureType === "GeometryCollection" || featureType === "FeatureCollection") {
             return (<span className={"mapstore-annotations-panel-card"}>
-                {(!!(geometry.geometries || geometry.features || []).filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
-                {markerStyle ? (<span className={"mapstore-annotations-panel-card"}>
-                    <div className={"mapstore-annotations-panel-card-thumbnail-" + marker.name} style={{...marker.thumbnailStyle, margin: 'auto', textAlign: 'center', color: '#ffffff', marginLeft: 7}}>
-                        <span className={"mapstore-annotations-panel-card-thumbnail " + this.getConfig().getGlyphClassName(markerStyle)} style={{marginTop: 0, marginLeft: -7}}/>
-                    </div>
-                </span>) : null}
+                {(!!(geometry.geometries || geometry.features || []).filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (this.getGeomsThumbnail(geometry))}
             </span>);
         }
-        return (
-            <span className={"mapstore-annotations-panel-card"}>
-                <div className={"mapstore-annotations-panel-card-thumbnail-" + marker.name} style={{...marker.thumbnailStyle, margin: 'auto', textAlign: 'center', color: '#ffffff', marginLeft: 7}}>
-                    <span className={"mapstore-annotations-panel-card-thumbnail " + this.getConfig().getGlyphClassName(markerStyle)} style={{marginTop: 0, marginLeft: -7}}/>
-                </div>
-            </span>);
+        return (<span className={"mapstore-annotations-panel-card"}>
+            <Glyphicon glyph={"point"}/>;
+        </span>);
     };
 
     renderItems = (annotation) => {
+        const {features: aFeatures, properties} = annotation;
         const cardActions = {
-            onMouseEnter: () => {this.props.onHighlight(annotation.properties.id); },
+            onMouseEnter: () => {this.props.onHighlight(properties.id); },
             onMouseLeave: this.props.onCleanHighlight,
-            onClick: () => this.props.onDetail(annotation.properties.id)
+            onClick: () => this.props.onEdit(properties.id)
         };
+        const annotationVisibility = properties && !isUndefined(properties.visibility) ? properties.visibility : true;
         return {
             ...this.getConfig().fields.reduce( (p, c)=> {
                 return assign({}, p, {[c.name]: this.renderField(c, annotation)});
             }, {}),
-            preview: this.renderThumbnail({style: annotation.style, featureType: "FeatureCollection", geometry: {features: annotation.features}, properties: annotation.properties }),
+            preview: this.renderThumbnail({featureType: "FeatureCollection", geometry: {features: aFeatures}, properties }),
+            tools: <Toolbar
+                btnDefaultProps={{
+                    className: 'square-button-md no-border'
+                }}
+                btnGroupProps={{
+                    style: {
+                        margin: 10
+                    }
+                }}
+                buttons={[
+                    {
+                        glyph: 'zoom-to',
+                        tooltipId: "annotations.zoomTo",
+                        onClick: (event) => {
+                            event.stopPropagation();
+                            const extent = bbox(annotation);
+                            this.props.onZoom(extent, 'EPSG:4326', this.props.maxZoom);
+                        }
+                    },
+                    {
+                        glyph: annotationVisibility ? 'eye-open' : 'eye-close',
+                        tooltipId: annotationVisibility ? "annotations.hide" : "annotations.show",
+                        onClick: (event) => {
+                            event.stopPropagation();
+                            this.props.onToggleVisibility(properties?.id);
+                        }
+                    }
+
+                ]}/>,
             ...cardActions
         };
     };
@@ -244,56 +298,15 @@ class Annotations extends React.Component {
         if (this.props.loading) {
             return (
                 <div style={{display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                    <Loader size={352}/>
+                    <Loader size={250}/>
                 </div>
             );
         }
         if (this.props.mode === 'list') {
+            const annotationsPresent = !!this.props.annotations.length;
             return (
-                <SideGrid items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
-            );
-        }
-        const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
-        const Editor = this.props.editor;
-        if (this.props.mode === 'detail') {
-            return <Editor feature={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width} {...annotation.properties}/>;
-        }
-        // mode = editing
-        return this.props.editing && <Editor feature={annotation} id={this.props.editing.properties && this.props.editing.properties.id || uuidv1()} width={this.props.width} config={this.props.config} {...this.props.editing.properties} lineDashOptions={this.props.lineDashOptions}
-            symbolsPath={this.props.symbolsPath}
-            onUpdateSymbols={this.props.onUpdateSymbols}
-            onSetErrorSymbol={this.props.onSetErrorSymbol}
-            symbolErrors={this.props.symbolErrors}
-            symbolList={this.props.symbolList}
-            defaultShape={this.props.defaultShape}
-            defaultShapeSize={this.props.defaultShapeSize}
-            defaultShapeFillColor={this.props.defaultShapeFillColor}
-            defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
-            defaultStyles={this.props.defaultStyles}
-            textRotationStep={this.props.textRotationStep}
-        />;
-    };
-
-    renderHeader() {
-        return (
-            <Grid fluid className="ms-header" style={this.props.styling || this.props.mode !== "list" ? { width: '100%', boxShadow: 'none'} : { width: '100%' }}>
-                <Row>
-                    <Col xs={2}>
-                        <Button className="square-button no-events">
-                            <Glyphicon glyph="comment"/>
-                        </Button>
-                    </Col>
-                    <Col xs={8}>
-                        <h4><Message msgId="annotations.title"/></h4>
-                    </Col>
-                    <Col xs={2}>
-                        <Button className="square-button no-border" onClick={this.props.toggleControl} >
-                            <Glyphicon glyph="1-close"/>
-                        </Button>
-                    </Col>
-                </Row>
-                {this.props.mode === "list" && <span><Row style={{margin: "auto"}}>
-                    <Col xs={12} style={{margin: "auto"}} className="text-center">
+                <>
+                    <div style={{display: "flex", margin: "auto", justifyContent: "center"}} className="text-center">
                         <Toolbar
                             btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
                             buttons={[
@@ -311,81 +324,81 @@ class Annotations extends React.Component {
                                 },
                                 {
                                     glyph: 'download',
-                                    disabled: !(this.props.annotations && this.props.annotations.length > 0),
+                                    disabled: !(annotationsPresent),
                                     tooltip: <Message msgId="annotations.downloadtooltip"/>,
                                     visible: this.props.mode === "list",
                                     onClick: () => { this.props.onDownload(); }
                                 }
                             ]}/>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12} style={{padding: "0 15px"}}>
+                    </div>
+                    <div style={{padding: "0 8px", margin: "10px 0 0"}}>
                         <Filter
                             filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
                             filterText={this.props.filter}
                             onFilter={this.props.onFilter} />
-                    </Col>
-                </Row></span>}
+                    </div>
+                    <div id="ms-annotations-panel-card" className={(!annotationsPresent && "annotations-empty-panel")}>
+                        {!annotationsPresent && <Message msgId={"annotations.empty"}/>}
+                        { annotationsPresent &&
+                            <SideGrid size="sm" items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
+                        }
+                    </div>
+                </>
+            );
+        }
+        const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
+        const Editor = this.props.editor;
+        if (this.props.mode === 'detail') {
+            return (<Editor feature={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width}
+                {...annotation.properties}
+            />);
+        }
+        // mode = editing
+        return this.props.editing && <Editor
+            feature={annotation} id={this.props.editing.properties && this.props.editing.properties.id || uuidv1()} width={this.props.width} config={this.props.config} {...this.props.editing.properties} lineDashOptions={this.props.lineDashOptions}
+            symbolsPath={this.props.symbolsPath}
+            onUpdateSymbols={this.props.onUpdateSymbols}
+            onSetErrorSymbol={this.props.onSetErrorSymbol}
+            symbolErrors={this.props.symbolErrors}
+            symbolList={this.props.symbolList}
+            defaultShape={this.props.defaultShape}
+            defaultShapeSize={this.props.defaultShapeSize}
+            defaultShapeFillColor={this.props.defaultShapeFillColor}
+            defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
+            defaultStyles={this.props.defaultStyles}
+            textRotationStep={this.props.textRotationStep}
+            annotations={this.props.annotations}
+            measurementAnnotationEdit={this.props.measurementAnnotationEdit}
+        />;
+    };
 
-            </Grid>
+    renderHeader() {
+        return (
+            <div style={this.props.styling || { width: '100%' }}>
+                <div style={{display: "flex", alignItems: "center"}}>
+                    <div>
+                        <Button className="square-button no-events">
+                            <Glyphicon glyph="comment"/>
+                        </Button>
+                    </div>
+                    <div style={{flex: "1 1 0%", padding: 8, textAlign: "center"}}>
+                        <h4><Message msgId="annotations.title"/></h4>
+                    </div>
+                    <div>
+                        <Button className="square-button no-border" onClick={this.props.toggleControl} >
+                            <Glyphicon glyph="1-close"/>
+                        </Button>
+                    </div>
+                </div>
+            </div>
         );
     }
 
     render() {
-        let body = null;
-        if (this.props.closing ) {
-            body = (<ConfirmDialog
-                show
-                modal
-                onClose={this.props.onCancelClose}
-                onConfirm={this.props.onConfirmClose}
-                confirmButtonBSStyle="default"
-                closeGlyph="1-close"
-                confirmButtonContent={<Message msgId="annotations.confirm" />}
-                closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId="annotations.undo"/>
-            </ConfirmDialog>);
-        } else if (this.props.showUnsavedChangesModal) {
-            body = (<ConfirmDialog
-                show
-                modal
-                onClose={this.props.onToggleUnsavedChangesModal}
-                onConfirm={() => { this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal(); }}
-                confirmButtonBSStyle="default"
-                closeGlyph="1-close"
-                confirmButtonContent={<Message msgId="annotations.confirm" />}
-                closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId="annotations.undo"/>
-            </ConfirmDialog>);
-        } else if (this.props.showUnsavedStyleModal) {
-            body = (<ConfirmDialog
-                show
-                modal
-                onClose={this.props.onToggleUnsavedStyleModal}
-                onConfirm={() => { this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal(); }}
-                confirmButtonBSStyle="default"
-                closeGlyph="1-close"
-                confirmButtonContent={<Message msgId="annotations.confirm" />}
-                closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId="annotations.undo"/>
-            </ConfirmDialog>);
-        } else if (this.props.removing) {
-            body = (<ConfirmDialog
-                show
-                modal
-                onClose={this.props.onCancelRemove}
-                onConfirm={() => this.props.onConfirmRemove(this.props.removing)}
-                confirmButtonBSStyle="default"
-                closeGlyph="1-close"
-                confirmButtonContent={<Message msgId="annotations.confirm" />}
-                closeText={<Message msgId="annotations.cancel" />}>
-                {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
-                    <Message msgId="annotations.removeannotation" msgParams={{title: this.props.editing && this.props.editing.properties && this.props.editing.properties.title}}/>}
-            </ConfirmDialog>);
-        } else if (this.state.selectFile) {
+        let body;
+        if (this.state.selectFile) {
             body = (
-                <SelecAnnotationsFile
+                <SelectAnnotationsFile
                     text={<Message msgId="annotations.selectfiletext"/>}
                     onFileChoosen={this.props.onLoadAnnotations}
                     show={this.state.selectFile}

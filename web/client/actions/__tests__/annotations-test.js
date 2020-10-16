@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {isFunction} = require('lodash');
+import expect from 'expect';
 
-const {
+import { isFunction } from 'lodash';
+
+import {
     EDIT_ANNOTATION,
     REMOVE_ANNOTATION,
     CONFIRM_REMOVE_ANNOTATION,
@@ -32,14 +33,22 @@ const {
     HIGHLIGHT,
     CLEAN_HIGHLIGHT,
     FILTER_ANNOTATIONS,
-    addText, ADD_TEXT,
-    CHANGE_FORMAT, changeFormat,
-    changedProperties, CHANGED_PROPERTIES,
-    toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
-    startDrawing, START_DRAWING,
-    toggleUnsavedChangesModal, TOGGLE_CHANGES_MODAL,
-    setUnsavedStyle, UNSAVED_STYLE,
-    setUnsavedChanges, UNSAVED_CHANGES,
+    addText,
+    ADD_TEXT,
+    CHANGE_FORMAT,
+    changeFormat,
+    changedProperties,
+    CHANGED_PROPERTIES,
+    toggleUnsavedStyleModal,
+    TOGGLE_STYLE_MODAL,
+    startDrawing,
+    START_DRAWING,
+    toggleUnsavedChangesModal,
+    TOGGLE_CHANGES_MODAL,
+    setUnsavedStyle,
+    UNSAVED_STYLE,
+    setUnsavedChanges,
+    UNSAVED_CHANGES,
     editAnnotation,
     removeAnnotation,
     confirmRemoveAnnotation,
@@ -77,8 +86,15 @@ const {
     UPDATE_SYMBOLS, updateSymbols,
     SET_DEFAULT_STYLE, setDefaultStyle,
     LOAD_DEFAULT_STYLES, loadDefaultStyles,
-    LOADING, loading
-} = require('../annotations');
+    LOADING, loading,
+    TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
+    CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
+    FILTER_MARKER, filterMarker,
+    GEOMETRY_HIGHLIGHT, geometryHighlight,
+    INIT_PLUGIN, initPlugin,
+    TOGGLE_SHOW_AGAIN, toggleShowAgain,
+    HIDE_MEASURE_WARNING, hideMeasureWarning
+} from '../annotations';
 
 describe('Test correctness of the annotations actions', () => {
     it('edit annotation', (done) => {
@@ -162,9 +178,10 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.format).toEqual(format);
     });
     it('confirm remove annotation', () => {
-        const result = confirmRemoveAnnotation('1');
+        const result = confirmRemoveAnnotation('1', 'geometry');
         expect(result.type).toEqual(CONFIRM_REMOVE_ANNOTATION);
         expect(result.id).toEqual('1');
+        expect(result.attribute).toEqual('geometry');
     });
     it('changedProperties', () => {
         const field = "desc";
@@ -253,8 +270,9 @@ describe('Test correctness of the annotations actions', () => {
     });
 
     it('remove annotation geometry', () => {
-        const result = removeAnnotationGeometry();
+        const result = removeAnnotationGeometry('1');
         expect(result.type).toEqual(REMOVE_ANNOTATION_GEOMETRY);
+        expect(result.id).toBe('1');
     });
 
     it('shows annotation', () => {
@@ -372,5 +390,38 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.type).toBe(LOADING);
         expect(result.value).toBe(true);
         expect(result.name).toBe('loadingFlag');
+    });
+    it('toggleVisibilityAnnotation ', () => {
+        const result = toggleVisibilityAnnotation('1');
+        expect(result.type).toBe(TOGGLE_ANNOTATION_VISIBILITY);
+        expect(result.id).toBe('1');
+    });
+    it('changeGeometryTitle ', () => {
+        const result = changeGeometryTitle('New title');
+        expect(result.type).toBe(CHANGE_GEOMETRY_TITLE);
+        expect(result.title).toBe('New title');
+    });
+    it('filterMarker ', () => {
+        const result = filterMarker('glass');
+        expect(result.type).toBe(FILTER_MARKER);
+        expect(result.filter).toBe('glass');
+    });
+    it('geometryHighlight ', () => {
+        const result = geometryHighlight('1', false);
+        expect(result.type).toBe(GEOMETRY_HIGHLIGHT);
+        expect(result.id).toBe('1');
+        expect(result.state).toBe(false);
+    });
+    it('initPlugin ', () => {
+        const result = initPlugin();
+        expect(result.type).toBe(INIT_PLUGIN);
+    });
+    it('toggleShowAgain ', () => {
+        const result = toggleShowAgain('glass');
+        expect(result.type).toBe(TOGGLE_SHOW_AGAIN);
+    });
+    it('hideMeasureWarning ', () => {
+        const result = hideMeasureWarning();
+        expect(result.type).toBe(HIDE_MEASURE_WARNING);
     });
 });

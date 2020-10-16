@@ -5,9 +5,23 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-const { updateMetadata, play, pause, stop, setFrames, appendFrames, setCurrentFrame, changeSetting, selectPlaybackRange, framesLoading, STATUS } = require('../../actions/playback');
-const playback = require('../playback');
+import expect from 'expect';
+
+import {
+    updateMetadata,
+    play,
+    pause,
+    stop,
+    setFrames,
+    appendFrames,
+    setCurrentFrame,
+    changeSetting,
+    selectPlaybackRange,
+    framesLoading,
+    STATUS
+} from '../../actions/playback';
+
+import playback from '../playback';
 describe('playback reducer', () => {
     it('default', () => {
         const oldState = {};

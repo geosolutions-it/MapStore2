@@ -15,6 +15,8 @@ const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../a
 const {set} = require('../utils/ImmutableUtils');
 const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
 const {ANNOTATION_TYPE} = require('../utils/AnnotationsUtils');
+const {MEASURE_TYPE} = require('../utils/MeasurementUtils');
+const {changeMeasurement} = require('../actions/measurement');
 const {error} = require('../actions/notifications');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {isFeatureGridOpen} = require('../selectors/featuregrid');
@@ -27,14 +29,14 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR,
-    LOAD_DEFAULT_STYLES
+    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES, GEOMETRY_HIGHLIGHT
 } = require('../actions/annotations');
 
 const uuidv1 = require('uuid/v1');
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head, findIndex, castArray, isArray, find, values} = require('lodash');
+const {head, findIndex, castArray, isArray, find, isUndefined, values} = require('lodash');
 const assign = require('object-assign');
 const {annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector} = require('../selectors/annotations');
 const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES,
@@ -204,14 +206,17 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 transformToFeatureCollection: true
             };
-            // parsing styles searching for missing symbols, therefore updating it with a missing symbol
-            return Rx.Observable.from([
+            const isMeasureType = feature.properties?.type === MEASURE_TYPE || false;
+            let actions = [
                 changeLayerProperties('annotations', {visibility: false}),
                 changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {
                     highlight: false
                 })),
                 hideMapinfoMarker()
-            ]);
+            ];
+            actions = isMeasureType ? actions.concat(changeMeasurement({geomType: null})) : actions;
+            // parsing styles searching for missing symbols, therefore updating it with a missing symbol
+            return Rx.Observable.from(actions);
         }),
     newAnnotationEpic: (action$) => action$.ofType(NEW_ANNOTATION)
         .switchMap(() => {
@@ -243,7 +248,7 @@ module.exports = (viewer) => ({
         }),
     removeAnnotationEpic: (action$, store) => action$.ofType(CONFIRM_REMOVE_ANNOTATION)
         .switchMap((action) => {
-            if (action.id === 'geometry') {
+            if (action.attribute === 'geometry') {
                 let state = store.getState();
                 const feature = state.annotations.editing;
                 const drawing = state.annotations.drawing;
@@ -261,7 +266,7 @@ module.exports = (viewer) => ({
 
                 return Rx.Observable.from([
                     changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}),
-                    changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
+                    changeDrawingStatus("drawOrEdit", CONFIRM_REMOVE_ANNOTATION, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
                 ]);
             }
             const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);
@@ -394,12 +399,13 @@ module.exports = (viewer) => ({
         }),
     restoreStyleEpic: (action$, store) => action$.ofType(RESTORE_STYLE)
         .switchMap( () => {
-            const {style, ...feature} = store.getState().annotations.editing;
+            const {styling, editing} = store.getState().annotations;
+            const {style, ...feature} = editing;
             return Rx.Observable.from([
                 changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [feature], {}, style),
                 setStyle(store.getState().annotations.originalStyle),
                 getSelectDrawStatus(store.getState()),
-                toggleStyle()
+                toggleStyle(!styling)
             ]
             );
         }),
@@ -413,6 +419,16 @@ module.exports = (viewer) => ({
                                 highlight: true
                             }))
                         })) || []
+                    }) : f)
+                })
+            );
+        }),
+    showHideAnnotationEpic: (action$, store) => action$.ofType(TOGGLE_ANNOTATION_VISIBILITY)
+        .switchMap((action) => {
+            return Rx.Observable.of(
+                updateNode('annotations', 'layer', {
+                    features: annotationsLayerSelector(store.getState()).features.map(f => f.properties.id === action.id ? assign({}, f, {
+                        properties: {...f.properties, visibility: !isUndefined(f.properties.visibility) ? !f.properties.visibility : false}
                     }) : f)
                 })
             );
@@ -669,7 +685,6 @@ module.exports = (viewer) => ({
             if (selected.properties.isText) {
                 method = "Text";
             }
-
             const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
@@ -681,6 +696,26 @@ module.exports = (viewer) => ({
                 transformToFeatureCollection: true,
                 addClickCallback: true
             }, assign({}, style, {highlight: false}));
+            return Rx.Observable.of( changeDrawingStatus("clean"), action);
+        }),
+    highlightGeometryEpic: (action$, {getState}) => action$.ofType(GEOMETRY_HIGHLIGHT)
+        .switchMap(({id = '', state: highlight = true}) => {
+            const state = getState();
+            const editing = state.annotations.editing;
+            const ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === id);
+            const selectedGeoJSON = editing.features[ftChangedIndex];
+            const styleChanged = castArray(selectedGeoJSON.style).map(s => ({...s, highlight}));
+            const multiGeometry = multiGeometrySelector(state);
+            const action = changeDrawingStatus("drawOrEdit", "", "annotations", [
+                set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing)], {
+                featureProjection: "EPSG:4326",
+                stopAfterDrawing: !multiGeometry,
+                editEnabled: false,
+                drawEnabled: false,
+                selectEnabled: true,
+                transformToFeatureCollection: true
+            }, assign({}, editing.style, {highlight: false}));
+
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
     editCircleFeatureEpic: (action$, {getState}) => action$.ofType(DRAWING_FEATURE)

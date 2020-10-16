@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {tutorialSelector} = require('../tutorial');
+import expect from 'expect';
+
+import { tutorialSelector } from '../tutorial';
 
 describe('Test tutorial selector', () => {
     it('test tutorialSelector', () => {

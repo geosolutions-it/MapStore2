@@ -28,6 +28,13 @@ describe('DecimalCoordinateEditor enhancer', () => {
         const elements = container.querySelectorAll('input');
         expect(elements.length).toBe(1);
     });
+    it('DecimalCoordinateEditor rendering from annotation viewer with defaults', () => {
+        ReactDOM.render(<DecimalCoordinateEditor canEdit={false}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(1);
+        expect(elements[0].disabled).toBe(false);
+    });
     it('Test DecimalCoordinateEditor onKeyDown with keyCode 69 "e" ', () => {
         ReactDOM.render( <DecimalCoordinateEditor value={19} />, document.getElementById("container"));
         const container = document.getElementById('container');

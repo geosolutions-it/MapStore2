@@ -5,14 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-var dashboards = require('../dashboards');
-const {
-    setDashboardsAvailable,
-    dashboardListLoaded,
-    dashboardsLoading
-} = require('../../actions/dashboards');
+import dashboards from '../dashboards';
+import { setDashboardsAvailable, dashboardListLoaded, dashboardsLoading } from '../../actions/dashboards';
 
 
 describe('Test the dashboards reducer', () => {

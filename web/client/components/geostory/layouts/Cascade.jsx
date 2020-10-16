@@ -115,7 +115,8 @@ const Cascade = ({
     getSize = defaultGetSize,
     theme = {},
     mediaViewer,
-    contentToolbar
+    contentToolbar,
+    storyFonts
 }) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
@@ -127,11 +128,29 @@ const Cascade = ({
             const storyTheme = theme && isObject(theme) && theme || {};
             return (<div
                 id="ms-sections-container"
-                className={`ms-sections-container${sizeClassName}`}
+                className={`ms-sections-container${sizeClassName} ms-sections-hyperlinks`}
                 style={{
                     ...storyTheme?.general,
                     ...isContentFocused && { overflow: 'hidden' }
                 }}>
+                {storyTheme?.link?.color && <style dangerouslySetInnerHTML={{__html: `
+        .ms-sections-hyperlinks .ms-text-editor-main a,
+        .ms-sections-hyperlinks .ms-text-wrapper a,
+        .ms-sections-hyperlinks .ms-text-editor-main a:link,
+        .ms-sections-hyperlinks .ms-text-wrapper a:link,
+        .ms-sections-hyperlinks .ms-text-editor-main a:visited,
+        .ms-sections-hyperlinks .ms-text-wrapper a:visited,
+        .ms-sections-hyperlinks .ms-text-editor-main a:active,
+        .ms-sections-hyperlinks .ms-text-wrapper a:active {
+            color: ${storyTheme.link.color};
+            opacity: 1;
+        }
+        .ms-sections-hyperlinks .ms-text-editor-main a:hover,
+        .ms-sections-hyperlinks .ms-text-wrapper a:hover {
+            color: ${storyTheme.link.color};
+            opacity: 0.75;
+        }
+    `}} />}
                 {
                     sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                         return (
@@ -156,6 +175,8 @@ const Cascade = ({
                                 storyTheme={storyTheme}
                                 mediaViewer={mediaViewer}
                                 contentToolbar={contentToolbar}
+                                sections={sections}
+                                storyFonts={storyFonts}
                             />
                         );
                     })

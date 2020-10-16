@@ -12,27 +12,26 @@ const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const { createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
+const {isUndefined} = require('lodash');
+
 const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
-
-const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector, isLoadedResponseSelector } = require('../selectors/mapInfo');
 const { isEditingAllowedSelector } = require('../selectors/featuregrid');
-const {getConfigProp} = require("../utils/ConfigUtils");
+const {currentLocaleSelector} = require('../selectors/locale');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures, setMapTrigger} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
-
-const {currentLocaleSelector} = require('../selectors/locale');
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-
+const {getConfigProp} = require("../utils/ConfigUtils");
 const { compose, defaultProps } = require('recompose');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');
 const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
 const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
-const zoomToFeatureHandler = require('..//components/data/identify/enhancers/zoomToFeatureHandler');
+const zoomToFeatureHandler = require('../components/data/identify/enhancers/zoomToFeatureHandler');
 const getToolButtons = require('./identify/toolButtons');
 const getFeatureButtons = require('./identify/featureButtons');
 const Message = require('./locale/Message');
@@ -67,21 +66,18 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, (index) => ({ index })),
+        createSelector(indexSelector, isLoadedResponseSelector, (state) =>state.browser && state.browser.mobile, (index, loaded, isMobile) => ({ index, loaded, isMobile })),
         {
             setIndex: changePage
         }
-    ),
-    defaultProps({
-        index: 0
-    })
+    )
 )
 ;
 const DefaultViewer = compose(
     identifyIndex,
     defaultViewerDefaultProps,
     defaultViewerHandlers,
-    loadingState(({responses}) => responses.length === 0)
+    loadingState(({loaded}) => isUndefined(loaded))
 )(require('../components/data/identify/DefaultViewer'));
 
 
@@ -263,6 +259,6 @@ module.exports = {
             position: 3
         }
     }),
-    reducers: {mapInfo: require('../reducers/mapInfo')},
+    reducers: {mapInfo: require('../reducers/mapInfo').default},
     epics: require('../epics/identify').default
 };

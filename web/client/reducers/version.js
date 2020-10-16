@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { CHANGE_VERSION, LOAD_VERSION_ERROR } = require('../actions/version');
-const assign = require('object-assign');
+import { CHANGE_VERSION, LOAD_VERSION_ERROR } from '../actions/version';
+
+import assign from 'object-assign';
 
 /**
  * Manages the state of the version identifier
@@ -40,4 +41,4 @@ function version(state = null, action) {
     }
 }
 
-module.exports = version;
+export default version;

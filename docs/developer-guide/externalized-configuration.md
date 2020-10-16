@@ -2,9 +2,9 @@
 
 Most of the MapStore configuration files can be externalized using a **data directory**.
 
-Currently this functionality can only be enabled for projects, not for the main product.
+Currently this functionality can only be enabled for projects, not for the main product. For the main product the externalization support is limited to the [Database Setup](../database-setup) )
 
-This is useful if you have custom configurations that you don't want to overwrite when you deploy a new version of your MapStore project.
+Externalization of configurations is useful if you have custom configurations that you don't want to overwrite when you deploy a new version of your MapStore project.
 
 This is a list of backend configuration files that can be externalized in the data directory:
 
@@ -60,21 +60,23 @@ by an administrator of the server. An example are uploaded extensions, and their
 
 MapStore looks for configuration resources in these places in order:
 
- * the first datadir.location path
- * other datadir.location paths, if any, in order
- * the application root folder
+* the first datadir.location path
+* other datadir.location paths, if any, in order
+* the application root folder
 
 Dynamic files will always be written by the UI in the first location in the list, so the first path is for dynamic stuff.
 
-**Example**
+*Example*:
 
 ```sh
 -Ddatadir.location=/etc/mapstore_extensions,/etc/mapstore_static_config
 ```
 
-## Externalize the proxy configuration
+## Externalize back-end configuration
 
-This must be done in the WEB-INF web.xml file:
+### Proxy
+
+This must be done in the `WEB-INF/web.xml` file:
 
 ```xml
 <context-param>
@@ -83,9 +85,9 @@ This must be done in the WEB-INF web.xml file:
 </context-param>
 ```
 
-## Externalize the log4j configuration
+### Logging
 
-This must be done in the WEB-INF web.xml file:
+This must be done in the `WEB-INF/web.xml` file:
 
 ```xml
 <context-param>
@@ -94,9 +96,9 @@ This must be done in the WEB-INF web.xml file:
 </context-param>
 ```
 
-## Externalize the database connection settings
+### Database Connection
 
-This must be done in the geostore-datasource-ovr.properties file:
+This must be done in the `geostore-datasource-ovr.properties` file:
 
 ```properties
 geostoreDataSource.driverClassName=org.postgresql.Driver
@@ -110,77 +112,63 @@ geostoreVendorAdapter.generateDdl=true
 geostoreVendorAdapter.showSql=false
 ```
 
-## Externalize the frontend configuration
+## Externalize front-end Configurations
 
-This must be done in the project `app.jsx` entry point, replacing the static configuration file names
-with a backend service call (/rest/config/load), that will load files from the datadir.
+MapStore by default fetches configuration files directly via HTTP, without any needing of any special back-end service in the middle (this simplifies the usage in a no-back-end context, as a framework). The `app.jsx` of the **MapStore project** allows to customize these URLs for these static configuration files (usually relative paths) to use your custom versions.
 
-Please notice that the rest/config/load backend service, used to externalize the configuration files,
-has an automatic fallback to use the internal versions, in the web app folder, if the file is not found
-in the datadir, so it is safe to change `app.jsx` without moving the configuration until needed.
+MapStore back-end provides a configuration service utility (at `/rest/config/load`) to provide the configuration files from the data directory.
 
-Also, the rest service can be used to load only allowed files (this is done for security reasons).
-By default the following resources are allowed:
+So to externalize the configuration files you can simply change their URLs to the ones provided by the configuration service utility. This utility provides also some advanced functionalities to better handle your externalized customizations (see the section about "overriding" or "patching" configuration).
 
-* `localConfig.json`
-* `pluginsConfig.json`
-* `extensions.json`
-* `config.json`
-* `new.json`
+!!! note
+    Fallback works only within the deployed application, if you are running `npm start` you need to comment the custom entries in `app.jsx`
 
-The list of allowed resources can be changed, via the allowed.resources JVM environment variable:
+!!! note
+    The configuration service utility can be used to load only allowed files (this is done for security reasons). Only json files can be allowed, and the extension is automatically appended.
+    By default the following resources are allowed:
+    `localConfig.json`, `pluginsConfig.json`, `extensions.json`, `config.json`, `new.json`.
+    The list of allowed resources can be changed, via the allowed.resources JVM environment variable:
+    `java -Dallowed.resources=localConfig,pluginsConfig,extensions,config,new ...`
 
-```sh
-java -Dallowed.resources=localConfig,pluginsConfig,extensions,config,new ...
-```
+**You can externalize the following files to the data directory by adding the relative line in the `app.jsx`** :
 
-Notice that only json files can be allowed, and the extension is automatically appended.
-
-### Externalize localConfig.json
-
-Change `app.jsx` to include the following statement:
+* Application (`localConfig.json`):
 
 ```javascript
 ConfigUtils.setLocalConfigurationFile("rest/config/load/localConfig.json");
 ```
 
-### Externalize static map configurations (new.json and config.json)
-
-Change `app.jsx` to include the following statement:
+* Static maps (`new.json` and `config.json`):
 
 ```javascript
 ConfigUtils.setConfigProp("configurationFolder", "rest/config/load/");
 ```
 
-### Externalize the extensions configuration
-
-Change `app.jsx` to include the following statement:
+* Extensions configuration (`extensions.json`):
 
 ```javascript
 ConfigUtils.setConfigProp("extensionsRegistry", "rest/config/load/extensions.json");
 ```
 
-### Externalize the context plugins configuration
-
-Change `app.jsx` to include the following statement:
+* Context Editor (`pluginsConfig.json`):
 
 ```javascript
 ConfigUtils.setConfigProp("contextPluginsConfiguration", "rest/config/load/pluginsConfig.json");
 ```
 
-### Externalize the extensions assets folder
-
-Change `app.jsx` to include the following statement:
+* Assets folder: (setting this will cause assets are loaded using a different service, `/rest/config/loadasset.`):
 
 ```javascript
 ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset?resource=");
 ```
 
-Assets are loaded using a different service, /rest/config/loadasset.
+!!! note
+    Because in this case we are modifying the `app.jsx` file, these changes can be applied only at build time in a custom project. Future improvements will allow to externalize these files also in the main product, without any need to rebuild the application.
 
-## Overriding frontend configuration
+## Overriding front-end configuration
 
 Externalizing the whole `localConfig.json` file allows to keep your configurations during the various updates. Anyway keeping this long file in sync can become hard.
+
 For this reason, MapStore gives you the possibility to override only some specific properties of this big file and keep these changes separated from the application,
 allowing an easier updates.
 This is particularly useful for example when you have to change only a bunch of settings on a specific instance, and use the standard configuration for everything else.
@@ -207,7 +195,7 @@ geoserverUrl=https://demo.geo-solutions.it/geoserver/wms
 
 This allows to have in `env.properties` a set of variables that can be used in overrides (even in different places). that are indicated by `overrides.mappings`.
 
-## Patching frontend configuration
+## Patching front-end configuration
 
 Another option is to patch the frontend configuration files, instead of overriding them completely, using a patch file
 in [json-patch](http://jsonpatch.com/) format.
@@ -217,7 +205,7 @@ To patch one of the allowed resources you can put a file with a **.patch** exten
 This allows easier migration to a new MapStore version. Please notice that when you use a patch file, any new configuration from
 the newer version will be applied automatically. This can be good or bad: the good part is that new plugins and features will be available without further configuration after the migration, the bad part is that you won't be aware that new plugins and features will be automatically exposed to the final user.
 
-**Example: adding a plugin to the localConfig.json configuration file**
+*Example: adding a plugin to the localConfig.json configuration file*:
 
 ```json
 [{"op": "add", "path": "/plugins/desktop/-", "value": "MyAwesomePlugin"}]

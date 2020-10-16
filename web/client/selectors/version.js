@@ -6,10 +6,5 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const versionSelector = (state) => state.version && state.version.current || '';
-const validateVersion = version => version && version.indexOf('${mapstore2.version}') === -1 && version.indexOf('no-version') === -1 ? true : false;
-
-module.exports = {
-    versionSelector,
-    validateVersion
-};
+export const versionSelector = (state) => state.version && state.version.current || '';
+export const validateVersion = version => version && version.indexOf('${mapstore2.version}') === -1 && version.indexOf('no-version') === -1 ? true : false;

@@ -9,6 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 const DefaultViewer = require('../DefaultViewer.jsx');
+import SwipeHeader from '../SwipeHeader';
 
 const expect = require('expect');
 
@@ -85,7 +86,7 @@ describe('DefaultViewer', () => {
             }]
         });
         const viewer = ReactDOM.render(
-            <DefaultViewer validator={validator}/>,
+            <DefaultViewer validator={validator} renderEmpty/>,
             document.getElementById("container")
         );
 
@@ -120,6 +121,38 @@ describe('DefaultViewer', () => {
         }];
         const viewer = ReactDOM.render(
             <DefaultViewer responses={responses}/>,
+            document.getElementById("container")
+        );
+
+        expect(viewer).toExist();
+        const dom = ReactDOM.findDOMNode(viewer);
+        expect(dom.getElementsByClassName("alert").length).toBe(1);
+        expect(dom.getElementsByClassName("panel").length).toBe(2);
+
+        // Desktop view
+        const gfiViewer = document.querySelector('.mapstore-identify-viewer');
+        const alertInfo = document.querySelector('.alert-info');
+        const swipeableView = document.querySelector('.swipeable-view');
+        expect(gfiViewer).toBeTruthy();
+        expect(gfiViewer.childNodes.length).toBe(2);
+        expect(gfiViewer.childNodes[0]).toEqual(swipeableView);
+        expect(gfiViewer.childNodes[1]).toEqual(alertInfo);
+    });
+
+    it('creates the DefaultViewer component with Identify floating', () => {
+        const responses = [{
+            response: "A",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "no features were found",
+            layerMetadata: {
+                title: 'b'
+            }
+        }];
+        const viewer = ReactDOM.render(
+            <DefaultViewer responses={responses} renderEmpty/>,
             document.getElementById("container")
         );
 
@@ -183,35 +216,56 @@ describe('DefaultViewer', () => {
         expect(dom.innerHTML.indexOf('myresponse') !== -1).toBe(true);
     });
 
-    it('test DefaultViewer component need reset current index on new request', () => {
-        const testHandlers = {
-            setIndex: () => {}
-        };
-        const spySetIndex = expect.spyOn(testHandlers, 'setIndex');
+    it('test DefaultViewer component with header (Popup view)', () => {
+
+        const responses = [{
+            response: "no features were found",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "B",
+            layerMetadata: {
+                title: 'Layer1'
+            }
+        }];
         ReactDOM.render(
-            <DefaultViewer responses={[{}]} setIndex={testHandlers.setIndex}/>,
+            <DefaultViewer responses={responses} header={SwipeHeader} renderEmpty/>,
             document.getElementById("container")
         );
-        ReactDOM.render(
-            <DefaultViewer responses={[{}, {}]} setIndex={testHandlers.setIndex}/>,
-            document.getElementById("container")
-        );
-        expect(spySetIndex.calls.length).toEqual(1);
+        const header = document.querySelector('.ms-identify-swipe-header');
+        const panel = document.querySelectorAll('.panel');
+        expect(header).toBeTruthy();
+        expect(header.innerText).toBe('Layer1');
+        expect(panel.length).toBe(1);
     });
 
-    it("test DefaultViewer component doesn't need reset current index when requests are the same", () => {
-        const testHandlers = {
-            setIndex: () => {}
-        };
-        const spySetIndex = expect.spyOn(testHandlers, 'setIndex');
+    it('test DefaultViewer component in mobile view', () => {
+        const responses = [{
+            response: "no features were found",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "B",
+            layerMetadata: {
+                title: 'Layer1'
+            }
+        }];
+        // Mobile view
         ReactDOM.render(
-            <DefaultViewer responses={[{}]} setIndex={testHandlers.setIndex}/>,
+            <DefaultViewer isMobile responses={responses} header={SwipeHeader}/>,
             document.getElementById("container")
         );
-        ReactDOM.render(
-            <DefaultViewer responses={[{}]} setIndex={testHandlers.setIndex}/>,
-            document.getElementById("container")
-        );
-        expect(spySetIndex.calls.length).toEqual(0);
+
+        const mobileContainer = document.getElementById('container');
+        let gfiViewer = mobileContainer.querySelector('.mapstore-identify-viewer');
+        let alertInfo = mobileContainer.querySelector('.alert-info');
+        let swipeableView = mobileContainer.querySelector('.swipeable-view');
+        expect(gfiViewer).toBeTruthy();
+        expect(gfiViewer.childNodes.length).toBe(2);
+        expect(gfiViewer.childNodes[0]).toEqual(alertInfo);
+        expect(gfiViewer.childNodes[1]).toEqual(swipeableView);
+
     });
 });

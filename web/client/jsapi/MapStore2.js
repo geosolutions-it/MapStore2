@@ -8,7 +8,13 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const StandardApp = require('../components/app/StandardApp');
+const StandardApp = require('../components/app/StandardApp').default;
+const {
+    standardReducers,
+    standardEpics,
+    standardRootReducerFunc
+} = require('../stores/defaultOptions');
+
 const LocaleUtils = require('../utils/LocaleUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {connect} = require('react-redux');
@@ -105,6 +111,10 @@ const getInitialActions = (options) => {
 /**
  * MapStore2 JavaScript API. Allows embedding MapStore2 functionalities into
  * a standard HTML page.
+ *
+ * ATTENTION: As of July 2020 a number of MapStore2 plugins (i.e. TOC layer settings, Identify) use react-dock for providing
+ * Dock panel functionality, that assumes that we use the whole window, so the panels won't show up at all or will
+ * not be constrained within the container.
  * @class
  */
 const MapStore2 = {
@@ -181,12 +191,19 @@ const MapStore2 = {
         }))(require('../components/app/StandardContainer'));
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
-        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {
-            security: require('../reducers/security'),
-            version: require('../reducers/version')
-        }, {
-            jsAPIEpic: actionTrigger.epic,
-            ...(options.epics || {})
+        const appStore = require('../stores/StandardStore').default.bind(null, {
+            initialState: initialState || {},
+            appReducers: {
+                security: require('../reducers/security'),
+                version: require('../reducers/version'),
+                ...standardReducers
+            },
+            appEpics: {
+                jsAPIEpic: actionTrigger.epic,
+                ...(options.epics || {}),
+                ...standardEpics
+            },
+            rootReducerFunc: standardRootReducerFunc
         });
         const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {

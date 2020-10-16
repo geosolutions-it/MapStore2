@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     activeSelector,
     authkeyParamNameSelector,
     delayAutoSearchSelector,
@@ -26,10 +27,11 @@ const {
     selectedServiceTypeSelector,
     selectedServiceSelector,
     servicesSelector,
-    serviceListOpenSelector
-} = require("../catalog");
+    serviceListOpenSelector,
+    tileSizeOptionsSelector
+} from '../catalog';
 
-const {set} = require('../../utils/ImmutableUtils');
+import { set } from '../../utils/ImmutableUtils';
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {
@@ -237,5 +239,10 @@ describe('Test catalog selectors', () => {
         expect(delay).toExist();
         expect(delay).toBe(1234);
     });
-
+    it('test tileSizeOptionsSelector defaults to array with 256', () => {
+        const tileSizes = tileSizeOptionsSelector(state);
+        expect(tileSizes.length).toBe(2);
+        expect(tileSizes[0]).toBe(256);
+        expect(tileSizes[1]).toBe(512);
+    });
 });

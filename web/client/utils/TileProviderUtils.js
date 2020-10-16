@@ -1,9 +1,12 @@
 const { isArray } = require('lodash');
 
 function template(str = "", data = {}) {
-    return str.replace(/(?!(\{?[zyx]?\}))\{*([\w_]+)*\}/g, function() {
+    return str.replace(/(\{(.*?)\})/g, function() {
         let st = arguments[0];
-        let key = arguments[1] ? arguments[1] : arguments[2];
+        let key = arguments[2] ? arguments[2] : arguments[1];
+        if (["x", "y", "z"].includes(key)) {
+            return arguments[0];
+        }
         let value = data[key];
 
         if (value === undefined) {
@@ -37,7 +40,17 @@ function getUrls(opt = {}) {
     return ['a', 'b', 'c'].map( c => template(url.replace("{s}", c), opt));
 }
 
+/**
+ * extracts one valid URL from the options provided, replacing variant, format etc...
+ * options must contain `url` entry to replace.
+ *
+ */
+const extractValidBaseURL = (options) => {
+    let urls = options.url.match(/(\{s\})/) ? getUrls(options) : [template(options.url, options)];
+    return urls[0];
+};
 module.exports = {
+    extractValidBaseURL,
     getUrls,
     template
 };

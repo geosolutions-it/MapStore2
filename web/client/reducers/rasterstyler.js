@@ -6,14 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
-    SET_RASTERSTYLE_PARAMETER,
-    SET_RASTER_LAYER
-} = require('../actions/rasterstyler');
+import { SET_RASTERSTYLE_PARAMETER, SET_RASTER_LAYER } from '../actions/rasterstyler';
 
-
-const assign = require('object-assign');
-const { STYLER_RESET } = require('../actions/styler');
+import assign from 'object-assign';
+import { STYLER_RESET } from '../actions/styler';
 
 const initialSpec = {
     pseudoband: {band: '1', contrast: 'none', algorithm: "none", gammaValue: 1, min: 1, max: 255},
@@ -66,4 +62,4 @@ function rasterstyler(state = initialSpec, action) {
     }
 }
 
-module.exports = rasterstyler;
+export default rasterstyler;

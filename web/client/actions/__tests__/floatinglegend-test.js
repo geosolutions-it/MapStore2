@@ -6,13 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
-    RESIZE_LEGEND,
-    EXPAND_LEGEND,
-    resizeLegend,
-    expandLegend
-} = require('../floatinglegend');
+import expect from 'expect';
+
+import { RESIZE_LEGEND, EXPAND_LEGEND, resizeLegend, expandLegend } from '../floatinglegend';
 
 describe('Test floatinglegend actions', () => {
     it('resizeLegend', () => {

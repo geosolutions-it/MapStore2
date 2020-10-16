@@ -25,7 +25,7 @@ Finally, to create the project, use the following command:
 node ./createProject.js <projectType> <projectName> <projectVersion> <projectDescription> <gitRepositoryUrl> <outputFolder>
 ```
 
-All the arguments except gitRepositoryUrl are mandatory:
+Note that projectName and outputFolder are mandatory:
 
 * **projectName**: short project name that will be used as the repository name on github, webapp path and name in package.json
 * **projectType**: type of project to create, currently two types of projects are supported:

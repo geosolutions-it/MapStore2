@@ -221,6 +221,6 @@ const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
 module.exports = {
     SearchServicesConfigPlugin: SearchServicesPlugin,
     reducers: {
-        searchconfig: require('../reducers/searchconfig')
+        searchconfig: require('../reducers/searchconfig').default
     }
 };

@@ -6,15 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const MANAGER_ITEM_SELECTED = 'MANAGER_ITEM_SELECTED';
+export const MANAGER_ITEM_SELECTED = 'MANAGER_ITEM_SELECTED';
 
-function itemSelected(toolId) {
+export function itemSelected(toolId) {
     return {
         type: MANAGER_ITEM_SELECTED,
         toolId
     };
 }
-
-module.exports = {
-    MANAGER_ITEM_SELECTED, itemSelected
-};

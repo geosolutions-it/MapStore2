@@ -6,8 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const { configureError, loadMapConfig, loadMapInfo, configureMap, MAP_CONFIG_LOAD_ERROR, LOAD_MAP_CONFIG, MAP_CONFIG_LOADED, LOAD_MAP_INFO} = require('../config');
+import expect from 'expect';
+
+import {
+    configureError,
+    loadMapConfig,
+    loadMapInfo,
+    configureMap,
+    MAP_CONFIG_LOAD_ERROR,
+    LOAD_MAP_CONFIG,
+    MAP_CONFIG_LOADED,
+    LOAD_MAP_INFO
+} from '../config';
 
 describe('Test configuration related actions', () => {
     it('loadMapConfig', () => {

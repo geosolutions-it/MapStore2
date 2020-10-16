@@ -6,9 +6,10 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {getWMSLayers, refreshingLayers} = require('../automapupdate');
-const reducer = require('../../reducers/layers');
+import expect from 'expect';
+
+import { getWMSLayers, refreshingLayers } from '../automapupdate';
+import reducer from '../../reducers/layers';
 
 const state = {
     layers: {

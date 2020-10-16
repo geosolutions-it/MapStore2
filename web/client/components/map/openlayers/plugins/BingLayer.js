@@ -26,6 +26,7 @@ Layers.registerType('bing', {
         var key = options.apiKey;
         var maxNativeZoom = options.maxNativeZoom || 19;
         const layer = new TileLayer({
+            msId: options.id,
             preload: Infinity,
             opacity: options.opacity !== undefined ? options.opacity : 1,
             zIndex: options.zIndex,

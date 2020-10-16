@@ -148,44 +148,98 @@ describe("test the SearchResultList", () => {
         expect(spy).toHaveBeenCalledWith(items[0], mapConfig);
     });
 
-    it('test showGFI button when it is enabled', () => {
-        const tb = ReactDOM.render(<SearchResultList searchOptions={{
-            services: [{
+    it('test showGFI button is enabled when openFeatureInfoButton=true', () => {
+        const tb = ReactDOM.render(<SearchResultList results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: {
                 id: "S1",
                 displayName: "S1",
                 subTitle: "S1",
+                options: {
+                    typeName: 'layerName'
+                },
                 launchInfoPanel: 'single_layer',
-                openFeatureInfoButtonEnabled: true,
-                forceSearchLayerVisibility: true
-            }]
-        }} results={[{
-            id: "ID",
-            properties: {
-                prop1: 1
-            },
-            __SERVICE__: "S1"
-        }]} notFoundMessage="not found"/>, document.getElementById("container"));
+                openFeatureInfoButtonEnabled: true
+            }
+        }]} layers={[{id: 'layerId', name: 'layerName', visibility: true}]} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(tb).toExist();
-        const button = document.querySelector('.search-result button');
+        const button = document.getElementById('open-gfi');
         expect(button).toExist();
+        expect(button.getAttribute('disabled')).toBe(null);
     });
 
-    it('test showGFI button when it is disabled', () => {
-        const tb = ReactDOM.render(<SearchResultList searchOptions={{
-            services: [{
-                id: "S1",
-                displayName: "S1",
-                subTitle: "S1"
-            }]
-        }} results={[{
+    it('test showGFI button is not present when openFeatureButtonEnabled=false', () => {
+        const tb = ReactDOM.render(<SearchResultList results={[{
             id: "ID",
             properties: {
                 prop1: 1
             },
-            __SERVICE__: "S1"
-        }]} notFoundMessage="not found"/>, document.getElementById("container"));
+            __SERVICE__: {
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                options: {
+                    typeName: 'layerName'
+                },
+                launchInfoPanel: 'single_layer',
+                openFeatureInfoButtonEnabled: false
+            }
+        }]} layers={[{id: 'layerId', name: 'layerName', visibility: true}]} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(tb).toExist();
-        const button = document.querySelector('.search-result button');
+        const button = document.getElementById('open-gfi');
         expect(button).toNotExist();
+    });
+
+    it('test showGFI button is disabled when openFeatureButtonEnabled=true and the target layer is not visible', () => {
+        const tb = ReactDOM.render(<SearchResultList results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: {
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                options: {
+                    typeName: 'layerName'
+                },
+                launchInfoPanel: 'single_layer',
+                openFeatureInfoButtonEnabled: true
+            }
+        }]} layers={[{id: 'layerId', name: 'layerName', visibility: false}]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+        const button = document.getElementById('open-gfi');
+        expect(button).toExist();
+        expect(button.getAttribute('disabled')).toBe('');
+
+        TestUtils.Simulate.mouseOver(button);
+
+        const tooltip = document.getElementById('tooltip-open-gfi');
+        expect(tooltip).toExist();
+    });
+
+    it('test item.id is used as key', () => {
+        const tb = ReactDOM.render(<SearchResultList results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: {
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                options: {
+                    typeName: 'layerName'
+                }
+            }
+        }]} layers={[{id: 'layerId', name: 'layerName', visibility: true}]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+
+        const searchResultEl = TestUtils.findRenderedComponentWithType(tb, SearchResult);
+        expect(searchResultEl).toExist();
+        expect(searchResultEl._reactInternalFiber.key).toBe('ID');
     });
 });

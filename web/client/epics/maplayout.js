@@ -15,7 +15,7 @@ const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
 const {isMapInfoOpen} = require('../selectors/mapInfo');
 const {showCoordinateEditorSelector} = require('../selectors/controls');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
+const {mapInfoDetailsSettingsFromIdSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 
 /**
  * Epìcs for feature grid
@@ -66,7 +66,7 @@ const updateMapLayoutEpic = (action$, store) =>
                 }));
             }
 
-            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || {left: {sm: 300, md: 500, lg: 600}, right: {md: 658}, bottom: {sm: 30}};
+            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || {left: {sm: 300, md: 500, lg: 600}, right: {md: 330}, bottom: {sm: 30}};
 
             if (get(state, "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
@@ -90,7 +90,7 @@ const updateMapLayoutEpic = (action$, store) =>
             ].filter(panel => panel)) || {left: 0};
 
             const rightPanels = head([
-                get(state, "controls.details.enabled") && {right: mapLayout.right.md} || null,
+                get(state, "controls.details.enabled") && !mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal && {right: mapLayout.right.md} || null,
                 get(state, "controls.annotations.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,

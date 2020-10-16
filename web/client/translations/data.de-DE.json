@@ -27,6 +27,10 @@
         "showMore": "Zeig mehr...",
         "collapse": "Kollabiert",
         "Forbidden": "Verboten",
+        "layerNameChangeError": {
+            "title": "Namensänderungsfehler",
+            "message": "Die Ebene konnte nicht mit einem geänderten Namen neu geladen werden"
+        },
         "expand": "Erweitern",
         "version": {
             "label": "Version"
@@ -107,7 +111,9 @@
                 "right": "Recht",
                 "left": "Links",
                 "bottom": "Bottom",
-                "top": "Oben"
+                "top": "Oben",
+                "editLayerName": "Layernamen bearbeiten",
+                "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens"
             },
             "legendOptions": {
               "title": "Legende",
@@ -116,8 +122,8 @@
               "legendPreview": "Vorschau"
             },
             "enableLocalizedLayerStyles": {
-                "label": "Schakel gelokaliseerde stijl in",
-                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+                "label": "Lokalisierten Stil aktivieren",
+                "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
             }
         },
         "longitude": "Lon",
@@ -346,6 +352,7 @@
         },
         "resources": {
             "successSaved": "Diese Ressource wurde korrekt gespeichert",
+            "savingError": "Beim Speichern der Ressource ist ein Fehler aufgetreten",
             "deleteConfirmTitle": "Bist du sicher",
             "deleteConfirmMessage": "Möchten Sie diese Ressource wirklich löschen?",
             "deleteConfirmButtonText": "Löschen",
@@ -448,7 +455,9 @@
                 "delete": "Löschen Sie das Detailblatt",
                 "titleUnsavedChanges": "Sind Sie sicher, dass Sie schließen wollen, ohne Ihre Änderungen zu speichern?",
                 "sureToClose": "Sind Sie sicher, dass Sie schließen wollen, ohne Ihre Änderungen zu speichern?",
-                "fieldsChanged": "Einige Felder wurden geändert"
+                "fieldsChanged": "Einige Felder wurden geändert",
+                "showAtStartup": "Beim Start anzeigen",
+                "showAsModal": "Als modal anzeigen"
             },
             "errors": {
                 "loading": {
@@ -513,6 +522,14 @@
             "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration vom Server",
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
             "epsgNotSupported": "KBS {epsg} wird für das Zoomen auf den Layer nicht unterstützt",
+            "compareTool": "Tool vergleichen",
+            "configureTool": "Konfigurieren",
+            "spyconfiguration": "Spyglass Konfiguration",
+            "swipeconfiguration": "Swipe-Konfiguration",
+            "swipe": "Wischen Sie",
+            "spyGlass": "Spion Glas",
+            "direction": "Wischen sie richtung",
+            "radius": "Radius",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
             "refreshOptions": {
@@ -693,10 +710,12 @@
             "newMeasure": "Neue Anmerkung",
             "selectTool": "Wählen Sie ein Messwerkzeug aus",
             "exportToGeoJSON": "Export nach GeoJSON",
+            "saveMeasure": "Speichern Sie die Messungen in Anmerkungen",
             "resetTooltip": "Klare Maßnahmen",
             "addAsLayer": "Als Ebene hinzufügen"
         },
         "search":{
+            "layerMustBeVisible": "Die Zielschicht ist inaktiv",
             "decimal": "Dezimal",
             "aeronautical": "Luftfahrt",
             "changeSearchInputField": "Ändern Sie das Suchwerkzeug",
@@ -1048,10 +1067,11 @@
             "edit": "Bearbeiten",
             "remove": "Löschen",
             "save": "Speichern",
+            "saveGeometry": "Geometrie speichern",
             "cancel": "Abbrechen",
             "back": "Zurück",
             "applyStyle": "Stil anwenden",
-            "addMarker": "Fügen Sie eine Geometrie hinzu",
+            "addGeometry": "Fügen Sie eine Geometrie hinzu",
             "styleGeometry": "Stil ändern",
             "deleteGeometry": "Entfernen Sie alle Anmerkungsgeometrien",
             "removeannotation": "Möchten Sie die Anmerkung mit Titel entfernen: {title}?",
@@ -1059,8 +1079,22 @@
             "confirm": "Bestätigen",
             "title": "Notizen / Zeichnen",
             "mandatory": "Pflichtfeld",
-            "emptygeometry": "Geometrie kann nicht leer sein",
             "add": "Neue",
+            "emptygeometry": "Fügen Sie mindestens eine gültige Geometrie hinzu",
+            "empty": "Noch keine Anmerkungen, klicken Sie auf [+], um Anmerkungen hinzuzufügen",
+            "geometries": "Geometrien",
+            "enableEdit": "Bearbeiten aktivieren",
+            "editMeasurement": "Messung bearbeiten",
+            "zoomTo": "Zur Anmerkung zoomen",
+            "zoomToGeometry": "Auf Geometrie zoomen",
+            "removeGeometry": "Entfernen",
+            "hide": "Anmerkung ausblenden",
+            "show": "Anmerkung anzeigen",
+            "tabCoordinates": "Koordinaten",
+            "warning": "Warnung!",
+            "measureWarningText": "Wenn Sie zum Bearbeiten des Messfelds navigieren, werden alle angewendeten Stile entfernt",
+            "notShowAgain": "Diese Nachricht nicht mehr anzeigen",
+            "tabStyle": "Stil",
             "filter": "Notizen / Zeichnungen filtern...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
             "titleUndoGeom": "Die Geometrie hat sich geändert",
@@ -1079,7 +1113,6 @@
             "loadoverride": "Ersetzen Sie Anmerkungen",
             "loaderror": "Wählen Sie eine oder mehrere Anmerkungsdateien aus. (unterstützte Dateien: json)",
             "defaulttitle": "Bearbeiten Sie den Standardtitel",
-            "zoomTo": "Zoom",
             "field": {
                 "title": "Titel",
                 "description": "Beschreibung"
@@ -1365,8 +1398,8 @@
             },
             "backgroundAlreadyAdded": "Zur Hintergrundauswahl hinzugefügt",
             "enableLocalizedLayerStyles": {
-                "label": "Schakel gelokaliseerde stijlen in",
-                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+                "label": "Lokalisierten Stil aktivieren",
+                "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
             }
         },
         "uploader": {
@@ -2073,7 +2106,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Dieser Stil hat keine Regeln",
+            "incompleteClassification": "Die Klassifizierung ist unvollständig, da die Einträge nicht verfügbar sind. Stellen Sie sicher, dass alle Eigenschaften korrekt bereitgestellt werden.",
+            "emptyImageIconSymbolizer": "Fehlende Bild-URL im Symbolstil",
+            "warningTextOrderTitle": "Warnung",
+            "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
         },
         "playback": {
             "settings": {
@@ -2326,18 +2364,22 @@
                     "backConfirmNo": "Nein",
                     "backConfirmYes": "Ja",
                     "save": "Einstellungen speichern",
-                    "headerTitle": "Story-Einstellungen",
+                    "storyTheme" : "Story-Thema",
+                    "storyHeader" : "Story-Header",
                     "title": "Titel",
                     "titlePlaceholder": "Titel eingeben",
                     "logo": "Logo",
-                    "logoPlaceholder": "Das Logo darf nicht höher als 48 px sein und es wird eine Breite von 96 px empfohlen. max 500kb",
+                    "logoPlaceholder": "Legen Sie Ihr Logo hier ab oder klicken Sie, um eine Bilddatei auszuwählen (unterstützte Formate sind PNG und JPEG).",
                     "autoplay": "Automatisches Abspielen",
                     "enableAutoplay": "Aktivieren Sie die automatische Wiedergabe",
                     "autoplayInterval": "Autoplay-Intervall (Sekunden)",
                     "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
-                    "theme": "Thema",
+                    "theme": "Standardthema",
+                    "fontFamily": "Schriftfamilie",
+                    "webFontLoadError": "Fehler beim Laden einiger Schriftarten aus der lokalen Konfiguration",
+                    "fontSize": "Schriftgröße",
                     "overlay": "Überlagerung",
                     "templateTooltip":"Mit dieser Einstellung können Sie die Identifizierungsfunktion auf der Karte aktivieren, indem Sie ein generisches Format für alle Ebenen definieren. Mit dem erweiterten Karteneditor (Stiftsymbol) kann für jede Ebene ein anderes Format konfiguriert werden. Weitere Informationen finden Sie im <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> Benutzerhandbuch </a>. Wenn ein Layer sein eigenes Identifizierungsformat definiert hat, wird er anstelle des auf Kartenebene festgelegten generischen Formats verwendet."
                 }

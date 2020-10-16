@@ -203,7 +203,8 @@ class MapPlugin extends React.Component {
         elevationEnabled: PropTypes.bool,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         localizedLayerStylesName: PropTypes.string,
-        currentLocaleLanguage: PropTypes.string
+        currentLocaleLanguage: PropTypes.string,
+        items: PropTypes.array
     };
 
     static defaultProps = {
@@ -240,7 +241,8 @@ class MapPlugin extends React.Component {
         shouldLoadFont: false,
         elevationEnabled: false,
         onFontError: () => {},
-        onResolutionsChange: () => {}
+        onResolutionsChange: () => {},
+        items: []
     };
     state = {
         canRender: true
@@ -355,11 +357,16 @@ class MapPlugin extends React.Component {
     };
 
     renderSupportTools = () => {
+        // Tools passed by other plugins
+        const toolsFromItems = this.props.items
+            .filter(({Tool}) => !!Tool)
+            .map(({Tool, name}) => <Tool key={name} />);
+
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);
             const options = this.props.toolsOptions[Tool.name] && this.props.toolsOptions[Tool.name][this.props.mapType] || this.props.toolsOptions[Tool.name] || {};
             return <Tool.impl key={Tool.name} {...options}/>;
-        });
+        }).concat(toolsFromItems);
     };
 
     render() {
@@ -419,12 +426,12 @@ module.exports = {
         onResolutionsChange: setMapResolutions
     })(MapPlugin),
     reducers: {
-        map: require('../reducers/map'),
-        layers: require('../reducers/layers'),
-        draw: require('../reducers/draw'),
-        highlight: require('../reducers/highlight'),
-        maptype: require('../reducers/maptype'),
-        additionallayers: require('../reducers/additionallayers')
+        map: require('../reducers/map').default,
+        layers: require('../reducers/layers').default,
+        draw: require('../reducers/draw').default,
+        highlight: require('../reducers/highlight').default,
+        maptype: require('../reducers/maptype').default,
+        additionallayers: require('../reducers/additionallayers').default
     },
     epics: require('../epics/map')
 };

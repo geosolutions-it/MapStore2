@@ -21,7 +21,8 @@ module.exports = {
                 resolution: props.map && props.map && props.map.zoom && MapUtils.getCurrentResolution(props.map.zoom, 0, 21, 96),
                 buffer: props.buffer || 2,
                 units: props.map && props.map.units,
-                rowViewer: layer.rowViewer
+                rowViewer: layer.rowViewer,
+                viewer: layer.viewer
             },
             url: ""
         };

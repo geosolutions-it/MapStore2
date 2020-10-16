@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {changeBrowserProperties, CHANGE_BROWSER_PROPERTIES} = require('../browser');
+import expect from 'expect';
+
+import { changeBrowserProperties, CHANGE_BROWSER_PROPERTIES } from '../browser';
 
 describe('Test browser related actions', () => {
     it('test browser properties change action', (done) => {

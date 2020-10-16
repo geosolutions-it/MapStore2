@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const PluginsContainer = require('../PluginsContainer');
+const PluginsContainer = require('../PluginsContainer').default;
 const {Provider} = require('react-redux');
 const {connect} = require('react-redux');
 

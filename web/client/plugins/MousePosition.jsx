@@ -152,5 +152,5 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {mousePosition: require('../reducers/mousePosition')}
+    reducers: {mousePosition: require('../reducers/mousePosition').default}
 };

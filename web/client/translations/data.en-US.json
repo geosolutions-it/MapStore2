@@ -28,6 +28,10 @@
         "collapse": "Collapse",
         "expand": "Expand",
         "Forbidden": "Forbidden",
+        "layerNameChangeError": {
+            "title": "Name change error",
+            "message": "The layer failed to reload with a changed name"
+        },
         "version": {
             "label": "Version"
         },
@@ -107,7 +111,9 @@
                 "right": "Right",
                 "left": "Left",
                 "bottom": "Bottom",
-                "top": "Top"
+                "top": "Top",
+                "editLayerName": "Edit layer name",
+                "confirmLayerName": "Confirm layer name change"
             },
             "legendOptions": {
               "title": "Legend",
@@ -346,6 +352,7 @@
 		},
         "resources": {
             "successSaved": "This resource has been saved correctly",
+            "savingError": "There was an error saving the resource",
             "deleteConfirmTitle": "Are you sure",
             "deleteConfirmMessage": "Are you sure you want to delete this resource?",
             "deleteConfirmButtonText": "Delete",
@@ -448,7 +455,9 @@
                 "delete": "Delete details sheet",
                 "titleUnsavedChanges": "Are you sure to close without save your changes?",
                 "sureToClose": "Are you sure to close without save your changes?",
-                "fieldsChanged": "Some attributes has been changed"
+                "fieldsChanged": "Some attributes has been changed",
+                "showAtStartup": "Show at startup",
+                "showAsModal": "Show as modal"
             },
             "errors": {
                 "loading": {
@@ -513,6 +522,14 @@
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
             "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
+            "compareTool": "Compare tool",
+            "configureTool": "Configure",
+            "spyconfiguration": "Spyglass configuration",
+            "swipeconfiguration": "Swipe configuration",
+            "swipe": "Swipe",
+            "spyGlass": "Spy glass",
+            "direction": "Swipe direction",
+            "radius": "Radius",
             "filterIconEnabled": "Disable layer filter",
             "filterIconDisabled": "Enable layer filter",
             "refreshOptions": {
@@ -689,6 +706,7 @@
             "trueBearingLabel": "True bearing",
             "formula": "Formula for distance calculation",
             "showLabel": "Show measurement label",
+            "saveMeasure": "Save measurements to annotation",
             "addAsAnnotation": "Add as annotation",
             "newMeasure": "New annotation",
             "selectTool": "Select a measurement tool",
@@ -697,6 +715,7 @@
             "addAsLayer": "Add as layer"
         },
         "search":{
+            "layerMustBeVisible": "The target layer is inactive",
             "decimal": "Decimal",
             "aeronautical": "Aeronautical",
             "changeSearchInputField": "Change the search tool",
@@ -1047,18 +1066,21 @@
             "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options.",
             "edit": "Edit",
             "remove": "Delete",
-            "save": "Save",
+            "save": "Save annotation",
+            "saveGeometry": "Save geometry",
             "cancel": "Cancel",
-            "back": "Back",
+            "back": "Back to annotation",
             "applyStyle": "Apply Style",
-            "addMarker": "Add a new geometry",
+            "addGeometry": "Add a new geometry",
             "styleGeometry": "Change style",
             "deleteGeometry": "Remove all annotation geometries",
+            "geometries": "Geometries",
             "removeannotation": "Do you want to remove the annotation with title: {title}?",
-            "removegeometry": "Do you want to remove all annotation features?",
+            "removegeometry": "Do you want to remove the annotation feature?",
             "confirm": "Confirm",
             "mandatory": "Mandatory field",
-            "emptygeometry": "Geometry cannot be empty",
+            "emptygeometry": "Add at least one valid geometry",
+            "empty": "No annotations yet, click on [+] to add annotations",
             "add": "New",
             "filter": "Filter annotations...",
             "undo": "Are you sure you want to abandon the annotation editing session?",
@@ -1068,8 +1090,19 @@
             "cancelModalGeom": "Cancel",
             "deleteFeature": "Delete this feature",
             "undoDeleteFeature": "Are you sure to delete this feature?",
+            "enableEdit": "Enable edit",
+            "editMeasurement": "Edit measurement",
             "title": "Annotations",
-            "zoomTo": "Zoom",
+            "zoomTo": "Zoom to annotation",
+            "zoomToGeometry": "Zoom to geometry",
+            "removeGeometry": "Remove",
+            "hide": "Hide annotation",
+            "show": "Show annotation",
+            "tabCoordinates": "Coordinates",
+            "warning": "Warning!",
+            "measureWarningText": "Navigating to edit measurement panel will remove any styling applied",
+            "notShowAgain": "Don't show this message again",
+            "tabStyle": "Style",
             "insertText": "Please insert the text annotation",
             "downloadtooltip": "Download annotations",
             "downloadcurrenttooltip": "Download current annotation",
@@ -2085,7 +2118,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "This style has no rules",
+            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
+            "emptyImageIconSymbolizer": "Missing image url in the icon style",
+            "warningTextOrderTitle": "Warning",
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
         },
         "playback": {
             "settings": {
@@ -2338,18 +2376,22 @@
                     "backConfirmNo": "No",
                     "backConfirmYes": "Yes",
                     "save": "Save settings",
-                    "headerTitle" : "Story Settings",
+                    "storyTheme" : "Story theme",
+                    "storyHeader" : "Story Header",
                     "title" : "Title",
                     "titlePlaceholder" : "Enter Title",
                     "logo" : "Logo",
-                    "logoPlaceholder": "Logo must not go beyond 48 px of height and is suggested a width of 96 px. max 500kb",
+                    "logoPlaceholder": "Drop your logo image here or click to select an image file (supported formats are png and jpeg)",
                     "autoplay" : "Autoplay",
                     "enableAutoplay" : "Enable autoplay",
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
                     "navbar" : "Navigation bar",
                     "showNavbar" : "Show navbar",
-                    "theme": "Theme",
+                    "theme": "Default Theme",
+                    "fontFamily": "Font Family",
+                    "webFontLoadError": "Failed to load some fonts from local configuration",
+                    "fontSize": "Font size",
                     "overlay": "Overlay",
                     "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
                 }

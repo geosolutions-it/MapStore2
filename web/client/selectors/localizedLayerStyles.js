@@ -6,10 +6,10 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {has, get, find} = require('lodash');
-const {createSelector} = require('reselect');
+import { has, get, find } from 'lodash';
 
-const {currentLocaleLanguageSelector} = require('./locale');
+import { createSelector } from 'reselect';
+import { currentLocaleLanguageSelector } from './locale';
 
 /**
  * selects localizedLayerStyles state
@@ -24,7 +24,7 @@ const {currentLocaleLanguageSelector} = require('./locale');
  * @param  {object} state the state
  * @return {boolean} true if the localizedLayerStyles property is defined
  */
-const isLocalizedLayerStylesEnabledSelector = (state) => has(state, 'localConfig.localizedLayerStyles');
+export const isLocalizedLayerStylesEnabledSelector = (state) => has(state, 'localConfig.localizedLayerStyles');
 
 /**
  * selects localizedLayerStyles value from state
@@ -32,7 +32,7 @@ const isLocalizedLayerStylesEnabledSelector = (state) => has(state, 'localConfig
  * @param  {object} state the state
  * @return {boolean} boolean if the localizedLayerStyles property is defined
  */
-const isLocalizedLayerStylesEnabledDashboardsSelector = (state) => {
+export const isLocalizedLayerStylesEnabledDashboardsSelector = (state) => {
     const dashboardPlugins = get(state, "localConfig.plugins.dashboard", []);
     const dashboardEditorPlugin = find(dashboardPlugins, item => item.name === 'DashboardEditor') || {};
     return get(dashboardEditorPlugin, "cfg.catalog.localizedLayerStyles", false);
@@ -44,7 +44,7 @@ const isLocalizedLayerStylesEnabledDashboardsSelector = (state) => {
  * @param  {object} state the state
  * @return {string} the localizedLayerStyles param name
  */
-const localizedLayerStylesNameSelector = (state) => get(state, 'localConfig.localizedLayerStyles.name', 'mapstore_language');
+export const localizedLayerStylesNameSelector = (state) => get(state, 'localConfig.localizedLayerStyles.name', 'mapstore_language');
 
 /**
  * generates localizedLayerStyles env object
@@ -52,7 +52,7 @@ const localizedLayerStylesNameSelector = (state) => get(state, 'localConfig.loca
  * @param  {object} state the state
  * @return {object} object that represents ENV param
  */
-const localizedLayerStylesEnvSelector = createSelector(
+export const localizedLayerStylesEnvSelector = createSelector(
     isLocalizedLayerStylesEnabledSelector,
     localizedLayerStylesNameSelector,
     currentLocaleLanguageSelector,
@@ -67,10 +67,3 @@ const localizedLayerStylesEnvSelector = createSelector(
         return env;
     }
 );
-
-module.exports = {
-    isLocalizedLayerStylesEnabledSelector,
-    localizedLayerStylesNameSelector,
-    localizedLayerStylesEnvSelector,
-    isLocalizedLayerStylesEnabledDashboardsSelector
-};

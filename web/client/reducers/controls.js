@@ -6,8 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, RESET_CONTROLS} = require('../actions/controls');
-const assign = require('object-assign');
+import {
+    TOGGLE_CONTROL,
+    SET_CONTROL_PROPERTY,
+    SET_CONTROL_PROPERTIES,
+    RESET_CONTROLS
+} from '../actions/controls';
+
+import assign from 'object-assign';
 /**
  * Manages the state of the controls in MapStore2
  * The root elements of the state returned by this reducers ar variable, but they have
@@ -87,4 +93,4 @@ function controls(state = {}, action) {
     }
 }
 
-module.exports = controls;
+export default controls;

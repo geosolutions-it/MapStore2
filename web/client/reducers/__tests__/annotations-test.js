@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const annotations = require('../annotations');
-const {DEFAULT_ANNOTATIONS_STYLES} = require('../../utils/AnnotationsUtils');
-const {isEmpty, round} = require('lodash');
-const {set} = require('../../utils/ImmutableUtils');
+import expect from 'expect';
+
+import annotations from '../annotations';
+import { DEFAULT_ANNOTATIONS_STYLES } from '../../utils/AnnotationsUtils';
+import { isEmpty, round } from 'lodash';
+import { set } from '../../utils/ImmutableUtils';
 
 const testFeatures = {
     point1: {
@@ -27,28 +28,56 @@ const testFeatures = {
     }
 };
 
-const {
-    REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION,
-    EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
-    VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
-    NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
-    FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
-    toggleDeleteFtModal, confirmDeleteFeature,
-    addText, setUnsavedChanges, setUnsavedStyle,
-    toggleUnsavedChangesModal, toggleUnsavedGeometryModal, toggleUnsavedStyleModal, changedProperties,
-    setInvalidSelected, addNewFeature, resetCoordEditor, changeText, changeRadius, changeSelected,
-    highlightPoint, changeFormat,
+import {
+    REMOVE_ANNOTATION,
+    CONFIRM_REMOVE_ANNOTATION,
+    CANCEL_REMOVE_ANNOTATION,
+    EDIT_ANNOTATION,
+    CANCEL_EDIT_ANNOTATION,
+    SAVE_ANNOTATION,
+    TOGGLE_ADD,
+    VALIDATION_ERROR,
+    REMOVE_ANNOTATION_GEOMETRY,
+    NEW_ANNOTATION,
+    SHOW_ANNOTATION,
+    CANCEL_SHOW_ANNOTATION,
+    FILTER_ANNOTATIONS,
+    CLOSE_ANNOTATIONS,
+    CONFIRM_CLOSE_ANNOTATIONS,
+    CANCEL_CLOSE_ANNOTATIONS,
+    toggleDeleteFtModal,
+    confirmDeleteFeature,
+    addText,
+    setUnsavedChanges,
+    setUnsavedStyle,
+    toggleUnsavedChangesModal,
+    toggleUnsavedGeometryModal,
+    toggleUnsavedStyleModal,
+    changedProperties,
+    setInvalidSelected,
+    addNewFeature,
+    resetCoordEditor,
+    changeText,
+    changeRadius,
+    changeSelected,
+    highlightPoint,
+    changeFormat,
     toggleStyle,
     setStyle,
     updateSymbols,
     setEditingFeature,
     setDefaultStyle,
-    loading
-} = require('../../actions/annotations');
-const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
-const {drawingFeatures, selectFeatures} = require('../../actions/draw');
+    loading,
+    changeGeometryTitle,
+    filterMarker,
+    initPlugin,
+    hideMeasureWarning,
+    toggleShowAgain
+} from '../../actions/annotations';
 
-const {toggleControl} = require('../../actions/controls');
+import { PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
+import { drawingFeatures, selectFeatures } from '../../actions/draw';
+import { toggleControl } from '../../actions/controls';
 
 const testAllProperty = (state, checkState) => {
     Object.keys(state).forEach( s => {
@@ -164,18 +193,20 @@ describe('Test the annotations reducer', () => {
         expect(state.removing).toBe('1');
     });
     it('confirm remove annotation', () => {
-        const state = annotations({removing: '1'}, {
+        const state = annotations({removing: '1', editing: {features: [{properties: {id: 2}}]}}, {
             type: CONFIRM_REMOVE_ANNOTATION,
             id: '1'
         });
         expect(state.removing).toNotExist();
         expect(state.stylerType).toBe("");
+        expect(state.editing.features).toBeTruthy();
 
     });
     it('confirm remove annotation geometry', () => {
         const state = annotations({
             removing: '1',
             editing: {
+                features: [{properties: {id: '1'}}],
                 style: {
                     "Circle": {
                         imgGliph: "comment"
@@ -303,9 +334,10 @@ describe('Test the annotations reducer', () => {
     });
     it('remove annotation geometry', () => {
         const state = annotations({removing: null}, {
-            type: REMOVE_ANNOTATION_GEOMETRY
+            type: REMOVE_ANNOTATION_GEOMETRY,
+            id: '1'
         });
-        expect(state.removing).toBe('geometry');
+        expect(state.removing).toBe('1');
         expect(state.unsavedChanges).toBe(true);
     });
     it('toggle style off', () => {
@@ -331,7 +363,7 @@ describe('Test the annotations reducer', () => {
             selected: selected,
             editing: {
                 features: [selected]
-            }}, toggleStyle());
+            }}, toggleStyle(false));
         expect(annotationsState.styling).toBe(false);
         annotationsState.selected.style.map(s => {
             expect(s.highlight).toBe(true);
@@ -363,7 +395,7 @@ describe('Test the annotations reducer', () => {
             selected: selected,
             editing: {
                 features: [selected]
-            }}, toggleStyle());
+            }}, toggleStyle(true));
         expect(annotationsState.styling).toBe(true);
         annotationsState.selected.style.map(s => {
             expect(s.highlight).toBe(false);
@@ -678,11 +710,15 @@ describe('Test the annotations reducer', () => {
         };
         const state = annotations({
             editing: featureColl,
-            selected: feature
+            selected: feature,
+            editedFields: {title: 'Title1'}
         }, addNewFeature(feature));
         expect(state.editing.features[0].properties.isText).toBe(true);
         expect(state.editing.features[0].geometry.coordinates[0]).toBe(1);
         expect(state.editing.features[0].geometry.coordinates[1]).toBe(2);
+        expect(state.editing.properties).toBeTruthy();
+        expect(state.editing.properties.id).toBe('1asdfads');
+        expect(state.editing.properties.title).toBe('Title1');
         expect(state.selected).toBe(null);
     });
 
@@ -1600,5 +1636,39 @@ describe('Test the annotations reducer', () => {
         const state = annotations({}, loading(true, 'loadingFlag'));
         expect(state.loading).toBe(true);
         expect(state.loadFlags).toEqual({loadingFlag: true});
+    });
+    it('Change geometry title', ()=>{
+        const state = annotations({
+            editing: {features: [{properties: {id: '1', geometryTitle: ""}}]},
+            selected: {properties: {id: '1', geometryTitle: ""}}}, changeGeometryTitle("New title"));
+        expect(state.selected).toBeTruthy();
+        expect(state.selected.properties.geometryTitle).toBe('New title');
+    });
+    it('Change marker filter option', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, filterMarker("glass"));
+        expect(state.config).toBeTruthy();
+        expect(state.config.filter).toBe('glass');
+    });
+    it('Hide measure warning', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, hideMeasureWarning());
+        expect(state.showPopupWarning).toBe(false);
+    });
+    it('Init plugin', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, initPlugin());
+        const showPopupWarning = localStorage?.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true;
+        expect(state.showPopupWarning).toBe(showPopupWarning);
+    });
+    it('toggleShowAgain', ()=>{
+        const state = annotations({
+            config: {"config1": 1}
+        }, toggleShowAgain(false));
+        expect(state.showAgain).toBeTruthy();
+        expect(state.showAgain).toBe(true);
     });
 });

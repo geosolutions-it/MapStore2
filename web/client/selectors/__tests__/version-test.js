@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {versionSelector, validateVersion} = require('../version');
+import expect from 'expect';
+
+import { versionSelector, validateVersion } from '../version';
 
 describe('Test version selector', () => {
     it('test versionSelector default', () => {

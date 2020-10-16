@@ -40,7 +40,8 @@ const Message = require('../components/I18N/Message');
 require('./print/print.css');
 
 /**
- * Print plugin. This plugin allows to print current map view.
+ * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
+ * Please look at mapstore documentation about how to add and configure the printing module in your installation.
  *
  * @class Print
  * @memberof plugins
@@ -485,5 +486,5 @@ module.exports = {
             doNotHide: true
         }
     }),
-    reducers: {print: require('../reducers/print')}
+    reducers: {print: require('../reducers/print').default}
 };

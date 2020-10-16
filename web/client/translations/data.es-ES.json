@@ -28,6 +28,10 @@
         "collapse": "Colapso",
         "expand": "Expandir",
         "Forbidden": "Prohibido",
+        "layerNameChangeError": {
+            "title": "Error de cambio de nombre",
+            "message": "La capa no se pudo recargar con un nombre cambiado"
+        },
         "version": {
             "label": "Versión"
         },
@@ -105,7 +109,9 @@
                 "right": "Derecha",
                 "left": "Izquierda",
                 "bottom": "Bottom",
-                "top": "Cima"
+                "top": "Cima",
+                "editLayerName": "Editar el nombre de la capa",
+                "confirmLayerName": "Confirmar cambio de nombre de capa"
             },
             "legendOptions": {
               "title": "Leyenda",
@@ -346,6 +352,7 @@
         },
         "resources": {
             "successSaved": "Este recurso se ha guardado correctamente",
+            "savingError": "Hubo un error al guardar el recurso",
             "deleteConfirmTitle": "¿Estás seguro?",
             "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
             "deleteConfirmButtonText": "Eliminar",
@@ -448,7 +455,9 @@
                 "delete": "Eliminar hoja de detalles",
                 "titleUnsavedChanges": "¿Estás seguro de cerrar sin guardar los cambios?",
                 "sureToClose": "¿Estás seguro de cerrar sin guardar los cambios?",
-                "fieldsChanged": "Algunos campos han sido modificados"
+                "fieldsChanged": "Algunos campos han sido modificados",
+                "showAtStartup": "Mostrar al inicio",
+                "showAsModal": "Mostrar como modal"
             },
             "errors": {
                 "loading": {
@@ -513,6 +522,14 @@
             "refreshMessage": "Recargue la configuración de las capas WMS a partir del servidor(es)",
             "refreshError": "Error actualizando las capas: ",
             "epsgNotSupported": "CRS {epsg} no es compatible con el zoom a la capa",
+            "compareTool": "Comparar herramienta",
+            "configureTool": "Configurar",
+            "spyconfiguration": "Configuración del catalejo",
+            "swipeconfiguration": "Configuración de deslizamiento",
+            "swipe": "Golpe fuerte",
+            "spyGlass": "Vidrio espía",
+            "direction": "Golpe fuerte dirección",
+            "radius": "Radio",
             "filterIconEnabled": "Deshabilitar filtro de capa",
             "filterIconDisabled": "Habilitar filtro de capa",
             "refreshOptions": {
@@ -693,10 +710,12 @@
             "newMeasure": "Nueva anotación",
             "selectTool": "Seleccione una herramienta de medición",
             "exportToGeoJSON": "Exportar a GeoJSON",
+            "saveMeasure": "Guarde las medidas en la anotación",
             "resetTooltip": "Medidas claras",
             "addAsLayer": "Agregar como capa"
         },
         "search":{
+            "layerMustBeVisible": "La capa de destino está inactiva",
             "decimal": "Decimal",
             "aeronautical": "Aeronáutica",
             "changeSearchInputField": "Cambiar la herramienta de búsqueda",
@@ -1048,10 +1067,11 @@
             "edit": "Editar",
             "remove": "Borrar",
             "save": "Guardar",
+            "saveGeometry": "Guardar geometría",
             "cancel": "Cancelar",
             "back": "Espalda",
             "applyStyle": "Aplicar estilo",
-            "addMarker": "Agrega una geometría",
+            "addGeometry": "Agrega una geometría",
             "styleGeometry": "Cambia estilo",
             "deleteGeometry": "Eliminar todas las geometrías de anotación",
             "removeannotation": "Desea eliminar la anotación con título: {title}?",
@@ -1059,8 +1079,22 @@
             "confirm": "Confirmar",
             "title": "Anotaciones",
             "mandatory": "Campo obligatorio",
-            "emptygeometry": "Geometría no puede estar vacía",
             "add": "Nueva",
+            "emptygeometry": "Agregue al menos una geometría válida",
+            "empty": "Aún no hay anotaciones, haga clic en [+] para agregar anotaciones",
+            "geometries": "Geometrías",
+            "enableEdit": "Habilitar editar",
+            "zoomTo": "Zoom a la anotación",
+            "zoomToGeometry": "Zoom a geometría",
+            "removeGeometry": "Eliminar",
+            "editMeasurement": "Editar medida",
+            "hide": "Ocultar anotación",
+            "show": "Mostrar anotación",
+            "tabCoordinates": "Coordenadas",
+            "warning": "¡Advertencia!",
+            "measureWarningText": "Navegar para editar el panel de medidas eliminará cualquier estilo aplicado",
+            "notShowAgain": "No volver a mostrar este mensaje",
+            "tabStyle": "Estilo",
             "filter": "Filtrar las anotaciones...",
             "titleUndoGeom": "La geometría ha cambiado",
             "undoGeom": "Estás seguro de salir sin guardar? (Perderá los cambios)",
@@ -1069,7 +1103,6 @@
             "deleteFeature": "Eliminar esta característica",
             "undoDeleteFeature": "Estás seguro de eliminar esta característica?",
             "undo": "Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
-            "zoomTo": "Zoom",
             "insertText": "Por favor inserte la anotación de texto",
             "downloadtooltip": "Descargar anotaciones",
             "downloadcurrenttooltip": "Descargar la anotación actual",
@@ -2074,7 +2107,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Clasificación",
             "ruleRaster": "Ráster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Este estilo no tiene reglas",
+            "incompleteClassification": "La clasificación es incompleta porque las entradas no están disponibles. Asegúrese de que todas las propiedades se proporcionan correctamente",
+            "emptyImageIconSymbolizer": "Falta la URL de la imagen en el estilo del icono",
+            "warningTextOrderTitle": "Advertencia",
+            "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
         },
         "playback": {
             "settings": {
@@ -2327,18 +2365,22 @@
                     "backConfirmNo": "No",
                     "backConfirmYes": "Si",
                     "save": "Guardar ajustes",
-                    "headerTitle": "Configuración de la historia",
+                    "storyTheme" : "Tema de la historia",
+                    "storyHeader" : "Encabezado de la historia",
                     "title": "Titulo",
                     "titlePlaceholder": "Ingrese título",
                     "logo": "Logo",
-                    "logoPlaceholder": "El logotipo no debe superar los 48 px de altura y se sugiere un ancho de 96 px. max 500kb",
+                    "logoPlaceholder": "Suelta la imagen de tu logotipo aquí o haz clic para seleccionar un archivo de imagen (los formatos admitidos son png y jpeg)",
                     "autoplay": "Auto-reproducción",
                     "enableAutoplay": "Habilitar reproducción automática",
                     "autoplayInterval": "Intervalo de reproducción automática (segundos)",
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
                     "showNavbar": "Mostrar barra de navegación",
-                    "theme": "Tema",
+                    "theme": "Tema predeterminado",
+                    "fontFamily": "Familia tipográfica",
+                    "webFontLoadError": "No se pudieron cargar algunas fuentes desde la configuración local",
+                    "fontSize": "Tamaño de fuente",
                     "overlay": "Cubrir",
                     "templateTooltip":"Esta configuración le permite habilitar la función Identificar en el mapa definiendo un formato genérico para todas las capas. Es posible configurar un formato diferente para cada nivel usando el editor de mapas avanzado (icono de lápiz). Para obtener más información, consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guía del usuario </a>. Si una capa ha definido su propio formato de identificación, se utilizará en lugar del genérico establecido en el nivel del mapa."
                 }

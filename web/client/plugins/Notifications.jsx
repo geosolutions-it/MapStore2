@@ -30,7 +30,7 @@ module.exports = {
         }
     )(require('../components/notifications/NotificationContainer')),
     reducers: {
-        notifications: require('../reducers/notifications')
+        notifications: require('../reducers/notifications').default
     },
     epics: {
         clearNotificationOnLocationChange

@@ -14,7 +14,8 @@ import inlineWidgets from './inlineWidgets';
 
 import {
     editStyleCode,
-    updateEditorMetadata
+    updateEditorMetadata,
+    errorStyle
 } from '../../actions/styleeditor';
 
 import {
@@ -115,7 +116,10 @@ const ConnectedVisualStyleEditor = connect(
                 ? styleService?.classificationMethods?.raster
                 : styleService?.classificationMethods?.vector) || methods
         })
-    )
+    ),
+    {
+        onError: errorStyle.bind(null, 'edit')
+    }
 )(VisualStyleEditor);
 
 ConnectedVisualStyleEditor.defaultProps = {

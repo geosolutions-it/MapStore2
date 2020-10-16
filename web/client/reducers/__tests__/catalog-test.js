@@ -5,7 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
+
 const emptyService = {
     title: "",
     type: "wms",
@@ -28,11 +29,34 @@ const serviceNew = {
     type,
     isNew: true
 };
-const catalog = require('../catalog');
-const {RECORD_LIST_LOADED, ADD_LAYER_ERROR, RESET_CATALOG, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, CHANGE_CATALOG_MODE,
-    FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, CHANGE_SERVICE_PROPERTY, DELETE_CATALOG_SERVICE, SAVING_SERVICE, CHANGE_METADATA_TEMPLATE, TOGGLE_THUMBNAIL, TOGGLE_TEMPLATE, TOGGLE_ADVANCED_SETTINGS,
-    addCatalogService, changeText, changeServiceFormat, setLoading} = require('../../actions/catalog');
-const {MAP_CONFIG_LOADED} = require('../../actions/config');
+import catalog from '../catalog';
+
+import {
+    RECORD_LIST_LOADED,
+    ADD_LAYER_ERROR,
+    RESET_CATALOG,
+    RECORD_LIST_LOAD_ERROR,
+    CHANGE_CATALOG_FORMAT,
+    CHANGE_CATALOG_MODE,
+    FOCUS_SERVICES_LIST,
+    CHANGE_TITLE,
+    CHANGE_URL,
+    CHANGE_TYPE,
+    CHANGE_SELECTED_SERVICE,
+    CHANGE_SERVICE_PROPERTY,
+    DELETE_CATALOG_SERVICE,
+    SAVING_SERVICE,
+    CHANGE_METADATA_TEMPLATE,
+    TOGGLE_THUMBNAIL,
+    TOGGLE_TEMPLATE,
+    TOGGLE_ADVANCED_SETTINGS,
+    addCatalogService,
+    changeText,
+    changeServiceFormat,
+    setLoading
+} from '../../actions/catalog';
+
+import { MAP_CONFIG_LOADED } from '../../actions/config';
 const sampleRecord = {
     boundingBox: {
         extent: [10.686,

@@ -122,6 +122,6 @@ module.exports = {
                 glyph: "1-group-mod"
             }}),
     reducers: {
-        usergroups: require('../../reducers/usergroups')
+        usergroups: require('../../reducers/usergroups').default
     }
 };

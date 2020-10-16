@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     queryPanelSelector,
     wfsDownloadAvailable,
     wfsDownloadSelector,
@@ -18,7 +19,7 @@ const {
     activeTabSettingsSelector,
     drawerEnabledControlSelector,
     showCoordinateEditorSelector
-} = require("../controls");
+} from '../controls';
 
 const state = {
     controls: {
