@@ -14,7 +14,6 @@ const ConfigUtils = require('../../../../utils/ConfigUtils');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const SearchBar = require('../SearchBar').default;
-import {getTotalMaxResults} from "../../../search/SearchBarUtils";
 
 const TestUtils = require('react-dom/test-utils');
 
@@ -532,36 +531,5 @@ describe("test the SearchBar", () => {
         expect(spyOnZoomToExtent).toHaveBeenCalled();
         expect(spyOnZoomToExtent.calls.length).toBe(1);
         expect(spyOnZoomToExtent.calls[0].arguments[0]).toEqual([ 5, 10, 20, 30 ]);
-    });
-
-    it('test the maxFeatures function', ()=> {
-        let services = [
-            {
-                priority: 5,
-                type: "nomination"
-            },
-            {
-                type: "wfs",
-                name: "Meteorites",
-                displayName: "${properties,name}",
-                options: {
-                    maxFeatures: 20,
-                    srsName: "EPSG:4326"
-                },
-                launchInfoPanel: "single_layer"
-            },
-            {
-                type: "wfs",
-                name: "Meteorites",
-                displayName: "${properties,name}",
-                options: {
-                    maxFeatures: undefined,
-                    srsName: "EPSG:4328"
-                },
-                launchInfoPanel: "single_layer"
-            }
-        ];
-
-        expect(getTotalMaxResults(services)).toEqual(50);
     });
 });
