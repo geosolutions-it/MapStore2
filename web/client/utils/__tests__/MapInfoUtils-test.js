@@ -258,6 +258,29 @@ describe('MapInfoUtils', () => {
         expect(req1.request.lat).toBe(43);
     });
 
+    it('buildIdentifyRequest works with properties field not defined in the layer object', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 25,
+                    lng: 0
+                }
+            }
+        };
+        let layer = {
+            type: "vector",
+            name: "layer",
+            features: [{}]
+        };
+        let req1 = buildIdentifyRequest(layer, props);
+        expect(req1.request).toExist();
+        expect(req1.request.lat).toBe(25);
+    });
+
     it('getViewer and setViewer test', () => {
         let props = {
             map: {
