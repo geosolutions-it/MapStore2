@@ -1671,7 +1671,8 @@
                 "noLegendDescription": "La carte connectée n'a aucune couche à afficher dans la légende",
                 "nodatainviewport": "Aucune donnée dans la fenêtre courante",
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
-                "genericError": "Erreur lors de la récupération des données"
+                "genericError": "Erreur lors de la récupération des données",
+                "genericErrorWithMessage": "Erreur lors de la récupération des données: \"{message}\""
             },
             "builder": {
                 "header": {
