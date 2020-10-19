@@ -8,7 +8,8 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const {Glyphicon, Tooltip} = require('react-bootstrap');
+const Button = require('../misc/Button').default;
 const OverlayTrigger = require('../misc/OverlayTrigger');
 
 class ZoomButton extends React.Component {

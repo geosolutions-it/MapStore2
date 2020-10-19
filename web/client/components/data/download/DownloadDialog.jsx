@@ -1,8 +1,9 @@
 const PropTypes = require('prop-types');
 const React = require('react');
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
+const Button = require('../../misc/Button').default;
 const Dialog = require('../../misc/Dialog');
 const Message = require('../../I18N/Message');
 const DownloadOptions = require('./DownloadOptions');

@@ -8,7 +8,8 @@ const PropTypes = require('prop-types');
  */
 
 var React = require('react');
-var {Button, Glyphicon, Tooltip} = require('react-bootstrap');
+var {Glyphicon, Tooltip} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 class RedoBtn extends React.Component {

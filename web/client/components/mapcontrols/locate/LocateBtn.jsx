@@ -8,8 +8,9 @@ const PropTypes = require('prop-types');
  */
 
 var React = require('react');
-var {Button, Glyphicon, Tooltip} = require('react-bootstrap');
+var {Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
+const Button = require('../../misc/Button').default;
 const defaultIcon = require('../../misc/spinners/InlineSpinner/img/spinner.gif');
 const Message = require('../../I18N/Message');
 require('./css/locate.css');

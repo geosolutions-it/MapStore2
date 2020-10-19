@@ -12,7 +12,8 @@ const assign = require('object-assign');
 const _ = require('lodash');
 const Select = require('react-select').default;
 const Spinner = require('react-spinkit');
-const {Table, Button, Glyphicon} = require('react-bootstrap');
+const {Table, Glyphicon} = require('react-bootstrap');
+const Button = require('../misc/Button').default;
 const Message = require('../I18N/Message');
 const LocaleUtils = require('../../utils/LocaleUtils');
 

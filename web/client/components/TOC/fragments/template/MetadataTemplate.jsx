@@ -8,9 +8,10 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 const {keys, isArray, isObject, isString} = require('lodash');
 const Message = require('../../../I18N/Message');
+const Button = require('../../../misc/Button').default;
 const {Table} = require('react-bootstrap');
 
 const LocaleUtils = require('../../../../utils/LocaleUtils');

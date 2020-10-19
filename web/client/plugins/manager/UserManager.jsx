@@ -8,10 +8,11 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const {connect} = require('react-redux');
-const {Button, Grid, Glyphicon} = require('react-bootstrap');
+const {Grid, Glyphicon} = require('react-bootstrap');
 const {editUser} = require('../../actions/users');
 const {getUsers, usersSearchTextChanged} = require('../../actions/users');
 const SearchBar = require("../../components/search/SearchBar").default;
+const Button = require('../../components/misc/Button').default;
 const UserGrid = require('./users/UserGrid');
 const UserDialog = require('./users/UserDialog');
 const UserDeleteConfirm = require('./users/UserDeleteConfirm');

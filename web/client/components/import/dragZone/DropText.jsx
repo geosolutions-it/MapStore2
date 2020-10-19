@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Button} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const Message = require('../../I18N/Message');
 const HTML = require('../../I18N/HTML');
 

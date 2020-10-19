@@ -8,7 +8,8 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {Alert, Tabs, Tab, Button, Glyphicon, Checkbox, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const {Alert, Tabs, Tab, Glyphicon, Checkbox, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const tooltip = require('../../../components/misc/enhancers/tooltip');
 const GlyphiconTooltip = tooltip(Glyphicon);
 const Dialog = require('../../../components/misc/Dialog');

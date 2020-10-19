@@ -15,7 +15,6 @@ const CoordinateEntry = require('./CoordinateEntry');
 const Message = require('../../I18N/Message');
 const {isEqual, isNumber} = require('lodash');
 const DropdownToolbarOptions = require('../toolbar/DropdownToolbarOptions');
-const OverlayTriggerCustom = require('../../misc/OverlayTriggerCustom').default;
 
 class CoordinatesRow extends React.Component {
     static propTypes = {
@@ -91,8 +90,7 @@ class CoordinatesRow extends React.Component {
                 glyph: 'trash',
                 onClick: () => {
                     this.props.onRemove(idx);
-                },
-                customOverlayTrigger: OverlayTriggerCustom
+                }
             },
             {
                 buttonConfig: {
@@ -120,8 +118,7 @@ class CoordinatesRow extends React.Component {
                 disabled: this.state.disabledApplyChange,
                 tooltipId: 'identifyCoordinateApplyChanges',
                 onClick: this.onSubmit,
-                visible: this.props.renderer !== "annotations",
-                customOverlayTrigger: OverlayTriggerCustom
+                visible: this.props.renderer !== "annotations"
             }
         ];
 

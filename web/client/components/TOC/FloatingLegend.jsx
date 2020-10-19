@@ -11,10 +11,11 @@ const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const {isEqual, delay} = require('lodash');
 
-const {Glyphicon, Panel, Grid, Row, Col, Button: ButtonB} = require('react-bootstrap');
+const {Glyphicon, Panel, Grid, Row, Col} = require('react-bootstrap');
 const {Resizable} = require('react-resizable');
 const ContainerDimensions = require('react-container-dimensions').default;
 const tooltip = require('../misc/enhancers/tooltip');
+const ButtonB = require('../misc/Button').default;
 const Button = tooltip(ButtonB);
 const SideGrid = require('../misc/cardgrids/SideGrid');
 const OpacitySlider = require('./fragments/OpacitySlider');

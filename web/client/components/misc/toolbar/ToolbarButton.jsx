@@ -10,7 +10,8 @@ const {compose} = require('recompose');
 const Message = require('../../I18N/Message');
 const { omit } = require('lodash');
 
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
+const Button = require('../Button').default;
 const Loader = require('../Loader');
 const tooltip = require('../enhancers/buttonTooltip');
 const popover = require('../enhancers/popover');

@@ -10,9 +10,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
-import {Grid, Button} from 'react-bootstrap';
+import {Grid} from 'react-bootstrap';
 import SearchBar from "../../components/search/SearchBar";
 import Message from '../../components/I18N/Message';
+import Button from '../../components/misc/Button';
 
 import {createPlugin} from '../../utils/PluginsUtils';
 import {userSelector} from '../../selectors/security';

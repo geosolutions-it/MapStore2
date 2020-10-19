@@ -1,5 +1,6 @@
 const React = require('react');
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
+const Button = require('../../../misc/Button').default;
 const hideStyle = {
     width: 0,
     padding: 0,

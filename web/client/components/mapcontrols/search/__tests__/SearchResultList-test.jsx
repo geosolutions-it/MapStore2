@@ -213,7 +213,7 @@ describe("test the SearchResultList", () => {
         expect(tb).toExist();
         const button = document.getElementById('open-gfi');
         expect(button).toExist();
-        expect(button.getAttribute('disabled')).toBe('');
+        expect(button.classList.contains('disabled')).toBe(true);
 
         TestUtils.Simulate.mouseOver(button);
 

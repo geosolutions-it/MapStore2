@@ -1,6 +1,7 @@
 const React = require('react');
 const Message = require('../../I18N/Message');
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const popoverTooltip = require('../../misc/enhancers/popover');
 const AlertIcon = popoverTooltip((props) => (<div className="square-button pull-right no-border" style={{display: 'flex'}} {...props}><Glyphicon glyph="exclamation-mark" className="text-danger"/></div>));
 

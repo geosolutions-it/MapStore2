@@ -8,8 +8,10 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 const {Document, Page} = require('react-pdf');
+
+const Button = require('../misc/Button').default;
 
 class PrintPreview extends React.Component {
     static propTypes = {

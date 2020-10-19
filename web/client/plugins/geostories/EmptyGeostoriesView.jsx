@@ -10,9 +10,9 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
-const { Button } = require('react-bootstrap');
 const { isLoggedIn } = require('../../selectors/security');
 
+const Button = require('../../components/misc/Button').default;
 const Message = require('../../components/I18N/Message');
 
 class EmptyGeostories extends React.Component {

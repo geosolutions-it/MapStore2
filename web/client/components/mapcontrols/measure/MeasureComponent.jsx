@@ -19,7 +19,6 @@ const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUt
 const {convertMeasuresToGeoJSON} = require('../../../utils/MeasurementUtils');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
-const OverlayTriggerCustom = require('../../misc/OverlayTriggerCustom').default;
 const BorderLayout = require('../../layout/BorderLayout');
 const CoordinatesEditor = require('../annotations/CoordinatesEditor');
 require('./measure.css');
@@ -369,8 +368,7 @@ class MeasureComponent extends React.Component {
                                                 this.props.measurement.features,
                                                 this.props.measurement.textLabels,
                                                 this.props.uom
-                                            ),
-                                            customOverlayTrigger: OverlayTriggerCustom
+                                            )
                                         },
                                         {
                                             glyph: exportToAnnotation ? 'floppy-disk' : 'comment',

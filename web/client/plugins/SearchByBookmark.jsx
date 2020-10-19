@@ -10,13 +10,14 @@ import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
 
 import { createSelector } from 'reselect';
-import {Glyphicon, Button, MenuItem} from 'react-bootstrap';
+import {Glyphicon, MenuItem} from 'react-bootstrap';
 import { get, isNil } from 'lodash';
 
 import { createPlugin } from '../utils/PluginsUtils';
 import {getExtentFromViewport} from "../utils/CoordinatesUtils";
 import ConfirmButton from '../components/buttons/ConfirmButton';
 import Dialog from '../components/misc/Dialog';
+import Button from '../components/misc/Button';
 import Message from './locale/Message';
 import BookmarkList from '../components/mapcontrols/searchbookmarkconfig/BookmarkList';
 import AddNewBookmark from '../components/mapcontrols/searchbookmarkconfig/AddNewBookmark';

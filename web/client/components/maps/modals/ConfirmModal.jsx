@@ -8,8 +8,8 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Button} = require('react-bootstrap');
 const Modal = require('../../misc/Modal');
+const Button = require('../../misc/Button').default;
 const Spinner = require('react-spinkit');
 
 /**

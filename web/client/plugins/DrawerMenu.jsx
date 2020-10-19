@@ -17,7 +17,7 @@ const {toggleControl, setControlProperty} = require('../actions/controls');
 
 const {changeMapStyle} = require('../actions/map');
 
-const {Button: ButtonB, Glyphicon, Panel} = require('react-bootstrap');
+const {Glyphicon, Panel} = require('react-bootstrap');
 
 const Section = require('./drawer/Section');
 
@@ -26,6 +26,7 @@ const {partialRight} = require('lodash');
 const assign = require('object-assign');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const ButtonB = require('../components/misc/Button').default;
 const tooltip = require('../components/misc/enhancers/tooltip');
 const Button = tooltip(ButtonB);
 

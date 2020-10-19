@@ -8,7 +8,8 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
-const {Glyphicon, Button} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
+const Button = require('../components/misc/Button').default;
 const ConfirmButton = require('../components/buttons/ConfirmButton');
 const Dialog = require('../components//misc/Dialog');
 const Portal = require('../components/misc/Portal');

@@ -10,9 +10,9 @@ const {connect} = require('react-redux');
 const {compose} = require('recompose');
 const {createSelector} = require('reselect');
 const {push} = require('connected-react-router');
-const {Button} = require('react-bootstrap');
 const {get} = require('lodash');
 
+const Button = require('../components/misc/Button').default;
 const withMask = require('../components/misc/enhancers/withMask');
 const {isLoggedIn} = require('../selectors/security');
 const Message = require('../components/I18N/Message');

@@ -9,8 +9,10 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {connect} = require('react-redux');
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 const {toggleControl} = require('../../actions/controls');
+
+const Button = require('../../components/misc/Button').default;
 
 class ToggleButton extends React.Component {
     static propTypes = {

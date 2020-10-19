@@ -7,7 +7,8 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Button} = require('react-bootstrap');
+
+const Button = require('../misc/Button').default;
 
 class LinkToPage extends React.Component {
     static propTypes = {

@@ -45,7 +45,8 @@ import { createPlugin } from '../utils/PluginsUtils';
 import tooltip from '../components/misc/enhancers/tooltip';
 import { withRouter } from 'react-router';
 import { removeQueryFromUrl } from '../utils/ShareUtils';
-import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
+import ButtonRB from '../components/misc/Button';
 const Button = tooltip(ButtonRB);
 
 const EditButton = connect(

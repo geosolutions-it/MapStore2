@@ -9,8 +9,9 @@ const { isNil, has, omit } = require("lodash");
 const assign = require("object-assign");
 const PropTypes = require("prop-types");
 const React = require("react");
-const { FormControl, FormGroup, Alert, Pagination, Button, Panel, Form, InputGroup, ControlLabel, Glyphicon } = require("react-bootstrap");
+const { FormControl, FormGroup, Alert, Pagination, Panel, Form, InputGroup, ControlLabel, Glyphicon } = require("react-bootstrap");
 
+const Button = require('../misc/Button').default;
 const Select = require("react-select").default;
 
 const BorderLayout = require("../layout/BorderLayout");

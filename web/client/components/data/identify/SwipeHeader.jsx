@@ -9,7 +9,9 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 
-const {Glyphicon, Button} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
+
+const Button = require('../../misc/Button').default;
 
 class SwipeHeader extends React.Component {
     static propTypes = {

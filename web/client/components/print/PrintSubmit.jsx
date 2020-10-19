@@ -9,9 +9,10 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
+const Button = require('../misc/Button').default;
 const Message = require('../I18N/Message');
 
 class PrintSubmit extends React.Component {

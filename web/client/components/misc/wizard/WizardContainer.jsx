@@ -7,7 +7,8 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Button, Row} = require('react-bootstrap');
+const {Row} = require('react-bootstrap');
+const Button = require('../Button').default;
 const Message = require('../../I18N/Message');
 
 /**

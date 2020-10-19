@@ -8,7 +8,8 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const Select = require('react-select').default;
-const {FormControl, Button, Alert} = require('react-bootstrap');
+const {FormControl, Alert} = require('react-bootstrap');
+const Button = require('../../misc/Button').default;
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 

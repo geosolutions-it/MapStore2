@@ -7,9 +7,10 @@
  */
 const React = require('react');
 const Dropzone = require('react-dropzone');
-const { Button: RButton, Glyphicon } = require('react-bootstrap');
+const { Glyphicon } = require('react-bootstrap');
 
 const tooltip = require('../../misc/enhancers/tooltip');
+const RButton = require('../../misc/Button').default;
 const Button = tooltip(RButton);
 module.exports = ({
     accept,

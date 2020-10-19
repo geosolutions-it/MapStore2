@@ -9,11 +9,12 @@
 const PropTypes = require('prop-types');
 
 const React = require('react');
-const {Button, Glyphicon, Alert} = require('react-bootstrap');
+const {Glyphicon, Alert} = require('react-bootstrap');
 
 const Dialog = require('../../misc/Dialog');
 const Portal = require('../../misc/Portal');
 const Message = require('../../I18N/Message');
+const Button = require('../../misc/Button').default;
 
 const Spinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
 
