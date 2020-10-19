@@ -1955,6 +1955,38 @@ describe('featuregrid Epics', () => {
             }]
         }, done);
     });
+    it('featureGridUpdateFilter initiates query when geometry filter is disabled after feature grid opens', done => {
+        const startActions = [openFeatureGrid(), createQuery(), updateFilter({
+            type: 'geometry',
+            enabled: false
+        })];
+
+        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_QUERY);
+            expect(actions[0].reason).toBe('geometry');
+        }, {
+            featuregrid: {
+                selectedLayer: 'layer',
+                filters: {
+                    geom: {
+                        attribute: 'geom',
+                        enabled: true,
+                        type: 'geometry',
+                        value: {
+                            attribute: 'geom',
+                            method: 'Circle',
+                            operation: 'INTERSECTS'
+                        }
+                    }
+                }
+            },
+            layers: [{
+                id: 'layer',
+                name: 'layer'
+            }]
+        }, done);
+    });
     it('activateTemporaryChangesEpic', (done) => {
         const startActions = [activateTemporaryChanges(true)];
         testEpic(activateTemporaryChangesEpic, 2, startActions, actions => {
