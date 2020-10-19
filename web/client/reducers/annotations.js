@@ -59,7 +59,8 @@ import {
     FILTER_MARKER,
     HIDE_MEASURE_WARNING,
     TOGGLE_SHOW_AGAIN,
-    INIT_PLUGIN
+    INIT_PLUGIN,
+    UNSELECT_FEATURE
 } from '../actions/annotations';
 
 import {
@@ -361,6 +362,24 @@ function annotations(state = {validationErrors: {}}, action) {
                 ...newState.editing,
                 features
             },
+            drawing: false,
+            coordinateEditorEnabled: false,
+            unsavedGeometry: false,
+            selected: null,
+            showUnsavedGeometryModal: false
+        });
+    }
+    case UNSELECT_FEATURE: {
+        let editing = state.editing;
+        const selected = state.selected;
+        const ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === selected.properties.id);
+        const selectedGeoJSON = editing.features[ftChangedIndex];
+        const styleChanged = castArray(selectedGeoJSON.style).map(s => ({...s, highlight: false}));
+        editing = set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing);
+        let newState = set(`editing.features`, editing.features.map(f => {
+            return set("properties.canEdit", false, f);
+        }), state);
+        return assign({}, newState, {
             drawing: false,
             coordinateEditorEnabled: false,
             unsavedGeometry: false,

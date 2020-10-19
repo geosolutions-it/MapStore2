@@ -62,6 +62,7 @@ export const FILTER_MARKER = 'ANNOTATIONS:FILTER_MARKER';
 export const HIDE_MEASURE_WARNING = 'ANNOTATIONS:HIDE_MEASURE_WARNING';
 export const TOGGLE_SHOW_AGAIN = 'ANNOTATIONS:TOGGLE_SHOW_AGAIN';
 export const GEOMETRY_HIGHLIGHT = 'ANNOTATIONS:GEOMETRY_HIGHLIGHT';
+export const UNSELECT_FEATURE = 'ANNOTATIONS:UNSELECT_FEATURE';
 
 export const initPlugin = () => ({
     type: INIT_PLUGIN
@@ -347,6 +348,11 @@ export const toggleUnsavedStyleModal = () => {
 export const resetCoordEditor = () => {
     return {
         type: RESET_COORD_EDITOR
+    };
+};
+export const unSelectFeature = () => {
+    return {
+        type: UNSELECT_FEATURE
     };
 };
 export const changeRadius = (radius, components, crs) => {
