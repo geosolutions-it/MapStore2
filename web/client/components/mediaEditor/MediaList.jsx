@@ -108,6 +108,7 @@ export default compose(
         emptyMessageId,
         filterPlaceholderMessageId
     } = mediaOptions[mediaType] || {};
+    const initialLoading = resources.length === 0 && loading;
     return (
         <div style={{ position: 'relative' }} className="ms-media-list">
             {
@@ -131,7 +132,8 @@ export default compose(
                     handleLoadResources({ page: 1, q: newFilterText });
                 }}
             />
-            {resources.length > 0 && (
+            {resources.length > 0
+            ? (
                 <SideList
                     loading={loading}
                     scrollOptions={{
@@ -160,18 +162,21 @@ export default compose(
                     onLoadMore={(newPage) => {
                         handleLoadResources({ page: newPage + 1 });
                     }}
-                />) || (
+                />
+            )
+            : !initialLoading &&
                 <div className="msEmptyListMessage">
                     <HTML msgId={emptyMessageId} />
-                </div>)}
+                </div>}
             <div className="ms-media-list-pagination">
                 <div>
                     {(resources.length && totalCount)
-                        && <span>{resources.length} of {totalCount}</span>}
+                        ? <HTML msgId="mediaEditor.mediaList.resultsCount" msgParams={{ count: resources.length, total: totalCount }}/>
+                        : null}
                 </div>
                 {loading && <Loader size={20} />}
             </div>
-            {loadingSelected &&
+            {(loadingSelected || initialLoading) &&
                 <div className="ms-media-list-loading">
                     <Loader size={70} />
                 </div>}

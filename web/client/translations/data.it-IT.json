@@ -2494,7 +2494,8 @@
             "mediaList" : {
                 "removeResourceTitle": "Sei sicuro?",
                 "confirmRemoveResource": "Vuoi rimuovere questa risorsa multimediale dalla storia?",
-                "confirmRemoveUsedResource": "Questa risorsa sarà rimossa anche da tutte le sezioni/contenuti che rimarrano vuoti. La vuoi rimuovere dalla storia?"
+                "confirmRemoveUsedResource": "Questa risorsa sarà rimossa anche da tutte le sezioni/contenuti che rimarrano vuoti. La vuoi rimuovere dalla storia?",
+                "resultsCount": "{count} di {total} {total, plural, one {Risultato} other {Risultati}}"
             },
             "imageList": {
                 "emptyList": "Premere il pulsante più per aggiungere una nuova immagine. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>questa</a> guida"

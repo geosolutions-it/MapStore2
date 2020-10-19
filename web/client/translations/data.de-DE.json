@@ -2493,7 +2493,8 @@
             "mediaList" : {
                 "removeResourceTitle": "Bist du sicher?",
                 "confirmRemoveResource": "Möchten Sie diese Medienressource aus der Story entfernen?",
-                "confirmRemoveUsedResource": "Diese Ressource wird auch aus allen Abschnitten / Inhalten entfernt, in denen sie verwendet wird und sie bleiben leer. Möchten Sie es aus der Geschichte entfernen?"
+                "confirmRemoveUsedResource": "Diese Ressource wird auch aus allen Abschnitten / Inhalten entfernt, in denen sie verwendet wird und sie bleiben leer. Möchten Sie es aus der Geschichte entfernen?",
+                "resultsCount": "{count} von {total} {total, plural, one {Ergebnis} other {Ergebnisse}}"
             },
             "imageList": {
                 "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Bild hinzuzufügen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> hier </a>"
