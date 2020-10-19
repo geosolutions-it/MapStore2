@@ -64,7 +64,7 @@ export const load = (store, { params }) => {
 export const remove = () => Observable.empty();
 
 export const getData = (store, { selectedItem }) => {
-    if (selectedItem.type === 'map' && selectedItem.data.id) {
+    if (selectedItem && selectedItem.type === 'map' && selectedItem.data && selectedItem.data.id) {
         return getResource(selectedItem.data.id)
             .switchMap(({
                 id,

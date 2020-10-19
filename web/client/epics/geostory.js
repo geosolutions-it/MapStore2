@@ -119,8 +119,11 @@ const updateMediaSection = (store, path) => action$ =>
             } else if (isEmpty(resource)) {
                 actions = [...actions, remove(`${path}`), hide()];
             }  else {
-            // if the resource is new, add it to the story resources list
-                resourceId = uuid();
+                // if the resource is new, add it to the story resources list
+                // if the media editor provides an id for the new resource we should use it
+                // to fit the requirement of a specific service
+                resourceId = resource.id || uuid();
+                console.log(resource.id || uuid());
                 actions = [...actions, addResource(resourceId, mediaType, resource.data ? resource.data : resource)];
             }
             let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
