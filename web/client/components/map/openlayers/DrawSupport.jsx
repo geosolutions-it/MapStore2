@@ -125,7 +125,7 @@ export default class DrawSupport extends React.Component {
         if (!newProps.drawStatus && this.selectInteraction) {
             this.selectInteraction.getFeatures().clear();
         }
-        if ( this.props.drawStatus !== newProps.drawStatus || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features || this.props.drawStatus === "simpleDrag" || newProps.drawStatus === "simpleDrag") {
+        if ( this.props.drawStatus !== newProps.drawStatus || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features || this.props.drawStatus === "simpleDrag") {
             switch (newProps.drawStatus) {
             case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
             case "start":/* only starts draw*/ this.addInteractions(newProps); break;
@@ -730,8 +730,9 @@ export default class DrawSupport extends React.Component {
     };
 
     addSimpleDragOperation = (props) => {
-        this.translate = new Translate();
-        this.translate.on("translateend", (e) => {
+        this.clean();
+        this.translateInteraction = new Translate();
+        this.translateInteraction.on("translateend", (e) => {
             const featureId = e.features.getArray()[0].id_;
             const coordinates = e.features.getArray()[0].getGeometry().getCoordinates();
             const latlng = toLonLat(coordinates, props.map.getView().getProjection().getCode());
@@ -745,7 +746,7 @@ export default class DrawSupport extends React.Component {
             });
         });
 
-        this.props.map.addInteraction(this.translate);
+        this.props.map.addInteraction(this.translateInteraction);
     };
 
     addInteractions = (newProps) => {
