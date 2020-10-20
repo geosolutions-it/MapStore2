@@ -103,6 +103,12 @@ export default class PopupSupport extends React.Component {
             !!popup && map.removeOverlay(popup);
         });
 
+        // Clean out any invisible overlays in the DOM
+        if (popups.length === 0) {
+            const overlays = map.getOverlays();
+            overlays.forEach(overlay => map.removeOverlay(overlay));
+        }
+
         this._popups = popups.map((options) => {
             const margin = 20;
             const maxMapWidth = Math.round(size[0] * 0.9) - margin * 2;
