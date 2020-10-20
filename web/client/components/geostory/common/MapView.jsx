@@ -12,7 +12,7 @@ import onMapViewChanges from '../../map/enhancers/onMapViewChanges';
 import { compose } from 'recompose';
 import { handlingUnsupportedProjection } from '../../map/enhancers/handlingUnsupportedProjection';
 import {withOnClick, withPopupSupport} from './enhancers/withIdentifyPopup';
-import {  withoutLocationLayer, withLocationLayer, withLocationClickInEdit, withLocationClick } from './enhancers/withLocationLayer';
+import {  withoutLocationLayer, withLocationLayer, withLocationClickInEdit } from './enhancers/withLocationLayer';
 import BaseMap from '../../map/BaseMap';
 
 export default compose(
@@ -21,7 +21,6 @@ export default compose(
     mapType,
     withoutLocationLayer,
     withLocationLayer,
-    withLocationClick,
     withLocationClickInEdit,
     withPopupSupport,
     withOnClick,

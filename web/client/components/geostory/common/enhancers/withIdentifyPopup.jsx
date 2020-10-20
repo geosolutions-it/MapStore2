@@ -10,9 +10,12 @@ import {compose, branch, withStateHandlers, withPropsOnChange, mapPropsStream, c
 import {Observable} from 'rxjs';
 import { isEqual} from 'lodash';
 import uuidv1 from 'uuid/v1';
+import buffer from 'turf-buffer';
+import intersect from 'turf-intersect';
 import MapInfoViewer from '../MapInfoViewer';
 import {getFeatureInfo} from '../../../../api/identify';
 
+import { getLayer } from '../../../../utils/LayersUtils';
 import {
     getAvailableInfoFormatValues,
     getDefaultInfoFormatValue,
@@ -21,6 +24,59 @@ import {
     filterRequestParams,
     getValidator
 } from '../../../../utils/MapInfoUtils';
+
+/**
+* Gets the feature that was clicked on a map layer
+* @param {array} layers the layers from which the required layer(layerId) can be filtered from
+* @param {string} layerId the id of the layer to which the clicked feature belongs
+* @param {object} options buildIndentifyRequest options
+*/
+const getIntersectingFeature = (layers, layerId, options) => {
+    const locationsLayer = getLayer(layerId, layers);
+
+    const identifyRequest = buildIdentifyRequest(locationsLayer, {...options});
+    const { metadata } = identifyRequest;
+
+    const cpoint = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "Point",
+            "coordinates": [options.point.latlng.lng, options.point.latlng.lat]
+        }
+    };
+
+    let unit = metadata && metadata.units;
+    switch (unit) {
+    case "m":
+        unit = "meters";
+        break;
+    case "deg":
+        unit = "degrees";
+        break;
+    case "mi":
+        unit = "miles";
+        break;
+    default:
+        unit = "meters";
+    }
+
+    const resolution = metadata && metadata.resolution || 1;
+    const bufferedPoint = buffer(cpoint, (metadata.buffer || 1) * resolution, unit);
+
+    const intersectingFeature = locationsLayer.features[0].features.filter(
+        (feature) => {
+            const buff = buffer(feature, 1, "meters");
+            const intersection = intersect(bufferedPoint, buff);
+            if (intersection) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    return intersectingFeature;
+};
 
 // verify if 'application/json' is available if not use default
 export const getDefaultInfoFormat = () => {
@@ -36,7 +92,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
     return loadFeatureInfo$.withLatestFrom(props$
         .map(({map, layers, options}) => ({map, layers, options}))
         .distinctUntilChanged((a, b ) => isEqual(a, b)))
-        .switchMap(([{point}, {map, layers = [], options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}]) => {
+        .switchMap(([{point, locData}, {map, layers = [], options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}]) => {
             const queryableLayers = layers.filter(defaultQueryableFilter);
 
             const excludeParams = ["SLD_BODY"];
@@ -91,6 +147,12 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                             request: param
                         }));
                 }).scan(({requests, responses, validResponses}, action) => {
+                    if (locData.validResponses) {
+                        return {
+                            requests: locData.requests,
+                            validResponses: locData.validResponses,
+                            responses: locData.responses};
+                    }
                     if (action.start) {
                         const {reqId, request} = action;
                         return {requests: requests.concat({ reqId, request }), responses, validResponses};
@@ -115,13 +177,55 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
 /**
  * Add identify popup support to base map and throws mapInfo requests
  */
-export const  withPopupSupport =  branch(({map: {mapInfoControl = false} = {}}) => mapInfoControl,
+export const  withPopupSupport =  branch(({editMap, map: {mapInfoControl = false, mapLocationsEnabled = false} = {}}) => mapInfoControl || (mapLocationsEnabled && !editMap),
     compose(
         withIdentifyRequest,
         withStateHandlers(({'popups': []}), {
-            onClick: (_state, {getFeatureInfoHandler = () => {}}) => ({rawPos: coordinates = [], ...point}, layerInfo) =>  {
-                getFeatureInfoHandler({point, layerInfo});
-                return {popups: [{ position: {  coordinates}, id: uuidv1() }]};
+            onClick: (_state, {map, layers, getFeatureInfoHandler = () => {}}) => ({rawPos: coordinates = [], ...point}, layerInfo) =>  {
+                let locData = {};
+                if (layerInfo === "locations") {
+                    const options = {
+                        map,
+                        point
+                    };
+
+                    const intersectingFeature = getIntersectingFeature(layers, "locations", options);
+
+                    if (intersectingFeature[0]) {
+                        const responses = [
+                            {
+                                format: "HTML",
+                                layerMetadata: {
+                                    featureInfo: {},
+                                    features: [],
+                                    featuresCrs: map.projection,
+                                    title: "Locations",
+                                    viewer: {}
+                                },
+                                queryParams: {
+                                    lat: point.latlng.lat,
+                                    lng: point.latlng.lng
+                                },
+                                response: `<body><p>${intersectingFeature[0]?.properties?.html}</p></body>`
+                            }
+                        ];
+                        const requests = [{}];
+                        const validator = getValidator("HTML");
+                        const validResponses = validator.getValidResponses(responses, true);
+                        locData = {
+                            requests,
+                            responses,
+                            validResponses
+                        };
+                    }
+                    getFeatureInfoHandler({point, layerInfo, locData});
+                    return {popups: [{ position: {  coordinates }, id: uuidv1() }]};
+                }
+
+                if (map.mapInfoControl) {
+                    getFeatureInfoHandler({point, layerInfo, locData});
+                    return {popups: [{ position: {  coordinates }, id: uuidv1() }]};
+                }
             },
             onPopupClose: () => () => ({popups: []})
         }),
