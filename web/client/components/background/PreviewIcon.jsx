@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {indexOf, has} = require('lodash');
+const {indexOf, has, includes} = require('lodash');
 require('./css/previewicon.css');
 
 class PreviewIcon extends React.Component {
@@ -46,7 +46,7 @@ class PreviewIcon extends React.Component {
         const compatibleWmts = this.props.layer.type === "wmts" && has(this.props.layer.allowedSRS, this.props.projection);
         const containerClass = this.props.vertical ? 'background-preview-icon-container-vertical' : 'background-preview-icon-container-horizontal';
         const type = this.props.layer.visibility ? ' bg-primary' : ' bg-body';
-        const valid = ((validCrs || compatibleWmts || ["wms", "empty", "osm"].includes(this.props.layer.type)) && !this.props.layer.invalid );
+        const valid = ((validCrs || compatibleWmts || includes(["wms", "empty", "osm"], this.props.layer.type)) && !this.props.layer.invalid );
 
         const click = !valid ? () => {} : () => {
             this.props.onToggle();

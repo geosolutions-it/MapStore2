@@ -57,7 +57,7 @@ describe("test the PreviewIcon", () => {
         const spyLayerChange = expect.spyOn(actions, 'onLayerChange');
         const spySetCurrentBackgroundLayer = expect.spyOn(actions, 'setCurrentBackgroundLayer');
 
-        layers.map((layer, i)=>{
+        layers.forEach((layer, i)=>{
             const previewIcon = ReactDOM.render(<PreviewIcon onPropertiesChange={actions.onPropertiesChange} onToggle={actions.onToggle} onLayerChange={actions.onLayerChange} setCurrentBackgroundLayer={actions.setCurrentBackgroundLayer} vertical layer={layer}/>, document.getElementById("container"));
             expect(previewIcon).toExist();
             const node = ReactDOM.findDOMNode(previewIcon);
