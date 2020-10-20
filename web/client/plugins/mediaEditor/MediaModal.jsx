@@ -90,7 +90,8 @@ const Editor = connect(createStructuredSelector({
     selectedItem: selectedItemSelector,
     selectedService: sourceIdSelector,
     services: availableSourcesSelector,
-    editing: editingSelector
+    editing: editingSelector,
+    saveState: saveStateSelector
 }), {
     setMediaService,
     setMediaType
