@@ -102,29 +102,11 @@ With groups there's the possibility to:
 
 ## Toolbar options
 
-Once a layer is selected the following toolbar appears: 
-
-<img src="../img/toc/layer-toolbar.jpg" class="ms-docimage"/>
-
-Through this toolbar it is possible to:
-
-* **Zoom to selected layer extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>
-
-* Access the selected [Layer Settings](layer-settings.md) <img src="../img/button/properties.jpg" class="ms-docbutton"/>
-
-* [Set a Filter](filtering-layers.md) for that layer <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/>
-
-* Access the [Attribute Table](attributes-table.md) <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/>
-
-* **Remove** the selected layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
-
-* [Create Widgets](widgets.md) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
-
-Selecting a group the toolbar is the following:
+Once a group is selected the following toolbar appears: 
 
 <img src="../img/toc/group-toolbar.jpg" class="ms-docimage"/>
 
-In this case the user is allowed to:
+Through this toolbar it is possible to:
 
 * **Add layer to selected group** <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/>
 
@@ -142,4 +124,36 @@ Once the changes have been made, it's possible to save them through the **Save**
 
 !!! note
     Information such modified will be persisted only within the current user session. In order to make thiese kind of changes persistent also for other user session, the whole map context needs to be saved.
+
+Selecting a layer the toolbar is the following:
+
+<img src="../img/toc/layer-toolbar.jpg" class="ms-docimage"/>
+
+In this case the user is allowed to:
+
+* **Zoom to selected layer extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>
+
+* Access the selected [Layer Settings](layer-settings.md) <img src="../img/button/properties.jpg" class="ms-docbutton"/>
+
+* [Set a Filter](filtering-layers.md) for that layer <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/>
+
+* Access the [Attribute Table](attributes-table.md) <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/>
+
+* **Remove** the selected layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+
+* [Create Widgets](widgets.md) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
+
+* Access the **Compare tool** where it is possible *Swipe* or *Spy* the selected layer <img src="../img/button/compare_tool_button.jpg" class="ms-docbutton"/>. 
+
+From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> by clicking on <img src="../img/button/swipe_button.jpg" class="ms-docbutton" style="max-height:25px;"/> button a draggable handle appears on the map to swipe the selected layer. 
+
+<img src="../img/toc/swipe_on_map.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+Once the Swipe is active, also on the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/>, by clicking on <img src="../img/button/configure_button.jpg" class="ms-docbutton" style="max-height:25px;"/> button the editor can change the direction of the swipe from *Vertical* to *Horizontal*.
+
+The user can also activated the <img src="../img/button/spy_button.jpg" class="ms-docbutton" style="max-height:25px;"/> from the same dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> and spy on the layer with the spy glass.
+
+<img src="../img/toc/spy_on_map.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+If the *Spy glass* is active from the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> by clicking on <img src="../img/button/configure_button.jpg" class="ms-docbutton" style="max-height:25px;"/> button, it is possible to change the size of the spy glass (`radius`). 
 
