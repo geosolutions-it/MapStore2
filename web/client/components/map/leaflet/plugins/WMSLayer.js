@@ -8,7 +8,6 @@
 const React = require('react');
 const Message = require('../../../../components/I18N/Message');
 const Layers = require('../../../../utils/leaflet/Layers');
-const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
 
 const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
@@ -174,8 +173,6 @@ function wmsToLeafletOptions(options) {
         opacity: opacity,
         zIndex: options.zIndex,
         version: options.version || "1.3.0",
-        SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
-        CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         tileSize: options.tileSize || 256,
         maxZoom: options.maxZoom || 23,
         maxNativeZoom: options.maxNativeZoom || 18
