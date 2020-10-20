@@ -93,8 +93,8 @@ export default (state = DEFAULT_STATE, action) => {
             set('saveState.editing', false),
             set('settings', {
                 ...(state.stashedSettings || DEFAULT_STATE.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED
-                ...(state.settings.mediaType && { mediaType: state.settings.mediaType }) // restore the latest selected media type
-            }), 
+                ...(state.settings?.mediaType && { mediaType: state.settings.mediaType }) // restore the latest selected media type
+            }),
             set('stashedSettings', undefined),
             unset('selected')
         )(state);

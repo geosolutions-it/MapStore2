@@ -64,15 +64,13 @@ export const edit = (mediaType, source, data, store) => {
     ).map(() => ({id, mediaType, data, source}));
 };
     /**
-     * load data for every media type
+     * load data for selected media type
      * @returns {Observable} a stream that emits an array of object with the following shape:
      * ```json
-     * [{
-     *     "resources": [{id, type, data}],
-     *     "sourceId": geostory,
-     *     "mediaType": image | map,
-     *     "totalCount": 1
-     * }]
+     * {
+     *     "resources": [{ id, type, data }],
+     *     "totalCount": 1,
+     * }
      * ```
      */
 export const load = (store, { mediaType, params }) => {

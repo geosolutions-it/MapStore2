@@ -52,6 +52,6 @@ const withDebounceOnCallback = (propCallbackKey, propKey) => (Component) => {
     };
     WithDebounceOnCallback.displayName = Component.displayName + 'WithDebounceOnCallback';
     return WithDebounceOnCallback;
-}
+};
 
 export default withDebounceOnCallback;

@@ -133,45 +133,45 @@ export default compose(
                 }}
             />
             {resources.length > 0
-            ? (
-                <SideList
-                    loading={loading}
-                    scrollOptions={{
-                        pageSize: params.pageSize
-                    }}
-                    items={resources.map(({ id, data = {} }) => ({
-                        preview: (data.thumbnail || mediaType === MediaTypes.IMAGE && data.src)
-                            ? <div
-                                style={{
-                                    backgroundImage: `url("${data.thumbnail || data.src}")`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    height: '100%',
-                                    overflow: 'hidden'
-                                }} />
-                            : <Icon
-                                glyph={glyph}
-                                padding={20}
-                            />,
-                        title: data.title || data.name,
-                        onClick: () => selectItem(id),
-                        selected: selectedItem && selectedItem.id && id === selectedItem.id,
-                        description: data.description
-                    }))}
-                    hasMore={() => totalCount > resources.length}
-                    onLoadMore={(newPage) => {
-                        handleLoadResources({ page: newPage + 1 });
-                    }}
-                />
-            )
-            : !initialLoading &&
+                ? (
+                    <SideList
+                        loading={loading}
+                        scrollOptions={{
+                            pageSize: params.pageSize
+                        }}
+                        items={resources.map(({ id, data = {} }) => ({
+                            preview: (data.thumbnail || mediaType === MediaTypes.IMAGE && data.src)
+                                ? <div
+                                    style={{
+                                        backgroundImage: `url("${data.thumbnail || data.src}")`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        height: '100%',
+                                        overflow: 'hidden'
+                                    }} />
+                                : <Icon
+                                    glyph={glyph}
+                                    padding={20}
+                                />,
+                            title: data.title || data.name,
+                            onClick: () => selectItem(id),
+                            selected: selectedItem && selectedItem.id && id === selectedItem.id,
+                            description: data.description
+                        }))}
+                        hasMore={() => totalCount > resources.length}
+                        onLoadMore={(newPage) => {
+                            handleLoadResources({ page: newPage + 1 });
+                        }}
+                    />
+                )
+                : !initialLoading &&
                 <div className="msEmptyListMessage">
                     <HTML msgId={emptyMessageId} />
                 </div>}
             <div className="ms-media-list-pagination">
                 <div>
                     {(resources.length && totalCount)
-                        ? <HTML msgId="mediaEditor.mediaList.resultsCount" msgParams={{ count: resources.length, total: totalCount }}/>
+                        ? <HTML msgId="mediaEditor.mediaList.resultsCount" msgParams={{ count: resources.length, total: totalCount }} />
                         : null}
                 </div>
                 {loading && <Loader size={20} />}

@@ -187,7 +187,7 @@ export const importInLocalSource = (action$, store) =>
                     return Observable.of(
                         setMediaService(sourceId),
                         saveMediaSuccess({mediaType: resource.type, source: sources[sourceId], data: resource, id}),
-                        loadMedia(undefined, resource.type, sources[sourceId]),
+                        loadMedia(undefined, resource.type, sourceId),
                         selectItem(id)
                     );
                 });
@@ -211,7 +211,7 @@ export const editRemoteMap = (action$, store) =>
                     Observable.of(
                         setMediaService(sourceId),
                         saveMediaSuccess({mediaType: resource.type, source: sources[sourceId], data: resource, id}),
-                        loadMedia(undefined, resource.type, sources[sourceId]),
+                        loadMedia(undefined, resource.type, sourceId),
                         selectItem(id),
                         hideMapEditor()
                     ));

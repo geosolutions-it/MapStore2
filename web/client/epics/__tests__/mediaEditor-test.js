@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 
-import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
+import {testEpic} from './epicTestUtils';
 
 import {
     loadMediaEditorDataEpic,
@@ -39,7 +39,8 @@ import {
     SELECT_ITEM,
     UPDATE_ITEM,
     LOAD_MEDIA,
-    SET_MEDIA_SERVICE
+    SET_MEDIA_SERVICE,
+    LOADING_MEDIA_LIST
 } from '../../actions/mediaEditor';
 
 describe('MediaEditor Epics', () => {
@@ -50,7 +51,7 @@ describe('MediaEditor Epics', () => {
         const mediaType = "image";
         const resultData = {
             resources: [{id: "resId", type: "image"}],
-            totalCount: 1
+            totalCount: 2
         };
         const sourceId = "geostory";
         testEpic(loadMediaEditorDataEpic, NUM_ACTIONS, loadMedia(params, mediaType, sourceId), (actions) => {
@@ -62,6 +63,8 @@ describe('MediaEditor Epics', () => {
                     expect(a.mediaType).toEqual(mediaType);
                     expect(a.sourceId).toEqual(sourceId);
                     expect(a.resultData).toEqual(resultData);
+                    break;
+                case LOADING_MEDIA_LIST:
                     break;
                 default: expect(true).toEqual(false);
                     break;
@@ -84,19 +87,23 @@ describe('MediaEditor Epics', () => {
         });
     });
     it('loadMediaEditorDataEpic with show and 0 resources', (done) => {
-        const NUM_ACTIONS = 1;
+        const NUM_ACTIONS = 2;
         const sourceId = "geostory";
-        testEpic(addTimeoutEpic(loadMediaEditorDataEpic, 10), NUM_ACTIONS, show("geostory"), (actions) => {
+        testEpic(loadMediaEditorDataEpic, NUM_ACTIONS, show("geostory"), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
-                case TEST_TIMEOUT:
-                    done();
+                case LOAD_MEDIA_SUCCESS:
+                    expect(a.resultData.resources).toEqual([]);
+                    expect(a.resultData.totalCount).toEqual(0);
+                    break;
+                case LOADING_MEDIA_LIST:
                     break;
                 default: expect(true).toEqual(false);
                     break;
                 }
             });
+            done();
         }, {
             geostory: {
                 currentStory: {
@@ -441,6 +448,8 @@ describe('MediaEditor Epics', () => {
                 case LOAD_MEDIA_SUCCESS:
                     expect(a.sourceId).toEqual(sourceId);
                     expect(a.resultData.totalCount).toEqual(0);
+                    break;
+                case LOADING_MEDIA_LIST:
                     break;
                 default: expect(true).toEqual(false);
                     break;
