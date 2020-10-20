@@ -10,12 +10,10 @@ import {compose, branch, withStateHandlers, withPropsOnChange, mapPropsStream, c
 import {Observable} from 'rxjs';
 import { isEqual} from 'lodash';
 import uuidv1 from 'uuid/v1';
-import buffer from 'turf-buffer';
-import intersect from 'turf-intersect';
 import MapInfoViewer from '../MapInfoViewer';
 import {getFeatureInfo} from '../../../../api/identify';
 
-import { getLayer } from '../../../../utils/LayersUtils';
+import { getIntersectingFeature } from '../../../../utils/IdentifyUtils';
 import {
     getAvailableInfoFormatValues,
     getDefaultInfoFormatValue,
@@ -24,59 +22,6 @@ import {
     filterRequestParams,
     getValidator
 } from '../../../../utils/MapInfoUtils';
-
-/**
-* Gets the feature that was clicked on a map layer
-* @param {array} layers the layers from which the required layer(layerId) can be filtered from
-* @param {string} layerId the id of the layer to which the clicked feature belongs
-* @param {object} options buildIndentifyRequest options
-*/
-const getIntersectingFeature = (layers, layerId, options) => {
-    const locationsLayer = getLayer(layerId, layers);
-
-    const identifyRequest = buildIdentifyRequest(locationsLayer, {...options});
-    const { metadata } = identifyRequest;
-
-    const cpoint = {
-        "type": "Feature",
-        "properties": {},
-        "geometry": {
-            "type": "Point",
-            "coordinates": [options.point.latlng.lng, options.point.latlng.lat]
-        }
-    };
-
-    let unit = metadata && metadata.units;
-    switch (unit) {
-    case "m":
-        unit = "meters";
-        break;
-    case "deg":
-        unit = "degrees";
-        break;
-    case "mi":
-        unit = "miles";
-        break;
-    default:
-        unit = "meters";
-    }
-
-    const resolution = metadata && metadata.resolution || 1;
-    const bufferedPoint = buffer(cpoint, (metadata.buffer || 1) * resolution, unit);
-
-    const intersectingFeature = locationsLayer.features[0].features.filter(
-        (feature) => {
-            const buff = buffer(feature, 1, "meters");
-            const intersection = intersect(bufferedPoint, buff);
-            if (intersection) {
-                return true;
-            }
-            return false;
-        }
-    );
-
-    return intersectingFeature;
-};
 
 // verify if 'application/json' is available if not use default
 export const getDefaultInfoFormat = () => {
