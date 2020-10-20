@@ -131,6 +131,48 @@ describe('identify Epics', () => {
             }
         }, state);
     });
+    it('getFeatureInfoOnFeatureInfoClick WMS with maxItems for configuration set', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    title: "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    title: "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        const NUM_ACTIONS = 5;
+        testEpic(getFeatureInfoOnFeatureInfoClick, NUM_ACTIONS, sentActions, (actions) => {
+            try {
+                const [a0, a1, a2, a3, a4] = actions;
+                expect(a0).toExist();
+                expect(a1).toExist();
+                expect(a2).toExist();
+                expect(a3.requestParams.feature_count).toBe(10);
+                expect(a4).toExist();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
+    });
     it('getFeatureInfoOnFeatureInfoClick WMS with filteredList and override params', (done) => {
         // remove previous hook
         registerHook('RESOLUTION_HOOK', undefined);

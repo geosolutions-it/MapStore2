@@ -100,7 +100,8 @@ export const identifyOptionsSelector = createStructuredSelector({
     format: generalInfoFormatSelector,
     map: mapSelector,
     point: clickPointSelector,
-    currentLocale: currentLocaleSelector
+    currentLocale: currentLocaleSelector,
+    maxItems: (state) => get(state, "mapInfo.configuration.maxItems", 10)
 });
 
 export const isHighlightEnabledSelector = (state = {}) => state.mapInfo && state.mapInfo.highlight;
