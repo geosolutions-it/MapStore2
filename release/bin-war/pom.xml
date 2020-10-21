@@ -18,7 +18,7 @@
         <dependency>
             <groupId>it.geosolutions.mapstore</groupId>
             <artifactId>mapstore-web</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
             <type>war</type>
             <scope>runtime</scope>
         </dependency>

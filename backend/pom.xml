@@ -4,7 +4,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-backend</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>MapStore 2 - Backend</name>
   <url>http://www.geo-solutions.it</url>
 
@@ -97,7 +97,23 @@
                 </configuration>
             </plugin>
     </plugins>
+    <extensions>
+        <!--.............................................-->
+        <!--       GeoSolutions (using wagon ftp)       -->
+        <!--.............................................-->
+      <extension>
+       <groupId>org.apache.maven.wagon</groupId>
+       <artifactId>wagon-ftp</artifactId>
+       <version>1.0-beta-2</version>
+      </extension>
+    </extensions>
   </build>
+  <distributionManagement>
+   <repository>
+    <id>geosolutions</id>
+    <url>ftp://maven.geo-solutions.it/</url>
+   </repository>
+  </distributionManagement>
   <profiles>
   </profiles>
     <repositories>
