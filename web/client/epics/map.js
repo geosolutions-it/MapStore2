@@ -28,7 +28,7 @@ const {mapTypeSelector} = require('../selectors/maptype');
 const { mapPaddingSelector } = require('../selectors/maplayout');
 
 const {setControlProperty} = require('../actions/controls');
-const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {isSupportedLayer} = require('../utils/LayersUtils');
 const MapUtils = require('../utils/MapUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -39,10 +39,6 @@ const {clearLayers} = require('../actions/layers');
 const {clearWarning: clearMapInfoWarning} = require('../actions/mapInfo');
 const {removeAllAdditionalLayers} = require('../actions/additionallayers');
 const { head, isArray, isObject, mapValues } = require('lodash');
-
-const { isLoggedIn } = require('../selectors/security');
-const {pathnameSelector} = require('../selectors/router');
-const { push } = require('connected-react-router');
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -222,11 +218,6 @@ const checkMapPermissions = (action$, {getState = () => {} }) =>
             return loadMapInfo(mapId);
         });
 
-const redirectUnauthorizedUserOnNewMap = (action$, { getState = () => {}}) =>
-    action$.ofType(MAP_CONFIG_LOAD_ERROR)
-        .filter((action) => action.error && action.error.status === 403 && pathnameSelector(getState()).indexOf("new") !== -1)
-        .filter(() => !isLoggedIn(getState()))
-        .switchMap(() => Rx.Observable.of(push('/'))); // go to home page
 
 module.exports = {
     checkMapPermissions,
@@ -234,6 +225,5 @@ module.exports = {
     handleCreationBackgroundError,
     resetMapOnInit,
     resetLimitsOnInit,
-    zoomToExtentEpic,
-    redirectUnauthorizedUserOnNewMap
+    zoomToExtentEpic
 };
