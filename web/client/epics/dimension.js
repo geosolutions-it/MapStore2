@@ -48,7 +48,7 @@ module.exports = {
         action$
             .ofType(ADD_LAYER)
             .filter(
-                ({ layer = {} } = {}) => layer.id && layer.url && layer.name && (layer.type === "wms" || layer.type === "wmts")
+                ({ layer = {} } = {}) => layer.id && layer.url && layer.name && (layer.type === "wms")
             )
             // find out possible multidim URL
             // TODO: find out a better way to extract or discover multidim URL
