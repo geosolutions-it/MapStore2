@@ -137,7 +137,13 @@ describe('identify Epics', () => {
         const state = {
             map: TEST_MAP_STATE,
             mapInfo: {
-                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } },
+                disabledAlwaysOn: false,
+                configuration: {
+                    showEmptyMessageGFI: false,
+                    infoFormat: "text/plain",
+                    maxItems: 50
+                }
             },
             layers: {
                 flat: [{
@@ -163,10 +169,10 @@ describe('identify Epics', () => {
             try {
                 const [a0, a1, a2, a3, a4] = actions;
                 expect(a0).toBeTruthy();
-                expect(a1).toExist();
-                expect(a2).toExist();
-                expect(a3.requestParams.feature_count).toBe(10);
-                expect(a4).toExist();
+                expect(a1).toBeTruthy();
+                expect(a2).toBeTruthy();
+                expect(a3.requestParams.feature_count).toBe(50);
+                expect(a4).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
