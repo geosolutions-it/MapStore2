@@ -10,7 +10,6 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const SearchBar = require('../SearchBar').default;
-import {getTotalMaxResults} from "../../../search/SearchBarUtils";
 
 const TestUtils = require('react-dom/test-utils');
 
@@ -337,36 +336,5 @@ describe("test the SearchBar", () => {
         expect(reset).toExist();
         expect(cog.length).toBe(0);
         expect(zoom.length).toBe(0);
-    });
-
-    it('test the maxFeatures function', ()=> {
-        let services = [
-            {
-                priority: 5,
-                type: "nomination"
-            },
-            {
-                type: "wfs",
-                name: "Meteorites",
-                displayName: "${properties,name}",
-                options: {
-                    maxFeatures: 20,
-                    srsName: "EPSG:4326"
-                },
-                launchInfoPanel: "single_layer"
-            },
-            {
-                type: "wfs",
-                name: "Meteorites",
-                displayName: "${properties,name}",
-                options: {
-                    maxFeatures: undefined,
-                    srsName: "EPSG:4328"
-                },
-                launchInfoPanel: "single_layer"
-            }
-        ];
-
-        expect(getTotalMaxResults(services)).toEqual(50);
     });
 });
