@@ -6,12 +6,26 @@
   * LICENSE file in the root directory of this source tree.
   */
 const {compose, withProps} = require('recompose');
+const {isObject, isNil} = require('lodash');
 const wpsAggregate = require('../../../observables/wps/aggregate');
 const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
 const Rx = require('rxjs');
 const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
-    AggregationResults.map( (res) => ({
-        ...GroupByAttributes.reduce( (a, p, i) => ({...a, [p]: res[i]}), {}),
+    AggregationResults.map((res) => ({
+        ...GroupByAttributes.reduce((a, p, i) => {
+            let value = res[i];
+            if (isObject(value)) {
+                if (!isNil(value.time)) {
+                    value = (new Date(value.time)).toISOString();
+                } else {
+                    throw new Error('Unknown response format from server');
+                }
+            }
+            return {
+                ...a,
+                [p]: value
+            };
+        }, {}),
         [`${AggregationFunctions[0]}(${AggregationAttribute})`]: res[res.length - 1]
     })).sort( (e1, e2) => {
         const n1 = parseFloat(e1[GroupByAttributes]);
