@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -90,9 +91,9 @@ public class ConfigController {
      * @param {boolean} overrides apply overrides from the configured properties file (if any)
      */
     @RequestMapping(value="/load/{resource}", method = RequestMethod.GET)
-    public @ResponseBody String loadResource(@PathVariable("resource") String resourceName, @RequestParam(value="overrides", defaultValue="true") boolean applyOverrides) throws IOException {
+    public @ResponseBody byte[] loadResource(@PathVariable("resource") String resourceName, @RequestParam(value="overrides", defaultValue="true") boolean applyOverrides) throws IOException {
         if (isAllowed(resourceName)) {
-            return readResource(resourceName + ".json", applyOverrides, resourceName + ".json.patch");
+            return readResource(resourceName + ".json", applyOverrides, resourceName + ".json.patch").getBytes("UTF-8");
         }
         throw new ResourceNotAllowedException("Resource is not allowed");
     }
@@ -103,8 +104,8 @@ public class ConfigController {
      * @param resourceName path of the asset to load
      */
     @RequestMapping(value="/loadasset", method = RequestMethod.GET)
-    public @ResponseBody String loadAsset(@RequestParam("resource") String resourceName) throws IOException {
-		return readResource(resourceName, false, "");
+    public @ResponseBody byte[] loadAsset(@RequestParam("resource") String resourceName) throws IOException {
+		return readResource(resourceName, false, "").getBytes("UTF-8");
     }
     
     private String readResource(String resourceName, boolean applyOverrides, String patchName) throws IOException {

@@ -36,7 +36,7 @@ public class ConfigControllerTest {
         File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/localConfig.json"));
         Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
-        String resource = controller.loadResource("localConfig", false);
+        String resource = new String(controller.loadResource("localConfig", false), "UTF-8");
         assertEquals("{}", resource.trim());
         tempResource.delete();
     }
@@ -63,7 +63,7 @@ public class ConfigControllerTest {
         controller.setDataDir(dataDir.getAbsolutePath());
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        String resource = controller.loadResource("localConfig", false);
+        String resource = new String(controller.loadResource("localConfig", false), "UTF-8");
         assertEquals("{}", resource.trim());
         tempResource.delete();
     }
@@ -81,9 +81,9 @@ public class ConfigControllerTest {
         controller.setDataDir(dataDir1.getAbsolutePath() + "," + dataDir2.getAbsolutePath());
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        String resource1 = controller.loadResource("localConfig", false);
+        String resource1 = new String(controller.loadResource("localConfig", false), "UTF-8");
         assertEquals("{}", resource1.trim());
-        String resource2 = controller.loadResource("extensions", false);
+        String resource2 = new String(controller.loadResource("extensions", false), "UTF-8");
         assertEquals("{}", resource2.trim());
         tempResource1.delete();
         tempResource2.delete();
@@ -95,7 +95,7 @@ public class ConfigControllerTest {
         File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/bundle.js"));
         Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
-        String resource = controller.loadAsset("localConfig");
+        String resource = new String(controller.loadAsset("localConfig"), "UTF-8");
         assertEquals("console.log('hello')", resource.trim());
         tempResource.delete();
     }
@@ -107,7 +107,7 @@ public class ConfigControllerTest {
         controller.setDataDir(dataDir.getAbsolutePath());
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        String resource = controller.loadAsset("bundle.js");
+        String resource = new String(controller.loadAsset("bundle.js"), "UTF-8");
         assertEquals("console.log('hello')", resource.trim());
         tempResource.delete();
     }
@@ -121,7 +121,7 @@ public class ConfigControllerTest {
         controller.setContext(context);
         controller.setOverrides(tempProperties.getAbsolutePath());
         controller.setMappings("header.height=headerHeight,header.url=headerUrl");
-        String resource = controller.loadResource("localConfig", true);
+        String resource = new String(controller.loadResource("localConfig", true), "UTF-8");
         assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore2.geo-solutions.it\"}}", resource.trim());
         tempResource.delete();
     }
@@ -136,7 +136,7 @@ public class ConfigControllerTest {
         ServletContext context = Mockito.mock(ServletContext.class);
         Mockito.when(context.getRealPath(Mockito.endsWith(".json"))).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
-        String resource = controller.loadResource("pluginsConfig", true);
+        String resource = new String(controller.loadResource("pluginsConfig", true), "UTF-8");
         assertEquals("{\"plugins\":[{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}]}", resource.trim());
         tempResource.delete();
         tempPatch.delete();
