@@ -1669,7 +1669,8 @@
                 "noLegendDescription": "Die verbundene Karte hat keine Ebenen, die in der Legende angezeigt werden",
                 "nodatainviewport": "Keine Daten im aktuellen Ansichtsfenster",
                 "timeoutExpired": "Der Aufruf des Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
-                "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
+                "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten",
+                "genericErrorWithMessage": "Beim Abrufen der Daten ist ein Fehler aufgetreten: \"{message}\""
             },
             "builder": {
                 "header": {

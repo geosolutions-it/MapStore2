@@ -88,7 +88,8 @@ import {
      isSharedStory,
      resourceByIdSelectorCreator,
      modeSelector,
-     updateUrlOnScrollSelector
+     updateUrlOnScrollSelector,
+     getMediaEditorSettings
 } from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
@@ -144,8 +145,9 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                         mediaPath = ".contents[0].contents[0]";
             }
             const path = `${arrayPath}[{"id":"${element.id}"}]${mediaPath}`;
+            const mediaEditorSetting = getMediaEditorSettings(store.getState());
             return Observable.of(
-                showMediaEditor('geostory') // open mediaEditor
+                showMediaEditor('geostory', mediaEditorSetting) // open mediaEditor
             )
                 .merge(
                     action$.let(updateMediaSection(store, path)),
@@ -261,9 +263,10 @@ export const editMediaForBackgroundEpic = (action$, store) =>
             .filter((mediaType) => {
                 return resource && resource.type !== mediaType;
             })
-            .map(() => setMediaType(resource.type)).merge(
+            .map(() => setMediaType(resource.type))
+            .merge(
                 Observable.of(
-                    showMediaEditor(owner),
+                    showMediaEditor(owner, getMediaEditorSettings(store.getState())),
                     selectItem(selectedResource)
                 )
                           .merge(

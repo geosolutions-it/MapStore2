@@ -1670,7 +1670,8 @@
                 "noLegendDescription": "The connected map has no layers to show in legend",
                 "nodatainviewport": "No data in the current viewport",
                 "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
-                "genericError": "There was an error during data retrival"
+                "genericError": "There was an error during data retrival",
+                "genericErrorWithMessage": "There was an error during data retrieval: \"{message}\""
             },
             "builder": {
                 "header": {

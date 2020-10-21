@@ -126,14 +126,27 @@ export default (state = DEFAULT_STATE, action) => {
     }
     case SHOW:
         // setup media editor settings
+        const settings = action.settings && {
+            ...action.settings,
+            // mediaType could be updated during the app lifecycle separately
+            // so we should use the one on the state if available
+            ...(state.settings.mediaType && { mediaType: state.settings.mediaType })
+        };
         return compose(
             set('open', true),
             set('owner', action.owner),
-            // set('settings', action.settings || state.settings), // TODO: allow fine customization
-            // set('stashedSettings', state.settings) // This should allow to use default config or customize for a different usage
+            set('settings', settings || state.settings), // TODO: allow fine customization
+            set('stashedSettings', state.settings) // This should allow to use default config or customize for a different usage
         )(state);
     case LOCATION_CHANGE:
-        return DEFAULT_STATE;
+        return {
+            ...DEFAULT_STATE,
+            settings: {
+                ...state.settings,
+                // restore the default mediaType but keep the current updated settings
+                mediaType: DEFAULT_STATE.settings.mediaType
+            }
+        };
     default:
         return state;
     }

@@ -801,6 +801,66 @@ describe('Geostory Epics', () => {
             }
         });
     });
+    it('test openMediaEditorForNewMedia with custom settings for media edtor', (done) => {
+        const NUM_ACTIONS = 2;
+        const mediaEditorSettings = {
+            sourceId: 'geostory',
+            mediaTypes: {
+                image: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                video: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                map: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                }
+            },
+            sources: {
+                geostory: {
+                    name: 'Current story',
+                    type: 'geostory'
+                }
+            }
+        };
+        testEpic(openMediaEditorForNewMedia, NUM_ACTIONS, [
+            add(`sections[{id: "abc"}].contents[{id: "def"}]`, undefined, {type: ContentTypes.MEDIA, id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9"}),
+            chooseMedia({id: "geostory"})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case UPDATE:
+                    break;
+                case SHOW:
+                    expect(a.owner).toEqual("geostory");
+                    expect(a.settings).toEqual(mediaEditorSettings);
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "geostory",
+                        data: {}
+                    }]
+                },
+                mediaEditorSettings
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image"
+                }
+            }
+        });
+    });
     it('update story with already existing image (geostory)', (done) => {
         const NUM_ACTIONS = 3;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
@@ -1064,6 +1124,79 @@ describe('Geostory Epics', () => {
                         }]
                     }]
                 }
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image",
+                    sourceId: "geostory"
+                }
+            }
+        });
+    });
+    it('should use custom media editor settings if available with editMediaForBackgroundEpic', (done) => {
+        const NUM_ACTIONS = 3;
+        const mediaEditorSettings = {
+            sourceId: 'geostory',
+            mediaTypes: {
+                image: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                video: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                map: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                }
+            },
+            sources: {
+                geostory: {
+                    name: 'Current story',
+                    type: 'geostory'
+                }
+            }
+        };
+        testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
+            chooseMedia({id: "resourceId"})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case UPDATE:
+                    break;
+                case SHOW:
+                    expect(a.owner).toEqual("geostore");
+                    expect(a.settings).toEqual(mediaEditorSettings);
+                    break;
+                case SELECT_ITEM:
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resourceId",
+                        type: "image",
+                        data: {
+                            id: "resource_id"
+                        }
+                    }],
+                    sections: [{
+                        id: "section_id",
+                        contents: [{
+                            id: "content_id",
+                            resourceId: "resourceId"
+                        }]
+                    }]
+                },
+                mediaEditorSettings
             },
             mediaEditor: {
                 settings: {
