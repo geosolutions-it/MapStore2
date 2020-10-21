@@ -180,10 +180,12 @@ const detectNewPage = (action$, store) =>
  */
 const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login required logic (403) condition from feedback mask
     action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR)
-        .filter((action) => action.error
-            && action.error.status === 403
-            && (pathnameSelector(store.getState()).indexOf("new") === -1 // new map has different handling (see redirectUnauthorizedUserOnNewMap, TODO: uniform different behaviour)
-                || pathnameSelector(store.getState()).indexOf("newgeostory") >= 0)) // geostory can use this (that is the same of the dashboard)
+        .filter((action) => {
+            const pathname = pathnameSelector(store.getState());
+            return action.error
+                && action.error.status === 403
+                && pathname.indexOf("new") === -1 && !(pathname.match(/dashboard/) !== null && pathname.match(/dashboard\/[0-9]+/) === null); // new map geostory and dashboard has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
+        })
         .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(
             () =>
@@ -195,6 +197,16 @@ const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login requ
 
                     ).takeUntil(action$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE))
         );
+
+const redirectUnauthorizedUserOnNewLoadError = (action$, { getState = () => {}}) =>
+    action$.ofType(MAP_CONFIG_LOAD_ERROR, LOAD_GEOSTORY_ERROR, DASHBOARD_LOAD_ERROR)
+        .filter((action) => action.error &&
+            action.error.status === 403 &&
+            (pathnameSelector(getState()).indexOf("new") !== -1 ||
+             pathnameSelector(getState()).match(/dashboard\/[0-9]+/) === null &&
+             pathnameSelector(getState()).match(/dashboard/) !== null))
+        .filter(() => !isLoggedIn(getState()))
+        .switchMap(() => Rx.Observable.of(push('/'))); // go to home page
 
 /**
  * Epics for feedbackMask functionality
@@ -208,5 +220,6 @@ module.exports = {
     updateDashboardVisibility,
     updateGeoStoryFeedbackMaskVisibility,
     detectNewPage,
-    feedbackMaskPromptLogin
+    feedbackMaskPromptLogin,
+    redirectUnauthorizedUserOnNewLoadError
 };
