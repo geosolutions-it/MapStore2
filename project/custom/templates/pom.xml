@@ -4,7 +4,7 @@
     <groupId>it.geosolutions.__PROJECTNAME__</groupId>
     <artifactId>__PROJECTNAME__-root</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-2020.02</version>
+    <version>1.0</version>
     <name>__PROJECTDESCRIPTION__ - Root Project</name>
     <url>http://www.geo-solutions.it</url>
 
