@@ -164,7 +164,7 @@ export const  withPopupSupport =  branch(({editMap, map: {mapInfoControl = false
                         };
                     }
                     getFeatureInfoHandler({point, layerInfo, locData});
-                    return {popups: [{ position: {  coordinates }, id: uuidv1() }]};
+                    return {popups: [{ position: { coordinates: intersectingFeature[0]?.geometry?.rawPos }, id: uuidv1() }]};
                 }
 
                 if (map.mapInfoControl) {
