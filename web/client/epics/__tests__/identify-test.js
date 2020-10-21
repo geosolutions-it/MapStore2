@@ -162,7 +162,7 @@ describe('identify Epics', () => {
         testEpic(getFeatureInfoOnFeatureInfoClick, NUM_ACTIONS, sentActions, (actions) => {
             try {
                 const [a0, a1, a2, a3, a4] = actions;
-                expect(a0).toExist();
+                expect(a0).toBeTruthy();
                 expect(a1).toExist();
                 expect(a2).toExist();
                 expect(a3.requestParams.feature_count).toBe(10);
