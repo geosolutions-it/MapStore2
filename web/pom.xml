@@ -4,7 +4,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-web</artifactId>
   <packaging>war</packaging>
-  <version>1.0-2020.02</version>
+  <version>1.0</version>
   <name>MapStore 2 - WAR</name>
   <url>http://www.geo-solutions.it</url>
 
@@ -19,7 +19,7 @@
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
       <artifactId>mapstore-backend</artifactId>
-      <version>1.0-2020.02</version>
+      <version>1.0</version>
     </dependency>
 
     <!-- ================================================================ -->
@@ -529,7 +529,7 @@
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
-            <version>geosolutions-2.0-2020.02</version>
+            <version>geosolutions-2.0</version>
         </dependency>
         <dependency>
             <groupId>org.mapfish.geo</groupId>

@@ -4,7 +4,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-root</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-2020.02</version>
+  <version>1.0</version>
   <name>MapStore 2</name>
   <url>http://www.geo-solutions.it</url>
 
