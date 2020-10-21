@@ -9,7 +9,6 @@ import React from 'react';
 import { compose, withProps } from 'recompose';
 import Text from '../../contents/Text';
 
-import withControllableState from '../../../misc/enhancers/withControllableState';
 import Manager from '../../../style/vector/Manager';
 import config from '../../../mapcontrols/annotations/AnnotationsConfig';
 
@@ -101,7 +100,6 @@ const withDefaultTabs = withProps((props) => ({
 }));
 
 export const withLocationPopupTabs = compose(
-    withControllableState('activeTab', 'setActiveTab', 'popup-editor'),
     withDefaultTabs
 );
 

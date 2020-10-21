@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {branch, compose, withProps, withPropsOnChange, withHandlers } from 'recompose';
+import {branch, compose, withProps, withPropsOnChange, withHandlers, withStateHandlers } from 'recompose';
 import {head} from 'lodash';
 import uuidv1 from 'uuid/v1';
 
@@ -57,6 +57,11 @@ export const withLocationLayer = branch(({editMap, map: {mapLocationsEnabled = f
  */
 export const withLocationClickInEdit = branch(({editMap, map: {mapLocationsEnabled = false} = {}}) => mapLocationsEnabled && editMap,
     compose(
+        withStateHandlers(({'activeTab': 'popup-editor'}), {
+            setActiveTab: () => (tab) => {
+                return { activeTab: tab };
+            }
+        }),
         withHandlers({
             onClick: ({update, map, currentMapLocation = "", layers = []}) => (point, layerId) =>  {
                 if (currentMapLocation !== "") {
@@ -85,7 +90,7 @@ export const withLocationClickInEdit = branch(({editMap, map: {mapLocationsEnabl
                 update("currentMapLocation", "");
             }
         }),
-        withPropsOnChange(["popups", "layers", "currentMapLocation"], ({ sections = [], layers = [], update = () => {}, currentMapLocation = "", mapInfoControlTrack }) => {
+        withPropsOnChange(["popups", "currentMapLocation", "layers", "activeTab"], ({ activeTab, setActiveTab, sections = [], layers = [], update = () => {}, currentMapLocation = "", mapInfoControlTrack }) => {
             const locationsLayer = getLayer('locations', layers);
             const locationFeatures = locationsLayer && locationsLayer.features[0].features || [];
             const currentLocationData = head(locationFeatures.filter((location) => location.id === currentMapLocation));
@@ -108,6 +113,8 @@ export const withLocationClickInEdit = branch(({editMap, map: {mapLocationsEnabl
 
             const component = () => (
                 <LocationPopoverEditor
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
                     sections={sections}
                     currentLocationData={currentLocationData}
                     html={currentLocationData?.properties?.html}
