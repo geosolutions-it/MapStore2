@@ -89,7 +89,7 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
                         style={{
                             textOverflow: "ellipsis"
                         }}
-                        placeholder={"example: https://{s}.myUrl.com/{variant}/{z}/{x}/{y}"}
+                        placeholder={"e.g. https://{s}.myUrl.com/{variant}/{z}/{x}/{y}"}
                         value={service && service.url}
                         onChange={(e) => onChangeUrl(e.target.value)} />
                 </React.Fragment>
@@ -101,7 +101,7 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
                             style={{
                                 textOverflow: "ellipsis"
                             }}
-                            placeholder="catalog.urlPlaceholder"
+                            placeholder={defaultPlaceholder(service)}
                             value={service && service.url}
                             onChange={(e) => onChangeUrl(e.target.value)} />
                     </React.Fragment>
