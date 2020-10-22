@@ -268,6 +268,11 @@ module.exports = {
                 .map(updateFilterFunc(store)),
             action$.ofType(UPDATE_FILTER)
                 .filter(({update = {}}) => update.type === 'geometry')
+                .take(1)
+                .filter(({update = {}}) => !update.enabled)
+                .map(updateFilterFunc(store)),
+            action$.ofType(UPDATE_FILTER)
+                .filter(({update = {}}) => update.type === 'geometry')
                 .distinctUntilChanged(({update: update1}, {update: update2}) => {
                     return !update1.enabled && update2.enabled && !update1.value && !update2.value ||
                         update1.value === update2.value;
