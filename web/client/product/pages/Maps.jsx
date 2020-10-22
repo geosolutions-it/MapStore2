@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,7 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const PropTypes = require('prop-types');
 require("../assets/css/maps.css");
 
 const {connect} = require('react-redux');
@@ -21,6 +20,14 @@ const {loadMaps} = require('../../actions/maps');
 
 const Page = require('../../containers/Page');
 
+/**
+  * @name Maps
+  * @memberof pages
+  * @class
+  * @classdesc
+  * This is the home page of MapStore.
+  * Renders plugins and triggers the initial load action for loading contents in the page.
+  */
 class MapsPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,

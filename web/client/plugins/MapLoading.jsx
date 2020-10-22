@@ -19,6 +19,13 @@ require('./maploading/maploading.css');
 
 const MapLoadingPlugin = connect(selector)(require('../components/misc/spinners/GlobalSpinner/GlobalSpinner'));
 
+/**
+ * Loading spinner rendered in the {@link #plugins.Toolbar|Toolbar}
+ * when layers are loading.
+ * @name MapLoading
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     MapLoadingPlugin: assign(MapLoadingPlugin, {
         Toolbar: {

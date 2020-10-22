@@ -30,8 +30,10 @@ const geostoriesCountSelector = createSelector(
 );
 
 /**
- * Plugin for Geostories resources
+ * Plugin for browsing GeoStory resources. Can render in {@link #plugins.ContentTabs|ContentTabs}
+ * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
  * @name Geostories
+ * @class
  * @memberof plugins
  * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
  */

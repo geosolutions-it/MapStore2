@@ -1,5 +1,10 @@
 /**
- * Pages that can be configured in MapStore to include plugins and implements parts of the application.
+ * The React Components listed as *pages* can be included from the `appConfig.js` file to be used in by `react-router`.
+ * They typically handle the `match` property to initialize the page and load the needed contents basing of parameters received by the router (`#` part of the URL, in the standard configuration).
+ * Usually pages are also wrappers for `Page` that is a wrapper for {@link ../docs/api/framework#components.plugins.PluginsContainer|PluginsContainer},
+ * This means that they also render MapStore {@link #plugins|plugins} configured for the page.
+ * MapStore has several pages, and every page *can* contain one or more {@link #plugins|plugins}.
+ *
  * @name pages
  * @see {@link https://mapstore.readthedocs.io/en/latest/developer-guide/plugins-architecture/}
  *

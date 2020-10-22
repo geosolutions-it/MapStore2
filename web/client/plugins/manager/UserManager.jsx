@@ -81,6 +81,13 @@ class UserManager extends React.Component {
     }
 }
 
+/**
+ * Allows an administrator to browse users.
+ * Renders in {@link #plugins.Manager|Manager} plugin.
+ * @name UserManager
+ * @memberof plugins
+ * @class
+ */
 module.exports = {
     UserManagerPlugin: assign(
         connect((state) => {

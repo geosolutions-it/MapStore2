@@ -83,7 +83,7 @@ const WidgetsView = compose(
 )(require('../components/dashboard/Dashboard'));
 
 /**
- * Dashboard Plugin
+ * Dashboard Plugin. Renders the main dashboard UI.
  * @static
  * @memberof plugins
  * @name Dashboard

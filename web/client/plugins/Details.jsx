@@ -23,7 +23,13 @@ import ResizableModal from '../components/misc/ResizableModal';
 import {createPlugin} from '../utils/PluginsUtils';
 
 /**
- * Details plugin used for fetching details of the map
+ * Allow to show details for the map.
+ * "Details for a map" is a window with some HTML, editable from {@link #plugins.Save|Save}
+ * or {@link #plugins.SaveAs|SaveAs} plugins.
+ * If details for the current map are present, the plugin
+ * renders an entry in {@link #plugins.BurgerMenu|BurgerMenu} to show it.
+ * It supports as an alternative to render the entry as a
+ * button in the {@link #plugins.Toolbar|Toolbar}
  * @class
  * @name Details
  * @memberof plugins

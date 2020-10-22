@@ -63,7 +63,8 @@ class OmniBar extends React.Component {
 
 /**
  * Generic bar that can contains other plugins.
- * used for SearchBar, BurgerMenu, Login, both in map or home page.
+ * used by {@link #plugins.SearchBar|SearchBar}, {@link #plugins.BurgerMenu|BurgerMenu},
+ * {@link #plugins.Login|Login} and many other, in different pages.
  * @name OmniBar
  * @class
  * @memberof plugins

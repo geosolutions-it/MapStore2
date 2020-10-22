@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -21,6 +21,12 @@ const About = connect((state) => ({
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 
+/**
+ * Plugin for the "About" window in mapstore.
+ * @name About
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     AboutPlugin: assign(About,
         {

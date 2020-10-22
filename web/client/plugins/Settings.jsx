@@ -176,6 +176,15 @@ const SettingsPlugin = connect((state) => ({
     toggleControl: toggleControl.bind(null, 'settings', null)
 })(SettingsButton);
 
+
+/**
+ * Settings window to configure some details of the current map.
+ * Is also a container for settings coming from the other plugins.
+ * Renders in {@link #plugins.BurgerMenu|BurgerMenu} an entry to open this window.
+ * @name Settings
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     SettingsPlugin: assign(SettingsPlugin, {
         Toolbar: {

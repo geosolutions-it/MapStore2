@@ -37,8 +37,8 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 
 /**
   * Timeline Plugin. Shows the timeline tool on the map.
-  * To use with Playback plugin. {@link api/plugins#plugins.Playback}
-  * For configuration, see related reducer's documentation {@link api/framework#reducers.timeline}
+  * To use with Playback plugin. {@link #plugins.Playback|Playback}
+  * For configuration, see related {@link api/framework#reducers.timeline|reducer's documentation}
   * @class  Timeline
   * @memberof plugins
   * @static

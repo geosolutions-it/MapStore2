@@ -43,7 +43,12 @@ const Redirect = connect((state) => ({
     userDetails: state.security || null
 }))(RedirectComponent);
 
-
+/**
+ * Utility plugin to redirect not logged users to the home page.
+ * @name Redirect
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     RedirectPlugin: assign(Redirect, {}
     )};

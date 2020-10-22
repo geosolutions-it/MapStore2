@@ -18,6 +18,13 @@ const {Glyphicon} = require('react-bootstrap');
 const { ActionCreators } = require('redux-undo');
 const {undo, redo} = ActionCreators;
 
+/**
+ * Renders a "undo" button in the {@link #plugins.Toolbar|Toolbar} to get back in
+ * map navigation history.
+ * @name Undo
+ * @class
+ * @memberof plugins
+ */
 const UndoButton = connect((state) => {
     let mapHistory = state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []};
     return {
@@ -27,6 +34,13 @@ const UndoButton = connect((state) => {
     onClick: undo
 })(require('../components/mapcontrols/navigationhistory/UndoButton'));
 
+/**
+ * Renders a "redo" button in the {@link #plugins.Toolbar|Toolbar} to go forward in
+ * map navigation history.
+ * @name Redo
+ * @class
+ * @memberof plugins
+ */
 const RedoButton = connect((state) => {
     let mapHistory = state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []};
     return {

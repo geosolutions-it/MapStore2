@@ -31,6 +31,15 @@ class Attribution extends React.Component {
     }
 }
 
+/**
+ * Renders the logo of GeoSolutions in the {@link #plugins.NavMenu|NavMenu}
+ * @name Attribution
+ * @class
+ * @memberof plugins
+ * @prop {string} [label='GeoSolutions'] the tooltip for the logo
+ * @prop {string} [href='https://www.geo-solutions.it/'] the URL to redirect on click
+ * @prop {string} [src] URL of the logo image. By default the GeoSolutions logo.
+ */
 module.exports = {
     AttributionPlugin: assign(Attribution, {
         NavMenu: {

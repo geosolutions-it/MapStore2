@@ -82,6 +82,13 @@ class GroupManager extends React.Component {
     }
 }
 
+/**
+ * Allows an administrator to browse user groups.
+ * Renders in {@link #plugins.Manager|Manager} plugin.
+ * @name GroupManager
+ * @memberof plugins
+ * @class
+ */
 module.exports = {
     GroupManagerPlugin: assign(
         connect((state) => {

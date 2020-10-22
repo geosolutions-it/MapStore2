@@ -10,6 +10,12 @@ const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
 const MailingLists = require('../components/home/MailingLists');
 
+/**
+ * MailingLists section of MapStore home page.
+ * @name MailingLists
+ * @class
+ * @memberof plugins
+ */
 class MailingListsPlugin extends React.Component {
     render() {
         return (<Grid>

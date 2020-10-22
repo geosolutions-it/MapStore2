@@ -25,6 +25,7 @@ const BackgroundSwitcherPlugin = connect((state) => ({
 require('./background/background.css');
 /**
   * BackgroundSwitcher Plugin
+  * @deprecated in favor of {@link plugins.BackgroundSelector}
   * @class BackgroundSwitcher
   * @memberof plugins
   * @static

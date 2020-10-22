@@ -97,7 +97,7 @@ const AddGroupPlugin = connect((state) => ({
 })(AddGroup);
 
 /**
- * AddGroup. Add to the TOC the possibility to add layer group.
+ * Adds to the {@link #plugins.TOC|TOC} plugin a button for creating new layer groups.
  * @name AddGroup
  * @class
  * @memberof plugins
