@@ -150,6 +150,6 @@ describe('Test CatalogServiceEditor', () => {
             type: "wms"
         };
         let placeholder = defaultPlaceholder(service);
-        expect(placeholder).toBe("example: https://mydomain.com/geoserver/wms");
+        expect(placeholder).toBe("e.g. https://mydomain.com/geoserver/wms");
     });
 });
