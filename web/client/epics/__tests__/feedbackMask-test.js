@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 
-const { updateMapVisibility, updateDashboardVisibility, updateGeoStoryFeedbackMaskVisibility, detectNewPage, feedbackMaskPromptLogin} = require('../feedbackMask');
+const { updateMapVisibility, updateDashboardVisibility, updateGeoStoryFeedbackMaskVisibility, detectNewPage, feedbackMaskPromptLogin, redirectUnauthorizedUserOnNewLoadError } = require('../feedbackMask');
 const {FEEDBACK_MASK_LOADING, FEEDBACK_MASK_LOADED, FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE} = require('../../actions/feedbackMask');
 const {initMap} = require('../../actions/map');
 const {configureMap, configureError} = require('../../actions/config');
@@ -188,30 +188,6 @@ describe('feedbackMask Epics', () => {
         },
         {});
     });
-    it('test feedbackMaskPromptLogin on geostory 403 with new story', done => {
-        const ACTIONS_EMITTED = 1;
-        const error = { status: 403, statusText: 'Forbidden' };
-        testEpic(feedbackMaskPromptLogin, ACTIONS_EMITTED, loadGeostoryError(error), actions => {
-            expect(actions.length).toBe(ACTIONS_EMITTED);
-            actions.map((action) => {
-                switch (action.type) {
-                case LOGIN_REQUIRED:
-                    done();
-                    break;
-                default:
-                    done(new Error("Action not recognized"));
-                }
-            });
-            done();
-        },
-        {
-            router: {
-                location: {
-                    pathname: '/geostory/newgeostory'
-                }
-            }
-        });
-    });
     it('test feedbackMaskPromptLogin on geostory 403 with shared story', done => {
         const ACTIONS_EMITTED = 1;
         const error = {status: 403, statusText: 'Forbidden'};
@@ -235,5 +211,55 @@ describe('feedbackMask Epics', () => {
         }
         });
     });
+    it('should navigate to homepage when user made some changes to new map, and prompt appears', (done) => {
+        const epicResponse = (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe('@@router/CALL_HISTORY_METHOD');
+            done();
+        };
 
+        const initState = {
+            router: {
+                location: {
+                    pathname: '/viewer/openlayers/new'
+                }
+            }
+        };
+
+        testEpic(redirectUnauthorizedUserOnNewLoadError, 1, configureError({status: 403}), epicResponse, initState);
+    });
+    it('should navigate to homepage when user made some changes to new geostory, and prompt appears', (done) => {
+        const epicResponse = (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe('@@router/CALL_HISTORY_METHOD');
+            done();
+        };
+
+        const initState = {
+            router: {
+                location: {
+                    pathname: '/geostory/newgeostory'
+                }
+            }
+        };
+
+        testEpic(redirectUnauthorizedUserOnNewLoadError, 1, configureError({status: 403}), epicResponse, initState);
+    });
+    it('should navigate to homepage when user made some changes to new dashboard, and prompt appears', (done) => {
+        const epicResponse = (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe('@@router/CALL_HISTORY_METHOD');
+            done();
+        };
+
+        const initState = {
+            router: {
+                location: {
+                    pathname: '/dashboard'
+                }
+            }
+        };
+
+        testEpic(redirectUnauthorizedUserOnNewLoadError, 1, configureError({status: 403}), epicResponse, initState);
+    });
 });

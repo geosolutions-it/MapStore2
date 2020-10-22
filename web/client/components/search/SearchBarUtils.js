@@ -22,7 +22,7 @@ export const defaultSearchWrapper = ({
     onSearchReset = () => {}
 }) => () => {
     const text = searchText;
-    const totalResults = getTotalMaxResults(searchOptions.services, maxResults);
+    const totalResults = getTotalMaxResults(searchOptions?.services, maxResults);
     if ((text === undefined || text === "") && (!selectedItems || selectedItems.length === 0)) {
         onSearchReset();
     } else if (text !== undefined && text !== "") {
