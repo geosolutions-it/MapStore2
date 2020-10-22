@@ -22,7 +22,9 @@ const LocationPopoverEditor = ({
     ...props
 } = {}
 ) => {
-    return (<div key="ms-geostory-map-settings-navbar" className="ms-row-tab">
+    return (<div key="ms-geostory-map-settings-navbar" className="ms-row-tab" style={{
+        height: '400px'
+    }}>
         <div>
             <Nav bsStyle="tabs" activeKey={activeTab} justified>
                 {tabs.map(tab =>
