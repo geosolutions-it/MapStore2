@@ -15,7 +15,7 @@ const SearchBar = require("../../components/search/SearchBar").default;
 const UserGrid = require('./users/UserGrid');
 const UserDialog = require('./users/UserDialog');
 const UserDeleteConfirm = require('./users/UserDeleteConfirm');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const assign = require('object-assign');
 const {trim} = require('lodash');
 

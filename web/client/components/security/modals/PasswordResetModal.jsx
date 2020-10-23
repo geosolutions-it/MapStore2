@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const PasswordReset = require('../forms/PasswordReset');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const {Button} = require('react-bootstrap');
 const Modal = require('../../misc/Modal');
 

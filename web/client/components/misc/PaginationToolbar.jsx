@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Row, Col, Pagination} = require('react-bootstrap');
-const Message = require("../I18N/Message");
+const Message = require("../I18N/Message").default;
 const Loader = require('../misc/Loader');
 
 class PaginationToolbar extends React.Component {

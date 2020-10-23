@@ -17,7 +17,7 @@ const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 require('react-widgets/lib/less/react-widgets.less');
 const {isNil} = require('lodash');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const tinycolor = require("tinycolor2");
 
 class StylePolygon extends React.Component {

@@ -7,7 +7,7 @@
 */
 const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
-const Message = require("../../../I18N/Message");
+const Message = require("../../../I18N/Message").default;
 const Select = require("../AttributeAccessSelect");
 const {castArray} = require("lodash");
 

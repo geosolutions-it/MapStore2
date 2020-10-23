@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 
 const SharingLink = require('./SharingLink');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 const {Popover, Button, Glyphicon} = require('react-bootstrap');
 

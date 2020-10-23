@@ -16,7 +16,7 @@ const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 const {DropdownList, Multiselect} = require('react-widgets');
 
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 
 class ComboField extends React.Component {
     static propTypes = {

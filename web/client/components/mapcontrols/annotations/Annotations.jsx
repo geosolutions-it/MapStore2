@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const bbox = require('@turf/bbox');
 const {head, countBy, values, isUndefined, keys} = require('lodash');

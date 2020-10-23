@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { Row, Col, Grid, Nav, NavItem} = require('react-bootstrap');
 const ToolsContainer = require('./containers/ToolsContainer');
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 const {connect} = require('react-redux');
 const assign = require('object-assign');

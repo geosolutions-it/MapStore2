@@ -7,7 +7,7 @@
  */
 import React from 'react';
 
-import ReactIntl from 'react-intl';
+import * as ReactIntl from 'react-intl';
 import PropTypes from 'prop-types';
 
 const FormattedMessage = ReactIntl.FormattedMessage;

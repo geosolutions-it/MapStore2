@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const ImporterUtils = require('../../../utils/ImporterUtils');
 const {Table, Glyphicon, Button, Label, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');

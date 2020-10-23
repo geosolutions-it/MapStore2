@@ -10,7 +10,7 @@
 const React = require('react');
 const { shouldUpdate } = require('recompose');
 const SideGrid = require('../../../../misc/cardgrids/SideGrid');
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 const sampleData = require('../../../enhancers/sampleChartData');
 const SimpleChart = sampleData(require('../../../../charts/SimpleChart'));
 const {Row} = require('react-bootstrap');

@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const TaskProgress = require('./TaskProgress');
 const ImporterUtils = require('../../../utils/ImporterUtils');
 const {Grid, Row, Panel, Label, Table, Button, Glyphicon, Tooltip} = require('react-bootstrap');

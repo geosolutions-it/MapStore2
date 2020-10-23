@@ -12,7 +12,7 @@ const Toolbar = require('../../misc/toolbar/Toolbar');
 const Portal = require('../../misc/Portal');
 const GeometryEditor = require('./GeometryEditor');
 const Manager = require('../../style/vector/Manager');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, ControlLabel, Checkbox } = require('react-bootstrap');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');

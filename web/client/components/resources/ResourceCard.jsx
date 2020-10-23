@@ -7,7 +7,7 @@
  */
 const PropTypes = require('prop-types');
 const React = require('react');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const GridCard = require('../misc/GridCard');
 const FitIcon = require('../misc/FitIcon');
 const thumbUrl = require('../maps/style/default.jpg');

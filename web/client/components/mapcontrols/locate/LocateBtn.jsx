@@ -11,7 +11,7 @@ var React = require('react');
 var {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const defaultIcon = require('../../misc/spinners/InlineSpinner/img/spinner.gif');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 require('./css/locate.css');
 let checkingGeoLocation = false;
 let geoLocationAllowed = false;

@@ -25,7 +25,7 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures, setMapTrigger} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
-const {getConfigProp} = require("../utils/ConfigUtils");
+const {getConfigProp} = require("../utils/ConfigUtils").default;
 const { compose, defaultProps } = require('recompose');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');

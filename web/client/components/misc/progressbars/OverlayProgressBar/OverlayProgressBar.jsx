@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {ProgressBar, Col, Row} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
-const Message = require('../../../../components/I18N/Message');
+const Message = require('../../../../components/I18N/Message').default;
 require('./css/overlayprogressbar.css');
 
 class OverlayProgressBar extends React.Component {

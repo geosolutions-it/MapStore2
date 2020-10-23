@@ -9,7 +9,7 @@ const React = require('react');
 const {branch} = require('recompose');
 const { Tooltip } = require('react-bootstrap');
 const OverlayTrigger = require('../OverlayTrigger');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {omit} = require('lodash');
 /**
  * Tooltip enhancer. Enhances an object adding a tooltip (with i18n support).

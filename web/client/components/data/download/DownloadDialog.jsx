@@ -4,7 +4,7 @@ const {Button, Glyphicon} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
 const Dialog = require('../../misc/Dialog');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const DownloadOptions = require('./DownloadOptions');
 const assign = require('object-assign');
 

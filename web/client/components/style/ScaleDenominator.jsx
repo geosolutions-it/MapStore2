@@ -13,7 +13,7 @@ const {findDOMNode} = require('react-dom');
 const DropdownList = require('react-widgets').DropdownList;
 const {Row, Col, Overlay, Popover, Label} = require('react-bootstrap');
 const LocaleUtils = require('../../utils/LocaleUtils');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 class ScaleDenominator extends React.Component {
     static propTypes = {

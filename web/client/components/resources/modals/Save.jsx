@@ -12,7 +12,7 @@ const Portal = require('../../misc/Portal');
 const ResizableModal = require('../../misc/ResizableModal');
 // require('./css/modals.css');
 const {Grid} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const ErrorBox = require('./fragments/ErrorBox');
 const MainForm = require('./fragments/MainForm');
 const ruleEditor = require('./enhancers/ruleEditor');

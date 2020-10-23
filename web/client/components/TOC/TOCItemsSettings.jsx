@@ -16,7 +16,7 @@ const NavItemT = tooltip(NavItem);
 const ResizableModal = require('../misc/ResizableModal');
 const Portal = require('../misc/Portal');
 const {head, isObject, isString} = require('lodash');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 /**
  * Component for rendering TOC Settings as tabs inside a Dockable contanier

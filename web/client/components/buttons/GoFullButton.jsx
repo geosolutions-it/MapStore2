@@ -11,9 +11,9 @@ const React = require('react');
 
 const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 
 /**
  * Button for Go to Full MapStore2.

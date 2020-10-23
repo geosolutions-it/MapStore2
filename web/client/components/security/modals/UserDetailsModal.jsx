@@ -12,7 +12,7 @@ const {Grid, Row, Col, Alert, Glyphicon} = require('react-bootstrap');
 const ResizableModal = require('../../../components/misc/ResizableModal');
 const Portal = require('../../../components/misc/Portal');
 const SecurityUtils = require('../../../utils/SecurityUtils');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const {isArray, isObject, isString} = require('lodash');
 
 /**

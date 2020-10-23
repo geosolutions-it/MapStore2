@@ -14,7 +14,7 @@ const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayerMetadataModal = require('./fragments/LayerMetadataModal');
 const Proj4js = require('proj4').default;
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const SwipeButton = require('./swipe/SwipeButton');
 
 class Toolbar extends React.Component {

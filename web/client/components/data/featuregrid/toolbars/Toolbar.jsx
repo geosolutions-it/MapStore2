@@ -1,7 +1,7 @@
 const React = require('react');
 const {ButtonGroup, Glyphicon, Checkbox} = require('react-bootstrap');
 require("./toolbar.css");
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const withHint = require("../enhancers/withHint");
 const TButton = withHint(require("./TButton"));
 const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {

@@ -13,7 +13,7 @@ const DefaultStyle = filterEnhancer(require("../DefaultStyle"));
 const AvailableStyles = filterEnhancer(require("../AvailableStyles"));
 
 const StylesList = require("../StylesList");
-const Message = require("../../../I18N/Message");
+const Message = require("../../../I18N/Message").default;
 
 const enhancer = require("./enhancers/style");
 const getAvailables = (styles, {allowedStyles = {}}) => {

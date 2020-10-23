@@ -12,7 +12,7 @@ const {Button, Col, Grid, Row, Image, Glyphicon, Table, Panel, Alert} = require(
 const {DateFormat} = require('../../I18N/I18N');
 require("./css/snapshot.css");
 
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 const shotingImg = require('./shoting.gif');
 const notAvailable = require('./not-available.png');
 const {isEqual} = require('lodash');
@@ -20,7 +20,7 @@ let SnapshotSupport;
 const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
 const Dialog = require('../../misc/Dialog');
 
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const Portal = require('../../misc/Portal');
 
 /**

@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const ReactQuill = require('react-quill');
 const ResizableModal = require('../../../misc/ResizableModal');
 const Portal = require('../../../misc/Portal');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const {Quill} = ReactQuill;
 const {ResizeModule, IFrame, toolbarConfig} = require('../../../misc/quillmodules/ResizeModule')(Quill);
 

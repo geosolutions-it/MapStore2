@@ -11,7 +11,7 @@ const React = require('react');
 
 const ToggleButton = require('./ToggleButton');
 const {Tooltip} = require('react-bootstrap');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 /**
  * Toggle button for fullscreen. Wraps {@link #components.buttons.ToggleButton} with some defaults

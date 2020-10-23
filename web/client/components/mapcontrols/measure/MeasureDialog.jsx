@@ -11,7 +11,7 @@ const React = require('react');
 const {isEqual} = require('lodash');
 const MeasureComponent = require('./MeasureComponent');
 const DockablePanel = require('../../misc/panels/DockablePanel');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const Dialog = require('../../misc/Dialog');
 const {Glyphicon} = require('react-bootstrap');
 

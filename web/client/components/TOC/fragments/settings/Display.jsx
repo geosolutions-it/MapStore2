@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {DropdownList} = require('react-widgets');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const {Grid, Row, Col, FormGroup, ControlLabel, Checkbox} = require('react-bootstrap');
 const {clamp, isNil, isNumber} = require('lodash');
 const Legend = require('../legend/Legend');

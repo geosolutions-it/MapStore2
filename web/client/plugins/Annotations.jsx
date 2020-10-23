@@ -9,7 +9,7 @@
 const React = require('react');
 const {connect} = require('../utils/PluginsUtils');
 const assign = require('object-assign');
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 const PropTypes = require('prop-types');
 
 const {Glyphicon} = require('react-bootstrap');

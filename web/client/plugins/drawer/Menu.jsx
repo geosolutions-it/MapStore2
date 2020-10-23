@@ -11,7 +11,7 @@ const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../components/misc/OverlayTrigger');
 const Sidebar = require('react-sidebar').default;
 const { Resizable } = require('react-resizable');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 
 class Menu extends React.Component {
     static propTypes = {

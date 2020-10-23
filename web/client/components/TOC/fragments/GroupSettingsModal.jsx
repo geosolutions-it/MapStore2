@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const General = require('./settings/General');
 const Dialog = require('../../misc/Dialog');
 const Portal = require('../../misc/Portal');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
 const assign = require('object-assign');
 

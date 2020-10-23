@@ -12,7 +12,7 @@ const {deleteGroup} = require('../../../actions/usergroups');
 const {Alert} = require('react-bootstrap');
 const Confirm = require('../../../components/misc/ConfirmDialog');
 const GroupCard = require('../../../components/manager/users/GroupCard');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const {findIndex} = require('lodash');
 
 class GroupDeleteConfirm extends React.Component {

@@ -16,7 +16,7 @@ const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 // not sure this is needed, TODO check!
 numberLocalizer();
 
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const {createFont} = require('../../../utils/AnnotationsUtils');
 

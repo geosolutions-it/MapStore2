@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Glyphicon, Tooltip} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 class StatusIcon extends React.Component {

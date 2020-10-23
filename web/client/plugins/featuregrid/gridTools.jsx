@@ -1,7 +1,7 @@
 const React = require('react');
 const bbox = require('@turf/bbox');
 const {zoomToExtent} = require('../../actions/map');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../components/misc/OverlayTrigger');
 

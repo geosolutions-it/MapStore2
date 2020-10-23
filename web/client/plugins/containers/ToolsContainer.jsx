@@ -21,7 +21,7 @@ const HelpBadge = connect((state) => ({
     changeHelpwinVisibility
 })(require('../../components/help/HelpBadge'));
 
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 
 const {Button, Tooltip, Panel, Collapse, Glyphicon} = require('react-bootstrap');
 const OverlayTrigger = require('../../components/misc/OverlayTrigger');

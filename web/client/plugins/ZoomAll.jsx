@@ -19,7 +19,7 @@ const ZoomToMaxExtentButton = connect(selector, {
     changeMapView
 })(require('../components/buttons/ZoomToMaxExtentButton'));
 
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 require('./zoomall/zoomall.css');
 
