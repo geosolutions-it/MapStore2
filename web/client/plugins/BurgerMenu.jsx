@@ -144,7 +144,7 @@ class BurgerMenu extends React.Component {
  * Menu button that can contain other plugins entries.
  * Usually rendered inside {@link #plugins.OmniBar|plugins.OmniBar}
  * You can render an item inside burger menu by adding the following to the `containers` entry of your plugin.
- * It is a wrapper for `ToolsContainer` so all the properties of the tools of {@ plugins.containers.ToolContainer|ToolContainer} can be used here (action, selector ...).
+ * It is a wrapper for `ToolsContainer` so all the properties of the tools of {@link #plugins.containers.ToolContainer|ToolContainer} can be used here (action, selector ...).
  * ```
  * BurgerMenu: {
  *      name: 'my_entry', // name of your entry
