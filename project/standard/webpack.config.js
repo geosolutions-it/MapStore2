@@ -1,17 +1,9 @@
-const path = require("path");
-
+const path = require('path');
+const fs = require('fs');
 const extractThemesPlugin = require('../../build/themes.js').extractThemesPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const paths = {
-    base: path.join(__dirname, "..", "..", "..", ".."),
-    dist: path.join(__dirname, "..", "..", "..", ".."),
-    framework: path.join(__dirname, "..", "..", "..", "..", "node_modules", "mapstore", "web", "client"),
-    code: [
-        path.join(__dirname, "..", "..", "..", "..", "js"),
-        path.join(__dirname, "..", "..", "..", "..", "node_modules", "mapstore", "web", "client")
-    ]
-};
+const DefinePlugin = require('webpack/lib/DefinePlugin');
+const appDirectory = fs.realpathSync(process.cwd());
 
 /*
 The mapstore properties inside the package.json is a configuration retrieved at build time.
@@ -28,7 +20,7 @@ It will override the default mapstore theme
 // package.json
 {
     ...,
-    "mapstore": { "themes": [ "default" ]  },
+    'mapstore': { 'themes': [ 'default' ]  },
     ...
 }
 
@@ -37,7 +29,7 @@ It will add a new entry to themes keeping the default style of mapstore
 
 // package.json
 {
-    "mapstore": { "themes": [ "mystyle" ]  }
+    'mapstore': { 'themes': [ 'mystyle' ]  }
 }
 
 example 3: this configuration will look inside the project for the theme/default/theme.less and theme/mystyle/theme.less files.
@@ -45,40 +37,73 @@ It will add a new entry to themes and it will override the default mapstore them
 
 // package.json
 {
-    "mapstore": { "themes": [ "default", "mystyle" ]  }
+    'mapstore': { 'themes': [ 'default', 'mystyle' ]  }
 }
 */
-const mapstoreConfig = require(path.join(__dirname, "..", "..", "..", "..", "package.json")).mapstore || {};
+const mapstoreConfig = require(path.join(appDirectory, 'package.json')).mapstore || {};
+const publicPath = '/';
+const output = '/';
+const themePrefix = 'mapstore';
+const buildConfig = require('../../build/buildConfig');
 
-module.exports = require('../../build/buildConfig')(
+let frameworkPath = path.join(appDirectory, 'web', 'client');
+let appEntriesDirectory = path.join(appDirectory, 'web', 'client', 'product');
+
+if (fs.existsSync(path.resolve(appDirectory, './MapStore2'))) {
+    frameworkPath = path.join(appDirectory, 'MapStore2', 'web', 'client');
+    appEntriesDirectory = path.join(appDirectory, 'js');
+}
+
+if (fs.existsSync(path.resolve(appDirectory, './node_modules/mapstore'))) {
+    frameworkPath = path.join(appDirectory, 'node_modules', 'mapstore', 'web', 'client');
+    appEntriesDirectory = path.join(appDirectory, 'js');
+}
+
+const paths = {
+    base: path.resolve(appDirectory),
+    dist: path.resolve(appDirectory, output),
+    framework: frameworkPath,
+    code: [
+        path.join(appDirectory, 'js'),
+        frameworkPath
+    ]
+};
+
+module.exports = buildConfig(
     {
-        'mapstore': path.join(paths.code[0], "app")
+        'mapstore': path.join(appEntriesDirectory, 'app')
     },
     {
-        'themes/default': path.join(paths.framework, "themes", "default", "theme.less"),
+        'themes/default': path.join(paths.framework, 'themes', 'default', 'theme.less'),
         ...(mapstoreConfig.themes || []).reduce((acc, name) => ({
             ...acc,
-            ['themes/' + name]: path.join(paths.base, "themes", name, "theme.less")
+            ['themes/' + name]: path.join(paths.base, 'themes', name, 'theme.less')
         }), {})
     },
     paths,
     extractThemesPlugin,
     false,
-    "/",
-    '.mapstore',
+    publicPath,
+    `.${themePrefix}`,
     [],
     {
-        "@mapstore": path.resolve(__dirname, "..", "..", "..", "web", "client"),
-        "@js": path.resolve(__dirname, "..", "..", "..", "..", "js")
+        '@mapstore/framework': paths.framework,
+        '@js': path.resolve(appDirectory, 'js')
     },
     undefined,
     [
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'indexTemplate.html'),
-            chunks: ['mapstore'],
-            inject: "body",
-            hash: true,
-            filename: 'index.html'
+            inject: false,
+            template: path.resolve(__dirname, 'index.ejs'),
+            templateParameters: {
+                title: mapstoreConfig.title || 'MapStore HomePage'
+            }
+        }),
+        new DefinePlugin({
+            '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify({
+                themePath: publicPath + 'themes',
+                themePrefix: themePrefix
+            })
         })
     ]
 );

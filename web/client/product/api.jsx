@@ -13,7 +13,7 @@ const getScriptPath = () => {
 const MapStore2 = require('../jsapi/MapStore2')
     .withPlugins(require('./apiPlugins'), {
         theme: {
-            path: getScriptPath() + '/themes'
+            path: __MAPSTORE_PROJECT_CONFIG__.themePath || getScriptPath() + '/themes'
         },
         noLocalConfig: true,
         initialState: require('./appConfigEmbedded').initialState,
