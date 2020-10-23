@@ -9,7 +9,7 @@
 import React from 'react';
 
 import { createSelector } from 'reselect';
-import { creationError, changeMapView, clickOnMap, mouseMove, mouseOut } from '../../actions/map';
+import { changeMapView, clickOnMap, mouseMove, mouseOut } from '../../actions/map';
 import { removePopup } from '../../actions/mapPopups';
 import { layerLoading, layerLoad, layerError } from '../../actions/layers';
 
@@ -19,7 +19,7 @@ import {
     resetGeometry,
     updateMeasures,
     setTextLabels,
-    changeMeasurement,
+    changeMeasurement
 } from '../../actions/measurement';
 
 import { measurementSelector } from '../../selectors/measurement';
@@ -33,7 +33,7 @@ import {
     geometryChanged,
     drawStopped,
     selectFeatures,
-    drawingFeatures,
+    drawingFeatures
 } from '../../actions/draw';
 
 import { updateHighlighted } from '../../actions/highlight';
@@ -53,7 +53,7 @@ const pluginsCreator = (mapType, actions) => {
             projectionDefs: projectionDefsSelector(state),
             mousePosition: isMouseMoveActiveSelector(state)
         }), assign({}, {
-            onCreationError: creationError,
+            onCreationError: () => {},
             onMapViewChanges: changeMapView,
             onClick: clickOnMap,
             onMouseMove: mouseMove,
