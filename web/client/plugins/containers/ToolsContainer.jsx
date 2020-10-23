@@ -24,7 +24,7 @@ const HelpBadge = connect((state) => ({
 const Message = require('../../components/I18N/Message').default;
 
 const {Button, Tooltip, Panel, Collapse, Glyphicon} = require('react-bootstrap');
-const OverlayTrigger = require('../../components/misc/OverlayTrigger');
+const OverlayTrigger = require('../../components/misc/OverlayTrigger').default;
 
 const {setControlProperty, toggleControl} = require('../../actions/controls');
 const {partial} = require('lodash');

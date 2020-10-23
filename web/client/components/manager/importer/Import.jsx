@@ -12,7 +12,7 @@ const Message = require('../../I18N/Message').default;
 const TaskProgress = require('./TaskProgress');
 const ImporterUtils = require('../../../utils/ImporterUtils');
 const {Grid, Row, Panel, Label, Table, Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 require("./style/importer.css");
 
 class Task extends React.Component {

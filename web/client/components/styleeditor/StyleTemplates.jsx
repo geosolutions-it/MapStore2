@@ -21,7 +21,7 @@ const Filter = withLocal('filterPlaceholder')(require('../misc/Filter'));
 const FormControl = withLocal('placeholder')(FormControlRB);
 
 const ResizableModal = require('../misc/ResizableModal').default;
-const Portal = require('../misc/Portal');
+const Portal = require('../misc/Portal').default;
 const Message = require('../I18N/Message').default;
 const HTML = require('../I18N/HTML');
 const SVGPreview = require('./SVGPreview');

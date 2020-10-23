@@ -47,7 +47,7 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const layerFilterEpics = require('../epics/layerfilter');
 
 const ResizableModal = require('../components/misc/ResizableModal').default;
-const Portal = require('../components/misc/Portal');
+const Portal = require('../components/misc/Portal').default;
 
 
 const {

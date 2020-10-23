@@ -21,7 +21,7 @@ const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
 const Dialog = require('../../misc/Dialog');
 
 const Message = require('../../I18N/Message').default;
-const Portal = require('../../misc/Portal');
+const Portal = require('../../misc/Portal').default;
 
 /**
  * SnapshotPanel allow to export a snapshot of the current map, showing a

@@ -12,7 +12,7 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 
 const {Tooltip} = require('react-bootstrap');
 
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 
 const {DropdownList, Multiselect} = require('react-widgets');
 

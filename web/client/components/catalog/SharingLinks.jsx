@@ -13,7 +13,7 @@ const Message = require('../I18N/Message').default;
 
 const {Popover, Button, Glyphicon} = require('react-bootstrap');
 
-const OverlayTrigger = require('../misc/OverlayTrigger');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
 
 class SharingLinks extends React.Component {
     static propTypes = {

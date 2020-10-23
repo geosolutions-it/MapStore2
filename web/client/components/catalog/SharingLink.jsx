@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const Message = require('../I18N/Message').default;
 const {FormControl, FormGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
 const CopyToClipboard = require('react-copy-to-clipboard');
 const SecurityUtils = require('../../utils/SecurityUtils');
 

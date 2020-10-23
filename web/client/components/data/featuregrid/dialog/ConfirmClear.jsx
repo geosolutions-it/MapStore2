@@ -1,6 +1,6 @@
 const React = require('react');
 const Confirm = require('../../../misc/ConfirmDialog');
-const Portal = require('../../../misc/Portal');
+const Portal = require('../../../misc/Portal').default;
 const Message = require('../../../I18N/Message').default;
 module.exports = ({
     onClose = () => {},

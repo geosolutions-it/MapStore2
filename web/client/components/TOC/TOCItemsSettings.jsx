@@ -14,7 +14,7 @@ const Toolbar = require('../misc/toolbar/Toolbar');
 const tooltip = require('../misc/enhancers/tooltip');
 const NavItemT = tooltip(NavItem);
 const ResizableModal = require('../misc/ResizableModal').default;
-const Portal = require('../misc/Portal');
+const Portal = require('../misc/Portal').default;
 const {head, isObject, isString} = require('lodash');
 const Message = require('../I18N/Message').default;
 

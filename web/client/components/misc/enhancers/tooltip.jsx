@@ -8,7 +8,7 @@
 const React = require('react');
 const {branch} = require('recompose');
 const { Tooltip } = require('react-bootstrap');
-const OverlayTrigger = require('../OverlayTrigger');
+const OverlayTrigger = require('../OverlayTrigger').default;
 const Message = require('../../I18N/Message').default;
 const {omit} = require('lodash');
 /**

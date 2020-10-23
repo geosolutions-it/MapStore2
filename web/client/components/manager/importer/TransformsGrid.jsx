@@ -10,7 +10,7 @@ const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message').default;
 const {Panel, Table, Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 
 class TransformsGrid extends React.Component {
     static propTypes = {

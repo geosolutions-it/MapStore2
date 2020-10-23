@@ -3,7 +3,7 @@ const bbox = require('@turf/bbox');
 const {zoomToExtent} = require('../../actions/map');
 const Message = require('../../components/I18N/Message').default;
 const {Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../components/misc/OverlayTrigger');
+const OverlayTrigger = require('../../components/misc/OverlayTrigger').default;
 
 module.exports = [{
     name: '',

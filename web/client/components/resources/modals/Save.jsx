@@ -8,7 +8,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {get} = require('lodash');
-const Portal = require('../../misc/Portal');
+const Portal = require('../../misc/Portal').default;
 const ResizableModal = require('../../misc/ResizableModal').default;
 // require('./css/modals.css');
 const {Grid} = require('react-bootstrap');

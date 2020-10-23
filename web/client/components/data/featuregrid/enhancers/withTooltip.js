@@ -1,5 +1,5 @@
 const React = require('react');
-const OverlayTrigger = require('../../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../../misc/OverlayTrigger').default;
 const {Tooltip} = require('react-bootstrap');
 
 module.exports = (Wrapped) => ({tooltip, id, placement, ...props}) =>
