@@ -9,7 +9,6 @@
 module.exports = {
     plugins: {
         // framework plugins
-        BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
         DrawerMenuPlugin: require('../plugins/DrawerMenu'),
         FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
         GoFullPlugin: require('../plugins/GoFull'),
