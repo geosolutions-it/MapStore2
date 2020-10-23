@@ -30,6 +30,8 @@ class Template extends React.Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.template !== this.props.template) {
+            // Reset to avoid rendering with old comp value during template update
+            this.comp = null;
             this.parseTemplate(nextProps.template);
         }
     }
