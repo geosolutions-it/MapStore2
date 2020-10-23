@@ -5,9 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { createSelector } = require('reselect');
-const { getFloatingWidgets, getFloatingWidgetsCurrentLayout, getCollapsedIds, getCollapsedState } = require('./widgets');
-const { find, findIndex, sortBy } = require('lodash');
+import { createSelector } from 'reselect';
+
+import {
+    getFloatingWidgets,
+    getFloatingWidgetsCurrentLayout,
+    getCollapsedIds,
+    getCollapsedState
+} from './widgets';
+
+import { find, findIndex, sortBy } from 'lodash';
 
 /**
  * Only widgets that are not pinned (static) can be in tray
@@ -18,7 +25,7 @@ const noStaticWidgets = w => !w.dataGrid || !w.dataGrid.static;
  * A selector that retrieves widgets to display in the tray area
  * @return the widgets to display in the tray area
  */
-const trayWidgets = createSelector(
+export const trayWidgets = createSelector(
     getFloatingWidgets,
     getCollapsedIds,
     getFloatingWidgetsCurrentLayout,
@@ -45,6 +52,4 @@ const trayWidgets = createSelector(
             })
 );
 
-module.exports = {
-    trayWidgets
-};
+export default trayWidgets;

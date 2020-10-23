@@ -5,35 +5,36 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {Provider} = require('react-redux');
-const PropTypes = require('prop-types');
-const dragDropContext = require('react-dnd').DragDropContext;
-const html5Backend = require('react-dnd-html5-backend');
-const proj4 = require('proj4').default;
 
-const {changeBrowserProperties} = require('../../actions/browser');
-const {loadLocale} = require('../../actions/locale');
-const {localConfigLoaded} = require('../../actions/localConfig');
-const {loadPrintCapabilities} = require('../../actions/print');
+import React from 'react';
+import { Provider } from 'react-redux';
+import PropTypes from 'prop-types';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import html5Backend from 'react-dnd-html5-backend';
 
-const ConfigUtils = require('../../utils/ConfigUtils');
-const LocaleUtils = require('../../utils/LocaleUtils');
-const PluginsUtils = require('../../utils/PluginsUtils');
+import { changeBrowserProperties } from '../../actions/browser';
+import { loadLocale } from '../../actions/locale';
+import { localConfigLoaded } from '../../actions/localConfig';
+import { loadPrintCapabilities } from '../../actions/print';
 
-const assign = require('object-assign');
-const url = require('url');
-const { isObject, isArray, castArray } = require('lodash');
+import ConfigUtils from '../../utils/ConfigUtils';
+import LocaleUtils from '../../utils/LocaleUtils';
+import PluginsUtils from '../../utils/PluginsUtils';
 
+import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 
-const axios = require('../../libs/ajax');
+import isObject from 'lodash/isObject';
+import isArray from 'lodash/isArray';
 
-require('./appPolyfill');
+import './appPolyfill';
 
-const { augmentStore } = require('../../utils/StateUtils');
-
-const {LOAD_EXTENSIONS, PLUGIN_UNINSTALLED} = require('../../actions/contextcreator');
+const DefaultAppLoaderComponent = () => (
+    <span>
+        <div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
+        <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div>
+    </span>
+);
 
 /**
  * Standard MapStore2 application component
@@ -58,40 +59,40 @@ class StandardApp extends React.Component {
         storeOpts: PropTypes.object,
         initialActions: PropTypes.array,
         appComponent: PropTypes.func,
-        printingEnabled: PropTypes.bool,
         onStoreInit: PropTypes.func,
         onInit: PropTypes.func,
+        onAfterInit: PropTypes.func,
         mode: PropTypes.string,
-        enableExtensions: PropTypes.bool
+        loaderComponent: PropTypes.func,
+        errorFallbackComponent: PropTypes.func
     };
 
     static defaultProps = {
         pluginsDef: {plugins: {}, requires: {}},
         initialActions: [],
-        printingEnabled: false,
         appStore: () => ({dispatch: () => {}, getState: () => ({}), subscribe: () => {}}),
         appComponent: () => <span/>,
         onStoreInit: () => {},
-        enableExtensions: false
+        loaderComponent: DefaultAppLoaderComponent
     };
 
     state = {
-        initialized: false,
-        pluginsRegistry: {},
-        removedPlugins: []
+        initialized: false
     };
 
     addProjDefinitions(config) {
         if (config.projectionDefs && config.projectionDefs.length) {
-            config.projectionDefs.forEach((proj) => {
-                proj4.defs(proj.code, proj.def);
+            import('proj4').then(mod => {
+                const proj4 = mod.default;
+                config.projectionDefs.forEach((proj) => {
+                    proj4.defs(proj.code, proj.def);
+                });
             });
-
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.initialized !== nextState.initialized || this.state.pluginsRegistry !== nextState.pluginsRegistry) {
+        if (this.state.initialized !== nextState.initialized) {
             return true;
         }
         if (this.props.pluginsDef !== nextProps.pluginsDef) {
@@ -118,13 +119,13 @@ class StandardApp extends React.Component {
             ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
         }
         ConfigUtils.loadConfiguration().then((config) => {
-            const opts = assign({}, this.props.storeOpts, {
-                onPersist: onInit.bind(null, config)
-            }, {
+            const opts = {
+                ...this.props.storeOpts,
+                onPersist: onInit.bind(null, config),
                 initialState: this.parseInitialState(config.initialState, {
                     mode: this.props.mode || (ConfigUtils.getBrowserProperties().mobile ? 'mobile' : 'desktop')
-                }) || {defaultState: {}, mobile: {}}
-            });
+                }) || { defaultState: {}, mobile: {} }
+            };
             this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
             this.props.onStoreInit(this.store);
 
@@ -139,17 +140,22 @@ class StandardApp extends React.Component {
         const {plugins, requires} = this.props.pluginsDef;
         const {appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
-
-        return this.state.initialized ?
-            <Provider store={this.store}>
-                <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.filterRemoved(this.state.pluginsRegistry, this.state.removedPlugins)}), { requires })} />
+        const Loader = this.props.loaderComponent;
+        return this.state.initialized
+            ? <Provider store={this.store}>
+                <App
+                    {...other}
+                    plugins={{ ...PluginsUtils.getPlugins(plugins), requires }}
+                />
             </Provider>
-            : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
-                <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
+            : <Loader />;
     }
     afterInit = () => {
         if (this.props.printingEnabled) {
             this.store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
+        }
+        if (this.props.onAfterInit) {
+            this.props.onAfterInit(this.store);
         }
         this.props.initialActions.forEach((action) => {
             this.store.dispatch(action());
@@ -158,91 +164,18 @@ class StandardApp extends React.Component {
             initialized: true
         });
     };
-    getAssetPath = (asset) => {
-        return ConfigUtils.getConfigProp("extensionsFolder") + asset;
-    };
-    removeExtension = (plugin) => {
-        this.setState({
-            removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"]
-        });
-    };
-    filterRemoved = (registry, removed) => {
-        return Object.keys(registry).reduce((acc, p) => {
-            if (removed.indexOf(p) !== -1) {
-                return acc;
-            }
-            return {
-                ...acc,
-                [p]: registry[p]
-            };
-        }, {});
-    };
-    loadExtensions = (path, callback) => {
-        if (this.props.enableExtensions) {
-            return axios.get(path).then((response) => {
-                const plugins = response.data;
-                Promise.all(Object.keys(plugins).map((pluginName) => {
-                    const bundlePath = this.getAssetPath(plugins[pluginName].bundle);
-                    return PluginsUtils.loadPlugin(bundlePath).then((loaded) => {
-                        return loaded.plugin.loadPlugin().then((impl) => {
-                            augmentStore({ reducers: impl.reducers || {}, epics: impl.epics || {} });
-                            const pluginDef = {
-                                [pluginName]: {
-                                    [pluginName]: {
-                                        loadPlugin: (resolve) => {
-                                            resolve(impl);
-                                        }
-                                    }
-                                }
-                            };
-                            return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
-                        });
-                    });
-                })).then((loaded) => {
-                    callback(loaded.reduce((previous, current) => {
-                        return { ...previous, ...current.plugin };
-                    }, {}), loaded.map(p => p.translations).filter(p => p !== ""));
-                }).catch(() => {
-                    callback({}, []);
-                });
-            }).catch(() => {
-                callback({}, []);
-            });
-        }
-        return callback({}, []);
-    };
-    onPluginsLoaded = (plugins, translations) => {
-        this.setState({
-            pluginsRegistry: plugins
-        });
-        if (translations.length > 0) {
-            ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
-        }
-        const locale = LocaleUtils.getUserLocale();
-        this.store.dispatch(loadLocale(null, locale));
-    };
+
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
-        if (this.store.addActionListener) {
-            this.store.addActionListener((action) => {
-                if (action.type === LOAD_EXTENSIONS) {
-                    this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), this.onPluginsLoaded);
-                }
-                if (action.type === PLUGIN_UNINSTALLED) {
-                    this.removeExtension(action.plugin);
-                }
-            });
-        }
         this.addProjDefinitions(config);
-        this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), (plugins, translations) => {
-            this.onPluginsLoaded(plugins, translations);
-            if (this.props.onInit) {
-                this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
-            } else {
-                this.afterInit(config);
-            }
-        });
+        if (this.props.onInit) {
+            this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
+        } else {
+            const locale = LocaleUtils.getUserLocale();
+            this.store.dispatch(loadLocale(null, locale));
+            this.afterInit(config);
+        }
     };
     /**
      * It returns an object of the same structure of the initialState but replacing strings like "{someExpression}" with the result of the expression between brackets.
@@ -261,4 +194,4 @@ class StandardApp extends React.Component {
     };
 }
 
-module.exports = StandardApp;
+export default StandardApp;

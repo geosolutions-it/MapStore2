@@ -6,33 +6,34 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const GETGROUPS = 'GROUPMANAGER_GETGROUPS';
-const EDITGROUP = 'GROUPMANAGER_EDITGROUP';
-const EDITGROUPDATA = 'GROUPMANAGER_EDITGROUP_DATA';
-const UPDATEGROUP = 'GROUPMANAGER_UPDATE_GROUP';
-const DELETEGROUP = 'GROUPMANAGER_DELETEGROUP';
-const SEARCHTEXTCHANGED = 'GROUPMANAGER_SEARCHTEXTCHANGED';
-const SEARCHUSERS = 'GROUPMANAGER_SEARCHUSERS';
-const STATUS_LOADING = "loading";
-const STATUS_SUCCESS = "success";
-const STATUS_ERROR = "error";
-// const STATUS_NEW = "new";
-const STATUS_SAVING = "saving";
-const STATUS_SAVED = "saved";
-const STATUS_CREATING = "creating";
-const STATUS_CREATED = "created";
-const STATUS_DELETED = "deleted";
+export const GETGROUPS = 'GROUPMANAGER_GETGROUPS';
+export const EDITGROUP = 'GROUPMANAGER_EDITGROUP';
+export const EDITGROUPDATA = 'GROUPMANAGER_EDITGROUP_DATA';
+export const UPDATEGROUP = 'GROUPMANAGER_UPDATE_GROUP';
+export const DELETEGROUP = 'GROUPMANAGER_DELETEGROUP';
+export const SEARCHTEXTCHANGED = 'GROUPMANAGER_SEARCHTEXTCHANGED';
+export const SEARCHUSERS = 'GROUPMANAGER_SEARCHUSERS';
+export const STATUS_LOADING = "loading";
+export const STATUS_SUCCESS = "success";
+export const STATUS_ERROR = "error";
+// export  const STATUS_NEW = "new";
+export const STATUS_SAVING = "saving";
+export const STATUS_SAVED = "saved";
+export const STATUS_CREATING = "creating";
+export const STATUS_CREATED = "created";
+export const STATUS_DELETED = "deleted";
 
 /*
-const USERGROUPMANAGER_UPDATE_GROUP = 'USERMANAGER_UPDATE_GROUP';
-const USERGROUPMANAGER_DELETE_GROUP = 'USERMANAGER_DELETE_GROUP';
-const USERGROUPMANAGER_SEARCH_TEXT_CHANGED = 'USERGROUPMANAGER_SEARCH_TEXT_CHANGED';
+export const USERGROUPMANAGER_UPDATE_GROUP = 'USERMANAGER_UPDATE_GROUP';
+export const USERGROUPMANAGER_DELETE_GROUP = 'USERMANAGER_DELETE_GROUP';
+export const USERGROUPMANAGER_SEARCH_TEXT_CHANGED = 'USERGROUPMANAGER_SEARCH_TEXT_CHANGED';
 */
-const API = require('../api/GeoStoreDAO');
-const {get/* , assign*/} = require('lodash');
-const assign = require('object-assign');
+import API from '../api/GeoStoreDAO';
 
-function getUserGroupsLoading(text, start, limit) {
+import { get } from 'lodash';
+import assign from 'object-assign';
+
+export function getUserGroupsLoading(text, start, limit) {
     return {
         type: GETGROUPS,
         status: STATUS_LOADING,
@@ -41,7 +42,7 @@ function getUserGroupsLoading(text, start, limit) {
         limit
     };
 }
-function getUserGroupSuccess(text, start, limit, groups, totalCount) {
+export function getUserGroupSuccess(text, start, limit, groups, totalCount) {
     return {
         type: GETGROUPS,
         status: STATUS_SUCCESS,
@@ -53,7 +54,7 @@ function getUserGroupSuccess(text, start, limit, groups, totalCount) {
 
     };
 }
-function getUserGroupError(text, start, limit, error) {
+export function getUserGroupError(text, start, limit, error) {
     return {
         type: GETGROUPS,
         status: STATUS_ERROR,
@@ -63,7 +64,7 @@ function getUserGroupError(text, start, limit, error) {
         error
     };
 }
-function getUserGroups(searchText, options) {
+export function getUserGroups(searchText, options) {
     let params = options && options.params;
     let start;
     let limit;
@@ -99,7 +100,7 @@ function getUserGroups(searchText, options) {
         });
     };
 }
-function editGroupLoading(group) {
+export function editGroupLoading(group) {
     return {
         type: EDITGROUP,
         status: STATUS_LOADING,
@@ -107,7 +108,7 @@ function editGroupLoading(group) {
     };
 }
 
-function editGroupSuccess(group) {
+export function editGroupSuccess(group) {
     return {
         type: EDITGROUP,
         status: STATUS_SUCCESS,
@@ -115,7 +116,7 @@ function editGroupSuccess(group) {
     };
 }
 
-function editGroupError(group, error) {
+export function editGroupError(group, error) {
     return {
         type: EDITGROUP,
         status: STATUS_ERROR,
@@ -124,14 +125,14 @@ function editGroupError(group, error) {
     };
 }
 
-function editNewGroup(group) {
+export function editNewGroup(group) {
     return {
         type: EDITGROUP,
         group
     };
 }
 // NOTE: not support on server side now for editing groups
-function editGroup(group, options = {params: {includeattributes: true}} ) {
+export function editGroup(group, options = {params: {includeattributes: true}} ) {
     return (dispatch) => {
         if (group && group.id) {
             dispatch(editGroupLoading(group));
@@ -146,7 +147,7 @@ function editGroup(group, options = {params: {includeattributes: true}} ) {
         }
     };
 }
-function changeGroupMetadata(key, newValue) {
+export function changeGroupMetadata(key, newValue) {
     return {
         type: EDITGROUPDATA,
         key,
@@ -154,7 +155,7 @@ function changeGroupMetadata(key, newValue) {
     };
 }
 
-function savingGroup(group) {
+export function savingGroup(group) {
     return {
         type: UPDATEGROUP,
         status: STATUS_SAVING,
@@ -162,7 +163,7 @@ function savingGroup(group) {
     };
 }
 
-function savedGroup(group) {
+export function savedGroup(group) {
     return {
         type: UPDATEGROUP,
         status: STATUS_SAVED,
@@ -170,7 +171,7 @@ function savedGroup(group) {
     };
 }
 
-function saveError(group, error) {
+export function saveError(group, error) {
     return {
         type: UPDATEGROUP,
         status: STATUS_ERROR,
@@ -179,7 +180,7 @@ function saveError(group, error) {
     };
 }
 
-function creatingGroup(group) {
+export function creatingGroup(group) {
     return {
         type: UPDATEGROUP,
         status: STATUS_CREATING,
@@ -187,7 +188,7 @@ function creatingGroup(group) {
     };
 }
 
-function groupCreated(id, group) {
+export function groupCreated(id, group) {
     return {
         type: UPDATEGROUP,
         status: STATUS_CREATED,
@@ -195,7 +196,7 @@ function groupCreated(id, group) {
     };
 }
 
-function createError(group, error) {
+export function createError(group, error) {
     return {
         type: UPDATEGROUP,
         status: STATUS_ERROR,
@@ -203,7 +204,7 @@ function createError(group, error) {
         error
     };
 }
-function saveGroup(group, options = {}) {
+export function saveGroup(group, options = {}) {
     return (dispatch) => {
         let newGroup = assign({}, {...group});
         if (newGroup && newGroup.lastError) {
@@ -230,21 +231,21 @@ function saveGroup(group, options = {}) {
     };
 }
 
-function deletingGroup(id) {
+export function deletingGroup(id) {
     return {
         type: DELETEGROUP,
         status: "deleting",
         id
     };
 }
-function deleteGroupSuccess(id) {
+export function deleteGroupSuccess(id) {
     return {
         type: DELETEGROUP,
         status: STATUS_DELETED,
         id
     };
 }
-function deleteGroupError(id, error) {
+export function deleteGroupError(id, error) {
     return {
         type: DELETEGROUP,
         status: STATUS_ERROR,
@@ -253,14 +254,14 @@ function deleteGroupError(id, error) {
     };
 }
 
-function closeDelete(status, id) {
+export function closeDelete(status, id) {
     return {
         type: DELETEGROUP,
         status,
         id
     };
 }
-function deleteGroup(id, status = "confirm") {
+export function deleteGroup(id, status = "confirm") {
     if (status === "confirm" || status === "cancelled") {
         return closeDelete(status, id);
     } else if ( status === "delete") {
@@ -277,19 +278,19 @@ function deleteGroup(id, status = "confirm") {
     return () => {};
 }
 
-function groupSearchTextChanged(text) {
+export function groupSearchTextChanged(text) {
     return {
         type: SEARCHTEXTCHANGED,
         text
     };
 }
-function searchUsersSuccessLoading() {
+export function searchUsersSuccessLoading() {
     return {
         type: SEARCHUSERS,
         status: STATUS_LOADING
     };
 }
-function searchUsersSuccess(users, count = 0) {
+export function searchUsersSuccess(users, count = 0) {
     return {
         type: SEARCHUSERS,
         status: STATUS_SUCCESS,
@@ -297,14 +298,14 @@ function searchUsersSuccess(users, count = 0) {
         count: count
     };
 }
-function searchUsersError(error) {
+export function searchUsersError(error) {
     return {
         type: SEARCHUSERS,
         status: STATUS_ERROR,
         error
     };
 }
-function searchUsers(text = "*", start = 0, limit = 5, options = {}, jollyChar = "*") {
+export function searchUsers(text = "*", start = 0, limit = 5, options = {}, jollyChar = "*") {
     return (dispatch) => {
         dispatch(searchUsersSuccessLoading(text, start, limit));
         return API.getUsers(jollyChar + text + jollyChar, {...options, params: {start, limit}}).then((response) => {
@@ -324,18 +325,3 @@ function searchUsers(text = "*", start = 0, limit = 5, options = {}, jollyChar =
         });
     };
 }
-
-module.exports = {
-    getUserGroups, GETGROUPS,
-    editGroup, EDITGROUP,
-    changeGroupMetadata, EDITGROUPDATA,
-    groupSearchTextChanged, SEARCHTEXTCHANGED,
-    searchUsers, SEARCHUSERS,
-    saveGroup, UPDATEGROUP,
-    deleteGroup, DELETEGROUP,
-    STATUS_SUCCESS,
-    STATUS_LOADING,
-    STATUS_CREATED,
-    STATUS_ERROR,
-    STATUS_DELETED
-};

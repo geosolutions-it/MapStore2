@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {rulesSelector, optionsSelector} = require('../rulesmanager');
+import expect from 'expect';
+
+import { rulesSelector, optionsSelector } from '../rulesmanager';
 
 describe('test rules manager selectors', () => {
 

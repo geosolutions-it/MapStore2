@@ -138,19 +138,24 @@ const FeaturesList = (props) => {
  * @function
  *
  */
-const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature, setTabValue, isMeasureEditDisabled, onStyleGeometry}) => {
+const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature, setTabValue, isMeasureEditDisabled, onStyleGeometry, onGeometryHighlight}) => {
     const type = getGeometryType(feature);
     const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
     const unselect = selected?.properties?.id === properties?.id;
-    const isValidFeature = selected?.properties?.isValidFeature || properties?.isValidFeature;
+    const selectedIsValidFeature = get(selected, "properties.isValidFeature", true);
+    const isValidFeature = selectedIsValidFeature || properties?.isValidFeature;
+    const allowCardMouseEvent = !unselect && selectedIsValidFeature;
 
     return (
         <div
             className={cs('geometry-card', {'ms-selected': unselect})}
+            onMouseEnter={() => allowCardMouseEvent && onGeometryHighlight(properties.id)}
+            onMouseLeave={() => allowCardMouseEvent && onGeometryHighlight(properties.id, false)}
             onClick={() =>{
                 if (unselect) {
                     onUnselectFeature();
+                    onGeometryHighlight(properties.id);
                 } else {
                     onSelectFeature([feature]);
                     setTabValue(isMeasureEditDisabled ? 'coordinates' : 'style');

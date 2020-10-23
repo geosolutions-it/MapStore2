@@ -25,7 +25,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
     highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
     setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles, changeGeometryTitle, filterMarker, toggleShowAgain, hideMeasureWarning,
-    initPlugin
+    initPlugin, geometryHighlight, unSelectFeature
 } = require('../actions/annotations');
 
 const {selectFeatures} = require('../actions/draw');
@@ -78,11 +78,13 @@ const commonEditorActions = {
     onConfirmClose: confirmCloseAnnotations,
     onConfirmRemove: confirmRemoveAnnotation,
     onDownload: download,
-    onSetAnnotationMeasurement: setAnnotationMeasurement,
     onFilterMarker: filterMarker,
+    onGeometryHighlight: geometryHighlight,
+    onSetAnnotationMeasurement: setAnnotationMeasurement,
     onHideMeasureWarning: hideMeasureWarning,
     onToggleShowAgain: toggleShowAgain,
-    onInitPlugin: initPlugin
+    onInitPlugin: initPlugin,
+    onUnSelectFeature: unSelectFeature
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
     {
@@ -249,7 +251,7 @@ module.exports = {
         }
     }),
     reducers: {
-        annotations: require('../reducers/annotations')
+        annotations: require('../reducers/annotations').default
     },
     epics: require('../epics/annotations')(AnnotationsInfoViewer)
 };

@@ -152,10 +152,12 @@ describe("test FeatureList component", () => {
             selected: {properties: {id: '1'}}
         };
         const testHandlers = {
-            onUnselectFeature: () => {}
+            onUnselectFeature: () => {},
+            onGeometryHighlight: () => {}
         };
         const spyOnUnselectFeature = expect.spyOn(testHandlers, "onUnselectFeature");
-        ReactDOM.render(<FeaturesList {...props} onUnselectFeature={testHandlers.onUnselectFeature}/>, document.getElementById("container"));
+        const spyOnGeometryHighlight = expect.spyOn(testHandlers, "onGeometryHighlight");
+        ReactDOM.render(<FeaturesList {...props} onUnselectFeature={testHandlers.onUnselectFeature} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toBeTruthy();
 
@@ -165,5 +167,83 @@ describe("test FeatureList component", () => {
         // OnUnSelectFeature
         TestUtils.Simulate.click(featureCard[0]);
         expect(spyOnUnselectFeature).toHaveBeenCalled();
+        expect(spyOnGeometryHighlight).toHaveBeenCalled();
+        expect(spyOnGeometryHighlight.calls[0].arguments[0]).toBe('1');
+    });
+
+    it('test geometry highlight', () => {
+        let props = {
+            editing: {
+                features: [{
+                    type: "Feature",
+                    properties: {id: '1', isValidFeature: true, geometryTitle: 'Polygon'},
+                    geometry: {type: "Polygon"}
+                }]
+            },
+            selected: {properties: {id: '1'}}
+        };
+        const testHandlers = {
+            onGeometryHighlight: () => {}
+        };
+        const spyOnGeometryHighlight = expect.spyOn(testHandlers, "onGeometryHighlight");
+        ReactDOM.render(<FeaturesList {...props} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
+        let container = document.getElementById('container');
+        expect(container).toBeTruthy();
+
+        let featureCard = document.getElementsByClassName('geometry-card');
+        expect(featureCard).toBeTruthy();
+
+        TestUtils.Simulate.mouseEnter(featureCard[0]);
+        expect(spyOnGeometryHighlight).toNotHaveBeenCalled();
+
+        // When geometry card is not selected
+        props = {...props, selected: {...props.selected, properties: {id: 2}}};
+        ReactDOM.render(<FeaturesList {...props} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
+        container = document.getElementById('container');
+        featureCard = document.getElementsByClassName('geometry-card');
+        // OnMouseEnter
+        TestUtils.Simulate.mouseEnter(featureCard[0]);
+        expect(spyOnGeometryHighlight).toHaveBeenCalled();
+        expect(spyOnGeometryHighlight.calls[0].arguments[0]).toBe('1');
+
+        // OnMouseLeave
+        TestUtils.Simulate.mouseLeave(featureCard[0]);
+        expect(spyOnGeometryHighlight).toHaveBeenCalled();
+        expect(spyOnGeometryHighlight.calls[1].arguments[0]).toBe('1');
+        expect(spyOnGeometryHighlight.calls[1].arguments[1]).toBe(false);
+    });
+
+    it('test geometry highlight limitations', () => {
+        let props = {
+            editing: {
+                features: [{
+                    type: "Feature",
+                    properties: {id: '1', isValidFeature: false, geometryTitle: 'Polygon'},
+                    geometry: {type: "Polygon"}
+                }]
+            },
+            selected: {properties: {id: '2', isValidFeature: false}}
+        };
+        const testHandlers = {
+            onGeometryHighlight: () => {}
+        };
+        const spyOnGeometryHighlight = expect.spyOn(testHandlers, "onGeometryHighlight");
+        ReactDOM.render(<FeaturesList {...props} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
+        let container = document.getElementById('container');
+        expect(container).toBeTruthy();
+
+        let featureCard = document.getElementsByClassName('geometry-card');
+        expect(featureCard).toBeTruthy();
+
+        ReactDOM.render(<FeaturesList {...props} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
+        container = document.getElementById('container');
+        featureCard = document.getElementsByClassName('geometry-card');
+        // OnMouseEnter
+        TestUtils.Simulate.mouseEnter(featureCard[0]);
+        expect(spyOnGeometryHighlight).toNotHaveBeenCalled();
+
+        // OnMouseLeave
+        TestUtils.Simulate.mouseLeave(featureCard[0]);
+        expect(spyOnGeometryHighlight).toNotHaveBeenCalled();
     });
 });

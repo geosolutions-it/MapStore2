@@ -52,5 +52,5 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {locate: require('../reducers/locate')}
+    reducers: {locate: require('../reducers/locate').default}
 };

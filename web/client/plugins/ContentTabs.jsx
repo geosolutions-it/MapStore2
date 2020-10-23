@@ -115,6 +115,6 @@ module.exports = {
             glyph: 'dashboard'
         }
     }),
-    reducers: {contenttabs: require('../reducers/contenttabs')},
+    reducers: {contenttabs: require('../reducers/contenttabs').default},
     epics: require('../epics/contenttabs')
 };

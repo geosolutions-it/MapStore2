@@ -259,6 +259,6 @@ module.exports = {
             position: 3
         }
     }),
-    reducers: {mapInfo: require('../reducers/mapInfo')},
+    reducers: {mapInfo: require('../reducers/mapInfo').default},
     epics: require('../epics/identify').default
 };

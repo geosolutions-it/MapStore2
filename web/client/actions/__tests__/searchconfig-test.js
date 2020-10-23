@@ -6,15 +6,16 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-var expect = require('expect');
-var {
+import expect from 'expect';
+
+import {
     SET_SEARCH_CONFIG_PROP,
     RESET_SEARCH_CONFIG,
     UPDATE_SERVICE,
     setSearchConfigProp,
     restServiceConfig,
     updateService
-} = require('../searchconfig');
+} from '../searchconfig';
 
 describe('Test correctness of the searchconfig actions', () => {
 

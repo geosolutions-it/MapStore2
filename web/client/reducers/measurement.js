@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {
+import {
     CHANGE_MEASUREMENT_TOOL,
     CHANGE_MEASUREMENT_STATE,
     CHANGE_UOM,
@@ -20,14 +20,14 @@ const {
     INIT,
     SET_MEASUREMENT_CONFIG,
     SET_ANNOTATION_MEASUREMENT
-} = require('../actions/measurement');
-const {TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY} = require('../actions/controls');
-const {set} = require('../utils/ImmutableUtils');
-const {getGeomTypeSelected} = require('../utils/MeasurementUtils');
-const {isPolygon} = require('../utils/openlayers/DrawUtils');
-const {dropRight, isEmpty, findIndex, isNumber} = require('lodash');
+} from '../actions/measurement';
 
-const assign = require('object-assign');
+import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY } from '../actions/controls';
+import { set } from '../utils/ImmutableUtils';
+import { getGeomTypeSelected } from '../utils/MeasurementUtils';
+import { isPolygon } from '../utils/openlayers/DrawUtils';
+import { dropRight, isEmpty, findIndex, isNumber } from 'lodash';
+import assign from 'object-assign';
 const defaultState = {
     lineMeasureEnabled: true,
     geomType: "LineString",
@@ -284,4 +284,4 @@ function measurement(state = defaultState, action) {
     }
 }
 
-module.exports = measurement;
+export default measurement;

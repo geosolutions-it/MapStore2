@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     SET_PRINT_PARAMETER,
     PRINT_CAPABILITIES_LOADED,
     PRINT_CAPABILITIES_ERROR,
@@ -17,12 +17,11 @@ const {
     PRINT_CREATED,
     PRINT_ERROR,
     PRINT_CANCEL
-} = require('../actions/print');
+} from '../actions/print';
 
-const {TOGGLE_CONTROL} = require('../actions/controls');
-const {isObject, get} = require('lodash');
-
-const assign = require('object-assign');
+import { TOGGLE_CONTROL } from '../actions/controls';
+import { isObject, get } from 'lodash';
+import assign from 'object-assign';
 
 const initialSpec = {
     antiAliasing: true,
@@ -132,4 +131,4 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
     }
 }
 
-module.exports = print;
+export default print;

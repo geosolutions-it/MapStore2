@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     NEW,
     INSERT,
     UPDATE,
@@ -25,7 +26,8 @@ const {
     EXPORT_IMAGE,
     DEPENDENCY_SELECTOR_KEY,
     TOGGLE_TRAY,
-    createChart, NEW_CHART,
+    createChart,
+    NEW_CHART,
     exportCSV,
     exportImage,
     openFilterEditor,
@@ -44,7 +46,7 @@ const {
     setupDependencySelector,
     toggleDependencySelector,
     toggleTray
-} = require('../widgets');
+} from '../widgets';
 
 describe('Test correctness of the widgets actions', () => {
 

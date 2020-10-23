@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {crsInputValueSelector} = require('../crsselector');
+import expect from 'expect';
+
+import { crsInputValueSelector } from '../crsselector';
 describe('Test layers selectors', () => {
     it('test crsInputValueSelector', () => {
         const props = crsInputValueSelector({crsselector: {value: 'EPSG:4326'}});

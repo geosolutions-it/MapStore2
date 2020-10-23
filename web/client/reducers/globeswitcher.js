@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {MAP_TYPE_CHANGED} = require('../actions/maptype');
-const {UPDATE_LAST_2D_MAPTYPE} = require('../actions/globeswitcher');
+import { MAP_TYPE_CHANGED } from '../actions/maptype';
+
+import { UPDATE_LAST_2D_MAPTYPE } from '../actions/globeswitcher';
 /**
  * state for globeswitcher tooltip. holds the last 2d mapType.
  * @memberof reducers
@@ -32,4 +33,4 @@ function globeswitcher(state = {last2dMapType: "leaflet"}, action) {
     }
 }
 
-module.exports = globeswitcher;
+export default globeswitcher;

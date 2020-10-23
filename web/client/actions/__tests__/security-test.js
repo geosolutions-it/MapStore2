@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const security = require('../security');
+import expect from 'expect';
+
+import * as security from '../security';
 
 describe('Test correctness of the close actions', () => {
     it('resetError', () => {

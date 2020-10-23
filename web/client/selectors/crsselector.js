@@ -6,9 +6,4 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const crsInputValueSelector = state => state && state.crsselector && state.crsselector.value;
-
-
-module.exports = {
-    crsInputValueSelector
-};
+export const crsInputValueSelector = state => state && state.crsselector && state.crsselector.value;

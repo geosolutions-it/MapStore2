@@ -1,6 +1,14 @@
-const SHOW_NOTIFICATION = 'SHOW_NOTIFICATION';
-const HIDE_NOTIFICATION = 'HIDE_NOTIFICATION';
-const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
+/*
+ * Copyright 2015, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
+export const SHOW_NOTIFICATION = 'SHOW_NOTIFICATION';
+export const HIDE_NOTIFICATION = 'HIDE_NOTIFICATION';
+export const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
 /**
  * Show a notification
  * @memberof actions.notifications
@@ -19,7 +27,7 @@ const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
  * @param  {String} [level='success'] The level of the notification. (one of "success"|"warning"|"info"|"error")
  * @return {object}                   action of type `SHOW_NOTIFICATION`
  */
-function show(opts = {}, level = 'success') {
+export function show(opts = {}, level = 'success') {
     return {
         type: SHOW_NOTIFICATION,
         ...opts,
@@ -34,7 +42,7 @@ function show(opts = {}, level = 'success') {
  * @param  {string|number} uid the identifier
  * @returns {object}     action of type `HIDE_NOTIFICATION`
  */
-function hide(uid) {
+export function hide(uid) {
     return {
         type: HIDE_NOTIFICATION,
         uid
@@ -47,7 +55,7 @@ function hide(uid) {
  * @param  {object} opts notification opts
  * @returns {object}     action of type `HIDE_NOTIFICATION`
  */
-function success(opts) {
+export function success(opts) {
     return show(opts, 'success');
 }
 /**
@@ -56,7 +64,7 @@ function success(opts) {
  * @param  {object} opts notification opts
  * @returns {object}     action of type `HIDE_NOTIFICATION`
  */
-function error(opts) {
+export function error(opts) {
     return show(opts, 'error');
 }
 
@@ -66,7 +74,7 @@ function error(opts) {
  * @param  {object} opts notification opts
  * @returns {object}     action of type `HIDE_NOTIFICATION`
  */
-function warning(opts) {
+export function warning(opts) {
     return show(opts, 'warning');
 }
 
@@ -76,7 +84,7 @@ function warning(opts) {
  * @param  {object} opts notification opts
  * @returns {object}     action of type `HIDE_NOTIFICATION`
  */
-function info(opts) {
+export function info(opts) {
     return show(opts, 'info');
 }
 
@@ -85,7 +93,7 @@ function info(opts) {
  * @memberof actions.notifications
  * @returns {object}     action of type `CLEAR_NOTIFICATIONS`
  */
-function clear() {
+export function clear() {
     return {
         type: CLEAR_NOTIFICATIONS
     };
@@ -96,7 +104,7 @@ function clear() {
  * @memberof actions.notifications
  * @returns {object}     action
  */
-function dispatchAction(action) {
+export function dispatchAction(action) {
     return action;
 }
 
@@ -105,16 +113,3 @@ function dispatchAction(action) {
  * @name notifications
  * @memberof actions
  */
-module.exports = {
-    SHOW_NOTIFICATION,
-    HIDE_NOTIFICATION,
-    CLEAR_NOTIFICATIONS,
-    show,
-    success,
-    warning,
-    error,
-    info,
-    hide,
-    clear,
-    dispatchAction
-};

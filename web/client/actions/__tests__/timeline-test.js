@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     RANGE_CHANGED,
     onRangeChanged,
     SELECT_TIME,
@@ -22,7 +23,7 @@ const {
     setCollapsed,
     SET_MAP_SYNC,
     setMapSync
-} = require('../timeline');
+} from '../timeline';
 
 describe('timeline actions', () => {
     it('onRangeChanged', () => {

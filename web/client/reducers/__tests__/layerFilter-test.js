@@ -5,11 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-const { APPLIED_FILTER, STORE_CURRENT_APPLIED_FILTER, INIT_LAYER_FILTER, DISCARD_CURRENT_FILTER} = require("../../actions/layerFilter");
-const { QUERY_FORM_RESET} = require('../../actions/queryform');
-const layerFilter = require('../layerFilter');
+import {
+    APPLIED_FILTER,
+    STORE_CURRENT_APPLIED_FILTER,
+    INIT_LAYER_FILTER,
+    DISCARD_CURRENT_FILTER
+} from '../../actions/layerFilter';
+
+import { QUERY_FORM_RESET } from '../../actions/queryform';
+import layerFilter from '../layerFilter';
 
 describe('Test the layerFilter reducer', () => {
     it('init filter history', () => {

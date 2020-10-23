@@ -63,5 +63,5 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {maptype: require('../../reducers/maptype')}
+    reducers: {maptype: require('../../reducers/maptype').default}
 };

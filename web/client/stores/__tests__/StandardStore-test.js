@@ -15,18 +15,20 @@ import {LOAD_MAP_CONFIG} from "../../actions/config";
 
 describe('Test StandardStore', () => {
     it('storeOpts notify is true by default', () => {
-        const store = createStore({}, {}, {}, {}, /* storeOpts */{});
-        expect(store.addActionListener).toExist();
+        const store = createStore({}, {}, /* storeOpts */{});
+        expect(store.addActionListener).toBeTruthy();
     });
     it('addActionListener is not available if storeOpts notify is false', () => {
-        const store = createStore({}, {}, {}, {}, /* storeOpts */{ notify: false });
-        expect(store.addActionListener).toNotExist();
+        const store = createStore({}, {}, /* storeOpts */{ notify: false });
+        expect(store.addActionListener).toBeFalsy();
     });
     it('appEpics override standard epics', (done) => {
 
-        const store = createStore({}, {}, {
-            loadMapConfigAndConfigureMap: ($action) =>
-                $action.ofType(LOAD_MAP_CONFIG).switchMap(() => Observable.of({type: "PONG"}))
+        const store = createStore({
+            appEpics: {
+                loadMapConfigAndConfigureMap: ($action) =>
+                    $action.ofType(LOAD_MAP_CONFIG).switchMap(() => Observable.of({type: "PONG"}))
+            }
         });
         let actions = 0;
         store.addActionListener((action) => {

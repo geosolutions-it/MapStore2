@@ -16,7 +16,7 @@ import ReactDock from 'react-dock';
 import { createPlugin } from '../utils/PluginsUtils';
 
 import * as epics from '../epics/featuregrid';
-import * as featuregrid from '../reducers/featuregrid';
+import featuregrid from '../reducers/featuregrid';
 
 import Grid from '../components/data/featuregrid/FeatureGrid';
 import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../selectors/query';

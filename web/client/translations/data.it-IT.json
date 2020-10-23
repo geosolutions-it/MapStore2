@@ -1670,7 +1670,8 @@
                 "noLegendDescription": "La mappa connessa non ha legende da mostrare",
                 "nodatainviewport": "Nessun dato per la vista selezionata",
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
-                "genericError": "C'è stato un errore durante la generazione del grafico"
+                "genericError": "C'è stato un errore durante la generazione del grafico",
+                "genericErrorWithMessage": "C'è stato un errore durante la generazione del grafico: \"{message}\""
             },
             "builder": {
                 "header": {

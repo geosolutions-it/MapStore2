@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var { TASK_STARTED, TASK_SUCCESS, TASK_ERROR } = require('../actions/tasks');
-var assign = require('object-assign');
+import { TASK_STARTED, TASK_SUCCESS, TASK_ERROR } from '../actions/tasks';
+
+import assign from 'object-assign';
 
 function tasks(state = {}, action) {
     switch (action.type) {
@@ -45,4 +46,4 @@ function tasks(state = {}, action) {
     }
 }
 
-module.exports = tasks;
+export default tasks;

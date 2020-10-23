@@ -5,7 +5,8 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const {get} = require('lodash');
+import { get } from 'lodash';
+
 /**
  * Checks for an error when a map is accessed
  * @function
@@ -13,9 +14,5 @@ const {get} = require('lodash');
  * @param  {object} state the state
  * @return {object} error object
  */
-const hasMapAccessLoadingError = (state) => get(state, "mapInitialConfig.loadingError");
-const mapIdSelector = (state) => state.mapInitialConfig?.mapId;
-module.exports = {
-    hasMapAccessLoadingError,
-    mapIdSelector
-};
+export const hasMapAccessLoadingError = (state) => get(state, "mapInitialConfig.loadingError");
+export const mapIdSelector = (state) => state.mapInitialConfig?.mapId;

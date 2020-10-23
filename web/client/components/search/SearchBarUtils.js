@@ -6,6 +6,13 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+export const getTotalMaxResults = (services = [], maxResults = 15) => {
+    return services.reduce(function(total, current) {
+        return total + (current?.options?.maxFeatures || maxResults);
+    }, 0) || maxResults;
+};
+
+
 export const defaultSearchWrapper = ({
     searchText,
     selectedItems,
@@ -15,9 +22,10 @@ export const defaultSearchWrapper = ({
     onSearchReset = () => {}
 }) => () => {
     const text = searchText;
+    const totalResults = getTotalMaxResults(searchOptions?.services, maxResults);
     if ((text === undefined || text === "") && (!selectedItems || selectedItems.length === 0)) {
         onSearchReset();
     } else if (text !== undefined && text !== "") {
-        onSearch(text, searchOptions, maxResults);
+        onSearch(text, searchOptions, totalResults );
     }
 };

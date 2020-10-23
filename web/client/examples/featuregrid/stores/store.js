@@ -13,8 +13,12 @@ const {layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, CLOSE_FEATURE_GRID} = 
 const {browseData} = require('../../../actions/layers');
 const {clearChanges, setPermission, toggleTool} = require('../../../actions/featuregrid');
 const {hasChangesSelector, hasNewFeaturesSelector} = require('../../../selectors/featuregrid');
+const {
+    standardEpics,
+    standardRootReducerFunc
+} = require('../../../stores/defaultOptions');
 module.exports = (plugins) => {
-    var reducers = {
+    var appReducers = {
         map: require('../../../reducers/map'),
         mapConfig: require('../../../reducers/config'),
         locale: require('../../../reducers/locale'),
@@ -22,31 +26,37 @@ module.exports = (plugins) => {
         layers: require('../../../reducers/controls'),
         query: require('../../../reducers/query')
     };
-    return require('../../../stores/StandardStore')({}, reducers, {
-        featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic,
-        initLoadFeatureGridDemo: (action$, store) =>
-            action$.ofType('MAP_CONFIG_LOADED', "FEATUREGRID_SAMPLE::SELECT_LAYER")
-                .switchMap(({id = 'atlantis:poi'} = {}) => {
-                    const state = store.getState();
-                    if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
-                        return Rx.Observable.of(toggleTool("featureCloseConfirm", true))
-                            .merge(action$.ofType(CLOSE_FEATURE_GRID).switchMap( () => Rx.Observable.of(
-                                layerSelectedForSearch(id),
-                                setPermission({canEdit: true})
-                            )));
-                    }
-                    return Rx.Observable.of(
-                        layerSelectedForSearch(id),
-                        setPermission({canEdit: true})
-                    );
-                }),
-        createFeatureGridDemoQuery: (action$, store) =>
-            action$.ofType(LAYER_SELECTED_FOR_SEARCH)
-                .switchMap((layer) => Rx.Observable.of(
-                    clearChanges(),
-                    browseData({
-                        ...getLayerFromId(store.getState(), layer.id)
-                    })
-                ))
+    return require('../../../stores/StandardStore').default({
+        initialState: {},
+        appReducers,
+        appEpics: {
+            featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic,
+            initLoadFeatureGridDemo: (action$, store) =>
+                action$.ofType('MAP_CONFIG_LOADED', "FEATUREGRID_SAMPLE::SELECT_LAYER")
+                    .switchMap(({id = 'atlantis:poi'} = {}) => {
+                        const state = store.getState();
+                        if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
+                            return Rx.Observable.of(toggleTool("featureCloseConfirm", true))
+                                .merge(action$.ofType(CLOSE_FEATURE_GRID).switchMap( () => Rx.Observable.of(
+                                    layerSelectedForSearch(id),
+                                    setPermission({canEdit: true})
+                                )));
+                        }
+                        return Rx.Observable.of(
+                            layerSelectedForSearch(id),
+                            setPermission({canEdit: true})
+                        );
+                    }),
+            createFeatureGridDemoQuery: (action$, store) =>
+                action$.ofType(LAYER_SELECTED_FOR_SEARCH)
+                    .switchMap((layer) => Rx.Observable.of(
+                        clearChanges(),
+                        browseData({
+                            ...getLayerFromId(store.getState(), layer.id)
+                        })
+                    )),
+            ...standardEpics
+        },
+        rootReducerFunc: standardRootReducerFunc
     }, plugins);
 };
