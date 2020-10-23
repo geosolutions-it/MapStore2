@@ -27,7 +27,6 @@ import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
 
-let plugins;
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
  * Some are already available for the supported mapping libraries (openlayers, leaflet, cesium), but it's possible to develop new ones.
@@ -284,6 +283,7 @@ class MapPlugin extends React.Component {
     }
 
     getHighlightLayer = (projection, index, env) => {
+        const plugins = this.state.plugins;
         return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}} env={env}>
             {this.props.features.map( (feature) => {
                 return (<plugins.Feature
@@ -301,7 +301,7 @@ class MapPlugin extends React.Component {
         if (isString(tool)) {
             return {
                 name: tool,
-                impl: plugins.tools[tool]
+                impl: this.state.plugins.tools[tool]
             };
         }
         return tool[this.props.mapType] || tool;
@@ -322,7 +322,7 @@ class MapPlugin extends React.Component {
                 value: this.props.currentLocaleLanguage
             });
         }
-
+        const plugins = this.state.plugins;
         return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
             return (
                 <plugins.Layer
@@ -341,6 +341,7 @@ class MapPlugin extends React.Component {
     };
 
     renderLayerContent = (layer, projection) => {
+        const plugins = this.state.plugins;
         if (layer.features && layer.type === "vector") {
             return layer.features.map( (feature) => {
                 return (
@@ -376,11 +377,11 @@ class MapPlugin extends React.Component {
     };
 
     render() {
-        if (this.props.map && this.state.canRender) {
+        if (this.props.map && this.state.canRender && this.state.plugins) {
             const {mapOptions = {}} = this.props.map;
 
             return (
-                <plugins.Map id="map"
+                <this.state.plugins.Map id="map"
                     {...this.props.options}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
@@ -390,7 +391,7 @@ class MapPlugin extends React.Component {
                 >
                     {this.renderLayers()}
                     {this.renderSupportTools()}
-                </plugins.Map>
+                </this.state.plugins.Map>
             );
         }
         if (this.props.loadingError) {
@@ -420,13 +421,11 @@ class MapPlugin extends React.Component {
         return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
     };
     updatePlugins = (props) => {
-        pluginsCreator(props.mapType, props.actions).then((p) => {
-            plugins = p;
+        pluginsCreator(props.mapType, props.actions).then((plugins) => {
+            this.setState({plugins});
         });
     };
 }
-
-
 
 export default createPlugin('Map', {
     component: connect(selector, {
