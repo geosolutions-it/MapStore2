@@ -28,7 +28,6 @@ module.exports = {
         AnnotationsPlugin: require('../plugins/Annotations'),
         AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate'),
         BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
-        BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
         BurgerMenuPlugin: require('../plugins/BurgerMenu'),
         CRSSelectorPlugin: require('../plugins/CRSSelector'),
         ContentTabs: require('../plugins/ContentTabs'),
