@@ -12,7 +12,7 @@ const xml2js = require('xml2js');
 const xmlBuilder = new xml2js.Builder();
 
 const axios = require('../libs/ajax');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const {registerErrorParser} = require('../utils/LocaleUtils');
 
 const generateMetadata = (name = "", description = "") =>

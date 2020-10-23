@@ -76,7 +76,7 @@ module.exports = {
         MapFooterPlugin: require('../plugins/MapFooter'),
         MapImportPlugin: require('../plugins/MapImport'),
         MapLoadingPlugin: require('../plugins/MapLoading'),
-        MapPlugin: require('../plugins/Map'),
+        MapPlugin: require('../plugins/Map').default,
         MapSearchPlugin: require('../plugins/MapSearch'),
         MapsPlugin: require('../plugins/Maps').default,
         MapCatalogPlugin: require('../plugins/MapCatalog').default,

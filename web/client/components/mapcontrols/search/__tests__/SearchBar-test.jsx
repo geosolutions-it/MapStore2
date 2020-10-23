@@ -10,7 +10,7 @@ import {MenuItem} from "react-bootstrap";
 const expect = require('expect');
 const Provider = require("react-redux").Provider;
 
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 const React = require('react');
 const ReactDOM = require('react-dom');
 const SearchBar = require('../SearchBar').default;

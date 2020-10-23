@@ -14,7 +14,7 @@ const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 
 const mapUtils = require('../../utils/MapUtils');
-const configUtils = require('../../utils/ConfigUtils');
+const configUtils = require('../../utils/ConfigUtils').default;
 
 
 /**

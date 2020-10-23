@@ -17,7 +17,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const moment = require('moment');
 const {FormControl: BFormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 const FormControl = require('../../misc/enhancers/localizedProps')('placeholder')(BFormControl);
 
 /**

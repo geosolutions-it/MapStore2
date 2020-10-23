@@ -11,7 +11,7 @@ const ReactDOM = require('react-dom');
 const withContainer = require('../WithContainer');
 const Portal = withContainer(require('react-overlays').Portal);
 const expect = require('expect');
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 
 describe('WithContainer Overlay', () => {
     beforeEach((done) => {

@@ -33,7 +33,7 @@ let mockAxios;
 
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 
 describe('Leaflet layer', () => {
     let map;

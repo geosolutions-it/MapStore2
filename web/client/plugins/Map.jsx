@@ -6,21 +6,27 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {connect} = require('../utils/PluginsUtils');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect, createPlugin } from '../utils/PluginsUtils';
+import { loadFont } from '../utils/AgentUtils';
+import assign from 'object-assign';
+import Spinner from 'react-spinkit';
+import './map/css/map.css';
+import Message from '../components/I18N/Message';
+import ConfigUtils from '../utils/ConfigUtils';
+import { errorLoadingFont, setMapResolutions } from '../actions/map';
+import { isString } from 'lodash';
+import selector from './map/selector';
+import mapReducer from "../reducers/map";
+import layersReducer from "../reducers/layers";
+import drawReducer from "../reducers/draw";
+import highlightReducer from "../reducers/highlight";
+import mapTypeReducer from "../reducers/maptype";
+import additionalLayersReducer from "../reducers/additionallayers";
+import mapEpics from "../epics/map";
+import pluginsCreator from "./map/index";
 
-const {loadFont} = require('../utils/AgentUtils');
-
-const assign = require('object-assign');
-const Spinner = require('react-spinkit');
-require('./map/css/map.css');
-
-const Message = require('../components/I18N/Message');
-const ConfigUtils = require('../utils/ConfigUtils');
-const {errorLoadingFont, setMapResolutions} = require('../actions/map');
-
-const {isString} = require('lodash');
 let plugins;
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -414,24 +420,27 @@ class MapPlugin extends React.Component {
         return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
     };
     updatePlugins = (props) => {
-        plugins = require('./map/index')(props.mapType, props.actions);
+        pluginsCreator(props.mapType, props.actions).then((p) => {
+            plugins = p;
+        });
     };
 }
-const selector = require('./map/selector').default;
 
 
-module.exports = {
-    MapPlugin: connect(selector, {
+
+export default createPlugin('Map', {
+    component: connect(selector, {
         onFontError: errorLoadingFont,
         onResolutionsChange: setMapResolutions
     })(MapPlugin),
     reducers: {
-        map: require('../reducers/map').default,
-        layers: require('../reducers/layers').default,
-        draw: require('../reducers/draw').default,
-        highlight: require('../reducers/highlight').default,
-        maptype: require('../reducers/maptype').default,
-        additionallayers: require('../reducers/additionallayers').default
+        map: mapReducer,
+        layers: layersReducer,
+        draw: drawReducer,
+        highlight: highlightReducer,
+        maptype: mapTypeReducer,
+        additionallayers: additionalLayersReducer
     },
-    epics: require('../epics/map')
-};
+    epics: mapEpics
+});
+

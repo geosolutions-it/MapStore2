@@ -10,7 +10,7 @@ const ReactDOM = require('react-dom');
 const mainApp = require('../main').default;
 const expect = require('expect');
 const assign = require('object-assign');
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 const {includes} = require('lodash');
 
 class AppComponent extends React.Component {

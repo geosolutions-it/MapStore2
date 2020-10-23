@@ -9,7 +9,7 @@
 
 const React = require('react');
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 
 module.exports = (Component) => {
     return (props) => {
