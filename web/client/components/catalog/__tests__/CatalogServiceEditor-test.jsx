@@ -9,6 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import CatalogServiceEditor from '../CatalogServiceEditor';
+import {defaultPlaceholder} from "../editor/MainFormUtils";
 
 const givenWmsService = {
     url: "url",
@@ -143,5 +144,12 @@ describe('Test CatalogServiceEditor', () => {
 
         const isLocalizedLayerStylesOption = document.querySelector('[data-qa="service-lacalized-layer-styles-option"]');
         expect(isLocalizedLayerStylesOption).toBeNull;
+    });
+    it('test defaultPlaceholder function for the main form placeholder urls', () => {
+        let service = {
+            type: "wms"
+        };
+        let placeholder = defaultPlaceholder(service);
+        expect(placeholder).toBe("e.g. https://mydomain.com/geoserver/wms");
     });
 });
