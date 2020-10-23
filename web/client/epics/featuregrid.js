@@ -284,6 +284,22 @@ module.exports = {
             .filter(({update = {}}) => update.type !== 'geometry')
             .map(updateFilterFunc(store))
     ),
+    /**
+     * Enables the Geometry filter when entering edit mode in feature grid.
+     * No filter value should have been set otherwise nothing is enabled.
+     * @memberof epics.featuregrid
+     */
+    enableGeometryFilterOnEditMode: (action$, store) =>
+        action$.ofType(TOGGLE_MODE)
+            .filter(() => modeSelector(store.getState()) === MODES.EDIT)
+            .switchMap(() => {
+                const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                return currentFilter.value ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
+                    attribute: "the_geom",
+                    enabled: true,
+                    type: "geometry"
+                }));
+            }),
     handleClickOnMap: (action$, store) =>
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
