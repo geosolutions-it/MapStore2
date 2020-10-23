@@ -15,7 +15,7 @@ const {Checkbox} = require("react-bootstrap");
 
 
 const Message = require('../../I18N/Message').default;
-const ResizableModal = require('../../misc/ResizableModal');
+const ResizableModal = require('../../misc/ResizableModal').default;
 
 const FileUtils = require('../../../utils/FileUtils');
 const {ANNOTATION_TYPE} = require('../../../utils/AnnotationsUtils');

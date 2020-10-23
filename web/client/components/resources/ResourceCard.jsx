@@ -12,7 +12,7 @@ const GridCard = require('../misc/GridCard');
 const FitIcon = require('../misc/FitIcon');
 const thumbUrl = require('../maps/style/default.jpg');
 const assign = require('object-assign');
-const ConfirmModal = require('../misc/ResizableModal');
+const ConfirmModal = require('../misc/ResizableModal').default;
 
 class ResourceCard extends React.Component {
     static propTypes = {

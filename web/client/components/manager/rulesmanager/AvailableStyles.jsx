@@ -11,7 +11,7 @@ const Message = require("../../I18N/Message").default;
 const Filter = require("../../misc/Filter");
 const Portal = require("../../misc/Portal");
 const {Col, Button, ButtonGroup} = require("react-bootstrap");
-const ResizableModal = require("../../misc/ResizableModal");
+const ResizableModal = require("../../misc/ResizableModal").default;
 const BorderLayout = require("../../layout/BorderLayout");
 
 module.exports = ({styles = [], selectedStyles = [], onSelectionChange = () => {}, show = false, stylesFilter = '', filterPlaceholder = "Filter styles...", clearAll = () => {}, selectAll = () => {}, onFilter = () => {}, onClose = () => {}}) => {

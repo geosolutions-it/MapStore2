@@ -10,7 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
-const ResizableModal = require('../ResizableModal');
+const ResizableModal = require('../ResizableModal').default;
 
 describe('ResizableModal component', () => {
     beforeEach((done) => {

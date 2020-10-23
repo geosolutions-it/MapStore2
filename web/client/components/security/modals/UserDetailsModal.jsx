@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Grid, Row, Col, Alert, Glyphicon} = require('react-bootstrap');
-const ResizableModal = require('../../../components/misc/ResizableModal');
+const ResizableModal = require('../../../components/misc/ResizableModal').default;
 const Portal = require('../../../components/misc/Portal');
 const SecurityUtils = require('../../../utils/SecurityUtils');
 const Message = require('../../../components/I18N/Message').default;

@@ -20,7 +20,7 @@ const withLocal = require("../misc/enhancers/localizedProps");
 const Filter = withLocal('filterPlaceholder')(require('../misc/Filter'));
 const FormControl = withLocal('placeholder')(FormControlRB);
 
-const ResizableModal = require('../misc/ResizableModal');
+const ResizableModal = require('../misc/ResizableModal').default;
 const Portal = require('../misc/Portal');
 const Message = require('../I18N/Message').default;
 const HTML = require('../I18N/HTML');
