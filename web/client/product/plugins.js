@@ -26,8 +26,8 @@ module.exports = {
         // framework plugins
         AddGroupPlugin: require('../plugins/AddGroup').default,
         AnnotationsPlugin: require('../plugins/Annotations'),
-        AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate'),
-        BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
+        AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate').default,
+        BackgroundSelectorPlugin: require('../plugins/BackgroundSelector').default,
         BurgerMenuPlugin: require('../plugins/BurgerMenu'),
         CRSSelectorPlugin: require('../plugins/CRSSelector'),
         ContentTabs: require('../plugins/ContentTabs'),
