@@ -6,17 +6,10 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect, createPlugin } from '../utils/PluginsUtils';
-import { loadFont } from '../utils/AgentUtils';
-import assign from 'object-assign';
-import Spinner from 'react-spinkit';
 import './map/css/map.css';
-import Message from '../components/I18N/Message';
-import ConfigUtils from '../utils/ConfigUtils';
 import { errorLoadingFont, setMapResolutions } from '../actions/map';
-import { isString } from 'lodash';
 import selector from './map/selector';
 import mapReducer from "../reducers/map";
 import layersReducer from "../reducers/layers";
@@ -25,7 +18,9 @@ import highlightReducer from "../reducers/highlight";
 import mapTypeReducer from "../reducers/maptype";
 import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
-import pluginsCreator from "./map/index";
+import {initComponents} from "./map/index";
+
+import Map from "../components/map/Map";
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -182,250 +177,9 @@ import pluginsCreator from "./map/index";
  *
  */
 
-
-class MapPlugin extends React.Component {
-    static propTypes = {
-        mapType: PropTypes.string,
-        map: PropTypes.object,
-        layers: PropTypes.array,
-        additionalLayers: PropTypes.array,
-        zoomControl: PropTypes.bool,
-        mapLoadingMessage: PropTypes.string,
-        loadingSpinner: PropTypes.bool,
-        loadingError: PropTypes.string,
-        tools: PropTypes.array,
-        fonts: PropTypes.array,
-        options: PropTypes.object,
-        mapOptions: PropTypes.object,
-        projectionDefs: PropTypes.array,
-        toolsOptions: PropTypes.object,
-        onFontError: PropTypes.func,
-        onResolutionsChange: PropTypes.func,
-        actions: PropTypes.object,
-        features: PropTypes.array,
-        securityToken: PropTypes.string,
-        shouldLoadFont: PropTypes.bool,
-        elevationEnabled: PropTypes.bool,
-        isLocalizedLayerStylesEnabled: PropTypes.bool,
-        localizedLayerStylesName: PropTypes.string,
-        currentLocaleLanguage: PropTypes.string,
-        items: PropTypes.array
-    };
-
-    static defaultProps = {
-        mapType: 'leaflet',
-        actions: {},
-        zoomControl: false,
-        mapLoadingMessage: "map.loading",
-        loadingSpinner: true,
-        tools: ["measurement", "locate", "scalebar", "draw", "highlight", "popup"],
-        options: {},
-        mapOptions: {},
-        fonts: ['FontAwesome'],
-        toolsOptions: {
-            measurement: {},
-            locate: {},
-            scalebar: {
-                leaflet: {
-                    position: "bottomright"
-                }
-            },
-            overview: {
-                overviewOpt: {
-                    position: 'bottomright',
-                    collapsedWidth: 25,
-                    collapsedHeight: 25,
-                    zoomLevelOffset: -5,
-                    toggleDisplay: true
-                },
-                layers: [{type: "osm"}]
-            }
-        },
-        securityToken: '',
-        additionalLayers: [],
-        shouldLoadFont: false,
-        elevationEnabled: false,
-        onFontError: () => {},
-        onResolutionsChange: () => {},
-        items: []
-    };
-    state = {
-        canRender: true
-    };
-
-    UNSAFE_componentWillMount() {
-        const {shouldLoadFont, fonts} = this.props;
-
-        // load each font before rendering (see issue #3155)
-        if (shouldLoadFont && fonts) {
-            this.setState({canRender: false});
-
-            Promise.all(
-                fonts.map(f =>
-                    loadFont(f, {
-                        timeoutAfter: 5000 // 5 seconds in milliseconds
-                    }).catch(() => {
-                        this.props.onFontError({family: f});
-                    }
-                    ))
-            ).then(() => {
-                this.setState({canRender: true});
-            });
-
-        }
-        this.updatePlugins(this.props);
-    }
-
-    UNSAFE_componentWillReceiveProps(newProps) {
-        if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
-            this.updatePlugins(newProps);
-        }
-    }
-
-    getHighlightLayer = (projection, index, env) => {
-        const plugins = this.state.plugins;
-        return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}} env={env}>
-            {this.props.features.map( (feature) => {
-                return (<plugins.Feature
-                    msId={feature.id}
-                    key={feature.id}
-                    crs={projection}
-                    type={feature.type}
-                    style={feature.style || null }
-                    geometry={feature.geometry}/>);
-            })}
-        </plugins.Layer>);
-    };
-
-    getTool = (tool) => {
-        if (isString(tool)) {
-            return {
-                name: tool,
-                impl: this.state.plugins.tools[tool]
-            };
-        }
-        return tool[this.props.mapType] || tool;
-    };
-
-    getMapOptions = () => {
-        return this.props.mapOptions && this.props.mapOptions[this.props.mapType] ||
-            ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[this.props.mapType];
-    };
-
-    renderLayers = () => {
-        const projection = this.props.map.projection || 'EPSG:3857';
-        const env = [];
-
-        if (this.props.isLocalizedLayerStylesEnabled) {
-            env.push({
-                name: this.props.localizedLayerStylesName,
-                value: this.props.currentLocaleLanguage
-            });
-        }
-        const plugins = this.state.plugins;
-        return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
-            return (
-                <plugins.Layer
-                    type={layer.type}
-                    srs={projection}
-                    position={index}
-                    key={layer.id || layer.name}
-                    options={layer}
-                    securityToken={this.props.securityToken}
-                    env={env}
-                >
-                    {this.renderLayerContent(layer, projection)}
-                </plugins.Layer>
-            );
-        }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, this.props.layers.length, env) || []);
-    };
-
-    renderLayerContent = (layer, projection) => {
-        const plugins = this.state.plugins;
-        if (layer.features && layer.type === "vector") {
-            return layer.features.map( (feature) => {
-                return (
-                    <plugins.Feature
-                        key={feature.id}
-                        msId={feature.id}
-                        type={feature.type}
-                        crs={projection}
-                        geometry={feature.geometry}
-                        features={feature.features}
-                        featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
-                        // FEATURE STYLE OVERWRITE LAYER STYLE
-                        layerStyle={layer.style}
-                        style={ feature.style || layer.style || null }
-                        properties={feature.properties}/>
-                );
-            });
-        }
-        return null;
-    };
-
-    renderSupportTools = () => {
-        // Tools passed by other plugins
-        const toolsFromItems = this.props.items
-            .filter(({Tool}) => !!Tool)
-            .map(({Tool, name}) => <Tool key={name} />);
-
-        return this.props.tools.map((tool) => {
-            const Tool = this.getTool(tool);
-            const options = this.props.toolsOptions[Tool.name] && this.props.toolsOptions[Tool.name][this.props.mapType] || this.props.toolsOptions[Tool.name] || {};
-            return <Tool.impl key={Tool.name} {...options}/>;
-        }).concat(toolsFromItems);
-    };
-
-    render() {
-        if (this.props.map && this.state.canRender && this.state.plugins) {
-            const {mapOptions = {}} = this.props.map;
-
-            return (
-                <this.state.plugins.Map id="map"
-                    {...this.props.options}
-                    projectionDefs={this.props.projectionDefs}
-                    {...this.props.map}
-                    mapOptions={assign({}, mapOptions, this.getMapOptions())}
-                    zoomControl={this.props.zoomControl}
-                    onResolutionsChange={this.props.onResolutionsChange}
-                >
-                    {this.renderLayers()}
-                    {this.renderSupportTools()}
-                </this.state.plugins.Map>
-            );
-        }
-        if (this.props.loadingError) {
-            return (<div style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-            }} className="mapErrorMessage">
-                <Message msgId="map.loadingerror"/>:
-                {this.props.loadingError}
-            </div>);
-        }
-        return (<div style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-        }} className="mapLoadingMessage">
-            {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
-            <Message msgId={this.props.mapLoadingMessage}/>
-        </div>);
-    }
-    filterLayer = (layer) => {
-        return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
-    };
-    updatePlugins = (props) => {
-        pluginsCreator(props.mapType, props.actions).then((plugins) => {
-            this.setState({plugins});
-        });
-    };
-}
+const MapPlugin = (props) => {
+    return <Map {...props} initMapComponents={initComponents}/>;
+};
 
 export default createPlugin('Map', {
     component: connect(selector, {

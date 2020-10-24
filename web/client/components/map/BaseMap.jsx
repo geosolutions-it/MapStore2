@@ -5,9 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const { isString } = require('lodash');
+import React from "react";
+import Map from "./Map";
 
 /**
  * Base map component that renders a map.
@@ -28,134 +27,15 @@ const { isString } = require('lodash');
  * Each tool must be implemented in plugins.tools
  *
  */
-class BaseMap extends React.Component {
-    static propTypes = {
-        id: PropTypes.string,
-        options: PropTypes.object,
-        map: PropTypes.object,
-        mapStateSource: PropTypes.string,
-        eventHandlers: PropTypes.object,
-        styleMap: PropTypes.object,
-        layers: PropTypes.array,
-        hookRegister: PropTypes.object,
-        projectionDefs: PropTypes.array,
-        plugins: PropTypes.any,
-        tools: PropTypes.array,
-        getLayerProps: PropTypes.func,
-        env: PropTypes.array
-    };
+const BaseMap = (props) => {
+    const {plugins, ...others} = props;
+    return (<Map id ="__base_map__" eventHandlers ={{
+        onMapViewChanges: () => {},
+        onClick: () => {},
+        onMouseMove: () => {},
+        onLayerLoading: () => {},
+        onLayerError: () => {}
+    }} components={plugins} tools={[]} {...others}/>);
+};
 
-    static defaultProps = {
-        id: '__base_map__',
-        options: {},
-        map: {},
-        styleMap: {},
-        tools: [],
-        projectionDefs: [],
-        eventHandlers: {
-            onMapViewChanges: () => {},
-            onClick: () => {},
-            onMouseMove: () => {},
-            onLayerLoading: () => {},
-            onLayerError: () => {}
-        },
-        env: []
-    };
-
-    getTool = (tool) => {
-        const { plugins } = this.props;
-        if (isString(tool)) {
-            return {
-                name: tool,
-                impl: plugins.tools[tool]
-            };
-        }
-        return {
-            name: tool.name,
-            impl: plugins.tools[tool.name],
-            ...tool
-        };
-    };
-
-    renderLayers = () => {
-        const projection = this.props.map && this.props.map.projection || "EPSG:3857";
-        const { plugins } = this.props;
-        const { Layer } = plugins;
-        return this.props.layers.map((layer, index) => {
-            return (
-                <Layer
-                    type={layer.type}
-                    srs={projection}
-                    position={index}
-                    key={layer.id || layer.name}
-                    options={layer}
-                    env={layer.localizedLayerStyles ? this.props.env : []}
-                >
-                    {this.renderLayerContent(layer, projection)}
-                </Layer>
-            );
-        });
-    };
-
-    renderLayerContent = (layer, projection) => {
-        if (layer.features && layer.type === "vector") {
-            const { plugins } = this.props;
-            const { Feature } = plugins;
-            return layer.features.map((feature) => {
-                return (
-                    <Feature
-                        key={feature.id}
-                        msId={feature.id}
-                        type={feature.type}
-                        crs={projection}
-                        geometry={feature.geometry}
-                        features={feature.features}
-                        featuresCrs={layer.featuresCrs || 'EPSG:4326'}
-                        // FEATURE STYLE OVERWRITE LAYER STYLE
-                        layerStyle={layer.style}
-                        style={feature.style || layer.style || null}
-                        properties={feature.properties} />
-                );
-            });
-        }
-        return null;
-    };
-
-    renderTools = () => {
-        return this.props.tools.map((tool) => {
-            const {impl: Tool, name, ...options} = this.getTool(tool);
-            return <Tool key={name} {...options} />;
-        });
-    };
-
-    render() {
-        const {plugins} = this.props;
-        const {Map} = plugins;
-        const projection = this.props.map && this.props.map.projection || "EPSG:3857";
-        if (this.props.map) {
-            return (
-                <Map
-                    projectionDefs={this.props.projectionDefs}
-                    style={this.props.styleMap}
-                    id={this.props.id}
-                    zoomControl={false}
-                    center={{ x: 0, y: 0 }}
-                    zoom={1}
-                    hookRegister={this.props.hookRegister}
-                    mapStateSource={this.props.mapStateSource || this.props.id}
-                    {...this.props.options}
-                    {...this.props.map}
-                    projection={projection}
-                    {...this.props.eventHandlers}
-                >
-                    {this.renderLayers()}
-                    {this.renderTools()}
-                </Map>
-            );
-        }
-        return null;
-    }
-}
-
-
-module.exports = BaseMap;
+export default BaseMap;

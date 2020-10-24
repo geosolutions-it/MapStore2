@@ -22,5 +22,5 @@ module.exports = compose(
     mapType,
     getProjectionDefs,
     handlingUnsupportedProjection
-)(require('../../map/BaseMap'));
+)(require('../../map/BaseMap').default);
 

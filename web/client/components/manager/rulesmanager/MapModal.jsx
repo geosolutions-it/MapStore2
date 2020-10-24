@@ -22,7 +22,7 @@ const MapWitDraw = compose(
     autoMapType,
     mapType,
     withDraw()
-)(require('../../map/BaseMap'));
+)(require('../../map/BaseMap').default);
 
 const Portal = require('react-overlays').Portal;
 

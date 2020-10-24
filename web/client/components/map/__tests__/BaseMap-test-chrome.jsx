@@ -9,7 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const expect = require('expect');
 
-const BaseMap = require('../BaseMap');
+const BaseMap = require('../BaseMap').default;
 const mapType = require('../enhancers/mapType');
 const TestMap = mapType(BaseMap);
 
