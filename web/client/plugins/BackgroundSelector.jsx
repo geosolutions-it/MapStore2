@@ -152,7 +152,7 @@ compose(
 )(BackgroundSelector);
 
 export default createPlugin("BackgroundSelector", {
-    BackgroundSelectorPlugin,
+    component: BackgroundSelectorPlugin,
     reducers: {
         controls: controlsReducer,
         backgroundSelector: backgroundReducer

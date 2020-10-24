@@ -39,6 +39,8 @@ let defaultConfig = {
     themePrefix: "ms2",
     bingApiKey: null,
     mapquestApiKey: null,
+    defaultSourceType: "gxp_wmssource",
+    backgroundGroup: "background",
     userSessions: {
         enabled: false
     }
@@ -102,9 +104,16 @@ export const getUrlWithoutParameters = (urlToFilter, skip) => {
     return !!paramsFiltered ? urlparts[0] + "?" + paramsFiltered : urlparts[0];
 };
 
+export const filterUrlParams = (urlToFilter, params = []) => {
+    if (isNil(urlToFilter) || urlToFilter === "") {
+        return null;
+    }
+    return getUrlWithoutParameters(cleanDuplicatedQuestionMarks(urlToFilter), params);
+};
+
 export const getParsedUrl = (urlToParse, options, params = []) => {
     if (urlToParse) {
-        const parsed = url.parse(ConfigUtils.filterUrlParams(urlToParse, params), true);
+        const parsed = url.parse(filterUrlParams(urlToParse, params), true);
         let newPathname = null;
         if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
             newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
@@ -145,12 +154,54 @@ export const getCenter = function(center, projection) {
     return assign({}, transformed, {crs: "EPSG:4326"});
 };
 
+export const setApiKeys = function(layer) {
+    if (layer.type === 'bing') {
+        layer.apiKey = defaultConfig.bingApiKey;
+    }
+    if (layer.type === 'mapquest') {
+        layer.apiKey = defaultConfig.mapquestApiKey;
+    }
+    return layer;
+};
+
+export const setLayerId = function(layer, i) {
+    if (!layer.id) {
+        layer.id = layer.name + "__" + i;
+    }
+    return layer;
+};
+
+export const replacePlaceholders = function(inputUrl) {
+    let currentUrl = inputUrl;
+    (currentUrl.match(/\{.*?\}/g) || []).forEach((placeholder) => {
+        const replacement = defaultConfig[placeholder.substring(1, placeholder.length - 1)];
+        // replacement must exist, or the URL is intended as a real template for the URL (e.g REST URLs of WMTS)
+        if (replacement !== undefined) {
+            currentUrl = currentUrl.replace(placeholder, replacement || '');
+        }
+    });
+    return currentUrl;
+};
+
+export const setUrlPlaceholders = function(layer) {
+    if (layer.url) {
+        if (isArray(layer.url)) {
+            layer.url = layer.url.map((currentUrl) => {
+                return replacePlaceholders(currentUrl);
+            });
+        } else {
+            layer.url = replacePlaceholders(layer.url);
+        }
+    }
+    return layer;
+};
+
 export const normalizeConfig = function(config) {
     const {layers, groups, plugins, ...other} = config;
-    other.center = ConfigUtils.getCenter(other.center);
+    other.center = getCenter(other.center);
     return {
         map: other,
-        layers: layers.map(ConfigUtils.setApiKeys, config).map(ConfigUtils.setLayerId).map(ConfigUtils.setUrlPlaceholders),
+        layers: layers.map(setApiKeys, config).map(setLayerId).map(setUrlPlaceholders),
         groups: groups,
         plugins: plugins
     };
@@ -177,26 +228,6 @@ export const getConfigUrl = ({mapId, config}) => {
     return getConfigurationOptions({mapId: id, config: configUrl});
 };
 
-export const convertFromLegacy = function(config) {
-    var mapConfig = config.map;
-    var sources = config.gsSources || config.sources;
-    var layers = mapConfig.layers.filter(layer => sources[layer.source]);
-    var latLng = ConfigUtils.getCenter(mapConfig.center, mapConfig.projection);
-    var zoom = mapConfig.zoom;
-    var maxExtent = mapConfig.maxExtent || mapConfig.extent;
-
-    // setup layers and sources with defaults
-    setupSources(sources, config.defaultSourceType);
-    setupLayers(layers, sources, ["gxp_osmsource", "gxp_wmssource", "gxp_googlesource", "gxp_bingsource", "gxp_mapquestsource", "gxp_olsource"]);
-    return ConfigUtils.normalizeConfig({
-        center: latLng,
-        zoom: zoom,
-        maxExtent: maxExtent, // TODO convert maxExtent
-        layers: layers,
-        projection: mapConfig.projection || 'EPSG:3857'
-    });
-};
-
 /**
  * set default wms source
  */
@@ -204,7 +235,7 @@ export const setupSources = function(sources, defaultSourceType) {
     var defType = defaultSourceType;
     var source;
     if (!defaultSourceType) {
-        defType = ConfigUtils.defaultSourceType;
+        defType = defaultConfig.defaultSourceType;
     }
     for (source in sources) {
         if (sources.hasOwnProperty(source)) {
@@ -214,12 +245,14 @@ export const setupSources = function(sources, defaultSourceType) {
         }
     }
 };
+
 export const normalizeSourceUrl = function(sourceUrl) {
     if (sourceUrl && sourceUrl.indexOf('?') !== -1) {
         return sourceUrl.split('?')[0];
     }
     return sourceUrl;
 };
+
 /**
  * Copy important source options to layer options.
  */
@@ -234,7 +267,7 @@ export const copySourceOptions = function(layer, source) {
         }
         layer.baseParams = assign({}, layer.baseParams, sourceParts.query);
     }
-    layer.url = ConfigUtils.normalizeSourceUrl(source.url);
+    layer.url = normalizeSourceUrl(source.url);
 };
 
 /**
@@ -249,7 +282,7 @@ export const setupLayers = function(layers, sources, supportedSourceTypes) {
         layer = layers[i];
         source = sources[layer.source];
         if (source) {
-            ConfigUtils.copySourceOptions(layer, source);
+            copySourceOptions(layer, source);
         }
 
         let type = source.ptype;
@@ -260,7 +293,7 @@ export const setupLayers = function(layers, sources, supportedSourceTypes) {
         }
         if (layer) {
             if (supportedSourceTypes.indexOf(source && source.ptype) >= 0) {
-                if (layer.group === ConfigUtils.backgroundGroup) {
+                if (layer.group === defaultConfig.backgroundGroup) {
                     // force to false if undefined
                     layer.visibility = layer.visibility || false;
                     if (candidateVisible && candidateVisible.visibility) {
@@ -285,6 +318,27 @@ export const setupLayers = function(layers, sources, supportedSourceTypes) {
         candidateVisible.visibility = true;
     }
 };
+
+export const convertFromLegacy = function(config) {
+    var mapConfig = config.map;
+    var sources = config.gsSources || config.sources;
+    var layers = mapConfig.layers.filter(layer => sources[layer.source]);
+    var latLng = getCenter(mapConfig.center, mapConfig.projection);
+    var zoom = mapConfig.zoom;
+    var maxExtent = mapConfig.maxExtent || mapConfig.extent;
+
+    // setup layers and sources with defaults
+    setupSources(sources, config.defaultSourceType);
+    setupLayers(layers, sources, ["gxp_osmsource", "gxp_wmssource", "gxp_googlesource", "gxp_bingsource", "gxp_mapquestsource", "gxp_olsource"]);
+    return normalizeConfig({
+        center: latLng,
+        zoom: zoom,
+        maxExtent: maxExtent, // TODO convert maxExtent
+        layers: layers,
+        projection: mapConfig.projection || 'EPSG:3857'
+    });
+};
+
 /**
  * Utility to merge different configs
  */
@@ -297,12 +351,6 @@ export const getProxyUrl = function(config) {
     return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
 };
 
-export const filterUrlParams = (urlToFilter, params = []) => {
-    if (isNil(urlToFilter) || urlToFilter === "") {
-        return null;
-    }
-    return getUrlWithoutParameters(cleanDuplicatedQuestionMarks(urlToFilter), params);
-};
 export const getProxiedUrl = function(uri, config = {}) {
     let sameOrigin = !(uri.indexOf("http") === 0);
     let urlParts = !sameOrigin && uri.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
@@ -320,7 +368,7 @@ export const getProxiedUrl = function(uri, config = {}) {
         sameOrigin = sameOrigin && uPort === lPort;
     }
     if (!sameOrigin) {
-        let proxyUrl = ConfigUtils.getProxyUrl(config);
+        let proxyUrl = getProxyUrl(config);
         if (proxyUrl) {
             let useCORS = [];
             if (isObject(proxyUrl)) {
@@ -405,44 +453,7 @@ export const getBrowserProperties = function() {
         retina: retina
     };
 };
-export const setApiKeys = function(layer) {
-    if (layer.type === 'bing') {
-        layer.apiKey = ConfigUtils.bingApiKey || defaultConfig.bingApiKey;
-    }
-    if (layer.type === 'mapquest') {
-        layer.apiKey = ConfigUtils.mapquestApiKey || defaultConfig.mapquestApiKey;
-    }
-    return layer;
-};
-export const setUrlPlaceholders = function(layer) {
-    if (layer.url) {
-        if (isArray(layer.url)) {
-            layer.url = layer.url.map((currentUrl) => {
-                return ConfigUtils.replacePlaceholders(currentUrl);
-            });
-        } else {
-            layer.url = ConfigUtils.replacePlaceholders(layer.url);
-        }
-    }
-    return layer;
-};
-export const replacePlaceholders = function(inputUrl) {
-    let currentUrl = inputUrl;
-    (currentUrl.match(/\{.*?\}/g) || []).forEach((placeholder) => {
-        const replacement = defaultConfig[placeholder.substring(1, placeholder.length - 1)];
-        // replacement must exist, or the URL is intended as a real template for the URL (e.g REST URLs of WMTS)
-        if (replacement !== undefined) {
-            currentUrl = currentUrl.replace(placeholder, replacement || '');
-        }
-    });
-    return currentUrl;
-};
-export const setLayerId = function(layer, i) {
-    if (!layer.id) {
-        layer.id = layer.name + "__" + i;
-    }
-    return layer;
-};
+
 export const getConfigProp = function(prop) {
     return defaultConfig[prop];
 };
@@ -454,8 +465,6 @@ export const removeConfigProp = function(prop) {
 };
 
 const ConfigUtils = {
-    defaultSourceType: "gxp_wmssource",
-    backgroundGroup: "background",
     PropTypes: {
         center: centerPropType,
         config: PropTypes.shape({

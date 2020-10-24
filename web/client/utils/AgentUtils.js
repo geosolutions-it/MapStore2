@@ -334,7 +334,7 @@ export const onfontready = (fontNameNew, onReady, options = {}, rootNew, tryFini
 */
 export const loadFont = (fontName, options = {}) =>
     new Promise((resolve, reject) => {
-        AgentUtils.onfontready(fontName, resolve, {
+        onfontready(fontName, resolve, {
             timeoutAfter: options.timeoutAfter,
 
             // Catch should only occur if onTimeout would normally be called
