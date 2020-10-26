@@ -11,7 +11,11 @@ import appConfig from './appConfig';
 import pluginsDef from './plugins';
 
 
-console.log("plugin not correctly loaded: ", Object.keys(pluginsDef.plugins).filter(plugin => pluginsDef.plugins[plugin].default));
+const missingPlugins = Object.keys(pluginsDef.plugins).filter(plugin => pluginsDef.plugins[plugin].default);
+
+if (missingPlugins.length) {
+    console.log("plugin not correctly loaded: ", missingPlugins);
+}
 
 
 main(appConfig, pluginsDef);
