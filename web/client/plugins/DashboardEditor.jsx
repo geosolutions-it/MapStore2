@@ -80,7 +80,12 @@ const Toolbar = compose(
 
 const { setEditing, setEditorAvailable } = require('../actions/dashboard');
 
-
+/**
+ * Side toolbar that allows to edit dashboard widgets.
+ * @name DashboardEditor
+ * @class
+ * @memberof plugins
+ */
 class DashboardEditorComponent extends React.Component {
     static propTypes = {
         id: PropTypes.string,

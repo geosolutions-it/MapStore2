@@ -47,6 +47,15 @@ const ExtensionsPlugin = connect(
     }
 )(Extensions);
 
+/**
+ * Shows the optional plugins list to activate/deactivate.
+ * It is made to be used in map contexts, where some plugins has been configured
+ * as optional, selectable by the user.
+ * The list of plugins to activate/deactivate is accessible from the {@link #plugins.BurgerMenu|BurgerMenu}
+ * @name UserExtensions
+ * @class
+ * @memberof plugins
+ */
 export default createPlugin('UserExtensions', {
     component: ExtensionsPlugin,
     containers: {

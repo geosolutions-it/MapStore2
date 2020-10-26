@@ -81,6 +81,14 @@ class Manager extends React.Component {
     }
 }
 
+/**
+ * Base container for Manager plugins like {@link #plugins.UserManager|UserManager} or
+ * {@link #plugins.GroupManager|GroupManager}
+ * usually rendered in {@link #pages.Manager|Manager Page}.
+ * @name Manager
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     ManagerPlugin: connect((state, ownProps) => ({
         selectedTool: ownProps.tool

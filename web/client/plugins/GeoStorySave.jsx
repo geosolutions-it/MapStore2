@@ -35,6 +35,7 @@ import geostory from '../reducers/geostory';
 
 /**
  * Save dialog component enhanced for GeoStory
+ * @ignore
  *
  */
 const SaveBaseDialog = compose(
@@ -62,7 +63,8 @@ const SaveBaseDialog = compose(
 )(require('../components/resources/modals/Save'));
 
 /**
- * Plugin for GeoStory Save
+ * Implements "save" button for geostories, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @class
  * @name GeoStorySave
  * @memberof plugins
  */
@@ -98,8 +100,9 @@ export const GeoStorySave = createPlugin('GeoStorySave', {
     }
 });
 /**
- * Plugin for GeoStory SaveAs functionality
- * @name GeoStorySaveAs
+ * Implements "save as" button for geostories, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @class
+ * @name GeoStorySave
  * @memberof plugins
  */
 export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {

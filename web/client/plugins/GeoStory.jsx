@@ -118,6 +118,7 @@ GeoStory.defaultProps = {
 /**
  * Plugin for GeoStory visualization
  * @name GeoStory
+ * @class
  * @memberof plugins
  * @prop {numeric} cfg.interceptionTime default 100, the debounce before calculations of currentPage active section
  * @prop {object[]} cfg.fontFamilies: A list of objects with font family names and sources where to load them from e.g. [{"family": "Comic sans", "src": "link to source"}]

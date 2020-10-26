@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,8 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
+
 const {connect} = require('react-redux');
 const {Button, Grid, Glyphicon} = require('react-bootstrap');
 const {editUser} = require('../../actions/users');
@@ -80,6 +81,13 @@ class UserManager extends React.Component {
     }
 }
 
+/**
+ * Allows an administrator to browse users.
+ * Renders in {@link #plugins.Manager|Manager} plugin.
+ * @name UserManager
+ * @memberof plugins
+ * @class
+ */
 module.exports = {
     UserManagerPlugin: assign(
         connect((state) => {

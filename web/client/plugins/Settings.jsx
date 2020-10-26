@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
 const {loadLocale} = require('../actions/locale');
@@ -176,6 +176,15 @@ const SettingsPlugin = connect((state) => ({
     toggleControl: toggleControl.bind(null, 'settings', null)
 })(SettingsButton);
 
+
+/**
+ * Settings window to configure some details of the current map.
+ * Is also a container for settings coming from the other plugins.
+ * Renders in {@link #plugins.BurgerMenu|BurgerMenu} an entry to open this window.
+ * @name Settings
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     SettingsPlugin: assign(SettingsPlugin, {
         Toolbar: {

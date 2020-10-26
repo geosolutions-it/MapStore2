@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -64,7 +64,7 @@ export const contextCreatorSelector = createStructuredSelector({
 });
 
 /**
- * Plugin for creation of Contexts.
+ * Plugin for creation of Contexts. Implements the wizard for creation of a context.
  * @memberof plugins
  * @name ContextCreator
  * @class

@@ -530,7 +530,7 @@ class LayerTree extends React.Component {
 /**
  * enhances the TOC to check `Permissions` properties and enable/disable
  * the proper tools.
- * @memberof plugins.TOC
+ * @ignore
  */
 const securityEnhancer = withPropsOnChange(
     [
@@ -579,7 +579,7 @@ const securityEnhancer = withPropsOnChange(
  * enhances the TOC to check the presence of TOC plugins to display/add buttons to the toolbar.
  * NOTE: the flags are required because of old configurations about permissions.
  * TODO: delegate button rendering and actions to the plugins (now this is only a check and some plugins are dummy, only to allow plug/unplug). Also permissions should be delegated to the related plugins
- * @memberof plugins.TOC
+ * @ignore
  */
 const checkPluginsEnhancer = branch(
     ({ checkPlugins = true }) => checkPlugins,

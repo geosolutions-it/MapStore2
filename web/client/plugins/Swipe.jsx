@@ -45,8 +45,9 @@ const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);
 
 /**
  * Swipe. Add to the TOC the possibility to select a layer for Swipe.
+ * @name Swipe
  * @memberof plugins
- * @requires plugins.Swipe
+ * @class
  */
 export default createPlugin(
     'Swipe',

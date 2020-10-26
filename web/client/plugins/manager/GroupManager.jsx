@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 const {Button, Grid, Glyphicon} = require('react-bootstrap');
 const {editGroup} = require('../../actions/usergroups');
@@ -82,6 +82,13 @@ class GroupManager extends React.Component {
     }
 }
 
+/**
+ * Allows an administrator to browse user groups.
+ * Renders in {@link #plugins.Manager|Manager} plugin.
+ * @name GroupManager
+ * @memberof plugins
+ * @class
+ */
 module.exports = {
     GroupManagerPlugin: assign(
         connect((state) => {

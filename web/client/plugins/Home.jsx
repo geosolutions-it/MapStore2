@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -44,6 +44,15 @@ const HomeConnected = connect((state) => ({
     onCloseUnsavedDialog: setControlProperty.bind(null, 'unsavedMap', 'enabled', false)
 })(Home);
 
+/**
+ * Renders a button that redirects to the home page.
+ * It can be rendered in {@link #plugins.OmniBar|OmniBar}.
+ * Supports as containers, lower priority, also {@link #plugins.BurgerMenu|BurgerMenu}
+ * or {@link #plugins.Toolbar|Toolbar}.
+ * @name Home
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     HomePlugin: assign(HomeConnected, {
         Toolbar: {

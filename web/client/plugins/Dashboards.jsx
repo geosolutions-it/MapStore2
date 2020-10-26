@@ -30,10 +30,13 @@ const dashboardsCountSelector = createSelector(
 );
 
 /**
- * Plugin for Dashboards resources
+ * Plugin for Dashboards resources browsing.
+ * Can be rendered inside {@link #plugins.ContentTabs|ContentTabs} plugin
+ * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
  * @name Dashboards
  * @memberof plugins
- * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
+ * @class
+ * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
  */
 class Dashboards extends React.Component {
     static propTypes = {

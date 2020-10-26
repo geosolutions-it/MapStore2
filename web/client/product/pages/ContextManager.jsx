@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -14,6 +14,14 @@ import {resetControls} from '../../actions/controls';
 
 import '../assets/css/manager.css';
 
+/**
+  * @name ContextManager
+  * @memberof pages
+  * @class
+  * @classdesc
+  * This is the main container page for ContextManager.
+  * it is a container for the ContextManager plugins.
+  */
 class ContextManager extends React.Component {
     static propTypes = {
         mode: PropTypes.string,

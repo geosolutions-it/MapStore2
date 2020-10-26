@@ -107,11 +107,6 @@ const TOCItemsSettingsPlugin = compose(
     }))
 )(TOCItemsSettings);
 
-/**
- * TOCItemsSettings. Add to the TOC the possibility to edit layers.
- * @memberof plugins
- * @requires plugins.TOC
- */
 export default createPlugin('TOCItemsSettings', {
     component: TOCItemsSettingsPlugin,
     containers: {
