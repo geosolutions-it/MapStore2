@@ -7,8 +7,16 @@
  */
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import {setStore, getStore, createStore, updateStore} from '../StateUtils';
+import {
+    PERSISTED_STORE_NAME,
+    setStore,
+    getStore,
+    createStore,
+    updateStore,
+    augmentStore
+} from '../StateUtils';
 import Rx from 'rxjs';
+import { setConfigProp } from '../ConfigUtils';
 
 describe('StateUtils', () => {
     beforeEach((done) => {
@@ -148,5 +156,51 @@ describe('StateUtils', () => {
         store.dispatch({ type: "fake" });
         expect(spy2.calls.length > 0).toBe(true);
         expect(spy1.calls.length).toBe(beforeUpdateCalls);
+    });
+    it('should use the new added reducers (augmentStore)', () => {
+        const rootReducer = () => ({});
+        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', rootReducer);
+        const store = {
+            replaceReducer: (reducer) => {
+                reducer();
+            }
+        };
+        let reducersKeys = [];
+        augmentStore({ reducers: {
+            map: () => {
+                reducersKeys.push('map');
+                return {};
+            },
+            controls: () => {
+                reducersKeys.push('controls');
+                return {};
+            }
+        } }, store);
+        expect(reducersKeys).toEqual([ 'map', 'controls' ]);
+        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', undefined);
+    });
+    it('should not use the new added reducers if they are available in the root reducer (augmentStore)', () => {
+        const rootReducer = () => ({
+            map: () => ({})
+        });
+        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', rootReducer);
+        const store = {
+            replaceReducer: (reducer) => {
+                reducer();
+            }
+        };
+        let reducersKeys = [];
+        augmentStore({ reducers: {
+            map: () => {
+                reducersKeys.push('map');
+                return {};
+            },
+            controls: () => {
+                reducersKeys.push('controls');
+                return {};
+            }
+        } }, store);
+        expect(reducersKeys).toEqual([ 'controls' ]);
+        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', undefined);
     });
 });
