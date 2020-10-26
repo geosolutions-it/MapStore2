@@ -110,5 +110,20 @@ export const remove = (mediaType, store) => {
         }
     ).map(() => ({id, type: mediaType}));
 };
-
+/**
+ * Get data of a selected media resource.
+ * If getData is a function that return an Observable of null
+ * the Media Editor will use the current selectedItem without updates.
+ * @param {string} store redux store middleware object (with dispatch and getStore method)
+ * @param {object} options
+ * @param {object} options.selectedItem the current selected item resource shaped as { id, type, data }
+ * @returns {Observable} a stream that emit an the data object of a resource
+ * ```
+ * {
+ *   "id", // of the deleted resource
+ *   "type": "map",
+ *   // ... resource data
+ * }
+ * ```
+ */
 export const getData = () => Observable.of(null);
