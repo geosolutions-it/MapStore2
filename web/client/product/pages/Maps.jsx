@@ -14,7 +14,7 @@ const {connect} = require('react-redux');
 
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 
 const {resetControls} = require('../../actions/controls');
 const {loadMaps} = require('../../actions/maps');

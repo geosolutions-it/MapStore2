@@ -25,7 +25,7 @@ const { checkPendingChanges } = require('../actions/pendingChanges');
 const {setControlProperty} = require('../actions/controls');
 const {unsavedMapSelector, unsavedMapSourceSelector} = require('../selectors/controls');
 const {feedbackMaskSelector} = require('../selectors/feedbackmask');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 
 const checkUnsavedMapChanges = (action) => {
     return dispatch => {

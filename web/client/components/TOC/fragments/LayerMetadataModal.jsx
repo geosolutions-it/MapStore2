@@ -13,7 +13,7 @@ const {Glyphicon} = require('react-bootstrap');
 require("./css/settingsModal.css");
 
 const Dialog = require('../../misc/Dialog');
-const Portal = require('../../misc/Portal');
+const Portal = require('../../misc/Portal').default;
 const Template = require('../../data/template/jsx/Template');
 const MetadataTemplate = require('./template/MetadataTemplate');
 const RenderTemplate = require("./template/index");

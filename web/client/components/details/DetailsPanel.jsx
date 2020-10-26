@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const {Glyphicon, Panel} = require('react-bootstrap');
 const Dock = require('react-dock').default;
 const BorderLayout = require('../layout/BorderLayout');

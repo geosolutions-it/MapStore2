@@ -8,7 +8,7 @@
 
 const React = require('react');
 const ReactDataGrid = require('react-data-grid');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 module.exports = ({
     style = {},

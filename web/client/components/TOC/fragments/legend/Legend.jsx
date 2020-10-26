@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {isArray} = require('lodash');
 
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 
 const assign = require('object-assign');

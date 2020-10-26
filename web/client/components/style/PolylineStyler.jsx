@@ -16,7 +16,7 @@ const Slider = require('react-nouislider');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 require('react-widgets/lib/less/react-widgets.less');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const {isNil} = require('lodash');
 const tinycolor = require("tinycolor2");
 

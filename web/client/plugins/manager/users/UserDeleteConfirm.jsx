@@ -12,7 +12,7 @@ const {deleteUser} = require('../../../actions/users');
 const {Alert} = require('react-bootstrap');
 const Confirm = require('../../../components/misc/ConfirmDialog');
 const UserCard = require('../../../components/manager/users/UserCard');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const {findIndex} = require('lodash');
 
 class UserDeleteConfirm extends React.Component {

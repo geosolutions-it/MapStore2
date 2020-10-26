@@ -11,7 +11,7 @@ const assign = require('object-assign');
 const {castArray, get} = require('lodash');
 const CatalogAPI = require('../CSW');
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 
 /**
  * Services to retrieve users and groups (roles)

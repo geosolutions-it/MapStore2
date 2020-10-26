@@ -11,10 +11,10 @@ var React = require('react');
 
 const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 
-const OverlayTrigger = require('../misc/OverlayTrigger');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
 
 const mapUtils = require('../../utils/MapUtils');
-const configUtils = require('../../utils/ConfigUtils');
+const configUtils = require('../../utils/ConfigUtils').default;
 
 
 /**

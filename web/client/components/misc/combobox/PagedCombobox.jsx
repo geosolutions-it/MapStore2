@@ -11,7 +11,7 @@ const React = require('react');
 const Combobox = require('react-widgets').Combobox;
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-const OverlayTrigger = require('../OverlayTrigger');
+const OverlayTrigger = require('../OverlayTrigger').default;
 const AutocompleteListItem = require('../../data/query/AutocompleteListItem');
 
 /**

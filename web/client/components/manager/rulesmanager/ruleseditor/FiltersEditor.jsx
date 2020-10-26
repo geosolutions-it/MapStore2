@@ -16,7 +16,7 @@ const filtersEnhancer = require("./enhancers/filters");
 const MapModal = require("../MapModal");
 const MapSwitch = require("../../../misc/switch/SwitchPanel");
 const SwitchPanel = switchEnhancer(MapSwitch);
-const Message = require("../../../I18N/Message");
+const Message = require("../../../I18N/Message").default;
 const SpatialFilter = require("../SimpleSpatialFilter");
 
 const {isEmpty} = require("lodash");

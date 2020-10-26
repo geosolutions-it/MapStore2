@@ -14,7 +14,7 @@ const {Glyphicon, Tooltip} = require('react-bootstrap');
 const AutocompleteListItem = require('./AutocompleteListItem');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const {isLikeOrIlike} = require('../../../utils/FilterUtils');
-const OverlayTrigger = require('../../../components/misc/OverlayTrigger');
+const OverlayTrigger = require('../../../components/misc/OverlayTrigger').default;
 const HTML = require('../../../components/I18N/HTML');
 /**
  * Combobox with remote autocomplete functionality.

@@ -11,7 +11,7 @@ const moment = require('moment');
 const { isNaN } = require('lodash');
 const { Form, FormGroup, ControlLabel, FormControl, InputGroup } = require('react-bootstrap');
 
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const InfoPopover = require('../widgets/widget/InfoPopover');
 
 const InlineDateTimeSelector = require('../time/InlineDateTimeSelector');

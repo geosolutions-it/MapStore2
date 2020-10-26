@@ -9,7 +9,7 @@
 const React = require('react');
 const {FormControl, Tooltip} = require('react-bootstrap');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-const OverlayTrigger = require('../../../components/misc/OverlayTrigger');
+const OverlayTrigger = require('../../../components/misc/OverlayTrigger').default;
 const HTML = require('../../../components/I18N/HTML');
 const PropTypes = require('prop-types');
 const {isLikeOrIlike} = require('../../../utils/FilterUtils');

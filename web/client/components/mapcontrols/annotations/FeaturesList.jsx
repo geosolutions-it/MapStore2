@@ -11,7 +11,7 @@ const uuidv1 = require('uuid/v1');
 const bbox = require('@turf/bbox');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const cs = require('classnames');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {get} = require('lodash');
 const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
 

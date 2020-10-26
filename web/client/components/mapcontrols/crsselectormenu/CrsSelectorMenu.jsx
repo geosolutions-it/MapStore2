@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { ListGroupItem, ListGroup, FormControl } = require('react-bootstrap');
 const LocaleUtils = require("../../../utils/LocaleUtils");
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 class CrsSelectorMenu extends React.Component {
     static propTypes = {

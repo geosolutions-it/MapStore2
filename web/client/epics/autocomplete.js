@@ -15,7 +15,7 @@ const {isArray, startsWith} = require('lodash');
 const {error} = require('../actions/notifications');
 const {typeNameSelector} = require('../selectors/query');
 const {maxFeaturesWPSSelector, appliedFilterSelector, storedFilterSelector} = require('../selectors/queryform');
-const {getParsedUrl} = require('../utils/ConfigUtils');
+const {getParsedUrl} = require('../utils/ConfigUtils').default;
 const {authkeyParamNameSelector} = require('../selectors/catalog');
 
 /**

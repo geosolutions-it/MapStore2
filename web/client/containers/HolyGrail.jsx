@@ -13,7 +13,7 @@ const { connect } = require('react-redux');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const PluginsUtils = require('../utils/PluginsUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const BorderLayout = require('../components/layout/BorderLayout');
 
 const PluginsContainer = connect((state) => ({

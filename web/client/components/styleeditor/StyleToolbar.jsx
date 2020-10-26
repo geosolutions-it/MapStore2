@@ -8,9 +8,9 @@
 
 const React = require('react');
 const Toolbar = require('../misc/toolbar/Toolbar');
-const ResizableModal = require('../misc/ResizableModal');
-const Portal = require('../misc/Portal');
-const Message = require('../I18N/Message');
+const ResizableModal = require('../misc/ResizableModal').default;
+const Portal = require('../misc/Portal').default;
+const Message = require('../I18N/Message').default;
 const { Alert } = require('react-bootstrap');
 
 /**

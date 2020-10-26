@@ -10,7 +10,7 @@ const React = require('react');
 
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const ToggleButton = require('../../../components/buttons/ToggleButton');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 
 class Home extends React.Component {
     static propTypes = {

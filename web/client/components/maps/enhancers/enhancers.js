@@ -9,7 +9,7 @@ const React = require('react');
 const Rx = require('rxjs');
 const { compose, withProps, mapPropsStream } = require('recompose');
 const { castArray } = require('lodash');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {getResources} = require('../../../api/persistence');
 const Icon = require('../../misc/FitIcon');
 

@@ -10,7 +10,7 @@ const React = require('react');
 
 const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const Toolbar = require('../../misc/toolbar/Toolbar');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 
 const FilterField = require('./FilterField');
 const ComboField = require('./ComboField');

@@ -8,7 +8,7 @@
 
 const React = require('react');
 const emptyState = require('../../../../misc/enhancers/emptyState');
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 
 /**
  * Enhances a component to show the empty view in case of no attributes.

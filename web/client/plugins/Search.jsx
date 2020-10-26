@@ -40,7 +40,7 @@ const {
 const {
     removeAdditionalLayer
 } = require("../actions/additionallayers");
-const { getConfigProp } = require("../utils/ConfigUtils");
+const { getConfigProp } = require("../utils/ConfigUtils").default;
 
 const searchSelector = createSelector([
     state => state.search || null,

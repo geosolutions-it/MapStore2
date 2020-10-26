@@ -10,7 +10,7 @@ var expect = require('expect');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Localized = require('../Localized');
-var Message = require('../Message');
+var Message = require('../Message').default;
 var HTML = require('../HTML');
 
 const messages = {

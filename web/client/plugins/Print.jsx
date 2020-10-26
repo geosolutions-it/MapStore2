@@ -35,7 +35,7 @@ const {currentLocaleSelector, currentLocaleLanguageSelector} = require('../selec
 const {isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector} = require('../selectors/localizedLayerStyles');
 const {mapTypeSelector} = require('../selectors/maptype');
 
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 require('./print/print.css');
 

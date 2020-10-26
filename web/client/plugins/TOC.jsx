@@ -42,7 +42,7 @@ const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
 const LocaleUtils = require('../utils/LocaleUtils');
 
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 const assign = require('object-assign');
 
 const layersIcon = require('./toolbar/assets/img/layers.png');

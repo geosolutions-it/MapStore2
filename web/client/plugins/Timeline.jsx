@@ -21,7 +21,7 @@ const withResizeSpy = require('../components/misc/enhancers/withResizeSpy');
 
 const { selectTime, enableOffset, onRangeChanged, setMapSync } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../selectors/playback');
 

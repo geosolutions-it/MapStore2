@@ -11,7 +11,7 @@ const expect = require('expect');
 const ReactDOM = require('react-dom');
 const IdentifyContainer = require('../IdentifyContainer');
 const TestUtils = require('react-dom/test-utils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 const getFeatureButtons = require('../../../../plugins/identify/featureButtons');
 
 describe("test IdentifyContainer", () => {

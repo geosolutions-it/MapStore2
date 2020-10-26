@@ -12,7 +12,7 @@ const xml2js = require('xml2js');
 const {isArray, castArray, get} = require('lodash');
 
 const axios = require('../libs/ajax');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const _ = require('lodash');
 
