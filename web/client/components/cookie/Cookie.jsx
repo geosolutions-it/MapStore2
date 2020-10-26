@@ -8,7 +8,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {Button, Glyphicon, Col} = require('react-bootstrap');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const MoreDetails = require('./MoreDetails');
 /**
   * Component used to show a panel with the information about cookies

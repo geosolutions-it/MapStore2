@@ -121,13 +121,24 @@ export const isMediaSection = (element) => element.type === SectionTypes.PARAGRA
     element.contents[0].contents[0].type === ContentTypes.MEDIA;
 
 /**
+ * cleans the id in case it has any get parameters attached at the end
+ * @param {string} id id of the dom element
+ * @return {string}
+ */
+export const onCleanId = (id) => {
+    const splitId = id.split('?');
+    return splitId.length === 2 ? splitId[0] : id;
+};
+
+/**
  * utility function that scrolls the view to the element
  * @param {string} id id of the dom element
  * @param {object|boolean} scrollOptions options used to the scroll action
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
  */
 export const scrollToContent = (id, scrollOptions) => {
-    const element = document.getElementById(id);
+    const cleanId = onCleanId(id);
+    const element = document.getElementById(cleanId);
     if (element) {
         element.scrollIntoView(scrollOptions);
     }

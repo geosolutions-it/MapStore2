@@ -8,7 +8,7 @@
 
 var expect = require('expect');
 const { testEpic } = require('./epicTestUtils');
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 
 const {
     searchGeostoriesOnMapSearch,

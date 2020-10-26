@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -18,6 +18,16 @@ const { checkLoggedUser } = require('../../actions/security');
 const Page = require('../../containers/Page');
 const BorderLayout = require('../../components/layout/BorderLayout');
 
+/**
+  * @name Dashboard
+  * @memberof pages
+  * @class
+  * @classdesc
+  * This is the main container page for Dashboard.
+  * It handles all the routing and initial loading functionalities dedicated to Dashboard contents and
+  * it is a container for the Dashboard plugins.
+  *
+  */
 class DashboardPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,

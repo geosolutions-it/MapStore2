@@ -11,7 +11,7 @@ const {compose, branch} = require('recompose');
 const withVirtualScroll = require('./infiniteScroll/withInfiniteScroll');
 const loadMore = require('./infiniteScroll/loadMore');
 const ShowMore = require('../ShowMore');
-const Message = require("../../I18N/Message");
+const Message = require("../../I18N/Message").default;
 const {Row, Col} = require('react-bootstrap');
 /**
  * Add pagination functionality to a component.

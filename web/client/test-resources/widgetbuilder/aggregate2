@@ -1,0 +1,1 @@
+{"GroupByAttributes":["year"],"AggregationResults":[[{"date":1,"hours":0,"seconds":0,"month":0,"nanos":0,"timezoneOffset":0,"year":21,"minutes":0,"time":-1546300800000,"day":6},18],[{"date":1,"hours":0,"seconds":0,"month":0,"nanos":0,"timezoneOffset":0,"year":54,"minutes":0,"time":-504921600000,"day":5},22]],"AggregationFunctions":["Count"],"AggregationAttribute":"name"}

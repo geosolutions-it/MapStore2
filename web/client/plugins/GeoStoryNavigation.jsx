@@ -63,6 +63,7 @@ const GeoStoryNavigation = ({
 /**
  * Plugin for GeoStory top panel for navigation
  * @name GeoStoryNavigation
+ * @class
  * @memberof plugins
  */
 export default createPlugin('GeoStoryNavigation', {

@@ -9,7 +9,7 @@
 const axios = require('axios');
 const combineURLs = require('axios/lib/helpers/combineURLs');
 const url = require('url');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const SecurityUtils = require('../utils/SecurityUtils');
 
 const assign = require('object-assign');

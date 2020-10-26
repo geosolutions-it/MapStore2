@@ -72,7 +72,8 @@ import {
     filterMarker,
     initPlugin,
     hideMeasureWarning,
-    toggleShowAgain
+    toggleShowAgain,
+    unSelectFeature
 } from '../../actions/annotations';
 
 import { PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
@@ -1670,5 +1671,38 @@ describe('Test the annotations reducer', () => {
         }, toggleShowAgain(false));
         expect(state.showAgain).toBeTruthy();
         expect(state.showAgain).toBe(true);
+    });
+    it('unSelectFeature', ()=>{
+        const selected = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "LineString",
+                coordinates: [1, 1]
+            },
+            style: [
+                {...DEFAULT_ANNOTATIONS_STYLES.LineString},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false}
+            ]
+        };
+        const state = annotations({
+            editing: {
+                features: [selected, {...selected, properties: {...selected.properties, id: "2"}}]
+            },
+            selected
+        }, unSelectFeature());
+        expect(state.drawing).toBe(false);
+        expect(state.coordinateEditorEnabled).toBe(false);
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.selected).toBeFalsy();
+        expect(state.showUnsavedGeometryModal).toBe(false);
+        const features = state.editing.features;
+        expect(features[0].properties.canEdit).toBe(false);
+        expect(features[1].properties.canEdit).toBe(false);
     });
 });

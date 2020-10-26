@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const {pure, compose, defaultProps} = require('recompose');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const emptyState = require('../misc/enhancers/emptyState');
 const withSelection = require('../widgets/view/enhancers/withSelection');
 const {widthProvider} = require('../layout/enhancers/gridLayout');

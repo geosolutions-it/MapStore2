@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../libs/ajax');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 
 const urlUtil = require('url');
 const assign = require('object-assign');

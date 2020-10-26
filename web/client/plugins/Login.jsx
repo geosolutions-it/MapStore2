@@ -16,13 +16,14 @@ const { comparePendingChanges } = require('../epics/pendingChanges');
 require('./login/login.css');
 
 /**
-  * Login Plugin. Allow to login/logout or show user info and reset password tools
+  * Login Plugin. Allow to login/logout or show user info and reset password tools.
+  * It renders a menu in {@link #plugins.OmniBar|OmniBar} plugin.
   * @class Login
   * @memberof plugins
   * @static
   *
   * @prop {string} cfg.id identifier of the Plugin, by default `"mapstore-login-menu"`
-  * @prop {object} cfg.menuStyle inline style for the menu, by defualt:
+  * @prop {object} cfg.menuStyle inline style for the menu, by default:
   * ```
   * menuStyle: {
   *      zIndex: 30

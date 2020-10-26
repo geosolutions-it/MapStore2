@@ -14,7 +14,7 @@ const assign = require('object-assign');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const PluginsUtils = require('../utils/PluginsUtils');
 
 const PluginsContainer = connect((state) => ({

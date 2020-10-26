@@ -7,7 +7,7 @@ import { keys } from 'lodash';
  * LICENSE file in the root directory of this source tree.
  */
 
-const ConfigUtils = require('./ConfigUtils');
+const ConfigUtils = require('./ConfigUtils').default;
 const URL = require('url');
 const assign = require('object-assign');
 const {head, isNil} = require('lodash');

@@ -514,7 +514,6 @@
             "removeLayer": "Rimuovi livello",
             "loadingerror": "Il livello non è stato caricato correttamente o non disponible.",
             "measure": "Misure",
-            "backgroundSwitcher": "Sfondi",
             "layers": "Livelli",
             "drawerButton": "Livelli",
             "refreshTitle": "Aggiorna livelli",
@@ -947,7 +946,6 @@
             "settingsPanel": "Questo è il testo di aiuto per SettingsPanel",
             "gohome": "Questo è il testo di aiuto per Home",
             "measureComponent": "Questo è il testo di aiuto per MeasureComponent",
-            "backgroundSwitcher": "Questo è il testo di aiuto per BackgroundSwitcher",
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "infoButton": "Questo è il testo di aiuto per InfoButton",
             "locateBtn": "Questo è il testo di aiuto per LocateBtn",
@@ -1670,7 +1668,8 @@
                 "noLegendDescription": "La mappa connessa non ha legende da mostrare",
                 "nodatainviewport": "Nessun dato per la vista selezionata",
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
-                "genericError": "C'è stato un errore durante la generazione del grafico"
+                "genericError": "C'è stato un errore durante la generazione del grafico",
+                "genericErrorWithMessage": "C'è stato un errore durante la generazione del grafico: \"{message}\""
             },
             "builder": {
                 "header": {

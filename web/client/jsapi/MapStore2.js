@@ -16,7 +16,7 @@ const {
 } = require('../stores/defaultOptions');
 
 const LocaleUtils = require('../utils/LocaleUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const {connect} = require('react-redux');
 
 const {configureMap, loadMapConfig} = require('../actions/config');

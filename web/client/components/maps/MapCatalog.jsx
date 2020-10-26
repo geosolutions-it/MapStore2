@@ -8,7 +8,7 @@
 const React = require('react');
 const { compose } = require('recompose');
 const { isNil } = require('lodash');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const MapCatalogForm = require('./MapCatalogForm');
 const BorderLayout = require('../layout/BorderLayout');
 const LoadingSpinner = require('../misc/LoadingSpinner');

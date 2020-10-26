@@ -8,9 +8,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Glyphicon, Tooltip, Button} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
-const Message = require('../../components/I18N/Message');
-const ConfirmModal = require('../../components/misc/ResizableModal');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
+const Message = require('../../components/I18N/Message').default;
+const ConfirmModal = require('../../components/misc/ResizableModal').default;
 
 class Home extends React.Component {
     static propTypes = {

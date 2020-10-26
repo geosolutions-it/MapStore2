@@ -93,7 +93,8 @@ import {
     GEOMETRY_HIGHLIGHT, geometryHighlight,
     INIT_PLUGIN, initPlugin,
     TOGGLE_SHOW_AGAIN, toggleShowAgain,
-    HIDE_MEASURE_WARNING, hideMeasureWarning
+    HIDE_MEASURE_WARNING, hideMeasureWarning,
+    UNSELECT_FEATURE, unSelectFeature
 } from '../annotations';
 
 describe('Test correctness of the annotations actions', () => {
@@ -423,5 +424,9 @@ describe('Test correctness of the annotations actions', () => {
     it('hideMeasureWarning ', () => {
         const result = hideMeasureWarning();
         expect(result.type).toBe(HIDE_MEASURE_WARNING);
+    });
+    it('unSelectFeature ', () => {
+        const result = unSelectFeature();
+        expect(result.type).toBe(UNSELECT_FEATURE);
     });
 });

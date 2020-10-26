@@ -14,7 +14,7 @@ import HTML from '../../components/I18N/HTML';
 
 /**
  * Footer plugin, section of the homepage.
- * descripition of footer can be overrided by
+ * description of footer can be overridden by
  * `home.footerDescription` message id in the translations
  * @prop {object} cfg.logo logo data to change image and href, set to null to hide the logo
  * @prop {object} cfg.logo.src source of the logo
@@ -24,6 +24,7 @@ import HTML from '../../components/I18N/HTML';
  * @prop {object} cfg.logo.alt alternative text of the logo image
  * @memberof plugins
  * @class
+ * @name Footer
  */
 
 class Footer extends React.Component {

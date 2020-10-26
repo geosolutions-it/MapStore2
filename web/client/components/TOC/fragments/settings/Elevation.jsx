@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const Slider = require('react-nouislider');
 const ElevationChart = require('./ElevationChart');
 const {Grid} = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const LayersUtils = require('../../../../utils/LayersUtils');
 require('react-widgets/lib/less/react-widgets.less');
 require("./css/elevation.css");

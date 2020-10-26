@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {head} = require('lodash');
 const {FormGroup, Label, FormControl} = require('react-bootstrap');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 class ThemeSwitcher extends React.Component {
     static propTypes = {

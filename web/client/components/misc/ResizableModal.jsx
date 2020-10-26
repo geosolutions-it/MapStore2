@@ -6,13 +6,14 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
-const Dialog = require('./Dialog');
-const Toolbar = require('./toolbar/Toolbar');
-const {withState} = require('recompose');
-const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-const LoadingSpinner = require('./LoadingSpinner');
+import React from 'react';
+
+import { Glyphicon } from 'react-bootstrap';
+import Dialog from './Dialog';
+import Toolbar from './toolbar/Toolbar';
+import { withState } from 'recompose';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import LoadingSpinner from './LoadingSpinner';
 
 
 const sizes = {
@@ -62,7 +63,7 @@ const fullscreen = {
  * @prop {string} dialogClassName custom class for the dialog component
  */
 
-const ResizableModal = ({
+const ResizableModalComp = ({
     show = false,
     loading,
     loadingText,
@@ -141,4 +142,6 @@ const ResizableModal = ({
         </ReactCSSTransitionGroup>) : dialog;
 };
 
-module.exports = withState('fullscreenState', 'onFullscreen', ({initialFullscreenState = 'collapsed'}) => initialFullscreenState)(ResizableModal);
+const ResizableModal = withState('fullscreenState', 'onFullscreen', ({initialFullscreenState = 'collapsed'}) => initialFullscreenState)(ResizableModalComp);
+
+export default ResizableModal;

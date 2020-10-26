@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {FormControl, FormGroup, ControlLabel, Alert} = require('react-bootstrap');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
 /**

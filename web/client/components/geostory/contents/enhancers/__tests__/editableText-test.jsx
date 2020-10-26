@@ -110,6 +110,10 @@ describe('editableText enhancer', () => {
                     {
                         "id": "id-2-1",
                         "type": "column"
+                    },
+                    {
+                        "id": "id-2-2",
+                        "type": "column"
                     }
                 ]
             },
@@ -142,17 +146,11 @@ describe('editableText enhancer', () => {
                 "id": "id-1"
             },
             {
-                "id": "id-2",
-                "type": "immersive",
-                "contents": [
-                    {
-                        "id": "id-2-1",
-                        "type": "column"
-                    }
-                ]
+                "id": "id-2-1",
+                "type": "column"
             },
             {
-                "id": "id-2-1",
+                "id": "id-2-2",
                 "type": "column"
             },
             {
@@ -167,11 +165,6 @@ describe('editableText enhancer', () => {
                 ]
             },
             {
-                "id": "id-3-1",
-                "type": "column",
-                "contents": []
-            },
-            {
                 "id": "id-4",
                 "type": "paragraph",
                 "contents": [
@@ -180,10 +173,6 @@ describe('editableText enhancer', () => {
                         "type": "column"
                     }
                 ]
-            },
-            {
-                "id": "id-4-1",
-                "type": "column"
             }
         ];
         const Sink = withGeoStoryEditor(createSink(() => {}));

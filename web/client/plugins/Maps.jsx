@@ -67,12 +67,6 @@ const PaginationToolbar = connect((state) => {
     };
 })(PaginationToolbarBase);
 
-/**
- * Plugin for Maps resources
- * @name Maps
- * @memberof plugins
- * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
- */
 class Maps extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
@@ -164,6 +158,15 @@ const MapsPlugin = compose(
     )
 )(Maps);
 
+/**
+ * Plugin for maps resources browsing.
+ * Can be rendered inside {@link #plugins.ContentTabs|ContentTabs} plugin
+ * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
+ * @name Maps
+ * @memberof plugins
+ * @class
+ * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
+ */
 export default {
     MapsPlugin: assign(MapsPlugin, {
         NavMenu: {

@@ -61,10 +61,10 @@ class MSLinkOptions extends Component {
                     {availableStorySections && availableStorySections.map(section => (
                         <DropdownOption
                             active={section.id === currentSelectOption}
-                            value={{value: section.id, label: section.title || section.contents[0].title || section.contents[0].id}}
+                            value={{value: section.id, label: section.title || section.type || section.id}}
                             key={section.id}
                         >
-                            {section.title || section.contents[0].title || section.contents[0].id}
+                            {section.title || section.type || section.id}
                         </DropdownOption>
                     ))}
                 </Dropdown>

@@ -88,7 +88,9 @@ class OpenlayersMap extends React.Component {
         registerHooks: true,
         hookRegister: mapUtils,
         interactive: true,
-        onMouseOut: () => {}
+        onMouseOut: () => {},
+        center: { x: 13, y: 45, crs: 'EPSG:4326' },
+        zoom: 5
     };
 
     componentDidMount() {

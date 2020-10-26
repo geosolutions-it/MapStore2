@@ -10,6 +10,15 @@ const PropTypes = require('prop-types');
 const {Jumbotron, Grid, Row, Col} = require('react-bootstrap');
 const HTML = require('../../components/I18N/HTML');
 
+/**
+ * Description of MapStore rendered in the home page.
+ * Renders the HTML in localization files identified by
+ * the path `home.shortDescription`.
+ * @name HomeDescription
+ * @class
+ * @memberof plugins
+ * @prop {string} [name='MapStore'] Title of the text
+ */
 class HomeDescription extends React.Component {
     static propTypes = {
         style: PropTypes.object,

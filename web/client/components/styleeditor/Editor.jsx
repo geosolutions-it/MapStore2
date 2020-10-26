@@ -14,7 +14,7 @@ const CM = require('codemirror/lib/codemirror');
 const BorderLayout = require('../layout/BorderLayout');
 const Loader = require('../misc/Loader');
 const InfoPopover = require('../widgets/widget/InfoPopover');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const assign = require('object-assign');
 
 require('codemirror/lib/codemirror.css');

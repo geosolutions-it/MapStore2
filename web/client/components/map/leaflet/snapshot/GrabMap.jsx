@@ -7,7 +7,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isEqual} = require('lodash');
 const html2canvas = require('html2canvas');

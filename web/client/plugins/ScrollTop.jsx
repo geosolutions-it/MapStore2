@@ -8,7 +8,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const ScrollUp = require('react-scroll-up').default;
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 const {Glyphicon, Button, Tooltip, OverlayTrigger} = require('react-bootstrap');
 
 /**

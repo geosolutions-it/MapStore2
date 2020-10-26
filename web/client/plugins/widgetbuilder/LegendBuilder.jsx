@@ -12,7 +12,7 @@ const {createSelector} = require('reselect');
 const {get} = require('lodash');
 const { compose, renameProps, mapPropsStream, withProps } = require('recompose');
 const InfoPopover = require('../../components/widgets/widget/InfoPopover');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const BorderLayout = require('../../components/layout/BorderLayout');
 
 const { insertWidget, onEditorChange, setPage, openFilterEditor } = require('../../actions/widgets');

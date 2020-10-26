@@ -15,7 +15,7 @@ const {
 } = require('react-bootstrap');
 
 const Overlay = require('../../misc/Overlay');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 /**
  * InfoPopover. A component that renders a icon with a Popover.
  * @prop {string} title the title of popover

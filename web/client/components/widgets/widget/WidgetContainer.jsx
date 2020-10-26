@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const BorderLayout = require('../../layout/BorderLayout');
 const ConfirmModal = require('../../maps/modals/ConfirmModal');
 

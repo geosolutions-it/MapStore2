@@ -7,7 +7,7 @@
  */
 
 const {get} = require('lodash');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 
 const getRecords = (url, startPosition, maxRecords, text) => {
     const backgroundList = get(ConfigUtils.getDefaults(), 'initialState.defaultState.catalog.default.staticServices.default_map_backgrounds.backgrounds');
