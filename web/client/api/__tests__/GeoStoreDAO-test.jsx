@@ -197,28 +197,7 @@ describe('Test correctness of the GeoStore APIs', () => {
                     {
                         "groupName": "everyone",
                         "id": 1,
-                        "restUsers": {
-                            "User": [
-                                {
-                                    "groupsNames": "everyone",
-                                    "id": 3,
-                                    "name": "user",
-                                    "role": "USER"
-                                },
-                                {
-                                    "groupsNames": "everyone",
-                                    "id": 2,
-                                    "name": "admin",
-                                    "role": "ADMIN"
-                                },
-                                {
-                                    "groupsNames": "everyone",
-                                    "id": 1,
-                                    "name": "guest",
-                                    "role": "GUEST"
-                                }
-                            ]
-                        }
+                        "restUsers": {}
                     },
                     {
                         "description": "test",
@@ -246,28 +225,7 @@ describe('Test correctness of the GeoStore APIs', () => {
                 "UserGroup": {
                     "groupName": "everyone",
                     "id": 1,
-                    "restUsers": {
-                        "User": [
-                            {
-                                "groupsNames": "everyone",
-                                "id": 3,
-                                "name": "user",
-                                "role": "USER"
-                            },
-                            {
-                                "groupsNames": "everyone",
-                                "id": 2,
-                                "name": "admin",
-                                "role": "ADMIN"
-                            },
-                            {
-                                "groupsNames": "everyone",
-                                "id": 1,
-                                "name": "guest",
-                                "role": "GUEST"
-                            }
-                        ]
-                    }
+                    "restUsers": {}
                 }
             }
         };
