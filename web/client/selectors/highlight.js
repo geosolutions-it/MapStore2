@@ -1,15 +1,23 @@
-const {get} = require('lodash');
-const {createSelector} = require('reselect');
-const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const selectedFeatures = (state) => get(state, state && state.highlight && state.highlight.featuresPath || "highlight.emptyFeatures") || [];
-const filteredspatialObject = (state) => get(state, state && state.featuregrid && state.featuregrid.open && state.featuregrid.showFilteredObject && "query.filterObj.spatialField" || "emptyObject");
-const filteredGeometry = (state) => filteredspatialObject(state) && filteredspatialObject(state).geometry;
-const filteredspatialObjectType = (state) => filteredGeometry(state) && filteredGeometry(state).type || "Polygon";
-const filteredspatialObjectCoord = (state) => filteredGeometry(state) && filteredGeometry(state).coordinates || [];
-const filteredSpatialObjectCrs = (state) => filteredGeometry(state) && filteredGeometry(state).projection || "EPSG:3857";
-const filteredSpatialObjectId = (state) => filteredGeometry(state) && filteredGeometry(state).id || "spatial_object";
-const filteredFeatures = createSelector(
+import { get } from 'lodash';
+import { createSelector } from 'reselect';
+import { reprojectGeoJson } from '../utils/CoordinatesUtils';
+
+export const selectedFeatures = (state) => get(state, state && state.highlight && state.highlight.featuresPath || "highlight.emptyFeatures") || [];
+export const filteredspatialObject = (state) => get(state, state && state.featuregrid && state.featuregrid.open && state.featuregrid.showFilteredObject && "query.filterObj.spatialField" || "emptyObject");
+export const filteredGeometry = (state) => filteredspatialObject(state) && filteredspatialObject(state).geometry;
+export const filteredspatialObjectType = (state) => filteredGeometry(state) && filteredGeometry(state).type || "Polygon";
+export const filteredspatialObjectCoord = (state) => filteredGeometry(state) && filteredGeometry(state).coordinates || [];
+export const filteredSpatialObjectCrs = (state) => filteredGeometry(state) && filteredGeometry(state).projection || "EPSG:3857";
+export const filteredSpatialObjectId = (state) => filteredGeometry(state) && filteredGeometry(state).id || "spatial_object";
+export const filteredFeatures = createSelector(
     [
         filteredspatialObjectCoord,
         filteredspatialObjectType,
@@ -40,15 +48,10 @@ const filteredFeatures = createSelector(
 
 );
 
-const highlighedFeatures = createSelector(
+export const highlighedFeatures = createSelector(
     [
         filteredFeatures,
         selectedFeatures
     ],
     (featuresFiltered, featuresSelected) => [ ...featuresSelected, ...featuresFiltered]
 );
-
-module.exports = {
-    selectedFeatures, filteredFeatures, filteredSpatialObjectId, filteredSpatialObjectCrs, filteredspatialObjectCoord,
-    filteredspatialObjectType, filteredGeometry, filteredspatialObject, highlighedFeatures
-};

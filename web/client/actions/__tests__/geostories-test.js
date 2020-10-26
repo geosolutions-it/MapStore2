@@ -5,16 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-const {
-    setGeostoriesAvailable, SET_GEOSTORIES_AVAILABLE,
-    searchGeostories, SEARCH_GEOSTORIES,
-    geostoriesLoading, LOADING,
-    geostoriesListLoaded, GEOSTORIES_LIST_LOADED,
-    deleteGeostory, DELETE_GEOSTORY,
-    geostoryDeleted, GEOSTORY_DELETED,
-    reloadGeostories, RELOAD
-} = require('../geostories');
+import expect from 'expect';
+
+import {
+    setGeostoriesAvailable,
+    SET_GEOSTORIES_AVAILABLE,
+    searchGeostories,
+    SEARCH_GEOSTORIES,
+    geostoriesLoading,
+    LOADING,
+    geostoriesListLoaded,
+    GEOSTORIES_LIST_LOADED,
+    deleteGeostory,
+    DELETE_GEOSTORY,
+    geostoryDeleted,
+    GEOSTORY_DELETED,
+    reloadGeostories,
+    RELOAD
+} from '../geostories';
+
 describe('geostories (browse) actions', () => {
     it('setGeostoriesAvailable', () => {
         const retval = setGeostoriesAvailable(true);

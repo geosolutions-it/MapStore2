@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const {Glyphicon, SplitButton, MenuItem} = require('react-bootstrap');
 
 
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const tooltip = require('../../misc/enhancers/tooltip');
 
 const SplitButtonT = tooltip(SplitButton);

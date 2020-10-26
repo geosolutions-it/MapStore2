@@ -7,7 +7,12 @@
  */
 
 
-const TOGGLE_FULLSCREEN = "TOGGLE_FULLSCREEN";
+/**
+ * Actions for FullScreen Plugin.
+ * @name actions.fullscreen
+ */
+
+export const TOGGLE_FULLSCREEN = "TOGGLE_FULLSCREEN";
 /**
  * when fullscreen have to be toggled
  * @memberof actions.fullscreen
@@ -15,18 +20,10 @@ const TOGGLE_FULLSCREEN = "TOGGLE_FULLSCREEN";
  * @param  {string} elementSelector querySelector string to use to get the element to fullscreen.
  * @return {action}                   the action of type `TOGGLE_FULLSCREEN` with enable flag and element selector.
  */
-function toggleFullscreen(enable, elementSelector) {
+export function toggleFullscreen(enable, elementSelector) {
     return {
         type: TOGGLE_FULLSCREEN,
         enable,
         elementSelector
     };
 }
-/**
- * Actions for FullScreen Plugin.
- * @name actions.fullscreen
- */
-module.exports = {
-    toggleFullscreen,
-    TOGGLE_FULLSCREEN
-};

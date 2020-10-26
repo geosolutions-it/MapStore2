@@ -7,12 +7,14 @@
  ectory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 
-module.exports = (Component) => {
+const withContainer = (Component) => {
     return (props) => {
         return <Component {...props} container={document.querySelector('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div") || document.body}/>;
     };
 };
+
+export default withContainer;

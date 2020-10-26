@@ -13,13 +13,13 @@ const { connect } = require('react-redux');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const PluginsUtils = require('../utils/PluginsUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const BorderLayout = require('../components/layout/BorderLayout');
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer'));
+}))(require('../components/plugins/PluginsContainer').default);
 
 class HolyGrail extends React.Component {
     static propTypes = {

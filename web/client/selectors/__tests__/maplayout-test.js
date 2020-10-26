@@ -6,8 +6,17 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const { mapLayoutSelector, mapLayoutValuesSelector, checkConditionsSelector, rightPanelOpenSelector, bottomPanelOpenSelector, boundingMapRectSelector, mapPaddingSelector} = require('../maplayout');
+import expect from 'expect';
+
+import {
+    mapLayoutSelector,
+    mapLayoutValuesSelector,
+    checkConditionsSelector,
+    rightPanelOpenSelector,
+    bottomPanelOpenSelector,
+    boundingMapRectSelector,
+    mapPaddingSelector
+} from '../maplayout';
 
 describe('Test map layout selectors', () => {
     it('test mapLayoutSelector no state', () => {

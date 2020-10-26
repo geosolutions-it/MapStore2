@@ -8,11 +8,11 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {get} = require('lodash');
-const Portal = require('../../misc/Portal');
-const ResizableModal = require('../../misc/ResizableModal');
+const Portal = require('../../misc/Portal').default;
+const ResizableModal = require('../../misc/ResizableModal').default;
 // require('./css/modals.css');
 const {Grid} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const ErrorBox = require('./fragments/ErrorBox');
 const MainForm = require('./fragments/MainForm');
 const ruleEditor = require('./enhancers/ruleEditor');

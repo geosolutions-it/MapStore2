@@ -293,3 +293,5 @@ export const updateUrlOnScrollSelector = state => get(state, 'geostory.updateUrl
  * @param {object} state application state
  */
 export const currentStoryFonts = state => get(state, "geostory.currentStory.settings.theme.fontFamilies", []);
+
+export const getMediaEditorSettings = state => get(state, 'geostory.mediaEditorSettings');

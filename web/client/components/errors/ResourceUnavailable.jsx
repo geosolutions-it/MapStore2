@@ -8,7 +8,7 @@
 
 const React = require('react');
 const emptyState = require('../misc/enhancers/emptyState');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const HTML = require('../I18N/HTML');
 
 /**

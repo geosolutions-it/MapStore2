@@ -6,33 +6,31 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {createSelector} = require('reselect');
+import { createSelector } from 'reselect';
 
-const MapInfoUtils = require('../utils/MapInfoUtils');
-const LayersUtils = require('../utils/LayersUtils');
-const {defaultIconStyle} = require('../utils/SearchUtils');
-const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
-const {clickedPointWithFeaturesSelector} = require('./mapInfo');
-const {defaultQueryableFilter} = require('../utils/MapInfoUtils');
+import MapInfoUtils from '../utils/MapInfoUtils';
+import LayersUtils from '../utils/LayersUtils';
+import { defaultIconStyle } from '../utils/SearchUtils';
+import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
+import { clickedPointWithFeaturesSelector } from './mapInfo';
+import { get, head, isEmpty, find, isObject, isArray, castArray } from 'lodash';
+import { flattenGroups } from '../utils/TOCUtils';
 
-const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
-const {flattenGroups} = require('../utils/TOCUtils');
-
-const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
-const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
-const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
-const getLayerFromName = (state, name) => head(layersSelector(state).filter(l => l.name === name));
-const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
-const highlightPointSelector = state => state.annotations && state.annotations.showMarker && state.annotations.clickPoint;
-const geoColderSelector = state => state.search && state.search;
+export const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
+export const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
+export const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
+export const getLayerFromName = (state, name) => head(layersSelector(state).filter(l => l.name === name));
+export const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
+export const highlightPointSelector = state => state.annotations && state.annotations.showMarker && state.annotations.clickPoint;
+export const geoColderSelector = state => state.search && state.search;
 
 // TODO currently loading flag causes a re-creation of the selector on any pan
 // to avoid this separate loading from the layer object
 
-const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
-const additionalLayersSelector = state => get(state, "additionallayers", []);
+export const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
+export const additionalLayersSelector = state => get(state, "additionallayers", []);
 
-const layerSelectorWithMarkers = createSelector(
+export const layerSelectorWithMarkers = createSelector(
     [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector,
         highlightPointSelector],
     (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint) => {
@@ -84,35 +82,35 @@ const layerSelectorWithMarkers = createSelector(
     }
 );
 
-const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
-const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
+export const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
+export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
-const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
-const getSelectedLayers = state => {
+export const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
+export const getSelectedLayers = state => {
     const selectedIds = selectedNodesSelector(state);
     return selectedIds.map((id) => find(layersSelector(state), {id}));
 };
-const getSelectedLayer = state => {
+export const getSelectedLayer = state => {
     const selected = getSelectedLayers(state) || [];
     return selected && selected[0];
 };
-const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
-const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
-const layerMetadataSelector = (state) => state.layers && state.layers.layerMetadata || {expanded: false, metadataRecord: {}, maskLoading: false};
-const wfsDownloadSelector = (state) => state.controls && state.controls.wfsdownload ? { expanded: state.controls.wfsdownload.enabled } : {expanded: false};
+export const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
+export const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
+export const layerMetadataSelector = (state) => state.layers && state.layers.layerMetadata || {expanded: false, metadataRecord: {}, maskLoading: false};
+export const wfsDownloadSelector = (state) => state.controls && state.controls.wfsdownload ? { expanded: state.controls.wfsdownload.enabled } : {expanded: false};
 
-const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
-const currentBackgroundSelector = (state) => {
+export const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
+export const currentBackgroundSelector = (state) => {
     const controls = backgroundControlsSelector(state);
     const layers = allBackgroundLayerSelector(state) || [];
     return controls.currentLayer && !isEmpty(controls.currentLayer) ? controls.currentLayer : head(layers.filter((l) => l.visibility)) || {};
 };
-const tempBackgroundSelector = (state) => {
+export const tempBackgroundSelector = (state) => {
     const controls = backgroundControlsSelector(state);
     const layers = allBackgroundLayerSelector(state) || [];
     return controls.tempLayer && !isEmpty(controls.tempLayer) ? controls.tempLayer : head(layers.filter((l) => l.visibility)) || {};
 };
-const getLayersWithDimension = (state, dimension) =>
+export const getLayersWithDimension = (state, dimension) =>
     (layersSelector(state) || [])
         .filter(l =>
             l
@@ -122,7 +120,7 @@ const getLayersWithDimension = (state, dimension) =>
 /**
  * gets the actual node opened in settings modal
 */
-const elementSelector = (state) => {
+export const elementSelector = (state) => {
     const settings = layerSettingSelector(state);
     const layers = layersSelector(state);
     const groups = groupsSelector(state);
@@ -134,43 +132,16 @@ const elementSelector = (state) => {
 * @param {object} state the state
 * @return {array} the queriable layers
 */
-const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
+export const queryableLayersSelector = state => layersSelector(state).filter(MapInfoUtils.defaultQueryableFilter);
 /**
  * Return loading error state for selected layer
  * @param {object} state the state
  * @return {boolean} true if selected layer has error
  */
-const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(state) || {}).loadingError === 'Error';
+export const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(state) || {}).loadingError === 'Error';
 /**
  * Return queriable selected layers
  * @param {object} state the state
  * @return {array} the queriable selected layers
  */
-const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(defaultQueryableFilter);
-
-module.exports = {
-    getLayerFromName,
-    layersSelector,
-    rawGroupsSelector,
-    layerSelectorWithMarkers,
-    queryableLayersSelector,
-    groupsSelector,
-    currentBackgroundLayerSelector,
-    allBackgroundLayerSelector,
-    getLayerFromId,
-    getLayersWithDimension,
-    selectedNodesSelector,
-    getSelectedLayer,
-    getSelectedLayers,
-    layerFilterSelector,
-    layerSettingSelector,
-    layerMetadataSelector,
-    wfsDownloadSelector,
-    backgroundControlsSelector,
-    currentBackgroundSelector,
-    tempBackgroundSelector,
-    centerToMarkerSelector,
-    elementSelector,
-    selectedLayerLoadingErrorSelector,
-    queryableSelectedLayersSelector
-};
+export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(MapInfoUtils.defaultQueryableFilter);

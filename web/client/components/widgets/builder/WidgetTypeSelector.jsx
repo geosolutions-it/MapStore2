@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const SideGrid = require('../../misc/cardgrids/SideGrid');
 const FitIcon = require('../../misc/FitIcon');
 

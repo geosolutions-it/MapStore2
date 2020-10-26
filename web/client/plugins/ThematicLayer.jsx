@@ -139,7 +139,7 @@ module.exports = {
         }
     }),
     reducers: {
-        thematic: require('../reducers/thematic')
+        thematic: require('../reducers/thematic').default
     },
     epics: require('../epics/thematic')(require('../api/SLDService'))
 };

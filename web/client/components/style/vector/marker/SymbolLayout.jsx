@@ -14,7 +14,7 @@ const {isArray, find, filter, isEqual} = require('lodash');
 const axios = require('axios');
 
 const Slider = require('../../../misc/Slider');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const {DEFAULT_SHAPE, DEFAULT_PATH, checkSymbolsError} = require('../../../../utils/AnnotationsUtils');
 
 /**

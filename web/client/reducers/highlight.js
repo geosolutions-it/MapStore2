@@ -6,13 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {
-    HIGHLIGHT_STATUS,
-    UPDATE_HIGHLIGHTED,
-    SET_HIGHLIGHT_FEATURES_PATH
-} = require('../actions/highlight');
+import { HIGHLIGHT_STATUS, UPDATE_HIGHLIGHTED, SET_HIGHLIGHT_FEATURES_PATH } from '../actions/highlight';
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
 const initialState = {
     status: 'disabled',
@@ -41,4 +37,4 @@ function highlight(state = initialState, action) {
     }
 }
 
-module.exports = highlight;
+export default highlight;

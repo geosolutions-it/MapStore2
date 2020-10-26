@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {Tooltip} = require("react-bootstrap");
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();

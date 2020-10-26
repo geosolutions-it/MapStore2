@@ -7,7 +7,7 @@
  */
 
 const { FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormats, onDownloadOptionChange} = require('../actions/wfsdownload');
-const {cleanDuplicatedQuestionMarks} = require('../utils/ConfigUtils');
+const {cleanDuplicatedQuestionMarks} = require('../utils/ConfigUtils').default;
 
 const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
 const {queryPanelSelector, wfsDownloadSelector} = require('../selectors/controls');

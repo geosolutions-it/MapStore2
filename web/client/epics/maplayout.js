@@ -14,7 +14,7 @@ const {CLOSE_IDENTIFY, ERROR_FEATURE_INFO, TOGGLE_MAPINFO_STATE, LOAD_FEATURE_IN
 const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
 const {isMapInfoOpen} = require('../selectors/mapInfo');
 const {showCoordinateEditorSelector} = require('../selectors/controls');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const {mapInfoDetailsSettingsFromIdSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 
 /**

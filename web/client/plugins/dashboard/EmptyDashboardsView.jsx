@@ -13,7 +13,7 @@ const { connect } = require('react-redux');
 const { Button } = require('react-bootstrap');
 const { isLoggedIn } = require('../../selectors/security');
 
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 
 class EmptyDashboards extends React.Component {
     static propTypes = {

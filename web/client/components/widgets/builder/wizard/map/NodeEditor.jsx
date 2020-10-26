@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 const tooltip = require('../../../../misc/enhancers/tooltip');
 const { isObject } = require('lodash');
 

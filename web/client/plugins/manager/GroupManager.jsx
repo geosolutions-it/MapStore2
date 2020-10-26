@@ -15,7 +15,7 @@ const SearchBar = require("../../components/search/SearchBar").default;
 const GroupsGrid = require('./users/GroupGrid');
 const GroupDialog = require('./users/GroupDialog');
 const GroupDeleteConfirm = require('./users/GroupDeleteConfirm');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const assign = require('object-assign');
 const {trim} = require('lodash');
 
@@ -129,6 +129,6 @@ module.exports = {
                 glyph: "1-group-mod"
             }}),
     reducers: {
-        usergroups: require('../../reducers/usergroups')
+        usergroups: require('../../reducers/usergroups').default
     }
 };

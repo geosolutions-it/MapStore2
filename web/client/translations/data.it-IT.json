@@ -28,6 +28,10 @@
         "collapse": "Collassa",
         "expand": "Espandi",
         "Forbidden": "Vietato",
+        "layerNameChangeError": {
+            "title": "Errore di modifica del nome",
+            "message": "Il livello non è stato ricaricato con un nome modificato"
+        },
         "version": {
             "label": "Versione"
         },
@@ -107,7 +111,9 @@
                 "right": "Destra",
                 "left": "Sinistra",
                 "bottom": "Sotto",
-                "top": "Sopra"
+                "top": "Sopra",
+                "editLayerName": "Modifica il nome del livello",
+                "confirmLayerName": "Conferma la modifica del nome del livello"
             },
             "legendOptions": {
               "title": "Legenda",
@@ -508,7 +514,6 @@
             "removeLayer": "Rimuovi livello",
             "loadingerror": "Il livello non è stato caricato correttamente o non disponible.",
             "measure": "Misure",
-            "backgroundSwitcher": "Sfondi",
             "layers": "Livelli",
             "drawerButton": "Livelli",
             "refreshTitle": "Aggiorna livelli",
@@ -704,6 +709,7 @@
             "newMeasure": "Nuova annotazione",
             "selectTool": "Seleziona uno strumento di misura",
             "exportToGeoJSON": "Esporta in GeoJSON",
+            "saveMeasure": "Salva le misure nell'annotazione",
             "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello"
         },
@@ -940,7 +946,6 @@
             "settingsPanel": "Questo è il testo di aiuto per SettingsPanel",
             "gohome": "Questo è il testo di aiuto per Home",
             "measureComponent": "Questo è il testo di aiuto per MeasureComponent",
-            "backgroundSwitcher": "Questo è il testo di aiuto per BackgroundSwitcher",
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "infoButton": "Questo è il testo di aiuto per InfoButton",
             "locateBtn": "Questo è il testo di aiuto per LocateBtn",
@@ -1077,6 +1082,9 @@
             "geometries": "Geometrie",
             "enableEdit": "Abilita modifica",
             "tabCoordinates": "Coordinate",
+            "warning": "Avvertimento!",
+            "measureWarningText": "La navigazione per modificare il pannello di misurazione rimuoverà qualsiasi stile applicato",
+            "notShowAgain": "Non mostrare più questo messaggio",
             "tabStyle": "Stile",
             "zoomTo": "Zoom sull'annotazione",
             "zoomToGeometry": "Zoom sulla geometria",
@@ -1092,6 +1100,7 @@
             "cancelModalGeom": "Annulla",
             "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
+            "editMeasurement": "Modifica misurazione",
             "insertText": "Inserisci il testo dell'annotatzione",
             "downloadtooltip": "Esporta annotazioni",
             "downloadcurrenttooltip": "Esporta annotazione corrente",
@@ -1659,7 +1668,8 @@
                 "noLegendDescription": "La mappa connessa non ha legende da mostrare",
                 "nodatainviewport": "Nessun dato per la vista selezionata",
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
-                "genericError": "C'è stato un errore durante la generazione del grafico"
+                "genericError": "C'è stato un errore durante la generazione del grafico",
+                "genericErrorWithMessage": "C'è stato un errore durante la generazione del grafico: \"{message}\""
             },
             "builder": {
                 "header": {

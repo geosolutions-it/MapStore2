@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {UPDATE_MAP_LAYOUT} = require('../../actions/maplayout');
-const mapLayout = require('../maplayout');
+import { UPDATE_MAP_LAYOUT } from '../../actions/maplayout';
+import mapLayout from '../maplayout';
 
 describe('Test the map layout reducer', () => {
     it('change layout bounds/style', () => {

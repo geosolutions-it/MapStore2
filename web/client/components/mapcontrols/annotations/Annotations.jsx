@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const bbox = require('@turf/bbox');
 const {head, countBy, values, isUndefined, keys} = require('lodash');
@@ -146,7 +146,8 @@ class Annotations extends React.Component {
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
-        textRotationStep: PropTypes.number
+        textRotationStep: PropTypes.number,
+        measurementAnnotationEdit: PropTypes.bool
     };
 
     static contextTypes = {
@@ -218,7 +219,11 @@ class Annotations extends React.Component {
     };
 
     renderThumbnail = ({featureType, geometry, properties = {}}) => {
-        if (featureType === "LineString" || featureType === "MultiLineString" ) {
+        if (properties?.type === "Measure") {
+            return (<span className={"mapstore-annotations-panel-card" }>
+                <Glyphicon glyph={"1-ruler"}/>
+            </span>);
+        } else if (featureType === "LineString" || featureType === "MultiLineString" ) {
             return (<span className={"mapstore-annotations-panel-card" }>
                 <Glyphicon glyph={"polyline"}/>;
             </span>);
@@ -363,6 +368,7 @@ class Annotations extends React.Component {
             defaultStyles={this.props.defaultStyles}
             textRotationStep={this.props.textRotationStep}
             annotations={this.props.annotations}
+            measurementAnnotationEdit={this.props.measurementAnnotationEdit}
         />;
     };
 

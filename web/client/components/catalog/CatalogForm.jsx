@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const { Col, FormGroup, FormControl, Grid, Row } = require('react-bootstrap');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const CatalogServiceSelector = require('./CatalogServiceSelector');
 const localizeProps = require('../misc/enhancers/localizedProps');
 const SearchInput = localizeProps("placeholder")(FormControl);

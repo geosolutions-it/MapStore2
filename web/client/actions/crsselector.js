@@ -6,16 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const CHANGE_CRS_INPUT_VALUE = 'CHANGE_CRS_INPUT_VALUE';
+export const CHANGE_CRS_INPUT_VALUE = 'CHANGE_CRS_INPUT_VALUE';
 
-function setInputValue(value) {
+export function setInputValue(value) {
     return {
         type: CHANGE_CRS_INPUT_VALUE,
         value
     };
 }
-
-module.exports = {
-    CHANGE_CRS_INPUT_VALUE,
-    setInputValue
-};

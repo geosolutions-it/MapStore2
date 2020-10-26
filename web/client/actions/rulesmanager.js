@@ -6,31 +6,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const RULES_SELECTED = 'RULES_SELECTED';
-const UPDATE_FILTERS_VALUES = 'UPDATE_FILTERS_VALUES';
-const OPTIONS_LOADED = 'OPTIONS_LOADED';
-const LOADING = 'RULES_MANAGER:LOADING';
-const SET_FILTER = "RULES_MANAGER:SET_FILTER";
-const EDIT_RULE = "RULES_MANAGER:EDIT_RULE";
-const CLEAN_EDITING = "RULES_MANAGER:CLEAN_EDITING";
-const SAVE_RULE = "RULES_MANAGER:SAVE_RULE";
-const RULE_SAVED = "RULES_MANAGER:RULE_SAVED";
-const DELETE_RULES = "RULES_MANAGER:DELETE_RULES";
-const CACHE_CLEAN = "RULES_MANAGER:CACHE_CLEAN";
+export const RULES_SELECTED = 'RULES_SELECTED';
+export const UPDATE_FILTERS_VALUES = 'UPDATE_FILTERS_VALUES';
+export const OPTIONS_LOADED = 'OPTIONS_LOADED';
+export const LOADING = 'RULES_MANAGER:LOADING';
+export const SET_FILTER = "RULES_MANAGER:SET_FILTER";
+export const EDIT_RULE = "RULES_MANAGER:EDIT_RULE";
+export const CLEAN_EDITING = "RULES_MANAGER:CLEAN_EDITING";
+export const SAVE_RULE = "RULES_MANAGER:SAVE_RULE";
+export const RULE_SAVED = "RULES_MANAGER:RULE_SAVED";
+export const DELETE_RULES = "RULES_MANAGER:DELETE_RULES";
+export const CACHE_CLEAN = "RULES_MANAGER:CACHE_CLEAN";
 
-function onCacheClean() {
+export function onCacheClean() {
     return {
         type: CACHE_CLEAN
     };
 }
-function delRules(ids) {
+export function delRules(ids) {
     return {
         type: DELETE_RULES,
         ids
     };
 }
 
-function setFilter(key, value) {
+export function setFilter(key, value) {
     return {
         type: SET_FILTER,
         key,
@@ -38,7 +38,7 @@ function setFilter(key, value) {
     };
 }
 
-function onEditRule(targetPriority = 0, createNew = false) {
+export function onEditRule(targetPriority = 0, createNew = false) {
     return {
         type: EDIT_RULE,
         createNew,
@@ -46,20 +46,20 @@ function onEditRule(targetPriority = 0, createNew = false) {
     };
 }
 
-function cleanEditing() {
+export function cleanEditing() {
     return {
         type: CLEAN_EDITING
     };
 }
 
-function setLoading(loading) {
+export function setLoading(loading) {
     return {
         type: LOADING,
         loading
     };
 }
 
-function rulesSelected(rules, merge, unselect, targetPosition) {
+export function rulesSelected(rules, merge, unselect, targetPosition) {
     return {
         type: RULES_SELECTED,
         rules,
@@ -69,7 +69,7 @@ function rulesSelected(rules, merge, unselect, targetPosition) {
     };
 }
 
-function optionsLoaded(name, values, page, valuesCount) {
+export function optionsLoaded(name, values, page, valuesCount) {
     return {
         type: OPTIONS_LOADED,
         name: name,
@@ -79,27 +79,11 @@ function optionsLoaded(name, values, page, valuesCount) {
     };
 }
 
-function updateFiltersValues(filtersValues) {
+export function updateFiltersValues(filtersValues) {
     return {
         type: UPDATE_FILTERS_VALUES,
         filtersValues: filtersValues
     };
 }
 
-const saveRule = (rule) => ({type: SAVE_RULE, rule});
-
-module.exports = {
-    RULES_SELECTED,
-    UPDATE_FILTERS_VALUES,
-    OPTIONS_LOADED,
-    rulesSelected,
-    updateFiltersValues,
-    optionsLoaded,
-    LOADING, setLoading,
-    SET_FILTER, setFilter,
-    EDIT_RULE, onEditRule,
-    CLEAN_EDITING, cleanEditing,
-    SAVE_RULE, saveRule, RULE_SAVED,
-    DELETE_RULES, delRules,
-    CACHE_CLEAN, onCacheClean
-};
+export const saveRule = (rule) => ({type: SAVE_RULE, rule});

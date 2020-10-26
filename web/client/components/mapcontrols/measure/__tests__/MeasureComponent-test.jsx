@@ -14,7 +14,7 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const MeasureComponent = dragDropContext(testBackend)(require('../MeasureComponent'));
 const TestUtils = require('react-dom/test-utils');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 
 describe("test the MeasureComponent", () => {
     beforeEach((done) => {
@@ -64,6 +64,7 @@ describe("test the MeasureComponent", () => {
         const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
+                geomType={'Polygon'}
                 toggleMeasure={(data) => {
                     newMeasureState = data;
                 }}
@@ -403,5 +404,119 @@ describe("test the MeasureComponent", () => {
         expect(submits.length).toBe(4);
         expect(isInValid.length).toBe(1);
 
+    });
+
+    it('test showing measurement from annotation', () => {
+        let measurement = {
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            geomType: 'LineString',
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[1, 2], [2, 5]]
+                },
+                properties: {}
+            }],
+            textLabels: [{position: [1, 1], text: "1,714 m"}],
+            id: 1,
+            geomTypeSelected: ['LineString'],
+            exportToAnnotation: true,
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        const uom = {
+            length: {unit: 'km', label: 'km'},
+            area: {unit: 'sqkm', label: 'km²'}
+        };
+        const actions = {
+            onAddAnnotation: () => {}
+        };
+        const spyOnAddAnnotation = expect.spyOn(actions, "onAddAnnotation");
+        let cmp = ReactDOM.render(
+            <MeasureComponent
+                onAddAnnotation={actions.onAddAnnotation}
+                uom={uom}
+                measurement={measurement}
+                format="decimal"
+                isDraggable
+                useSingleFeature
+                lineMeasureEnabled
+                showAddAsAnnotation
+            />, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+        const toolbar = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-toolbar");
+        const toolBarGroup = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-group");
+        expect(toolbar).toExist();
+        expect(toolBarGroup.length).toBe(3);
+
+        const buttons = document.querySelectorAll('button');
+        expect(buttons.length).toBe(7);
+        expect(buttons[0].disabled).toBe(false);
+        expect(buttons[1].disabled).toBe(false);
+        expect(buttons[2].disabled).toBe(false);
+        expect(buttons[3].disabled).toBe(false);
+        expect(buttons[4].disabled).toBe(false);
+        expect(buttons[5].disabled).toBe(true); // Add as layer button
+        expect(buttons[6].disabled).toBe(false);
+        expect(buttons[6].childNodes[0].className).toContain('floppy-disk');
+
+        // Save annotation
+        TestUtils.Simulate.click(buttons[6]);
+        expect(spyOnAddAnnotation).toHaveBeenCalled();
+        expect(spyOnAddAnnotation.calls[0].arguments).toBeTruthy();
+        expect(spyOnAddAnnotation.calls[0].arguments.length).toBe(5);
+        expect(spyOnAddAnnotation.calls[0].arguments[0]).toEqual(measurement.features);
+        expect(spyOnAddAnnotation.calls[0].arguments[1]).toEqual(measurement.textLabels);
+        expect(spyOnAddAnnotation.calls[0].arguments[2]).toEqual(uom);
+        expect(spyOnAddAnnotation.calls[0].arguments[3]).toBe(false);
+        expect(spyOnAddAnnotation.calls[0].arguments[4]).toBe(1);
+    });
+
+    it("test Measurement default", () =>{
+        let measurement = {
+            lineMeasureEnabled: true,
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[1, 2], [2, 5]]
+                },
+                properties: {}
+            }],
+            textLabels: [{position: [1, 1], text: "1,714 m"}],
+            id: 1,
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent
+                measurement={measurement}
+                format="decimal"
+                isDraggable
+                useSingleFeature
+                lineMeasureEnabled
+                showAddAsAnnotation
+            />, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+        const toolbar = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-toolbar");
+        const toolBarGroup = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-group");
+        expect(toolbar).toExist();
+        expect(toolBarGroup.length).toBe(3);
+
+        const buttons = document.querySelectorAll('button');
+        expect(buttons.length).toBe(7);
+        // By default LineString is selected
+        expect(buttons[0].className).toContain('active');
+
+        // Restrict unselect of the geometry
+        TestUtils.Simulate.click(buttons[0]);
+        expect(buttons[0].className).toContain('active');
     });
 });

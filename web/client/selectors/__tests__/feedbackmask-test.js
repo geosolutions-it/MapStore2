@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {feedbackMaskSelector} = require('../feedbackmask');
+import expect from 'expect';
+
+import { feedbackMaskSelector } from '../feedbackmask';
 
 const state = {
     feedbackMask: {

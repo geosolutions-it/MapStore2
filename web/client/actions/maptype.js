@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const MAP_TYPE_CHANGED = 'MAP_TYPE_CHANGED';
+export const MAP_TYPE_CHANGED = 'MAP_TYPE_CHANGED';
 
 /**
  * changes the map type
@@ -14,14 +14,14 @@ const MAP_TYPE_CHANGED = 'MAP_TYPE_CHANGED';
  * @param  {string} mapType the mapType.
  * @return {action}         the action of type `MAP_TYPE_CHANGED` with mapType
  */
-function changeMapType(mapType) {
+export function changeMapType(mapType) {
     return {
         type: MAP_TYPE_CHANGED,
         mapType
     };
 }
+
 /**
  * Actions for map type management.Allow to manage the default map type.
  * @name actions.maptype
  */
-module.exports = {MAP_TYPE_CHANGED, changeMapType};

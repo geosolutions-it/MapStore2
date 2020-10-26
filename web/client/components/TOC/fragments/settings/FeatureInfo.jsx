@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const Accordion = require('../../../misc/panels/Accordion');
 const {Glyphicon} = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 
 /**
  * Component for rendering FeatureInfo an Accordion with current available format for get feature info

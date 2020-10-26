@@ -22,7 +22,7 @@ const {CLOSE_IDENTIFY} = require('../../actions/mapInfo');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, startDrawing, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
     resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION,
-    loadDefaultStyles, LOADING, SET_DEFAULT_STYLE, toggleVisibilityAnnotation
+    loadDefaultStyles, LOADING, SET_DEFAULT_STYLE, toggleVisibilityAnnotation, geometryHighlight
 } = require('../../actions/annotations');
 const {TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const {STYLE_POINT_MARKER} = require('../../utils/AnnotationsUtils');
@@ -30,13 +30,13 @@ const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAn
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, highlightGeometryEpic
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, highlightGeometryEpic
 );
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -214,8 +214,12 @@ describe('annotations Epics', () => {
             editing: {
                 style: {},
                 features: [ft],
-                type: "FeatureCollection"
+                type: "FeatureCollection",
+                properties: {
+                    id: "is a point"
+                }
             },
+            styling: false,
             drawingText: {
                 drawing: true
             },
@@ -976,5 +980,34 @@ describe('annotations Epics', () => {
         });
         mockAxios.onGet('/path/to/symbols/triangle.svg').reply(200, triangleSvg);
         store.dispatch(loadDefaultStyles('triangle', 24, '#0000FF', '#00FF00', '/path/to/symbols/'));
+    });
+    it('highlightGeometryEpic', (done) => {
+        store = mockStore({
+            annotations: {
+                config: {multiGeometry: false, defaultPointType: 'symbol'},
+                editing: {
+                    style: {},
+                    features: [{...ft, properties: {id: '1'}}],
+                    type: "FeatureCollection",
+                    properties: {id: "1"}
+                },
+                styling: false,
+                featureType: "Point"
+            }
+        });
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 3) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].status).toBe('clean');
+                expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[2].status).toBe('drawOrEdit');
+                const [feature] = actions[2].features[0].features;
+                expect(feature.style[0].highlight).toBe(true);
+                done();
+            }
+        });
+        const action = geometryHighlight("1");
+        store.dispatch(action);
     });
 });

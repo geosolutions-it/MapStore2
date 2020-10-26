@@ -18,7 +18,7 @@ numberLocalizer();
 require('react-widgets/lib/less/react-widgets.less');
 const LocaleUtils = require('../../utils/LocaleUtils');
 const {createFont} = require('../../utils/AnnotationsUtils');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const tinycolor = require("tinycolor2");
 const IntlNumberFormControl = require('../I18N/IntlNumberFormControl');
 

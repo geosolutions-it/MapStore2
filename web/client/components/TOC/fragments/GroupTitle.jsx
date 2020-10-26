@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const StatusIcon = require('./StatusIcon');
 const {Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 const {getTitleAndTooltip} = require('../../../utils/TOCUtils');
 
 class GroupTitle extends React.Component {

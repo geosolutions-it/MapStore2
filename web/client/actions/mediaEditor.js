@@ -110,7 +110,7 @@ export const setEditingMedia = (editing) => ({ type: EDITING_MEDIA, editing });
  * show media editor
  * @param {*} owner
  */
-export const show = (owner) => ({type: SHOW, owner});
+export const show = (owner, settings) => ({type: SHOW, owner, settings});
 
 /**
  * edit media reference for resource media

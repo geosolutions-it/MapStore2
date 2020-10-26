@@ -31,6 +31,6 @@ const Cookie = connect((state) => ({
 
 module.exports = {
     CookiePlugin: Cookie,
-    reducers: {cookie: require('../reducers/cookie')},
+    reducers: {cookie: require('../reducers/cookie').default},
     epics: require('../epics/cookies')
 };

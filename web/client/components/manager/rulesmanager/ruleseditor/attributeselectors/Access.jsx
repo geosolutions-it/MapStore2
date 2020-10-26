@@ -11,7 +11,7 @@ const {Row, Col} = require('react-bootstrap');
 const fixedOptions = require("../../enhancers/fixedOptions");
 const localizedProps = require("../../../../misc/enhancers/localizedProps");
 const { compose, defaultProps, withHandlers, withPropsOnChange} = require('recompose');
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 
 const AccessSelector = (props) => (
     <Row className={props.disabled ? 'ms-disabled' : ''}>

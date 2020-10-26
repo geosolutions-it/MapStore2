@@ -10,7 +10,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {get} = require('lodash');
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 const {Tooltip} = require('react-bootstrap');
 const {createSelector} = require('reselect');
 
@@ -152,5 +152,5 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {mousePosition: require('../reducers/mousePosition')}
+    reducers: {mousePosition: require('../reducers/mousePosition').default}
 };

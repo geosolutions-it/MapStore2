@@ -6,15 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
+import expect from 'expect';
+
+import {
     CHANGE_MOUSE_POSITION,
     CHANGE_MOUSE_POSITION_CRS,
     CHANGE_MOUSE_POSITION_STATE,
     changeMousePosition,
     changeMousePositionCrs,
     changeMousePositionState
-} = require('../mousePosition');
+} from '../mousePosition';
 
 describe('Test correctness of mausePosition actions', () => {
 

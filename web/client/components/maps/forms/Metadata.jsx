@@ -17,7 +17,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 const moment = require('moment');
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 
 /**
  * A DropDown menu for user details:

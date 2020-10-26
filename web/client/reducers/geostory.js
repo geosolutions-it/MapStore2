@@ -33,7 +33,8 @@ import {
     UPDATE_SETTING,
     REMOVE_RESOURCE,
     SET_PENDING_CHANGES,
-    SET_UPDATE_URL_SCROLL
+    SET_UPDATE_URL_SCROLL,
+    UPDATE_MEDIA_EDITOR_SETTINGS
 } from '../actions/geostory';
 
 
@@ -252,7 +253,7 @@ export default (state = INITIAL_STATE, action) => {
         return set('currentStory', {...action.story, settings}, state);
     }
     case SELECT_CARD: {
-        return set(`selectedCard`, state.selectedCard === action.card ? "" : action.card, state);
+        return set('selectedCard', state.selectedCard === action.card ? "" : action.card, state);
     }
     case SET_CONTROL: {
         const { control, value } = action;
@@ -266,16 +267,16 @@ export default (state = INITIAL_STATE, action) => {
         const { resource } = action;
         const settings = state.currentStory && state.currentStory.settings || {};
         return compose(
-            set(`resource`, resource),
+            set('resource', resource),
             set('currentStory.settings.storyTitle', settings.storyTitle || resource.name) // TODO check that resource has name prop
 
         )(state);
     }
     case SAVED: case CLEAR_SAVE_ERROR: {
-        return unset(`errors.save`, state);
+        return unset('errors.save', state);
     }
     case SAVE_ERROR: {
-        return set(`errors.save`, castArray(action.error), state);
+        return set('errors.save', castArray(action.error), state);
     }
     case TOGGLE_CARD_PREVIEW: {
         return set('isCollapsed', !state.isCollapsed, state);
@@ -337,13 +338,16 @@ export default (state = INITIAL_STATE, action) => {
     case TOGGLE_CONTENT_FOCUS: {
         const {status, target, selector = "", hideContent = false, path} = action;
         const focusedContent = status ? {target, selector, hideContent, path} : undefined;
-        return set(`focusedContent`, focusedContent, state);
+        return set('focusedContent', focusedContent, state);
     }
     case SET_PENDING_CHANGES: {
-        return set(`pendingChanges`, action.value, state);
+        return set('pendingChanges', action.value, state);
     }
     case SET_UPDATE_URL_SCROLL: {
-        return set(`updateUrlOnScroll`, action.value, state);
+        return set('updateUrlOnScroll', action.value, state);
+    }
+    case UPDATE_MEDIA_EDITOR_SETTINGS: {
+        return set('mediaEditorSettings', action.mediaEditorSettings, state);
     }
     default:
         return state;

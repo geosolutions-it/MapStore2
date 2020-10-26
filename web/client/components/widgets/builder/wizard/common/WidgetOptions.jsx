@@ -7,7 +7,7 @@
   */
 const React = require('react');
 const {Row, Col, Form, FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 const StepHeader = require('../../../../misc/wizard/StepHeader');
 
 module.exports = ({data = {}, onChange = () => {}, sampleChart}) => (<Row>

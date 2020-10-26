@@ -13,7 +13,7 @@ const {Provider} = require('react-redux');
 
 const StandardRouter = require('../StandardRouter').default;
 
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 
 class mycomponent extends React.Component {
     static propTypes = {

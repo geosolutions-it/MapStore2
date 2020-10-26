@@ -112,6 +112,6 @@ class DashboardPlugin extends React.Component {
 module.exports = {
     DashboardPlugin,
     reducers: {
-        widgets: require('../reducers/widgets')
+        widgets: require('../reducers/widgets').default
     }
 };

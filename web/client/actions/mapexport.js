@@ -5,9 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const EXPORT_MAP = "EXPORT::EXPORT_MAP";
+export const EXPORT_MAP = "EXPORT::EXPORT_MAP";
 
-module.exports = {
-    EXPORT_MAP,
-    exportMap: (format = "mapstore2") => ({ type: EXPORT_MAP, format})
-};
+export const exportMap =  (format = "mapstore2") => ({ type: EXPORT_MAP, format});

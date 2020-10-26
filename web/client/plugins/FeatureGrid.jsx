@@ -49,7 +49,7 @@ module.exports = {
         setDockSize: dockSizeFeatures
     })(require('../components/data/featuregrid_ag/DockedFeatureGrid')),
     reducers: {
-        featuregrid: require('../reducers/featuregrid'),
-        highlight: require('../reducers/highlight')
+        featuregrid: require('../reducers/featuregrid').default,
+        highlight: require('../reducers/highlight').default
     }
 };

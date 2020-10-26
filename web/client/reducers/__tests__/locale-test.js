@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
 
-var locale = require('../locale');
+import locale from '../locale';
 
 
 describe('Test the locale reducer', () => {

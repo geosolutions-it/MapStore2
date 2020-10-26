@@ -15,7 +15,7 @@ const DEFAULT_MESSAGES = {
     405: "dashboard.errors.forbidden405"
 };
 
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const { Row } = require('react-bootstrap');
 const errorString = err => typeof err === 'string' ? err : (err.statusText || err.message);
 const errorCode = err => typeof err === 'string' ? err : err.status;

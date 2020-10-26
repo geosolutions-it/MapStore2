@@ -154,5 +154,5 @@ const toolbarSelector = stateSelector => createSelector([
  */
 module.exports = {
     ToolbarPlugin: (stateSelector = 'toolbar') => connect(toolbarSelector(stateSelector))(Toolbar),
-    reducers: {controls: require('../reducers/controls')}
+    reducers: {controls: require('../reducers/controls').default}
 };

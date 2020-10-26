@@ -27,6 +27,10 @@
         "showMore": "Zeig mehr...",
         "collapse": "Kollabiert",
         "Forbidden": "Verboten",
+        "layerNameChangeError": {
+            "title": "Namensänderungsfehler",
+            "message": "Die Ebene konnte nicht mit einem geänderten Namen neu geladen werden"
+        },
         "expand": "Erweitern",
         "version": {
             "label": "Version"
@@ -107,7 +111,9 @@
                 "right": "Recht",
                 "left": "Links",
                 "bottom": "Bottom",
-                "top": "Oben"
+                "top": "Oben",
+                "editLayerName": "Layernamen bearbeiten",
+                "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens"
             },
             "legendOptions": {
               "title": "Legende",
@@ -508,7 +514,6 @@
             "removeLayer": "Ebene entfernen",
             "loadingerror": "Diese Ebene wurde nicht korrekt geladen oder nicht verfügbar",
             "measure": "Messen",
-            "backgroundSwitcher": "Hintergrund",
             "layers": "Ebenen",
             "drawerButton": "Ebenen",
             "refreshTitle": "Ebenen aktualisieren",
@@ -704,6 +709,7 @@
             "newMeasure": "Neue Anmerkung",
             "selectTool": "Wählen Sie ein Messwerkzeug aus",
             "exportToGeoJSON": "Export nach GeoJSON",
+            "saveMeasure": "Speichern Sie die Messungen in Anmerkungen",
             "resetTooltip": "Klare Maßnahmen",
             "addAsLayer": "Als Ebene hinzufügen"
         },
@@ -940,7 +946,6 @@
             "settingsPanel": "Das ist die Hilfe für das SettingsPanel",
             "gohome": "Das ist die Hilfe für Home",
             "measureComponent": "Das ist die Hilfe für MeasureComponent",
-            "backgroundSwitcher": "Das ist die Hilfe für den BackgroundSwitcher",
             "layerSwitcher": "Das ist die Hilfe für den LayerSwitcher",
             "infoButton": "Das ist die Hilfe für den InfoButton",
             "locateBtn": "Das ist die Hilfe für den LocateBtn",
@@ -1077,12 +1082,16 @@
             "empty": "Noch keine Anmerkungen, klicken Sie auf [+], um Anmerkungen hinzuzufügen",
             "geometries": "Geometrien",
             "enableEdit": "Bearbeiten aktivieren",
+            "editMeasurement": "Messung bearbeiten",
             "zoomTo": "Zur Anmerkung zoomen",
             "zoomToGeometry": "Auf Geometrie zoomen",
             "removeGeometry": "Entfernen",
             "hide": "Anmerkung ausblenden",
             "show": "Anmerkung anzeigen",
             "tabCoordinates": "Koordinaten",
+            "warning": "Warnung!",
+            "measureWarningText": "Wenn Sie zum Bearbeiten des Messfelds navigieren, werden alle angewendeten Stile entfernt",
+            "notShowAgain": "Diese Nachricht nicht mehr anzeigen",
             "tabStyle": "Stil",
             "filter": "Notizen / Zeichnungen filtern...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
@@ -1658,7 +1667,8 @@
                 "noLegendDescription": "Die verbundene Karte hat keine Ebenen, die in der Legende angezeigt werden",
                 "nodatainviewport": "Keine Daten im aktuellen Ansichtsfenster",
                 "timeoutExpired": "Der Aufruf des Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
-                "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
+                "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten",
+                "genericErrorWithMessage": "Beim Abrufen der Daten ist ein Fehler aufgetreten: \"{message}\""
             },
             "builder": {
                 "header": {

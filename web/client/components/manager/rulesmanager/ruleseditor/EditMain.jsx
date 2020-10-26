@@ -8,7 +8,7 @@
 const React = require('react');
 const {Grid, Row, Col, Glyphicon} = require('react-bootstrap');
 const Selectors = require("./attributeselectors");
-const Message = require("../../../I18N/Message");
+const Message = require("../../../I18N/Message").default;
 
 
 module.exports = ({rule = {}, setOption = () => {}, active = true}) => {

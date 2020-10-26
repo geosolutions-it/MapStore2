@@ -28,6 +28,10 @@
         "collapse": "Colapso",
         "expand": "Expandir",
         "Forbidden": "Prohibido",
+        "layerNameChangeError": {
+            "title": "Error de cambio de nombre",
+            "message": "La capa no se pudo recargar con un nombre cambiado"
+        },
         "version": {
             "label": "Versión"
         },
@@ -105,7 +109,9 @@
                 "right": "Derecha",
                 "left": "Izquierda",
                 "bottom": "Bottom",
-                "top": "Cima"
+                "top": "Cima",
+                "editLayerName": "Editar el nombre de la capa",
+                "confirmLayerName": "Confirmar cambio de nombre de capa"
             },
             "legendOptions": {
               "title": "Leyenda",
@@ -508,7 +514,6 @@
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
             "measure": "Medir",
-            "backgroundSwitcher": "Fondos",
             "layers": "Capas",
             "drawerButton": "Capas",
             "refreshTitle": "Refrescar capas",
@@ -704,6 +709,7 @@
             "newMeasure": "Nueva anotación",
             "selectTool": "Seleccione una herramienta de medición",
             "exportToGeoJSON": "Exportar a GeoJSON",
+            "saveMeasure": "Guarde las medidas en la anotación",
             "resetTooltip": "Medidas claras",
             "addAsLayer": "Agregar como capa"
         },
@@ -940,7 +946,6 @@
             "settingsPanel": "Esta es la ayuda para el panel de configuración",
             "gohome": "Esta es la ayuda Inicio",
             "measureComponent": " Herramientas para medir",
-            "backgroundSwitcher": "Esta es la ayuda para el selector de capa de fondo",
             "layerSwitcher": "Esta es la ayuda para el selector de capa",
             "infoButton": "Esta es la ayuda para el botón de Información",
             "locateBtn": "Esta es la ayuda para el botón Localízame",
@@ -1080,9 +1085,13 @@
             "zoomTo": "Zoom a la anotación",
             "zoomToGeometry": "Zoom a geometría",
             "removeGeometry": "Eliminar",
+            "editMeasurement": "Editar medida",
             "hide": "Ocultar anotación",
             "show": "Mostrar anotación",
             "tabCoordinates": "Coordenadas",
+            "warning": "¡Advertencia!",
+            "measureWarningText": "Navegar para editar el panel de medidas eliminará cualquier estilo aplicado",
+            "notShowAgain": "No volver a mostrar este mensaje",
             "tabStyle": "Estilo",
             "filter": "Filtrar las anotaciones...",
             "titleUndoGeom": "La geometría ha cambiado",
@@ -1659,7 +1668,8 @@
                 "noLegendDescription": "El mapa conectado no tiene capas para mostrar en la leyenda",
                 "nodatainviewport": "Sin datos en la ventana gráfica actual",
                 "timeoutExpired": "El servicio tardó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
-                "genericError": "Hubo un error durante la recuperación de datos"
+                "genericError": "Hubo un error durante la recuperación de datos",
+                "genericErrorWithMessage": "Hubo un error durante la recuperación de datos: \"{message}\""
             },
             "builder": {
                 "header": {

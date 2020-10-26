@@ -80,6 +80,6 @@ module.exports = {
         }
     }),
     reducers: {
-        snapshot: require('../reducers/snapshot')
+        snapshot: require('../reducers/snapshot').default
     }
 };

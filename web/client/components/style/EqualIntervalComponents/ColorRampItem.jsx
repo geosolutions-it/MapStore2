@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const colors = require('./ExtendColorBrewer');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 /**
  * @name ColorRampItem

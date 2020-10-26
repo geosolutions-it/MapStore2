@@ -18,11 +18,11 @@ var {Provider} = require('react-redux');
 
 var {changeBrowserProperties} = require('../../actions/browser');
 
-var ConfigUtils = require('../../utils/ConfigUtils');
+var ConfigUtils = require('../../utils/ConfigUtils').default;
 
 var Debug = require('../../components/development/Debug');
-var mapConfig = require('../../reducers/map');
-var browser = require('../../reducers/browser');
+var mapConfig = require('../../reducers/map').default;
+var browser = require('../../reducers/browser').default;
 
 var LMap = require('../../components/map/leaflet/Map');
 var LLayer = require('../../components/map/leaflet/Layer');

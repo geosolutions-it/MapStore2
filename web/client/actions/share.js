@@ -6,16 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const CHANGE_SHARE_STATE = 'CHANGE_SHARE_STATE';
+export const CHANGE_SHARE_STATE = 'CHANGE_SHARE_STATE';
 
-function changeShareState(enabled) {
+export function changeShareState(enabled) {
     return {
         type: CHANGE_SHARE_STATE,
         enabled: enabled
     };
 }
-
-module.exports = {
-    CHANGE_SHARE_STATE,
-    changeShareState
-};

@@ -66,7 +66,7 @@ module.exports = {
     }),
     epics: require('../epics/playback'),
     reducers: {
-        playback: require('../reducers/playback'),
-        dimension: require('../reducers/dimension')
+        playback: require('../reducers/playback').default,
+        dimension: require('../reducers/dimension').default
     }
 };

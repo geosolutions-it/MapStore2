@@ -50,7 +50,7 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
         });
         it('show when control is set to "save"', () => {
             const storeState = stateMocker(DUMMY_ACTION, toggleControl('mapSave', 'enabled'));
-            const { Plugin } = getPluginForTest(MapSave, storeState);
+            const { Plugin } = getPluginForTest(MapSave, {...storeState, security: {user: {role: 'ADMIN'}}});
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.modal-fixed')).toBeTruthy();
             // permission table present by default
@@ -59,7 +59,7 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
         describe('integrations', () => {
             it('disablePermission options hides the permission (compatibility with system that do not use GeoStore)', () => {
                 const storeState = stateMocker(DUMMY_ACTION, toggleControl('mapSave', 'enabled'));
-                const { Plugin } = getPluginForTest(MapSave, storeState);
+                const { Plugin } = getPluginForTest(MapSave, {...storeState, security: {user: {role: 'ADMIN'}}});
                 ReactDOM.render(<Plugin disablePermission />, document.getElementById("container"));
                 expect(document.querySelector('.modal-fixed')).toBeTruthy();
                 expect(document.querySelector('.permissions-table')).toBeFalsy();

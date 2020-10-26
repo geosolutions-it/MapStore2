@@ -6,8 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {get} = require('lodash');
+import { get } from 'lodash';
 
-module.exports = {
-    feedbackMaskSelector: state => get(state, 'feedbackMask', {})
-};
+
+export const feedbackMaskSelector = state => get(state, 'feedbackMask', {});

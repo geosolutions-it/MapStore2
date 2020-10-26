@@ -6,25 +6,53 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {connect} = require('react-redux');
-const {compose, withProps} = require('recompose');
-const {find} = require('lodash');
+import { connect } from 'react-redux';
 
+import { compose, withProps } from 'recompose';
+import { find } from 'lodash';
+import { toggleControl, setControlProperty } from '../actions/controls';
+import { changeLayerProperties, removeNode, updateNode, addLayer } from '../actions/layers';
 
-const {toggleControl, setControlProperty} = require('../actions/controls');
-const {changeLayerProperties, removeNode, updateNode, addLayer} = require('../actions/layers');
-const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal, backgroundAdded,
-    updateThumbnail, removeBackground, clearModalParameters, backgroundEdited, setCurrentBackgroundLayer} = require('../actions/backgroundselector');
+import {
+    addBackground,
+    addBackgroundProperties,
+    confirmDeleteBackgroundModal,
+    backgroundAdded,
+    updateThumbnail,
+    removeBackground,
+    clearModalParameters,
+    backgroundEdited,
+    setCurrentBackgroundLayer
+} from '../actions/backgroundselector';
 
-const {createSelector} = require('reselect');
-const {allBackgroundLayerSelector, backgroundControlsSelector,
-    currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
-const {mapSelector, mapIsEditableSelector, projectionSelector} = require('../selectors/map');
-const {modalParamsSelector, isDeletedIdSelector, backgroundListSelector,
-    backgroundLayersSelector, confirmDeleteBackgroundModalSelector, allowBackgroundsDeletionSelector} = require('../selectors/backgroundselector');
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+import { createSelector } from 'reselect';
 
-const thumbs = require('./background/DefaultThumbs');
+import {
+    allBackgroundLayerSelector,
+    backgroundControlsSelector,
+    currentBackgroundSelector,
+    tempBackgroundSelector
+} from '../selectors/layers';
+
+import { mapSelector, mapIsEditableSelector, projectionSelector } from '../selectors/map';
+
+import {
+    modalParamsSelector,
+    isDeletedIdSelector,
+    backgroundListSelector,
+    backgroundLayersSelector,
+    confirmDeleteBackgroundModalSelector,
+    allowBackgroundsDeletionSelector
+} from '../selectors/backgroundselector';
+
+import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import thumbs from './background/DefaultThumbs';
+import { createPlugin } from '../utils/PluginsUtils';
+
+import controlsReducer from "../reducers/controls";
+import backgroundReducer from "../reducers/backgroundselector";
+import backgroundEpic from "../epics/backgroundselector";
+import BackgroundSelector from "../components/background/BackgroundSelector";
 
 const backgroundSelector = createSelector([
     projectionSelector,
@@ -121,13 +149,13 @@ compose(
     withProps(({ items = [] }) => ({
         hasCatalog: !!find(items, { name: 'MetadataExplorer' })
     }))
-)(require('../components/background/BackgroundSelector'));
+)(BackgroundSelector);
 
-module.exports = {
-    BackgroundSelectorPlugin,
+export default createPlugin("BackgroundSelector", {
+    component: BackgroundSelectorPlugin,
     reducers: {
-        controls: require('../reducers/controls'),
-        backgroundSelector: require('../reducers/backgroundselector')
+        controls: controlsReducer,
+        backgroundSelector: backgroundReducer
     },
-    epics: require('../epics/backgroundselector')
-};
+    epics: backgroundEpic
+});

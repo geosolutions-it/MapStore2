@@ -13,7 +13,7 @@ const _ = require('lodash');
 const Select = require('react-select').default;
 const Spinner = require('react-spinkit');
 const {Table, Button, Glyphicon} = require('react-bootstrap');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const LocaleUtils = require('../../utils/LocaleUtils');
 
 /**

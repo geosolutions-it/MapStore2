@@ -33,17 +33,6 @@
 					}
 				}
 		 }, {
-			  "name": "BackgroundSwitcher",
-				"cfg": {
-					"id": "mobile-background-switcher",
-					"fluid": true,
-		      "columnProperties": {
-              "xs": 6,
-              "sm": 6,
-              "md": 6
-          }
-				}
-		 }, {
 			 	"name": "Identify",
 				"hideFrom": ["Settings"],
 				"cfg": {
@@ -135,16 +124,6 @@
 			  "name": "Home"
 		}, {
 				"name": "TOC"
-		}, {
-				"name": "BackgroundSwitcher",
-				"cfg": {
-					"fluid": true,
-		      "columnProperties": {
-              "xs": 12,
-              "sm": 12,
-              "md": 12
-          }
-				}
 		}, {
 				"name": "Measure",
         "cfg":{

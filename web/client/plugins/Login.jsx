@@ -65,7 +65,7 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {security: require('../reducers/security')},
+    reducers: {security: require('../reducers/security').default},
     epics: {
         ...epics,
         comparePendingChanges

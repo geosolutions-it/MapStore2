@@ -6,14 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
-    SET_VECTOR_LAYER
-} = require('../actions/vectorstyler');
-const {
-    SET_RASTER_LAYER
-} = require('../actions/rasterstyler');
+import { SET_VECTOR_LAYER } from '../actions/vectorstyler';
 
-const { SET_STYLER_LAYER, STYLER_RESET } = require('../actions/styler');
+import { SET_RASTER_LAYER } from '../actions/rasterstyler';
+import { SET_STYLER_LAYER, STYLER_RESET } from '../actions/styler';
 function styler(state = {}, action) {
     switch (action.type) {
     case SET_VECTOR_LAYER: {
@@ -33,4 +29,4 @@ function styler(state = {}, action) {
     }
 }
 
-module.exports = styler;
+export default styler;

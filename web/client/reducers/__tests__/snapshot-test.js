@@ -5,9 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var snapshot = require('../snapshot');
-var {CHANGE_SNAPSHOT_STATE, SNAPSHOT_READY, SNAPSHOT_ERROR, SNAPSHOT_ADD_QUEUE, SNAPSHOT_REMOVE_QUEUE} = require('../../actions/snapshot');
+import expect from 'expect';
+
+import snapshot from '../snapshot';
+
+import {
+    CHANGE_SNAPSHOT_STATE,
+    SNAPSHOT_READY,
+    SNAPSHOT_ERROR,
+    SNAPSHOT_ADD_QUEUE,
+    SNAPSHOT_REMOVE_QUEUE
+} from '../../actions/snapshot';
 
 describe('Test the snapshot reducer', () => {
 

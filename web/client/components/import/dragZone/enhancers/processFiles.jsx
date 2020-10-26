@@ -10,7 +10,7 @@ const { compose, mapPropsStream, createEventHandler} = require('recompose');
 const { get, some, every } = require('lodash');
 const FileUtils = require('../../../../utils/FileUtils');
 const LayersUtils = require('../../../../utils/LayersUtils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 const {isAnnotation} = require('../../../../utils/AnnotationsUtils');
 
 const JSZip = require('jszip');

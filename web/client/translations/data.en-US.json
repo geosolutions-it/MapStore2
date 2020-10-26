@@ -28,6 +28,10 @@
         "collapse": "Collapse",
         "expand": "Expand",
         "Forbidden": "Forbidden",
+        "layerNameChangeError": {
+            "title": "Name change error",
+            "message": "The layer failed to reload with a changed name"
+        },
         "version": {
             "label": "Version"
         },
@@ -107,7 +111,9 @@
                 "right": "Right",
                 "left": "Left",
                 "bottom": "Bottom",
-                "top": "Top"
+                "top": "Top",
+                "editLayerName": "Edit layer name",
+                "confirmLayerName": "Confirm layer name change"
             },
             "legendOptions": {
               "title": "Legend",
@@ -508,7 +514,6 @@
             "removeLayer": "Remove layer",
             "loadingerror": "The layer has not been loaded correctly or not available.",
             "measure": "Measure",
-            "backgroundSwitcher": "Backgrounds",
             "layers": "Layers",
             "drawerButton": "Layers",
             "refreshTitle": "Update layers",
@@ -700,6 +705,7 @@
             "trueBearingLabel": "True bearing",
             "formula": "Formula for distance calculation",
             "showLabel": "Show measurement label",
+            "saveMeasure": "Save measurements to annotation",
             "addAsAnnotation": "Add as annotation",
             "newMeasure": "New annotation",
             "selectTool": "Select a measurement tool",
@@ -940,7 +946,6 @@
             "settingsPanel": "This is the helptext for the SettingsPanel",
             "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
-            "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "infoButton": "This is the helptext for the InfoButton",
             "locateBtn": "This is the helptext for the LocateBtn",
@@ -1084,6 +1089,7 @@
             "deleteFeature": "Delete this feature",
             "undoDeleteFeature": "Are you sure to delete this feature?",
             "enableEdit": "Enable edit",
+            "editMeasurement": "Edit measurement",
             "title": "Annotations",
             "zoomTo": "Zoom to annotation",
             "zoomToGeometry": "Zoom to geometry",
@@ -1091,6 +1097,9 @@
             "hide": "Hide annotation",
             "show": "Show annotation",
             "tabCoordinates": "Coordinates",
+            "warning": "Warning!",
+            "measureWarningText": "Navigating to edit measurement panel will remove any styling applied",
+            "notShowAgain": "Don't show this message again",
             "tabStyle": "Style",
             "insertText": "Please insert the text annotation",
             "downloadtooltip": "Download annotations",
@@ -1659,7 +1668,8 @@
                 "noLegendDescription": "The connected map has no layers to show in legend",
                 "nodatainviewport": "No data in the current viewport",
                 "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
-                "genericError": "There was an error during data retrival"
+                "genericError": "There was an error during data retrival",
+                "genericErrorWithMessage": "There was an error during data retrieval: \"{message}\""
             },
             "builder": {
                 "header": {

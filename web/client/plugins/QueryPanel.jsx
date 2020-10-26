@@ -46,8 +46,8 @@ const {bindActionCreators} = require('redux');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const layerFilterEpics = require('../epics/layerfilter');
 
-const ResizableModal = require('../components/misc/ResizableModal');
-const Portal = require('../components/misc/Portal');
+const ResizableModal = require('../components/misc/ResizableModal').default;
+const Portal = require('../components/misc/Portal').default;
 
 
 const {
@@ -454,9 +454,9 @@ const QueryPanelPlugin = connect(tocSelector, {
 module.exports = {
     QueryPanelPlugin,
     reducers: {
-        queryform: require('../reducers/queryform'),
-        query: require('../reducers/query'),
-        layerFilter: require('../reducers/layerFilter')
+        queryform: require('../reducers/queryform').default,
+        query: require('../reducers/query').default,
+        layerFilter: require('../reducers/layerFilter').default
     },
     epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform'), ...layerFilterEpics}
 };

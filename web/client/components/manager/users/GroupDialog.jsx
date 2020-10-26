@@ -13,7 +13,7 @@ const PropTypes = require('prop-types');
 
 const Dialog = require('../../../components/misc/Dialog');
 const assign = require('object-assign');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const Spinner = require('react-spinkit');
 const {findIndex} = require('lodash');
 const PagedCombobox = require('../../misc/combobox/PagedCombobox');

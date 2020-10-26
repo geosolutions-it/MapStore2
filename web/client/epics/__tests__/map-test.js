@@ -8,10 +8,10 @@
 
 const expect = require('expect');
 
-const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, redirectUnauthorizedUserOnNewMap } = require('../map');
+const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions } = require('../map');
 const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
 
-const { LOAD_MAP_INFO, configureMap, configureError} = require('../../actions/config');
+const { LOAD_MAP_INFO, configureMap } = require('../../actions/config');
 
 const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 const MapUtils = require('../../utils/MapUtils');
@@ -245,23 +245,4 @@ describe('map epics', () => {
         }, state);
     });
 
-    describe('redirectUnauthorizedUserOnNewMap', () => {
-        it('should navigate to homepage when user made some changes to map, and prompt appears', (done) => {
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe('@@router/CALL_HISTORY_METHOD');
-                done();
-            };
-
-            const initState = {
-                router: {
-                    location: {
-                        pathname: '/viewer/openlayers/new'
-                    }
-                }
-            };
-
-            testEpic(redirectUnauthorizedUserOnNewMap, 1, configureError({status: 403}), epicResponse, initState);
-        });
-    });
 });

@@ -5,10 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
 
-var browser = require('../browser');
-var ConfigUtils = require('../../utils/ConfigUtils');
+import browser from '../browser';
+import ConfigUtils from '../../utils/ConfigUtils';
 
 describe('Test the browser reducer', () => {
     it('Get borwser properties', () => {

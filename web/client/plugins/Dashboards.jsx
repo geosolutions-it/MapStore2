@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const {connect} = require('react-redux');
-const Message = require("../components/I18N/Message");
+const Message = require("../components/I18N/Message").default;
 const emptyState = require('../components/misc/enhancers/emptyState');
 
 const { setDashboardsAvailable } = require('../actions/dashboards');
@@ -136,6 +136,6 @@ module.exports = {
     }),
     epics: require('../epics/dashboards'),
     reducers: {
-        dashboards: require('../reducers/dashboards')
+        dashboards: require('../reducers/dashboards').default
     }
 };

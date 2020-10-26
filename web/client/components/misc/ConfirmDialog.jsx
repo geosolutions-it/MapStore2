@@ -11,7 +11,7 @@ const { Button, ButtonGroup, Glyphicon } = require('react-bootstrap');
 
 const Dialog = require('./Dialog');
 const assign = require('object-assign');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 /**
  * A Modal window to show password reset form

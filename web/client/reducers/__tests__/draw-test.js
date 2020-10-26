@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const draw = require('../draw');
-const {GEOMETRY_CHANGED, SET_CURRENT_STYLE} = require('../../actions/draw');
+import expect from 'expect';
+
+import draw from '../draw';
+import { GEOMETRY_CHANGED, SET_CURRENT_STYLE } from '../../actions/draw';
 
 
 describe('Test the draw reducer', () => {

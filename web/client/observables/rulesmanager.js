@@ -1,7 +1,7 @@
 const Rx = require('rxjs');
 
 const GeoFence = require('../api/geoserver/GeoFence');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const { trim} = require("lodash");
 const WMS = require('../api/WMS');
 const {getLayerCapabilities, describeLayer} = require("./wms");

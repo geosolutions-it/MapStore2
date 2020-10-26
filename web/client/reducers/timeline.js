@@ -1,9 +1,8 @@
-const { RANGE_CHANGED } = require('../actions/timeline');
-const { REMOVE_NODE } = require('../actions/layers');
-const { RESET_CONTROLS } = require('../actions/controls');
-const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC } = require('../actions/timeline');
-const { set } = require('../utils/ImmutableUtils');
-const { assign, pickBy, has } = require('lodash');
+import { REMOVE_NODE } from '../actions/layers';
+import { RESET_CONTROLS } from '../actions/controls';
+import { RANGE_CHANGED, RANGE_DATA_LOADED, LOADING, SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC } from '../actions/timeline';
+import { set } from '../utils/ImmutableUtils';
+import { assign, pickBy, has } from 'lodash';
 
 /**
  * Provides state for the timeline. Example:
@@ -47,7 +46,7 @@ const { assign, pickBy, has } = require('lodash');
  * @param {action} action
 
  */
-module.exports = (state = {
+export default (state = {
     settings: {
         autoSelect: true, // selects the first layer available as guide layer. This is a configuration only setting for now
         collapsed: false

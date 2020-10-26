@@ -9,11 +9,11 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const Toolbar = require('../../misc/toolbar/Toolbar');
-const Portal = require('../../misc/Portal');
+const Portal = require('../../misc/Portal').default;
 const GeometryEditor = require('./GeometryEditor');
 const Manager = require('../../style/vector/Manager');
-const Message = require('../../I18N/Message');
-const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, ControlLabel } = require('react-bootstrap');
+const Message = require('../../I18N/Message').default;
+const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, ControlLabel, Checkbox } = require('react-bootstrap');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
 const { isFunction, isEmpty, head } = require('lodash');
@@ -24,6 +24,7 @@ const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
 const FeaturesList = require('./FeaturesList');
 const {getComponents, coordToArray, validateCoords} = require('../../../utils/AnnotationsUtils');
+const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -110,8 +111,17 @@ const {getComponents, coordToArray, validateCoords} = require('../../../utils/An
  * @prop {string} defaultShapeSize default symbol shape size in px
  * @prop {object} defaultStyles object with default symbol styles
  * @prop {number} textRotationStep rotation step of text styler
+ * @prop {function} onSetAnnotationMeasurement triggered on click of edit measurement button when annotation is of type 'Measure'
  * @prop {function} onFilterMarker triggered when marker/glyph name is specified for filtering
  * @prop {object[]} annotations list of annotations
+ * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features
+ * @prop {function} onHideMeasureWarning triggered when warning is ignored with "Don't show again" flag
+ * @prop {boolean} showAgain flag for checkbox on the measure annotation popup warning
+ * @prop {boolean} showPopupWarning flag to show warning modal on navigating to measurement panel from annotation
+ * @prop {function} onToggleShowAgain triggered when interacting with the checkbox on measure annotation warning popup
+ * @prop {function} onInitPlugin triggered when annotation editor is mounted
+ * @prop {function} onGeometryHighlight triggered onMouseEnter and onMouseLeave of the geometry card
+ * @prop {function} onUnSelectFeature triggered on unselecting a geometry card
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -206,8 +216,17 @@ class AnnotationsEditor extends React.Component {
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         textRotationStep: PropTypes.number,
+        onSetAnnotationMeasurement: PropTypes.func,
         onFilterMarker: PropTypes.func,
-        annotations: PropTypes.array
+        annotations: PropTypes.array,
+        measurementAnnotationEdit: PropTypes.bool,
+        onHideMeasureWarning: PropTypes.func,
+        showAgain: PropTypes.bool,
+        showPopupWarning: PropTypes.bool,
+        onToggleShowAgain: PropTypes.func,
+        onInitPlugin: PropTypes.func,
+        onGeometryHighlight: PropTypes.func,
+        onUnSelectFeature: PropTypes.func
     };
 
     static defaultProps = {
@@ -223,7 +242,9 @@ class AnnotationsEditor extends React.Component {
         format: "decimal",
         pointType: "marker",
         stylerType: "marker",
-        annotations: []
+        annotations: [],
+        measurementAnnotationEdit: false,
+        onInitPlugin: () => {}
     };
     /**
     @prop {object} removing object to remove, it is also a flag that means we are currently asking for removing an annotation / geometry. Toggles visibility of the confirm dialog
@@ -232,8 +253,13 @@ class AnnotationsEditor extends React.Component {
         editedFields: {},
         removing: null,
         textValue: "",
-        tabValue: "coordinates"
+        tabValue: "coordinates",
+        showPopupWarning: false
     };
+
+    componentDidMount() {
+        this.props.onInitPlugin();
+    }
 
     getConfig = () => {
         return {...defaultConfig, ...this.props.config, onFilterMarker: this.props.onFilterMarker};
@@ -319,7 +345,7 @@ class AnnotationsEditor extends React.Component {
                                 disabled: this.props?.selected?.properties
                                     && !this.props?.selected?.properties?.isValidFeature || false,
                                 onClick: () => {
-                                    if (this.props.styling) {
+                                    if (this.props.styling && this.isMeasureEditDisabled()) {
                                         if (this.props.unsavedStyle) {
                                             this.props.onToggleUnsavedStyleModal();
                                         } else {
@@ -426,6 +452,7 @@ class AnnotationsEditor extends React.Component {
         if (items.length === 0) {
             return null;
         }
+
         return (<div className={"mapstore-annotations-info-viewer-items" + (this.props.styling ? " mapstore-annotations-info-viewer-styler" : "")}>
             <div>
                 {items}
@@ -444,7 +471,12 @@ class AnnotationsEditor extends React.Component {
                     onStyleGeometry={this.props.onStyleGeometry}
                     onSelectFeature={this.props.onSelectFeature}
                     drawing={this.props.drawing}
-                    onUnselectFeature={this.props.onResetCoordEditor}
+                    onUnselectFeature={this.props.onUnSelectFeature}
+                    onGeometryHighlight={this.props.onGeometryHighlight}
+                    isMeasureEditDisabled={this.isMeasureEditDisabled()}
+                    onSetAnnotationMeasurement={this.setAnnotationMeasurement}
+                    setPopupWarning={this.setPopupWarning}
+                    showPopupWarning={this.props.showPopupWarning}
                 />
                 }
             </div>
@@ -503,8 +535,13 @@ class AnnotationsEditor extends React.Component {
                 modal
                 onClose={this.props.onToggleUnsavedStyleModal}
                 onConfirm={() => {
-                    this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal();
-                    this.setTabValue('coordinates');
+                    this.props.onCancelStyle();
+                    this.props.onToggleUnsavedStyleModal();
+                    if (this.isMeasureEditDisabled()) {
+                        this.setTabValue('coordinates');
+                    } else {
+                        this.setTabValue('style');
+                    }
                 }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
@@ -547,7 +584,28 @@ class AnnotationsEditor extends React.Component {
                 {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
                     <Message msgId="annotations.removeannotation" msgParams={{title: this.props?.feature?.properties?.title}}/>}
             </ConfirmDialog></Portal>);
+        } else if (this.state.showPopupWarning && this.props.showPopupWarning) {
+            return (<Portal><ConfirmDialog
+                show
+                modal
+                title={<Message msgId="annotations.warning" />}
+                onClose={this.hideWarning}
+                onConfirm={this.setAnnotationMeasurement}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <span>
+                    <p><Message msgId="annotations.measureWarningText" /></p>
+                    <p>
+                        <Checkbox {...{checked: this.props.showAgain, onClick: this.props.onToggleShowAgain}}>
+                            <Message msgId="annotations.notShowAgain"/>
+                        </Checkbox>
+                    </p>
+                </span>
+            </ConfirmDialog></Portal>);
         }
+
         return null;
     }
 
@@ -613,21 +671,22 @@ class AnnotationsEditor extends React.Component {
                             </FormGroup>
                         </div>}
                         <Nav bsStyle="tabs" activeKey={this.state.tabValue} justified>
-                            <NavItem
+                            {this.isMeasureEditDisabled() && <NavItem
                                 key="coordinates"
                                 eventKey="coordinates"
                                 onClick={() => {
                                     this.setTabValue('coordinates');
-                                    this.props.styling && this.props.onStyleGeometry();
+                                    this.props.onStyleGeometry(false);
                                 }}>
                                 <Message msgId={"annotations.tabCoordinates"}/>
                             </NavItem>
+                            }
                             <NavItem
                                 key="style"
                                 eventKey="style"
                                 onClick={() => {
                                     this.setTabValue('style');
-                                    !this.props.styling && this.props.onStyleGeometry();
+                                    this.props.onStyleGeometry(true);
                                 }}>
                                 <Message msgId={"annotations.tabStyle"}/>
                             </NavItem>
@@ -759,6 +818,29 @@ class AnnotationsEditor extends React.Component {
         if (this.state.tabValue !== tabValue) {
             this.setState({...this.state, tabValue});
         }
+    }
+
+    setPopupWarning = (showPopupWarning) =>{
+        this.setState({...this.state, showPopupWarning});
+    }
+
+    isMeasureEditDisabled = () => {
+        const isMeasureAnnotation = this.props.editing?.properties?.type === MEASURE_TYPE || false;
+        return !this.props.measurementAnnotationEdit || !isMeasureAnnotation;
+    }
+
+    setAnnotationMeasurement = () => {
+        // Excluding geometry types not supported by measurement
+        this.props.onSetAnnotationMeasurement(this.props.editing.features.filter(f=> f.geometry.type !== 'Point' && !f.properties.isCircle), this.props.editing?.properties.id);
+        this.hideWarning();
+    }
+
+    hideWarning = () => {
+        if (this.props.showAgain) {
+            localStorage.setItem("showPopupWarning", false);
+            this.props.onHideMeasureWarning();
+        }
+        this.setPopupWarning(false);
     }
 }
 
