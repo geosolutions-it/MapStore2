@@ -15,7 +15,7 @@ const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
 const missingPlugins = Object.keys(pluginsDef.plugins).filter(plugin => pluginsDef.plugins[plugin].default);
 
 if (missingPlugins.length) {
-    console.log("plugin not correctly loaded: ", missingPlugins);
+    console.error("plugin not correctly loaded: ", missingPlugins);
 }
 const StandardRouter = connect((state) => ({
     locale: state.locale || {},
