@@ -10,4 +10,8 @@ import main from './main';
 import appConfig from './appConfig';
 import pluginsDef from './plugins';
 
+
+console.log("plugin not correctly loaded: ", Object.keys(pluginsDef.plugins).filter(plugin => pluginsDef.plugins[plugin].default));
+
+
 main(appConfig, pluginsDef);
