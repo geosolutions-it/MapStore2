@@ -12,7 +12,11 @@ const {connect} = require('react-redux');
 const StandardApp = require('../MapStore2/web/client/components/app/StandardApp');
 
 const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
+const missingPlugins = Object.keys(pluginsDef.plugins).filter(plugin => pluginsDef.plugins[plugin].default);
 
+if (missingPlugins.length) {
+    console.error("plugin not correctly loaded: ", missingPlugins);
+}
 const StandardRouter = connect((state) => ({
     locale: state.locale || {},
     pages
