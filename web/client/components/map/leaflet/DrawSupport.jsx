@@ -7,7 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {head, last: _last, isNil} = require('lodash');
+const {last: _last, isNil} = require('lodash');
 const L = require('leaflet');
 
 require('leaflet-draw');
