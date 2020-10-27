@@ -194,8 +194,8 @@ const MapStore2 = {
         const appStore = require('../stores/StandardStore').default.bind(null, {
             initialState: initialState || {},
             appReducers: {
-                security: require('../reducers/security'),
-                version: require('../reducers/version'),
+                security: require('../reducers/security').default,
+                version: require('../reducers/version').default,
                 ...standardReducers
             },
             appEpics: {

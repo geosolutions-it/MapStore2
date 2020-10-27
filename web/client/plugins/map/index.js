@@ -53,7 +53,6 @@ const pluginsCreator = (mapType, actions) => {
             projectionDefs: projectionDefsSelector(state),
             mousePosition: isMouseMoveActiveSelector(state)
         }), assign({}, {
-            onCreationError: () => {},
             onMapViewChanges: changeMapView,
             onClick: clickOnMap,
             onMouseMove: mouseMove,
