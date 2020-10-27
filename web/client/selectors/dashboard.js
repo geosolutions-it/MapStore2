@@ -21,4 +21,5 @@ export const getDashboardSaveErrors = state => state && state.dashboard && state
 export const isBrowserMobile = state => state && state.browser && state.browser.mobile;
 export const buttonCanEdit = createSelector(pathnameSelector, dashboardResource, isBrowserMobile,
     (path, resource, isMobile) => isMobile ? !isMobile : (resource && resource.canEdit || isNaN(path.substr(-4))));
+export const originalDataSelector = state => state?.dashboard?.originalData;
 
