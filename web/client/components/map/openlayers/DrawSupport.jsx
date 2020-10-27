@@ -118,7 +118,6 @@ export default class DrawSupport extends React.Component {
  * endDrawing as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
 */
     UNSAFE_componentWillReceiveProps(newProps) {
-        console.log("NEW PROPS", newProps);
         if (this.drawLayer) {
             this.updateFeatureStyles(newProps.features);
         }
@@ -877,7 +876,6 @@ export default class DrawSupport extends React.Component {
         });
 
         let props;
-
         const allHaveFeatures = newFeatures.every(ft => {
             if (ft && ft.features && ft.features.length) {
                 return true;
@@ -893,14 +891,15 @@ export default class DrawSupport extends React.Component {
         });
 
         if (allHaveFeatures) {
-            props = assign({}, newProps, {features: [...newFeatures]});
+            props = assign({}, newProps, {features: newFeatures});
         } else {
             if (allHaveCircleProperty) {
                 props = assign({}, newProps, {features: []});
             } else {
-
                 const fts = newFeatures.reduce((pre, curr) => {
-                    pre.push({...curr.geometry, properties: curr.properties});
+                    if (curr.geometry) {
+                        pre.push({...curr.geometry, properties: curr.properties});
+                    }
                     return pre;
                 }, []);
                 props = assign({}, newProps, {features: fts});
