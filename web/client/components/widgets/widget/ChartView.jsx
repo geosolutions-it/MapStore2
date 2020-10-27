@@ -16,7 +16,7 @@ const PlotlyChart = require('../../charts/PlotlyChart').default;
 const { withProps } = require('recompose');
 // TODO: this should be splitted in two in final implementation.
 // One is the adapter for data (wpsChart or what else) and type, options parsing in the component.
-const toPlotly = withProps(({ data, xAxis, series, type, height, width }) => {
+const toPlotly = withProps(({ data, xAxis, series, type, height, width, cartesian }) => {
     const xDataKey = xAxis.dataKey;
     const yDataKey = series[0].dataKey;
     const x = data.map(d => d[xDataKey]);
@@ -26,6 +26,11 @@ const toPlotly = withProps(({ data, xAxis, series, type, height, width }) => {
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
+            yaxis: {
+                // showticklabels,showline for yAxis false
+                showgrid: cartesian
+            },
+            // xaxis.tickangle for oblique labels and so on...
             margin: {
                 l: 40,
                 r: 5,
@@ -33,6 +38,7 @@ const toPlotly = withProps(({ data, xAxis, series, type, height, width }) => {
                 t: 20,
                 pad: 4
             },
+
             autosize: false,
             automargin: true,
             height,
