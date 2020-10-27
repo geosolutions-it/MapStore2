@@ -46,8 +46,12 @@ const Empty = () => { return <span/>; };
 
 const pluginsCreator = (mapType, actions) => {
 
-    return import('./' + mapType + '/index').then((module) => {
-        import('../../components/map/' + mapType + '/plugins/index');
+    return Promise.all([
+        import('./' + mapType + '/index'),
+        // wait until the layer registration is complete
+        // to ensure the layer can create the layer based on type
+        import('../../components/map/' + mapType + '/plugins/index')
+    ]).then(([ module ]) => {
         const components = module.default;
         const LMap = connect((state) => ({
             projectionDefs: projectionDefsSelector(state),
