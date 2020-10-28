@@ -223,7 +223,10 @@ const converters = {
                     identifier: record.Name,
                     service: records.service,
                     tags: "",
-                    layerOptions: options && options.layerOptions || {},
+                    layerOptions: {
+                        ...(options?.layerOptions || {}),
+                        ...(records?.layerOptions || {})
+                    },
                     title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
                     formats: castArray(record.formats || []),
                     dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
