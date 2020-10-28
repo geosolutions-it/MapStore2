@@ -46,7 +46,7 @@ function dashboard(state = {
         return set('originalData', action.data, set("resource", action.resource, state));
     }
     case DASHBOARD_RESET: {
-        return set("resource", undefined, state);
+        return set('originalData', undefined, set("resource", undefined, state));
     }
     case SAVE_ERROR: {
         return set('saveErrors', castArray(action.error), state);
