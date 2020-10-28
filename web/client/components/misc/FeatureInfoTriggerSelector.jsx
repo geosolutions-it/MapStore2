@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require("../../plugins/locale/Message").default;
+const Message = require("../../plugins/locale/Message");
 const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
 

@@ -45,7 +45,11 @@ const appConfig = require('@mapstore/product/appConfig');
  * const plugins = require('./plugins');
  */
 const plugins = require('@mapstore/product/plugins');
+const missingPlugins = Object.keys(plugins.plugins).filter(plugin => plugins.plugins[plugin].default);
 
+if (missingPlugins.length) {
+    console.error("plugin not correctly loaded: ", missingPlugins);
+}
 import main from '@mapstore/product/main';
 
 main(appConfig, plugins);

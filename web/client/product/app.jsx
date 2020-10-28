@@ -10,4 +10,12 @@ import main from './main';
 import appConfig from './appConfig';
 import pluginsDef from './plugins';
 
+
+const missingPlugins = Object.keys(pluginsDef.plugins).filter(plugin => pluginsDef.plugins[plugin].default);
+
+if (missingPlugins.length) {
+    console.error("plugin not correctly loaded: ", missingPlugins);
+}
+
+
 main(appConfig, pluginsDef);
