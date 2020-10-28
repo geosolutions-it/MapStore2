@@ -47,16 +47,25 @@ describe('Map Plugin', () => {
         }, 200);
     });
 
-    it.skip('creates a Map plugin with specified mapType configuration (openlayers)', (done) => {
+    it('creates a Map plugin with specified mapType configuration (openlayers)', (done) => {
         const { Plugin } = getPluginForTest(MapPlugin, { map, maptype: {
             mapType: 'openlayers'
         } });
-        ReactDOM.render(<Plugin pluginCfg={{ shouldLoadFont: false }} />, document.getElementById("container"));
-        setTimeout(() => {
-            expect(document.getElementById('map')).toExist();
-            expect(document.getElementsByClassName('ol-viewport').length).toBe(1);
-            done();
-        }, 200);
+        ReactDOM.render(<Plugin
+            pluginCfg={{ shouldLoadFont: false }}
+            onLoadingMapPlugins={(loading, mapType) => {
+                if (!loading) {
+                    try {
+                        expect(mapType).toBe('openlayers');
+                        expect(document.getElementById('map')).toExist();
+                        expect(document.getElementsByClassName('ol-viewport').length).toBe(1);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }
+            }}
+        />, document.getElementById("container"));
     });
 
     it('resetOnMapInit epic is activated by INIT_MAP action', () => {
