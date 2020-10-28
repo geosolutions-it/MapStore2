@@ -19,11 +19,12 @@ const assign = require('object-assign');
 const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../actions/draw');
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
-const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
+const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, updateFeatureInfoClickPoint} = require('../actions/mapInfo');
 const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent, CLICK_ON_MAP} = require('../actions/map');
 const {projectionSelector} = require('../selectors/map');
+const {clickPointSelector} = require('../selectors/mapInfo');
 
 
 const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
@@ -38,7 +39,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
     STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC,
     updateFilter, selectFeatures, DEACTIVATE_GEOMETRY_FILTER, ACTIVATE_TEMPORARY_CHANGES, disableToolbar, FEATURES_MODIFIED,
-    deactivateGeometryFilter } = require('../actions/featuregrid');
+    deactivateGeometryFilter, setSelectionOptions, deselectFeatures } = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl} = require('../actions/controls');
 const {queryPanelSelector, showCoordinateEditorSelector, drawerEnabledControlSelector} = require('../selectors/controls');
@@ -289,11 +290,18 @@ module.exports = {
             .filter(({update = {}}) => update.type !== 'geometry')
             .map(updateFilterFunc(store))
     ),
+    disableMultiSelect: (action$) =>
+        action$.ofType(UPDATE_FILTER)
+            .filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
+            .switchMap(() => {
+                return Rx.Observable.of(setSelectionOptions(), updateFeatureInfoClickPoint({modifiers: {ctrl: false, metaKey: false}}));
+            }),
     handleClickOnMap: (action$, store) =>
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
             .switchMap(() =>
-                action$.ofType(CLICK_ON_MAP).switchMap(({point: {latlng, pixel}}) => {
+                action$.ofType(CLICK_ON_MAP).switchMap(({point}) => {
+                    const {latlng, pixel, modifiers: {ctrl, metaKey}} = point;
                     const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
                     const projection = projectionSelector(store.getState());
@@ -301,7 +309,7 @@ module.exports = {
                     const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
                     const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
 
-                    return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
+                    return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(setSelectionOptions({multiselect: ctrl || metaKey}), updateFeatureInfoClickPoint(point), updateFilter({
                         ...currentFilter,
                         value: {
                             attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
@@ -326,10 +334,25 @@ module.exports = {
         action$.ofType(QUERY_RESULT)
             .filter(({reason}) => reason === 'geometry')
             .map(({result}) => {
+                const clickPoint = clickPointSelector(store.getState());
+                const { modifiers: { ctrl, metaKey } } = clickPoint;
                 const feature = get(result, 'features[0]');
-                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
 
-                return selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : []);
+                const selectedFeatures = selectedFeaturesSelector(store.getState());
+                const alreadySelectedFeature = find(selectedFeatures, { id: feature.id });
+                if ((ctrl || metaKey) && alreadySelectedFeature) {
+                    if (selectedFeatures.length === 1) {
+                        return updateFilter({
+                            attribute: "the_geom",
+                            enabled: false,
+                            type: "geometry"
+                        });
+                    }
+                    return deselectFeatures([alreadySelectedFeature]);
+                }
+
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
+                return selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : [], ctrl || metaKey);
             }),
     activateTemporaryChangesEpic: (action$) =>
         action$.ofType(ACTIVATE_TEMPORARY_CHANGES)
@@ -393,7 +416,16 @@ module.exports = {
             .merge(action$.ofType(UPDATE_QUERY).debounceTime(500).map(action => ({...action, page: 0})))
             .switchMap((a) => createLoadPageFlow(store)(a)
                 .merge(action$.ofType(QUERY_RESULT)
-                    .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                    .map((ra) => {
+                        let features = get(ra, "result.features", []);
+                        const clickPoint = clickPointSelector(store.getState());
+                        const modifiers = clickPoint?.modifiers;
+                        if ((modifiers?.ctrl || modifiers?.metaKey)) {
+                            features = selectedFeaturesSelector(store.getState());
+                        }
+                        // TODO: Handle pagination when multiselect due to control
+                        return fatureGridQueryResult(features, [get(ra, "filterObj.pagination.startIndex")]);
+                    })
                     .take(1)
                     .takeUntil(action$.ofType(QUERY_ERROR))
                 )

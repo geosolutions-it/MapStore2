@@ -224,6 +224,7 @@ class OpenlayersMap extends React.Component {
                         modifiers: {
                             alt: event.originalEvent.altKey,
                             ctrl: event.originalEvent.ctrlKey,
+                            metaKey: event.originalEvent.metaKey, // MAC OS
                             shift: event.originalEvent.shiftKey
                         }
                     }, layerInfo);
