@@ -16,7 +16,7 @@ const defaultIconStyle = {
 
 const showGFIForService = (service) => service?.launchInfoPanel === 'single_layer' && !!service?.openFeatureInfoButtonEnabled;
 
-const layerIsVisibleForGFI = (searchLayerObj, service) => service?.forceSearchLayerVisibility || !!searchLayerObj?.visibility;
+const layerIsVisibleForGFI = (searchLayerObj, service) => !!searchLayerObj && (service?.forceSearchLayerVisibility || !!searchLayerObj.visibility);
 
 module.exports = {
     defaultIconStyle,
