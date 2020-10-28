@@ -47,7 +47,7 @@ describe('Map Plugin', () => {
         }, 200);
     });
 
-    it('creates a Map plugin with specified mapType configuration (openlayers)', (done) => {
+    it.skip('creates a Map plugin with specified mapType configuration (openlayers)', (done) => {
         const { Plugin } = getPluginForTest(MapPlugin, { map, maptype: {
             mapType: 'openlayers'
         } });
