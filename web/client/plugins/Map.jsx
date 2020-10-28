@@ -210,7 +210,7 @@ class MapPlugin extends React.Component {
         localizedLayerStylesName: PropTypes.string,
         currentLocaleLanguage: PropTypes.string,
         items: PropTypes.array,
-        onLoadingMapPlugins: PropTypes.array
+        onLoadingMapPlugins: PropTypes.func
     };
 
     static defaultProps = {
@@ -446,4 +446,3 @@ export default createPlugin('Map', {
     },
     epics: mapEpics
 });
-
