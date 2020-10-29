@@ -85,6 +85,8 @@
             "propertiesFormatDescription": "Prikaz informacija o objektu kao lista svojstava",
             "templateFormatTitle": "PREDLOŽAK",
             "templateFormatDescription": "Prilagodba prikaza informacija o objektu",
+            "hideFormatTitle": "DÉSACTIVER L'IDENTIFICATION",
+            "hideFormatDescription": "Tiltsa le a funkció információit ehhez a réteghez",
             "templateFormatInfoAlert1": "Klikni na dugme za editiranje za dodavanje novog predloška.",
             "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",

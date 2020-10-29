@@ -64,13 +64,13 @@ describe("test FeatureInfo", () => {
     it('test changes on click', done => {
         ReactDOM.render(<FeatureInfo onChange={(key, value) => {
             expect(key).toBe('featureInfo');
-            expect(value.format).toBe('TEXT');
+            expect(value.format).toBe('HIDDEN');
             done();
         }} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat}/>, document.getElementById("container"));
         const testComponent = document.getElementsByClassName('test-preview');
         expect(testComponent.length).toBe(4);
         const sideCards = document.getElementsByClassName('mapstore-side-card');
-        expect(sideCards.length).toBe(4);
+        expect(sideCards.length).toBe(5);
         TestUtils.Simulate.click(sideCards[0]);
     });
 });

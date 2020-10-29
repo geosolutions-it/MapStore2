@@ -12,6 +12,8 @@ const INFO_FORMATS_BY_MIME_TYPE = FeatureInfoUtils.INFO_FORMATS_BY_MIME_TYPE;
 const pointOnSurface = require('turf-point-on-surface');
 const {findIndex} = require('lodash');
 
+INFO_FORMATS.HIDDEN = "text/html";
+
 const MapInfoUtils = {
     /**
      * specifies which info formats are currently supported
@@ -22,6 +24,7 @@ const MapInfoUtils = {
     EMPTY_RESOURCE_VALUE: 'NODATA',
 
     VIEWERS: {},
+
     /**
      * @return a filtered version of INFO_FORMATS object.
      * the returned object contains only keys that AVAILABLE_FORMAT contains.
@@ -30,6 +33,7 @@ const MapInfoUtils = {
         return Object.keys(INFO_FORMATS).filter((k) => {
             return MapInfoUtils.AVAILABLE_FORMAT.indexOf(k) !== -1;
         }).reduce((prev, k) => {
+            prev.HIDDEN = "text/html";
             prev[k] = INFO_FORMATS[k];
             return prev;
         }, {});
@@ -204,7 +208,8 @@ const MapInfoUtils = {
             [FeatureInfoUtils.INFO_FORMATS.PROPERTIES]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.JSON]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.HTML]: require('../components/data/identify/viewers/HTMLViewer'),
-            [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer')
+            [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer'),
+            [FeatureInfoUtils.INFO_FORMATS.HIDDEN]: require('../components/data/identify/viewers/HiddenViewer')
         };
     },
     defaultQueryableFilter(l) {

@@ -52,6 +52,11 @@ const isStylableLayer = (props) =>
 
 
 const formatCards = {
+    HIDDEN: {
+        titleId: 'layerProperties.hideFormatTitle',
+        descId: 'layerProperties.hideFormatDescription',
+        glyph: 'ext-empty'
+    },
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
         descId: 'layerProperties.textFormatDescription',

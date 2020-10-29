@@ -107,7 +107,6 @@ describe('identify Epics', () => {
         testEpic(getFeatureInfoOnFeatureInfoClick, 2, sentActions, ([a0, a1]) => {
             expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
             expect(a1.type).toBe(NO_QUERYABLE_LAYERS);
-
             done();
         }, state);
     });

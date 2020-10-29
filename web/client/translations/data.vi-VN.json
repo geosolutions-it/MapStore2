@@ -685,6 +685,8 @@
             "styleListLoadError": "Có lỗi khi tải danh sách kiểu",
             "stylesRefreshList": "Làm mới danh sách kiểu",
             "templateFormatDescription": "Tùy chỉnh định dạng kết quả thông tin tính năng",
+            "hideFormatTitle": "TẮT NHẬN DẠNG",
+            "hideFormatDescription": "Tắt thông tin tính năng cho lớp này",
             "templateFormatInfoAlert1": "Nhấp vào nút chỉnh sửa để thêm một mẫu mới.",
             "templateFormatInfoAlert2": "Sử dụng ${ attribute } để bọc các thuộc tính bạn cần hiển thị",
             "templateFormatInfoAlertExample": "Id của tính năng là ${ properties }",
