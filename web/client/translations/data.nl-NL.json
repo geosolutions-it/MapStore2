@@ -95,6 +95,8 @@
             "htmlFormatDescription": "Toont de objectinformatie in HTML",
             "propertiesFormatTitle": "PROPERTIES",
             "propertiesFormatDescription": "Toont de objectinformatie in een eigenschappenlijst",
+            "hideFormatTitle": "UITSCHAKELEN IDENTIFICATIE",
+            "hideFormatDescription": "Schakel de feature-info voor deze laag uit",
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Objectinformatie in een formaat op maat",
             "templateFormatInfoAlert1": "Klik op de editeerknop om een nieuw sjabloon toe te voegen.",

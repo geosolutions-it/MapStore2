@@ -97,6 +97,8 @@
             "propertiesFormatDescription": "Affiche les attributs de l'objet sous forme de liste de propriétés",
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Personnaliser le format des résultats d'interrogation des attributs",
+            "hideFormatTitle": "DÉSACTIVER L'IDENTIFICATION",
+            "hideFormatDescription": "Désactiver les informations sur les caractéristiques de cette couche",
             "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
