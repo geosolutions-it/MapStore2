@@ -290,6 +290,11 @@ module.exports = {
             .filter(({update = {}}) => update.type !== 'geometry')
             .map(updateFilterFunc(store))
     ),
+    /**
+     * Resets multiselect and ctrl, metaKey modifiers in case they were true during map clicks
+     * This happens when filter is disabled
+     * @memberof epics.featuregird
+     */
     disableMultiSelect: (action$) =>
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry' && !update.enabled)

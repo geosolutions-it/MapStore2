@@ -40,7 +40,9 @@ import {
     TOGGLE_HIGHLIGHT_FEATURE,
     toggleHighlightFeature,
     SET_MAP_TRIGGER,
-    setMapTrigger
+    setMapTrigger,
+    UPDATE_MAPINFO_STATE_WITH_CLICK_POINT,
+    updateMapInfoStateWithClickPoint
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -163,5 +165,13 @@ describe('Test correctness of the map actions', () => {
     });
     it('setMapTrigger', () => {
         expect(setMapTrigger('hover')).toEqual({type: SET_MAP_TRIGGER, trigger: 'hover' });
+    });
+    it('updateMapInfoStateWithClickPoint', () => {
+        const point = {
+            modifiers: {
+                ctrl: true
+            }
+        };
+        expect(updateMapInfoStateWithClickPoint(point)).toEqual({type: UPDATE_MAPINFO_STATE_WITH_CLICK_POINT, point });
     });
 });
