@@ -161,6 +161,7 @@ import pluginsCreator from "./map/index";
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
+ * @prop {number} toolsOptions.locate.maxZoom The maximum zoom for automatic view setting to the user location
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
