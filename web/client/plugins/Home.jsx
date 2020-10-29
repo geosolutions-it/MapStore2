@@ -38,7 +38,8 @@ const HomeConnected = connect((state) => ({
     displayUnsavedDialog: unsavedMapSelector(state)
         && unsavedMapSourceSelector(state) === 'gohome'
         && (feedbackMaskSelector(state).currentPage === 'viewer'
-        || feedbackMaskSelector(state).currentPage === 'geostory')
+        || feedbackMaskSelector(state).currentPage === 'geostory'
+        || feedbackMaskSelector(state).currentPage === 'dashboard')
 }), {
     onCheckMapChanges: checkUnsavedMapChanges,
     onCloseUnsavedDialog: setControlProperty.bind(null, 'unsavedMap', 'enabled', false)
