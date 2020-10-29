@@ -194,7 +194,8 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    version: '1.3.0'
                 },
                 {
                     allowedSRS: {},
@@ -328,7 +329,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -376,7 +378,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: '1.3.0'
                     },
                     {
                         allowedSRS: {},
@@ -424,7 +427,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -472,7 +476,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -685,7 +690,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -733,7 +739,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -781,7 +788,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -829,7 +837,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -877,7 +886,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -925,7 +935,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1113,6 +1124,7 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         tileSize: undefined,
+                        version: undefined,
                         legendOptions: { legendWidth: "", legendHeight: 40}
                     },
                     {
@@ -1161,7 +1173,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -1209,6 +1222,7 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: "both",
                         tooltipPlacement: "right",
                         tileSize: undefined,
+                        version: undefined,
                         legendOptions: { legendWidth: 20, legendHeight: 40}
                     }],
                     mapOptions: {
@@ -1411,6 +1425,7 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tileSize: undefined,
+                        version: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined
                     },
                     {
@@ -1458,6 +1473,7 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tileSize: undefined,
+                        version: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined
                     },
                     {
@@ -1505,6 +1521,7 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tileSize: undefined,
+                        version: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined
                     }],
                     mapOptions: {},
@@ -1689,6 +1706,7 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tileSize: undefined,
+                        version: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined,
                         params: {} } ],
                     groups: [ {
@@ -1843,7 +1861,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -2000,7 +2019,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -2197,7 +2217,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -2245,7 +2266,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -2293,7 +2315,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     },
                     {
                         allowedSRS: {},
@@ -2341,7 +2364,8 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
-                        tileSize: undefined
+                        tileSize: undefined,
+                        version: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],

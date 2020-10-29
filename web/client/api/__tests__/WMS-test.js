@@ -136,6 +136,8 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.service).toExist();
                 expect(result.records[0].formats.length).toBe(20);
                 expect(result.numberOfRecordsMatched).toBe(5);
+                expect(result.layerOptions).toExist();
+                expect(result.layerOptions.version).toBe('1.3.0');
                 done();
             } catch (ex) {
                 done(ex);
@@ -165,6 +167,8 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.service).toExist();
                 expect(result.records[0].formats.length).toBe(42);
                 expect(result.numberOfRecordsMatched).toBe(7);
+                expect(result.layerOptions).toExist();
+                expect(result.layerOptions.version).toBe('1.1.1');
                 done();
             } catch (ex) {
                 done(ex);

@@ -209,7 +209,8 @@ class MapPlugin extends React.Component {
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         localizedLayerStylesName: PropTypes.string,
         currentLocaleLanguage: PropTypes.string,
-        items: PropTypes.array
+        items: PropTypes.array,
+        onLoadingMapPlugins: PropTypes.func
     };
 
     static defaultProps = {
@@ -247,7 +248,8 @@ class MapPlugin extends React.Component {
         elevationEnabled: false,
         onFontError: () => {},
         onResolutionsChange: () => {},
-        items: []
+        items: [],
+        onLoadingMapPlugins: () => {}
     };
     state = {
         canRender: true
@@ -421,8 +423,10 @@ class MapPlugin extends React.Component {
         return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
     };
     updatePlugins = (props) => {
+        props.onLoadingMapPlugins(true);
         pluginsCreator(props.mapType, props.actions).then((plugins) => {
             this.setState({plugins});
+            props.onLoadingMapPlugins(false, props.mapType);
         });
     };
 }
@@ -442,4 +446,3 @@ export default createPlugin('Map', {
     },
     epics: mapEpics
 });
-

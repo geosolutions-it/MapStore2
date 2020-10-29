@@ -89,6 +89,9 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
         numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         service,
+        layerOptions: {
+            version: (json.WMS_Capabilities || json.WMT_MS_Capabilities)?.$?.version || '1.3.0'
+        },
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
             .map((layer) => assign({}, layer, { formats: rootFormats, onlineResource, SRS: SRSList, credits: layer.Attribution ? extractCredits(layer.Attribution) : credits}))

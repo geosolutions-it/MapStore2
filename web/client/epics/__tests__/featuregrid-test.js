@@ -107,7 +107,8 @@ const {
     featureGridUpdateGeometryFilter,
     activateTemporaryChangesEpic,
     disableMultiSelect,
-    selectFeaturesOnMapClickResult
+    selectFeaturesOnMapClickResult,
+    enableGeometryFilterOnEditMode
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1945,6 +1946,57 @@ describe('featuregrid Epics', () => {
                 }
             }
         }, done);
+    });
+    it('enableGeometryFilterOnEditMode epic', (done) => {
+        const epicResponse = actions => {
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+            done();
+        };
+
+        const featureGridState1 = {
+            featuregrid: {
+                mode: "EDIT",
+                filters: {}
+            }
+        };
+
+        testEpic(
+            enableGeometryFilterOnEditMode,
+            1,
+            toggleEditMode(),
+            epicResponse,
+            featureGridState1
+        );
+
+        const epicResponse2 = actions => {
+            expect(actions).toBe(undefined);
+            done();
+        };
+
+
+        const featureGridState2 = {
+            featuregrid: {
+                mode: "EDIT",
+                filters: {
+                    ["the_geom"]: {
+                        attribute: "the_geom",
+                        enabled: true,
+                        type: "geometry",
+                        value: {
+                            attribute: "the_geom"
+                        }
+                    }
+                }
+            }
+        };
+
+        testEpic(
+            enableGeometryFilterOnEditMode,
+            1,
+            toggleEditMode(),
+            epicResponse2,
+            featureGridState2
+        );
     });
     it('featureGridUpdateFilter with geometry filter', (done) => {
         const startActions = [openFeatureGrid(), createQuery(), updateFilter({

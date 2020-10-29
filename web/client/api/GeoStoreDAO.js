@@ -327,7 +327,7 @@ const Api = {
     getAvailableGroups: function(user) {
         if (user && user.role === "ADMIN") {
             return axios.get(
-                "usergroups/?all=true",
+                "usergroups/?all=true&users=false",
                 this.addBaseUrl({
                     headers: {
                         'Accept': "application/json"
