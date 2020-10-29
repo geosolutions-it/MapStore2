@@ -97,6 +97,8 @@
             "propertiesFormatDescription": "Muestra resultados de información de la capa como lista de propiedades",
             "templateFormatTitle": "PLANTILLA",
             "templateFormatDescription": "Personalizar el formato de resultados de información de la capa",
+            "hideFormatTitle": "Esconder",
+            "hideFormatDescription": "No mostrar formato de resultados de información de funciones",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "tooltip": {

@@ -85,6 +85,8 @@
             "propertiesFormatDescription": "Prikaz informacija o objektu kao lista svojstava",
             "templateFormatTitle": "PREDLOŽAK",
             "templateFormatDescription": "Prilagodba prikaza informacija o objektu",
+            "hideFormatTitle": "Sakrij se",
+            "hideFormatDescription": "Ne prikazujte rezultate informacija o karakteristikama",
             "templateFormatInfoAlert1": "Klikni na dugme za editiranje za dodavanje novog predloška.",
             "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",

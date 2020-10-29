@@ -17,7 +17,7 @@ const MapInfoUtils = {
      * specifies which info formats are currently supported
      */
     //           default format ↴
-    AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'],
+    AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE', 'HIDDEN'],
 
     EMPTY_RESOURCE_VALUE: 'NODATA',
 
@@ -204,7 +204,8 @@ const MapInfoUtils = {
             [FeatureInfoUtils.INFO_FORMATS.PROPERTIES]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.JSON]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.HTML]: require('../components/data/identify/viewers/HTMLViewer'),
-            [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer')
+            [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer'),
+            [FeatureInfoUtils.INFO_FORMATS.HIDDEN]: require('../components/data/identify/viewers/HiddenViewer'),
         };
     },
     defaultQueryableFilter(l) {

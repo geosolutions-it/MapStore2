@@ -16,6 +16,7 @@ import { Glyphicon } from 'react-bootstrap';
 import HTMLViewer from '../../components/data/identify/viewers/HTMLViewer';
 import TextViewer from '../../components/data/identify/viewers/TextViewer';
 import JSONViewer from '../../components/data/identify/viewers/JSONViewer';
+import HiddenViewer from '../../components/data/identify/viewers/HiddenViewer';
 import HtmlRenderer from '../../components/misc/HtmlRenderer';
 
 import MapInfoUtils from '../../utils/MapInfoUtils';
@@ -85,6 +86,18 @@ const formatCards = {
                 <div><Message msgId="layerProperties.exampleOfResponse" /></div>
                 <br />
                 <JSONViewer response={responses.json} />
+            </div>
+        )
+    },
+    HIDDEN: {
+        titleId: 'layerProperties.hideFormatTitle',
+        descId: 'layerProperties.hideFormatDescription',
+        glyph: 'ext-empty',
+        body: () => (
+            <div>
+                <div><Message msgId="layerProperties.exampleOfResponse" /></div>
+                <br />
+                <HiddenViewer/>
             </div>
         )
     },

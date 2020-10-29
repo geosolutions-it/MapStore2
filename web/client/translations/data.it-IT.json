@@ -97,6 +97,8 @@
             "propertiesFormatDescription": "Mosta i risultati come lista di proprietà",
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Personalizza il formato di risposta",
+            "hideFormatTitle": "Nascondere",
+            "hideFormatDescription": "Non visualizzare i risultati delle informazioni sulle funzioni",
             "templateFormatInfoAlert1": "Click sul bottone di modifica per aggiungere un nuovo template.",
             "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
             "templateFormatInfoAlertExample": "id della feature è ${ properties }",

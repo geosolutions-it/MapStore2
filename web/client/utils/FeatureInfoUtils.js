@@ -4,6 +4,7 @@ const INFO_FORMATS = {
     "HTML": "text/html",
     "JSONP": "text/javascript",
     "PROPERTIES": "application/json",
+    "HIDDEN":"text/html",
     "JSON": "application/json",
     "GML2": "application/vnd.ogc.gml",
     "GML3": "application/vnd.ogc.gml/3.1.1",
