@@ -19,7 +19,7 @@ const assign = require('object-assign');
 const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../actions/draw');
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
-const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, updateFeatureInfoClickPoint} = require('../actions/mapInfo');
+const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER } = require('../actions/mapInfo');
 const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent, CLICK_ON_MAP} = require('../actions/map');
@@ -28,7 +28,7 @@ const {clickPointSelector} = require('../selectors/mapInfo');
 
 
 const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
-const { closeIdentify, hideMapinfoMarker } = require('../actions/mapInfo');
+const { closeIdentify, hideMapinfoMarker, updateMapInfoStateWithClickPoint } = require('../actions/mapInfo');
 
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
@@ -294,7 +294,7 @@ module.exports = {
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
             .switchMap(() => {
-                return Rx.Observable.of(setSelectionOptions(), updateFeatureInfoClickPoint({modifiers: {ctrl: false, metaKey: false}}));
+                return Rx.Observable.of(setSelectionOptions(), updateMapInfoStateWithClickPoint({modifiers: {ctrl: false, metaKey: false}}));
             }),
     handleClickOnMap: (action$, store) =>
         action$.ofType(UPDATE_FILTER)
@@ -309,7 +309,7 @@ module.exports = {
                     const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
                     const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
 
-                    return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(setSelectionOptions({multiselect: ctrl || metaKey}), updateFeatureInfoClickPoint(point), updateFilter({
+                    return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(setSelectionOptions({multiselect: ctrl || metaKey}), updateMapInfoStateWithClickPoint(point), updateFilter({
                         ...currentFilter,
                         value: {
                             attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
