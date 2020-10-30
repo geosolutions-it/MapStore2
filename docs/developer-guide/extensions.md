@@ -137,7 +137,7 @@ The `index.json file should contain all the information about the extension:
 }
 ```
 
-`plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](../context-editor-config.md)
+`plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md)
 
 ### Installing Extensions
 

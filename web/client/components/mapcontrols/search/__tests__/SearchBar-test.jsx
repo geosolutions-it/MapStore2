@@ -10,7 +10,7 @@ import {MenuItem} from "react-bootstrap";
 const expect = require('expect');
 const Provider = require("react-redux").Provider;
 
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 const React = require('react');
 const ReactDOM = require('react-dom');
 const SearchBar = require('../SearchBar').default;
@@ -73,8 +73,28 @@ describe("test the SearchBar", () => {
     });
 
     it('test search and reset on enter', () => {
+        let searchOptions = {displaycrs: "EPSG:3857",
+            services: [
+                {type: "wfs",
+                    name: "Meteorites",
+                    displayName: "${properties,name}",
+                    options: {
+                        maxFeatures: 20,
+                        srsName: "EPSG:4326"
+                    },
+                    launchInfoPanel: "single_layer"
+                }]
+        };
         const renderSearchBar = (testHandlers, text) => {
-            return ReactDOM.render(<SearchBar searchText={text} delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+            return ReactDOM.render(
+                <SearchBar
+                    searchText={text}
+                    searchOptions={searchOptions}
+                    delay={0} typeAhead={false}
+                    onSearch={testHandlers.onSearchHandler}
+                    onSearchReset={testHandlers.onSearchResetHandler}
+                    onSearchTextChange={testHandlers.onSearchTextChangeHandler}
+                />, document.getElementById("container"));
         };
 
         const testHandlers = {
@@ -100,7 +120,31 @@ describe("test the SearchBar", () => {
     });
 
     it('test that options are passed to search action', () => {
-        let searchOptions = {displaycrs: "EPSG:3857"};
+        let searchOptions = {displaycrs: "EPSG:3857",
+            services: [
+                {
+                    priority: 5,
+                    type: "nomination"
+                },
+                {type: "wfs",
+                    name: "Meteorites",
+                    displayName: "${properties,name}",
+                    options: {
+                        maxFeatures: 20,
+                        srsName: "EPSG:4326"
+                    },
+                    launchInfoPanel: "single_layer"
+                },
+                {type: "wfs",
+                    name: "Meteorites",
+                    displayName: "${properties,name}",
+                    options: {
+                        maxFeatures: undefined,
+                        srsName: "EPSG:4328"
+                    },
+                    launchInfoPanel: "single_layer"
+                }]
+        };
 
         const renderSearchBar = (testHandlers, text) => {
             return ReactDOM.render(
@@ -108,7 +152,7 @@ describe("test the SearchBar", () => {
                     searchOptions={searchOptions}
                     searchText={text}
                     delay={0}
-                    maxResults={23}
+                    maxResults={15}
                     typeAhead={false}
                     onSearch={testHandlers.onSearchHandler}
                     onSearchReset={testHandlers.onSearchResetHandler}
@@ -131,7 +175,7 @@ describe("test the SearchBar", () => {
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.keyDown(input, {key: "Enter", keyCode: 13, which: 13});
         expect(spy.calls.length).toEqual(1);
-        expect(spy).toHaveBeenCalledWith('test', searchOptions, 23);
+        expect(spy).toHaveBeenCalledWith('test', searchOptions, 50);
     });
     it('test error and loading status', () => {
         ReactDOM.render(<SearchBar loading error={{message: "TEST_ERROR"}}/>, document.getElementById("container"));
@@ -315,13 +359,13 @@ describe("test the SearchBar", () => {
     });
 
     it('test showOptions false, only address tool visible', () => {
-        ReactDOM.render(<SearchBar showOptions={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
-        let reset = document.getElementsByClassName("glyphicon-search")[0];
-        let cog = document.getElementsByClassName("glyphicon-cog");
-        let zoom = document.getElementsByClassName("glyphicon-zoom-to");
-        expect(reset).toExist();
-        expect(cog.length).toBe(0);
-        expect(zoom.length).toBe(0);
+        ReactDOM.render(<SearchBar splitTools showOptions={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let menu = document.getElementsByClassName("glyphicon-menu-hamburger");
+        let search = document.getElementsByClassName("glyphicon-search");
+        let options = document.getElementsByClassName("glyphicon-cog");
+        expect(menu.length).toBe(0);
+        expect(search.length).toBe(1);
+        expect(options.length).toBe(0);
     });
 
     it('test default coordinate format from localConfig', () => {

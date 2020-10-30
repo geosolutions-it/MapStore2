@@ -1,10 +1,13 @@
 # How to release
+
 Below you can find the release procedure as a checklist. On each release it can be updated (if needed), copied and pasted into a GitHub issue, of course changing the release name.
 Then you can check each entry on the GitHub issue when done until the release is end.
 
 ## Changelog generation
+
 Add an entry in the changelog like this:
-```
+
+```markdown
 ## [2018.02.00](https://github.com/geosolutions-it/MapStore2/tree/v2018.02.00) (2018-09-11)
 
  - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.01.00...v2018.02.00)**
@@ -16,24 +19,28 @@ Add an entry in the changelog like this:
  - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed)**
 
 ```
+
 Replacing:
- -  replacing `2018.02.00` with branch name
- - with current release tag name `v2018.02.00`
- - `%222018.02.00%22` with the name of the milestone (`%22` are `"` in the URL to generate a filter like `milestone:"2018.02.00"`)
+
+- replacing `2018.02.00` with branch name
+- with current release tag name `v2018.02.00`
+- `%222018.02.00%22` with the name of the milestone (`%22` are `"` in the URL to generate a filter like `milestone:"2018.02.00"`)
 
 ## Release Checklist
-```
+
+```markdown
 - [ ] Create an issue with this checklist in the release milestone.
+- [ ] Verify if it is needed to release a new version of http-proxy or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process)
 - [ ] If major release (YYYY.XX.00), create a branch `YYYY.XX.xx`  (`xx` is really `xx`, example: 2018.01.xx)
 - [ ]  If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy by updating the `branch` parameter in the build configuration page to `YYYY.XX.xx`
-- [ ] Fix pom.xml to stable versions ( no -SNAPSHOT in relaase).
+- [ ] Fix `pom.xml` to stable versions ( no `-SNAPSHOT` in release).
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] Test on QA [http://qa.mapstore.geo-solutions.it/mapstore/](http://qa.mapstore.geo-solutions.it/mapstore/)
     * Any fix must be done on **YYYY.XX.mm**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
 - [ ] Test [Binary](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/ws/release/target/) (take the mapstore2-QA-<RELEASE_BRANCH>-bin.zip)
-- [ ] Lunch the [stable deploy](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Stable/) to install the latest stable version on official demo 
-- [ ] remove manually from localConfig the entry for authentication to gs-stable in the deploied webapp.
+- [ ] Lunch the [stable deploy](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Stable/) to install the latest stable version on official demo
+- [ ] Manually edit the localConfig.json on mapstore.geo-solutions.it to fit the authkey for production (`authkey-prod`)
 - [ ] Update `CHANGELOG.md`. [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
 - [ ] Commit the changelog to the release branch
 - [ ] Create a [github draft release](https://github.com/geosolutions-it/MapStore2/releases) pointing to the branch **YYYY.XX.mm**.

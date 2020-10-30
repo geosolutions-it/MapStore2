@@ -28,6 +28,10 @@
         "collapse": "réduire",
         "expand": "étendre",
         "Forbidden": "Interdit",
+        "layerNameChangeError": {
+            "title": "Erreur de changement de nom",
+            "message": "Échec du rechargement de la couche avec un nom modifié"
+        },
         "version": {
             "label": "Version"
         },
@@ -107,7 +111,9 @@
                 "right": "Droite",
                 "left": "Gauche",
                 "bottom": "Bas",
-                "top": "Haut"
+                "top": "Haut",
+                "editLayerName": "Modifier le nom du calque",
+                "confirmLayerName": "Confirmer le changement de nom du calque"
             },
             "legendOptions": {
               "title": "Légende",
@@ -449,7 +455,9 @@
                 "delete": "Supprimer la fiche détaillée",
                 "titleUnsavedChanges": "Êtes-vous sûr de fermer sans enregistrer vos modifications ?",
                 "sureToClose": "Êtes-vous sûr de fermer sans enregistrer vos modifications ?",
-                "fieldsChanged": "Certains attributs ont été modifiés"
+                "fieldsChanged": "Certains attributs ont été modifiés",
+                "showAtStartup": "Afficher au démarrage",
+                "showAsModal": "Afficher comme modal"
             },
             "errors": {
                 "loading": {
@@ -506,7 +514,6 @@
             "removeLayer": "Supprimer la couche",
             "loadingerror": "La couche n'a pas été chargée correctement ou n'est pas disponible.",
             "measure": "Mesurer",
-            "backgroundSwitcher": "Fonds de plan",
             "layers": "Couches",
             "drawerButton": "Couches",
             "refreshTitle": "Recharger les couches",
@@ -514,6 +521,14 @@
             "refreshMessage": "Rechargez la configuration des couches WMS à partir du(des) serveur(s)",
             "refreshError": "Erreur lors de la mise à jour des couches : ",
             "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
+            "compareTool": "Comparer l'outil",
+            "configureTool": "Configurer",
+            "spyconfiguration": "Configuration de Spyglass",
+            "swipeconfiguration": "Configuration du balayage",
+            "swipe": "Glisser",
+            "spyGlass": "Verre espion",
+            "direction": "Glisser direction",
+            "radius": "Rayon",
             "filterIconEnabled": "Désactiver le filtre de couche",
             "filterIconDisabled": "Activer le filtre de couche",
             "refreshOptions": {
@@ -694,6 +709,7 @@
             "newMeasure": "Nouvelle annotation",
             "selectTool": "Sélectionnez un outil de mesure",
             "exportToGeoJSON": "Exporter vers GeoJSON",
+            "saveMeasure": "Enregistrer les mesures dans l'annotation",
             "resetTooltip": "Effacer les mesures",
             "addAsLayer": "Ajouter comme couche"
         },
@@ -930,7 +946,6 @@
             "settingsPanel": "Ceci est le texte d'aide pour le panneau de configuration",
             "gohome": "Ceci est le texte d'aide pour 'Home'",
             "measureComponent": "Ceci est le texte d'aide pour les outils de mesure",
-            "backgroundSwitcher": "Ceci est le texte d'aide pour le sélectionneur de fonds de plans",
             "layerSwitcher": "Ceci est le texte d'aide pour le sélectionneur de couches",
             "infoButton": "Ceci est le texte d'aide pour le bouton d'information",
             "locateBtn": "Ceci est le texte d'aide pour 'LocateBtn'",
@@ -1072,6 +1087,9 @@
             "hide": "Masquer l'annotation",
             "show": "Afficher l'annotation",
             "tabCoordinates": "Coordonnés",
+            "warning": "Avertissement!",
+            "measureWarningText": "Naviguer pour modifier le panneau de mesure supprimera tout style appliqué",
+            "notShowAgain": "Ne plus afficher ce message",
             "tabStyle": "Style",
             "filter": "Filtrer les annotations...",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition des annotations ?",
@@ -1082,10 +1100,11 @@
             "deleteFeature": "Supprimer cet objet",
             "undoDeleteFeature": "Êtes-vous sûr de supprimer cet objet ?",
             "title": "Annotations",
+            "editMeasurement": "Modifier la mesure",
             "insertText": "Veuillez insérer l'annotation de texte",
             "downloadtooltip": "Télécharger les annotations",
             "downloadcurrenttooltip": "Télécharger l'annotation courante",
-            "downloadError": "Erreur d'exportation",
+            "downloadError": "Erreur d'export",
             "loadtooltip": "Importer des annotations",
             "loadtitle": "Importer des annotations",
             "selectfiletext": "Déposez votre fichier ici ou cliquez pour sélectionner le fichier d'annotations à importer. (fichiers supportés : JSON)",
@@ -1289,7 +1308,7 @@
             },
             "errors": {
                 "fileNotSupported": "Fichier non pris en charge",
-                "unknownError": "il y a eu une erreur inconnue lors de l'importation",
+                "unknownError": "il y a eu une erreur inconnue lors de l'import",
                 "projectionNotSupported": "La projection du/des fichier(s) que vous essayez d'importer n'est pas prise en charge"
             }
         },
@@ -1297,7 +1316,7 @@
             "title": "Exporter la carte",
             "exportPanel": {
                 "title": "<p><h4>Sélectionnez votre format</h4></p>",
-                "exportButtonLabel": "Exportation"
+                "exportButtonLabel": "Export"
             },
             "formats": {
                 "mapstore2": {
@@ -1310,8 +1329,8 @@
                     "note": "<p><small><i><strong>note</strong>: le format WMC prend en charge <strong>uniquement les couches WMS</strong></i></small></p>"
                 }
             },
-            "errorTitle": "Échec de l'exportation de la carte",
-            "wmcNoLayersError": "Au moins une couche WMS est nécessaire pour exporter vers WMC, zéro trouvée"
+            "errorTitle": "Échec de l'export de la carte",
+            "wmcNoLayersError": "Au moins une couche WMS est nécessaire pour exporter vers WMC, aucune trouvée"
         },
         "catalog": {
             "start": "Date de début ",
@@ -1650,7 +1669,8 @@
                 "noLegendDescription": "La carte connectée n'a aucune couche à afficher dans la légende",
                 "nodatainviewport": "Aucune donnée dans la fenêtre courante",
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
-                "genericError": "Erreur lors de la récupération des données"
+                "genericError": "Erreur lors de la récupération des données",
+                "genericErrorWithMessage": "Erreur lors de la récupération des données: \"{message}\""
             },
             "builder": {
                 "header": {

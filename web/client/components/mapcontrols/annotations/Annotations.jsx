@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const bbox = require('@turf/bbox');
 const {head, countBy, values, isUndefined, keys} = require('lodash');
@@ -146,7 +146,8 @@ class Annotations extends React.Component {
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
-        textRotationStep: PropTypes.number
+        textRotationStep: PropTypes.number,
+        measurementAnnotationEdit: PropTypes.bool
     };
 
     static contextTypes = {
@@ -208,16 +209,21 @@ class Annotations extends React.Component {
 
     renderFieldValue = (field, annotation) => {
         const fieldValue = annotation.properties[field.name] || '';
-        switch (field.type) {
-        case 'html':
-            return <span dangerouslySetInnerHTML={{__html: fieldValue} }/>;
-        default:
-            return fieldValue;
+        if (field.type === 'html') {
+            // Return the text content of the first child of the html string (to prevent collating all texts into a single word)
+            return (new DOMParser).parseFromString(fieldValue, "text/html").documentElement.lastElementChild
+                ?.firstChild
+                ?.textContent || '';
         }
+        return fieldValue;
     };
 
     renderThumbnail = ({featureType, geometry, properties = {}}) => {
-        if (featureType === "LineString" || featureType === "MultiLineString" ) {
+        if (properties?.type === "Measure") {
+            return (<span className={"mapstore-annotations-panel-card" }>
+                <Glyphicon glyph={"1-ruler"}/>
+            </span>);
+        } else if (featureType === "LineString" || featureType === "MultiLineString" ) {
             return (<span className={"mapstore-annotations-panel-card" }>
                 <Glyphicon glyph={"polyline"}/>;
             </span>);
@@ -318,7 +324,7 @@ class Annotations extends React.Component {
                                 },
                                 {
                                     glyph: 'download',
-                                    disabled: !(this.props.annotations && this.props.annotations.length > 0),
+                                    disabled: !(annotationsPresent),
                                     tooltip: <Message msgId="annotations.downloadtooltip"/>,
                                     visible: this.props.mode === "list",
                                     onClick: () => { this.props.onDownload(); }
@@ -361,6 +367,8 @@ class Annotations extends React.Component {
             defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
             defaultStyles={this.props.defaultStyles}
             textRotationStep={this.props.textRotationStep}
+            annotations={this.props.annotations}
+            measurementAnnotationEdit={this.props.measurementAnnotationEdit}
         />;
     };
 

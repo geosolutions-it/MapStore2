@@ -41,4 +41,36 @@ describe('GeoStory Plugin', () => {
         expect(actions.length).toEqual(1);
         expect(store.getState().geostory.currentStory.settings.theme.fontFamilies).toEqual(fontFamilies);
     });
+    it('should store the media editor setting with onUpdateMediaEditorSetting', () => {
+        const { Plugin, actions, store } = getPluginForTest(GeoStory, stateMocker({geostory}));
+        const mediaEditorSettings = {
+            sourceId: 'geostory',
+            mediaTypes: {
+                image: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                video: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                },
+                map: {
+                    defaultSource: 'geostory',
+                    sources: ['geostory']
+                }
+            },
+            sources: {
+                geostory: {
+                    name: 'Current story',
+                    type: 'geostory'
+                }
+            }
+        };
+        ReactDOM.render(<Plugin
+            mediaEditorSettings={mediaEditorSettings}
+        />, document.getElementById('container'));
+
+        expect(actions.length).toBe(2);
+        expect(store.getState().geostory.mediaEditorSettings).toEqual(mediaEditorSettings);
+    });
 });

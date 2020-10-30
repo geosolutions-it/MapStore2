@@ -5,15 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const PrintUtils = require('../PrintUtils');
-const ConfigUtils = require('../ConfigUtils');
+import expect from 'expect';
+import { find } from 'lodash';
+
+import PrintUtils from '../PrintUtils';
+import ConfigUtils from '../ConfigUtils';
+import { KVP1, REST1 } from '../../test-resources/layers/wmts';
+import { poi as TMS110_1 } from '../../test-resources/layers/tms';
+import { BasemapAT, NASAGIBS, NLS_CUSTOM_URL } from '../../test-resources/layers/tileprovider';
+
 
 const layer = {
     url: "http://mygeoserver",
     name: "my:layer",
     type: "wms",
-    params: {myparam: "myvalue"}
+    params: { myparam: "myvalue" }
 };
 
 const layerSottoPasso = {
@@ -132,7 +138,7 @@ const vectorLayer = {
     "id": "web2014all_mv__14",
     "name": "web2014all_mv",
     "hideLoading": true,
-    "features": [ featurePoint ],
+    "features": [featurePoint],
     "style": {
         "weight": 3,
         "radius": 10,
@@ -143,14 +149,14 @@ const vectorLayer = {
     }
 };
 
-var annotationsVectorLayer = {
+const annotationsVectorLayer = {
     "type": "vector",
     "visibility": true,
     "group": "Local shape",
     "id": "annotations",
     "name": "web2014all_mv",
     "hideLoading": true,
-    "features": [ featureCollection ],
+    "features": [featureCollection],
     "style": {
         "weight": 3,
         "radius": 10,
@@ -161,14 +167,14 @@ var annotationsVectorLayer = {
     }
 };
 
-var measurementVectorLayer = {
+const measurementVectorLayer = {
     "type": "vector",
     "visibility": true,
     "group": "Local shape",
     "id": "aaa",
     "name": "Measurements",
     "hideLoading": true,
-    "features": [ featureCollection ],
+    "features": [featureCollection],
     "style": {
         "weight": 3,
         "radius": 10,
@@ -178,12 +184,14 @@ var measurementVectorLayer = {
         "fillColor": "rgb(0, 0, 255)"
     }
 };
-let vector2 = {...vectorLayer};
+let vector2 = { ...vectorLayer };
 delete vector2.style;
-let vectorWithFtCollInside = {...vectorLayer, features: [{
-    type: "FeatureCollection",
-    features: [featurePoint]
-}]};
+let vectorWithFtCollInside = {
+    ...vectorLayer, features: [{
+        type: "FeatureCollection",
+        features: [featurePoint]
+    }]
+};
 
 const mapFishVectorLayer = {
     "type": "Vector",
@@ -284,25 +292,25 @@ describe('PrintUtils', () => {
         expect(specs[0].customParams.myparam).toBe("myvalue");
     });
     it('vector layer generation for print', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([vectorLayer], {projection: "EPSG:3857"}, 'map');
+        const specs = PrintUtils.getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
     });
     it('vector layer from annotations are preprocessed for printing', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([annotationsVectorLayer], {projection: "EPSG:3857"}, 'map');
+        const specs = PrintUtils.getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('vector layer from measurements are preprocessed for printing', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([measurementVectorLayer], {projection: "EPSG:3857"}, 'map');
+        const specs = PrintUtils.getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('wms layer generation for legend', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([layer], {projection: "EPSG:3857"}, 'legend');
+        const specs = PrintUtils.getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
     });
@@ -392,17 +400,17 @@ describe('PrintUtils', () => {
         expect(specs[0].classes[0].icons[0].indexOf('SCALE=50000') !== -1).toBe(true);
     });
     it('vector layer default point style', () => {
-        const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Point"}}]});
+        const style = PrintUtils.getOlDefaultStyle({ features: [{ geometry: { type: "Point" } }] });
         expect(style).toExist();
         expect(style.pointRadius).toBe(5);
     });
     it('vector layer default marker style', () => {
-        const style = PrintUtils.getOlDefaultStyle({styleName: "marker", features: [{geometry: {type: "Point"}}]});
+        const style = PrintUtils.getOlDefaultStyle({ styleName: "marker", features: [{ geometry: { type: "Point" } }] });
         expect(style).toExist();
         expect(style.externalGraphic).toExist();
     });
     it('vector layer default polygon style', () => {
-        const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Polygon"}}]});
+        const style = PrintUtils.getOlDefaultStyle({ features: [{ geometry: { type: "Polygon" } }] });
         expect(style).toExist();
         expect(style.strokeWidth).toBe(3);
         expect(style.strokeDashstyle).toBe("dash");
@@ -413,7 +421,7 @@ describe('PrintUtils', () => {
         expect(style.strokeOpacity).toBe(1);
     });
     it('vector layer default line style', () => {
-        const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "LineString"}}]});
+        const style = PrintUtils.getOlDefaultStyle({ features: [{ geometry: { type: "LineString" } }] });
         expect(style).toExist();
         expect(style.strokeWidth).toBe(3);
     });
@@ -425,8 +433,8 @@ describe('PrintUtils', () => {
     });
     it('getMapSize', () => {
         expect(PrintUtils.getMapSize()).toExist(); // check defaults
-        expect(PrintUtils.getMapSize({map: {width: 200, height: 200}}, 150).height).toBe(150);
-        expect(PrintUtils.getMapSize({rotation: true, map: {width: 200, height: 100}}, 200).height).toBe(400);
+        expect(PrintUtils.getMapSize({ map: { width: 200, height: 200 } }, 150).height).toBe(150);
+        expect(PrintUtils.getMapSize({ rotation: true, map: { width: 200, height: 100 } }, 200).height).toBe(400);
     });
     it('getNearestZoom', () => {
         const scales = [10000000, 1000000, 10000, 1000];
@@ -447,5 +455,155 @@ describe('PrintUtils', () => {
         const rgb = PrintUtils.rgbaTorgb("rgba(255, 255, 255, 0.1)");
         expect(rgb).toExist();
         expect(rgb).toBe("rgb(255, 255, 255)");
+    });
+    describe('specCreators', () => {
+        describe('opacity', () => {
+            const testBase = {
+                wms: layer,
+                wmts: KVP1,
+                vector: vectorLayer,
+                tms: TMS110_1,
+                tileprovider: BasemapAT,
+                osm: {
+                    "group": "background",
+                    "source": "osm",
+                    "name": "mapnik",
+                    "title": "Open Street Map",
+                    "type": "osm",
+                    "visibility": true,
+                    "singleTile": false,
+                    "dimensions": [],
+                    "id": "mapnik__0",
+                    "loading": false,
+                    "loadingError": false
+                }
+            };
+            it('check opacity for all layers to be 1 for undefined, therwise its value', () => {
+                Object.keys(PrintUtils.specCreators).map( k => {
+                    const fun = PrintUtils.specCreators[k].map;
+                    // 0 must remain
+                    expect(fun({ ...(testBase[k] || {}), opacity: 0 }, { projection: "EPSG:900913" }).opacity).toEqual(0);
+                    expect(fun({ ...(testBase[k] || {}), opacity: 0.5 }, { projection: "EPSG:900913" }).opacity).toEqual(0.5);
+                    expect(fun({ ...(testBase[k] || {}), opacity: undefined }, { projection: "EPSG:900913" }).opacity).toEqual(1);
+
+                } );
+            });
+        });
+        describe('WMTS', () => {
+            const checkMatrixIds = (layerSpec, tileMatrixSet) => layerSpec.matrixIds.map((mid, index) => {
+                const tileMatrixEntry = tileMatrixSet.TileMatrix[index];
+                expect(mid.identifier).toEqual(tileMatrixEntry["ows:Identifier"]);
+                expect(mid.matrixSize[0] + "").toEqual(tileMatrixEntry.MatrixHeight);
+                expect(mid.matrixSize[1] + "").toEqual(tileMatrixEntry.MatrixWidth);
+                expect(mid.tileSize[0] + "").toEqual(tileMatrixEntry.TileWidth);
+                expect(mid.tileSize[1] + "").toEqual(tileMatrixEntry.TileHeight);
+                expect(mid.resolution).toExist();
+                expect((mid.topLeftCorner[0] + "").indexOf("-20037508.34") === 0).toBe(true);
+                expect((mid.topLeftCorner[1] + "").indexOf("20037508") === 0).toBe(true);
+            });
+            it('KVP WMTS', () => {
+                const testLayer = KVP1;
+                const layerSpec = PrintUtils.specCreators.wmts.map(testLayer, { projection: "EPSG:900913" });
+                expect(layerSpec.type).toEqual("WMTS");
+                expect(layerSpec.format).toExist();
+                expect(layerSpec.baseURL).toEqual(testLayer.url);
+                expect(layerSpec.matrixSet).toEqual("EPSG:900913");
+                expect(layerSpec.requestEncoding).toBe("KVP");
+                const tileMatrixSet = find(testLayer.tileMatrixSet, { "ows:Identifier": layerSpec.matrixSet }); // the one with Identifier === matrixSet;
+                checkMatrixIds(layerSpec, tileMatrixSet);
+            });
+            it('REST WMTS', () => {
+                const testLayer = REST1;
+                const layerSpec = PrintUtils.specCreators.wmts.map(testLayer, { projection: "EPSG:900913" });
+                expect(layerSpec.type).toEqual("WMTS");
+                expect(layerSpec.format).toExist();
+                expect(layerSpec.baseURL).toEqual(encodeURI(testLayer.url[0])); // must be encoded
+                expect(layerSpec.matrixSet).toEqual("google3857");
+
+                const tileMatrixSet = find(testLayer.tileMatrixSet, { "ows:Identifier": layerSpec.matrixSet }); // the one with Identifier === matrixSet;
+                checkMatrixIds(layerSpec, tileMatrixSet);
+
+                // REST part
+                expect(layerSpec.requestEncoding).toBe("REST"); // Not RESTful
+                expect(layerSpec.name).toBe(testLayer.name);
+
+                // Style works as dimension from the URL {Style} entry
+                expect(layerSpec.dimensions[0]).toBe("Style");
+                expect(layerSpec.params.STYLE).toBe(testLayer.style);
+                expect(layerSpec.style).toBe(testLayer.style);
+                expect(layerSpec.version).toBe("1.0.0");
+            });
+        });
+        describe('tileprovider', () => {
+            it('BasemapAT', () => {
+                const testLayer = BasemapAT;
+                const layerSpec = PrintUtils.specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
+                expect(layerSpec.type).toEqual("xyz");
+                // string without subdomains or params
+                expect(layerSpec.baseURL).toEqual("https://maps.wien.gv.at/basemap/geolandbasemap/normal/google3857/");
+                // parameters should be passed in pathSpec
+                expect(layerSpec.baseURL.indexOf(/\{[x,y,z]\}/)).toBeLessThan(0);
+                expect(layerSpec.path_format).toBe("${z}/${y}/${x}.png"); // use the format of mapfish print for variables
+                // mandatory values
+                expect(layerSpec.maxExtent).toExist();
+                expect(layerSpec.maxExtent).toExist();
+                expect(layerSpec.tileSize).toExist();
+                expect(layerSpec.resolutions).toExist();
+                expect(layerSpec.extension).toBe("png");
+                expect(layerSpec.resolutions.length).toBe(19);
+
+            });
+            it('NASAGIBS', () => {
+                const testLayer = NASAGIBS;
+                const layerSpec = PrintUtils.specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
+                expect(layerSpec.type).toEqual("xyz");
+                // string without subdomains or params
+                expect(layerSpec.baseURL).toEqual("https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default//GoogleMapsCompatible_Level8/");
+                // parameter    s should be passed in pathSpec
+                expect(layerSpec.baseURL.indexOf(/\{[x,y,z]\}/)).toBeLessThan(0);
+                expect(layerSpec.path_format).toBe("${z}/${y}/${x}.jpg"); // use the format of mapfish print for variables
+                // mandatory values
+                expect(layerSpec.maxExtent).toExist();
+                expect(layerSpec.maxExtent).toExist();
+                expect(layerSpec.tileSize).toExist();
+                expect(layerSpec.resolutions).toExist();
+                expect(layerSpec.extension).toBe("jpg");
+                expect(layerSpec.resolutions.length).toBe(9);
+
+            });
+            it('tileprovider with custom URL', () => {
+                const testLayer = NLS_CUSTOM_URL;
+                const layerSpec = PrintUtils.specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
+                expect(layerSpec.type).toEqual("xyz");
+                // string without subdomains or params
+                expect(layerSpec.baseURL).toEqual("https://nls-0.tileserver.com/nls/");
+                // parameter    s should be passed in pathSpec
+                expect(layerSpec.baseURL.indexOf(/\{[x,y,z]\}/)).toBeLessThan(0);
+                expect(layerSpec.path_format).toBe("${z}/${x}/${y}.jpg"); // use the format of mapfish print for variables
+                // mandatory values
+                expect(layerSpec.maxExtent).toExist();
+                expect(layerSpec.maxExtent).toExist();
+                expect(layerSpec.tileSize).toExist();
+                expect(layerSpec.resolutions).toExist();
+                expect(layerSpec.extension).toBe("jpg");
+                expect(layerSpec.resolutions.length).toBe(19);
+
+            });
+        });
+        describe('TMS', () => {
+            it('TMS 1.0.0', () => {
+                const testLayer = TMS110_1;
+                const layerSpec = PrintUtils.specCreators.tms.map(testLayer, { projection: "EPSG:900913" });
+                expect(layerSpec.type).toEqual("tms");
+                expect(layerSpec.format).toExist();
+                // baseURL should not have version in URL
+                expect(layerSpec.baseURL).toEqual(encodeURI(testLayer.tileMapService).split("/1.0.0")[0]);
+                expect(layerSpec.layer).toEqual(testLayer.tileMapUrl.split("/1.0.0/")[1]);
+                expect(layerSpec.tileSize).toEqual(testLayer.tileSize);
+                expect(layerSpec).toExist();
+                expect(layerSpec.resolutions.length).toEqual(testLayer.tileSets.length);
+                expect(layerSpec.format).toBe("png"); // format is mandatory
+            });
+        });
     });
 });

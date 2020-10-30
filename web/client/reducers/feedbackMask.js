@@ -6,7 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {FEEDBACK_MASK_LOADING, FEEDBACK_MASK_LOADED, FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE} = require('../actions/feedbackMask');
+import {
+    FEEDBACK_MASK_LOADING,
+    FEEDBACK_MASK_LOADED,
+    FEEDBACK_MASK_ENABLED,
+    DETECTED_NEW_PAGE
+} from '../actions/feedbackMask';
 
 function feedbackMask(state = {}, action) {
     switch (action.type) {
@@ -32,4 +37,4 @@ function feedbackMask(state = {}, action) {
     }
 }
 
-module.exports = feedbackMask;
+export default feedbackMask;

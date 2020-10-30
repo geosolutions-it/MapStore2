@@ -10,7 +10,7 @@ const {get} = require('lodash');
 const {loadMaps, mapsSearchTextChanged, searchFilterChanged, searchFilterClearAll, loadContexts} = require('../actions/maps');
 const {searchFilterSelector, contextsSelector, loadFlagsSelector} = require('../selectors/maps');
 const {toggleControl} = require('../actions/controls');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 /**
 * MapSearch Plugin is a plugin that allows to make a search, reset its content, show a loading spinner while search is going on and can be
 * used for different purpose (maps, wfs services)
@@ -75,5 +75,5 @@ const SearchBar = connect((state) => ({
 
 module.exports = {
     MapSearchPlugin: SearchBar,
-    reducers: {maps: require('../reducers/maps')}
+    reducers: {maps: require('../reducers/maps').default}
 };

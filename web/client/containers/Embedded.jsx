@@ -14,7 +14,7 @@ const assign = require('object-assign');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const PluginsUtils = require('../utils/PluginsUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
@@ -22,7 +22,7 @@ const PluginsContainer = connect((state) => ({
         layerSettings: state.layers.settings
     }),
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer'));
+}))(require('../components/plugins/PluginsContainer').default);
 
 class Embedded extends React.Component {
     static propTypes = {

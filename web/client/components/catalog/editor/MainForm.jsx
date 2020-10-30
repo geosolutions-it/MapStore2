@@ -16,25 +16,32 @@ import InfoPopover from '../../widgets/widget/InfoPopover';
 import { FormControl as FC, Form, Col, FormGroup, ControlLabel } from "react-bootstrap";
 
 import localizedProps from '../../misc/enhancers/localizedProps';
+import {defaultPlaceholder} from "./MainFormUtils";
 
 const FormControl = localizedProps('placeholder')(FC);
 
 const CUSTOM = "custom";
 const TMS = "tms";
 
-const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => (<FormGroup controlId="URL">
-    <Col xs={12}>
-        <ControlLabel><Message msgId="catalog.url" /></ControlLabel>
-        <FormControl
-            type="text"
-            style={{
-                textOverflow: "ellipsis"
-            }}
-            placeholder="catalog.urlPlaceholder"
-            value={service && service.url}
-            onChange={(e) => onChangeUrl(e.target.value)} />
-    </Col>
-</FormGroup>);
+const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => {
+
+    return (
+
+        <FormGroup controlId="URL">
+            <Col xs={12}>
+                <ControlLabel><Message msgId="catalog.url"/></ControlLabel>
+                <FormControl
+                    type="text"
+                    style={{
+                        textOverflow: "ellipsis"
+                    }}
+                    placeholder={defaultPlaceholder(service)}
+                    value={service && service.url}
+                    onChange={(e) => onChangeUrl(e.target.value)}/>
+            </Col>
+        </FormGroup>
+    );
+};
 
 // selector for tile provider
 import CONFIG_PROVIDER from '../../../utils/ConfigProvider';
@@ -82,7 +89,7 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
                         style={{
                             textOverflow: "ellipsis"
                         }}
-                        placeholder={"example: https://{s}.myUrl.com/{variant}/{z}/{x}/{y}"}
+                        placeholder={"e.g. https://{s}.myUrl.com/{variant}/{z}/{x}/{y}"}
                         value={service && service.url}
                         onChange={(e) => onChangeUrl(e.target.value)} />
                 </React.Fragment>
@@ -94,7 +101,7 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
                             style={{
                                 textOverflow: "ellipsis"
                             }}
-                            placeholder="catalog.urlPlaceholder"
+                            placeholder={defaultPlaceholder(service)}
                             value={service && service.url}
                             onChange={(e) => onChangeUrl(e.target.value)} />
                     </React.Fragment>

@@ -34,6 +34,7 @@ const {mapTypeSelector} = require('../selectors/maptype');
  *     - GPX
  * @memberof plugins
  * @name MapImport
+ * @class
  */
 module.exports = {
     MapImportPlugin: assign({loadPlugin: (resolve) => {
@@ -82,7 +83,7 @@ module.exports = {
         }
     }),
     reducers: {
-        mapimport: require('../reducers/mapimport'),
-        style: require('../reducers/style')
+        mapimport: require('../reducers/mapimport').default,
+        style: require('../reducers/style').default
     }
 };

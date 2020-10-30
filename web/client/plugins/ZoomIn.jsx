@@ -16,7 +16,7 @@ const selector = createSelector([mapSelector], (map) => ({currentZoom: map && ma
 
 const {changeZoomLevel} = require('../actions/map');
 
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 /**
   * ZoomIn Plugin. Provides button to zoom in

@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const {connect} = require('react-redux');
-const Message = require("../components/I18N/Message");
+const Message = require("../components/I18N/Message").default;
 const emptyState = require('../components/misc/enhancers/emptyState');
 
 const { setGeostoriesAvailable } = require('../actions/geostories');
@@ -30,8 +30,10 @@ const geostoriesCountSelector = createSelector(
 );
 
 /**
- * Plugin for Geostories resources
+ * Plugin for browsing GeoStory resources. Can render in {@link #plugins.ContentTabs|ContentTabs}
+ * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
  * @name Geostories
+ * @class
  * @memberof plugins
  * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
  */
@@ -133,6 +135,6 @@ module.exports = {
     }),
     epics: require('../epics/geostories'),
     reducers: {
-        geostories: require('../reducers/geostories')
+        geostories: require('../reducers/geostories').default
     }
 };

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var axios = require('../libs/ajax');
-var ConfigUtils = require('../utils/ConfigUtils');
+var ConfigUtils = require('../utils/ConfigUtils').default;
 /**
  * API for local config
  */

@@ -190,7 +190,7 @@ describe("test the Annotations Panel", () => {
             "properties": {
                 "id": "819b4120-aa2c-11ea-95b6-c74060290256",
                 "title": "Poly",
-                "description": "<p>Description</p>",
+                "description": "<p>Description</p><p>Next Line</p>",
                 "visibility": true
             },
             "features": [
@@ -222,6 +222,8 @@ describe("test the Annotations Panel", () => {
         expect(sideCard.length).toBe(1);
         const sideCardTitle = TestUtils.scryRenderedDOMComponentsWithClass(container, "mapstore-annotations-panel-card-title");
         expect(sideCardTitle[0].innerText).toBe('Poly');
+        const sideCardDescription = TestUtils.scryRenderedDOMComponentsWithClass(container, "mapstore-annotations-panel-card-description");
+        expect(sideCardDescription[0].innerText).toBe('Description');
         const sideCardTools = document.querySelectorAll('.mapstore-side-card-tool .btn-group');
         expect(sideCardTools).toBeTruthy();
         const cardButtons = sideCardTools[0].querySelectorAll('button');

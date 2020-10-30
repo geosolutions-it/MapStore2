@@ -115,8 +115,3 @@ module.exports = {
    reducers: {myreducer}
 };
 ```
-
-## The Plugins Example Application
-The [example](http://dev.mapstore.geo-solutions.it/mapstore/examples/plugins/) shows the plugins infrastructure power in an interactive way.
-
-The UI allows to add / remove plugins from the base applications, and to configure them using a JSON object with plugins configuration properties.

@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const Spinner = require('react-spinkit');
 const { FormControl, FormGroup, ControlLabel, InputGroup, Col } = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const { SimpleSelect } = require('react-selectize');
 const { isString, isObject, find } = require('lodash');
 const LocaleUtils = require('../../../../utils/LocaleUtils');
@@ -19,6 +19,8 @@ require('react-selectize/themes/index.css');
 const { Grid } = require('react-bootstrap');
 const { createFromSearch, flattenGroups } = require('../../../../utils/TOCUtils');
 const TOCUtils = require('../../../../utils/TOCUtils');
+
+const LayerNameEditField = require('./LayerNameEditField').default;
 
 /**
  * General Settings form for layer
@@ -32,7 +34,8 @@ class General extends React.Component {
         nodeType: PropTypes.string,
         pluginCfg: PropTypes.object,
         showTooltipOptions: PropTypes.bool,
-        allowNew: PropTypes.bool
+        allowNew: PropTypes.bool,
+        enableLayerNameEditFeedback: PropTypes.bool
     };
 
     static contextTypes = {
@@ -98,15 +101,10 @@ class General extends React.Component {
                         }
                         )}
                     </FormGroup>)}
-                    <FormGroup>
-                        <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
-                        <FormControl
-                            defaultValue={this.props.element.name || ''}
-                            key="name"
-                            type="text"
-                            disabled
-                            onBlur={this.updateEntry.bind(null, "name")} />
-                    </FormGroup>
+                    <LayerNameEditField
+                        element={this.props.element}
+                        enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
+                        onUpdateEntry={this.updateEntry.bind(null)}/>
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :

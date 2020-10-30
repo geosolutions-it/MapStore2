@@ -114,7 +114,7 @@ geostoreVendorAdapter.showSql=false
 
 ## Externalize front-end Configurations
 
-MapStore by default fetches configuration files directly via HTTP, without any needing of any special back-end service in the middle (this simplifies the usage in a no-back-end context, as a framework). The `app.jsx` of **custom projects** allows to customize these URLs for these static configuration files (usually relative paths) to use your custom versions.
+MapStore by default fetches configuration files directly via HTTP, without any needing of any special back-end service in the middle (this simplifies the usage in a no-back-end context, as a framework). The `app.jsx` of the **MapStore project** allows to customize these URLs for these static configuration files (usually relative paths) to use your custom versions.
 
 MapStore back-end provides a configuration service utility (at `/rest/config/load`) to provide the configuration files from the data directory.
 

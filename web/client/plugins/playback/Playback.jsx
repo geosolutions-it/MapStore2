@@ -16,7 +16,7 @@ const { statusSelector, hasPrevNextAnimationSteps, playbackMetadataSelector } = 
 const { animationStepMove, STATUS } = require('../../actions/playback');
 
 
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
 
 const Settings = require('./Settings');

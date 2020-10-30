@@ -8,8 +8,8 @@
 const React = require('react');
 const {branch} = require('recompose');
 const { Tooltip } = require('react-bootstrap');
-const OverlayTrigger = require('../OverlayTrigger');
-const Message = require('../../I18N/Message');
+const OverlayTrigger = require('../OverlayTrigger').default;
+const Message = require('../../I18N/Message').default;
 const {omit} = require('lodash');
 /**
  * Tooltip enhancer. Enhances an object adding a tooltip (with i18n support).
@@ -30,12 +30,12 @@ const {omit} = require('lodash');
  */
 module.exports = branch(
     ({tooltip, tooltipId} = {}) => tooltip || tooltipId,
-    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, args, ...props} = {}) => (<OverlayTrigger
+    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, args, customOverlayTrigger: CustomOverlayTrigger = OverlayTrigger, ...props} = {}) => (<CustomOverlayTrigger
         trigger={tooltipTrigger}
         id={idDropDown}
         key={keyProp}
         placement={tooltipPosition}
-        overlay={<Tooltip id={"tooltip-" + {keyProp}}>{tooltipId ? <Message msgId={tooltipId} msgParams={{data: args}} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),
+        overlay={<Tooltip id={"tooltip-" + keyProp}>{tooltipId ? <Message msgId={tooltipId} msgParams={{data: args}} /> : tooltip}</Tooltip>}><Wrapped {...props}/></CustomOverlayTrigger>),
     // avoid to pass non needed props
     (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip"]))}>{props.children}</Wrapped>
 );

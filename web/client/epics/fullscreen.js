@@ -9,7 +9,7 @@ const screenfull = require('screenfull');
 const {head, last} = require('lodash');
 const {setControlProperty} = require('../actions/controls');
 const {TOGGLE_FULLSCREEN} = require('../actions/fullscreen');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const Rx = require('rxjs');
 
 const getFullScreenEvent = () => {

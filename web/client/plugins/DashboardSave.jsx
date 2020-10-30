@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
+import { compose, withProps } from 'recompose';
 import { createSelector } from 'reselect';
 import {Glyphicon} from 'react-bootstrap';
 import Message from '../components/I18N/Message';
@@ -21,7 +21,7 @@ import dashboard from '../reducers/dashboard';
 
 /**
  * Save dialog component enhanced for dashboard
- *
+ *  @ignore
  */
 const SaveBaseDialog = compose(
     connect(createSelector(
@@ -33,10 +33,18 @@ const SaveBaseDialog = compose(
     ), {
         onSave: saveDashboard
     }),
+    withProps({
+        category: "DASHBOARD"
+    }),
     handleSaveModal
 )(require('../components/resources/modals/Save'));
 
-
+/**
+ * Implements "save" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @class
+ * @name DashboardSave
+ * @memberof plugins
+ */
 export const DashboardSave = createPlugin('DashboardSave', {
     component: compose(
         connect(createSelector(
@@ -69,6 +77,12 @@ export const DashboardSave = createPlugin('DashboardSave', {
     }
 });
 
+/**
+ * Implements "save as" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @class
+ * @name DashboardSaveAs
+ * @memberof plugins
+ */
 export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
     component: compose(
         connect(createSelector(
@@ -80,7 +94,10 @@ export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
         {
             onClose: () => triggerSaveAs(false)
         }
-        ))(SaveBaseDialog),
+        ),
+        withProps({
+            isNewResource: true
+        }))(SaveBaseDialog),
     reducers: {dashboard},
     options: {
         disablePluginIf: "{!!(state('browser') && state('browser').mobile)}"

@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,6 +7,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const {connect} = require('react-redux');
 
@@ -43,7 +43,12 @@ const Redirect = connect((state) => ({
     userDetails: state.security || null
 }))(RedirectComponent);
 
-
+/**
+ * Utility plugin to redirect not logged users to the home page.
+ * @name Redirect
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     RedirectPlugin: assign(Redirect, {}
     )};

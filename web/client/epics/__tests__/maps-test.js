@@ -37,7 +37,7 @@ const axios = require('../../libs/ajax');
 const MockAdapter = require('axios-mock-adapter');
 const { EMPTY_RESOURCE_VALUE } = require('../../utils/MapInfoUtils');
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 const params = {start: 0, limit: 12 };
 const baseUrl = "base/web/client/test-resources/geostore/";
 

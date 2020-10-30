@@ -12,13 +12,26 @@ import handleDetailsDownload from './handleDetailsDownload';
 
 import { compose, branch, renderNothing } from 'recompose';
 
+const handleModal = compose(
+    handleResourceData,
+    handlePermission(),
+    handleErrors
+);
+
 export default compose(
     branch(
         ({ show }) => !show,
         renderNothing
     ),
-    handleResourceData,
-    handleDetailsDownload,
-    handlePermission(),
-    handleErrors
+    branch(
+        ({ isNewResource }) => !isNewResource,
+        compose(
+            handleDetailsDownload,
+            branch(
+                ({ resource }) => resource && resource.id,
+                handleModal
+            )
+        ),
+        handleModal
+    )
 );

@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+import expect from 'expect';
 
-var {
+import {
     START_TUTORIAL,
     SETUP_TUTORIAL,
     INIT_TUTORIAL,
@@ -25,7 +25,7 @@ var {
     resetTutorial,
     closeTutorial,
     toggleTutorial
-} = require('../tutorial');
+} from '../tutorial';
 
 describe('Test the tutorial actions', () => {
 

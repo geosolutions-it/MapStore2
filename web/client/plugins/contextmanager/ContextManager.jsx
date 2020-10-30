@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -144,6 +144,14 @@ const contextManagerSelector = createStructuredSelector({
     resources: resultsSelector
 });
 
+/**
+  * Plugin for ContextManager. It implements the context Manager UI,
+  * for contexts browsing and search.
+  * @name ContextManager
+  * @memberof plugins
+  * @class
+  * @classdesc
+  */
 export default createPlugin('ContextManager', {
     component: connect(contextManagerSelector, {
         onSearch: searchContexts,

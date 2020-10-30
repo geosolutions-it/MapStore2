@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -18,6 +18,13 @@ const LangBar = connect((state) => ({
     onLanguageChange: loadLocale.bind(null, null)
 })(require('../components/I18N/LangBar'));
 
+/**
+ * Renders a menu to switch language.
+ * It can be rendered in {@link #plugins.OmniBar|OmniBar}.
+ * @name Language
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     LanguagePlugin: assign(LangBar, {
         OmniBar: {

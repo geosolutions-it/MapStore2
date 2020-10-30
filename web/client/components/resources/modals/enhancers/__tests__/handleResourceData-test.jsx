@@ -48,7 +48,7 @@ describe('handleResourceData enhancer', () => {
             expect(props).toExist();
             expect(props.onUpdateLinkedResource).toExist();
             expect(props.metadata.name).toBe("TEST");
-            if (!props.linkedResources) {
+            if (!props.linkedResources?.thumbnail) {
                 props.onUpdateLinkedResource("thumbnail", "DATA", "CATEGORY", {tail: "TEST"});
             } else {
                 const thumb = props.linkedResources.thumbnail;
@@ -78,5 +78,41 @@ describe('handleResourceData enhancer', () => {
 
         }));
         ReactDOM.render(<Sink resource={{ name: "TEST", description: "TEST" }} />, document.getElementById("container"));
+    });
+    it('handleResourceData with linkedResources details', (done) => {
+        const Sink = handleResourceData(createSink(props => {
+            expect(props).toExist();
+            expect(props.linkedResources).toExist();
+            expect(props.linkedResources.details).toExist();
+            expect(props.linkedResources.details.data).toBe('text');
+            expect(props.linkedResources.details.category).toBe('DETAILS');
+            done();
+        }));
+        ReactDOM.render(<Sink resource={{ name: 'TEST', description: 'TEST' }} linkedResources={{details: {data: 'text', category: 'DETAILS'}}}/>,
+            document.getElementById('container'));
+    });
+    it('handleResourceData with resource with detailsSettings', (done) => {
+        const Sink = handleResourceData(createSink(props => {
+            expect(props).toExist();
+            expect(props.resource).toExist();
+            expect(props.resource.attributes).toExist();
+            expect(props.resource.attributes.detailsSettings).toExist();
+            expect(props.resource.attributes.detailsSettings).toEqual({showAtStartup: true, showAsModal: true});
+            done();
+        }));
+        ReactDOM.render(<Sink resource={{ name: 'TEST', description: 'TEST', attributes: {detailsSettings: '{\"showAtStartup\":true,\"showAsModal\":true}'} }} />,
+            document.getElementById('container'));
+    });
+    it('handleResourceData with resource with invalid detailsSettings', (done) => {
+        const Sink = handleResourceData(createSink(props => {
+            expect(props).toExist();
+            expect(props.resource).toExist();
+            expect(props.resource.attributes).toExist();
+            expect(props.resource.attributes.detailsSettings).toExist();
+            expect(props.resource.attributes.detailsSettings).toEqual({});
+            done();
+        }));
+        ReactDOM.render(<Sink resource={{ name: 'TEST', description: 'TEST', attributes: {detailsSettings: '{\"showAtStartup\":true,\"showAsModal\":true'} }} />,
+            document.getElementById('container'));
     });
 });

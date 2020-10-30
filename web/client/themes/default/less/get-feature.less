@@ -1,5 +1,9 @@
 
 #identify-container {
+    .degrees, .minutes {
+        width: auto;
+    }
+
     .layer-select-row{
         margin-top: unset;
         .layer-col{
@@ -23,11 +27,39 @@
         }
     }
     .coordinateRow.coord-editor.aeronautical {
+        .coordinate {
+            flex-direction: column;
+        }
+        span.react-numeric-input{
+            width: 100%;
+        }
+        @media screen and (max-width: 660px) {
+            display: block;
+            & .col-xs-1 .pull-right.btn-group {
+                margin-top: -70px;
+            }
+        }
         & .form-group {
             width: 100%;
             position: relative;
             & .seconds {
-                min-width: 75px;
+                flex: unset;
+            }
+        }
+    }
+    .coordinateRow {
+        .coordinate {
+            .input-group {
+                .form-group {
+                    display: flex;
+                    .react-numeric-input{
+                        width: 100%;
+                        font-size: 12px;
+                        input#intl-numeric{
+                            float: unset;
+                        }
+                    }
+                }
             }
         }
     }
@@ -39,10 +71,19 @@
             justify-content: space-between;
             flex-wrap: wrap;
             .input-group {
+                .input-group-addon {
+                    min-width: 45px;
+                }
                 flex: 1 1 0%;
                 padding: 4px 0px;
                 margin-right: 8px;
                 .form-group{
+                    width: 100%;
+                    position: relative;
+                    display: flex;
+                    input#intl-numeric{
+                        float: unset;
+                    }
                     .minutes, .degrees {
                         min-width: 45px;
                         flex: 1;
@@ -53,8 +94,16 @@
                         flex: 1;
                         min-width: 75px;
                     }
+                    .direction-select{
+                        min-width: 45px;
+                    }
                 }
             }
+        }
+    }
+    .mapstore-identify-viewer {
+        .alert-info{
+            margin-bottom: 10px;
         }
     }
 }
@@ -79,6 +128,9 @@
                 padding: 4px 0;
                 margin-right: 8px;
                 .form-group{
+                    input#intl-numeric{
+                        float: unset;
+                    }
                     .minutes, .degrees {
                         min-width: 45px;
                         flex: 1;
@@ -88,6 +140,9 @@
                         display: flex;
                         flex: 1;
                         min-width: 75px;
+                    }
+                    .direction-select{
+                        min-width: 45px;
                     }
                 }
             }
@@ -233,6 +288,12 @@
     }
 }
 
+.react-numeric-input b {
+    width: 2.06ex !important;
+    background: unset !important;
+    box-shadow: unset !important;
+    z-index: 100;
+}
 .coordinates-text {
     flex: 1 1 0%;
     margin-left: 8px;

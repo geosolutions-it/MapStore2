@@ -8,7 +8,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Button, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
 const LocaleUtils = require('../../utils/LocaleUtils');
 
 

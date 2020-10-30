@@ -8,7 +8,7 @@
 const React = require('react');
 const {compose, mapPropsStream} = require('recompose');
 const {isNil} = require('lodash');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const Rx = require('rxjs');
 const { isObject } = require('lodash');
 

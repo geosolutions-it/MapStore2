@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const {Row, Col} = require('react-bootstrap');
 const Metadata = require('../../forms/Metadata');
 const Thumbnail = require('../../forms/Thumbnail');

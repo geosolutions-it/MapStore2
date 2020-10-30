@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const {DropdownList} = require('react-widgets');
 const MapInfoUtils = require('../../../../utils/MapInfoUtils');
 const {Grid} = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 /**
  * FeatureInfoFormat shows the infoformat selected for that layer or the default one taken
  * from the general settings.

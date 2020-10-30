@@ -13,7 +13,7 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const CoordinatesEditor = dragDropContext(testBackend)(require('../CoordinatesEditor'));
 const TestUtils = require('react-dom/test-utils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 
 const testHandlers = {
     onChange: () => {},
@@ -216,13 +216,12 @@ describe("test the CoordinatesEditor Panel", () => {
             {lat: 6, lon: 6 },
             { lat: 15, lon: 10 }
         ], undefined, undefined, undefined);
-
         input.value = "";
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.click(submit);
+
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
-
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("coords", [[10, "" ], [6, 6 ], [6, 6]]);
         expect(spyOnChange).toHaveBeenCalled();
         expect(spyOnChange.calls.length).toBe(2);

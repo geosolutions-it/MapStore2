@@ -145,6 +145,7 @@ const createLayer = (options, map) => {
 
     if (options.singleTile && !vectorFormat) {
         return new ImageLayer({
+            msId: options.id,
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
@@ -173,6 +174,7 @@ const createLayer = (options, map) => {
     }, options);
     const wmsSource = new TileWMS({ ...sourceOptions });
     const layerConfig = {
+        msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility !== false,
         zIndex: options.zIndex

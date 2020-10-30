@@ -6,10 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { SET_EDITING, SET_EDITOR_AVAILABLE, SHOW_CONNECTIONS, TRIGGER_SAVE_MODAL, TRIGGER_SAVE_AS_MODAL, DASHBOARD_LOADING, DASHBOARD_LOADED, DASHBOARD_SAVED, DASHBOARD_RESET, SAVE_ERROR} = require('../actions/dashboard');
-const {INSERT, UPDATE, DELETE} = require('../actions/widgets');
-const {set} = require('../utils/ImmutableUtils');
-const {castArray} = require('lodash');
+import {
+    SET_EDITING,
+    SET_EDITOR_AVAILABLE,
+    SHOW_CONNECTIONS,
+    TRIGGER_SAVE_MODAL,
+    TRIGGER_SAVE_AS_MODAL,
+    DASHBOARD_LOADING,
+    DASHBOARD_LOADED,
+    DASHBOARD_SAVED,
+    DASHBOARD_RESET,
+    SAVE_ERROR
+} from '../actions/dashboard';
+
+import { INSERT, UPDATE, DELETE } from '../actions/widgets';
+import { set } from '../utils/ImmutableUtils';
+import { castArray } from 'lodash';
 function dashboard(state = {
     showConnections: true
 }, action) {
@@ -31,10 +43,10 @@ function dashboard(state = {
     case TRIGGER_SAVE_AS_MODAL:
         return set("showSaveAsModal", action.show, set('saveErrors', undefined, state));
     case DASHBOARD_LOADED: {
-        return set("resource", action.resource, state);
+        return set('originalData', action.data, set("resource", action.resource, state));
     }
     case DASHBOARD_RESET: {
-        return set("resource", undefined, state);
+        return set('originalData', undefined, set("resource", undefined, state));
     }
     case SAVE_ERROR: {
         return set('saveErrors', castArray(action.error), state);
@@ -52,4 +64,4 @@ function dashboard(state = {
         return state;
     }
 }
-module.exports = dashboard;
+export default dashboard;

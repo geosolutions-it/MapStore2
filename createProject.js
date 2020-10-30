@@ -94,6 +94,10 @@ function doWork(params) {
             return project.initGit(params.outFolder);
         })
         .then(() => {
+            process.stdout.write('git init\n');
+            return project.updateSubmoduleBranch(params.outFolder);
+        })
+        .then(() => {
             process.stdout.write('git repo OK!\n');
             process.exit();
         })

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
     LOAD_FEATURE_INFO,
@@ -31,15 +31,13 @@ const {
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
     SET_MAP_TRIGGER
-} = require('../actions/mapInfo');
-const {
-    MAP_CONFIG_LOADED
-} = require('../actions/config');
-const {RESET_CONTROLS} = require('../actions/controls');
+} from '../actions/mapInfo';
 
-const assign = require('object-assign');
-const {findIndex, isUndefined} = require('lodash');
-const {getValidator} = require('../utils/MapInfoUtils');
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import { RESET_CONTROLS } from '../actions/controls';
+import assign from 'object-assign';
+import { findIndex, isUndefined, isEmpty } from 'lodash';
+import { getValidator } from '../utils/MapInfoUtils';
 
 /**
  * Identifies when to update a index when the display information trigger is click (GFI panel)
@@ -57,7 +55,7 @@ const isIndexValid = (state, responses, requestIndex, isVector) => {
     const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses, true);
     return ((isUndefined(index) && !!validResponse.length)
         || (!isVector && requests.length === inValidResponse.filter(res=>res).length)
-        || (isVector && requests.length === 1 && queryableLayers.length === 1)
+        || (isUndefined(index) && isVector && requests.filter(r=>isEmpty(r)).length === queryableLayers.length) // Check if all requested layers are vector
     );
 };
 
@@ -65,11 +63,11 @@ const isIndexValid = (state, responses, requestIndex, isVector) => {
  * Handles responses based on the type ["data"|"exceptions","error","vector"] of the responses received
  * @param {object} state current state of the reducer
  * @param {object} action object of the current response
- * @param {boolean} type type of the response received
+ * @param {string} type type of the response received
  */
 function receiveResponse(state, action, type) {
     const isVector = type === "vector";
-    const requestIndex = !isVector ? findIndex((state.requests || []), (req) => req.reqId === action.reqId) : findIndex((state.requests || []), (req) => !req.reqId);
+    const requestIndex = !isVector ? findIndex((state.requests || []), (req) => req.reqId === action.reqId) : action.reqId;
 
     if (requestIndex !== -1) {
         // Filter un-queryable layer
@@ -389,19 +387,22 @@ function mapInfo(state = initState, action) {
             layerMetadata: action.metadata,
             format: 'JSON'
         };
-
+        let vectorAction;
         // Add response such that it doesn't replace other layer response's index
         if (!isHover) {
             responses[state.requests.length] = vectorResponse;
+            // To identify vector request index
+            vectorAction = {reqId: state.requests.length};
         } else {
             responses = [...responses, vectorResponse];
+            vectorAction = {reqId: 0};
         }
         const requests = [...state.requests, {}];
         return receiveResponse(assign({}, state, {
             requests,
             queryableLayers: action.queryableLayers,
             responses: [...responses]
-        }), null, "vector");
+        }), vectorAction, "vector");
     }
     case UPDATE_CENTER_TO_MARKER: {
         return assign({}, state, {
@@ -452,4 +453,4 @@ function mapInfo(state = initState, action) {
     }
 }
 
-module.exports = mapInfo;
+export default mapInfo;

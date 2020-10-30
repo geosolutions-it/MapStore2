@@ -10,10 +10,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const MapInfoUtils = require('../../../utils/MapInfoUtils');
 const HTML = require('../../../components/I18N/HTML');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const {Alert, Panel, Accordion} = require('react-bootstrap');
 const ViewerPage = require('./viewers/ViewerPage');
-const {isEmpty} = require('lodash');
+const {isEmpty, reverse} = require('lodash');
 const {getFormatForResponse} = require('../../../utils/IdentifyUtils');
 
 class DefaultViewer extends React.Component {
@@ -37,7 +37,8 @@ class DefaultViewer extends React.Component {
         setIndex: PropTypes.func,
         showEmptyMessageGFI: PropTypes.bool,
         renderEmpty: PropTypes.bool,
-        loaded: PropTypes.bool
+        loaded: PropTypes.bool,
+        isMobile: PropTypes.bool
     };
 
     static defaultProps = {
@@ -59,7 +60,8 @@ class DefaultViewer extends React.Component {
         renderEmpty: false,
         onNext: () => {},
         onPrevious: () => {},
-        setIndex: () => {}
+        setIndex: () => {},
+        isMobile: false
     };
 
     shouldComponentUpdate(nextProps) {
@@ -171,27 +173,33 @@ class DefaultViewer extends React.Component {
     render() {
         const Container = this.props.container;
         const {currResponse, emptyResponses} = this.getResponseProperties();
+        let componentOrder = [this.renderEmptyLayers(),
+            <Container {...this.props.containerProps}
+                onChangeIndex={(index) => {
+                    this.props.setIndex(index);
+                }}
+                ref="container"
+                index={this.props.index || 0}
+                key={"swiper"}
+                style={this.containerStyle(currResponse)}
+                className="swipeable-view">
+                {this.renderPages()}
+            </Container>
+        ];
+        // Display renderEmptyPages at top in mobile for seamless swipeable view
+        componentOrder = this.props.isMobile ? componentOrder : reverse(componentOrder);
         return (
             <div className="mapstore-identify-viewer">
-                {!emptyResponses ?
-                    <>
-                        <Container {...this.props.containerProps}
-                            onChangeIndex={(index) => {
-                                this.props.setIndex(index);
-                            }}
-                            ref="container"
-                            index={this.props.index || 0}
-                            key={"swiper"}
-                            style={{display: isEmpty(currResponse) ? "none" : "block"}}
-                            className="swipeable-view">
-                            {this.renderPages()}
-                        </Container>
-                        {this.renderEmptyLayers()}
-                    </>
-                    : this.renderEmptyPages()
-                }
+                {!emptyResponses ? componentOrder.map((c)=> c) : this.renderEmptyPages()}
             </div>
         );
+    }
+
+    containerStyle = (currResponse) => {
+        if (isEmpty(currResponse) && this.props.isMobile) {
+            return {height: "100%"};
+        }
+        return {display: isEmpty(currResponse) ? 'none' : 'block'};
     }
 }
 

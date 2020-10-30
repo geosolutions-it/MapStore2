@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ConfigUtils = require('./ConfigUtils');
+const ConfigUtils = require('./ConfigUtils').default;
 const {isArray, isObject} = require('lodash');
 var ProxyUtils = {
     needProxy: function(uri, config = {}) {

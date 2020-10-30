@@ -6,20 +6,34 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, UPDATE_LAYER, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET,
-    ADD_DEPENDENCY, REMOVE_DEPENDENCY, LOAD_DEPENDENCIES, RESET_DEPENDENCIES, TOGGLE_COLLAPSE, TOGGLE_COLLAPSE_ALL, TOGGLE_TRAY, toggleCollapse} = require('../actions/widgets');
-const {
-    MAP_CONFIG_LOADED
-} = require('../actions/config');
-const {
-    DASHBOARD_LOADED,
-    DASHBOARD_RESET
-} = require('../actions/dashboard');
+import {
+    EDIT_NEW,
+    INSERT,
+    EDIT,
+    UPDATE_PROPERTY,
+    UPDATE_LAYER,
+    DELETE,
+    EDITOR_CHANGE,
+    EDITOR_SETTING_CHANGE,
+    CHANGE_LAYOUT,
+    CLEAR_WIDGETS,
+    DEFAULT_TARGET,
+    ADD_DEPENDENCY,
+    REMOVE_DEPENDENCY,
+    LOAD_DEPENDENCIES,
+    RESET_DEPENDENCIES,
+    TOGGLE_COLLAPSE,
+    TOGGLE_COLLAPSE_ALL,
+    TOGGLE_TRAY,
+    toggleCollapse
+} from '../actions/widgets';
 
-const assign = require('object-assign');
-const set = require('lodash/fp/set');
-const { get, find, omit, mapValues, castArray} = require('lodash');
-const {arrayUpsert, compose, arrayDelete} = require('../utils/ImmutableUtils');
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
+import assign from 'object-assign';
+import set from 'lodash/fp/set';
+import { get, find, omit, mapValues, castArray } from 'lodash';
+import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
 
 const emptyState = {
     dependencies: {
@@ -248,4 +262,4 @@ function widgetsReducer(state = emptyState, action) {
     }
 }
 
-module.exports = widgetsReducer;
+export default widgetsReducer;

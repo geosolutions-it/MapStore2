@@ -21,7 +21,11 @@ const actions = {
     onEdit: () => {},
     onCancelEdit: () => {},
     onSetUnsavedStyle: () => {},
-    onError: () => {}
+    onError: () => {},
+    onSetAnnotationMeasurement: () => {},
+    onDownload: () => {},
+    onHideMeasureWarning: () => {},
+    onSelectFeature: () => {}
 };
 describe("test the AnnotationsEditor Panel", () => {
     beforeEach((done) => {
@@ -110,12 +114,12 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const spyRemove = expect.spyOn(testHandlers, 'onRemoveHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{properties: {id: "1"}}} onChangeProperties={()=>{}} onSetUnsavedChanges={()=>{}}
+        let viewer = ReactDOM.render(<AnnotationsEditor annotations={["test"]} {...feature} editing={{properties: {id: "1"}}} onChangeProperties={()=>{}} onSetUnsavedChanges={()=>{}}
             onConfirmRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
-        const btnGroup = document.querySelector(".mapstore-annotations-info-viewer-buttons");
-        const toolBarButtons = btnGroup.querySelectorAll('button');
-        const removeBtn = toolBarButtons[1];
+        let btnGroup = document.querySelector(".mapstore-annotations-info-viewer-buttons");
+        let toolBarButtons = btnGroup.querySelectorAll('button');
+        let removeBtn = toolBarButtons[1];
         expect(toolBarButtons.length).toBe(4);
         expect(removeBtn).toExist();
         TestUtils.Simulate.click(removeBtn);
@@ -124,6 +128,16 @@ describe("test the AnnotationsEditor Panel", () => {
         const confirm = dialog.querySelectorAll('button')[1];
         TestUtils.Simulate.click(confirm);
         expect(spyRemove).toHaveBeenCalled();
+
+        // Disable remove button when no annotations present except for the unsaved new annotation
+        viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{properties: {id: "1"}}} onChangeProperties={()=>{}} onSetUnsavedChanges={()=>{}}
+            onConfirmRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
+        expect(viewer).toExist();
+        btnGroup = document.querySelector(".mapstore-annotations-info-viewer-buttons");
+        toolBarButtons = btnGroup.querySelectorAll('button');
+        removeBtn = toolBarButtons[1];
+        expect(toolBarButtons.length).toBe(4);
+        expect(removeBtn.disabled).toBe(true);
 
     });
 
@@ -349,5 +363,148 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const stylerPanel = TestUtils.findRenderedDOMComponentWithClass(viewer, "mapstore-annotations-info-viewer-styler");
         expect(stylerPanel).toExist();
+    });
+
+    it('test Measurement annotation', () => {
+        const feature = {
+            id: "1",
+            title: 'Measure Length',
+            description: '<span><i>Description</i></span>',
+            type: "Measure",
+            iconGlyph: "1-measure-length"
+        };
+        const spyOnSetAnnotationMeasurement = expect.spyOn(actions, "onSetAnnotationMeasurement");
+        const spyOnHideMeasureWarning = expect.spyOn(actions, "onHideMeasureWarning");
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} styling
+            onSetAnnotationMeasurement={actions.onSetAnnotationMeasurement}
+            onHideMeasureWarning={actions.onHideMeasureWarning}
+            onSelectFeature={actions.onHideMeasureWarning}
+            measurementAnnotationEdit
+            showAgain
+            editing={{
+                properties: feature,
+                features: [{
+                    type: 'Feature',
+                    geometry: {type: "LineString"},
+                    properties: {
+                        id: 1,
+                        values: [{
+                            value: '1511',
+                            formattedValues: "1,511 m",
+                            position: [1, 1],
+                            type: 'length'
+                        }]
+                    }
+                },
+                {type: 'Feature', geometry: {type: "Point"}}],
+                style: [{}]
+            }}/>, document.getElementById("container"));
+        expect(viewer).toBeTruthy();
+        const viewerNode = ReactDOM.findDOMNode(viewer);
+        expect(viewerNode.className).toBe('mapstore-annotations-info-viewer');
+
+        const annotationInfoViewer = TestUtils.findRenderedDOMComponentWithClass(viewer, "mapstore-annotations-info-viewer-items");
+        const geometriesToolbar = document.querySelector('.geometries-toolbar');
+        const geometryCard = document.querySelectorAll('.geometry-card');
+        expect(annotationInfoViewer).toBeTruthy();
+        expect(geometriesToolbar).toBeTruthy();
+
+        const geomButton = geometriesToolbar.children[1].getElementsByTagName('button');
+        expect(geomButton.length).toBe(1);
+        const editMeasureButton = geomButton[0];
+        expect(editMeasureButton.children[0].className).toContain(feature.iconGlyph);
+        expect(geometryCard.length).toBe(2);
+
+        // Edit measurement
+        TestUtils.Simulate.click(editMeasureButton);
+        expect(spyOnSetAnnotationMeasurement).toHaveBeenCalled();
+        expect(spyOnHideMeasureWarning).toHaveBeenCalled();
+        expect(spyOnSetAnnotationMeasurement.calls[0].arguments).toBeTruthy();
+        expect(spyOnSetAnnotationMeasurement.calls[0].arguments.length).toBe(2);
+        const features = spyOnSetAnnotationMeasurement.calls[0].arguments[0];
+        expect(features.length).toBe(1);
+        expect(features[0].geometry.type).toBe('LineString');
+    });
+
+    it('test Measurement geometry', () => {
+        const properties = {
+            id: "1",
+            title: 'Measure Length',
+            description: '<span><i>Description</i></span>',
+            type: "Measure",
+            iconGlyph: "1-measure-length"
+        };
+        const feature = {
+            properties,
+            features: [{
+                type: 'Feature',
+                geometry: {type: "LineString"},
+                properties: {
+                    id: 1,
+                    values: [{
+                        value: '1511',
+                        formattedValues: "1,511 m",
+                        position: [1, 1],
+                        type: 'length'
+                    }]
+                }
+            },
+            {type: 'Feature', geometry: {type: "Point"}}],
+            style: [{}]
+        };
+        const viewer = ReactDOM.render(<AnnotationsEditor {...properties} {...actions} styling
+            onSetAnnotationMeasurement={actions.onSetAnnotationMeasurement}
+            measurementAnnotationEdit
+            selected={feature}
+            editing={feature}/>, document.getElementById("container"));
+        expect(viewer).toBeTruthy();
+        const viewerNode = ReactDOM.findDOMNode(viewer);
+        expect(viewerNode.className).toBe('mapstore-annotations-info-viewer');
+
+        const annotationInfoViewer = TestUtils.findRenderedDOMComponentWithClass(viewer, "mapstore-annotations-info-viewer-items");
+        const geometryCard = document.querySelectorAll('.geometry-card');
+        expect(annotationInfoViewer).toBeTruthy();
+        expect(geometryCard.length).toBe(2);
+
+        // Onclick of measurement geometry
+        TestUtils.Simulate.click(geometryCard[0]);
+        const navTabs = document.querySelector('.nav-tabs');
+        expect(navTabs.children.length).toBe(1);
+        const styleTab = navTabs.children[0].childNodes[0].textContent;
+        expect(styleTab).toContain('Style');
+    });
+
+    it('test onDownload annotation', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const spyOnDownload = expect.spyOn(actions, 'onDownload');
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+            onDownload={actions.onDownload}
+            editing={{
+                features: [{id: "1"}],
+                properties: feature,
+                newFeature: true
+            }}/>, document.getElementById("container"));
+
+        expect(viewer).toExist();
+        const viewerNode = ReactDOM.findDOMNode(viewer);
+        expect(viewerNode.className).toBe('mapstore-annotations-info-viewer');
+
+        const buttonsRow = viewerNode.querySelector('.mapstore-annotations-info-viewer-buttons .noTopMargin');
+        expect(buttonsRow).toBeTruthy();
+
+        const buttons = buttonsRow.querySelectorAll('button');
+        expect(buttons.length).toBe(4);
+
+        const downloadCurrentAnnotation = buttons[3];
+        expect(downloadCurrentAnnotation.disabled).toBe(false);
+
+        TestUtils.Simulate.click(downloadCurrentAnnotation);
+        expect(spyOnDownload).toHaveBeenCalled();
+        expect(spyOnDownload.calls[0].arguments[0]).toEqual({features: [{id: "1"}], properties: feature});
     });
 });

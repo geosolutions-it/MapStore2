@@ -10,7 +10,7 @@ const React = require('react');
 const {branch, renameProps} = require('recompose');
 const BorderLayout = require('../../layout/BorderLayout');
 const DockPanel = require('./DockPanel');
-const ResizableModal = require('../ResizableModal');
+const ResizableModal = require('../ResizableModal').default;
 
 /**
  * Component for rendering a DockPanel or Modal based on dock props.

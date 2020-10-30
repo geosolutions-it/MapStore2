@@ -8,15 +8,15 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {FormControl} = require('react-bootstrap');
 const Combobox = require('react-widgets').Combobox;
 const Slider = require('react-nouislider');
+const IntlNumberFormControl = require('../../I18N/IntlNumberFormControl');
 
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 // not sure this is needed, TODO check!
 numberLocalizer();
 
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const {createFont} = require('../../../utils/AnnotationsUtils');
 
@@ -98,11 +98,11 @@ class Text extends React.Component {
                 </div>
                 <div className="right" style={{display: "flex"}}>
                     <div className="left font-size">
-                        <FormControl
+                        <IntlNumberFormControl
                             value={style.fontSize || 14}
                             placeholder=""
-                            onChange={(e) => {
-                                const fontSize = e.target.value || 14;
+                            onChange={(val) => {
+                                const fontSize = val || 14;
                                 const font = createFont({...style, fontSize});
                                 this.props.onChange(style.id, {fontSize, font});
                             }}

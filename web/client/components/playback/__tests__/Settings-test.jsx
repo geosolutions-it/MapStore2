@@ -24,8 +24,11 @@ describe('Timeline/Playback Settings component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-playback-settings');
         expect(el).toExist();
-        expect(document.querySelector('#frameDuration').value).toBe('1');
-        expect(document.querySelector('input#formPlaybackStep').value).toBe('1');
+        const numericInputs = document.querySelectorAll('input#intl-numeric');
+        const frameDuration = numericInputs[0];
+        const formPlaybackStep = numericInputs[1];
+        expect(frameDuration.value).toBe('1');
+        expect(formPlaybackStep.value).toBe('1');
         expect(document.querySelector('select#formPlaybackStep').value).toBe('days');
     });
     it('test guide layer switch value', () => {
@@ -54,7 +57,8 @@ describe('Timeline/Playback Settings component', () => {
         };
         const spyonChangeSetting = expect.spyOn(actions, 'onSettingChange');
         ReactDOM.render(<Settings onSettingChange={actions.onSettingChange} />, document.getElementById("container"));
-        const element = document.querySelector('#frameDuration');
+        const element = document.querySelector('input#intl-numeric');
+        ReactTestUtils.Simulate.focus(element);
         ReactTestUtils.Simulate.change(element, { target: { value: "2" } });
         expect(spyonChangeSetting).toHaveBeenCalled();
         expect(spyonChangeSetting.calls[0].arguments[0]).toBe("frameDuration");
@@ -66,7 +70,8 @@ describe('Timeline/Playback Settings component', () => {
         };
         const spyonChangeSetting = expect.spyOn(actions, 'onSettingChange');
         ReactDOM.render(<Settings onSettingChange={actions.onSettingChange} />, document.getElementById("container"));
-        const element = document.querySelector('#frameDuration');
+        const element = document.querySelector('input#intl-numeric');
+        ReactTestUtils.Simulate.focus(element);
         ReactTestUtils.Simulate.change(element, { target: { value: "-2" } });
         expect(spyonChangeSetting).toHaveBeenCalled();
         expect(spyonChangeSetting.calls[0].arguments[1]).toBe(1);

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     START_TUTORIAL,
     INIT_TUTORIAL,
     SETUP_TUTORIAL,
@@ -15,11 +15,11 @@ const {
     RESET_TUTORIAL,
     CLOSE_TUTORIAL,
     TOGGLE_TUTORIAL
-} = require('../actions/tutorial');
+} from '../actions/tutorial';
 
-const assign = require('object-assign');
-const React = require('react');
-const I18N = require('../components/I18N/I18N');
+import assign from 'object-assign';
+import React from 'react';
+import I18N from '../components/I18N/I18N';
 
 const initialState = {
     run: false,
@@ -167,4 +167,4 @@ function tutorial(state = initialState, action) {
     }
 }
 
-module.exports = tutorial;
+export default tutorial;

@@ -17,7 +17,7 @@ const Slider = require('react-nouislider');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 // not sure this is needed, TODO check!
 numberLocalizer();
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const OpacitySlider = require('../../TOC/fragments/OpacitySlider');
 const ColorSelector = require('../ColorSelector').default;
 const DashArray = require('./DashArray');

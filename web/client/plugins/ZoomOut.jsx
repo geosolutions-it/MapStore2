@@ -14,7 +14,7 @@ const selector = createSelector([mapSelector, minZoomSelector], (map, minZoom) =
 
 const {changeZoomLevel} = require('../actions/map');
 
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 /**
   * ZoomOut Plugin. Provides button to zoom out

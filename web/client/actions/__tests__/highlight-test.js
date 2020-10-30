@@ -6,12 +6,16 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
-    HIGHLIGHT_STATUS, highlightStatus,
-    UPDATE_HIGHLIGHTED, updateHighlighted,
-    SET_HIGHLIGHT_FEATURES_PATH, setHighlightFeaturesPath
-} = require('../highlight');
+import expect from 'expect';
+
+import {
+    HIGHLIGHT_STATUS,
+    highlightStatus,
+    UPDATE_HIGHLIGHTED,
+    updateHighlighted,
+    SET_HIGHLIGHT_FEATURES_PATH,
+    setHighlightFeaturesPath
+} from '../highlight';
 
 describe('Test correctness of the highlight actions', () => {
 

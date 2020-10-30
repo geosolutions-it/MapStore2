@@ -21,12 +21,14 @@ module.exports = pages$ => props$ => props$.switchMap(({
     maxStoredPages = 5,
     filter,
     options = {},
+    sortOptions,
     pages,
     features = [],
     onLoad = () => { },
     onLoadError = () => { }
 }) => pages$.switchMap(({ pagesRange, pagination = {} }, { }) => getLayerJSONFeature(layer, filter, {
     ...getCurrentPaginationOptions(pagesRange, pages, size),
+    sortOptions: sortOptions,
     timeout: 15000,
     totalFeatures: pagination.totalFeatures, // this is needed to allow workaround of GEOS-7233
     propertyName: options.propertyName,

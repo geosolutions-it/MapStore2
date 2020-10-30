@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const SET_SEARCH_CONFIG_PROP = 'SET_SEARCH_CONFIG_PROP';
-const RESET_SEARCH_CONFIG = 'RESET_SEARCH_CONFIG';
-const UPDATE_SERVICE = 'UPDATE_SERVICE';
+export const SET_SEARCH_CONFIG_PROP = 'SET_SEARCH_CONFIG_PROP';
+export const RESET_SEARCH_CONFIG = 'RESET_SEARCH_CONFIG';
+export const UPDATE_SERVICE = 'UPDATE_SERVICE';
 
 /**
 * Sets a property
@@ -17,7 +17,7 @@ const UPDATE_SERVICE = 'UPDATE_SERVICE';
 * @param {string|number|boolean|object} value the value to set or to check for toggling
 * @return {object} of type `SET_SEARCH_CONFIG_PROP` with property and value params
 */
-function setSearchConfigProp(property, value) {
+export function setSearchConfigProp(property, value) {
     return {
         type: SET_SEARCH_CONFIG_PROP,
         property,
@@ -25,13 +25,13 @@ function setSearchConfigProp(property, value) {
     };
 }
 
-function restServiceConfig(page = 0 ) {
+export function restServiceConfig(page = 0 ) {
     return {
         type: RESET_SEARCH_CONFIG,
         page
     };
 }
-function updateService(service, idx = -1) {
+export function updateService(service, idx = -1) {
     return {
         type: UPDATE_SERVICE,
         service,
@@ -43,11 +43,3 @@ function updateService(service, idx = -1) {
 * Actions for search
 * @name actions.searchconfig
 */
-module.exports = {
-    SET_SEARCH_CONFIG_PROP,
-    RESET_SEARCH_CONFIG,
-    UPDATE_SERVICE,
-    setSearchConfigProp,
-    restServiceConfig,
-    updateService
-};

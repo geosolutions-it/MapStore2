@@ -6,11 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
-    pathnameSelector,
-    searchSelector
-} = require("../router");
+import expect from 'expect';
+
+import { pathnameSelector, searchSelector } from '../router';
 const pathname = "/viewer/openlayers/123";
 const search = "?showHome=true";
 const state = {

@@ -8,7 +8,7 @@
 
 const ReactDOM = require('react-dom');
 const {findIndex} = require('lodash');
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 const { INIT_MAP } = require('../../actions/map');
 const { MAP_CONFIG_LOADED } = require('../../actions/config');
 const { CHANGE_BROWSER_PROPERTIES } = require('../../actions/browser');

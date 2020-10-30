@@ -37,6 +37,8 @@ export default ({
     expandableMedia,
     mediaViewer,
     contentToolbar,
+    sections = [],
+    sectionType,
     storyFonts
 }) => (
     <section
@@ -56,6 +58,7 @@ export default ({
             sectionId={id}
             viewWidth={viewWidth}
             viewHeight={viewHeight}
+            sectionType={sectionType}
             contentProps={{
                 expandable: expandableMedia,
                 mediaViewer,
@@ -64,6 +67,7 @@ export default ({
                     [ContentTypes.TEXT]: [size(true), 'remove']
                 }
             }}
+            sections={sections}
             storyFonts={storyFonts}
         />
         {mode === Modes.EDIT && <AddBar

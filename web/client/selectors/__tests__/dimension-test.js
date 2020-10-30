@@ -6,11 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const dimension = require('../../reducers/dimension');
-const { updateLayerDimensionData } = require('../../actions/dimension');
+import expect from 'expect';
 
-const { layerDimensionRangeSelector, layerDimensionSelectorCreator, layerTimeSequenceSelectorCreator } = require('../dimension');
+import dimension from '../../reducers/dimension';
+import { updateLayerDimensionData } from '../../actions/dimension';
+
+import {
+    layerDimensionRangeSelector,
+    layerDimensionSelectorCreator,
+    layerTimeSequenceSelectorCreator
+} from '../dimension';
 
 describe('Test dimension selectors', () => {
     it('currentTimeRangeSelector', () => {

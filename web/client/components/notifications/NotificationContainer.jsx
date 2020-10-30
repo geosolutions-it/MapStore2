@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const {injectIntl, intlShape, defineMessages} = require('react-intl');
 
 var LocaleUtils = require('../../utils/LocaleUtils');
-const Portal = require('../misc/Portal');
+const Portal = require('../misc/Portal').default;
 
 /**
  * Container for Notifications. Allows to display notifications by passing

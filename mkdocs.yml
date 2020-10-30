@@ -19,10 +19,13 @@ extra:
   repo_icon: 'github'
   social:
     - type: 'github'
+      icon: 'fontawesome/brands/github'
       link: 'https://github.com/geosolutions-it'
     - type: 'twitter'
+      icon: 'fontawesome/brands/twitter'
       link: 'https://twitter.com/geosolutions_it'
     - type: 'linkedin'
+      icon: 'fontawesome/brands/linkedin'
       link: 'https://it.linkedin.com/company/geosolutions-s-a-s-'
 extra_javascript:
   - 'https://code.jquery.com/jquery-3.3.1.min.js'
@@ -78,6 +81,7 @@ pages:
       - Overview: 'user-guide/exploring-stories.md'
       - Story Settings: 'user-guide/story-setting.md'
       - Title Section: 'user-guide/title-section.md'
+      - Banner Section: 'user-guide/banner-section.md'
       - Paragraph Section: 'user-guide/paragraph-section.md'
       - Immersive Section: 'user-guide/immersive-section.md'
       - Media Section: 'user-guide/media-section.md'
@@ -106,6 +110,7 @@ pages:
       - Styling and theming: 'developer-guide/customize-theme.md'
       - Application tutorial: 'developer-guide/application-tutorial.md'
       - Working with Extensions: 'developer-guide/extensions.md'
+      - Printing Module: 'developer-guide/printing-module.md'
       - FAQ: 'developer-guide/dev-faq.md'
     - Guidelines:
       - Code Conventions: 'developer-guide/code-conventions.md'

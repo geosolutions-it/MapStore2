@@ -8,7 +8,7 @@ var MyApp = require('./containers/myapp');
 var url = require('url');
 
 var loadMapConfig = require('./actions/config').loadMapConfig;
-var ConfigUtils = require('../../utils/ConfigUtils');
+var ConfigUtils = require('../../utils/ConfigUtils').default;
 
 // initializes Redux store
 var store = require('./stores/myappstore');

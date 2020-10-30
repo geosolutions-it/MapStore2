@@ -146,8 +146,13 @@ const toolbarSelector = stateSelector => createSelector([
     layout: featuregridOpen ? 'horizontal' : 'vertical',
     style
 }));
-
+/**
+ * Container for map tools, rendered in the bottom right corner of the map.
+ * @name Toolbar
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     ToolbarPlugin: (stateSelector = 'toolbar') => connect(toolbarSelector(stateSelector))(Toolbar),
-    reducers: {controls: require('../reducers/controls')}
+    reducers: {controls: require('../reducers/controls').default}
 };

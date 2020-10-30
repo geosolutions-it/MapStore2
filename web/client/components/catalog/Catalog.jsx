@@ -15,7 +15,7 @@ const Select = require("react-select").default;
 
 const BorderLayout = require("../layout/BorderLayout");
 const LocaleUtils = require("../../utils/LocaleUtils");
-const Message = require("../I18N/Message");
+const Message = require("../I18N/Message").default;
 const RecordGrid = require("./RecordGrid");
 const Loader = require('../misc/Loader');
 

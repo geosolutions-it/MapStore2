@@ -5,13 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Portal} from 'react-overlays';
 
-const withContainer = require('../WithContainer');
-const Portal = withContainer(require('react-overlays').Portal);
-const expect = require('expect');
-const ConfigUtils = require('../../../utils/ConfigUtils');
+import withContainer from '../WithContainer';
+
+import expect from 'expect';
+import ConfigUtils from '../../../utils/ConfigUtils';
+
+const PortalComp = withContainer(Portal);
 
 describe('WithContainer Overlay', () => {
     beforeEach((done) => {
@@ -27,7 +30,7 @@ describe('WithContainer Overlay', () => {
 
     it('test with default custom class', () => {
         ConfigUtils.setConfigProp('themePrefix', 'custom');
-        const cmp = ReactDOM.render(<div id="old-portal-container"><Portal><div className="portal-child"/></Portal></div>, document.getElementById("old-container"));
+        const cmp = ReactDOM.render(<div id="old-portal-container"><PortalComp><div className="portal-child"/></PortalComp></div>, document.getElementById("old-container"));
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         expect(document.getElementById('container').querySelector('.portal-child')).toExist();

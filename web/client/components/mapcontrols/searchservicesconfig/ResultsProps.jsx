@@ -14,7 +14,7 @@ const assign = require('object-assign');
 const PropTypes = require('prop-types');
 const Select = require("react-select").default;
 
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
 function validate(service = {}) {

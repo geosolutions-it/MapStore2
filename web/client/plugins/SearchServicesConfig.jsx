@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const {Glyphicon, Button} = require('react-bootstrap');
 const ConfirmButton = require('../components/buttons/ConfirmButton');
 const Dialog = require('../components//misc/Dialog');
-const Portal = require('../components/misc/Portal');
+const Portal = require('../components/misc/Portal').default;
 const Message = require('./locale/Message');
 const {isEqual} = require('lodash');
 const {toggleControl} = require('../actions/controls');
@@ -221,6 +221,6 @@ const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
 module.exports = {
     SearchServicesConfigPlugin: SearchServicesPlugin,
     reducers: {
-        searchconfig: require('../reducers/searchconfig')
+        searchconfig: require('../reducers/searchconfig').default
     }
 };

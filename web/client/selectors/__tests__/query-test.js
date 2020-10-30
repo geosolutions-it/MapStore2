@@ -6,8 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     wfsURL,
     wfsURLSelector,
     wfsFilter,
@@ -23,7 +24,8 @@ const {
     attributesSelector,
     isSyncWmsActive,
     isFilterActive
-} = require('../query');
+} from '../query';
+
 const STRANGE_LAYER_NAME = "test.workspace:test.layer";
 const idFt1 = "idFt1";
 const idFt2 = "idFt2";

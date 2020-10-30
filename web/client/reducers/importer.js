@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     IMPORTS_LOADING,
     IMPORTS_LIST_LOADED,
     IMPORTS_LIST_LOAD_ERROR,
@@ -34,14 +34,11 @@ const {
     IMPORTER_WORKSPACE_CREATED,
     IMPORTER_WORKSPACE_CREATION_ERROR,
     IMPORTER_WORKSPACE_STATUS_CHANGE
-} = require('../actions/importer');
+} from '../actions/importer';
 
-const {
-    MANAGER_ITEM_SELECTED
-} = require('../actions/manager');
-
-const assign = require('object-assign');
-const {head, findIndex} = require('lodash');
+import { MANAGER_ITEM_SELECTED } from '../actions/manager';
+import assign from 'object-assign';
+import { head, findIndex } from 'lodash';
 
 // constant used to reset the state only if the importer tool is passed to the reducer
 // see case: MANAGER_ITEM_SELECTED
@@ -408,4 +405,4 @@ function importer(state = {}, action) {
     }
 }
 
-module.exports = importer;
+export default importer;

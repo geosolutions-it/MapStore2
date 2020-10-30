@@ -33,6 +33,39 @@ const initGit = (outFolder) => {
     });
 };
 
+/**
+ * it does a checkout to a specified folder which in general is rootProject/MapStore2
+ * @param {string} outFolder the folder where to apply the checkout
+ * @return {Promise} the promise to continue the flow of project creation
+ */
+const updateSubmoduleBranch = (outFolder) => {
+    const git = require('simple-git')();
+    const gitProjectMs2 = require('simple-git')(`${outFolder}/MapStore2`);
+
+    return new Promise((resolve, reject) => {
+        try {
+            git.branchLocal( (err, data) => {
+                if (err) {
+                    reject(err);
+                }
+                process.stdout.write("doing checkout to the branch: " + data.current + "\n");
+                gitProjectMs2.checkout(data.current, null, (error) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    process.stdout.write("checkout done");
+                    resolve();
+                });
+            });
+        } catch (e) {
+            process.stdout.write("error");
+            process.stdout.write(e);
+            reject(e);
+        }
+    });
+};
+
+
 const copyTemplates = (basePath, outFolder, options, level = 0, path = '') => {
     return readdir(basePath + path)
         .then(files => {
@@ -91,5 +124,6 @@ module.exports = {
     initGit,
     createPackageJSON,
     copyTemplates,
-    copyStaticFiles
+    copyStaticFiles,
+    updateSubmoduleBranch
 };

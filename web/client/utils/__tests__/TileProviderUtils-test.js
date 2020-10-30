@@ -54,6 +54,9 @@ describe('Test the TileProviderUtils', () => {
     it('test template ', () => {
         const value = template(urlReplaced, optArray);
         expect(value).toBe("//stamen-tiles-a.a.ssl.fastly.net/" + optArray.variant + "/{z}/{x}/{y}." + optArray.ext);
+        expect(
+            template("https://test.com/6510a8722129af6954196fbb26dfadc/1.0.0/topowebb/default/3857/{z}/{y}/{x}.png", optArray))
+            .toEqual("https://test.com/6510a8722129af6954196fbb26dfadc/1.0.0/topowebb/default/3857/{z}/{y}/{x}.png");
         // expect().toBe();
     });
 

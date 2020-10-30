@@ -14,7 +14,7 @@ const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const MousePositionLabelDMS = require('./MousePositionLabelDMS');
 const MousePositionLabelYX = require('./MousePositionLabelYX');
 const CRSSelector = require('./CRSSelector');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {isNumber} = require('lodash');
 
 require('./mousePosition.css');

@@ -16,7 +16,7 @@ import {mapInfoSelector} from '../selectors/map';
 import { isLoggedIn } from '../selectors/security';
 import { createPlugin } from '../utils/PluginsUtils';
 import {toggleControl} from '../actions/controls';
-import {mapSaved as resetMapSaveError} from '../actions/config';
+import {resetMapSaveError} from '../actions/config';
 import SaveBaseDialog from './maps/MapSave';
 
 const showMapSaveAsSelector = state => state.controls && state.controls.mapSaveAs && state.controls.mapSaveAs.enabled;
@@ -25,6 +25,7 @@ const showMapSaveAsSelector = state => state.controls && state.controls.mapSaveA
  * Plugin for Create/Clone a Map. Saves the map as a new Resource (using the persistence API).
  * @prop {boolean} [cfg.disablePermission=false] disable the permission selector in the tool. Can be used in context when permissions are not needed (resources are private only/using plugin with another API)
  * @name SaveAs
+ * @class
  * @memberof plugins
  */
 export default createPlugin('SaveAs', {
@@ -33,7 +34,7 @@ export default createPlugin('SaveAs', {
             showMapSaveAsSelector,
             mapInfoSelector,
             (show, resource) => {
-                const {id, attributes, name, description, ...others} = resource || {};
+                const {id, attributes, name, description, detailsSettings, ...others} = resource || {};
                 return {show, resource: others};
             }),
         {
@@ -41,7 +42,7 @@ export default createPlugin('SaveAs', {
             onResetMapSaveError: resetMapSaveError
         }),
         withProps({
-            isMapSaveAs: true
+            isNewResource: true
         }))(SaveBaseDialog),
     containers: {
         BurgerMenu: {

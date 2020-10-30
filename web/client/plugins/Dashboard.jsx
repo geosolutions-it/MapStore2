@@ -83,7 +83,7 @@ const WidgetsView = compose(
 )(require('../components/dashboard/Dashboard'));
 
 /**
- * Dashboard Plugin
+ * Dashboard Plugin. Renders the main dashboard UI.
  * @static
  * @memberof plugins
  * @name Dashboard
@@ -112,6 +112,6 @@ class DashboardPlugin extends React.Component {
 module.exports = {
     DashboardPlugin,
     reducers: {
-        widgets: require('../reducers/widgets')
+        widgets: require('../reducers/widgets').default
     }
 };

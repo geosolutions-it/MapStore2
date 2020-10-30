@@ -42,17 +42,50 @@ let newfeature3 = {
         someProp: "someValue"
     }
 };
-const expect = require('expect');
-const featuregrid = require('../featuregrid');
-const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures, updateFilter,
-    featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
-    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid,
-    toggleShowAgain, hideSyncPopover, initPlugin, sizeChange, storeAdvancedSearchFilter, setUp, setTimeSync} = require('../../actions/featuregrid');
-const {featureTypeLoaded, createQuery} = require('../../actions/wfsquery');
+import expect from 'expect';
+import featuregrid from '../featuregrid';
 
-const {changeDrawingStatus} = require('../../actions/draw');
+import {
+    setFeatures,
+    dockSizeFeatures,
+    setLayer,
+    toggleTool,
+    customizeAttribute,
+    selectFeatures,
+    deselectFeatures,
+    createNewFeatures,
+    updateFilter,
+    featureSaving,
+    toggleSelection,
+    clearSelection,
+    MODES,
+    toggleEditMode,
+    toggleViewMode,
+    saveSuccess,
+    clearChanges,
+    saveError,
+    startDrawingFeature,
+    deleteGeometryFeature,
+    geometryChanged,
+    setSelectionOptions,
+    changePage,
+    featureModified,
+    setPermission,
+    disableToolbar,
+    openFeatureGrid,
+    closeFeatureGrid,
+    toggleShowAgain,
+    hideSyncPopover,
+    initPlugin,
+    sizeChange,
+    storeAdvancedSearchFilter,
+    setUp,
+    setTimeSync
+} from '../../actions/featuregrid';
 
-const museam = require('../../test-resources/wfs/museam.json');
+import { featureTypeLoaded, createQuery } from '../../actions/wfsquery';
+import { changeDrawingStatus } from '../../actions/draw';
+import museam from '../../test-resources/wfs/museam.json';
 describe('Test the featuregrid reducer', () => {
 
     it('returns original state on unrecognized action', () => {

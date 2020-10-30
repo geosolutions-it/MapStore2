@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
+import {
     UPDATE_TEMPORARY_STYLE,
     UPDATE_STATUS,
     ERROR_STYLE,
@@ -17,9 +17,9 @@ const {
     INIT_STYLE_SERVICE,
     SET_EDIT_PERMISSION,
     UPDATE_EDITOR_METADATA
-} = require('../actions/styleeditor');
+} from '../actions/styleeditor';
 
-const isString = require('lodash/isString');
+import isString from 'lodash/isString';
 
 function styleeditor(state = {}, action) {
     switch (action.type) {
@@ -129,4 +129,4 @@ function styleeditor(state = {}, action) {
     }
 }
 
-module.exports = styleeditor;
+export default styleeditor;

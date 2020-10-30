@@ -19,7 +19,7 @@
  * @param  {object} state the state
  * @return {string}       the maptype in the state
  */
-const mapTypeSelector = (state) => state && state.maptype && state.maptype.mapType || 'leaflet';
+export const mapTypeSelector = (state) => state && state.maptype && state.maptype.mapType || 'leaflet';
 
 /**
  * Check if the mapType is cesium
@@ -28,13 +28,6 @@ const mapTypeSelector = (state) => state && state.maptype && state.maptype.mapTy
  * @param  {object} state the state
  * @return {boolean}
  */
-const isCesium = state => mapTypeSelector(state) === "cesium";
-const isLeaflet = state => mapTypeSelector(state) === "leaflet";
-const isOpenlayers = state => mapTypeSelector(state) === "openlayers";
-
-module.exports = {
-    mapTypeSelector,
-    isCesium,
-    isLeaflet,
-    isOpenlayers
-};
+export const isCesium = state => mapTypeSelector(state) === "cesium";
+export const isLeaflet = state => mapTypeSelector(state) === "leaflet";
+export const isOpenlayers = state => mapTypeSelector(state) === "openlayers";

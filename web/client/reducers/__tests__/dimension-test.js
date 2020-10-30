@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-var dimension = require('../dimension');
-const { updateLayerDimensionData, setCurrentTime, setCurrentOffset, moveTime } = require('../../actions/dimension');
-const { layerDimensionDataSelectorCreator } = require('../../selectors/dimension');
+import dimension from '../dimension';
+import { updateLayerDimensionData, setCurrentTime, setCurrentOffset, moveTime } from '../../actions/dimension';
+import { layerDimensionDataSelectorCreator } from '../../selectors/dimension';
 
 describe('Test the dimension reducer', () => {
     it('external action', () => {

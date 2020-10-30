@@ -25,7 +25,7 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures, setMapTrigger} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
-const {getConfigProp} = require("../utils/ConfigUtils");
+const {getConfigProp} = require("../utils/ConfigUtils").default;
 const { compose, defaultProps } = require('recompose');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');
@@ -66,7 +66,7 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, isLoadedResponseSelector, (index, loaded) => ({ index, loaded })),
+        createSelector(indexSelector, isLoadedResponseSelector, (state) =>state.browser && state.browser.mobile, (index, loaded, isMobile) => ({ index, loaded, isMobile })),
         {
             setIndex: changePage
         }
@@ -259,6 +259,6 @@ module.exports = {
             position: 3
         }
     }),
-    reducers: {mapInfo: require('../reducers/mapInfo')},
+    reducers: {mapInfo: require('../reducers/mapInfo').default},
     epics: require('../epics/identify').default
 };

@@ -11,7 +11,7 @@ const React = require('react');
 const LoginForm = require('../forms/LoginForm');
 const {Button} = require('react-bootstrap');
 const Modal = require('../../misc/Modal');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
 require('../css/security.css');

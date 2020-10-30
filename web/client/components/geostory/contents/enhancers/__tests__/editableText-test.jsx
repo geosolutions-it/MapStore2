@@ -9,7 +9,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
 import expect from 'expect';
-import editableText from '../editableText';
+import ReactTestUtils from 'react-dom/test-utils';
+
+import editableText, {withGeoStoryEditor} from '../editableText';
 import { EMPTY_CONTENT } from '../../../../../utils/GeoStoryUtils';
 
 describe('editableText enhancer', () => {
@@ -93,5 +95,89 @@ describe('editableText enhancer', () => {
             }, 20);
         }));
         ReactDOM.render(<Sink save={actions.save} />, document.getElementById("container"));
+    });
+
+    it('flattened out sections are properly generated', () => {
+        const sections = [
+            {
+                "type": "title",
+                "id": "id-1"
+            },
+            {
+                "id": "id-2",
+                "type": "immersive",
+                "contents": [
+                    {
+                        "id": "id-2-1",
+                        "type": "column"
+                    },
+                    {
+                        "id": "id-2-2",
+                        "type": "column"
+                    }
+                ]
+            },
+            {
+                "id": "id-3",
+                "type": "paragraph",
+                "contents": [
+                    {
+                        "id": "id-3-1",
+                        "type": "column",
+                        "contents": []
+                    }
+                ]
+            },
+            {
+                "id": "id-4",
+                "type": "paragraph",
+                "contents": [
+                    {
+                        "id": "id-4-1",
+                        "type": "column"
+                    }
+                ]
+            }
+        ];
+
+        const flattenedSections = [
+            {
+                "type": "title",
+                "id": "id-1"
+            },
+            {
+                "id": "id-2-1",
+                "type": "column"
+            },
+            {
+                "id": "id-2-2",
+                "type": "column"
+            },
+            {
+                "id": "id-3",
+                "type": "paragraph",
+                "contents": [
+                    {
+                        "id": "id-3-1",
+                        "type": "column",
+                        "contents": []
+                    }
+                ]
+            },
+            {
+                "id": "id-4",
+                "type": "paragraph",
+                "contents": [
+                    {
+                        "id": "id-4-1",
+                        "type": "column"
+                    }
+                ]
+            }
+        ];
+        const Sink = withGeoStoryEditor(createSink(() => {}));
+        const rendered = ReactDOM.render(<Sink sections={sections}/>, document.getElementById("container"));
+        const m = ReactTestUtils.findAllInRenderedTree(rendered, (c) => !!c?.props?.availableStorySections);
+        expect(m[0].props.availableStorySections).toEqual(flattenedSections);
     });
 });

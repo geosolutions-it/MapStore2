@@ -40,7 +40,7 @@ const {
 const {
     removeAdditionalLayer
 } = require("../actions/additionallayers");
-const { getConfigProp } = require("../utils/ConfigUtils");
+const { getConfigProp } = require("../utils/ConfigUtils").default;
 
 const searchSelector = createSelector([
     state => state.search || null,
@@ -318,7 +318,7 @@ module.exports = {
     }),
     epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
     reducers: {
-        search: require('../reducers/search'),
-        mapInfo: require('../reducers/mapInfo')
+        search: require('../reducers/search').default,
+        mapInfo: require('../reducers/mapInfo').default
     }
 };

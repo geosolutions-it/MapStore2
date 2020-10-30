@@ -35,7 +35,8 @@ export default compose(
     height,
     size,
     showCaption,
-    caption: contentCaption
+    caption: contentCaption,
+    mapType = "leaflet" // default for when map MediaViewer is not connected to redux
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
@@ -105,15 +106,16 @@ export default compose(
                 layers={layers}
                 tools={isMapInfoControlActive ? ["popup"] : []}
                 options={applyDefaults(updatedMapOptions)}
+                mapType={mapType}
             />
             {expandable && !editMap &&
-            <Button
-                className="ms-expand-media-button"
-                onClick={() => setActive(!active)}
-                tooltipId={active ? 'geostory.closeFullscreenMap' : 'geostory.showFullscreenMap'}
-                tooltipPosition="left">
-                <Glyphicon glyph={!active ? '1-full-screen' : '1-close'}/>
-            </Button>}
+        <Button
+            className="ms-expand-media-button"
+            onClick={() => setActive(!active)}
+            tooltipId={active ? 'geostory.closeFullscreenMap' : 'geostory.showFullscreenMap'}
+            tooltipPosition="left">
+            <Glyphicon glyph={!active ? '1-full-screen' : '1-close'}/>
+        </Button>}
         </>
     );
     return (<div

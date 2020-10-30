@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 const {Button, Grid, Glyphicon} = require('react-bootstrap');
 const {editGroup} = require('../../actions/usergroups');
@@ -15,7 +15,7 @@ const SearchBar = require("../../components/search/SearchBar").default;
 const GroupsGrid = require('./users/GroupGrid');
 const GroupDialog = require('./users/GroupDialog');
 const GroupDeleteConfirm = require('./users/GroupDeleteConfirm');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const assign = require('object-assign');
 const {trim} = require('lodash');
 
@@ -82,6 +82,13 @@ class GroupManager extends React.Component {
     }
 }
 
+/**
+ * Allows an administrator to browse user groups.
+ * Renders in {@link #plugins.Manager|Manager} plugin.
+ * @name GroupManager
+ * @memberof plugins
+ * @class
+ */
 module.exports = {
     GroupManagerPlugin: assign(
         connect((state) => {
@@ -122,6 +129,6 @@ module.exports = {
                 glyph: "1-group-mod"
             }}),
     reducers: {
-        usergroups: require('../../reducers/usergroups')
+        usergroups: require('../../reducers/usergroups').default
     }
 };

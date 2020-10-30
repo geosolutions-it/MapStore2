@@ -6,30 +6,77 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const assign = require('object-assign');
-const {transformLineToArcs} = require('../utils/CoordinatesUtils');
+import assign from 'object-assign';
 
-const circle = require('@turf/circle').default;
+import { transformLineToArcs } from '../utils/CoordinatesUtils';
+import circle from '@turf/circle';
+import { PURGE_MAPINFO_RESULTS } from '../actions/mapInfo';
+import { TOGGLE_CONTROL } from '../actions/controls';
+import { FEATURES_SELECTED, DRAWING_FEATURE } from '../actions/draw';
 
-const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
-const {TOGGLE_CONTROL} = require('../actions/controls');
-const {FEATURES_SELECTED, DRAWING_FEATURE} = require('../actions/draw');
-const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, CLOSE_ANNOTATIONS,
-    CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
-    EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
-    TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS,
-    UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
-    ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
-    ADD_NEW_FEATURE, SET_EDITING_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT,
-    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS, SET_DEFAULT_STYLE, LOADING, CHANGE_GEOMETRY_TITLE
-} = require('../actions/annotations');
+import {
+    REMOVE_ANNOTATION,
+    CONFIRM_REMOVE_ANNOTATION,
+    CANCEL_REMOVE_ANNOTATION,
+    CLOSE_ANNOTATIONS,
+    CONFIRM_CLOSE_ANNOTATIONS,
+    CANCEL_CLOSE_ANNOTATIONS,
+    EDIT_ANNOTATION,
+    CANCEL_EDIT_ANNOTATION,
+    SAVE_ANNOTATION,
+    TOGGLE_ADD,
+    VALIDATION_ERROR,
+    REMOVE_ANNOTATION_GEOMETRY,
+    TOGGLE_STYLE,
+    SET_STYLE,
+    NEW_ANNOTATION,
+    SHOW_ANNOTATION,
+    CANCEL_SHOW_ANNOTATION,
+    FILTER_ANNOTATIONS,
+    UNSAVED_CHANGES,
+    TOGGLE_GEOMETRY_MODAL,
+    TOGGLE_CHANGES_MODAL,
+    CHANGED_PROPERTIES,
+    TOGGLE_STYLE_MODAL,
+    UNSAVED_STYLE,
+    ADD_TEXT,
+    CHANGED_SELECTED,
+    RESET_COORD_EDITOR,
+    CHANGE_RADIUS,
+    CHANGE_TEXT,
+    ADD_NEW_FEATURE,
+    SET_EDITING_FEATURE,
+    SET_INVALID_SELECTED,
+    TOGGLE_DELETE_FT_MODAL,
+    CONFIRM_DELETE_FEATURE,
+    HIGHLIGHT_POINT,
+    CHANGE_FORMAT,
+    UPDATE_SYMBOLS,
+    ERROR_SYMBOLS,
+    SET_DEFAULT_STYLE,
+    LOADING,
+    CHANGE_GEOMETRY_TITLE,
+    FILTER_MARKER,
+    HIDE_MEASURE_WARNING,
+    TOGGLE_SHOW_AGAIN,
+    INIT_PLUGIN,
+    UNSELECT_FEATURE
+} from '../actions/annotations';
 
-const {validateCoordsArray, getAvailableStyler, convertGeoJSONToInternalModel, addIds, validateFeature,
-    getComponents, updateAllStyles, getBaseCoord} = require('../utils/AnnotationsUtils');
-const {set} = require('../utils/ImmutableUtils');
-const {head, findIndex, isNil, slice, castArray} = require('lodash');
+import {
+    validateCoordsArray,
+    getAvailableStyler,
+    convertGeoJSONToInternalModel,
+    addIds,
+    validateFeature,
+    getComponents,
+    updateAllStyles,
+    getBaseCoord
+} from '../utils/AnnotationsUtils';
 
-const uuid = require('uuid');
+import { set } from '../utils/ImmutableUtils';
+import { head, findIndex, isNil, slice, castArray, get } from 'lodash';
+import uuid from 'uuid';
 
 const fixCoordinates = (coords, type) => {
     switch (type) {
@@ -39,8 +86,14 @@ const fixCoordinates = (coords, type) => {
     }
 };
 
-function annotations(state = { validationErrors: {} }, action) {
+function annotations(state = {validationErrors: {}}, action) {
     switch (action.type) {
+    case INIT_PLUGIN: {
+        return {
+            ...state,
+            showPopupWarning: localStorage && localStorage.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true
+        };
+    }
     case CHANGED_SELECTED: {
         let newState = set(`unsavedGeometry`, true, state);
         let {coordinates, radius, text} = action;
@@ -316,6 +369,24 @@ function annotations(state = { validationErrors: {} }, action) {
             showUnsavedGeometryModal: false
         });
     }
+    case UNSELECT_FEATURE: {
+        let editing = state.editing;
+        const selected = state.selected;
+        const ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === selected.properties.id);
+        const selectedGeoJSON = editing.features[ftChangedIndex];
+        const styleChanged = castArray(selectedGeoJSON.style).map(s => ({...s, highlight: false}));
+        editing = set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing);
+        let newState = set(`editing.features`, editing.features.map(f => {
+            return set("properties.canEdit", false, f);
+        }), state);
+        return assign({}, newState, {
+            drawing: false,
+            coordinateEditorEnabled: false,
+            unsavedGeometry: false,
+            selected: null,
+            showUnsavedGeometryModal: false
+        });
+    }
     case ADD_NEW_FEATURE: {
         let selected = state.selected;
         let newState = state;
@@ -339,12 +410,14 @@ function annotations(state = { validationErrors: {} }, action) {
             newState = set(`editing.features[${ftChangedIndex}]`, selected, newState);
         }
         newState = set(`editing.tempFeatures`, newState.editing.features, newState);
+        newState = {...newState, editing: {...newState.editing, properties: {...newState.editing.properties, ...newState.editedFields}}};
 
         return assign({}, newState, {
             coordinateEditorEnabled: false,
             drawing: false,
             unsavedGeometry: false,
-            selected: null
+            selected: null,
+            config: {...newState.config, filter: ''}
         });
     }
     case SET_EDITING_FEATURE: {
@@ -352,13 +425,14 @@ function annotations(state = { validationErrors: {} }, action) {
             return state;
         }
         const feature = set('features', action.feature.features.map(x => set('properties.canEdit', false, x)), action.feature);
-        const newFeature = set('newFeature', true, set('properties.canEdit', false, set('tempFeatures', feature.features, feature)));
+        const newFeature = set('newFeature', get(action.feature, "newFeature", true), set('properties.canEdit', false, set('tempFeatures', feature.features, feature)));
         const newState = set('editing', newFeature, state);
         return assign({}, newState, {
             coordinateEditorEnabled: false,
             drawing: false,
             unsavedGeometry: false,
-            selected: null
+            selected: null,
+            config: {...newState.config, filter: ''}
         });
     }
     case TOGGLE_DELETE_FT_MODAL: {
@@ -429,7 +503,7 @@ function annotations(state = { validationErrors: {} }, action) {
             originalStyle: null
         });
     case CONFIRM_REMOVE_ANNOTATION:
-        const features = state.editing.features.filter(feature=> feature.properties.id !== action.id);
+        const features = state.editing?.features?.filter(feature=> feature.properties.id !== action.id) || [];
         const delSelectedFeature = state?.selected?.properties?.id === action.id || false;
         return assign({}, state, {
             removing: null,
@@ -527,7 +601,8 @@ function annotations(state = { validationErrors: {} }, action) {
             originalStyle: null,
             selected: null,
             filter: null,
-            unsavedChanges: false
+            unsavedChanges: false,
+            editedFields: {}
         });
     case TOGGLE_ADD: {
         const type = action.featureType || state.featureType;
@@ -570,7 +645,8 @@ function annotations(state = { validationErrors: {} }, action) {
     }
     case TOGGLE_STYLE:
         // removing highlight when the styler is opened
-        const newStyling = !state.styling;
+        // const newStyling = !state.styling;
+        const newStyling = action.styling;
         return {
             ...state,
             styling: newStyling,
@@ -644,10 +720,19 @@ function annotations(state = { validationErrors: {} }, action) {
             "loading", action.value, state
         ));
     }
+    case FILTER_MARKER: {
+        return {...state, config: {...state.config, filter: action.filter}};
+    }
+    case TOGGLE_SHOW_AGAIN: {
+        return {...state, showAgain: !state.showAgain};
+    }
+    case HIDE_MEASURE_WARNING: {
+        return {...state, showPopupWarning: false};
+    }
     default:
         return state;
 
     }
 }
 
-module.exports = annotations;
+export default annotations;

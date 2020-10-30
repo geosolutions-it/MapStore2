@@ -9,7 +9,6 @@
 module.exports = {
     plugins: {
         // framework plugins
-        BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
         DrawerMenuPlugin: require('../plugins/DrawerMenu'),
         FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
         GoFullPlugin: require('../plugins/GoFull'),
@@ -17,7 +16,7 @@ module.exports = {
         LocatePlugin: require('../plugins/Locate'),
         MapFooterPlugin: require('../plugins/MapFooter'),
         MapLoadingPlugin: require('../plugins/MapLoading'),
-        MapPlugin: require('../plugins/Map'),
+        MapPlugin: require('../plugins/Map').default,
         OmniBarPlugin: require('../plugins/OmniBar'),
         SearchPlugin: require('../plugins/Search'),
         TOCPlugin: require('../plugins/TOC'),

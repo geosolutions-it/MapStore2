@@ -12,10 +12,18 @@ import { createStructuredSelector } from 'reselect';
 import WebFont from 'webfontloader';
 
 import {createPlugin} from '../utils/PluginsUtils';
-import { Modes, createWebFontLoaderConfig, extractFontNames } from '../utils/GeoStoryUtils';
+import { Modes, createWebFontLoaderConfig, extractFontNames, scrollToContent } from '../utils/GeoStoryUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { basicError } from '../utils/NotificationUtils';
-import { add, update, updateSetting, updateCurrentPage, remove, editWebPage } from '../actions/geostory';
+import {
+    add,
+    update,
+    updateSetting,
+    updateCurrentPage,
+    remove,
+    editWebPage,
+    updateMediaEditorSettings
+} from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
 import {
@@ -32,6 +40,7 @@ import Story from '../components/geostory/Story';
 import MapEditor from '../components/geostory/common/MapEditor';
 import MediaViewer from './geostory/MediaViewer';
 import MediaContentToolbar from './geostory/MediaContentToolbar';
+
 const GeoStory = ({
     story,
     mode = Modes.VIEW,
@@ -42,13 +51,28 @@ const GeoStory = ({
     webFont = WebFont,
     onUpdate = () => {},
     onBasicError = () => {},
+    onUpdateMediaEditorSetting,
+    mediaEditorSettings,
     ...props
 }) => {
     const localize = useCallback((id) => getMessageById(messages, id), [messages]);
     const addFunc = (path, position, element) => onAdd(path, position, element, localize);
 
     useEffect(() => {
+        window.__geostory_interaction = (type, param) => {
+            if (type === 'scrollTo')  {
+                scrollToContent(param, {behavior: "smooth"});
+            }
+        };
+    }, []);
+
+    useEffect(() => {
         onUpdate("settings.theme.fontFamilies", fontFamilies, "merge");
+        // we need to store settings for media editor
+        // so we could use them later when we open the media editor plugin
+        if (mediaEditorSettings) {
+            onUpdateMediaEditorSetting(mediaEditorSettings);
+        }
     }, []);
 
     useEffect(() => {
@@ -87,15 +111,51 @@ const storyThemeSelector = (state) => {
 
 GeoStory.defaultProps = {
     storyFonts: [],
-    fontFamilies: []
+    fontFamilies: [],
+    onUpdateMediaEditorSetting: () => {}
 };
 
 /**
  * Plugin for GeoStory visualization
  * @name GeoStory
+ * @class
  * @memberof plugins
  * @prop {numeric} cfg.interceptionTime default 100, the debounce before calculations of currentPage active section
  * @prop {object[]} cfg.fontFamilies: A list of objects with font family names and sources where to load them from e.g. [{"family": "Comic sans", "src": "link to source"}]
+ * @prop {object} cfg.mediaEditorSettings settings for media editor services divided by media type
+ * @prop {string} cfg.mediaEditorSettings.sourceId selected service identifier used when the modal shows up
+ * @prop {object} cfg.mediaEditorSettings.mediaTypes configuration of source options for each media type: image, video and map
+ * @prop {object} cfg.mediaEditorSettings.sources definition of sources
+ * @example
+ * // example of mediaEditorSettings configuration with only the geostory service
+ * {
+ *   "name": "GeoStory",
+ *   "cfg": {
+ *     "mediaEditorSettings": {
+ *       "sourceId": "geostory",
+ *       "mediaTypes": {
+ *         "image": {
+ *           "defaultSource": "geostory",
+ *           "sources": ["geostory"]
+ *         },
+ *         "video": {
+ *           "defaultSource": "geostory",
+ *           "sources": ["geostory"]
+ *         },
+ *         "map": {
+ *           "defaultSource": "geostory",
+ *           "sources": ["geostory"]
+ *         }
+ *       },
+ *       "sources": {
+ *         "geostory": {
+ *           "name": "Current story",
+ *           "type": "geostory"
+ *         }
+ *       }
+ *     }
+ *   }
+ * }
  */
 export default createPlugin("GeoStory", {
     component: connect(
@@ -115,7 +175,8 @@ export default createPlugin("GeoStory", {
             remove,
             editMedia,
             editWebPage,
-            onBasicError: basicError
+            onBasicError: basicError,
+            onUpdateMediaEditorSetting: updateMediaEditorSettings
         }
     )(GeoStory),
     reducers: {

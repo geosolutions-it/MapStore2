@@ -9,6 +9,13 @@ const { compose, withPropsOnChange } = require('recompose');
 const { get } = require('lodash');
 const {editableWidget, withHeaderTools, defaultIcons} = require('./tools');
 
+const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => { } } = {}) => ({
+    gridEvents: {
+        ...gridEvents,
+        onGridSort: (sortBy, sortOrder) => updateProperty("sortOptions", { sortBy, sortOrder })
+    }
+}));
+
 /**
  * enhancer that updates widget column size on resize. and add base icons and menus
  * Moreover enhances it to allow delete.
@@ -26,5 +33,6 @@ module.exports = compose(
     require('./deleteWidget'),
     editableWidget(),
     defaultIcons(),
-    withHeaderTools()
+    withHeaderTools(),
+    withSorting()
 );

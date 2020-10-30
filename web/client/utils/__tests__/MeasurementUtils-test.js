@@ -7,7 +7,7 @@
 */
 
 import expect from 'expect';
-import {convertMeasuresToGeoJSON} from '../MeasurementUtils';
+import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../MeasurementUtils';
 
 const testUom = {
     length: {
@@ -21,48 +21,50 @@ const testUom = {
 };
 
 describe('MeasurementUtils', () => {
-    it('convertMeasuresToGeoJSON with LineString', () => {
-        const features = [{
-            type: "Feature",
-            geometry: {
-                type: "LineString",
-                coordinates: [
-                    [
-                        -3.6694335937499996,
-                        37.81701672562037
-                    ],
-                    [
+    const features = [{
+        type: "Feature",
+        geometry: {
+            type: "LineString",
+            coordinates: [
+                [
+                    -3.6694335937499996,
+                    37.81701672562037
+                ],
+                [
+                    24.763183593750004,
+                    41.6674407428383
+                ]
+            ]
+        },
+        properties: {
+            values: [
+                {
+                    value: 2456862.991,
+                    formattedValue: "2,456,862.99 m",
+                    position: [
                         24.763183593750004,
                         41.6674407428383
-                    ]
-                ]
-            },
-            properties: {
-                values: [
-                    {
-                        value: 2456862.991,
-                        formattedValue: "2,456,862.99 m",
-                        position: [
-                            24.763183593750004,
-                            41.6674407428383
-                        ],
-                        type: "length"
-                    }
-                ]
-            }
-        }];
-
+                    ],
+                    type: "length"
+                }
+            ]
+        }
+    }];
+    it('convertMeasuresToGeoJSON with LineString', () => {
         const geoJson = convertMeasuresToGeoJSON(features, [], testUom, 'id');
 
         expect(geoJson).toExist();
         expect(geoJson.type).toBe('FeatureCollection');
         expect(geoJson.properties).toExist();
         expect(geoJson.properties.id).toBe('id');
+        expect(geoJson.properties.title).toBe('Measure Length');
+        expect(geoJson.properties.type).toBe('Measure');
+        expect(geoJson.properties.iconGlyph).toBe('1-measure-length');
         expect(geoJson.features).toExist();
         expect(geoJson.features.length).toBe(2);
         expect(geoJson.features[0].type).toBe('Feature');
         expect(geoJson.features[0].geometry).toExist();
-        expect(geoJson.features[0].geometry.type).toBe('MultiPoint');
+        expect(geoJson.features[0].geometry.type).toBe('LineString');
         expect(geoJson.features[0].geometry.coordinates).toEqual(features[0].geometry.coordinates);
         expect(geoJson.features[0].properties).toExist();
         expect(geoJson.features[0].properties.geometryGeodesic).toExist();
@@ -81,5 +83,12 @@ describe('MeasurementUtils', () => {
         expect(geoJson.features[1].properties.isText).toBe(true);
         expect(geoJson.features[1].properties.isValidFeature).toBe(true);
         expect(geoJson.features[1].properties.valueText).toBe(features[0].properties.values[0].formattedValue);
+    });
+
+    it('getGeomTypeSelected', ()=>{
+        const geomTypeSelected = getGeomTypeSelected(features);
+        expect(geomTypeSelected).toBeTruthy();
+        expect(geomTypeSelected.length).toBe(1);
+        expect(geomTypeSelected).toEqual(["LineString"]);
     });
 });

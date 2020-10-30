@@ -14,7 +14,7 @@ const {closeIdentify, purgeMapInfoResults, noQueryableLayers} = require('../../a
 
 const {updateMapLayoutEpic} = require('../maplayout');
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 
 describe('map layout epics', () => {
     afterEach(() => {

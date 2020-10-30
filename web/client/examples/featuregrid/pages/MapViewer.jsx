@@ -14,7 +14,7 @@ const {connect} = require('react-redux');
 
 const url = require('url');
 
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 
 const {loadMapConfig} = require('../../../actions/config');
 
@@ -25,7 +25,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
     mode: urlQuery.mobile || state.browser && state.browser.touch ? 'mobile' : 'desktop'
-}))(require('../../../components/plugins/PluginsContainer'));
+}))(require('../../../components/plugins/PluginsContainer').default);
 
 
 class MapViewer extends React.Component {

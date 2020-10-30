@@ -101,173 +101,176 @@ const updateStyleMetadata = ({ baseUrl: geoserverBaseUrl, styleName, metadata })
 * Api for GeoServer styles via rest
 * @name api.geoserver
 */
-const Api = {
-    saveStyle: function(geoserverBaseUrl, styleName, body, options) {
-        let url = geoserverBaseUrl + "styles/" + encodeURI(styleName);
-        let opts = assign({}, options);
-        opts.headers = assign({}, opts.headers, {"Content-Type": "application/vnd.ogc.sld+xml"});
-        return axios.put(url, body, opts);
-    },
-    /**
-    * Get style service configuration based on url
-    * @memberof api.geoserver
-    * @param {object} params {baseUrl, style, options, format, styleName}
-    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
-    * @return {promise} it returns a valid styleService object or null
-    */
-    getStyleService: function({ baseUrl }) {
-        return getVersion({ baseUrl })
-            .then(({ version, manifest, fonts = [] }) => {
-                if (!version) return null;
-                const formats = (manifest || [])
-                    .map(({ name }) =>
-                        head(STYLE_MODULES
-                            .filter(({ regex }) => name.match(regex))
-                            .map(({ format }) => format))
-                    ).filter(format => format);
-                const geoserver = head(version.filter(({ name = ''}) => name.toLowerCase() === 'geoserver')) || {};
-                return {
-                    baseUrl,
-                    version: geoserver.version,
-                    formats: [...formats, 'sld'],
-                    availableUrls: [],
-                    fonts
-                };
-            });
-    },
-    /**
-    * Get style object
-    * @memberof api.geoserver
-    * @param {object} params {options, format, baseUrl, styleName}
-    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
-    * @param {string} params.format style format eg: css or sld
-    * @param {string} params.styleName style name
-    * @return {object} GeoServer style object
-    */
-    getStyle: ({options, format, baseUrl, styleName}) => {
-        const {name, workspace} = getNameParts(styleName);
-        const data = formatRequestData({options, format, baseUrl, name, workspace});
-        return axios.get(data.url, data.options);
-    },
-
-    /**
-    * Create a new style
-    * @memberof api.geoserver
-    * @param {object} params {baseUrl, style, options, format, styleName}
-    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
-    * @param {string} params.format style format eg: css or sld
-    * @param {string} params.styleName style name
-    * @param {string} params.code style code
-    * @return {object} response
-    */
-    createStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion, metadata }) => {
-        const {name, workspace} = getNameParts(styleName);
-        const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion}, true);
-        return axios.post(data.url, code, data.options)
-            .then(() => {
-                return metadata
-                    ? updateStyleMetadata({ baseUrl, styleName, metadata })
-                        .then(() => null)
-                        // silent fail for missing update on metadata
-                        .catch(() => null)
-                    : null;
-            });
-    },
-    /**
-    * Update a style
-    * @memberof api.geoserver
-    * @param {object} params {baseUrl, style, options, format, styleName}
-    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
-    * @param {string} params.format style format eg: css or sld
-    * @param {string} params.styleName style name
-    * @param {string} params.code style code
-    * @return {object} response
-    */
-    updateStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion, metadata}) => {
-        const {name, workspace} = getNameParts(styleName);
-        const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion});
-        return axios.put(data.url, code, data.options)
-            .then(() => {
-                return metadata
-                    ? updateStyleMetadata({ baseUrl, styleName, metadata })
-                        .then(() => null)
-                        // silent fail for missing update on metadata
-                        .catch(() => null)
-                    : null;
-            });
-    },
-    /**
-    * Delete a style
-    * @memberof api.geoserver
-    * @param {object} params {baseUrl, options, format, styleName}
-    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
-    * @param {string} params.styleName style name
-    * @return {object} response
-    */
-    deleteStyle: ({baseUrl, options, format = 'sld', styleName}) => {
-        const {name, workspace} = getNameParts(styleName);
-        const data = formatRequestData({options, format, baseUrl, name, workspace});
-        return axios.delete(data.url, data.options);
-    },
-    /**
-    * Retrive style info an merge them to the provided list of styles
-    * @memberof api.geoserver
-    * @param {object} params {baseUrl, styles}
-    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
-    * @param {string} params.styles list of styles eg: [ { name: 'style.css', title: 'Style', _abstract: '' } ]
-    * @return {array} array of style provided with additional info as format, filename and languageVersion
-    */
-    getStylesInfo: ({baseUrl: geoserverBaseUrl, styles = []}) => {
-        let responses = [];
-        let count = styles.length;
-        return new Promise(function(resolve) {
-            if (!styles || styles.length === 0) {
-                resolve([]);
-            } else {
-                styles.forEach(({name}, idx) =>
-                    axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
-                        .then(({data}) => {
-                            responses[idx] = assign({}, styles[idx], data && data.style && {
-                                ...data.style,
-                                ...(data.style.metadata && { metadata: parseStyleMetadata(data.style.metadata) }),
-                                name: stringifyNameParts(data.style)
-                            } || {});
-                            count--;
-                            if (count === 0) resolve(responses.filter(val => val));
-                        })
-                        .catch(() => {
-                            responses[idx] = assign({}, styles[idx]);
-                            count--;
-                            if (count === 0) resolve(responses.filter(val => val));
-                        })
-                );
-            }
+export const saveStyle = (geoserverBaseUrl, styleName, body, options) => {
+    let url = geoserverBaseUrl + "styles/" + encodeURI(styleName);
+    let opts = assign({}, options);
+    opts.headers = assign({}, opts.headers, {"Content-Type": "application/vnd.ogc.sld+xml"});
+    return axios.put(url, body, opts);
+};
+/**
+* Get style service configuration based on url
+* @memberof api.geoserver
+* @param {object} params {baseUrl, style, options, format, styleName}
+* @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+* @return {promise} it returns a valid styleService object or null
+*/
+export const getStyleService = ({ baseUrl }) => {
+    return getVersion({ baseUrl })
+        .then(({ version, manifest, fonts = [] }) => {
+            if (!version) return null;
+            const formats = (manifest || [])
+                .map(({ name }) =>
+                    head(STYLE_MODULES
+                        .filter(({ regex }) => name.match(regex))
+                        .map(({ format }) => format))
+                ).filter(format => format);
+            const geoserver = head(version.filter(({ name = ''}) => name.toLowerCase() === 'geoserver')) || {};
+            return {
+                baseUrl,
+                version: geoserver.version,
+                formats: [...formats, 'sld'],
+                availableUrls: [],
+                fonts
+            };
         });
-    },
-    /**
-    * Get style code
-    * @memberof api.geoserver
-    * @param {object} params {baseUrl, styleName, workspace}
-    * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
-    * @param {string} params.styleName style name
-    * @return {object} GeoServer style object with code params eg: {...otherStyleParams, code: '* { stroke: #ff0000; }'}
-    */
-    getStyleCodeByName: ({baseUrl: geoserverBaseUrl, styleName, options}) => {
-        const {name, workspace} = getNameParts(styleName);
-        const url = getStyleBaseUrl({name, workspace, geoserverBaseUrl});
-        return axios.get(url, options)
-            .then(response => {
-                return response.data && response.data.style && response.data.style.name ?
-                    axios.get(getStyleBaseUrl({ workspace, geoserverBaseUrl, name: response.data.style.name, format: getStyleFormatFromFilename(response.data.style.filename) })).then(({data: code}) => ({...response.data.style, code}))
-                    : null;
-            });
-    },
-    /**
-     * Update style metadata
-     * @param {string} baseUrl service endpoint
-     * @param {string} styleName name of style
-     * @param {object} metadata object with metadata properties
-     */
+};
+/**
+* Get style object
+* @memberof api.geoserver
+* @param {object} params {options, format, baseUrl, styleName}
+* @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+* @param {string} params.format style format eg: css or sld
+* @param {string} params.styleName style name
+* @return {object} GeoServer style object
+*/
+export const getStyle = ({options, format, baseUrl, styleName}) => {
+    const {name, workspace} = getNameParts(styleName);
+    const data = formatRequestData({options, format, baseUrl, name, workspace});
+    return axios.get(data.url, data.options);
+};
+
+/**
+* Create a new style
+* @memberof api.geoserver
+* @param {object} params {baseUrl, style, options, format, styleName}
+* @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+* @param {string} params.format style format eg: css or sld
+* @param {string} params.styleName style name
+* @param {string} params.code style code
+* @return {object} response
+*/
+export const createStyle = ({baseUrl, code, options, format = 'sld', styleName, languageVersion, metadata }) => {
+    const {name, workspace} = getNameParts(styleName);
+    const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion}, true);
+    return axios.post(data.url, code, data.options)
+        .then(() => {
+            return metadata
+                ? updateStyleMetadata({ baseUrl, styleName, metadata })
+                    .then(() => null)
+                    // silent fail for missing update on metadata
+                    .catch(() => null)
+                : null;
+        });
+};
+/**
+* Update a style
+* @memberof api.geoserver
+* @param {object} params {baseUrl, style, options, format, styleName}
+* @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+* @param {string} params.format style format eg: css or sld
+* @param {string} params.styleName style name
+* @param {string} params.code style code
+* @return {object} response
+*/
+export const updateStyle = ({baseUrl, code, options, format = 'sld', styleName, languageVersion, metadata}) => {
+    const {name, workspace} = getNameParts(styleName);
+    const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion});
+    return axios.put(data.url, code, data.options)
+        .then(() => {
+            return metadata
+                ? updateStyleMetadata({ baseUrl, styleName, metadata })
+                    .then(() => null)
+                    // silent fail for missing update on metadata
+                    .catch(() => null)
+                : null;
+        });
+};
+/**
+* Delete a style
+* @memberof api.geoserver
+* @param {object} params {baseUrl, options, format, styleName}
+* @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+* @param {string} params.styleName style name
+* @return {object} response
+*/
+export const deleteStyle = ({baseUrl, options, format = 'sld', styleName}) => {
+    const {name, workspace} = getNameParts(styleName);
+    const data = formatRequestData({options, format, baseUrl, name, workspace});
+    return axios.delete(data.url, data.options);
+};
+/**
+* Retrive style info an merge them to the provided list of styles
+* @memberof api.geoserver
+* @param {object} params {baseUrl, styles}
+* @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+* @param {string} params.styles list of styles eg: [ { name: 'style.css', title: 'Style', _abstract: '' } ]
+* @return {array} array of style provided with additional info as format, filename and languageVersion
+*/
+export const getStylesInfo = ({baseUrl: geoserverBaseUrl, styles = []}) => {
+    let responses = [];
+    let count = styles.length;
+    return new Promise(function(resolve) {
+        if (!styles || styles.length === 0) {
+            resolve([]);
+        } else {
+            styles.forEach(({name}, idx) =>
+                axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
+                    .then(({data}) => {
+                        responses[idx] = assign({}, styles[idx], data && data.style && {
+                            ...data.style,
+                            ...(data.style.metadata && { metadata: parseStyleMetadata(data.style.metadata) }),
+                            name: stringifyNameParts(data.style)
+                        } || {});
+                        count--;
+                        if (count === 0) resolve(responses.filter(val => val));
+                    })
+                    .catch(() => {
+                        responses[idx] = assign({}, styles[idx]);
+                        count--;
+                        if (count === 0) resolve(responses.filter(val => val));
+                    })
+            );
+        }
+    });
+};
+/**
+* Get style code
+* @memberof api.geoserver
+* @param {object} params {baseUrl, styleName, workspace}
+* @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
+* @param {string} params.styleName style name
+* @return {object} GeoServer style object with code params eg: {...otherStyleParams, code: '* { stroke: #ff0000; }'}
+*/
+export const getStyleCodeByName = ({baseUrl: geoserverBaseUrl, styleName, options}) => {
+    const {name, workspace} = getNameParts(styleName);
+    const url = getStyleBaseUrl({name, workspace, geoserverBaseUrl});
+    return axios.get(url, options)
+        .then(response => {
+            return response.data && response.data.style && response.data.style.name ?
+                axios.get(getStyleBaseUrl({ workspace, geoserverBaseUrl, name: response.data.style.name, format: getStyleFormatFromFilename(response.data.style.filename) })).then(({data: code}) => ({...response.data.style, code}))
+                : null;
+        });
+};
+
+const Api = {
+    saveStyle,
+    getStyleService,
+    getStyle,
+    createStyle,
+    updateStyle,
+    deleteStyle,
+    getStylesInfo,
+    getStyleCodeByName,
     updateStyleMetadata
 };
 

@@ -87,6 +87,17 @@ export default ({
                 placement="right"
                 onChange={(overlay) => onUpdateSettings("theme", { ...settings?.theme, overlay })}/>
         </FormGroup>
+        <FormGroup>
+            <div style={{ marginBottom: "10px" }}>
+                <ControlLabel><Message msgId="Links"/></ControlLabel>
+            </div>
+            <CustomThemePicker
+                disableBackgroundPicker
+                disableShadow
+                themeStyle={settings?.theme?.link}
+                placement="right"
+                onChange={(link) => onUpdateSettings("theme", { ...settings?.theme, link })}/>
+        </FormGroup>
         <div>
             <h4><Message msgId="geostory.builder.settings.storyHeader"/></h4>
             <hr />
@@ -114,9 +125,11 @@ export default ({
                 <div><Message msgId="geostory.builder.settings.fontSize"/></div>
                 <div>
                     <Select
+                        disabled={!settings.isTitleEnabled}
                         value={settings.storyTitleFontSize}
                         onChange={event => onUpdateSettings("storyTitleFontSize", event.value)}
                         options={storyTitleFontSizes}
+                        clearable={false}
                     />
                 </div>
             </div>

@@ -6,20 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var axios = require('../libs/ajax');
+import { castArray, merge } from 'lodash';
+import { Promise } from 'es6-promise';
 
-var LocaleUtils = require('../utils/LocaleUtils');
+import axios from '../libs/ajax';
+import { error } from './notifications';
+import LocaleUtils from '../utils/LocaleUtils';
+import ConfigUtils from '../utils/ConfigUtils';
 
-const ConfigUtils = require('../utils/ConfigUtils');
+export const CHANGE_LOCALE = 'CHANGE_LOCALE';
+export const LOCALE_LOAD_ERROR = 'LOCALE_LOAD_ERROR';
 
-const CHANGE_LOCALE = 'CHANGE_LOCALE';
-const LOCALE_LOAD_ERROR = 'LOCALE_LOAD_ERROR';
-
-const {castArray, merge} = require('lodash');
-const {Promise} = require('es6-promise');
-const {error} = require('./notifications');
-
-function changeLocale(data) {
+export function changeLocale(data) {
     return {
         type: CHANGE_LOCALE,
         messages: data.messages,
@@ -27,14 +25,14 @@ function changeLocale(data) {
     };
 }
 
-function localeError(e) {
+export function localeError(e) {
     return {
         type: LOCALE_LOAD_ERROR,
         error: e
     };
 }
 
-function appendLocale(folder) {
+export function appendLocale(folder) {
     return (dispatch, getState) => {
         axios.get(folder + `/data.${getState().locale.current}.json`)
             .then((response) => {
@@ -61,7 +59,7 @@ function appendLocale(folder) {
     };
 }
 
-function loadLocale(translationFolder, language) {
+export function loadLocale(translationFolder, language) {
     return (dispatch) => {
         let locale = language;
         if (!locale) {
@@ -101,4 +99,3 @@ function loadLocale(translationFolder, language) {
     };
 }
 
-module.exports = { CHANGE_LOCALE, LOCALE_LOAD_ERROR, loadLocale, appendLocale};

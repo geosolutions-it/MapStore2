@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -21,6 +21,7 @@ import layers from '../../reducers/layers';
 import controls from '../../reducers/controls';
 import annotations from '../../reducers/annotations';
 import context from '../../reducers/context';
+import security from '../../reducers/security';
 
 // StandardStore add by default current reducers
 const rootReducers = {
@@ -29,7 +30,8 @@ const rootReducers = {
     controls,
     maptype,
     annotations,
-    context
+    context,
+    security
 };
 
 const createRegisterActionsMiddleware = (actions) => {

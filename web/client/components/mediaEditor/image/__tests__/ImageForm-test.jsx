@@ -22,7 +22,7 @@ describe('ImageForm component', () => {
         setTimeout(done);
     });
     it('ImageForm rendering with defaults', () => {
-        ReactDOM.render(<ImageForm />, document.getElementById("container"));
+        ReactDOM.render(<ImageForm addImageDimensionsFunc={() => {}} />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-imageForm')).toExist();
         expect(container.querySelectorAll('input').length).toBe(5);

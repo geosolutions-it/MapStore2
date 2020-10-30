@@ -68,5 +68,5 @@ const MeasureResultsPlugin = connect((state) => {
 
 module.exports = {
     MeasureResultsPlugin,
-    reducers: {measurement: require('../reducers/measurement')}
+    reducers: {measurement: require('../reducers/measurement').default}
 };

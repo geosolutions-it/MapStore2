@@ -88,4 +88,17 @@ describe('Cascade component', () => {
         expect(sectionsContainerNode.style.color).toBe('rgb(255, 255, 255)');
         expect(sectionsContainerNode.style.backgroundColor).toBe('rgb(0, 0, 0)');
     });
+    it('should apply custom links color on the story', () => {
+        const COLOR = '#ffffff';
+        const BACKGROUND_COLOR = '#000000';
+        ReactDOM.render(<Cascade {...STORY} theme={{link: { color: COLOR }, general: { color: COLOR, backgroundColor: BACKGROUND_COLOR }, overlay: {color: COLOR, backgroundColor: BACKGROUND_COLOR}}}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+
+        // We expect to have a class that we use to add custom color to hyperlinks
+        const sectionsContainerNode = container.querySelector('.ms-sections-hyperlinks');
+        expect(sectionsContainerNode).toBeTruthy();
+        const tag = document.getElementsByTagName('a')[0];
+        const tagStyle = window.getComputedStyle(tag);
+        expect(tagStyle.getPropertyValue('color')).toBe('rgb(255, 255, 255)');
+    });
 });

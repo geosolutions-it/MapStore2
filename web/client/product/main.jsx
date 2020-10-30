@@ -6,100 +6,112 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {themeLoaded} = require('../actions/theme');
+import { connect } from 'react-redux';
 
-module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
-    const React = require('react');
-    const ReactDOM = require('react-dom');
-    const {connect} = require('react-redux');
-    const LocaleUtils = require('../utils/LocaleUtils');
+import main from '../components/app/main';
+import StandardApp from '../components/app/StandardApp';
+import withExtensions from '../components/app/withExtensions';
+import StandardRouter from '../components/app/StandardRouter';
 
-    const startApp = () => {
-        const {loadVersion} = require('../actions/version');
-        const {versionSelector} = require('../selectors/version');
-        const {loadAfterThemeSelector} = require('../selectors/config');
-        const StandardApp = require('../components/app/StandardApp');
+import { loadVersion } from '../actions/version';
+import { themeLoaded } from '../actions/theme';
 
-        const {
-            appEpics = {},
-            baseEpics,
-            appReducers = {},
-            baseReducers,
-            initialState,
-            pages,
-            printingEnabled = true,
-            storeOpts,
-            themeCfg = {},
-            mode
-        } = config;
+import { updateMapLayoutEpic } from '../epics/maplayout';
+import { setSupportedLocales } from '../epics/localconfig';
+import { readQueryParamsOnMapEpic } from '../epics/queryparams';
 
-        const StandardRouter = connect((state) => ({
-            locale: state.locale || {},
-            pages,
-            themeCfg,
-            version: versionSelector(state),
-            loadAfterTheme: loadAfterThemeSelector(state),
-            themeLoaded: state.theme && state.theme.loaded
-        }), {
-            onThemeLoaded: themeLoaded
-        })(require('../components/app/StandardRouter').default);
+import maptype from '../reducers/maptype';
+import maps from '../reducers/maps';
+import maplayout from '../reducers/maplayout';
+import version from '../reducers/version';
+import mapPopups from '../reducers/mapPopups';
 
-        const {updateMapLayoutEpic} = require('../epics/maplayout');
-        const {setSupportedLocales} = require('../epics/localconfig');
-        const {readQueryParamsOnMapEpic} = require('../epics/queryparams');
+import { versionSelector } from '../selectors/version';
+import { loadAfterThemeSelector } from '../selectors/config';
 
-        /**
-         * appStore data needed to create the store
-         * @param {object} baseReducers is used to override all the appReducers
-         * @param {object} appReducers is used to extend the appReducers
-         * @param {object} baseEpics is used to override all the appEpics
-         * @param {object} appEpics is used to extend the appEpics
-         * @param {object} initialState is used to initialize the state of the application
-        */
-        const appStore = require('../stores/StandardStore').bind(null,
-            initialState,
-            baseReducers || {
-                maptype: require('../reducers/maptype'),
-                maps: require('../reducers/maps'),
-                maplayout: require('../reducers/maplayout'),
-                version: require('../reducers/version'),
-                mapPopups: require('../reducers/mapPopups').default,
-                ...appReducers
-            },
-            baseEpics || {
+import {
+    standardReducers,
+    standardEpics,
+    standardRootReducerFunc
+} from '../stores/defaultOptions';
+
+export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
+
+    const {
+        // store config
+        initialState,
+        appEpics: configAppEpics = {},
+        baseEpics,
+        appReducers: configAppReducers = {},
+        baseReducers,
+        // app config
+        storeOpts,
+        pages,
+        printingEnabled = true,
+        themeCfg = {},
+        mode
+    } = config;
+
+    const appComponent = connect((state) => ({
+        locale: state.locale || {},
+        pages,
+        themeCfg,
+        version: versionSelector(state),
+        loadAfterTheme: loadAfterThemeSelector(state),
+        themeLoaded: state.theme && state.theme.loaded
+    }), {
+        onThemeLoaded: themeLoaded
+    })(StandardRouter);
+
+    const appReducers = {
+        ...(baseReducers
+            ? baseReducers
+            : {
+                maptype,
+                maps,
+                maplayout,
+                version,
+                mapPopups,
+                ...configAppReducers
+            }),
+
+        ...standardReducers
+    };
+
+    const appEpics = {
+        ...(baseEpics
+            ? baseEpics
+            : {
                 updateMapLayoutEpic,
                 setSupportedLocales,
                 readQueryParamsOnMapEpic,
-                ...appEpics
-            }
-        );
+                ...configAppEpics
+            }),
 
-        const initialActions = [
-            loadVersion
-        ];
-
-        const appConfig = overrideConfig({
-            storeOpts,
-            appEpics,
-            appStore,
-            pluginsDef,
-            initialActions,
-            appComponent: StandardRouter,
-            printingEnabled,
-            themeCfg,
-            mode
-        });
-
-        ReactDOM.render(
-            <StandardApp enableExtensions {...appConfig}/>,
-            document.getElementById('container')
-        );
+        ...standardEpics
     };
 
-    if (!global.Intl ) {
-        // Ensure Intl is loaded, then call the given callback
-        LocaleUtils.ensureIntl(startApp);
-    } else {
-        startApp();
-    }
+    const initialActions = [
+        loadVersion
+    ];
+
+    const appConfig = overrideConfig({
+        // store config
+        initialState,
+        appReducers,
+        appEpics,
+        rootReducerFunc: standardRootReducerFunc,
+        // app config
+        pluginsDef,
+        storeOpts,
+        initialActions,
+        appComponent,
+        printingEnabled,
+        themeCfg,
+        mode
+    });
+
+    const App = withExtensions(StandardApp);
+
+    return main(appConfig, App);
 };
