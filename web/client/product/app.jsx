@@ -14,6 +14,7 @@ import pluginsDef from './plugins';
 const missingPlugins = Object.keys(pluginsDef.plugins).filter(plugin => pluginsDef.plugins[plugin].default);
 
 if (missingPlugins.length) {
+    // eslint-disable-next-line no-console
     console.error("plugin not correctly loaded: ", missingPlugins);
 }
 

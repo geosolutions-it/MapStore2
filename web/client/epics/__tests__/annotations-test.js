@@ -463,6 +463,30 @@ describe('annotations Epics', () => {
         const action = confirmRemoveAnnotation('1', 'geometry');
         store.dispatch(action);
     });
+    it('remove annotation geometry of type Circle', (done) => {
+        const tempStore = mockStore({
+            ...defaultState,
+            annotations: {
+                ...defaultState.annotations,
+                featureType: "Circle"
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].status).toBe('replace');
+                expect(actions[1].method).toBe('Circle');
+                expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[2].status).toBe('drawOrEdit');
+                expect(actions[2].method).toBe('ANNOTATIONS:CONFIRM_REMOVE');
+                expect(actions[2].options.drawEnabled).toBe(false);
+                done();
+            }
+        });
+        const action = confirmRemoveAnnotation('1', 'geometry');
+        store.dispatch(action);
+    });
 
     it('remove annotation geometry when initial state is not set', (done) => {
         const tempStore = mockStore({

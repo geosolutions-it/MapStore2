@@ -259,7 +259,7 @@ module.exports = (viewer) => ({
                     stopAfterDrawing: !multiGeom,
                     editEnabled: type !== "Circle",
                     drawing,
-                    drawEnabled: type === "Circle",
+                    drawEnabled: false,
                     transformToFeatureCollection: true,
                     addClickCallback: false
                 };
