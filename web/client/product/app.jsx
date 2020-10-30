@@ -9,14 +9,8 @@
 import main from './main';
 import appConfig from './appConfig';
 import pluginsDef from './plugins';
+import { checkForMissingPlugins } from '../utils/DebugUtils';
 
-
-const missingPlugins = Object.keys(pluginsDef.plugins).filter(plugin => pluginsDef.plugins[plugin].default);
-
-if (missingPlugins.length) {
-    // eslint-disable-next-line no-console
-    console.error("plugin not correctly loaded: ", missingPlugins);
-}
-
+checkForMissingPlugins(pluginsDef.plugins);
 
 main(appConfig, pluginsDef);
