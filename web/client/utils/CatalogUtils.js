@@ -63,7 +63,7 @@ const converters = {
                 // look in URI objects for wms and thumbnail
                 if (dc && dc.URI) {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
-                    let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) );
+                    let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) ) || head([].filter.call(URI, (uri) => uri.protocol?.indexOf('image/') > -1));
                     thumbURL = thumb ? thumb.value : null;
                     wms = head([].filter.call(URI, (uri) => { return uri.protocol && (uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) || uri.protocol.match(/^OGC:WMS/g)); }));
                 }
