@@ -17,7 +17,6 @@ const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
     moveNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
     browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
     download} = require('../actions/layers');
-const { setActive, setMode } = require('../actions/swipe');
 const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
@@ -248,7 +247,6 @@ class LayerTree extends React.Component {
         onLayerInfo: PropTypes.func,
         onSetSwipeActive: PropTypes.func,
         updatableLayersCount: PropTypes.number,
-        onSetActive: PropTypes.func,
         onSetSwipeMode: PropTypes.func
     };
 
@@ -332,7 +330,6 @@ class LayerTree extends React.Component {
         refreshLayerVersion: () => {},
         metadataTemplate: null,
         onLayerInfo: () => {},
-        onSetActive: () => {},
         onSetSwipeMode: () => {}
     };
 
@@ -497,8 +494,7 @@ class LayerTree extends React.Component {
                                 onGetMetadataRecord: this.props.onGetMetadataRecord,
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler,
-                                onLayerInfo: this.props.onLayerInfo,
-                                onSetActive: this.props.onSetActive
+                                onLayerInfo: this.props.onLayerInfo
                             }}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
@@ -883,8 +879,7 @@ const TOCPlugin = connect(tocSelector, {
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion,
-    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false),
-    onSetActive: setActive
+    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false)
 })(compose(
     securityEnhancer,
     checkPluginsEnhancer
