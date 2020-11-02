@@ -14,12 +14,19 @@ import { getSelectedLayer } from '../selectors/layers';
 import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
 import swipe from '../reducers/swipe';
 import * as epics from '../epics/swipe';
+import {
+    setActive,
+    setMode
+} from '../actions/swipe';
+
 
 import { createPlugin } from '../utils/PluginsUtils';
 
 import SwipeSettings from './SwipeSettings';
 import SliderSwipeSupport from '../components/map/openlayers/swipe/SliderSwipeSupport';
 import SpyGlassSupport from '../components/map/openlayers/swipe/SpyGlassSupport';
+import SwipeButton from './swipe/SwipeButton';
+
 
 export const Support = ({ mode, map, layer, active, swipeModeSettings, spyModeSettings }) => {
     if (mode === "spy") {
@@ -58,7 +65,16 @@ export default createPlugin(
         component: SwipeSettings,
         containers: {
             TOC: {
-                name: "Swipe"
+                name: "Swipe",
+                target: "toolbar",
+                selector: ({ status }) => status === 'LAYER',
+                Component: connect(
+                    createSelector(layerSwipeSettingsSelector, (swipeSettings) => ({swipeSettings})),
+                    {
+                        onSetActive: setActive,
+                        onSetSwipeMode: setMode
+                    }
+                )(SwipeButton)
             },
             Map: {
                 name: "Swipe",

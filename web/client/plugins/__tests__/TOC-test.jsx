@@ -322,6 +322,77 @@ describe('TOCPlugin Plugin', () => {
                 }
             }
         };
+        describe('target: toolbar', () => {
+            it('render custom plugin', () => {
+                const { Plugin } = getPluginForTest(TOCPlugin, {
+                    layers: {
+                        groups: [{ id: 'default', title: 'Default', nodes: [] }],
+                        flat: []
+                    },
+                    maptype: {
+                        mapType: 'openlayers'
+                    }
+                });
+                const WrappedPlugin = dndContext(Plugin);
+                ReactDOM.render(<WrappedPlugin items={[{
+                    name: "Custom",
+                    target: "toolbar",
+                    Component: () => <button id="toolbarCustomButton"></button>
+                }]} />, document.getElementById("container"));
+                expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
+                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton`)).toExist();
+            });
+            it('selector do not show the button when return false', () => {
+                const { Plugin } = getPluginForTest(TOCPlugin, {
+                    layers: {
+                        groups: [{ id: 'default', title: 'Default', nodes: [] }],
+                        flat: []
+                    },
+                    maptype: {
+                        mapType: 'openlayers'
+                    }
+                });
+                const WrappedPlugin = dndContext(Plugin);
+                ReactDOM.render(<WrappedPlugin items={[{
+                    name: "Custom",
+                    target: "toolbar",
+                    selector: () => {
+                        return false;
+                    },
+                    Component: () => <button id="toolbarCustomButton"></button>
+                }]} />, document.getElementById("container"));
+                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton`)).toNotExist();
+            });
+            it('selector reads status, selectedGroups, selectedLayers', () => {
+                const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
+                const WrappedPlugin = dndContext(Plugin);
+                ReactDOM.render(<WrappedPlugin items={[{
+                    name: "Custom",
+                    target: "toolbar",
+                    selector: ({ status, selectedGroups, selectedLayers}) => {
+                        return status === "LAYER" && selectedGroups.length === 0 && selectedLayers[0].id === "topp:states__6";
+                    },
+                    Component: () => <button id="toolbarCustomButton"></button>
+                }]} />, document.getElementById("container"));
+                expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBeGreaterThan(0); // other buttons are shown.
+                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton`)).toExist();
+            });
+            it('Component receives the property \`status\`', () => {
+                const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
+                const WrappedPlugin = dndContext(Plugin);
+                ReactDOM.render(<WrappedPlugin items={[{
+                    name: "Custom",
+                    target: "toolbar",
+                    Component: ({ status, selectedGroups, selectedLayers}) => {
+                        expect(status === "LAYER" && selectedGroups.length === 0 && selectedLayers[0].id === "topp:states__6").toBeTruthy();
+                        return <button id={`toolbarCustomButton-${status}`}></button>;
+                    }
+                }]} />, document.getElementById("container"));
+                expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBeGreaterThan(0); // other buttons are shown.
+                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton-LAYER`)).toExist();
+            });
+        });
+
         it('AddLayer and AddGroup do not show without proper plugins', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, {
                 layers: {
