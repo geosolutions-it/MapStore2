@@ -11,10 +11,6 @@ import expect from 'expect';
 
 import BoxSelectionSupport from '../BoxSelectionSupport';
 
-const testHandlers = {
-    onBoxEnd: () => {}
-};
-
 let fakeMap;
 
 describe('Test BoxSelectionSupport', () => {
