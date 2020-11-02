@@ -40,11 +40,11 @@ const LayersUtils = require('../utils/LayersUtils');
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
 const QueryPanelHeader = require('../components/data/query/QueryPanelHeader');
-const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
-const autocompleteEpics = require('../epics/autocomplete');
+const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery').default;
+const autocompleteEpics = require('../epics/autocomplete').default;
 const {bindActionCreators} = require('redux');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const layerFilterEpics = require('../epics/layerfilter');
+const layerFilterEpics = require('../epics/layerfilter').default;
 
 const ResizableModal = require('../components/misc/ResizableModal').default;
 const Portal = require('../components/misc/Portal').default;
@@ -458,5 +458,5 @@ module.exports = {
         query: require('../reducers/query').default,
         layerFilter: require('../reducers/layerFilter').default
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform'), ...layerFilterEpics}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform').default, ...layerFilterEpics}
 };

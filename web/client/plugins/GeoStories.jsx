@@ -133,7 +133,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: require('../epics/geostories'),
+    epics: require('../epics/geostories').default,
     reducers: {
         geostories: require('../reducers/geostories').default
     }

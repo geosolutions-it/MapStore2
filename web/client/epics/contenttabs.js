@@ -6,19 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
-const {keys, findIndex, difference} = require('lodash');
-const {MAPS_LOAD_MAP, MAPS_LIST_LOADED} = require("../actions/maps");
-const {
-    DASHBOARDS_LIST_LOADED
-} = require('../actions/dashboards');
-const {GEOSTORIES_LIST_LOADED} = require('../actions/geostories');
-const {onTabSelected, SET_TABS_HIDDEN} = require("../actions/contenttabs");
+import Rx from 'rxjs';
+
+import { keys, findIndex, difference } from 'lodash';
+import { MAPS_LOAD_MAP, MAPS_LIST_LOADED } from '../actions/maps';
+import { DASHBOARDS_LIST_LOADED } from '../actions/dashboards';
+import { GEOSTORIES_LIST_LOADED } from '../actions/geostories';
+import { onTabSelected, SET_TABS_HIDDEN } from '../actions/contenttabs';
 /**
 * Update Maps, Dashboards and Geostories counts to select contenttabs each tab has to have a key in its ContentTab configuration
 * @param {object} action
 */
-const updateMapsDashboardTabs = (action$, {getState = () => {}}) =>
+export const updateMapsDashboardTabs = (action$, {getState = () => {}}) =>
     action$.ofType(MAPS_LOAD_MAP)
         .switchMap(() => {
             return Rx.Observable.forkJoin(action$.ofType(MAPS_LIST_LOADED).take(1), action$.ofType(DASHBOARDS_LIST_LOADED).take(1), action$.ofType(GEOSTORIES_LIST_LOADED).take(1))
@@ -36,7 +35,7 @@ const updateMapsDashboardTabs = (action$, {getState = () => {}}) =>
                 });
         });
 
-const updateSelectedOnHiddenTabs = (action$, store) =>
+export const updateSelectedOnHiddenTabs = (action$, store) =>
     action$.ofType(SET_TABS_HIDDEN)
         .switchMap(() => {
             const state = store.getState();
@@ -49,4 +48,4 @@ const updateSelectedOnHiddenTabs = (action$, store) =>
                 Rx.Observable.empty();
         });
 
-module.exports = {updateMapsDashboardTabs, updateSelectedOnHiddenTabs};
+export default {updateMapsDashboardTabs, updateSelectedOnHiddenTabs};

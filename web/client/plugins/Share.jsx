@@ -16,7 +16,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 import ShareUtils from '../utils/ShareUtils';
 import {getExtentFromViewport} from '../utils/CoordinatesUtils';
 import { versionSelector } from '../selectors/version';
-import * as shareEpics from '../epics/queryparams';
+import shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';
