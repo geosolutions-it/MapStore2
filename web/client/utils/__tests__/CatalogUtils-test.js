@@ -652,6 +652,33 @@ describe('Test the CatalogUtils', () => {
         expect(records[0].thumbnail).toBe(url + cswRecordsLocal[0].dc.URI[1].value);
     });
 
+    it('csw with DC references with image mime protocol url and with a named image but not a thumbnail', () => {
+        const cswRecordsLocal = [{
+            dc: {
+                references: [{
+                    name: "thumbnail",
+                    scheme: "WWW:LINK-1.0-http--image-thumbnail",
+                    value: "http://thumb"
+                }, {
+                    name: "wms",
+                    scheme: "OGC:WMS-1.1.1-http-get-map",
+                    value: "http://geoserver"
+                }],
+                URI: [{
+                    protocol: 'image/png',
+                    value: "/thumbimage"
+                }, {
+                    name: "someImage",
+                    scheme: "WWW:LINK-1.0-http--image-thumbnail",
+                    value: "/thumb"
+                }]
+            }
+        }];
+        const records = CatalogUtils.getCatalogRecords('csw', { records: cswRecordsLocal }, {url});
+        expect(records.length).toBe(1);
+        expect(records[0].thumbnail).toBe(url + cswRecordsLocal[0].dc.URI[0].value);
+    });
+
     it('wmts, with url, with options', () => {
         const wmtsRecords = [{}];
         const records = CatalogUtils.getCatalogRecords('wmts', { records: wmtsRecords }, {url});
