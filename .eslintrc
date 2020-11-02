@@ -118,7 +118,14 @@
     "vars-on-top": 2,                // http://eslint.org/docs/rules/vars-on-top
     "wrap-iife": [2, "any"],         // http://eslint.org/docs/rules/wrap-iife
     "yoda": 2,                       // http://eslint.org/docs/rules/yoda
-
+/**
+ * Restricted imports/modules
+ */
+    "no-restricted-imports": ["error", {
+      "name": "react-bootstrap",
+      "importNames": ["Button"],
+      "message": "Please import 'Button' from 'components/misc/Button instead."
+    }],
 /**
  * Style
  */
