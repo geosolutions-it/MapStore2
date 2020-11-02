@@ -23,6 +23,7 @@ const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo')
 const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent, CLICK_ON_MAP} = require('../actions/map');
+const {BOX_END, changeBoxSelectionStatus} = require('../actions/box');
 const {projectionSelector} = require('../selectors/map');
 
 
@@ -305,6 +306,34 @@ module.exports = {
                     type: "geometry"
                 }));
             }),
+    handleBoxSelectionDrawEnd: (action$, store) =>
+        action$.ofType(UPDATE_FILTER)
+            .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
+            .switchMap(() => {
+                return action$.ofType(BOX_END).switchMap(({boxEndInfo}) => {
+                    const { boxExtent } = boxEndInfo;
+                    const geom = CoordinatesUtils.getPolygonFromExtent(boxExtent);
+                    const projection = projectionSelector(store.getState());
+                    const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+
+                    return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
+                        ...currentFilter,
+                        value: {
+                            geometry: {
+                                ...geom.geometry,
+                                projection
+                            },
+                            attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                            method: "Rectangle",
+                            operation: "INTERSECTS"
+                        }
+                    }));
+                })
+                    .takeUntil(Rx.Observable.merge(
+                        action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
+                        action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
+                    ));
+            }),
     handleClickOnMap: (action$, store) =>
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
@@ -560,6 +589,16 @@ module.exports = {
                     actions.push(setControlProperty('measure', 'enabled', false));
                 }
                 return Rx.Observable.from(actions);
+            }),
+    activateBoxSelectionTool: (action$) =>
+        action$.ofType(OPEN_FEATURE_GRID)
+            .switchMap( () => {
+                return Rx.Observable.of(changeBoxSelectionStatus("start"));
+            }),
+    deactivateBoxSelectionTool: (action$) =>
+        action$.ofType(CLOSE_FEATURE_GRID)
+            .switchMap( () => {
+                return Rx.Observable.of(changeBoxSelectionStatus("end"));
             }),
     /**
      * intercept geometry changed events in draw support to update current

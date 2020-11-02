@@ -21,6 +21,7 @@ import selector from './map/selector';
 import mapReducer from "../reducers/map";
 import layersReducer from "../reducers/layers";
 import drawReducer from "../reducers/draw";
+import boxReducer from '../reducers/box';
 import highlightReducer from "../reducers/highlight";
 import mapTypeReducer from "../reducers/maptype";
 import additionalLayersReducer from "../reducers/additionallayers";
@@ -219,7 +220,7 @@ class MapPlugin extends React.Component {
         zoomControl: false,
         mapLoadingMessage: "map.loading",
         loadingSpinner: true,
-        tools: ["measurement", "locate", "scalebar", "draw", "highlight", "popup"],
+        tools: ["measurement", "locate", "scalebar", "draw", "highlight", "popup", "box"],
         options: {},
         mapOptions: {},
         fonts: ['FontAwesome'],
@@ -440,6 +441,7 @@ export default createPlugin('Map', {
         map: mapReducer,
         layers: layersReducer,
         draw: drawReducer,
+        box: boxReducer,
         highlight: highlightReducer,
         maptype: mapTypeReducer,
         additionallayers: additionalLayersReducer

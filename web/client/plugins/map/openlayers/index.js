@@ -21,5 +21,6 @@ module.exports = {
     DrawSupport: require('../../../components/map/openlayers/DrawSupport').default,
     HighlightFeatureSupport: require('../../../components/map/openlayers/HighlightFeatureSupport').default,
     SelectionSupport: require('../../../components/map/openlayers/SelectionSupport').default,
-    PopupSupport: require('../../../components/map/openlayers/PopupSupport').default
+    PopupSupport: require('../../../components/map/openlayers/PopupSupport').default,
+    BoxSelectionSupport: require('../../../components/map/openlayers/BoxSelectionSupport').default
 };
