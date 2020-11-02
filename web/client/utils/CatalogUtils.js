@@ -10,7 +10,7 @@ const assign = require('object-assign');
 const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes, get, isNil} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
-const ConfigUtils = require('./ConfigUtils');
+const ConfigUtils = require('./ConfigUtils').default;
 const LayersUtils = require('./LayersUtils');
 const LocaleUtils = require('./LocaleUtils');
 const WMTSUtils = require('./WMTSUtils');
@@ -223,7 +223,10 @@ const converters = {
                     identifier: record.Name,
                     service: records.service,
                     tags: "",
-                    layerOptions: options && options.layerOptions || {},
+                    layerOptions: {
+                        ...(options?.layerOptions || {}),
+                        ...(records?.layerOptions || {})
+                    },
                     title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
                     formats: castArray(record.formats || []),
                     dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {

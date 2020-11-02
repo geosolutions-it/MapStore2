@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {Glyphicon} = require('react-bootstrap');
 const {keys, isArray, isObject, isString} = require('lodash');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const Button = require('../../../misc/Button').default;
 const {Table} = require('react-bootstrap');
 

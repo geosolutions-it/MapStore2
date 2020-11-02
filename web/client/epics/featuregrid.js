@@ -268,6 +268,11 @@ module.exports = {
                 .map(updateFilterFunc(store)),
             action$.ofType(UPDATE_FILTER)
                 .filter(({update = {}}) => update.type === 'geometry')
+                .take(1)
+                .filter(({update = {}}) => !update.enabled)
+                .map(updateFilterFunc(store)),
+            action$.ofType(UPDATE_FILTER)
+                .filter(({update = {}}) => update.type === 'geometry')
                 .distinctUntilChanged(({update: update1}, {update: update2}) => {
                     return !update1.enabled && update2.enabled && !update1.value && !update2.value ||
                         update1.value === update2.value;
@@ -284,6 +289,22 @@ module.exports = {
             .filter(({update = {}}) => update.type !== 'geometry')
             .map(updateFilterFunc(store))
     ),
+    /**
+     * Enables the Geometry filter when entering edit mode in feature grid.
+     * No filter value should have been set otherwise nothing is enabled.
+     * @memberof epics.featuregrid
+     */
+    enableGeometryFilterOnEditMode: (action$, store) =>
+        action$.ofType(TOGGLE_MODE)
+            .filter(() => modeSelector(store.getState()) === MODES.EDIT)
+            .switchMap(() => {
+                const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                return currentFilter.value ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
+                    attribute: "the_geom",
+                    enabled: true,
+                    type: "geometry"
+                }));
+            }),
     handleClickOnMap: (action$, store) =>
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry' && update.enabled)

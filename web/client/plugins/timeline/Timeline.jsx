@@ -21,7 +21,7 @@ const { createShallowSelectorCreator } = require('../../utils/ReselectUtils');
 
 const { compose, withPropsOnChange, defaultProps } = require('recompose');
 const withMask = require('../../components/misc/enhancers/withMask');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const LoadingSpinner = require('../../components/misc/LoadingSpinner');
 
 

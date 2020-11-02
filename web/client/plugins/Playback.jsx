@@ -39,7 +39,7 @@ const Playback = compose(
 )(require('./playback/Playback'));
 
 /**
-  * Playback Plugin. Shows the playback controls for @see {@link api/plugins#plugins.Timeline}
+  * Playback Plugin. Shows the playback controls for {@link #plugins.Timeline|Timeline}
   * @class  Playback
   * @memberof plugins
   * @static

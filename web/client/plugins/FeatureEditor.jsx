@@ -16,7 +16,7 @@ import ReactDock from 'react-dock';
 import { createPlugin } from '../utils/PluginsUtils';
 
 import * as epics from '../epics/featuregrid';
-import * as featuregrid from '../reducers/featuregrid';
+import featuregrid from '../reducers/featuregrid';
 
 import Grid from '../components/data/featuregrid/FeatureGrid';
 import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../selectors/query';
@@ -82,7 +82,7 @@ const Dock = connect(createSelector(
   * @prop {boolean} cfg.showTimeSync default false. Shows the button to enable time sync
   * @prop {boolean} cfg.timeSync default false. If true, the timeSync is active by default.
   * @classdesc
-  * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
+  * FeatureEditor Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
   * <br/>sets the size of loaded pages cache, while vsOverscan and scrollDebounce params determine the behavior of grid scrolling
   * <br/>and of row loading.

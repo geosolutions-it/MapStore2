@@ -43,10 +43,10 @@ function dashboard(state = {
     case TRIGGER_SAVE_AS_MODAL:
         return set("showSaveAsModal", action.show, set('saveErrors', undefined, state));
     case DASHBOARD_LOADED: {
-        return set("resource", action.resource, state);
+        return set('originalData', action.data, set("resource", action.resource, state));
     }
     case DASHBOARD_RESET: {
-        return set("resource", undefined, state);
+        return set('originalData', undefined, set("resource", undefined, state));
     }
     case SAVE_ERROR: {
         return set('saveErrors', castArray(action.error), state);

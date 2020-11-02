@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const Select = require('react-select').default;
 const {Glyphicon, Alert} = require('react-bootstrap');
 const {findIndex} = require('lodash');

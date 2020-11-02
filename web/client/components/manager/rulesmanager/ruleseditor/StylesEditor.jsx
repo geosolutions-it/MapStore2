@@ -14,7 +14,7 @@ const AvailableStyles = filterEnhancer(require("../AvailableStyles"));
 
 const Button = require('../../../misc/Button').default;
 const StylesList = require("../StylesList");
-const Message = require("../../../I18N/Message");
+const Message = require("../../../I18N/Message").default;
 
 const enhancer = require("./enhancers/style");
 const getAvailables = (styles, {allowedStyles = {}}) => {

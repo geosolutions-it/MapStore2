@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const emptyState = require('../../misc/enhancers/emptyState');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 module.exports = (asTooltip = true) => emptyState(
     ({ layers = [] }) => layers.length === 0,

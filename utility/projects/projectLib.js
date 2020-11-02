@@ -48,7 +48,7 @@ const updateSubmoduleBranch = (outFolder) => {
                 if (err) {
                     reject(err);
                 }
-                process.stdout.write("doing checkout to the branch: ", data.current);
+                process.stdout.write("doing checkout to the branch: " + data.current + "\n");
                 gitProjectMs2.checkout(data.current, null, (error) => {
                     if (error) {
                         reject(error);

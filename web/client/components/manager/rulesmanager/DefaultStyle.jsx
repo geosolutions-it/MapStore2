@@ -7,10 +7,10 @@
 */
 const React = require('react');
 const StylesList = require('./StylesList');
-const Message = require("../../I18N/Message");
+const Message = require("../../I18N/Message").default;
 const Filter = require("../../misc/Filter");
-const Portal = require("../../misc/Portal");
-const ResizableModal = require("../../misc/ResizableModal");
+const Portal = require("../../misc/Portal").default;
+const ResizableModal = require("../../misc/ResizableModal").default;
 const BorderLayout = require("../../layout/BorderLayout");
 
 module.exports = ({styles = [], selectedStyles = [], onSelectionChange = () => {}, show = false, stylesFilter = '', filterPlaceholder = "", onFilter = () => {}, onClose = () => {}}) => {

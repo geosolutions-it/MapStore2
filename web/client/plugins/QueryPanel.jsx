@@ -46,8 +46,8 @@ const {bindActionCreators} = require('redux');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const layerFilterEpics = require('../epics/layerfilter');
 
-const ResizableModal = require('../components/misc/ResizableModal');
-const Portal = require('../components/misc/Portal');
+const ResizableModal = require('../components/misc/ResizableModal').default;
+const Portal = require('../components/misc/Portal').default;
 
 
 const {
@@ -389,7 +389,7 @@ class QueryPanel extends React.Component {
  *   - typeName {string} the workspace + layer name on geoserver
  *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
  *   - srsName {string} The projection of the requested features fetched via wfs
- *
+
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
  * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer to hide
  * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)

@@ -5,7 +5,7 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import React, {useState, useEffect, useRef } from 'react';
+import React, {useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 const {Glyphicon} = require('react-bootstrap');
 
@@ -13,20 +13,35 @@ import EffectSupport from './EffectSupport';
 
 const VSlider = ({ type, map, widthRef }) => {
 
+    const [pos, setPos] = useState();
     const [showArrows, setShowArrows] = useState(true);
+
+    // reset the slider positon to prevent misalignment between handler and cut positions
+    const onWindowResize = () => {
+        setPos({x: 0, y: 0});
+        widthRef.current = map.getProperties().size[0] / 2;
+    };
+
+    const onDragVerticalHandler = (e, ui) => {
+        widthRef.current += ui.deltaX;
+        setPos({x: ui.x, y: ui.y});
+        map.render();
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', onWindowResize);
+        return () => {
+            window.removeEventListener('resize', onWindowResize);
+        };
+    }, [ type ]);
 
     useEffect(() => {
         widthRef.current = map.getProperties().size[0] / 2;
     }, [ type ]);
 
-    const onDragVerticalHandler = (e, ui) => {
-        widthRef.current += ui.deltaX;
-        map.render();
-    };
-
     return (
         <Draggable
-            axis="x"
+            position={pos}
             bounds="parent"
             onStart={() => setShowArrows(false)}
             onDrag={(e, ui) => onDragVerticalHandler(e, ui)}
@@ -58,18 +73,33 @@ const VSlider = ({ type, map, widthRef }) => {
 
 const HSlider = ({ type, map, heightRef }) => {
 
+    const [pos, setPos] = useState();
     const [showArrows, setShowArrows] = useState(true);
+
+    const onWindowResize = () => {
+        setPos({x: 0, y: 0});
+        heightRef.current = map.getProperties().size[1] / 2;
+    };
+
+    const onDragHorizontalHandler = (e, ui) => {
+        heightRef.current += ui.deltaY;
+        setPos({x: ui.x, y: ui.y});
+        map.render();
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', onWindowResize);
+        return () => {
+            window.removeEventListener('resize', onWindowResize);
+        };
+    }, [ type ]);
 
     useEffect(() => {
         heightRef.current = map.getProperties().size[1] / 2;
     }, [ type ]);
 
-    const onDragHorizontalHandler = (e, ui) => {
-        heightRef.current += ui.deltaY;
-        map.render();
-    };
     return (<Draggable
-        axis="y"
+        position={pos}
         bounds="parent"
         onStart={() => setShowArrows(false)}
         onDrag={(e, ui) => onDragHorizontalHandler(e, ui)}

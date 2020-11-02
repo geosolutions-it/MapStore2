@@ -10,7 +10,7 @@ const axios = require('../libs/ajax');
 const _ = require('lodash');
 
 const urlUtil = require('url');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const assign = require('object-assign');
 

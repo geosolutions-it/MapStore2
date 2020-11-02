@@ -7,7 +7,7 @@ const reorderRules = require("./reorderRules");
 const scrollStream = require("./scrollStream");
 const filtersStream = require("./filtersStream");
 const FilterRenderers = require("../filterRenderers");
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 const AccessFormatter = require('../formatters/AccessFormatter');
 const {getRow, flattenPages, getOffsetFromTop} = require('../../../../../utils/RulesGridUtils');
 

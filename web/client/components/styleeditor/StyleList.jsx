@@ -14,7 +14,7 @@ const emptyState = require('../misc/enhancers/emptyState');
 const withLocal = require("../misc/enhancers/localizedProps");
 const Filter = withLocal('filterPlaceholder')(require('../misc/Filter'));
 const SVGPreview = require('./SVGPreview');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const tooltip = require('../misc/enhancers/tooltip');
 const Glyphicon = tooltip(GlyphiconRB);
 

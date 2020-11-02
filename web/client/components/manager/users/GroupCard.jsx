@@ -8,11 +8,11 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-// const Message = require('../I18N/Message');
+// const Message = require('../I18N/Message').default;
 const GridCard = require('../../misc/GridCard');
 const {Glyphicon} = require('react-bootstrap');
 const Button = require('../../../components/misc/Button').default;
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 
 
 // const ConfirmModal = require('./modals/ConfirmModal');

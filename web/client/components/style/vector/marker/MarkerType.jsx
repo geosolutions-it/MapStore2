@@ -11,7 +11,7 @@ const React = require('react');
 const {Row, Col} = require('react-bootstrap');
 const Select = require('react-select').default;
 
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 
 /**
  * Styler for the gliph, color and shape

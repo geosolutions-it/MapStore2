@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const Modal = require('../../misc/Modal');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const Button = require('../../misc/Button').default;
 
 module.exports = ({

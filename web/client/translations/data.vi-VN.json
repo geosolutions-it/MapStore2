@@ -489,7 +489,6 @@
         "groups": "Các nhóm",
         "help": "Trợ giúp",
         "helptexts": {
-            "backgroundSwitcher": "Đây là phần trợ giúp cho phần chuyển nền",
             "expandToolbar": "Đây là phần trợ giúp cho Mở rộng / Biến thể",
             "gohome": "Đây là phần trợ giúp cho Trang chủ",
             "historyredo": "Sử dụng nút này để đi đến vị trí và thu phóng bản đồ tiếp theo",
@@ -1420,7 +1419,6 @@
             "addLayer": "Thêm lớp",
             "addLayerToGroup": "Thêm lớp vào nhóm đã chọn",
             "addSubGroup": "Thêm nhóm phụ vào nhóm đã chọn",
-            "backgroundSwitcher": "Hình nền",
             "browseData": "Mở bảng thuộc tính",
             "clearFilter": "Xóa bộ lọc",
             "createWidget": "Tạo một tiện ích cho lớp đã chọn",

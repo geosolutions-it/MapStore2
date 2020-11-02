@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 const { getResourceIdFromURL } = require('../../../utils/ResourceUtils');
 const Thumbnail = require('../../misc/Thumbnail').default;
 

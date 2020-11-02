@@ -11,7 +11,7 @@ const uuidv1 = require('uuid/v1');
 const bbox = require('@turf/bbox');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const cs = require('classnames');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {get} = require('lodash');
 const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
 
@@ -143,16 +143,19 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
     const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
     const unselect = selected?.properties?.id === properties?.id;
-    const isValidFeature = selected?.properties?.isValidFeature || properties?.isValidFeature;
+    const selectedIsValidFeature = get(selected, "properties.isValidFeature", true);
+    const isValidFeature = selectedIsValidFeature || properties?.isValidFeature;
+    const allowCardMouseEvent = !unselect && selectedIsValidFeature;
 
     return (
         <div
             className={cs('geometry-card', {'ms-selected': unselect})}
-            onMouseEnter={() => !unselect && onGeometryHighlight(properties.id)}
-            onMouseLeave={() => !unselect && onGeometryHighlight(properties.id, false)}
+            onMouseEnter={() => allowCardMouseEvent && onGeometryHighlight(properties.id)}
+            onMouseLeave={() => allowCardMouseEvent && onGeometryHighlight(properties.id, false)}
             onClick={() =>{
                 if (unselect) {
                     onUnselectFeature();
+                    onGeometryHighlight(properties.id);
                 } else {
                     onSelectFeature([feature]);
                     setTabValue(isMeasureEditDisabled ? 'coordinates' : 'style');

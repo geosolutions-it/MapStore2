@@ -9,7 +9,7 @@
 const React = require('react');
 const assign = require('object-assign');
 
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
 const PreviewIcon = require('./PreviewIcon');

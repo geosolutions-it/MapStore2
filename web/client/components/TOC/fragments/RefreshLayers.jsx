@@ -12,8 +12,8 @@ const React = require('react');
 const {Glyphicon, Alert} = require('react-bootstrap');
 
 const Dialog = require('../../misc/Dialog');
-const Portal = require('../../misc/Portal');
-const Message = require('../../I18N/Message');
+const Portal = require('../../misc/Portal').default;
+const Message = require('../../I18N/Message').default;
 const Button = require('../../misc/Button').default;
 
 const Spinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');

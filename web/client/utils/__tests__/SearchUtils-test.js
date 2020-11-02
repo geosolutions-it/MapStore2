@@ -35,4 +35,7 @@ describe('SearchUtils test', () => {
     it('layerIsVisibleForGFI layer hidden with force visibility', () => {
         expect(layerIsVisibleForGFI({visibility: false}, {launchInfoPanel: 'single_layer', openFeatureInfoButtonEnabled: true, forceSearchLayerVisibility: true})).toBe(true);
     });
+    it('layerIsVisibleForGFI layer doesn\'t exist', () => {
+        expect(layerIsVisibleForGFI(undefined, {launchInfoPanel: 'single_layer', openFeatureInfoButtonEnabled: true, forceSearchLayerVisibility: true})).toBe(false);
+    });
 });

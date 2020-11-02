@@ -9,10 +9,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const Button = require('../../components/misc/Button').default;
-const OverlayTrigger = require('../../components/misc/OverlayTrigger');
+const OverlayTrigger = require('../../components/misc/OverlayTrigger').default;
 const Sidebar = require('react-sidebar').default;
 const { Resizable } = require('react-resizable');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 
 class Menu extends React.Component {
     static propTypes = {

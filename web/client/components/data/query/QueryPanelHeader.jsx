@@ -1,5 +1,5 @@
 const React = require('react');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {Glyphicon} = require('react-bootstrap');
 const Button = require('../../misc/Button').default;
 const popoverTooltip = require('../../misc/enhancers/popover');

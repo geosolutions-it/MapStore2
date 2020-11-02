@@ -37,20 +37,35 @@ describe('Map Plugin', () => {
         MapUtils.clearHooks();
     });
 
-    it('creates a Map plugin with default configuration (leaflet)', () => {
+    it('creates a Map plugin with default configuration (leaflet)', (done) => {
         const { Plugin } = getPluginForTest(MapPlugin, {map});
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('map')).toExist();
-        expect(document.getElementsByClassName('leaflet-container').length).toBe(1);
+        setTimeout(() => {
+            expect(document.getElementById('map')).toExist();
+            expect(document.getElementsByClassName('leaflet-container').length).toBe(1);
+            done();
+        }, 200);
     });
 
-    it('creates a Map plugin with specified mapType configuration (openlayers)', () => {
+    it('creates a Map plugin with specified mapType configuration (openlayers)', (done) => {
         const { Plugin } = getPluginForTest(MapPlugin, { map, maptype: {
             mapType: 'openlayers'
         } });
-        ReactDOM.render(<Plugin pluginCfg={{ shouldLoadFont: false }} />, document.getElementById("container"));
-        expect(document.getElementById('map')).toExist();
-        expect(document.getElementsByClassName('ol-viewport').length).toBe(1);
+        ReactDOM.render(<Plugin
+            pluginCfg={{ shouldLoadFont: false }}
+            onLoadingMapPlugins={(loading, mapType) => {
+                if (!loading) {
+                    try {
+                        expect(mapType).toBe('openlayers');
+                        expect(document.getElementById('map')).toExist();
+                        expect(document.getElementsByClassName('ol-viewport').length).toBe(1);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }
+            }}
+        />, document.getElementById("container"));
     });
 
     it('resetOnMapInit epic is activated by INIT_MAP action', () => {

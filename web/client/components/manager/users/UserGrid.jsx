@@ -11,7 +11,7 @@ const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
 const UserCard = require('./UserCard');
 const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
 

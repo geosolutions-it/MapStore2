@@ -14,7 +14,7 @@ const {error} = require('../../../../../actions/notifications');
 const localizedProps = require("../../../../misc/enhancers/localizedProps");
 const {getWorkspaces} = require('../../../../../observables/rulesmanager');
 const {connect} = require("react-redux");
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 
 const WorkspaceSelector = (props) => (
     <Row className={props.disabled ? 'ms-disabled' : ''}>

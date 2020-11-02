@@ -7,7 +7,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 class BreadCrumb extends React.Component {
     static propTypes = {

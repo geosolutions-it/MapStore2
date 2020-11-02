@@ -514,7 +514,6 @@
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
             "measure": "Medir",
-            "backgroundSwitcher": "Fondos",
             "layers": "Capas",
             "drawerButton": "Capas",
             "refreshTitle": "Refrescar capas",
@@ -947,7 +946,6 @@
             "settingsPanel": "Esta es la ayuda para el panel de configuración",
             "gohome": "Esta es la ayuda Inicio",
             "measureComponent": " Herramientas para medir",
-            "backgroundSwitcher": "Esta es la ayuda para el selector de capa de fondo",
             "layerSwitcher": "Esta es la ayuda para el selector de capa",
             "infoButton": "Esta es la ayuda para el botón de Información",
             "locateBtn": "Esta es la ayuda para el botón Localízame",
@@ -1670,7 +1668,8 @@
                 "noLegendDescription": "El mapa conectado no tiene capas para mostrar en la leyenda",
                 "nodatainviewport": "Sin datos en la ventana gráfica actual",
                 "timeoutExpired": "El servicio tardó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
-                "genericError": "Hubo un error durante la recuperación de datos"
+                "genericError": "Hubo un error durante la recuperación de datos",
+                "genericErrorWithMessage": "Hubo un error durante la recuperación de datos: \"{message}\""
             },
             "builder": {
                 "header": {

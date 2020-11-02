@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +7,12 @@
  */
 const React = require('react');
 
+/**
+ * Fork Ribbon that links to MapStore GitHub repository
+ * @memberof plugins
+ * @class
+ * @name Fork
+ */
 class ForkPlugin extends React.Component {
     render() {
         return (

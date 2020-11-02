@@ -10,4 +10,4 @@ const {connect} = require('react-redux');
 module.exports = connect((state) => ({
     locale: state.locale && state.locale.currentLocale,
     messages: state.locale && state.locale.messages || []
-}))(require('../../components/I18N/Message'));
+}))(require('../../components/I18N/Message').default);

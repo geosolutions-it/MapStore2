@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 const Page = require('../../containers/Page');
 
@@ -15,6 +15,16 @@ const {resetControls} = require('../../actions/controls');
 
 require('../assets/css/manager.css');
 
+
+/**
+  * @name Manager
+  * @memberof pages
+  * @class
+  * @classdesc
+  * This is the main container page for user administration page.
+  * it is a container for the Manager plugins.
+  *
+  */
 class Manager extends React.Component {
     static propTypes = {
         mode: PropTypes.string,

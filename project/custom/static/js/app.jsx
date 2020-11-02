@@ -5,20 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {connect} = require('react-redux');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
 
-const StandardApp = require('../MapStore2/web/client/components/app/StandardApp');
+import StandardApp from '../MapStore2/web/client/components/app/StandardApp';
+import StandardRouterComp from '../MapStore2/web/client/components/app/StandardRouter';
+import StandardStore from '../MapStore2/web/client/components/stores/StandardStore';
 
-const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
+import {pages, pluginsDef, initialState, storeOpts} from './appConfig';
 
+import { checkForMissingPlugins } from '../MapStore2/web/client/utils/DebugUtils';
+
+checkForMissingPlugins(pluginsDef.plugins);
 const StandardRouter = connect((state) => ({
     locale: state.locale || {},
     pages
-}))(require('../MapStore2/web/client/components/app/StandardRouter').default);
+}))(StandardRouterComp);
 
-const appStore = require('../MapStore2/web/client/stores/StandardStore').bind(null, initialState, {}, {}, {});
+const appStore = StandardStore.bind(null, { initialState });
 
 const appConfig = {
     storeOpts,

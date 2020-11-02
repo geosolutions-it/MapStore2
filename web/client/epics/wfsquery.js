@@ -21,7 +21,7 @@ const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const { addTimeParameter } = require('../utils/WFSTimeUtils');
 
 
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');

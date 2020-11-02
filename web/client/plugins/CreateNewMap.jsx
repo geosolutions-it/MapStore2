@@ -135,7 +135,7 @@ class CreateNewMap extends React.Component {
 }
 
 /**
- * Button bar to create a new map or dashboard.
+ * Button bar to create a new contents.
  * @memberof plugins
  * @class CreateNewMap
  * @static

@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const Draggable = require('react-draggable');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 class Dialog extends React.Component {
     static propTypes = {

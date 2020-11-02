@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -19,7 +19,7 @@ const ZoomToMaxExtentButton = connect(selector, {
     changeMapView
 })(require('../components/buttons/ZoomToMaxExtentButton'));
 
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 require('./zoomall/zoomall.css');
 
@@ -33,6 +33,12 @@ class ZoomAllPlugin extends React.Component {
 
 const assign = require('object-assign');
 
+/**
+ * Button to zoom to map max Extent.
+ * @name ZoomAll
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     ZoomAllPlugin: assign(ZoomAllPlugin, {
         Toolbar: {

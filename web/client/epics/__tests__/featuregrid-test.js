@@ -102,7 +102,8 @@ const {
     hideDrawerOnFeatureGridOpenMobile,
     handleClickOnMap,
     featureGridUpdateGeometryFilter,
-    activateTemporaryChangesEpic
+    activateTemporaryChangesEpic,
+    enableGeometryFilterOnEditMode
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1932,6 +1933,57 @@ describe('featuregrid Epics', () => {
             }
         }, done);
     });
+    it('enableGeometryFilterOnEditMode epic', (done) => {
+        const epicResponse = actions => {
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+            done();
+        };
+
+        const featureGridState1 = {
+            featuregrid: {
+                mode: "EDIT",
+                filters: {}
+            }
+        };
+
+        testEpic(
+            enableGeometryFilterOnEditMode,
+            1,
+            toggleEditMode(),
+            epicResponse,
+            featureGridState1
+        );
+
+        const epicResponse2 = actions => {
+            expect(actions).toBe(undefined);
+            done();
+        };
+
+
+        const featureGridState2 = {
+            featuregrid: {
+                mode: "EDIT",
+                filters: {
+                    ["the_geom"]: {
+                        attribute: "the_geom",
+                        enabled: true,
+                        type: "geometry",
+                        value: {
+                            attribute: "the_geom"
+                        }
+                    }
+                }
+            }
+        };
+
+        testEpic(
+            enableGeometryFilterOnEditMode,
+            1,
+            toggleEditMode(),
+            epicResponse2,
+            featureGridState2
+        );
+    });
     it('featureGridUpdateFilter with geometry filter', (done) => {
         const startActions = [openFeatureGrid(), createQuery(), updateFilter({
             type: 'geometry',
@@ -1948,6 +2000,38 @@ describe('featuregrid Epics', () => {
         }, {
             featuregrid: {
                 selectedLayer: 'layer'
+            },
+            layers: [{
+                id: 'layer',
+                name: 'layer'
+            }]
+        }, done);
+    });
+    it('featureGridUpdateFilter initiates query when geometry filter is disabled after feature grid opens', done => {
+        const startActions = [openFeatureGrid(), createQuery(), updateFilter({
+            type: 'geometry',
+            enabled: false
+        })];
+
+        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_QUERY);
+            expect(actions[0].reason).toBe('geometry');
+        }, {
+            featuregrid: {
+                selectedLayer: 'layer',
+                filters: {
+                    geom: {
+                        attribute: 'geom',
+                        enabled: true,
+                        type: 'geometry',
+                        value: {
+                            attribute: 'geom',
+                            method: 'Circle',
+                            operation: 'INTERSECTS'
+                        }
+                    }
+                }
             },
             layers: [{
                 id: 'layer',

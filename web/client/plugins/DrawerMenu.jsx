@@ -81,7 +81,9 @@ const DrawerButton = connect(state => ({
 );
 
 /**
- * DrawerMenu plugin. Shows a left menu with some pluins rendered inside it (typically the TOC).
+ * DrawerMenu plugin. It is a container for other plugins.
+ * It shows a collapsible panel on the left with some plugins rendered inside it (typically the {@link #plugins.TOC|TOC})
+ * and a button on the top-left corner to open this panel.
  * @prop {string} cfg.glyph glyph icon to use for the button
  * @prop {object} cfg.menuButtonStyle Css inline style for the button. Display property will be overridden by the hideButton/forceDrawer options.
  * @prop {string} cfg.buttonClassName class for the toggle button

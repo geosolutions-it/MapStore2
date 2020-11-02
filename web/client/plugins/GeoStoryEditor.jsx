@@ -136,9 +136,12 @@ const GeoStoryEditor = ({
         />
     </div> : null;
 };
+
 /**
- * Plugin for GeoStory side panel editor
+ * Plugin for GeoStory side panel editor. Allows editing of {@link #plugins.GeoStory|GeoStory},
+ * turning it in edit mode.
  * @name GeoStoryEditor
+ * @class
  * @memberof plugins
  */
 export default createPlugin('GeoStoryEditor', {

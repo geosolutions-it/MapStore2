@@ -12,7 +12,7 @@ const {setControlProperty} = require('../../actions/controls');
 const { checkPendingChanges } = require('../../actions/pendingChanges');
 const {Glyphicon} = require('react-bootstrap');
 const {unsavedMapSelector, unsavedMapSourceSelector} = require('../../selectors/controls');
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 
 
 const closeLogin = () => {

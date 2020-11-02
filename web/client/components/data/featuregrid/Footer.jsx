@@ -1,5 +1,5 @@
 const React = require('react');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {Glyphicon, Grid, Row, Col} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const Button = require('../../misc/Button').default;

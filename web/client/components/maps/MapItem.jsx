@@ -14,7 +14,7 @@ var ListGroupItem = BootstrapReact.ListGroupItem;
 var Glyphicon = BootstrapReact.Glyphicon;
 var Tooltip = BootstrapReact.Tooltip;
 const Button = require('../misc/Button').default;
-const OverlayTrigger = require('../misc/OverlayTrigger');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
 var {isFunction} = require('lodash');
 
 class MapItem extends React.Component {

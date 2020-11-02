@@ -37,7 +37,7 @@ const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedL
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {metadataSourceSelector, modalParamsSelector} = require('../selectors/backgroundselector');
-const Message = require("../components/I18N/Message");
+const Message = require("../components/I18N/Message").default;
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
 const CatalogUtils = require('../utils/CatalogUtils');

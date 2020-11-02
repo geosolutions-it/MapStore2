@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var expect = require('expect');
-var ConfigUtils = require('../ConfigUtils');
+var ConfigUtils = require('../ConfigUtils').default;
 var lconfig = {};
 var testMap = {
     "defaultSourceType": "gxp_wmssource",

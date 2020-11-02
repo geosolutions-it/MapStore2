@@ -52,10 +52,11 @@ describe('Test the dashboard reducer', () => {
         expect(state.showSaveAsModal).toBe(true);
     });
     it('dashboard dashboardLoaded', () => {
-        const action = dashboardLoaded("TEST");
+        const action = dashboardLoaded("TEST", "DATA");
         const state = dashboard( undefined, action);
         expect(state).toExist();
         expect(state.resource).toBe("TEST");
+        expect(state.originalData).toBe("DATA");
     });
     it('dashboard dashboardSaveError', () => {
         const action = dashboardSaveError(["error1"]);

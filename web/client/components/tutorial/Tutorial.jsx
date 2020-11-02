@@ -11,7 +11,7 @@ const Joyride = require('react-joyride').default;
 const I18N = require('../I18N/I18N');
 const assign = require('object-assign');
 const {head} = require('lodash');
-const Portal = require('../misc/Portal');
+const Portal = require('../misc/Portal').default;
 
 require('react-joyride/lib/react-joyride-compiled.css');
 require('./style/tutorial.css');

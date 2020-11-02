@@ -12,7 +12,7 @@ const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
 const { isLoggedIn } = require('../../selectors/security');
 
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const Button = require('../../components/misc/Button').default;
 
 class EmptyDashboards extends React.Component {

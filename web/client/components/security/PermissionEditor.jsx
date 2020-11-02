@@ -14,7 +14,7 @@ const Select = require('react-select').default;
 const Spinner = require('react-spinkit');
 const {Table, Glyphicon} = require('react-bootstrap');
 const Button = require('../misc/Button').default;
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const LocaleUtils = require('../../utils/LocaleUtils');
 
 /**

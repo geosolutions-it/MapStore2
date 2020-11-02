@@ -8,7 +8,7 @@
 const React = require('react');
 const { Row, Col, Glyphicon } = require('react-bootstrap');
 const Button = require('../../misc/Button').default;
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 /**
  * Common header component for builder content. With close button and icon

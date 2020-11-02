@@ -26,6 +26,7 @@ import {
     getDefaultSectionTemplate,
     isMediaSection,
     lists,
+    onCleanId,
     scrollToContent,
     testRegex,
     isWebPageSection,
@@ -44,6 +45,13 @@ describe("GeoStory Utils", () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = "";
         setTimeout(done);
+    });
+    it('should clean the id of get params', () => {
+        const sampleId1 = "e4675889?showHome=true";
+        const sampleId2 = "e4675889";
+
+        expect(onCleanId(sampleId1)).toEqual("e4675889");
+        expect(onCleanId(sampleId2)).toEqual("e4675889");
     });
     it('test scrollToContent with image content', () => {
         const SAMPLE_ID = "res_img";
