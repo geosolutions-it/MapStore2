@@ -12,7 +12,6 @@ import ReactDOM from 'react-dom';
 import LocaleUtils from '../../utils/LocaleUtils';
 import StandardStore from '../../stores/StandardStore';
 import StandardApp from './StandardApp';
-
 /**
  * main entry point of application.
  * This function provide basic functionality to initialize an application in the MapStore framework.
