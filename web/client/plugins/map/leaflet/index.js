@@ -16,5 +16,6 @@ module.exports = {
     ScaleBar: require('../../../components/map/leaflet/ScaleBar'),
     DrawSupport: require('../../../components/map/leaflet/DrawSupport'),
     HighlightFeatureSupport: require('../../../components/map/leaflet/HighlightFeatureSupport'),
-    PopupSupport: require('../../../components/map/leaflet/PopupSupport').default
+    PopupSupport: require('../../../components/map/leaflet/PopupSupport').default,
+    BoxSelectionSupport: require('../../../components/map/leaflet/BoxSelectionSupport').default
 };

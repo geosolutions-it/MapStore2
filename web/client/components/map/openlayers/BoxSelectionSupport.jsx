@@ -19,7 +19,6 @@ const BoxSelectionSupport = (props) => {
     useEffect(() => {
         if (status === "start") {
             select = new Select();
-            console.log("SLELE", select);
             dragBox = new DragBox({});
             map.addInteraction(select);
             map.addInteraction(dragBox);
