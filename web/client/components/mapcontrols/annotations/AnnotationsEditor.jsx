@@ -22,7 +22,7 @@ const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
-const FeaturesList = require('./FeaturesList');
+const FeaturesList = require('./FeaturesList').default;
 const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
 
 /**
