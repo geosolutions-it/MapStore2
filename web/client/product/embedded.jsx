@@ -10,6 +10,9 @@ import { loadVersion } from '../actions/version';
 import appConfigEmbedded from './appConfigEmbedded';
 import apiPlugins from './apiPlugins';
 import main from './main';
+import { checkForMissingPlugins } from '../utils/DebugUtils';
+
+checkForMissingPlugins(apiPlugins.plugins);
 
 main(
     appConfigEmbedded,

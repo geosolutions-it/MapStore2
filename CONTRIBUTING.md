@@ -114,7 +114,7 @@ If you are testing a specific component follow the following convention:
 
 MapStore 2 follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules.
 
-The set of used rules can be found in the [.eslintrc](https://github.com/geosolutions-it/MapStore2/blob/master/.eslintrc) file, in the root folder of the project.
+The set of used rules can be found in the ESLint config package[eslint-config-mapstore](https://github.com/geosolutions-it/MapStore2/blob/master/utility/eslint/index.js) file, deployed on npm and configured in the `package.json`.
 
 You can run the linter locally on your machine before committing using the `lint`
 target:

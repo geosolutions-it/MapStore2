@@ -25,31 +25,31 @@ export default ({
     bsStyle = "default",
     bsSize = "sm"
 }) => (<>
-        <Button
-            style={style}
-            bsSize={bsSize}
-            bsStyle={bsStyle}
-            className={className}
-            onClick={onClick}>
-            {title}
-        </Button>
-        {confirmMessage && <Portal>
-            <ConfirmDialog
-                modal
-                show={showConfirm}
-                onClose={() => {
-                    onClose();
-                    onShowConfirm(false);
-                }}
-                onConfirm={() => {
-                    onConfirm();
-                    onShowConfirm(false);
-                }}
-                confirmButtonBSStyle="default"
-                confirmButtonContent={<Message msgId="confirm"/>}
-                closeText={<Message msgId="cancel"/>}
-                closeGlyph="1-close">
-                <Message msgId={confirmMessage}/>
-            </ConfirmDialog>
-        </Portal>}
+    <Button
+        style={style}
+        bsSize={bsSize}
+        bsStyle={bsStyle}
+        className={className}
+        onClick={onClick}>
+        {title}
+    </Button>
+    {confirmMessage && <Portal>
+        <ConfirmDialog
+            modal
+            show={showConfirm}
+            onClose={() => {
+                onClose();
+                onShowConfirm(false);
+            }}
+            onConfirm={() => {
+                onConfirm();
+                onShowConfirm(false);
+            }}
+            confirmButtonBSStyle="default"
+            confirmButtonContent={<Message msgId="confirm"/>}
+            closeText={<Message msgId="cancel"/>}
+            closeGlyph="1-close">
+            <Message msgId={confirmMessage}/>
+        </ConfirmDialog>
+    </Portal>}
 </>);

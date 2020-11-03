@@ -6,17 +6,23 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const { testEpic } = require('./epicTestUtils');
-const { UPDATE_METADATA } = require('../../actions/playback');
-const { retrieveFramesForPlayback, playbackStopWhenDeleteLayer, playbackCacheNextPreviousTimes } = require('../playback');
-const DOMAIN_VALUES_RESPONSE = require('raw-loader!../../test-resources/wmts/DomainValues.xml');
-const { removeNode, CHANGE_LAYER_PROPERTIES } = require('../../actions/layers');
-const { STOP, play, stop, FRAMES_LOADING, SET_FRAMES } = require('../../actions/playback');
-const { setCurrentTime, moveTime } = require('../../actions/dimension');
-const { selectLayer, LOADING, setMapSync } = require('../../actions/timeline');
-const axios = require("../../libs/ajax");
-const MockAdapter = require("axios-mock-adapter");
+import expect from 'expect';
+
+import { testEpic } from './epicTestUtils';
+import { UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES } from '../../actions/playback';
+
+import {
+    retrieveFramesForPlayback,
+    playbackStopWhenDeleteLayer,
+    playbackCacheNextPreviousTimes
+} from '../playback';
+
+import DOMAIN_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainValues.xml';
+import { removeNode, CHANGE_LAYER_PROPERTIES } from '../../actions/layers';
+import { setCurrentTime, moveTime } from '../../actions/dimension';
+import { selectLayer, LOADING, setMapSync } from '../../actions/timeline';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
 const ANIMATION_MOCK_STATE = {
     dimension: {
         currentTime: '2016-09-05T00:00:00.000Z'

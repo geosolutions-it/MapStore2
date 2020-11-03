@@ -20,42 +20,42 @@ function Band({
 }) {
     return (
         <>
-        <PropertyField
-            label={label}>
-            <Select
-                clearable={false}
-                options={bands}
-                value={value}
-                onChange={option => onChange('band', option.value)}
-            />
-        </PropertyField>
-        <PropertyField
-            label="styleeditor.contrastEnhancement">
-            <Select
-                clearable={false}
-                options={[
-                    {
-                        label: <Message msgId="styleeditor.none" />,
-                        value: 'none'
-                    },
-                    {
-                        label: <Message msgId="styleeditor.normalize" />,
-                        value: 'normalize'
-                    },
-                    {
-                        label: <Message msgId="styleeditor.histogram" />,
-                        value: 'histogram'
-                    }
-                ]}
-                value={enhancementType || 'none'}
-                onChange={option => {
-                    const newEnhancementType = option.value === 'none'
-                        ? undefined
-                        : option.value;
-                    onChange('enhancementType', newEnhancementType);
-                }}
-            />
-        </PropertyField>
+            <PropertyField
+                label={label}>
+                <Select
+                    clearable={false}
+                    options={bands}
+                    value={value}
+                    onChange={option => onChange('band', option.value)}
+                />
+            </PropertyField>
+            <PropertyField
+                label="styleeditor.contrastEnhancement">
+                <Select
+                    clearable={false}
+                    options={[
+                        {
+                            label: <Message msgId="styleeditor.none" />,
+                            value: 'none'
+                        },
+                        {
+                            label: <Message msgId="styleeditor.normalize" />,
+                            value: 'normalize'
+                        },
+                        {
+                            label: <Message msgId="styleeditor.histogram" />,
+                            value: 'histogram'
+                        }
+                    ]}
+                    value={enhancementType || 'none'}
+                    onChange={option => {
+                        const newEnhancementType = option.value === 'none'
+                            ? undefined
+                            : option.value;
+                        onChange('enhancementType', newEnhancementType);
+                    }}
+                />
+            </PropertyField>
         </>
     );
 }

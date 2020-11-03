@@ -141,8 +141,8 @@ const SliderSwipeSupport = ({ map, layer, type = "cut-vertical", active }) => {
     if (layer && active) {
         return (
             <>
-            {type === "cut-vertical" && (<VSlider widthRef={widthRef} map={map} type={type} />)}
-            {type === "cut-horizontal" && (<HSlider heightRef={heightRef} map={map} type={type} />)}
+                {type === "cut-vertical" && (<VSlider widthRef={widthRef} map={map} type={type} />)}
+                {type === "cut-horizontal" && (<HSlider heightRef={heightRef} map={map} type={type} />)}
                 <EffectSupport
                     map={map}
                     layer={layer}

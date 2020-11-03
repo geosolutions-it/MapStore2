@@ -6,19 +6,32 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const Rx = require('rxjs');
+import Rx from 'rxjs';
 
-const {head} = require('lodash');
-const {ADD_BACKGROUND, ADD_BACKGROUND_PROPERTIES, SET_CURRENT_BACKGROUND_LAYER, BACKGROUND_ADDED, BACKGROUND_EDITED, REMOVE_BACKGROUND, createBackgroundsList, clearModalParameters,
-    setBackgroundModalParams, setCurrentBackgroundLayer, allowBackgroundsDeletion} = require('../actions/backgroundselector');
-const {setControlProperty} = require('../actions/controls');
-const {MAP_CONFIG_LOADED} = require('../actions/config');
-const {changeSelectedService} = require('../actions/catalog');
-const {changeLayerProperties, removeNode} = require('../actions/layers');
-const {getLayerFromId, currentBackgroundSelector} = require('../selectors/layers');
-const {backgroundLayersSelector} = require('../selectors/backgroundselector');
-const {getLayerCapabilities} = require('../observables/wms');
-const {formatCapabitiliesOptions} = require('../utils/LayersUtils');
+import { head } from 'lodash';
+
+import {
+    ADD_BACKGROUND,
+    ADD_BACKGROUND_PROPERTIES,
+    SET_CURRENT_BACKGROUND_LAYER,
+    BACKGROUND_ADDED,
+    BACKGROUND_EDITED,
+    REMOVE_BACKGROUND,
+    createBackgroundsList,
+    clearModalParameters,
+    setBackgroundModalParams,
+    setCurrentBackgroundLayer,
+    allowBackgroundsDeletion
+} from '../actions/backgroundselector';
+
+import { setControlProperty } from '../actions/controls';
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import { changeSelectedService } from '../actions/catalog';
+import { changeLayerProperties, removeNode } from '../actions/layers';
+import { getLayerFromId, currentBackgroundSelector } from '../selectors/layers';
+import { backgroundLayersSelector } from '../selectors/backgroundselector';
+import { getLayerCapabilities } from '../observables/wms';
+import { formatCapabitiliesOptions } from '../utils/LayersUtils';
 
 const accessMetadataExplorer = (action$) =>
     action$.ofType(ADD_BACKGROUND)
@@ -117,7 +130,7 @@ const backgroundRemovedEpic = (action$, store) =>
             ) : Rx.Observable.empty();
         });
 
-module.exports = {
+export default {
     accessMetadataExplorer,
     addBackgroundPropertiesEpic,
     backgroundsListInit,

@@ -1,9 +1,9 @@
-var PropTypes = require('prop-types');
-var React = require('react');
-var L = require('leaflet');
-var assign = require('object-assign');
-require('leaflet.locatecontrol');
-require('leaflet.locatecontrol/dist/L.Control.Locate.css');
+import PropTypes from 'prop-types';
+import React from 'react';
+import L from 'leaflet';
+import assign from 'object-assign';
+import 'leaflet.locatecontrol';
+import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
 
 const defaultOpt = { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
     follow: true,  // follow with zoom and pan the user's location
@@ -13,7 +13,6 @@ const defaultOpt = { // For all configuration options refer to https://github.co
         maximumAge: 2000,
         enableHighAccuracy: false,
         timeout: 10000,
-        maxZoom: Infinity,
         watch: true  // if you overwrite this, visualization cannot be updated
     }
 };
@@ -35,6 +34,9 @@ L.Control.MSLocate = L.Control.Locate.extend({
         this.options.followCircleStyle = tmp;
         this._resetVariables();
         this._map.on('unload', this._unload, this);
+    },
+    setLocateOptions: function(options) {
+        this.options.locateOptions = {...options};
     },
     _setClasses: function(state) {
         this._map.fire('locatestatus', {state: state});
@@ -62,6 +64,7 @@ class Locate extends React.Component {
         map: PropTypes.object,
         status: PropTypes.string,
         messages: PropTypes.object,
+        maxZoom: PropTypes.number,
         changeLocateState: PropTypes.func,
         onLocateError: PropTypes.func
     };
@@ -69,13 +72,14 @@ class Locate extends React.Component {
     static defaultProps = {
         id: 'overview',
         status: "DISABLED",
+        maxZoom: Infinity,
         changeLocateState: () => {},
         onLocateError: () => {}
     };
 
     componentDidMount() {
         if (this.props.map ) {
-            this.locate = new L.Control.MSLocate(defaultOpt);
+            this.locate = new L.Control.MSLocate(this.mergeOptions(this.props));
             this.locate.setMap(this.props.map);
             this.props.map.on('locatestatus', this.locateControlState);
             this.locate.options.onLocationError = this.onLocationError;
@@ -106,6 +110,9 @@ class Locate extends React.Component {
                 this.locate.drawMarker(this.locate._map);
             }
         }
+        if (newProps.maxZoom !== this.props.maxZoom) {
+            this.locate.setLocateOptions(this.mergeOptions(newProps).locateOptions);
+        }
     }
 
     onLocationError = (err) => {
@@ -115,6 +122,16 @@ class Locate extends React.Component {
 
     render() {
         return null;
+    }
+
+    mergeOptions(props) {
+        return {
+            ...defaultOpt,
+            locateOptions: {
+                ...defaultOpt.locateOptions,
+                maxZoom: props.maxZoom
+            }
+        };
     }
 
     locateControlState = (state) => {
@@ -128,4 +145,4 @@ class Locate extends React.Component {
     };
 }
 
-module.exports = Locate;
+export default Locate;
