@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+import expect from 'expect';
 
-const {toggleControl, TOGGLE_CONTROL} = require('../../actions/controls');
-const {download} = require('../../actions/layers');
-const { DOWNLOAD_OPTIONS_CHANGE, downloadFeatures } = require('../../actions/wfsdownload');
-const { QUERY_CREATE } = require('../../actions/wfsquery');
-const { closeExportDownload, openDownloadTool, startFeatureExportDownload} = require('../wfsdownload');
-const {testEpic} = require('./epicTestUtils');
+import { toggleControl, TOGGLE_CONTROL } from '../../actions/controls';
+import { download } from '../../actions/layers';
+import { DOWNLOAD_OPTIONS_CHANGE, downloadFeatures } from '../../actions/wfsdownload';
+import { QUERY_CREATE } from '../../actions/wfsquery';
+import { closeExportDownload, openDownloadTool, startFeatureExportDownload } from '../wfsdownload';
+import { testEpic } from './epicTestUtils';
 describe('wfsdownload Epics', () => {
     it('close export panel', (done) => {
         const epicResult = actions => {

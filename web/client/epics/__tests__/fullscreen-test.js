@@ -7,15 +7,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+import expect from 'expect';
 
-const configureMockStore = require('redux-mock-store').default;
-const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const {toggleFullscreen} = require('../../actions/fullscreen');
-const {SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const screenfull = require('screenfull');
-
-const {toggleFullscreenEpic} = require('../fullscreen');
+import configureMockStore from 'redux-mock-store';
+import { createEpicMiddleware, combineEpics } from 'redux-observable';
+import { toggleFullscreen } from '../../actions/fullscreen';
+import { SET_CONTROL_PROPERTY } from '../../actions/controls';
+import screenfull from 'screenfull';
+import { toggleFullscreenEpic } from '../fullscreen';
 const rootEpic = combineEpics(toggleFullscreenEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);

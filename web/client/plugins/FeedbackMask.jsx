@@ -81,5 +81,5 @@ module.exports = {
     reducers: {
         feedbackMask: require('../reducers/feedbackMask').default
     },
-    epics: require('../epics/feedbackMask')
+    epics: require('../epics/feedbackMask').default
 };

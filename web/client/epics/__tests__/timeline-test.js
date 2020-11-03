@@ -7,16 +7,21 @@
 */
 
 
-const expect = require('expect');
-const moment = require('moment');
-const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
-const { setTimelineCurrentTime, updateRangeDataOnRangeChange, settingInitialOffsetValue } = require('../timeline');
-const { changeMapView } = require('../../actions/map');
-const { set, compose } = require('../../utils/ImmutableUtils');
+import expect from 'expect';
 
+import moment from 'moment';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 
-const { selectTime, LOADING, RANGE_DATA_LOADED, RANGE_CHANGED, enableOffset} = require('../../actions/timeline');
-const { SET_CURRENT_TIME, SET_OFFSET_TIME, updateLayerDimensionData } = require('../../actions/dimension');
+import {
+    setTimelineCurrentTime,
+    updateRangeDataOnRangeChange,
+    settingInitialOffsetValue
+} from '../timeline';
+
+import { changeMapView } from '../../actions/map';
+import { set, compose } from '../../utils/ImmutableUtils';
+import { selectTime, LOADING, RANGE_DATA_LOADED, RANGE_CHANGED, enableOffset } from '../../actions/timeline';
+import { SET_CURRENT_TIME, SET_OFFSET_TIME, updateLayerDimensionData } from '../../actions/dimension';
 
 
 describe('timeline Epics', () => {

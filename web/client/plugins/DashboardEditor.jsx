@@ -150,5 +150,5 @@ module.exports = {
     reducers: {
         dashboard: require('../reducers/dashboard').default
     },
-    epics: require('../epics/dashboard')
+    epics: require('../epics/dashboard').default
 };

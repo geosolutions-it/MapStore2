@@ -5,17 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
+import expect from 'expect';
 
-const {
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+
+import {
     clearWidgetsOnLocationChange,
     alignDependenciesToWidgets,
     toggleWidgetConnectFlow,
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange
-} = require('../widgets');
-const {
+} from '../widgets';
+
+import {
     CLEAR_WIDGETS,
     insertWidget,
     toggleConnection,
@@ -25,22 +27,14 @@ const {
     EDITOR_SETTING_CHANGE,
     LOAD_DEPENDENCIES,
     DEPENDENCY_SELECTOR_KEY
-} = require('../../actions/widgets');
-const {
-    savingMap,
-    mapCreated
-} = require('../../actions/maps');
-const {
-    configureMap
-} = require('../../actions/config');
-const {
-    changeLayerProperties,
-    layerLoad,
-    layerError
-} = require('../../actions/layers');
-const { onLocationChanged } = require('connected-react-router');
-const { ActionsObservable } = require('redux-observable');
-const Rx = require('rxjs');
+} from '../../actions/widgets';
+
+import { savingMap, mapCreated } from '../../actions/maps';
+import { configureMap } from '../../actions/config';
+import { changeLayerProperties, layerLoad, layerError } from '../../actions/layers';
+import { onLocationChanged } from 'connected-react-router';
+import { ActionsObservable } from 'redux-observable';
+import Rx from 'rxjs';
 
 describe('widgets Epics', () => {
     it('clearWidgetsOnLocationChange triggers CLEAR_WIDGETS on LOCATION_CHANGE', (done) => {
