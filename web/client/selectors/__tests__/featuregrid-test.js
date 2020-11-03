@@ -573,6 +573,6 @@ describe('Test featuregrid selectors', () => {
                 multiselect: true
             }
         };
-        expect(multiSelect(state).multiselect).toBe(true);
+        expect(multiSelect(state)).toBe(true);
     });
 });
