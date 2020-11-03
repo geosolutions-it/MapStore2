@@ -22,7 +22,6 @@ import {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
-    UPDATE_MAPINFO_STATE_WITH_CLICK_POINT,
     TOGGLE_HIGHLIGHT_FEATURE,
     CHANGE_PAGE,
     TOGGLE_MAPINFO_STATE,
@@ -287,12 +286,6 @@ function mapInfo(state = initState, action) {
             itemId: action.itemId || null,
             overrideParams: action.overrideParams || null,
             filterNameList: action.filterNameList || null
-        });
-    }
-    case UPDATE_MAPINFO_STATE_WITH_CLICK_POINT: {
-        return assign({}, state, {
-            clickPoint: action.point,
-            clickLayer: action.layer || null
         });
     }
     case CHANGE_MAPINFO_FORMAT: {

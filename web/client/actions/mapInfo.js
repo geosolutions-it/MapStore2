@@ -23,7 +23,6 @@ export const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 export const CLEAR_WARNING = 'CLEAR_WARNING';
 export const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
 export const UPDATE_FEATURE_INFO_CLICK_POINT  = 'IDENTIFY:UPDATE_FEATURE_INFO_CLICK_POINT';
-export const UPDATE_MAPINFO_STATE_WITH_CLICK_POINT = "UPDATE_MAPINFO_STATE_WITH_CLICK_POINT";
 export const TOGGLE_HIGHLIGHT_FEATURE = "IDENTIFY:TOGGLE_HIGHLIGHT_FEATURE";
 export const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 export const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
@@ -215,13 +214,6 @@ export function featureInfoClick(point, layer, filterNameList = [], overridePara
 export function updateFeatureInfoClickPoint(point) {
     return {
         type: UPDATE_FEATURE_INFO_CLICK_POINT,
-        point
-    };
-}
-
-export function updateMapInfoStateWithClickPoint(point) {
-    return {
-        type: UPDATE_MAPINFO_STATE_WITH_CLICK_POINT,
         point
     };
 }

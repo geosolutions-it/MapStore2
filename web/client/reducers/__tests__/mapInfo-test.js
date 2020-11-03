@@ -17,8 +17,7 @@ import {
     changeFormat,
     changePage,
     toggleHighlightFeature,
-    setMapTrigger,
-    updateMapInfoStateWithClickPoint
+    setMapTrigger
 } from '../../actions/mapInfo';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
@@ -828,15 +827,5 @@ describe('Test the mapInfo reducer', () => {
         const action = setMapTrigger('hover');
         const state = mapInfo(undefined, action);
         expect(state.configuration.trigger).toBe('hover');
-    });
-    it('mapInfo UPDATE_MAPINFO_STATE_WITH_CLICK_POINT', () => {
-        const point = {
-            modifiers: {
-                ctrl: true
-            }
-        };
-        const action = updateMapInfoStateWithClickPoint(point);
-        const state = mapInfo(undefined, action);
-        expect(state.clickPoint).toBe(point);
     });
 });

@@ -18,8 +18,7 @@ import assign from 'object-assign';
 import { changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset } from '../actions/draw';
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
-import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker, updateMapInfoStateWithClickPoint } from '../actions/mapInfo';
-import { clickPointSelector } from '../selectors/mapInfo';
+import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
 
 import {
     query,
@@ -129,7 +128,8 @@ import {
     hasSupportedGeometry,
     queryOptionsSelector,
     getAttributeFilters,
-    selectedLayerSelector
+    selectedLayerSelector,
+    multiSelect
 } from '../selectors/featuregrid';
 
 import { error, warning } from '../actions/notifications';
@@ -408,7 +408,7 @@ export const disableMultiSelect = (action$) =>
     action$.ofType(UPDATE_FILTER)
         .filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
         .switchMap(() => {
-            return Rx.Observable.of(setSelectionOptions(), updateMapInfoStateWithClickPoint({modifiers: {ctrl: false, metaKey: false}}));
+            return Rx.Observable.of(setSelectionOptions());
         });
 export const handleClickOnMap = (action$, store) =>
     action$.ofType(UPDATE_FILTER)
@@ -425,23 +425,22 @@ export const handleClickOnMap = (action$, store) =>
 
                 return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
                     setSelectionOptions({multiselect: ctrl || metaKey}),
-                    updateMapInfoStateWithClickPoint(point),
                     updateFilter({
-                    ...currentFilter,
-                    value: {
-                        attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
-                        geometry: {
-                            center: [center.x, center.y],
-                            coordinates: CoordinatesUtils.calculateCircleCoordinates(center, radius, 12),
-                            extent: [center.x - radius, center.y - radius, center.x + radius, center.y + radius],
-                            projection,
-                            radius,
-                            type: "Polygon"
-                        },
-                        method: "Circle",
-                        operation: "INTERSECTS"
-                    }
-                }));
+                        ...currentFilter,
+                        value: {
+                            attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                            geometry: {
+                                center: [center.x, center.y],
+                                coordinates: CoordinatesUtils.calculateCircleCoordinates(center, radius, 12),
+                                extent: [center.x - radius, center.y - radius, center.x + radius, center.y + radius],
+                                projection,
+                                radius,
+                                type: "Polygon"
+                            },
+                            method: "Circle",
+                            operation: "INTERSECTS"
+                        }
+                    }));
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
@@ -451,26 +450,25 @@ export const selectFeaturesOnMapClickResult = (action$, store) =>
     action$.ofType(QUERY_RESULT)
         .filter(({reason}) => reason === 'geometry')
         .switchMap(({result}) => {
-            const clickPoint = clickPointSelector(store.getState());
-            const { modifiers: { ctrl, metaKey } } = clickPoint;
             const feature = get(result, 'features[0]');
-
             const selectedFeatures = selectedFeaturesSelector(store.getState());
             const alreadySelectedFeature = find(selectedFeatures, { id: feature.id });
-            if ((ctrl || metaKey) && alreadySelectedFeature) {
+            const multipleSelect = multiSelect(store.getState());
+
+            if (multipleSelect && alreadySelectedFeature) {
                 if (selectedFeatures.length === 1) {
                     return Rx.Observable.of(
                         updateFilter({
                             attribute: "the_geom",
                             enabled: false,
                             type: "geometry"
-                        }), deselectFeatures([alreadySelectedFeature]))
+                        }), deselectFeatures([alreadySelectedFeature]));
                 }
                 return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
             }
 
             const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-            return Rx.Observable.of(selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : [], ctrl || metaKey));
+            return Rx.Observable.of(selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : [], multipleSelect));
         });
 export const activateTemporaryChangesEpic = (action$) =>
     action$.ofType(ACTIVATE_TEMPORARY_CHANGES)
@@ -536,10 +534,9 @@ export const featureGridChangePage = (action$, store) =>
             .merge(action$.ofType(QUERY_RESULT)
                 .map((ra) => {
                     let features = get(ra, "result.features", []);
-                    const clickPoint = clickPointSelector(store.getState());
-                    const modifiers = clickPoint?.modifiers;
+                    const multipleSelect = multiSelect(store.getState());
                     const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-                    if ((modifiers?.ctrl || modifiers?.metaKey) && geometryFilter.enabled) {
+                    if (multipleSelect && geometryFilter.enabled) {
                         features = selectedFeaturesSelector(store.getState());
                     }
                     // TODO: Handle pagination when multiselect due to control
