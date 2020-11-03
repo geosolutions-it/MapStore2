@@ -14,7 +14,7 @@ const { set } = require('../../utils/ImmutableUtils');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const { hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER} = require('../../actions/mapInfo');
-const { createQuery } = require('../../actions/wfsquery');
+const { createQuery, TOGGLE_SYNC_WMS } = require('../../actions/wfsquery');
 
 const {
     toggleEditMode,
@@ -103,7 +103,8 @@ const {
     handleClickOnMap,
     featureGridUpdateGeometryFilter,
     activateTemporaryChangesEpic,
-    enableGeometryFilterOnEditMode
+    enableGeometryFilterOnEditMode,
+    deactivateSyncWmsFilterOnFeatureGridClose
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -2048,5 +2049,16 @@ describe('featuregrid Epics', () => {
             expect(actions[1].type).toBe(DEACTIVATE_GEOMETRY_FILTER);
             expect(actions[1].deactivated).toBe(true);
         }, {}, done);
+    });
+    it('deactivateSyncWmsFilterOnFeatureGridClose', (done) => {
+        const startActions = [closeFeatureGrid()];
+        testEpic(deactivateSyncWmsFilterOnFeatureGridClose, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TOGGLE_SYNC_WMS);
+        }, {
+            query: {
+                syncWmsFilter: true
+            }
+        }, done);
     });
 });

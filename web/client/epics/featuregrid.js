@@ -20,7 +20,7 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
-const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
+const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING, toggleSyncWms} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent, CLICK_ON_MAP} = require('../actions/map');
 const {projectionSelector} = require('../selectors/map');
@@ -804,6 +804,15 @@ module.exports = {
         action$.ofType(TOGGLE_SYNC_WMS)
             .filter( () => !isSyncWmsActive(store.getState()))
             .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}])),
+    /**
+     * Deactivate map sync when featuregrid closes if it was active
+     */
+    deactivateSyncWmsFilterOnFeatureGridClose: (action$, store) =>
+        action$.ofType(CLOSE_FEATURE_GRID)
+            .filter(() => isSyncWmsActive(store.getState()))
+            .switchMap(() => {
+                return Rx.Observable.of(toggleSyncWms());
+            }),
     /**
      * Sync map with filter.
      *
