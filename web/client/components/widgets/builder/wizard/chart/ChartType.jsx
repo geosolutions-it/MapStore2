@@ -7,13 +7,16 @@
  */
 
 
-const React = require('react');
-const { shouldUpdate } = require('recompose');
-const SideGrid = require('../../../../misc/cardgrids/SideGrid');
-const Message = require('../../../../I18N/Message').default;
-const sampleData = require('../../../enhancers/sampleChartData');
-const SimpleChart = sampleData(require('../../../../charts/SimpleChart'));
-const {Row} = require('react-bootstrap');
+import React from 'react';
+import { Row } from 'react-bootstrap';
+import { shouldUpdate } from 'recompose';
+
+import SideGrid from '../../../../misc/cardgrids/SideGrid';
+import Message from '../../../../I18N/Message';
+import sampleData from '../../../enhancers/sampleChartData';
+import SimpleChart from '../../../../charts/SimpleChart';
+const SampleChart = sampleData(SimpleChart);
+
 const sampleProps = {
     legend: false,
     tooltip: false,
@@ -22,7 +25,7 @@ const sampleProps = {
     height: 100,
     popup: false
 };
-const StepHeader = require('../../../../misc/wizard/StepHeader');
+import StepHeader from '../../../../misc/wizard/StepHeader';
 
 const ITEMS = [{
     type: "bar"
@@ -36,7 +39,7 @@ const ITEMS = [{
     description: <Message msgId={`widgets.chartType.${type}.description`} />,
     caption: <Message msgId={`widgets.chartType.${type}.caption`} />
 }));
-module.exports = shouldUpdate(
+export default shouldUpdate(
     ({ types, type }, { types: nextTypes, type: nextType}) => type !== nextType && types !== nextTypes
 )(({ onSelect = () => { }, onNextPage = () => { }, types = ITEMS, type} = {}) => (<Row>
     <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
@@ -48,7 +51,7 @@ module.exports = shouldUpdate(
                 ({
                     ...item,
                     selected: item.type === type,
-                    preview: (<SimpleChart
+                    preview: (<SampleChart
                         {...sampleProps}
                         type={item.type}
                         autoColorOptions={item.type === type ? {

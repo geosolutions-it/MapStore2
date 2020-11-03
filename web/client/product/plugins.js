@@ -37,7 +37,7 @@ module.exports = {
         CookiePlugin: require('../plugins/Cookie'),
         CreateNewMapPlugin: require('../plugins/CreateNewMap').default,
         Dashboard: require('../plugins/Dashboard'),
-        DashboardEditor: require('../plugins/DashboardEditor'),
+        DashboardEditor: require('../plugins/DashboardEditor').default,
         DashboardsPlugin: require('../plugins/Dashboards'),
         DetailsPlugin: require('../plugins/Details').default,
         DrawerMenuPlugin: require('../plugins/DrawerMenu'),

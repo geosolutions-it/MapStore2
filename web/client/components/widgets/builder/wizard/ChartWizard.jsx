@@ -5,26 +5,32 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
+import WizardContainer from '../../../misc/wizard/WizardContainer';
+import { wizardHandlers } from '../../../misc/wizard/enhancers';
+import loadingEnhancer from '../../../misc/enhancers/loadingState';
+import noAttribute from './common/noAttributesEmptyView';
+import BaseChartType from './chart/ChartType';
+import wfsChartOptions from './common/wfsChartOptions';
+import WPSWidgetOptions from './common/WPSWidgetOptions';
+import WidgetOptions from './common/WidgetOptions';
+import sampleData from '../../enhancers/sampleChartData';
+import wpsChart from '../../enhancers/wpsChart';
+import dependenciesToWidget from '../../enhancers/dependenciesToWidget';
+import dependenciesToFilter from '../../enhancers/dependenciesToFilter';
+import dependenciesToOptions from '../../enhancers/dependenciesToOptions';
+import emptyChartState from '../../enhancers/emptyChartState';
+import errorChartState from '../../enhancers/errorChartState';
+import { compose, lifecycle } from 'recompose';
+import SimpleChart from '../../../charts/SimpleChart';
 
-const { wizardHandlers } = require('../../../misc/wizard/enhancers');
-const loadingState = require('../../../misc/enhancers/loadingState')(({ loading, data }) => loading || !data, { width: 500, height: 200 });
-const noAttribute = require('./common/noAttributesEmptyView');
-const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = ""} = {}) => type.indexOf("gml:") !== 0).length === 0;
+const loadingState = loadingEnhancer(({ loading, data }) => loading || !data, { width: 500, height: 200 });
+const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = "" } = {}) => type.indexOf("gml:") !== 0).length === 0;
 const ChartType = noAttribute(
     hasNoAttributes
-)(require('./chart/ChartType'));
-const wfsChartOptions = require('./common/wfsChartOptions');
-const ChartOptions = wfsChartOptions(require('./common/WPSWidgetOptions'));
-const WidgetOptions = require('./common/WidgetOptions');
-const sampleData = require('../../enhancers/sampleChartData');
-const wpsChart = require('../../enhancers/wpsChart');
-const dependenciesToWidget = require('../../enhancers/dependenciesToWidget');
-const dependenciesToFilter = require('../../enhancers/dependenciesToFilter');
-const dependenciesToOptions = require('../../enhancers/dependenciesToOptions');
-const emptyChartState = require('../../enhancers/emptyChartState');
-const errorChartState = require('../../enhancers/errorChartState');
-const { compose, lifecycle } = require('recompose');
+)(BaseChartType);
+const ChartOptions = wfsChartOptions(WPSWidgetOptions);
+
 const enhancePreview = compose(
     dependenciesToWidget,
     dependenciesToFilter,
@@ -34,8 +40,8 @@ const enhancePreview = compose(
     errorChartState,
     emptyChartState
 );
-const PreviewChart = enhancePreview(require('../../../charts/SimpleChart'));
-const SampleChart = sampleData(require('../../../charts/SimpleChart'));
+const PreviewChart = enhancePreview(SimpleChart);
+const SampleChart = sampleData(SimpleChart);
 
 const sampleProps = {
     width: 430,
@@ -45,7 +51,7 @@ const sampleProps = {
 
 const isChartOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
 
-const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
+const Wizard = wizardHandlers(WizardContainer);
 
 
 const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { }, shortenChartLabelThreshold }) => isChartOptionsValid(data.options)
@@ -91,7 +97,7 @@ const enhanceWizard = compose(lifecycle({
     }
 })
 );
-module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies, shortenChartLabelThreshold }) =>
+const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies, shortenChartLabelThreshold }) =>
     (<Wizard
         step={step}
         setPage={setPage}
@@ -127,4 +133,5 @@ module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, se
             layer={data.layer || layer}
             sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)), shortenChartLabelThreshold })}
         />
-    </Wizard>));
+    </Wizard>);
+export default enhanceWizard(ChartWizard);
