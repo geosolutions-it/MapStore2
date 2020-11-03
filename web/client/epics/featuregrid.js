@@ -33,7 +33,8 @@ import {
     updateQuery,
     TOGGLE_SYNC_WMS,
     QUERY_ERROR,
-    FEATURE_LOADING
+    FEATURE_LOADING,
+    toggleSyncWms
 } from '../actions/wfsquery';
 
 import { reset, QUERY_FORM_SEARCH, loadFilter } from '../actions/queryform';
@@ -897,15 +898,15 @@ export const stopSyncWmsFilter = (action$, store) =>
  * Sync map with filter.
  *
  */
-    /**
+/**
      * Deactivate map sync when featuregrid closes if it was active
      */
 export const deactivateSyncWmsFilterOnFeatureGridClose = (action$, store) =>
-        action$.ofType(CLOSE_FEATURE_GRID)
-            .filter(() => isSyncWmsActive(store.getState()))
-            .switchMap(() => {
-                return Rx.Observable.of(toggleSyncWms());
-            });
+    action$.ofType(CLOSE_FEATURE_GRID)
+        .filter(() => isSyncWmsActive(store.getState()))
+        .switchMap(() => {
+            return Rx.Observable.of(toggleSyncWms());
+        });
 export const syncMapWmsFilter = (action$, store) =>
     action$.ofType(QUERY_CREATE, UPDATE_QUERY).
         filter((a) => {
