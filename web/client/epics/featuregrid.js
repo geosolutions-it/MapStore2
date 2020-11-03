@@ -450,7 +450,7 @@ export const handleClickOnMap = (action$, store) =>
 export const selectFeaturesOnMapClickResult = (action$, store) =>
     action$.ofType(QUERY_RESULT)
         .filter(({reason}) => reason === 'geometry')
-        .map(({result}) => {
+        .switchMap(({result}) => {
             const clickPoint = clickPointSelector(store.getState());
             const { modifiers: { ctrl, metaKey } } = clickPoint;
             const feature = get(result, 'features[0]');
@@ -459,17 +459,18 @@ export const selectFeaturesOnMapClickResult = (action$, store) =>
             const alreadySelectedFeature = find(selectedFeatures, { id: feature.id });
             if ((ctrl || metaKey) && alreadySelectedFeature) {
                 if (selectedFeatures.length === 1) {
-                    return updateFilter({
-                        attribute: "the_geom",
-                        enabled: false,
-                        type: "geometry"
-                    });
+                    return Rx.Observable.of(
+                        updateFilter({
+                            attribute: "the_geom",
+                            enabled: false,
+                            type: "geometry"
+                        }), deselectFeatures([alreadySelectedFeature]))
                 }
-                return deselectFeatures([alreadySelectedFeature]);
+                return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
             }
 
             const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-            return selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : [], ctrl || metaKey);
+            return Rx.Observable.of(selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : [], ctrl || metaKey));
         });
 export const activateTemporaryChangesEpic = (action$) =>
     action$.ofType(ACTIVATE_TEMPORARY_CHANGES)
@@ -537,7 +538,8 @@ export const featureGridChangePage = (action$, store) =>
                     let features = get(ra, "result.features", []);
                     const clickPoint = clickPointSelector(store.getState());
                     const modifiers = clickPoint?.modifiers;
-                    if ((modifiers?.ctrl || modifiers?.metaKey)) {
+                    const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
+                    if ((modifiers?.ctrl || modifiers?.metaKey) && geometryFilter.enabled) {
                         features = selectedFeaturesSelector(store.getState());
                     }
                     // TODO: Handle pagination when multiselect due to control
