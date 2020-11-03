@@ -1091,5 +1091,6 @@ export default {
     virtualScrollLoadFeatures,
     replayOnTimeDimensionChange,
     hideFeatureGridOnDrawerOpenMobile,
-    hideDrawerOnFeatureGridOpenMobile
+    hideDrawerOnFeatureGridOpenMobile,
+    disableMultiSelect
 };

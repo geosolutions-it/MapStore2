@@ -9,7 +9,6 @@ module.exports = (props = {
     onPageChange: () => {}
 }) => {
     const {page = 0, size = 0, resultSize = 0, maxPages = 0, total = 0} = toPage(props);
-    console.log("MY PROPS", props);
     return (<Grid className="bg-body data-grid-bottom-toolbar" fluid style={{width: "100%"}}>
         <Row className="featuregrid-toolbar-margin">
             <Col md={3}>
