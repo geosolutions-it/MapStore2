@@ -2102,12 +2102,14 @@ describe('featuregrid Epics', () => {
                 }
             };
             const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
-            testEpic(selectFeaturesOnMapClickResult, 2, startActions, actions => {
-                expect(actions.length).toBe(2);
+            testEpic(selectFeaturesOnMapClickResult, 3, startActions, actions => {
+                expect(actions.length).toBe(3);
                 expect(actions[0].type).toEqual(UPDATE_FILTER);
                 expect(actions[0].update.enabled).toBe(false);
                 expect(actions[1].type).toEqual(DESELECT_FEATURES);
                 expect(actions[1].features).toEqual([{id: "ft_id"}]);
+                expect(actions[2].type).toBe(SET_SELECTION_OPTIONS);
+                expect(actions[2].multiselect).toBe(false);
             }, stateObj, done);
         });
         it('should append to selected features, ctrl and metaKey are held', (done) => {

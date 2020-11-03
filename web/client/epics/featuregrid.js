@@ -460,7 +460,7 @@ export const selectFeaturesOnMapClickResult = (action$, store) =>
                             attribute: "the_geom",
                             enabled: false,
                             type: "geometry"
-                        }), deselectFeatures([alreadySelectedFeature]));
+                        }), deselectFeatures([alreadySelectedFeature]), setSelectionOptions());
                 }
                 return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
             }
