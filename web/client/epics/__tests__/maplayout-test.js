@@ -25,10 +25,10 @@ describe('map layout epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layout).toEqual({ left: 600, right: 330, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
                         bottom: 30,
                         left: 600,
-                        right: 330
+                        right: 658
                     }});
                 });
             } catch (e) {
@@ -144,16 +144,16 @@ describe('map layout epics', () => {
     });
 
     describe('tests layout updated for right panels', () => {
-        const epicResult = done => actions => {
+        const epicResult = (done, right = 658) => actions => {
             try {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 0, right: 330, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        left: 0, right, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
                             bottom: 30,
                             left: 0,
-                            right: 330
+                            right
                         }
                     });
                 });
@@ -172,7 +172,7 @@ describe('map layout epics', () => {
         });
         it('annotations', (done) => {
             const state = { controls: { annotations: { enabled: true, group: "parent" } } };
-            testEpic(updateMapLayoutEpic, 1, setControlProperties("annotations", "enabled", true, "group", "parent"), epicResult(done), state);
+            testEpic(updateMapLayoutEpic, 1, setControlProperties("annotations", "enabled", true, "group", "parent"), epicResult(done, 329), state);
         });
         it('details', (done) => {
             const state = { controls: { details: { enabled: true, group: "parent" } } };
