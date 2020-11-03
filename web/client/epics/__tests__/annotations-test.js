@@ -489,6 +489,35 @@ describe('annotations Epics', () => {
         const action = confirmRemoveAnnotation('1', 'geometry');
         store.dispatch(action);
     });
+    it('remove annotation geometry of type Circle', (done) => {
+        const tempStore = mockStore({
+            ...defaultState,
+            annotations: {
+                ...defaultState.annotations,
+                featureType: "Circle"
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].status).toBe('replace');
+                expect(actions[1].method).toBe('Circle');
+                expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[2].status).toBe('drawOrEdit');
+                expect(actions[2].method).toBe('Circle');
+                expect(actions[2].options.drawEnabled).toBe(false);
+                expect(actions[2].options.editEnabled).toBe(true);
+                expect(actions[2].options.selectEnabled).toBe(true);
+                expect(actions[2].options.useSelectedStyle).toBe(true);
+                expect(actions[2].options.addClickCallback).toBe(true);
+                expect(typeof actions[2].options.editFilter).toBe('function');
+                done();
+            }
+        });
+        const action = confirmRemoveAnnotation('1', 'geometry');
+        store.dispatch(action);
+    });
 
     it('remove annotation geometry when initial state is not set', (done) => {
         const tempStore = mockStore({
@@ -1027,7 +1056,7 @@ describe('annotations Epics', () => {
                 expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
                 expect(actions[1].status).toBe('clean');
                 expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
-                expect(actions[2].status).toBe('drawOrEdit');
+                expect(actions[2].status).toBe('updateStyle');
                 const [feature] = actions[2].features[0].features;
                 expect(feature.style[0].highlight).toBe(true);
                 done();

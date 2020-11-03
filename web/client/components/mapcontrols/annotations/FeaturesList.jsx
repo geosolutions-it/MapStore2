@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {Glyphicon, ControlLabel} = require('react-bootstrap');
-const uuidv1 = require('uuid/v1');
-const bbox = require('@turf/bbox');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const cs = require('classnames');
-const Message = require('../../I18N/Message').default;
-const {get} = require('lodash');
-const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
+import React from 'react';
+import {Glyphicon, ControlLabel} from 'react-bootstrap';
+import uuidv1 from 'uuid/v1';
+import bbox from '@turf/bbox';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import cs from 'classnames';
+import Message from '../../I18N/Message';
+import OverlayTriggerCustom from '../../misc/OverlayTriggerCustom';
+import {get} from 'lodash';
+import {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} from '../../../utils/AnnotationsUtils';
 
 /**
  * Feature List component for Annotation Viewer.
@@ -62,7 +63,8 @@ const FeaturesList = (props) => {
                             onClick: () => {
                                 showPopupWarning ? setPopupWarning(true) : onSetAnnotationMeasurement();
                             },
-                            tooltip: <Message msgId="annotations.editMeasurement" />
+                            tooltip: <Message msgId="annotations.editMeasurement" />,
+                            customOverlayTrigger: OverlayTriggerCustom
                         },
                         {
                             glyph: 'point-plus',
@@ -72,7 +74,8 @@ const FeaturesList = (props) => {
                                 const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}];
                                 onClickGeometry("Point", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.marker" />
+                            tooltip: <Message msgId="annotations.titles.marker" />,
+                            customOverlayTrigger: OverlayTriggerCustom
                         },
                         {
                             glyph: 'polyline-plus',
@@ -83,7 +86,8 @@ const FeaturesList = (props) => {
                                     .concat(getStartEndPointsForLinestring());
                                 onClickGeometry("LineString", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.line" />
+                            tooltip: <Message msgId="annotations.titles.line" />,
+                            customOverlayTrigger: OverlayTriggerCustom
                         },
                         {
                             glyph: 'polygon-plus',
@@ -94,7 +98,8 @@ const FeaturesList = (props) => {
                                     {...DEFAULT_ANNOTATIONS_STYLES.Polygon, highlight: true, id: uuidv1()}];
                                 onClickGeometry("Polygon", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.polygon" />
+                            tooltip: <Message msgId="annotations.titles.polygon" />,
+                            customOverlayTrigger: OverlayTriggerCustom
                         },
                         {
                             glyph: 'font-add',
@@ -105,7 +110,8 @@ const FeaturesList = (props) => {
                                     {...DEFAULT_ANNOTATIONS_STYLES.Text, highlight: true, type: "Text", title: "Text Style", id: uuidv1()}];
                                 onClickGeometry("Text", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.text" />
+                            tooltip: <Message msgId="annotations.titles.text" />,
+                            customOverlayTrigger: OverlayTriggerCustom
                         },
                         {
                             glyph: '1-circle-add',
@@ -118,7 +124,8 @@ const FeaturesList = (props) => {
                                 ];
                                 onClickGeometry("Circle", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.circle" />
+                            tooltip: <Message msgId="annotations.titles.circle" />,
+                            customOverlayTrigger: OverlayTriggerCustom
                         }
                     ]}
                 />
@@ -213,4 +220,4 @@ FeaturesList.defaultProps = {
     isMeasureEditDisabled: true
 };
 
-module.exports = FeaturesList;
+export default FeaturesList;
