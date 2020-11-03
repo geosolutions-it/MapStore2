@@ -19,7 +19,7 @@ import { getSelectedLayer } from '../selectors/layers';
  * @param {external:Observable} action$ manages `SELECT_NODE`
  * @return {external:Observable}
  */
-const resetLayerSwipeSettingsEpic = (action$, store) =>
+export const resetLayerSwipeSettingsEpic = (action$, store) =>
     action$.ofType(SELECT_NODE)
         .switchMap(({nodeType}) => {
             const state = store.getState();
@@ -31,6 +31,6 @@ const resetLayerSwipeSettingsEpic = (action$, store) =>
                 : Rx.Observable.empty();
         });
 
-export {
+export default {
     resetLayerSwipeSettingsEpic
 };

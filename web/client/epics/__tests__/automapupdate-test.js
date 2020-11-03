@@ -6,14 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+import expect from 'expect';
 
-const configureMockStore = require('redux-mock-store').default;
-const {createEpicMiddleware, combineEpics } = require('redux-observable');
-const {configureMap, mapInfoLoaded} = require('../../actions/config');
-const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-
-const {manageAutoMapUpdate} = require('../automapupdate');
+import configureMockStore from 'redux-mock-store';
+import { createEpicMiddleware, combineEpics } from 'redux-observable';
+import { configureMap, mapInfoLoaded } from '../../actions/config';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { manageAutoMapUpdate } from '../automapupdate';
 const rootEpic = combineEpics(manageAutoMapUpdate);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);

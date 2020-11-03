@@ -278,33 +278,33 @@ const RulesEditor = forwardRef(({
                             }
                             tools={
                                 <>
-                                {checkOrderWarning(rule, index) && <InfoPopover
-                                    glyph="exclamation-mark"
-                                    bsStyle="warning"
-                                    placement="right"
-                                    title={<Message msgId="styleeditor.warningTextOrderTitle"/>}
-                                    text={<Message msgId="styleeditor.warningTextOrder"/>}/>}
-                                <FilterBuilderPopover
-                                    hide={hideFilter}
-                                    value={filter}
-                                    attributes={attributes}
-                                    onChange={(values) => handleChanges({ values, ruleId }, true)}
-                                />
-                                <ScaleDenominatorPopover
-                                    hide={hideScaleDenominator}
-                                    value={scaleDenominator}
-                                    scales={scales}
-                                    zoom={zoom}
-                                    onChange={(values) => handleChanges({ values, ruleId }, true)}
-                                />
-                                <Button
-                                    className="square-button-md no-border"
-                                    tooltipId="styleeditor.removeRule"
-                                    onClick={() => handleRemove(ruleId)}>
-                                    <Glyphicon
-                                        glyph="trash"
+                                    {checkOrderWarning(rule, index) && <InfoPopover
+                                        glyph="exclamation-mark"
+                                        bsStyle="warning"
+                                        placement="right"
+                                        title={<Message msgId="styleeditor.warningTextOrderTitle"/>}
+                                        text={<Message msgId="styleeditor.warningTextOrder"/>}/>}
+                                    <FilterBuilderPopover
+                                        hide={hideFilter}
+                                        value={filter}
+                                        attributes={attributes}
+                                        onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     />
-                                </Button>
+                                    <ScaleDenominatorPopover
+                                        hide={hideScaleDenominator}
+                                        value={scaleDenominator}
+                                        scales={scales}
+                                        zoom={zoom}
+                                        onChange={(values) => handleChanges({ values, ruleId }, true)}
+                                    />
+                                    <Button
+                                        className="square-button-md no-border"
+                                        tooltipId="styleeditor.removeRule"
+                                        onClick={() => handleRemove(ruleId)}>
+                                        <Glyphicon
+                                            glyph="trash"
+                                        />
+                                    </Button>
                                 </>
                             }
                         >

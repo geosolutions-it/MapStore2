@@ -118,5 +118,5 @@ module.exports = {
         }
     }),
     reducers: {measurement: require('../reducers/measurement').default},
-    epics: require('../epics/measurement')
+    epics: require('../epics/measurement').default
 };

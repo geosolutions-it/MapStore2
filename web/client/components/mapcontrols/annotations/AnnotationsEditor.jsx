@@ -17,13 +17,12 @@ const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, Control
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
 const { isFunction, isEmpty, head } = require('lodash');
-const {getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
+const {getGeometryGlyphInfo, getGeometryType, getComponents, coordToArray, validateCoords} = require('../../../utils/AnnotationsUtils');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
 const FeaturesList = require('./FeaturesList').default;
-const {getComponents, coordToArray, validateCoords} = require('../../../utils/AnnotationsUtils');
 const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
 
 /**

@@ -77,3 +77,11 @@ export const setMeasureStateFromAnnotationEpic = (action$, store) =>
                 setControlProperty("measure", "enabled", true),
                 setControlProperty("annotations", "enabled", false));
         });
+
+export default {
+    addAnnotationFromMeasureEpic,
+    addAsLayerEpic,
+    openMeasureEpic,
+    closeMeasureEpics,
+    setMeasureStateFromAnnotationEpic
+};
