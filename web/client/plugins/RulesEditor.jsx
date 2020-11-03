@@ -90,5 +90,5 @@ module.exports = {
     reducers: {
         rulesmanager: require('../reducers/rulesmanager').default
     },
-    epics: require("../epics/rulesmanager")
+    epics: require("../epics/rulesmanager").default
 };

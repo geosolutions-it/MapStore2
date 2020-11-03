@@ -6,16 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const configureMockStore = require('redux-mock-store').default;
-const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const {onEpic} = require('../controls');
+import configureMockStore from 'redux-mock-store';
+import { createEpicMiddleware, combineEpics } from 'redux-observable';
+import { onEpic } from '../controls';
 const rootEpic = combineEpics(onEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
-const {TOGGLE_CONTROL, toggleControl, resetControls, RESET_CONTROLS, on} = require('../../actions/controls');
+import { TOGGLE_CONTROL, toggleControl, resetControls, RESET_CONTROLS, on } from '../../actions/controls';
 
 describe('controls Epics', () => {
     let store = mockStore({

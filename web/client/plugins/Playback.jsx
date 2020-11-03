@@ -64,7 +64,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: require('../epics/playback'),
+    epics: require('../epics/playback').default,
     reducers: {
         playback: require('../reducers/playback').default,
         dimension: require('../reducers/dimension').default

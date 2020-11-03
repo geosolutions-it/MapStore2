@@ -219,5 +219,5 @@ module.exports = {
     reducers: {
         styleeditor: require('../reducers/styleeditor').default
     },
-    epics: require('../epics/styleeditor')
+    epics: require('../epics/styleeditor').default
 };

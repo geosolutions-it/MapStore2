@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-const {testEpic} = require('./epicTestUtils');
+import expect from 'expect';
 
-const {MAPS_LOAD_MAP, MAPS_LIST_LOADED} = require("../../actions/maps");
-const {DASHBOARDS_LIST_LOADED} = require("../../actions/dashboards");
-const {GEOSTORIES_LIST_LOADED} = require("../../actions/geostories");
-const {updateMapsDashboardTabs} = require("../contenttabs");
+import { testEpic } from './epicTestUtils';
+import { MAPS_LOAD_MAP, MAPS_LIST_LOADED } from '../../actions/maps';
+import { DASHBOARDS_LIST_LOADED } from '../../actions/dashboards';
+import { GEOSTORIES_LIST_LOADED } from '../../actions/geostories';
+import { updateMapsDashboardTabs } from '../contenttabs';
 
 describe('Test Maps Dashboard Content Tabs', () => {
     it('test updateMapsDashboardTabs flow ', done => {

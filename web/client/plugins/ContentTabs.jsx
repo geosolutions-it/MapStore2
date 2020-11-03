@@ -116,5 +116,5 @@ module.exports = {
         }
     }),
     reducers: {contenttabs: require('../reducers/contenttabs').default},
-    epics: require('../epics/contenttabs')
+    epics: require('../epics/contenttabs').default
 };

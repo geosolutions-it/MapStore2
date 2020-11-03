@@ -6,15 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
+import Rx from 'rxjs';
 
-module.exports = {
-    onEpic: (action$, store) =>
-        action$.filter((action) => action.type.indexOf('IF:') === 0)
-            .switchMap((action) => {
-                if (action.condition(store.getState())) {
-                    return Rx.Observable.of(action.action);
-                }
-                return Rx.Observable.of(action.elseAction.call());
-            })
+export const onEpic = (action$, store) =>
+    action$.filter((action) => action.type.indexOf('IF:') === 0)
+        .switchMap((action) => {
+            if (action.condition(store.getState())) {
+                return Rx.Observable.of(action.action);
+            }
+            return Rx.Observable.of(action.elseAction.call());
+        });
+
+export default {
+    onEpic
 };

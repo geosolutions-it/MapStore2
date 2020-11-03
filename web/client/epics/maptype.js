@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {changeMapType} = require('../actions/maptype');
-const Rx = require('rxjs');
-const {get} = require('lodash');
+import { changeMapType } from '../actions/maptype';
+
+import Rx from 'rxjs';
+import { get } from 'lodash';
 const defaultRegex = /\/(viewer)\/(\w+)\/(\w+)/;
 const findMapType = path => {
     const match = path.match(defaultRegex);
     return match && match[0] && match[0].replace(defaultRegex, '$2');
 };
-const { LOCATION_CHANGE } = require('connected-react-router');
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 /**
  * keep the default mapType in sync when change the URL of the map for viewer
@@ -22,7 +23,7 @@ const { LOCATION_CHANGE } = require('connected-react-router');
  * @param  {object} store   the store middleware API from redux `createMiddleware`
  * @return {external:Observable}  the stream of the actions to emit. (`changeMapType`)
  */
-const syncMapType = (action$, store) =>
+export const syncMapType = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .filter(action =>
             action.payload
@@ -33,11 +34,12 @@ const syncMapType = (action$, store) =>
         .switchMap((action) =>
             Rx.Observable.of(changeMapType(findMapType(action.payload.location.pathname)))
         );
+
 /**
  * Epics for maptype switch functionalities
  * @name epics.maptype
  * @type {Object}
  */
-module.exports = {
+export default {
     syncMapType
 };

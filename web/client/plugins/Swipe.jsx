@@ -13,12 +13,11 @@ import { createSelector } from 'reselect';
 import { getSelectedLayer } from '../selectors/layers';
 import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
 import swipe from '../reducers/swipe';
-import * as epics from '../epics/swipe';
+import epics from '../epics/swipe';
 import {
     setActive,
     setMode
 } from '../actions/swipe';
-
 
 import { createPlugin } from '../utils/PluginsUtils';
 

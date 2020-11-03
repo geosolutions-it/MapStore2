@@ -306,5 +306,5 @@ module.exports = {
         dimension: require('../reducers/dimension').default,
         timeline: require('../reducers/timeline').default
     },
-    epics: require('../epics/timeline')
+    epics: require('../epics/timeline').default
 };
