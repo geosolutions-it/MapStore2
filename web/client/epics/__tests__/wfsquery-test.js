@@ -6,17 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const axios = require('../../libs/ajax');
-const MockAdapter = require('axios-mock-adapter');
-const {parse} = require('url');
-const { head } = require('lodash');
-const {UPDATE_GEOMETRY} = require('../../actions/queryform');
-const {changeMapView} = require('../../actions/map');
+import expect from 'expect';
 
-const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
-const {QUERY_RESULT, FEATURE_LOADING, query, updateQuery} = require('../../actions/wfsquery');
-const {viewportSelectedEpic, wfsQueryEpic} = require('../wfsquery');
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+import { parse } from 'url';
+import { head } from 'lodash';
+import { UPDATE_GEOMETRY } from '../../actions/queryform';
+import { changeMapView } from '../../actions/map';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { QUERY_RESULT, FEATURE_LOADING, query, updateQuery } from '../../actions/wfsquery';
+import { viewportSelectedEpic, wfsQueryEpic } from '../wfsquery';
 
 
 describe('wfsquery Epics', () => {

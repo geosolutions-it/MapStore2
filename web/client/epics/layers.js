@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
-const Api = require('../api/WMS');
-const {
+import Rx from 'rxjs';
+
+import Api from '../api/WMS';
+
+import {
     REFRESH_LAYERS,
     UPDATE_LAYERS_DIMENSION,
     UPDATE_SETTINGS_PARAMS,
@@ -17,20 +19,18 @@ const {
     updateNode,
     updateSettings,
     layersRefreshError,
-    changeLayerParams } = require('../actions/layers');
-const {getLayersWithDimension, layerSettingSelector, getLayerFromId} = require('../selectors/layers');
+    changeLayerParams
+} from '../actions/layers';
 
-const { setControlProperty } = require('../actions/controls');
-const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
+import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '../selectors/layers';
+import { setControlProperty } from '../actions/controls';
+import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
+import { basicError } from '../utils/NotificationUtils';
+import LayersUtils from '../utils/LayersUtils';
+import assign from 'object-assign';
+import { isArray, head } from 'lodash';
 
-const { basicError } = require('../utils/NotificationUtils');
-const LayersUtils = require('../utils/LayersUtils');
-
-
-const assign = require('object-assign');
-const {isArray, head} = require('lodash');
-
-const getUpdates = (updates, options) => {
+export const getUpdates = (updates, options) => {
     return Object.keys(options).filter((opt) => options[opt]).reduce((previous, current) => {
         return assign(previous, {
             [current]: updates[current]
@@ -38,7 +38,7 @@ const getUpdates = (updates, options) => {
     }, {});
 };
 
-const removeWorkspace = (layer) => {
+export const removeWorkspace = (layer) => {
     if (layer.indexOf(':') !== -1) {
         return layer.split(':')[1];
     }
@@ -52,7 +52,7 @@ const removeWorkspace = (layer) => {
  * @return {external:Observable}
  */
 
-const refresh = action$ =>
+export const refresh = action$ =>
     action$.ofType(REFRESH_LAYERS)
         .debounce(({debounceTime = 500} = {}) => Rx.Observable.timer(debounceTime) )
         .switchMap(action => {
@@ -108,7 +108,7 @@ const refresh = action$ =>
  * @param {external:Observable} action$ manages `UPDATE_LAYERS_DIMENSION`
  * @return {external:Observable}
  */
-const updateDimension = (action$, {getState = () => {}} = {}) =>
+export const updateDimension = (action$, {getState = () => {}} = {}) =>
     action$.ofType(UPDATE_LAYERS_DIMENSION)
         .map(({ layers, dimension, ...other }) => ({ ...other, dimension, layers: layers || getLayersWithDimension(getState(), dimension)}))
         .switchMap(({layers, dimension, value}) =>
@@ -131,7 +131,7 @@ const updateDimension = (action$, {getState = () => {}} = {}) =>
  * @param {external:Observable} action$ manages `UPDATE_SETTINGS_PARAMS`
  * @return {external:Observable}
  */
-const updateSettingsParamsEpic = (action$, store) =>
+export const updateSettingsParamsEpic = (action$, store) =>
     action$.ofType(UPDATE_SETTINGS_PARAMS)
         .switchMap(({ newParams = {}, update }) => {
 
@@ -168,7 +168,7 @@ const updateSettingsParamsEpic = (action$, store) =>
                 Rx.Observable.empty());
         });
 
-module.exports = {
+export default {
     refresh,
     updateDimension,
     updateSettingsParamsEpic

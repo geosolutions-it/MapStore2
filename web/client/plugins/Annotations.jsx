@@ -27,7 +27,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles, changeGeometryTitle, filterMarker, toggleShowAgain, hideMeasureWarning,
     initPlugin, geometryHighlight, unSelectFeature
 } = require('../actions/annotations');
-
+const annotationsEpics = require('../epics/annotations').default;
 const {selectFeatures} = require('../actions/draw');
 const {setAnnotationMeasurement} = require('../actions/measurement');
 
@@ -253,5 +253,5 @@ module.exports = {
     reducers: {
         annotations: require('../reducers/annotations').default
     },
-    epics: require('../epics/annotations')(AnnotationsInfoViewer)
+    epics: annotationsEpics(AnnotationsInfoViewer)
 };

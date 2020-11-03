@@ -16,7 +16,7 @@ const { getSelectedLayer } = require('../selectors/layers');
 const API = require('../api/SLDService');
 
 const { isAdminUserSelector } = require('../selectors/security');
-
+const epics = require('../epics/thematic').default;
 /**
  * Plugin that adds thematic styles for wms layers, through attribute classification.
  *
@@ -141,5 +141,5 @@ module.exports = {
     reducers: {
         thematic: require('../reducers/thematic').default
     },
-    epics: require('../epics/thematic')(require('../api/SLDService'))
+    epics: epics(require('../api/SLDService'))
 };

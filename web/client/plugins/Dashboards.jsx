@@ -134,7 +134,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: require('../epics/dashboards'),
+    epics: require('../epics/dashboards').default,
     reducers: {
         dashboards: require('../reducers/dashboards').default
     }

@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-const {openQueryBuilder, discardCurrentFilter, applyFilter} = require('../../actions/layerFilter');
-const {QUERY_FORM_SEARCH} = require('../../actions/queryform');
-const {testEpic} = require('./epicTestUtils');
+import expect from 'expect';
 
-const {handleLayerFilterPanel, restoreSavedFilter, onApplyFilter} = require('../layerfilter');
+import { openQueryBuilder, discardCurrentFilter, applyFilter } from '../../actions/layerFilter';
+import { QUERY_FORM_SEARCH } from '../../actions/queryform';
+import { testEpic } from './epicTestUtils';
+import { handleLayerFilterPanel, restoreSavedFilter, onApplyFilter } from '../layerfilter';
 
 describe('layerFilter Epics', () => {
     it("handleLayerFilterPanel is correctly initiated and react to QUERY_FORM_SEARCH", (done) => {

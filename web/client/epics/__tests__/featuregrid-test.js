@@ -6,17 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const assign = require('object-assign');
+import expect from 'expect';
 
-const { set } = require('../../utils/ImmutableUtils');
+import assign from 'object-assign';
+import { set } from '../../utils/ImmutableUtils';
+import CoordinatesUtils from '../../utils/CoordinatesUtils';
+import { CLOSE_IDENTIFY, hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER } from '../../actions/mapInfo';
 
-
-const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const { hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER} = require('../../actions/mapInfo');
-const { createQuery } = require('../../actions/wfsquery');
-
-const {
+import {
     toggleEditMode,
     toggleViewMode,
     openFeatureGrid,
@@ -51,23 +48,30 @@ const {
     activateTemporaryChanges,
     DISABLE_TOOLBAR,
     DEACTIVATE_GEOMETRY_FILTER
-} = require('../../actions/featuregrid');
-const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
-const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
-const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
-const {ZOOM_TO_EXTENT, clickOnMap} = require('../../actions/map');
-const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
-const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
-const {geometryChanged} = require('../../actions/draw');
-const { TOGGLE_CONTROL } = require('../../actions/controls');
+} from '../../actions/featuregrid';
 
-const {
-    toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE, FEATURE_TYPE_SELECTED,
-    layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
-const { LOAD_FILTER, QUERY_FORM_RESET} = require('../../actions/queryform');
+import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
+import { CHANGE_DRAWING_STATUS, geometryChanged } from '../../actions/draw';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
+import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
+import { CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData } from '../../actions/layers';
 
-const {
+import {
+    createQuery,
+    toggleSyncWms,
+    QUERY,
+    querySearchResponse,
+    query,
+    QUERY_CREATE,
+    FEATURE_TYPE_SELECTED,
+    layerSelectedForSearch,
+    UPDATE_QUERY
+} from '../../actions/wfsquery';
+
+import { LOAD_FILTER, QUERY_FORM_RESET } from '../../actions/queryform';
+
+import {
     featureGridBrowseData,
     setHighlightFeaturesPath,
     triggerDrawSupportOnSelectionChange,
@@ -104,11 +108,11 @@ const {
     featureGridUpdateGeometryFilter,
     activateTemporaryChangesEpic,
     enableGeometryFilterOnEditMode
-} = require('../featuregrid');
-const { onLocationChanged } = require('connected-react-router');
+} from '../featuregrid';
 
-const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
-const {isEmpty, isNil} = require('lodash');
+import { onLocationChanged } from 'connected-react-router';
+import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
+import { isEmpty, isNil } from 'lodash';
 const filterObj = {
     featureTypeName: 'TEST',
     groupFields: [
