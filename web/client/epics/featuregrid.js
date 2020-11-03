@@ -400,8 +400,6 @@ export const enableGeometryFilterOnEditMode = (action$, store) =>
             }));
         });
 /**
- * Resets multiselect and ctrl, metaKey modifiers in case they were true during map clicks
- * This happens when filter is disabled
  * @memberof epics.featuregird
  */
 export const disableMultiSelect = (action$) =>
