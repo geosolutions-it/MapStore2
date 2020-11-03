@@ -5,42 +5,66 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const moment = require('moment');
-const { get } = require('lodash');
-const {
-    PLAY, PAUSE, STOP, STATUS, SET_FRAMES, SET_CURRENT_FRAME, TOGGLE_ANIMATION_MODE, ANIMATION_STEP_MOVE,
-    stop, setFrames, appendFrames, setCurrentFrame,
-    framesLoading, updateMetadata
-} = require('../actions/playback');
-const {
-    moveTime, SET_CURRENT_TIME, MOVE_TIME
-} = require('../actions/dimension');
-const {
-    selectLayer,
-    onRangeChanged,
-    timeDataLoading,
-    SELECT_LAYER,
-    SET_MAP_SYNC
-} = require('../actions/timeline');
+import moment from 'moment';
 
-const { changeLayerProperties, REMOVE_NODE } = require('../actions/layers');
+import { get } from 'lodash';
 
-const { error } = require('../actions/notifications');
+import {
+    PLAY,
+    PAUSE,
+    STOP,
+    STATUS,
+    SET_FRAMES,
+    SET_CURRENT_FRAME,
+    TOGGLE_ANIMATION_MODE,
+    ANIMATION_STEP_MOVE,
+    stop,
+    setFrames,
+    appendFrames,
+    setCurrentFrame,
+    framesLoading,
+    updateMetadata
+} from '../actions/playback';
 
-const { currentTimeSelector, layersWithTimeDataSelector, layerTimeSequenceSelectorCreator } = require('../selectors/dimension');
+import { moveTime, SET_CURRENT_TIME, MOVE_TIME } from '../actions/dimension';
+import { selectLayer, onRangeChanged, timeDataLoading, SELECT_LAYER, SET_MAP_SYNC } from '../actions/timeline';
+import { changeLayerProperties, REMOVE_NODE } from '../actions/layers';
+import { error } from '../actions/notifications';
 
-const { LOCATION_CHANGE } = require('connected-react-router');
+import {
+    currentTimeSelector,
+    layersWithTimeDataSelector,
+    layerTimeSequenceSelectorCreator
+} from '../selectors/dimension';
 
-const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector, playbackMetadataSelector } = require('../selectors/playback');
+import { LOCATION_CHANGE } from 'connected-react-router';
 
-const { selectedLayerSelector, selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, timelineLayersSelector, multidimOptionsSelectorCreator } = require('../selectors/timeline');
+import {
+    currentFrameSelector,
+    currentFrameValueSelector,
+    lastFrameSelector,
+    playbackRangeSelector,
+    playbackSettingsSelector,
+    frameDurationSelector,
+    statusSelector,
+    playbackMetadataSelector
+} from '../selectors/playback';
 
-const pausable = require('../observables/pausable');
-const { wrapStartStop } = require('../observables/epics');
+import {
+    selectedLayerSelector,
+    selectedLayerName,
+    selectedLayerUrl,
+    selectedLayerData,
+    selectedLayerTimeDimensionConfiguration,
+    rangeSelector,
+    timelineLayersSelector,
+    multidimOptionsSelectorCreator
+} from '../selectors/timeline';
 
-const { getDomainValues } = require('../api/MultiDim');
-
-const Rx = require('rxjs');
+import pausable from '../observables/pausable';
+import { wrapStartStop } from '../observables/epics';
+import { getDomainValues } from '../api/MultiDim';
+import Rx from 'rxjs';
 
 const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
@@ -160,186 +184,194 @@ const isOutOfRange = (time, { start, end } = {}) =>
     start && end && ( moment(time).isBefore(start) || moment(time).isAfter(end));
 
 
-module.exports = {
-    /**
-     * When animation start, triggers the flow to retrieve the frames, buffering them:
-     * The first setFrames will trigger the animation.
-     * On any new animation frame, if the buffer is near to finish, this epic triggers
-     * the retrieval of the next frames, until the animation ends.
-     */
-    retrieveFramesForPlayback: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(PLAY).exhaustMap(() =>
-            getAnimationFrames(getState, {
-                fromValue:
-                    // if animation range is set, don't set from value on startup...
-                    (playbackRangeSelector(getState())
-                        && playbackRangeSelector(getState()).startPlaybackTime
-                        && playbackRangeSelector(getState()).endPlaybackTime)
-                        ? undefined
-                    // ...otherwise, start from the current time (start animation from cursor position)
-                        : currentTimeSelector(getState())
-            })
-                .map((frames) => setFrames(frames))
-                .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
-                    error({
-                        title: "There was an error retrieving animation", // TODO: localize
-                        message: "Please contact the administrator" // TODO: localize
-                    }),
-                    stop()
-                ))
-                // show loading mask
-                .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
-                .concat(
-                    action$
-                        .ofType(SET_CURRENT_FRAME)
-                        .filter(({ frame }) => frame % BUFFER_SIZE === ((BUFFER_SIZE - PRELOAD_BEFORE)))
-                        .switchMap(() =>
-                            getAnimationFrames(getState, {
-                                fromValue: lastFrameSelector(getState())
-                            })
-                                .map(appendFrames)
-                                .let(wrapStartStop(framesLoading(true), framesLoading(false)))
-                        )
-                )
-                .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
-                // this removes loading mask even if the STOP action is triggered before frame end (empty result)
-                .concat(Rx.Observable.of(timeDataLoading(false, false)))
-                .let(setupAnimation(getState))
-        ),
-    /**
-     * When the new animation frame is triggered, changes the current time, if the next frame is available. Otherwise stops.
-     * NOTE: we don't have a count of next animation steps, so we suppose that the selector has already pre-loaded next animation steps.
-     */
-    updateCurrentTimeFromAnimation: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(SET_CURRENT_FRAME)
-            .map(() => currentFrameValueSelector(getState()))
-            .map(t => t ? moveTime(t) : stop()),
-    /**
-     * When a new frame sequence is set, the animation starts.
-     */
-    timeDimensionPlayback: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(SET_FRAMES)
-            .exhaustMap(() =>
-                Rx.Observable.interval(frameDurationSelector(getState()) * 1000)
-                    .startWith(0) // start immediately
-                    .let(pausable(
-                        action$
-                            .ofType(PLAY, PAUSE)
-                            .map(a => a.type === PLAY)
-                    ))
-                    // pause is with loss, so the count of timer is not correct.
-                    // the following scan emit a for every event emitted effectively, with correct count
-                    // TODO: in case of loop, we can reset to 0 on load end.
-                    .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
-                    .merge( action$.ofType(ANIMATION_STEP_MOVE)
-                        .map(({direction}) =>
-                            setCurrentFrame(
-                                Math.max(0, currentFrameSelector(getState()) + direction)))
+/**
+ * When animation start, triggers the flow to retrieve the frames, buffering them:
+ * The first setFrames will trigger the animation.
+ * On any new animation frame, if the buffer is near to finish, this epic triggers
+ * the retrieval of the next frames, until the animation ends.
+ */
+export const retrieveFramesForPlayback = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(PLAY).exhaustMap(() =>
+        getAnimationFrames(getState, {
+            fromValue:
+                // if animation range is set, don't set from value on startup...
+                (playbackRangeSelector(getState())
+                    && playbackRangeSelector(getState()).startPlaybackTime
+                    && playbackRangeSelector(getState()).endPlaybackTime)
+                    ? undefined
+                // ...otherwise, start from the current time (start animation from cursor position)
+                    : currentTimeSelector(getState())
+        })
+            .map((frames) => setFrames(frames))
+            .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
+                error({
+                    title: "There was an error retrieving animation", // TODO: localize
+                    message: "Please contact the administrator" // TODO: localize
+                }),
+                stop()
+            ))
+            // show loading mask
+            .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
+            .concat(
+                action$
+                    .ofType(SET_CURRENT_FRAME)
+                    .filter(({ frame }) => frame % BUFFER_SIZE === ((BUFFER_SIZE - PRELOAD_BEFORE)))
+                    .switchMap(() =>
+                        getAnimationFrames(getState, {
+                            fromValue: lastFrameSelector(getState())
+                        })
+                            .map(appendFrames)
+                            .let(wrapStartStop(framesLoading(true), framesLoading(false)))
                     )
-                    .concat(Rx.Observable.of(stop()))
-                    .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
-            ),
-    /**
-     * Synchronizes the fixed animation step toggle with guide layer on timeline
-     */
-    playbackToggleGuideLayerToFixedStep: (action$, { getState = () => { } } = {}) =>
-        action$
-            .ofType(TOGGLE_ANIMATION_MODE)
-            .exhaustMap(() =>
-                selectedLayerName(getState())
-                    // need to deselect
-                    ? Rx.Observable.of(selectLayer(undefined))
-                    // need to select first
-                    : Rx.Observable.of(
-                        selectLayer(
-                            get(timelineLayersSelector(getState()), "[0].id")
-                        )
-                    )
-            ),
-    /**
-     * Allow to move time 1 single step. TODO: evaluate to move this in timeline controls
-     */
-    playbackMoveStep: (action$, { getState = () => { } } = {}) =>
-        action$
-            .ofType(ANIMATION_STEP_MOVE)
-            .filter(() => statusSelector(getState()) !== STATUS.PLAY /* && statusSelector(getState()) !== STATUS.PAUSE*/) // if is playing, the animation manages this event
-            .switchMap(({ direction = 1 }) => {
-                const md = playbackMetadataSelector(getState()) || {};
-                const currentTime = currentTimeSelector(getState());
-                // check if the next/prev value is present in the state (by `playbackCacheNextPreviousTimes`)
-                if (currentTime && md.forTime === currentTime) {
-                    return Rx.Observable.of(direction > 0 ? md.next : md.previous);
-                }
-                // if not downloaded yet, download it
-                return getAnimationFrames(getState, { limit: 1, sort: direction > 0 ? "asc" : "desc", fromValue: currentTimeSelector(getState()) })
-                    .map(([t] = []) => t);
-            }).filter(t => !!t)
-            .map(t => moveTime(t)),
-    /**
-     * Pre-loads next and previous values for the current time, when change.
-     * This is useful to enable/disable playback buttons in guide-layer mode. The state updated by this
-     * epic is also used as a cache to load next/previous button (only when the animation is not active)
-     */
-    playbackCacheNextPreviousTimes: (action$, { getState = () => { } } = {}) =>
-        action$
-            .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP, SET_MAP_SYNC )
-            .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
-            .filter(() => selectedLayerSelector(getState()))
-            .filter( t => !!t )
-            .switchMap(({time: actionTime}) => {
-                // get current time in case of SELECT_LAYER
-                const time = actionTime || currentTimeSelector(getState());
-                return Rx.Observable.forkJoin(
-                    // TODO: find out a way to optimize and do only one request
-                    // TODO: support for local list of values (in case of missing multidim-extension)
-                    getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time }))
-                        .map(res => res.DomainValues.Domain.split(","))
-                        .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
-                    getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time }))
-                        .map(res => res.DomainValues.Domain.split(","))
-                        .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
-                ).map(([next, previous]) =>
-                    updateMetadata({
-                        forTime: time,
-                        next,
-                        previous
-                    })
-                );
-            }),
-    /**
-     * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
-     * current start-end values
-     */
-    playbackFollowCursor: (action$, { getState = () => { } } = {}) =>
-        action$
-            .ofType(MOVE_TIME)
-            .filter(({type}) =>
-                (type === MOVE_TIME || statusSelector(getState()) === STATUS.PLAY )
-                && isOutOfRange(currentTimeSelector(getState()), rangeSelector(getState())))
-            .filter(() => get(playbackSettingsSelector(getState()), "following") )
-            .switchMap(() => Rx.Observable.of(
-                onRangeChanged(
-                    (() => {
-                        const currentTime = currentTimeSelector(getState());
-                        const {start, end} = rangeSelector(getState());
-                        const difference = moment(end).diff(moment(start));
-                        const nextEnd = moment(currentTime).add(difference).toISOString();
-                        return {
-                            start: currentTime,
-                            end: nextEnd
-                        };
-                    })()
-                )
-            )),
-
-    playbackStopWhenDeleteLayer: (action$, { getState = () => {} } = {}) =>
-        action$
-            .ofType(REMOVE_NODE)
-            .filter( () =>
-                !selectedLayerSelector(getState())
-                && statusSelector(getState()) === "PLAY"
             )
-            .switchMap( () => Rx.Observable.of(stop()))
+            .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+            // this removes loading mask even if the STOP action is triggered before frame end (empty result)
+            .concat(Rx.Observable.of(timeDataLoading(false, false)))
+            .let(setupAnimation(getState))
+    );
+/**
+ * When the new animation frame is triggered, changes the current time, if the next frame is available. Otherwise stops.
+ * NOTE: we don't have a count of next animation steps, so we suppose that the selector has already pre-loaded next animation steps.
+ */
+export const updateCurrentTimeFromAnimation = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(SET_CURRENT_FRAME)
+        .map(() => currentFrameValueSelector(getState()))
+        .map(t => t ? moveTime(t) : stop());
+/**
+ * When a new frame sequence is set, the animation starts.
+ */
+export const timeDimensionPlayback = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(SET_FRAMES)
+        .exhaustMap(() =>
+            Rx.Observable.interval(frameDurationSelector(getState()) * 1000)
+                .startWith(0) // start immediately
+                .let(pausable(
+                    action$
+                        .ofType(PLAY, PAUSE)
+                        .map(a => a.type === PLAY)
+                ))
+                // pause is with loss, so the count of timer is not correct.
+                // the following scan emit a for every event emitted effectively, with correct count
+                // TODO: in case of loop, we can reset to 0 on load end.
+                .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
+                .merge( action$.ofType(ANIMATION_STEP_MOVE)
+                    .map(({direction}) =>
+                        setCurrentFrame(
+                            Math.max(0, currentFrameSelector(getState()) + direction)))
+                )
+                .concat(Rx.Observable.of(stop()))
+                .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+        );
+/**
+ * Synchronizes the fixed animation step toggle with guide layer on timeline
+ */
+export const playbackToggleGuideLayerToFixedStep = (action$, { getState = () => { } } = {}) =>
+    action$
+        .ofType(TOGGLE_ANIMATION_MODE)
+        .exhaustMap(() =>
+            selectedLayerName(getState())
+                // need to deselect
+                ? Rx.Observable.of(selectLayer(undefined))
+                // need to select first
+                : Rx.Observable.of(
+                    selectLayer(
+                        get(timelineLayersSelector(getState()), "[0].id")
+                    )
+                )
+        );
+/**
+ * Allow to move time 1 single step. TODO: evaluate to move this in timeline controls
+ */
+export const playbackMoveStep = (action$, { getState = () => { } } = {}) =>
+    action$
+        .ofType(ANIMATION_STEP_MOVE)
+        .filter(() => statusSelector(getState()) !== STATUS.PLAY /* && statusSelector(getState()) !== STATUS.PAUSE*/) // if is playing, the animation manages this event
+        .switchMap(({ direction = 1 }) => {
+            const md = playbackMetadataSelector(getState()) || {};
+            const currentTime = currentTimeSelector(getState());
+            // check if the next/prev value is present in the state (by `playbackCacheNextPreviousTimes`)
+            if (currentTime && md.forTime === currentTime) {
+                return Rx.Observable.of(direction > 0 ? md.next : md.previous);
+            }
+            // if not downloaded yet, download it
+            return getAnimationFrames(getState, { limit: 1, sort: direction > 0 ? "asc" : "desc", fromValue: currentTimeSelector(getState()) })
+                .map(([t] = []) => t);
+        }).filter(t => !!t)
+        .map(t => moveTime(t));
+/**
+ * Pre-loads next and previous values for the current time, when change.
+ * This is useful to enable/disable playback buttons in guide-layer mode. The state updated by this
+ * epic is also used as a cache to load next/previous button (only when the animation is not active)
+ */
+export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } } = {}) =>
+    action$
+        .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP, SET_MAP_SYNC )
+        .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
+        .filter(() => selectedLayerSelector(getState()))
+        .filter( t => !!t )
+        .switchMap(({time: actionTime}) => {
+            // get current time in case of SELECT_LAYER
+            const time = actionTime || currentTimeSelector(getState());
+            return Rx.Observable.forkJoin(
+                // TODO: find out a way to optimize and do only one request
+                // TODO: support for local list of values (in case of missing multidim-extension)
+                getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time }))
+                    .map(res => res.DomainValues.Domain.split(","))
+                    .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
+                getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time }))
+                    .map(res => res.DomainValues.Domain.split(","))
+                    .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
+            ).map(([next, previous]) =>
+                updateMetadata({
+                    forTime: time,
+                    next,
+                    previous
+                })
+            );
+        });
+/**
+ * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
+ * current start-end values
+ */
+export const playbackFollowCursor = (action$, { getState = () => { } } = {}) =>
+    action$
+        .ofType(MOVE_TIME)
+        .filter(({type}) =>
+            (type === MOVE_TIME || statusSelector(getState()) === STATUS.PLAY )
+            && isOutOfRange(currentTimeSelector(getState()), rangeSelector(getState())))
+        .filter(() => get(playbackSettingsSelector(getState()), "following") )
+        .switchMap(() => Rx.Observable.of(
+            onRangeChanged(
+                (() => {
+                    const currentTime = currentTimeSelector(getState());
+                    const {start, end} = rangeSelector(getState());
+                    const difference = moment(end).diff(moment(start));
+                    const nextEnd = moment(currentTime).add(difference).toISOString();
+                    return {
+                        start: currentTime,
+                        end: nextEnd
+                    };
+                })()
+            )
+        ));
+
+export const playbackStopWhenDeleteLayer = (action$, { getState = () => {} } = {}) =>
+    action$
+        .ofType(REMOVE_NODE)
+        .filter( () =>
+            !selectedLayerSelector(getState())
+            && statusSelector(getState()) === "PLAY"
+        )
+        .switchMap( () => Rx.Observable.of(stop()));
 
 
+export default {
+    retrieveFramesForPlayback,
+    updateCurrentTimeFromAnimation,
+    timeDimensionPlayback,
+    playbackToggleGuideLayerToFixedStep,
+    playbackMoveStep,
+    playbackCacheNextPreviousTimes,
+    playbackFollowCursor,
+    playbackStopWhenDeleteLayer
 };

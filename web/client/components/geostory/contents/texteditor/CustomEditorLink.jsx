@@ -249,31 +249,31 @@ class LayoutComponent extends Component {
                   onSelectionChange={this.onSelectionChange}
                   availableStorySections={availableStorySections} />
               {currentSelectOption === EXTERNAL_LINK && (
-          <>
-            <input
-                id="linkTarget"
-                className="rdw-link-modal-input"
-                onChange={this.updateValue}
-                onBlur={this.updateValue}
-                name="linkTarget"
-                value={linkTarget}
-            />
-            <label
-                className="rdw-link-modal-target-option"
-                htmlFor="openLinkInNewWindow"
-            >
-                <input
-                    id="openLinkInNewWindow"
-                    type="checkbox"
-                    defaultChecked={linkTargetOption === '_blank'}
-                    value="_blank"
-                    onChange={this.updateTargetOption}
-                />
-                <span>
-                    {translations['components.controls.link.linkTargetOption']}
-                </span>
-            </label>
-          </>
+                  <>
+                      <input
+                          id="linkTarget"
+                          className="rdw-link-modal-input"
+                          onChange={this.updateValue}
+                          onBlur={this.updateValue}
+                          name="linkTarget"
+                          value={linkTarget}
+                      />
+                      <label
+                          className="rdw-link-modal-target-option"
+                          htmlFor="openLinkInNewWindow"
+                      >
+                          <input
+                              id="openLinkInNewWindow"
+                              type="checkbox"
+                              defaultChecked={linkTargetOption === '_blank'}
+                              value="_blank"
+                              onChange={this.updateTargetOption}
+                          />
+                          <span>
+                              {translations['components.controls.link.linkTargetOption']}
+                          </span>
+                      </label>
+                  </>
               )}
               <span className="rdw-link-modal-buttonsection">
                   <button

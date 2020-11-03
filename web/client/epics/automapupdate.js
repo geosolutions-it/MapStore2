@@ -5,14 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const Rx = require('rxjs');
-const {refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR} = require('../actions/layers');
-const {MAP_CONFIG_LOADED, MAP_INFO_LOADED} = require('../actions/config');
-const {warning, success} = require('../actions/notifications');
-const {toggleControl} = require('../actions/controls');
-const {updateVersion} = require('../actions/map');
-const {mapVersionSelector} = require('../selectors/map');
-const {mapUpdateOptions} = require('../selectors/automapupdate');
+import Rx from 'rxjs';
+
+import { refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR } from '../actions/layers';
+import { MAP_CONFIG_LOADED, MAP_INFO_LOADED } from '../actions/config';
+import { warning, success } from '../actions/notifications';
+import { toggleControl } from '../actions/controls';
+import { updateVersion } from '../actions/map';
+import { mapVersionSelector } from '../selectors/map';
+import { mapUpdateOptions } from '../selectors/automapupdate';
 
 /**
  * When map has been loaded, it sends a notification if the version is less than 2 and users has write permission.
@@ -21,7 +22,7 @@ const {mapUpdateOptions} = require('../selectors/automapupdate');
  * @return {external:Observable}
  */
 
-const manageAutoMapUpdate = (action$, store) =>
+export const manageAutoMapUpdate = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED)
         .switchMap((mapConfigLoaded) =>
             action$.ofType(MAP_INFO_LOADED)
@@ -71,6 +72,6 @@ const manageAutoMapUpdate = (action$, store) =>
  * @type {Object}
  */
 
-module.exports = {
+export default {
     manageAutoMapUpdate
 };

@@ -6,14 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const { INIT_CATALOG } = require('../../actions/catalog');
-const { MAP_CONFIG_LOAD_ERROR } = require('../../actions/config');
-const { SET_CONTROL_PROPERTY, setControlProperty } = require('../../actions/controls');
-const { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED } = require('../../actions/security');
-const { initCatalogOnLoginOutEpic, promptLoginOnMapError, reloadMapConfig, redirectOnLogout } = require('../login');
+import expect from 'expect';
 
-const { testEpic } = require('./epicTestUtils');
+
+import { MAP_CONFIG_LOAD_ERROR } from '../../actions/config';
+import { SET_CONTROL_PROPERTY, setControlProperty } from '../../actions/controls';
+import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED } from '../../actions/security';
+
+import {
+    initCatalogOnLoginOutEpic,
+    promptLoginOnMapError,
+    reloadMapConfig,
+    redirectOnLogout
+} from '../login';
+
+import { testEpic } from './epicTestUtils';
 
 describe('login Epics', () => {
     describe('reloadMapConfig', () => {
@@ -57,7 +64,7 @@ describe('login Epics', () => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
             const action = actions[0];
-            expect(action.type).toBe(INIT_CATALOG);
+            expect(action.type).toBe(undefined);
             done();
         };
         testEpic(initCatalogOnLoginOutEpic, 1, loginSuccess(), epicResult, {});
@@ -67,7 +74,7 @@ describe('login Epics', () => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
             const action = actions[0];
-            expect(action.type).toBe(INIT_CATALOG);
+            expect(action.type).toBe(undefined);
             done();
         };
         testEpic(initCatalogOnLoginOutEpic, 1, logout(), epicResult, {});

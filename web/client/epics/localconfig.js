@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const Rx = require('rxjs');
-const {LOCAL_CONFIG_LOADED, supportedLanguagesRegistered} = require('../actions/localConfig');
-const LocaleUtils = require('../utils/LocaleUtils');
-const {get} = require('lodash');
+import Rx from 'rxjs';
+
+import { LOCAL_CONFIG_LOADED, supportedLanguagesRegistered } from '../actions/localConfig';
+import LocaleUtils from '../utils/LocaleUtils';
+import { get } from 'lodash';
 
 /**
  * Epics for cookies policy informations
@@ -26,7 +27,7 @@ const {get} = require('lodash');
  */
 
 
-const setSupportedLocales = (action$) =>
+export const setSupportedLocales = (action$) =>
     action$.ofType(LOCAL_CONFIG_LOADED)
         .switchMap(action => {
             const supportedLocales = get(action, "config.initialState.defaultState.locales.supportedLocales", {});
@@ -38,6 +39,6 @@ const setSupportedLocales = (action$) =>
         });
 
 
-module.exports = {
+export default {
     setSupportedLocales
 };

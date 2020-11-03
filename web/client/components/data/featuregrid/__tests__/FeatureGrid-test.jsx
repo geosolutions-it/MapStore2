@@ -64,8 +64,13 @@ describe('Test for FeatureGrid component', () => {
         };
         spyOn(events, "onSort");
         ReactDOM.render(<FeatureGrid virtualScroll={false} gridEvents={{onGridSort: events.onSort}} describeFeatureType={describePois} features={museam.features}/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--ascending').length).toBe(0);
         document.getElementsByClassName('react-grid-HeaderCell-sortable')[0].click();
         expect(events.onSort).toHaveBeenCalled();
+        expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--ascending').length).toBe(1);
+        document.getElementsByClassName('react-grid-HeaderCell-sortable')[0].click();
+        expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--ascending').length).toBe(0);
+        expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--descending').length).toBe(1);
     });
     //
     // ROW SELECTION EVENTS

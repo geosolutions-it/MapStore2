@@ -22,11 +22,7 @@ import uuid from 'uuid/v1';
 
 import axios from '../libs/ajax';
 
-const {
-    createResource,
-    updateResource,
-    getResource
-} = require('../api/persistence');
+import { createResource, updateResource, getResource } from '../api/persistence';
 
 import {
     ADD,
@@ -167,10 +163,10 @@ const updateWebPageSection = path => action$ =>
             );
         });
 
-    /**
-     * Epic that handles opening webPageCreator and saves url of WebPage component
-     * @param {Observable} action$ stream of redux action
-     */
+/**
+ * Epic that handles opening webPageCreator and saves url of WebPage component
+ * @param {Observable} action$ stream of redux action
+ */
 export const openWebPageComponentCreator = action$ =>
     action$.ofType(ADD)
         .filter(({ element = {} }) => {

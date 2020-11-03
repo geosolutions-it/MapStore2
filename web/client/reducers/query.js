@@ -50,7 +50,7 @@ const initialState = {
     data: {},
     result: null,
     resultError: null,
-    syncWmsFilter: true,
+    syncWmsFilter: false,
     isLayerFilter: false
 };
 
