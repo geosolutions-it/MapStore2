@@ -33,7 +33,8 @@ import {
     updateQuery,
     TOGGLE_SYNC_WMS,
     QUERY_ERROR,
-    FEATURE_LOADING
+    FEATURE_LOADING,
+    toggleSyncWms
 } from '../actions/wfsquery';
 
 import { reset, QUERY_FORM_SEARCH, loadFilter } from '../actions/queryform';
@@ -898,6 +899,15 @@ export const stopSyncWmsFilter = (action$, store) =>
  * Sync map with filter.
  *
  */
+/**
+     * Deactivate map sync when featuregrid closes if it was active
+     */
+export const deactivateSyncWmsFilterOnFeatureGridClose = (action$, store) =>
+    action$.ofType(CLOSE_FEATURE_GRID)
+        .filter(() => isSyncWmsActive(store.getState()))
+        .switchMap(() => {
+            return Rx.Observable.of(toggleSyncWms());
+        });
 export const syncMapWmsFilter = (action$, store) =>
     action$.ofType(QUERY_CREATE, UPDATE_QUERY).
         filter((a) => {
@@ -1006,52 +1016,3 @@ export const hideDrawerOnFeatureGridOpenMobile = (action$, { getState } = {}) =>
             && drawerEnabledControlSelector(getState())
         )
         .mapTo(toggleControl('drawer', 'enabled'));
-
-
-export default {
-    featureGridBrowseData,
-    featureGridLayerSelectionInitialization,
-    featureGridStartupQuery,
-    featureGridSort,
-    featureGridUpdateGeometryFilter,
-    featureGridUpdateTextFilters,
-    enableGeometryFilterOnEditMode,
-    handleClickOnMap,
-    selectFeaturesOnMapClickResult,
-    activateTemporaryChangesEpic,
-    handleGeometryFilterActivation,
-    deactivateGeometryFilter,
-    activateGeometryFilter,
-    featureGridChangePage,
-    featureGridReloadPageOnSaveSuccess,
-    savePendingFeatureGridChanges,
-    deleteSelectedFeatureGridFeatures,
-    handleEditFeature,
-    handleDrawFeature,
-    resetEditingOnFeatureGridClose,
-    closeRightPanelOnFeatureGridOpen,
-    onFeatureGridGeometryEditing,
-    deleteGeometryFeature,
-    triggerDrawSupportOnSelectionChange,
-    onFeatureGridCreateNewFeature,
-    setHighlightFeaturesPath,
-    resetGridOnLocationChange,
-    resetQueryPanel,
-    autoCloseFeatureGridEpicOnDrowerOpen,
-    askChangesConfirmOnFeatureGridClose,
-    onClearChangeConfirmedFeatureGrid,
-    onCloseFeatureGridConfirmed,
-    removeWmsFilterOnGridClose,
-    autoReopenFeatureGridOnFeatureInfoClose,
-    onOpenAdvancedSearch,
-    onFeatureGridZoomAll,
-    resetControlsOnEnterInEditMode,
-    closeIdentifyWhenOpenFeatureGrid,
-    startSyncWmsFilter,
-    stopSyncWmsFilter,
-    syncMapWmsFilter,
-    virtualScrollLoadFeatures,
-    replayOnTimeDimensionChange,
-    hideFeatureGridOnDrawerOpenMobile,
-    hideDrawerOnFeatureGridOpenMobile
-};
