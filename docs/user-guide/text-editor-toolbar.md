@@ -21,7 +21,7 @@ With the *Text Editor Toolbar* it is possible to customize the text by modifying
 
 * **Indent/Outdent** <img src="../img/button/indent.jpg" class="ms-docbutton" style="max-height:15px;"/> to  indent the text in relation to the left margin or to the right margin
 
-* **Link** <img src="../img/button/link.jpg" class="ms-docbutton" style="max-height:15px;"/> to convert in hyperlink the selected portion of text. The editor can define hyperlinks to external web pages by choosing the 'External link' option on the *Link target* dropdown menu and then entering a web page URL or define the hyperlinks to other sections of the same story by choosing the section from the same dropdown menu. 
+* **Link** <img src="../img/button/link.jpg" class="ms-docbutton" style="max-height:15px;"/> to convert in hyperlink the selected portion of text. The editor can define hyperlinks to external web pages by choosing the *External link* option on the **Link target** dropdown menu and then entering a web page URL or define the hyperlinks to other sections of the same story by choosing the section from the same **Link target** dropdown menu. 
 
 <img src="../img/text-editor-toolbar/hyperlink_menu.jpg" class="ms-docimage"/>
 
