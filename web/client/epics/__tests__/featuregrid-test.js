@@ -975,12 +975,15 @@ describe('featuregrid Epics', () => {
                 open: true
             }
         };
-        testEpic(autoCloseFeatureGridEpicOnDrowerOpen, 1, [openFeatureGrid(), toggleControl('drawer')], actions => {
-            expect(actions.length).toBe(1);
+        testEpic(autoCloseFeatureGridEpicOnDrowerOpen, 2, [openFeatureGrid(), toggleControl('drawer')], actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                case SELECT_FEATURES:
+                    expect(action.type).toBe(SELECT_FEATURES);
                     break;
                 default:
                     expect(true).toBe(false);
@@ -991,12 +994,15 @@ describe('featuregrid Epics', () => {
     });
 
     it('test askChangesConfirmOnFeatureGridClose', (done) => {
-        testEpic(askChangesConfirmOnFeatureGridClose, 1, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(1);
+        testEpic(askChangesConfirmOnFeatureGridClose, 2, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                case SELECT_FEATURES:
+                    expect(action.type).toBe(SELECT_FEATURES);
                     break;
                 default:
                     expect(true).toBe(false);

@@ -788,15 +788,15 @@ export const autoCloseFeatureGridEpicOnDrowerOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID).switchMap(() =>
         action$.ofType(TOGGLE_CONTROL)
             .filter(action => action.control && action.control === 'drawer' && isFeatureGridOpen(store.getState()))
-            .switchMap(() => Rx.Observable.of(closeFeatureGrid()))
-            .takeUntil(action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE))
+            .switchMap(() => Rx.Observable.of(closeFeatureGrid(), selectFeatures([])))
+            .takeUntil(action$.ofType(LOCATION_CHANGE))
     );
 export const askChangesConfirmOnFeatureGridClose = (action$, store) => action$.ofType(CLOSE_FEATURE_GRID_CONFIRM).switchMap( () => {
     const state = store.getState();
     if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
         return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
     }
-    return Rx.Observable.of(closeFeatureGrid());
+    return Rx.Observable.of(closeFeatureGrid(), selectFeatures([]));
 });
 export const onClearChangeConfirmedFeatureGrid = (action$) => action$.ofType(CLEAR_CHANGES_CONFIRMED)
     .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false)));
