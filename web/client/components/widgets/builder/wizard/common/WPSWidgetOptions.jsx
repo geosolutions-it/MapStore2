@@ -193,24 +193,31 @@ module.exports = ({
                             <Col componentClass={ControlLabel} sm={6}>
                                 <Message msgId={getLabelMessageId("xAxisAngle", data)} />
                             </Col>
-                            <Col sm={6}>
-                                <div
-                                    className={"mapstore-slider with-tooltip"}
-                                    onClick={(e) => { e.stopPropagation(); }}
-                                >
-                                    <Slider
-                                        key="priority"
-                                        format= {{
-                                            // this is needed to remove the 2 decimals that this comp adds by default
-                                            to: value => parseInt(value, 10),
-                                            from: value => Number(value)
-                                        }}
-                                        onSlide={(values) => { onChange("xAxisAngle", parseInt(values[0], 10)); }}
-                                        range={{min: 0, max: 90}}
-                                        start={[!isNil(data.xAxisAngle) ? data.xAxisAngle : 0]}
-                                        step={15}
-                                        tooltips={[true]}
-                                    />
+                            <Col sm={6} style={{display: "flex"}}>
+                                <SwitchButton
+                                    checked={data.xAxisAngle === undefined}
+                                    onChange={(val) => { onChange("xAxisAngle", val ? undefined : 0); }}
+                                />
+                                <div style={{ flexGrow: 1, padding: 5 }}>
+                                    {data.xAxisAngle !== undefined
+                                        ? <div
+
+                                            className="mapstore-slider with-tooltip"
+                                            onClick={(e) => { e.stopPropagation(); }}
+                                        ><Slider
+                                                key="priority"
+                                                format= {{
+                                                    // this is needed to remove the 2 decimals that this comp adds by default
+                                                    to: value => `${parseInt(value, 10)}°`,
+                                                    from: value => Number(value)
+                                                }}
+                                                onSlide={(values) => { onChange("xAxisAngle", parseInt(values[0], 10)); }}
+                                                range={{min: -90, max: 90}}
+                                                start={[!isNil(data.xAxisAngle) ? data.xAxisAngle : 0]}
+                                                step={15}
+                                                tooltips={[true]}
+                                            /></div>
+                                        : <div style={{ textAlign: "center"}}>Auto</div>}
                                 </div>
                             </Col>
                         </FormGroup>

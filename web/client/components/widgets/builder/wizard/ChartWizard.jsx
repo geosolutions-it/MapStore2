@@ -54,7 +54,7 @@ const isChartOptionsValid = (options = {}) => options.aggregateFunction && optio
 const Wizard = wizardHandlers(WizardContainer);
 
 
-const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { }, shortenChartLabelThreshold }) => isChartOptionsValid(data.options)
+const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { } }) => isChartOptionsValid(data.options)
     ? (<PreviewChart
         key="preview-chart"
         onLoad={() => setValid(true)}
@@ -75,7 +75,6 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         yAxis={data.yAxis}
         xAxisAngle={data.xAxisAngle}
         yAxisLabel={data.yAxisLabel}
-        shortenChartLabelThreshold={shortenChartLabelThreshold}
     />)
     : (<SampleChart
         key="sample-chart"
@@ -86,7 +85,6 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         legend={data.legend}
         cartesian={data.cartesian}
         yAxis={data.yAxis}
-        shortenChartLabelThreshold={shortenChartLabelThreshold}
     />);
 
 const enhanceWizard = compose(lifecycle({
@@ -97,7 +95,7 @@ const enhanceWizard = compose(lifecycle({
     }
 })
 );
-const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies, shortenChartLabelThreshold }) =>
+const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies }) =>
     (<Wizard
         step={step}
         setPage={setPage}
@@ -124,14 +122,14 @@ const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () 
             data={data}
             onChange={onChange}
             layer={data.layer || layer}
-            sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)), shortenChartLabelThreshold })}
+            sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)) })}
         />
         <WidgetOptions
             key="widget-options"
             data={data}
             onChange={onChange}
             layer={data.layer || layer}
-            sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)), shortenChartLabelThreshold })}
+            sampleChart={renderPreview({ data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options)) })}
         />
     </Wizard>);
 export default enhanceWizard(ChartWizard);
