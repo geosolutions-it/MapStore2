@@ -117,7 +117,6 @@ import {
     hasChangesSelector,
     hasNewFeaturesSelector,
     selectedFeatureSelector,
-    selectedFeaturesCount,
     selectedLayerIdSelector,
     isDrawingSelector,
     modeSelector,
@@ -185,7 +184,7 @@ const setupDrawSupport = (state, original) => {
     // Remove features with geometry null or id "empty_row"
     const cleanFeatures = features.filter(ft => ft.geometry !== null || ft.id !== 'empty_row');
 
-    if (selectedFeaturesCount(state) > 0) {
+    if (cleanFeatures.length > 0) {
         return Rx.Observable.from([
             changeDrawingStatus("drawOrEdit", geomType, "featureGrid", cleanFeatures, drawOptions)
         ]);
