@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -12,7 +12,7 @@ const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 const {toggleControl} = require('../actions/controls');
 

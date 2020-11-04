@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const {isAnnotation} = require('../../../utils/AnnotationsUtils');
 let { toVectorStyle } = require('../../../utils/StyleUtils');

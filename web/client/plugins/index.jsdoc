@@ -1,5 +1,6 @@
 /**
- * MapStore2 plugins
+ * MapStore2 plugins.
+ * In this documentation you can find the list of all the plugins available in MapStore, their main purpose and configuration.
  * @name plugins
  * @see {@link https://mapstore.readthedocs.io/en/latest/developer-guide/plugins-architecture/}
  *

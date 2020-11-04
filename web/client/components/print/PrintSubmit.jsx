@@ -12,7 +12,7 @@ const React = require('react');
 const {Button, Glyphicon} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 class PrintSubmit extends React.Component {
     static propTypes = {

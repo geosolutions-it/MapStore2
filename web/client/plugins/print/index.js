@@ -8,7 +8,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {compose} = require('redux');
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
 const {setPrintParameter, changePrintZoomLevel, changeMapPrintPreview, printCancel} =

@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const StandardApp = require('../StandardApp').default;
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 
 class mycomponent extends React.Component {
     static propTypes = {

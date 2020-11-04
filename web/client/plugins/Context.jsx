@@ -11,8 +11,10 @@ import context from '../reducers/context';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
- * Plugin for Context support. Adds state handlers to the application (reducer and epics).
+ * Plugin for Context support.
+ * Adds state handlers to the application (reducer and epics).
  * @name Context
+ * @class
  * @memberof plugins
  */
 export default createPlugin("Context", {

@@ -519,7 +519,8 @@ const LayersUtils = {
             tooltipOptions: layer.tooltipOptions,
             tooltipPlacement: layer.tooltipPlacement,
             legendOptions: layer.legendOptions,
-            tileSize: layer.tileSize
+            tileSize: layer.tileSize,
+            version: layer.version
         },
         layer.params ? { params: layer.params } : {},
         layer.credits ? { credits: layer.credits } : {},

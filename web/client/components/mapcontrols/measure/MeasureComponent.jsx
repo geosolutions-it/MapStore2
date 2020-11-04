@@ -14,7 +14,7 @@ const uuidv1 = require('uuid/v1');
 
 const { download } = require('../../../utils/FileUtils');
 const NumberFormat = require('../../I18N/Number');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const {convertMeasuresToGeoJSON} = require('../../../utils/MeasurementUtils');
 const LocaleUtils = require('../../../utils/LocaleUtils');

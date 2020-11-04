@@ -7,12 +7,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {head, last} = require('lodash');
+import expect from 'expect';
 
-const configureMockStore = require('redux-mock-store').default;
-const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const {
+import { head, last } from 'lodash';
+import configureMockStore from 'redux-mock-store';
+import { createEpicMiddleware, combineEpics } from 'redux-observable';
+
+import {
     textSearch,
     selectSearchItem,
     TEXT_SEARCH_RESULTS_LOADED,
@@ -22,14 +23,16 @@ const {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_TEXT_CHANGE,
     TEXT_SEARCH_ERROR,
-    zoomAndAddPoint, ZOOM_ADD_POINT,
+    zoomAndAddPoint,
+    ZOOM_ADD_POINT,
     searchLayerWithFilter
-} = require('../../actions/search');
-const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER} = require('../../actions/mapInfo');
-const {ZOOM_TO_EXTENT, ZOOM_TO_POINT} = require('../../actions/map');
-const {UPDATE_ADDITIONAL_LAYER} = require('../../actions/additionallayers');
-const {searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic } = require('../search');
+} from '../../actions/search';
+
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER } from '../../actions/mapInfo';
+import { ZOOM_TO_EXTENT, ZOOM_TO_POINT } from '../../actions/map';
+import { UPDATE_ADDITIONAL_LAYER } from '../../actions/additionallayers';
+import { searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic } from '../search';
 const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -38,7 +41,7 @@ const SEARCH_NESTED = 'SEARCH NESTED';
 const TEST_NESTED_PLACEHOLDER = 'TEST_NESTED_PLACEHOLDER';
 const STATE_NAME = 'STATE_NAME';
 
-const {testEpic, addTimeoutEpic} = require('./epicTestUtils');
+import { testEpic, addTimeoutEpic } from './epicTestUtils';
 
 const nestedService = {
     nestedPlaceholder: TEST_NESTED_PLACEHOLDER

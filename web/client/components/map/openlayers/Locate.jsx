@@ -11,8 +11,7 @@ const defaultOpt = {
     locateOptions: {
         maximumAge: 2000,
         enableHighAccuracy: false,
-        timeout: 10000,
-        maxZoom: 18
+        timeout: 10000
     }
 };
 
@@ -23,6 +22,7 @@ export default class Locate extends React.Component {
         map: PropTypes.object,
         status: PropTypes.string,
         messages: PropTypes.object,
+        maxZoom: PropTypes.number,
         changeLocateState: PropTypes.func,
         onLocateError: PropTypes.func
     };
@@ -30,13 +30,14 @@ export default class Locate extends React.Component {
     static defaultProps = {
         id: 'overview',
         status: "DISABLED",
+        maxZoom: 18,
         changeLocateState: () => {},
         onLocateError: () => {}
     };
 
     componentDidMount() {
         if (this.props.map) {
-            this.locate = new OlLocate(this.props.map, defaultOpt);
+            this.locate = new OlLocate(this.props.map, this.mergeOptions(this.props));
             this.locate.setStrings(this.props.messages);
             this.locate.options.onLocationError = this.onLocationError;
             this.locate.on("propertychange", (e) => {this.onStateChange(e.target.get(e.key)); });
@@ -50,6 +51,9 @@ export default class Locate extends React.Component {
         }
         if (newProps.messages !== this.props.messages) {
             this.locate.setStrings(newProps.messages);
+        }
+        if (newProps.maxZoom !== this.props.maxZoom) {
+            this.locate.setTrackingOptions(this.mergeOptions(newProps).locateOptions);
         }
     }
 
@@ -66,6 +70,16 @@ export default class Locate extends React.Component {
 
     render() {
         return null;
+    }
+
+    mergeOptions(props) {
+        return {
+            ...defaultOpt,
+            locateOptions: {
+                ...defaultOpt.locateOptions,
+                maxZoom: props.maxZoom
+            }
+        };
     }
 
     configureLocate = (newStatus) => {

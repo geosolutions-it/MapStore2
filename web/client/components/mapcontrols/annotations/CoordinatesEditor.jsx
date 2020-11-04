@@ -18,7 +18,7 @@ const {head, isNaN, get, isEmpty} = require('lodash');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {validateCoords, coordToArray} = require('../../../utils/AnnotationsUtils');
 const CoordinatesRow = require('../../misc/coordinateeditors/CoordinatesRow');
 const MeasureEditor = require('./MeasureEditor');
@@ -258,65 +258,65 @@ class CoordinatesEditor extends React.Component {
                             </span>
                         </div>
                         }
-                    <CoordinatesRow
-                        format={this.props.format}
-                        aeronauticalOptions={this.props.aeronauticalOptions}
-                        sortId={idx}
-                        key={idx + " key"}
-                        renderer={this.props.renderer}
-                        isDraggable={this.props.isDraggable}
-                        isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
-                        showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
-                        formatVisible={false}
-                        removeVisible={componentsValidation[type].remove}
-                        removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
-                        onSubmit={this.change}
-                        onMouseEnter={(val) => {
-                            if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
-                                this.props.onHighlightPoint(val);
-                            }
-                        }}
-                        onMouseLeave={() => {
-                            if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
-                                this.props.onHighlightPoint(null);
-                            }
-                        }}
-                        onSort={(targetId, currentId) => {
-                            const components = this.props.components.reduce((allCmp, cmp, id) => {
-                                if (targetId === id) {
-                                    return targetId > currentId ?
-                                        [...allCmp, {...cmp}, head(this.props.components.filter((cm, i) => i === currentId))]
-                                        :
-                                        [...allCmp, head(this.props.components.filter((cm, i) => i === currentId)), {...cmp}];
+                        <CoordinatesRow
+                            format={this.props.format}
+                            aeronauticalOptions={this.props.aeronauticalOptions}
+                            sortId={idx}
+                            key={idx + " key"}
+                            renderer={this.props.renderer}
+                            isDraggable={this.props.isDraggable}
+                            isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
+                            showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
+                            formatVisible={false}
+                            removeVisible={componentsValidation[type].remove}
+                            removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
+                            onSubmit={this.change}
+                            onMouseEnter={(val) => {
+                                if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
+                                    this.props.onHighlightPoint(val);
                                 }
-                                if (currentId === id) {
-                                    return [...allCmp];
-                                }
-                                return [...allCmp, {...cmp}];
-                            }, []).filter(val => val);
-
-                            if (this.isValid(components)) {
-                                this.props.onChange(components);
-                            } else if (this.props.properties.isValidFeature) {
-                                this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
-                            }
-                        }}
-                        idx={idx}
-                        component={component}
-                        onRemove={() => {
-                            const components = this.props.components.filter((cmp, i) => i !== idx);
-                            if (this.isValid(components)) {
-                                if (this.props.isMouseEnterEnabled || this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
-                                    this.props.onHighlightPoint(components[idx]);
-                                } else {
+                            }}
+                            onMouseLeave={() => {
+                                if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
                                     this.props.onHighlightPoint(null);
                                 }
-                                this.props.onChange(components);
-                            } else if (this.props.properties.isValidFeature) {
-                                this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
-                            }
-                        }}/>
-                        </>
+                            }}
+                            onSort={(targetId, currentId) => {
+                                const components = this.props.components.reduce((allCmp, cmp, id) => {
+                                    if (targetId === id) {
+                                        return targetId > currentId ?
+                                            [...allCmp, {...cmp}, head(this.props.components.filter((cm, i) => i === currentId))]
+                                            :
+                                            [...allCmp, head(this.props.components.filter((cm, i) => i === currentId)), {...cmp}];
+                                    }
+                                    if (currentId === id) {
+                                        return [...allCmp];
+                                    }
+                                    return [...allCmp, {...cmp}];
+                                }, []).filter(val => val);
+
+                                if (this.isValid(components)) {
+                                    this.props.onChange(components);
+                                } else if (this.props.properties.isValidFeature) {
+                                    this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
+                                }
+                            }}
+                            idx={idx}
+                            component={component}
+                            onRemove={() => {
+                                const components = this.props.components.filter((cmp, i) => i !== idx);
+                                if (this.isValid(components)) {
+                                    if (this.props.isMouseEnterEnabled || this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
+                                        this.props.onHighlightPoint(components[idx]);
+                                    } else {
+                                        this.props.onHighlightPoint(null);
+                                    }
+                                    this.props.onChange(components);
+                                } else if (this.props.properties.isValidFeature) {
+                                    this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
+                                }
+                            }}/>
+                    </>
                     )}
                 </div>
                 {(!this.props.components || this.props.components.length === 0) &&

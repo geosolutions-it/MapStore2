@@ -14,8 +14,8 @@ const Spinner = require('react-spinkit');
 const {Checkbox} = require("react-bootstrap");
 
 
-const Message = require('../../I18N/Message');
-const ResizableModal = require('../../misc/ResizableModal');
+const Message = require('../../I18N/Message').default;
+const ResizableModal = require('../../misc/ResizableModal').default;
 
 const FileUtils = require('../../../utils/FileUtils');
 const {ANNOTATION_TYPE} = require('../../../utils/AnnotationsUtils');

@@ -5,16 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
+import React from 'react';
+import { connect } from 'react-redux';
+import { Glyphicon } from 'react-bootstrap';
 
-const {changeLocateState} = require('../actions/locate');
+import { changeLocateState } from '../actions/locate';
+import Message from './locale/Message';
+import LocateBtn from '../components/mapcontrols/locate/LocateBtn';
 
-const Message = require('./locale/Message');
+import { createPlugin } from '../utils/PluginsUtils';
 
-const {Glyphicon} = require('react-bootstrap');
+import locate from '../reducers/locate';
 
-const assign = require('object-assign');
+import './locate/locate.css';
 
 /**
   * Locate Plugin. Provides button to locate the user's position on the map.
@@ -36,13 +39,14 @@ const LocatePlugin = connect((state) => ({
     tooltip: state.locate && state.locate.state === 'FOLLOWING' ? "locate.tooltipDeactivate" : "locate.tooltip"
 }), {
     onClick: changeLocateState
-})(require('../components/mapcontrols/locate/LocateBtn'));
+})(LocateBtn);
 
-require('./locate/locate.css');
-
-module.exports = {
-    LocatePlugin: assign(LocatePlugin, {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
+export default createPlugin('Locate', {
+    component: LocatePlugin,
+    options: {
+        disablePluginIf: "{state('mapType') === 'cesium'}"
+    },
+    containers: {
         Toolbar: {
             name: 'locate',
             position: 2,
@@ -51,6 +55,6 @@ module.exports = {
             help: <Message msgId="helptexts.locateBtn"/>,
             priority: 1
         }
-    }),
-    reducers: {locate: require('../reducers/locate').default}
-};
+    },
+    reducers: {locate}
+});

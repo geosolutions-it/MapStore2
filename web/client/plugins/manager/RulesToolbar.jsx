@@ -13,7 +13,7 @@ const { onEditRule, delRules, onCacheClean} = require('../../actions/rulesmanage
 const {rulesEditorToolbarSelector} = require('../../selectors/rulesmanager');
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
 const Modal = require("../../components/manager/rulesmanager/ModalDialog");
-const Message = require("../../components/I18N/Message");
+const Message = require("../../components/I18N/Message").default;
 
 const ToolbarWithModal = ({modalsProps, loading, ...props}) => {
     return (

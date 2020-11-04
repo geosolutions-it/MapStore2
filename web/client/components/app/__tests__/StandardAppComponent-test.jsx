@@ -12,7 +12,7 @@ const {Provider} = require('react-redux');
 
 const StandardAppComponent = require('../StandardAppComponent');
 
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 window.__DEVTOOLS__ = false;
 
 class MyPlugin extends React.Component {

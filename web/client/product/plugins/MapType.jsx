@@ -8,7 +8,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {Label, FormControl, FormGroup} = require('react-bootstrap');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const {compose} = require('redux');
 const {changeMapType} = require('../../actions/maptype');
 const {mapTypeSelector} = require('../../selectors/maptype');

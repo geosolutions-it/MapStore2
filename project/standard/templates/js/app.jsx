@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ConfigUtils = require('@mapstore/utils/ConfigUtils');
+import { checkForMissingPlugins } from '@mapstore/utils/DebugUtils';
+import main from '@mapstore/product/main';
+const ConfigUtils = require('@mapstore/utils/ConfigUtils').default;
 /**
  * Add custom (overriding) translations with:
  *
@@ -46,6 +48,6 @@ const appConfig = require('@mapstore/product/appConfig');
  */
 const plugins = require('@mapstore/product/plugins');
 
-import main from '@mapstore/product/main';
+checkForMissingPlugins(plugins.plugins);
 
 main(appConfig, plugins);

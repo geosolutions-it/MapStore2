@@ -11,8 +11,8 @@ const PropTypes = require('prop-types');
 const {Glyphicon, SplitButton, MenuItem} = require('react-bootstrap');
 
 
-const Message = require('../../I18N/Message');
-const tooltip = require('../../misc/enhancers/tooltip');
+const Message = require('../../components/I18N/Message').default;
+const tooltip = require('../../components/misc/enhancers/tooltip');
 
 const SplitButtonT = tooltip(SplitButton);
 const splitToolButtonConfig = {
@@ -24,21 +24,21 @@ const splitToolButtonConfig = {
 };
 
 const SwipeButton = (props) => {
-    const {swipeSettings, onToolsActions, status} = props;
+    const { swipeSettings, onSetActive, onSetSwipeMode, status} = props;
 
     const showConfiguration = () => {
         if (!swipeSettings.configuring && (status === 'LAYER')) {
-            onToolsActions.onSetActive(true, "configuring");
+            onSetActive(true, "configuring");
         } else {
-            onToolsActions.onSetActive(false, "configuring");
+            onSetActive(false, "configuring");
         }
     };
 
     const showSwipeTools = () => {
         if (!swipeSettings.active && (status === 'LAYER')) {
-            onToolsActions.onSetActive(true);
+            onSetActive(true);
         } else {
-            onToolsActions.onSetActive(false);
+            onSetActive(false);
         }
     };
 
@@ -50,16 +50,16 @@ const SwipeButton = (props) => {
             <MenuItem
                 active={swipeSettings?.mode === "swipe"}
                 onClick={() => {
-                    onToolsActions.onSetSwipeMode("swipe");
-                    onToolsActions.onSetActive(true);
+                    onSetSwipeMode("swipe");
+                    onSetActive(true);
                 }}>
                 <Glyphicon glyph="vert-dashed"/><Message msgId="toc.swipe" />
             </MenuItem>
             <MenuItem
                 active={swipeSettings?.mode === "spy"}
                 onClick={() => {
-                    onToolsActions.onSetSwipeMode("spy");
-                    onToolsActions.onSetActive(true);
+                    onSetSwipeMode("spy");
+                    onSetActive(true);
                 }}>
                 <Glyphicon glyph="search" /><Message msgId="toc.spyGlass" />
             </MenuItem>
@@ -74,14 +74,14 @@ const SwipeButton = (props) => {
 SwipeButton.propTypes = {
     swipeSettings: PropTypes.object,
     status: PropTypes.string,
-    onToolsActions: PropTypes.object
+    onSetActive: PropTypes.func,
+    onSetSwipeMode: PropTypes.func
 };
 
 SwipeButton.defaultProps = {
     status: "LAYER",
-    onToolsActions: {
-        onToolsActions: () => {}
-    }
+    onSetSwipeMode: () => { },
+    onSetActive: () => { }
 };
 
 module.exports =  SwipeButton;

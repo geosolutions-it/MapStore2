@@ -13,7 +13,7 @@ const TestUtils = require('react-dom/test-utils');
 
 const SwipeButton = require('../SwipeButton');
 
-const onToolsActions = {
+const actions = {
     onSetActive: () => {},
     onSetSwipeMode: () => {}
 };
@@ -37,7 +37,8 @@ describe('SwipeButton', () => {
         };
 
         ReactDOM.render(<SwipeButton
-            onToolsActions={onToolsActions}
+            onSetActive={actions.onSetActive}
+            onSetSwipeMode={actions.onSetSwipeMode}
             swipeSettings={settings} />, document.getElementById("container"));
 
         const el = document.getElementById('container');
@@ -47,15 +48,16 @@ describe('SwipeButton', () => {
     });
 
     it('should set tool or configuring state active', () => {
-        const spySetActive = expect.spyOn(onToolsActions, 'onSetActive');
-        const spySetSwipeMode = expect.spyOn(onToolsActions, 'onSetSwipeMode');
+        const spySetActive = expect.spyOn(actions, 'onSetActive');
+        const spySetSwipeMode = expect.spyOn(actions, 'onSetSwipeMode');
         const settings = {
             active: true,
             mode: "swipe"
         };
 
         ReactDOM.render(<SwipeButton
-            onToolsActions={onToolsActions}
+            onSetActive={actions.onSetActive}
+            onSetSwipeMode={actions.onSetSwipeMode}
             swipeSettings={settings} />, document.getElementById("container"));
 
         const el = document.getElementById('container');

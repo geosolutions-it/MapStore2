@@ -100,50 +100,50 @@ const VideoThumbnail = ({
 
     return (
         <>
-        <Thumbnail
-            thumbnail={thumbnail}
-            thumbnailOptions={{
-                width: 640,
-                height: 360,
-                type: 'image/jpeg',
-                quality: 0.5
-            }}
-            loading={loading}
-            message={<Message msgId="mediaEditor.mediaPicker.thumbnail"/>}
-            onUpdate={(newImageData) => {
-                onUpdate(newImageData);
-                setErrors(undefined);
-            }}
-            onError={(err) => setErrors(err)}
-            toolbarButtons={[
-                {
-                    glyph: 'refresh',
-                    tooltipId: 'mediaEditor.mediaPicker.createVideoThumbnail',
-                    visible: !thumbnail,
-                    onClick: (event) => {
-                        event.stopPropagation();
-                        setCreateThumbnail(true);
+            <Thumbnail
+                thumbnail={thumbnail}
+                thumbnailOptions={{
+                    width: 640,
+                    height: 360,
+                    type: 'image/jpeg',
+                    quality: 0.5
+                }}
+                loading={loading}
+                message={<Message msgId="mediaEditor.mediaPicker.thumbnail"/>}
+                onUpdate={(newImageData) => {
+                    onUpdate(newImageData);
+                    setErrors(undefined);
+                }}
+                onError={(err) => setErrors(err)}
+                toolbarButtons={[
+                    {
+                        glyph: 'refresh',
+                        tooltipId: 'mediaEditor.mediaPicker.createVideoThumbnail',
+                        visible: !thumbnail,
+                        onClick: (event) => {
+                            event.stopPropagation();
+                            setCreateThumbnail(true);
+                        }
+                    },
+                    {
+                        glyph: 'trash',
+                        tooltipId: 'removeThumbnail',
+                        visible: !!thumbnail,
+                        onClick: (event) => {
+                            event.stopPropagation();
+                            onUpdate(undefined);
+                            setErrors(undefined);
+                        }
                     }
-                },
-                {
-                    glyph: 'trash',
-                    tooltipId: 'removeThumbnail',
-                    visible: !!thumbnail,
-                    onClick: (event) => {
-                        event.stopPropagation();
-                        onUpdate(undefined);
-                        setErrors(undefined);
-                    }
-                }
-            ]}
-        />
-        {errors && errors.length > 0 &&
-        <Alert bsStyle="danger" className="text-center">
-            {errors.indexOf('CREATE') === -1 && <div><Message msgId="map.error"/></div>}
-            {errors.indexOf('FORMAT') !== -1 && <div><Message msgId="map.errorFormat" /></div>}
-            {errors.indexOf('SIZE') !== -1 && <div><Message msgId="map.errorSize" /></div>}
-            {errors.indexOf('CREATE') !== -1 && <div><Message msgId="mediaEditor.mediaPicker.thumbnailCreateError" /></div>}
-        </Alert>}
+                ]}
+            />
+            {errors && errors.length > 0 &&
+            <Alert bsStyle="danger" className="text-center">
+                {errors.indexOf('CREATE') === -1 && <div><Message msgId="map.error"/></div>}
+                {errors.indexOf('FORMAT') !== -1 && <div><Message msgId="map.errorFormat" /></div>}
+                {errors.indexOf('SIZE') !== -1 && <div><Message msgId="map.errorSize" /></div>}
+                {errors.indexOf('CREATE') !== -1 && <div><Message msgId="mediaEditor.mediaPicker.thumbnailCreateError" /></div>}
+            </Alert>}
         </>
     );
 };

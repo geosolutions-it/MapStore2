@@ -197,13 +197,18 @@ export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} }
 export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     const rootReducer = fetchReducer();
     const reducer = (state, action) => {
+        const initialStoreKeys = Object.keys(rootReducer({}, {}));
         const newState = {...state, ...rootReducer(state, action)};
-        return Object.keys(reducers).reduce((previous, current) => {
-            return {
-                ...previous,
-                [current]: reducers[current](previous[current], action)
-            };
-        }, newState);
+        return Object.keys(reducers)
+            // avoid to update the state twice
+            // if the original store contains the same reducers
+            .filter((key) => initialStoreKeys.indexOf(key) === -1)
+            .reduce((previous, current) => {
+                return {
+                    ...previous,
+                    [current]: reducers[current](previous[current], action)
+                };
+            }, newState);
     };
     (store || getStore()).replaceReducer(reducer);
     const rootEpic = fetchEpic();

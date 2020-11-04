@@ -6,14 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
+import expect from 'expect';
 
-const {
-    FIELDS_LOADED, FIELDS_ERROR, CLASSIFICATION_LOADED, CLASSIFICATION_ERROR, loadFields, loadClassification
-} = require('../../actions/thematic');
+import { testEpic, TEST_TIMEOUT, addTimeoutEpic } from './epicTestUtils';
 
-const { updateNode, CHANGE_LAYER_PARAMS } = require('../../actions/layers');
+import {
+    FIELDS_LOADED,
+    FIELDS_ERROR,
+    CLASSIFICATION_LOADED,
+    CLASSIFICATION_ERROR,
+    loadFields,
+    loadClassification
+} from '../../actions/thematic';
+
+import { updateNode, CHANGE_LAYER_PARAMS } from '../../actions/layers';
 
 const API = {
     getFieldsService: (layer) => {
@@ -28,7 +34,8 @@ const API = {
     removeThematicStyle: () => ({})
 };
 
-const { loadFieldsEpic, loadClassificationEpic, removeThematicEpic } = require('../thematic')(API);
+import loadFieldsEpicloadClassificationEpicremoveThematicEpicFactory from '../thematic';
+const { loadFieldsEpic, loadClassificationEpic, removeThematicEpic } = loadFieldsEpicloadClassificationEpicremoveThematicEpicFactory(API);
 
 const layer = {
     name: 'mylayer',

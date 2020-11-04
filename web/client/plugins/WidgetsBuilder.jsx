@@ -8,7 +8,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as epics from '../epics/widgetsbuilder';
+import epics from '../epics/widgetsbuilder';
 import { createPlugin } from '../utils/PluginsUtils';
 
 import DockPanel from "../components/misc/panels/DockPanel";

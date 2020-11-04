@@ -40,7 +40,12 @@ class RulesManagerFooter extends React.Component {
         );
     }
 }
-
+/**
+ * Footer plugin for {@link #plugins.RulesEditor}
+ * @name RulesManager
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     RulesManagerFooterPlugin: connect(({rulesmanager}) => ({loading: rulesmanager.loading}))(RulesManagerFooter),
     reducers: {}

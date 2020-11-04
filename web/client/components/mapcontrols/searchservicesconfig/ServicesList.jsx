@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {FormGroup, Checkbox, ControlLabel, Glyphicon} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const ConfirmButton = require('../../buttons/ConfirmButton');
 const PropTypes = require('prop-types');
 

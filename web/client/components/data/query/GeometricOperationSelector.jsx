@@ -1,6 +1,6 @@
 const React = require('react');
 
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {DropdownList} = require('react-widgets');
 
 const ListItem = ({ item } = {}) => (

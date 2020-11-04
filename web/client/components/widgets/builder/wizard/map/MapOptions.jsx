@@ -17,7 +17,7 @@ const {compose, withProps} = require('recompose');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
 const emptyState = require('../../../../misc/enhancers/emptyState');
 const localizeStringMap = require('../../../../misc/enhancers/localizeStringMap');
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 const TOC = emptyState(
     ({ map = {} } = {}) => !map.layers || (map.layers || []).filter(l => l.group !== 'background').length === 0,
     () => ({

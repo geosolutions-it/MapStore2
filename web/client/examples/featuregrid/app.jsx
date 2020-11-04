@@ -13,7 +13,7 @@ const {Provider} = require('react-redux');
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 const LocaleUtils = require('../../utils/LocaleUtils');
 const PluginsUtils = require('../../utils/PluginsUtils');
 

@@ -9,7 +9,7 @@ const React = require('react');
 const { compose, withStateHandlers, withState, branch, withHandlers, renderComponent} = require('recompose');
 const {isString} = require('lodash');
 const {set} = require('../../../../utils/ImmutableUtils');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const ConfirmDialog = require('../ConfirmModal');
 
 /**

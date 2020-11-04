@@ -5,29 +5,36 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { refreshAccessToken, sessionValid, logout, loginPromptClosed, LOGIN_SUCCESS, LOGOUT, LOGIN_REQUIRED} = require('../actions/security');
+import {
+    refreshAccessToken,
+    sessionValid,
+    logout,
+    loginPromptClosed,
+    LOGIN_SUCCESS,
+    LOGOUT,
+    LOGIN_REQUIRED
+} from '../actions/security';
 
-const {loadMapConfig, configureError} = require('../actions/config');
-const {mapIdSelector} = require('../selectors/map');
-const {hasMapAccessLoadingError} = require('../selectors/mapInitialConfig');
-const {initCatalog} = require('../actions/catalog');
-const {setControlProperty, SET_CONTROL_PROPERTY} = require('../actions/controls');
-const {pathnameSelector} = require('../selectors/router');
-const {isLoggedIn} = require('../selectors/security');
-const ConfigUtils = require('../utils/ConfigUtils');
-const AuthenticationAPI = require('../api/GeoStoreDAO');
-const Rx = require('rxjs');
-const { LOCATION_CHANGE } = require('connected-react-router');
-const url = require('url');
-const {get} = require('lodash');
-const {push} = require('connected-react-router');
+import { loadMapConfig, configureError } from '../actions/config';
+import { mapIdSelector } from '../selectors/map';
+import { hasMapAccessLoadingError } from '../selectors/mapInitialConfig';
+import { initCatalog } from '../actions/catalog';
+import { setControlProperty, SET_CONTROL_PROPERTY } from '../actions/controls';
+import { pathnameSelector } from '../selectors/router';
+import { isLoggedIn } from '../selectors/security';
+import ConfigUtils from '../utils/ConfigUtils';
+import AuthenticationAPI from '../api/GeoStoreDAO';
+import Rx from 'rxjs';
+import { push, LOCATION_CHANGE } from 'connected-react-router';
+import url from 'url';
+import { get } from 'lodash';
 
 /**
  * Refresh the access_token every 5 minutes
  * @memberof epics.login
  * @return {external:Observable} emitting {@link #actions.security.refreshAccessToken} events
  */
-const refreshTokenEpic = (action$, store) =>
+export const refreshTokenEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .take(1)
         // do not launch the session verify is there is no stored session
@@ -45,7 +52,7 @@ const refreshTokenEpic = (action$, store) =>
         );
 
 
-const reloadMapConfig = (action$, store) =>
+export const reloadMapConfig = (action$, store) =>
     Rx.Observable.merge(
         action$.ofType(LOGIN_SUCCESS, LOGOUT)
             .filter(() => pathnameSelector(store.getState()).indexOf("viewer") !== -1)
@@ -69,7 +76,7 @@ const reloadMapConfig = (action$, store) =>
             return Rx.Observable.of(configureError(e));
         });
 
-const promptLoginOnMapError = (actions$, store) =>
+export const promptLoginOnMapError = (actions$, store) =>
     actions$.ofType(LOGIN_REQUIRED)
         .switchMap(() => {
             return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true))
@@ -83,13 +90,13 @@ const promptLoginOnMapError = (actions$, store) =>
                 );
         });
 
-const initCatalogOnLoginOutEpic = (action$) =>
+export const initCatalogOnLoginOutEpic = (action$) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
         .switchMap(() => {
             return Rx.Observable.of(initCatalog());
         });
 
-const redirectOnLogout = action$ =>
+export const redirectOnLogout = action$ =>
     action$.ofType(LOGOUT)
         .filter(({ redirectUrl }) => redirectUrl)
         .switchMap(({ redirectUrl }) => Rx.Observable.of(push(redirectUrl)));
@@ -99,7 +106,7 @@ const redirectOnLogout = action$ =>
  * @name epics.login
  * @type {Object}
  */
-module.exports = {
+export default {
     refreshTokenEpic,
     reloadMapConfig,
     promptLoginOnMapError,

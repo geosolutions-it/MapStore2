@@ -1,5 +1,4 @@
-var PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,7 +6,15 @@ var PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var PropTypes = require('prop-types');
 
+/**
+ * Header of MapStore, rendered in the home page (big full-width image).
+ * @name Header
+ * @class
+ * @memberof plugins
+ * @prop {object} [style] the style for the main div.
+ */
 class Header extends React.Component {
     static propTypes = {
         style: PropTypes.object,

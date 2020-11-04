@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const {Button} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const HTML = require('../../I18N/HTML');
 
 module.exports = ({

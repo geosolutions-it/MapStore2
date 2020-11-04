@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 
 const {Collapse, Panel, Button, ButtonGroup, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
 
 const assign = require('object-assign');
 

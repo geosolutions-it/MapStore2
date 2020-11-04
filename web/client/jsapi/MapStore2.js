@@ -16,7 +16,7 @@ const {
 } = require('../stores/defaultOptions');
 
 const LocaleUtils = require('../utils/LocaleUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const {connect} = require('react-redux');
 
 const {configureMap, loadMapConfig} = require('../actions/config');
@@ -194,8 +194,8 @@ const MapStore2 = {
         const appStore = require('../stores/StandardStore').default.bind(null, {
             initialState: initialState || {},
             appReducers: {
-                security: require('../reducers/security'),
-                version: require('../reducers/version'),
+                security: require('../reducers/security').default,
+                version: require('../reducers/version').default,
                 ...standardReducers
             },
             appEpics: {

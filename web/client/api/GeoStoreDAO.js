@@ -12,7 +12,7 @@ const xml2js = require('xml2js');
 const xmlBuilder = new xml2js.Builder();
 
 const axios = require('../libs/ajax');
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
 const {registerErrorParser} = require('../utils/LocaleUtils');
 
 const generateMetadata = (name = "", description = "") =>
@@ -327,7 +327,7 @@ const Api = {
     getAvailableGroups: function(user) {
         if (user && user.role === "ADMIN") {
             return axios.get(
-                "usergroups/?all=true",
+                "usergroups/?all=true&users=false",
                 this.addBaseUrl({
                     headers: {
                         'Accept': "application/json"

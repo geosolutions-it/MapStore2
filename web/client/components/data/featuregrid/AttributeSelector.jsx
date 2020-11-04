@@ -1,6 +1,6 @@
 const React = require('react');
 const {Checkbox} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 module.exports = ({
     style = {},

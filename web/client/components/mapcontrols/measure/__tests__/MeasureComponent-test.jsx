@@ -14,7 +14,7 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const MeasureComponent = dragDropContext(testBackend)(require('../MeasureComponent'));
 const TestUtils = require('react-dom/test-utils');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 
 describe("test the MeasureComponent", () => {
     beforeEach((done) => {

@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {ProgressBar, Col, Row} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
-const Message = require('../../../../components/I18N/Message');
-require('./css/overlayprogressbar.css');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { ProgressBar, Col, Row } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
+import Message from '../../../../components/I18N/Message';
+import './css/overlayprogressbar.css';
 
 class OverlayProgressBar extends React.Component {
     static propTypes = {
@@ -57,4 +58,4 @@ class OverlayProgressBar extends React.Component {
     }
 }
 
-module.exports = OverlayProgressBar;
+export default OverlayProgressBar;

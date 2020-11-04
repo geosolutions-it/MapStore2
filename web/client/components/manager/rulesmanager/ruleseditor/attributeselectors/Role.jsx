@@ -15,7 +15,7 @@ const localizedProps = require("../../../../misc/enhancers/localizedProps");
 const {getRoles} = require('../../../../../observables/rulesmanager');
 const {connect} = require("react-redux");
 const {error} = require('../../../../../actions/notifications');
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 
 const RoleSelector = (props) => (
     <Row className={props.disabled ? 'ms-disabled' : ''}>

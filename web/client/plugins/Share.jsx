@@ -16,7 +16,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 import ShareUtils from '../utils/ShareUtils';
 import {getExtentFromViewport} from '../utils/CoordinatesUtils';
 import { versionSelector } from '../selectors/version';
-import * as shareEpics from '../epics/queryparams';
+import shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';
@@ -28,7 +28,7 @@ import { clickPointSelector} from '../selectors/mapInfo';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
- * You can share it on socials networks(facebook,twitter,google+,linkedin)
+ * You can share it on socials networks(facebook,twitter,google+,linkedIn)
  * copying the direct link
  * copying the embedded code
  * using the QR code with mobile apps
@@ -43,7 +43,6 @@ import { updateUrlOnScrollSelector } from '../selectors/geostory';
  * @prop {function} [onClose] function to call on close window event.
  * @prop {function} [getCount] function used to get the count for social links.
  * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
- * @prop {boolean} []
  */
 
 const Share = connect(createSelector([

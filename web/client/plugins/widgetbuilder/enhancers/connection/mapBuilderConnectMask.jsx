@@ -11,7 +11,7 @@ const { connect } = require('react-redux');
 const {createSelector} = require('reselect');
 const {compose} = require('recompose');
 const React = require('react');
-const Message = require('../../../../components/I18N/Message');
+const Message = require('../../../../components/I18N/Message').default;
 module.exports = compose(
     connect(createSelector(isWidgetSelectionActive, (widgetSelectionActive) => ({ widgetSelectionActive }))),
     withMask(

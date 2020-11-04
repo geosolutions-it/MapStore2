@@ -8,7 +8,7 @@
 
 /* eslint-disable */
 const Bootstrap = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 
 const React = require('react');
 

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const {onEditorChange} = require('../../actions/widgets');
 const {connect} = require('react-redux');
 const BorderLayout = require('../../components/layout/BorderLayout');

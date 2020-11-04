@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -15,8 +15,8 @@ import Message from '../components/I18N/Message';
 import help from '../reducers/help';
 
 /**
- *  HelpLink is a plugin that navigates the user to the online documentation.
- *  It gets displayed into the BurgerMenu plugin.
+ *  HelpLink is a plugin that redirects the user to the online documentation.
+ *  It gets displayed into the {@link #plugins.BurgerMenu|BurgerMenu} plugin.
  *  @name HelpLink
  *  @memberof plugins
  *  @class

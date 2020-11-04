@@ -8,6 +8,7 @@
 import Rx from 'rxjs';
 import { setControlProperty } from '../actions/controls';
 import { mapHasPendingChangesSelector } from '../selectors/mapsave';
+import { dashboardHasPendingChangesSelector } from '../selectors/dashboardsave';
 import { hasPendingChanges as storyHasPendingChanges } from '../selectors/geostory';
 
 import { feedbackMaskSelector } from '../selectors/feedbackmask';
@@ -33,7 +34,8 @@ export const comparePendingChanges = (action$, { getState = () => { } }) =>
             // TODO: avoid to specify the check and the reset event here, provide them externally to generalize this support.
             const isMapToSave = currentPage === 'viewer' && mapHasPendingChangesSelector(state);
             const isStoryToSave = currentPage === 'geostory' && storyHasPendingChanges(state);
-            if (isMapToSave || isStoryToSave) {
+            const isDashboardToSave = currentPage === 'dashboard' && dashboardHasPendingChangesSelector(state);
+            if (isMapToSave || isStoryToSave || isDashboardToSave) {
                 return Rx.Observable.of(
                     setControlProperty('unsavedMap', 'enabled', true),
                     setControlProperty('unsavedMap', 'source', source, false)

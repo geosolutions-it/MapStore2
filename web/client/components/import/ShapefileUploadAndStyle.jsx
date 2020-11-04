@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const LayersUtils = require('../../utils/LayersUtils');
 const LocaleUtils = require('../../utils/LocaleUtils');
 const FileUtils = require('../../utils/FileUtils');

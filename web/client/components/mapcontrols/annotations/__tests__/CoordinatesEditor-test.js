@@ -13,7 +13,7 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const CoordinatesEditor = dragDropContext(testBackend)(require('../CoordinatesEditor'));
 const TestUtils = require('react-dom/test-utils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 
 const testHandlers = {
     onChange: () => {},

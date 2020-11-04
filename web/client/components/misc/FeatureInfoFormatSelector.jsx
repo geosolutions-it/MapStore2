@@ -42,16 +42,16 @@ function FeatureInfoFormatSelector({
 
     const select = (
         <>
-        &nbsp;  {popoverMessage && <ControlledPopover text={<HTML msgId={popoverMessage} />} /> }
-        <Select
-            { ...selectProps }
-            id={id}
-            value={infoFormat}
-            clearable={false}
-            disabled={disabled}
-            options={options}
-            onChange={(selected) => onInfoFormatChange(selected?.value)}
-        /></>
+            &nbsp;  {popoverMessage && <ControlledPopover text={<HTML msgId={popoverMessage} />} /> }
+            <Select
+                { ...selectProps }
+                id={id}
+                value={infoFormat}
+                clearable={false}
+                disabled={disabled}
+                options={options}
+                onChange={(selected) => onInfoFormatChange(selected?.value)}
+            /></>
     );
 
     return label

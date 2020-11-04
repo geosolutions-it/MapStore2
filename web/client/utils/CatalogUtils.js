@@ -10,7 +10,7 @@ const assign = require('object-assign');
 const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes, get, isNil} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
-const ConfigUtils = require('./ConfigUtils');
+const ConfigUtils = require('./ConfigUtils').default;
 const LayersUtils = require('./LayersUtils');
 const LocaleUtils = require('./LocaleUtils');
 const WMTSUtils = require('./WMTSUtils');
@@ -63,7 +63,7 @@ const converters = {
                 // look in URI objects for wms and thumbnail
                 if (dc && dc.URI) {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
-                    let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) );
+                    let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) ) || head([].filter.call(URI, (uri) => !uri.name && uri.protocol?.indexOf('image/') > -1));
                     thumbURL = thumb ? thumb.value : null;
                     wms = head([].filter.call(URI, (uri) => { return uri.protocol && (uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) || uri.protocol.match(/^OGC:WMS/g)); }));
                 }
@@ -223,7 +223,10 @@ const converters = {
                     identifier: record.Name,
                     service: records.service,
                     tags: "",
-                    layerOptions: options && options.layerOptions || {},
+                    layerOptions: {
+                        ...(options?.layerOptions || {}),
+                        ...(records?.layerOptions || {})
+                    },
                     title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
                     formats: castArray(record.formats || []),
                     dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
