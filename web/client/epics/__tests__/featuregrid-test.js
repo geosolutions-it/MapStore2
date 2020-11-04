@@ -112,6 +112,7 @@ import {
 
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
+import { getDefaultFeatureProjection } from '../../utils/FeatureGridUtils';
 import { isEmpty, isNil } from 'lodash';
 const filterObj = {
     featureTypeName: 'TEST',
@@ -767,6 +768,54 @@ describe('featuregrid Epics', () => {
                         expect(action.method).toBe("");
                         expect(action.features).toEqual([]);
                         expect(action.options).toEqual({});
+                        expect(action.style).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        testEpic(triggerDrawSupportOnSelectionChange, 1, toggleEditMode(), epicResult, newState);
+    });
+
+    it('trigger draw support on multiple selection', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: 'EDIT',
+                select: [{id: 'ft_1'}, {id: 'ft_2'}],
+                changes: [],
+                features
+            }
+        };
+
+        const toDrawFeatures = [
+            { id: 'ft_1', type: 'Feature' },
+            { id: 'ft_2', type: 'Feature' }
+        ];
+        const drawOptions = {
+            featureProjection: getDefaultFeatureProjection(),
+            stopAfterDrawing: true,
+            editEnabled: true,
+            drawEnabled: false };
+
+        const newState = assign({}, state, stateFeaturegrid);
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case CHANGE_DRAWING_STATUS:
+                        expect(action.status).toBe("drawOrEdit");
+                        expect(action.method).toBe("Polygon");
+                        expect(action.owner).toBe("featureGrid");
+                        expect(action.features).toEqual(toDrawFeatures);
+                        expect(action.options).toEqual(drawOptions);
                         expect(action.style).toBe(undefined);
                         break;
                     default:

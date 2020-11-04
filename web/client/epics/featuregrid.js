@@ -117,7 +117,6 @@ import {
     hasChangesSelector,
     hasNewFeaturesSelector,
     selectedFeatureSelector,
-    selectedFeaturesCount,
     selectedLayerIdSelector,
     isDrawingSelector,
     modeSelector,
@@ -150,45 +149,47 @@ import MapUtils from '../utils/MapUtils';
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
-    let drawOptions; let geomType;
-    let feature = assign({}, selectedFeatureSelector(state), {type: "Feature"});
-    if (!isEmpty(feature)) {
-        geomType = findGeometryProperty(describeSelector(state)).localType;
+    const geomType = findGeometryProperty(describeSelector(state)).localType;
+    const drawOptions = {
+        featureProjection: defaultFeatureProj,
+        stopAfterDrawing: MapUtils.isSimpleGeomType(geomType),
+        editEnabled: true,
+        drawEnabled: false
+    };
 
-        // TODO check this WITH APPLY CHANGES
-        let changes = changesMapSelector(state);
-        if (changes[feature.id] && (changes[feature.id].geometry || changes[feature.id].geometry === null)) {
-            feature.geometry = changes[feature.id].geometry;
-        }
-        if (feature._new && !feature.geometry) {
-            const stateNewFeature = find(newFeaturesSelector(state), {id: feature.id});
-            if (stateNewFeature && stateNewFeature.geometry ) {
-                feature.geometry = stateNewFeature.geometry;
+    let features = selectedFeaturesSelector(state).map(ft => {
+        let feature = assign({}, ft, {type: "Feature"});
+        if (!isEmpty(feature)) {
+
+            // TODO check this WITH APPLY CHANGES
+            let changes = changesMapSelector(state);
+            if (changes[feature.id] && (changes[feature.id].geometry || changes[feature.id].geometry === null)) {
+                feature.geometry = changes[feature.id].geometry;
             }
 
-        }
-        if (original) {
-            feature.geometry = getFeatureById(state, feature.id) ? getFeatureById(state, feature.id).geometry : null;
-        }
-
-        drawOptions = {
-            featureProjection: defaultFeatureProj,
-            stopAfterDrawing: MapUtils.isSimpleGeomType(geomType),
-            editEnabled: !!feature.geometry,
-            drawEnabled: false,
-            ftId: feature.id
-        };
-        if (selectedFeaturesCount(state) === 1) {
-            if (feature.geometry === null || feature.id === 'empty_row') {
-                return Rx.Observable.from([
-                    drawSupportReset()
-                ]);
+            if (feature._new && !feature.geometry) {
+                const stateNewFeature = find(newFeaturesSelector(state), {id: feature.id});
+                if (stateNewFeature && stateNewFeature.geometry ) {
+                    feature.geometry = stateNewFeature.geometry;
+                }
             }
-            return Rx.Observable.from([
-                changeDrawingStatus("drawOrEdit", geomType, "featureGrid", [feature], drawOptions)
-            ]);
+
+            if (original) {
+                feature.geometry = getFeatureById(state, feature.id) ? getFeatureById(state, feature.id).geometry : null;
+            }
         }
+        return feature;
+    });
+
+    // Remove features with geometry null or id "empty_row"
+    const cleanFeatures = features.filter(ft => ft.geometry !== null || ft.id !== 'empty_row');
+
+    if (cleanFeatures.length > 0) {
+        return Rx.Observable.from([
+            changeDrawingStatus("drawOrEdit", geomType, "featureGrid", cleanFeatures, drawOptions)
+        ]);
     }
+
     return Rx.Observable.from([
         changeDrawingStatus("clean", "", "featureGrid", [], {})
     ]);
