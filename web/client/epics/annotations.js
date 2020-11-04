@@ -288,22 +288,23 @@ export default (viewer) => ({
             if (action.attribute === 'geometry') {
                 let state = store.getState();
                 const feature = state.annotations.editing;
-                const drawing = state.annotations.drawing;
                 const type = state.annotations.featureType;
                 const multiGeom = multiGeometrySelector(state);
                 const drawOptions = {
                     featureProjection: "EPSG:4326",
                     stopAfterDrawing: !multiGeom,
-                    editEnabled: type !== "Circle",
-                    drawing,
-                    drawEnabled: type === "Circle",
+                    editEnabled: true,
+                    drawEnabled: false,
+                    selectEnabled: true,
+                    editFilter: (f) => f.getProperties().canEdit,
+                    useSelectedStyle: true,
                     transformToFeatureCollection: true,
-                    addClickCallback: false
+                    addClickCallback: true
                 };
 
                 return Rx.Observable.from([
-                    changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}),
-                    changeDrawingStatus("drawOrEdit", CONFIRM_REMOVE_ANNOTATION, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
+                    changeDrawingStatus("replace", type, "annotations", [feature], {}),
+                    changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
                 ]);
             }
             const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);
@@ -713,21 +714,12 @@ export default (viewer) => ({
     highlightGeometryEpic: (action$, {getState}) => action$.ofType(GEOMETRY_HIGHLIGHT)
         .switchMap(({id = '', state: highlight = true}) => {
             const state = getState();
-            const editing = state.annotations.editing;
+            const {editing, featureType: type} = state.annotations;
             const ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === id);
             const selectedGeoJSON = editing.features[ftChangedIndex];
             const styleChanged = castArray(selectedGeoJSON.style).map(s => ({...s, highlight}));
-            const multiGeometry = multiGeometrySelector(state);
-            const action = changeDrawingStatus("drawOrEdit", "", "annotations", [
-                set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing)], {
-                featureProjection: "EPSG:4326",
-                stopAfterDrawing: !multiGeometry,
-                editEnabled: false,
-                drawEnabled: false,
-                selectEnabled: true,
-                transformToFeatureCollection: true
-            }, assign({}, editing.style, {highlight: false}));
-
+            const action = changeDrawingStatus("updateStyle", type, "annotations", [
+                set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing)], {transformToFeatureCollection: true}, assign({}, editing.style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
     editCircleFeatureEpic: (action$, {getState}) => action$.ofType(DRAWING_FEATURE)
