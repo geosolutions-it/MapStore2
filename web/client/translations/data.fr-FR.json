@@ -1576,8 +1576,8 @@
                     "number": "Tapez un nombre ou une expression... Exemples : 10, > 2, < 10",
                     "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
                     "geometry": {
-                        "disabled": "Filtrez en cliquant sur la carte",
-                        "enabled": "Cliquez sur la carte pour filtrer les résultats",
+                        "disabled": "Filtrez en cliquant sur la carte/ Maintenez ctrl et cliquez pour filtrer plusieurs",
+                        "enabled": "Cliquez sur la carte pour filtrer les résultats / Maintenez ctrl et cliquez pour filtrer plusieurs",
                         "applied": "Supprimez le filtre en cliquant sur la carte"
                     }
                 }

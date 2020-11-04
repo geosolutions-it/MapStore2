@@ -1575,8 +1575,8 @@
                     "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
                     "date":"Digita una data o un'espressione. Utilizza {format} per la data",
                     "geometry": {
-                        "disabled": "Filtra facendo clic sulla mappa",
-                        "enabled": "Fai clic sulla mappa per filtrare i risultati",
+                        "disabled": "Filtra facendo clic sulla mappa / Tieni premuto ctrl e fai clic per filtrare più elementi",
+                        "enabled": "Fai clic sulla mappa per filtrare i risultati / Tieni premuto ctrl e fai clic per filtrare più elementi",
                         "applied": "Rimuovi il filtro applicato con il click sulla mappa"
                     }
                 }
