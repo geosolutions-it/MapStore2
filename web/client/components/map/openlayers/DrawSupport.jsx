@@ -898,7 +898,7 @@ export default class DrawSupport extends React.Component {
             } else {
                 const fts = newFeatures.reduce((pre, curr) => {
                     if (curr.geometry) {
-                        pre.push({...curr.geometry, properties: curr.properties});
+                        return [...pre, {...curr.geometry, properties: curr.properties}];
                     }
                     return pre;
                 }, []);

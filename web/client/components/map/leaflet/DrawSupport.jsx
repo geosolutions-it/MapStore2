@@ -495,7 +495,7 @@ class DrawSupport extends React.Component {
             }
         });
 
-        const props = assign({}, newProps, {features: newFeatures});
+        const props = assign({}, newProps, {features: newFeatures.length >  0 ? newFeatures : [{}]});
         if (!this.drawLayer) {
             /* Reprojection is needed to implement circle initial visualization after querypanel geometry reload (on reload the 100 points polygon is shown)
              *
