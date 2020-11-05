@@ -65,9 +65,13 @@ describe('WPSWidgetOptions component', () => {
         expect(spyonChange.calls[5].arguments[0]).toBe("yAxis");
         expect(spyonChange.calls[5].arguments[1]).toBe(true);
 
-        ReactTestUtils.Simulate.change(inputs[8], { target: { value: 'Y axis label' } });
-        expect(spyonChange.calls[6].arguments[0]).toBe("yAxisLabel");
-        expect(spyonChange.calls[6].arguments[1]).toBe("Y axis label");
+        ReactTestUtils.Simulate.change(inputs[8]);
+        expect(spyonChange.calls[6].arguments[0]).toBe("xAxisAngle");
+        expect(spyonChange.calls[6].arguments[1]).toBe(0);
+
+        ReactTestUtils.Simulate.change(inputs[9], { target: { value: 'Y axis label' } });
+        expect(spyonChange.calls[7].arguments[0]).toBe("yAxisLabel");
+        expect(spyonChange.calls[7].arguments[1]).toBe("Y axis label");
 
 
     });
@@ -122,7 +126,7 @@ describe('WPSWidgetOptions component', () => {
         const slider = document.getElementsByClassName('mapstore-slider');
         expect(slider).toExist();
         const tooltip = document.getElementsByClassName('noUi-tooltip')[0];
-        expect(tooltip.innerText).toBe("45");
+        expect(tooltip.innerText).toBe("45°");
 
     });
 });
