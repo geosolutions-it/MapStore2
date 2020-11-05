@@ -17,6 +17,13 @@ import PluginsUtils from '../../utils/PluginsUtils';
 import { augmentStore } from '../../utils/StateUtils';
 import { LOAD_EXTENSIONS, PLUGIN_UNINSTALLED } from '../../actions/contextcreator';
 
+/**
+ * This HOC adds to StandardApp (or whatever customization) the
+ * possibility to dynamically load extensions. For more info see
+ * MapStore developer documentation about extensions.
+ * @param {Component} AppComponent the App component
+ * @returns the App component that loads the extensions. The new component accepts the additional prop `enableExtensions` that can be set to `false` if need to disable this loading.
+ */
 function withExtensions(AppComponent) {
 
     class WithExtensions extends Component {
@@ -29,7 +36,7 @@ function withExtensions(AppComponent) {
 
         static defaultProps = {
             pluginsDef: { plugins: {}, requires: {} },
-            enableExtensions: false
+            enableExtensions: true
         };
 
         state = {

@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,9 +7,10 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const {UserDetails, PasswordReset, UserMenu, Login, LoginNav } = require('./login/index');
-const epics = require('../epics/login');
+const epics = require('../epics/login').default;
 const { comparePendingChanges } = require('../epics/pendingChanges');
 
 require('./login/login.css');

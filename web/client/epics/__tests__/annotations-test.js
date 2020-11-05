@@ -6,41 +6,67 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const axios = require('axios');
-const MockAdapter = require('axios-mock-adapter');
-const {find} = require('lodash');
+import expect from 'expect';
 
-const configureMockStore = require('redux-mock-store').default;
-const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
-const {CHANGE_DRAWING_STATUS, drawingFeatures, DRAWING_FEATURE, selectFeatures} = require('../../actions/draw');
-const {set} = require('../../utils/ImmutableUtils');
-const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, purgeMapInfoResults} = require('../../actions/mapInfo');
-const {configureMap} = require('../../actions/config');
-const {CLOSE_IDENTIFY} = require('../../actions/mapInfo');
-const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, startDrawing, cancelEditAnnotation,
-    setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
-    resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION,
-    loadDefaultStyles, LOADING, SET_DEFAULT_STYLE, toggleVisibilityAnnotation, geometryHighlight
-} = require('../../actions/annotations');
-const {TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const {STYLE_POINT_MARKER} = require('../../utils/AnnotationsUtils');
-const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
-    disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { find } from 'lodash';
+import configureMockStore from 'redux-mock-store';
+import { createEpicMiddleware, combineEpics } from 'redux-observable';
+import { ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES } from '../../actions/layers';
+import { CHANGE_DRAWING_STATUS, drawingFeatures, DRAWING_FEATURE, selectFeatures } from '../../actions/draw';
+import { set } from '../../utils/ImmutableUtils';
+import { CLOSE_IDENTIFY, HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, purgeMapInfoResults } from '../../actions/mapInfo';
+import { configureMap } from '../../actions/config';
+
+import {
+    editAnnotation,
+    confirmRemoveAnnotation,
+    saveAnnotation,
+    startDrawing,
+    cancelEditAnnotation,
+    setStyle,
+    highlight,
+    cleanHighlight,
+    download,
+    loadAnnotations,
+    SET_STYLE,
+    toggleStyle,
+    resetCoordEditor,
+    changeRadius,
+    changeText,
+    changeSelected,
+    confirmDeleteFeature,
+    openEditor,
+    SHOW_ANNOTATION,
+    loadDefaultStyles,
+    LOADING,
+    SET_DEFAULT_STYLE,
+    toggleVisibilityAnnotation,
+    geometryHighlight
+} from '../../actions/annotations';
+
+import { TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { STYLE_POINT_MARKER } from '../../utils/AnnotationsUtils';
+import annotationsEpics from '../annotations';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+
+const {
+    addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
+    disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
     editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, highlightGeometryEpic
-} = require('../annotations')({});
+} = annotationsEpics({});
+
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
-    disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
+    disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
     editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, highlightGeometryEpic
 );
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
-const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 const ft = {
     type: "Feature",
     geometry: {
@@ -457,6 +483,35 @@ describe('annotations Epics', () => {
             const actions = store.getActions();
             if (actions.length >= 2) {
                 expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = confirmRemoveAnnotation('1', 'geometry');
+        store.dispatch(action);
+    });
+    it('remove annotation geometry of type Circle', (done) => {
+        const tempStore = mockStore({
+            ...defaultState,
+            annotations: {
+                ...defaultState.annotations,
+                featureType: "Circle"
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].status).toBe('replace');
+                expect(actions[1].method).toBe('Circle');
+                expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[2].status).toBe('drawOrEdit');
+                expect(actions[2].method).toBe('Circle');
+                expect(actions[2].options.drawEnabled).toBe(false);
+                expect(actions[2].options.editEnabled).toBe(true);
+                expect(actions[2].options.selectEnabled).toBe(true);
+                expect(actions[2].options.useSelectedStyle).toBe(true);
+                expect(actions[2].options.addClickCallback).toBe(true);
+                expect(typeof actions[2].options.editFilter).toBe('function');
                 done();
             }
         });
@@ -1001,7 +1056,7 @@ describe('annotations Epics', () => {
                 expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
                 expect(actions[1].status).toBe('clean');
                 expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
-                expect(actions[2].status).toBe('drawOrEdit');
+                expect(actions[2].status).toBe('updateStyle');
                 const [feature] = actions[2].features[0].features;
                 expect(feature.style[0].highlight).toBe(true);
                 done();

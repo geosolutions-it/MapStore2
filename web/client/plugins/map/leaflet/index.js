@@ -10,7 +10,7 @@ module.exports = {
     LMap: require('../../../components/map/leaflet/Map'),
     Layer: require('../../../components/map/leaflet/Layer'),
     Feature: require('../../../components/map/leaflet/Feature'),
-    Locate: require('../../../components/map/leaflet/Locate'),
+    Locate: require('../../../components/map/leaflet/Locate').default,
     MeasurementSupport: require('../../../components/map/leaflet/MeasurementSupport'),
     Overview: require('../../../components/map/leaflet/Overview'),
     ScaleBar: require('../../../components/map/leaflet/ScaleBar'),

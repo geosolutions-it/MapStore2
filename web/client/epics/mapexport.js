@@ -5,25 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const Rx = require('rxjs');
-const { get, zip } = require('lodash');
+import Rx from 'rxjs';
 
-const MapUtils = require('../utils/MapUtils');
-const { getLayerCapabilities } = require('../observables/wms');
-const { toWMC } = require('../utils/ogc/WMC');
-
-const { download } = require('../utils/FileUtils');
-const { EXPORT_MAP } = require('../actions/mapexport');
-const { setControlProperty } = require('../actions/controls');
-
-const { set } = require('../utils/ImmutableUtils');
-
-const { mapSelector } = require('../selectors/map');
-const { layersSelector, groupsSelector } = require('../selectors/layers');
-const { backgroundListSelector } = require('../selectors/backgroundselector');
-const { mapOptionsToSaveSelector } = require('../selectors/mapsave');
-const { basicError } = require('../utils/NotificationUtils');
-const { getErrorMessage } = require('../utils/LocaleUtils');
+import { get, zip } from 'lodash';
+import MapUtils from '../utils/MapUtils';
+import { getLayerCapabilities } from '../observables/wms';
+import { toWMC } from '../utils/ogc/WMC';
+import { download } from '../utils/FileUtils';
+import { EXPORT_MAP } from '../actions/mapexport';
+import { setControlProperty } from '../actions/controls';
+import { set } from '../utils/ImmutableUtils';
+import { mapSelector } from '../selectors/map';
+import { layersSelector, groupsSelector } from '../selectors/layers';
+import { backgroundListSelector } from '../selectors/backgroundselector';
+import { mapOptionsToSaveSelector } from '../selectors/mapsave';
+import { basicError } from '../utils/NotificationUtils';
+import { getErrorMessage } from '../utils/LocaleUtils';
 import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../selectors/searchconfig';
 
 function MapExportError(title, message) {

@@ -6,17 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+import expect from 'expect';
 
-const {toggle3d, UPDATE_LAST_2D_MAPTYPE} = require('../../actions/globeswitcher');
-const { localConfigLoaded } = require('../../actions/localConfig');
-
-const assign = require('object-assign');
-
-
-const { updateRouteOn3dSwitch, updateLast2dMapTypeOnChangeEvents} = require('../globeswitcher');
-
-const {testEpic} = require('./epicTestUtils');
+import { toggle3d, UPDATE_LAST_2D_MAPTYPE } from '../../actions/globeswitcher';
+import { localConfigLoaded } from '../../actions/localConfig';
+import assign from 'object-assign';
+import { updateRouteOn3dSwitch, updateLast2dMapTypeOnChangeEvents } from '../globeswitcher';
+import { testEpic } from './epicTestUtils';
 describe('globeswitcher Epics', () => {
     it('updates maptype toggling to 3D', (done) => {
         testEpic(updateRouteOn3dSwitch, 1, assign({hash: "/viewer/leaflet/2"}, toggle3d(true, "leaflet")), actions => {

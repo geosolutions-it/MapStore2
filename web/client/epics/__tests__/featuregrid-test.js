@@ -6,17 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const assign = require('object-assign');
+import expect from 'expect';
 
-const { set } = require('../../utils/ImmutableUtils');
+import assign from 'object-assign';
+import { set } from '../../utils/ImmutableUtils';
+import CoordinatesUtils from '../../utils/CoordinatesUtils';
+import { CLOSE_IDENTIFY, hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER } from '../../actions/mapInfo';
 
-
-const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const { hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER} = require('../../actions/mapInfo');
-const { createQuery } = require('../../actions/wfsquery');
-
-const {
+import {
     toggleEditMode,
     toggleViewMode,
     openFeatureGrid,
@@ -51,25 +48,32 @@ const {
     activateTemporaryChanges,
     DISABLE_TOOLBAR,
     DEACTIVATE_GEOMETRY_FILTER
-} = require('../../actions/featuregrid');
-const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
-const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
-const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
-const {ZOOM_TO_EXTENT, clickOnMap} = require('../../actions/map');
-const {boxEnd} = require('../../actions/box');
-const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
-const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
-const {geometryChanged} = require('../../actions/draw');
-const {CHANGE_BOX_SELECTION_STATUS} = require('../../actions/box');
-const { TOGGLE_CONTROL } = require('../../actions/controls');
+} from '../../actions/featuregrid';
 
-const {
-    toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE, FEATURE_TYPE_SELECTED,
-    layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
-const { LOAD_FILTER, QUERY_FORM_RESET} = require('../../actions/queryform');
+import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
+import { CHANGE_DRAWING_STATUS, geometryChanged } from '../../actions/draw';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
+import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
+import { boxEnd, CHANGE_BOX_SELECTION_STATUS } from '../../actions/box';
+import { CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData } from '../../actions/layers';
 
-const {
+import {
+    createQuery,
+    toggleSyncWms,
+    QUERY,
+    querySearchResponse,
+    query,
+    QUERY_CREATE,
+    FEATURE_TYPE_SELECTED,
+    layerSelectedForSearch,
+    UPDATE_QUERY,
+    TOGGLE_SYNC_WMS
+} from '../../actions/wfsquery';
+
+import { LOAD_FILTER, QUERY_FORM_RESET } from '../../actions/queryform';
+
+import {
     featureGridBrowseData,
     setHighlightFeaturesPath,
     triggerDrawSupportOnSelectionChange,
@@ -108,12 +112,14 @@ const {
     enableGeometryFilterOnEditMode,
     handleBoxSelectionDrawEnd,
     activateBoxSelectionTool,
-    deactivateBoxSelectionTool
-} = require('../featuregrid');
-const { onLocationChanged } = require('connected-react-router');
+    deactivateBoxSelectionTool,
+    deactivateSyncWmsFilterOnFeatureGridClose
+} from '../featuregrid';
 
-const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
-const {isEmpty, isNil} = require('lodash');
+import { onLocationChanged } from 'connected-react-router';
+import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
+import { getDefaultFeatureProjection } from '../../utils/FeatureGridUtils';
+import { isEmpty, isNil } from 'lodash';
 const filterObj = {
     featureTypeName: 'TEST',
     groupFields: [
@@ -768,6 +774,54 @@ describe('featuregrid Epics', () => {
                         expect(action.method).toBe("");
                         expect(action.features).toEqual([]);
                         expect(action.options).toEqual({});
+                        expect(action.style).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        testEpic(triggerDrawSupportOnSelectionChange, 1, toggleEditMode(), epicResult, newState);
+    });
+
+    it('trigger draw support on multiple selection', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: 'EDIT',
+                select: [{id: 'ft_1'}, {id: 'ft_2'}],
+                changes: [],
+                features
+            }
+        };
+
+        const toDrawFeatures = [
+            { id: 'ft_1', type: 'Feature' },
+            { id: 'ft_2', type: 'Feature' }
+        ];
+        const drawOptions = {
+            featureProjection: getDefaultFeatureProjection(),
+            stopAfterDrawing: true,
+            editEnabled: true,
+            drawEnabled: false };
+
+        const newState = assign({}, state, stateFeaturegrid);
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case CHANGE_DRAWING_STATUS:
+                        expect(action.status).toBe("drawOrEdit");
+                        expect(action.method).toBe("Polygon");
+                        expect(action.owner).toBe("featureGrid");
+                        expect(action.features).toEqual(toDrawFeatures);
+                        expect(action.options).toEqual(drawOptions);
                         expect(action.style).toBe(undefined);
                         break;
                     default:
@@ -2098,5 +2152,16 @@ describe('featuregrid Epics', () => {
             expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
             expect(actions[0].status).toBe('end');
         }, {}, done);
+    });
+    it('deactivateSyncWmsFilterOnFeatureGridClose', (done) => {
+        const startActions = [closeFeatureGrid()];
+        testEpic(deactivateSyncWmsFilterOnFeatureGridClose, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TOGGLE_SYNC_WMS);
+        }, {
+            query: {
+                syncWmsFilter: true
+            }
+        }, done);
     });
 });

@@ -23,11 +23,11 @@ export const CloseConfirmButton = ({onClick = () => {}, status = "success"}) => 
     bsStyle="default"
     bsSize="small"
     confirmContent={
-    <>
-        <Message msgId="map.details.fieldsChanged" />
-        <br/>
-        <Message msgId="map.details.sureToClose" />
-    </>
+        <>
+            <Message msgId="map.details.fieldsChanged" />
+            <br/>
+            <Message msgId="map.details.sureToClose" />
+        </>
     }
     onClick={onClick}
 />;

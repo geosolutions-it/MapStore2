@@ -6,38 +6,63 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+import expect from 'expect';
 
-const configureMockStore = require('redux-mock-store').default;
-const {createEpicMiddleware, combineEpics } = require('redux-observable');
-const {CALL_HISTORY_METHOD} = require('connected-react-router');
-const {
-    MAPS_LIST_LOADING, MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR,
-    CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
-    openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
-    MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted,
-    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING, LOAD_CONTEXTS
-} = require('../../actions/maps');
-const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } = require('../../actions/config');
-const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
-const {loginSuccess, logout} = require('../../actions/security');
+import configureMockStore from 'redux-mock-store';
+import { createEpicMiddleware, combineEpics } from 'redux-observable';
+import { CALL_HISTORY_METHOD } from 'connected-react-router';
 
-const {
-    loadMapsEpic, getMapsResourcesByCategoryEpic,
-    closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    deleteMapAndAssociatedResourcesEpic, mapsSetupFilterOnLogin,
-    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic} = require('../maps');
+import {
+    MAPS_LIST_LOADING,
+    MAPS_LIST_LOADED,
+    MAPS_LIST_LOAD_ERROR,
+    CLOSE_DETAILS_PANEL,
+    closeDetailsPanel,
+    loadMaps,
+    MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+    openDetailsPanel,
+    UPDATE_DETAILS,
+    DETAILS_LOADED,
+    getMapResourcesByCategory,
+    MAP_DELETING,
+    MAP_DELETED,
+    deleteMap,
+    mapDeleted,
+    saveMapResource,
+    MAP_CREATED,
+    SAVING_MAP,
+    MAP_UPDATING,
+    MAPS_LOAD_MAP,
+    LOADING,
+    LOAD_CONTEXTS
+} from '../../actions/maps';
+
+import { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } from '../../actions/config';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { TOGGLE_CONTROL, SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { CLOSE_FEATURE_GRID } from '../../actions/featuregrid';
+import { loginSuccess, logout } from '../../actions/security';
+
+import {
+    loadMapsEpic,
+    getMapsResourcesByCategoryEpic,
+    closeDetailsPanelEpic,
+    fetchDataForDetailsPanel,
+    deleteMapAndAssociatedResourcesEpic,
+    mapsSetupFilterOnLogin,
+    storeDetailsInfoEpic,
+    mapSaveMapResourceEpic,
+    reloadMapsEpic
+} from '../maps';
+
 const rootEpic = combineEpics(closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
-const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
-const axios = require('../../libs/ajax');
-const MockAdapter = require('axios-mock-adapter');
-const { EMPTY_RESOURCE_VALUE } = require('../../utils/MapInfoUtils');
-
-const ConfigUtils = require('../../utils/ConfigUtils').default;
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+import { EMPTY_RESOURCE_VALUE } from '../../utils/MapInfoUtils';
+import ConfigUtils from '../../utils/ConfigUtils';
 const params = {start: 0, limit: 12 };
 const baseUrl = "base/web/client/test-resources/geostore/";
 
@@ -581,8 +606,8 @@ describe('Get Map Resource By Category Epic', () => {
         });
     });
 });
-const Persistence = require("../../api/persistence");
-const Rx = require("rxjs");
+import Persistence from '../../api/persistence';
+import Rx from 'rxjs';
 const api = {
     createResource: () => Rx.Observable.of(10),
     updateResource: () => Rx.Observable.of(10)

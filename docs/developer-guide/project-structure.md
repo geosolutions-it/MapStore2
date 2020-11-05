@@ -7,7 +7,6 @@ This is the overall framework folder structure:
 +-- pom.xml
 +-- build.sh
 +-- .babelrc
-+-- .eslintrc
 +-- .editorconfig
 +-- .travis.yml
 +-- ...
