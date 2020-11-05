@@ -211,12 +211,11 @@ const MapInfoUtils = {
         };
     },
     defaultQueryableFilter(l) {
-        if(l?.featureInfo?.format === 'HIDDEN'){
+        if (l?.featureInfo?.format === 'HIDDEN') {
             return l.visibility &&
                 MapInfoUtils.services[l.type] &&
                 (l.queryable === undefined || l.queryable) &&
                 l.group !== "background" && l.queryable === false;
-                ;
         }
         return l.visibility &&
             MapInfoUtils.services[l.type] &&

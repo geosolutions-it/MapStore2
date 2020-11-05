@@ -12,7 +12,6 @@ var ReactDOM = require('react-dom');
 var HTMLViewer = require('../HTMLViewer');
 var JSONViewer = require('../JSONViewer');
 var TextViewer = require('../TextViewer');
-var HiddenViewer = require('../HiddenViewer');
 
 const SimpleRowViewer = (props) => {
     return <div>{['name', 'description'].map((key) => <span key={key}>{key}:{props[key]}</span>)}</div>;
