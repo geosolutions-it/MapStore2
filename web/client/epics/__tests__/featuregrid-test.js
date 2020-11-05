@@ -2135,15 +2135,16 @@ describe('featuregrid Epics', () => {
         }), boxEnd({
             boxExtent: [-14653436.944438, 4971311.4456112925, -12792577.490835384, 6611726.509639461]
         })];
-        testEpic(handleBoxSelectionDrawEnd, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(UPDATE_FILTER);
-            expect(actions[0].update).toExist();
-            expect(actions[0].update.value).toExist();
-            expect(actions[0].update.value.attribute).toBe('the_geom');
-            expect(actions[0].update.value.method).toBe('Rectangle');
-            expect(actions[0].update.value.geometry).toExist();
-            expect(actions[0].update.value.geometry.type).toBe('Polygon');
+        testEpic(handleBoxSelectionDrawEnd, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_SELECTION_OPTIONS);
+            expect(actions[1].type).toBe(UPDATE_FILTER);
+            expect(actions[1].update).toExist();
+            expect(actions[1].update.value).toExist();
+            expect(actions[1].update.value.attribute).toBe('the_geom');
+            expect(actions[1].update.value.method).toBe('Rectangle');
+            expect(actions[1].update.value.geometry).toExist();
+            expect(actions[1].update.value.geometry.type).toBe('Polygon');
         }, {
             featuregrid: {
                 filters: [{
