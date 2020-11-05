@@ -52,6 +52,10 @@ describe('DefaultViewer', () => {
             response: "A",
             layerMetadata: {
                 title: 'a'
+            }, {
+            response: "B",
+            layerMetadata: {
+                title: 'b'
             }
         }];
         const Header = () => <div className="mycontainer"/>;
@@ -62,7 +66,7 @@ describe('DefaultViewer', () => {
 
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
-        expect(dom.getElementsByClassName("mycontainer").length).toBe(1);
+        expect(dom.getElementsByClassName("mycontainer").length).toBe(2);
     });
 
     it('creates the DefaultViewer component with custom validator', () => {
@@ -163,25 +167,33 @@ describe('DefaultViewer', () => {
     });
 
     it('creates the DefaultViewer component with some results', () => {
-        const responses = [{
-            response: "A",
-            layerMetadata: {
-                title: 'a'
-            }
-        }, {
-            response: "B",
-            layerMetadata: {
-                title: 'b'
-            }
-        }];
+        const validator = () => ({
+            getValidResponses: () => [{
+                response: "A",
+                layerMetadata: {
+                    title: 'a'
+                }
+            }, {
+                response: "B",
+                layerMetadata: {
+                    title: 'b'
+                }
+            }],
+            getNoValidResponses: () => [{
+                response: "C",
+                layerMetadata: {
+                    title: 'c'
+                }
+            }]
+        });
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses} requests={["TEST"]}/>,
+            <DefaultViewer validator={validator} renderEmpty/>,
             document.getElementById("container")
         );
 
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
-        expect(dom.getElementsByClassName("alert").length).toBe(0);
+        expect(dom.getElementsByClassName("panel").length).toBe(2);
     });
 
     it('creates the DefaultViewer component with missing results', () => {
@@ -218,26 +230,34 @@ describe('DefaultViewer', () => {
 
     it('test DefaultViewer component with header (Popup view)', () => {
 
-        const responses = [{
-            response: "no features were found",
-            layerMetadata: {
-                title: 'a'
-            }
-        }, {
-            response: "B",
-            layerMetadata: {
-                title: 'Layer1'
-            }
-        }];
+        const validator = () => ({
+            getValidResponses: () => [{
+                response: "A",
+                layerMetadata: {
+                    title: 'a'
+                }
+            }, {
+                response: "B",
+                layerMetadata: {
+                    title: 'b'
+                }
+            }],
+            getNoValidResponses: () => [{
+                response: "C",
+                layerMetadata: {
+                    title: 'c'
+                }
+            }]
+        });
         ReactDOM.render(
-            <DefaultViewer responses={responses} header={SwipeHeader} renderEmpty/>,
+            <DefaultViewer validator={validator}  header={SwipeHeader} renderEmpty/>,
             document.getElementById("container")
         );
         const header = document.querySelector('.ms-identify-swipe-header');
         const panel = document.querySelectorAll('.panel');
         expect(header).toBeTruthy();
-        expect(header.innerText).toBe('Layer1');
-        expect(panel.length).toBe(1);
+        expect(header.innerText).toBe('a');
+        expect(panel.length).toBe(2);
     });
 
     it('test DefaultViewer component in mobile view', () => {

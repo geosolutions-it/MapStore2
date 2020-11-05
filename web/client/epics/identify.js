@@ -162,6 +162,13 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                         const itemId = itemIdSelector(getState());
                         const reqId = uuid.v1();
                         const param = { ...appParams, ...requestParams };
+                        const infoFormat = queryableLayers[0]?.featureInfo?.format;
+                        if (infoFormat === 'HIDDEN') {
+                            return [
+                                newMapInfoRequest(reqId, param),
+                                loadFeatureInfo(reqId, [{}], requestParams, { ...lMetaData, features: 0, featuresCrs: `EPSG:4326` }, layer)
+                            ];
+                        }
                         return getFeatureInfo(basePath, param, layer, {attachJSON, itemId})
                             .map((response) =>
                                 response.data.exceptions
