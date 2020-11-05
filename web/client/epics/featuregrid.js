@@ -98,7 +98,9 @@ import {
     ACTIVATE_TEMPORARY_CHANGES,
     disableToolbar,
     FEATURES_MODIFIED,
-    deactivateGeometryFilter as  deactivateGeometryFilterAction
+    deactivateGeometryFilter as  deactivateGeometryFilterAction,
+    setSelectionOptions,
+    deselectFeatures
 } from '../actions/featuregrid';
 
 import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
@@ -126,7 +128,8 @@ import {
     hasSupportedGeometry,
     queryOptionsSelector,
     getAttributeFilters,
-    selectedLayerSelector
+    selectedLayerSelector,
+    multiSelect
 } from '../selectors/featuregrid';
 
 import { error, warning } from '../actions/notifications';
@@ -398,11 +401,21 @@ export const enableGeometryFilterOnEditMode = (action$, store) =>
                 type: "geometry"
             }));
         });
+/**
+ * @memberof epics.featuregird
+ */
+export const disableMultiSelect = (action$) =>
+    action$.ofType(UPDATE_FILTER)
+        .filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
+        .switchMap(() => {
+            return Rx.Observable.of(setSelectionOptions());
+        });
 export const handleClickOnMap = (action$, store) =>
     action$.ofType(UPDATE_FILTER)
         .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
         .switchMap(() =>
-            action$.ofType(CLICK_ON_MAP).switchMap(({point: {latlng, pixel}}) => {
+            action$.ofType(CLICK_ON_MAP).switchMap(({point}) => {
+                const {latlng, pixel, modifiers: {ctrl, metaKey}} = point;
                 const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
                 const projection = projectionSelector(store.getState());
@@ -410,22 +423,24 @@ export const handleClickOnMap = (action$, store) =>
                 const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
                 const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
 
-                return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
-                    ...currentFilter,
-                    value: {
-                        attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
-                        geometry: {
-                            center: [center.x, center.y],
-                            coordinates: CoordinatesUtils.calculateCircleCoordinates(center, radius, 12),
-                            extent: [center.x - radius, center.y - radius, center.x + radius, center.y + radius],
-                            projection,
-                            radius,
-                            type: "Polygon"
-                        },
-                        method: "Circle",
-                        operation: "INTERSECTS"
-                    }
-                }));
+                return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
+                    setSelectionOptions({multiselect: ctrl || metaKey}),
+                    updateFilter({
+                        ...currentFilter,
+                        value: {
+                            attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                            geometry: {
+                                center: [center.x, center.y],
+                                coordinates: CoordinatesUtils.calculateCircleCoordinates(center, radius, 12),
+                                extent: [center.x - radius, center.y - radius, center.x + radius, center.y + radius],
+                                projection,
+                                radius,
+                                type: "Polygon"
+                            },
+                            method: "Circle",
+                            operation: "INTERSECTS"
+                        }
+                    }));
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
@@ -434,11 +449,26 @@ export const handleClickOnMap = (action$, store) =>
 export const selectFeaturesOnMapClickResult = (action$, store) =>
     action$.ofType(QUERY_RESULT)
         .filter(({reason}) => reason === 'geometry')
-        .map(({result}) => {
+        .switchMap(({result}) => {
             const feature = get(result, 'features[0]');
-            const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
+            const selectedFeatures = selectedFeaturesSelector(store.getState());
+            const alreadySelectedFeature = find(selectedFeatures, { id: feature.id });
+            const multipleSelect = multiSelect(store.getState());
 
-            return selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : []);
+            if (multipleSelect && alreadySelectedFeature) {
+                if (selectedFeatures.length === 1) {
+                    return Rx.Observable.of(
+                        updateFilter({
+                            attribute: "the_geom",
+                            enabled: false,
+                            type: "geometry"
+                        }), deselectFeatures([alreadySelectedFeature]), setSelectionOptions());
+                }
+                return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
+            }
+
+            const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
+            return Rx.Observable.of(selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : [], multipleSelect));
         });
 export const activateTemporaryChangesEpic = (action$) =>
     action$.ofType(ACTIVATE_TEMPORARY_CHANGES)
@@ -502,7 +532,16 @@ export const featureGridChangePage = (action$, store) =>
         .merge(action$.ofType(UPDATE_QUERY).debounceTime(500).map(action => ({...action, page: 0})))
         .switchMap((a) => createLoadPageFlow(store)(a)
             .merge(action$.ofType(QUERY_RESULT)
-                .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                .map((ra) => {
+                    let features = get(ra, "result.features", []);
+                    const multipleSelect = multiSelect(store.getState());
+                    const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
+                    if (multipleSelect && geometryFilter.enabled) {
+                        features = selectedFeaturesSelector(store.getState());
+                    }
+                    // TODO: Handle pagination when multiselect due to control
+                    return fatureGridQueryResult(features, [get(ra, "filterObj.pagination.startIndex")]);
+                })
                 .take(1)
                 .takeUntil(action$.ofType(QUERY_ERROR))
             )
@@ -751,15 +790,15 @@ export const autoCloseFeatureGridEpicOnDrowerOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID).switchMap(() =>
         action$.ofType(TOGGLE_CONTROL)
             .filter(action => action.control && action.control === 'drawer' && isFeatureGridOpen(store.getState()))
-            .switchMap(() => Rx.Observable.of(closeFeatureGrid()))
-            .takeUntil(action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE))
+            .switchMap(() => Rx.Observable.of(closeFeatureGrid(), selectFeatures([])))
+            .takeUntil(action$.ofType(LOCATION_CHANGE))
     );
 export const askChangesConfirmOnFeatureGridClose = (action$, store) => action$.ofType(CLOSE_FEATURE_GRID_CONFIRM).switchMap( () => {
     const state = store.getState();
     if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
         return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
     }
-    return Rx.Observable.of(closeFeatureGrid());
+    return Rx.Observable.of(closeFeatureGrid(), selectFeatures([]));
 });
 export const onClearChangeConfirmedFeatureGrid = (action$) => action$.ofType(CLEAR_CHANGES_CONFIRMED)
     .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false)));
@@ -834,7 +873,10 @@ export const autoReopenFeatureGridOnFeatureInfoClose = (action$) =>
         );
 export const onOpenAdvancedSearch = (action$, store) =>
     action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
+        const selected = selectedFeaturesSelector(store.getState());
         return Rx.Observable.of(
+            // temporarily hide selected features from map
+            selectFeatures([]),
             loadFilter(get(store.getState(), `featuregrid.advancedFilters["${selectedLayerIdSelector(store.getState())}"]`)),
             closeFeatureGrid(),
             setControlProperty('queryPanel', "enabled", true)
@@ -854,8 +896,8 @@ export const onOpenAdvancedSearch = (action$, store) =>
                         .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
                         .mergeMap(() => {
                             const {drawStatus} = (store.getState()).draw || {};
-                            const acts = drawStatus !== 'clean' ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
-                            return Rx.Observable.from(acts.concat(openFeatureGrid()));
+                            const acts = (drawStatus !== 'clean' && selected.length === 0) ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
+                            return Rx.Observable.from(acts.concat(selectFeatures(selected, true), openFeatureGrid()));
                         }
                         )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))

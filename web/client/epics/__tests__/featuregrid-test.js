@@ -47,7 +47,10 @@ import {
     UPDATE_FILTER,
     activateTemporaryChanges,
     DISABLE_TOOLBAR,
-    DEACTIVATE_GEOMETRY_FILTER
+    DEACTIVATE_GEOMETRY_FILTER,
+    SET_SELECTION_OPTIONS,
+    DESELECT_FEATURES,
+    SELECT_FEATURES
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
@@ -108,10 +111,11 @@ import {
     handleClickOnMap,
     featureGridUpdateGeometryFilter,
     activateTemporaryChangesEpic,
+    disableMultiSelect,
+    selectFeaturesOnMapClickResult,
     enableGeometryFilterOnEditMode,
     deactivateSyncWmsFilterOnFeatureGridClose
 } from '../featuregrid';
-
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
 import { getDefaultFeatureProjection } from '../../utils/FeatureGridUtils';
@@ -1021,12 +1025,15 @@ describe('featuregrid Epics', () => {
                 open: true
             }
         };
-        testEpic(autoCloseFeatureGridEpicOnDrowerOpen, 1, [openFeatureGrid(), toggleControl('drawer')], actions => {
-            expect(actions.length).toBe(1);
+        testEpic(autoCloseFeatureGridEpicOnDrowerOpen, 2, [openFeatureGrid(), toggleControl('drawer')], actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                case SELECT_FEATURES:
+                    expect(action.type).toBe(SELECT_FEATURES);
                     break;
                 default:
                     expect(true).toBe(false);
@@ -1037,12 +1044,15 @@ describe('featuregrid Epics', () => {
     });
 
     it('test askChangesConfirmOnFeatureGridClose', (done) => {
-        testEpic(askChangesConfirmOnFeatureGridClose, 1, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(1);
+        testEpic(askChangesConfirmOnFeatureGridClose, 2, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                case SELECT_FEATURES:
+                    expect(action.type).toBe(SELECT_FEATURES);
                     break;
                 default:
                     expect(true).toBe(false);
@@ -1451,10 +1461,13 @@ describe('featuregrid Epics', () => {
 
         const newState = assign({}, state, stateFeaturegrid);
         testEpic(onOpenAdvancedSearch, 4, [openAdvancedSearch(), toggleControl('queryPanel', 'enabled')], actions => {
-
             expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
+                case SELECT_FEATURES:
+                    // temporarily hide selected features
+                    expect(action.features).toEqual([]);
+                    break;
                 case LOAD_FILTER:
                     // load filter, if present
                     expect(action.filter).toExist();
@@ -1949,10 +1962,7 @@ describe('featuregrid Epics', () => {
         });
     });
     it('handleClickOnMap epic', (done) => {
-        const startActions = [updateFilter({
-            type: 'geometry',
-            enabled: true
-        }), clickOnMap({
+        const clickPoint = {
             latlng: {
                 lat: 1.0,
                 lng: 8.0
@@ -1960,19 +1970,29 @@ describe('featuregrid Epics', () => {
             pixel: {
                 x: 10.0,
                 y: 10.0
+            },
+            modifiers: {
+                ctrl: false,
+                metaKey: false
             }
-        })];
+        };
+        const startActions = [updateFilter({
+            type: 'geometry',
+            enabled: true
+        }), clickOnMap(clickPoint)];
 
-        testEpic(handleClickOnMap, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(UPDATE_FILTER);
-            expect(actions[0].update).toExist();
-            expect(actions[0].update.value).toExist();
-            expect(actions[0].update.value.attribute).toBe('the_geom');
-            expect(actions[0].update.value.method).toBe('Circle');
-            expect(actions[0].update.value.geometry).toExist();
-            expect(actions[0].update.value.geometry.type).toBe('Polygon');
-            expect(actions[0].update.value.geometry.radius).toExist();
+        testEpic(handleClickOnMap, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_SELECTION_OPTIONS);
+            expect(actions[0].multiselect).toBe(false);
+            expect(actions[1].type).toBe(UPDATE_FILTER);
+            expect(actions[1].update).toExist();
+            expect(actions[1].update.value).toExist();
+            expect(actions[1].update.value.attribute).toBe('the_geom');
+            expect(actions[1].update.value.method).toBe('Circle');
+            expect(actions[1].update.value.geometry).toExist();
+            expect(actions[1].update.value.geometry.type).toBe('Polygon');
+            expect(actions[1].update.value.geometry.radius).toExist();
         }, {
             featuregrid: {
                 filters: [{
@@ -2103,6 +2123,82 @@ describe('featuregrid Epics', () => {
             expect(actions[1].type).toBe(DEACTIVATE_GEOMETRY_FILTER);
             expect(actions[1].deactivated).toBe(true);
         }, {}, done);
+    });
+    it('disableMultiSelect epic', (done) => {
+        const geomFilter = {
+            type: "geometry",
+            update: {
+                enabled: false
+            }
+        };
+        const startActions = [updateFilter(geomFilter)];
+        testEpic(disableMultiSelect, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_SELECTION_OPTIONS);
+            expect(actions[0].multiselect).toBe(false);
+        }, {}, done);
+    });
+    describe('selectFeaturesOnMapClickResult epic', () => {
+        it('should deselect feature that is already selected and clicked when ctrl or metaKey held', (done) => {
+            const stateObj = {
+                featuregrid: {
+                    multiselect: true,
+                    select: [{id: "ft_id"}, {id: "ft_id_2"}]
+                }
+            };
+            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
+            testEpic(selectFeaturesOnMapClickResult, 1, startActions, actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toEqual(DESELECT_FEATURES);
+                expect(actions[0].features).toEqual([{id: "ft_id"}]);
+            }, stateObj, done);
+        });
+        it('should update geometry filter with enabled false when only feature selected is clicked, ctrl and metaKey are held', (done) => {
+            const stateObj = {
+                featuregrid: {
+                    multiselect: true,
+                    select: [{id: "ft_id"}]
+                }
+            };
+            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
+            testEpic(selectFeaturesOnMapClickResult, 3, startActions, actions => {
+                expect(actions.length).toBe(3);
+                expect(actions[0].type).toEqual(UPDATE_FILTER);
+                expect(actions[0].update.enabled).toBe(false);
+                expect(actions[1].type).toEqual(DESELECT_FEATURES);
+                expect(actions[1].features).toEqual([{id: "ft_id"}]);
+                expect(actions[2].type).toBe(SET_SELECTION_OPTIONS);
+                expect(actions[2].multiselect).toBe(false);
+            }, stateObj, done);
+        });
+        it('should append to selected features, ctrl and metaKey are held', (done) => {
+            const stateObj = {
+                featuregrid: {
+                    multiselect: true,
+                    select: [{id: "ft_id"}]
+                }
+            };
+            const startActions = [querySearchResponse({features: [{id: "ft_id_2"}]}, "", {}, {}, "geometry")];
+            testEpic(selectFeaturesOnMapClickResult, 1, startActions, actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toEqual(SELECT_FEATURES);
+                expect(actions[0].append).toBe(true);
+            }, stateObj, done);
+        });
+        it('should select the feature, ctrl and metaKey are not held', (done) => {
+            const stateObj = {
+                featuregrid: {
+                    multiselect: false,
+                    select: []
+                }
+            };
+            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
+            testEpic(selectFeaturesOnMapClickResult, 1, startActions, actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toEqual(SELECT_FEATURES);
+                expect(actions[0].append).toBe(false);
+            }, stateObj, done);
+        });
     });
     it('deactivateSyncWmsFilterOnFeatureGridClose', (done) => {
         const startActions = [closeFeatureGrid()];

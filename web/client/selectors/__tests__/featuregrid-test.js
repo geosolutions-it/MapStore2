@@ -36,7 +36,8 @@ import {
     selectedLayerNameSelector,
     queryOptionsSelector,
     showTimeSync,
-    timeSyncActive
+    timeSyncActive,
+    multiSelect
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -565,5 +566,13 @@ describe('Test featuregrid selectors', () => {
             }
         };
         expect(queryOptionsSelector(state).cqlFilter).toBe("a:b");
+    });
+    it('multiSelect', () => {
+        const state = {
+            featuregrid: {
+                multiselect: true
+            }
+        };
+        expect(multiSelect(state)).toBe(true);
     });
 });

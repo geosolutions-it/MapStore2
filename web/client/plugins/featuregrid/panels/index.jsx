@@ -15,7 +15,7 @@ const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive,
 const { getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, getAttributeFilter, hasSupportedGeometry, timeSyncActive, showTimeSync, isEditingAllowedSelector} = require('../../../selectors/featuregrid');
 const {isCesium} = require('../../../selectors/maptype');
 const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
-const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector, selectedLayerNameSelector} = require('../../../selectors/featuregrid');
+const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector, selectedLayerNameSelector, multiSelect} = require('../../../selectors/featuregrid');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
 const {getFilterRenderer} = require('../../../components/data/featuregrid/filterRenderers');
@@ -75,8 +75,12 @@ const Footer = connect(
         createStructuredSelector(paginationInfo),
         featureLoadingSelector,
         state => state && state.featuregrid && !!state.featuregrid.virtualScroll,
-        (pagination, loading, virtualScroll) => ({
+        multiSelect,
+        selectedFeaturesCount,
+        (pagination, loading, virtualScroll, multiselect, count) => ({
             ...pagination,
+            resultSize: multiselect ? count : pagination.resultSize,
+            totalFeatures: multiselect ? count : pagination.totalFeatures,
             loading,
             virtualScroll
         })),
