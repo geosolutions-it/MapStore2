@@ -100,8 +100,7 @@ import {
     FEATURES_MODIFIED,
     deactivateGeometryFilter as  deactivateGeometryFilterAction,
     setSelectionOptions,
-    deselectFeatures,
-    setFeatures
+    deselectFeatures
 } from '../actions/featuregrid';
 
 import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
@@ -898,7 +897,7 @@ export const onOpenAdvancedSearch = (action$, store) =>
                         .mergeMap(() => {
                             const {drawStatus} = (store.getState()).draw || {};
                             const acts = (drawStatus !== 'clean' && selected.length === 0) ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
-                            return Rx.Observable.from(acts.concat(selectFeatures(selected), openFeatureGrid()));
+                            return Rx.Observable.from(acts.concat(selectFeatures(selected, true), openFeatureGrid()));
                         }
                         )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
