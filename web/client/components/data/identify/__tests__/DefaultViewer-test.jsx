@@ -78,7 +78,7 @@ describe('DefaultViewer', () => {
                     title: 'a'
                 }
             }, {
-                response: "B",
+                response: "no features were found",
                 layerMetadata: {
                     title: 'b'
                 }
