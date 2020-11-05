@@ -50,7 +50,7 @@ class SideBarComponent extends React.Component {
          dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object,
-         layout: PropTypes.object,
+         layout: PropTypes.object
      };
      static defaultProps = {
          id: "widgets-builder-plugin",
