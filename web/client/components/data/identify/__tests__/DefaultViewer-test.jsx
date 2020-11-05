@@ -229,38 +229,6 @@ describe('DefaultViewer', () => {
         expect(dom.innerHTML.indexOf('myresponse') !== -1).toBe(true);
     });
 
-    it('test DefaultViewer component with header (Popup view)', () => {
-
-        const validator = () => ({
-            getValidResponses: () => [{
-                response: "A",
-                layerMetadata: {
-                    title: 'a'
-                }
-            }, {
-                response: "B",
-                layerMetadata: {
-                    title: 'b'
-                }
-            }],
-            getNoValidResponses: () => [{
-                response: "C",
-                layerMetadata: {
-                    title: 'c'
-                }
-            }]
-        });
-        ReactDOM.render(
-            <DefaultViewer validator={validator}  header={SwipeHeader} renderEmpty/>,
-            document.getElementById("container")
-        );
-        const header = document.querySelector('.ms-identify-swipe-header');
-        const panel = document.querySelectorAll('.panel');
-        expect(header).toBeTruthy();
-        expect(header.innerText).toBe('a');
-        expect(panel.length).toBe(2);
-    });
-
     it('test DefaultViewer component in mobile view', () => {
         const responses = [{
             response: "no features were found",

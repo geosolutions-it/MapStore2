@@ -40,17 +40,6 @@ describe('Identity Viewers', () => {
         expect(cmpDom.getElementsByClassName("testclass").length).toBe(1);
     });
 
-    it('test HiddenViewer', () => {
-        const cmp = ReactDOM.render(<HiddenViewer />, document.getElementById("container"));
-        expect(cmp).toExist();
-
-        const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
-
-        expect(cmpDom.getElementsByClassName("alert").length).toBe(1);
-
-    });
-
     it('test TextViewer', () => {
         const cmp = ReactDOM.render(<TextViewer response="testtext" />, document.getElementById("container"));
         expect(cmp).toExist();

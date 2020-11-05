@@ -207,11 +207,17 @@ const MapInfoUtils = {
             [FeatureInfoUtils.INFO_FORMATS.PROPERTIES]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.JSON]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.HTML]: require('../components/data/identify/viewers/HTMLViewer'),
-            [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer'),
-            [FeatureInfoUtils.INFO_FORMATS.HIDDEN]: require('../components/data/identify/viewers/HiddenViewer')
+            [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer')
         };
     },
     defaultQueryableFilter(l) {
+        if(l?.featureInfo?.format === 'HIDDEN'){
+            return l.visibility &&
+                MapInfoUtils.services[l.type] &&
+                (l.queryable === undefined || l.queryable) &&
+                l.group !== "background" && l.queryable === false;
+                ;
+        }
         return l.visibility &&
             MapInfoUtils.services[l.type] &&
             (l.queryable === undefined || l.queryable) &&
