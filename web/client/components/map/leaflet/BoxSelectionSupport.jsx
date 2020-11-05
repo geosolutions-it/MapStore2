@@ -8,6 +8,7 @@
 
 import {useEffect} from 'react';
 const L = require('leaflet');
+require('leaflet-draw');
 
 const {boundsToOLExtent} = require('../../../utils/leaflet/DrawSupportUtils');
 
@@ -32,7 +33,7 @@ const BoxSelectionSupport = (props) => {
             map.on('draw:created', (event) => {
                 const layer = event.layer;
                 onBoxEnd({
-                    boxExtent: boundsToOLExtent(layer.getBounds())
+                    boxExtent: layer ? boundsToOLExtent(layer.getBounds()) : []
                 });
             });
         }
