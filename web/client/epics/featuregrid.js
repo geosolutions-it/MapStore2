@@ -100,7 +100,8 @@ import {
     FEATURES_MODIFIED,
     deactivateGeometryFilter as  deactivateGeometryFilterAction,
     setSelectionOptions,
-    deselectFeatures
+    deselectFeatures,
+    setFeatures
 } from '../actions/featuregrid';
 
 import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
@@ -873,7 +874,10 @@ export const autoReopenFeatureGridOnFeatureInfoClose = (action$) =>
         );
 export const onOpenAdvancedSearch = (action$, store) =>
     action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
+        const selected = selectedFeaturesSelector(store.getState());
         return Rx.Observable.of(
+            // temporarily hide selected features from map
+            selectFeatures([]),
             loadFilter(get(store.getState(), `featuregrid.advancedFilters["${selectedLayerIdSelector(store.getState())}"]`)),
             closeFeatureGrid(),
             setControlProperty('queryPanel', "enabled", true)
@@ -893,8 +897,8 @@ export const onOpenAdvancedSearch = (action$, store) =>
                         .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
                         .mergeMap(() => {
                             const {drawStatus} = (store.getState()).draw || {};
-                            const acts = drawStatus !== 'clean' ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
-                            return Rx.Observable.from(acts.concat(openFeatureGrid()));
+                            const acts = (drawStatus !== 'clean' && selected.length === 0) ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
+                            return Rx.Observable.from(acts.concat(selectFeatures(selected), openFeatureGrid()));
                         }
                         )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))

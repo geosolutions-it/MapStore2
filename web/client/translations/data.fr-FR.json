@@ -1542,7 +1542,7 @@
             "deselectall": "Tout désélectionner",
             "backtosearch": "Retour à la recherche",
             "resultInfo": "{total, plural, =0 {aucun objet} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
-            "resultInfoVirtual": "{total, plural, =0 {aucun objet} =1 {{total} de {total}} other {{total} Objets}}",
+            "resultInfoVirtual": "{total, plural, =0 {aucun objet} =1 {{total} Objet} other {{total} Objets}}",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} de {totalPages}} other {Page {page} de {totalPages}}}",
             "pagination": {
                 "page": "Page",

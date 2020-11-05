@@ -1461,10 +1461,13 @@ describe('featuregrid Epics', () => {
 
         const newState = assign({}, state, stateFeaturegrid);
         testEpic(onOpenAdvancedSearch, 4, [openAdvancedSearch(), toggleControl('queryPanel', 'enabled')], actions => {
-
             expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
+                case SELECT_FEATURES:
+                    // temporarily hide selected features
+                    expect(action.features).toEqual([]);
+                    break;
                 case LOAD_FILTER:
                     // load filter, if present
                     expect(action.filter).toExist();
