@@ -18,6 +18,7 @@ import SimpleChart from '../../../../charts/SimpleChart';
 const SampleChart = sampleData(SimpleChart);
 
 const sampleProps = {
+    xAxisAngle: 0,
     legend: false,
     tooltip: false,
     cartesian: false,
