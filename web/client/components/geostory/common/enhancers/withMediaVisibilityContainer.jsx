@@ -35,11 +35,11 @@ const withMediaVisibility = (MediaComponent) => {
             ? (
                 <VisibilityContainer
                 // key needed for immersive background children
-                    key={props.id}
-                    id={props.id}
+                    key={props.loadingId}
+                    id={props.loadingId}
                     debounceTime={props.debounceTime}
                     loading={props.isLoading}
-                    onLoad={(id) => props.onLoad({ ...props.loading, [id]: false })}
+                    onLoad={(loadingId) => props.onLoad({ ...props.loading, [loadingId]: false })}
                     loaderComponent={LoaderComponent}
                     loaderStyle={loaderStyle}>
                     <MediaComponent
