@@ -18,7 +18,8 @@ import {
     reloadMediaResources,
     importInLocalSource,
     editRemoteMap,
-    removeMediaEpic
+    removeMediaEpic,
+    updateSelectedItem
 } from '../mediaEditor';
 import {
     show as showMapEditor,
@@ -40,7 +41,9 @@ import {
     UPDATE_ITEM,
     LOAD_MEDIA,
     SET_MEDIA_SERVICE,
-    LOADING_MEDIA_LIST
+    LOADING_MEDIA_LIST,
+    selectItem,
+    LOADING_SELECTED_MEDIA
 } from '../../actions/mediaEditor';
 
 describe('MediaEditor Epics', () => {
@@ -524,6 +527,24 @@ describe('MediaEditor Epics', () => {
                             category: 'MAP'
                         }
                     }
+                }
+            }
+        });
+    });
+
+    it('should look for getData api hook updateSelectedItem', (done) => {
+        const NUM_ACTIONS = 2;
+        const id = 'id';
+        testEpic(updateSelectedItem, NUM_ACTIONS, selectItem(id), (actions) => {
+            expect(actions.map(({ type }) => type)).toEqual([
+                LOADING_SELECTED_MEDIA, // true
+                LOADING_SELECTED_MEDIA // false
+            ]);
+            done();
+        }, {
+            mediaEditor: {
+                settings: {
+                    sourceId: 'geostory'
                 }
             }
         });

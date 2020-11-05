@@ -237,7 +237,12 @@ export const removeMediaEpic = (action$, store) =>
                         loadMedia(undefined, currentMediaTypeSelector(store.getState()), SourceTypes.GEOSTORY));
                 });
         });
-
+/**
+ * Handles selection of a media item and update the data if needed
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
 export const updateSelectedItem = (action$, store) =>
     action$.ofType(SELECT_ITEM)
         .switchMap(() => {
