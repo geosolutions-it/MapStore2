@@ -7,7 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {head, last: _last, isNil} = require('lodash');
+const {last: _last, isNil} = require('lodash');
 const L = require('leaflet');
 
 require('leaflet-draw');
@@ -456,39 +456,46 @@ class DrawSupport extends React.Component {
     };
 
     addDrawOrEditInteractions = (newProps) => {
-        let newFeature = head(newProps.features);
-        let newFeatures;
-        if (newFeature && newFeature.geometry && newFeature.geometry.type && !isSimpleGeomType(newFeature.geometry.type)) {
-            if (newFeature.geometry.type === "GeometryCollection") {
-                newFeatures = newFeature.geometry.geometries.map(g => {
-                    return g.coordinates.map((coords, idx) => {
+        let newFeatures = [];
+
+        newProps.features.map(ft => {
+            let newFs;
+            if (ft && ft.geometry && ft.geometry.type && !isSimpleGeomType(ft.geometry.type)) {
+                if (ft.geometry.type === "GeometryCollection") {
+                    newFs = ft.geometry.geometries.map(g => {
+                        return g.coordinates.map((coords, idx) => {
+                            return {
+                                type: 'Feature',
+                                properties: {...ft.properties},
+                                id: g.type + idx,
+                                geometry: {
+                                    coordinates: coords,
+                                    type: getSimpleGeomType(g.type)
+                                }
+                            };
+                        });
+                    });
+
+                    newFeatures.push({type: "FeatureCollection", features: newFs});
+                } else {
+                    newFs = ft.geometry.coordinates.map((coords, idx) => {
                         return {
                             type: 'Feature',
-                            properties: {...newFeature.properties},
-                            id: g.type + idx,
+                            properties: {...ft.properties},
+                            id: ft.geometry.type + idx,
                             geometry: {
                                 coordinates: coords,
-                                type: getSimpleGeomType(g.type)
+                                type: getSimpleGeomType(ft.geometry.type)
                             }
                         };
                     });
-                });
-            } else {
-                newFeatures = newFeature.geometry.coordinates.map((coords, idx) => {
-                    return {
-                        type: 'Feature',
-                        properties: {...newFeature.properties},
-                        id: newFeature.geometry.type + idx,
-                        geometry: {
-                            coordinates: coords,
-                            type: getSimpleGeomType(newFeature.geometry.type)
-                        }
-                    };
-                });
-                newFeature = {type: "FeatureCollection", features: newFeatures};
+
+                    newFeatures.push({type: "FeatureCollection", features: newFs});
+                }
             }
-        }
-        const props = assign({}, newProps, {features: [newFeature ? newFeature : {}]});
+        });
+
+        const props = assign({}, newProps, {features: newFeatures.length >  0 ? newFeatures : [{}]});
         if (!this.drawLayer) {
             /* Reprojection is needed to implement circle initial visualization after querypanel geometry reload (on reload the 100 points polygon is shown)
              *
