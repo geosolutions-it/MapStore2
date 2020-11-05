@@ -87,6 +87,8 @@
             "propertiesFormatDescription": "Mostrar resultados da informação do tema em modo lista de propriedades",
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Costumizar resultados da informação do tema",
+            "hideFormatTitle": "DESATIVAR IDENTIFICAR",
+            "hideFormatDescription": "Desative as informações do recurso para esta camada",
             "templateFormatInfoAlert1": "Clicar no botão editar para adicionar um novo template.",
             "templateFormatInfoAlert2": "Use ${ attribute } para identificar as propriedades que necessita visualizar",
             "templateFormatInfoAlertExample": "O id do tema é ${ properties }",

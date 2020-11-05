@@ -88,7 +88,7 @@ describe('test Layer Properties FeatureInfoFormat module component', () => {
         expect(comp).toExist();
         const div = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "div" );
         expect(div[2]).toExist();
-        expect(div[2].textContent).toBe("HTML");
+        expect(div[2].textContent).toBe("HIDDEN");
 
     });
 });

@@ -12,6 +12,7 @@ var ReactDOM = require('react-dom');
 var HTMLViewer = require('../HTMLViewer');
 var JSONViewer = require('../JSONViewer');
 var TextViewer = require('../TextViewer');
+var HiddenViewer = require('../HiddenViewer');
 
 const SimpleRowViewer = (props) => {
     return <div>{['name', 'description'].map((key) => <span key={key}>{key}:{props[key]}</span>)}</div>;
@@ -37,6 +38,17 @@ describe('Identity Viewers', () => {
         expect(cmpDom).toExist();
 
         expect(cmpDom.getElementsByClassName("testclass").length).toBe(1);
+    });
+
+    it('test HiddenViewer', () => {
+        const cmp = ReactDOM.render(<HiddenViewer />, document.getElementById("container"));
+        expect(cmp).toExist();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+
+        expect(cmpDom.getElementsByClassName("alert").length).toBe(1);
+
     });
 
     it('test TextViewer', () => {
