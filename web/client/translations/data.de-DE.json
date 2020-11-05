@@ -1540,7 +1540,7 @@
             "deselectall": "Auswahl aufheben",
             "backtosearch": "Zurück zur suche",
             "resultInfo": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{start}-{end} von {total}}}",
-            "resultInfoVirtual": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {Keine Artikel} =1 {{total}} other {{total}}}",
             "pageInfo": "{totalPages, plural, =0 {keine Seite} =1 {Seite {totalPages} von {totalPages}} other {Seite {page} von {totalPages}}}",
             "pagination": {
                 "page": "Seite",
@@ -1574,8 +1574,8 @@
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
                     "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
                     "geometry": {
-                        "disabled": "Filterklick auf die Karte",
-                        "enabled": "Klicken Sie auf die Karte, um die Ergebnisse zu filtern",
+                        "disabled": "Filterklick auf die Karte / Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere zu filtern",
+                        "enabled": "Klicken Sie auf die Karte, um die Ergebnisse zu filtern / Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere zu filtern",
                         "applied": "Entfernen Sie den Filter per Mausklick"
                     }
                 }

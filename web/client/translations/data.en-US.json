@@ -1541,7 +1541,7 @@
             "deselectall": "Clear Selection",
             "backtosearch": "Back to search",
             "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
-            "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{total} Items}}",
+            "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item} other {{total} Items}}",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
             "pagination": {
                 "page": "Page",
@@ -1575,8 +1575,8 @@
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
                     "date": "Type a date or an expression. Use {format} for the date.",
                     "geometry": {
-                        "disabled": "Filter clicking on the map",
-                        "enabled": "Click on the map to filter the results",
+                        "disabled": "Filter clicking on the map / Hold ctrl and click to filter multiple",
+                        "enabled": "Click on the map to filter the results / Hold ctrl and click to filter multiple",
                         "applied": "Remove the filter by mouse click"
                     }
                 }

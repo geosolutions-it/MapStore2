@@ -325,8 +325,7 @@ function featuregrid(state = emptyResultsState, action) {
             deleteConfirm: false,
             drawing: false,
             newFeatures: [],
-            changes: [],
-            select: []
+            changes: []
         });
     }
     case DISABLE_TOOLBAR: {
