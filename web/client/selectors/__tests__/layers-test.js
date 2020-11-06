@@ -25,7 +25,7 @@ import {
     centerToMarkerSelector,
     getLayersWithDimension,
     elementSelector,
-    queryableSelectedLayersSelector, queryableLayersSelector
+    queryableSelectedLayersSelector
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -261,20 +261,6 @@ describe('Test layers selectors', () => {
         expect(props.length).toBe(1);
         expect(props[0].nodes.length).toBe(2);
         expect(props[0].nodes[0]).toNotBeA('string');
-    });
-
-    it('test queryableLayersSelector from layers', () => {
-        const props = queryableLayersSelector({layers: [{
-            visibility: true,
-            type: 'wms',
-            featureInfo: {
-                format: 'TEMPLATE'
-            },
-            group: 'group'
-        }]});
-        expect(props.length).toBe(1);
-        expect(props.[0].visibility).toBe(true);
-        expect(props.[0].featureInfo.format).toBe('TEMPLATE');
     });
 
     it('test groupsSelector from layers flat more groups', () => {

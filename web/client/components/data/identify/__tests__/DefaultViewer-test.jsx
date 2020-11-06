@@ -216,6 +216,30 @@ describe('DefaultViewer', () => {
         expect(dom.innerHTML.indexOf('myresponse') !== -1).toBe(true);
     });
 
+    it('test DefaultViewer component with header (Popup view)', () => {
+
+        const responses = [{
+            response: "no features were found",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "B",
+            layerMetadata: {
+                title: 'Layer1'
+            }
+        }];
+        ReactDOM.render(
+            <DefaultViewer responses={responses} header={SwipeHeader} renderEmpty/>,
+            document.getElementById("container")
+        );
+        const header = document.querySelector('.ms-identify-swipe-header');
+        const panel = document.querySelectorAll('.panel');
+        expect(header).toBeTruthy();
+        expect(header.innerText).toBe('Layer1');
+        expect(panel.length).toBe(1);
+    });
+
     it('test DefaultViewer component in mobile view', () => {
         const responses = [{
             response: "no features were found",
