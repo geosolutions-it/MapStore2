@@ -53,7 +53,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('getAvailableInfoFormatLabels', () => {
-        let testData = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE', 'HIDDEN'];
+        let testData = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'];
         let results = getAvailableInfoFormatLabels();
         expect(results).toExist();
         expect(results.length).toBe(4);
