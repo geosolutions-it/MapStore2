@@ -53,11 +53,6 @@ describe('DefaultViewer', () => {
             layerMetadata: {
                 title: 'a'
             }
-        }, {
-            response: "B",
-            layerMetadata: {
-                title: 'b'
-            }
         }];
         const Header = () => <div className="mycontainer"/>;
         const viewer = ReactDOM.render(
@@ -67,7 +62,7 @@ describe('DefaultViewer', () => {
 
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
-        expect(dom.getElementsByClassName("mycontainer").length).toBe(2);
+        expect(dom.getElementsByClassName("mycontainer").length).toBe(1);
     });
 
     it('creates the DefaultViewer component with custom validator', () => {
@@ -78,7 +73,7 @@ describe('DefaultViewer', () => {
                     title: 'a'
                 }
             }, {
-                response: "no features were found",
+                response: "B",
                 layerMetadata: {
                     title: 'b'
                 }
@@ -168,33 +163,25 @@ describe('DefaultViewer', () => {
     });
 
     it('creates the DefaultViewer component with some results', () => {
-        const validator = () => ({
-            getValidResponses: () => [{
-                response: "A",
-                layerMetadata: {
-                    title: 'a'
-                }
-            }, {
-                response: "B",
-                layerMetadata: {
-                    title: 'b'
-                }
-            }],
-            getNoValidResponses: () => [{
-                response: "C",
-                layerMetadata: {
-                    title: 'c'
-                }
-            }]
-        });
+        const responses = [{
+            response: "A",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "B",
+            layerMetadata: {
+                title: 'b'
+            }
+        }];
         const viewer = ReactDOM.render(
-            <DefaultViewer validator={validator} renderEmpty/>,
+            <DefaultViewer responses={responses} requests={["TEST"]}/>,
             document.getElementById("container")
         );
 
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
-        expect(dom.getElementsByClassName("panel").length).toBe(2);
+        expect(dom.getElementsByClassName("alert").length).toBe(0);
     });
 
     it('creates the DefaultViewer component with missing results', () => {
