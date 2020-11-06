@@ -166,7 +166,7 @@ describe('Widget Chart: data conversions ', () => {
                 data[0].x.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.xAxis.dataKey]));
                 // LAYOUT
 
-                // minimal margins, botton automatic
+                // minimal margins, bottom automatic
                 expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
 
                 // colors generated are the defaults, generated on series (1 color for series, so 1)
