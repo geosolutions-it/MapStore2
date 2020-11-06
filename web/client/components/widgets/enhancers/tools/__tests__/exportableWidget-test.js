@@ -67,7 +67,6 @@ describe('exportableWidget enhancer', () => {
     it('should disable exportCSV or exportImage btns when data is empty', () => {
         const Sink = exportable(createSink(({ widgetTools = [] }) => {
             expect(widgetTools[0].disabled).toBe(true);
-            expect(widgetTools[1].disabled).toBe(true);
             widgetTools[0].onClick();
         }));
 
