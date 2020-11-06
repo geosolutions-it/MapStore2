@@ -51,15 +51,11 @@ describe('exportableWidget enhancer', () => {
             expect(widgetTools[0]).toExist();
             widgetTools[0].onClick();
         }));
-        const SinkCallDelete = exportable(createSink(({ widgetTools = [] }) => {
-            expect(widgetTools[0]).toExist();
-            widgetTools[1].onClick();
-        }));
+
         ReactDOM.render(<SinkCallEdit title="widget title" data={sampleData} exportCSV={actions.exportCSV} />, document.getElementById("container"));
         expect(spyCSV).toHaveBeenCalled();
         expect(spyCSV.calls[0].arguments[0].data).toBe(sampleData);
         expect(spyCSV.calls[0].arguments[0].title).toBe("widget title");
-        ReactDOM.render(<SinkCallDelete title="widget title" id={"ID"} exportImage={actions.exportImage} />, document.getElementById("container"));
         // check the id of the widget' s div is correctly generated (
         // it must be the same of the widget, to allow canvg to crate an image from the div
     });
