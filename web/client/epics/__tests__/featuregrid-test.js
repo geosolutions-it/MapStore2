@@ -2133,7 +2133,11 @@ describe('featuregrid Epics', () => {
             type: 'geometry',
             enabled: true
         }), boxEnd({
-            boxExtent: [-14653436.944438, 4971311.4456112925, -12792577.490835384, 6611726.509639461]
+            boxExtent: [-14653436.944438, 4971311.4456112925, -12792577.490835384, 6611726.509639461],
+            modifiers: {
+                ctrl: false,
+                metaKey: false
+            }
         })];
         testEpic(handleBoxSelectionDrawEnd, 2, startActions, actions => {
             expect(actions.length).toBe(2);

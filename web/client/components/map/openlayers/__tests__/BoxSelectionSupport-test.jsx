@@ -44,8 +44,8 @@ describe('Test BoxSelectionSupport', () => {
         ReactDOM.render(<BoxSelectionSupport status="start" map={fakeMap}/>, document.getElementById("container"));
         expect(addInteractionSpy).toHaveBeenCalled();
 
-        // add select and dragBox interactions
-        expect(addInteractionSpy.calls.length).toBe(2);
+        // add dragBox interaction
+        expect(addInteractionSpy.calls.length).toBe(1);
     });
 
     it('should remove interactions from map when status is end', () => {
@@ -53,8 +53,8 @@ describe('Test BoxSelectionSupport', () => {
         ReactDOM.render(<BoxSelectionSupport status="end" map={fakeMap}/>, document.getElementById("container"));
         expect(removeInteractionSpy).toHaveBeenCalled();
 
-        // remove select and dragBox interactions
-        expect(removeInteractionSpy.calls.length).toBe(2);
+        // remove dragBox interaction
+        expect(removeInteractionSpy.calls.length).toBe(1);
     });
 
 });
