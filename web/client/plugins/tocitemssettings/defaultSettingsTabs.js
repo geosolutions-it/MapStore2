@@ -121,7 +121,7 @@ const formatCards = {
 import FeatureInfoCmp from '../../components/TOC/fragments/settings/FeatureInfo';
 const FeatureInfo = defaultProps({
     formatCards,
-    defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat()
+    defaultInfoFormat: Object.assign({ "HIDDEN": "text/html"}, MapInfoUtils.getAvailableInfoFormat())
 })(FeatureInfoCmp);
 
 const configuredPlugins = {};

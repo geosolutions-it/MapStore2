@@ -12,7 +12,6 @@ const INFO_FORMATS_BY_MIME_TYPE = FeatureInfoUtils.INFO_FORMATS_BY_MIME_TYPE;
 const pointOnSurface = require('turf-point-on-surface');
 const {findIndex} = require('lodash');
 
-INFO_FORMATS.HIDDEN = "text/html";
 
 const MapInfoUtils = {
     /**
@@ -32,7 +31,6 @@ const MapInfoUtils = {
         return Object.keys(INFO_FORMATS).filter((k) => {
             return MapInfoUtils.AVAILABLE_FORMAT.indexOf(k) !== -1;
         }).reduce((prev, k) => {
-            prev.HIDDEN = "text/html";
             prev[k] = INFO_FORMATS[k];
             return prev;
         }, {});
@@ -211,16 +209,10 @@ const MapInfoUtils = {
         };
     },
     defaultQueryableFilter(l) {
-        if (l?.featureInfo?.format === 'HIDDEN') {
-            return l.visibility &&
-                MapInfoUtils.services[l.type] &&
-                (l.queryable === undefined || l.queryable) &&
-                l.group !== "background" && l.queryable === false;
-        }
         return l.visibility &&
             MapInfoUtils.services[l.type] &&
             (l.queryable === undefined || l.queryable) &&
-            l.group !== "background"
+            l.group !== "background" && l?.featureInfo?.format !== 'HIDDEN'
         ;
     },
     services: {

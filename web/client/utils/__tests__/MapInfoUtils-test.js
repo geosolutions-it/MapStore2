@@ -38,8 +38,7 @@ describe('MapInfoUtils', () => {
             "TEXT": "text/plain",
             "HTML": "text/html",
             "PROPERTIES": "application/json",
-            "TEMPLATE": "application/json",
-            "HIDDEN": "text/html"
+            "TEMPLATE": "application/json"
         };
         let results = getAvailableInfoFormat();
         expect(results).toExist();
@@ -57,7 +56,7 @@ describe('MapInfoUtils', () => {
         let testData = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE', 'HIDDEN'];
         let results = getAvailableInfoFormatLabels();
         expect(results).toExist();
-        expect(results.length).toBe(5);
+        expect(results.length).toBe(4);
 
         expect(results.reduce((prev, label) => {
             return prev && testData.indexOf(label) !== -1;
@@ -68,7 +67,7 @@ describe('MapInfoUtils', () => {
         let testData = ['text/plain', 'text/html', 'application/json'];
         let results = getAvailableInfoFormatValues();
         expect(results).toExist();
-        expect(results.length).toBe(5);
+        expect(results.length).toBe(4);
 
         expect(results.reduce((prev, value) => {
             return prev && testData.indexOf(value) !== -1;
@@ -550,7 +549,7 @@ describe('MapInfoUtils', () => {
     });
     it('get the label given the text/html value', () => {
         let label = getLabelFromValue("text/html");
-        expect(label).toBe("HIDDEN");
+        expect(label).toBe("HTML");
     });
     it('get the default label given the wrong value', () => {
         let label = getLabelFromValue("text_or_something_else");
