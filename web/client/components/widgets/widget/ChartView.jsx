@@ -5,16 +5,25 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
+import React from 'react';
+import ContainerDimensions from 'react-container-dimensions';
 
+import loadingState from '../../misc/enhancers/loadingState';
+import errorChartState from '../enhancers/errorChartState';
+import emptyChartState from '../enhancers/emptyChartState';
+import SimpleChart from '../../charts/SimpleChart';
 
-const loadingState = require('../../misc/enhancers/loadingState')();
-const errorChartState = require('../enhancers/errorChartState');
-const emptyChartState = require('../enhancers/emptyChartState');
-const SimpleChart = loadingState(errorChartState(emptyChartState((require('../../charts/SimpleChart')))));
-const ContainerDimensions = require('react-container-dimensions').default;
-const React = require('react');
-module.exports = (props) => (<div className="mapstore-widget-chart">
+const EnhancedChart = loadingState()(errorChartState(emptyChartState((SimpleChart))));
+
+/**
+ * This is the main chart view component for widgets.
+ * Adds to the chart the loading, error, empty state enhancers and wrap it into
+ * a chart with a ContainerDimensions, that allow to pass the current size of the
+ * div to the chart.
+ */
+const ChartView = (props) => (<div className="mapstore-widget-chart">
     <ContainerDimensions>
-        <SimpleChart {...props}/>
+        <EnhancedChart {...props} />
     </ContainerDimensions>
 </div>);
+export default ChartView;
