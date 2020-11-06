@@ -40,7 +40,7 @@ function getMargins({ type, yAxis, isModeBarVisible, xAxisAngle }) {
             l: 2,
             r: 2,
             pad: 4
-    };
+        };
     default:
         return {
             l: !yAxis ? 5 : undefined, // if yAxis is false, reduce left margin
