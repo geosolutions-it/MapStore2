@@ -2268,6 +2268,7 @@
             "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
         "geostory": {
+            "storyResources": "Risorse della Storia",
             "geostoreMap": "Mappe di MapStore",
             "loadingSpinner": "Caricamento Storia",
             "addTitleSection": "Aggiungi sezione titolo",

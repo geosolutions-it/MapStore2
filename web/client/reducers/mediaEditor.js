@@ -56,14 +56,32 @@ export const DEFAULT_STATE = {
         // all media sources available, with their type and other parameters
         sources: {
             geostory: {
-                name: "Current story", // shown in in the UI,  TODO: localize?
-                type: SourceTypes.GEOSTORY // determines the type related to the API
+                name: "geostory.storyResources",
+                type: SourceTypes.GEOSTORY, // determines the type related to the API
+                addMediaEnabled: {
+                    image: true,
+                    video: true,
+                    map: true
+                },
+                editMediaEnabled: {
+                    image: true,
+                    video: true,
+                    map: true
+                },
+                removeMediaEnabled: {
+                    image: true,
+                    video: true,
+                    map: true
+                }
             },
             geostoreMap: {
                 name: "geostory.geostoreMap", // id for Message comp
                 type: SourceTypes.GEOSTORE,
                 baseURL: "rest/geostore/",
-                category: "MAP"
+                category: "MAP",
+                editMediaEnabled: {
+                    map: true
+                }
             }
         }
     }

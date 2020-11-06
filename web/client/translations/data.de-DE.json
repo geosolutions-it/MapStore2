@@ -2267,6 +2267,7 @@
             "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
         "geostory": {
+            "storyResources": "Story Ressourcen",
             "geostoreMap": "MapStore-Karten",
             "loadingSpinner": "Story wird geladen",
             "addTitleSection": "Titelabschnitt hinzufügen",

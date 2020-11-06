@@ -22,6 +22,7 @@ import HTML from '../I18N/HTML';
 import withDebounceOnCallback from '../misc/enhancers/withDebounceOnCallback';
 import withScrollSpy from '../misc/enhancers/infiniteScroll/withScrollSpy';
 import Icon from '../misc/FitIcon';
+import Message from "../I18N/Message";
 
 const SideList = withScrollSpy()(SideGrid);
 
@@ -52,6 +53,7 @@ export default compose(
     withRemoveResource
 )(({
     resources = [],
+    services = [],
     selectedItem,
     selectedSource = {},
     selectedService,
@@ -66,31 +68,40 @@ export default compose(
     onLoad,
     loadingSelected,
     loading,
-    disableAddMedia,
-    disableEditMedia,
     buttons = [
         {
             glyph: 'plus',
             tooltipId: 'mediaEditor.mediaPicker.add',
-            visible: !disableAddMedia?.[mediaType] && selectedSource.type === SourceTypes.GEOSTORY,
+            visible: !!selectedSource?.addMediaEnabled?.[mediaType],
             onClick: () => setAddingMedia(true)
         },
         {
             glyph: 'pencil',
             tooltipId: 'mediaEditor.mediaPicker.edit',
-            visible: !disableEditMedia?.[mediaType] && selectedSource.type === SourceTypes.GEOSTORY && !isNil(selectedItem),
-            onClick: () => setEditingMedia(true)
-        },
-        {
-            glyph: 'pencil',
-            tooltipId: 'mediaEditor.mediaPicker.edit',
-            visible: selectedSource.type === SourceTypes.GEOSTORE && mediaType === MediaTypes.MAP && !isNil(selectedItem),
-            onClick: editRemoteMap
+            visible: !!(
+                // undefined is an internal resource (geostory)
+                // or imported by an external service an saved in the configuration (geostore)
+                (selectedItem?.data?.sourceId === undefined
+                    // we should edit with the specific source service
+                    // and exclude this options in the other lists
+                    // if the source id is defined in the data of the selected item (geonode)
+                    || selectedItem?.data?.sourceId === selectedService)
+                && selectedSource?.editMediaEnabled?.[mediaType]
+                && !isNil(selectedItem)
+            ),
+            onClick: () => {
+                if (selectedSource.type === SourceTypes.GEOSTORY) {
+                    setEditingMedia(true);
+                } else if (selectedSource.type === SourceTypes.GEOSTORE) {
+                    editRemoteMap();
+                }
+            }
         },
         {
             glyph: 'trash',
             tooltipId: 'mediaEditor.mediaPicker.trash',
-            visible: selectedSource.type === SourceTypes.GEOSTORY && !isNil(selectedItem),
+            visible: !!(selectedSource?.removeMediaEnabled?.[mediaType] && !isNil(selectedItem)
+            ),
             onClick: removeMedia
         }
     ]
@@ -139,25 +150,29 @@ export default compose(
                         scrollOptions={{
                             pageSize: params.pageSize
                         }}
-                        items={resources.map(({ id, data = {} }) => ({
-                            preview: (data.thumbnail || mediaType === MediaTypes.IMAGE && data.src)
-                                ? <div
-                                    style={{
-                                        backgroundImage: `url("${data.thumbnail || data.src}")`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        height: '100%',
-                                        overflow: 'hidden'
-                                    }} />
-                                : <Icon
-                                    glyph={glyph}
-                                    padding={20}
-                                />,
-                            title: data.title || data.name,
-                            onClick: () => selectItem(id),
-                            selected: selectedItem && selectedItem.id && id === selectedItem.id,
-                            description: data.description
-                        }))}
+                        items={resources.map(({ id, data = {} }) => {
+                            const service = services?.find(({ id: serviceId }) => serviceId === data.sourceId);
+                            return {
+                                preview: (data.thumbnail || mediaType === MediaTypes.IMAGE && data.src)
+                                    ? <div
+                                        style={{
+                                            backgroundImage: `url("${data.thumbnail || data.src}")`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            height: '100%',
+                                            overflow: 'hidden'
+                                        }} />
+                                    : <Icon
+                                        glyph={glyph}
+                                        padding={20}
+                                    />,
+                                title: data.title || data.name,
+                                onClick: () => selectItem(id),
+                                selected: selectedItem && selectedItem.id && id === selectedItem.id,
+                                description: data.description,
+                                caption: service && <Message msgId={service.name} />
+                            };
+                        })}
                         hasMore={() => totalCount > resources.length}
                         onLoadMore={(newPage) => {
                             handleLoadResources({ page: newPage + 1 });
