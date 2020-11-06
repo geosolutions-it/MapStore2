@@ -46,9 +46,9 @@ describe('MediaList component', () => {
         );
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-media-list')).toBeTruthy();
-        expect(container.querySelectorAll('button').length).toBe(3);
+        expect(container.querySelectorAll('button').length).toBe(0);
     });
-    it('should render with disableAddMedia', () => {
+    it('should render with addMediaEnabled', () => {
         ReactDOM.render(
             <Provider store={{subscribe: () => {}, getState: () => ({})}}>
                 <MediaList
@@ -56,7 +56,12 @@ describe('MediaList component', () => {
                     disableAddMedia={{
                         image: true
                     }}
-                    selectedSource={{ type: 'geostory' }}
+                    selectedSource={{
+                        type: 'geostory',
+                        addMediaEnabled: {
+                            image: true
+                        }
+                    }}
                     selectedItem={{
                         id: 'id'
                     }}
@@ -66,9 +71,9 @@ describe('MediaList component', () => {
         );
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-media-list')).toBeTruthy();
-        expect(container.querySelectorAll('button').length).toBe(2);
+        expect(container.querySelectorAll('button').length).toBe(1);
     });
-    it('should render with disableEditMedia', () => {
+    it('should render with editMediaEnabled', () => {
         ReactDOM.render(
             <Provider store={{subscribe: () => {}, getState: () => ({})}}>
                 <MediaList
@@ -76,7 +81,12 @@ describe('MediaList component', () => {
                     disableEditMedia={{
                         image: true
                     }}
-                    selectedSource={{ type: 'geostory' }}
+                    selectedSource={{
+                        type: 'geostory',
+                        editMediaEnabled: {
+                            image: true
+                        }
+                    }}
                     selectedItem={{
                         id: 'id'
                     }}
@@ -86,6 +96,59 @@ describe('MediaList component', () => {
         );
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-media-list')).toBeTruthy();
-        expect(container.querySelectorAll('button').length).toBe(2);
+        expect(container.querySelectorAll('button').length).toBe(1);
+    });
+    it('should render with editMediaEnabled and different sourceId', () => {
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, getState: () => ({})}}>
+                <MediaList
+                    mediaType="image"
+                    disableEditMedia={{
+                        image: true
+                    }}
+                    selectedSource={{
+                        type: 'geostory',
+                        editMediaEnabled: {
+                            image: true
+                        }
+                    }}
+                    selectedItem={{
+                        id: 'id',
+                        data: {
+                            sourceId: 'geonode'
+                        }
+                    }}
+                />
+            </Provider>,
+            document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-media-list')).toBeTruthy();
+        expect(container.querySelectorAll('button').length).toBe(0);
+    });
+    it('should render with removeMediaEnabled', () => {
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, getState: () => ({})}}>
+                <MediaList
+                    mediaType="image"
+                    disableEditMedia={{
+                        image: true
+                    }}
+                    selectedSource={{
+                        type: 'geostory',
+                        removeMediaEnabled: {
+                            image: true
+                        }
+                    }}
+                    selectedItem={{
+                        id: 'id'
+                    }}
+                />
+            </Provider>,
+            document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-media-list')).toBeTruthy();
+        expect(container.querySelectorAll('button').length).toBe(1);
     });
 });
