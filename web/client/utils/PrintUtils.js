@@ -10,7 +10,7 @@ const CoordinatesUtils = require('./CoordinatesUtils');
 const SecurityUtils = require('./SecurityUtils');
 const MapUtils = require('./MapUtils');
 const {optionsToVendorParams} = require('./VendorParamsUtils');
-const AnnotationsUtils = require("./AnnotationsUtils").default;
+const {annotationsToPrint} = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
 const {getLayerConfig} = require('./TileConfigProvider').default;
 const { extractValidBaseURL } = require('./TileProviderUtils');
@@ -319,7 +319,7 @@ const PrintUtils = {
                 },
                 geoJson: CoordinatesUtils.reprojectGeoJson({
                     type: "FeatureCollection",
-                    features: isAnnotationLayer(layer) && AnnotationsUtils.annotationsToPrint(layer.features) ||
+                    features: isAnnotationLayer(layer) && annotationsToPrint(layer.features) ||
                                     layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
                 },
                 "EPSG:4326",

@@ -9,7 +9,7 @@ import expect from 'expect';
 import {map, clone} from 'lodash';
 import { compose, set } from '../ImmutableUtils';
 
-import CatalogUtils from '../CatalogUtils';
+import * as CatalogUtils from '../CatalogUtils';
 import ConfigUtils from '../ConfigUtils';
 import TileMapSample from '../../test-resources/tms/TileMapSample';
 
