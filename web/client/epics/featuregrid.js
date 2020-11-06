@@ -473,8 +473,7 @@ export const handleBoxSelectionDrawEnd =  (action$, store) =>
                     }));
             })
                 .takeUntil(Rx.Observable.merge(
-                    action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
-                    action$.ofType(LOCATION_CHANGE)
+                    action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
                 ));
         });
 export const activateBoxSelectionTool = (action$) =>
@@ -486,7 +485,7 @@ export const activateBoxSelectionTool = (action$) =>
 export const deactivateBoxSelectionTool = (action$) =>
     Rx.Observable.merge(
         action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
-        action$.ofType(CLOSE_FEATURE_GRID)
+        action$.ofType(CLOSE_FEATURE_GRID_CONFIRM)
     ).switchMap(() => {
         return Rx.Observable.of(changeBoxSelectionStatus("end"));
     });

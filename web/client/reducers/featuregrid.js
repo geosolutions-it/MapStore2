@@ -7,7 +7,7 @@
 */
 import assign from 'object-assign';
 
-import { head, get } from 'lodash';
+import { head, get, uniqBy } from 'lodash';
 
 import {
     SELECT_FEATURES,
@@ -164,7 +164,7 @@ function featuregrid(state = emptyResultsState, action) {
     case SELECT_FEATURES: {
         const features = action.features.filter(f => f.id !== 'empty_row');
         if (state.multiselect && action.append) {
-            return assign({}, state, {select: action.append ? [...state.select, ...features] : features});
+            return assign({}, state, {select: action.append ? uniqBy([...state.select, ...features], "id") : features});
         }
         if (features && state.select && state.select[0] && features[0] && state.select.length === 1 && isSameFeature(features[0], state.select[0])) {
             return state;

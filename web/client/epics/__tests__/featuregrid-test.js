@@ -2187,7 +2187,7 @@ describe('featuregrid Epics', () => {
             expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
             expect(actions[0].status).toBe('end');
         }, {}, done);
-        testEpic(deactivateBoxSelectionTool, 1, closeFeatureGrid(), actions => {
+        testEpic(deactivateBoxSelectionTool, 1, closeFeatureGridConfirm(), actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
             expect(actions[0].status).toBe('end');
