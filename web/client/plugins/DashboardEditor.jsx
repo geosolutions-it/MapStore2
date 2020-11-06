@@ -11,6 +11,8 @@ import { withProps, compose } from 'recompose';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { createPlugin } from '../utils/PluginsUtils';
+
 
 import { dashboardHasWidgets, getWidgetsDependenciesGroups } from '../selectors/widgets';
 import { isDashboardEditing, showConnectionsSelector, isDashboardLoading, buttonCanEdit } from '../selectors/dashboard';
@@ -147,10 +149,10 @@ const Plugin = connect(
         onUnmount: () => setEditorAvailable(false)
     }
 )(DashboardEditorComponent);
-export default {
-    DashboardEditorPlugin: Plugin,
+export default createPlugin('DashboardEditor', {
+    component: Plugin,
     reducers: {
         dashboard
     },
     epics
-};
+});

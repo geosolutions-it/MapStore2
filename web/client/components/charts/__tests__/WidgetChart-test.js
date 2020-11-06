@@ -100,12 +100,14 @@ describe('Widget Chart: data conversions ', () => {
                 expect(layout.height).toBe(200);
             });
         });
-        it(`show toolbar only if witdth > ${THRESHOLD}`, () => {
-            testAllTypes({ ...DATASET_1, width: THRESHOLD }, ({ config }) => {
-                expect(config.displayModeBar).toBe(false);
+        it(`show toolbar only if witdth > ${THRESHOLD}, with correct margin`, () => {
+            testAllTypes({ ...DATASET_1, width: THRESHOLD }, ({ config, layout }) => {
+                expect(config.displayModeBar).toEqual(false);
+                expect(layout.margin.t).toEqual(5);
             });
-            testAllTypes({ ...DATASET_1, width: THRESHOLD + 1 }, ({ config }) => {
-                expect(config.displayModeBar).toBe(true);
+            testAllTypes({ ...DATASET_1, width: THRESHOLD + 1 }, ({ config, layout }) => {
+                expect(config.displayModeBar).toEqual(true);
+                expect(layout.margin.t).toEqual(20);
             });
         });
         it('show legend', () => {

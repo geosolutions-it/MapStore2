@@ -18,7 +18,7 @@ import {
 /**
  * Renders proper widget by widgetType, binding props and methods
  */
-export default ({
+const DefaultWidget = ({
     dependencies,
     toggleCollapse = () => {},
     exportCSV = () => {},
@@ -64,3 +64,4 @@ export default ({
                         exportImage={exportImage}
                         onDelete={onDelete}
                         onEdit={onEdit} />);
+export default DefaultWidget;

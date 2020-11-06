@@ -34,7 +34,13 @@ function getData({ type, xDataKey, yDataKey, data}) {
 function getMargins({ type, yAxis, isModeBarVisible, xAxisAngle }) {
     switch (type) {
     case 'pie':
-        return { t: 5, b: 5, l: 2, r: 2, pad: 4 };
+        return {
+            t: isModeBarVisible ? 20 : 5,
+            b: 5,
+            l: 2,
+            r: 2,
+            pad: 4
+    };
     default:
         return {
             l: !yAxis ? 5 : undefined, // if yAxis is false, reduce left margin

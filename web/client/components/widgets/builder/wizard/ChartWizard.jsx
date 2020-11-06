@@ -21,7 +21,7 @@ import dependenciesToFilter from '../../enhancers/dependenciesToFilter';
 import dependenciesToOptions from '../../enhancers/dependenciesToOptions';
 import emptyChartState from '../../enhancers/emptyChartState';
 import errorChartState from '../../enhancers/errorChartState';
-import { compose, lifecycle } from 'recompose';
+import { compose, lifecycle, setDisplayName } from 'recompose';
 import SimpleChart from '../../../charts/SimpleChart';
 
 const loadingState = loadingEnhancer(({ loading, data }) => loading || !data, { width: 500, height: 200 });
@@ -93,7 +93,8 @@ const enhanceWizard = compose(lifecycle({
             setValid(false);
         }
     }
-})
+}),
+setDisplayName('ChartWizard')
 );
 const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies }) =>
     (<Wizard

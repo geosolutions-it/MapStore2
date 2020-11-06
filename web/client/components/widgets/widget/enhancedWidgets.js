@@ -27,8 +27,8 @@ import BaseChartWidget from './ChartWidget';
 import BaseTextWidget from './TextWidget';
 import BaseMapWidget from './MapWidget';
 import BaseTableWidget from './TableWidget';
-import BaseCounterWidget from "./CounterWidget";
-import BaseLegendWidget from "./LegendWidget";
+import BaseCounterWidget from './CounterWidget';
+import BaseLegendWidget from './LegendWidget';
 
 //
 // connect widgets to dependencies, remote services and add base icons/tools

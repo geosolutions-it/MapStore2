@@ -21,8 +21,7 @@ const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) 
     return null;
 };
 
-
-export default ({
+const ChartWidget = ({
     id,
     title,
     description,
@@ -55,3 +54,5 @@ export default ({
     </WidgetContainer>
 
     );
+
+export default ChartWidget;
