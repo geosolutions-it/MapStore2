@@ -5,16 +5,16 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const React = require('react');
-const { head, get, isNil} = require('lodash');
-const { Row, Col, Form, FormGroup, FormControl, ControlLabel, Glyphicon} = require('react-bootstrap');
-const Message = require('../../../../I18N/Message').default;
-const Select = require('react-select').default;
-const Slider = require('react-nouislider');
-const ColorRamp = require('../../../../styleeditor/ColorRamp').default;
-const StepHeader = require('../../../../misc/wizard/StepHeader');
-const SwitchPanel = require('../../../../misc/switch/SwitchPanel');
-const SwitchButton = require('../../../../misc/switch/SwitchButton');
+import React from 'react';
+import { head, get} from 'lodash';
+import { Row, Col, Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import Message from '../../../../I18N/Message';
+import Select from 'react-select';
+import ColorRamp from '../../../../styleeditor/ColorRamp';
+import StepHeader from '../../../../misc/wizard/StepHeader';
+import SwitchButton from '../../../../misc/switch/SwitchButton';
+import ChartAdvancedOptions from './ChartAdvancedOptions';
+
 const COLORS = [{
     name: 'global.colors.random',
     schema: 'qualitative',
@@ -52,19 +52,7 @@ const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type ||
 
 const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
 
-const renderHeader = (data) => {
-    const panelHeader = <Message msgId={getLabelMessageId("advancedOptions", data)} />;
-    return (
-        <span>
-            <span style={{cursor: "pointer"}}>{panelHeader}</span>
-            <button className="close">
-                {data.panel ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
-            </button>
-        </span>
-    );
-};
-
-module.exports = ({
+export default ({
     data = { options: {} },
     onChange = () => { },
     options = [],
@@ -164,73 +152,9 @@ module.exports = ({
                             />
                         </Col>
                     </FormGroup> : null}
-                {formOptions.advancedOptions && data.type === "bar" || data.type === "line" ?
-                    <SwitchPanel id="displayCartesian"
-                        header={renderHeader(data)}
-                        collapsible
-                        expanded={data.panel}
-                        onSwitch={(val) => { onChange("panel", val); }}
-                    >
-                        <FormGroup controlId="AdvancedOptions">
-                            <Col componentClass={ControlLabel} sm={6}>
-                                <Message msgId={getLabelMessageId("displayCartesian", data)} />
-                            </Col>
-                            <Col sm={6}>
-                                <SwitchButton
-                                    checked={data.cartesian || data.cartesian === false ? !data.cartesian : false}
-                                    onChange={(val) => { onChange("cartesian", !val); }}
-                                />
-                            </Col>
-                            <Col componentClass={ControlLabel} sm={6}>
-                                <Message msgId={getLabelMessageId("yAxis", data)} />
-                            </Col>
-                            <Col sm={6}>
-                                <SwitchButton
-                                    checked={data.yAxis || data.yAxis === false ? !data.yAxis : true}
-                                    onChange={(val) => { onChange("yAxis", !val); }}
-                                />
-                            </Col>
-                            <Col componentClass={ControlLabel} sm={6}>
-                                <Message msgId={getLabelMessageId("xAxisAngle", data)} />
-                            </Col>
-                            <Col sm={6} style={{display: "flex"}}>
-                                <SwitchButton
-                                    checked={data.xAxisAngle === undefined}
-                                    onChange={(val) => { onChange("xAxisAngle", val ? undefined : 0); }}
-                                />
-                                <div style={{ flexGrow: 1, padding: 5 }}>
-                                    {data.xAxisAngle !== undefined
-                                        ? <div
-
-                                            className="mapstore-slider with-tooltip"
-                                            onClick={(e) => { e.stopPropagation(); }}
-                                        ><Slider
-                                                key="priority"
-                                                format= {{
-                                                    // this is needed to remove the 2 decimals that this comp adds by default
-                                                    to: value => `${parseInt(value, 10)}°`,
-                                                    from: value => Number(value)
-                                                }}
-                                                onSlide={(values) => { onChange("xAxisAngle", parseInt(values[0], 10)); }}
-                                                range={{min: -90, max: 90}}
-                                                start={[!isNil(data.xAxisAngle) ? data.xAxisAngle : 0]}
-                                                step={15}
-                                                tooltips={[true]}
-                                            /></div>
-                                        : <div style={{ textAlign: "center"}}>Auto</div>}
-                                </div>
-                            </Col>
-                        </FormGroup>
-
-                        <FormGroup controlId="yAxisLabel">
-                            <Col componentClass={ControlLabel} sm={6}>
-                                <Message msgId={getLabelMessageId("yAxisLabel", data)} />
-                            </Col>
-                            <Col sm={6}>
-                                <FormControl value= {data.yAxisLabel} type="text" onChange={ e => onChange("yAxisLabel", e.target.value)} />
-                            </Col>
-                        </FormGroup>
-                    </SwitchPanel> : null}
+                {formOptions.advancedOptions && data.type === "bar" || data.type === "line"
+                    ? <ChartAdvancedOptions data={data} onChange={onChange} />
+                    : null}
 
             </Form>
 

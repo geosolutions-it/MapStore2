@@ -64,6 +64,8 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         dependenciesMap={data.dependenciesMap}
         {...sampleProps}
         type={data.type}
+        xAxisOpts={data.xAxisOpts}
+        yAxisOpts={data.yAxisOpts}
         legend={data.legend}
         cartesian={data.cartesian}
         layer={data.layer || layer}

@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {get} = require('lodash');
-const describeStates = require('../../../../../../test-resources/wfs/describe-states.json');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
-const wfsChartOptions = require('../wfsChartOptions');
-const WPSWidgetOptions = wfsChartOptions(require('../WPSWidgetOptions'));
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {get} from 'lodash';
+import describeStates from '../../../../../../test-resources/wfs/describe-states.json';
+import ReactTestUtils from 'react-dom/test-utils';
+import expect from 'expect';
+import wfsChartOptions from '../wfsChartOptions';
+import BasePanel from '../WPSWidgetOptions';
+const WPSWidgetOptions = wfsChartOptions(BasePanel);
 describe('WPSWidgetOptions component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
