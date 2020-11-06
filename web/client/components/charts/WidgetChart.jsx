@@ -1,6 +1,7 @@
 import React from 'react';
-import Plot from 'react-plotly.js';
+import { Plot } from './PlotlyChart';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
+
 export const COLOR_DEFAULTS = {
     base: 190,
     range: 0,
