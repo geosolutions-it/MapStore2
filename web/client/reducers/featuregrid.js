@@ -169,7 +169,7 @@ function featuregrid(state = emptyResultsState, action) {
         if (features && state.select && state.select[0] && features[0] && state.select.length === 1 && isSameFeature(features[0], state.select[0])) {
             return state;
         }
-        return assign({}, state, {select: (features || []).splice(0, 1)});
+        return assign({}, state, {select: (features || [])});
     }
     case TOGGLE_FEATURES_SELECTION:
         let keepValues = state.select.filter( f => !isPresent(f, action.features));

@@ -452,13 +452,13 @@ export const handleBoxSelectionDrawEnd =  (action$, store) =>
         .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
         .switchMap(() => {
             return action$.ofType(BOX_END).switchMap(({boxEndInfo}) => {
-                const { boxExtent } = boxEndInfo;
+                const { boxExtent, modifiers: {ctrl, metaKey} } = boxEndInfo;
                 const geom = CoordinatesUtils.getPolygonFromExtent(boxExtent);
                 const projection = projectionSelector(store.getState());
                 const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
                 return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
-                    setSelectionOptions({multiselect: true}),
+                    setSelectionOptions({multiselect: ctrl || metaKey}),
                     updateFilter({
                         ...currentFilter,
                         value: {
@@ -474,19 +474,22 @@ export const handleBoxSelectionDrawEnd =  (action$, store) =>
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
-                    action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
+                    action$.ofType(LOCATION_CHANGE)
                 ));
         });
 export const activateBoxSelectionTool = (action$) =>
-    action$.ofType(OPEN_FEATURE_GRID)
+    action$.ofType(UPDATE_FILTER)
+        .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
         .switchMap( () => {
             return Rx.Observable.of(changeBoxSelectionStatus("start"));
         });
 export const deactivateBoxSelectionTool = (action$) =>
-    action$.ofType(CLOSE_FEATURE_GRID)
-        .switchMap( () => {
-            return Rx.Observable.of(changeBoxSelectionStatus("end"));
-        });
+    Rx.Observable.merge(
+        action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
+        action$.ofType(CLOSE_FEATURE_GRID)
+    ).switchMap(() => {
+        return Rx.Observable.of(changeBoxSelectionStatus("end"));
+    });
 export const selectFeaturesOnMapClickResult = (action$, store) =>
     action$.ofType(QUERY_RESULT)
         .filter(({reason}) => reason === 'geometry')
@@ -509,7 +512,10 @@ export const selectFeaturesOnMapClickResult = (action$, store) =>
             }
 
             const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-            return Rx.Observable.of(selectFeatures(features.length > 0 && geometryFilter && geometryFilter.value ? [...features] : [], multipleSelect));
+            return Rx.Observable.of(
+                selectFeatures(
+                    features.length > 0 && geometryFilter && geometryFilter.value ? [...features] : [],
+                    multipleSelect));
         });
 export const activateTemporaryChangesEpic = (action$) =>
     action$.ofType(ACTIVATE_TEMPORARY_CHANGES)

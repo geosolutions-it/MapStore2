@@ -2161,14 +2161,29 @@ describe('featuregrid Epics', () => {
         }, done);
     });
     it('activateBoxSelectionTool', (done) => {
-        testEpic(activateBoxSelectionTool, 1, [openFeatureGrid()], actions => {
+        const startActions = [
+            updateFilter({
+                type: 'geometry',
+                enabled: true
+            })];
+        testEpic(activateBoxSelectionTool, 1, startActions, actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
             expect(actions[0].status).toBe('start');
         }, {}, done);
     });
     it('deactivateBoxSelectionTool', (done) => {
-        testEpic(deactivateBoxSelectionTool, 1, [closeFeatureGrid()], actions => {
+        const startActions = [
+            updateFilter({
+                type: 'geometry',
+                enabled: false
+            })];
+        testEpic(deactivateBoxSelectionTool, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+            expect(actions[0].status).toBe('end');
+        }, {}, done);
+        testEpic(deactivateBoxSelectionTool, 1, closeFeatureGrid(), actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
             expect(actions[0].status).toBe('end');

@@ -7,10 +7,8 @@
 */
 
 import {useEffect} from 'react';
-import Select from 'ol/interaction/Select';
 import DragBox from 'ol/interaction/DragBox';
 
-let select;
 let dragBox;
 
 const BoxSelectionSupport = (props) => {
@@ -18,23 +16,22 @@ const BoxSelectionSupport = (props) => {
 
     useEffect(() => {
         if (status === "start") {
-            select = new Select();
             dragBox = new DragBox({});
-            map.addInteraction(select);
             map.addInteraction(dragBox);
         } else if (status === "end") {
-            map.removeInteraction(select);
             map.removeInteraction(dragBox);
         }
     }, [status]);
 
     useEffect(() => {
         if (dragBox) {
-
-            // TODO: Pass some more information from event to the onBoxEnd function
-            dragBox.on('boxend', () => {
+            dragBox.on('boxend', (event) => {
                 onBoxEnd({
-                    boxExtent: dragBox.getGeometry().getExtent()
+                    boxExtent: dragBox.getGeometry().getExtent(),
+                    modifiers: {
+                        ctrl: event.mapBrowserEvent.pointerEvent.ctrlKey,
+                        metaKey: event.mapBrowserEvent.pointerEvent.metaKey // MAC OS
+                    }
                 });
             });
         }

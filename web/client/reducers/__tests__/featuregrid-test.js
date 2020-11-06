@@ -135,24 +135,24 @@ describe('Test the featuregrid reducer', () => {
         // single select
         let state = featuregrid( undefined, selectFeatures([1, 2]));
         expect(state.select).toExist();
-        expect(state.select.length).toBe(1);
+        expect(state.select.length).toBe(2);
         expect(state.select[0]).toBe(1);
         state = featuregrid( state, selectFeatures([1, 2]));
         expect(state.select).toExist();
-        expect(state.select.length).toBe(1);
+        expect(state.select.length).toBe(2);
         expect(state.select[0]).toBe(1);
         // check multiselect true, append false
         state = featuregrid(undefined, {type: 'UNKNOWN'});
         state = featuregrid({...state, multiselect: true}, selectFeatures([1, 2], false));
         expect(state.select).toExist();
-        expect(state.select.length).toBe(1);
+        expect(state.select.length).toBe(2);
         expect(state.select[0]).toBe(1);
 
         // check multiselect true, append true
         state = featuregrid( state, selectFeatures([3], true));
         expect(state.select).toExist();
-        expect(state.select.length).toBe(2);
-        expect(state.select[1]).toBe(3);
+        expect(state.select.length).toBe(3);
+        expect(state.select[1]).toBe(2);
     });
 
     it('clearSelection', () => {
