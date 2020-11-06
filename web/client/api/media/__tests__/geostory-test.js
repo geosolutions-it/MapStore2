@@ -7,7 +7,7 @@
 */
 
 import expect from 'expect';
-import {load} from '../geostory';
+import { create } from '../geostory';
 
 describe('Test correctness of the geostory media api', () => {
     it('testing load stream', (done) => {
@@ -50,7 +50,8 @@ describe('Test correctness of the geostory media api', () => {
                 }
             })
         };
-        const streams = load(store, { params, mediaType });
+        const { load } = create({ store });
+        const streams = load({ params, mediaType });
         expect(streams.value.resources).toEqual([imageResource]);
         expect(streams.value.totalCount).toBe(1);
         done();

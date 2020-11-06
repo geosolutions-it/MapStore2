@@ -84,7 +84,12 @@ describe('MediaEditor Epics', () => {
             },
             mediaEditor: {
                 settings: {
-                    sourceId
+                    sourceId,
+                    sources: {
+                        [sourceId]: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });
@@ -115,7 +120,12 @@ describe('MediaEditor Epics', () => {
             },
             mediaEditor: {
                 settings: {
-                    sourceId
+                    sourceId,
+                    sources: {
+                        [sourceId]: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });
@@ -154,7 +164,12 @@ describe('MediaEditor Epics', () => {
                 },
                 selected: "id",
                 settings: {
-                    sourceId: "geostory"
+                    sourceId: "geostory",
+                    sources: {
+                        geostory: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });
@@ -200,7 +215,12 @@ describe('MediaEditor Epics', () => {
                 },
                 selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
                 settings: {
-                    sourceId: "geostory"
+                    sourceId: "geostory",
+                    sources: {
+                        geostory: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });
@@ -432,7 +452,12 @@ describe('MediaEditor Epics', () => {
             mediaEditor: {
                 settings: {
                     sourceId,
-                    mediaType: "image"
+                    mediaType: "image",
+                    sources: {
+                        [sourceId]: {
+                            type: 'geostory'
+                        }
+                    }
                 },
                 selected: "resId"
             }
@@ -544,7 +569,12 @@ describe('MediaEditor Epics', () => {
         }, {
             mediaEditor: {
                 settings: {
-                    sourceId: 'geostory'
+                    sourceId: 'geostory',
+                    sources: {
+                        geostory: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });

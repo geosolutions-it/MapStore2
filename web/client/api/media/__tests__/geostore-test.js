@@ -24,9 +24,6 @@ describe('GeoStore media api', () => {
             page: 1,
             pageSize: 10
         };
-        const store = {
-            getState: () => ({})
-        };
         mockAxios.onGet().reply(() => [200, {
             success: true,
             totalCount: 1,
@@ -46,7 +43,7 @@ describe('GeoStore media api', () => {
                 }
             ]
         }]);
-        load(store, { params })
+        load({ params })
             .subscribe(
                 (response) => {
                     expect(response.totalCount).toBe(1);
@@ -132,9 +129,6 @@ describe('GeoStore media api', () => {
                     ]
                 }
             }]);
-        const store = {
-            getState: () => ({})
-        };
         const selectedItem = {
             id: '0a12d-7894',
             type: 'map',
@@ -152,7 +146,7 @@ describe('GeoStore media api', () => {
                 owner: 'admin'
             }
         };
-        getData(store, { selectedItem })
+        getData({ selectedItem })
             .subscribe(
                 (data) => {
                     expect(data).toEqual({
