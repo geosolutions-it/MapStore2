@@ -62,7 +62,7 @@ const emptyResultsState = {
     showTimeSync: false,
     open: false,
     canEdit: false,
-    focusOnEdit: true,
+    focusOnEdit: false,
     showAgain: false,
     showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
     mode: MODES.VIEW,
@@ -125,7 +125,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  *     enableColumnFilters: true,
  *     open: false,
  *     canEdit: false,
- *     focusOnEdit: true,
+ *     focusOnEdit: false,
  *     mode: MODES.VIEW,
  *     changes: [],
  *     pagination: {

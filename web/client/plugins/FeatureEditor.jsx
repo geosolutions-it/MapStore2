@@ -228,7 +228,7 @@ const selector = createSelector(
     changesSelector,
     newFeaturesSelector,
     hasChangesSelector,
-    state => get(state, 'featuregrid.focusOnEdit') || [],
+    state => get(state, 'featuregrid.focusOnEdit', false),
     state => get(state, 'featuregrid.enableColumnFilters'),
     createStructuredSelector(paginationInfo),
     state => get(state, 'featuregrid.pages'),

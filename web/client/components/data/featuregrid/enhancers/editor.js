@@ -55,7 +55,7 @@ const featuresToGrid = compose(
         newFeatures: [],
         select: [],
         changes: {},
-        focusOnEdit: true,
+        focusOnEdit: false,
         editors,
         dataStreamFactory,
         virtualScroll: true
