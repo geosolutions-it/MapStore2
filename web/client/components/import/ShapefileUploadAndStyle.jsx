@@ -11,7 +11,17 @@ const PropTypes = require('prop-types');
 const Message = require('../../components/I18N/Message').default;
 const LayersUtils = require('../../utils/LayersUtils');
 const LocaleUtils = require('../../utils/LocaleUtils');
-const FileUtils = require('../../utils/FileUtils');
+const {
+    recognizeExt,
+    MIME_LOOKUPS,
+    readKml,
+    kmlToGeoJSON,
+    gpxToGeoJSON,
+    readKmz,
+    readZip,
+    checkShapePrj,
+    shpToGeoJSON
+} = require('../../utils/FileUtils');
 const {Grid, Row, Col, Button} = require('react-bootstrap');
 const {isString} = require('lodash');
 const Combobox = require('react-widgets').DropdownList;
@@ -54,31 +64,31 @@ class ShapeFileUploadAndStyle extends React.Component {
     static defaultProps = {
         shapeLoading: () => {},
         readFiles: (files, onWarnings) => files.map((file) => {
-            const ext = FileUtils.recognizeExt(file.name);
-            const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+            const ext = recognizeExt(file.name);
+            const type = file.type || MIME_LOOKUPS[ext];
             if (type === 'application/vnd.google-earth.kml+xml') {
-                return FileUtils.readKml(file).then((xml) => {
-                    return FileUtils.kmlToGeoJSON(xml);
+                return readKml(file).then((xml) => {
+                    return kmlToGeoJSON(xml);
                 });
             }
             if (type === 'application/gpx+xml') {
-                return FileUtils.readKml(file).then((xml) => {
-                    return FileUtils.gpxToGeoJSON(xml);
+                return readKml(file).then((xml) => {
+                    return gpxToGeoJSON(xml);
                 });
             }
             if (type === 'application/vnd.google-earth.kmz') {
-                return FileUtils.readKmz(file).then((xml) => {
-                    return FileUtils.kmlToGeoJSON(xml);
+                return readKmz(file).then((xml) => {
+                    return kmlToGeoJSON(xml);
                 });
             }
             if (type === 'application/x-zip-compressed' ||
                 type === 'application/zip' ) {
-                return FileUtils.readZip(file).then((buffer) => {
-                    return FileUtils.checkShapePrj(buffer).then((warnings) => {
+                return readZip(file).then((buffer) => {
+                    return checkShapePrj(buffer).then((warnings) => {
                         if (warnings.length > 0) {
                             onWarnings('shapefile.error.missingPrj');
                         }
-                        return FileUtils.shpToGeoJSON(buffer);
+                        return shpToGeoJSON(buffer);
                     });
                 });
             }

@@ -10,7 +10,10 @@ const Layers = require('../../../../utils/cesium/Layers');
 const Cesium = require('../../../../libs/cesium');
 const BILTerrainProvider = require('../../../../utils/cesium/BILTerrainProvider')(Cesium);
 const ConfigUtils = require('../../../../utils/ConfigUtils').default;
-const ProxyUtils = require('../../../../utils/ProxyUtils');
+const {
+    getProxyUrl,
+    needProxy
+} = require('../../../../utils/ProxyUtils');
 const assign = require('object-assign');
 const {isArray} = require('lodash');
 const WMSUtils = require('../../../../utils/cesium/WMSUtils');
@@ -39,7 +42,7 @@ function WMSProxy(proxy) {
 
 WMSProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
-    return ProxyUtils.getProxyUrl() + encodeURIComponent(url + queryString);
+    return getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
@@ -82,7 +85,7 @@ function wmsToCesiumOptions(options) {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
+        proxy = needProxy(options.url) && proxyUrl;
     }
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
@@ -117,7 +120,7 @@ function wmsToCesiumOptionsBIL(options) {
     let proxy;
     let url = options.url;
     if (proxyUrl) {
-        proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
+        proxy = needProxy(options.url) && proxyUrl;
         if (proxy) {
             url = proxy + encodeURIComponent(url);
         }

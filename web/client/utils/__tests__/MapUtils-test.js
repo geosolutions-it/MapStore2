@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-const { keys, sortBy } = require('lodash');
+import expect from 'expect';
 
-var {
+import { keys, sortBy } from 'lodash';
+
+import {
     RESOLUTIONS_HOOK,
     EXTENT_TO_ZOOM_HOOK,
     COMPUTE_BBOX_HOOK,
@@ -37,7 +38,7 @@ var {
     mergeMapConfigs,
     addRootParentGroup,
     mapUpdated
-} = require('../MapUtils');
+} from '../MapUtils';
 
 const POINT = "Point";
 const CIRCLE = "Circle";

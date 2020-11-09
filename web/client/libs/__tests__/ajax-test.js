@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const axios = require('../ajax');
-const SecurityUtils = require('../../utils/SecurityUtils');
-const assign = require('object-assign');
-const urlUtil = require('url');
-const MockAdapter = require("axios-mock-adapter");
+import expect from 'expect';
+import axios from '../ajax';
+import SecurityUtils from '../../utils/SecurityUtils';
+import assign from 'object-assign';
+import urlUtil from 'url';
+import MockAdapter from "axios-mock-adapter";
 let mockAxios;
 
 const userA = {

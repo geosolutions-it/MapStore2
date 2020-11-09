@@ -18,7 +18,7 @@ const assign = require('object-assign');
 require('react-selectize/themes/index.css');
 const { Grid } = require('react-bootstrap');
 const { createFromSearch, flattenGroups } = require('../../../../utils/TOCUtils');
-const TOCUtils = require('../../../../utils/TOCUtils');
+const {getLabelName} = require('../../../../utils/TOCUtils');
 
 const LayerNameEditField = require('./LayerNameEditField').default;
 
@@ -124,13 +124,13 @@ class General extends React.Component {
                                 options={
                                     (groups || (this.props.element && this.props.element.group) || []).map(item => {
                                         if (isObject(item)) {
-                                            return {...item, label: TOCUtils.getLabelName(item.label, groups)};
+                                            return {...item, label: getLabelName(item.label, groups)};
                                         }
-                                        return { label: TOCUtils.getLabelName(item, groups), value: item };
+                                        return { label: getLabelName(item, groups), value: item };
                                     })
                                 }
-                                defaultValue={{ label: TOCUtils.getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
-                                placeholder={TOCUtils.getLabelName(this.props.element && this.props.element.group || "Default", groups)}
+                                defaultValue={{ label: getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
+                                placeholder={getLabelName(this.props.element && this.props.element.group || "Default", groups)}
                                 onChange={(value) => {
                                     this.updateEntry("group", { target: { value: value || "Default" } });
                                 }}

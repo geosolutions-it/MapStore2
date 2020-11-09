@@ -17,7 +17,7 @@ const {Checkbox} = require("react-bootstrap");
 const Message = require('../../I18N/Message').default;
 const ResizableModal = require('../../misc/ResizableModal').default;
 
-const FileUtils = require('../../../utils/FileUtils');
+const {readGeoJson} = require('../../../utils/FileUtils');
 const {ANNOTATION_TYPE} = require('../../../utils/AnnotationsUtils');
 const {Promise} = require('es6-promise');
 
@@ -82,7 +82,7 @@ class SelectAnnotationsFile extends React.Component {
     // inoltre può accettare qualsiasi collezione di features inoltre filtrare le features che hanno medesimo id
     checkfile = (files) => {
         this.setState(() => ({loading: true}));
-        Promise.all(files.map(file => FileUtils.readGeoJson(file))).then((contents) => {
+        Promise.all(files.map(file => readGeoJson(file))).then((contents) => {
             if (this.state.error) {
                 this.setState(() => ({error: null}));
             }

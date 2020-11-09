@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,11 +8,12 @@ const PropTypes = require('prop-types');
 const React = require('react');
 
 const {connect} = require('react-redux');
+const PropTypes = require('prop-types');
 const assign = require('object-assign');
 
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
-const PluginsUtils = require('../utils/PluginsUtils');
+const {getMonitoredState} = require('../utils/PluginsUtils');
 const ConfigUtils = require('../utils/ConfigUtils').default;
 
 const PluginsContainer = connect((state) => ({
@@ -21,7 +21,7 @@ const PluginsContainer = connect((state) => ({
     pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
         layerSettings: state.layers.settings
     }),
-    monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
+    monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
 }))(require('../components/plugins/PluginsContainer').default);
 
 class Embedded extends React.Component {

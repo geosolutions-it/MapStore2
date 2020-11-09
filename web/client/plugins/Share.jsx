@@ -13,7 +13,7 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import ConfigUtils from '../utils/ConfigUtils';
-import ShareUtils from '../utils/ShareUtils';
+import {getApiUrl, getConfigUrl} from '../utils/ShareUtils';
 import {getExtentFromViewport} from '../utils/CoordinatesUtils';
 import { versionSelector } from '../selectors/version';
 import shareEpics from '../epics/queryparams';
@@ -57,8 +57,8 @@ const Share = connect(createSelector([
 ], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({
     isVisible,
     shareUrl: location.href,
-    shareApiUrl: ShareUtils.getApiUrl(location.href),
-    shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
+    shareApiUrl: getApiUrl(location.href),
+    shareConfigUrl: getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
     center: map && map.center && ConfigUtils.getCenter(map.center),

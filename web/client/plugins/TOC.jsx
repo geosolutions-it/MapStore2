@@ -38,7 +38,7 @@ const {userSelector} = require('../selectors/security');
 const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
 const LayersUtils = require('../utils/LayersUtils');
-const mapUtils = require('../utils/MapUtils');
+const {getScales} = require('../utils/MapUtils');
 const LocaleUtils = require('../utils/LocaleUtils');
 
 const Message = require('../components/I18N/Message').default;
@@ -109,7 +109,7 @@ const tocSelector = createSelector(
         layerMetadata,
         wfsdownload,
         currentZoomLvl: map && map.zoom,
-        scales: mapUtils.getScales(
+        scales: getScales(
             map && map.projection || 'EPSG:3857',
             map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
         ),

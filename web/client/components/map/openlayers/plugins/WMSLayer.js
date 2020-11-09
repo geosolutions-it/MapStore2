@@ -15,14 +15,14 @@ import isArray from 'lodash/isArray';
 import assign from 'object-assign';
 
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
-import ProxyUtils from '../../../../utils/ProxyUtils';
+import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
 import SecurityUtils from '../../../../utils/SecurityUtils';
 import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
 import MapUtils from '../../../../utils/MapUtils';
-import ElevationUtils from '../../../../utils/ElevationUtils';
+import  {loadTile, getElevation as getElevationFunc} from '../../../../utils/ElevationUtils';
 
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';
@@ -73,8 +73,8 @@ function getWMSURLs( urls ) {
 // Works with geosolutions proxy
 function proxyTileLoadFunction(imageTile, src) {
     var newSrc = src;
-    if (ProxyUtils.needProxy(src)) {
-        let proxyUrl = ProxyUtils.getProxyUrl();
+    if (needProxy(src)) {
+        let proxyUrl = getProxyUrl();
         newSrc = proxyUrl + encodeURIComponent(src);
     }
     imageTile.getImage().src = newSrc;
@@ -86,13 +86,13 @@ function tileCoordsToKey(coords) {
 
 function elevationLoadFunction(forceProxy, imageTile, src) {
     let newSrc = src;
-    if (forceProxy && ProxyUtils.needProxy(src)) {
-        let proxyUrl = ProxyUtils.getProxyUrl();
+    if (forceProxy && needProxy(src)) {
+        let proxyUrl = getProxyUrl();
         newSrc = proxyUrl + encodeURIComponent(src);
     }
     const coords = imageTile.getTileCoord();
     imageTile.getImage().src = "";
-    ElevationUtils.loadTile(newSrc, coords, tileCoordsToKey(coords));
+    loadTile(newSrc, coords, tileCoordsToKey(coords));
 }
 
 function addTileLoadFunction(sourceOptions, options) {
@@ -125,7 +125,7 @@ function getElevation(pos) {
     try {
         const tilePoint = getTileFromCoords(this, pos);
         const tileSize = this.getSource().getTileGrid().getTileSize();
-        const elevation = ElevationUtils.getElevation(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'));
+        const elevation = getElevationFunc(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'));
         if (elevation.available) {
             return elevation.value;
         }

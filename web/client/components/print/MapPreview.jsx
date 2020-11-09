@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,13 +6,14 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 
 const assign = require('object-assign');
 
 const ScaleBox = require("../mapcontrols/scale/ScaleBox");
 const {Button, Glyphicon} = require('react-bootstrap');
 
-const PrintUtils = require('../../utils/PrintUtils');
+const {getMapZoom} = require('../../utils/PrintUtils');
 
 let PMap;
 let Layer;
@@ -129,7 +129,7 @@ class MapPreview extends React.Component {
                 interactive={false}
                 onMapViewChanges={this.props.onMapViewChanges}
                 zoomControl={false}
-                zoom={this.props.useFixedScales && this.props.scales ? PrintUtils.getMapZoom(this.props.map.scaleZoom, this.props.scales) : this.props.map.zoom}
+                zoom={this.props.useFixedScales && this.props.scales ? getMapZoom(this.props.map.scaleZoom, this.props.scales) : this.props.map.zoom}
                 center={this.props.map.center}
                 id="print_preview"
                 registerHooks={false}

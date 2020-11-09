@@ -15,7 +15,11 @@ const Button = tooltip(ButtonRB);
 const Message = require('../components/I18N/Message').default;
 const {changeMapCrs} = require('../actions/map');
 const {setInputValue} = require('../actions/crsselector');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const {
+    getAvailableCRS,
+    filterCRSList,
+    normalizeSRS
+} = require('../utils/CoordinatesUtils');
 const {isCesium} = require('../selectors/maptype');
 const {connect} = require('react-redux');
 const CrsSelectorMenu = require('../components/mapcontrols/crsselectormenu/CrsSelectorMenu');
@@ -50,7 +54,7 @@ class Selector extends React.Component {
         currentRole: PropTypes.string
     };
     static defaultProps = {
-        availableCRS: CoordinatesUtils.getAvailableCRS(),
+        availableCRS: getAvailableCRS(),
         setCrs: ()=> {},
         typeInput: () => {},
         enabled: true,
@@ -62,14 +66,14 @@ class Selector extends React.Component {
         let list = [];
         let availableCRS = {};
         if (Object.keys(this.props.availableCRS).length) {
-            availableCRS = CoordinatesUtils.filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
+            availableCRS = filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
         }
         for (let crs in availableCRS) {
             if (availableCRS.hasOwnProperty(crs)) {
                 list.push({value: crs});
             }
         }
-        const currentCRS = CoordinatesUtils.normalizeSRS(this.props.selected, this.props.filterAllowedCRS);
+        const currentCRS = normalizeSRS(this.props.selected, this.props.filterAllowedCRS);
         const compatibleCrs = ['EPSG:4326', 'EPSG:3857', 'EPSG:900913'];
         const changeCrs = (crs) => {
             if ( indexOf(compatibleCrs, crs) > -1 || this.props.currentBackground.type === "wms" || this.props.currentBackground.type === "empty" ||

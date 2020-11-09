@@ -25,7 +25,7 @@ const {generateActionTrigger} = require('../epics/jsapi');
 
 const url = require('url');
 
-const ThemeUtils = require('../utils/ThemeUtils');
+const {renderFromLess} = require('../utils/ThemeUtils');
 
 const assign = require('object-assign');
 const {partialRight, merge} = require('lodash');
@@ -221,7 +221,7 @@ const MapStore2 = {
                 dom.id = 'custom_theme';
                 document.head.appendChild(dom);
             }
-            ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
+            renderFromLess(options.style, 'custom_theme', 'themes/default/');
         }
         const defaultThemeCfg = {
             prefixContainer: '#' + container

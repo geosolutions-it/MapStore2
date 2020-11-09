@@ -9,7 +9,7 @@
 import uuidv1 from 'uuid/v1';
 
 import LocaleUtils from './LocaleUtils';
-import { extraMarkers } from './MarkerUtils';
+import MarkerUtils from './MarkerUtils';
 import { geometryFunctions, fetchStyle, hashAndStringify } from './VectorStyleUtils';
 import { set } from './ImmutableUtils';
 import { values, isNil, slice, head, castArray, last, isArray, findIndex, isString } from 'lodash';
@@ -170,7 +170,7 @@ export const annStyleToOlStyle = (type, tempStyle, label = "") => {
     case "Point":
     case "MultiPoint": {
         // TODO TEST THIS
-        const externalGraphic = s.symbolUrl && fetchStyle(hashAndStringify(s), "base64") || extraMarkers.markerToDataUrl(s);
+        const externalGraphic = s.symbolUrl && fetchStyle(hashAndStringify(s), "base64") || MarkerUtils.extraMarkers.markerToDataUrl(s);
         let graphicXOffset = -18;
         let graphicYOffset = -46;
         if (s.iconAnchor && isArray(s.iconAnchor) && s.size) {

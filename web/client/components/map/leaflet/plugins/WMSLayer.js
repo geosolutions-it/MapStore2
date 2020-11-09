@@ -15,7 +15,7 @@ const L = require('leaflet');
 const objectAssign = require('object-assign');
 const {isArray, isNil} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
-const ElevationUtils = require('../../../../utils/ElevationUtils');
+const { loadTile, getElevation } = require('../../../../utils/ElevationUtils');
 const { creditsToAttribution } = require('../../../../utils/LayersUtils');
 
 const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
@@ -118,13 +118,13 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
     },
     _addTile: function(coords) {
         const tileUrl = this.getTileUrl(coords);
-        ElevationUtils.loadTile(tileUrl, coords, this._tileCoordsToKey(coords));
+        loadTile(tileUrl, coords, this._tileCoordsToKey(coords));
     },
 
     getElevation: function(latLng, containerPoint) {
         try {
             const tilePoint = this._getTileFromCoords(latLng);
-            const elevation = ElevationUtils.getElevation(this._tileCoordsToKey(tilePoint),
+            const elevation = getElevation(this._tileCoordsToKey(tilePoint),
                 this._getTileRelativePixel(tilePoint, containerPoint), this.getTileSize().x, this._nodata);
             if (elevation.available) {
                 return elevation.value;

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const MarkerUtils = require('../../../utils/MarkerUtils');
+const MarkerUtils = require('../../../utils/MarkerUtils').default;
 
 const defaultIcon = MarkerUtils.markers.extra.icons[0];
 const defaultMarkers = MarkerUtils.markers.extra.getGrid();

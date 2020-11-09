@@ -15,7 +15,7 @@ const {loadLocale} = require('../../actions/locale');
 
 const ConfigUtils = require('../../utils/ConfigUtils').default;
 const LocaleUtils = require('../../utils/LocaleUtils');
-const PluginsUtils = require('../../utils/PluginsUtils');
+const {getPlugins} = require('../../utils/PluginsUtils');
 
 
 const assign = require('object-assign');
@@ -33,7 +33,7 @@ function startApp() {
 
     ReactDOM.render(
         <Provider store={store}>
-            <App plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>
+            <App plugins={assign(getPlugins(plugins), {requires})}/>
         </Provider>,
         document.getElementById('container')
     );

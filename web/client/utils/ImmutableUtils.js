@@ -108,15 +108,3 @@ export const arrayDelete = (path, condition, object) => {
  * ```
  * @memberof utils.ImmutableUtils
  */
-
-
-const ImmutableUtils = {
-    set,
-    unset,
-    compose,
-    arrayUpsert,
-    arrayUpdate,
-    arrayDelete
-};
-
-export default ImmutableUtils;

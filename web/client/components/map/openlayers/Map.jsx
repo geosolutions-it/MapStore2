@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import assign from 'object-assign';
 
-import CoordinatesUtils from '../../../utils/CoordinatesUtils';
+import {reproject, reprojectBbox, normalizeLng, normalizeSRS} from '../../../utils/CoordinatesUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import mapUtils from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
@@ -100,7 +100,7 @@ class OpenlayersMap extends React.Component {
         });
         // It may be a good idea to check if CoordinateUtils also registered the projectionDefs
         // normally it happens ad application level.
-        let center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
+        let center = reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
         register(proj4);
         // interactive flag is used only for initializations,
         // TODO manage it also when it changes status (ComponentWillReceiveProps)
@@ -173,18 +173,18 @@ class OpenlayersMap extends React.Component {
                 let pos = event.coordinate.slice();
                 let projectionExtent = view.getProjection().getExtent();
                 if (this.props.projection === 'EPSG:4326') {
-                    pos[0] = CoordinatesUtils.normalizeLng(pos[0]);
+                    pos[0] = normalizeLng(pos[0]);
                 }
                 if (this.props.projection === 'EPSG:900913' || this.props.projection === 'EPSG:3857') {
                     pos = toLonLat(pos, this.props.projection);
-                    projectionExtent = CoordinatesUtils.reprojectBbox(projectionExtent, this.props.projection, "EPSG:4326");
+                    projectionExtent = reprojectBbox(projectionExtent, this.props.projection, "EPSG:4326");
                 }
                 // prevent user from clicking outside the projection extent
                 if (pos[0] >= projectionExtent[0] && pos[0] <= projectionExtent[2] &&
                     pos[1] >= projectionExtent[1] && pos[1] <= projectionExtent[3]) {
                     let coords;
                     if (this.props.projection !== 'EPSG:900913' && this.props.projection !== 'EPSG:3857') {
-                        coords = CoordinatesUtils.reproject(pos, this.props.projection, "EPSG:4326");
+                        coords = reproject(pos, this.props.projection, "EPSG:4326");
                     } else {
                         coords = { x: pos[0], y: pos[1] };
                     }
@@ -208,7 +208,7 @@ class OpenlayersMap extends React.Component {
                             }
                         }
                     });
-                    const tLng = CoordinatesUtils.normalizeLng(coords.x);
+                    const tLng = normalizeLng(coords.x);
                     const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                     this.props.onClick({
                         pixel: {
@@ -298,7 +298,7 @@ class OpenlayersMap extends React.Component {
         if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.props.limits !== newProps.limits) {
             if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits) {
                 let mapProjection = newProps.projection;
-                const center = CoordinatesUtils.reproject([
+                const center = reproject([
                     newProps.center.x,
                     newProps.center.y
                 ], 'EPSG:4326', mapProjection);
@@ -537,14 +537,14 @@ class OpenlayersMap extends React.Component {
 
     createView = (center, zoom, projection, options, limits = {}) => {
         // limit has a crs defined
-        const extent = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, CoordinatesUtils.normalizeSRS(projection));
+        const extent = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, normalizeSRS(projection));
         const newOptions = !options || (options && !options.view) ? assign({}, options, { extent }) : assign({}, options);
         /*
         * setting the zoom level in the localConfig file is co-related to the projection extent(size)
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
         */
         const viewOptions = assign({}, {
-            projection: CoordinatesUtils.normalizeSRS(projection),
+            projection: normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom,
             minZoom: limits.minZoom
@@ -560,7 +560,7 @@ class OpenlayersMap extends React.Component {
 
         if (!centerIsUpdated) {
             // let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
-            let center = CoordinatesUtils.reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
+            let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
             view.setCenter([center.x, center.y]);
         }
         if (Math.round(newProps.zoom) !== this.props.zoom) {
@@ -572,7 +572,7 @@ class OpenlayersMap extends React.Component {
     };
 
     normalizeCenter = (center) => {
-        let c = CoordinatesUtils.reproject({ x: center[0], y: center[1] }, this.props.projection, 'EPSG:4326', true);
+        let c = reproject({ x: center[0], y: center[1] }, this.props.projection, 'EPSG:4326', true);
         return [c.x, c.y];
     };
 
@@ -591,7 +591,7 @@ class OpenlayersMap extends React.Component {
             return this.map.getView().getResolution();
         });
         this.props.hookRegister.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
-            var olCenter = CoordinatesUtils.reproject([center.x, center.y], 'EPSG:4326', this.props.projection);
+            var olCenter = reproject([center.x, center.y], 'EPSG:4326', this.props.projection);
             let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits);
             let size = this.map.getSize();
             let bbox = view.calculateExtent(size);
@@ -613,7 +613,7 @@ class OpenlayersMap extends React.Component {
             return this.map.getCoordinateFromPixel(pixel);
         });
         this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration} = {}) => {
-            let bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
+            let bounds = reprojectBbox(extent, crs, this.props.projection);
             // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
             if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&

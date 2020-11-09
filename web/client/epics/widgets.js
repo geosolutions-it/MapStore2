@@ -32,7 +32,7 @@ import { MAP_CREATED, SAVING_MAP, MAP_ERROR } from '../actions/maps';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
-import FileUtils from '../utils/FileUtils';
+import {downloadCanvasDataURL} from '../utils/FileUtils';
 import converter from 'json-2-csv';
 import canvg from 'canvg-browser';
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
@@ -218,7 +218,7 @@ export const exportWidgetImage = action$ =>
                     context.fillStyle = '#fff'; // <- background color
                     // draw background / rect on entire canvas
                     context.fillRect(0, 0, canvas.width, canvas.height);
-                    FileUtils.downloadCanvasDataURL(canvas.toDataURL('image/jpeg', 1.0), `${title}.jpg`, "image/jpeg");
+                    downloadCanvasDataURL(canvas.toDataURL('image/jpeg', 1.0), `${title}.jpg`, "image/jpeg");
                 }
             });
         })

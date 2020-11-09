@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-const {getUrls, template} = require('../TileProviderUtils');
+import { getUrls, template } from '../TileProviderUtils';
 const url = "//stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}.{ext}";
 const urlReplaced = "//stamen-tiles-a.a.ssl.fastly.net/{variant}/{z}/{x}/{y}.{ext}";
 

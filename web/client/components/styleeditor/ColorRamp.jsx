@@ -8,7 +8,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import ColorUtils from '../../utils/ColorUtils';
+import {sameToneRangeColors} from '../../utils/ColorUtils';
 import Select from 'react-select';
 import find from 'lodash/find';
 import Message from '../I18N/Message';
@@ -52,7 +52,7 @@ function ColorRamp({
         ramp: rampFunction
             ? rampFunction(item, options)
             // TODO: replace with tynicolor
-            : (ColorUtils.sameToneRangeColors(options.base, options.range, samples + 1, options.options) || ["#AAA"]).splice(1)
+            : (sameToneRangeColors(options.base, options.range, samples + 1, options.options) || ["#AAA"]).splice(1)
     }));
 
     const selectedValue = find(items, (item = {}) => item === value || item.name === (value && value.name));

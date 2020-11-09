@@ -6,13 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const FeatureGridEditorUtils = {
-    forceSelection: ( {oldValue, changedValue, data, allowEmpty}) => {
-        if (allowEmpty && changedValue === "") {
-            return "";
-        }
-        return data.indexOf(changedValue) !== -1 ? changedValue : oldValue;
+
+export const forceSelection = ( {oldValue, changedValue, data, allowEmpty}) => {
+    if (allowEmpty && changedValue === "") {
+        return "";
     }
+    return data.indexOf(changedValue) !== -1 ? changedValue : oldValue;
 };
 
-module.exports = FeatureGridEditorUtils;

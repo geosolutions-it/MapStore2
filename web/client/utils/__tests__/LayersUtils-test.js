@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const assign = require('object-assign');
-const LayersUtils = require('../LayersUtils');
+import expect from 'expect';
+
+import assign from 'object-assign';
+import LayersUtils from '../LayersUtils';
 const {extractTileMatrixSetFromLayers} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {

@@ -31,7 +31,7 @@ require('../plugins/VectorLayer');
 
 let mockAxios;
 
-const SecurityUtils = require('../../../../utils/SecurityUtils');
+const {setStore} = require('../../../../utils/SecurityUtils');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
 const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 
@@ -720,7 +720,7 @@ describe('Leaflet layer', () => {
             }
         ]);
 
-        SecurityUtils.setStore({
+        setStore({
             getState: () => ({
                 security: {
                     token: "########-####-####-####-###########"
@@ -763,7 +763,7 @@ describe('Leaflet layer', () => {
             }
         ]);
 
-        SecurityUtils.setStore({
+        setStore({
             getState: () => ({
                 security: {
                     token: "########-####-####-####-###########"
@@ -958,7 +958,7 @@ describe('Leaflet layer', () => {
             }
         ]);
 
-        SecurityUtils.setStore({
+        setStore({
             getState: () => ({
                 security: {
                     token: "########-####-####-####-###########"

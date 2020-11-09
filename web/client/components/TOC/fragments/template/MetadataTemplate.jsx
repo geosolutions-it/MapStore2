@@ -14,8 +14,8 @@ const Message = require('../../../I18N/Message').default;
 const {Table} = require('react-bootstrap');
 
 const LocaleUtils = require('../../../../utils/LocaleUtils');
-const URLUtils = require('../../../../utils/URLUtils');
-const StringUtils = require('../../../../utils/StringUtils');
+const {isValidURL} = require('../../../../utils/URLUtils');
+const {isValidEmail} = require('../../../../utils/StringUtils');
 
 class MetadataTemplate extends React.Component {
     static propTypes = {
@@ -108,8 +108,8 @@ class MetadataTemplate extends React.Component {
                         rowWithTitleCell(<ul>{renderedElements}</ul>);
                 }
             } else if (isString(field)) {
-                const isEmail = StringUtils.isValidEmail(field);
-                const isURL = URLUtils.isValidURL(field);
+                const isEmail = isValidEmail(field);
+                const isURL = isValidURL(field);
                 const cellContent = isEmail || isURL ?
                     <a target="_blank" rel="noopener noreferrer" href={isURL ? field : `mailto:${field}`}>{field}</a> :
                     field;

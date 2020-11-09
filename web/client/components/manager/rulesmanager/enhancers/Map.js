@@ -6,8 +6,8 @@
 * LICENSE file in the root directory of this source tree.
 */
 const {compose, withStateHandlers, defaultProps, withPropsOnChange, withProps} = require("recompose");
-const MapUtils = require("../../../../utils/MapUtils");
-const CoordinatesUtils = require("../../../../utils/CoordinatesUtils");
+const {getCenterForExtent, getZoomForExtent} = require("../../../../utils/MapUtils");
+const {reprojectBbox} = require("../../../../utils/CoordinatesUtils");
 const {isEmpty} = require("lodash");
 const defaultBaseLayer = {
     group: "background",
@@ -49,11 +49,11 @@ module.exports = compose(
             if (isEmpty(l)) {
                 return {};
             }
-            const center = MapUtils.getCenterForExtent(l.bbox.extent, l.bbox.crs);
-            const extent = l.bbox.crs !== (map.projection || "EPSG:3857") ? CoordinatesUtils.reprojectBbox(l.bbox.extent, l.bbox.crs, map.projection || "EPSG:3857") : l.bbox.extent;
+            const center = getCenterForExtent(l.bbox.extent, l.bbox.crs);
+            const extent = l.bbox.crs !== (map.projection || "EPSG:3857") ? reprojectBbox(l.bbox.extent, l.bbox.crs, map.projection || "EPSG:3857") : l.bbox.extent;
             let zoom = 1;
             if (map.size) {
-                zoom = MapUtils.getZoomForExtent(extent, map.size, 0, 21);
+                zoom = getZoomForExtent(extent, map.size, 0, 21);
             }
             const {bbox: omit, ...om} = map;
             return {map: {...om, zoom, center, extent, mapStateSource: "mapModal"}};

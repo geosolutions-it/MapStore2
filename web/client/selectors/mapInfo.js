@@ -12,7 +12,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { mapSelector } from './map';
 import { isPluginInContext } from './context';
 import { currentLocaleSelector } from './locale';
-import MapInfoUtils from '../utils/MapInfoUtils';
+import {getValidator} from '../utils/MapInfoUtils';
 import { isCesium } from './maptype';
 import { isMouseMoveIdentifyActiveSelector as identifyFloatingTool } from '../selectors/map';
 import { pluginsSelectorCreator } from './localConfig';
@@ -123,7 +123,7 @@ export const validResponsesSelector = createSelector(
     generalInfoFormatSelector,
     identifyFloatingTool,
     (requests, responses, format, renderEmpty) => {
-        const validatorFormat = MapInfoUtils.getValidator(format);
+        const validatorFormat = getValidator(format);
         return requests.length === responses.length && validatorFormat.getValidResponses(responses, renderEmpty);
     });
 

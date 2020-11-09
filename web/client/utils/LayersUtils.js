@@ -10,6 +10,7 @@ const assign = require('object-assign');
 const toBbox = require('turf-bbox');
 const uuidv1 = require('uuid/v1');
 const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
+const SecurityUtils = require('./SecurityUtils');
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
@@ -262,7 +263,6 @@ const getURLs = (urls, queryParametersString = '') => {
     return urls.map((url) => url.split("\?")[0] + queryParametersString);
 };
 
-const SecurityUtils = require('./SecurityUtils');
 
 const LayerCustomUtils = {};
 

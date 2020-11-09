@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const {
-    forceSelection
-} = require('../FeatureGridEditorUtils');
+import expect from 'expect';
+
+import { forceSelection } from '../FeatureGridEditorUtils';
 
 describe('FeatureGridEditorUtils', () => {
     it('forceSelection allowEmpty=true', () => {

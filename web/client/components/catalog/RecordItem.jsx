@@ -19,7 +19,7 @@ import {
     recordToLayer,
     wfsToLayer
 } from '../../utils/CatalogUtils';
-import CoordinatesUtils from '../../utils/CoordinatesUtils';
+import {isAllowedSRS} from '../../utils/CoordinatesUtils';
 import HtmlRenderer from '../misc/HtmlRenderer';
 import {parseCustomTemplate} from '../../utils/TemplateUtils';
 import LocaleUtils from '../../utils/LocaleUtils';
@@ -339,7 +339,7 @@ class RecordItem extends React.Component {
 
     makeLayer = (type, ogcReferences, formats = [this.props.defaultFormat]) => {
         const allowedSRS = buildSRSMap(ogcReferences.SRS);
-        if (ogcReferences.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
+        if (ogcReferences.SRS.length > 0 && !isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
             return null;
         }

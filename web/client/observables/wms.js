@@ -9,8 +9,12 @@ const {Observable} = require('rxjs');
 const axios = require('../libs/ajax');
 const WMS = require('../api/WMS');
 const LayersUtils = require('../utils/LayersUtils');
-const SecurityUtils = require('../utils/SecurityUtils');
-const CoordinatesUtils = require("../utils/CoordinatesUtils");
+const {cleanAuthParamsFromURL} = require('../utils/SecurityUtils');
+const {
+    determineCrs,
+    fetchProjRemotely,
+    getProjUrl
+} = require("../utils/CoordinatesUtils");
 const urlUtil = require('url');
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {head} = require('lodash');
@@ -50,7 +54,7 @@ module.exports = {
                 params: {}, // TODO: if needed, clean them up
                 search: owsURL ? {
                     type: "wfs",
-                    url: SecurityUtils.cleanAuthParamsFromURL(owsURL)
+                    url: cleanAuthParamsFromURL(owsURL)
                 } : undefined
             })),
     getNativeCrs: (layer) => Observable.of(layer).filter(({nativeCrs}) => !nativeCrs)
@@ -58,9 +62,9 @@ module.exports = {
             return getLayerCapabilities(l)
                 .switchMap((layerCapability = {}) => {
                     const nativeCrs = head(layerCapability.crs) || "EPSG:3587";
-                    if (!CoordinatesUtils.determineCrs(nativeCrs)) {
+                    if (!determineCrs(nativeCrs)) {
                         const EPSG = nativeCrs.split(":").length === 2 ? nativeCrs.split(":")[1] : "3857";
-                        return Observable.fromPromise(CoordinatesUtils.fetchProjRemotely(nativeCrs, CoordinatesUtils.getProjUrl(EPSG))
+                        return Observable.fromPromise(fetchProjRemotely(nativeCrs, getProjUrl(EPSG))
                             .then(res => {
                                 proj4.defs(nativeCrs, res.data);
                                 return nativeCrs;

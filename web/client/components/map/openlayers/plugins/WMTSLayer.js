@@ -14,7 +14,7 @@ import last from 'lodash/last';
 
 
 import SecurityUtils from '../../../../utils/SecurityUtils';
-import WMTSUtils from '../../../../utils/WMTSUtils';
+import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import MapUtils from '../../../../utils/MapUtils';
 import { isVectorFormat} from '../../../../utils/VectorTileUtils';

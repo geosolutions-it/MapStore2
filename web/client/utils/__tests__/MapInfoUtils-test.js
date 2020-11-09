@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-var expect = require('expect');
-var {
+import React from 'react';
+
+import expect from 'expect';
+
+import {
     getAvailableInfoFormat,
     getAvailableInfoFormatLabels,
     getAvailableInfoFormatValues,
@@ -20,11 +22,11 @@ var {
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfo,
-    filterRequestParams,
-    defaultQueryableFilter
-} = require('../MapInfoUtils');
+    defaultQueryableFilter,
+    filterRequestParams
+} from '../MapInfoUtils';
 
-const CoordinatesUtils = require('../CoordinatesUtils');
+import { createBBox } from '../CoordinatesUtils';
 
 class App extends React.Component {
     render() {
@@ -82,7 +84,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('it should returns a bbox', () => {
-        let results = CoordinatesUtils.createBBox(-10, 10, -10, 10);
+        let results = createBBox(-10, 10, -10, 10);
         expect(results).toExist();
         expect(results.maxx).toBe(-10);
     });
