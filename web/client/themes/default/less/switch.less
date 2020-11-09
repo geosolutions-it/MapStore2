@@ -61,7 +61,11 @@
                 }
             }
         }
-
+        &:disabled +.m-slider {
+            cursor: not-allowed;
+            opacity: 1; // disabled + unchecked are too light
+            background-color:  @input-bg-disabled;
+        }
         &:focus + .m-slider {
             .shadow-soft;
         }

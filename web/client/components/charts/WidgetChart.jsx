@@ -73,7 +73,7 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
             },
             xaxis: {
                 type: xAxisOpts?.type,
-                showticklabels: xAxisOpts?.hide,
+                showticklabels: !xAxisOpts?.hide,
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,

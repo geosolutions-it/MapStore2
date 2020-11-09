@@ -1817,7 +1817,14 @@
               "yAxisType": "Type",
               "yAxisLabel": "Legend Label",
               "title": "Advanced Options",
-              "legend": "Legend"
+              "legend": "Legend",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Linear",
+                "category": "Category",
+                "log": "Log",
+                "date": "Date"
+              }
             },
             "tray": {
                 "title": "Widgets",

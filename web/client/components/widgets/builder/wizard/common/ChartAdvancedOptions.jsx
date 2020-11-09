@@ -3,9 +3,29 @@ import { isNil } from 'lodash';
 import { Col, FormGroup, FormControl, ControlLabel, Glyphicon } from 'react-bootstrap';
 import Message from '../../../../I18N/Message';
 import Select from 'react-select';
-import Slider from 'react-nouislider';
+import Slider from '../../../../misc/Slider';
+
 import SwitchPanel from '../../../../misc/switch/SwitchPanel';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
+import localizedProps from '../../../../misc/enhancers/localizedProps';
+const AxisTypeSelect = localizedProps('options')(Select);
+
+const AXIS_TYPES = [{
+    value: '-',
+    label: 'widgets.advanced.axisTypes.auto'
+}, {
+    value: 'linear',
+    label: 'widgets.advanced.axisTypes.linear'
+}, {
+    value: 'category',
+    label: 'widgets.advanced.axisTypes.category'
+}, {
+    value: 'log',
+    label: 'widgets.advanced.axisTypes.log'
+}, {
+    value: 'date',
+    label: 'widgets.advanced.axisTypes.date'
+}];
 
 function Header({data}) {
     return (<span>
@@ -43,24 +63,9 @@ export default function ChartAdvancedOptions({
                 <Message msgId="widgets.advanced.xAxisType" />
             </Col>
             <Col sm={6}>
-                <Select
+                <AxisTypeSelect
                     value={data.yAxisOpts && data.yAxisOpts.type || '-'}
-                    options={[{
-                        value: '-',
-                        label: 'auto'
-                    }, {
-                        value: 'linear',
-                        label: 'Linear'
-                    }, {
-                        value: 'category',
-                        label: 'Category'
-                    }, {
-                        value: 'log',
-                        label: 'Log'
-                    }, {
-                        value: 'date',
-                        label: 'Date'
-                    }]}
+                    options={AXIS_TYPES}
                     onChange={(val) => {
                         onChange("yAxisOpts.type", val && val.value);
                     }}
@@ -83,24 +88,9 @@ export default function ChartAdvancedOptions({
                 <Message msgId="widgets.advanced.xAxisType" />
             </Col>
             <Col sm={6}>
-                <Select
+                <AxisTypeSelect
                     value={data?.xAxisOpts?.type ?? '-'}
-                    options={[{
-                        value: '-',
-                        label: 'auto'
-                    }, {
-                        value: 'linear',
-                        label: 'Linear'
-                    }, {
-                        value: 'category',
-                        label: 'Category'
-                    }, {
-                        value: 'log',
-                        label: 'Log'
-                    }, {
-                        value: 'date',
-                        label: 'Date'
-                    }]}
+                    options={AXIS_TYPES}
                     onChange={(val) => {
                         onChange("xAxisOpts.type", val && val.value);
                     }}
@@ -111,8 +101,8 @@ export default function ChartAdvancedOptions({
             </Col>
             <Col sm={6}>
                 <SwitchButton
-                    checked={!data?.xAxisOpts?.hide}
-                    onChange={(val) => { onChange("xAxisOpts.hide", !val); }}
+                    checked={data?.xAxisOpts?.hide ?? false}
+                    onChange={(val) => { onChange("xAxisOpts.hide", val); }}
                 />
             </Col>
             <Col componentClass={ControlLabel} sm={6}>
@@ -120,6 +110,7 @@ export default function ChartAdvancedOptions({
             </Col>
             <Col sm={6}>
                 <SwitchButton
+                    disabled={data?.xAxisOpts?.hide ?? false}
                     checked={data?.xAxisOpts?.forceTicks}
                     onChange={(val) => { onChange("xAxisOpts.forceTicks", val); }}
                 />
@@ -129,16 +120,17 @@ export default function ChartAdvancedOptions({
             </Col>
             <Col sm={6} style={{ display: "flex" }}>
                 <SwitchButton
-                    checked={data.xAxisAngle === undefined}
-                    onChange={(val) => { onChange("xAxisAngle", val ? undefined : 0); }}
+                    disabled={data?.xAxisOpts?.hide ?? false}
+                    checked={data.xAxisAngle !== undefined}
+                    onChange={(val) => { onChange("xAxisAngle", !val ? undefined : 0); }}
                 />
                 <div style={{ flexGrow: 1, padding: 5 }}>
                     {data.xAxisAngle !== undefined
                         ? <div
-
                             className="mapstore-slider with-tooltip"
                             onClick={(e) => { e.stopPropagation(); }}
                         ><Slider
+                                disabled={!!data?.xAxisOpts?.hide}
                                 key="priority"
                                 format={{
                                     // this is needed to remove the 2 decimals that this comp adds by default
