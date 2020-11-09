@@ -9,7 +9,7 @@
 import { isObject, get } from 'lodash';
 
 import {getGroupByName} from './LayersUtils';
-import LocaleUtils from './LocaleUtils';
+import {getLocale} from './LocaleUtils';
 
 export const createFromSearch = function(options, search) {
     /* only create an option from search if the length of the search string is > 0 and
@@ -103,7 +103,7 @@ export const getLabelName = (groupLabel = "", groups = []) => {
     let label = groupLabel.replace(/[^\.\/]+/g, match => {
         const title = get(getGroupByName(match, groups), 'title');
         if (isObject(title)) {
-            const locale = LocaleUtils.getLocale();
+            const locale = getLocale();
             return title[locale] || title.default;
         }
         return groups && title || match;

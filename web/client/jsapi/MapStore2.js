@@ -15,7 +15,7 @@ const {
     standardRootReducerFunc
 } = require('../stores/defaultOptions');
 
-const LocaleUtils = require('../utils/LocaleUtils');
+const {ensureIntl} = require('../utils/LocaleUtils');
 const ConfigUtils = require('../utils/ConfigUtils').default;
 const {connect} = require('react-redux');
 
@@ -353,7 +353,7 @@ const MapStore2 = {
 
 if (!global.Intl ) {
     // Ensure Intl is loaded, then call the given callback
-    LocaleUtils.ensureIntl();
+    ensureIntl();
 }
 
 module.exports = MapStore2;

@@ -21,7 +21,7 @@ import withShareTool from '../resources/enhancers/withShareTool';
 import withFilter from './enhancers/withFilter';
 import withDelete from './enhancers/withDelete';
 import withEdit from './enhancers/withEdit';
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getMessageById} from '../../utils/LocaleUtils';
 import Toolbar from '../misc/toolbar/Toolbar';
 import Filter from '../misc/Filter';
 import MapCatalog from '../maps/MapCatalog';
@@ -153,7 +153,7 @@ const MapCatalogPanel = ({
                 }}
                 header={<Filter
                     filterText={filterText}
-                    filterPlaceholder={LocaleUtils.getMessageById(messages, 'mapCatalog.filterPlaceholder')}
+                    filterPlaceholder={getMessageById(messages, 'mapCatalog.filterPlaceholder')}
                     onFilter={onFilter}/>
                 }
                 items={items.map(mapToItem)}/>

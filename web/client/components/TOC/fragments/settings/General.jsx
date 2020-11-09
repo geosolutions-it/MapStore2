@@ -13,7 +13,7 @@ const { FormControl, FormGroup, ControlLabel, InputGroup, Col } = require('react
 const Message = require('../../../I18N/Message').default;
 const { SimpleSelect } = require('react-selectize');
 const { isString, isObject, find } = require('lodash');
-const LocaleUtils = require('../../../../utils/LocaleUtils');
+const {getMessageById, getSupportedLocales} = require('../../../../utils/LocaleUtils');
 const assign = require('object-assign');
 require('react-selectize/themes/index.css');
 const { Grid } = require('react-bootstrap');
@@ -52,20 +52,20 @@ class General extends React.Component {
     };
 
     render() {
-        const locales = LocaleUtils.getSupportedLocales();
+        const locales = getSupportedLocales();
         const translations = isObject(this.props.element.title) ? assign({}, this.props.element.title) : { 'default': this.props.element.title };
         const { hideTitleTranslations = false } = this.props.pluginCfg;
 
         const tooltipItems = [
-            { value: "title", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.title") },
-            { value: "description", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.description") },
-            { value: "both", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.both") },
-            { value: "none", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.none") }
+            { value: "title", label: getMessageById(this.context.messages, "layerProperties.tooltip.title") },
+            { value: "description", label: getMessageById(this.context.messages, "layerProperties.tooltip.description") },
+            { value: "both", label: getMessageById(this.context.messages, "layerProperties.tooltip.both") },
+            { value: "none", label: getMessageById(this.context.messages, "layerProperties.tooltip.none") }
         ];
         const tooltipPlacementItems = [
-            { value: "top", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.top") },
-            { value: "right", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.right") },
-            { value: "bottom", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
+            { value: "top", label: getMessageById(this.context.messages, "layerProperties.tooltip.top") },
+            { value: "right", label: getMessageById(this.context.messages, "layerProperties.tooltip.right") },
+            { value: "bottom", label: getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
         ];
         const groups = this.props.groups && flattenGroups(this.props.groups);
         return (

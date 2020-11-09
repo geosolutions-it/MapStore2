@@ -8,7 +8,7 @@
 
 import uuidv1 from 'uuid/v1';
 
-import LocaleUtils from './LocaleUtils';
+import {getMessageById} from './LocaleUtils';
 import MarkerUtils from './MarkerUtils';
 import { geometryFunctions, fetchStyle, hashAndStringify } from './VectorStyleUtils';
 import { set } from './ImmutableUtils';
@@ -111,7 +111,7 @@ export const getStylesObject = ({type = "Point", features = []} = {}) => {
         return p;
     }, {type: "FeatureCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
 };
-export const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") !== "annotations.defaulttitle" ? LocaleUtils.getMessageById(messages, "annotations.defaulttitle") : "Default title", id: uuidv1(), ...props});
+export const getProperties = (props = {}, messages = {}) => ({title: getMessageById(messages, "annotations.defaulttitle") !== "annotations.defaulttitle" ? getMessageById(messages, "annotations.defaulttitle") : "Default title", id: uuidv1(), ...props});
 
 export const getDashArrayFromStyle = dashArray => {
     return isString(dashArray) && dashArray || isArray(dashArray) && dashArray.join(" ");

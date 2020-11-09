@@ -25,7 +25,7 @@ import urlUtil from 'url';
 import CoordinatesUtils from './CoordinatesUtils';
 import ConfigUtils from './ConfigUtils';
 import {getLayerTitleTranslations} from './LayersUtils';
-import LocaleUtils from './LocaleUtils';
+import {getMessageById} from './LocaleUtils';
 import * as WMTSUtils from './WMTSUtils';
 import { cleanAuthParamsFromURL } from './SecurityUtils';
 import WMS from '../api/WMS';
@@ -198,10 +198,10 @@ const converters = {
                                 const value = e.substr(equalIndex + 1, e.length - 1);
                                 const isOnlyDateFormat = e.length - equalIndex - 1 <= 10;
                                 if (includes(["start", "end"], prop) && scheme === "W3C-DTF" && !isOnlyDateFormat) {
-                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + new Date(value).toLocaleString();
+                                    return getMessageById(locales, `catalog.${prop}`) + new Date(value).toLocaleString();
                                 }
                                 if (includes(["start", "end"], prop)) {
-                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + value;
+                                    return getMessageById(locales, `catalog.${prop}`) + value;
                                 }
                                 return "";
                             });

@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const Dropzone = require('react-dropzone');
 const Spinner = require('react-spinkit');
 
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getMessageById} = require('../../utils/LocaleUtils');
 
 const JSZip = require('jszip');
 const {readZip, recognizeExt, MIME_LOOKUPS} = require('../../utils/FileUtils');
@@ -77,7 +77,7 @@ class SelectShape extends React.Component {
             }
             this.props.onShapeChoosen(files);
         }).catch(() => {
-            const error = LocaleUtils.getMessageById(this.context.messages, this.props.errorMessage);
+            const error = getMessageById(this.context.messages, this.props.errorMessage);
             this.props.onShapeError(error);
         });
     };

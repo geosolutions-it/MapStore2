@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import {intlShape} from 'react-intl';
 import {getContext} from 'recompose';
 import DateTimePicker from '../../../misc/datetimepicker';
-import LocaleUtils from '../../../../utils/LocaleUtils';
+import {getMessageById} from '../../../../utils/LocaleUtils';
 import { getDateTimeFormat } from '../../../../utils/TimeUtils';
 import AttributeFilter from './AttributeFilter';
 import utcDateWrapper from '../../../misc/enhancers/utcDateWrapper';
@@ -46,7 +46,7 @@ class DateFilter extends AttributeFilter {
             return <span />;
         }
         const format = getDateTimeFormat(this.context.locale, this.props.type);
-        const placeholder = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId) || "Insert date";
+        const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Insert date";
         const toolTip = this.props.intl && this.props.intl.formatMessage({id: `${this.props.tooltipMsgId}`}, {format}) || `Insert date in ${format} format`;
 
         const inputKey = 'header-filter-' + this.props.column.key;

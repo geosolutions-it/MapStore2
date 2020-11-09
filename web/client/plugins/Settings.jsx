@@ -32,7 +32,7 @@ const {Glyphicon, FormGroup, Row, Col} = require('react-bootstrap');
 const assign = require('object-assign');
 
 const SettingsPanel = require('./settings/SettingsPanel');
-const LocaleUtils = require('../utils/LocaleUtils');
+const {getSupportedLocales} = require('../utils/LocaleUtils');
 const {Panel} = require('react-bootstrap');
 const Dialog = require('../components/misc/Dialog');
 
@@ -97,7 +97,7 @@ class SettingsButton extends React.Component {
                         </Row>
                         <Row>
                             <Col xs={12}>
-                                <LangBar dropdown={false} locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
+                                <LangBar dropdown={false} locales={getSupportedLocales()} key="langSelector"/>
                             </Col>
                         </Row>
                     </FormGroup>

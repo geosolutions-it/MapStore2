@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const Message = require('../../components/I18N/Message').default;
 const {geoJSONToLayer} = require('../../utils/LayersUtils');
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getMessageById} = require('../../utils/LocaleUtils');
 const {
     recognizeExt,
     MIME_LOOKUPS,
@@ -261,7 +261,7 @@ class ShapeFileUploadAndStyle extends React.Component {
                 this.props.updateShapeBBox(bbox && bbox.length ? bbox : this.props.bbox);
                 this.props.onZoomSelected(bbox && bbox.length ? bbox : this.props.bbox, "EPSG:4326");
             }
-            this.props.onShapeSuccess(this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success"));
+            this.props.onShapeSuccess(this.props.layers[0].name + getMessageById(this.context.messages, "shapefile.success"));
             this.props.onLayerAdded(this.props.selected);
         }).catch(() => {
             this.props.shapeLoading(false);

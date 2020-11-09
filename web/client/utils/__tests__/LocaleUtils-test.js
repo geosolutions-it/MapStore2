@@ -9,7 +9,7 @@
 import expect from 'expect';
 
 import url from 'url';
-import LocaleUtils from '../LocaleUtils';
+import * as LocaleUtils from '../LocaleUtils';
 
 describe('LocaleUtils', () => {
     it('normalizeLocaleCode', () => {

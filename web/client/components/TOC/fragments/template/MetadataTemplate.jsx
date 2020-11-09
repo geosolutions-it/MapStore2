@@ -13,7 +13,7 @@ const {keys, isArray, isObject, isString} = require('lodash');
 const Message = require('../../../I18N/Message').default;
 const {Table} = require('react-bootstrap');
 
-const LocaleUtils = require('../../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../../utils/LocaleUtils');
 const {isValidURL} = require('../../../../utils/URLUtils');
 const {isValidEmail} = require('../../../../utils/StringUtils');
 
@@ -63,7 +63,7 @@ class MetadataTemplate extends React.Component {
             let fieldContent;
 
             const localizedPropNameId = `toc.layerMetadata.${key}`;
-            const localizedPropName = LocaleUtils.getMessageById(this.context.messages, localizedPropNameId);
+            const localizedPropName = getMessageById(this.context.messages, localizedPropNameId);
             const propNameElement = localizedPropName === localizedPropNameId ?
                 <Message msgId="toc.layerMetadata.defaultPropName" msgParams={{propName: key}}/> :
                 <Message msgId={localizedPropNameId}/>;
@@ -81,9 +81,9 @@ class MetadataTemplate extends React.Component {
                     fieldContent = null;
                 } else {
                     const fieldItemTitleId = `toc.layerMetadata.itemTitles.${key}`;
-                    const messagesFieldItemTitle = LocaleUtils.getMessageById(this.context.messages, fieldItemTitleId);
+                    const messagesFieldItemTitle = getMessageById(this.context.messages, fieldItemTitleId);
                     const fieldItemTitle = messagesFieldItemTitle === fieldItemTitleId ?
-                        LocaleUtils.getMessageById(this.context.messages, 'toc.layerMetadata.itemTitles.default') :
+                        getMessageById(this.context.messages, 'toc.layerMetadata.itemTitles.default') :
                         messagesFieldItemTitle;
                     const renderedElements = field.map((fieldElement, i) => {
                         const subFieldPath = itemPath(fieldPath, i);

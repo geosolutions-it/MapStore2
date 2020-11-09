@@ -12,7 +12,7 @@ const {getGoogleMercatorScales} = require('../../utils/MapUtils');
 const {findDOMNode} = require('react-dom');
 const DropdownList = require('react-widgets').DropdownList;
 const {Row, Col, Overlay, Popover, Label} = require('react-bootstrap');
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getMessageById} = require('../../utils/LocaleUtils');
 const Message = require('../I18N/Message').default;
 
 class ScaleDenominator extends React.Component {
@@ -36,7 +36,7 @@ class ScaleDenominator extends React.Component {
 
     UNSAFE_componentWillMount() {
         let scales = getGoogleMercatorScales(0, 21);
-        this.scales = [{value: null, text: LocaleUtils.getMessageById(this.context.messages, "scaledenominator.none") || 'None'}, ...scales.map((v) => ({value: v, text: `${v.toFixed(0)}`}))];
+        this.scales = [{value: null, text: getMessageById(this.context.messages, "scaledenominator.none") || 'None'}, ...scales.map((v) => ({value: v, text: `${v.toFixed(0)}`}))];
     }
 
     onChange = (t, {value: v}) => {

@@ -42,7 +42,7 @@ const {
     toggleByType
 } = require('../utils/LayersUtils');
 const {getScales} = require('../utils/MapUtils');
-const LocaleUtils = require('../utils/LocaleUtils');
+const {getMessageById} = require('../utils/LocaleUtils');
 
 const Message = require('../components/I18N/Message').default;
 const assign = require('object-assign');
@@ -397,7 +397,7 @@ class LayerTree extends React.Component {
                     onClear={() => { this.props.onSelectNode(); }}
                     onFilter={this.props.onFilter}
                     filterTooltipClear={<Message msgId="toc.clearFilter" />}
-                    filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "toc.filterPlaceholder")}
+                    filterPlaceholder={getMessageById(this.context.messages, "toc.filterPlaceholder")}
                     filterText={this.props.filterText}
                     toolbar={
                         <Toolbar

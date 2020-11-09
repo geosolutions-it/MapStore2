@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const Combobox = require('react-widgets').Combobox;
 const {Glyphicon, Tooltip} = require('react-bootstrap');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const OverlayTrigger = require('../OverlayTrigger').default;
 const AutocompleteListItem = require('../../data/query/AutocompleteListItem');
 
@@ -133,9 +133,9 @@ class PagedCombobox extends React.Component {
     };
     renderField = () => {
         const messages = {
-            emptyList: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
-            open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
-            emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
+            emptyList: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
+            open: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
+            emptyFilter: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
         let options = [];
         if (this.props.data && this.props.data.length > 0) {

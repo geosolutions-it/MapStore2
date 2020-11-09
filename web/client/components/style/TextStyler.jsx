@@ -16,7 +16,7 @@ const StyleCanvas = require('./StyleCanvas');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 require('react-widgets/lib/less/react-widgets.less');
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getMessageById} = require('../../utils/LocaleUtils');
 const {createFont} = require('../../utils/AnnotationsUtils');
 const Message = require('../I18N/Message').default;
 const tinycolor = require("tinycolor2");
@@ -56,9 +56,9 @@ class TextStyler extends React.Component {
 
     render() {
         const messages = {
-            emptyList: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
-            open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
-            emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
+            emptyList: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
+            open: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
+            emptyFilter: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
         const {styleType, shapeStyle} = this.props;
         const style = shapeStyle[styleType];

@@ -1,6 +1,6 @@
 import { isString, isDate, get, castArray } from 'lodash';
 import moment from 'moment';
-import LocaleUtils from './LocaleUtils';
+import {getDateFormat} from './LocaleUtils';
 
 const ROUND_RESOLUTION_REGEX = /PT?[\d\.]+[YMWDHMS]/;
 
@@ -201,7 +201,7 @@ export  const getUTCDatePart = (date) => {
  * @return {string} format to be returned
 */
 export const getDateTimeFormat = (locale, type) => {
-    const dateFormat = LocaleUtils.getDateFormat(locale);
+    const dateFormat = getDateFormat(locale);
     const timeFormat = "HH:mm:SS";
     switch (type) {
     case "time":

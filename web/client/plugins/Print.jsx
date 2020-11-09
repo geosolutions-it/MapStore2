@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 
 const {connect} = require('react-redux');
 
-const LocaleUtils = require('../utils/LocaleUtils');
+const {getMessageById} = require('../utils/LocaleUtils');
 const {reprojectBbox} = require('../utils/CoordinatesUtils');
 const {defaultGetZoomForExtent, mapUpdated, getResolutions} = require('../utils/MapUtils');
 const Dialog = require('../components/misc/Dialog');
@@ -259,7 +259,7 @@ module.exports = {
                     renderLayoutsAlternatives = () => {
                         return this.props.alternatives.map((alternative) =>
                             (<alternative.component key={"printoption_" + alternative.name}
-                                label={LocaleUtils.getMessageById(this.context.messages, "print.alternatives." + alternative.name)}
+                                label={getMessageById(this.context.messages, "print.alternatives." + alternative.name)}
                                 enableRegex={alternative.regex}
                             />)
                         );
@@ -293,27 +293,27 @@ module.exports = {
                                 {this.renderWarning(layout)}
                                 <Row>
                                     <Col xs={12} md={6}>
-                                        <Name label={LocaleUtils.getMessageById(this.context.messages, 'print.title')} placeholder={LocaleUtils.getMessageById(this.context.messages, 'print.titleplaceholder')} />
-                                        <Description label={LocaleUtils.getMessageById(this.context.messages, 'print.description')} placeholder={LocaleUtils.getMessageById(this.context.messages, 'print.descriptionplaceholder')} />
+                                        <Name label={getMessageById(this.context.messages, 'print.title')} placeholder={getMessageById(this.context.messages, 'print.titleplaceholder')} />
+                                        <Description label={getMessageById(this.context.messages, 'print.description')} placeholder={getMessageById(this.context.messages, 'print.descriptionplaceholder')} />
                                         <Accordion defaultActiveKey="1">
-                                            <Panel className="print-layout" header={LocaleUtils.getMessageById(this.context.messages, "print.layout")} eventKey="1" collapsible>
+                                            <Panel className="print-layout" header={getMessageById(this.context.messages, "print.layout")} eventKey="1" collapsible>
                                                 <Sheet key="sheetsize"
                                                     layouts={this.props.capabilities.layouts}
-                                                    label={LocaleUtils.getMessageById(this.context.messages, "print.sheetsize")}
+                                                    label={getMessageById(this.context.messages, "print.sheetsize")}
                                                 />
                                                 {this.renderLayoutsAlternatives()}
                                             </Panel>
-                                            <Panel className="print-legend-options" header={LocaleUtils.getMessageById(this.context.messages, "print.legendoptions")} eventKey="2" collapsible>
-                                                <Font label={LocaleUtils.getMessageById(this.context.messages, "print.legend.font")}/>
-                                                <ForceLabelsOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.forceLabels")}/>
-                                                <AntiAliasingOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.antiAliasing")}/>
-                                                <IconSizeOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.iconsSize")}/>
-                                                <LegendDpiOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.dpi")}/>
+                                            <Panel className="print-legend-options" header={getMessageById(this.context.messages, "print.legendoptions")} eventKey="2" collapsible>
+                                                <Font label={getMessageById(this.context.messages, "print.legend.font")}/>
+                                                <ForceLabelsOption label={getMessageById(this.context.messages, "print.legend.forceLabels")}/>
+                                                <AntiAliasingOption label={getMessageById(this.context.messages, "print.legend.antiAliasing")}/>
+                                                <IconSizeOption label={getMessageById(this.context.messages, "print.legend.iconsSize")}/>
+                                                <LegendDpiOption label={getMessageById(this.context.messages, "print.legend.dpi")}/>
                                             </Panel>
                                         </Accordion>
                                     </Col>
                                     <Col xs={12} md={6} style={{textAlign: "center"}}>
-                                        <Resolution label={LocaleUtils.getMessageById(this.context.messages, "print.resolution")}/>
+                                        <Resolution label={getMessageById(this.context.messages, "print.resolution")}/>
                                         <MapPreview width={mapSize.width} height={mapSize.height} mapType={this.props.mapType}
                                             onMapRefresh={() => this.configurePrintMap()}
                                             layout={layoutName}
@@ -323,7 +323,7 @@ module.exports = {
                                             env={this.props.localizedLayerStylesEnv}
                                             {...this.props.mapPreviewOptions}
                                         />
-                                        {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={LocaleUtils.getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
+                                        {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
                                         <PrintSubmit {...this.props.submitConfig} disabled={!layout} onPrint={this.print}/>
                                         {this.renderDownload()}
                                     </Col>

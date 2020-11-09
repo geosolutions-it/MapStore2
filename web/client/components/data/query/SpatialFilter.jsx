@@ -19,7 +19,7 @@ const {createWFSFetchStream} = require('../../../observables/autocomplete');
 
 const ZoneField = require('./ZoneField');
 
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const I18N = require('../../I18N/I18N');
 const IntlNumberFormControl = require("../../I18N/IntlNumberFormControl");
@@ -73,7 +73,7 @@ class SpatialFilter extends React.Component {
         return find(this.props.spatialMethodOptions, method => method && method.id === id) || null;
     };
     renderHeader = () => {
-        const spatialFilterHeader = LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
+        const spatialFilterHeader = getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
 
         return (
             <span>
@@ -103,14 +103,14 @@ class SpatialFilter extends React.Component {
                                     {...other}/>)}
                             fieldOptions={
                                 this.props.spatialMethodOptions.map((opt) => {
-                                    return LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name;
+                                    return getMessageById(this.context.messages, opt.name) || opt.name;
                                 })
                             }
-                            placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
+                            placeholder={getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
                             fieldName="method"
                             fieldRowId={new Date().getTime()}
                             fieldValue={
-                                LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "") || selectedMethod && selectedMethod.name || ""
+                                getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "") || selectedMethod && selectedMethod.name || ""
                             }
                             onUpdateField={this.updateSpatialMethod}/>
                     </Col>
@@ -293,13 +293,13 @@ class SpatialFilter extends React.Component {
                 <ComboField
                     fieldOptions={
                         this.props.spatialOperations.map((opt) => {
-                            return LocaleUtils.getMessageById(this.context.messages, opt.name);
+                            return getMessageById(this.context.messages, opt.name);
                         })
                     }
                     fieldName="operation"
                     fieldRowId={new Date().getTime()}
                     fieldValue={
-                        LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
+                        getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
                     }
                     onUpdateField={this.updateSpatialOperation}/>
             </Col>
@@ -330,7 +330,7 @@ class SpatialFilter extends React.Component {
         this.props.actions.onShowSpatialSelectionDetails(false);
 
         const method = this.props.spatialMethodOptions.filter((opt) => {
-            return value === (LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name);
+            return value === (getMessageById(this.context.messages, opt.name) || opt.name);
         })[0].id;
 
         const selectedMethod = this.getMethodFromId(method);
@@ -358,7 +358,7 @@ class SpatialFilter extends React.Component {
 
     updateSpatialOperation = (id, name, value) => {
         const operation = this.props.spatialOperations.filter((opt) => {
-            return value === LocaleUtils.getMessageById(this.context.messages, opt.name);
+            return value === getMessageById(this.context.messages, opt.name);
         })[0].id;
 
         this.props.actions.onSelectSpatialOperation(operation, name);

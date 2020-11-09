@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {FormControl, Tooltip} = require('react-bootstrap');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const OverlayTrigger = require('../../../components/misc/OverlayTrigger').default;
 const HTML = require('../../../components/I18N/HTML');
 const PropTypes = require('prop-types');
@@ -58,7 +58,7 @@ class TextField extends React.Component {
         }
     }
     renderField = () => {
-        let placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.text_placeholder");
+        let placeholder = getMessageById(this.context.messages, "queryform.attributefilter.text_placeholder");
         let tooltip = <Tooltip id={"textField-tooltip" + this.props.fieldRowId}><HTML msgId="queryform.attributefilter.tooltipTextField"/></Tooltip>;
         let field = (<FormControl
             disabled={this.props.operator === "isNull"}

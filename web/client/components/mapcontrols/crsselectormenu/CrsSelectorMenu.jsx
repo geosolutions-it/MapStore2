@@ -8,7 +8,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { ListGroupItem, ListGroup, FormControl } = require('react-bootstrap');
-const LocaleUtils = require("../../../utils/LocaleUtils");
+const {getMessageById} = require("../../../utils/LocaleUtils");
 const Message = require('../../I18N/Message').default;
 
 class CrsSelectorMenu extends React.Component {
@@ -51,7 +51,7 @@ class CrsSelectorMenu extends React.Component {
                         this.input = c;
                     }}
                     type="text"
-                    placeholder={LocaleUtils.getMessageById(this.context.messages, "crsSelectorFilterPlaceholder")}
+                    placeholder={getMessageById(this.context.messages, "crsSelectorFilterPlaceholder")}
                     onChange={this.handleChange}
                     value={this.props.value}
                 />
