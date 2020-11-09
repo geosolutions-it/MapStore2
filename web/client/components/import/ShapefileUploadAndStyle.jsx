@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Message = require('../../components/I18N/Message').default;
-const LayersUtils = require('../../utils/LayersUtils');
+const {geoJSONToLayer} = require('../../utils/LayersUtils');
 const LocaleUtils = require('../../utils/LocaleUtils');
 const {
     recognizeExt,
@@ -224,7 +224,7 @@ class ShapeFileUploadAndStyle extends React.Component {
                 // geoJson is array
                 if (geoJson) {
                     return layers.concat(geoJson.map((layer) => {
-                        return LayersUtils.geoJSONToLayer(layer, this.props.createId(layer, geoJson));
+                        return geoJSONToLayer(layer, this.props.createId(layer, geoJson));
                     }));
                 }
                 return layers;

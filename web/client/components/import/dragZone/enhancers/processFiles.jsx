@@ -21,7 +21,7 @@ const {
     readJson,
     readWMC
 } = require('../../../../utils/FileUtils');
-const LayersUtils = require('../../../../utils/LayersUtils');
+const {geoJSONToLayer} = require('../../../../utils/LayersUtils');
 const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 const {isAnnotation} = require('../../../../utils/AnnotationsUtils');
 
@@ -145,7 +145,7 @@ module.exports = compose(
                                             // annotation GeoJSON to layers
                                             { name: "Annotations", features: json?.features || [], filename: json.filename} :
                                             // other GeoJSON to layers
-                                            {...LayersUtils.geoJSONToLayer(json), filename: json.filename}))
+                                            {...geoJSONToLayer(json), filename: json.filename}))
                                 ),
                             maps: (result.maps || [])
                                 .concat(

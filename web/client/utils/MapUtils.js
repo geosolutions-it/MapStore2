@@ -28,7 +28,12 @@ import uuidv1 from 'uuid/v1';
 
 import { getUnits } from './CoordinatesUtils';
 import { set } from './ImmutableUtils';
-import LayersUtils from './LayersUtils';
+import {
+    saveLayer,
+    getGroupNodes,
+    getNode,
+    extractSourcesFromLayers
+} from './LayersUtils';
 import assign from 'object-assign';
 
 export const DEFAULT_SCREEN_DPI = 96;
@@ -355,23 +360,23 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
     };
 
     const layers = currentLayers.map((layer) => {
-        return LayersUtils.saveLayer(layer);
+        return saveLayer(layer);
     });
 
     const flatGroupId = currentGroups.reduce((a, b) => {
-        const flatGroups = a.concat(LayersUtils.getGroupNodes(b));
+        const flatGroups = a.concat(getGroupNodes(b));
         return flatGroups;
     }, [].concat(currentGroups.map(g => g.id)));
 
     const groups = flatGroupId.map(g => {
-        const node = LayersUtils.getNode(currentGroups, g);
+        const node = getNode(currentGroups, g);
         return node && node.nodes ? groupSaveFormatted(node) : null;
     }).filter(g => g);
 
     const backgrounds = currentBackgrounds.filter(background => !!background.thumbnail);
 
     // extract sources map
-    const sources = LayersUtils.extractSourcesFromLayers(layers);
+    const sources = extractSourcesFromLayers(layers);
 
     /* removes tilematrixset from layers and reduced matrix ids to a list */
     const formattedLayers = layers.map(l => {

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import undoable from 'redux-undo';
+import undoable, {ActionTypes} from 'redux-undo';
 import { isEqual } from 'lodash';
 
 import assign from 'object-assign';
@@ -15,10 +15,10 @@ const mapConfigHistoryUtil = (reducer) => {
         let newState = reducer(state, action);
         let unredoState;
         // If undo modified the state we change mapStateSource
-        if (action.type === undoable.ActionTypes.UNDO && state.past.length > 0) {
+        if (action.type === ActionTypes.UNDO && state.past.length > 0) {
             let mapC = assign({}, newState.present, {mapStateSource: "undoredo", style: state.present.style, resize: state.present.resize});
             unredoState = assign({}, newState, {present: mapC});
-        } else if (action.type === undoable.ActionTypes.REDO && state.future.length > 0) {
+        } else if (action.type === ActionTypes.REDO && state.future.length > 0) {
             let mapC = assign({}, newState.present, {mapStateSource: "undoredo", style: state.present.style, resize: state.present.resize});
             unredoState = assign({}, newState, {present: mapC});
         }

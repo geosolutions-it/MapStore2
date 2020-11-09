@@ -61,7 +61,7 @@ import {
     recordToLayer
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import LayersUtils from '../utils/LayersUtils';
+import {getCapabilitiesUrl} from '../utils/LayersUtils';
 
 
 /**
@@ -264,7 +264,7 @@ export default (API) => ({
                 const state = store.getState();
                 const layer = getSelectedLayer(state);
 
-                return Rx.Observable.defer(() => API.wms.getCapabilities(LayersUtils.getCapabilitiesUrl(layer)))
+                return Rx.Observable.defer(() => API.wms.getCapabilities(getCapabilitiesUrl(layer)))
                     .switchMap((caps) => {
                         const layersXml = get(caps, 'capability.layer.layer', []);
                         const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === layer.name.split(':')[1]);

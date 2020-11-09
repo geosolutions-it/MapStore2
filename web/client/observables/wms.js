@@ -8,7 +8,7 @@
 const {Observable} = require('rxjs');
 const axios = require('../libs/ajax');
 const WMS = require('../api/WMS');
-const LayersUtils = require('../utils/LayersUtils');
+const {getCapabilitiesUrl} = require('../utils/LayersUtils');
 const {cleanAuthParamsFromURL} = require('../utils/SecurityUtils');
 const {
     determineCrs,
@@ -39,7 +39,7 @@ const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
         });
 };
 const describeLayer = l => Observable.defer( () => axios.get(toDescribeLayerURL(l))).let(interceptOGCError);
-const getLayerCapabilities = l => Observable.defer(() => WMS.getCapabilities(LayersUtils.getCapabilitiesUrl(l)))
+const getLayerCapabilities = l => Observable.defer(() => WMS.getCapabilities(getCapabilitiesUrl(l)))
     .let(interceptOGCError)
     .map(c => WMS.parseLayerCapabilities(c, l));
 

@@ -8,7 +8,7 @@
 
 import { isObject, get } from 'lodash';
 
-import LayersUtils from './LayersUtils';
+import {getGroupByName} from './LayersUtils';
 import LocaleUtils from './LocaleUtils';
 
 export const createFromSearch = function(options, search) {
@@ -101,7 +101,7 @@ export const flattenGroups = (groups, idx = 0, wholeGroup = false) => {
 };
 export const getLabelName = (groupLabel = "", groups = []) => {
     let label = groupLabel.replace(/[^\.\/]+/g, match => {
-        const title = get(LayersUtils.getGroupByName(match, groups), 'title');
+        const title = get(getGroupByName(match, groups), 'title');
         if (isObject(title)) {
             const locale = LocaleUtils.getLocale();
             return title[locale] || title.default;

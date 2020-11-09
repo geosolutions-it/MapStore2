@@ -24,7 +24,7 @@ import {
 import urlUtil from 'url';
 import CoordinatesUtils from './CoordinatesUtils';
 import ConfigUtils from './ConfigUtils';
-import LayersUtils from './LayersUtils';
+import {getLayerTitleTranslations} from './LayersUtils';
 import LocaleUtils from './LocaleUtils';
 import * as WMTSUtils from './WMTSUtils';
 import { cleanAuthParamsFromURL } from './SecurityUtils';
@@ -239,7 +239,7 @@ const converters = {
                         ...(options?.layerOptions || {}),
                         ...(records?.layerOptions || {})
                     },
-                    title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
+                    title: getLayerTitleTranslations(record) || record.Name,
                     formats: castArray(record.formats || []),
                     dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
                         values: dim._ && dim._.split(',') || []

@@ -9,7 +9,7 @@
 import { createSelector } from 'reselect';
 
 import {getMarkerLayer, defaultQueryableFilter} from '../utils/MapInfoUtils';
-import LayersUtils from '../utils/LayersUtils';
+import { denormalizeGroups } from '../utils/LayersUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
@@ -83,7 +83,7 @@ export const layerSelectorWithMarkers = createSelector(
 );
 
 export const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
-export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
+export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 export const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
 export const getSelectedLayers = state => {

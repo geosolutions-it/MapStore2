@@ -8,7 +8,7 @@
 import expect from 'expect';
 
 import assign from 'object-assign';
-import LayersUtils from '../LayersUtils';
+import * as LayersUtils from '../LayersUtils';
 const {extractTileMatrixSetFromLayers} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
