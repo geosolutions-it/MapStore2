@@ -39,6 +39,7 @@ import {
 
 import { reset, QUERY_FORM_SEARCH, loadFilter } from '../actions/queryform';
 import { zoomToExtent, CLICK_ON_MAP } from '../actions/map';
+import { BOX_END, changeBoxSelectionStatus } from '../actions/box';
 import { projectionSelector } from '../selectors/map';
 
 import {
@@ -446,13 +447,55 @@ export const handleClickOnMap = (action$, store) =>
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
                     action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
                 )));
+export const handleBoxSelectionDrawEnd =  (action$, store) =>
+    action$.ofType(UPDATE_FILTER)
+        .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
+        .switchMap(() => {
+            return action$.ofType(BOX_END).switchMap(({boxEndInfo}) => {
+                const { boxExtent, modifiers: {ctrl, metaKey} } = boxEndInfo;
+                const geom = CoordinatesUtils.getPolygonFromExtent(boxExtent);
+                const projection = projectionSelector(store.getState());
+                const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+
+                return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
+                    setSelectionOptions({multiselect: ctrl || metaKey}),
+                    updateFilter({
+                        ...currentFilter,
+                        value: {
+                            geometry: {
+                                ...geom.geometry,
+                                projection
+                            },
+                            attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                            method: "Rectangle",
+                            operation: "INTERSECTS"
+                        }
+                    }));
+            })
+                .takeUntil(Rx.Observable.merge(
+                    action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
+                ));
+        });
+export const activateBoxSelectionTool = (action$) =>
+    action$.ofType(UPDATE_FILTER)
+        .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
+        .switchMap( () => {
+            return Rx.Observable.of(changeBoxSelectionStatus("start"));
+        });
+export const deactivateBoxSelectionTool = (action$) =>
+    Rx.Observable.merge(
+        action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
+        action$.ofType(CLOSE_FEATURE_GRID_CONFIRM)
+    ).switchMap(() => {
+        return Rx.Observable.of(changeBoxSelectionStatus("end"));
+    });
 export const selectFeaturesOnMapClickResult = (action$, store) =>
     action$.ofType(QUERY_RESULT)
         .filter(({reason}) => reason === 'geometry')
         .switchMap(({result}) => {
-            const feature = get(result, 'features[0]');
+            let features = get(result, 'features');
             const selectedFeatures = selectedFeaturesSelector(store.getState());
-            const alreadySelectedFeature = find(selectedFeatures, { id: feature.id });
+            const alreadySelectedFeature = find(selectedFeatures, { id: features[0].id });
             const multipleSelect = multiSelect(store.getState());
 
             if (multipleSelect && alreadySelectedFeature) {
@@ -468,7 +511,10 @@ export const selectFeaturesOnMapClickResult = (action$, store) =>
             }
 
             const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-            return Rx.Observable.of(selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : [], multipleSelect));
+            return Rx.Observable.of(
+                selectFeatures(
+                    features.length > 0 && geometryFilter && geometryFilter.value ? [...features] : [],
+                    multipleSelect));
         });
 export const activateTemporaryChangesEpic = (action$) =>
     action$.ofType(ACTIVATE_TEMPORARY_CHANGES)

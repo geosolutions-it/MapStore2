@@ -58,6 +58,7 @@ import { CHANGE_DRAWING_STATUS, geometryChanged } from '../../actions/draw';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
 import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
+import { boxEnd, CHANGE_BOX_SELECTION_STATUS } from '../../actions/box';
 import { CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData } from '../../actions/layers';
 
 import {
@@ -114,6 +115,9 @@ import {
     disableMultiSelect,
     selectFeaturesOnMapClickResult,
     enableGeometryFilterOnEditMode,
+    handleBoxSelectionDrawEnd,
+    activateBoxSelectionTool,
+    deactivateBoxSelectionTool,
     deactivateSyncWmsFilterOnFeatureGridClose
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
@@ -2122,6 +2126,71 @@ describe('featuregrid Epics', () => {
             expect(actions[0].disabled).toBe(true);
             expect(actions[1].type).toBe(DEACTIVATE_GEOMETRY_FILTER);
             expect(actions[1].deactivated).toBe(true);
+        }, {}, done);
+    });
+    it('handleBoxSelectionDrawEnd', (done) => {
+        const startActions = [updateFilter({
+            type: 'geometry',
+            enabled: true
+        }), boxEnd({
+            boxExtent: [-14653436.944438, 4971311.4456112925, -12792577.490835384, 6611726.509639461],
+            modifiers: {
+                ctrl: false,
+                metaKey: false
+            }
+        })];
+        testEpic(handleBoxSelectionDrawEnd, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_SELECTION_OPTIONS);
+            expect(actions[1].type).toBe(UPDATE_FILTER);
+            expect(actions[1].update).toExist();
+            expect(actions[1].update.value).toExist();
+            expect(actions[1].update.value.attribute).toBe('the_geom');
+            expect(actions[1].update.value.method).toBe('Rectangle');
+            expect(actions[1].update.value.geometry).toExist();
+            expect(actions[1].update.value.geometry.type).toBe('Polygon');
+        }, {
+            featuregrid: {
+                filters: [{
+                    type: 'geometry',
+                    attribute: 'the_geom',
+                    enabled: true
+                }]
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
+            }
+        }, done);
+    });
+    it('activateBoxSelectionTool', (done) => {
+        const startActions = [
+            updateFilter({
+                type: 'geometry',
+                enabled: true
+            })];
+        testEpic(activateBoxSelectionTool, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+            expect(actions[0].status).toBe('start');
+        }, {}, done);
+    });
+    it('deactivateBoxSelectionTool', (done) => {
+        const startActions = [
+            updateFilter({
+                type: 'geometry',
+                enabled: false
+            })];
+        testEpic(deactivateBoxSelectionTool, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+            expect(actions[0].status).toBe('end');
+        }, {}, done);
+        testEpic(deactivateBoxSelectionTool, 1, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+            expect(actions[0].status).toBe('end');
         }, {}, done);
     });
     it('disableMultiSelect epic', (done) => {

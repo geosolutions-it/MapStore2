@@ -10,6 +10,7 @@ import React from 'react';
 
 import { createSelector } from 'reselect';
 import { changeMapView, clickOnMap, mouseMove, mouseOut } from '../../actions/map';
+import { boxEnd } from '../../actions/box';
 import { removePopup } from '../../actions/mapPopups';
 import { layerLoading, layerLoad, layerError } from '../../actions/layers';
 
@@ -25,6 +26,7 @@ import {
 import { measurementSelector } from '../../selectors/measurement';
 import { changeSelectionState } from '../../actions/selection';
 import { changeLocateState, onLocateError } from '../../actions/locate';
+import { boxSelectionStatus } from '../../selectors/box';
 
 import {
     changeDrawingStatus,
@@ -108,6 +110,16 @@ const pluginsCreator = (mapType, actions) => {
             setCurrentStyle: setCurrentStyle
         })( components.DrawSupport || Empty);
 
+        const BoxSelectionSupport = connect(
+            createSelector(
+                (state) => boxSelectionStatus(state),
+                (status) => ({
+                    status
+                })), {
+                onBoxEnd: boxEnd
+            }
+        )(components.BoxSelectionSupport || Empty);
+
         const HighlightSupport = connect((state) =>
             state.highlight || {}, {updateHighlighted})( components.HighlightFeatureSupport || Empty);
 
@@ -141,7 +153,8 @@ const pluginsCreator = (mapType, actions) => {
                 draw: DrawSupport,
                 highlight: HighlightSupport,
                 selection: SelectionSupport,
-                popup: PopupSupport
+                popup: PopupSupport,
+                box: BoxSelectionSupport
             }
         };
     });
