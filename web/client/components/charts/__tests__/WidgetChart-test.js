@@ -167,7 +167,7 @@ describe('Widget Chart: data conversions ', () => {
                 // LAYOUT
 
                 // minimal margins, bottom automatic
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
+                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
 
                 // colors generated are the defaults, generated on series (1 color for series, so 1)
                 expect(layout.colorway).toEqual(defaultColorGenerator(1, COLOR_DEFAULTS));
@@ -190,48 +190,14 @@ describe('Widget Chart: data conversions ', () => {
                 expect(data[0].name).toEqual("TEST_LABEL");
             });
         });
-        it('xAxisAngle and relative bottom margin', () => {
-            testAllTypes({
-                ...DATASET_1,
-                xAxisAngle: 0
-            }, ({ layout }) => {
-                // bottom margin is optimized
-                expect(layout.margin).toEqual({ t: 5, b: 25, l: 5, r: 5, pad: 4 });
-                expect(layout.xaxis.tickangle).toEqual(0);
-            });
-            testAllTypes({
-                ...DATASET_1,
-                xAxisAngle: 90
-            }, ({ layout }) => {
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
-                expect(layout.xaxis.tickangle).toEqual(90);
-            });
-        });
-        it('yAxis amd relative left margin', () => {
-            testAllTypes({
-                ...DATASET_1
-            }, ({ layout }) => {
-                // bottom margin is optimized
-                expect(layout.yaxis.showticklabels).toBe(false); // false by default
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
-            });
-            testAllTypes({
-                ...DATASET_1,
-                yAxis: true
-            }, ({ layout }) => {
-                // bottom margin is optimized
-                expect(layout.yaxis.showticklabels).toBe(true);
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: undefined, r: 5, pad: 4 });
-            });
-        });
         it('cartesian to show/hide grid', () => {
             testAllTypes({
                 ...DATASET_1,
                 cartesian: true
             }, ({ layout }) => {
                 // bottom margin is optimized
-                expect(layout.yaxis.showgrid).toBe(true); // false by default
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
+                expect(layout.yaxis.showgrid).toBe(true);
+                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
             });
 
         });
