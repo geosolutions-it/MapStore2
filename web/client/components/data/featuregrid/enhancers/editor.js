@@ -60,7 +60,7 @@ const featuresToGrid = compose(
         dataStreamFactory,
         virtualScroll: true
     }),
-    withPropsOnChange("showDragHandle", ({showDragHandle = false} = {}) => ({
+    withPropsOnChange("showDragHandle", ({showDragHandle = true} = {}) => ({
         className: showDragHandle ? 'feature-grid-drag-handle-show' : 'feature-grid-drag-handle-hide'
     })),
     withPropsOnChange(
