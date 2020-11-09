@@ -86,6 +86,8 @@
       "propertiesFormatDescription": "Näyttää ominaisuustietojen tulokset ominaisuusluettelona",
       "templateFormatTitle": "MALLI",
       "templateFormatDescription": "Mukauta ominaisuustietojen tulokset",
+      "hideFormatTitle": "VAMMAISEN TUNNISTAMINEN",
+      "hideFormatDescription": "Poista ominaisuuden tiedot tältä tasolta",
       "templateFormatInfoAlert1": "Napsauta Muokkaa-painiketta lisätäksesi uuden mallin.",
       "templateFormatInfoAlert2": "Käytä ${ attribute } kääriäksesi näytettävät ominaisuudet",
       "templateFormatInfoAlertExample": "Kohteen ID on ${ properties }",

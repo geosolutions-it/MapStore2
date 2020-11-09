@@ -20,7 +20,8 @@ var {
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfo,
-    filterRequestParams
+    filterRequestParams,
+    defaultQueryableFilter
 } = require('../MapInfoUtils');
 
 const CoordinatesUtils = require('../CoordinatesUtils');
@@ -653,6 +654,7 @@ describe('MapInfoUtils', () => {
                 }
             }
         };
+
         const layer3 = {...layer1, ...layer2};
         const wmts1 = {...layer1, type: "wmts"};
         const wmts2 = { ...layer2, type: "wmts" };
@@ -666,6 +668,27 @@ describe('MapInfoUtils', () => {
         // the filterObj and CQL_FILTER must be merged into a unique filter
         expect(buildIdentifyRequest(wmts3, props).request.CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop1 = 'value')");
 
+    });
+
+    it('defaultQueryableFilter should return false if featureInfo format is HIDDEN', () => {
+
+        let layer4 = {
+            type: "wms",
+            queryLayers: false,
+            name: "layer",
+            url: "http://localhost",
+            featureInfo: {
+                format: "HIDDEN",
+                viewer: {
+                    type: 'customViewer'
+                }
+            },
+            group: 'background',
+            queryable: false,
+            visibility: false
+        };
+        let results = defaultQueryableFilter(layer4);
+        expect(results).toEqual(false);
     });
 
 });

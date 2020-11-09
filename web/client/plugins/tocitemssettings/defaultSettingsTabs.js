@@ -52,6 +52,11 @@ const isStylableLayer = (props) =>
 
 
 const formatCards = {
+    HIDDEN: {
+        titleId: 'layerProperties.hideFormatTitle',
+        descId: 'layerProperties.hideFormatDescription',
+        glyph: 'ext-empty'
+    },
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
         descId: 'layerProperties.textFormatDescription',
@@ -116,7 +121,7 @@ const formatCards = {
 import FeatureInfoCmp from '../../components/TOC/fragments/settings/FeatureInfo';
 const FeatureInfo = defaultProps({
     formatCards,
-    defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat()
+    defaultInfoFormat: Object.assign({ "HIDDEN": "text/html"}, MapInfoUtils.getAvailableInfoFormat())
 })(FeatureInfoCmp);
 
 const configuredPlugins = {};

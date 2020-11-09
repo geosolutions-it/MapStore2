@@ -12,6 +12,7 @@ const INFO_FORMATS_BY_MIME_TYPE = FeatureInfoUtils.INFO_FORMATS_BY_MIME_TYPE;
 const pointOnSurface = require('turf-point-on-surface');
 const {findIndex} = require('lodash');
 
+
 const MapInfoUtils = {
     /**
      * specifies which info formats are currently supported
@@ -211,7 +212,7 @@ const MapInfoUtils = {
         return l.visibility &&
             MapInfoUtils.services[l.type] &&
             (l.queryable === undefined || l.queryable) &&
-            l.group !== "background"
+            l.group !== "background" && l?.featureInfo?.format !== 'HIDDEN'
         ;
     },
     services: {
