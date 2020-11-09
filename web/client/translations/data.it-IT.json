@@ -1821,7 +1821,7 @@
               "axisTypes": {
                 "auto": "Auto",
                 "linear": "Lineare",
-                "categoria": "Categoria",
+                "category": "Categoria",
                 "log": "Logaritmo",
                 "date": "Data"
               }
