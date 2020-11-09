@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { get } from 'lodash';
 import ReactTestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import ChartAdvancedOptions from '../ChartAdvancedOptions';
