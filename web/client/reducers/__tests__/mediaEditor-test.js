@@ -20,7 +20,9 @@ import {
     setMediaService,
     setMediaType,
     show,
-    updateItem
+    updateItem,
+    loadingSelectedMedia,
+    loadingMediaList
 } from '../../actions/mediaEditor';
 
 describe('Test the mediaEditor reducer', () => {
@@ -208,5 +210,18 @@ describe('Test the mediaEditor reducer', () => {
             }
         }, updateItem(map, "replace"));
         expect(state.data.map.geostoreMap.resultData.resources[0]).toBe(map);
+    });
+    it('LOADING_SELECTED_MEDIA', () => {
+        const loading = true;
+        const state = mediaEditor({}, loadingSelectedMedia(loading));
+        expect(state).toEqual({
+            loadingSelected: true
+        });
+    });
+    it('LOADING_MEDIA_LIST', () => {
+        const state = mediaEditor({}, loadingMediaList());
+        expect(state).toEqual({
+            loadingList: true
+        });
     });
 });

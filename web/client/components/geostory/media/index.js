@@ -32,10 +32,12 @@ export const typesMap = {
 export const Media = ({ debounceTime, mediaViewer, ...props }) => {
     // store all ids inside an immersive section
     // in this way every media is loaded only when in view
+    const loadingId = `${props.id}${props.resourceId ? `-${props.resourceId}` : ''}`;
+    // define a specific loading id to match the one in the visibility container
     const [loading, onLoad] = useState({});
-    const isLoading = loading[props.id] === undefined
+    const isLoading = loading[loadingId] === undefined
         ? true
-        : loading[props.id];
+        : loading[loadingId];
 
     const MediaType = mediaViewer || typesMap[props.mediaType || props.type] || Image;
 
@@ -46,6 +48,7 @@ export const Media = ({ debounceTime, mediaViewer, ...props }) => {
             loading={loading}
             isLoading={isLoading}
             onLoad={onLoad}
+            loadingId={loadingId}
             {...props} />
     );
 };
