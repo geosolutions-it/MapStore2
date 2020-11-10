@@ -1813,6 +1813,7 @@
               "hideLabels": "Ocultar etiquetas",
               "xAxisType": "Tipo",
               "forceTicks": "Nunca omita etiquetas",
+              "maxXAxisLabels": "De todos modos, las etiquetas no pueden ser más de {max}",
               "yAxis": "Eje Y",
               "yAxisType": "Tipo",
               "yAxisLabel": "Etiqueta de leyenda",

@@ -1813,6 +1813,7 @@
               "hideLabels": "Hide labels",
               "xAxisType": "Type",
               "forceTicks": "Never skip labels",
+              "maxXAxisLabels": "The labels can not anyway be more than {max}",
               "yAxis":  "Y axis",
               "yAxisType": "Type",
               "yAxisLabel": "Legend Label",

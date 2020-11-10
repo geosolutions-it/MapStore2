@@ -1812,6 +1812,7 @@
               "hideLabels": "Labels ausblenden",
               "xAxisType": "Type",
               "forceTicks": "Überspringe niemals Etik.",
+              "maxXAxisLabels": "Die Beschriftungen dürfen sowieso nicht mehr als {max} sein",
               "yAxis": "Y-Achse",
               "yAxisType": "Type",
               "yAxisLabel": "Legend Label",

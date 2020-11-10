@@ -1814,6 +1814,7 @@
               "hideLabels": "Masquer les libellés",
               "xAxisType": "Type",
               "forceTicks": "Ne sauter les étiquettes",
+              "maxXAxisLabels": "Les libellés ne peuvent de toute façon pas dépasser {max}",
               "yAxis": "axe Y",
               "yAxisType": "Type",
               "yAxisLabel": "Légende Libellé",

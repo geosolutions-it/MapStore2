@@ -4,6 +4,8 @@ import { Col, FormGroup, FormControl, ControlLabel, Glyphicon } from 'react-boot
 import Message from '../../../../I18N/Message';
 import Select from 'react-select';
 import Slider from '../../../../misc/Slider';
+import InfoPopover from '../../../widget/InfoPopover';
+
 
 import SwitchPanel from '../../../../misc/switch/SwitchPanel';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
@@ -115,7 +117,11 @@ export default function ChartAdvancedOptions({
                     disabled={data?.xAxisOpts?.hide ?? false}
                     checked={!!data?.xAxisOpts?.nTicks}
                     onChange={(val) => { onChange("xAxisOpts.nTicks", val ? MAX_X_AXIS_LABELS : undefined ); }}
-                />
+                /><span style={{
+                    position: "relative",
+                    top: -5,
+                    margin: 10
+                }}><InfoPopover bsStyle="info" text={<Message msgId="widgets.advanced.maxXAxisLabels" msgParams={{ max: MAX_X_AXIS_LABELS }} />} /></span>
             </Col>
             <Col componentClass={ControlLabel} sm={6}>
                 <Message msgId="widgets.advanced.xAxisAngle" />
