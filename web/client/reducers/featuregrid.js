@@ -45,7 +45,8 @@ import {
     GRID_QUERY_RESULT,
     LOAD_MORE_FEATURES,
     SET_UP,
-    SET_TIME_SYNC
+    SET_TIME_SYNC,
+    UPDATE_EDITORS_OPTIONS
 } from '../actions/featuregrid';
 
 import { FEATURE_TYPE_LOADED, QUERY_CREATE } from '../actions/wfsquery';
@@ -76,7 +77,10 @@ const emptyResultsState = {
     drawing: false,
     newFeatures: [],
     features: [],
-    dockSize: 0.35
+    dockSize: 0.35,
+    customEditorsOptions: {
+        "rules": []
+    }
 };
 const isSameFeature = (f1, f2) => f2 === f1 || (f1.id !== undefined && f1.id !== null && f1.id === f2.id);
 const isPresent = (f1, features = []) => features.filter( f2 => isSameFeature(f1, f2)).length > 0;
@@ -184,6 +188,8 @@ function featuregrid(state = emptyResultsState, action) {
     case SET_SELECTION_OPTIONS: {
         return assign({}, state, {multiselect: action.multiselect});
     }
+    case UPDATE_EDITORS_OPTIONS:
+        return assign({}, state, { customEditorsOptions: action.payload });
     case SET_UP: {
         return assign({}, state, action.options || {});
     }
