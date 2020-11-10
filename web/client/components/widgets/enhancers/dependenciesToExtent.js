@@ -11,7 +11,7 @@ const { mapPropsStream, compose, branch, withPropsOnChange} = require('recompose
 const { isEmpty, isEqual} = require('lodash');
 
 const { composeFilterObject } = require('./utils');
-const wpsBounds = require('../../../observables/wps/bounds');
+const wpsBounds = require('../../../observables/wps/bounds').default;
 const FilterUtils = require('../../../utils/FilterUtils');
 const { getWpsUrl } = require('../../../utils/LayersUtils');
 const { set } = require('../../../utils/ImmutableUtils');
@@ -63,11 +63,11 @@ module.exports = compose(
                             };
                             const wfsGetFeature = FilterUtils.toOGCFilter(featureTypeName, filterObjCollection, "1.1.0");
                             return wpsBounds(getWpsUrl(dependencies.layer), {wfsGetFeature })
-                                .switchMap(response => {
+                                .switchMap(data => {
                                     let json;
                                     let sw;
                                     let ne;
-                                    xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+                                    xml2js.parseString(data, {explicitArray: false}, (ignore, result) => {
                                         json = result["ows:BoundingBox"];
                                         sw = json["ows:LowerCorner"].split(" ");
                                         ne = json["ows:UpperCorner"].split(" ");
