@@ -77,7 +77,7 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,
-                dtick: xAxisOpts.forceTicks ? 0.25 : undefined,
+                nticks: xAxisOpts.nTicks, // max number of ticks, to avoid performance issues
                 automargin: true,
                 tickangle: xAxisAngle ?? 'auto'
             }

@@ -201,5 +201,15 @@ describe('Widget Chart: data conversions ', () => {
             });
 
         });
+        it('nTicks passed to force to show all labels, max nTicks', () => {
+            testAllTypes({
+                ...DATASET_1,
+                xAxisOpts: { nTicks: 200}
+            }, ({ layout }) => {
+                // bottom margin is optimized
+                expect(layout.xaxis.nticks).toBe(200);
+            });
+
+        });
     });
 });

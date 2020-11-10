@@ -27,6 +27,8 @@ const AXIS_TYPES = [{
     label: 'widgets.advanced.axisTypes.date'
 }];
 
+const MAX_X_AXIS_LABELS = 200;
+
 function Header({data}) {
     return (<span>
         <span style={{ cursor: "pointer" }}><Message msgId="widgets.advanced.title"/></span>
@@ -111,8 +113,8 @@ export default function ChartAdvancedOptions({
             <Col sm={6}>
                 <SwitchButton
                     disabled={data?.xAxisOpts?.hide ?? false}
-                    checked={data?.xAxisOpts?.forceTicks}
-                    onChange={(val) => { onChange("xAxisOpts.forceTicks", val); }}
+                    checked={!!data?.xAxisOpts?.nTicks}
+                    onChange={(val) => { onChange("xAxisOpts.nTicks", val ? MAX_X_AXIS_LABELS : undefined ); }}
                 />
             </Col>
             <Col componentClass={ControlLabel} sm={6}>
