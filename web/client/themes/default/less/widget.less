@@ -229,14 +229,6 @@
             }
         }
     }
-    .Select-menu-outer {
-        // fix select options z-index that
-        // conflicts with slider in advanced options menu
-        // TODO: several changes of this kind in application.
-        // need to be unified.
-        z-index: 2 !important;
-    }
-
     /*
      * fix for google map layer in preview
      */
@@ -293,6 +285,13 @@
     height: 100%;
     background-color: @ms2-color-background;
     .shadow-soft;
+    .Select-menu-outer {
+        // fix select options z-index that
+        // conflicts with slider in advanced options menu
+        // TODO: several changes of this kind in application.
+        // need to be unified.
+        z-index: 2 !important;
+    }
     // makes the body scrollable
     .ms2-border-layout-content{
         position: relative;
