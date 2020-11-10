@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,18 +6,19 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 
 const { connect } = require('react-redux');
 
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
-const PluginsUtils = require('../utils/PluginsUtils');
+const {getMonitoredState} = require('../utils/PluginsUtils');
 const ConfigUtils = require('../utils/ConfigUtils').default;
 const BorderLayout = require('../components/layout/BorderLayout');
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
-    monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
+    monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
 }))(require('../components/plugins/PluginsContainer').default);
 
 class HolyGrail extends React.Component {

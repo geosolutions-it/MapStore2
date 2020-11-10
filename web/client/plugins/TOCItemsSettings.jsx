@@ -12,7 +12,9 @@ import PropTypes from 'prop-types';
 import {createSelector} from 'reselect';
 import { compose, defaultProps, withPropsOnChange, getContext} from 'recompose';
 import { createPlugin } from '../utils/PluginsUtils';
-import LayersUtils from '../utils/LayersUtils';
+import {
+    getDimension
+} from '../utils/LayersUtils';
 import {hideSettings, updateSettings, updateNode, updateSettingsParams} from '../actions/layers';
 import {getLayerCapabilities} from '../actions/layerCapabilities';
 import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
@@ -94,7 +96,7 @@ const TOCItemsSettingsPlugin = compose(
     }),
     updateSettingsLifecycle,
     defaultProps({
-        getDimension: LayersUtils.getDimension,
+        getDimension: getDimension,
         enableLayerNameEditFeedback: true
     }),
     getContext({

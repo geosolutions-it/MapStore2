@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,12 +5,13 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Badge = BootstrapReact.Badge;
+const React = require('react');
+const BootstrapReact = require('react-bootstrap');
+const Badge = BootstrapReact.Badge;
+const PropTypes = require('prop-types');
 
 const {isString} = require('lodash');
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getMessageById} = require('../../utils/LocaleUtils');
 
 /**
  * A badge to show that there is a help text available for the parent component.
@@ -42,7 +42,7 @@ class HelpBadge extends React.Component {
     };
 
     onMouseOver = () => {
-        const helpText = isString(this.props.helpText) ? this.props.helpText : LocaleUtils.getMessageById(this.context.messages, this.props.helpText.props.msgId);
+        const helpText = isString(this.props.helpText) ? this.props.helpText : getMessageById(this.context.messages, this.props.helpText.props.msgId);
         this.props.changeHelpText(helpText);
         this.props.changeHelpwinVisibility(true);
     };

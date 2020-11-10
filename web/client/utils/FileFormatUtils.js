@@ -1,17 +1,25 @@
-const {head} = require('lodash');
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const getFormatByName = (outF) => {
+import { head } from 'lodash';
+
+export const getFormatByName = (outF) => {
     const extension = outF.split(/[^\w]/)[1];
     return extension ? {outputFormat: outF, extension: extension.toLowerCase()} : undefined;
 
 };
 
-const formatToGlyph = {
+export const formatToGlyph = {
     json: 'ext-json',
     wmc: 'ext-wmc'
 };
 
-const formatToText = {
+export const formatToText = {
     json: 'JSON',
     wmc: 'WMC'
 };
@@ -79,9 +87,4 @@ const formats = [{
 }
 ];
 
-module.exports = {
-    formats,
-    formatToGlyph,
-    formatToText,
-    getByOutputFormat: (outF) => head(formats.filter(format => format.outputFormat === outF)) || getFormatByName(outF)
-};
+export const getByOutputFormat = (outF) => head(formats.filter(format => format.outputFormat === outF)) || getFormatByName(outF);

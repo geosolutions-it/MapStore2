@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const url = require('url');
-const LocaleUtils = require('../LocaleUtils');
+import expect from 'expect';
+
+import url from 'url';
+import * as LocaleUtils from '../LocaleUtils';
 
 describe('LocaleUtils', () => {
     it('normalizeLocaleCode', () => {

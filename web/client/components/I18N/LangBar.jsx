@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {DropdownButton, MenuItem, ButtonGroup} = require('react-bootstrap');
 const {head} = require('lodash');
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getSupportedLocales} = require('../../utils/LocaleUtils');
 const FlagButton = require('./FlagButton');
 
 class LangBar extends React.Component {
@@ -32,7 +32,7 @@ class LangBar extends React.Component {
     };
 
     render() {
-        const locales = LocaleUtils.getSupportedLocales();
+        const locales = getSupportedLocales();
         const currentLanguage = head(Object.keys(locales).filter(lang => locales[lang].code === this.props.currentLocale));
         return this.props.dropdown ? (
             <div

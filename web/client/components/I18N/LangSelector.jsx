@@ -1,5 +1,4 @@
 
-var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,9 +6,10 @@ var PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var {FormControl} = require('react-bootstrap');
-var LocaleUtils = require('../../utils/LocaleUtils');
+const React = require('react');
+const {FormControl} = require('react-bootstrap');
+const PropTypes = require('prop-types');
+const {getSupportedLocales} = require('../../utils/LocaleUtils');
 
 class LangSelector extends React.Component {
     static propTypes = {
@@ -30,7 +30,7 @@ class LangSelector extends React.Component {
         var val;
         var label;
         var list = [];
-        let locales = LocaleUtils.getSupportedLocales();
+        let locales = getSupportedLocales();
         for (let lang in locales) {
             if (locales.hasOwnProperty(lang)) {
                 val = locales[lang].code;

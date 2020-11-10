@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,8 +6,9 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {isEqual} = require("lodash");
-const TemplateUtils = require('../../../../utils/TemplateUtils');
+const {parseTemplate} = require('../../../../utils/TemplateUtils');
 
 class Template extends React.Component {
     static propTypes = {
@@ -57,7 +57,7 @@ class Template extends React.Component {
     }
 
     parseTemplate = (temp) => {
-        TemplateUtils.parseTemplate(temp, (comp, error) => {
+        parseTemplate(temp, (comp, error) => {
             if (error) {
                 this.props.onError(error.message);
             } else {

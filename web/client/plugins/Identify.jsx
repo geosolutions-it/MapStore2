@@ -27,7 +27,7 @@ const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
 const {getConfigProp} = require("../utils/ConfigUtils").default;
 const { compose, defaultProps } = require('recompose');
-const MapInfoUtils = require('../utils/MapInfoUtils');
+const {getDefaultInfoFormatValue, getValidator} = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');
 const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
 const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
@@ -86,7 +86,7 @@ const identifyDefaultProps = defaultProps({
     enabled: false,
     draggable: true,
     collapsible: false,
-    format: MapInfoUtils.getDefaultInfoFormatValue(),
+    format: getDefaultInfoFormatValue(),
     requests: [],
     responses: [],
     viewerOptions: {},
@@ -131,7 +131,7 @@ const identifyDefaultProps = defaultProps({
     getFeatureButtons,
     showFullscreen: false,
     validResponses: [],
-    validator: MapInfoUtils.getValidator, // TODO: move all validation from the components to the selectors
+    validator: getValidator, // TODO: move all validation from the components to the selectors
     zIndex: 1050
 });
 

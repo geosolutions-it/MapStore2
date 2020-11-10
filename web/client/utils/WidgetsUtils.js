@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { get, find, isNumber, round} = require('lodash');
-const {WIDGETS_REGEX} = require('../actions/widgets');
-const { findGroups } = require('./GraphUtils');
-const { sameToneRangeColors } = require('./ColorUtils');
+import { get, find, isNumber, round } from 'lodash';
 
-const getDependentWidget = (k, widgets) => {
+import { WIDGETS_REGEX } from '../actions/widgets';
+import { findGroups } from './GraphUtils';
+import { sameToneRangeColors } from './ColorUtils';
+
+export const getDependentWidget = (k, widgets) => {
     const [match, id] = WIDGETS_REGEX.exec(k);
     if (match) {
         const widget = find(widgets, { id });
@@ -20,7 +21,7 @@ const getDependentWidget = (k, widgets) => {
     return null;
 };
 
-const getWidgetDependency = (k, widgets) => {
+export const getWidgetDependency = (k, widgets) => {
     const regRes = WIDGETS_REGEX.exec(k);
     const rest = regRes && regRes[2];
     const widget = getDependentWidget(k, widgets);
@@ -28,7 +29,7 @@ const getWidgetDependency = (k, widgets) => {
         ? get(widget, rest)
         : widget;
 };
-const getConnectionList = (widgets = []) => {
+export const getConnectionList = (widgets = []) => {
     return widgets.reduce(
         (acc, curr) => {
         // note: check mapSync because dependency map is not actually cleaned
@@ -54,7 +55,7 @@ const getConnectionList = (widgets = []) => {
  * @param {number} decimals number of decimal to use when rounding
  * @return the shortened number plus a suffix or the label is a string is passed
 */
-const shortenLabel = (label, threshold = 1000, decimals = 1) => {
+export const shortenLabel = (label, threshold = 1000, decimals = 1) => {
     if (!isNumber(label)) {
         return label;
     }
@@ -88,17 +89,12 @@ const shortenLabel = (label, threshold = 1000, decimals = 1) => {
     return number;
 };
 
-module.exports = {
-    shortenLabel,
-    getWidgetDependency,
-    getConnectionList,
-    getWidgetsGroups: (widgets = []) => {
-        const groups = findGroups(getConnectionList(widgets));
-        const colorsOpts = { base: 190, range: 340, options: { base: 10, range: 360, s: 0.67, v: 0.67 } };
-        const colors = sameToneRangeColors(colorsOpts.base, colorsOpts.range, groups.length + 1, colorsOpts.options);
-        return groups.map((members, i) => ({
-            color: colors[i],
-            widgets: members
-        }));
-    }
+export const getWidgetsGroups =  (widgets = []) => {
+    const groups = findGroups(getConnectionList(widgets));
+    const colorsOpts = { base: 190, range: 340, options: { base: 10, range: 360, s: 0.67, v: 0.67 } };
+    const colors = sameToneRangeColors(colorsOpts.base, colorsOpts.range, groups.length + 1, colorsOpts.options);
+    return groups.map((members, i) => ({
+        color: colors[i],
+        widgets: members
+    }));
 };

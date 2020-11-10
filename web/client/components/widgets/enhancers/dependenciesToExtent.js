@@ -12,10 +12,10 @@ const { isEmpty, isEqual} = require('lodash');
 
 const { composeFilterObject } = require('./utils');
 const wpsBounds = require('../../../observables/wps/bounds');
-const FilterUtils = require('../../../utils/FilterUtils');
+const {composeAttributeFilters, toOGCFilter} = require('../../../utils/FilterUtils');
 const { getWpsUrl } = require('../../../utils/LayersUtils');
 const { set } = require('../../../utils/ImmutableUtils');
-const MapUtils = require('../../../utils/MapUtils');
+const {createRegisterHooks, ZOOM_TO_EXTENT_HOOK} = require('../../../utils/MapUtils');
 
 /**
  * fetches the bounds from an ogc filter based on dependencies
@@ -30,7 +30,7 @@ module.exports = compose(
         compose(
             withPropsOnChange(["id"],
                 ({hookRegister = null}) => ({
-                    hookRegister: hookRegister || MapUtils.createRegisterHooks()
+                    hookRegister: hookRegister || createRegisterHooks()
                 })),
             mapPropsStream(props$ => {
                 return props$
@@ -49,7 +49,7 @@ module.exports = compose(
                             filterObjCollection = {...filterObjCollection, ...composeFilterObject(filterObj, dependencies.quickFilters, dependencies.options)};
                         }
                         if (dependencies.filter) {
-                            filterObjCollection = {...filterObjCollection, ...FilterUtils.composeAttributeFilters([filterObjCollection, dependencies.filter])};
+                            filterObjCollection = {...filterObjCollection, ...composeAttributeFilters([filterObjCollection, dependencies.filter])};
                         }
                         const featureTypeName = dependencies && dependencies.layer && dependencies.layer.name;
                         if (!isEmpty(filterObjCollection)) {
@@ -61,7 +61,7 @@ module.exports = compose(
                                     noSchemaLocation: true
                                 }
                             };
-                            const wfsGetFeature = FilterUtils.toOGCFilter(featureTypeName, filterObjCollection, "1.1.0");
+                            const wfsGetFeature = toOGCFilter(featureTypeName, filterObjCollection, "1.1.0");
                             return wpsBounds(getWpsUrl(dependencies.layer), {wfsGetFeature })
                                 .switchMap(response => {
                                     let json;
@@ -81,7 +81,7 @@ module.exports = compose(
                                         maxx: parseFloat(ne[0]),
                                         maxy: parseFloat(ne[1])
                                     };
-                                    const hook = hookRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+                                    const hook = hookRegister.getHook(ZOOM_TO_EXTENT_HOOK);
                                     if (hook) {
                                         // trigger "internal" zoom to extent
                                         hook(bounds4326, {

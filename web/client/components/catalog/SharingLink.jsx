@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,8 +9,9 @@ const React = require('react');
 const Message = require('../I18N/Message').default;
 const {FormControl, FormGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger').default;
+const PropTypes = require('prop-types');
 const CopyToClipboard = require('react-copy-to-clipboard');
-const SecurityUtils = require('../../utils/SecurityUtils');
+const {addAuthenticationToUrl} = require('../../utils/SecurityUtils');
 
 class SharingLink extends React.Component {
     static propTypes = {
@@ -35,7 +35,7 @@ class SharingLink extends React.Component {
             return null;
         }
         // add authentication to the url if possible
-        const url = this.props.addAuthentication ? SecurityUtils.addAuthenticationToUrl(this.props.url) : this.props.url;
+        const url = this.props.addAuthentication ? addAuthenticationToUrl(this.props.url) : this.props.url;
         const messageId = this.state.showCopiedToolTip ? "catalog.copied" : "catalog.copyToClipboard";
         const tooltip =
             (<Tooltip id="tooltip">

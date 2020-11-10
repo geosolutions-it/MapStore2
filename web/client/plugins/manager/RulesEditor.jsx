@@ -8,7 +8,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
+const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditorUtils");
 const Message = require('../../components/I18N/Message').default;
 const BorderLayout = require("../../components/layout/BorderLayout");
 const Header = require("../../components/manager/rulesmanager/ruleseditor/Header");

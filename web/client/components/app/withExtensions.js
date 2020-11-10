@@ -9,7 +9,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { loadLocale } from '../../actions/locale';
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getUserLocale} from '../../utils/LocaleUtils';
 import castArray from 'lodash/castArray';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
@@ -61,7 +61,7 @@ function withExtensions(AppComponent) {
             if (translations.length > 0) {
                 ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
             }
-            const locale = LocaleUtils.getUserLocale();
+            const locale = getUserLocale();
             store.dispatch(loadLocale(null, locale));
         };
 

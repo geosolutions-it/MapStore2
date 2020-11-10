@@ -8,8 +8,8 @@
 
 import uuidv1 from 'uuid/v1';
 
-import LocaleUtils from './LocaleUtils';
-import { extraMarkers } from './MarkerUtils';
+import {getMessageById} from './LocaleUtils';
+import MarkerUtils from './MarkerUtils';
 import { geometryFunctions, fetchStyle, hashAndStringify } from './VectorStyleUtils';
 import { set } from './ImmutableUtils';
 import { values, isNil, slice, head, castArray, last, isArray, findIndex, isString } from 'lodash';
@@ -111,7 +111,7 @@ export const getStylesObject = ({type = "Point", features = []} = {}) => {
         return p;
     }, {type: "FeatureCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
 };
-export const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") !== "annotations.defaulttitle" ? LocaleUtils.getMessageById(messages, "annotations.defaulttitle") : "Default title", id: uuidv1(), ...props});
+export const getProperties = (props = {}, messages = {}) => ({title: getMessageById(messages, "annotations.defaulttitle") !== "annotations.defaulttitle" ? getMessageById(messages, "annotations.defaulttitle") : "Default title", id: uuidv1(), ...props});
 
 export const getDashArrayFromStyle = dashArray => {
     return isString(dashArray) && dashArray || isArray(dashArray) && dashArray.join(" ");
@@ -170,7 +170,7 @@ export const annStyleToOlStyle = (type, tempStyle, label = "") => {
     case "Point":
     case "MultiPoint": {
         // TODO TEST THIS
-        const externalGraphic = s.symbolUrl && fetchStyle(hashAndStringify(s), "base64") || extraMarkers.markerToDataUrl(s);
+        const externalGraphic = s.symbolUrl && fetchStyle(hashAndStringify(s), "base64") || MarkerUtils.extraMarkers.markerToDataUrl(s);
         let graphicXOffset = -18;
         let graphicYOffset = -46;
         if (s.iconAnchor && isArray(s.iconAnchor) && s.size) {

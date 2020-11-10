@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormControl } from 'react-bootstrap';
 
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getMessageById} from '../../utils/LocaleUtils';
 
 const SearchBarInput = ({
     show,
@@ -65,7 +65,7 @@ const SearchBarInput = ({
 
     let actualPlaceholder = "search.addressSearch";
     if (!placeholder && context.messages) {
-        const placeholderLocMessage = LocaleUtils.getMessageById(context.messages, placeholderMsgId || actualPlaceholder);
+        const placeholderLocMessage = getMessageById(context.messages, placeholderMsgId || actualPlaceholder);
         if (placeholderLocMessage) {
             actualPlaceholder = placeholderLocMessage;
         }

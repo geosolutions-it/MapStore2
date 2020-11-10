@@ -9,7 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+const {getAvailableCRS, filterCRSList} = require('../../../utils/CoordinatesUtils').default;
 
 class CRSSelector extends React.Component {
     static propTypes = {
@@ -27,7 +27,7 @@ class CRSSelector extends React.Component {
 
     static defaultProps = {
         id: "mapstore-crsselector",
-        availableCRS: CoordinatesUtils.getAvailableCRS(),
+        availableCRS: getAvailableCRS(),
         crs: null,
         onCRSChange: function() {},
         enabled: false,
@@ -40,7 +40,7 @@ class CRSSelector extends React.Component {
         var list = [];
         let availableCRS = {};
         if (Object.keys(this.props.availableCRS).length) {
-            availableCRS = CoordinatesUtils.filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
+            availableCRS = filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
         }
         for (let crs in availableCRS) {
             if (availableCRS.hasOwnProperty(crs)) {

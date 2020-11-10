@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 
 import { LOCAL_CONFIG_LOADED, supportedLanguagesRegistered } from '../actions/localConfig';
-import LocaleUtils from '../utils/LocaleUtils';
+import {setSupportedLocales as setSupportedLocalesUtil} from '../utils/LocaleUtils';
 import { get } from 'lodash';
 
 /**
@@ -34,7 +34,7 @@ export const setSupportedLocales = (action$) =>
             if (Object.keys(supportedLocales).length === 0) {
                 return Rx.Observable.of(supportedLanguagesRegistered({}));
             }
-            LocaleUtils.setSupportedLocales(supportedLocales);
+            setSupportedLocalesUtil(supportedLocales);
             return Rx.Observable.of(supportedLanguagesRegistered(supportedLocales));
         });
 

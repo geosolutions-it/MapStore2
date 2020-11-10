@@ -25,7 +25,9 @@ import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/WFS3Layer';
 
-import SecurityUtils from '../../../../utils/SecurityUtils';
+import {
+    setStore
+} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 
 import { Map, View } from 'ol';
@@ -1776,7 +1778,7 @@ describe('Openlayers layer', () => {
             }
         ]);
 
-        SecurityUtils.setStore({
+        setStore({
             getState: () => ({
                 security: {
                     token: "########-####-####-####-###########"
@@ -1817,7 +1819,7 @@ describe('Openlayers layer', () => {
             }
         ]);
 
-        SecurityUtils.setStore({
+        setStore({
             getState: () => ({
                 security: {
                     token: "########-####-####-####-###########"
@@ -1929,7 +1931,7 @@ describe('Openlayers layer', () => {
             }
         ]);
 
-        SecurityUtils.setStore({
+        setStore({
             getState: () => ({
                 security: {
                     token: "########-####-####-####-###########"

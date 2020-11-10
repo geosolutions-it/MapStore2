@@ -8,7 +8,17 @@
 import expect from 'expect';
 import { find } from 'lodash';
 
-import PrintUtils from '../PrintUtils';
+import {
+    toOpenLayers2Style,
+    getMapfishLayersSpecification,
+    getOlDefaultStyle,
+    toAbsoluteURL,
+    getMapSize,
+    getNearestZoom,
+    getMapfishPrintSpecification,
+    rgbaTorgb,
+    specCreators
+} from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
 import { poi as TMS110_1 } from '../../test-resources/layers/tms';
@@ -285,37 +295,37 @@ describe('PrintUtils', () => {
 
     it('custom params are applied to wms layers', () => {
 
-        const specs = PrintUtils.getMapfishLayersSpecification([layer], {}, 'map');
+        const specs = getMapfishLayersSpecification([layer], {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.myparam).toExist();
         expect(specs[0].customParams.myparam).toBe("myvalue");
     });
     it('vector layer generation for print', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
     });
     it('vector layer from annotations are preprocessed for printing', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('vector layer from measurements are preprocessed for printing', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('wms layer generation for legend', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, 'legend');
+        const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
     });
     it('toOpenLayers2Style for vector layer wich contains a FeatureCollection using the default style', () => {
-        const style = PrintUtils.toOpenLayers2Style(vectorWithFtCollInside, null, "FeatureCollection");
+        const style = toOpenLayers2Style(vectorWithFtCollInside, null, "FeatureCollection");
         expect(style).toExist();
 
         expect(style.strokeColor).toBe("#0000FF");
@@ -326,14 +336,14 @@ describe('PrintUtils', () => {
         expect(style.fillOpacity).toBe(0.1);
     });
     it('toOpenLayers2Style for vector layer using a default LineString style', () => {
-        const style = PrintUtils.toOpenLayers2Style(vector2, null, "LineString");
+        const style = toOpenLayers2Style(vector2, null, "LineString");
         expect(style).toExist();
         expect(style.strokeColor).toBe("#0000FF");
         expect(style.strokeOpacity).toBe(1);
         expect(style.strokeWidth).toBe(3);
     });
     it('toOpenLayers2Style for vector layer using a default MultiPolygon style', () => {
-        const style = PrintUtils.toOpenLayers2Style(vector2, null, "MultiPolygon");
+        const style = toOpenLayers2Style(vector2, null, "MultiPolygon");
         expect(style).toExist();
         expect(style.strokeColor).toBe("#0000FF");
         expect(style.fillColor).toBe("#0000FF");
@@ -354,14 +364,14 @@ describe('PrintUtils', () => {
             }
         ]);
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
-        const specs = PrintUtils.getMapfishLayersSpecification([layer], {}, 'map');
+        const specs = getMapfishLayersSpecification([layer], {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.authkey).toExist();
         expect(specs[0].customParams.authkey).toBe("mykey");
     });
     it('custom params include layerFilter and filterObj', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([{
+        const specs = getMapfishLayersSpecification([{
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso,
             filterObj: filterObjSottoPasso
@@ -372,7 +382,7 @@ describe('PrintUtils', () => {
         expect(specs[0].customParams.CQL_FILTER).toBe(`(("TIPO" = '2')) AND (("ID_OGGETTO" < '44'))`);
     });
     it('custom params include cql_filter', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([{
+        const specs = getMapfishLayersSpecification([{
             ...layerSottoPasso,
             filterObj: filterObjSottoPasso
         }], {}, 'map');
@@ -382,7 +392,7 @@ describe('PrintUtils', () => {
         expect(specs[0].customParams.CQL_FILTER).toBe(`("ID_OGGETTO" < '44')`);
     });
     it('custom params include layerFilter', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([{
+        const specs = getMapfishLayersSpecification([{
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso
         }], {}, 'map');
@@ -392,7 +402,7 @@ describe('PrintUtils', () => {
         expect(specs[0].customParams.CQL_FILTER).toBe(`("TIPO" = '2')`);
     });
     it('wms layer generation for legend includes scale', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([layer], testSpec, 'legend');
+        const specs = getMapfishLayersSpecification([layer], testSpec, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].classes.length).toBe(1);
@@ -400,17 +410,17 @@ describe('PrintUtils', () => {
         expect(specs[0].classes[0].icons[0].indexOf('SCALE=50000') !== -1).toBe(true);
     });
     it('vector layer default point style', () => {
-        const style = PrintUtils.getOlDefaultStyle({ features: [{ geometry: { type: "Point" } }] });
+        const style = getOlDefaultStyle({ features: [{ geometry: { type: "Point" } }] });
         expect(style).toExist();
         expect(style.pointRadius).toBe(5);
     });
     it('vector layer default marker style', () => {
-        const style = PrintUtils.getOlDefaultStyle({ styleName: "marker", features: [{ geometry: { type: "Point" } }] });
+        const style = getOlDefaultStyle({ styleName: "marker", features: [{ geometry: { type: "Point" } }] });
         expect(style).toExist();
         expect(style.externalGraphic).toExist();
     });
     it('vector layer default polygon style', () => {
-        const style = PrintUtils.getOlDefaultStyle({ features: [{ geometry: { type: "Polygon" } }] });
+        const style = getOlDefaultStyle({ features: [{ geometry: { type: "Polygon" } }] });
         expect(style).toExist();
         expect(style.strokeWidth).toBe(3);
         expect(style.strokeDashstyle).toBe("dash");
@@ -421,38 +431,38 @@ describe('PrintUtils', () => {
         expect(style.strokeOpacity).toBe(1);
     });
     it('vector layer default line style', () => {
-        const style = PrintUtils.getOlDefaultStyle({ features: [{ geometry: { type: "LineString" } }] });
+        const style = getOlDefaultStyle({ features: [{ geometry: { type: "LineString" } }] });
         expect(style).toExist();
         expect(style.strokeWidth).toBe(3);
     });
     it('toAbsoluteUrl', () => {
-        const url = PrintUtils.toAbsoluteURL("/geoserver", "http://localhost:8080");
+        const url = toAbsoluteURL("/geoserver", "http://localhost:8080");
         expect(url).toExist();
         expect(url).toBe("http://localhost:8080/geoserver");
-        expect(PrintUtils.toAbsoluteURL("//someurl/geoserver").indexOf("http")).toBe(0);
+        expect(toAbsoluteURL("//someurl/geoserver").indexOf("http")).toBe(0);
     });
     it('getMapSize', () => {
-        expect(PrintUtils.getMapSize()).toExist(); // check defaults
-        expect(PrintUtils.getMapSize({ map: { width: 200, height: 200 } }, 150).height).toBe(150);
-        expect(PrintUtils.getMapSize({ rotation: true, map: { width: 200, height: 100 } }, 200).height).toBe(400);
+        expect(getMapSize()).toExist(); // check defaults
+        expect(getMapSize({ map: { width: 200, height: 200 } }, 150).height).toBe(150);
+        expect(getMapSize({ rotation: true, map: { width: 200, height: 100 } }, 200).height).toBe(400);
     });
     it('getNearestZoom', () => {
         const scales = [10000000, 1000000, 10000, 1000];
-        expect(PrintUtils.getNearestZoom(18, scales)).toBe(2);
+        expect(getNearestZoom(18, scales)).toBe(2);
     });
     it('getNearestZoom fractional zoom', () => {
         const scales = [10000000, 1000000, 10000, 1000];
-        expect(PrintUtils.getNearestZoom(18.3, scales)).toBe(2);
+        expect(getNearestZoom(18.3, scales)).toBe(2);
     });
     it('getMapfishPrintSpecification', () => {
-        const printSpec = PrintUtils.getMapfishPrintSpecification(testSpec);
+        const printSpec = getMapfishPrintSpecification(testSpec);
         expect(printSpec).toExist();
         expect(printSpec.dpi).toBe(96);
         expect(printSpec.layers.length).toBe(1);
         expect(printSpec.geodetic).toBe(false);
     });
     it('from rgba to rgb', () => {
-        const rgb = PrintUtils.rgbaTorgb("rgba(255, 255, 255, 0.1)");
+        const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
         expect(rgb).toExist();
         expect(rgb).toBe("rgb(255, 255, 255)");
     });
@@ -479,8 +489,8 @@ describe('PrintUtils', () => {
                 }
             };
             it('check opacity for all layers to be 1 for undefined, therwise its value', () => {
-                Object.keys(PrintUtils.specCreators).map( k => {
-                    const fun = PrintUtils.specCreators[k].map;
+                Object.keys(specCreators).map( k => {
+                    const fun = specCreators[k].map;
                     // 0 must remain
                     expect(fun({ ...(testBase[k] || {}), opacity: 0 }, { projection: "EPSG:900913" }).opacity).toEqual(0);
                     expect(fun({ ...(testBase[k] || {}), opacity: 0.5 }, { projection: "EPSG:900913" }).opacity).toEqual(0.5);
@@ -503,7 +513,7 @@ describe('PrintUtils', () => {
             });
             it('KVP WMTS', () => {
                 const testLayer = KVP1;
-                const layerSpec = PrintUtils.specCreators.wmts.map(testLayer, { projection: "EPSG:900913" });
+                const layerSpec = specCreators.wmts.map(testLayer, { projection: "EPSG:900913" });
                 expect(layerSpec.type).toEqual("WMTS");
                 expect(layerSpec.format).toExist();
                 expect(layerSpec.baseURL).toEqual(testLayer.url);
@@ -514,7 +524,7 @@ describe('PrintUtils', () => {
             });
             it('REST WMTS', () => {
                 const testLayer = REST1;
-                const layerSpec = PrintUtils.specCreators.wmts.map(testLayer, { projection: "EPSG:900913" });
+                const layerSpec = specCreators.wmts.map(testLayer, { projection: "EPSG:900913" });
                 expect(layerSpec.type).toEqual("WMTS");
                 expect(layerSpec.format).toExist();
                 expect(layerSpec.baseURL).toEqual(encodeURI(testLayer.url[0])); // must be encoded
@@ -537,7 +547,7 @@ describe('PrintUtils', () => {
         describe('tileprovider', () => {
             it('BasemapAT', () => {
                 const testLayer = BasemapAT;
-                const layerSpec = PrintUtils.specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
+                const layerSpec = specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
                 expect(layerSpec.type).toEqual("xyz");
                 // string without subdomains or params
                 expect(layerSpec.baseURL).toEqual("https://maps.wien.gv.at/basemap/geolandbasemap/normal/google3857/");
@@ -555,7 +565,7 @@ describe('PrintUtils', () => {
             });
             it('NASAGIBS', () => {
                 const testLayer = NASAGIBS;
-                const layerSpec = PrintUtils.specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
+                const layerSpec = specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
                 expect(layerSpec.type).toEqual("xyz");
                 // string without subdomains or params
                 expect(layerSpec.baseURL).toEqual("https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default//GoogleMapsCompatible_Level8/");
@@ -573,7 +583,7 @@ describe('PrintUtils', () => {
             });
             it('tileprovider with custom URL', () => {
                 const testLayer = NLS_CUSTOM_URL;
-                const layerSpec = PrintUtils.specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
+                const layerSpec = specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
                 expect(layerSpec.type).toEqual("xyz");
                 // string without subdomains or params
                 expect(layerSpec.baseURL).toEqual("https://nls-0.tileserver.com/nls/");
@@ -593,7 +603,7 @@ describe('PrintUtils', () => {
         describe('TMS', () => {
             it('TMS 1.0.0', () => {
                 const testLayer = TMS110_1;
-                const layerSpec = PrintUtils.specCreators.tms.map(testLayer, { projection: "EPSG:900913" });
+                const layerSpec = specCreators.tms.map(testLayer, { projection: "EPSG:900913" });
                 expect(layerSpec.type).toEqual("tms");
                 expect(layerSpec.format).toExist();
                 // baseURL should not have version in URL

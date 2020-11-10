@@ -19,10 +19,10 @@ import {
     recordToLayer,
     wfsToLayer
 } from '../../utils/CatalogUtils';
-import CoordinatesUtils from '../../utils/CoordinatesUtils';
+import {isAllowedSRS} from '../../utils/CoordinatesUtils';
 import HtmlRenderer from '../misc/HtmlRenderer';
 import {parseCustomTemplate} from '../../utils/TemplateUtils';
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getMessageById} from '../../utils/LocaleUtils';
 import Message from '../I18N/Message';
 import SharingLinks from './SharingLinks';
 import SideCard from '../misc/cardgrids/SideCard';
@@ -102,7 +102,7 @@ class RecordItem extends React.Component {
     };
 
     componentDidMount() {
-        const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
+        const notAvailable = getMessageById(this.context.messages, "catalog.notAvailable");
         const record = this.props.record;
         this.setState({visibleExpand: !this.props.hideExpand &&
             (
@@ -256,7 +256,7 @@ class RecordItem extends React.Component {
         if (!record) {
             return null;
         }
-        const notAvailable = LocaleUtils.getMessageById(this.context.messages, "catalog.notAvailable");
+        const notAvailable = getMessageById(this.context.messages, "catalog.notAvailable");
         return this.state.fullText && record.metadataTemplate
             ? (<div className="catalog-metadata ql-editor">
                 <HtmlRenderer html={parseCustomTemplate(record.metadataTemplate, record.metadata, (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`)}/>
@@ -339,7 +339,7 @@ class RecordItem extends React.Component {
 
     makeLayer = (type, ogcReferences, formats = [this.props.defaultFormat]) => {
         const allowedSRS = buildSRSMap(ogcReferences.SRS);
-        if (ogcReferences.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
+        if (ogcReferences.SRS.length > 0 && !isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
             return null;
         }

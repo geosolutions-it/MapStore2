@@ -19,13 +19,9 @@
  * @return {string} the string presentation of env param
  * @memberof utils.LayerLocalizationUtils
  */
-const generateEnvString = (env = []) => {
+export const generateEnvString = (env = []) => {
     if (env.length) {
         return env.map(({ name, value }) => `${name}:${value}`).join(';');
     }
     return '';
-};
-
-export {
-    generateEnvString
 };

@@ -10,7 +10,7 @@ import { isNil, isEqual } from 'lodash';
 import L from 'leaflet';
 import { colorToRgbaStr } from '../../../../utils/ColorUtils';
 
-import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
+import {normalizeSRS} from '../../../../utils/CoordinatesUtils';
 import Layers from '../../../../utils/leaflet/Layers';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 
@@ -29,7 +29,7 @@ const loadFeatures = (layer, options) => {
         // bbox: extent.join(',') + ',' + proj,
         outputFormat: "application/json",
         maxFeatures: 1000,
-        srsname: CoordinatesUtils.normalizeSRS( 'EPSG:4326'),
+        srsname: normalizeSRS( 'EPSG:4326'),
         ...params
     }).then(response => {
         if (response.status === 200) {

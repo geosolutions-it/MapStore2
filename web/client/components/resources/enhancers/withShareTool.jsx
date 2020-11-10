@@ -10,7 +10,7 @@ import React from 'react';
 import {compose, withState} from 'recompose';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import SharePanel from '../../share/SharePanel';
-import ShareUtils from '../../../utils/ShareUtils';
+import {getApiUrl, getConfigUrl} from '../../../utils/ShareUtils';
 import {isString} from 'lodash';
 
 export const addSharePanel = Component => props => {
@@ -38,8 +38,8 @@ export const addSharePanel = Component => props => {
             shareUrl={fullUrl}
             showAPI={showAPI}
             version={version}
-            shareApiUrl={showAPI ? ShareUtils.getApiUrl(fullUrl) : ''}
-            shareConfigUrl={ShareUtils.getConfigUrl(fullUrl, ConfigUtils.getConfigProp('geoStoreUrl'))}
+            shareApiUrl={showAPI ? getApiUrl(fullUrl) : ''}
+            shareConfigUrl={getConfigUrl(fullUrl, ConfigUtils.getConfigProp('geoStoreUrl'))}
             onClose={() => onShowShareModal(false)}
             onUpdateSettings={setShareModalSettings}
             {...options} />

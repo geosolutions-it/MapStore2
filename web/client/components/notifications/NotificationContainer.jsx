@@ -10,7 +10,7 @@ const NotificationSystem = require('react-notification-system');
 const PropTypes = require('prop-types');
 const {injectIntl, intlShape, defineMessages} = require('react-intl');
 
-var LocaleUtils = require('../../utils/LocaleUtils');
+const {getMessageById} = require('../../utils/LocaleUtils');
 const Portal = require('../misc/Portal').default;
 
 /**
@@ -85,7 +85,7 @@ class NotificationContainer extends React.Component {
         notifications.forEach(notification => {
             if (systemNotifications.indexOf(notification.uid) < 0) {
                 let id = notification.message;
-                let str = LocaleUtils.getMessageById(this.context.messages, id);
+                let str = getMessageById(this.context.messages, id);
                 let message;
                 if (notification.values) {
                     // this add support the template string using the same library react-intl used for i18n
@@ -101,10 +101,10 @@ class NotificationContainer extends React.Component {
 
                 this.system().addNotification({
                     ...notification,
-                    title: LocaleUtils.getMessageById(this.context.messages, notification.title) || notification.title,
+                    title: getMessageById(this.context.messages, notification.title) || notification.title,
                     message,
                     action: notification.action && {
-                        label: LocaleUtils.getMessageById(this.context.messages, notification.action.label) || notification.action.label,
+                        label: getMessageById(this.context.messages, notification.action.label) || notification.action.label,
                         callback: notification.action.dispatch ? () => { this.props.onDispatch(notification.action.dispatch); } : notification.action.callback
                     },
                     onRemove: () => {

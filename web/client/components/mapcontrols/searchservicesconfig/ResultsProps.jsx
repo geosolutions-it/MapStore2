@@ -15,7 +15,7 @@ const PropTypes = require('prop-types');
 const Select = require("react-select").default;
 
 const Message = require('../../I18N/Message').default;
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 
 function validate(service = {}) {
     return service.displayName && service.displayName.length > 0;
@@ -45,15 +45,15 @@ class ResultsProps extends React.Component {
         const {service} = this.props;
         const launchInfoPanelOptions = this.props.launchInfoPanelOptions || [
             {
-                label: LocaleUtils.getMessageById(this.context.messages, `search.s_launch_info_panel.no_info`),
+                label: getMessageById(this.context.messages, `search.s_launch_info_panel.no_info`),
                 value: "no_info"
             },
             {
-                label: LocaleUtils.getMessageById(this.context.messages, `search.s_launch_info_panel.all_layers`),
+                label: getMessageById(this.context.messages, `search.s_launch_info_panel.all_layers`),
                 value: "all_layers"
             },
             {
-                label: LocaleUtils.getMessageById(this.context.messages, `search.s_launch_info_panel.single_layer`),
+                label: getMessageById(this.context.messages, `search.s_launch_info_panel.single_layer`),
                 value: "single_layer"
             }
         ];

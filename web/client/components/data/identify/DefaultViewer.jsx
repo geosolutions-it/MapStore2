@@ -8,7 +8,10 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const MapInfoUtils = require('../../../utils/MapInfoUtils');
+const {getDefaultInfoFormatValue,
+    getValidator,
+    getViewers,
+    getViewer} = require('../../../utils/MapInfoUtils');
 const HTML = require('../../../components/I18N/HTML');
 const Message = require('../../../components/I18N/Message').default;
 const {Alert, Panel, Accordion} = require('react-bootstrap');
@@ -42,15 +45,15 @@ class DefaultViewer extends React.Component {
     };
 
     static defaultProps = {
-        format: MapInfoUtils.getDefaultInfoFormatValue(),
+        format: getDefaultInfoFormatValue(),
         responses: [],
         requests: [],
         missingResponses: 0,
         collapsible: false,
         headerOptions: {},
         container: Accordion,
-        validator: MapInfoUtils.getValidator,
-        viewers: MapInfoUtils.getViewers(),
+        validator: getValidator,
+        viewers: getViewers(),
         style: {
             position: "relative",
             marginBottom: 0
@@ -146,7 +149,7 @@ class DefaultViewer extends React.Component {
             const PageHeader = this.props.header;
             let customViewer;
             if (layerMetadata?.viewer?.type) {
-                customViewer = MapInfoUtils.getViewer(layerMetadata.viewer.type);
+                customViewer = getViewer(layerMetadata.viewer.type);
             }
             return (<Panel
                 eventKey={i}

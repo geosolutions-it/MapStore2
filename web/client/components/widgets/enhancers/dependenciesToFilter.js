@@ -8,8 +8,8 @@
 const { compose, withPropsOnChange } = require('recompose');
 const { find, isEmpty} = require('lodash');
 
-const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-const FilterUtils = require('../../../utils/FilterUtils');
+const {getViewportGeometry} = require('../../../utils/CoordinatesUtils');
+const {toOGCFilterParts} = require('../../../utils/FilterUtils');
 const filterBuilder = require('../../../utils/ogc/Filter/FilterBuilder');
 const fromObject = require('../../../utils/ogc/Filter/fromObject');
 const { getDependencyLayerParams, composeFilterObject } = require('./utils');
@@ -52,8 +52,8 @@ module.exports = compose(
             if (!mapSync) {
                 return {
                     filter: !isEmpty(newFilterObj) || layerFilter ? filter(and(
-                        ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                        ...(newFilterObj ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
+                        ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                        ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
                     )) : undefined
                 };
             }
@@ -70,7 +70,7 @@ module.exports = compose(
                 const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
                     return {...p, [c]: parseFloat(viewport.bounds[c])};
                 }, {});
-                geom = CoordinatesUtils.getViewportGeometry(bounds, viewport.crs);
+                geom = getViewportGeometry(bounds, viewport.crs);
                 const cqlFilter = getCqlFilter(layer, dependencies);
                 cqlFilterRules = cqlFilter
                     ? [toFilter(read(cqlFilter))]
@@ -79,16 +79,16 @@ module.exports = compose(
                 return {
                     filter: filter(and(
                         ...cqlFilterRules,
-                        ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                        ...(newFilterObj ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
+                        ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                        ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
                         property(geomProp).intersects(geom)))
                 };
             }
             // this will contain only an ogc filter based on current and other filters (cql excluded)
             return {
                 filter: filter(and(
-                    ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                    ...(newFilterObj ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])))
+                    ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                    ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])))
             };
         }
     )

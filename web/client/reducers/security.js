@@ -19,7 +19,7 @@ import {
 
 import { SET_CONTROL_PROPERTY } from '../actions/controls';
 import { USERMANAGER_UPDATE_USER } from '../actions/users';
-import SecurityUtils from '../utils/SecurityUtils';
+import {getUserAttributes} from '../utils/SecurityUtils';
 import assign from 'object-assign';
 import { cloneDeep, head } from 'lodash';
 
@@ -42,7 +42,7 @@ function security(state = {user: null, errorCause: null}, action) {
         return state;
     case LOGIN_SUCCESS:
     {
-        const userAttributes = SecurityUtils.getUserAttributes(action.userDetails.User);
+        const userAttributes = getUserAttributes(action.userDetails.User);
         const userUuid = head(userAttributes.filter(attribute => attribute.name.toLowerCase() === 'uuid'));
         const timestamp = new Date() / 1000 | 0;
         return assign({}, state, {

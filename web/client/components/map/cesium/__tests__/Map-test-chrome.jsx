@@ -11,7 +11,12 @@ const CesiumMap = require('../Map.jsx');
 const CesiumLayer = require('../Layer.jsx');
 const expect = require('expect');
 const Cesium = require('../../../../libs/cesium');
-const MapUtils = require('../../../../utils/MapUtils');
+const {
+    getHook,
+    ZOOM_TO_EXTENT_HOOK,
+    registerHook,
+    createRegisterHooks
+} = require('../../../../utils/MapUtils');
 
 
 require('../../../../utils/cesium/Layers');
@@ -229,27 +234,27 @@ describe('CesiumMap', () => {
             onMapViewChanges={testHandlers.onMapViewChanges}
         />, document.getElementById("container"));
         // computing the bounding box for the new center and the new zoom
-        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        const hook = getHook(ZOOM_TO_EXTENT_HOOK);
         // update the map with the new center and the new zoom so we can check our computed bouding box
         expect(hook).toExist();
 
         hook([10, 10, 20, 20], {crs: "EPSG:4326", duration: 0});
         // unregister hook
-        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        registerHook(ZOOM_TO_EXTENT_HOOK);
     });
     describe("hookRegister", () => {
         it("default", () => {
             const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
             expect(map).toExist();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(getHook(ZOOM_TO_EXTENT_HOOK)).toExist();
         });
         it("with custom hookRegister", () => {
-            const customHooRegister = MapUtils.createRegisterHooks();
+            const customHooRegister = createRegisterHooks();
             const map = ReactDOM.render(<CesiumMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
             expect(map).toExist();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(customHooRegister.getHook(ZOOM_TO_EXTENT_HOOK)).toExist();
         });
     });
 

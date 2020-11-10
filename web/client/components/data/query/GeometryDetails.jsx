@@ -13,7 +13,7 @@ const I18N = require('../../I18N/I18N');
 
 const assign = require('object-assign');
 
-const CoordinatesUtils = require("../../../utils/CoordinatesUtils");
+const {reprojectBbox, reproject, getUnits} = require("../../../utils/CoordinatesUtils");
 const IntlNumberFormControl = require("../../I18N/IntlNumberFormControl");
 
 
@@ -65,7 +65,7 @@ class GeometryDetails extends React.Component {
             }
         }
 
-        let bbox = CoordinatesUtils.reprojectBbox(coordinates, 'EPSG:4326', this.props.projection);
+        let bbox = reprojectBbox(coordinates, 'EPSG:4326', this.props.projection);
 
         let geometry = {
             type: this.props.geometry.type,
@@ -87,7 +87,7 @@ class GeometryDetails extends React.Component {
             this.tempCircle[name] = parseFloat(value);
         }
         let center = !isNaN(parseFloat(this.tempCircle.x)) && !isNaN(parseFloat(this.tempCircle.y)) ?
-            CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.projection) : [this.tempCircle.x, this.tempCircle.y];
+            reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.projection) : [this.tempCircle.x, this.tempCircle.y];
 
         center = center.x === undefined ? {x: center[0], y: center[1]} : center;
         const validateCenter = {x: !isNaN(center.x) ? center.x : 0, y: !isNaN(center.y) ? center.y : 0};
@@ -123,7 +123,7 @@ class GeometryDetails extends React.Component {
         return (name === 'radius' && !this.isWGS84() && step * 10000) || step;
     };
     getBBOXDimensions = (geometry) => {
-        const extent =  CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326');
+        const extent =  reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326');
 
         return {
             // minx
@@ -138,9 +138,9 @@ class GeometryDetails extends React.Component {
     };
     getCircleDimensions = (geometry) => {
         // Show the center coordinates in 4326
-        const center = CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326');
-        const centerReproject = CoordinatesUtils.reproject(geometry.center, geometry.projection, this.props.projection);
-        const radiusEnd = CoordinatesUtils.reproject([geometry.center[0] + geometry.radius, geometry.center[1]], geometry.projection, this.props.projection);
+        const center = reproject(geometry.center, geometry.projection, 'EPSG:4326');
+        const centerReproject = reproject(geometry.center, geometry.projection, this.props.projection);
+        const radiusEnd = reproject([geometry.center[0] + geometry.radius, geometry.center[1]], geometry.projection, this.props.projection);
         const radius = Math.sqrt((radiusEnd.x - centerReproject.x) * (radiusEnd.x - centerReproject.x) +
             (radiusEnd.y - centerReproject.y) * (radiusEnd.y - centerReproject.y));
 
@@ -230,7 +230,7 @@ class GeometryDetails extends React.Component {
             ;
         } else if (this.props.type === "Circle") {
             const circle = this.getCircleDimensions(geometry);
-            const uom = CoordinatesUtils.getUnits(this.props.projection);
+            const uom = getUnits(this.props.projection);
             detailsContent =
                 (<div>
                     <div className="container-fluid">

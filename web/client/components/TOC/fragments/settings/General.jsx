@@ -13,12 +13,12 @@ const { FormControl, FormGroup, ControlLabel, InputGroup, Col } = require('react
 const Message = require('../../../I18N/Message').default;
 const { SimpleSelect } = require('react-selectize');
 const { isString, isObject, find } = require('lodash');
-const LocaleUtils = require('../../../../utils/LocaleUtils');
+const {getMessageById, getSupportedLocales} = require('../../../../utils/LocaleUtils');
 const assign = require('object-assign');
 require('react-selectize/themes/index.css');
 const { Grid } = require('react-bootstrap');
 const { createFromSearch, flattenGroups } = require('../../../../utils/TOCUtils');
-const TOCUtils = require('../../../../utils/TOCUtils');
+const {getLabelName} = require('../../../../utils/TOCUtils');
 
 const LayerNameEditField = require('./LayerNameEditField').default;
 
@@ -52,20 +52,20 @@ class General extends React.Component {
     };
 
     render() {
-        const locales = LocaleUtils.getSupportedLocales();
+        const locales = getSupportedLocales();
         const translations = isObject(this.props.element.title) ? assign({}, this.props.element.title) : { 'default': this.props.element.title };
         const { hideTitleTranslations = false } = this.props.pluginCfg;
 
         const tooltipItems = [
-            { value: "title", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.title") },
-            { value: "description", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.description") },
-            { value: "both", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.both") },
-            { value: "none", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.none") }
+            { value: "title", label: getMessageById(this.context.messages, "layerProperties.tooltip.title") },
+            { value: "description", label: getMessageById(this.context.messages, "layerProperties.tooltip.description") },
+            { value: "both", label: getMessageById(this.context.messages, "layerProperties.tooltip.both") },
+            { value: "none", label: getMessageById(this.context.messages, "layerProperties.tooltip.none") }
         ];
         const tooltipPlacementItems = [
-            { value: "top", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.top") },
-            { value: "right", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.right") },
-            { value: "bottom", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
+            { value: "top", label: getMessageById(this.context.messages, "layerProperties.tooltip.top") },
+            { value: "right", label: getMessageById(this.context.messages, "layerProperties.tooltip.right") },
+            { value: "bottom", label: getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
         ];
         const groups = this.props.groups && flattenGroups(this.props.groups);
         return (
@@ -124,13 +124,13 @@ class General extends React.Component {
                                 options={
                                     (groups || (this.props.element && this.props.element.group) || []).map(item => {
                                         if (isObject(item)) {
-                                            return {...item, label: TOCUtils.getLabelName(item.label, groups)};
+                                            return {...item, label: getLabelName(item.label, groups)};
                                         }
-                                        return { label: TOCUtils.getLabelName(item, groups), value: item };
+                                        return { label: getLabelName(item, groups), value: item };
                                     })
                                 }
-                                defaultValue={{ label: TOCUtils.getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
-                                placeholder={TOCUtils.getLabelName(this.props.element && this.props.element.group || "Default", groups)}
+                                defaultValue={{ label: getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
+                                placeholder={getLabelName(this.props.element && this.props.element.group || "Default", groups)}
                                 onChange={(value) => {
                                     this.updateEntry("group", { target: { value: value || "Default" } });
                                 }}

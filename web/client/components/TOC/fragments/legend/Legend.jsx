@@ -4,7 +4,7 @@ const React = require('react');
 const {isArray} = require('lodash');
 
 const Message = require('../../../I18N/Message').default;
-const SecurityUtils = require('../../../../utils/SecurityUtils');
+const {clearNilValuesForParams, addAuthenticationToSLD, addAuthenticationParameter} = require('../../../../utils/SecurityUtils');
 
 const assign = require('object-assign');
 
@@ -50,7 +50,7 @@ class Legend extends React.Component {
 
             let urlObj = urlUtil.parse(url);
 
-            const cleanParams = SecurityUtils.clearNilValuesForParams(layer.params);
+            const cleanParams = clearNilValuesForParams(layer.params);
             let query = assign({}, {
                 service: "WMS",
                 request: "GetLegendGraphic",
@@ -64,10 +64,10 @@ class Legend extends React.Component {
                 LEGEND_OPTIONS: props.legendOptions
             }, layer.legendParams || {},
             props.language && layer.localizedLayerStyles ? {LANGUAGE: props.language} : {},
-            SecurityUtils.addAuthenticationToSLD(cleanParams || {}, props.layer),
+            addAuthenticationToSLD(cleanParams || {}, props.layer),
             cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
             props.scales && props.currentZoomLvl && props.scaleDependent ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
-            SecurityUtils.addAuthenticationParameter(url, query);
+            addAuthenticationParameter(url, query);
 
             return urlUtil.format({
                 host: urlObj.host,

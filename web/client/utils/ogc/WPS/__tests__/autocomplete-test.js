@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const assign = require('object-assign');
-const FilterUtils = require('../../../FilterUtils');
+const {toOGCFilterParts} = require('../../../FilterUtils');
 const {getWpsPayload} = require('../autocomplete');
 
 const defaultOptions = {
@@ -91,13 +91,13 @@ const getBodyPart2 = ({attribute, value}) => '<ogc:Filter xmlns:ogc="http://www.
 
 const getBodyPart2WithLayerFilter = ({layerFilter}) => '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">'
 + '<ogc:And>'
-+ FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc").join('')
++ toOGCFilterParts(layerFilter, "1.1.0", "ogc").join('')
 + '</ogc:And>'
 + '</ogc:Filter>';
 
 const getBodyPart2Both = ({attribute, value, layerFilter}) => '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">'
 + '<ogc:And>'
-+ FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc").join('')
++ toOGCFilterParts(layerFilter, "1.1.0", "ogc").join('')
 + '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">'
 + '   <ogc:PropertyName>' + attribute + '</ogc:PropertyName>'
 + '   <ogc:Literal>*' + value + '*</ogc:Literal>'

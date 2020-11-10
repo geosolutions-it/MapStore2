@@ -15,7 +15,7 @@ const {
     standardRootReducerFunc
 } = require('../stores/defaultOptions');
 
-const LocaleUtils = require('../utils/LocaleUtils');
+const {ensureIntl} = require('../utils/LocaleUtils');
 const ConfigUtils = require('../utils/ConfigUtils').default;
 const {connect} = require('react-redux');
 
@@ -25,7 +25,7 @@ const {generateActionTrigger} = require('../epics/jsapi');
 
 const url = require('url');
 
-const ThemeUtils = require('../utils/ThemeUtils');
+const {renderFromLess} = require('../utils/ThemeUtils');
 
 const assign = require('object-assign');
 const {partialRight, merge} = require('lodash');
@@ -221,7 +221,7 @@ const MapStore2 = {
                 dom.id = 'custom_theme';
                 document.head.appendChild(dom);
             }
-            ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
+            renderFromLess(options.style, 'custom_theme', 'themes/default/');
         }
         const defaultThemeCfg = {
             prefixContainer: '#' + container
@@ -353,7 +353,7 @@ const MapStore2 = {
 
 if (!global.Intl ) {
     // Ensure Intl is loaded, then call the given callback
-    LocaleUtils.ensureIntl();
+    ensureIntl();
 }
 
 module.exports = MapStore2;

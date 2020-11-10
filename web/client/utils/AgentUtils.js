@@ -343,12 +343,3 @@ export const loadFont = (fontName, options = {}) =>
             generic: options.generic
         });
     });
-
-const AgentUtils = {
-    getWindowSize,
-    onfontready,
-    loadFont
-};
-
-
-export default AgentUtils;

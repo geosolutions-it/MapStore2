@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 // const axios = require('axios');
-import FileUtils from '../utils/FileUtils';
+import {downloadCanvasDataURL} from '../utils/FileUtils';
 
 export const CHANGE_SNAPSHOT_STATE = 'CHANGE_SNAPSHOT_STATE';
 export const SNAPSHOT_ERROR = 'SNAPSHOT_ERROR';
@@ -73,7 +73,7 @@ export function postCanvas(canvasData, serviceUrl) {
 }
  */
 export function saveImage(dataURL) {
-    FileUtils.downloadCanvasDataURL(dataURL, "snapshot.png", "image/png");
+    downloadCanvasDataURL(dataURL, "snapshot.png", "image/png");
     return {
         type: SAVE_IMAGE,
         dataURL: dataURL
