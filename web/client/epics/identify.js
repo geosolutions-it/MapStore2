@@ -38,7 +38,7 @@ import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
     currentEditFeatureQuerySelector, mapTriggerSelector } from '../selectors/mapInfo';
-import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
+import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
@@ -128,9 +128,13 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             if (queryableSelectedLayers.length) {
                 queryableLayers = queryableSelectedLayers;
             }
-            if (queryableLayers.length === 0) {
+
+            const selectedLayers = selectedNodesSelector(getState());
+
+            if (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
             }
+
             // TODO: make it in the application getState()
             const excludeParams = ["SLD_BODY"];
             const includeOptions = [
