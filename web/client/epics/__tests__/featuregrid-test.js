@@ -1048,12 +1048,17 @@ describe('featuregrid Epics', () => {
     });
 
     it('test askChangesConfirmOnFeatureGridClose', (done) => {
-        testEpic(askChangesConfirmOnFeatureGridClose, 2, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(2);
+        testEpic(askChangesConfirmOnFeatureGridClose, 3, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                case UPDATE_FILTER:
+                    expect(action.type).toBe(UPDATE_FILTER);
+                    expect(action.update).toExist();
+                    expect(action.update.enabled).toBe(false);
                     break;
                 case SELECT_FEATURES:
                     expect(action.type).toBe(SELECT_FEATURES);
