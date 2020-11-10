@@ -19,7 +19,7 @@ import findIndex from 'lodash/findIndex';
 import pick from 'lodash/pick';
 import isNil from 'lodash/isNil';
 let LayersUtils;
-import SecurityUtils from './SecurityUtils';
+import {addAuthenticationParameter} from './SecurityUtils';
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
@@ -616,7 +616,7 @@ export const getAuthenticationParam = options => {
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
     let authenticationParam = {};
     urls.forEach(url => {
-        SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken);
+        addAuthenticationParameter(url, authenticationParam, options.securityToken);
     });
     return authenticationParam;
 };

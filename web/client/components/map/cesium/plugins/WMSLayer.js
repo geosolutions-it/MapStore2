@@ -19,7 +19,7 @@ const {isArray} = require('lodash');
 const WMSUtils = require('../../../../utils/cesium/WMSUtils');
 const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
 const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
-const SecurityUtils = require('../../../../utils/SecurityUtils');
+const {addAuthenticationToSLD} = require('../../../../utils/SecurityUtils');
 
 const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
 
@@ -75,7 +75,7 @@ function wmsToCesiumOptionsSingleTile(options) {
 
     return {
         url: (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
-            + getQueryString(SecurityUtils.addAuthenticationToSLD(parameters, options))
+            + getQueryString(addAuthenticationToSLD(parameters, options))
     };
 }
 

@@ -10,7 +10,7 @@ import Layers from '../../../../utils/leaflet/Layers';
 import {normalizeSRS} from '../../../../utils/CoordinatesUtils';
 import L from 'leaflet';
 import assign from 'object-assign';
-import SecurityUtils from '../../../../utils/SecurityUtils';
+import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import WMTS from '../../../../utils/leaflet/WMTS';
 import { isArray } from 'lodash';
@@ -45,7 +45,7 @@ function getWMSURLs(urls) {
 const createLayer = options => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmtsToLeafletOptions(options) || {};
-    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
+    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const { tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
     return L.tileLayer.wmts(urls, queryParameters, {

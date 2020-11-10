@@ -8,7 +8,7 @@
 
 import { reproject, getUnits, reprojectGeoJson, normalizeSRS } from './CoordinatesUtils';
 
-import SecurityUtils from './SecurityUtils';
+import {addAuthenticationParameter} from './SecurityUtils';
 import { getGoogleMercatorScales } from './MapUtils';
 import { optionsToVendorParams } from './VendorParamsUtils';
 import { annotationsToPrint } from './AnnotationsUtils';
@@ -259,7 +259,7 @@ export const specCreators = {
             "styles": [
                 layer.style || ''
             ],
-            "customParams": SecurityUtils.addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
+            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
                 "TRANSPARENT": true,
                 "TILED": true,
                 "EXCEPTIONS": "application/vnd.ogc.se_inimage",
@@ -279,7 +279,7 @@ export const specCreators = {
                     "name": "",
                     "icons": [
                         PrintUtils.normalizeUrl(layer.url) + url.format({
-                            query: SecurityUtils.addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), {
+                            query: addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), {
                                 TRANSPARENT: true,
                                 EXCEPTIONS: "application/vnd.ogc.se_xml",
                                 VERSION: "1.1.1",
@@ -452,7 +452,7 @@ export const specCreators = {
                 "format": layer.format || "image/png",
                 "type": "WMTS",
                 "layer": layer.name,
-                "customParams ": SecurityUtils.addAuthenticationParameter(layer.capabilitiesURL, assign({
+                "customParams ": addAuthenticationParameter(layer.capabilitiesURL, assign({
                     "TRANSPARENT": true
                 })),
                 // rest parameter style is not included

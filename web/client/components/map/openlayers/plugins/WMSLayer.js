@@ -18,7 +18,7 @@ import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
-import SecurityUtils from '../../../../utils/SecurityUtils';
+import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
 import MapUtils from '../../../../utils/MapUtils';
@@ -63,7 +63,7 @@ function wmsToOpenlayersOptions(options) {
             options.env && options.env.length &&
             options.group !== 'background' ? {ENV: generateEnvString(options.env) } : {})
     ));
-    return SecurityUtils.addAuthenticationToSLD(result, options);
+    return addAuthenticationToSLD(result, options);
 }
 
 function getWMSURLs( urls ) {
@@ -139,7 +139,7 @@ const toOLAttributions = credits => credits && creditsToAttribution(credits) || 
 const createLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmsToOpenlayersOptions(options) || {};
-    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
+    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
 
     const vectorFormat = isVectorFormat(options.format);
 
@@ -308,7 +308,7 @@ Layers.registerType('wms', {
                 vectorSource.refresh();
             }
             if (changed) {
-                const params = assign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
+                const params = assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 
                 wmsSource.updateParams(assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
                     return !isNil(params[key]) ? previous : assign(previous, {
