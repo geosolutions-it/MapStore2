@@ -9,7 +9,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ControlLabel, Form, FormControl, FormGroup, Alert } from 'react-bootstrap';
-import LocaleUtils from '../../../utils/LocaleUtils';
+import {getMessageById} from '../../../utils/LocaleUtils';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
@@ -204,7 +204,7 @@ const VideoForm = ({
                         </ControlLabel>
                         <FormControl
                             type={field.type}
-                            placeholder={LocaleUtils.getMessageById(messages, field.placeholder)}
+                            placeholder={getMessageById(messages, field.placeholder)}
                             value={properties[field.id] || ""}
                             onChange={(event) => {
                                 setProperties({

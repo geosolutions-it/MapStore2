@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,8 +10,9 @@ const React = require('react');
 const LoginForm = require('../forms/LoginForm');
 const Button = require('../../misc/Button').default;
 const Modal = require('../../misc/Modal');
+const PropTypes = require('prop-types');
 const Message = require('../../../components/I18N/Message').default;
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 
 require('../css/security.css');
 
@@ -71,12 +71,12 @@ class LoginModal extends React.Component {
         return (<span role="footer">
             <Button
                 ref="submit"
-                value={LocaleUtils.getMessageById(this.context.messages, "user.signIn")}
+                value={getMessageById(this.context.messages, "user.signIn")}
                 bsStyle="primary"
                 bsSize={this.props.buttonSize}
                 className="pull-left"
                 onClick={this.loginSubmit}
-                key="submit">{LocaleUtils.getMessageById(this.context.messages, "user.signIn")}</Button>
+                key="submit">{getMessageById(this.context.messages, "user.signIn")}</Button>
             {this.props.includeCloseButton ? <Button
                 key="closeButton"
                 ref="closeButton"

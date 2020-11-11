@@ -66,22 +66,22 @@
     }
 }
 
-.noUi-target[disabled="true"] {
+.noUi-target[disabled="true"], .mapstore-slider.with-tooltip .noUi-target[disabled="true"] {
     cursor: not-allowed;
     &.noUi-horizontal {
+        background-color:  @input-bg-disabled;
         .noUi-base {
             .noUi-origin {
                 .noUi-handle {
                     cursor: not-allowed;
                     .noUi-tooltip {
+                        background-color:  @input-bg-disabled;
                         &:hover {
                             cursor: not-allowed;
-                            background-color: @ms2-color-primary;
                         }
                     }
                     &:hover {
                         cursor: not-allowed;
-                        background-color: @ms2-color-primary;
                     }
                 }
             }
@@ -107,7 +107,7 @@
                     &:before {
                         left: -@ms-slider-margin;
                         width: @ms-slider-margin;
-                        
+
                     }
                     &:after {
                         right: -@ms-slider-margin;

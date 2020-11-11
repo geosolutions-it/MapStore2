@@ -15,7 +15,7 @@ const tooltip = require('../../misc/enhancers/tooltip');
 const Glyphicon = tooltip(GlyphiconRB);
 const DropdownButton = tooltip(DropdownButtonRB);
 const {head, isNaN, get, isEmpty} = require('lodash');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
 const Message = require('../../I18N/Message').default;
@@ -229,7 +229,7 @@ class CoordinatesEditor extends React.Component {
                                             '';
                                     return {label: `${geomType} (${valueLabel}${secondValueLabel})`, value: i};
                                 }), {
-                                    label: LocaleUtils.getMessageById(this.context.messages, 'annotations.editor.newFeature'),
+                                    label: getMessageById(this.context.messages, 'annotations.editor.newFeature'),
                                     value: this.props.features.length
                                 }
                             ].filter(f => !!f)}

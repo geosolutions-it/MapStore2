@@ -27,7 +27,7 @@ import {
 import { featureTypeSelected, toggleLayerFilter, initQueryPanel } from '../actions/wfsquery';
 import { getSelectedLayer } from '../selectors/layers';
 import { changeDrawingStatus } from '../actions/draw';
-import FilterUtils from '../utils/FilterUtils';
+import {setupCrossLayerFilterDefaults} from '../utils/FilterUtils';
 
 const isNotEmptyFilter = ({crossLayerFilter, spatialField, filterFields} = {}) => {
     return !!(filterFields && head(filterFields)
@@ -74,7 +74,7 @@ export const handleLayerFilterPanel = (action$, {getState}) =>
                         if (newFilter) {
                             newFilter.filterFields = newFilter.attributePanelExpanded && newFilter.filterFields || [];
                             newFilter.spatialField = newFilter.spatialPanelExpanded && newFilter.spatialField || null;
-                            newFilter.crossLayerFilter = newFilter.crossLayerExpanded && FilterUtils.setupCrossLayerFilterDefaults(newFilter.crossLayerFilter) || null;
+                            newFilter.crossLayerFilter = newFilter.crossLayerExpanded && setupCrossLayerFilterDefaults(newFilter.crossLayerFilter) || null;
                         }
                         return Rx.Observable.of(addFilterToLayer(layer.id, newFilter));
                     })

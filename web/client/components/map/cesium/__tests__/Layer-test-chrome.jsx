@@ -24,7 +24,7 @@ require('../plugins/GraticuleLayer');
 require('../plugins/OverlayLayer');
 require('../plugins/MarkerLayer');
 
-const SecurityUtils = require('../../../../utils/SecurityUtils');
+const {setStore} = require('../../../../utils/SecurityUtils');
 const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 
 window.CESIUM_BASE_URL = "node_modules/cesium/Build/Cesium";
@@ -672,7 +672,7 @@ describe('Cesium layer', () => {
             }
         ]);
 
-        SecurityUtils.setStore({
+        setStore({
             getState: () => ({
                 security: {
                     token: "########-####-####-####-###########"
@@ -739,7 +739,7 @@ describe('Cesium layer', () => {
             }
         ]);
 
-        SecurityUtils.setStore({
+        setStore({
             getState: () => ({
                 security: {
                     token: "########-####-####-####-###########"

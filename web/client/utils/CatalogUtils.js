@@ -6,17 +6,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes, get, isNil} = require('lodash');
-const urlUtil = require('url');
-const CoordinatesUtils = require('./CoordinatesUtils');
-const ConfigUtils = require('./ConfigUtils').default;
-const LayersUtils = require('./LayersUtils');
-const LocaleUtils = require('./LocaleUtils');
-const WMTSUtils = require('./WMTSUtils');
-const { cleanAuthParamsFromURL } = require('./SecurityUtils');
+import assign from 'object-assign';
 
-const WMS = require('../api/WMS');
+import {
+    head,
+    isArray,
+    isString,
+    castArray,
+    isObject,
+    sortBy,
+    uniq,
+    includes,
+    get,
+    isNil
+} from 'lodash';
+
+import urlUtil from 'url';
+import CoordinatesUtils from './CoordinatesUtils';
+import ConfigUtils from './ConfigUtils';
+import {getLayerTitleTranslations} from './LayersUtils';
+import {getMessageById} from './LocaleUtils';
+import * as WMTSUtils from './WMTSUtils';
+import { cleanAuthParamsFromURL } from './SecurityUtils';
+import WMS from '../api/WMS';
 
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
@@ -186,10 +198,10 @@ const converters = {
                                 const value = e.substr(equalIndex + 1, e.length - 1);
                                 const isOnlyDateFormat = e.length - equalIndex - 1 <= 10;
                                 if (includes(["start", "end"], prop) && scheme === "W3C-DTF" && !isOnlyDateFormat) {
-                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + new Date(value).toLocaleString();
+                                    return getMessageById(locales, `catalog.${prop}`) + new Date(value).toLocaleString();
                                 }
                                 if (includes(["start", "end"], prop)) {
-                                    return LocaleUtils.getMessageById(locales, `catalog.${prop}`) + value;
+                                    return getMessageById(locales, `catalog.${prop}`) + value;
                                 }
                                 return "";
                             });
@@ -227,7 +239,7 @@ const converters = {
                         ...(options?.layerOptions || {}),
                         ...(records?.layerOptions || {})
                     },
-                    title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
+                    title: getLayerTitleTranslations(record) || record.Name,
                     formats: castArray(record.formats || []),
                     dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
                         values: dim._ && dim._.split(',') || []
@@ -392,13 +404,13 @@ const converters = {
         return null;
     }
 };
-const buildSRSMap = (srs) => {
+export const buildSRSMap = (srs) => {
     return srs.filter(s => CoordinatesUtils.isSRSAllowed(s)).reduce((previous, current) => {
         return assign(previous, {[current]: true});
     }, {});
 };
 
-const removeParameters = (url, skip) => {
+export const removeParameters = (url, skip) => {
     const urlparts = url.split('?');
     const params = {};
     if (urlparts.length >= 2 && urlparts[1]) {
@@ -412,7 +424,7 @@ const removeParameters = (url, skip) => {
     }
     return {url: urlparts[0], params};
 };
-const extractOGCServicesReferences = ({ references = [] } = {}) => ({
+export const extractOGCServicesReferences = ({ references = [] } = {}) => ({
     wfs: head(references.filter(reference => reference.type && (reference.type === "OGC:WFS"
         || reference.type.indexOf("OGC:WFS") > -1 && reference.type.indexOf("http-get-feature") > -1))),
     wms: head(references.filter(reference => reference.type && (reference.type === "OGC:WMS"
@@ -422,11 +434,11 @@ const extractOGCServicesReferences = ({ references = [] } = {}) => ({
     tms: head(references.filter(reference => reference.type && (reference.type === "OGC:TMS"
         || reference.type.indexOf("OGC:TMS") > -1)))
 });
-const extractEsriReferences = (record = { references: [] }) => ({
+export const extractEsriReferences = (record = { references: [] }) => ({
     esri: head(record.references.filter(reference => reference.type && (reference.type === "ESRI:SERVER"
         || reference.type === "arcgis" )))
 });
-const getRecordLinks = ({ references = [] } = {}) => {
+export const getRecordLinks = ({ references = [] } = {}) => {
     let wmsGetCap = head(references.filter(reference => reference.type &&
         reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
     let wfsGetCap = head(references.filter(reference => reference.type &&
@@ -465,204 +477,196 @@ const toURLArray = (url) => {
     return url;
 };
 
-const CatalogUtils = {
-    /**
-     * Creates a map of SRS based on the record's srs object
-     * @type {String}
-     */
-    buildSRSMap,
-    removeParameters,
-    getRecordLinks,
-    extractOGCServicesReferences,
-    extractEsriReferences,
-    /**
-     * Convert a record into a MS2 layer
-     * @param  {Object} record            The record
-     * @param  {String} [type="wms"]      The layer type
-     * @param  {Object} options an object with additional options.
-     *  - `catalogURL` to attach to the layer
-     *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
-     *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
-     */
-    recordToLayer: (record, type = "wms", {removeParams = [], format, catalogURL, url} = {}, baseConfig = {}, localizedLayerStyles) => {
-        if (!record || !record.references) {
-            // we don't have a valid record so no buttons to add
-            return null;
-        }
-        // let's extract the references we need
-        const {wms, wmts} = extractOGCServicesReferences(record);
-        const ogcServiceReference = wms || wmts;
 
-        // typically you should remove authkey parameters
-        const cleanURL = URL => removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(URL), ["request", "layer", "layers", "service", "version"].concat(removeParams));
-        let originalUrl;
-        let params;
-        const urls = toURLArray(ogcServiceReference.url);
-
-        // extract additional parameters and alternative URLs.
-        if (urls && isArray(urls)) {
-            originalUrl = urls.map( u => cleanURL(u)).map( ({url: u}) => u);
-            params = urls.map(u => cleanURL(u)).map(({params: p}) => p).reduce( (prev, cur) => ({...prev, ...cur}), {});
-        } else {
-            const { url: uu, params: pp } = cleanURL(urls || catalogURL);
-            originalUrl = uu;
-            params = pp;
-        }
-
-        // calculate and normalize URL
-        // if array of 1 element, take simply the string
-        const toLayerURL = u => isArray(u) && u.length === 1 ? u[0] : u;
-        const layerURL = toLayerURL(url || originalUrl);
-
-        const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
-        return {
-            type: type,
-            requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
-            style: record.style,
-            format,
-            url: layerURL,
-            capabilitiesURL: record.capabilitiesURL,
-            queryable: record.queryable,
-            visibility: true,
-            dimensions: record.dimensions || [],
-            name: ogcServiceReference.params && ogcServiceReference.params.name,
-            title: record.title || ogcServiceReference.params && ogcServiceReference.params.name,
-            matrixIds: type === "wmts" ? record.matrixIds || [] : undefined,
-            description: record.description || "",
-            tileMatrixSet: type === "wmts" ? record.tileMatrixSet || [] : undefined,
-            credits: !ConfigUtils.getConfigProp("noCreditsFromCatalog") && record.credits,
-            bbox: {
-                crs: record.boundingBox.crs,
-                bounds: {
-                    minx: record.boundingBox.extent[0],
-                    miny: record.boundingBox.extent[1],
-                    maxx: record.boundingBox.extent[2],
-                    maxy: record.boundingBox.extent[3]
-                }
-            },
-            links: getRecordLinks(record),
-            params: params,
-            allowedSRS: allowedSRS,
-            catalogURL,
-            ...baseConfig,
-            ...record.layerOptions,
-            localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined
-        };
-    },
-    getCatalogRecords: (format, records, options, locales) => {
-        return converters[format] && converters[format](records, options, locales) || null;
-    },
-    esriToLayer: (record, baseConfig = {}) => {
-        if (!record || !record.references) {
-            // we don't have a valid record so no buttons to add
-            return null;
-        }
-        // let's extract the references we need
-        const {esri} = extractEsriReferences(record);
-        return {
-            type: esri.type,
-            url: esri.url,
-            visibility: true,
-            dimensions: record.dimensions || [],
-            name: esri.params && esri.params.name,
-            bbox: {
-                crs: record.boundingBox.crs,
-                bounds: {
-                    minx: record.boundingBox.extent[0],
-                    miny: record.boundingBox.extent[1],
-                    maxx: record.boundingBox.extent[2],
-                    maxy: record.boundingBox.extent[3]
-                }
-            },
-            ...baseConfig
-        };
-
-    },
-    /**
-     * tmsToLayer convert Catalog record into a TMS layer for MapStore.
-     * @param {object} record the catalog record
-     * @param object TileMapService a JSON representation of TileMapService resource, see https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
-     * @param service the original catalog service
-     */
-    tmsToLayer: ({ tileMapUrl }, { TileMap = {} }, { forceDefaultTileGrid }) => {
-        const { Title, Abstract, SRS, BoundingBox = {}, Origin, TileFormat = {}, TileSets } = TileMap;
-        const { version, tilemapservice } = TileMap.$;
-        const { minx, miny, maxx, maxy } = get(BoundingBox, '$', {});
-        const {x, y} = get(Origin, "$");
-        const { width: tileWidth, height: tileHeight, "mime-type": format, extension} = get(TileFormat, "$", {});
-        const tileSize = [parseFloat(tileWidth), parseFloat(tileHeight, 10)];
-        const tileSets = castArray(get(TileSets, "TileSet", []).map(({ $ }) => $)).map(({ href, order, "units-per-pixel": resolution}) => ({
-            href: cleanAuthParamsFromURL(href),
-            order: parseFloat(order),
-            resolution: parseFloat(resolution)
-        }));
-        const profile = get(TileSets, "profile");
-        return {
-            title: Title,
-            visibility: true,
-            hideErrors: true, // TMS can rise a lot of errors of tile not found
-            name: Title,
-            allowedSRS: {[SRS]: true},
-            description: Abstract,
-            srs: SRS,
-            version,
-            tileMapService: tilemapservice ? cleanAuthParamsFromURL(tilemapservice) : undefined,
-            type: 'tms',
-            profile,
-            tileMapUrl,
-            // option to force to use the TileGrid of the projection, instead of the one provided by the service. Userful for some GeoServer instances that use default GridSet but provide wrong origin and resolution
-            forceDefaultTileGrid,
-            bbox: BoundingBox && {crs: SRS, bounds: {minx: parseFloat(minx), miny: parseFloat(miny), maxx: parseFloat(maxx), maxy: parseFloat(maxy)}},
-            tileSets,
-            origin: {x: parseFloat(x), y: parseFloat(y)},
-            format,
-            tileSize,
-            extension
-        };
-    },
-    wfsToLayer: (record) => {
-        const DEFAULT_VECTOR_STYLE = {
-            "weight": 1,
-            "color": "rgba(0, 0, 255, 1)",
-            "opacity": 1,
-            "fillColor": "rgba(0, 0, 255, 0.1)",
-            "fillOpacity": 0.1,
-            radius: 10
-        };
-        return {
-            type: record.type || "wfs",
-            search: {
-                url: record.url,
-                type: "wfs"
-            },
-            url: record.url,
-            queryable: record.queryable,
-            visibility: true,
-            name: record.name,
-            title: record.title || record.name,
-            description: record.description || "",
-            bbox: record.boundingBox,
-            links: getRecordLinks(record),
-            style: DEFAULT_VECTOR_STYLE,
-            ...record.layerOptions
-        };
-    },
-
-    /**
-     * Converts a record into a layer
-     */
-    tileProviderToLayer: (record) => {
-        return {
-            type: "tileprovider",
-            visibility: true,
-            url: record.url,
-            title: record.title,
-            attribution: record.attribution,
-            options: record.options,
-            provider: record.provider, // "ProviderName.VariantName"
-            name: record.provider
-        };
-
+/**
+ * Creates a map of SRS based on the record's srs object
+ * @type {String}
+ */
+/**
+ * Convert a record into a MS2 layer
+ * @param  {Object} record            The record
+ * @param  {String} [type="wms"]      The layer type
+ * @param  {Object} options an object with additional options.
+ *  - `catalogURL` to attach to the layer
+ *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
+ *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
+ */
+export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url} = {}, baseConfig = {}, localizedLayerStyles) => {
+    if (!record || !record.references) {
+        // we don't have a valid record so no buttons to add
+        return null;
     }
+    // let's extract the references we need
+    const {wms, wmts} = extractOGCServicesReferences(record);
+    const ogcServiceReference = wms || wmts;
+
+    // typically you should remove authkey parameters
+    const cleanURL = URL => removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(URL), ["request", "layer", "layers", "service", "version"].concat(removeParams));
+    let originalUrl;
+    let params;
+    const urls = toURLArray(ogcServiceReference.url);
+
+    // extract additional parameters and alternative URLs.
+    if (urls && isArray(urls)) {
+        originalUrl = urls.map( u => cleanURL(u)).map( ({url: u}) => u);
+        params = urls.map(u => cleanURL(u)).map(({params: p}) => p).reduce( (prev, cur) => ({...prev, ...cur}), {});
+    } else {
+        const { url: uu, params: pp } = cleanURL(urls || catalogURL);
+        originalUrl = uu;
+        params = pp;
+    }
+
+    // calculate and normalize URL
+    // if array of 1 element, take simply the string
+    const toLayerURL = u => isArray(u) && u.length === 1 ? u[0] : u;
+    const layerURL = toLayerURL(url || originalUrl);
+
+    const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
+    return {
+        type: type,
+        requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
+        style: record.style,
+        format,
+        url: layerURL,
+        capabilitiesURL: record.capabilitiesURL,
+        queryable: record.queryable,
+        visibility: true,
+        dimensions: record.dimensions || [],
+        name: ogcServiceReference.params && ogcServiceReference.params.name,
+        title: record.title || ogcServiceReference.params && ogcServiceReference.params.name,
+        matrixIds: type === "wmts" ? record.matrixIds || [] : undefined,
+        description: record.description || "",
+        tileMatrixSet: type === "wmts" ? record.tileMatrixSet || [] : undefined,
+        credits: !ConfigUtils.getConfigProp("noCreditsFromCatalog") && record.credits,
+        bbox: {
+            crs: record.boundingBox.crs,
+            bounds: {
+                minx: record.boundingBox.extent[0],
+                miny: record.boundingBox.extent[1],
+                maxx: record.boundingBox.extent[2],
+                maxy: record.boundingBox.extent[3]
+            }
+        },
+        links: getRecordLinks(record),
+        params: params,
+        allowedSRS: allowedSRS,
+        catalogURL,
+        ...baseConfig,
+        ...record.layerOptions,
+        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined
+    };
 };
-module.exports = CatalogUtils;
+export const getCatalogRecords = (format, records, options, locales) => {
+    return converters[format] && converters[format](records, options, locales) || null;
+};
+export const esriToLayer = (record, baseConfig = {}) => {
+    if (!record || !record.references) {
+        // we don't have a valid record so no buttons to add
+        return null;
+    }
+    // let's extract the references we need
+    const {esri} = extractEsriReferences(record);
+    return {
+        type: esri.type,
+        url: esri.url,
+        visibility: true,
+        dimensions: record.dimensions || [],
+        name: esri.params && esri.params.name,
+        bbox: {
+            crs: record.boundingBox.crs,
+            bounds: {
+                minx: record.boundingBox.extent[0],
+                miny: record.boundingBox.extent[1],
+                maxx: record.boundingBox.extent[2],
+                maxy: record.boundingBox.extent[3]
+            }
+        },
+        ...baseConfig
+    };
+
+};
+/**
+ * tmsToLayer convert Catalog record into a TMS layer for MapStore.
+ * @param {object} record the catalog record
+ * @param object TileMapService a JSON representation of TileMapService resource, see https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
+ * @param service the original catalog service
+ */
+export const tmsToLayer = ({ tileMapUrl }, { TileMap = {} }, { forceDefaultTileGrid }) => {
+    const { Title, Abstract, SRS, BoundingBox = {}, Origin, TileFormat = {}, TileSets } = TileMap;
+    const { version, tilemapservice } = TileMap.$;
+    const { minx, miny, maxx, maxy } = get(BoundingBox, '$', {});
+    const {x, y} = get(Origin, "$");
+    const { width: tileWidth, height: tileHeight, "mime-type": format, extension} = get(TileFormat, "$", {});
+    const tileSize = [parseFloat(tileWidth), parseFloat(tileHeight, 10)];
+    const tileSets = castArray(get(TileSets, "TileSet", []).map(({ $ }) => $)).map(({ href, order, "units-per-pixel": resolution}) => ({
+        href: cleanAuthParamsFromURL(href),
+        order: parseFloat(order),
+        resolution: parseFloat(resolution)
+    }));
+    const profile = get(TileSets, "profile");
+    return {
+        title: Title,
+        visibility: true,
+        hideErrors: true, // TMS can rise a lot of errors of tile not found
+        name: Title,
+        allowedSRS: {[SRS]: true},
+        description: Abstract,
+        srs: SRS,
+        version,
+        tileMapService: tilemapservice ? cleanAuthParamsFromURL(tilemapservice) : undefined,
+        type: 'tms',
+        profile,
+        tileMapUrl,
+        // option to force to use the TileGrid of the projection, instead of the one provided by the service. Userful for some GeoServer instances that use default GridSet but provide wrong origin and resolution
+        forceDefaultTileGrid,
+        bbox: BoundingBox && {crs: SRS, bounds: {minx: parseFloat(minx), miny: parseFloat(miny), maxx: parseFloat(maxx), maxy: parseFloat(maxy)}},
+        tileSets,
+        origin: {x: parseFloat(x), y: parseFloat(y)},
+        format,
+        tileSize,
+        extension
+    };
+};
+export const wfsToLayer = (record) => {
+    const DEFAULT_VECTOR_STYLE = {
+        "weight": 1,
+        "color": "rgba(0, 0, 255, 1)",
+        "opacity": 1,
+        "fillColor": "rgba(0, 0, 255, 0.1)",
+        "fillOpacity": 0.1,
+        radius: 10
+    };
+    return {
+        type: record.type || "wfs",
+        search: {
+            url: record.url,
+            type: "wfs"
+        },
+        url: record.url,
+        queryable: record.queryable,
+        visibility: true,
+        name: record.name,
+        title: record.title || record.name,
+        description: record.description || "",
+        bbox: record.boundingBox,
+        links: getRecordLinks(record),
+        style: DEFAULT_VECTOR_STYLE,
+        ...record.layerOptions
+    };
+};
+
+/**
+ * Converts a record into a layer
+ */
+export const tileProviderToLayer = (record) => {
+    return {
+        type: "tileprovider",
+        visibility: true,
+        url: record.url,
+        title: record.title,
+        attribution: record.attribution,
+        options: record.options,
+        provider: record.provider, // "ProviderName.VariantName"
+        name: record.provider
+    };
+};

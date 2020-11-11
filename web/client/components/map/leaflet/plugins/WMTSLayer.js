@@ -7,11 +7,11 @@
  */
 
 import Layers from '../../../../utils/leaflet/Layers';
-import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
+import {normalizeSRS} from '../../../../utils/CoordinatesUtils';
 import L from 'leaflet';
 import assign from 'object-assign';
-import SecurityUtils from '../../../../utils/SecurityUtils';
-import WMTSUtils from '../../../../utils/WMTSUtils';
+import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import WMTS from '../../../../utils/leaflet/WMTS';
 import { isArray } from 'lodash';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
@@ -21,7 +21,7 @@ L.tileLayer.wmts = function(urls, options, matrixOptions) {
 };
 
 function wmtsToLeafletOptions(options) {
-    const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
+    const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     return assign({
         requestEncoding: options.requestEncoding,
@@ -32,7 +32,7 @@ function wmtsToLeafletOptions(options) {
         tileMatrixSet: tileMatrixSet,
         version: options.version || "1.0.0",
         tileSize: options.tileSize || 256,
-        CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
+        CRS: normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         maxZoom: options.maxZoom || 23,
         maxNativeZoom: options.maxNativeZoom || 18
     }, options.params || {});
@@ -45,8 +45,8 @@ function getWMSURLs(urls) {
 const createLayer = options => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmtsToLeafletOptions(options) || {};
-    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
-    const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
+    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+    const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const { tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
     return L.tileLayer.wmts(urls, queryParameters, {
         tileMatrixPrefix: options.tileMatrixPrefix || queryParameters.tileMatrixSet + ':' || srs + ':',

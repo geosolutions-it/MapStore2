@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,6 +8,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 
 const {Glyphicon, Tooltip} = require('react-bootstrap');
+const PropTypes = require('prop-types');
+
 const Button = require('../../misc/Button').default;
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const OverlayTrigger = require('../../misc/OverlayTrigger').default;
@@ -21,7 +22,7 @@ const TextField = require('./TextField');
 const AutocompleteField = require('./AutocompleteFieldHOC');
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const StringSelector = require('../../misc/StringSelector');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const I18N = require('../../I18N/I18N');
 
 class GroupField extends React.Component {
@@ -268,7 +269,7 @@ class GroupField extends React.Component {
     };
 
     renderHeader = () => {
-        return LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.attribute_filter_header");
+        return getMessageById(this.context.messages, "queryform.attributefilter.attribute_filter_header");
     };
 
     render() {
@@ -291,7 +292,7 @@ class GroupField extends React.Component {
 
     updateLogicCombo = (groupId, name, value) => {
         const logic = this.props.logicComboOptions.filter((opt) => {
-            return value === LocaleUtils.getMessageById(this.context.messages, opt.name);
+            return value === getMessageById(this.context.messages, opt.name);
         })[0].logic;
         this.props.actions.onUpdateLogicCombo(groupId, logic);
     };

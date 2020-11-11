@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const ComboField = require('./ComboField');
 const assign = require('object-assign');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 
 class FilterField extends React.Component {
     static propTypes = {
@@ -79,7 +79,7 @@ class FilterField extends React.Component {
                         valueField={'id'}
                         textField={'name'}
                         fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
-                        placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder")}
+                        placeholder={getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder")}
                         fieldValue={this.props.filterField.attribute}
                         attType={selectedAttribute && selectedAttribute.type}
                         fieldName="attribute"

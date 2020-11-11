@@ -5,13 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var L = require('leaflet');
+const L = require('leaflet');
 const PropTypes = require('prop-types');
-var React = require('react');
-var ConfigUtils = require('../../../utils/ConfigUtils').default;
-var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-var assign = require('object-assign');
-var mapUtils = require('../../../utils/MapUtils');
+const React = require('react');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
+const {reprojectBbox, reproject} = require('../../../utils/CoordinatesUtils');
+const assign = require('object-assign');
+const {
+    getGoogleMercatorResolutions,
+    EXTENT_TO_ZOOM_HOOK,
+    RESOLUTIONS_HOOK,
+    COMPUTE_BBOX_HOOK,
+    GET_PIXEL_FROM_COORDINATES_HOOK,
+    GET_COORDINATES_FROM_PIXEL_HOOK,
+    ZOOM_TO_EXTENT_HOOK,
+    registerHook
+} = require('../../../utils/MapUtils');
 const Rx = require('rxjs');
 
 const {throttle} = require('lodash');
@@ -68,10 +77,12 @@ class LeafletMap extends React.Component {
         onLayerError: () => {},
         resize: 0,
         registerHooks: true,
-        hookRegister: mapUtils,
+        hookRegister: {
+            registerHook
+        },
         style: {},
         interactive: true,
-        resolutions: mapUtils.getGoogleMercatorResolutions(0, 23),
+        resolutions: getGoogleMercatorResolutions(0, 23),
         onMouseOut: () => {}
     };
 
@@ -81,7 +92,7 @@ class LeafletMap extends React.Component {
         this.zoomOffset = 0;
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions && this.props.mapOptions.view.resolutions.length > 0) {
             const scaleFun = L.CRS.EPSG3857.scale;
-            const ratio = this.props.mapOptions.view.resolutions[0] / mapUtils.getGoogleMercatorResolutions(0, 23)[0];
+            const ratio = this.props.mapOptions.view.resolutions[0] / getGoogleMercatorResolutions(0, 23)[0];
             this.crs = assign({}, L.CRS.EPSG3857, {
                 scale: (zoom) => {
                     return scaleFun.call(L.CRS.EPSG3857, zoom) / Math.pow(2, Math.round(Math.log2(ratio)));
@@ -92,7 +103,7 @@ class LeafletMap extends React.Component {
     }
     componentDidMount() {
         const {limits = {}} = this.props;
-        const maxBounds = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
+        const maxBounds = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
         let mapOptions = assign({}, this.props.interactive ? {} : {
             dragging: false,
             touchZoom: false,
@@ -149,6 +160,7 @@ class LeafletMap extends React.Component {
                     modifiers: {
                         alt: event.originalEvent.altKey,
                         ctrl: event.originalEvent.ctrlKey,
+                        metaKey: event.originalEvent.metaKey, // MAC OS
                         shift: event.originalEvent.shiftKey
                     }
                 });
@@ -271,7 +283,7 @@ class LeafletMap extends React.Component {
             const {limits = {}} = newProps;
             const {limits: oldLimits} = this.props;
             if (limits.restrictedExtent !== (oldLimits && oldLimits.restrictedExtent)) {
-                const maxBounds = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
+                const maxBounds = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
                 this.map.setMaxBounds(limits.restrictedExtent && L.latLngBounds([
                     [maxBounds[1], maxBounds[0]],
                     [maxBounds[3], maxBounds[2]]
@@ -424,15 +436,15 @@ class LeafletMap extends React.Component {
     };
 
     registerHooks = () => {
-        this.props.hookRegister.registerHook(mapUtils.EXTENT_TO_ZOOM_HOOK, (extent) => {
-            var repojectedPointA = CoordinatesUtils.reproject([extent[0], extent[1]], this.props.projection, 'EPSG:4326');
-            var repojectedPointB = CoordinatesUtils.reproject([extent[2], extent[3]], this.props.projection, 'EPSG:4326');
+        this.props.hookRegister.registerHook(EXTENT_TO_ZOOM_HOOK, (extent) => {
+            var repojectedPointA = reproject([extent[0], extent[1]], this.props.projection, 'EPSG:4326');
+            var repojectedPointB = reproject([extent[2], extent[3]], this.props.projection, 'EPSG:4326');
             return this.map.getBoundsZoom([[repojectedPointA.y, repojectedPointA.x], [repojectedPointB.y, repojectedPointB.x]]) - 1;
         });
-        this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
+        this.props.hookRegister.registerHook(RESOLUTIONS_HOOK, () => {
             return this.getResolutions();
         });
-        this.props.hookRegister.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
+        this.props.hookRegister.registerHook(COMPUTE_BBOX_HOOK, (center, zoom) => {
             let latLngCenter = L.latLng([center.y, center.x]);
             // this call will use map internal size
             let topLeftPoint = this.map._getNewPixelOrigin(latLngCenter, zoom);
@@ -451,20 +463,20 @@ class LeafletMap extends React.Component {
                 rotation: 0
             };
         });
-        this.props.hookRegister.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, (pos) => {
-            let latLng = CoordinatesUtils.reproject(pos, this.props.projection, 'EPSG:4326');
+        this.props.hookRegister.registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, (pos) => {
+            let latLng = reproject(pos, this.props.projection, 'EPSG:4326');
             let pixel = this.map.latLngToContainerPoint([latLng.y, latLng.x]);
             return [pixel.x, pixel.y];
         });
-        this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
+        this.props.hookRegister.registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             const point = this.map.containerPointToLatLng(pixel);
-            let pos = CoordinatesUtils.reproject([point.lng, point.lat], 'EPSG:4326', this.props.projection);
+            let pos = reproject([point.lng, point.lat], 'EPSG:4326', this.props.projection);
             return [pos.x, pos.y];
         });
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
+        this.props.hookRegister.registerHook(ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
             const paddingTopLeft = padding && L.point(padding.left || 0, padding.top || 0);
             const paddingBottomRight = padding && L.point(padding.right || 0, padding.bottom || 0);
-            const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');
+            const bounds = reprojectBbox(extent, crs, 'EPSG:4326');
             // bbox is minx, miny, maxx, maxy'southwest_lng,southwest_lat,northeast_lng,northeast_lat'
             this.map.fitBounds([
                 // sw

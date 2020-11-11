@@ -17,13 +17,13 @@ const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 const ScaleBox = require("../components/mapcontrols/scale/ScaleBox");
 
-const mapUtils = require('../utils/MapUtils');
+const {getScales} = require('../utils/MapUtils');
 const assign = require('object-assign');
 
 const selector = createSelector([mapSelector, minZoomSelector], (map, minZoom) => ({
     minZoom,
     currentZoomLvl: map && map.zoom,
-    scales: mapUtils.getScales(
+    scales: getScales(
         map && map.projection || 'EPSG:3857',
         map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
     )

@@ -145,9 +145,3 @@ export const getVideoThumbnail = (src = '', options) => {
         .then((dataURL) =>
             createBase64Thumbnail(dataURL, options));
 };
-
-export default {
-    createBase64Thumbnail,
-    getVideoFrame,
-    getVideoThumbnail
-};

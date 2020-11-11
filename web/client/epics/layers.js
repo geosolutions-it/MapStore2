@@ -26,7 +26,7 @@ import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '..
 import { setControlProperty } from '../actions/controls';
 import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { basicError } from '../utils/NotificationUtils';
-import LayersUtils from '../utils/LayersUtils';
+import { getCapabilitiesUrl, getLayerTitleTranslations} from '../utils/LayersUtils';
 import assign from 'object-assign';
 import { isArray, head } from 'lodash';
 
@@ -59,7 +59,7 @@ export const refresh = action$ =>
             return Rx.Observable.from(
                 action.layers.map((layer) =>
                     Rx.Observable.forkJoin(
-                        Api.getCapabilities(LayersUtils.getCapabilitiesUrl(layer), true)
+                        Api.getCapabilities(getCapabilitiesUrl(layer), true)
                             .then( (json) => {
                                 const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
                                 const layersObj = Api.flatLayers(root);
@@ -83,7 +83,7 @@ export const refresh = action$ =>
                         if (caps.error) {
                             return Rx.Observable.of(caps.error && caps);
                         }
-                        return Rx.Observable.of(assign({layer: layer.id, title: LayersUtils.getLayerTitleTranslations(caps), bbox: Api.getBBox(caps, true), dimensions: Api.getDimensions(caps)}, (describe && !describe.error) ? {search: describe} : {}));
+                        return Rx.Observable.of(assign({layer: layer.id, title: getLayerTitleTranslations(caps), bbox: Api.getBBox(caps, true), dimensions: Api.getDimensions(caps)}, (describe && !describe.error) ? {search: describe} : {}));
                     })
                 )
             )

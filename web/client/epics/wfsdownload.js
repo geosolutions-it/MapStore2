@@ -24,7 +24,7 @@ import Rx from 'rxjs';
 import { get, find, pick, toPairs } from 'lodash';
 import { saveAs } from 'file-saver';
 import axios from 'axios';
-import FilterUtils from '../utils/FilterUtils';
+import {toOGCFilter} from '../utils/FilterUtils';
 import { getByOutputFormat } from '../utils/FileFormatUtils';
 import { getLayerWFSCapabilities } from '../observables/wfs';
 
@@ -59,7 +59,7 @@ const hasOutputFormat = (data) => {
 };
 
 const getWFSFeature = ({url, filterObj = {}, downloadOptions = {}} = {}) => {
-    const data = FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, false, null, null, downloadOptions.selectedSrs);
+    const data = toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, false, null, null, downloadOptions.selectedSrs);
     return Rx.Observable.defer( () =>
         axios.post(cleanDuplicatedQuestionMarks(url + `?service=WFS&outputFormat=${downloadOptions.selectedFormat}`), data, {
             timeout: 60000,

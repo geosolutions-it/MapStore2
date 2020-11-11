@@ -5,15 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     createFromSearch,
     getTooltip,
     getTooltipFragment,
     flattenGroups,
     getTitleAndTooltip,
     getLabelName
-} = require('../TOCUtils');
+} from '../TOCUtils';
+
 let options = [{label: "lab1", value: "val1"}];
 const groups = [{
     "id": "first",

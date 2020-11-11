@@ -871,19 +871,41 @@ export default class DrawSupport extends React.Component {
         };
         this.clean();
 
-        let newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.getMapCrs()) || {};
-        let props;
-        if (newFeature && newFeature.features && newFeature.features.length) {
-            // filtering circles features only when drawing
+        let newFeatures = newProps.features.map(f => {
+            return reprojectGeoJson(f, newProps.options.featureProjection, this.getMapCrs()) || {};
+        });
 
-            props = assign({}, newProps, {features: [newFeature]});
+        let props;
+        const allHaveFeatures = newFeatures.every(ft => {
+            if (ft && ft.features && ft.features.length) {
+                return true;
+            }
+            return false;
+        });
+
+        const allHaveCircleProperty = newFeatures.every(ft => {
+            if (ft && ft.properties && ft.properties.isCircle) {
+                return true;
+            }
+            return false;
+        });
+
+        if (allHaveFeatures) {
+            props = assign({}, newProps, {features: newFeatures});
         } else {
-            if (newFeature && newFeature.properties && newFeature.properties.isCircle) {
+            if (allHaveCircleProperty) {
                 props = assign({}, newProps, {features: []});
             } else {
-                props = assign({}, newProps, {features: newFeature.geometry ? [{...newFeature.geometry, properties: newFeature.properties}] : []});
+                const fts = newFeatures.reduce((pre, curr) => {
+                    if (curr.geometry) {
+                        return [...pre, {...curr.geometry, properties: curr.properties}];
+                    }
+                    return pre;
+                }, []);
+                props = assign({}, newProps, {features: fts});
             }
         }
+
         // TODO investigate if this newFeature.geometry is needed instead of only newFeature
         if (!this.drawLayer) {
             this.addLayer(props);

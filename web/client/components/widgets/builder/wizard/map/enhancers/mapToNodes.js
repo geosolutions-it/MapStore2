@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const LayersUtils = require('../../../../../../utils/LayersUtils');
+const {denormalizeGroups, splitMapAndLayers} = require('../../../../../../utils/LayersUtils');
 const { withProps } = require('recompose');
 
 /**
@@ -15,7 +15,7 @@ const { withProps } = require('recompose');
  */
 const mapToNodes = ({ map }) => ({
     nodes: (
-        ({ layers = {} }) => (LayersUtils.denormalizeGroups(layers.flat || [], layers.groups || []).groups)
-    )(LayersUtils.splitMapAndLayers(map))
+        ({ layers = {} }) => (denormalizeGroups(layers.flat || [], layers.groups || []).groups)
+    )(splitMapAndLayers(map))
 });
 module.exports = withProps(mapToNodes);

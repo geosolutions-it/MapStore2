@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const xml2js = require('xml2js');
-const WMTSUtils = require('../WMTSUtils');
-const restCapabilities = require('raw-loader!../../test-resources/wmts/GetCapabilities-rest.xml');
-const kvpCapabilities = require('raw-loader!../../test-resources/wmts/GetCapabilities-1.0.0.xml');
+import expect from 'expect';
+
+import xml2js from 'xml2js';
+import * as WMTSUtils from '../WMTSUtils';
+import restCapabilities from 'raw-loader!../../test-resources/wmts/GetCapabilities-rest.xml';
+import kvpCapabilities from 'raw-loader!../../test-resources/wmts/GetCapabilities-1.0.0.xml';
 
 describe('Test the WMTSUtils', () => {
     it('get matrix ids with object', () => {

@@ -40,7 +40,7 @@ const {metadataSourceSelector, modalParamsSelector} = require('../selectors/back
 const Message = require("../components/I18N/Message").default;
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
-const CatalogUtils = require('../utils/CatalogUtils');
+const {getCatalogRecords} = require('../utils/CatalogUtils');
 const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
 const metadataExplorerSelector = createStructuredSelector({
@@ -79,7 +79,7 @@ const metadataExplorerSelector = createStructuredSelector({
 
 const Catalog = compose(
     withProps(({ result, selectedFormat, options, layerOptions, services, selectedService, locales}) => ({
-        records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, { ...options, layerOptions, service: services[selectedService] }, locales) || []
+        records: result && getCatalogRecords(selectedFormat, result, { ...options, layerOptions, service: services[selectedService] }, locales) || []
     })),
     defaultProps({
         buttonStyle: {

@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -11,8 +10,9 @@ const React = require('react');
 const {FormControl, FormGroup, ControlLabel, Alert} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const Button = require('../../misc/Button').default;
+const PropTypes = require('prop-types');
 const Message = require('../../I18N/Message').default;
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 
 /**
  * A Form to login menu for user details:
@@ -93,7 +93,7 @@ class LoginForm extends React.Component {
     };
 
     renderSubmit = () => {
-        let submitText = LocaleUtils.getMessageById(this.context.messages, "user.signIn");
+        let submitText = getMessageById(this.context.messages, "user.signIn");
         if (this.props.showSubmitButton) {
             return (<Button
                 type="submit"
@@ -113,7 +113,7 @@ class LoginForm extends React.Component {
                         key="username"
                         type="text"
                         value={this.state.username}
-                        placeholder={LocaleUtils.getMessageById(this.context.messages, "user.username")}
+                        placeholder={getMessageById(this.context.messages, "user.username")}
                         onChange={this.setUser} />
                 </FormGroup>
                 <FormGroup>
@@ -123,7 +123,7 @@ class LoginForm extends React.Component {
                         type="password"
                         value={this.state.password}
                         onKeyPress={this.handleKeyPress}
-                        placeholder={LocaleUtils.getMessageById(this.context.messages, "user.password")}
+                        placeholder={getMessageById(this.context.messages, "user.password")}
                         onChange={this.setPassword} />
                 </FormGroup>
                 {this.renderSubmit()}

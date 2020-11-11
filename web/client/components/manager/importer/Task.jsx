@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,12 +7,14 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const {Grid, Col, Row, Panel, Label, Alert} = require('react-bootstrap');
+const PropTypes = require('prop-types');
 const Spinner = require('react-spinkit');
 const {DropdownList} = require('react-widgets');
 require('react-widgets/lib/less/react-widgets.less');
+
 const Button = require('../../misc/Button').default;
 const {Message} = require('../../I18N/I18N');
-const ImporterUtils = require('../../../utils/ImporterUtils');
+const {getbsStyleForState} = require('../../../utils/ImporterUtils');
 const Layer = require('./Layer');
 const TransformsGrid = require('./TransformsGrid');
 
@@ -41,10 +42,6 @@ class Task extends React.Component {
         loadTransform: () => {},
         deleteTransform: () => {}
 
-    };
-
-    getbsStyleForState = (state) => {
-        return ImporterUtils.getbsStyleForState(state);
     };
 
     renderLoading = (element) => {
@@ -75,7 +72,7 @@ class Task extends React.Component {
         return (<Panel style={this.props.panStyle} bsStyle="info" header={<span><Message msgId="importer.task.general" /></span>}>
             <dl className="dl-horizontal">
                 <dt><Message msgId="importer.task.status" /></dt>
-                <dd><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderErrorMessage(task)}</dd>
+                <dd><Label bsStyle={getbsStyleForState(task.state)}>{task.state}</Label>{this.renderErrorMessage(task)}</dd>
                 <dt><Message msgId="importer.task.updateMode" /></dt>
                 <dd>{
                     this.props.task.state === "READY" // force this to default because APPEND and REPLACE are not supported yet.

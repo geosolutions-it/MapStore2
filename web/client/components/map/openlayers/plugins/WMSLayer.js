@@ -15,14 +15,14 @@ import isArray from 'lodash/isArray';
 import assign from 'object-assign';
 
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
-import ProxyUtils from '../../../../utils/ProxyUtils';
+import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
-import SecurityUtils from '../../../../utils/SecurityUtils';
+import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
 import MapUtils from '../../../../utils/MapUtils';
-import ElevationUtils from '../../../../utils/ElevationUtils';
+import  {loadTile, getElevation as getElevationFunc} from '../../../../utils/ElevationUtils';
 
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';
@@ -63,7 +63,7 @@ function wmsToOpenlayersOptions(options) {
             options.env && options.env.length &&
             options.group !== 'background' ? {ENV: generateEnvString(options.env) } : {})
     ));
-    return SecurityUtils.addAuthenticationToSLD(result, options);
+    return addAuthenticationToSLD(result, options);
 }
 
 function getWMSURLs( urls ) {
@@ -73,8 +73,8 @@ function getWMSURLs( urls ) {
 // Works with geosolutions proxy
 function proxyTileLoadFunction(imageTile, src) {
     var newSrc = src;
-    if (ProxyUtils.needProxy(src)) {
-        let proxyUrl = ProxyUtils.getProxyUrl();
+    if (needProxy(src)) {
+        let proxyUrl = getProxyUrl();
         newSrc = proxyUrl + encodeURIComponent(src);
     }
     imageTile.getImage().src = newSrc;
@@ -86,13 +86,13 @@ function tileCoordsToKey(coords) {
 
 function elevationLoadFunction(forceProxy, imageTile, src) {
     let newSrc = src;
-    if (forceProxy && ProxyUtils.needProxy(src)) {
-        let proxyUrl = ProxyUtils.getProxyUrl();
+    if (forceProxy && needProxy(src)) {
+        let proxyUrl = getProxyUrl();
         newSrc = proxyUrl + encodeURIComponent(src);
     }
     const coords = imageTile.getTileCoord();
     imageTile.getImage().src = "";
-    ElevationUtils.loadTile(newSrc, coords, tileCoordsToKey(coords));
+    loadTile(newSrc, coords, tileCoordsToKey(coords));
 }
 
 function addTileLoadFunction(sourceOptions, options) {
@@ -125,7 +125,7 @@ function getElevation(pos) {
     try {
         const tilePoint = getTileFromCoords(this, pos);
         const tileSize = this.getSource().getTileGrid().getTileSize();
-        const elevation = ElevationUtils.getElevation(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'));
+        const elevation = getElevationFunc(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'));
         if (elevation.available) {
             return elevation.value;
         }
@@ -139,7 +139,7 @@ const toOLAttributions = credits => credits && creditsToAttribution(credits) || 
 const createLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmsToOpenlayersOptions(options) || {};
-    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
+    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
 
     const vectorFormat = isVectorFormat(options.format);
 
@@ -308,7 +308,7 @@ Layers.registerType('wms', {
                 vectorSource.refresh();
             }
             if (changed) {
-                const params = assign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
+                const params = assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 
                 wmsSource.updateParams(assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
                     return !isNil(params[key]) ? previous : assign(previous, {

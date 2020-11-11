@@ -6,12 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {
-    createShallowSelector,
-    createShallowSelectorCreator
-} = require('../ReselectUtils');
-const { isEqual } = require('lodash');
+import expect from 'expect';
+
+import { createShallowSelector, createShallowSelectorCreator } from '../ReselectUtils';
+import { isEqual } from 'lodash';
 
 const TEST_STRING_1 = "TEST_1";
 const TEST_STRING_2 = "TEST_2";

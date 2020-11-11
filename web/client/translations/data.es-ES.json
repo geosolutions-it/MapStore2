@@ -97,6 +97,8 @@
             "propertiesFormatDescription": "Muestra resultados de información de la capa como lista de propiedades",
             "templateFormatTitle": "PLANTILLA",
             "templateFormatDescription": "Personalizar el formato de resultados de información de la capa",
+            "hideFormatTitle": "DESACTIVAR IDENTIFICAR",
+            "hideFormatDescription": "Deshabilite la información de la entidad para esta capa",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "tooltip": {
@@ -1541,7 +1543,7 @@
             "deselectall": "Deseleccionar todos",
             "backtosearch": "Volver a la búsqueda",
             "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
-            "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total} de {total}} other { {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total}} other { {total}}}",
             "pageInfo": "{totalPages, plural, =0 {ninguna Página} =1 {Página {totalPages} de {totalPages}} other {Página {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",
@@ -1575,8 +1577,8 @@
                     "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
                     "date": "Escriba una fecha o una expresión. Usa {format} para la fecha.",
                     "geometry": {
-                        "disabled": "Filtrar haciendo clic en el mapa",
-                        "enabled": "Haga clic en el mapa para filtrar los resultados",
+                        "disabled": "Filtrar haciendo clic en el mapa/ Mantenga presionada la tecla Ctrl y haga clic para filtrar múltiples",
+                        "enabled": "Haga clic en el mapa para filtrar los resultados / Mantenga presionada la tecla Ctrl y haga clic para filtrar múltiples",
                         "applied": "Eliminar el filtro haciendo clic con el mouse"
                     }
                 }
@@ -1806,25 +1808,26 @@
                 "bar": "Mostrar leyenda",
                 "gauge": "Mostrar etiquetas"
             },
-            "displayCartesian": {
-                "line": "Ocultar cuadrícula",
-                "bar": "Ocultar cuadrícula"
-            },
-            "xAxisAngle":{
-                "line": "Eye X: Ángulo de rotación de la etiqueta °",
-                "bar": "Eye X: Ángulo de rotación de la etiqueta °"
-            },
-            "yAxis":{
-                "line": "Ocultar el eje Y",
-                "bar": "Ocultar el eje Y"
-            },
-            "yAxisLabel":{
-                "line": "Etiqueta leyenda",
-                "bar": "Etiqueta leyenda"
-            },
-            "advancedOptions":{
-                "line": "Opciones avanzadas",
-                "bar": "Opciones avanzadas"
+            "advanced": {
+              "displayCartesian": "Ocultar cuadrícula",
+              "xAxis": "Eje X",
+              "xAxisAngle": "Rotación de etiquetas",
+              "hideLabels": "Ocultar etiquetas",
+              "xAxisType": "Tipo",
+              "forceTicks": "Nunca omita etiquetas",
+              "maxXAxisLabels": "De todos modos, las etiquetas no pueden ser más de {max}",
+              "yAxis": "Eje Y",
+              "yAxisType": "Tipo",
+              "yAxisLabel": "Etiqueta de leyenda",
+              "title": "Opciones avanzadas",
+              "legend": "Legend",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Lineal",
+                "category": "Categoría",
+                "log": "Log",
+                "date": "Fecha"
+              }
             },
             "tray": {
                 "title": "Widgets",
@@ -2268,6 +2271,7 @@
             "selectworkspace": "Debe seleccionar el espacio de trabajo para habilitar opciones avanzadas."
         },
         "geostory": {
+            "storyResources": "Recursos de la historia",
             "geostoreMap": "Mapas de MapStore",
             "loadingSpinner": "Cargando Historia",
             "addTitleSection": "Agregar sección de título",
@@ -2493,7 +2497,8 @@
             "mediaList" : {
                 "removeResourceTitle": "¿Estás seguro?",
                 "confirmRemoveResource": "¿Desea eliminar este recurso de medios de la historia?",
-                "confirmRemoveUsedResource": "Este recurso también se eliminará de todas las secciones / contenidos donde se usa dejándolos vacíos. ¿Quieres eliminarlo de la historia?"
+                "confirmRemoveUsedResource": "Este recurso también se eliminará de todas las secciones / contenidos donde se usa dejándolos vacíos. ¿Quieres eliminarlo de la historia?",
+                "resultsCount": "{count} de {total} {total, plural, one {Resultado} other {Resultados}}"
             },
             "imageList": {
                 "emptyList": "Haga clic en el botón más para agregar una nueva imagen. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> aquí </a>"

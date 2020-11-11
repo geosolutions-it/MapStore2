@@ -97,6 +97,8 @@
             "propertiesFormatDescription": "Zeigt Feature-Info-Ergebnisse als Eigenschaftsliste an",
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
+            "hideFormatTitle": "IDENTIFIZIERUNG DEAKTIVIEREN",
+            "hideFormatDescription": "Deaktivieren Sie die Funktionsinformationen für diese Ebene",
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
             "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
@@ -1540,7 +1542,7 @@
             "deselectall": "Auswahl aufheben",
             "backtosearch": "Zurück zur suche",
             "resultInfo": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{start}-{end} von {total}}}",
-            "resultInfoVirtual": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {Keine Artikel} =1 {{total}} other {{total}}}",
             "pageInfo": "{totalPages, plural, =0 {keine Seite} =1 {Seite {totalPages} von {totalPages}} other {Seite {page} von {totalPages}}}",
             "pagination": {
                 "page": "Seite",
@@ -1574,8 +1576,8 @@
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
                     "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
                     "geometry": {
-                        "disabled": "Filterklick auf die Karte",
-                        "enabled": "Klicken Sie auf die Karte, um die Ergebnisse zu filtern",
+                        "disabled": "Filterklick auf die Karte / Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere zu filtern",
+                        "enabled": "Klicken Sie auf die Karte, um die Ergebnisse zu filtern / Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere zu filtern",
                         "applied": "Entfernen Sie den Filter per Mausklick"
                     }
                 }
@@ -1805,25 +1807,26 @@
                 "bar": "Legende anzeigen",
                 "gauge": "Legende anzeigen"
             },
-            "displayCartesian": {
-                "line": "Raster ausblenden",
-                "bar": "Raster ausblenden"
-            },
-            "xAxisAngle":{
-                "line": "X-Achse: Beschriften Sie den Drehwinkel °",
-                "bar": "X-Achse: Beschriften Sie den Drehwinkel °"
-            },
-            "yAxis":{
-                "line": "Y-Achse ausblenden",
-                "bar": "Y-Achse ausblenden"
-            },
-            "yAxisLabel":{
-                "line": "Legenden-Label",
-                "bar": "Legenden-Label"
-            },
-            "advancedOptions":{
-                "line": "Erweiterte Optionen",
-                "bar": "Erweiterte Optionen"
+            "advanced": {
+              "displayCartesian": "Gitter ausblenden",
+              "xAxis": "X-Achse",
+              "xAxisAngle": "Etikettendrehung",
+              "hideLabels": "Labels ausblenden",
+              "xAxisType": "Type",
+              "forceTicks": "Überspringe niemals Etik.",
+              "maxXAxisLabels": "Die Beschriftungen dürfen sowieso nicht mehr als {max} sein",
+              "yAxis": "Y-Achse",
+              "yAxisType": "Type",
+              "yAxisLabel": "Legend Label",
+              "title": "Erweiterte Optionen",
+              "legend": "Legende",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "linear",
+                "category": "Kategorie",
+                "log": "Logarithmus",
+                "date": "Datum"
+              }
             },
             "tray": {
                 "title": "Widgets",
@@ -2267,6 +2270,7 @@
             "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
         "geostory": {
+            "storyResources": "Story Ressourcen",
             "geostoreMap": "MapStore-Karten",
             "loadingSpinner": "Story wird geladen",
             "addTitleSection": "Titelabschnitt hinzufügen",
@@ -2492,7 +2496,8 @@
             "mediaList" : {
                 "removeResourceTitle": "Bist du sicher?",
                 "confirmRemoveResource": "Möchten Sie diese Medienressource aus der Story entfernen?",
-                "confirmRemoveUsedResource": "Diese Ressource wird auch aus allen Abschnitten / Inhalten entfernt, in denen sie verwendet wird und sie bleiben leer. Möchten Sie es aus der Geschichte entfernen?"
+                "confirmRemoveUsedResource": "Diese Ressource wird auch aus allen Abschnitten / Inhalten entfernt, in denen sie verwendet wird und sie bleiben leer. Möchten Sie es aus der Geschichte entfernen?",
+                "resultsCount": "{count} von {total} {total, plural, one {Ergebnis} other {Ergebnisse}}"
             },
             "imageList": {
                 "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Bild hinzuzufügen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> hier </a>"

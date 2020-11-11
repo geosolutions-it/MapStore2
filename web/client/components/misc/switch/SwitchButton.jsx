@@ -16,6 +16,7 @@ const PropTypes = require('prop-types');
 class SwitchButton extends React.Component {
 
     static propTypes = {
+        disabled: PropTypes.bool,
         className: PropTypes.string,
         checked: PropTypes.bool,
         onChange: PropTypes.func,
@@ -32,6 +33,7 @@ class SwitchButton extends React.Component {
     render() {
         return (<label className={`mapstore-switch-btn ${this.props.className}`}>
             <input type="checkbox"
+                disabled={this.props.disabled}
                 checked={this.props.checked}
                 onChange={() => this.props.onChange(!this.props.checked)}
             />

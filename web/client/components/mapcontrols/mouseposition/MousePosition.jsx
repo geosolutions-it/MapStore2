@@ -11,7 +11,7 @@ const proj4js = require('proj4').default;
 const {Glyphicon, Label} = require('react-bootstrap');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const Button = require('../../misc/Button').default;
-const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+const {reproject, getUnits} = require('../../../utils/CoordinatesUtils');
 const MousePositionLabelDMS = require('./MousePositionLabelDMS');
 const MousePositionLabelYX = require('./MousePositionLabelYX');
 const CRSSelector = require('./CRSSelector');
@@ -85,9 +85,9 @@ class MousePosition extends React.Component {
             // if we repoject null coordinates we can end up with -0.00 instead of 0.00
             ({x, y} = {x: 0, y: 0, z});
         } else if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.props.crs)) {
-            ({x, y} = CoordinatesUtils.reproject([x, y], this.props.mousePosition.crs, this.props.crs));
+            ({x, y} = reproject([x, y], this.props.mousePosition.crs, this.props.crs));
         }
-        let units = CoordinatesUtils.getUnits(this.props.crs);
+        let units = getUnits(this.props.crs);
         if (units === "degrees") {
             return {lat: y, lng: x, z};
         }
@@ -95,7 +95,7 @@ class MousePosition extends React.Component {
     };
 
     getTemplateComponent = () => {
-        return CoordinatesUtils.getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
+        return getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
     };
 
     render() {

@@ -13,7 +13,7 @@ const ContainerDimensions = require('react-container-dimensions').default;
 const {Controlled: Codemirror} = require('react-codemirror2');
 require('codemirror/lib/codemirror.css');
 require('codemirror/mode/sql/sql');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 
 
 class RoiCql extends React.Component {
@@ -49,7 +49,7 @@ class RoiCql extends React.Component {
                                 lineNumbers: true,
                                 lineWrapping: true
                             }}/>
-                        <Button disabled={this.props.wkt === this.state.cql} text={LocaleUtils.getMessageById(this.context.messages, "rulesmanager.apply")} onClick={this.apply}/>
+                        <Button disabled={this.props.wkt === this.state.cql} text={getMessageById(this.context.messages, "rulesmanager.apply")} onClick={this.apply}/>
                     </div>}
             </ContainerDimensions>);
     }

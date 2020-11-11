@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,9 +7,10 @@ const PropTypes = require('prop-types');
  */
 
 var React = require('react');
+const PropTypes = require('prop-types');
 var NominatimResult = require('./NominatimResult');
-const mapUtils = require('../../../../utils/MapUtils');
-const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+const {getZoomForExtent, getCenterForExtent} = require('../../../../utils/MapUtils');
+const {reprojectBbox} = require('../../../../utils/CoordinatesUtils');
 const I18N = require('../../../I18N/I18N');
 
 
@@ -37,10 +37,10 @@ class ResultList extends React.Component {
         // zoom by the max. extent defined in the map's config
         var mapSize = this.props.mapConfig.size;
 
-        var newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", this.props.mapConfig.projection), mapSize, 0, 21, null);
+        var newZoom = getZoomForExtent(reprojectBbox(bbox, "EPSG:4326", this.props.mapConfig.projection), mapSize, 0, 21, null);
 
         // center by the max. extent defined in the map's config
-        var newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
+        var newCenter = getCenterForExtent(bbox, "EPSG:4326");
 
         this.props.onItemClick(newCenter, newZoom, {
             bounds: {

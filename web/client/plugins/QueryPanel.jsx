@@ -35,7 +35,11 @@ const {
 } = require('../selectors/queryform');
 
 const {isEqual} = require('lodash');
-const LayersUtils = require('../utils/LayersUtils');
+const {
+    toggleByType,
+    sortUsing,
+    sortLayers
+} = require('../utils/LayersUtils');
 
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
@@ -435,10 +439,10 @@ const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,
     retrieveLayerData: getLayerCapabilities,
-    onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
-    onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
+    onToggleGroup: toggleByType('groups', toggleNode),
+    onToggleLayer: toggleByType('layers', toggleNode),
     onToggleQuery: toggleControl.bind(null, 'queryPanel', null),
-    onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
+    onSort: sortUsing(sortLayers, sortNode),
     onSettings: showSettings,
     onInit: initQueryPanel,
     onZoomToExtent: zoomToExtent,

@@ -8,7 +8,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import MapInfoUtils from '../../utils/MapInfoUtils';
+import {getAvailableInfoFormat, getDefaultInfoFormatValue} from '../../utils/MapInfoUtils';
 import Select from "react-select";
 import { FormGroup, ControlLabel } from 'react-bootstrap';
 import ControlledPopover from '../widgets/widget/ControlledPopover';
@@ -77,8 +77,8 @@ FeatureInfoFormatSelector.propTypes = {
 
 FeatureInfoFormatSelector.defaultProps = {
     id: "mapstore-feature-format-selector",
-    availableInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
-    infoFormat: MapInfoUtils.getDefaultInfoFormatValue(),
+    availableInfoFormat: getAvailableInfoFormat(),
+    infoFormat: getDefaultInfoFormatValue(),
     popoverMessage: "",
     onInfoFormatChange: function() {},
     selectProps: {}

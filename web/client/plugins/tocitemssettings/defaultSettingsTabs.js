@@ -18,8 +18,8 @@ import TextViewer from '../../components/data/identify/viewers/TextViewer';
 import JSONViewer from '../../components/data/identify/viewers/JSONViewer';
 import HtmlRenderer from '../../components/misc/HtmlRenderer';
 
-import MapInfoUtils from '../../utils/MapInfoUtils';
-import PluginsUtils from '../../utils/PluginsUtils';
+import {getAvailableInfoFormat} from '../../utils/MapInfoUtils';
+import {getConfiguredPlugin as getConfiguredPluginUtil } from '../../utils/PluginsUtils';
 
 import General from '../../components/TOC/fragments/settings/General';
 import Display from '../../components/TOC/fragments/settings/Display';
@@ -52,6 +52,11 @@ const isStylableLayer = (props) =>
 
 
 const formatCards = {
+    HIDDEN: {
+        titleId: 'layerProperties.hideFormatTitle',
+        descId: 'layerProperties.hideFormatDescription',
+        glyph: 'ext-empty'
+    },
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
         descId: 'layerProperties.textFormatDescription',
@@ -116,7 +121,7 @@ const formatCards = {
 import FeatureInfoCmp from '../../components/TOC/fragments/settings/FeatureInfo';
 const FeatureInfo = defaultProps({
     formatCards,
-    defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat()
+    defaultInfoFormat: Object.assign({ "HIDDEN": "text/html"}, getAvailableInfoFormat())
 })(FeatureInfoCmp);
 
 const configuredPlugins = {};
@@ -125,7 +130,7 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
     if (plugin) {
         let configured = configuredPlugins[plugin.name];
         if (!configured) {
-            configured = PluginsUtils.getConfiguredPlugin(plugin, loaded, loadingComp);
+            configured = getConfiguredPluginUtil(plugin, loaded, loadingComp);
             if (configured && configured.loaded) {
                 configuredPlugins[plugin.name] = configured;
             }

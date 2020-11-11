@@ -7,11 +7,11 @@
  */
 
 import axios from '../libs/ajax';
-import FileUtils from '../utils/FileUtils';
+import {readZip} from '../utils/FileUtils';
 
 export const upload = (files, url = "rest/config/uploadPlugin") => {
     return Promise.all(
-        files.map(file => FileUtils.readZip(file)
+        files.map(file => readZip(file)
             .then((readFile) => axios.post(url, readFile, {
                 headers: {
                     "Content-Type": "application/octet-stream"

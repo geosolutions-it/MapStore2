@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,8 +10,9 @@ const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
 const GroupCard = require('./GroupCard');
 const Spinner = require('react-spinkit');
+const PropTypes = require('prop-types');
 const Message = require('../../I18N/Message').default;
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 
 class GroupsGrid extends React.Component {
     static propTypes = {
@@ -78,11 +78,11 @@ class GroupsGrid extends React.Component {
             let actions = [{
                 onClick: () => {this.props.onEdit(group); },
                 glyph: "wrench",
-                tooltip: LocaleUtils.getMessageById(this.context.messages, "usergroups.editGroup")
+                tooltip: getMessageById(this.context.messages, "usergroups.editGroup")
             }, {
                 onClick: () => {this.props.onDelete(group && group.id); },
                 glyph: "remove-circle",
-                tooltip: LocaleUtils.getMessageById(this.context.messages, "usergroups.deleteGroup")
+                tooltip: getMessageById(this.context.messages, "usergroups.deleteGroup")
             }];
             if ( group && group.groupName === "everyone") {
                 actions = [];

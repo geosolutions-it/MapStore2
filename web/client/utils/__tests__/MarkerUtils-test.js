@@ -5,23 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-
-const {
-    extraMarkers,
-    getGlyphs
-} = require('../MarkerUtils');
+import MarkerUtils from '../MarkerUtils';
 
 describe('Test the MarkerUtils', () => {
     it('extraMarker offsets', () => {
-        expect(extraMarkers.getOffsets(extraMarkers.colors[0], extraMarkers.shapes[0])).toEqual([-2, 0]);
-        expect(extraMarkers.getOffsets(extraMarkers.colors[1], extraMarkers.shapes[0])).toEqual([-(extraMarkers.size[0] + 2), 0]);
-        expect(extraMarkers.getOffsets(extraMarkers.colors[1], extraMarkers.shapes[1])).toEqual([-(extraMarkers.size[0] + 2), -extraMarkers.size[1]]);
+        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[0], MarkerUtils.extraMarkers.shapes[0])).toEqual([-2, 0]);
+        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[1], MarkerUtils.extraMarkers.shapes[0])).toEqual([-(MarkerUtils.extraMarkers.size[0] + 2), 0]);
+        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[1], MarkerUtils.extraMarkers.shapes[1])).toEqual([-(MarkerUtils.extraMarkers.size[0] + 2), -MarkerUtils.extraMarkers.size[1]]);
     });
 
     it('extraMarker matches', () => {
-        expect(extraMarkers.matches({
+        expect(MarkerUtils.extraMarkers.matches({
             iconColor: 'red',
             iconShape: 'square'
         }, {
@@ -29,7 +25,7 @@ describe('Test the MarkerUtils', () => {
             shape: 'square'
         })).toBe(true);
 
-        expect(extraMarkers.matches({
+        expect(MarkerUtils.extraMarkers.matches({
             iconColor: 'red',
             iconShape: 'circle'
         }, {
@@ -37,7 +33,7 @@ describe('Test the MarkerUtils', () => {
             shape: 'square'
         })).toBe(false);
 
-        expect(extraMarkers.matches({
+        expect(MarkerUtils.extraMarkers.matches({
             iconColor: 'red',
             iconShape: 'circle'
         }, {
@@ -47,7 +43,7 @@ describe('Test the MarkerUtils', () => {
     });
 
     it('extraMarker getStyle', () => {
-        expect(extraMarkers.getStyle({
+        expect(MarkerUtils.extraMarkers.getStyle({
             color: 'red',
             shape: 'square'
         })).toEqual({
@@ -57,15 +53,15 @@ describe('Test the MarkerUtils', () => {
     });
 
     it('getGlyphs', () => {
-        expect(Object.keys(getGlyphs('fontawesome')).length > 0).toBe(true);
-        expect(getGlyphs('fontawesome').comment).toExist();
+        expect(Object.keys(MarkerUtils.getGlyphs('fontawesome')).length > 0).toBe(true);
+        expect(MarkerUtils.getGlyphs('fontawesome').comment).toExist();
     });
 
     it('markerToDataUrl', () => {
         const style = {
             iconShape: 'penta',
             iconColor: 'green'};
-        const dataUrl = extraMarkers.markerToDataUrl(style);
+        const dataUrl = MarkerUtils.extraMarkers.markerToDataUrl(style);
         expect(dataUrl).toExist();
     });
 });

@@ -27,8 +27,12 @@ export const selectedSourceSelector = state => get(sourcesSelector(state), sourc
 export const getSourceByIdSelectorCreator = sourceId => state => get(sourcesSelector(state), `${sourceId}`, {});
 export const availableSourcesSelector = state => sourcesForMediaTypeSelector(state).map(s => ({id: s, name: getSourceByIdSelectorCreator(s)(state).name}));
 export const resultDataSelector = state => get(state, `mediaEditor.data["${currentMediaTypeSelector(state)}"]["${sourceIdSelector(state)}"].resultData`);
+export const getCurrentMediaResourcesParams = state => get(state, `mediaEditor.data["${currentMediaTypeSelector(state)}"]["${sourceIdSelector(state)}"].params`);
 export const currentResourcesSelector = state => get(resultDataSelector(state), "resources");
+export const getCurrentMediaResourcesTotalCount = state => get(resultDataSelector(state), "totalCount");
 export const selectedIdSelector = state => get(state, "mediaEditor.selected");
+export const getLoadingSelectedMedia = state => get(state, "mediaEditor.loadingSelected");
+export const getLoadingMediaList = state => get(state, "mediaEditor.loadingList");
 export const selectedItemSelector = createSelector(
     currentResourcesSelector,
     selectedIdSelector,

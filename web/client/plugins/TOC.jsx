@@ -37,9 +37,12 @@ const {generalInfoFormatSelector} = require("../selectors/mapInfo");
 const {userSelector} = require('../selectors/security');
 const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
-const LayersUtils = require('../utils/LayersUtils');
-const mapUtils = require('../utils/MapUtils');
-const LocaleUtils = require('../utils/LocaleUtils');
+const {
+    getNode,
+    toggleByType
+} = require('../utils/LayersUtils');
+const {getScales} = require('../utils/MapUtils');
+const {getMessageById} = require('../utils/LocaleUtils');
 
 const Message = require('../components/I18N/Message').default;
 const assign = require('object-assign');
@@ -109,7 +112,7 @@ const tocSelector = createSelector(
         layerMetadata,
         wfsdownload,
         currentZoomLvl: map && map.zoom,
-        scales: mapUtils.getScales(
+        scales: getScales(
             map && map.projection || 'EPSG:3857',
             map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
         ),
@@ -121,7 +124,7 @@ const tocSelector = createSelector(
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
         updatableLayersCount: layers.filter(l => l.group !== 'background' && (l.type === 'wms' || l.type === 'wmts')).length,
-        selectedGroups: selectedNodes.map(n => LayersUtils.getNode(groups, n)).filter(n => n && n.nodes),
+        selectedGroups: selectedNodes.map(n => getNode(groups, n)).filter(n => n && n.nodes),
         mapName,
         filteredGroups: addFilteredAttributesGroups(groups, [
             {
@@ -394,7 +397,7 @@ class LayerTree extends React.Component {
                     onClear={() => { this.props.onSelectNode(); }}
                     onFilter={this.props.onFilter}
                     filterTooltipClear={<Message msgId="toc.clearFilter" />}
-                    filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "toc.filterPlaceholder")}
+                    filterPlaceholder={getMessageById(this.context.messages, "toc.filterPlaceholder")}
                     filterText={this.props.filterText}
                     toolbar={
                         <Toolbar
@@ -857,8 +860,8 @@ const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,
     retrieveLayerData: getLayerCapabilities,
-    onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
-    onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
+    onToggleGroup: toggleByType('groups', toggleNode),
+    onToggleLayer: toggleByType('layers', toggleNode),
     onContextMenu: contextNode,
     onBrowseData: browseData,
     onQueryBuilder: openQueryBuilder,

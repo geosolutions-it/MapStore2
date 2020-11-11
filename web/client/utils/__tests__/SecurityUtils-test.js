@@ -5,10 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from "expect";
 
-const SecurityUtils = require('../SecurityUtils');
-const assign = require('object-assign');
+import SecurityUtils from "../SecurityUtils";
+import ConfigUtils from "../ConfigUtils";
+import assign from "object-assign";
+import {setStore} from "../StateUtils";
+
+function setSecurityInfo(info) {
+    setStore({
+        getState: () => ({
+            security: info
+        })
+    });
+}
 
 const userA = {
     User: {
@@ -53,6 +63,11 @@ const securityInfoC = {
     token: "263c6917-543f-43e3-8e1a-6a0d29952f72"
 };
 
+const securityInfoToken = {
+    user: userC,
+    token: "goodtoken"
+};
+
 const authenticationRules = [
     {
         "urlPattern": ".*geoserver.*",
@@ -68,24 +83,33 @@ const authenticationRules = [
     }
 ];
 
+const tokenAuthenticationRules = [
+    {
+        "urlPattern": ".*a test url.*",
+        "method": "authkey"
+    }
+];
+
 describe('Test security utils methods', () => {
     afterEach(() => {
         expect.restoreSpies();
+        setStore({});
+        ConfigUtils.setConfigProp("authenticationRules", null);
+        ConfigUtils.setConfigProp("useAuthenticationRules", false);
     });
 
     it('test getting user attributes', () => {
         // test a null user
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(null);
         let attributes = SecurityUtils.getUserAttributes();
         expect(attributes).toBeAn("array");
         expect(attributes.length).toBe(0);
         // test user with no attributes
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        setSecurityInfo(securityInfoA);
         attributes = SecurityUtils.getUserAttributes();
         expect(attributes).toBeAn("array");
         expect(attributes.length).toBe(0);
         // test user with a single attribute
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        setSecurityInfo(securityInfoB);
         attributes = SecurityUtils.getUserAttributes();
         expect(attributes).toBeAn("array");
         expect(attributes.length).toBe(1);
@@ -94,7 +118,7 @@ describe('Test security utils methods', () => {
             value: "263c6917-543f-43e3-8e1a-6a0d29952f72"
         });
         // test user with multiple attributes
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
+        setSecurityInfo(securityInfoC);
         attributes = SecurityUtils.getUserAttributes();
         expect(attributes).toBeAn("array");
         expect(attributes.length).toBe(2);
@@ -110,22 +134,21 @@ describe('Test security utils methods', () => {
 
     it('test find user attribute', () => {
         // test a null user
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(null);
         let attribute = SecurityUtils.findUserAttribute("uuid");
         expect(attribute).toNotExist();
         // test user with no attributes
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        setSecurityInfo(securityInfoA);
         attribute = SecurityUtils.findUserAttribute("uuid");
         expect(attribute).toNotExist();
         // test user with a single attribute
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        setSecurityInfo(securityInfoB);
         attribute = SecurityUtils.findUserAttribute("uuid");
         expect(attribute).toEqual({
             name: "UUID",
             value: "263c6917-543f-43e3-8e1a-6a0d29952f72"
         });
         // test user with multiple attributes
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
+        setSecurityInfo(securityInfoC);
         attribute = SecurityUtils.findUserAttribute("uuid");
         expect(attribute).toEqual({
             name: "UUID",
@@ -135,26 +158,25 @@ describe('Test security utils methods', () => {
 
     it('test find user attribute value', () => {
         // test a null user
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(null);
         let attributeValue = SecurityUtils.findUserAttributeValue("uuid");
         expect(attributeValue).toNotExist();
         // test user with no attributes
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        setSecurityInfo(securityInfoA);
         attributeValue = SecurityUtils.findUserAttributeValue("uuid");
         expect(attributeValue).toNotExist();
         // test user with a single attribute
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        setSecurityInfo(securityInfoB);
         attributeValue = SecurityUtils.findUserAttributeValue("uuid");
         expect(attributeValue).toBe("263c6917-543f-43e3-8e1a-6a0d29952f72");
         // test user with multiple attributes
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
+        setSecurityInfo(securityInfoC);
         attributeValue = SecurityUtils.findUserAttributeValue("uuid");
         expect(attributeValue).toBe("263c6917-543f-43e3-8e1a-6a0d29952f72");
     });
 
     it('test get authentication method for an url', () => {
         // mocking the authentication rules
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        ConfigUtils.setConfigProp('authenticationRules', authenticationRules);
         expect(SecurityUtils.getAuthenticationRules().length).toBe(3);
         // basic authentication should be found
         let authenticationMethod = SecurityUtils.getAuthenticationMethod('http://www.some-site.com/index?parameter1=value1&parameter2=value2');
@@ -172,42 +194,38 @@ describe('Test security utils methods', () => {
 
     it('test add authkey authentication to url', () => {
         // mocking the authentication rules
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        ConfigUtils.setConfigProp("useAuthenticationRules", true);
+        ConfigUtils.setConfigProp('authenticationRules', authenticationRules);
         expect(SecurityUtils.getAuthenticationRules().length).toBe(3);
         // authkey authentication with no user
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(null);
         let urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
         expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
         // authkey authentication with user not providing a uuid
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        setSecurityInfo(securityInfoA);
         urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
         expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
         // authkey authentication with a user providing a uuid
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
+        setSecurityInfo(securityInfoC);
         urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
         expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=263c6917-543f-43e3-8e1a-6a0d29952f72');
         // basic authentication with a user providing a uuid
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
+        setSecurityInfo(securityInfoC);
         urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/index?parameter1=value1&parameter2=value2');
         expect(urlWithAuthentication).toBe('http://www.some-site.com/index?parameter1=value1&parameter2=value2');
         // authkey authentication with a user providing a uuid but authentication deactivated
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(false);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
+        ConfigUtils.setConfigProp("useAuthenticationRules", false);
+        setSecurityInfo(securityInfoC);
         urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
         expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
     });
     it('test addAuthenticationParameter for authkey', () => {
-        expect.spyOn(SecurityUtils, 'getAuthenticationMethod').andReturn("authkey");
-        expect.spyOn(SecurityUtils, 'getToken').andReturn("goodtoken");
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+        setSecurityInfo(securityInfoToken);
+        ConfigUtils.setConfigProp("useAuthenticationRules", true);
+        ConfigUtils.setConfigProp('authenticationRules', tokenAuthenticationRules);
         expect(SecurityUtils.addAuthenticationParameter("a test url", null)).toEqual({'authkey': 'goodtoken'});
     });
     it('cleanAuthParamsFromURL', () => {
         // mocking the authentication rules
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
         expect(SecurityUtils.cleanAuthParamsFromURL('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=SOME_AUTH_KEY').indexOf('authkey')).toBe(-1);
     });
     it('clearNilValuesForParams', () => {

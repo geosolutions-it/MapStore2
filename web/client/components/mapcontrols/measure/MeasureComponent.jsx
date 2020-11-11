@@ -17,7 +17,7 @@ const NumberFormat = require('../../I18N/Number');
 const Message = require('../../I18N/Message').default;
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const {convertMeasuresToGeoJSON} = require('../../../utils/MeasurementUtils');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const BorderLayout = require('../../layout/BorderLayout');
 const CoordinatesEditor = require('../annotations/CoordinatesEditor');
@@ -252,7 +252,7 @@ class MeasureComponent extends React.Component {
 
     renderLabel = (msgId) => {
         if (this.props.showButtonsLabels) {
-            return <span className="option-text">{LocaleUtils.getMessageById(this.context.messages, msgId)}</span>;
+            return <span className="option-text">{getMessageById(this.context.messages, msgId)}</span>;
         }
         return null;
     };

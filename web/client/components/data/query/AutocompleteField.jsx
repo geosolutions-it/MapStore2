@@ -12,7 +12,7 @@ const React = require('react');
 const Combobox = require('react-widgets').Combobox;
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const AutocompleteListItem = require('./AutocompleteListItem');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const {isLikeOrIlike} = require('../../../utils/FilterUtils');
 const OverlayTrigger = require('../../../components/misc/OverlayTrigger').default;
 const HTML = require('../../../components/I18N/HTML');
@@ -101,9 +101,9 @@ class AutocompleteField extends React.Component {
             options.push({ label: '', value: '', disabled: true, pagination: this.renderPagination() });
         }
         const messages = {
-            emptyList: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
-            open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
-            emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
+            emptyList: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
+            open: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
+            emptyFilter: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
         const tooltip = (<Tooltip id={"autocompleteField-tooltip" + (this.props.filterField && this.props.filterField.rowId)}>
             <HTML msgId="queryform.attributefilter.tooltipTextField"/></Tooltip>);

@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var GeoCodeUtils = require('../GeoCodeUtils');
+import expect from 'expect';
+
+import {nominatimToLayer} from '../GeoCodeUtils';
 
 
 describe('GeoCodeUtils', () => {
@@ -41,7 +42,7 @@ describe('GeoCodeUtils', () => {
                 "coordinates": [-84.3108613, 33.8231305]
             }
         }];
-        let layer = GeoCodeUtils.nominatimToLayer("test", testNominatim);
+        let layer = nominatimToLayer("test", testNominatim);
         expect(layer).toExist();
         expect(layer.name).toBe("test");
         expect(layer.features).toExist();

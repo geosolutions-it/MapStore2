@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 const L = require('leaflet');
-const MapUtils = require('../MapUtils');
-const CoordinatesUtils = require('../CoordinatesUtils');
+const {getScales} = require('../MapUtils');
+const {parseString} = require('../CoordinatesUtils');
 const {head, isNumber} = require('lodash');
 
 const isInRange = function(col, row, ranges) {
@@ -54,7 +54,7 @@ var WMTS = L.TileLayer.extend({
         L.setOptions(this, options);
     },
     getWMTSParams: (matrixSet, matrixIds, zoom, nw, tilewidth) => {
-        const currentScale = MapUtils.getScales()[zoom];
+        const currentScale = getScales()[zoom];
 
         const matrix = head(matrixSet.map((s, i) => {
             if (i === matrixSet.length - 1) {
@@ -77,7 +77,7 @@ var WMTS = L.TileLayer.extend({
         }
 
         const ident = matrixIds[id].identifier;
-        const topLeftCorner = matrix.data && matrix.data.TopLeftCorner && CoordinatesUtils.parseString(matrix.data.TopLeftCorner) || matrixIds[id].topLeftCorner;
+        const topLeftCorner = matrix.data && matrix.data.TopLeftCorner && parseString(matrix.data.TopLeftCorner) || matrixIds[id].topLeftCorner;
 
         const X0 = topLeftCorner.lng || topLeftCorner.x;
         const Y0 = topLeftCorner.lat || topLeftCorner.y;

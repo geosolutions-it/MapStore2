@@ -12,8 +12,8 @@ const xml2js = require('xml2js');
 const {isArray, castArray, get} = require('lodash');
 
 const axios = require('../libs/ajax');
-const ConfigUtils = require('../utils/ConfigUtils').default;
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const {getConfigProp} = require('../utils/ConfigUtils');
+const {getWMSBoundingBox} = require('../utils/CoordinatesUtils');
 const _ = require('lodash');
 
 const capabilitiesCache = {};
@@ -161,7 +161,7 @@ export const describeLayer = (url, layers, options = {}) => {
 };
 export const getRecords = (url, startPosition, maxRecords, text) => {
     const cached = capabilitiesCache[url];
-    if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+    if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
         return new Promise((resolve) => {
             resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
         });
@@ -227,10 +227,10 @@ export const parseLayerCapabilities = (capabilities, layer, lyrs) => {
 };
 export const getBBox = (record, bounds) => {
     let layer = record;
-    let bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+    let bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
     while (!bbox && layer.Layer && layer.Layer.length) {
         layer = layer.Layer[0];
-        bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+        bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
     }
     if (!bbox) {
         bbox = {

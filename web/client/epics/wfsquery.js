@@ -53,7 +53,7 @@ import { getJSONFeatureWA, getLayerJSONFeature } from '../observables/wfs';
 import { describeFeatureTypeToAttributes } from '../utils/FeatureTypeUtils';
 import * as notifications from '../actions/notifications';
 import { find } from 'lodash';
-import FilterUtils from '../utils/FilterUtils';
+import { isFilterValid, toOGCFilterParts } from '../utils/FilterUtils';
 import filterBuilder from '../utils/ogc/Filter/FilterBuilder';
 import fromObject from '../utils/ogc/Filter/fromObject';
 import { read } from '../utils/ogc/Filter/CQL/parser';
@@ -154,10 +154,10 @@ export const wfsQueryEpic = (action$, store) =>
                 ? [toFilter(read(cqlFilter))]
                 : [];
 
-            const filterObj = (cqlFilterRules.length > 0 || (FilterUtils.isFilterValid(layerFilter) && !layerFilter.disabled)) && filter(and(
+            const filterObj = (cqlFilterRules.length > 0 || (isFilterValid(layerFilter) && !layerFilter.disabled)) && filter(and(
                 ...cqlFilterRules,
-                ...(FilterUtils.isFilterValid(layerFilter) && !layerFilter.disabled ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                ...(FilterUtils.isFilterValid(action.filterObj) ? FilterUtils.toOGCFilterParts(action.filterObj, "1.1.0", "ogc") : [])))
+                ...(isFilterValid(layerFilter) && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                ...(isFilterValid(action.filterObj) ? toOGCFilterParts(action.filterObj, "1.1.0", "ogc") : [])))
                 || action.filterObj;
             const { url: queryUrl, options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
             const options = {

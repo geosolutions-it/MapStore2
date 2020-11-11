@@ -10,7 +10,7 @@ import React from 'react';
 import Spinner from 'react-spinkit';
 import Message from '../I18N/Message';
 import {FormGroup, ControlLabel, FormControl, Glyphicon} from 'react-bootstrap';
-import * as LocaleUtils from '../../utils/LocaleUtils';
+import {getMessageById} from '../../utils/LocaleUtils';
 
 export default ({contextName = "", windowTitle = "", isValidContextName = true, contextNameChecked = true, loading = false, onChange = () => {}, context = {}}) => (
     <div className="general-settings-step">
@@ -27,7 +27,7 @@ export default ({contextName = "", windowTitle = "", isValidContextName = true, 
                 <FormControl
                     type="text"
                     value={contextName}
-                    placeholder={LocaleUtils.getMessageById(context.messages, "contextCreator.generalSettings.namePlaceholder")}
+                    placeholder={getMessageById(context.messages, "contextCreator.generalSettings.namePlaceholder")}
                     onChange={e => onChange('name', e.target.value && e.target.value.replace(/[^a-zA-Z0-9\-_]/g, ''))}/>
             </FormGroup>
             <FormGroup validationState={windowTitle.length > 0 ? 'success' : null}>
@@ -37,7 +37,7 @@ export default ({contextName = "", windowTitle = "", isValidContextName = true, 
                 <FormControl
                     type="text"
                     value={windowTitle}
-                    placeholder={LocaleUtils.getMessageById(context.messages, "contextCreator.generalSettings.windowTitlePlaceholder")}
+                    placeholder={getMessageById(context.messages, "contextCreator.generalSettings.windowTitlePlaceholder")}
                     onChange={e => onChange('windowTitle', e.target.value)}/>
             </FormGroup>
         </div>

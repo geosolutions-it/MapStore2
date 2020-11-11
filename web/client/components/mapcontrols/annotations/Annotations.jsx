@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Message = require('../../I18N/Message').default;
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const bbox = require('@turf/bbox');
 const {head, countBy, values, isUndefined, keys} = require('lodash');
 const assign = require('object-assign');
@@ -334,7 +334,7 @@ class Annotations extends React.Component {
                     </div>
                     <div style={{padding: "0 8px", margin: "10px 0 0"}}>
                         <Filter
-                            filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
+                            filterPlaceholder={getMessageById(this.context.messages, "annotations.filter")}
                             filterText={this.props.filter}
                             onFilter={this.props.onFilter} />
                     </div>

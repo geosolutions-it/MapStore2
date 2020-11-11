@@ -38,7 +38,7 @@ module.exports = ({
                 (<Panel
                     key={i}
                     eventKey={panel.id}
-                    className={activePanel === panel.id ? 'ms-selected' : ''}
+                    className={activePanel === panel.id && panel.id !== 'HIDDEN' ? 'ms-selected' : ''}
                     header={panel.head && <a role="tab">
                         <SideCard
                             {...panel.head}

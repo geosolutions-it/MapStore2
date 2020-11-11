@@ -44,7 +44,8 @@ module.exports = ({
     static propTypes = {
         hasMore: PropTypes.func,
         onLoadMore: PropTypes.func,
-        isScrolled: PropTypes.func
+        isScrolled: PropTypes.func,
+        scrollOptions: PropTypes.object
     }
     static defaultProps = {
         onLoadMore: () => {},
@@ -93,9 +94,10 @@ module.exports = ({
     }
 
     onScroll = () => {
+        const options = { skip, pageSize, offsetSize, ...this.props.scrollOptions };
         const div = this.findScrollDomNode();
         if (div
-            && this.props.isScrolled({div, offset: offsetSize})
+            && this.props.isScrolled({div, offset: options.offsetSize})
             && (dataProp // has data array (if dataprop has been defined)
                 ? this.props[dataProp] && this.props[dataProp].length
                 : true)
@@ -104,7 +106,7 @@ module.exports = ({
                 : true)
             && this.props.hasMore(this.props)) {
             this.props.onLoadMore(dataProp
-                ? Math.ceil((this.props[dataProp].length - skip) / pageSize)
+                ? Math.ceil((this.props[dataProp].length - options.skip) / options.pageSize)
                 : null);
         }
     }

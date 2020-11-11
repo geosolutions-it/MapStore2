@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
-const withMenu = require('../withMenu');
-const DefaultWidget = require('../../../widget/DefaultWidget');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+import ReactTestUtils from 'react-dom/test-utils';
+import expect from 'expect';
+import withMenu from '../withMenu';
+import DefaultWidget from '../../../widget/DefaultWidget';
 const Widget = withMenu()(DefaultWidget);
 
 describe('withMenu enhancer', () => {

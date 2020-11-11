@@ -38,7 +38,7 @@ import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
     currentEditFeatureQuerySelector, mapTriggerSelector } from '../selectors/mapInfo';
-import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
+import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
@@ -50,7 +50,7 @@ import { createControlEnabledSelector, measureSelector } from '../selectors/cont
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 
 import {getBbox, getCurrentResolution, parseLayoutValue, getHook, GET_COORDINATES_FROM_PIXEL_HOOK, GET_PIXEL_FROM_COORDINATES_HOOK} from '../utils/MapUtils';
-import MapInfoUtils from '../utils/MapInfoUtils';
+import {buildIdentifyRequest, filterRequestParams} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
@@ -128,9 +128,13 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             if (queryableSelectedLayers.length) {
                 queryableLayers = queryableSelectedLayers;
             }
-            if (queryableLayers.length === 0) {
+
+            const selectedLayers = selectedNodesSelector(getState());
+
+            if (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
             }
+
             // TODO: make it in the application getState()
             const excludeParams = ["SLD_BODY"];
             const includeOptions = [
@@ -145,7 +149,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             })))
                 .mergeMap(layer => {
                     let env = localizedLayerStylesEnvSelector(getState());
-                    let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env});
+                    let { url, request, metadata } = buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env});
                     // request override
                     if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
                         request = {...request, ...overrideParamsSelector(getState())[layer.name]};
@@ -157,7 +161,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                         const basePath = url;
                         const requestParams = request;
                         const lMetaData = metadata;
-                        const appParams = MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams);
+                        const appParams = filterRequestParams(layer, includeOptions, excludeParams);
                         const attachJSON = isHighlightEnabledSelector(getState());
                         const itemId = itemIdSelector(getState());
                         const reqId = uuid.v1();

@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const {Tooltip} = require('react-bootstrap');
 const Button = require('../misc/Button').default;
 const OverlayTrigger = require('../misc/OverlayTrigger').default;
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getSupportedLocales} = require('../../utils/LocaleUtils');
 
 
 class LangBar extends React.Component {
@@ -26,7 +26,7 @@ class LangBar extends React.Component {
     };
 
     static defaultProps = {
-        locales: LocaleUtils.getSupportedLocales(),
+        locales: getSupportedLocales(),
         code: 'en-US',
         onLanguageChange: function() {},
         onFlagSelected: () => {},

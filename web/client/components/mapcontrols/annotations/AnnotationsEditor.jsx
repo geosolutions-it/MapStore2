@@ -20,7 +20,7 @@ const { isFunction, isEmpty, head } = require('lodash');
 const {getGeometryGlyphInfo, getGeometryType, getComponents, coordToArray, validateCoords} = require('../../../utils/AnnotationsUtils');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
-const PluginsUtils = require('../../../utils/PluginsUtils');
+const {handleExpression} = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
 const FeaturesList = require('./FeaturesList').default;
 const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
@@ -285,7 +285,7 @@ class AnnotationsEditor extends React.Component {
         if (isFunction(validator)) {
             return validator;
         }
-        return PluginsUtils.handleExpression({}, {}, '{(function(value) {return ' + validator + ';})}');
+        return handleExpression({}, {}, '{(function(value) {return ' + validator + ';})}');
     };
 
     renderViewButtons = () => {
