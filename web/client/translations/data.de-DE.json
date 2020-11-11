@@ -1807,25 +1807,26 @@
                 "bar": "Legende anzeigen",
                 "gauge": "Legende anzeigen"
             },
-            "displayCartesian": {
-                "line": "Raster ausblenden",
-                "bar": "Raster ausblenden"
-            },
-            "xAxisAngle":{
-                "line": "X-Achse: Beschriften Sie den Drehwinkel °",
-                "bar": "X-Achse: Beschriften Sie den Drehwinkel °"
-            },
-            "yAxis":{
-                "line": "Y-Achse ausblenden",
-                "bar": "Y-Achse ausblenden"
-            },
-            "yAxisLabel":{
-                "line": "Legenden-Label",
-                "bar": "Legenden-Label"
-            },
-            "advancedOptions":{
-                "line": "Erweiterte Optionen",
-                "bar": "Erweiterte Optionen"
+            "advanced": {
+              "displayCartesian": "Gitter ausblenden",
+              "xAxis": "X-Achse",
+              "xAxisAngle": "Etikettendrehung",
+              "hideLabels": "Labels ausblenden",
+              "xAxisType": "Type",
+              "forceTicks": "Überspringe niemals Etik.",
+              "maxXAxisLabels": "Die Beschriftungen dürfen sowieso nicht mehr als {max} sein",
+              "yAxis": "Y-Achse",
+              "yAxisType": "Type",
+              "yAxisLabel": "Legend Label",
+              "title": "Erweiterte Optionen",
+              "legend": "Legende",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "linear",
+                "category": "Kategorie",
+                "log": "Logarithmus",
+                "date": "Datum"
+              }
             },
             "tray": {
                 "title": "Widgets",

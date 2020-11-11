@@ -1808,25 +1808,26 @@
                 "bar": "Mostrar leyenda",
                 "gauge": "Mostrar etiquetas"
             },
-            "displayCartesian": {
-                "line": "Ocultar cuadrícula",
-                "bar": "Ocultar cuadrícula"
-            },
-            "xAxisAngle":{
-                "line": "Eye X: Ángulo de rotación de la etiqueta °",
-                "bar": "Eye X: Ángulo de rotación de la etiqueta °"
-            },
-            "yAxis":{
-                "line": "Ocultar el eje Y",
-                "bar": "Ocultar el eje Y"
-            },
-            "yAxisLabel":{
-                "line": "Etiqueta leyenda",
-                "bar": "Etiqueta leyenda"
-            },
-            "advancedOptions":{
-                "line": "Opciones avanzadas",
-                "bar": "Opciones avanzadas"
+            "advanced": {
+              "displayCartesian": "Ocultar cuadrícula",
+              "xAxis": "Eje X",
+              "xAxisAngle": "Rotación de etiquetas",
+              "hideLabels": "Ocultar etiquetas",
+              "xAxisType": "Tipo",
+              "forceTicks": "Nunca omita etiquetas",
+              "maxXAxisLabels": "De todos modos, las etiquetas no pueden ser más de {max}",
+              "yAxis": "Eje Y",
+              "yAxisType": "Tipo",
+              "yAxisLabel": "Etiqueta de leyenda",
+              "title": "Opciones avanzadas",
+              "legend": "Legend",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Lineal",
+                "category": "Categoría",
+                "log": "Log",
+                "date": "Fecha"
+              }
             },
             "tray": {
                 "title": "Widgets",

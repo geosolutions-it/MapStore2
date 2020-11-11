@@ -229,7 +229,6 @@
             }
         }
     }
-
     /*
      * fix for google map layer in preview
      */
@@ -271,7 +270,7 @@
                 }
             }
             padding-right: 8px;
-            margin-right: 6px; 
+            margin-right: 6px;
             border-right: 1px solid @ms2-color-shade-lighter;
         }
     }
@@ -286,7 +285,18 @@
     height: 100%;
     background-color: @ms2-color-background;
     .shadow-soft;
-
+    .Select-menu-outer {
+        // fix select options z-index that
+        // conflicts with slider in advanced options menu
+        // TODO: several changes of this kind in application.
+        // need to be unified.
+        z-index: 2 !important;
+    }
+    // makes the body scrollable
+    .ms2-border-layout-content{
+        position: relative;
+        overflow: auto;
+    }
     .ms2-border-layout-body {
         background-color: @ms2-color-background;
     }

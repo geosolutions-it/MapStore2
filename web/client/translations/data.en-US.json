@@ -1808,25 +1808,26 @@
                 "bar": "Display Legend",
                 "gauge": "Display labels"
             },
-            "displayCartesian": {
-                "line": "Hide Grid",
-                "bar": "Hide Grid"
-            },
-            "xAxisAngle":{
-                "line": "X Axis: Label rotation angle °",
-                "bar": "X Axis: Label rotation angle °"
-            },
-            "yAxis":{
-                "line": "Hide Y axis",
-                "bar": "Hide Y axis"
-            },
-            "yAxisLabel":{
-                "line": "Legend Label",
-                "bar": "Legend Label"
-            },
-            "advancedOptions":{
-                "line": "Advanced Options",
-                "bar": "Advanced Options"
+            "advanced": {
+              "displayCartesian": "Hide Grid",
+              "xAxis": "X axis",
+              "xAxisAngle": "Label rotation",
+              "hideLabels": "Hide labels",
+              "xAxisType": "Type",
+              "forceTicks": "Never skip labels",
+              "maxXAxisLabels": "The labels can not anyway be more than {max}",
+              "yAxis":  "Y axis",
+              "yAxisType": "Type",
+              "yAxisLabel": "Legend Label",
+              "title": "Advanced Options",
+              "legend": "Legend",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Linear",
+                "category": "Category",
+                "log": "Log",
+                "date": "Date"
+              }
             },
             "tray": {
                 "title": "Widgets",
