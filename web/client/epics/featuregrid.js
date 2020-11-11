@@ -46,6 +46,7 @@ import {
     BROWSE_DATA,
     changeLayerProperties,
     refreshLayerVersion,
+    changeLayerParams,
     CHANGE_LAYER_PARAMS
 } from '../actions/layers';
 
@@ -997,20 +998,36 @@ export const deactivateSyncWmsFilterOnFeatureGridClose = (action$, store) =>
             return Rx.Observable.of(toggleSyncWms());
         });
 export const syncMapWmsFilter = (action$, store) =>
-    action$.ofType(QUERY_CREATE, UPDATE_QUERY).
+    action$.ofType(QUERY_CREATE, UPDATE_QUERY, SELECT_FEATURES).
         filter((a) => {
             const {disableQuickFilterSync} = (store.getState()).featuregrid;
             return a.type === QUERY_CREATE || !disableQuickFilterSync;
         })
-        .switchMap(() => {
+        .switchMap((ac) => {
             const {query: q, featuregrid: f} = store.getState();
             const layerId = (f || {}).selectedLayer;
             const filter = (q || {}).filterObj;
+            let selectedFeatures = [];
+            if (ac.type === SELECT_FEATURES) {
+                selectedFeatures = selectedFeaturesSelector(store.getState());
+            }
             return Rx.Observable.merge(
                 Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
                 action$.ofType(START_SYNC_WMS))
                 .mergeMap(() => {
-                    return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
+                    let fl = filter;
+                    if (selectedFeatures.length > 1) {
+                        let cfl = "STATE_ABBR IN (";
+                        selectedFeatures.forEach((ft) => {
+                            cfl += `'${ft.properties.STATE_ABBR}',`;
+                        });
+
+                        cfl = cfl.slice(0, -1).concat(")");
+                        return Rx.Observable.of(changeLayerParams(layerId, {
+                            cql_filter: cfl
+                        }));
+                    }
+                    return Rx.Observable.of(addFilterToWMSLayer(layerId, fl));
                 });
         });
 export const virtualScrollLoadFeatures = (action$, {getState}) =>
