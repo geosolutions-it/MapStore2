@@ -445,7 +445,6 @@ export const handleClickOnMap = (action$, store) =>
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
-                    // action$.switchMap(() => Rx.Observable.zip([action$.ofType(CLOSE_FEATURE_GRID_CONFIRM), action$.ofType(CLOSE_FEATURE_GRID)])),
                     action$.ofType(LOCATION_CHANGE)
                 )));
 export const handleBoxSelectionDrawEnd =  (action$, store) =>
