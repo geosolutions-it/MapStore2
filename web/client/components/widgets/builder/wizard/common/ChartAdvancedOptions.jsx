@@ -1,15 +1,21 @@
 import React from 'react';
 import { isNil } from 'lodash';
-import { Col, FormGroup, FormControl, ControlLabel, Glyphicon } from 'react-bootstrap';
-import Message from '../../../../I18N/Message';
 import Select from 'react-select';
+import { Col, FormGroup, FormControl, ControlLabel, Glyphicon } from 'react-bootstrap';
+
+import Message from '../../../../I18N/Message';
+import HTML from '../../../../I18N/HTML';
+
 import Slider from '../../../../misc/Slider';
 import InfoPopover from '../../../widget/InfoPopover';
+import DisposablePopover from '../../../../misc/popover/DisposablePopover';
+import FormulaInput from './FormulaInput';
 
 
 import SwitchPanel from '../../../../misc/switch/SwitchPanel';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
+
 const AxisTypeSelect = localizedProps('options')(Select);
 
 const AXIS_TYPES = [{
@@ -60,6 +66,7 @@ export default function ChartAdvancedOptions({
                     onChange={(val) => { onChange("cartesian", !val); }}
                 />
             </Col>
+            {/* Y AXIS */}
             <Col componentClass={"label"} sm={12}>
                 <Message msgId="widgets.advanced.yAxis" />
             </Col>
@@ -84,7 +91,30 @@ export default function ChartAdvancedOptions({
                     onChange={(val) => { onChange("yAxis", !val); }}
                 />
             </Col>
-            {/* X Axis */}
+            <Col componentClass={ControlLabel} sm={12}>
+                <Message msgId="widgets.advanced.format" />
+            </Col>
+            <Col sm={4}>
+                <ControlLabel>
+                    <Message msgId="widgets.advanced.prefix" />
+                    <FormControl disabled={data.yAxis === false} value={data?.yAxisOpts?.tickPrefix} type="text" onChange={e => onChange("yAxisOpts.tickPrefix", e.target.value)} />
+                </ControlLabel>
+            </Col>
+            <Col sm={4}>
+                <ControlLabel>
+                    <Message msgId="widgets.advanced.format" />
+                    <DisposablePopover placement="top" title={<Message msgId="examples" />} text={<HTML msgId="widgets.advanced.formatExamples"/>} />
+                </ControlLabel>
+                <FormControl disabled={data.yAxis === false} value={data?.yAxisOpts?.format} type="text" onChange={e => onChange("yAxisOpts.format", e.target.value)} />
+            </Col>
+            <Col sm={4}>
+                <ControlLabel><Message msgId="widgets.advanced.suffix" /></ControlLabel>
+                <FormControl disabled={data.yAxis === false} value={data?.yAxisOpts?.tickSuffix} type="text" onChange={e => onChange("yAxisOpts.tickSuffix", e.target.value)} />
+            </Col>
+            <Col sm={12}>
+                <FormulaInput disabled={data.yAxis === false} value={data?.yAxisOpts?.formula} type="text" onChange={e => onChange("yAxisOpts.formula", e.target.value)} />
+            </Col>
+            {/* X AXIS */}
             <Col componentClass={"label"} sm={12}>
                 <Message msgId="widgets.advanced.xAxis" />
             </Col>

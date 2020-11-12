@@ -1,6 +1,9 @@
+
 import React from 'react';
 import { Plot } from './PlotlyChart';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
+import { parseExpression } from '../../utils/ExpressionUtils';
+
 
 export const COLOR_DEFAULTS = {
     base: 190,
@@ -13,9 +16,9 @@ export const defaultColorGenerator = (total, colorOptions) => {
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
 };
 
-function getData({ type, xDataKey, yDataKey, data}) {
+function getData({ type, xDataKey, yDataKey, data, yAxisOpts}) {
     const x = data.map(d => d[xDataKey]);
-    const y = data.map(d => d[yDataKey]);
+    let y = data.map(d => d[yDataKey]);
     switch (type) {
     case 'pie':
 
@@ -26,6 +29,19 @@ function getData({ type, xDataKey, yDataKey, data}) {
         };
 
     default:
+        if (yAxisOpts?.formula) {
+            y = y.map(v => {
+                const value = v;
+                try {
+                    return parseExpression(yAxisOpts.formula, {value});
+                } catch {
+                    // if error (e.g. null values), return the value itself
+                    return v;
+                }
+            });
+
+
+        }
         return {
             x,
             y
@@ -67,6 +83,9 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
             yaxis: {
                 type: yAxisOpts?.type,
                 automargin: true,
+                tickformat: yAxisOpts?.format,
+                tickprefix: yAxisOpts?.tickPrefix,
+                ticksuffix: yAxisOpts?.tickSuffix,
                 showticklabels: yAxis === true,
                 // showticklabels,showline for yAxis false
                 showgrid: cartesian
@@ -146,8 +165,18 @@ export const toPlotly = (props) => {
  * @prop {boolean} legend if present, show legend
  * @prop {object[]} data the data set `[{ name: 'Page A', uv: 0, pv: 0, amt: 0 }]`
  * @prop {object} xAxis contains xAxis `dataKey`, the key from `data` array for x axis (or category).
- * @prop {number} xAxisAngle the angle, in degrees, of xAxisAngle.
- * @prop {object|boolean} yAxis if false, hide the yAxis. true by default. (should contain future options for yAxis)
+ * @prop {object} [xAxisOpts] options for xAxis: `type`, `hide`, `nTicks`.
+ * @prop {string} [xAxisOpts.type] determine the type of the x axis of `date`, `-` (automatic), `log`, `linear`, `category`, `date`.
+ * @prop {object} [xAxisOpts.hide=false] if true, hides the labels of the axis
+ * @prop {number} [xAxisOpts.nTicks] max number of ticks. Can be used to force to display all labels, instead of skipping.
+ * @prop {number} [xAxisAngle] the angle, in degrees, of xAxisAngle.
+ * @prop {object|boolean} [yAxis=true] if false, hide the yAxis. true by default. (should contain future options for yAxis)
+ * @prop {object} [yAxisOpts] options for yAxis: `type`, `tickPrefix`, `tickPostfix`, `format`, `formula`
+ * @prop {string} [yAxisOpts.type] determine the type of the y axis of `date`, `-` (automatic), `log`, `linear`, `category`, `date`.
+ * @prop {string} [yAxisOpts.format] format for y axis value. See {@link https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/}
+ * @prop {string} [yAxisOpts.tickPrefix] the prefix on y value
+ * @prop {string} [yAxisOpts.tickSuffix] the suffix of y value.
+ * @prop {string} [yAxisOpts.formula] a formula to calculate the
  * @prop {string} yAxisLabel the label of yAxis, to show in the legend
  * @prop {boolean} cartesian show the cartesian grid behind the chart
  * @prop {object} autoColorOptions options to generate the colors of the chart.
