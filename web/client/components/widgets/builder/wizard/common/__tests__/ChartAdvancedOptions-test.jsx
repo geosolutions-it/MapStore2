@@ -11,15 +11,19 @@ const getInputs = () => {
         cartesian: inputs[1],
         yAxis: inputs[3],
         yAxisOpts: {
-            type: inputs[2]
+            type: inputs[2],
+            tickPrefix: inputs[4],
+            format: inputs[5],
+            tickSuffix: inputs [6]
         },
-        yAxisLabel: inputs[8], // legend
+        formula: inputs [7],
+        yAxisLabel: inputs[12], // legend
         xAxisOpts: {
-            type: inputs[4],
-            hide: inputs[5],
-            nTicks: inputs[6] // force ticks
+            type: inputs[8],
+            hide: inputs[9],
+            nTicks: inputs[10] // force ticks
         },
-        xAxisAngle: inputs[7]
+        xAxisAngle: inputs[11]
     };
 };
 const createSpyOnChange = () => {
@@ -142,17 +146,55 @@ describe('chart advanced options', () => {
         expect(spyOnChange.calls[0].arguments[0]).toBe("yAxisLabel");
         expect(spyOnChange.calls[0].arguments[1]).toBe("test");
     });
-
+    it('yAxisOpts format', () => {
+        // label rotation
+        const spyOnChange = createSpyOnChange();
+        ReactTestUtils.Simulate.change(getInputs().yAxisOpts.format, { target: { value: "test" } });
+        expect(spyOnChange.calls[0].arguments[0]).toBe("yAxisOpts.format");
+        expect(spyOnChange.calls[0].arguments[1]).toBe("test");
+    });
+    it('yAxisOpts tickPrefix', () => {
+        // label rotation
+        const spyOnChange = createSpyOnChange();
+        ReactTestUtils.Simulate.change(getInputs().yAxisOpts.tickPrefix, { target: { value: "test" } });
+        expect(spyOnChange.calls[0].arguments[0]).toBe("yAxisOpts.tickPrefix");
+        expect(spyOnChange.calls[0].arguments[1]).toBe("test");
+    });
+    it('yAxisOpts tickSuffix', () => {
+        // label rotation
+        const spyOnChange = createSpyOnChange();
+        ReactTestUtils.Simulate.change(getInputs().yAxisOpts.tickSuffix, { target: { value: "test" } });
+        expect(spyOnChange.calls[0].arguments[0]).toBe("yAxisOpts.tickSuffix");
+        expect(spyOnChange.calls[0].arguments[1]).toBe("test");
+    });
+    it('yAxisOpts formula', () => {
+        // label rotation
+        const spyOnChange = createSpyOnChange();
+        // invalid
+        ReactTestUtils.Simulate.change(getInputs().formula, { target: { value: "test" } });
+        expect(spyOnChange.calls.length).toBe(0);
+        // valid
+        ReactTestUtils.Simulate.change(getInputs().formula, { target: { value: "value * 100" } });
+        expect(spyOnChange.calls.length).toBe(1);
+        expect(spyOnChange.calls[0].arguments[0]).toBe("formula");
+        expect(spyOnChange.calls[0].arguments[1]).toBe("value * 100");
+    });
+    it('yAxis advanced options disabled when hide', () => {
+        ReactDOM.render(<ChartAdvancedOptions data={{ type: 'bar', yAxis: false}} />, document.getElementById("container"));
+        // switch checked
+        expect(getInputs().yAxis.value).toEqual('on');
+        expect(getInputs().formula.disabled).toBeTruthy();
+        expect(getInputs().yAxisOpts.format.disabled).toBeTruthy();
+        expect(getInputs().yAxisOpts.tickPrefix.disabled).toBeTruthy();
+        expect(getInputs().yAxisOpts.tickSuffix.disabled).toBeTruthy();
+    });
     it('xAxis advanced options disabled when hide', () => {
 
         ReactDOM.render(<ChartAdvancedOptions data={{ type: 'bar', xAxisOpts: { hide: true } }} />, document.getElementById("container"));
-        const inputs = document.querySelectorAll('input');
-        // 0 is panel switch
-
         // switch checked
-        expect(inputs[5].value).toEqual('on');
-        expect(inputs[6].disabled).toBeTruthy();
-        expect(inputs[7].disabled).toBeTruthy();
+        expect(getInputs().xAxisOpts.hide.value).toEqual('on');
+        expect(getInputs().xAxisOpts.nTicks.disabled).toBeTruthy();
+        expect(getInputs().xAxisAngle.disabled).toBeTruthy();
     });
 });
 

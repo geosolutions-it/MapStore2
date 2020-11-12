@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React from 'react';
 import { isNil } from 'lodash';
 import Select from 'react-select';
@@ -97,22 +104,22 @@ export default function ChartAdvancedOptions({
             <Col sm={4}>
                 <ControlLabel>
                     <Message msgId="widgets.advanced.prefix" />
-                    <FormControl disabled={data.yAxis === false} value={data?.yAxisOpts?.tickPrefix} type="text" onChange={e => onChange("yAxisOpts.tickPrefix", e.target.value)} />
+                    <FormControl placeholder="e.g.: ~" disabled={data.yAxis === false} value={data?.yAxisOpts?.tickPrefix} type="text" onChange={e => onChange("yAxisOpts.tickPrefix", e.target.value)} />
                 </ControlLabel>
             </Col>
             <Col sm={4}>
                 <ControlLabel>
                     <Message msgId="widgets.advanced.format" />
-                    <DisposablePopover placement="top" title={<Message msgId="examples" />} text={<HTML msgId="widgets.advanced.formatExamples"/>} />
                 </ControlLabel>
-                <FormControl disabled={data.yAxis === false} value={data?.yAxisOpts?.format} type="text" onChange={e => onChange("yAxisOpts.format", e.target.value)} />
+                <DisposablePopover placement="top" title={<Message msgId="widgets.advanced.examples"/>} text={<HTML msgId="widgets.advanced.formatExamples" />} />
+                <FormControl placeholder="e.g.: .2s" disabled={data.yAxis === false} value={data?.yAxisOpts?.format} type="text" onChange={e => onChange("yAxisOpts.format", e.target.value)} />
             </Col>
             <Col sm={4}>
                 <ControlLabel><Message msgId="widgets.advanced.suffix" /></ControlLabel>
-                <FormControl disabled={data.yAxis === false} value={data?.yAxisOpts?.tickSuffix} type="text" onChange={e => onChange("yAxisOpts.tickSuffix", e.target.value)} />
+                <FormControl placeholder="e.g.: W" disabled={data.yAxis === false} value={data?.yAxisOpts?.tickSuffix} type="text" onChange={e => onChange("yAxisOpts.tickSuffix", e.target.value)} />
             </Col>
             <Col sm={12}>
-                <FormulaInput disabled={data.yAxis === false} value={data?.yAxisOpts?.formula} type="text" onChange={e => onChange("yAxisOpts.formula", e.target.value)} />
+                <FormulaInput disabled={data.yAxis === false} value={data.formula} type="text" onChange={e => onChange("formula", e.target.value)} />
             </Col>
             {/* X AXIS */}
             <Col componentClass={"label"} sm={12}>

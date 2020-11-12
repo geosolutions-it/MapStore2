@@ -1,4 +1,12 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React, {useState} from 'react';
+import HTML from '../../../../I18N/HTML';
 
 import {Col, FormControl, ControlLabel, FormGroup} from 'react-bootstrap';
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
@@ -41,11 +49,15 @@ function getValidationState(isValid, value) {
     }
     return null;
 }
+/**
+ * Input for formula. Provides validation, and change the value
+ * only if the value is valid.
+ */
 export default function FormulaInput({onChange, value, ...props}) {
-    const [initialValid, initialValidationValue] = validate(props.value);
+    const [initialValid, initialValidationValue] = validate(value);
     const [isValid, setValid] = useState(initialValid);
     const [validationValue, setValidationValue] = useState(initialValidationValue);
-    const [localValue, setLocalValue] = useState(props.value);
+    const [localValue, setLocalValue] = useState(value);
     const validateAndChange = e => {
         const [valid, val] = validate(e.target.value);
         if (valid) {
@@ -60,18 +72,9 @@ export default function FormulaInput({onChange, value, ...props}) {
     };
     return (<FormGroup validationState={getValidationState(isValid, localValue)}>
         <Col xs={12}>
-            <ControlLabel><Message msgId="widgets.advanced.formula" />
-                <DisposablePopover placement="top" title={<Message msgId="widgets.advanced.formula"/>} text={
-                    <div>
-                Transform the value using a formula. Use the variable <code>value</code> in the expression:
-                        <h5>Examples</h5>
-                        <ul>
-                            <li><code></code>value / 100</li>
-                        </ul>
-                        More information about all the operators <a target="_blank" href="https://github.com/m93a/filtrex#expressions">here</a>
-                    </div>
-                } /></ControlLabel>
-            <FormControl feedback={getFeedback(isValid, validationValue)} {...props} type="text" value={localValue} onChange={validateAndChange} />
+            <ControlLabel><Message msgId="widgets.advanced.formula" /></ControlLabel>
+            <DisposablePopover placement="top" title={<Message msgId="widgets.advanced.formula" />} text={<HTML msgId="widgets.advanced.formulaExamples" />} />
+            <FormControl placeholder="e.g. value / 100" feedback={getFeedback(isValid, validationValue)} {...props} type="text" value={localValue} onChange={validateAndChange} />
         </Col>
     </FormGroup>);
 }

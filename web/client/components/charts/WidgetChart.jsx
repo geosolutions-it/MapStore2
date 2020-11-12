@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import React from 'react';
 import { Plot } from './PlotlyChart';
@@ -16,7 +23,7 @@ export const defaultColorGenerator = (total, colorOptions) => {
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
 };
 
-function getData({ type, xDataKey, yDataKey, data, yAxisOpts}) {
+function getData({ type, xDataKey, yDataKey, data, formula}) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     switch (type) {
@@ -29,11 +36,11 @@ function getData({ type, xDataKey, yDataKey, data, yAxisOpts}) {
         };
 
     default:
-        if (yAxisOpts?.formula) {
+        if (formula) {
             y = y.map(v => {
                 const value = v;
                 try {
-                    return parseExpression(yAxisOpts.formula, {value});
+                    return parseExpression(formula, {value});
                 } catch {
                     // if error (e.g. null values), return the value itself
                     return v;
@@ -176,10 +183,10 @@ export const toPlotly = (props) => {
  * @prop {string} [yAxisOpts.format] format for y axis value. See {@link https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/}
  * @prop {string} [yAxisOpts.tickPrefix] the prefix on y value
  * @prop {string} [yAxisOpts.tickSuffix] the suffix of y value.
- * @prop {string} [yAxisOpts.formula] a formula to calculate the
- * @prop {string} yAxisLabel the label of yAxis, to show in the legend
- * @prop {boolean} cartesian show the cartesian grid behind the chart
- * @prop {object} autoColorOptions options to generate the colors of the chart.
+ * @prop {string} [formula] a formula to calculate the final value
+ * @prop {string} [yAxisLabel] the label of yAxis, to show in the legend
+ * @prop {boolean} [cartesian] show the cartesian grid behind the chart
+ * @prop {object} [autoColorOptions] options to generate the colors of the chart.
  * @prop {object[]} series descriptor for every series. Contains the y axis (or value) `dataKey`
  */
 export default function WidgetChart({
