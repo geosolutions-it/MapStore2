@@ -279,7 +279,7 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
 };
 
-const updateFilterFunc = (store) => ({update = {}} = {}) => {
+const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
     // If an advanced filter is present it's filterFields should be composed with the action'
     const {id} = selectedLayerSelector(store.getState());
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
@@ -292,7 +292,14 @@ const updateFilterFunc = (store) => ({update = {}} = {}) => {
         const filter = {...filterObj, ...composedFilterFields};
         return updateQuery(filter, update.type);
     }
-    return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())), update.type);
+    let u = update;
+    if (append) {
+        u = get(store.getState(), "featuregrid.filters.the_geom");
+    }
+    console.log("GRID UPDATE", u);
+    const requiredQuery = gridUpdateToQueryUpdate(u, wfsFilter(store.getState()));
+    console.log("REQUIRED QUERY", requiredQuery);
+    return updateQuery(requiredQuery, u.type);
 };
 
 
@@ -424,6 +431,15 @@ export const handleClickOnMap = (action$, store) =>
                 const center = CoordinatesUtils.reproject([latlng.lng, latlng.lat], 'EPSG:4326', projection);
                 const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
                 const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
+                const selectedFeatures = selectedFeaturesSelector(store.getState());
+                if (selectedFeatures.length > 0) {
+                    // if the point clicked exists in any of the bbox properties found in the selectedFeatures,
+                    // we shall get the index of the matching bbox-point combo and then use that index to remove
+                    // value from the filter values at the same index.
+                    // we further go to the selected features and deselect that feature as well
+                    const isItReally = CoordinatesUtils.isPointInsideExtent(latlng, selectedFeatures[0]?.bbox);
+                    console.log("THIS IS NEBRASKA", isItReally);
+                }
 
                 return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
                     setSelectionOptions({multiselect: ctrl || metaKey}),
@@ -442,7 +458,7 @@ export const handleClickOnMap = (action$, store) =>
                             method: "Circle",
                             operation: "INTERSECTS"
                         }
-                    }));
+                    }, ctrl || metaKey));
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
@@ -499,17 +515,17 @@ export const selectFeaturesOnMapClickResult = (action$, store) =>
             const alreadySelectedFeature = find(selectedFeatures, { id: features[0].id });
             const multipleSelect = multiSelect(store.getState());
 
-            if (multipleSelect && alreadySelectedFeature) {
-                if (selectedFeatures.length === 1) {
-                    return Rx.Observable.of(
-                        updateFilter({
-                            attribute: "the_geom",
-                            enabled: false,
-                            type: "geometry"
-                        }), deselectFeatures([alreadySelectedFeature]), setSelectionOptions());
-                }
-                return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
-            }
+            // if (multipleSelect && alreadySelectedFeature) {
+            //     if (selectedFeatures.length === 1) {
+            //         return Rx.Observable.of(
+            //             updateFilter({
+            //                 attribute: "the_geom",
+            //                 enabled: false,
+            //                 type: "geometry"
+            //             }), deselectFeatures([alreadySelectedFeature]), setSelectionOptions());
+            //     }
+            //     return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
+            // }
 
             const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
             return Rx.Observable.of(
@@ -1003,31 +1019,15 @@ export const syncMapWmsFilter = (action$, store) =>
             const {disableQuickFilterSync} = (store.getState()).featuregrid;
             return a.type === QUERY_CREATE || !disableQuickFilterSync;
         })
-        .switchMap((ac) => {
+        .switchMap(() => {
             const {query: q, featuregrid: f} = store.getState();
             const layerId = (f || {}).selectedLayer;
             const filter = (q || {}).filterObj;
-            let selectedFeatures = [];
-            if (ac.type === SELECT_FEATURES) {
-                selectedFeatures = selectedFeaturesSelector(store.getState());
-            }
             return Rx.Observable.merge(
                 Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
                 action$.ofType(START_SYNC_WMS))
                 .mergeMap(() => {
-                    let fl = filter;
-                    if (selectedFeatures.length > 1) {
-                        let cfl = "STATE_ABBR IN (";
-                        selectedFeatures.forEach((ft) => {
-                            cfl += `'${ft.properties.STATE_ABBR}',`;
-                        });
-
-                        cfl = cfl.slice(0, -1).concat(")");
-                        return Rx.Observable.of(changeLayerParams(layerId, {
-                            cql_filter: cfl
-                        }));
-                    }
-                    return Rx.Observable.of(addFilterToWMSLayer(layerId, fl));
+                    return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
                 });
         });
 export const virtualScrollLoadFeatures = (action$, {getState}) =>

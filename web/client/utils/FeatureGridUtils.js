@@ -175,6 +175,14 @@ export const hasValidNewFeatures = (newFeatures = [], describeFeatureType) => ne
 export const applyAllChanges = (orig, changes = {}) => applyChanges(orig, changes[orig.id] || {});
 
 export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
+    if (isArray(value)) {
+        return {
+            ...oldFilterObj,
+            groupFields: [{id: 1, logic: "OR", index: 0}],
+            spatialFieldOperator: "OR",
+            spatialField: value
+        };
+    }
     return {
         ...oldFilterObj,
         groupFields: [{
