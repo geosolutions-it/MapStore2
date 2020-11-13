@@ -15,7 +15,8 @@ import wfsChartOptions from './common/wfsChartOptions';
 import WPSWidgetOptions from './common/WPSWidgetOptions';
 import WidgetOptions from './common/WidgetOptions';
 import sampleData from '../../enhancers/sampleChartData';
-import wpsChart from '../../enhancers/wpsChart';
+import multiProtocolChart from '../../enhancers/multiProtocolChart';
+
 import dependenciesToWidget from '../../enhancers/dependenciesToWidget';
 import dependenciesToFilter from '../../enhancers/dependenciesToFilter';
 import dependenciesToOptions from '../../enhancers/dependenciesToOptions';
@@ -35,7 +36,7 @@ const enhancePreview = compose(
     dependenciesToWidget,
     dependenciesToFilter,
     dependenciesToOptions,
-    wpsChart,
+    multiProtocolChart,
     loadingState,
     errorChartState,
     emptyChartState

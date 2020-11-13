@@ -72,6 +72,7 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
                 showgrid: cartesian
             },
             xaxis: {
+                showgrid: cartesian,
                 type: xAxisOpts?.type,
                 showticklabels: !xAxisOpts?.hide,
                 // dtick used to force show all x axis labels.

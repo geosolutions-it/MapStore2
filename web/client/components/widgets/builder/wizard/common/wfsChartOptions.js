@@ -32,6 +32,10 @@ module.exports = compose(
     withProps(({featureTypeProperties = [], data = {}} = {}) => ({
         options: propsToOptions(featureTypeProperties),
         aggregationOptions: getAllowedAggregationOptions(data.options && data.options.aggregationAttribute, featureTypeProperties)
+            // Add None entry if the widget is not a
+            .concat(
+                data?.widgetType !== "counter" ? [{ value: "None", label: "None" }] : []
+            )
     })),
 
 );
