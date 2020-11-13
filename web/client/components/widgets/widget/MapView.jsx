@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const autoMapType = require('../../map/enhancers/autoMapType');
-const mapType = require('../../map/enhancers/mapType');
+const mapType = require('../../map/enhancers/mapType').default;
 const autoResize = require('../../map/enhancers/autoResize');
 const getProjectionDefs = require('../../map/enhancers/getProjectionDefs').default;
 const onMapViewChanges = require('../../map/enhancers/onMapViewChanges');

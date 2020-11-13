@@ -132,7 +132,7 @@ class BaseMap extends React.Component {
         const {plugins} = this.props;
         const {Map} = plugins;
         const projection = this.props.map && this.props.map.projection || "EPSG:3857";
-        if (this.props.map) {
+        if (this.props.map && Map) {
             return (
                 <Map
                     projectionDefs={this.props.projectionDefs}
@@ -150,6 +150,7 @@ class BaseMap extends React.Component {
                 >
                     {this.renderLayers()}
                     {this.renderTools()}
+                    {this.props.children}
                 </Map>
             );
         }
