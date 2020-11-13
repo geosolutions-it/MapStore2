@@ -1360,7 +1360,7 @@ describe('featuregrid Epics', () => {
                 open: true,
                 selectedLayer: "TEST_LAYER",
                 mode: 'EDIT',
-                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                select: [{id: 'polygons.1', _new: 'polygons._new', properties: {STATE_ABRR: "TEST_ABBR"}}],
                 changes: []
             },
             layers: {
@@ -1376,12 +1376,34 @@ describe('featuregrid Epics', () => {
         };
         const newState = assign({}, state, stateFeaturegrid);
 
-        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
+        const expectedFilterObjShape = {
+            groupFields: [{id: 1, logic: "OR", index: 0}],
+            filterFields: [{
+                attribute: "STATE_ABRR",
+                fieldOptions: {valuesCount: 0, currentPage: 1},
+                groupId: 1,
+                operator: "like",
+                type: "string",
+                value: "TEST_ABBR"
+            }],
+            filterType: "OGC",
+            ogcVersion: "1.1.0",
+            spatialField: {
+                attribute: "the_geom",
+                geometry: null,
+                method: null,
+                operation: "INTERSECTS",
+                value: undefined
+            }
+        };
+
+        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}, {type: SELECT_FEATURES}, {type: DESELECT_FEATURES}], actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
                 case CHANGE_LAYER_PROPERTIES: {
-                    expect(isEmpty(action.newProperties.filterObj)).toBeTruthy();
+                    expect(action.newProperties.filterObj).toBeTruthy();
+                    expect(action.newProperties.filterObj).toEqual(expectedFilterObjShape);
                     expect(isNil(action.newProperties.nativeCrs)).toBeTruthy();
                     break;
                 }
