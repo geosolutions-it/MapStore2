@@ -174,7 +174,7 @@ export const createNewAndEditingFilter = (hasChanges, newFeatures, changes) => f
 export const hasValidNewFeatures = (newFeatures = [], describeFeatureType) => newFeatures.map(f => isValid(f, describeFeatureType)).reduce((acc, cur) => cur && acc, true);
 export const applyAllChanges = (orig, changes = {}) => applyChanges(orig, changes[orig.id] || {});
 
-export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
+export const gridUpdateToQueryUpdate = ({attribute, operator, value, type, rawValue} = {}, oldFilterObj = {}) => {
     return {
         ...oldFilterObj,
         groupFields: [{
@@ -189,7 +189,8 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
                 type,
                 groupId: 1,
                 operator,
-                value
+                value,
+                rawValue
 
             })
             : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute)),

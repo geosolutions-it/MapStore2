@@ -18,7 +18,9 @@ import {
     cqlStringField,
     ogcBooleanField,
     getCrossLayerCqlFilter,
-    composeAttributeFilters
+    composeAttributeFilters,
+    composeMultipleAttributeFilters,
+    cleanColumnFilters
 } from '../FilterUtils';
 
 
@@ -1539,6 +1541,42 @@ describe('FilterUtils', () => {
         expect(filter.filterFields[1].groupId).toBe(filter.groupFields[2].id);
         expect(filter.filterFields[2].groupId).toBe(filter.groupFields[3].id);
         expect(filter.filterFields[3].groupId).toBe(filter.groupFields[4].id);
+    });
+    it('compose Multiple Attribute Filter', () => {
+        const filterA = {
+            "filterFields": [
+                {
+                    "attribute": "STATE_NAME",
+                    "rowId": 15454118,
+                    "operator": "ilike",
+                    "rawValue": "Alabama, Illinois",
+                    "value": "Alabama, Illinois",
+                    "type": "string"
+                }
+            ]
+        };
+        const filter = composeMultipleAttributeFilters(filterA, "AND");
+        expect(filter).toExist();
+        expect(filter.groupFields.length).toBe(2);
+        expect(filter.groupFields[0].logic).toBe("AND");
+        expect(filter.groupFields[1].groupId).toBe(filter.groupFields[0].id);
+    });
+    it('cleans ColumnFilters', () => {
+        const filterA = {
+            "filterFields": [
+                {
+                    "attribute": "STATE_NAME",
+                    "rowId": 15454118,
+                    "operator": "ilike",
+                    "rawValue": "Alabama, Illinois",
+                    "value": "Alabama, Illinois",
+                    "type": "string"
+                }
+            ]
+        };
+        const filter = cleanColumnFilters(filterA);
+        expect(filter).toExist();
+        expect(filter.groupFields.length).toBe(1);
     });
     it('check CQL filter when logic is NOR', () => {
         const filterObject = {

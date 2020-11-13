@@ -148,7 +148,7 @@ import {
 
 import { interceptOGCError } from '../utils/ObservableUtils';
 import { queryFormUiStateSelector, spatialFieldSelector } from '../selectors/queryform';
-import { composeAttributeFilters } from '../utils/FilterUtils';
+import { composeAttributeFilters, composeMultipleAttributeFilters, cleanColumnFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
 
@@ -284,12 +284,19 @@ const updateFilterFunc = (store) => ({update = {}} = {}) => {
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
     if (filterObj) {
         const attributesFilter = getAttributeFilters(store.getState()) || {};
-        const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
+        const filteredColumnFilter = reduce(attributesFilter, (cFilters, value, attribute) => {
             return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
         }, {});
+        let columnsFilters = cleanColumnFilters(filteredColumnFilter);
         const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", "AND");
         const filter = {...filterObj, ...composedFilterFields};
         return updateQuery(filter, update.type);
+    }
+    if (update.type !== 'geometry' && update.rawValue.includes(',')) {
+        const columnsFilters = gridUpdateToQueryUpdate(update, wfsFilter(store.getState()));
+        const composedFilterFields = composeMultipleAttributeFilters(columnsFilters, "AND");
+        return updateQuery(composedFilterFields, update.type);
+
     }
     return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())), update.type);
 };
