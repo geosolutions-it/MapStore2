@@ -214,11 +214,10 @@ export function setLayer(id) {
         id
     };
 }
-export function updateFilter(update, append = false) {
+export function updateFilter(update) {
     return {
         type: UPDATE_FILTER,
-        update,
-        append
+        update
     };
 }
 export function toggleTool(tool, value) {

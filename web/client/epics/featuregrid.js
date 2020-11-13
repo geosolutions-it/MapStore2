@@ -431,15 +431,6 @@ export const handleClickOnMap = (action$, store) =>
                 const center = CoordinatesUtils.reproject([latlng.lng, latlng.lat], 'EPSG:4326', projection);
                 const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
                 const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
-                const selectedFeatures = selectedFeaturesSelector(store.getState());
-                if (selectedFeatures.length > 0) {
-                    // if the point clicked exists in any of the bbox properties found in the selectedFeatures,
-                    // we shall get the index of the matching bbox-point combo and then use that index to remove
-                    // value from the filter values at the same index.
-                    // we further go to the selected features and deselect that feature as well
-                    const isItReally = CoordinatesUtils.isPointInsideExtent(latlng, selectedFeatures[0]?.bbox);
-                    console.log("THIS IS NEBRASKA", isItReally);
-                }
 
                 return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
                     setSelectionOptions({multiselect: ctrl || metaKey}),
@@ -515,17 +506,17 @@ export const selectFeaturesOnMapClickResult = (action$, store) =>
             const alreadySelectedFeature = find(selectedFeatures, { id: features[0].id });
             const multipleSelect = multiSelect(store.getState());
 
-            // if (multipleSelect && alreadySelectedFeature) {
-            //     if (selectedFeatures.length === 1) {
-            //         return Rx.Observable.of(
-            //             updateFilter({
-            //                 attribute: "the_geom",
-            //                 enabled: false,
-            //                 type: "geometry"
-            //             }), deselectFeatures([alreadySelectedFeature]), setSelectionOptions());
-            //     }
-            //     return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
-            // }
+            if (multipleSelect && alreadySelectedFeature) {
+                if (selectedFeatures.length === 1) {
+                    return Rx.Observable.of(
+                        updateFilter({
+                            attribute: "the_geom",
+                            enabled: false,
+                            type: "geometry"
+                        }), deselectFeatures([alreadySelectedFeature]), setSelectionOptions());
+                }
+                return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
+            }
 
             const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
             return Rx.Observable.of(
@@ -1000,10 +991,7 @@ export const stopSyncWmsFilter = (action$, store) =>
     action$.ofType(TOGGLE_SYNC_WMS)
         .filter( () => !isSyncWmsActive(store.getState()))
         .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}]));
-/**
- * Sync map with filter.
- *
- */
+
 /**
      * Deactivate map sync when featuregrid closes if it was active
      */
@@ -1013,21 +1001,50 @@ export const deactivateSyncWmsFilterOnFeatureGridClose = (action$, store) =>
         .switchMap(() => {
             return Rx.Observable.of(toggleSyncWms());
         });
+/**
+ * Sync map with filter.
+ *
+ */
 export const syncMapWmsFilter = (action$, store) =>
-    action$.ofType(QUERY_CREATE, UPDATE_QUERY, SELECT_FEATURES).
+    action$.ofType(QUERY_CREATE, UPDATE_QUERY, SELECT_FEATURES, DESELECT_FEATURES).
         filter((a) => {
             const {disableQuickFilterSync} = (store.getState()).featuregrid;
             return a.type === QUERY_CREATE || !disableQuickFilterSync;
         })
         .switchMap(() => {
-            const {query: q, featuregrid: f} = store.getState();
+            const {featuregrid: f} = store.getState();
             const layerId = (f || {}).selectedLayer;
-            const filter = (q || {}).filterObj;
+            const selectedFeatures = selectedFeaturesSelector(store.getState());
+
             return Rx.Observable.merge(
                 Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
                 action$.ofType(START_SYNC_WMS))
                 .mergeMap(() => {
-                    return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
+                    const filterFields = selectedFeatures.map(ft => {
+                        const props = Object.keys(ft.properties);
+                        return {
+                            attribute: props[0],
+                            fieldOptions: {valuesCount: 0, currentPage: 1},
+                            groupId: 1,
+                            operator: "like",
+                            type: typeof ft.properties[props[0]],
+                            value: ft.properties[props[0]]
+                        };
+                    });
+                    const newFl = {
+                        groupFields: [{id: 1, logic: "OR", index: 0}],
+                        filterFields,
+                        filterType: "OGC",
+                        ogcVersion: "1.1.0",
+                        spatialField: {
+                            attribute: "the_geom",
+                            geometry: null,
+                            method: null,
+                            operation: "INTERSECTS",
+                            value: undefined
+                        }
+                    };
+                    return Rx.Observable.of(addFilterToWMSLayer(layerId, newFl));
                 });
         });
 export const virtualScrollLoadFeatures = (action$, {getState}) =>
