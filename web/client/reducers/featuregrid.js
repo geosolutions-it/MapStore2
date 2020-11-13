@@ -7,7 +7,7 @@
 */
 import assign from 'object-assign';
 
-import { head, get, uniqBy, isArray } from 'lodash';
+import { head, get, uniqBy } from 'lodash';
 
 import {
     SELECT_FEATURES,

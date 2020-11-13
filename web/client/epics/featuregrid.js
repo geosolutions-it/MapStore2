@@ -46,7 +46,6 @@ import {
     BROWSE_DATA,
     changeLayerProperties,
     refreshLayerVersion,
-    changeLayerParams,
     CHANGE_LAYER_PARAMS
 } from '../actions/layers';
 
@@ -279,7 +278,7 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
 };
 
-const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
+const updateFilterFunc = (store) => ({update = {}} = {}) => {
     // If an advanced filter is present it's filterFields should be composed with the action'
     const {id} = selectedLayerSelector(store.getState());
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
@@ -292,14 +291,7 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
         const filter = {...filterObj, ...composedFilterFields};
         return updateQuery(filter, update.type);
     }
-    let u = update;
-    if (append) {
-        u = get(store.getState(), "featuregrid.filters.the_geom");
-    }
-    console.log("GRID UPDATE", u);
-    const requiredQuery = gridUpdateToQueryUpdate(u, wfsFilter(store.getState()));
-    console.log("REQUIRED QUERY", requiredQuery);
-    return updateQuery(requiredQuery, u.type);
+    return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())), update.type);
 };
 
 
@@ -449,7 +441,7 @@ export const handleClickOnMap = (action$, store) =>
                             method: "Circle",
                             operation: "INTERSECTS"
                         }
-                    }, ctrl || metaKey));
+                    }));
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
