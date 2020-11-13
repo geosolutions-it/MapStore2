@@ -17,14 +17,15 @@ import Overlay from '../../misc/Overlay';
 
 
 /**
- * InfoPopover. A component that renders a icon with a Popover.
+ * DisposablePopover. A component that renders a icon with a Popover.
+ * clicking on the icon opens the info tool. A close button, or clicking
+ * on the same icon closes the popup.
  * @prop {string} title the title of popover
  * @prop {string} text the text of popover
  * @prop {string} glyph glyph id for the icon
  * @prop {number} left left prop of popover
  * @prop {number} right right prop of popover
  * @prop {string} placement position of popover
- * @prop {boolean|String[]} trigger ['hover', 'focus'] by default. false always show the popover. Array with hover, focus and/or click string to specify events that trigger popover to show.
  */
 export default function DisposablePopover({
     showOnRender,
