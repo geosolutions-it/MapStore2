@@ -21,7 +21,7 @@ import {addLayer as addNewLayer, changeLayerProperties} from './layers';
 import { zoomToExtent } from './map';
 
 
-import * as LayersUtils from '../utils/LayersUtils';
+import {getLayerId, getLayerUrl} from '../utils/LayersUtils';
 import * as ConfigUtils from '../utils/ConfigUtils';
 import {find} from 'lodash';
 import {authkeyParamNameSelector} from '../selectors/catalog';
@@ -264,14 +264,14 @@ export function addLayerAndDescribe(layer, {zoomToLayer = false} = {}) {
     return (dispatch, getState) => {
         const state = getState();
         const layers = layersSelector(state);
-        const id = LayersUtils.getLayerId(layer, layers || []);
+        const id = getLayerId(layer, layers || []);
         dispatch(addNewLayer({...layer, id}));
         if (zoomToLayer && layer.bbox) {
             dispatch(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
         }
         if (layer.type === 'wms') {
             // try to describe layer
-            return API.wms.describeLayers(LayersUtils.getLayerUrl(layer), layer.name).then((results) => {
+            return API.wms.describeLayers(getLayerUrl(layer), layer.name).then((results) => {
                 if (results) {
                     let description = find(results, (desc) => desc.name === layer.name );
                     if (description && description.owsType === 'WFS') {

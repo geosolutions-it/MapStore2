@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 import JSZip from 'jszip';
-import FileUtils from './FileUtils';
+import {readZip} from './FileUtils';
 
 export const ERROR = {
     WRONG_FORMAT: 'WRONG_FORMAT',
@@ -35,7 +35,7 @@ const parseIndex = (json, plugins) => {
 };
 
 export const checkZipBundle = (file, plugins = []) => {
-    return FileUtils.readZip(file).then((buffer) => {
+    return readZip(file).then((buffer) => {
         var zip = new JSZip();
         return zip.loadAsync(buffer).catch(() => {
             throw ERROR.WRONG_FORMAT;

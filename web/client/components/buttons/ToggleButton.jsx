@@ -10,7 +10,7 @@ var React = require('react');
 const PropTypes = require('prop-types');
 var {Button, Glyphicon} = require('react-bootstrap');
 
-const OverlayTrigger = require('../misc/OverlayTrigger');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
 
 var ImageButton = require('./ImageButton');
 

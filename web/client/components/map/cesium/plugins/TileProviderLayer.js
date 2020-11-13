@@ -10,7 +10,7 @@ import Layers from '../../../../utils/cesium/Layers';
 import Cesium from '../../../../libs/cesium';
 import TileProvider from '../../../../utils/TileConfigProvider';
 import ConfigUtils from '../../../../utils/ConfigUtils';
-import ProxyUtils from '../../../../utils/ProxyUtils';
+import {getProxyUrl, needProxy} from '../../../../utils/ProxyUtils';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -34,7 +34,7 @@ TileProviderProxy.prototype.getURL = function(resource) {
     if (url.indexOf("//") === 0) {
         url = location.protocol + url;
     }
-    return ProxyUtils.getProxyUrl() + encodeURIComponent(url + queryString);
+    return getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
@@ -64,7 +64,7 @@ Layers.registerType('tileprovider', (options) => {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        proxy = opt.noCors || ProxyUtils.needProxy(url);
+        proxy = opt.noCors || needProxy(url);
     }
     const cr = opt.credits;
     const credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;

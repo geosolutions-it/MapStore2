@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,12 +9,13 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {isEqual} = require('lodash');
 const {AgGridReact} = require('ag-grid-react');
+const PropTypes = require('prop-types');
 const reactCellRendererFactory = require('./ColorMapGridComponents/ReactCellRendererFactoryParams');
 const ColorPickerRenderer = require('./ColorMapGridComponents/ColorPickerRenderer');
 const assign = require('object-assign');
 const NumberRenderer = require('./ColorMapGridComponents/NumberRenderer');
 
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getMessageById} = require('../../utils/LocaleUtils');
 
 require("ag-grid-community/dist/styles/ag-grid.css");
 require("ag-grid-community/dist/styles/ag-theme-blue.css");
@@ -60,18 +60,18 @@ class ColorMapGrid extends React.Component {
                     columnDefs={[{
                         width: 50,
                         suppressSizeToFit: true,
-                        headerName: LocaleUtils.getMessageById(this.context.messages, "colormapgrid.color"),
+                        headerName: getMessageById(this.context.messages, "colormapgrid.color"),
                         field: "color",
                         cellRenderer: reactCellRendererFactory(ColorPickerRenderer, { onChangeColor: this.changeColor})
 
                     }, {
                         width: 135,
-                        headerName: LocaleUtils.getMessageById(this.context.messages, "colormapgrid.quantity"),
+                        headerName: getMessageById(this.context.messages, "colormapgrid.quantity"),
                         field: "quantity",
-                        cellRenderer: reactCellRendererFactory(NumberRenderer, { onChangeValue: this.changeQuantity, errorMessage: LocaleUtils.getMessageById(this.context.messages, "colormapgrid.minmaxerror")})
+                        cellRenderer: reactCellRendererFactory(NumberRenderer, { onChangeValue: this.changeQuantity, errorMessage: getMessageById(this.context.messages, "colormapgrid.minmaxerror")})
                     }, {
                         width: 160,
-                        headerName: LocaleUtils.getMessageById(this.context.messages, "colormapgrid.label"),
+                        headerName: getMessageById(this.context.messages, "colormapgrid.label"),
                         field: "label",
                         editable: true
                     }]}

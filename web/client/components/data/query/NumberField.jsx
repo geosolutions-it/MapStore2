@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,9 +7,10 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {Tooltip} = require("react-bootstrap");
-const OverlayTrigger = require('../../misc/OverlayTrigger');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 const {NumberPicker} = require('react-widgets');
@@ -126,13 +126,13 @@ class NumberField extends React.Component {
     changeNumber = (value) => {
         if (this.props.operator === "><") {
             if (value.lowBound !== null && value.lowBound !== undefined && ( value.upBound !== null && value.upBound !== undefined) && value.lowBound >= value.upBound) {
-                this.props.onUpdateExceptionField(this.props.fieldRowId, LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.numberfield.wrong_range"));
+                this.props.onUpdateExceptionField(this.props.fieldRowId, getMessageById(this.context.messages, "queryform.attributefilter.numberfield.wrong_range"));
             } else if (this.props.fieldException) {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, null);
             }
         } else {
             if (this.props.isRequired && ( value === null || value === undefined)) {
-                this.props.onUpdateExceptionField(this.props.fieldRowId, LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.numberfield.isRequired"));
+                this.props.onUpdateExceptionField(this.props.fieldRowId, getMessageById(this.context.messages, "queryform.attributefilter.numberfield.isRequired"));
             } else if (this.props.fieldException) {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, null);
             }

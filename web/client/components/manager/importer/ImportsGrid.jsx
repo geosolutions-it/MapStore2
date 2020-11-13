@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,10 +7,11 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
-const ImporterUtils = require('../../../utils/ImporterUtils');
+const Message = require('../../I18N/Message').default;
+const PropTypes = require('prop-types');
+const {getbsStyleForState} = require('../../../utils/ImporterUtils');
 const {Table, Glyphicon, Button, Label, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 const {findIndex} = require('lodash');
 
 class ImportsGrid extends React.Component {
@@ -48,10 +48,6 @@ class ImportsGrid extends React.Component {
         clearInterval(this.interval);
     }
 
-    getbsStyleForState = (state) => {
-        return ImporterUtils.getbsStyleForState(state);
-    };
-
     renderLoadingMessage = (importObj) => {
         switch (importObj.message) {
         case "deleting":
@@ -79,7 +75,7 @@ class ImportsGrid extends React.Component {
         let tooltip = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={importObj && importObj.id}>
             <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadImport(importObj.id); }} >{importObj.id}</a></td>
-            <td key="state"><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label>
+            <td key="state"><Label bsStyle={getbsStyleForState(importObj.state)}>{importObj.state}</Label>
                 {this.renderLoadingImport(importObj)}
                 {this.renderImportErrorMessage(importObj)}
             </td>

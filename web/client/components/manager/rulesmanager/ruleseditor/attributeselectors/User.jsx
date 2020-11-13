@@ -15,7 +15,7 @@ const localizedProps = require("../../../../misc/enhancers/localizedProps");
 const {getUsers} = require('../../../../../observables/rulesmanager');
 const {connect} = require("react-redux");
 const {error} = require('../../../../../actions/notifications');
-const Message = require('../../../../I18N/Message');
+const Message = require('../../../../I18N/Message').default;
 
 const UserSelector = (props) => (
     <Row className={props.disabled ? 'ms-disabled' : ''}>

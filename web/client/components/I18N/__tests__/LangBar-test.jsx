@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+const expect = require('expect');
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var LangBar = require('../LangBar');
-var LocaleUtils = require('../../../utils/LocaleUtils');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const LangBar = require('../LangBar');
+const {getSupportedLocales} = require('../../../utils/LocaleUtils');
 const TestUtils = require('react-dom/test-utils');
 
 describe('LangBar', () => {
@@ -35,7 +35,7 @@ describe('LangBar', () => {
 
         const buttons = cmpDom.getElementsByTagName("button");
 
-        expect(buttons.length === LocaleUtils.getSupportedLocales().length);
+        expect(buttons.length === getSupportedLocales().length);
 
     });
 

@@ -21,7 +21,7 @@ const {highlightPoint} = require('../actions/annotations');
 const { isOpenlayers } = require('../selectors/maptype');
 const { isCoordinateEditorEnabledSelector, showAddAsAnnotationSelector, isTrueBearingEnabledSelector } = require('../selectors/measurement');
 const { showCoordinateEditorSelector, measureSelector } = require('../selectors/controls');
-const { getConfigProp } = require('../utils/ConfigUtils');
+const { getConfigProp } = require('../utils/ConfigUtils').default;
 
 const selector = (state) => {
     return {
@@ -118,5 +118,5 @@ module.exports = {
         }
     }),
     reducers: {measurement: require('../reducers/measurement').default},
-    epics: require('../epics/measurement')
+    epics: require('../epics/measurement').default
 };

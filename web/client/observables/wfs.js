@@ -17,7 +17,7 @@ const {stripPrefix} = require('xml2js/lib/processors');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {getCapabilitiesUrl} = require('../utils/LayersUtils');
-const FilterUtils = require('../utils/FilterUtils');
+const {getWFSFilterData} = require('../utils/FilterUtils');
 const requestBuilder = require('../utils/ogc/WFS/RequestBuilder');
 const {getFeature, query, sortBy, propertyName} = requestBuilder({ wfsVersion: "1.1.0" });
 
@@ -90,7 +90,7 @@ const getPagination = (filterObj = {}, options = {}) =>
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
 const getJSONFeature = (searchUrl, filterObj, options = {}) => {
-    const data = FilterUtils.getWFSFilterData(filterObj, options);
+    const data = getWFSFilterData(filterObj, options);
 
     const urlParsedObj = Url.parse(searchUrl, true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};

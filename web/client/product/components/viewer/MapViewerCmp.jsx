@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 require('../../assets/css/viewer.css');
 let oldLocation;
 

@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const {defaultIconStyle, showGFIForService, layerIsVisibleForGFI} = require('../SearchUtils');
+import expect from 'expect';
+
+import { defaultIconStyle, showGFIForService, layerIsVisibleForGFI } from '../SearchUtils';
 
 
 describe('SearchUtils test', () => {
@@ -34,5 +35,8 @@ describe('SearchUtils test', () => {
     });
     it('layerIsVisibleForGFI layer hidden with force visibility', () => {
         expect(layerIsVisibleForGFI({visibility: false}, {launchInfoPanel: 'single_layer', openFeatureInfoButtonEnabled: true, forceSearchLayerVisibility: true})).toBe(true);
+    });
+    it('layerIsVisibleForGFI layer doesn\'t exist', () => {
+        expect(layerIsVisibleForGFI(undefined, {launchInfoPanel: 'single_layer', openFeatureInfoButtonEnabled: true, forceSearchLayerVisibility: true})).toBe(false);
     });
 });

@@ -6,46 +6,83 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
-const axios = require('axios');
-const {saveAs} = require('file-saver');
-const {MAP_CONFIG_LOADED} = require('../actions/config');
-const {TOGGLE_CONTROL, toggleControl, setControlProperty} = require('../actions/controls');
-const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
-const {set} = require('../utils/ImmutableUtils');
-const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
-const {ANNOTATION_TYPE} = require('../utils/AnnotationsUtils');
-const {MEASURE_TYPE} = require('../utils/MeasurementUtils');
-const {changeMeasurement} = require('../actions/measurement');
-const {error} = require('../actions/notifications');
-const {closeFeatureGrid} = require('../actions/featuregrid');
-const {isFeatureGridOpen} = require('../selectors/featuregrid');
-const {queryPanelSelector, measureSelector} = require('../selectors/controls');
-const { hideMapinfoMarker, purgeMapInfoResults, closeIdentify} = require('../actions/mapInfo');
+import Rx from 'rxjs';
+import { head, findIndex, castArray, isArray, find, isUndefined, values } from 'lodash';
+import assign from 'object-assign';
+import axios from 'axios';
+import uuidv1 from 'uuid/v1';
+import { saveAs } from 'file-saver';
 
-const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd,
-    showAnnotation, editAnnotation, setDefaultStyle, setErrorSymbol, loading,
-    CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
-    SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
-    CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
-    ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR,
-    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES, GEOMETRY_HIGHLIGHT, UNSELECT_FEATURE
-} = require('../actions/annotations');
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import { TOGGLE_CONTROL, toggleControl, setControlProperty } from '../actions/controls';
+import { addLayer, updateNode, changeLayerProperties, removeLayer } from '../actions/layers';
+import { changeMeasurement } from '../actions/measurement';
+import { error } from '../actions/notifications';
+import { closeFeatureGrid } from '../actions/featuregrid';
+import { hideMapinfoMarker, purgeMapInfoResults, closeIdentify, PURGE_MAPINFO_RESULTS } from '../actions/mapInfo';
+import {
+    updateAnnotationGeometry,
+    setStyle,
+    toggleStyle,
+    cleanHighlight,
+    toggleAdd,
+    showAnnotation,
+    editAnnotation,
+    setDefaultStyle,
+    setErrorSymbol,
+    loading,
+    CONFIRM_REMOVE_ANNOTATION,
+    SAVE_ANNOTATION,
+    EDIT_ANNOTATION,
+    CANCEL_EDIT_ANNOTATION,
+    SET_STYLE,
+    RESTORE_STYLE,
+    HIGHLIGHT,
+    CLEAN_HIGHLIGHT,
+    CONFIRM_CLOSE_ANNOTATIONS,
+    START_DRAWING,
+    DOWNLOAD,
+    LOAD_ANNOTATIONS,
+    CHANGED_SELECTED,
+    RESET_COORD_EDITOR,
+    CHANGE_RADIUS,
+    ADD_NEW_FEATURE,
+    SET_EDITING_FEATURE,
+    CHANGE_TEXT,
+    NEW_ANNOTATION,
+    TOGGLE_STYLE,
+    CONFIRM_DELETE_FEATURE,
+    OPEN_EDITOR,
+    TOGGLE_ANNOTATION_VISIBILITY,
+    LOAD_DEFAULT_STYLES,
+    GEOMETRY_HIGHLIGHT,
+    UNSELECT_FEATURE
+} from '../actions/annotations';
+import { FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE, changeDrawingStatus } from '../actions/draw';
 
-const uuidv1 = require('uuid/v1');
-const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
-const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
+import { set } from '../utils/ImmutableUtils';
+import { reprojectGeoJson } from '../utils/CoordinatesUtils';
+import {
+    ANNOTATION_TYPE,
+    normalizeAnnotation,
+    removeDuplicate,
+    validateCoordsArray,
+    getStartEndPointsForLinestring,
+    DEFAULT_ANNOTATIONS_STYLES,
+    STYLE_POINT_MARKER,
+    STYLE_POINT_SYMBOL,
+    DEFAULT_SHAPE,
+    DEFAULT_PATH } from '../utils/AnnotationsUtils';
+import { MEASURE_TYPE } from '../utils/MeasurementUtils';
+import { createSvgUrl } from '../utils/VectorStyleUtils';
 
-const {head, findIndex, castArray, isArray, find, isUndefined, values} = require('lodash');
-const assign = require('object-assign');
-const {annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector} = require('../selectors/annotations');
-const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES,
-    STYLE_POINT_MARKER, STYLE_POINT_SYMBOL, DEFAULT_SHAPE, DEFAULT_PATH} = require('../utils/AnnotationsUtils');
-const {createSvgUrl} = require('../utils/VectorStyleUtils');
+import { isFeatureGridOpen } from '../selectors/featuregrid';
+import { queryPanelSelector, measureSelector } from '../selectors/controls';
+import { annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector } from '../selectors/annotations';
+import { mapNameSelector } from '../selectors/map';
 
-const {mapNameSelector} = require('../selectors/map');
-const {changeDrawingStatus} = require('../actions/draw');
 
+import symbolMissing from '../product/assets/symbols/symbolMissing.svg';
 /**
     * Epics for annotations
     * @name epics.annotations
@@ -160,7 +197,7 @@ const createNewFeature = (action) => {
 };
 
 
-module.exports = (viewer) => ({
+export default (viewer) => ({
     addAnnotationsLayerEpic: (action$, store) => action$.ofType(MAP_CONFIG_LOADED)
         .switchMap(() => {
             const annotationsLayer = annotationsLayerSelector(store.getState());
@@ -251,22 +288,23 @@ module.exports = (viewer) => ({
             if (action.attribute === 'geometry') {
                 let state = store.getState();
                 const feature = state.annotations.editing;
-                const drawing = state.annotations.drawing;
                 const type = state.annotations.featureType;
                 const multiGeom = multiGeometrySelector(state);
                 const drawOptions = {
                     featureProjection: "EPSG:4326",
                     stopAfterDrawing: !multiGeom,
-                    editEnabled: type !== "Circle",
-                    drawing,
-                    drawEnabled: type === "Circle",
+                    editEnabled: true,
+                    drawEnabled: false,
+                    selectEnabled: true,
+                    editFilter: (f) => f.getProperties().canEdit,
+                    useSelectedStyle: true,
                     transformToFeatureCollection: true,
-                    addClickCallback: false
+                    addClickCallback: true
                 };
 
                 return Rx.Observable.from([
-                    changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}),
-                    changeDrawingStatus("drawOrEdit", CONFIRM_REMOVE_ANNOTATION, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
+                    changeDrawingStatus("replace", type, "annotations", [feature], {}),
+                    changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
                 ]);
             }
             const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);
@@ -357,31 +395,6 @@ module.exports = (viewer) => ({
             return Rx.Observable.from([
                 updateAnnotationGeometry(mergeGeometry(action.features), action.textChanged, action.circleChanged)
             ].concat(!multiGeometrySelector(store.getState()) && store.getState().annotations.drawing ? [toggleAdd()] : []));
-        }),
-    endDrawTextEpic: (action$, store) => action$.ofType(SAVE_TEXT)
-        .switchMap( () => {
-            const feature = store.getState().annotations.selected;
-            // let reprojected = reprojectGeoJson(feature, "EPSG:4326", "EPSG:3857");
-            const style = store.getState().annotations.editing.style;
-            return Rx.Observable.from([
-                changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [feature], {featureProjection: "EPSG:3857",
-                    transformToFeatureCollection: true}, assign({}, style, {highlight: false}))
-            ].concat(!multiGeometrySelector(store.getState()) ? [toggleAdd()] : []));
-        }),
-    cancelTextAnnotationsEpic: (action$, store) => action$.ofType(CANCEL_CLOSE_TEXT)
-        .switchMap( () => {
-            const state = store.getState();
-            const feature = state.annotations.editing;
-            const multiGeometry = multiGeometrySelector(state);
-            const style = feature.style;
-            return Rx.Observable.from([
-                changeDrawingStatus("drawOrEdit", "Text", "annotations", [feature], {
-                    featureProjection: "EPSG:4326",
-                    stopAfterDrawing: !multiGeometry,
-                    editEnabled: false,
-                    drawEnabled: true
-                }, assign({}, style, {highlight: false}))
-            ]);
         }),
     setAnnotationStyleEpic: (action$, store) => action$.ofType(SET_STYLE)
         .switchMap( () => {
@@ -701,21 +714,12 @@ module.exports = (viewer) => ({
     highlightGeometryEpic: (action$, {getState}) => action$.ofType(GEOMETRY_HIGHLIGHT)
         .switchMap(({id = '', state: highlight = true}) => {
             const state = getState();
-            const editing = state.annotations.editing;
+            const {editing, featureType: type} = state.annotations;
             const ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === id);
             const selectedGeoJSON = editing.features[ftChangedIndex];
             const styleChanged = castArray(selectedGeoJSON.style).map(s => ({...s, highlight}));
-            const multiGeometry = multiGeometrySelector(state);
-            const action = changeDrawingStatus("drawOrEdit", "", "annotations", [
-                set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing)], {
-                featureProjection: "EPSG:4326",
-                stopAfterDrawing: !multiGeometry,
-                editEnabled: false,
-                drawEnabled: false,
-                selectEnabled: true,
-                transformToFeatureCollection: true
-            }, assign({}, editing.style, {highlight: false}));
-
+            const action = changeDrawingStatus("updateStyle", type, "annotations", [
+                set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing)], {transformToFeatureCollection: true}, assign({}, editing.style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
     editCircleFeatureEpic: (action$, {getState}) => action$.ofType(DRAWING_FEATURE)
@@ -766,7 +770,7 @@ module.exports = (viewer) => ({
                                 setErrorSymbol(symbolErrors.concat(['loading_symbol' + shape])),
                                 setDefaultStyle('POINT.symbol', {
                                     ...defaultSymbolStyle,
-                                    symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg'),
+                                    symbolUrlCustomized: symbolMissing,
                                     symbolUrl: symbolsPath + shape + ".svg",
                                     shape
                                 })

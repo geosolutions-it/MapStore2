@@ -9,9 +9,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {DropdownList} = require('react-widgets');
-const MapInfoUtils = require('../../../../utils/MapInfoUtils');
+const {getAvailableInfoFormat, getLabelFromValue} = require('../../../../utils/MapInfoUtils');
 const {Grid} = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 /**
  * FeatureInfoFormat shows the infoformat selected for that layer or the default one taken
  * from the general settings.
@@ -33,7 +33,7 @@ module.exports = class extends React.Component {
     };
 
     static defaultProps = {
-        defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
+        defaultInfoFormat: getAvailableInfoFormat(),
         generalInfoFormat: "text/plain",
         onChange: () => {},
         label: <Message msgId="layerProperties.featureInfoFormatLbl"/>
@@ -61,7 +61,7 @@ module.exports = class extends React.Component {
                     (<DropdownList
                         key="format-dropdown"
                         data={data}
-                        value={this.props.element.featureInfo ? this.props.element.featureInfo.format : MapInfoUtils.getLabelFromValue(this.props.generalInfoFormat)}
+                        value={this.props.element.featureInfo ? this.props.element.featureInfo.format : getLabelFromValue(this.props.generalInfoFormat)}
                         defaultValue={data[0]}
                         disabled={checkDisabled}
                         onChange={(value) => {

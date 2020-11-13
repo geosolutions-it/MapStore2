@@ -430,3 +430,18 @@ export const mapSaveMapResourceEpic = (action$, store) =>
                 })
                 .startWith(!resource.id ? savingMap(resource.metadata) : mapUpdating(resource.metadata));
         });
+
+export default {
+    loadMapsEpic,
+    reloadMapsEpic,
+    getMapsResourcesByCategoryEpic,
+    loadMapsOnSearchFilterChange,
+    hideTabsOnSearchFilterChange,
+    mapsLoadContextsEpic,
+    mapsSetupFilterOnLogin,
+    deleteMapAndAssociatedResourcesEpic,
+    fetchDataForDetailsPanel,
+    closeDetailsPanelEpic,
+    storeDetailsInfoEpic,
+    mapSaveMapResourceEpic
+};

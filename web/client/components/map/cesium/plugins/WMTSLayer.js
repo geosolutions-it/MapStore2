@@ -8,8 +8,11 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import ConfigUtils from '../../../../utils/ConfigUtils';
-import ProxyUtils from '../../../../utils/ProxyUtils';
-import WMTSUtils from '../../../../utils/WMTSUtils';
+import {
+    getProxyUrl,
+    needProxy
+} from '../../../../utils/ProxyUtils';
+import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import Cesium from '../../../../libs/cesium';
 import { getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
 import assign from 'object-assign';
@@ -44,7 +47,7 @@ const isValidTile = (tileMatrixSet) => (x, y, level) =>
 
 WMTSProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
-    return ProxyUtils.getProxyUrl() + encodeURIComponent(url + queryString);
+    return getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
@@ -106,7 +109,7 @@ function wmtsToCesiumOptions(options) {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
+        proxy = needProxy(options.url) && proxyUrl;
     }
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSetID]);
     const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});

@@ -8,15 +8,27 @@
 const Rx = require('rxjs');
 const { compose, mapPropsStream, createEventHandler} = require('recompose');
 const { get, some, every } = require('lodash');
-const FileUtils = require('../../../../utils/FileUtils');
-const LayersUtils = require('../../../../utils/LayersUtils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+const {
+    readZip,
+    recognizeExt,
+    MIME_LOOKUPS,
+    readKml,
+    kmlToGeoJSON,
+    gpxToGeoJSON,
+    readKmz,
+    checkShapePrj,
+    shpToGeoJSON,
+    readJson,
+    readWMC
+} = require('../../../../utils/FileUtils');
+const {geoJSONToLayer} = require('../../../../utils/LayersUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 const {isAnnotation} = require('../../../../utils/AnnotationsUtils');
 
 const JSZip = require('jszip');
 
 const tryUnzip = (file) => {
-    return FileUtils.readZip(file).then((buffer) => {
+    return readZip(file).then((buffer) => {
         var zip = new JSZip();
         return zip.loadAsync(buffer);
     });
@@ -27,8 +39,8 @@ const tryUnzip = (file) => {
  */
 const checkFileType = (file) => {
     return new Promise((resolve, reject) => {
-        const ext = FileUtils.recognizeExt(file.name);
-        const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+        const ext = recognizeExt(file.name);
+        const type = file.type || MIME_LOOKUPS[ext];
         if (type === 'application/x-zip-compressed'
             || type === 'application/zip'
             || type === 'application/vnd.google-earth.kml+xml'
@@ -49,33 +61,33 @@ const checkFileType = (file) => {
  * @param {function} onWarnings callback in case of warnings to report
  */
 const readFile = (onWarnings) => (file) => {
-    const ext = FileUtils.recognizeExt(file.name);
-    const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+    const ext = recognizeExt(file.name);
+    const type = file.type || MIME_LOOKUPS[ext];
     const projectionDefs = ConfigUtils.getConfigProp('projectionDefs') || [];
     const supportedProjections = (projectionDefs.length && projectionDefs.map(({code})  => code) || []).concat(["EPSG:4326", "EPSG:3857", "EPSG:900913"]);
     if (type === 'application/vnd.google-earth.kml+xml') {
-        return FileUtils.readKml(file).then((xml) => {
-            return FileUtils.kmlToGeoJSON(xml);
+        return readKml(file).then((xml) => {
+            return kmlToGeoJSON(xml);
         });
     }
     if (type === 'application/gpx+xml') {
-        return FileUtils.readKml(file).then((xml) => {
-            return FileUtils.gpxToGeoJSON(xml, file.name);
+        return readKml(file).then((xml) => {
+            return gpxToGeoJSON(xml, file.name);
         });
     }
     if (type === 'application/vnd.google-earth.kmz') {
-        return FileUtils.readKmz(file).then((xml) => {
-            return FileUtils.kmlToGeoJSON(xml);
+        return readKmz(file).then((xml) => {
+            return kmlToGeoJSON(xml);
         });
     }
     if (type === 'application/x-zip-compressed' ||
         type === 'application/zip') {
-        return FileUtils.readZip(file).then((buffer) => {
-            return FileUtils.checkShapePrj(buffer).then((warnings) => {
+        return readZip(file).then((buffer) => {
+            return checkShapePrj(buffer).then((warnings) => {
                 if (warnings.length > 0) {
                     onWarnings({type: 'warning', filename: file.name, message: 'shapefile.error.missingPrj'});
                 }
-                const geoJsonArr = FileUtils.shpToGeoJSON(buffer).map(json => ({ ...json, filename: file.name }));
+                const geoJsonArr = shpToGeoJSON(buffer).map(json => ({ ...json, filename: file.name }));
                 const areProjectionsPresent = some(geoJsonArr, geoJson => !!get(geoJson, 'map.projection'));
                 if (areProjectionsPresent) {
                     const filteredGeoJsonArr = geoJsonArr.filter(item => !!get(item, 'map.projection'));
@@ -90,7 +102,7 @@ const readFile = (onWarnings) => (file) => {
         });
     }
     if (type === 'application/json') {
-        return FileUtils.readJson(file).then(f => {
+        return readJson(file).then(f => {
             const projection = get(f, 'map.projection');
             if (projection) {
                 if (supportedProjections.includes(projection)) {
@@ -102,7 +114,7 @@ const readFile = (onWarnings) => (file) => {
         });
     }
     if (type === 'application/vnd.wmc') {
-        return FileUtils.readWMC(file).then(config => [config]);
+        return readWMC(file).then(config => [config]);
     }
     return null;
 };
@@ -133,7 +145,7 @@ module.exports = compose(
                                             // annotation GeoJSON to layers
                                             { name: "Annotations", features: json?.features || [], filename: json.filename} :
                                             // other GeoJSON to layers
-                                            {...LayersUtils.geoJSONToLayer(json), filename: json.filename}))
+                                            {...geoJSONToLayer(json), filename: json.filename}))
                                 ),
                             maps: (result.maps || [])
                                 .concat(

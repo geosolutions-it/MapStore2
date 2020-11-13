@@ -6,17 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const assign = require('object-assign');
+import expect from 'expect';
 
-const { set } = require('../../utils/ImmutableUtils');
+import assign from 'object-assign';
+import { set } from '../../utils/ImmutableUtils';
+import CoordinatesUtils from '../../utils/CoordinatesUtils';
+import { CLOSE_IDENTIFY, hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER } from '../../actions/mapInfo';
 
-
-const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const { hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER} = require('../../actions/mapInfo');
-const { createQuery } = require('../../actions/wfsquery');
-
-const {
+import {
     toggleEditMode,
     toggleViewMode,
     openFeatureGrid,
@@ -50,24 +47,36 @@ const {
     UPDATE_FILTER,
     activateTemporaryChanges,
     DISABLE_TOOLBAR,
-    DEACTIVATE_GEOMETRY_FILTER
-} = require('../../actions/featuregrid');
-const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
-const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
-const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
-const {ZOOM_TO_EXTENT, clickOnMap} = require('../../actions/map');
-const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
-const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
-const {geometryChanged} = require('../../actions/draw');
-const { TOGGLE_CONTROL } = require('../../actions/controls');
+    DEACTIVATE_GEOMETRY_FILTER,
+    SET_SELECTION_OPTIONS,
+    DESELECT_FEATURES,
+    SELECT_FEATURES
+} from '../../actions/featuregrid';
 
-const {
-    toggleSyncWms, QUERY, querySearchResponse, query, QUERY_CREATE, FEATURE_TYPE_SELECTED,
-    layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
-const { LOAD_FILTER, QUERY_FORM_RESET} = require('../../actions/queryform');
+import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
+import { CHANGE_DRAWING_STATUS, geometryChanged } from '../../actions/draw';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
+import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
+import { boxEnd, CHANGE_BOX_SELECTION_STATUS } from '../../actions/box';
+import { CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData } from '../../actions/layers';
 
-const {
+import {
+    createQuery,
+    toggleSyncWms,
+    QUERY,
+    querySearchResponse,
+    query,
+    QUERY_CREATE,
+    FEATURE_TYPE_SELECTED,
+    layerSelectedForSearch,
+    UPDATE_QUERY,
+    TOGGLE_SYNC_WMS
+} from '../../actions/wfsquery';
+
+import { LOAD_FILTER, QUERY_FORM_RESET } from '../../actions/queryform';
+
+import {
     featureGridBrowseData,
     setHighlightFeaturesPath,
     triggerDrawSupportOnSelectionChange,
@@ -102,12 +111,19 @@ const {
     hideDrawerOnFeatureGridOpenMobile,
     handleClickOnMap,
     featureGridUpdateGeometryFilter,
-    activateTemporaryChangesEpic
-} = require('../featuregrid');
-const { onLocationChanged } = require('connected-react-router');
-
-const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
-const {isEmpty, isNil} = require('lodash');
+    activateTemporaryChangesEpic,
+    disableMultiSelect,
+    selectFeaturesOnMapClickResult,
+    enableGeometryFilterOnEditMode,
+    handleBoxSelectionDrawEnd,
+    activateBoxSelectionTool,
+    deactivateBoxSelectionTool,
+    deactivateSyncWmsFilterOnFeatureGridClose
+} from '../featuregrid';
+import { onLocationChanged } from 'connected-react-router';
+import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
+import { getDefaultFeatureProjection } from '../../utils/FeatureGridUtils';
+import { isEmpty, isNil } from 'lodash';
 const filterObj = {
     featureTypeName: 'TEST',
     groupFields: [
@@ -776,6 +792,54 @@ describe('featuregrid Epics', () => {
         testEpic(triggerDrawSupportOnSelectionChange, 1, toggleEditMode(), epicResult, newState);
     });
 
+    it('trigger draw support on multiple selection', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: 'EDIT',
+                select: [{id: 'ft_1'}, {id: 'ft_2'}],
+                changes: [],
+                features
+            }
+        };
+
+        const toDrawFeatures = [
+            { id: 'ft_1', type: 'Feature' },
+            { id: 'ft_2', type: 'Feature' }
+        ];
+        const drawOptions = {
+            featureProjection: getDefaultFeatureProjection(),
+            stopAfterDrawing: true,
+            editEnabled: true,
+            drawEnabled: false };
+
+        const newState = assign({}, state, stateFeaturegrid);
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case CHANGE_DRAWING_STATUS:
+                        expect(action.status).toBe("drawOrEdit");
+                        expect(action.method).toBe("Polygon");
+                        expect(action.owner).toBe("featureGrid");
+                        expect(action.features).toEqual(toDrawFeatures);
+                        expect(action.options).toEqual(drawOptions);
+                        expect(action.style).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        testEpic(triggerDrawSupportOnSelectionChange, 1, toggleEditMode(), epicResult, newState);
+    });
+
     it('trigger draw support on selection change with not supported geometry', (done) => {
 
         const stateFeaturegrid = {
@@ -965,12 +1029,15 @@ describe('featuregrid Epics', () => {
                 open: true
             }
         };
-        testEpic(autoCloseFeatureGridEpicOnDrowerOpen, 1, [openFeatureGrid(), toggleControl('drawer')], actions => {
-            expect(actions.length).toBe(1);
+        testEpic(autoCloseFeatureGridEpicOnDrowerOpen, 2, [openFeatureGrid(), toggleControl('drawer')], actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                case SELECT_FEATURES:
+                    expect(action.type).toBe(SELECT_FEATURES);
                     break;
                 default:
                     expect(true).toBe(false);
@@ -981,12 +1048,20 @@ describe('featuregrid Epics', () => {
     });
 
     it('test askChangesConfirmOnFeatureGridClose', (done) => {
-        testEpic(askChangesConfirmOnFeatureGridClose, 1, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(1);
+        testEpic(askChangesConfirmOnFeatureGridClose, 3, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
+                    break;
+                case UPDATE_FILTER:
+                    expect(action.type).toBe(UPDATE_FILTER);
+                    expect(action.update).toExist();
+                    expect(action.update.enabled).toBe(false);
+                    break;
+                case SELECT_FEATURES:
+                    expect(action.type).toBe(SELECT_FEATURES);
                     break;
                 default:
                     expect(true).toBe(false);
@@ -1395,10 +1470,13 @@ describe('featuregrid Epics', () => {
 
         const newState = assign({}, state, stateFeaturegrid);
         testEpic(onOpenAdvancedSearch, 4, [openAdvancedSearch(), toggleControl('queryPanel', 'enabled')], actions => {
-
             expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
+                case SELECT_FEATURES:
+                    // temporarily hide selected features
+                    expect(action.features).toEqual([]);
+                    break;
                 case LOAD_FILTER:
                     // load filter, if present
                     expect(action.filter).toExist();
@@ -1893,10 +1971,7 @@ describe('featuregrid Epics', () => {
         });
     });
     it('handleClickOnMap epic', (done) => {
-        const startActions = [updateFilter({
-            type: 'geometry',
-            enabled: true
-        }), clickOnMap({
+        const clickPoint = {
             latlng: {
                 lat: 1.0,
                 lng: 8.0
@@ -1904,19 +1979,29 @@ describe('featuregrid Epics', () => {
             pixel: {
                 x: 10.0,
                 y: 10.0
+            },
+            modifiers: {
+                ctrl: false,
+                metaKey: false
             }
-        })];
+        };
+        const startActions = [updateFilter({
+            type: 'geometry',
+            enabled: true
+        }), clickOnMap(clickPoint)];
 
-        testEpic(handleClickOnMap, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(UPDATE_FILTER);
-            expect(actions[0].update).toExist();
-            expect(actions[0].update.value).toExist();
-            expect(actions[0].update.value.attribute).toBe('the_geom');
-            expect(actions[0].update.value.method).toBe('Circle');
-            expect(actions[0].update.value.geometry).toExist();
-            expect(actions[0].update.value.geometry.type).toBe('Polygon');
-            expect(actions[0].update.value.geometry.radius).toExist();
+        testEpic(handleClickOnMap, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_SELECTION_OPTIONS);
+            expect(actions[0].multiselect).toBe(false);
+            expect(actions[1].type).toBe(UPDATE_FILTER);
+            expect(actions[1].update).toExist();
+            expect(actions[1].update.value).toExist();
+            expect(actions[1].update.value.attribute).toBe('the_geom');
+            expect(actions[1].update.value.method).toBe('Circle');
+            expect(actions[1].update.value.geometry).toExist();
+            expect(actions[1].update.value.geometry.type).toBe('Polygon');
+            expect(actions[1].update.value.geometry.radius).toExist();
         }, {
             featuregrid: {
                 filters: [{
@@ -1931,6 +2016,57 @@ describe('featuregrid Epics', () => {
                 }
             }
         }, done);
+    });
+    it('enableGeometryFilterOnEditMode epic', (done) => {
+        const epicResponse = actions => {
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+            done();
+        };
+
+        const featureGridState1 = {
+            featuregrid: {
+                mode: "EDIT",
+                filters: {}
+            }
+        };
+
+        testEpic(
+            enableGeometryFilterOnEditMode,
+            1,
+            toggleEditMode(),
+            epicResponse,
+            featureGridState1
+        );
+
+        const epicResponse2 = actions => {
+            expect(actions).toBe(undefined);
+            done();
+        };
+
+
+        const featureGridState2 = {
+            featuregrid: {
+                mode: "EDIT",
+                filters: {
+                    ["the_geom"]: {
+                        attribute: "the_geom",
+                        enabled: true,
+                        type: "geometry",
+                        value: {
+                            attribute: "the_geom"
+                        }
+                    }
+                }
+            }
+        };
+
+        testEpic(
+            enableGeometryFilterOnEditMode,
+            1,
+            toggleEditMode(),
+            epicResponse2,
+            featureGridState2
+        );
     });
     it('featureGridUpdateFilter with geometry filter', (done) => {
         const startActions = [openFeatureGrid(), createQuery(), updateFilter({
@@ -1996,5 +2132,157 @@ describe('featuregrid Epics', () => {
             expect(actions[1].type).toBe(DEACTIVATE_GEOMETRY_FILTER);
             expect(actions[1].deactivated).toBe(true);
         }, {}, done);
+    });
+    it('handleBoxSelectionDrawEnd', (done) => {
+        const startActions = [updateFilter({
+            type: 'geometry',
+            enabled: true
+        }), boxEnd({
+            boxExtent: [-14653436.944438, 4971311.4456112925, -12792577.490835384, 6611726.509639461],
+            modifiers: {
+                ctrl: false,
+                metaKey: false
+            }
+        })];
+        testEpic(handleBoxSelectionDrawEnd, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_SELECTION_OPTIONS);
+            expect(actions[1].type).toBe(UPDATE_FILTER);
+            expect(actions[1].update).toExist();
+            expect(actions[1].update.value).toExist();
+            expect(actions[1].update.value.attribute).toBe('the_geom');
+            expect(actions[1].update.value.method).toBe('Rectangle');
+            expect(actions[1].update.value.geometry).toExist();
+            expect(actions[1].update.value.geometry.type).toBe('Polygon');
+        }, {
+            featuregrid: {
+                filters: [{
+                    type: 'geometry',
+                    attribute: 'the_geom',
+                    enabled: true
+                }]
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
+            }
+        }, done);
+    });
+    it('activateBoxSelectionTool', (done) => {
+        const startActions = [
+            updateFilter({
+                type: 'geometry',
+                enabled: true
+            })];
+        testEpic(activateBoxSelectionTool, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+            expect(actions[0].status).toBe('start');
+        }, {}, done);
+    });
+    it('deactivateBoxSelectionTool', (done) => {
+        const startActions = [
+            updateFilter({
+                type: 'geometry',
+                enabled: false
+            })];
+        testEpic(deactivateBoxSelectionTool, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+            expect(actions[0].status).toBe('end');
+        }, {}, done);
+        testEpic(deactivateBoxSelectionTool, 1, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+            expect(actions[0].status).toBe('end');
+        }, {}, done);
+    });
+    it('disableMultiSelect epic', (done) => {
+        const geomFilter = {
+            type: "geometry",
+            update: {
+                enabled: false
+            }
+        };
+        const startActions = [updateFilter(geomFilter)];
+        testEpic(disableMultiSelect, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_SELECTION_OPTIONS);
+            expect(actions[0].multiselect).toBe(false);
+        }, {}, done);
+    });
+    describe('selectFeaturesOnMapClickResult epic', () => {
+        it('should deselect feature that is already selected and clicked when ctrl or metaKey held', (done) => {
+            const stateObj = {
+                featuregrid: {
+                    multiselect: true,
+                    select: [{id: "ft_id"}, {id: "ft_id_2"}]
+                }
+            };
+            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
+            testEpic(selectFeaturesOnMapClickResult, 1, startActions, actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toEqual(DESELECT_FEATURES);
+                expect(actions[0].features).toEqual([{id: "ft_id"}]);
+            }, stateObj, done);
+        });
+        it('should update geometry filter with enabled false when only feature selected is clicked, ctrl and metaKey are held', (done) => {
+            const stateObj = {
+                featuregrid: {
+                    multiselect: true,
+                    select: [{id: "ft_id"}]
+                }
+            };
+            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
+            testEpic(selectFeaturesOnMapClickResult, 3, startActions, actions => {
+                expect(actions.length).toBe(3);
+                expect(actions[0].type).toEqual(UPDATE_FILTER);
+                expect(actions[0].update.enabled).toBe(false);
+                expect(actions[1].type).toEqual(DESELECT_FEATURES);
+                expect(actions[1].features).toEqual([{id: "ft_id"}]);
+                expect(actions[2].type).toBe(SET_SELECTION_OPTIONS);
+                expect(actions[2].multiselect).toBe(false);
+            }, stateObj, done);
+        });
+        it('should append to selected features, ctrl and metaKey are held', (done) => {
+            const stateObj = {
+                featuregrid: {
+                    multiselect: true,
+                    select: [{id: "ft_id"}]
+                }
+            };
+            const startActions = [querySearchResponse({features: [{id: "ft_id_2"}]}, "", {}, {}, "geometry")];
+            testEpic(selectFeaturesOnMapClickResult, 1, startActions, actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toEqual(SELECT_FEATURES);
+                expect(actions[0].append).toBe(true);
+            }, stateObj, done);
+        });
+        it('should select the feature, ctrl and metaKey are not held', (done) => {
+            const stateObj = {
+                featuregrid: {
+                    multiselect: false,
+                    select: []
+                }
+            };
+            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
+            testEpic(selectFeaturesOnMapClickResult, 1, startActions, actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toEqual(SELECT_FEATURES);
+                expect(actions[0].append).toBe(false);
+            }, stateObj, done);
+        });
+    });
+    it('deactivateSyncWmsFilterOnFeatureGridClose', (done) => {
+        const startActions = [closeFeatureGrid()];
+        testEpic(deactivateSyncWmsFilterOnFeatureGridClose, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TOGGLE_SYNC_WMS);
+        }, {
+            query: {
+                syncWmsFilter: true
+            }
+        }, done);
     });
 });

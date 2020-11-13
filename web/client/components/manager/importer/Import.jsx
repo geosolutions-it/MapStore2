@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,12 +6,13 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const TaskProgress = require('./TaskProgress');
-const ImporterUtils = require('../../../utils/ImporterUtils');
+const {getbsStyleForState} = require('../../../utils/ImporterUtils');
 const {Grid, Row, Panel, Label, Table, Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 require("./style/importer.css");
 
 class Task extends React.Component {
@@ -63,14 +63,10 @@ class Task extends React.Component {
         }
     }
 
-    getbsStyleForState = (state) => {
-        return ImporterUtils.getbsStyleForState(state);
-    };
-
     renderGeneral = (importObj) => {
         return (<dl className="dl-horizontal">
             <dt><Message msgId="importer.import.status" /></dt>
-            <dd><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label></dd>
+            <dd><Label bsStyle={getbsStyleForState(importObj.state)}>{importObj.state}</Label></dd>
             <dt><Message msgId="importer.import.archive" /></dt>
             <dd>{importObj.archive}</dd>
         </dl>);
@@ -87,7 +83,7 @@ class Task extends React.Component {
         let tooltipDelete = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={task && task.id}>
             <td><a onClick={(e) => {e.preventDefault(); this.props.loadTask(task.id); }} >{task.id}</a></td>
-            <td><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderProgressTask(task)}{this.renderLoadingTask(task)}</td>
+            <td><Label bsStyle={getbsStyleForState(task.state)}>{task.state}</Label>{this.renderProgressTask(task)}{this.renderLoadingTask(task)}</td>
             <td key="actions">
                 <OverlayTrigger overlay={tooltipDelete} placement={this.props.placement}>
                     <Button className="importer-button" bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTask(this.props.import.id, task.id); }}>

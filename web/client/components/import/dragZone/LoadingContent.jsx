@@ -9,7 +9,7 @@
 const React = require('react');
 
 const Loader = require('../../misc/Loader');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 module.exports = () => (<div style={{
     margin: 'auto',

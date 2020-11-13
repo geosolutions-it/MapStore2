@@ -7,7 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {head, last: _last, isNil} = require('lodash');
+const {last: _last, isNil} = require('lodash');
 const L = require('leaflet');
 
 require('leaflet-draw');
@@ -31,7 +31,7 @@ const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils')
 const {boundsToOLExtent} = require('../../../utils/leaflet/DrawSupportUtils');
 const assign = require('object-assign');
 
-const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+const {reproject, reprojectBbox, calculateCircleCoordinates, reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
 
 const {pointToLayer} = require('../../../utils/leaflet/Vector');
 
@@ -53,9 +53,9 @@ const toProjectedCircle = (mRadius, center, projection) => {
 
     // calculate
     const lonRadius = (mRadius / 40075017) * 360 / Math.cos(DEG_TO_RAD * (center[1]));
-    const projCenter = CoordinatesUtils.reproject(center, "EPSG:4326", projection);
+    const projCenter = reproject(center, "EPSG:4326", projection);
     if (lonRadius) {
-        const checkPoint = CoordinatesUtils.reproject([center[0] + lonRadius, center[1]], "EPSG:4326", projection);
+        const checkPoint = reproject([center[0] + lonRadius, center[1]], "EPSG:4326", projection);
         return {
             center: projCenter,
             srs: projection,
@@ -85,7 +85,7 @@ const toLeafletCircle = (radius, center, projection = "EPSG:4326") => {
             radius
         };
     }
-    const leafletCenter = CoordinatesUtils.reproject({x: center.lng, y: center.lat}, projection, "EPSG:4326");
+    const leafletCenter = reproject({x: center.lng, y: center.lat}, projection, "EPSG:4326");
     if (radius === undefined) {
         return {
             center: leafletCenter,
@@ -93,7 +93,7 @@ const toLeafletCircle = (radius, center, projection = "EPSG:4326") => {
             radius
         };
     }
-    const checkPoint = CoordinatesUtils.reproject([center.lng + radius, center.lat], projection, "EPSG:4326");
+    const checkPoint = reproject([center.lng + radius, center.lat], projection, "EPSG:4326");
 
     const lonRadius = Math.sqrt(Math.pow(leafletCenter.x - checkPoint.x, 2) + Math.pow(leafletCenter.y - checkPoint.y, 2));
     const mRadius = lonRadius * Math.cos(DEG_TO_RAD * leafletCenter.y) * 40075017 / 360;
@@ -233,11 +233,11 @@ class DrawSupport extends React.Component {
             // but for first time we need to do this!
             geoJesonFt.projection = "EPSG:4326";
             projection = "EPSG:3857";
-            extent = CoordinatesUtils.reprojectBbox(extent, "EPSG:4326", projection);
+            extent = reprojectBbox(extent, "EPSG:4326", projection);
             const projCircle = toProjectedCircle(layer._mRadius, center, projection);
             center = projCircle.center;
             radius = projCircle.radius;
-            coordinates = CoordinatesUtils.calculateCircleCoordinates(center, radius, 100);
+            coordinates = calculateCircleCoordinates(center, radius, 100);
             geoJesonFt.radius = layer.getRadius ? layer.getRadius() : 0;
             center = [center.x, center.y];
             type = "Polygon";
@@ -299,7 +299,7 @@ class DrawSupport extends React.Component {
         let geoJsonLayerGroup = L.geoJson(features, {style: (f) => {
             return f.style || style;
         }, pointToLayer: (f, latLng) => {
-            let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, projection, "EPSG:4326");
+            let center = reproject({x: latLng.lng, y: latLng.lat}, projection, "EPSG:4326");
             return pointToLayer(L.latLng(center.y, center.x), f, style);
         }});
 
@@ -330,7 +330,7 @@ class DrawSupport extends React.Component {
                 };
             } else {
                 this.drawLayer.options.pointToLayer = (f, latLng) => {
-                    let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, newProps.options && newProps.options.featureProjection || "EPSG:4326", "EPSG:4326");
+                    let center = reproject({x: latLng.lng, y: latLng.lat}, newProps.options && newProps.options.featureProjection || "EPSG:4326", "EPSG:4326");
                     return pointToLayer(L.latLng(center.y, center.x), f, newProps.style);
                 };
             }
@@ -342,7 +342,7 @@ class DrawSupport extends React.Component {
         this.replaceFeatures(newProps);
         const geometry = _last(newProps.features);
         if (this.props.drawMethod === "Circle" && geometry && !isNil(geometry.center) && !isNil(geometry.radius)) {
-            this.props.onEndDrawing({...geometry, coordinates: CoordinatesUtils.calculateCircleCoordinates(geometry.center, geometry.radius, 100)}, this.props.drawOwner);
+            this.props.onEndDrawing({...geometry, coordinates: calculateCircleCoordinates(geometry.center, geometry.radius, 100)}, this.props.drawOwner);
         } else if (geometry) {
             this.props.onEndDrawing(geometry, this.props.drawOwner);
         }
@@ -456,39 +456,46 @@ class DrawSupport extends React.Component {
     };
 
     addDrawOrEditInteractions = (newProps) => {
-        let newFeature = head(newProps.features);
-        let newFeatures;
-        if (newFeature && newFeature.geometry && newFeature.geometry.type && !isSimpleGeomType(newFeature.geometry.type)) {
-            if (newFeature.geometry.type === "GeometryCollection") {
-                newFeatures = newFeature.geometry.geometries.map(g => {
-                    return g.coordinates.map((coords, idx) => {
+        let newFeatures = [];
+
+        newProps.features.map(ft => {
+            let newFs;
+            if (ft && ft.geometry && ft.geometry.type && !isSimpleGeomType(ft.geometry.type)) {
+                if (ft.geometry.type === "GeometryCollection") {
+                    newFs = ft.geometry.geometries.map(g => {
+                        return g.coordinates.map((coords, idx) => {
+                            return {
+                                type: 'Feature',
+                                properties: {...ft.properties},
+                                id: g.type + idx,
+                                geometry: {
+                                    coordinates: coords,
+                                    type: getSimpleGeomType(g.type)
+                                }
+                            };
+                        });
+                    });
+
+                    newFeatures.push({type: "FeatureCollection", features: newFs});
+                } else {
+                    newFs = ft.geometry.coordinates.map((coords, idx) => {
                         return {
                             type: 'Feature',
-                            properties: {...newFeature.properties},
-                            id: g.type + idx,
+                            properties: {...ft.properties},
+                            id: ft.geometry.type + idx,
                             geometry: {
                                 coordinates: coords,
-                                type: getSimpleGeomType(g.type)
+                                type: getSimpleGeomType(ft.geometry.type)
                             }
                         };
                     });
-                });
-            } else {
-                newFeatures = newFeature.geometry.coordinates.map((coords, idx) => {
-                    return {
-                        type: 'Feature',
-                        properties: {...newFeature.properties},
-                        id: newFeature.geometry.type + idx,
-                        geometry: {
-                            coordinates: coords,
-                            type: getSimpleGeomType(newFeature.geometry.type)
-                        }
-                    };
-                });
-                newFeature = {type: "FeatureCollection", features: newFeatures};
+
+                    newFeatures.push({type: "FeatureCollection", features: newFs});
+                }
             }
-        }
-        const props = assign({}, newProps, {features: [newFeature ? newFeature : {}]});
+        });
+
+        const props = assign({}, newProps, {features: newFeatures.length >  0 ? newFeatures : [{}]});
         if (!this.drawLayer) {
             /* Reprojection is needed to implement circle initial visualization after querypanel geometry reload (on reload the 100 points polygon is shown)
              *
@@ -497,7 +504,7 @@ class DrawSupport extends React.Component {
             */
             this.addGeojsonLayer({
                 features: newProps.features && newProps.options.featureProjection && newProps.options.featureProjection !== "EPSG:4326"
-                    ? newProps.features.map(f => CoordinatesUtils.reprojectGeoJson(f, newProps.options.featureProjection, "EPSG:4326") )
+                    ? newProps.features.map(f => reprojectGeoJson(f, newProps.options.featureProjection, "EPSG:4326") )
                     : newProps.features,
                 projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
                 style: newProps.style && newProps.style[newProps.drawMethod] || newProps.style});

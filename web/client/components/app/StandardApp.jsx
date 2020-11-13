@@ -18,7 +18,7 @@ import { localConfigLoaded } from '../../actions/localConfig';
 import { loadPrintCapabilities } from '../../actions/print';
 
 import ConfigUtils from '../../utils/ConfigUtils';
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getUserLocale} from '../../utils/LocaleUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
 
 import url from 'url';
@@ -172,7 +172,7 @@ class StandardApp extends React.Component {
         if (this.props.onInit) {
             this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
         } else {
-            const locale = LocaleUtils.getUserLocale();
+            const locale = getUserLocale();
             this.store.dispatch(loadLocale(null, locale));
             this.afterInit(config);
         }

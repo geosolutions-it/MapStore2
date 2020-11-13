@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 var React = require('react');
 var {ButtonGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 var ImageButton = require('../../buttons/ImageButton');
 
 class HistoryBar extends React.Component {

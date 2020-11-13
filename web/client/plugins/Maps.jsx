@@ -14,8 +14,8 @@ import { compose } from 'recompose';
 import ConfigUtils from '../utils/ConfigUtils';
 import Message from "../components/I18N/Message";
 
-import * as maptypeEpics from '../epics/maptype';
-import * as mapsEpics from '../epics/maps';
+import maptypeEpics from '../epics/maptype';
+import mapsEpics from '../epics/maps';
 import {mapTypeSelector} from '../selectors/maptype';
 import {userRoleSelector} from '../selectors/security';
 import {versionSelector} from '../selectors/version';
@@ -32,7 +32,7 @@ import EmptyMaps from './maps/EmptyMaps';
 import {loadMaps, setShowMapDetails} from '../actions/maps';
 
 import mapsReducer from '../reducers/maps';
-import maptype from '../reducers/maptype';
+import maptypeReducer from '../reducers/maptype';
 
 const mapsCountSelector = createSelector(
     totalCountSelector,
@@ -67,12 +67,6 @@ const PaginationToolbar = connect((state) => {
     };
 })(PaginationToolbarBase);
 
-/**
- * Plugin for Maps resources
- * @name Maps
- * @memberof plugins
- * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
- */
 class Maps extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
@@ -164,6 +158,15 @@ const MapsPlugin = compose(
     )
 )(Maps);
 
+/**
+ * Plugin for maps resources browsing.
+ * Can be rendered inside {@link #plugins.ContentTabs|ContentTabs} plugin
+ * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
+ * @name Maps
+ * @memberof plugins
+ * @class
+ * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
+ */
 export default {
     MapsPlugin: assign(MapsPlugin, {
         NavMenu: {
@@ -188,6 +191,6 @@ export default {
     },
     reducers: {
         maps: mapsReducer,
-        maptype
+        maptype: maptypeReducer
     }
 };

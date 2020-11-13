@@ -6,13 +6,43 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const { LOCATION_CHANGE } = require('connected-react-router');
-const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW, UNREGISTER_EVENT_LISTENER, REGISTER_EVENT_LISTENER} = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint, purgeMapInfoResults } = require('../../actions/mapInfo');
-const { REMOVE_MAP_POPUP } = require('../../actions/mapPopups');
-const { TEXT_SEARCH_CANCEL_ITEM } = require('../../actions/search');
-const {
+import expect from 'expect';
+
+import { LOCATION_CHANGE } from 'connected-react-router';
+
+import {
+    ZOOM_TO_POINT,
+    clickOnMap,
+    CHANGE_MAP_VIEW,
+    UNREGISTER_EVENT_LISTENER,
+    REGISTER_EVENT_LISTENER
+} from '../../actions/map';
+
+import {
+    FEATURE_INFO_CLICK,
+    UPDATE_CENTER_TO_MARKER,
+    PURGE_MAPINFO_RESULTS,
+    NEW_MAPINFO_REQUEST,
+    LOAD_FEATURE_INFO,
+    NO_QUERYABLE_LAYERS,
+    ERROR_FEATURE_INFO,
+    EXCEPTIONS_FEATURE_INFO,
+    SHOW_MAPINFO_MARKER,
+    HIDE_MAPINFO_MARKER,
+    GET_VECTOR_INFO,
+    SET_CURRENT_EDIT_FEATURE_QUERY,
+    loadFeatureInfo,
+    featureInfoClick,
+    closeIdentify,
+    toggleHighlightFeature,
+    editLayerFeatures,
+    updateFeatureInfoClickPoint,
+    purgeMapInfoResults
+} from '../../actions/mapInfo';
+
+import { REMOVE_MAP_POPUP } from '../../actions/mapPopups';
+import { TEXT_SEARCH_CANCEL_ITEM } from '../../actions/search';
+import {
     getFeatureInfoOnFeatureInfoClick,
     zoomToVisibleAreaEpic,
     onMapClick,
@@ -26,13 +56,19 @@ const {
     removePopupOnLocationChangeEpic,
     removePopupOnUnregister,
     setMapTriggerEpic
-} = require('../identify').default;
-const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
-const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
-const { registerHook, GET_COORDINATES_FROM_PIXEL_HOOK, GET_PIXEL_FROM_COORDINATES_HOOK } = require('../../utils/MapUtils');
-const { setControlProperties } = require('../../actions/controls');
-const { BROWSE_DATA } = require('../../actions/layers');
-const { configureMap } = require('../../actions/config');
+} from '../identify';
+import { CLOSE_ANNOTATIONS } from '../../actions/annotations';
+import { testEpic, TEST_TIMEOUT, addTimeoutEpic } from './epicTestUtils';
+
+import {
+    registerHook,
+    GET_COORDINATES_FROM_PIXEL_HOOK,
+    GET_PIXEL_FROM_COORDINATES_HOOK
+} from '../../utils/MapUtils';
+
+import { setControlProperties } from '../../actions/controls';
+import { BROWSE_DATA } from '../../actions/layers';
+import { configureMap } from '../../actions/config';
 
 const TEST_MAP_STATE = {
     present: {
@@ -75,6 +111,38 @@ describe('identify Epics', () => {
             done();
         }, state);
     });
+
+    it('getFeatureInfoOnFeatureInfoClick, no queryable layers if feature info format is HIDDEN', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    name: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    featureInfo: {
+                        format: "HIDDEN"
+                    }
+                }],
+                selected: ['TEST']
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 2, sentActions, ([a0, a1]) => {
+            expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+            expect(a1.type).toBe(NO_QUERYABLE_LAYERS);
+            done();
+        }, state);
+    });
+
     it('getFeatureInfoOnFeatureInfoClick WMS', (done) => {
         // remove previous hook
         registerHook('RESOLUTION_HOOK', undefined);

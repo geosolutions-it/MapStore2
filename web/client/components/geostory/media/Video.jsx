@@ -97,76 +97,76 @@ const Video = withResizeDetector(({
             }}>
             {src &&
             <>
-            {started && <ReactPlayer
-                url={src}
-                width={size[0]}
-                height={size[1]}
-                playing={playing}
-                loop={forceLoop}
-                volume={volume}
-                muted={muted}
-                style={isCover
-                    ? {
-                        left: '50%',
-                        top: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        position: 'absolute'
-                    } : {}}
-                controls={showControls}
-                pip={false}
-                fileConfig={{
-                    attributes: {
-                        controlsList: 'nodownload',
-                        disablePictureInPicture: true
-                    }
-                }}
-                youtubeConfig={{
-                    playerVars: {
-                        controls: showControls ? 2 : 0,
-                        modestbranding: 1,
-                        rel: 0
-                    }
-                }}
-                onReady={() => setLoading(false)}
-                onError={e => setError(e)}
-                onPause={() => onPlay(false)}
-                onPlay={() => onPlay(true)}
-            />}
-            {(!started || started && (loading || error)) && <div
-                className="ms-video-cover"
-                style={{
-                    position: 'absolute',
-                    width: size[0],
-                    height: size[1],
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'rgba(0, 0, 0, 1.0)',
-                    ...(!(loading || error) && { cursor: 'pointer' }),
-                    ...(!playing && thumbnail && {
-                        backgroundImage: `url(${thumbnail})`,
-                        backgroundSize: isCover ? 'cover' : '640px auto',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                    })
-                }}
-                onClick={() => {
-                    setStarted(true);
-                    setLoading(true);
-                    onPlay(true);
-                }}>
-                {loading && <Loader size={70}/>}
-                {error && 'Error'}
-                {!(loading || error) && !playing &&
-                    <Glyphicon
-                        glyph="play"
-                        style={{
-                            fontSize: size[1] / 4 > 100 ? 100 : size[1] / 4,
-                            mixBlendMode: 'difference',
-                            color: '#ffffff'
-                        }}
-                    />}
-            </div>}
+                {started && <ReactPlayer
+                    url={src}
+                    width={size[0]}
+                    height={size[1]}
+                    playing={playing}
+                    loop={forceLoop}
+                    volume={volume}
+                    muted={muted}
+                    style={isCover
+                        ? {
+                            left: '50%',
+                            top: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            position: 'absolute'
+                        } : {}}
+                    controls={showControls}
+                    pip={false}
+                    fileConfig={{
+                        attributes: {
+                            controlsList: 'nodownload',
+                            disablePictureInPicture: true
+                        }
+                    }}
+                    youtubeConfig={{
+                        playerVars: {
+                            controls: showControls ? 2 : 0,
+                            modestbranding: 1,
+                            rel: 0
+                        }
+                    }}
+                    onReady={() => setLoading(false)}
+                    onError={e => setError(e)}
+                    onPause={() => onPlay(false)}
+                    onPlay={() => onPlay(true)}
+                />}
+                {(!started || started && (loading || error)) && <div
+                    className="ms-video-cover"
+                    style={{
+                        position: 'absolute',
+                        width: size[0],
+                        height: size[1],
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 1.0)',
+                        ...(!(loading || error) && { cursor: 'pointer' }),
+                        ...(!playing && thumbnail && {
+                            backgroundImage: `url(${thumbnail})`,
+                            backgroundSize: isCover ? 'cover' : '640px auto',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                        })
+                    }}
+                    onClick={() => {
+                        setStarted(true);
+                        setLoading(true);
+                        onPlay(true);
+                    }}>
+                    {loading && <Loader size={70}/>}
+                    {error && 'Error'}
+                    {!(loading || error) && !playing &&
+                        <Glyphicon
+                            glyph="play"
+                            style={{
+                                fontSize: size[1] / 4 > 100 ? 100 : size[1] / 4,
+                                mixBlendMode: 'difference',
+                                color: '#ffffff'
+                            }}
+                        />}
+                </div>}
             </>}
             {!showControls && <div
                 className="ms-video-mask-cover"

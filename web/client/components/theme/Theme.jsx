@@ -8,7 +8,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const withSideEffect = require('react-side-effect');
-const ConfigUtils = require('../../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
 const {validateVersion} = require('../../selectors/version');
 const {trim} = require('lodash');
 

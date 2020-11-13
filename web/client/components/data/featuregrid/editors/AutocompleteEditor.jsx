@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const AttributeEditor = require('./AttributeEditor');
 const {AutocompleteCombobox} = require('../../../misc/AutocompleteCombobox');
-const {getParsedUrl} = require('../../../../utils/ConfigUtils');
+const {getParsedUrl} = require('../../../../utils/ConfigUtils').default;
 const {createPagedUniqueAutompleteStream} = require('../../../../observables/autocomplete');
 
 /**

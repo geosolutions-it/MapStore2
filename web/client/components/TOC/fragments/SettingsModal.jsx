@@ -20,10 +20,10 @@ const Display = require('./settings/Display');
 const WMSStyle = require('./settings/WMSStyle');
 const Elevation = require('./settings/Elevation');
 const FeatureInfoFormat = require('./settings/FeatureInfoFormat');
-const Portal = require('../../misc/Portal');
+const Portal = require('../../misc/Portal').default;
 const assign = require('object-assign');
-const Message = require('../../I18N/Message');
-const LayersUtils = require('../../../utils/LayersUtils');
+const Message = require('../../I18N/Message').default;
+const {getDimension} = require('../../../utils/LayersUtils');
 
 class SettingsModal extends React.Component {
     static propTypes = {
@@ -77,7 +77,7 @@ class SettingsModal extends React.Component {
         realtimeUpdate: true,
         deleteText: <Message msgId="layerProperties.delete" />,
         confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />,
-        getDimension: LayersUtils.getDimension,
+        getDimension: getDimension,
         showFeatureInfoTab: true
     };
 

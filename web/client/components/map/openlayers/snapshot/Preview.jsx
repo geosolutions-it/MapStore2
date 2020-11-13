@@ -8,7 +8,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ConfigUtils from '../../../../utils/ConfigUtils';
-import ProxyUtils from '../../../../utils/ProxyUtils';
+import {getProxyUrl} from '../../../../utils/ProxyUtils';
 import isEqual from 'lodash/isEqual';
 
 /**
@@ -52,7 +52,7 @@ export default class GrabLMap extends React.Component {
     componentDidMount() {
 
         this.proxy = null;
-        let proxyUrl = ProxyUtils.getProxyUrl();
+        let proxyUrl = getProxyUrl();
         if (proxyUrl) {
             if ( typeof proxyUrl === 'object') {
                 proxyUrl = proxyUrl.url;

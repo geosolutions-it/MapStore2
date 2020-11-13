@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
 * Copyright 2016, GeoSolutions Sas.
 * All rights reserved.
@@ -8,13 +7,14 @@ const PropTypes = require('prop-types');
 */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const _ = require('lodash');
 const Select = require('react-select').default;
 const Spinner = require('react-spinkit');
 const {Table, Button, Glyphicon} = require('react-bootstrap');
-const Message = require('../I18N/Message');
-const LocaleUtils = require('../../utils/LocaleUtils');
+const Message = require('../I18N/Message').default;
+const {getMessageById} = require('../../utils/LocaleUtils');
 
 /**
 * Map permission editor
@@ -139,9 +139,9 @@ class PermissionEditor extends React.Component {
     getPermissonLabel = (perm) => {
         switch (perm) {
         case "canRead":
-            return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canView");
+            return getMessageById(this.context.messages, "map.permissions.canView");
         case "canWrite":
-            return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canWrite");
+            return getMessageById(this.context.messages, "map.permissions.canWrite");
         default:
             return perm;
         }
@@ -220,11 +220,11 @@ class PermissionEditor extends React.Component {
                         <tr key="addRowKey">
                             <td>
                                 <Select
-                                    noResultsText={LocaleUtils.getMessageById(this.context.messages, "map.permissions.noResult")}
+                                    noResultsText={getMessageById(this.context.messages, "map.permissions.noResult")}
                                     ref="newGroup"
                                     isLoading={!this.getSelectableGroups()}
                                     clearable={false}
-                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "map.permissions.selectGroup")}
+                                    placeholder={getMessageById(this.context.messages, "map.permissions.selectGroup")}
                                     options={this.getSelectableGroups()}
                                     value={this.props.newGroup && this.props.newGroup.id}
                                     onChange={this.onNewGroupChoose}/>

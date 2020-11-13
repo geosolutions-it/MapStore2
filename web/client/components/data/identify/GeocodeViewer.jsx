@@ -7,9 +7,9 @@
  */
 
 const React = require('react');
-const ResizableModal = require('../../misc/ResizableModal');
-const Portal = require('../../misc/Portal');
-const Message = require('../../I18N/Message');
+const ResizableModal = require('../../misc/ResizableModal').default;
+const Portal = require('../../misc/Portal').default;
+const Message = require('../../I18N/Message').default;
 const {Glyphicon} = require('react-bootstrap');
 
 /**

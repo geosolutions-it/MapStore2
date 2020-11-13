@@ -5,23 +5,46 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
+import expect from 'expect';
 
-const feature = require("../../test-resources/Annotation_geomColl.json");
+import feature from '../../test-resources/Annotation_geomColl.json';
 
-const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
-    DEFAULT_ANNOTATIONS_STYLES, createFont, circlesToMultiPolygon, textToPoint,
-    flattenGeometryCollection, normalizeAnnotation, removeDuplicate,
-    formatCoordinates, getComponents, addIds, validateCoords, validateCoordsArray,
-    validateCoord, getBaseCoord, validateText, validateCircle, validateCoordinates,
-    coordToArray, validateFeature, fromTextToPoint, fromCircleToPolygon,
-    fromAnnotationToGeoJson, annotationsToPrint,
+import {
+    getAvailableStyler,
+    getRelativeStyler,
+    convertGeoJSONToInternalModel,
+    DEFAULT_ANNOTATIONS_STYLES,
+    createFont,
+    circlesToMultiPolygon,
+    textToPoint,
+    flattenGeometryCollection,
+    normalizeAnnotation,
+    removeDuplicate,
+    formatCoordinates,
+    getComponents,
+    addIds,
+    validateCoords,
+    validateCoordsArray,
+    validateCoord,
+    getBaseCoord,
+    validateText,
+    validateCircle,
+    validateCoordinates,
+    coordToArray,
+    validateFeature,
+    fromTextToPoint,
+    fromCircleToPolygon,
+    fromAnnotationToGeoJson,
+    annotationsToPrint,
     getStartEndPointsForLinestring,
     createGeometryFromGeomFunction,
     updateAllStyles,
-    fromLineStringToGeodesicLineString, isCompletePolygon,
-    getDashArrayFromStyle, getGeometryType, getGeometryGlyphInfo
-} = require('../AnnotationsUtils');
+    fromLineStringToGeodesicLineString,
+    isCompletePolygon,
+    getDashArrayFromStyle,
+    getGeometryType,
+    getGeometryGlyphInfo
+} from '../AnnotationsUtils';
 
 const featureCollection = {
     features: [{

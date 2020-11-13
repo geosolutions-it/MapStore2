@@ -21,7 +21,7 @@ import ResizableModal from './ResizableModal';
 import TransferColumnCardList from './transfer/TransferColumnCardList';
 import Loader from './Loader';
 import Message from '../I18N/Message';
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getMessageById} from '../../utils/LocaleUtils';
 
 const searchContexts = ({searchText, opts}) => getResources({
     query: searchText || '*',
@@ -87,7 +87,7 @@ const NewMapDialog = ({
                         setFilterText(text);
                         loadFirst({searchText: text});
                     }}
-                    filterPlaceholder={LocaleUtils.getMessageById(messages, 'newMapDialog.filterPlaceholder')}/>
+                    filterPlaceholder={getMessageById(messages, 'newMapDialog.filterPlaceholder')}/>
             </div>
             <div className="new-map-dialog-list-container">
                 {loading && items.length === 0 ?

@@ -7,7 +7,7 @@
  */
 import {Observable} from 'rxjs';
 import uuid from 'uuid';
-import {findKey, get} from 'lodash';
+import findKey from 'lodash/findKey';
 
 import {
     loadMedia,
@@ -24,49 +24,70 @@ import {
     ADDING_MEDIA,
     EDITING_MEDIA,
     IMPORT_IN_LOCAL,
-    REMOVE_MEDIA
+    REMOVE_MEDIA,
+    SET_MEDIA_TYPE,
+    SET_MEDIA_SERVICE,
+    SELECT_ITEM,
+    loadingSelectedMedia,
+    loadingMediaList
 } from '../actions/mediaEditor';
 
 import { HIDE, SAVE, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
 
-import { editingSelector, sourceIdSelector, currentMediaTypeSelector, currentResourcesSelector, selectedItemSelector, sourcesSelector} from '../selectors/mediaEditor';
+import { editingSelector, selectedIdSelector, sourceIdSelector, currentMediaTypeSelector, currentResourcesSelector, selectedItemSelector, sourcesSelector, selectedSourceSelector} from '../selectors/mediaEditor';
 import {MediaTypes } from '../utils/GeoStoryUtils';
 import {SourceTypes} from '../utils/MediaEditorUtils';
 
 import mediaAPI from '../api/media';
 
 export const loadMediaEditorDataEpic = (action$, store) =>
-    // TODO: NOW IS TRIGGERED ON SHOW because we can not select the source and the media type yet.
-    // final version should get mediaType and sourceId from settings, for show (ok for LOAD_MEDIA)
-    // now we have only one type/source, so I trigger directly the load of it
-    action$.ofType(SHOW, LOAD_MEDIA)
-        .switchMap(() => {
-            return mediaAPI("geostory").load(store) // store is required for local data (e.g. local geostory data)
-                .switchMap(results => {
-                    const sId = sourceIdSelector(store.getState());
-                    // We need to create the actions to remove the resource for a media type presents in the state
-                    // when the api responds nothing for that type.
-                    // So first of all we create empty result foreach mediaType preset in mediaEditor state.
-                    // After we override this with the data from the api response.
-                    const oldResources = Object.keys(get(store.getState(), "mediaEditor.data", {}));
-                    const updateActions = oldResources.reduce((acc, type) =>
-                        ({...acc, [type]: loadMediaSuccess({
-                            mediaType: type,
-                            sourceId: sId,
-                            params: {type},
-                            resultData: {resources: [], totalCount: 0}})})
-                    , {});
-                    return (Object.keys(updateActions).length > 0 || results) && Observable.from(
-                        Object.values((results || []).reduce((acc, r) =>
-                            ({...acc, [r.mediaType]: loadMediaSuccess({
-                                mediaType: r.mediaType,
-                                sourceId: r.sourceId,
-                                params: {mediaType: r.mediaType},
-                                resultData: {resources: r.resources, totalCount: r.totalCount}
-                            })}), {...updateActions})
-                        )) || Observable.empty();
-                }
-                );
+    action$.ofType(SHOW, LOAD_MEDIA, SET_MEDIA_TYPE, SET_MEDIA_SERVICE)
+        .switchMap((action) => {
+            const state = store.getState();
+            const sourceId = action.sourceId || sourceIdSelector(state);
+            const mediaType = action.mediaType || currentMediaTypeSelector(state);
+            const resources = currentResourcesSelector(store.getState()) || [];
+            const selectedId = selectedIdSelector(state);
+            const pageSize = 10;
+            const page = action.params?.page ? action.params.page : 1;
+            const params = {
+                ...action.params,
+                page,
+                pageSize
+            };
+            const currentResources = page === 1
+                ? []
+                : resources;
+            const source = {
+                ...selectedSourceSelector(state),
+                store
+            };
+            return mediaAPI(source).load({
+                mediaType,
+                sourceId,
+                params,
+                selectedId
+            })
+                .switchMap(resultData => {
+                    return resultData
+                        ? Observable.of(loadMediaSuccess({
+                            mediaType,
+                            sourceId,
+                            params: {
+                                ...params,
+                                mediaType
+                            },
+                            resultData: {
+                                ...resultData,
+                                resources: [
+                                    ...currentResources,
+                                    ...resultData.resources
+                                ]
+                            }
+                        }))
+                        :  Observable.empty();
+                })
+                .startWith(loadingMediaList());
         });
 
 /**
@@ -83,10 +104,13 @@ export const editorSaveUpdateMediaEpic = (action$, store) =>
     action$.ofType(SAVE_MEDIA)
         .switchMap(({mediaType = "image", source, data}) => {
             const editing = editingSelector(store.getState());
-            const sourceId = sourceIdSelector(store.getState());
+            const sourceOptions = {
+                ...selectedSourceSelector(store.getState()),
+                store
+            };
             const handler = editing ?
-                mediaAPI(sourceId).edit(mediaType, source, data, store) :
-                mediaAPI(sourceId).save(mediaType, source, data, store);
+                mediaAPI(sourceOptions).edit({ mediaType, source, data }) :
+                mediaAPI(sourceOptions).save({ mediaType, source, data });
             const feedbackAction = editing ? setEditingMedia(false) : setAddingMedia(false);
             return handler // store is required both for some custom auth, or to dispatch actions in case of local
                 // TODO: saving state (for loading spinners), errors
@@ -173,14 +197,18 @@ export const importInLocalSource = (action$, store) =>
         .switchMap(({resource, sourceType}) => {
             const sources = sourcesSelector(store.getState());
             const sourceId = findKey(sources, ({type}) => sourceType === type);
-            const handler = mediaAPI(sourceId).save(resource.type, sources[sourceId], resource, store);
+            const source = {
+                ...sources[sourceId],
+                store
+            };
+            const handler = mediaAPI(source).save({ mediaType: resource.type, source: sources[sourceId], data: resource });
             return handler // store is required both for some custom auth, or to dispatch actions in case of local
                 // TODO: saving state (for loading spinners), errors
                 .switchMap(({id}) => {
                     return Observable.of(
                         setMediaService(sourceId),
                         saveMediaSuccess({mediaType: resource.type, source: sources[sourceId], data: resource, id}),
-                        loadMedia(undefined, resource.type, sources[sourceId]),
+                        loadMedia(undefined, resource.type, sourceId),
                         selectItem(id)
                     );
                 });
@@ -199,12 +227,16 @@ export const editRemoteMap = (action$, store) =>
             return action$.ofType(SAVE).switchMap(({map}) => {
                 const sources = sourcesSelector(store.getState());
                 const sourceId = findKey(sources, ({type}) => SourceTypes.GEOSTORY === type);
-                const handler = mediaAPI(sourceId).save(resource.type, sources[sourceId], { ...resource, ...map}, store);
+                const source = {
+                    ...sources[sourceId],
+                    store
+                };
+                const handler = mediaAPI(source).save({ mediaType: resource.type, source: sources[sourceId], data: { ...resource, ...map} });
                 return handler.switchMap(({id}) =>
                     Observable.of(
                         setMediaService(sourceId),
                         saveMediaSuccess({mediaType: resource.type, source: sources[sourceId], data: resource, id}),
-                        loadMedia(undefined, resource.type, sources[sourceId]),
+                        loadMedia(undefined, resource.type, sourceId),
                         selectItem(id),
                         hideMapEditor()
                     ));
@@ -222,11 +254,49 @@ export const editRemoteMap = (action$, store) =>
 export const removeMediaEpic = (action$, store) =>
     action$.ofType(REMOVE_MEDIA)
         .switchMap(({mediaType}) => {
-            const sourceId = sourceIdSelector(store.getState());
-            const handler = mediaAPI(sourceId).remove(mediaType, store);
+            const source = {
+                ...selectedSourceSelector(store.getState()),
+                store
+            };
+            const handler = mediaAPI(source).remove({ mediaType });
             return handler
                 .switchMap(() => {
                     return Observable.of(
                         loadMedia(undefined, currentMediaTypeSelector(store.getState()), SourceTypes.GEOSTORY));
                 });
+        });
+/**
+ * Handles selection of a media item and update the data if needed
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const updateSelectedItem = (action$, store) =>
+    action$.ofType(SELECT_ITEM)
+        .switchMap(() => {
+            const state = store.getState();
+            const selectedItem = selectedItemSelector(state);
+            const source = {
+                ...selectedSourceSelector(store.getState()),
+                store
+            };
+            return mediaAPI(source).getData({ selectedItem })
+                .switchMap((response) => {
+                    return response === null
+                        ? Observable.of(
+                            loadingSelectedMedia(false)
+                        )
+                        : Observable.of(
+                            updateItem({ ...selectedItem, data: { ...response }}, 'replace'),
+                            loadingSelectedMedia(false)
+                        );
+                })
+                .catch(() => {
+                    return Observable.of(
+                        loadingSelectedMedia(false)
+                    );
+                })
+                .startWith(
+                    loadingSelectedMedia(true)
+                );
         });

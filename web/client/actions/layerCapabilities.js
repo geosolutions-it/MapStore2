@@ -11,7 +11,7 @@ import { updateNode } from './layers';
 import WMS from '../api/WMS';
 import * as WFS from '../api/WFS';
 import WCS from '../api/WCS';
-import LayersUtils from '../utils/LayersUtils';
+import {getCapabilitiesUrl, formatCapabitiliesOptions} from '../utils/LayersUtils';
 import { get, head } from 'lodash';
 
 export function getDescribeLayer(url, layer, options) {
@@ -54,7 +54,7 @@ export function getDescribeLayer(url, layer, options) {
 
 export function getLayerCapabilities(layer, options) {
     // geoserver's specific. TODO parse layer.capabilitiesURL.
-    const reqUrl = LayersUtils.getCapabilitiesUrl(layer);
+    const reqUrl = getCapabilitiesUrl(layer);
     return (dispatch) => {
         // TODO, look ad current cached capabilities;
         dispatch(updateNode(layer.id, "id", {
@@ -64,7 +64,7 @@ export function getLayerCapabilities(layer, options) {
             const layerCapability = WMS.parseLayerCapabilities(capabilities, layer);
 
             if (layerCapability) {
-                dispatch(updateNode(layer.id, "id", LayersUtils.formatCapabitiliesOptions(layerCapability)));
+                dispatch(updateNode(layer.id, "id", formatCapabitiliesOptions(layerCapability)));
             } else {
                 dispatch(updateNode(layer.id, "id", { capabilitiesLoading: null, capabilities: { error: "error getting capabilities", details: "no layer info" }, description: null }));
             }

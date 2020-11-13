@@ -6,12 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const { getConnectionList, getWidgetsGroups, shortenLabel } = require('../WidgetsUtils');
-
-const {widgets} = require('../../test-resources/widgets/widgets1.json');
-const { widgets: complexGraphWidgets } = require('../../test-resources/widgets/complex_graph.json');
+import { getConnectionList, getWidgetsGroups, shortenLabel } from '../WidgetsUtils';
+import { widgets } from '../../test-resources/widgets/widgets1.json';
+import { widgets as complexGraphWidgets } from '../../test-resources/widgets/complex_graph.json';
 describe('Test WidgetsUtils', () => {
     it('test getConnectionList', () => {
         const pairs = getConnectionList(widgets);

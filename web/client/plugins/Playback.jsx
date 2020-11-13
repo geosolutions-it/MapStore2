@@ -39,7 +39,7 @@ const Playback = compose(
 )(require('./playback/Playback'));
 
 /**
-  * Playback Plugin. Shows the playback controls for @see {@link api/plugins#plugins.Timeline}
+  * Playback Plugin. Shows the playback controls for {@link #plugins.Timeline|Timeline}
   * @class  Playback
   * @memberof plugins
   * @static
@@ -64,7 +64,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: require('../epics/playback'),
+    epics: require('../epics/playback').default,
     reducers: {
         playback: require('../reducers/playback').default,
         dimension: require('../reducers/dimension').default

@@ -115,7 +115,7 @@ const paramActions = {
  * @memberof epics.share
  * @return {external:Observable}
  */
-const readQueryParamsOnMapEpic = (action$, store) =>
+export const readQueryParamsOnMapEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .switchMap(() =>
             action$.ofType(CHANGE_MAP_VIEW)
@@ -144,7 +144,7 @@ const readQueryParamsOnMapEpic = (action$, store) =>
  * @memberof epics.share
  * @return {external:Observable}
  */
-const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
+export const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(CLICK_ON_MAP).
         switchMap(({point, layer}) =>{
             const allowClick = get(getState(), 'controls.share.settings.centerAndZoomEnabled');
@@ -160,7 +160,7 @@ const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
  * @memberof epics.share
  * @return {external:Observable}
  */
-const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
+export const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(TOGGLE_CONTROL)
         .filter(({control}) => control === "share")
         .switchMap(() => {
@@ -176,7 +176,7 @@ const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
                 setControlProperty("share", "settings", shareParams));
         });
 
-export {
+export default {
     readQueryParamsOnMapEpic,
     onMapClickForShareEpic,
     disableGFIForShareEpic

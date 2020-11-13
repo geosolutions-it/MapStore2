@@ -16,7 +16,7 @@ const legendWidget = require('../../enhancers/legendWidget');
 const WidgetOptions = require('./common/WidgetOptions');
 const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 const StepHeader = require('../../../misc/wizard/StepHeader');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const emptyLegendState = require('../../enhancers/emptyLegendState');
 
 const enhancePreview = compose(

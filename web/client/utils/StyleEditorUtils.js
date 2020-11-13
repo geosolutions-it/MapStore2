@@ -20,7 +20,7 @@ import uuidv1 from 'uuid/v1';
 
 import url from 'url';
 
-const { baseTemplates, customTemplates } = require('./styleeditor/stylesTemplates');
+import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
 
 export const STYLE_ID_SEPARATOR = '___';
 export const STYLE_OWNER_NAME = 'styleeditor';

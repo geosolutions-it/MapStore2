@@ -13,10 +13,10 @@ const DockablePanel = require('../misc/panels/DockablePanel');
 const Toolbar = require('../misc/toolbar/Toolbar');
 const tooltip = require('../misc/enhancers/tooltip');
 const NavItemT = tooltip(NavItem);
-const ResizableModal = require('../misc/ResizableModal');
-const Portal = require('../misc/Portal');
+const ResizableModal = require('../misc/ResizableModal').default;
+const Portal = require('../misc/Portal').default;
 const {head, isObject, isString} = require('lodash');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 /**
  * Component for rendering TOC Settings as tabs inside a Dockable contanier

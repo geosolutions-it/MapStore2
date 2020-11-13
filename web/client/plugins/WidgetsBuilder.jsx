@@ -8,7 +8,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as epics from '../epics/widgetsbuilder';
+import epics from '../epics/widgetsbuilder';
 import { createPlugin } from '../utils/PluginsUtils';
 
 import DockPanel from "../components/misc/panels/DockPanel";
@@ -50,8 +50,7 @@ class SideBarComponent extends React.Component {
          dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object,
-         layout: PropTypes.object,
-         shortenChartLabelThreshold: PropTypes.number
+         layout: PropTypes.object
      };
      static defaultProps = {
          id: "widgets-builder-plugin",
@@ -62,7 +61,6 @@ class SideBarComponent extends React.Component {
          fluid: false,
          dimMode: "none",
          position: "left",
-         shortenChartLabelThreshold: 1000,
          onMount: () => {},
          onUnmount: () => {},
          onClose: () => {},
@@ -89,7 +87,7 @@ class SideBarComponent extends React.Component {
                      enabled={this.props.enabled}
                      onClose={this.props.onClose}
                      typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend'}
-                     shortenChartLabelThreshold={this.props.shortenChartLabelThreshold}/>
+                 />
              </DockPanel>);
 
      }

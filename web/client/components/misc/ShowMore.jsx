@@ -9,7 +9,7 @@
 const React = require('react');
 const {Row, Col, Button} = require('react-bootstrap');
 const Loader = require('./Loader');
-const Message = require("../I18N/Message");
+const Message = require("../I18N/Message").default;
 
 /**
  * A component to display a show more button with counting of results

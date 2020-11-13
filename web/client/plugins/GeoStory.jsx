@@ -118,6 +118,7 @@ GeoStory.defaultProps = {
 /**
  * Plugin for GeoStory visualization
  * @name GeoStory
+ * @class
  * @memberof plugins
  * @prop {numeric} cfg.interceptionTime default 100, the debounce before calculations of currentPage active section
  * @prop {object[]} cfg.fontFamilies: A list of objects with font family names and sources where to load them from e.g. [{"family": "Comic sans", "src": "link to source"}]
@@ -125,6 +126,11 @@ GeoStory.defaultProps = {
  * @prop {string} cfg.mediaEditorSettings.sourceId selected service identifier used when the modal shows up
  * @prop {object} cfg.mediaEditorSettings.mediaTypes configuration of source options for each media type: image, video and map
  * @prop {object} cfg.mediaEditorSettings.sources definition of sources
+ * @prop {object} cfg.mediaEditorSettings.sources[sourceId].name name id of service for translations
+ * @prop {object} cfg.mediaEditorSettings.sources[sourceId].type type of service
+ * @prop {object} cfg.mediaEditorSettings.sources[sourceId].addMediaEnabled[mediaType] enable add button (supported service types: geostory)
+ * @prop {object} cfg.mediaEditorSettings.sources[sourceId].editMediaEnabled[mediaType] enable edit button (supported service types: geostory and geostore)
+ * @prop {object} cfg.mediaEditorSettings.sources[sourceId].removeMediaEnabled[mediaType] enable remove button (supported service types: geostory)
  * @example
  * // example of mediaEditorSettings configuration with only the geostory service
  * {
@@ -148,8 +154,23 @@ GeoStory.defaultProps = {
  *       },
  *       "sources": {
  *         "geostory": {
- *           "name": "Current story",
+ *           "name": "geostory.currentStory",
  *           "type": "geostory"
+ *           "addMediaEnabled": {
+ *             "image": true,
+ *             "video": true,
+ *             "map": true
+ *           },
+ *           "editMediaEnabled": {
+ *             "image": true,
+ *             "video": true,
+ *             "map": true
+ *           },
+ *           "removeMediaEnabled": {
+ *             "image": true,
+ *             "video": true,
+ *             "map": true
+ *           }
  *         }
  *       }
  *     }

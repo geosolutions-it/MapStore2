@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const MapUtils = require('../MapUtils');
-const CoordinatesUtils = require('../CoordinatesUtils');
+const {getCurrentResolution} = require('../MapUtils');
+const {reproject, getProjectedBBox, normalizeSRS} = require('../CoordinatesUtils');
 const {getLayerUrl} = require('../LayersUtils');
 const {isObject} = require('lodash');
 const { optionsToVendorParams } = require('../VendorParamsUtils');
 const { generateEnvString } = require('../LayerLocalizationUtils');
 
-const SecurityUtils = require('../SecurityUtils');
+const {addAuthenticationToSLD} = require('../SecurityUtils');
 const assign = require('object-assign');
 
 module.exports = {
@@ -34,13 +34,13 @@ module.exports = {
         const widthBBox = sizeBBox && sizeBBox.width || 101;
         const size = [heightBBox, widthBBox];
         const rotation = 0;
-        const resolution = MapUtils.getCurrentResolution(Math.ceil(map.zoom), 0, 21, 96);
+        const resolution = getCurrentResolution(Math.ceil(map.zoom), 0, 21, 96);
         let wrongLng = point.latlng.lng;
         // longitude restricted to the [-180°,+180°] range
         let lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
         const center = {x: lngCorrected, y: point.latlng.lat};
-        let centerProjected = CoordinatesUtils.reproject(center, 'EPSG:4326', map.projection);
-        let bounds = CoordinatesUtils.getProjectedBBox(centerProjected, resolution, rotation, size, null);
+        let centerProjected = reproject(center, 'EPSG:4326', map.projection);
+        let bounds = getProjectedBBox(centerProjected, resolution, rotation, size, null);
         let queryLayers = layer.name;
         if (layer.queryLayers) {
             queryLayers = layer.queryLayers.join(",");
@@ -53,7 +53,7 @@ module.exports = {
             params: assign({}, layer.baseParams, layer.params, defaultParams)
         });
         return {
-            request: SecurityUtils.addAuthenticationToSLD({
+            request: addAuthenticationToSLD({
                 service: 'WMS',
                 version: '1.1.1',
                 request: 'GetFeatureInfo',
@@ -66,7 +66,7 @@ module.exports = {
                 y: widthBBox % 2 === 1 ? Math.ceil(widthBBox / 2) : widthBBox / 2,
                 height: heightBBox,
                 width: widthBBox,
-                srs: CoordinatesUtils.normalizeSRS(map.projection) || 'EPSG:4326',
+                srs: normalizeSRS(map.projection) || 'EPSG:4326',
                 bbox: bounds.minx + "," +
                       bounds.miny + "," +
                       bounds.maxx + "," +

@@ -12,7 +12,7 @@ import urlParser from 'url';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import MapUtils from '../../../../utils/MapUtils';
 import Layers from '../../../../utils/openlayers/Layers';
-import SecurityUtils from '../../../../utils/SecurityUtils';
+import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 
 import {get, getTransform} from 'ol/proj';
 import {applyTransform} from 'ol/extent';
@@ -85,7 +85,7 @@ const createLayer = (options) => {
         .replace(/\{col\}/, '{x}');
 
     let queryParameters = { };
-    SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken);
+    addAuthenticationParameter(url, queryParameters, options.securityToken);
 
     const layerUrl = decodeURI(url);
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });

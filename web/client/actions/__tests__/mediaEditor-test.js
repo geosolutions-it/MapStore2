@@ -23,7 +23,9 @@ import {
     setAddingMedia, ADDING_MEDIA,
     setEditingMedia, EDITING_MEDIA,
     show, SHOW,
-    removeMedia, REMOVE_MEDIA
+    removeMedia, REMOVE_MEDIA,
+    loadingSelectedMedia, LOADING_SELECTED_MEDIA,
+    loadingMediaList, LOADING_MEDIA_LIST
 } from '../mediaEditor';
 
 describe('mediaEditor actions', () => {
@@ -142,5 +144,15 @@ describe('mediaEditor actions', () => {
         expect(action.type).toEqual(REMOVE_MEDIA);
         expect(action.mediaType).toEqual(type);
         expect(action.owner).toEqual(owner);
+    });
+    it('loadingSelectedMedia', () => {
+        const loading = true;
+        const action = loadingSelectedMedia(loading);
+        expect(action.type).toBe(LOADING_SELECTED_MEDIA);
+        expect(action.loading).toBe(loading);
+    });
+    it('loadingMediaList', () => {
+        const action = loadingMediaList();
+        expect(action.type).toBe(LOADING_MEDIA_LIST);
     });
 });

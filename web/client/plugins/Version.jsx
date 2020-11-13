@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 const {versionSelector} = require('../selectors/version');
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 /**
   * Version Plugin. Shows current MapStore2 version in settings panel

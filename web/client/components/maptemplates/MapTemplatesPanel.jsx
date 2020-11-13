@@ -17,7 +17,7 @@ import BaseFilter from '../misc/Filter';
 import ConfirmDialog from '../misc/ConfirmDialog';
 import emptyState from '../misc/enhancers/emptyState';
 import localizedProps from '../misc/enhancers/localizedProps';
-import FileFormatUtils from '../../utils/FileFormatUtils';
+import {formatToGlyph, formatToText} from '../../utils/FileFormatUtils';
 
 const Filter = localizedProps('filterPlaceholder')(BaseFilter);
 
@@ -83,8 +83,8 @@ export default ({
             </div>,
         infoExtra:
             template.format && <div className={`map-templates-formaticon${isFavouriteList ? " map-templates-favourite" : ""}`}>
-                <Glyphicon glyph={FileFormatUtils.formatToGlyph[template.format]}/>
-                <span>{FileFormatUtils.formatToText[template.format]}</span>
+                <Glyphicon glyph={formatToGlyph[template.format]}/>
+                <span>{formatToText[template.format]}</span>
             </div>,
         tools: <Toolbar
             btnDefaultProps={{

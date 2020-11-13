@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate } = require('../URLUtils');
+import expect from 'expect';
+
+import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate } from '../URLUtils';
 
 const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
 const url2 = "https://demo.geo-solutions.it/geoserver/wfs";

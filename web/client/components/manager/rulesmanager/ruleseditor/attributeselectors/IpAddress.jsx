@@ -8,8 +8,8 @@
 const React = require("react");
 const PropTypes = require("prop-types");
 const {FormControl, FormGroup, Row, Col} = require("react-bootstrap");
-const Message = require('../../../../I18N/Message');
-const {checkIp} = require('../../../../../utils/RulesEditor');
+const Message = require('../../../../I18N/Message').default;
+const {checkIp} = require('../../../../../utils/RulesEditorUtils');
 const withLocalized = require("../../../../misc/enhancers/localizedProps");
 const {compose, defaultProps} = require("recompose");
 

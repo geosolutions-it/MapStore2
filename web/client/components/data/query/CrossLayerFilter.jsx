@@ -8,7 +8,7 @@
 
 const React = require('react');
 
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const {Row, Col} = require('react-bootstrap');

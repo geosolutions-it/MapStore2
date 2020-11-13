@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,8 +8,9 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 
-const Message = require('../../I18N/Message');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const Message = require('../../I18N/Message').default;
+const {getMessageById} = require('../../../utils/LocaleUtils');
+const PropTypes = require('prop-types');
 const {isAnnotation} = require('../../../utils/AnnotationsUtils');
 let { toVectorStyle } = require('../../../utils/StyleUtils');
 const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
@@ -212,7 +212,7 @@ class StylePanel extends React.Component {
                 }
             }
             this.props.onSuccess(this.props.layers.length > 1
-                ? isAnnotationLayer ? "Annotation" : this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success")
+                ? isAnnotationLayer ? "Annotation" : this.props.layers[0].name + getMessageById(this.context.messages, "shapefile.success")
                 : undefined);
 
             this.props.onLayerAdded(this.props.selected);

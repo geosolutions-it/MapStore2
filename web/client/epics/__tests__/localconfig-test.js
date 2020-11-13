@@ -6,14 +6,13 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {SUPPORTED_LOCALES_REGISTERED, localConfigLoaded} = require('../../actions/localConfig');
-const LocaleUtils = require('../../utils/LocaleUtils');
+import { SUPPORTED_LOCALES_REGISTERED, localConfigLoaded } from '../../actions/localConfig';
 
-const expect = require('expect');
-const assign = require('object-assign');
-
-const {testEpic} = require('./epicTestUtils');
-const {setSupportedLocales} = require('../localconfig');
+import {getSupportedLocales} from '../../utils/LocaleUtils';
+import expect from 'expect';
+import assign from 'object-assign';
+import { testEpic } from './epicTestUtils';
+import { setSupportedLocales } from '../localconfig';
 
 describe('localconfig Epics', () => {
 
@@ -23,7 +22,7 @@ describe('localconfig Epics', () => {
         testEpic(setSupportedLocales, 1, localConfigLoaded(newState), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
-                const suppLocales = LocaleUtils.getSupportedLocales();
+                const suppLocales = getSupportedLocales();
                 switch (action.type) {
                 case SUPPORTED_LOCALES_REGISTERED:
                     expect(Object.keys(suppLocales).length).toBe(11);
@@ -55,7 +54,7 @@ describe('localconfig Epics', () => {
         testEpic(setSupportedLocales, 1, localConfigLoaded(newState), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
-                const suppLocales = LocaleUtils.getSupportedLocales();
+                const suppLocales = getSupportedLocales();
                 switch (action.type) {
                 case SUPPORTED_LOCALES_REGISTERED:
                     expect(suppLocales).toBe(ita);

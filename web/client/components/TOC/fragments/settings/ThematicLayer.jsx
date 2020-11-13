@@ -12,7 +12,7 @@ const { ControlLabel, FormGroup, Row, Col, Grid, Alert, Checkbox} = require('rea
 const { isObject, isEqual} = require('lodash');
 const Combobox = require('react-widgets').Combobox;
 const assign = require('object-assign');
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 const SwitchPanel = require('../../../misc/switch/SwitchPanel');
 const ColorRamp = require('../../../styleeditor/ColorRamp').default;
 

@@ -9,10 +9,10 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Grid, Row, Col, Alert, Glyphicon} = require('react-bootstrap');
-const ResizableModal = require('../../../components/misc/ResizableModal');
-const Portal = require('../../../components/misc/Portal');
-const SecurityUtils = require('../../../utils/SecurityUtils');
-const Message = require('../../../components/I18N/Message');
+const ResizableModal = require('../../../components/misc/ResizableModal').default;
+const Portal = require('../../../components/misc/Portal').default;
+const {getUserAttributes} = require('../../../utils/SecurityUtils');
+const Message = require('../../../components/I18N/Message').default;
 const {isArray, isObject, isString} = require('lodash');
 
 /**
@@ -55,7 +55,7 @@ class UserDetails extends React.Component {
 
     renderAttributes = () => {
         if (this.props.user && this.props.user.attribute) {
-            const userAttributes = SecurityUtils.getUserAttributes(this.props.user);
+            const userAttributes = getUserAttributes(this.props.user);
             if (userAttributes && userAttributes.length > 0) {
                 const userInfo = this.getUserInfo();
                 const attributesObj = userAttributes.reduce((a, b) => b.nam !== 'UUID' ? {...a, [b.name]: b.value } : {...a}, {});

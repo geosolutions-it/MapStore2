@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../libs/ajax');
-const ConfigUtils = require('../utils/ConfigUtils');
+const {getConfigProp} = require('../utils/ConfigUtils');
 
 const urlUtil = require('url');
 const assign = require('object-assign');
@@ -17,7 +17,7 @@ const capabilitiesCache = {};
 
 const {castArray} = require('lodash');
 
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const {getEPSGCode} = require('../utils/CoordinatesUtils');
 const { getOperations, getOperation, getRequestEncoding, getDefaultStyleIdentifier, getDefaultFormat} = require('../utils/WMTSUtils');
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
@@ -38,7 +38,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {
     let SRSList = [];
     let len = TileMatrixSet.length;
     for (let i = 0; i < len; i++) {
-        SRSList.push(CoordinatesUtils.getEPSGCode(TileMatrixSet[i]["ows:SupportedCRS"]));
+        SRSList.push(getEPSGCode(TileMatrixSet[i]["ows:SupportedCRS"]));
     }
     const layersObj = root.Layer;
     const layers = castArray(layersObj);
@@ -68,7 +68,7 @@ const Api = {
     parseUrl,
     getRecords: function(url, startPosition, maxRecords, text) {
         const cached = capabilitiesCache[url];
-        if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+        if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
                 resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, url));
             });
@@ -87,7 +87,7 @@ const Api = {
     },
     getCapabilities: (url) => {
         const cached = capabilitiesCache[url];
-        if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+        if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
                 resolve(cached.data);
             });

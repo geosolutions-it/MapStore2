@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,15 +7,16 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const assign = require('object-assign');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const {getMessageById} = require('../../../utils/LocaleUtils');
 
+const PropTypes = require('prop-types');
 const {Tooltip} = require('react-bootstrap');
 
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 
 const {DropdownList, Multiselect} = require('react-widgets');
 
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../../components/I18N/Message').default;
 
 class ComboField extends React.Component {
     static propTypes = {
@@ -111,7 +111,7 @@ class ComboField extends React.Component {
                 caseSensitive={false}
                 minLength={3}
                 placeholder={this.props.placeholder}
-                messages={{open: LocaleUtils.getMessageById(this.context.messages, "queryform.comboField.drop_down")}}
+                messages={{open: getMessageById(this.context.messages, "queryform.comboField.drop_down")}}
                 filter={this.props.comboFilter}
                 style={style}
                 groupBy={this.props.groupBy}
@@ -130,7 +130,7 @@ class ComboField extends React.Component {
                 caseSensitive={false}
                 minLength={3}
                 placeholder={this.props.placeholder}
-                messages={{open: LocaleUtils.getMessageById(this.context.messages, "queryform.comboField.drop_down")}}
+                messages={{open: getMessageById(this.context.messages, "queryform.comboField.drop_down")}}
                 filter={this.props.comboFilter}
                 style={style}
                 groupBy={this.props.groupBy}

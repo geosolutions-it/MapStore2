@@ -14,7 +14,7 @@ const Combobox = require('react-widgets').Combobox;
 
 const ColorMapGrid = require('./ColorMapGrid');
 
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 class PseudoColorSettings extends React.Component {
     static propTypes = {

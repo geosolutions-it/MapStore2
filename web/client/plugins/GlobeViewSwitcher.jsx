@@ -10,7 +10,7 @@ const {connect} = require('react-redux');
 
 const assign = require('object-assign');
 const globeswitcher = require('../reducers/globeswitcher').default;
-const epics = require('../epics/globeswitcher');
+const epics = require('../epics/globeswitcher').default;
 const {toggle3d} = require('../actions/globeswitcher');
 const {mapTypeSelector, isCesium} = require('../selectors/maptype');
 const {createSelector} = require('reselect');

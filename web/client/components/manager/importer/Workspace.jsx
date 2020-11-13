@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,9 +7,10 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const Select = require('react-select').default;
+const PropTypes = require('prop-types');
 const {FormControl, Button, Alert} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const Message = require('../../I18N/Message').default;
+const {getMessageById} = require('../../../utils/LocaleUtils');
 
 module.exports = class extends React.Component {
     static propTypes = {
@@ -79,7 +79,7 @@ module.exports = class extends React.Component {
                 <FormControl
                     onChange={this.validate}
                     ref="workspaceNewName"
-                    placeholder={LocaleUtils.getMessageById(this.context.messages, "importer.workspace.new")}
+                    placeholder={getMessageById(this.context.messages, "importer.workspace.new")}
                     bsSize="small"
                     name="workspace-name"
                     key="workspace-name"
