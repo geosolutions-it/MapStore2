@@ -123,7 +123,7 @@ import {
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
 import { getDefaultFeatureProjection } from '../../utils/FeatureGridUtils';
-import { isEmpty, isNil } from 'lodash';
+import { isNil } from 'lodash';
 const filterObj = {
     featureTypeName: 'TEST',
     groupFields: [
