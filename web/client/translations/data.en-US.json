@@ -1808,25 +1808,26 @@
                 "bar": "Display Legend",
                 "gauge": "Display labels"
             },
-            "displayCartesian": {
-                "line": "Hide Grid",
-                "bar": "Hide Grid"
-            },
-            "xAxisAngle":{
-                "line": "X Axis: Label rotation angle °",
-                "bar": "X Axis: Label rotation angle °"
-            },
-            "yAxis":{
-                "line": "Hide Y axis",
-                "bar": "Hide Y axis"
-            },
-            "yAxisLabel":{
-                "line": "Legend Label",
-                "bar": "Legend Label"
-            },
-            "advancedOptions":{
-                "line": "Advanced Options",
-                "bar": "Advanced Options"
+            "advanced": {
+              "displayCartesian": "Hide Grid",
+              "xAxis": "X axis",
+              "xAxisAngle": "Label rotation",
+              "hideLabels": "Hide labels",
+              "xAxisType": "Type",
+              "forceTicks": "Never skip labels",
+              "maxXAxisLabels": "The labels can not anyway be more than {max}",
+              "yAxis":  "Y axis",
+              "yAxisType": "Type",
+              "yAxisLabel": "Legend Label",
+              "title": "Advanced Options",
+              "legend": "Legend",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Linear",
+                "category": "Category",
+                "log": "Log",
+                "date": "Date"
+              }
             },
             "tray": {
                 "title": "Widgets",
@@ -2281,6 +2282,7 @@
             "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "geostory": {
+            "storyResources": "Story Resources",
             "geostoreMap": "MapStore Maps",
             "loadingSpinner": "Loading Story",
             "addTitleSection": "Add Title Section",
@@ -2506,7 +2508,8 @@
             "mediaList" : {
                 "removeResourceTitle": "Are you sure?",
                 "confirmRemoveResource": "Do you want to remove this media resource from the story?",
-                "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?"
+                "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?",
+                "resultsCount": "{count} of {total} {total, plural, one {Result} other {Results}}"
             },
             "imageList": {
                 "emptyList": "Click on the plus button to add a new image. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>here</a>"

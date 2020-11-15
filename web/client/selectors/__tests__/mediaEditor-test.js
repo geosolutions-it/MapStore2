@@ -23,7 +23,11 @@ import {
     sourceIdSelector,
     sourcesSelector,
     sourcesForMediaTypeSelector,
-    selectedSourceSelector
+    selectedSourceSelector,
+    getCurrentMediaResourcesParams,
+    getCurrentMediaResourcesTotalCount,
+    getLoadingSelectedMedia,
+    getLoadingMediaList
 } from "../mediaEditor";
 
 describe('mediaEditor selectors', () => {
@@ -178,6 +182,35 @@ describe('mediaEditor selectors', () => {
             }
         })).toEqual({id: "id"});
     });
-
-
+    it('getCurrentMediaResourcesParams', () => {
+        const params = { page: 1 };
+        expect(getCurrentMediaResourcesParams({
+            mediaEditor: {
+                settings: { mediaType: "image", sourceId: "id" },
+                data: { image: { id: { params, resultData: {} } } }
+            }
+        })).toEqual(params);
+    });
+    it('getCurrentMediaResourcesTotalCount', () => {
+        expect(getCurrentMediaResourcesTotalCount({
+            mediaEditor: {
+                settings: { mediaType: "image", sourceId: "id" },
+                data: { image: { id: { resultData: { totalCount: 0 } } } }
+            }
+        })).toBe(0);
+    });
+    it('getLoadingSelectedMedia', () => {
+        expect(getLoadingSelectedMedia({
+            mediaEditor: {
+                loadingSelected: true
+            }
+        })).toBe(true);
+    });
+    it('getLoadingMediaList', () => {
+        expect(getLoadingMediaList({
+            mediaEditor: {
+                loadingList: true
+            }
+        })).toBe(true);
+    });
 });

@@ -7,45 +7,53 @@
 */
 
 import expect from 'expect';
-import {load} from '../geostory';
+import { create } from '../geostory';
 
 describe('Test correctness of the geostory media api', () => {
     it('testing load stream', (done) => {
         const imgType = "image";
         const mapType = "map";
-        const streams = load({getState: () => ({
-            geostory: {
-                currentStory: {
-                    resources: [{
-                        "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
-                        type: imgType,
-                        "data": {
-                            "src": "https://images.unsplash.com",
-                            "title": "title",
-                            "credits": "credits",
-                            "description": "desc",
-                            "altText": "altText"
-                        }
-                    },
-                    {
-                        "id": "8d578d57-8d57-48df-9a56-8e21ac252282",
-                        type: mapType,
-                        "data": {
-                            "title": "Map name",
-                            "description": "map desc",
-                            layers: [],
-                            "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-                        }
-                    }]
-                }
+        const mediaType = 'image';
+        const params = {
+            page: 1,
+            pageSize: 10
+        };
+        const imageResource = {
+            "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
+            type: imgType,
+            "data": {
+                "src": "https://images.unsplash.com",
+                "title": "title",
+                "credits": "credits",
+                "description": "desc",
+                "altText": "altText"
             }
-        })
-        });
-        expect(streams.value.length).toBe(2);
-        const result1 = streams.value[0];
-        const result2 = streams.value[1];
-        expect(result1.mediaType).toBe(imgType);
-        expect(result2.mediaType).toBe(mapType);
+        };
+        const store = {
+            getState: () => ({
+                geostory: {
+                    currentStory: {
+                        resources: [
+                            imageResource,
+                            {
+                                "id": "8d578d57-8d57-48df-9a56-8e21ac252282",
+                                type: mapType,
+                                "data": {
+                                    "title": "Map name",
+                                    "description": "map desc",
+                                    layers: [],
+                                    "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                                }
+                            }
+                        ]
+                    }
+                }
+            })
+        };
+        const { load } = create({ store });
+        const streams = load({ params, mediaType });
+        expect(streams.value.resources).toEqual([imageResource]);
+        expect(streams.value.totalCount).toBe(1);
         done();
     });
 });

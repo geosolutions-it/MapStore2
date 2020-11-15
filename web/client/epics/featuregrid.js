@@ -448,7 +448,7 @@ export const handleClickOnMap = (action$, store) =>
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
-                    action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
+                    action$.ofType(LOCATION_CHANGE)
                 )));
 export const handleBoxSelectionDrawEnd =  (action$, store) =>
     action$.ofType(UPDATE_FILTER)
@@ -833,7 +833,11 @@ export const askChangesConfirmOnFeatureGridClose = (action$, store) => action$.o
     if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
         return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
     }
-    return Rx.Observable.of(closeFeatureGrid(), selectFeatures([]));
+    return Rx.Observable.of(closeFeatureGrid(), updateFilter({
+        attribute: "the_geom",
+        enabled: false,
+        type: "geometry"
+    }), selectFeatures([]));
 });
 export const onClearChangeConfirmedFeatureGrid = (action$) => action$.ofType(CLEAR_CHANGES_CONFIRMED)
     .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false)));

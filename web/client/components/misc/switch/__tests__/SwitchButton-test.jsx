@@ -38,4 +38,10 @@ describe('SwitchButton component', () => {
         ReactTestUtils.Simulate.change(input); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
     });
+    it('Test disabled', () => {
+        ReactDOM.render(<SwitchButton disabled />, document.getElementById("container"));
+        const input = document.getElementsByTagName('input')[0];
+        expect(input.disabled).toBeTruthy();
+
+    });
 });

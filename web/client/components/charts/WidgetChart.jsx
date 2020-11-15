@@ -32,7 +32,7 @@ function getData({ type, xDataKey, yDataKey, data}) {
         };
     }
 }
-function getMargins({ type, yAxis, isModeBarVisible, xAxisAngle }) {
+function getMargins({ type, isModeBarVisible}) {
     switch (type) {
     case 'pie':
         return {
@@ -44,10 +44,9 @@ function getMargins({ type, yAxis, isModeBarVisible, xAxisAngle }) {
         };
     default:
         return {
-            l: !yAxis ? 5 : undefined, // if yAxis is false, reduce left margin
+            l: 5, // if yAxis is false, reduce left margin
             r: 5,
-            // optimization of bottom space, if the angle is fixed to 0
-            b: xAxisAngle === 0 ? 25 : undefined,
+            b: 30, // at least the space to show the tooltip
             // save space on top if the bar is not visible
             t: isModeBarVisible ? 20 : 5,
             pad: 4
@@ -55,7 +54,7 @@ function getMargins({ type, yAxis, isModeBarVisible, xAxisAngle }) {
     }
 }
 
-function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, data = [], autoColorOptions = COLOR_DEFAULTS} ) {
+function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS} ) {
     switch (type) {
     case 'pie':
         return {
@@ -66,15 +65,19 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, dat
         return {
             colorway: defaultColorGenerator(series.length, autoColorOptions),
             yaxis: {
+                type: yAxisOpts?.type,
                 automargin: true,
                 showticklabels: yAxis === true,
                 // showticklabels,showline for yAxis false
                 showgrid: cartesian
             },
             xaxis: {
+                type: xAxisOpts?.type,
+                showticklabels: !xAxisOpts?.hide,
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,
+                nticks: xAxisOpts.nTicks, // max number of ticks, to avoid performance issues
                 automargin: true,
                 tickangle: xAxisAngle ?? 'auto'
             }
