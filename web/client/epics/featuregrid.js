@@ -1000,7 +1000,6 @@ export const syncMapWmsFilter = (action$, store) =>
             const {query: q, featuregrid: f} = store.getState();
             const layerId = (f || {}).selectedLayer;
             const filter = (q || {}).filterObj;
-
             return Rx.Observable.merge(
                 Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
                 action$.ofType(START_SYNC_WMS))

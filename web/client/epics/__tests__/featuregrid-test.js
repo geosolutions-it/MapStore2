@@ -123,7 +123,7 @@ import {
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
 import { getDefaultFeatureProjection } from '../../utils/FeatureGridUtils';
-import { isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 const filterObj = {
     featureTypeName: 'TEST',
     groupFields: [
@@ -1365,7 +1365,7 @@ describe('featuregrid Epics', () => {
                 open: true,
                 selectedLayer: "TEST_LAYER",
                 mode: 'EDIT',
-                select: [{id: 'polygons.1', _new: 'polygons._new', properties: {STATE_ABRR: "TEST_ABBR"}}],
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
                 changes: []
             },
             layers: {
@@ -1381,34 +1381,12 @@ describe('featuregrid Epics', () => {
         };
         const newState = assign({}, state, stateFeaturegrid);
 
-        const expectedFilterObjShape = {
-            groupFields: [{id: 1, logic: "OR", index: 0}],
-            filterFields: [{
-                attribute: "STATE_ABRR",
-                fieldOptions: {valuesCount: 0, currentPage: 1},
-                groupId: 1,
-                operator: "like",
-                type: "string",
-                value: "TEST_ABBR"
-            }],
-            filterType: "OGC",
-            ogcVersion: "1.1.0",
-            spatialField: {
-                attribute: "the_geom",
-                geometry: null,
-                method: null,
-                operation: "INTERSECTS",
-                value: undefined
-            }
-        };
-
-        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}, {type: SELECT_FEATURES}, {type: DESELECT_FEATURES}], actions => {
+        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
                 case CHANGE_LAYER_PROPERTIES: {
-                    expect(action.newProperties.filterObj).toBeTruthy();
-                    expect(action.newProperties.filterObj).toEqual(expectedFilterObjShape);
+                    expect(isEmpty(action.newProperties.filterObj)).toBeTruthy();
                     expect(isNil(action.newProperties.nativeCrs)).toBeTruthy();
                     break;
                 }
@@ -2235,38 +2213,6 @@ describe('featuregrid Epics', () => {
         }, {}, done);
     });
     describe('selectFeaturesOnMapClickResult epic', () => {
-        it('should deselect feature that is already selected and clicked when ctrl or metaKey held', (done) => {
-            const stateObj = {
-                featuregrid: {
-                    multiselect: true,
-                    select: [{id: "ft_id"}, {id: "ft_id_2"}]
-                }
-            };
-            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
-            testEpic(selectFeaturesOnMapClickResult, 1, startActions, actions => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toEqual(DESELECT_FEATURES);
-                expect(actions[0].features).toEqual([{id: "ft_id"}]);
-            }, stateObj, done);
-        });
-        it('should update geometry filter with enabled false when only feature selected is clicked, ctrl and metaKey are held', (done) => {
-            const stateObj = {
-                featuregrid: {
-                    multiselect: true,
-                    select: [{id: "ft_id"}]
-                }
-            };
-            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
-            testEpic(selectFeaturesOnMapClickResult, 3, startActions, actions => {
-                expect(actions.length).toBe(3);
-                expect(actions[0].type).toEqual(UPDATE_FILTER);
-                expect(actions[0].update.enabled).toBe(false);
-                expect(actions[1].type).toEqual(DESELECT_FEATURES);
-                expect(actions[1].features).toEqual([{id: "ft_id"}]);
-                expect(actions[2].type).toBe(SET_SELECTION_OPTIONS);
-                expect(actions[2].multiselect).toBe(false);
-            }, stateObj, done);
-        });
         it('should append to selected features, ctrl and metaKey are held', (done) => {
             const stateObj = {
                 featuregrid: {

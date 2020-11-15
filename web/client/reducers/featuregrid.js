@@ -355,7 +355,7 @@ function featuregrid(state = emptyResultsState, action) {
     case UPDATE_FILTER : {
         const {attribute} = (action.update || {});
         if (attribute && action.append) {
-            const value = state.filters.the_geom.value;
+            const value = state.filters[attribute].value;
             let oldVal = [];
             if (value?.attribute) {
                 oldVal = [value];

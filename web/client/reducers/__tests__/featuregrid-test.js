@@ -322,11 +322,27 @@ describe('Test the featuregrid reducer', () => {
 
     });
     it('UPDATE_FILTER', () => {
-        const update = {attribute: "ATTRIBUTE", opeartor: "OPERATOR", value: "VAL", rawValue: "RAWVAL"};
+        const update = {
+            attribute: "ATTRIBUTE",
+            opeartor: "OPERATOR",
+            value: {attribute: "ATTRIBUTE", method: "METHOD_1"},
+            rawValue: "RAWVAL"
+        };
         let state = featuregrid({}, updateFilter(update));
         expect(state.filters).toExist();
         expect(state.filters[update.attribute]).toExist();
         expect(state.filters[update.attribute].value).toBe(update.value);
+
+
+        const multiselectUpdate = {...update, value: {attribute: "ATTRIBUTE", method: "METHOD_2"}};
+        state = featuregrid(state, updateFilter(multiselectUpdate, true));
+        expect(state.filters).toExist();
+        expect(state.filters[update.attribute]).toExist();
+        expect(state.filters[update.attribute].value).toEqual(
+            [ { attribute: 'ATTRIBUTE', method: 'METHOD_1' },
+                { attribute: 'ATTRIBUTE', method: 'METHOD_2' } ]);
+
+
         state = featuregrid({}, createQuery("url", {}));
         expect(state.filters).toExist();
         expect(state.filters[update.attribute]).toNotExist();
