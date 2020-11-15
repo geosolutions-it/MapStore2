@@ -177,7 +177,7 @@ export const applyAllChanges = (orig, changes = {}) => applyChanges(orig, change
 export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
     return {
         ...oldFilterObj,
-        groupFields: [{
+        groupFields: isArray(value) ? [{id: 1, logic: "OR", index: 0}] : [{
             id: 1,
             logic: "AND",
             index: 0
@@ -195,7 +195,8 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
             : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute)),
         spatialField: type === 'geometry' ?
             value :
-            oldFilterObj.spatialField
+            oldFilterObj.spatialField,
+        spatialFieldOperator: isArray(value) ? "OR" : ""
     };
 };
 export const toPage = ({startIndex = 0, maxFeatures = 1, totalFeatures = 0, resultSize} = {}) => ({
