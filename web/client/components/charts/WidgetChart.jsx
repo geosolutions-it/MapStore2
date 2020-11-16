@@ -119,7 +119,7 @@ export const toPlotly = (props) => {
         data: series.map(({ dataKey: yDataKey }) => {
             return {
                 type,
-                name: yAxisLabel ?? yDataKey,
+                name: yAxisLabel || yDataKey,
                 ...getData({ ...props, xDataKey, yDataKey})
             };
         }),
