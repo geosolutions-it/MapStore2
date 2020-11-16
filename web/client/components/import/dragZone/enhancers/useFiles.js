@@ -1,5 +1,5 @@
 
-const {compose, mapPropsStream, withHandlers} = require('recompose');
+import { compose, mapPropsStream, withHandlers } from 'recompose';
 
 /**
  * Enhancer for processing map configuration and layers object

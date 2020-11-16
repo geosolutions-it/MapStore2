@@ -527,4 +527,4 @@ class MeasurementSupport extends React.Component {
     }
 }
 
-export default MeasurementSupport;
+module.exports = MeasurementSupport;

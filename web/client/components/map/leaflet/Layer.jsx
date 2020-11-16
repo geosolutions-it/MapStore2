@@ -185,4 +185,4 @@ class LeafletLayer extends React.Component {
     };
 }
 
-export default LeafletLayer;
+module.exports = LeafletLayer;

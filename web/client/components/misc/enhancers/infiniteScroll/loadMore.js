@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { mapPropsStream, createEventHandler } from 'recompose';
-
-import Rx from 'rxjs';
+import { createEventHandler, mapPropsStream } from 'recompose';
+const Rx = require('rxjs');
 
 /**
  * Create a stream that implements the infinite scrolling

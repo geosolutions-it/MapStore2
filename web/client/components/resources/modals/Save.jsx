@@ -16,6 +16,7 @@ import Message from '../../I18N/Message';
 import Portal from '../../misc/Portal';
 import ResizableModal from '../../misc/ResizableModal';
 import ruleEditor from './enhancers/ruleEditor';
+import DetailsComp from './fragments/Details';
 import ErrorBox from './fragments/ErrorBox';
 import MainForm from './fragments/MainForm';
 import PermissionEditorComp from './fragments/PermissionEditor';
@@ -121,7 +122,7 @@ class SaveModal extends React.Component {
         canSave: true,
         user: {},
         dialogClassName: '',
-        detailsComponent: require('./enhancers/handleDetails').default((require('./fragments/Details').default))
+        detailsComponent: require('./enhancers/handleDetails').default((DetailsComp))
     };
     onCloseMapPropertiesModal = () => {
         this.props.onClose();

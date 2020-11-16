@@ -335,4 +335,4 @@ class GrabLMap extends React.Component {
     };
 }
 
-export default GrabLMap;
+module.exports =  GrabLMap;

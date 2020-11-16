@@ -14,12 +14,13 @@ import Message from '../../../I18N/Message';
 import emptyState from '../../../misc/enhancers/emptyState';
 import {wizardHandlers} from '../../../misc/wizard/enhancers';
 import StepHeader from '../../../misc/wizard/StepHeader';
+import WizardContainer from '../../../misc/wizard/WizardContainer';
 import emptyLegendState from '../../enhancers/emptyLegendState';
 import legendWidget from '../../enhancers/legendWidget';
 import LegendView from '../../widget/LegendView';
 import WidgetOptions from './common/WidgetOptions';
 
-const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
+const Wizard = wizardHandlers(WizardContainer);
 
 const enhancePreview = compose(
     legendWidget,

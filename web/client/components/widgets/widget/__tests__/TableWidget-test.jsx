@@ -15,6 +15,7 @@ import { compose, defaultProps } from 'recompose';
 import describePois from '../../../../test-resources/wfs/describe-pois.json';
 import tableWidget from '../../enhancers/tableWidget';
 import TableWidgetComp from '../TableWidget';
+
 const TableWidget = compose(
     defaultProps({ canEdit: true }),
     tableWidget

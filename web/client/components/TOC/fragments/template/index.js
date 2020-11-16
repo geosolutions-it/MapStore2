@@ -5,12 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 /* eslint-disable */
-import Bootstrap from 'react-bootstrap';
-
-import Message from '../../../I18N/Message';
-import React from 'react';
+const Bootstrap = require('react-bootstrap');
+const Message = require('../../../I18N/Message').default;
+const React = require('react');
 
 const RenderTemplate = function(comp, props) {
     let model = props.model;

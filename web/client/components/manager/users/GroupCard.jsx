@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,17 +6,14 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-
-// const Message = require('../I18N/Message').default;
-import GridCard from '../../misc/GridCard';
-
-import { Button, Glyphicon } from 'react-bootstrap';
-import Message from '../../../components/I18N/Message';
-
-// const ConfirmModal = require('./modals/ConfirmModal');
-
 import './style/usercard.css';
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Button, Glyphicon } from 'react-bootstrap';
+
+import Message from '../../../components/I18N/Message';
+import GridCard from '../../misc/GridCard';
 
 class GroupCard extends React.Component {
     static propTypes = {

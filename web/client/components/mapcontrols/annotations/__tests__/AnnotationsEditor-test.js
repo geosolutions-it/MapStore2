@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import html5Backend from 'react-dnd-html5-backend';
-const AnnotationsEditor = dragDropContext(html5Backend)(require('../AnnotationsEditor'));
+import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+
+import AnnotationsEditorComp from '../AnnotationsEditor';
+
+const AnnotationsEditor = dragDropContext(html5Backend)(AnnotationsEditorComp);
 
 const actions = {
     onChangeProperties: () => {},

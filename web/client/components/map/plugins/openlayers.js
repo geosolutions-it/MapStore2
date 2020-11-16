@@ -7,7 +7,7 @@
 */
 
 export default () => {
-    require('../openlayers/plugins/index');
+    require('../openlayers/plugins/index').default;
     return {
         Map: require('../openlayers/Map').default,
         Layer: require('../openlayers/Layer').default,

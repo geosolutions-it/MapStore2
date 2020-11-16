@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,12 +6,16 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var {Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger').default;
-const defaultIcon = require('../../misc/spinners/InlineSpinner/img/spinner.gif');
-const Message = require('../../I18N/Message').default;
-require('./css/locate.css');
+import PropTypes from 'prop-types';
+import React from 'react';
+import {Button, Glyphicon, Tooltip} from 'react-bootstrap';
+
+import Message from '../../I18N/Message';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import defaultIcon from '../../misc/spinners/InlineSpinner/img/spinner.gif';
+
+import('./css/locate.css');
+
 let checkingGeoLocation = false;
 let geoLocationAllowed = false;
 

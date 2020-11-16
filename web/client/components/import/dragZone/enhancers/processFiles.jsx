@@ -5,27 +5,28 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const Rx = require('rxjs');
-const { compose, mapPropsStream, createEventHandler} = require('recompose');
-const { get, some, every } = require('lodash');
-const {
+
+import JSZip from 'jszip';
+import { every, get, some } from 'lodash';
+import { compose, createEventHandler, mapPropsStream } from 'recompose';
+import Rx from 'rxjs';
+
+import { isAnnotation } from '../../../../utils/AnnotationsUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import {
+    MIME_LOOKUPS,
+    checkShapePrj,
+    gpxToGeoJSON,
+    kmlToGeoJSON,
+    readJson,
+    readKml,
+    readKmz,
+    readWMC,
     readZip,
     recognizeExt,
-    MIME_LOOKUPS,
-    readKml,
-    kmlToGeoJSON,
-    gpxToGeoJSON,
-    readKmz,
-    checkShapePrj,
-    shpToGeoJSON,
-    readJson,
-    readWMC
-} = require('../../../../utils/FileUtils');
-const {geoJSONToLayer} = require('../../../../utils/LayersUtils');
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
-const {isAnnotation} = require('../../../../utils/AnnotationsUtils');
-
-const JSZip = require('jszip');
+    shpToGeoJSON
+} from '../../../../utils/FileUtils';
+import { geoJSONToLayer } from '../../../../utils/LayersUtils';
 
 const tryUnzip = (file) => {
     return readZip(file).then((buffer) => {

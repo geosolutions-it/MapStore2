@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-const PropTypes = require('prop-types');
-var NominatimResult = require('./NominatimResult');
-const {getZoomForExtent, getCenterForExtent} = require('../../../../utils/MapUtils');
-const {reprojectBbox} = require('../../../../utils/CoordinatesUtils');
-const I18N = require('../../../I18N/I18N');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import NominatimResult from './NominatimResult';
+import { getZoomForExtent, getCenterForExtent } from '../../../../utils/MapUtils';
+import { reprojectBbox } from '../../../../utils/CoordinatesUtils';
+import I18N from '../../../I18N/I18N';
 
 
 class ResultList extends React.Component {

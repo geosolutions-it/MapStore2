@@ -6,17 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-
-import PropTypes from 'prop-types';
-import { Glyphicon } from 'react-bootstrap';
 import './css/settingsModal.css';
+
+import { isArray, isString } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+
+import Template from '../../data/template/jsx/Template';
 import Dialog from '../../misc/Dialog';
 import Portal from '../../misc/Portal';
-import Template from '../../data/template/jsx/Template';
-import MetadataTemplate from './template/MetadataTemplate';
 import RenderTemplate from './template/index';
-import { isArray, isString } from 'lodash';
+import MetadataTemplate from './template/MetadataTemplate';
 
 class LayerMetadataModal extends React.Component {
     static propTypes = {

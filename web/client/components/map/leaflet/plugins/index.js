@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default {
+module.exports = {
     BingLayer: require('./BingLayer'),
     Commons: require('./Commons'),
     GraticuleLayer: require('./GraticuleLayer'),

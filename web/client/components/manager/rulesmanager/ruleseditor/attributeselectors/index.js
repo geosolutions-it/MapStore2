@@ -1,12 +1,12 @@
 export default {
-    Role: require("./Role"),
-    User: require("./User"),
-    Service: require("./Service"),
-    Request: require("./Request"),
-    Workspace: require("./Workspace"),
-    Layer: require("./Layer"),
-    Access: require("./Access"),
-    Ip: require("./IpAddress"),
-    Priority: require("./Priority")
+    Role: require("./Role").default,
+    User: require("./User").default,
+    Service: require("./Service").default,
+    Request: require("./Request").default,
+    Workspace: require("./Workspace").default,
+    Layer: require("./Layer").default,
+    Access: require("./Access").default,
+    Ip: require("./IpAddress").default,
+    Priority: require("./Priority").default
 };
 

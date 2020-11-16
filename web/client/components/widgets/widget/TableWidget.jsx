@@ -7,17 +7,18 @@
  */
 import React from 'react';
 
+import { getWidgetFilterRenderers } from '../../../plugins/widgets/getWidgetFilterRenderers';
+import EmptyRowsView from '../../data/featuregrid/EmptyRowsView';
+import FeatureGridComp from '../../data/featuregrid/FeatureGrid';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
-import LoadingSpinner from '../../misc/LoadingSpinner';
-import EmptyRowsView from '../../data/featuregrid/EmptyRowsView';
 import loadingState from '../../misc/enhancers/loadingState';
+import LoadingSpinner from '../../misc/LoadingSpinner';
 import errorChartState from '../enhancers/errorChartState';
-import { getWidgetFilterRenderers } from '../../../plugins/widgets/getWidgetFilterRenderers';
-
-const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(require('../../data/featuregrid/FeatureGrid')));
-
 import WidgetContainer from './WidgetContainer';
+
+const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(FeatureGridComp));
+
 
 export default getWidgetFilterRenderers(({
     id,

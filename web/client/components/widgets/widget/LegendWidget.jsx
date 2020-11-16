@@ -7,10 +7,11 @@
  */
 import React from 'react';
 
-import WidgetContainer from './WidgetContainer';
 import emptyLegendState from '../enhancers/emptyLegendState';
+import LegendViewComp from './LegendView';
+import WidgetContainer from './WidgetContainer';
 
-const LegendView = emptyLegendState()(require('./LegendView'));
+const LegendView = emptyLegendState()(LegendViewComp);
 
 export default ({
     toggleDeleteConfirm = () => {},

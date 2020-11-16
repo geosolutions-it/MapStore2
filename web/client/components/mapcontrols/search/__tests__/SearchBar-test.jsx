@@ -7,15 +7,13 @@
  */
 import {MenuItem} from "react-bootstrap";
 
-const expect = require('expect');
-const Provider = require("react-redux").Provider;
-
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
-const React = require('react');
-const ReactDOM = require('react-dom');
-const SearchBar = require('../SearchBar').default;
-
-const TestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import { Provider } from 'react-redux';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SearchBar from '../SearchBar';
+import TestUtils from 'react-dom/test-utils';
 
 describe("test the SearchBar", () => {
     const items = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => <MenuItem>Search by bookmark</MenuItem>}];

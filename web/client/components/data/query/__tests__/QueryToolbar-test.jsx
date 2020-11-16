@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-
-import ReactDOM from 'react-dom';
 import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import QueryToolbar from '../QueryToolbar';
+
 describe('QueryToolbar component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

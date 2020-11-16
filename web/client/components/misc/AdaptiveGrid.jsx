@@ -6,15 +6,18 @@
  * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
+import ContainerDimensions from 'react-container-dimensions';
 
+import DataGrid from  '../data/grid/DataGrid';
 import forceScrollTop from '../data/grid/forceScrollTop';
+
 /*
 * NOTE: forceScrollTop is a workaround to avoid to show empty rows during virtual scrolling.
 * TODO: investigate where is the proper place to apply this enhancer. Notice that it do not allow to
 * call Grid method directly by ref (as for instance RulesGrid does).
 */
-const Grid = forceScrollTop(require('../data/grid/DataGrid'));
-import ContainerDimensions from 'react-container-dimensions';
+
+const Grid = forceScrollTop(DataGrid);
 
 /**
  * A react-data-grid that adapts to container

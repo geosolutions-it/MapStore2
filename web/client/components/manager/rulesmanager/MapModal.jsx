@@ -6,14 +6,16 @@
 * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
+import { Portal } from 'react-overlays';
+import { compose } from 'recompose';
 
-import enhancer from './enhancers/Map';
+import BaseMapComp from '../../map/BaseMap';
 import autoMapType from '../../map/enhancers/autoMapType';
-import mapType from '../../map/enhancers/mapType';
 import autoResize from '../../map/enhancers/autoResize';
+import mapType from '../../map/enhancers/mapType';
 import onMapViewChanges from '../../map/enhancers/onMapViewChanges';
 import withDraw from '../../map/enhancers/withDraw';
-import { compose } from 'recompose';
+import enhancer from './enhancers/Map';
 
 const MapWitDraw = compose(
     enhancer,
@@ -22,9 +24,8 @@ const MapWitDraw = compose(
     autoMapType,
     mapType,
     withDraw()
-)(require('../../map/BaseMap'));
+)(BaseMapComp);
 
-import { Portal } from 'react-overlays';
 
 export default ({layer, onMapReady = () => {}}) => {
     return (

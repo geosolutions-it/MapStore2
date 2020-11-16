@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import withContainer from './WithContainer';
-
+import assign from 'object-assign';
 import { Modal } from 'react-bootstrap';
+
+import withContainer from './WithContainer';
 
 /**
   * This allow do disable event propagation if used
@@ -28,7 +29,6 @@ class FixedModal extends Modal {
     }
 }
 
-import assign from 'object-assign';
 
 export default assign(withContainer(FixedModal), {
     Body: Modal.Body,

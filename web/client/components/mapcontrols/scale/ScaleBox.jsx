@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-
-import { Form, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
-import { getGoogleMercatorScales } from '../../../utils/MapUtils';
-import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
+
+import { getGoogleMercatorScales } from '../../../utils/MapUtils';
 
 class ScaleBox extends React.Component {
     static propTypes = {

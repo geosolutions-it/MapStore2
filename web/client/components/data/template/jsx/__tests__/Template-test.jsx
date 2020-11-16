@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var expect = require('expect');
-var ReactDOM = require('react-dom');
-var Template = require('../Template');
-const {Promise} = require('es6-promise');
+
+import {Promise} from 'es6-promise';
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Template from '../Template';
 
 describe("Test JSX Template", () => {
     beforeEach((done) => {

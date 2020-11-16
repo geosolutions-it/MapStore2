@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const assign = require('object-assign');
-const expect = require('expect');
-const {loadPage, updateItemsLifecycle} = require('../featuredMaps');
+import expect from 'expect';
+import assign from 'object-assign';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const GeoStoreDAO = require('../../../../api/GeoStoreDAO');
+import GeoStoreDAO from '../../../../api/GeoStoreDAO';
+import {loadPage, updateItemsLifecycle} from '../featuredMaps';
+
 const oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
 describe('featuredMaps enhancher', () => {

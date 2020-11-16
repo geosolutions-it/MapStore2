@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,7 +7,7 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+var React = require('react');
 
 
 class Feature extends React.Component {
@@ -29,4 +28,4 @@ class Feature extends React.Component {
     }
 }
 
-export default Feature;
+module.exports = Feature;

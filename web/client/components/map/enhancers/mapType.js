@@ -12,6 +12,6 @@ import { withPropsOnChange } from 'recompose';
 export default withPropsOnChange(
     ['mapType', 'plugins'],
     ({mapType, plugins} = {}) => ({
-        plugins: {...require('../plugins/' + mapType + '.js')(), ...plugins}
+        plugins: {...require('../plugins/' + mapType + '.js').default(), ...plugins}
     })
 );

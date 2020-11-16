@@ -10,8 +10,8 @@ const {createSink} = require('recompose');
 export default () => {
     require('../cesium/plugins/index');
     return {
-        Map: require('../cesium/Map'),
-        Layer: require('../cesium/Layer'),
+        Map: require('../cesium/Map').default,
+        Layer: require('../cesium/Layer').default,
         Feature: createSink(() => {})
     };
 };

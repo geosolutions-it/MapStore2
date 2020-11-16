@@ -11,7 +11,7 @@ import { find, get } from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import MetadataModal from '../Save.jsx';
+import MetadataModal from '../Save';
 
 describe('This test for dashboard save form', () => {
 

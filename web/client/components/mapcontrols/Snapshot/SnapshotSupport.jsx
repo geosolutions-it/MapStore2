@@ -7,6 +7,6 @@
  */
 
 export default (mapType) => {
-    const SnapshotSupport = require('../../map/' + mapType + '/SnapshotSupport');
+    const SnapshotSupport = require('../../map/' + mapType + '/SnapshotSupport').default;
     return SnapshotSupport.default || SnapshotSupport;
 };

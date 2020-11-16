@@ -17,7 +17,7 @@ import dashboard from '../../reducers/dashboard';
 import {DashboardSave, DashboardSaveAs} from '../DashboardSave';
 import { getPluginForTest } from './pluginsTestUtils';
 
-describe.only('DashboardSave Plugins (DashboardSave, DashboardSaveAs)', () => {
+describe('DashboardSave Plugins (DashboardSave, DashboardSaveAs)', () => {
     const stateMocker = createStateMocker({ dashboard });
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

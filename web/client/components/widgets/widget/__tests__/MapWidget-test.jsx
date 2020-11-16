@@ -13,12 +13,13 @@ import {Provider} from 'react-redux';
 import {compose, defaultProps} from 'recompose';
 
 import mapWidget from '../../enhancers/mapWidget';
+import MapWidgetComp from '../MapWidget';
 
 const MapWidget = compose(
     defaultProps({
         canEdit: true
     }),
-    mapWidget)(require('../MapWidget'));
+    mapWidget)(MapWidgetComp);
 describe('MapWidget component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

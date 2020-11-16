@@ -13,11 +13,12 @@ import ReactTestUtils from 'react-dom/test-utils';
 import {compose, defaultProps} from 'recompose';
 
 import legendWidget from '../../enhancers/legendWidget';
+import LegendWidgetComp from '../LegendWidget';
 
 const LegendWidget = compose(
     defaultProps({canEdit: true}),
     legendWidget
-)(require('../LegendWidget'));
+)(LegendWidgetComp);
 
 describe('LegendWidget component', () => {
     beforeEach((done) => {

@@ -6,24 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-
 import { head } from 'lodash';
-import { Form, FormGroup, FormControl as FormControlRB, ControlLabel, Alert } from 'react-bootstrap';
-import BorderLayout from '../layout/BorderLayout';
-import emptyState from '../misc/enhancers/emptyState';
-import Loader from '../misc/Loader';
-import SquareCard from '../misc/cardgrids/SquareCard';
-import withLocal from '../misc/enhancers/localizedProps';
+import React from 'react';
+import { Alert, ControlLabel, Form, FormControl as FormControlRB, FormGroup } from 'react-bootstrap';
 
-const Filter = withLocal('filterPlaceholder')(require('../misc/Filter').default);
-const FormControl = withLocal('placeholder')(FormControlRB);
-
-import ResizableModal from '../misc/ResizableModal';
-import Portal from '../misc/Portal';
-import Message from '../I18N/Message';
 import HTML from '../I18N/HTML';
+import Message from '../I18N/Message';
+import BorderLayout from '../layout/BorderLayout';
+import SideGridComp from '../misc/cardgrids/SideGrid';
+import SquareCard from '../misc/cardgrids/SquareCard';
+import emptyState from '../misc/enhancers/emptyState';
+import withLocal from '../misc/enhancers/localizedProps';
+import FilterComp from '../misc/Filter';
+import Loader from '../misc/Loader';
+import Portal from '../misc/Portal';
+import ResizableModal from '../misc/ResizableModal';
 import SVGPreview from './SVGPreview';
+
+const Filter = withLocal('filterPlaceholder')(FilterComp);
+const FormControl = withLocal('placeholder')(FormControlRB);
 
 const SideGrid = emptyState(
     ({items}) => items.length === 0,
@@ -31,7 +32,7 @@ const SideGrid = emptyState(
         title: <Message msgId="styleeditor.filterMatchNotFound"/>,
         glyph: '1-stilo'
     }
-)(require('../misc/cardgrids/SideGrid')).default;
+)(SideGridComp);
 
 const validateAlphaNumeric = ({title, _abstract}) => {
     const regex = /^[a-zA-Z0-9\s]*$/;

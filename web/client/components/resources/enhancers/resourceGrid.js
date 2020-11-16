@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2018, GeoSolutions Sas.
 * All rights reserved.
@@ -6,17 +5,19 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import { compose, branch, withState, withHandlers, defaultProps, mapProps } from 'recompose';
+import { branch, compose, defaultProps, mapProps, withHandlers, withState } from 'recompose';
 
+import handleDetailsDownload from '../modals/enhancers/handleDetailsDownload';
+import handleResourceDownload from '../modals/enhancers/handleResourceDownload';
 import handleSave from '../modals/enhancers/handleSave';
 import handleSaveModal from '../modals/enhancers/handleSaveModal';
-import handleResourceDownload from '../modals/enhancers/handleResourceDownload';
-import handleDetailsDownload from '../modals/enhancers/handleDetailsDownload';
+import Save from '../modals/Save';
 
 /*
  * EditDialog
  * Automatically downloads missing data and manage resource changes. Manages save, triggering onSaveSuccess
  */
+
 const EditDialog = compose(
     handleResourceDownload,
     withHandlers({
@@ -39,7 +40,7 @@ const EditDialog = compose(
             )
         )
     )
-)(require('../modals/Save'));
+)(Save);
 
 const resourceGrid = compose(
     withState('resource', 'setResource'),

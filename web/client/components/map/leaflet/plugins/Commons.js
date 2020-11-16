@@ -11,7 +11,7 @@
  */
 var L = require('leaflet');
 
-export default L.TileLayer.extend({
+module.exports =  L.TileLayer.extend({
     initialize: function(options) {
         L.TileLayer.prototype.initialize.call(this, this.url, options);
     }

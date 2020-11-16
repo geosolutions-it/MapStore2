@@ -5,24 +5,26 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const PropTypes = require('prop-types');
-const React = require('react');
-const {DropdownList} = require('react-widgets');
-const {ButtonToolbar, Tooltip, Glyphicon, Grid, Row, Col, FormGroup} = require('react-bootstrap');
-const {isEqual, round, get, dropRight} = require('lodash');
-const uuidv1 = require('uuid/v1');
 
-const { download } = require('../../../utils/FileUtils');
-const NumberFormat = require('../../I18N/Number');
-const Message = require('../../I18N/Message').default;
-const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
-const {convertMeasuresToGeoJSON} = require('../../../utils/MeasurementUtils');
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const Toolbar = require('../../misc/toolbar/Toolbar').default;
-const OverlayTriggerCustom = require('../../misc/OverlayTriggerCustom').default;
-const BorderLayout = require('../../layout/BorderLayout').default;
-const CoordinatesEditor = require('../annotations/CoordinatesEditor');
-require('./measure.css');
+import {dropRight, get, isEqual, round} from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {ButtonToolbar, Col, FormGroup, Glyphicon, Grid, Row, Tooltip} from 'react-bootstrap';
+import {DropdownList} from 'react-widgets';
+import uuidv1 from 'uuid/v1';
+
+import { download } from '../../../utils/FileUtils';
+import {getMessageById} from '../../../utils/LocaleUtils';
+import {convertMeasuresToGeoJSON} from '../../../utils/MeasurementUtils';
+import {convertUom, getFormattedBearingValue} from '../../../utils/MeasureUtils';
+import Message from '../../I18N/Message';
+import NumberFormat from '../../I18N/Number';
+import BorderLayout from '../../layout/BorderLayout';
+import OverlayTriggerCustom from '../../misc/OverlayTriggerCustom';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import CoordinatesEditor from '../annotations/CoordinatesEditor';
+
+import('./measure.css');
 
 class MeasureComponent extends React.Component {
     static propTypes = {

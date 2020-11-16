@@ -12,4 +12,4 @@ const GrabMap = require("./GrabMap");
  * The preview can use the same React Class.
  * using allowTaint: true to make the snapshot preview faster.
  */
-export default GrabMap;
+module.exports = GrabMap;
