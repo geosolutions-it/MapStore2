@@ -473,7 +473,7 @@ export const handleBoxSelectionDrawEnd =  (action$, store) =>
                             method: "Rectangle",
                             operation: "INTERSECTS"
                         }
-                    }));
+                    }, ctrl || metaKey));
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
