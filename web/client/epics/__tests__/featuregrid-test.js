@@ -49,7 +49,6 @@ import {
     DISABLE_TOOLBAR,
     DEACTIVATE_GEOMETRY_FILTER,
     SET_SELECTION_OPTIONS,
-    DESELECT_FEATURES,
     SELECT_FEATURES
 } from '../../actions/featuregrid';
 
