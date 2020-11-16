@@ -101,7 +101,7 @@ export const featureTypeSelectedEpic = (action$, store) =>
             }
 
             const selectedLayer = selectedLayerSelector(state);
-            if (selectedLayer.type === 'vector') {
+            if (selectedLayer && selectedLayer.type === 'vector') {
                 return Rx.Observable.defer( () =>axios.get(action.url))
                     .map((response) => {
 

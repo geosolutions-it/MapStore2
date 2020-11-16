@@ -95,7 +95,7 @@ const createFeatureCollection = (features) => (
 
 const getFeaturesFiltered = (features, filterObj) => {
     if (filterObj.filterFields && filterObj.filterFields.length !== 0) {
-        const featuresFiltered = features.features.filter(FilterUtils.createFeatureFilter(filterObj));
+        const featuresFiltered = features.features.filter(createFeatureFilter(filterObj));
 
         features.features = featuresFiltered;
         features.numberMatched = featuresFiltered.length;
