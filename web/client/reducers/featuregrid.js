@@ -7,7 +7,7 @@
 */
 import assign from 'object-assign';
 
-import { head, get, uniqBy } from 'lodash';
+import { head, get, uniqBy, isArray } from 'lodash';
 
 import {
     SELECT_FEATURES,
@@ -354,6 +354,30 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case UPDATE_FILTER : {
         const {attribute} = (action.update || {});
+        if (attribute && action.append) {
+            const value = state.filters[attribute].value;
+            let oldVal = [];
+            if (value?.attribute) {
+                oldVal = [value];
+            }
+
+            if (isArray(value)) {
+                oldVal = value;
+            }
+
+            const newValue = [...oldVal, action.update.value];
+            return assign({}, state, {
+                filters: {
+                    [attribute]: {
+                        attribute: "the_geom",
+                        enabled: true,
+                        type: "geometry",
+                        operator: "OR",
+                        value: newValue
+                    }
+                }
+            });
+        }
         if (attribute) {
             return assign({}, state, {
                 filters: {
