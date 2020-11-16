@@ -129,7 +129,7 @@ export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
     });
 
 
-    if (layer.type === 'vector') {
+    if (layer && layer.type === 'vector') {
         return Rx.Observable.defer(() => new Promise((resolve) => {
             let features = createFeatureCollection(layer.features);
             let featuresFiltered = getFeaturesFiltered(features, filterObj);
