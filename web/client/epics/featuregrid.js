@@ -753,9 +753,16 @@ export const onFeatureGridGeometryEditing = (action$, store) => action$.ofType(G
             editEnabled: true,
             drawEnabled: false
         };
+
+        let changedFeatures = a.features.map((ft, index) => {
+            return assign({}, ft, {id: selectedFeaturesSelector(state)[index].id, _new: selectedFeaturesSelector(state)[index]._new, type: "Feature"});
+        });
+
+        // use one of the features to get drawing method i.e. feature.geometry.type
         let feature = assign({}, head(a.features), {id: selectedFeatureSelector(state).id, _new: selectedFeatureSelector(state)._new, type: "Feature"});
-        let enableEdit = a.enableEdit === "enterEditMode" ? Rx.Observable.of(changeDrawingStatus("drawOrEdit", feature.geometry.type, "featureGrid", [feature], drawOptions)) : Rx.Observable.empty();
-        return Rx.Observable.of(geometryChanged([feature])).concat(enableEdit);
+        let enableEdit = a.enableEdit === "enterEditMode" ? Rx.Observable.of(changeDrawingStatus("drawOrEdit", feature.geometry.type, "featureGrid", changedFeatures, drawOptions)) : Rx.Observable.empty();
+
+        return Rx.Observable.of(geometryChanged(changedFeatures)).concat(enableEdit);
     });
 /**
  * Manage delete geometry action flow
