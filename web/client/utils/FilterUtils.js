@@ -1016,38 +1016,42 @@ export const composeMultipleAttributeFilters = (filters, logic = "AND") =>{
         logic
     };
 
+    let groupField = {
+        id: uuid(),
+        index: 0,
+        logic: "OR",
+        groupId: 1
+    };
+
     let groupFieldArray = [];
     let attributeObj = {};
     let attributeValue = '';
     let featureArray = [];
-    for (let element of filters.filterFields) {
-        if (attributeValue !== element.attribute) {
-            attributeValue = element.attribute;
-            let groupField = {
-                id: uuid(),
-                index: 0,
-                logic: "OR",
-                groupId: 1
-            };
-            groupFieldArray.push(groupField);
-            attributeObj[attributeValue] = groupField.id;
-        }
-    }
-    for (let obj of filters.filterFields) {
-        if (obj.rawValue.includes(',')) {
-            let valueString = obj.rawValue.split(",");
-            for (let element of valueString) {
-                featureArray.push({
-                    attribute: obj.attribute,
-                    rowId: obj.rowId,
-                    type: obj.type,
-                    operator: obj.operator,
-                    value: obj.type === 'number' ? Number(element) : element.toString(),
-                    rawValue: element
-                });
-            }
-        }
-    }
+    let valueString;
+    filters.filterFields.map((element) =>
+        attributeValue !== element.attribute
+            ? ((attributeValue = element.attribute),
+            groupFieldArray.push(groupField),
+            (attributeObj[attributeValue] = groupField.id))
+            : null
+    );
+
+    filters.filterFields.map((obj)=>{
+        obj.rawValue.includes(',') ?
+            (valueString = obj.rawValue.split(","),
+            valueString.map((element) => {
+                if (element !== "") {
+                    featureArray.push({
+                        attribute: obj.attribute,
+                        rowId: obj.rowId,
+                        type: obj.type,
+                        operator: obj.operator,
+                        value: obj.type === 'number' ? Number(element) : element.toString(),
+                        rawValue: element
+                    });
+                }
+            })) : null;
+    });
     for (let element of featureArray) {
         for (let char in attributeObj) {
             if (element.attribute === char) {
@@ -1102,36 +1106,38 @@ export const cleanColumnFilters = (featureObj)=> {
     let groupFieldArray = [];
     let attributeObj = {};
     let attributeValue = '';
+    let groupField = {
+        id: uuid(),
+        index: 0,
+        logic: "OR",
+        groupId: 1
+    };
     for (let key of featureObj.filterFields) {
         if (key.rawValue.includes(',')) {
             let valueString = key.rawValue.split(",");
             for (let element of valueString) {
-                featureArray.push({
-                    attribute: key.attribute,
-                    rowId: key.rowId,
-                    type: key.type,
-                    operator: key.operator,
-                    value: key.type === 'number' ? Number(element) : element.toString(),
-                    rawValue: element
-                });
+                if (element !== "") {
+                    featureArray.push({
+                        attribute: key.attribute,
+                        rowId: key.rowId,
+                        type: key.type,
+                        operator: key.operator,
+                        value: key.type === 'number' ? Number(element) : element.toString(),
+                        rawValue: element
+                    });
+                }
             }
         } else {
             featureArray.push(key);
         }
     }
-    for (let element of featureObj.filterFields) {
-        if (attributeValue !== element.attribute) {
-            attributeValue = element.attribute;
-            let groupField = {
-                id: uuid(),
-                index: 0,
-                logic: "OR",
-                groupId: 1
-            };
-            groupFieldArray.push(groupField);
-            attributeObj[attributeValue] = groupField.id;
-        }
-    }
+    featureObj.filterFields.map((element) =>
+        attributeValue !== element.attribute
+            ? ((attributeValue = element.attribute),
+            groupFieldArray.push(groupField),
+            (attributeObj[attributeValue] = groupField.id))
+            : null
+    );
     featureObj.filterFields = featureArray;
     for (let element of featureArray) {
         for (let char in attributeObj) {
