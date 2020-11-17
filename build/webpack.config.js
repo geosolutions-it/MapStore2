@@ -4,7 +4,7 @@ const themeEntries = require('./themes.js').themeEntries;
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 module.exports = require('./buildConfig')(
     {
-        "mapstore2": path.join(__dirname, "..", "web", "client", "product", "app")
+        [process.env.bundle || "mapstore2"]: path.join(__dirname, "..", "web", "client", "product", process.env.entrypoint || process.env.bundle || "app")
     },
     { ["themes/default"]: themeEntries["themes/" + (process.env.theme || "default")]},
     {
