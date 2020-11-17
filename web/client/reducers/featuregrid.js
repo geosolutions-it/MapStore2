@@ -368,7 +368,7 @@ function featuregrid(state = emptyResultsState, action) {
             return assign({}, state, {
                 filters: {
                     [attribute]: {
-                        attribute: "the_geom",
+                        attribute: attribute,
                         enabled: true,
                         type: "geometry",
                         operator: "OR",

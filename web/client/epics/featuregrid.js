@@ -291,9 +291,6 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
         return updateQuery(filter, update.type);
     }
     let u = update;
-    if (append) {
-        u = get(store.getState(), "featuregrid.filters.the_geom");
-    }
     return updateQuery(gridUpdateToQueryUpdate(u, wfsFilter(store.getState())), u.type);
 };
 
@@ -400,7 +397,7 @@ export const enableGeometryFilterOnEditMode = (action$, store) =>
         .switchMap(() => {
             const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
             return currentFilter.value ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
-                attribute: "the_geom",
+                attribute: findGeometryProperty(describeSelector(store.getState())).name,
                 enabled: true,
                 type: "geometry"
             }));
@@ -574,7 +571,7 @@ export const featureGridChangePage = (action$, store) =>
                     if (multipleSelect && geometryFilter.enabled) {
                         features = selectedFeaturesSelector(store.getState());
                     }
-                    // TODO: Handle pagination when multiselect due to control
+                    // TODO: Handle pagination when multi-select due to control
                     return fatureGridQueryResult(features, [get(ra, "filterObj.pagination.startIndex")]);
                 })
                 .take(1)
@@ -609,6 +606,17 @@ export const featureGridReloadPageOnSaveSuccess = (action$, store) =>
                 .take(2)
             )
     );
+/**
+ * When some changes has been saved the selected features have
+ * to be cleaned up. This because the geometry may have been changed and so
+ * the filter may not match with them anymore. Moreover they are highlighted
+ * in edit mode, so the position may have been changed.
+ * Also the feature grid close should reset selection, whatever events causes it (manual close, widget creation...).
+ */
+export const updateSelectedOnSaveOrCloseFeatureGrid = (action$) =>
+    action$.ofType(SAVE_SUCCESS, CLOSE_FEATURE_GRID).switchMap(() => {
+        return Rx.Observable.of(selectFeatures([]));
+    });
 /**
  * trigger WFS transaction stream on SAVE_CHANGES action
  */
@@ -841,10 +849,10 @@ export const askChangesConfirmOnFeatureGridClose = (action$, store) => action$.o
         return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
     }
     return Rx.Observable.of(closeFeatureGrid(), updateFilter({
-        attribute: "the_geom",
+        attribute: findGeometryProperty(describeSelector(state)).propName,
         enabled: false,
         type: "geometry"
-    }), selectFeatures([]));
+    }));
 });
 export const onClearChangeConfirmedFeatureGrid = (action$) => action$.ofType(CLEAR_CHANGES_CONFIRMED)
     .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false)));
