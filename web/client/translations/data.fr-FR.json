@@ -1789,6 +1789,15 @@
             "placeHolder": {
                 "default": "Sélectionnez un attribut"
             },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUM": "SUM",
+              "AVG": "AVG",
+              "STDDEV": "STDDEV",
+              "MIN": "MIN",
+              "MAX": "MAX",
+              "NONE": "Aucune opération"
+            },
             "groupByAttributes": {
                 "line": "Attributs X",
                 "pie": "Grouper par",
@@ -1841,6 +1850,13 @@
               "xAxis": "Axe X",
               "xAxisAngle": "Rotation des étiquettes",
               "hideLabels": "Masquer les libellés",
+              "format": "Format",
+              "prefix": "Prefix",
+              "suffix": "Suffixe",
+              "examples": "Exemples",
+              "formatExamples": "<div><ul><li><code>.0%</code>: pourcentage arrondi, '12%'</li><li><code>.2s</code>:SI -préfixe avec deux chiffres significatifs, '42M' </li> <li> <code>,.2r</code>: groupé des milliers avec deux chiffres significatifs '4 200'</li> </ul> <em>Plus d'informations sur la syntaxe de formatage <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\"> ici</a>.</em> </div> ",
+              "formula": "Formule",
+              "formulaExamples": "<div> Transformez la valeur à l'aide d'une formule. Utilisez la variable <code> valeur </code> dans l'expression: <h5> Exemples </h5> <ul> <li> <code> valeur + 2 </code></li><li> <code> valeur / 100 </code> </li> </ul> <em>Plus d'informations sur la syntaxe <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">ici </a>.</em></div> ",
               "xAxisType": "Type",
               "forceTicks": "Ne sauter les étiquettes",
               "maxXAxisLabels": "Les libellés ne peuvent de toute façon pas dépasser {max}",

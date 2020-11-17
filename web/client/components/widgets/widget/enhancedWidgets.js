@@ -9,7 +9,7 @@ import textWidget from '../enhancers/textWidget';
 import mapWidget from '../enhancers/mapWidget';
 
 // Enhancers for ajax support
-import wpsChart from '../enhancers/wpsChart';
+import multiProtocolChart from '../enhancers/multiProtocolChart';
 import wpsCounter from '../enhancers/wpsCounter';
 import wfsTable from '../enhancers/wfsTable';
 
@@ -47,7 +47,7 @@ export const ChartWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,
     dependenciesToOptions,
-    wpsChart,
+    multiProtocolChart,
     chartWidget
 )(BaseChartWidget);
 

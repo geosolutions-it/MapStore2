@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import expect from 'expect';
-import ChartWizard from '../ChartWizard';
+import ChartWizard, { isChartOptionsValid } from '../ChartWizard';
 describe('ChartWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -33,5 +33,24 @@ describe('ChartWizard component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.chart-options-form');
         expect(el).toExist();
+    });
+    describe('isChartOptionsValid', () => {
+        it('mandatory operation if process present', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B"
+            }, { hasAggregateProcess: true })).toBeFalsy();
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B",
+                aggregateFunction: "SUM"
+            }, { hasAggregateProcess: true })).toBeTruthy();
+        });
+        it('operation not needed if WPS not present', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B"
+            }, { hasAggregateProcess: false })).toBeTruthy();
+        });
     });
 });

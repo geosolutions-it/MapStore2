@@ -100,8 +100,7 @@ import {
     disableToolbar,
     FEATURES_MODIFIED,
     deactivateGeometryFilter as  deactivateGeometryFilterAction,
-    setSelectionOptions,
-    deselectFeatures
+    setSelectionOptions
 } from '../actions/featuregrid';
 
 import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
@@ -278,7 +277,7 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
 };
 
-const updateFilterFunc = (store) => ({update = {}} = {}) => {
+const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
     // If an advanced filter is present it's filterFields should be composed with the action'
     const {id} = selectedLayerSelector(store.getState());
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
@@ -291,7 +290,11 @@ const updateFilterFunc = (store) => ({update = {}} = {}) => {
         const filter = {...filterObj, ...composedFilterFields};
         return updateQuery(filter, update.type);
     }
-    return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())), update.type);
+    let u = update;
+    if (append) {
+        u = get(store.getState(), "featuregrid.filters.the_geom");
+    }
+    return updateQuery(gridUpdateToQueryUpdate(u, wfsFilter(store.getState())), u.type);
 };
 
 
@@ -441,11 +444,11 @@ export const handleClickOnMap = (action$, store) =>
                             method: "Circle",
                             operation: "INTERSECTS"
                         }
-                    }));
+                    }, ctrl || metaKey));
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
-                    action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
+                    action$.ofType(LOCATION_CHANGE)
                 )));
 export const handleBoxSelectionDrawEnd =  (action$, store) =>
     action$.ofType(UPDATE_FILTER)
@@ -470,7 +473,7 @@ export const handleBoxSelectionDrawEnd =  (action$, store) =>
                             method: "Rectangle",
                             operation: "INTERSECTS"
                         }
-                    }));
+                    }, ctrl || metaKey));
             })
                 .takeUntil(Rx.Observable.merge(
                     action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
@@ -494,21 +497,7 @@ export const selectFeaturesOnMapClickResult = (action$, store) =>
         .filter(({reason}) => reason === 'geometry')
         .switchMap(({result}) => {
             let features = get(result, 'features');
-            const selectedFeatures = selectedFeaturesSelector(store.getState());
-            const alreadySelectedFeature = find(selectedFeatures, { id: features[0].id });
             const multipleSelect = multiSelect(store.getState());
-
-            if (multipleSelect && alreadySelectedFeature) {
-                if (selectedFeatures.length === 1) {
-                    return Rx.Observable.of(
-                        updateFilter({
-                            attribute: "the_geom",
-                            enabled: false,
-                            type: "geometry"
-                        }), deselectFeatures([alreadySelectedFeature]), setSelectionOptions());
-                }
-                return Rx.Observable.of(deselectFeatures([alreadySelectedFeature]));
-            }
 
             const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
             return Rx.Observable.of(
@@ -753,9 +742,16 @@ export const onFeatureGridGeometryEditing = (action$, store) => action$.ofType(G
             editEnabled: true,
             drawEnabled: false
         };
+
+        let changedFeatures = a.features.map((ft, index) => {
+            return assign({}, ft, {id: selectedFeaturesSelector(state)[index].id, _new: selectedFeaturesSelector(state)[index]._new, type: "Feature"});
+        });
+
+        // use one of the features to get drawing method i.e. feature.geometry.type
         let feature = assign({}, head(a.features), {id: selectedFeatureSelector(state).id, _new: selectedFeatureSelector(state)._new, type: "Feature"});
-        let enableEdit = a.enableEdit === "enterEditMode" ? Rx.Observable.of(changeDrawingStatus("drawOrEdit", feature.geometry.type, "featureGrid", [feature], drawOptions)) : Rx.Observable.empty();
-        return Rx.Observable.of(geometryChanged([feature])).concat(enableEdit);
+        let enableEdit = a.enableEdit === "enterEditMode" ? Rx.Observable.of(changeDrawingStatus("drawOrEdit", feature.geometry.type, "featureGrid", changedFeatures, drawOptions)) : Rx.Observable.empty();
+
+        return Rx.Observable.of(geometryChanged(changedFeatures)).concat(enableEdit);
     });
 /**
  * Manage delete geometry action flow
@@ -844,7 +840,11 @@ export const askChangesConfirmOnFeatureGridClose = (action$, store) => action$.o
     if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
         return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
     }
-    return Rx.Observable.of(closeFeatureGrid(), selectFeatures([]));
+    return Rx.Observable.of(closeFeatureGrid(), updateFilter({
+        attribute: "the_geom",
+        enabled: false,
+        type: "geometry"
+    }), selectFeatures([]));
 });
 export const onClearChangeConfirmedFeatureGrid = (action$) => action$.ofType(CLEAR_CHANGES_CONFIRMED)
     .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false)));
@@ -983,10 +983,7 @@ export const stopSyncWmsFilter = (action$, store) =>
     action$.ofType(TOGGLE_SYNC_WMS)
         .filter( () => !isSyncWmsActive(store.getState()))
         .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}]));
-/**
- * Sync map with filter.
- *
- */
+
 /**
      * Deactivate map sync when featuregrid closes if it was active
      */
@@ -996,6 +993,10 @@ export const deactivateSyncWmsFilterOnFeatureGridClose = (action$, store) =>
         .switchMap(() => {
             return Rx.Observable.of(toggleSyncWms());
         });
+/**
+ * Sync map with filter.
+ *
+ */
 export const syncMapWmsFilter = (action$, store) =>
     action$.ofType(QUERY_CREATE, UPDATE_QUERY).
         filter((a) => {

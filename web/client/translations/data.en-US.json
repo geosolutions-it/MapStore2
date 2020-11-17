@@ -1788,6 +1788,15 @@
             "placeHolder":{
                 "default":"Select attribute"
             },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUM":"SUM",
+              "AVG":"AVG",
+              "STDDEV":"STDDEV",
+              "MIN":"MIN",
+              "MAX":"MAX",
+              "NONE": "No Operation"
+            },
             "groupByAttributes": {
                 "line": "X Attribute",
                 "pie": "Group By",
@@ -1840,6 +1849,13 @@
               "xAxis": "X axis",
               "xAxisAngle": "Label rotation",
               "hideLabels": "Hide labels",
+              "format": "Format",
+              "prefix": "Prefix",
+              "suffix": "Suffix",
+              "examples": "Examples",
+              "formatExamples": "<div><ul><li><code>.0%</code>: rounded percentage, '12%'</li><li><code>.2s</code>:SI-prefix with two significant digits, '42M'</li><li><code>,.2r</code>: grouped thousands with two significant digits '4,200'</li></ul><em>More information about formatting syntax <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">here</a>.</em></div>",
+              "formula": "Formula",
+              "formulaExamples": "<div>Transform the value using a formula. Use the variable <code>value</code> in the expression:<h5>Examples</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em>More information about the syntax <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">here</a>.</em></div>",
               "xAxisType": "Type",
               "forceTicks": "Never skip labels",
               "maxXAxisLabels": "The labels can not anyway be more than {max}",
