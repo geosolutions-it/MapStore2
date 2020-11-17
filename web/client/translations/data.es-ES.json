@@ -1615,10 +1615,37 @@
             "srs": "Sistema de referencia espacial",
             "export": "Exportar",
             "downloadonlycurrentpage": "Descargar la página actual",
+            "cropDataSet": "Recortar el conjunto de datos a la ventana gráfica actual",
+            "downloadFilteredDataSet": "Descargar conjunto de datos filtrado",
+            "advancedOptions": "Opciones avanzadas",
+            "compression": "Compresión",
+            "tileWidth": "Ancho del azulejo",
+            "tileHeight": "Altura del azulejo",
+            "quality": "Calidad",
             "error": {
                 "title": "Error en la exportación",
-                "invalidOutputFormat": "Formato de exportación no disponible"
-            }
+                "invalidOutputFormat": "Formato de exportación no disponible",
+                "downloadEstimatorTitle": "Error de DownloadEstimator",
+                "downloadEstimatorFailed": "La solicitud de DownloadEstimator falló, lo que significa que el archivo exportado excede los límites del servidor configurado. Intente cambiar las opciones de descarga o agregue un filtro a su capa y vuelva a intentarlo."
+            },
+            "exportResultsMessages": {
+                "newExport": "El archivo estará disponible aquí cuando se complete la exportación",
+                "exportFailure": "Error al exportar la capa \"{layerTitle}\". Abra el cuadro de diálogo de resultados de exportación para obtener más información.",
+                "exportSuccess": "La exportación de la capa \"{layerTitle}\" finalizó correctamente.",
+                "invalidHref": "¡La respuesta del servidor no contenía una dirección URL válida para los archivos exportados!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "¡El proceso de descarga falló! El servidor ha devuelto el siguiente informe de excepción: \"{exceptionReport}\"",
+                "badResponse": "¡El proceso de descarga falló! El servidor ha devuelto datos incorrectos, código de error: \"{errorCode}\"",
+                "executeProcessXhrFailed": "¡La solicitud ExecuteProcess falló! El servidor puede estar mal configurado o no se puede acceder",
+                "getExecutionStatusXhrFailed": "¡La solicitud GetExecutionStatus falló! El servidor puede estar mal configurado o no se puede acceder",
+                "unexpectedError": "Ocurrió un error inesperado"
+            },
+            "noSupportedServiceFound": "¡El servidor no admite la descarga de WFS o WPS para esta capa!"
+        },
+        "exportDataResults": {
+            "title": "Exportar resultados de datos",
+            "emptyStateMessage": "No se han encontrado resultados"
         },
         "widgets": {
              "types": {

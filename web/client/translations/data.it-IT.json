@@ -1615,10 +1615,37 @@
             "srs": "Sistema di riferimento",
             "export": "Esporta",
             "downloadonlycurrentpage": "Scarica solo la pagina corrente",
+            "cropDataSet": "Ritaglia il set di dati nella finestra corrente",
+            "downloadFilteredDataSet": "Scarica set di dati filtrati",
+            "advancedOptions": "Opzioni avanzate",
+            "compression": "Compressione",
+            "tileWidth": "Larghezza piastrella",
+            "tileHeight": "Altezza piastrella",
+            "quality": "Qualità",
             "error": {
                 "title": "Errore durante l'esportazione",
-                "invalidOutputFormat": "Il formato selezionato non è disponibile"
-            }
+                "invalidOutputFormat": "Il formato selezionato non è disponibile",
+                "downloadEstimatorTitle": "Errore DownloadEstimator",
+                "downloadEstimatorFailed": "Richiesta DownloadEstimator non riuscita, il che significa che il file esportato supera i limiti del server configurato. Prova a modificare le opzioni di download o aggiungi un filtro al tuo livello e riprova."
+            },
+            "exportResultsMessages": {
+                "newExport": "Il file sarà disponibile qui al termine dell'esportazione",
+                "exportFailure": "Esportazione per il livello \"{layerTitle}\" non riuscita! Apri la finestra di dialogo dei risultati di esportazione per ulteriori informazioni.",
+                "exportSuccess": "L'esportazione per il livello \"{layerTitle}\" è terminata correttamente.",
+                "invalidHref": "La risposta dal server non conteneva un indirizzo URL valido per i file esportati!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Processo di download fallito! Il server ha restituito il seguente rapporto di eccezione: \"{exceptionReport}\"",
+                "badResponse": "Processo di download fallito! Il server ha restituito dati errati, codice di errore: \"{errorCode}\"",
+                "executeProcessXhrFailed": "Richiesta ExecuteProcess non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
+                "getExecutionStatusXhrFailed": "Richiesta GetExecutionStatus non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
+                "unexpectedError": "Si è verificato un errore imprevisto"
+            },
+            "noSupportedServiceFound": "Il server non supporta il download WFS o WPS per questo livello!"
+        },
+        "exportDataResults": {
+            "title": "Esporta i risultati dei dati",
+            "emptyStateMessage": "Nessun risultato trovato"
         },
         "widgets": {
             "types": {
