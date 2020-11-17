@@ -259,8 +259,7 @@ function featuregrid(state = emptyResultsState, action) {
             deleteConfirm: false,
             drawing: false,
             newFeatures: [],
-            changes: [],
-            select: []
+            changes: []
         });
     }
     case CREATE_NEW_FEATURE: {
