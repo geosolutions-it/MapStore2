@@ -161,7 +161,7 @@ const MapStore2 = {
      * });
      */
     create(container, opts, pluginsDef, component) {
-        const embedded = require('../containers/Embedded');
+        const embedded = require('../containers/Embedded').default;
         const options = merge({}, this.defaultOptions || {}, opts);
         const {initialState, storeOpts} = options;
 
@@ -179,7 +179,7 @@ const MapStore2 = {
             componentConfig,
             version: versionSelector(state),
             loadAfterTheme: loadAfterThemeSelector(state)
-        }))(require('../components/app/StandardContainer'));
+        }))(require('../components/app/StandardContainer').default);
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
         const appStore = require('../stores/StandardStore').default.bind(null, {

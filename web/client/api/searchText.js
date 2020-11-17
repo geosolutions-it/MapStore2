@@ -38,7 +38,7 @@ let Services = {
     nominatim: (searchText, options = {
         returnFullData: false
     }) =>
-        require('./Nominatim')
+        require('./Nominatim').default
             .geocode(searchText, options)
             .then( res => {return options.returnFullData ? res : nominatimToGeoJson(res.data); }),
     wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, fromTextToFilter = defaultFromTextToFilter, returnFullData = false, ...params }) => {

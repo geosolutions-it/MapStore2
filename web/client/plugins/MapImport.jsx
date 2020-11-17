@@ -49,7 +49,7 @@ import { mapTypeSelector } from '../selectors/maptype';
 export default {
     MapImportPlugin: assign({loadPlugin: (resolve) => {
         require.ensure(['./import/Import'], () => {
-            const Import = require('./import/Import');
+            const Import = require('./import/Import').default;
 
             const ImportPlugin = connect((state) => (
                 {
