@@ -1051,11 +1051,9 @@ export const normalizeFilterCQL = (filter, nativeCrs) => {
  * @param {string} opts.nsPlaceholder xlmns placeholder to use
  * @param {boolean} opts.addXmlnsToRoot add xmlns information to root ogc:Filter element
  * @param {string[]} opts.xmlnsToAdd xmlns strings to add to root ogc:Filter element if addXmlnsToRoot is true
- * @param {string[]} filters.cqlFilters cql filters array
- * @param {string[]} filters.ogcFilterParts ogc filter parts
- * @param {object[]} filters.filterObjects array of filter objects to convert to ogc
+ * @param {...string|object} filters filters to merge
  */
-export const mergeFiltersToOGC = (opts = {}, filters = {}) =>  {
+export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
     const {
         nsPlaceholder = 'ogc',
         ogcVersion: ogcVersionOpt = '2.0',

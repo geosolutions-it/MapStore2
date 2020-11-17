@@ -262,7 +262,7 @@ export const startFeatureExportDownload = (action$, store) =>
                             ogcVersion: '1.0.0',
                             addXmlnsToRoot: true,
                             xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
-                        }, [layer.layerFilter, action.filterObj])
+                        }, layer.layerFilter, action.filterObj)
                     }
                 } : undefined,
                 ROI: cropToROI ? {

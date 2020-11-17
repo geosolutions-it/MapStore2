@@ -144,7 +144,7 @@ export const wfsQueryEpic = (action$, store) =>
             const {layerFilter, params} = layer;
             const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
 
-            const ogcFilter = mergeFiltersToOGC({ogcVersion: '1.1.0'}, [cqlFilter, layerFilter, action.filterObj]);
+            const ogcFilter = mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, action.filterObj);
             const { options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
             const options = {
                 ...action.filterObj.pagination,
