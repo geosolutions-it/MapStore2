@@ -98,6 +98,7 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
                 showgrid: cartesian
             },
             xaxis: {
+                showgrid: cartesian,
                 type: xAxisOpts?.type,
                 showticklabels: !xAxisOpts?.hide,
                 // dtick used to force show all x axis labels.
@@ -144,7 +145,7 @@ export const toPlotly = (props) => {
         data: series.map(({ dataKey: yDataKey }) => {
             return {
                 type,
-                name: yAxisLabel ?? yDataKey,
+                name: yAxisLabel || yDataKey,
                 ...getData({ ...props, xDataKey, yDataKey})
             };
         }),

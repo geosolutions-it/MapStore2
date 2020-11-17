@@ -1761,6 +1761,15 @@
             "placeHolder":{
                 "default":"Seleziona attributo"
             },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUM":"SUM",
+              "AVG":"AVG",
+              "STDDEV":"STDDEV",
+              "MIN":"MIN",
+              "MAX":"MAX",
+              "NONE": "Nessuna Operazione"
+            },
             "groupByAttributes": {
                 "line": "Attributo X",
                 "pie": "Raggruppa per",
