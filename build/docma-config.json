@@ -298,7 +298,7 @@
                 "web/client/plugins/UserExtensions.jsx",
                 "web/client/plugins/UserSession.jsx",
                 "web/client/plugins/Version.jsx",
-                "web/client/plugins/WFSDownload.jsx",
+                "web/client/plugins/LayerDownload.jsx",
                 "web/client/plugins/Widgets.jsx",
                 "web/client/plugins/WidgetsBuilder.jsx",
                 "web/client/plugins/WidgetsTray.jsx",

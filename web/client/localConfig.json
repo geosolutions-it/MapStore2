@@ -343,7 +343,8 @@
                     }
                 }
             }, "Home", "FeatureEditor",
-            "WFSDownload",
+            "LayerDownload",
+            "ExportDataResults",
             {
               "name": "QueryPanel",
               "cfg": {

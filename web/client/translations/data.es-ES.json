@@ -1609,7 +1609,7 @@
                 "createNewChart": "Crea un gráfico para la capa seleccionada"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exportar los datos",
             "format": "Formato de fichero",
             "srs": "Sistema de referencia espacial",
@@ -2694,7 +2694,7 @@
             "descriptionGeorchestra": "Muestra la versión de GeOrchestra en la herramienta de configuración de mapas",
             "title": "Versión"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Permite descargar datos de la tabla de atributos",
             "title": "Descargar Datos"
           },

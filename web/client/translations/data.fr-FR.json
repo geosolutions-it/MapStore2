@@ -1610,7 +1610,7 @@
                 "createNewChart": "Créer un graphique pour le calque sélectionné"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exporter des données",
             "format": "Format de fichier",
             "srs": "Système de référence spatiale",
@@ -2695,7 +2695,7 @@
             "descriptionGeorchestra": "Affiche la version de GeOrchestra dans l'outil de paramètres de carte",
             "title": "Version"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Permet de télécharger des données de la table d'attributs",
             "title": "Télécharger les données"
           },

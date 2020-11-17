@@ -10,22 +10,22 @@ import expect from 'expect';
 
 import { toggleControl, TOGGLE_CONTROL } from '../../actions/controls';
 import { download } from '../../actions/layers';
-import { DOWNLOAD_OPTIONS_CHANGE, downloadFeatures } from '../../actions/wfsdownload';
+import { DOWNLOAD_OPTIONS_CHANGE, downloadFeatures } from '../../actions/layerdownload';
 import { QUERY_CREATE } from '../../actions/wfsquery';
-import { closeExportDownload, openDownloadTool, startFeatureExportDownload } from '../wfsdownload';
+import { closeExportDownload, openDownloadTool, startFeatureExportDownload } from '../layerdownload';
 import { testEpic } from './epicTestUtils';
-describe('wfsdownload Epics', () => {
+describe('layerdownload Epics', () => {
     it('close export panel', (done) => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 expect(action.type).toBe(TOGGLE_CONTROL);
-                expect(action.control).toBe('wfsdownload');
+                expect(action.control).toBe('layerdownload');
             });
             done();
         };
 
-        const state = {controls: { queryPanel: {enabled: false}, wfsdownload: {enabled: true}}};
+        const state = {controls: { queryPanel: {enabled: false}, layerdownload: {enabled: true}}};
         testEpic(closeExportDownload, 1, toggleControl("queryPanel"), epicResult, state);
     });
     it('downloads a layer', (done) => {
@@ -34,7 +34,7 @@ describe('wfsdownload Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case TOGGLE_CONTROL:
-                    expect(action.control).toBe('wfsdownload');
+                    expect(action.control).toBe('layerdownload');
                     break;
                 case DOWNLOAD_OPTIONS_CHANGE:
                     expect(action.key).toBe('singlePage');
@@ -51,8 +51,8 @@ describe('wfsdownload Epics', () => {
             done();
         };
 
-        const state = { controls: { wfsdownload: { enabled: false, downloadOptions: {}} } };
-        testEpic(openDownloadTool, 3, download({name: 'mylayer', url: 'myurl'}), epicResult, state);
+        const state = { controls: { layerdownload: { enabled: false, downloadOptions: {}} } };
+        testEpic(openDownloadTool, 3, download({name: 'mylayer', url: 'myurl', search: {url: 'http://search'}}), epicResult, state);
     });
     it('startFeatureExportDownload triggers on downloadFeatures', (done) => {
         const epicResult = actions => {
@@ -69,7 +69,7 @@ describe('wfsdownload Epics', () => {
         const state = {
             controls: {
                 queryPanel: { enabled: false },
-                wfsdownload: { enabled: true }
+                layerdownload: { enabled: true }
             },
             featuregrid: {}
         };

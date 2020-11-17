@@ -6,15 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {
+    CHECKING_WPS_AVAILABILITY,
     DOWNLOAD_OPTIONS_CHANGE,
+    CLEAR_DOWNLOAD_OPTIONS,
     DOWNLOAD_FEATURES,
     DOWNLOAD_FINISHED,
     FORMAT_OPTIONS_FETCH,
-    FORMAT_OPTIONS_UPDATE
-} from '../actions/wfsdownload';
+    FORMAT_OPTIONS_UPDATE,
+    SET_SERVICE
+} from '../actions/layerdownload';
 
 /**
- * reducer for wfsdownload
+ * reducer for layerdownload
  * @memberof reducers
  * @param  {Object} [state={downloadOptions: {}}]          The initial state
  * @param  {Object} action                   the action
@@ -24,7 +27,7 @@ import {
  * @prop {string}  downloadOptions.selectedFormat the format selectedFormat
  * @prop {boolean} downloadOptions.singlePage export only the current page, not the whole data
  */
-function wfsdownload( state = {downloadOptions: {singlePage: true}}, action) {
+function layerdownload( state = {downloadOptions: {singlePage: true}}, action) {
     switch (action.type) {
     case DOWNLOAD_FEATURES:
         return {
@@ -37,6 +40,13 @@ function wfsdownload( state = {downloadOptions: {singlePage: true}}, action) {
             downloadOptions: {
                 ...state.downloadOptions,
                 [action.key]: action.value
+            }
+        };
+    case CLEAR_DOWNLOAD_OPTIONS:
+        return {
+            ...state,
+            downloadOptions: {
+                singlePage: true
             }
         };
     case FORMAT_OPTIONS_FETCH:
@@ -59,9 +69,21 @@ function wfsdownload( state = {downloadOptions: {singlePage: true}}, action) {
             formatsLoading: false
         };
     }
+    case SET_SERVICE: {
+        return {
+            ...state,
+            service: action.service
+        };
+    }
+    case CHECKING_WPS_AVAILABILITY: {
+        return {
+            ...state,
+            checkingWPSAvailability: action.checking
+        };
+    }
     default:
         return state;
     }
 }
 
-export default wfsdownload;
+export default layerdownload;

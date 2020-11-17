@@ -104,13 +104,13 @@ const tocSelector = createSelector(
         isCesium,
         userSelector,
         isLocalizedLayerStylesEnabledSelector
-    ], (enabled, groups, settings, swipeSettings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
+    ], (enabled, groups, settings, swipeSettings, layerMetadata, layerdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
         enabled,
         groups,
         settings,
         swipeSettings,
         layerMetadata,
-        wfsdownload,
+        layerdownload,
         currentZoomLvl: map && map.zoom,
         scales: getScales(
             map && map.projection || 'EPSG:3857',
@@ -171,7 +171,7 @@ class LayerTree extends React.Component {
         settings: PropTypes.object,
         swipeSettings: PropTypes.object,
         layerMetadata: PropTypes.object,
-        wfsdownload: PropTypes.object,
+        layerdownload: PropTypes.object,
         metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func]),
         refreshMapEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
@@ -288,7 +288,7 @@ class LayerTree extends React.Component {
         activateRemoveLayer: true,
         activateRemoveGroup: true,
         activateQueryTool: true,
-        activateDownloadTool: false,
+        activateDownloadTool: true,
         activateWidgetTool: false,
         activateLayerFilterTool: false,
         activateLayerInfoTool: true,
@@ -409,7 +409,7 @@ class LayerTree extends React.Component {
                             settings={this.props.settings}
                             swipeSettings={this.props.swipeSettings}
                             layerMetadata={this.props.layerMetadata}
-                            wfsdownload={this.props.wfsdownload}
+                            layerdownload={this.props.layerdownload}
                             metadataTemplate={this.props.metadataTemplate}
                             maxDepth={this.props.maxDepth}
                             activateTool={{
@@ -597,7 +597,8 @@ const checkPluginsEnhancer = branch(
             activateSettingsTool = true,
             activateLayerFilterTool = true,
             activateWidgetTool = true,
-            activateLayerInfoTool = true
+            activateLayerInfoTool = true,
+            activateDownloadTool = true
         }) => ({
             activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "MetadataExplorer" }) || false, // requires MetadataExplorer (Catalog)
             activateAddGroupButton: activateAddGroupButton && !!find(items, { name: "AddGroup" }) || false,
@@ -607,7 +608,8 @@ const checkPluginsEnhancer = branch(
             // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approach
             // the button should hide if also widgets plugins is not available. Maybe is a good idea to merge the two plugins
             activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) && !!find(items, { name: "Widgets" }),
-            activateLayerInfoTool: activateLayerInfoTool && !!find(items, { name: "LayerInfo" }) || false
+            activateLayerInfoTool: activateLayerInfoTool && !!find(items, { name: "LayerInfo" }) || false,
+            activateDownloadTool: activateDownloadTool && !!find(items, { name: "LayerDownload" }) || false
         })
     )
 );

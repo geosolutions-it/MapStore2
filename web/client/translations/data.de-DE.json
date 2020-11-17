@@ -1608,7 +1608,7 @@
                 "createNewChart": "Erstellen Sie ein Diagramm für die ausgewählte Ebene"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Daten exportieren",
             "format": "Dateiformat",
             "srs": "Räumliches Bezugssystem",
@@ -2693,7 +2693,7 @@
             "descriptionGeorchestra": "Zeigt die Version von GeOrchestra in den Karteneinstellungen an",
             "title": "Ausführung"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Ermöglicht das Herunterladen von Daten aus der Attributtabelle",
             "title": "Daten herunterladen"
           },

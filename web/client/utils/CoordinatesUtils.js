@@ -407,6 +407,27 @@ export const reprojectBbox = function(bbox, source, dest, normalize = true) {
     }
     return projPoints;
 };
+export const bboxToFeatureGeometry = (bbox) => {
+    const bboxObj = isArray(bbox) ? {
+        minx: bbox[0],
+        miny: bbox[1],
+        maxx: bbox[2],
+        maxy: bbox[3]
+    } : bbox;
+
+    const {minx, miny, maxx, maxy} = bboxObj;
+
+    return {
+        type: "Polygon",
+        coordinates: [[
+            [minx, miny],
+            [minx, maxy],
+            [maxx, maxy],
+            [maxx, miny],
+            [minx, miny]
+        ]]
+    };
+};
 export const getCompatibleSRS = (srs, allowedSRS) => {
     if (srs === 'EPSG:900913' && !allowedSRS['EPSG:900913'] && allowedSRS['EPSG:3857']) {
         return 'EPSG:3857';

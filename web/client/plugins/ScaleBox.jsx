@@ -62,7 +62,7 @@ module.exports = {
     }, {
         MapFooter: {
             name: 'scale',
-            position: 1,
+            position: 2,
             tool: true,
             priority: 1
         }

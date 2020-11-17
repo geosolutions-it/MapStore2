@@ -1609,7 +1609,7 @@
                 "createNewChart": "crea un grafico per il livello selezionato"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Esporta dati",
             "format": "Formato file",
             "srs": "Sistema di riferimento",
@@ -2694,7 +2694,7 @@
             "descriptionGeorchestra": "Mostra la versione di GeOrchestra nellla finestra di settings",
             "title": "Versione"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Consente di scaricare dati dalla tabella degli attributi",
             "title": "Scarica dati"
           },
