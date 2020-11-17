@@ -103,7 +103,7 @@ import {
     setSelectionOptions
 } from '../actions/featuregrid';
 
-import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
+import { TOGGLE_CONTROL, SET_CONTROL_PROPERTY, resetControls, setControlProperty, toggleControl } from '../actions/controls';
 
 import {
     queryPanelSelector,
@@ -713,6 +713,14 @@ export const resetEditingOnFeatureGridClose = (action$, store) => action$.ofType
                 .switchMap(() => Rx.Observable.of(drawSupportReset())))
 
 );
+export const clearSelectedFeaturesOnOpenWidgetBuilder = (action$, store) =>
+    action$.ofType(SET_CONTROL_PROPERTY)
+        .filter(({control, value}) => (control === "widgetBuilder" && value === false))
+        .switchMap(() => {
+            const selFeatures = selectedFeaturesSelector(store.getState());
+            return selFeatures.length > 0 ? Rx.Observable.of(selectFeatures([]), changeBoxSelectionStatus("end")) : Rx.Observable.empty();
+        });
+
 export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID)
         .switchMap( () => {

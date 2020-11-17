@@ -55,7 +55,7 @@ import {
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
 import { CHANGE_DRAWING_STATUS, geometryChanged } from '../../actions/draw';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
-import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
+import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl, setControlProperty } from '../../actions/controls';
 import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
 import { boxEnd, CHANGE_BOX_SELECTION_STATUS } from '../../actions/box';
 import { CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData } from '../../actions/layers';
@@ -117,7 +117,8 @@ import {
     handleBoxSelectionDrawEnd,
     activateBoxSelectionTool,
     deactivateBoxSelectionTool,
-    deactivateSyncWmsFilterOnFeatureGridClose
+    deactivateSyncWmsFilterOnFeatureGridClose,
+    clearSelectedFeaturesOnOpenWidgetBuilder
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -2249,6 +2250,20 @@ describe('featuregrid Epics', () => {
         }, {
             query: {
                 syncWmsFilter: true
+            }
+        }, done);
+    });
+    it('clearSelectedFeaturesOnOpenWidgetBuilder', (done) => {
+        const startActions = [setControlProperty("widgetBuilder", "enabled", false)];
+        testEpic(clearSelectedFeaturesOnOpenWidgetBuilder, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SELECT_FEATURES);
+            expect(actions[0].features).toEqual([]);
+            expect(actions[1].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+            expect(actions[1].status).toBe("end");
+        }, {
+            featuregrid: {
+                select: [{id: 'ft-1'}]
             }
         }, done);
     });
