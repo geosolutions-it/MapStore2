@@ -290,11 +290,11 @@ export const startFeatureExportDownload = (action$, store) =>
                 status: 'pending'
             };
             const wpsExecuteOptions = {
-                outputsExtractor: makeOutputsExtractor(referenceOutputExtractor),
-                cancelStream$: action$.ofType(REMOVE_EXPORT_DATA_RESULT).filter(({id}) => id === newResult.id).take(1)
+                outputsExtractor: makeOutputsExtractor(referenceOutputExtractor)
             };
 
             return download(action.url, wpsDownloadOptions, wpsExecuteOptions)
+                .takeUntil(action$.ofType(REMOVE_EXPORT_DATA_RESULT).filter(({id}) => id === newResult.id).take(1))
                 .flatMap((data) => {
                     if (data === 'DownloadEstimatorSuccess') {
                         return Rx.Observable.of(
