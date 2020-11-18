@@ -916,12 +916,10 @@ describe('contextcreator epics', () => {
             expect(actions[5].type).toBe(LOADING);
         }, {
             contextcreator: {
-                newContext: {
-                    templates: [{
-                        id: 1,
-                        format: 'json'
-                    }]
-                }
+                templates: [{
+                    id: 1,
+                    format: 'json'
+                }]
             }
         }, done);
     });
