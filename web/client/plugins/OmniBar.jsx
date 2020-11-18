@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-require('./omnibar/omnibar.css');
-const assign = require('object-assign');
-const ToolsContainer = require('./containers/ToolsContainer');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import './omnibar/omnibar.css';
+import assign from 'object-assign';
+import ToolsContainer from './containers/ToolsContainer';
 
 class OmniBar extends React.Component {
     static propTypes = {
@@ -69,7 +70,7 @@ class OmniBar extends React.Component {
  * @class
  * @memberof plugins
  */
-module.exports = {
+export default {
     OmniBarPlugin: assign(
         OmniBar,
         {

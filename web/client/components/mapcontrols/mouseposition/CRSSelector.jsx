@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const PropTypes = require('prop-types');
-const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const {getAvailableCRS, filterCRSList} = require('../../../utils/CoordinatesUtils').default;
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
+import ReactDOM from 'react-dom';
+
+import {filterCRSList, getAvailableCRS} from '../../../utils/CoordinatesUtils';
 
 class CRSSelector extends React.Component {
     static propTypes = {
@@ -89,4 +91,4 @@ class CRSSelector extends React.Component {
     };
 }
 
-module.exports = CRSSelector;
+export default CRSSelector;

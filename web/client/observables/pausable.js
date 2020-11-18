@@ -11,7 +11,7 @@
   * lettable to make a stream pausable.
   *
   */
-module.exports = (sem$, start = true, condition = c => c) =>
+export default (sem$, start = true, condition = c => c) =>
     stream$ =>
         stream$.withLatestFrom(
             sem$.startWith(start)

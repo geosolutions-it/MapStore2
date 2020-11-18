@@ -5,29 +5,32 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
 
-const BorderLayout = require('../../components/layout/BorderLayout');
-const {selectedCatalogSelector} = require('../../selectors/catalog');
-const Toolbar = require('../../components/widgets/builder/wizard/common/layerselector/Toolbar');
-const BuilderHeader = require('./BuilderHeader');
-const InfoPopover = require('../../components/widgets/widget/InfoPopover');
-const {Message, HTML} = require('../../components/I18N/I18N');
-const { compose, branch } = require('recompose');
+import React from 'react';
+import { connect } from 'react-redux';
+import { branch, compose } from 'recompose';
+import { createSelector } from 'reselect';
+
+import { HTML, Message } from '../../components/I18N/I18N';
+import BorderLayout from '../../components/layout/BorderLayout';
+import Toolbar from '../../components/widgets/builder/wizard/common/layerselector/Toolbar';
+import InfoPopover from '../../components/widgets/widget/InfoPopover';
+import { selectedCatalogSelector } from '../../selectors/catalog';
+import BuilderHeader from './BuilderHeader';
+import CatalogComp from './Catalog';
 
 const Catalog = compose(
     branch(
         ({catalog} = {}) => !catalog,
         connect(createSelector(selectedCatalogSelector, catalog => ({catalog})))
     ),
-)(require('./Catalog'));
+)(CatalogComp);
+
 /**
  * Builder page that allows layer's selection
  * @prop {function} [layerValidationStream]
  */
-module.exports = ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, catalogServices} = {}) =>
+export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, catalogServices} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>

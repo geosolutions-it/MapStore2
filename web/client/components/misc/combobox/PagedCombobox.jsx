@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const Combobox = require('react-widgets').Combobox;
-const {Glyphicon, Tooltip} = require('react-bootstrap');
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const OverlayTrigger = require('../OverlayTrigger').default;
-const AutocompleteListItem = require('../../data/query/AutocompleteListItem');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { Combobox } from 'react-widgets';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import OverlayTrigger from '../OverlayTrigger';
+import AutocompleteListItem from '../../data/query/AutocompleteListItem';
 
 /**
  * Combobox with remote autocomplete functionality.
@@ -186,4 +187,4 @@ class PagedCombobox extends React.Component {
 }
 
 
-module.exports = PagedCombobox;
+export default PagedCombobox;

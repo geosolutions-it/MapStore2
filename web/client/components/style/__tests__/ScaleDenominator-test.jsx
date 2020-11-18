@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ScaleDenominator = require('../ScaleDenominator');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ScaleDenominator from '../ScaleDenominator';
 
 describe('ScaleDenominator', () => {
     beforeEach((done) => {

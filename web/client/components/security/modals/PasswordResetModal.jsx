@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,13 +8,13 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PasswordReset = require('../forms/PasswordReset');
-const Message = require('../../../components/I18N/Message').default;
-const {Button} = require('react-bootstrap');
-const Modal = require('../../misc/Modal');
+import React from 'react';
 
-const Spinner = require('react-spinkit');
+import PasswordReset from '../forms/PasswordReset';
+import Message from '../../../components/I18N/Message';
+import { Button } from 'react-bootstrap';
+import Modal from '../../misc/Modal';
+import Spinner from 'react-spinkit';
 
 /**
  * A Modal window to show password reset form
@@ -123,4 +124,4 @@ class PasswordResetModal extends React.Component {
     }
 }
 
-module.exports = PasswordResetModal;
+export default PasswordResetModal;

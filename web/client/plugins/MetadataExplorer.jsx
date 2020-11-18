@@ -6,41 +6,78 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
+import './metadataexplorer/css/style.css';
 
-const assign = require('object-assign');
-const {createStructuredSelector} = require("reselect");
-const { compose, branch, renderComponent, withProps, defaultProps } = require("recompose");
-const CatalogServiceEditor = require('../components/catalog/CatalogServiceEditor').default;
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Glyphicon, Panel } from 'react-bootstrap';
+import ContainerDimensions from 'react-container-dimensions';
+import { connect } from 'react-redux';
+import { branch, compose, defaultProps, renderComponent, withProps } from 'recompose';
+import { createStructuredSelector } from 'reselect';
 
-const {Glyphicon, Panel} = require('react-bootstrap');
-const ContainerDimensions = require('react-container-dimensions').default;
-const {changeLayerProperties} = require('../actions/layers');
-const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
-    changeUrl, changeTitle, changeServiceProperty, changeType, changeServiceFormat, changeSelectedService,
-    addLayer, addLayerError, focusServicesList, changeText,
-    changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate, catalogClose} = require("../actions/catalog");
-const {addBackgroundProperties, clearModalParameters, backgroundAdded} = require('../actions/backgroundselector');
-const {currentLocaleSelector, currentMessagesSelector} = require("../selectors/locale");
-const {layersSelector} = require('../selectors/layers');
-const {setControlProperty, toggleControl} = require("../actions/controls");
-const {resultSelector, serviceListOpenSelector, newServiceSelector,
-    newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector, servicesSelector,
-    servicesSelectorWithBackgrounds, loadingErrorSelector, selectedServiceSelector,
-    modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
-    searchTextSelector, groupSelector, pageSizeSelector, loadingSelector, selectedServiceLayerOptionsSelector,
-    tileSizeOptionsSelector } = require("../selectors/catalog");
-const {projectionSelector} = require('../selectors/map');
-const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
+import { addBackgroundProperties, backgroundAdded, clearModalParameters } from '../actions/backgroundselector';
+import {
+    addLayer,
+    addLayerError,
+    addService,
+    catalogClose,
+    changeCatalogFormat,
+    changeCatalogMode,
+    changeMetadataTemplate,
+    changeSelectedService,
+    changeServiceFormat,
+    changeServiceProperty,
+    changeText,
+    changeTitle,
+    changeType,
+    changeUrl,
+    deleteService,
+    focusServicesList,
+    textSearch,
+    toggleAdvancedSettings,
+    toggleTemplate,
+    toggleThumbnail
+} from '../actions/catalog';
+import { setControlProperty, toggleControl } from '../actions/controls';
+import { changeLayerProperties } from '../actions/layers';
+import API from '../api/catalog';
+import CatalogComp from '../components/catalog/Catalog';
+import CatalogServiceEditor from '../components/catalog/CatalogServiceEditor';
+import Message from '../components/I18N/Message';
+import DockPanel from '../components/misc/panels/DockPanel';
+import { metadataSourceSelector, modalParamsSelector } from '../selectors/backgroundselector';
+import {
+    activeSelector,
+    authkeyParamNameSelector,
+    groupSelector,
+    layerErrorSelector,
+    loadingErrorSelector,
+    loadingSelector,
+    modeSelector,
+    newServiceSelector,
+    newServiceTypeSelector,
+    pageSizeSelector,
+    resultSelector,
+    savingSelector,
+    searchOptionsSelector,
+    searchTextSelector,
+    selectedServiceLayerOptionsSelector,
+    selectedServiceSelector,
+    selectedServiceTypeSelector,
+    serviceListOpenSelector,
+    servicesSelector,
+    servicesSelectorWithBackgrounds,
+    tileSizeOptionsSelector
+} from '../selectors/catalog';
+import { layersSelector } from '../selectors/layers';
+import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
+import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
+import { projectionSelector } from '../selectors/map';
+import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import { getCatalogRecords } from '../utils/CatalogUtils';
 
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {metadataSourceSelector, modalParamsSelector} = require('../selectors/backgroundselector');
-const Message = require("../components/I18N/Message").default;
-const DockPanel = require("../components/misc/panels/DockPanel");
-require('./metadataexplorer/css/style.css');
-const {getCatalogRecords} = require('../utils/CatalogUtils');
 const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
 const metadataExplorerSelector = createStructuredSelector({
@@ -107,7 +144,7 @@ const Catalog = compose(
         ({mode}) => mode === "edit",
         renderComponent(CatalogServiceEditor)
     )
-)(require('../components/catalog/Catalog'));
+)(CatalogComp);
 
 
 class MetadataExplorerComponent extends React.Component {
@@ -234,7 +271,6 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
 })(MetadataExplorerComponent);
-const API = require('../api/catalog').default;
 
 /**
  * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS and WFS).
@@ -252,7 +288,7 @@ const API = require('../api/catalog').default;
  * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added
  * @prop {number} [delayAutoSearch] time in ms passed after a search is triggered by filter changes, default 1000
  */
-module.exports = {
+export default {
     MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
         BurgerMenu: {
             name: 'metadataexplorer',

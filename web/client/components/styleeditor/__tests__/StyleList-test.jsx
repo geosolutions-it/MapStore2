@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const StyleList = require('../StyleList');
-const TestUtils = require('react-dom/test-utils');
-const expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import StyleList from '../StyleList';
+import TestUtils from 'react-dom/test-utils';
+import expect from 'expect';
 
 describe('test StyleList module component', () => {
     beforeEach((done) => {

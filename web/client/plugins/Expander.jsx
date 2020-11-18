@@ -5,12 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
 
-const {Glyphicon} = require('react-bootstrap');
-const assign = require('object-assign');
-
-const ExpanderPlugin = require('../components/buttons/ToggleButton');
+import { Glyphicon } from 'react-bootstrap';
+import assign from 'object-assign';
+import ExpanderPlugin from '../components/buttons/ToggleButton';
 
 /**
  * Expander plugin. Adds the '...' button to the Toolbar plugin to hide some buttons.
@@ -18,7 +17,7 @@ const ExpanderPlugin = require('../components/buttons/ToggleButton');
  * @class
  * @memberof plugins
  */
-module.exports = {
+export default {
     ExpanderPlugin: assign(ExpanderPlugin, {
         Toolbar: {
             name: 'expand',

@@ -5,17 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const WidgetContainer = require('./WidgetContainer');
-const BorderLayout = require('../../layout/BorderLayout');
-const { omit } = require('lodash');
-const {withHandlers} = require('recompose');
+
+import { omit } from 'lodash';
+import React from 'react';
+import { withHandlers } from 'recompose';
+
+import BorderLayout from '../../layout/BorderLayout';
+import LoadingSpinner from '../../misc/LoadingSpinner';
+import MapViewComp from './MapView';
+import WidgetContainer from './WidgetContainer';
+
 const MapView = withHandlers({
     onMapViewChanges: ({ updateProperty = () => { } }) => ({layers, ...map}) => updateProperty('map', map, "merge" )
-})(require('./MapView'));
-const LoadingSpinner = require('../../misc/LoadingSpinner');
+})(MapViewComp);
 
-module.exports = ({
+export default ({
     updateProperty = () => { },
     toggleDeleteConfirm = () => { },
     id, title,

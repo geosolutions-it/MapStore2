@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { withProps, compose } = require('recompose');
+import { withProps, compose } from 'recompose';
+
 /**
  * Returns an enhancer that add `stepButtons` for viewport connection to a wizard toolbar
  * @param {function} showCondition parses props to allow visualization of the buttons (if other connect condition are satisfied)
  */
-module.exports = (showCondition = () => true) => compose(
+export default (showCondition = () => true) => compose(
     withProps(({
         disableMultiDependencySupport,
         stepButtons = [],

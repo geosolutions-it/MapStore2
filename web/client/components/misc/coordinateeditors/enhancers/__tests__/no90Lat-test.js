@@ -1,8 +1,9 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const expect = require('expect');
-const no90Lat = require('../no90Lat');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+
+import no90Lat from '../no90Lat';
 
 describe('no90Lat enhancer', () => {
     beforeEach((done) => {

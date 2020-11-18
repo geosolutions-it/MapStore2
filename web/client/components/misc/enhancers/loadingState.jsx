@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {branch} = require('recompose');
+import React from 'react';
 
-const DefaultLoadingComponent = require('../LoadingView');
+import { branch } from 'recompose';
+import DefaultLoadingComponent from '../LoadingView';
 
 const defaultTest = ({loading, isLoading}) => loading || isLoading && ((typeof isLoading === 'function') ? isLoading() : isLoading === true);
+
 /**
 * Loading State enhancer. Enhances an object displaying an empty state view under a given condition
 * @type {function}
@@ -24,7 +25,7 @@ const defaultTest = ({loading, isLoading}) => loading || isLoading && ((typeof i
 * loadingState(({isloading}) => isloading)(ComponentToEnhance);
 *
 */
-module.exports = (isLoading = defaultTest, loaderProps = {}, LoadingComponent = DefaultLoadingComponent) => branch(
+export default (isLoading = defaultTest, loaderProps = {}, LoadingComponent = DefaultLoadingComponent) => branch(
     isLoading,
     // TODO return proper HOC
     () => ({loaderProps: dynamicLoaderProps}) => <LoadingComponent {...loaderProps} {...dynamicLoaderProps}/>);

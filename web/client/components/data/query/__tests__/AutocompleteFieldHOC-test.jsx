@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
+import expect from 'expect';
 
-const AutocompleteFieldHOC = require('../AutocompleteFieldHOC');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import AutocompleteFieldHOC from '../AutocompleteFieldHOC';
 
 describe('AutocompleteFieldHOC', () => {
     beforeEach((done) => {

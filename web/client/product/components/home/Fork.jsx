@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
+import React from 'react';
 
 class Fork extends React.Component {
     render() {
@@ -17,4 +17,4 @@ class Fork extends React.Component {
     }
 }
 
-module.exports = Fork;
+export default Fork;

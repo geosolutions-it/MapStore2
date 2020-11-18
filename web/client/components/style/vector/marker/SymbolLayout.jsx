@@ -6,16 +6,16 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const Select = require('react-select').default;
-const {Row, Col, InputGroup, Glyphicon, Alert } = require('react-bootstrap');
-const {isArray, find, filter, isEqual} = require('lodash');
-const axios = require('axios');
+import PropTypes from 'prop-types';
 
-const Slider = require('../../../misc/Slider');
-const Message = require('../../../I18N/Message').default;
-const {DEFAULT_SHAPE, DEFAULT_PATH, checkSymbolsError} = require('../../../../utils/AnnotationsUtils');
+import React from 'react';
+import Select from 'react-select';
+import { Row, Col, InputGroup, Glyphicon, Alert } from 'react-bootstrap';
+import { isArray, find, filter, isEqual } from 'lodash';
+import axios from 'axios';
+import Slider from '../../../misc/Slider';
+import Message from '../../../I18N/Message';
+import { DEFAULT_SHAPE, DEFAULT_PATH, checkSymbolsError } from '../../../../utils/AnnotationsUtils';
 
 /**
  * Styler for the layout of the symbol
@@ -196,4 +196,4 @@ class SymbolLayout extends React.Component {
     }
 }
 
-module.exports = SymbolLayout;
+export default SymbolLayout;

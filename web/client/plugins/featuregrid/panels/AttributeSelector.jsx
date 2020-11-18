@@ -1,10 +1,10 @@
 
-const {connect} = require('react-redux');
+import { connect } from 'react-redux';
+import AttributeSelector from '../../../components/data/featuregrid/AttributeSelector';
+import { getCustomizedAttributes } from '../../../selectors/featuregrid';
+import { customizeAttribute } from '../../../actions/featuregrid';
 
-const AttributeSelector = require('../../../components/data/featuregrid/AttributeSelector');
-const {getCustomizedAttributes} = require('../../../selectors/featuregrid');
-const {customizeAttribute} = require('../../../actions/featuregrid');
-module.exports = connect((state) => ({
+export default connect((state) => ({
     attributes: getCustomizedAttributes(state)
 }), {
     onChange: (name, value) => customizeAttribute(name, "hide", value)

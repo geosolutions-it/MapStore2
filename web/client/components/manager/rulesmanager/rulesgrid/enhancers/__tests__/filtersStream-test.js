@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const filtersStream = require('../filtersStream');
-const Rx = require("rxjs");
+import expect from 'expect';
+
+import filtersStream from '../filtersStream';
+import Rx from 'rxjs';
 describe('rulegrid filterStream', () => {
     it('debounce addFilter$', (done) => {
         const setFilters = (filter) => {

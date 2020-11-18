@@ -1,4 +1,3 @@
-var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,6 +6,7 @@ var PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
+var PropTypes = require('prop-types');
 var React = require('react');
 var L = require('leaflet');
 

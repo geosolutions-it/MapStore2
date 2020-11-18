@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const { ListGroupItem, ListGroup, FormControl } = require('react-bootstrap');
-const {getMessageById} = require("../../../utils/LocaleUtils");
-const Message = require('../../I18N/Message').default;
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormControl, ListGroup, ListGroupItem } from 'react-bootstrap';
+
+import {getMessageById} from "../../../utils/LocaleUtils";
+import Message from '../../I18N/Message';
 
 class CrsSelectorMenu extends React.Component {
     static propTypes = {
@@ -65,4 +67,4 @@ class CrsSelectorMenu extends React.Component {
 
 }
 
-module.exports = CrsSelectorMenu;
+export default CrsSelectorMenu;

@@ -6,11 +6,11 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Toolbar = require('../Toolbar');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
+import Toolbar from '../Toolbar';
 
 describe("Toolbar component", () => {
     beforeEach((done) => {

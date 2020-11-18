@@ -5,19 +5,31 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const { isNil, has, omit } = require("lodash");
-const assign = require("object-assign");
-const PropTypes = require("prop-types");
-const React = require("react");
-const { FormControl, FormGroup, Alert, Pagination, Button, Panel, Form, InputGroup, ControlLabel, Glyphicon } = require("react-bootstrap");
+import { isNil, has, omit } from 'lodash';
 
-const Select = require("react-select").default;
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-const BorderLayout = require("../layout/BorderLayout");
-const {getMessageById} = require("../../utils/LocaleUtils");
-const Message = require("../I18N/Message").default;
-const RecordGrid = require("./RecordGrid");
-const Loader = require('../misc/Loader');
+import {
+    FormControl,
+    FormGroup,
+    Alert,
+    Pagination,
+    Button,
+    Panel,
+    Form,
+    InputGroup,
+    ControlLabel,
+    Glyphicon
+} from 'react-bootstrap';
+
+import Select from 'react-select';
+import BorderLayout from '../layout/BorderLayout';
+import { getMessageById } from '../../utils/LocaleUtils';
+import Message from '../I18N/Message';
+import RecordGrid from './RecordGrid';
+import Loader from '../misc/Loader';
 
 class Catalog extends React.Component {
     static propTypes = {
@@ -374,4 +386,4 @@ class Catalog extends React.Component {
     };
 }
 
-module.exports = Catalog;
+export default Catalog;

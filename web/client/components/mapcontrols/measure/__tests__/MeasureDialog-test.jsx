@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
-var MeasureDialog = require('../MeasureDialog');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 
+import MeasureDialog from '../MeasureDialog';
 
 describe("test the MeasureDialog", () => {
     beforeEach((done) => {

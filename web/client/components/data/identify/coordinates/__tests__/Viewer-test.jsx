@@ -1,7 +1,9 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const Viewer = require('../Viewer');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Viewer from '../Viewer';
+
 describe('Identify Coordinate Viewer Component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

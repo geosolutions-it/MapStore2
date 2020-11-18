@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require("react");
-const expect = require('expect');
-const ReactDOM = require('react-dom');
-const UserDialog = require('../UserDialog');
-const ReactTestUtils = require('react-dom/test-utils');
+import React from 'react';
+
+import expect from 'expect';
+import ReactDOM from 'react-dom';
+import UserDialog from '../UserDialog';
+import ReactTestUtils from 'react-dom/test-utils';
 const enabledUser = {
     id: 1,
     name: "USER1",

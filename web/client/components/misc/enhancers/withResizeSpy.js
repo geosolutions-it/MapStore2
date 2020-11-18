@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { debounce } = require('lodash');
-const PropTypes = require('prop-types');
-const ReactDom = require('react-dom');
-const ResizeObserver = require('resize-observer-polyfill').default;
+import React from 'react';
+
+import { debounce } from 'lodash';
+import PropTypes from 'prop-types';
+import ReactDom from 'react-dom';
+import ResizeObserver from 'resize-observer-polyfill';
 
 /**
  * Enhancer that calls the prop handler `onResize` when the div has been resized.
@@ -24,12 +25,12 @@ const ResizeObserver = require('resize-observer-polyfill').default;
  * <Cmp onResize={() => console.log("Resized")} />;
  *
  */
-module.exports = ({
+export default ({
     debounceTime,
     querySelector,
     closest = false
 } = {}) => (Component) =>
-    class WithResizeSpy extends React.Component {
+    (class WithResizeSpy extends React.Component {
     static propTypes = {
         handleWidth: PropTypes.bool,
         handleHeight: PropTypes.bool,
@@ -89,4 +90,4 @@ module.exports = ({
     render() {
         return <Component {...this.props} />;
     }
-    };
+    });

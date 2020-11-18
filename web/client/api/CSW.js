@@ -5,14 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../libs/ajax');
 
-const _ = require('lodash');
+import urlUtil from 'url';
 
-const urlUtil = require('url');
-const {cleanDuplicatedQuestionMarks} = require('../utils/ConfigUtils');
-const {makeNumericEPSG, makeBboxFromOWS, extractCrsFromURN} = require('../utils/CoordinatesUtils');
-const assign = require('object-assign');
+import _ from 'lodash';
+import assign from 'object-assign';
+
+import axios from '../libs/ajax';
+import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
+import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG } from '../utils/CoordinatesUtils';
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
@@ -242,4 +243,4 @@ var Api = {
     reset: () => {}
 };
 
-module.exports = Api;
+export default Api;

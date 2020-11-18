@@ -4,7 +4,7 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
-const { head } = require('lodash');
+import { head } from 'lodash';
 
 const parseLocalPart = {
     'short': 'number',
@@ -20,7 +20,7 @@ const getType = ({localPart, prefix}) => {
     || parseLocalPart[localPart] || localPart || '';
 };
 
-module.exports = function(CodeMirror) {
+export default function(CodeMirror) {
     const {Pos: codeMirrorPos} = CodeMirror;
 
     CodeMirror.registerHelper('hint', 'geocss', function(cm) {
@@ -102,6 +102,6 @@ module.exports = function(CodeMirror) {
         }
         return null;
     });
-};
+}
 
 

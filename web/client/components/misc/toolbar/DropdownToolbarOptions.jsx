@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const {Glyphicon, DropdownButton, MenuItem} = require('react-bootstrap');
-const tooltip = require('../enhancers/tooltip');
-const React = require('react');
-const uuidv1 = require('uuid/v1');
+import { Glyphicon, DropdownButton, MenuItem } from 'react-bootstrap';
+
+import tooltip from '../enhancers/tooltip';
+import React from 'react';
+import uuidv1 from 'uuid/v1';
 
 const DropdownButtonT = tooltip(DropdownButton);
 
@@ -43,4 +44,4 @@ const DropdownFeatureType = ({
             </MenuItem>)) : null}
     </DropdownButtonT>
 );
-module.exports = DropdownFeatureType;
+export default DropdownFeatureType;

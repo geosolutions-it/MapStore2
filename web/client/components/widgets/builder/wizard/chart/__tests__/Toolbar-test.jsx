@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const expect = require('expect');
-const Toolbar = require('../Toolbar');
+import Toolbar from '../Toolbar';
+
 describe('CounterWizard Toolbar component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

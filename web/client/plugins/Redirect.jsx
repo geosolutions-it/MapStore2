@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const assign = require('object-assign');
-const {connect} = require('react-redux');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import assign from 'object-assign';
+import { connect } from 'react-redux';
 
 class RedirectComponent extends React.Component {
     static propTypes = {
@@ -49,6 +50,6 @@ const Redirect = connect((state) => ({
  * @class
  * @memberof plugins
  */
-module.exports = {
+export default {
     RedirectPlugin: assign(Redirect, {}
     )};

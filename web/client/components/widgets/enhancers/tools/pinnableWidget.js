@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {compose, withProps} = require('recompose');
 
+import {compose, withProps} from 'recompose';
 /**
  * Support widget locking. When locked, a widget becomes "static".
  */
-module.exports = () =>
+export default () =>
     compose(
         withProps(({ widgetTools = [], toolsOptions = {}, updateProperty = () => { }, dataGrid = {}}) => ({
             widgetTools: !!toolsOptions.showPin ? [

@@ -5,23 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
 
-const PropTypes = require('prop-types');
-const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const OverlayTrigger = require('../../misc/OverlayTrigger').default;
-
-const FilterField = require('./FilterField');
-const ComboField = require('./ComboField');
-const DateField = require('./DateField');
-const NumberField = require('./NumberField');
-const TextField = require('./TextField');
-const AutocompleteField = require('./AutocompleteFieldHOC');
-const SwitchPanel = require('../../misc/switch/SwitchPanel');
-const StringSelector = require('../../misc/StringSelector');
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const I18N = require('../../I18N/I18N');
+import PropTypes from 'prop-types';
+import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import FilterField from './FilterField';
+import ComboField from './ComboField';
+import DateField from './DateField';
+import NumberField from './NumberField';
+import TextField from './TextField';
+import AutocompleteField from './AutocompleteFieldHOC';
+import SwitchPanel from '../../misc/switch/SwitchPanel';
+import StringSelector from '../../misc/StringSelector';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import I18N from '../../I18N/I18N';
 
 class GroupField extends React.Component {
     static propTypes = {
@@ -296,4 +295,4 @@ class GroupField extends React.Component {
     };
 }
 
-module.exports = GroupField;
+export default GroupField;

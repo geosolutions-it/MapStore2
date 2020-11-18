@@ -5,26 +5,39 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../components/I18N/Message').default;
-const {connect} = require('react-redux');
-const {bindActionCreators} = require('redux');
 
-const {
-    loadImports,
-    createImport, loadImport, runImport, deleteImport,
-    uploadImportFiles, loadTask, updateTask, deleteTask,
-    updateProgress,
-    loadLayer, updateLayer,
-    loadTransform, deleteTransform, editTransform, updateTransform,
-    loadStylerTool,
-    loadWorkspaces,
-    selectWorkSpace,
+import assign from 'object-assign';
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import {
+    createImport,
     createWorkspace,
-    dismissWorkspaceCreationStatus
-} = require('../../actions/importer');
+    deleteImport,
+    deleteTask,
+    deleteTransform,
+    dismissWorkspaceCreationStatus,
+    editTransform,
+    loadImport,
+    loadImports,
+    loadLayer,
+    loadStylerTool,
+    loadTask,
+    loadTransform,
+    loadWorkspaces,
+    runImport,
+    selectWorkSpace,
+    updateLayer,
+    updateProgress,
+    updateTask,
+    updateTransform,
+    uploadImportFiles
+} from '../../actions/importer';
+import Message from '../../components/I18N/Message';
+import Importer from "../../components/manager/importer/Importer";
+import importer from '../../reducers/importer';
 
-const assign = require('object-assign');
 const getURL = function(props) {
     return props.geoserverRestURL || "/geoserver/rest/";
 };
@@ -178,8 +191,9 @@ const ImporterPlugin = connect(
             }
         });
     }
-)(require("../../components/manager/importer/Importer"));
-module.exports = {
+)(Importer);
+
+export default {
     ImporterPlugin: assign(ImporterPlugin, {
         hide: true,
         Manager: {
@@ -190,5 +204,5 @@ module.exports = {
             glyph: "import"
         }
     }),
-    reducers: {importer: require('../../reducers/importer').default}
+    reducers: {importer}
 };

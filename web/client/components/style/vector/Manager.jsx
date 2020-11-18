@@ -6,38 +6,38 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {castArray, findIndex, find, isNil, filter} = require('lodash');
-const {Grid} = require('react-bootstrap');
-const assign = require('object-assign');
-const uuidv1 = require('uuid/v1');
-const tinycolor = require("tinycolor2");
-const axios = require("axios");
+import axios from 'axios';
+import { castArray, filter, find, findIndex, isNil } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Grid } from 'react-bootstrap';
+import tinycolor from 'tinycolor2';
+import uuidv1 from 'uuid/v1';
 
-const SwitchPanel = require('../../misc/switch/SwitchPanel');
-const {arrayUpdate} = require('../../../utils/ImmutableUtils');
-const StyleCanvas = require('../StyleCanvas');
-const Stroke = require('./Stroke');
-const Fill = require('./Fill');
-const MarkerGlyph = require('./marker/MarkerGlyph');
-const MarkerType = require('./marker/MarkerType');
-const SymbolLayout = require('./marker/SymbolLayout');
-const Text = require('./Text');
-
-const {
-    createSvgUrl, registerStyle,
-    hashAndStringify, fetchStyle,
-    getStylerTitle, isSymbolStyle,
-    isMarkerStyle, isStrokeStyle,
-    isFillStyle, addOpacityToColor,
-    isTextStyle
-} = require('../../../utils/VectorStyleUtils');
-
-const {
-    DEFAULT_SHAPE, DEFAULT_PATH,
-    checkSymbolsError
-} = require('../../../utils/AnnotationsUtils');
+import { DEFAULT_PATH, DEFAULT_SHAPE, checkSymbolsError } from '../../../utils/AnnotationsUtils';
+import { arrayUpdate } from '../../../utils/ImmutableUtils';
+import {
+    addOpacityToColor,
+    createSvgUrl,
+    fetchStyle,
+    getStylerTitle,
+    hashAndStringify,
+    isFillStyle,
+    isMarkerStyle,
+    isStrokeStyle,
+    isSymbolStyle,
+    isTextStyle,
+    registerStyle
+} from '../../../utils/VectorStyleUtils';
+import SwitchPanel from '../../misc/switch/SwitchPanel';
+import StyleCanvas from '../StyleCanvas';
+import Fill from './Fill';
+import MarkerGlyph from './marker/MarkerGlyph';
+import MarkerType from './marker/MarkerType';
+import SymbolLayout from './marker/SymbolLayout';
+import Stroke from './Stroke';
+import Text from './Text';
 
 class Manager extends React.Component {
     static propTypes = {
@@ -46,7 +46,6 @@ class Manager extends React.Component {
         lineDashOptions: PropTypes.array,
         onChangeStyle: PropTypes.func,
         pointType: PropTypes.string,
-        onChangePointType: PropTypes.func,
         onUpdateSymbols: PropTypes.func,
         onSetErrorSymbol: PropTypes.func,
         width: PropTypes.number,
@@ -73,7 +72,6 @@ class Manager extends React.Component {
         defaultShapeStrokeColor: '#000000',
         symbolErrors: [],
         onChangeStyle: () => {},
-        onChangePointType: () => {},
         onUpdateSymbols: () => {},
         defaultStyles: {},
         switchPanelOptions: []
@@ -115,7 +113,7 @@ class Manager extends React.Component {
         const preview = !(isMarkerStyle(style) || isSymbolStyle(style) && (checkSymbolsError(this.props.symbolErrors) ||
          checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape))) && (<div className="ms-marker-preview" style={{display: 'flex', width: '100%', height: 90}}>
             <StyleCanvas style={{ padding: 0, margin: "auto", display: "block",
-                width: isTextOrSymbol ? "100%" : "auto", ...isTextOrSymbol && {transform: "scaleX(2.2) scaleY(2.5)"}}}
+                width: isTextOrSymbol ? "100%" : "auto", ...(isTextOrSymbol && {transform: "scaleX(2.2) scaleY(2.5)"})}}
             originalStyle={style}
             shapeStyle={assign({}, style, {
                 color: addOpacityToColor(tinycolor(style.color).toRgb(), isNil(style.opacity) ? 1 : style.opacity),
@@ -218,7 +216,6 @@ class Manager extends React.Component {
         if (styleChangedIndex !== -1) {
             let newStyles = styles.map((s, k) => k === styleChangedIndex ? {...pointStyle, id: s.id, title: s.title, geometry: s.geometry, filtering: s.filtering} : s);
             this.props.onChangeStyle(newStyles);
-            this.props.onChangePointType(pointType);
         }
     }
     checkSymbolUrl = ({style, symbolErrors, onLoadingError = this.props.onSetErrorSymbol}) => {
@@ -237,4 +234,4 @@ class Manager extends React.Component {
     }
 }
 
-module.exports = Manager;
+export default Manager;

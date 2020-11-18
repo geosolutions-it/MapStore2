@@ -6,16 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink, setObservableConfig} = require('recompose');
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import { createSink, setObservableConfig } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
-const expect = require('expect');
-const MapCatalog = require('../MapCatalog');
-const mapCatalog = require('../enhancers/mapCatalog');
-const mapCatalogWithEmptymap = require('../enhancers/mapCatalogWithEmptyMap');
-const GeoStoreDAO = require('../../../api/GeoStoreDAO');
+import expect from 'expect';
+import MapCatalog from '../MapCatalog';
+import mapCatalog from '../enhancers/mapCatalog';
+import mapCatalogWithEmptymap from '../enhancers/mapCatalogWithEmptyMap';
+import GeoStoreDAO from '../../../api/GeoStoreDAO';
 
 describe('MapCatalog component', () => {
     let oldAddBaseUri;

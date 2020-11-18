@@ -12,12 +12,12 @@
  * @return {Observable} Stream of props to trigger the data fetch
  */
 
-const {getPagesToLoad} = require('../../../../../utils/RulesGridUtils');
+import { getPagesToLoad } from '../../../../../utils/RulesGridUtils';
 
 const sameRowsCount = ({rowsCount: oR}, {rowsCount: nR}) => oR === nR;
 const samePages = ({pages: oP}, {pages: nP}) => oP === nP;
 
-module.exports = ($props) => {
+export default ($props) => {
     return $props.distinctUntilChanged((oP, nP) => sameRowsCount(oP, nP) && samePages(oP, nP))
         .switchMap(({ size, moreRules, pages, rowsCount, vsOverScan = 5, scrollDebounce = 50, onGridScroll$ }) => {
             return onGridScroll$.filter(() => rowsCount !== 0)

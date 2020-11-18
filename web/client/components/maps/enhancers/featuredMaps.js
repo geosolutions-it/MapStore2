@@ -6,11 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const Rx = require('rxjs');
-const {isArray, isObject, isEqual, get, zip} = require('lodash');
-const {searchListByAttributes} = require('../../../api/GeoStoreDAO');
-const {getResource} = require('../../../api/persistence');
-const {compose, withState, lifecycle} = require('recompose');
+import { get, isArray, isEqual, isObject, zip } from 'lodash';
+import { compose, lifecycle, withState } from 'recompose';
+import Rx from 'rxjs';
+
+import DAO from '../../../api/GeoStoreDAO';
+import { getResource } from '../../../api/persistence';
 
 /*
  * parse attributes returned from records
@@ -56,7 +57,7 @@ const searchFeaturedMaps = (start, limit, searchText = '') => {
             ).map(contextNames => makeExtResource(results, maps, contextNames));
     };
     return Rx.Observable.fromPromise(
-        searchListByAttributes({
+        DAO.searchListByAttributes({
             AND: {
                 ...searchObj,
                 ATTRIBUTE: [
@@ -119,7 +120,7 @@ const resultToProps = ({result = {}, permission}) => ({
 /*
  * retrieves data from a GeoStore service and converts to props
  */
-const loadPage = ({permission, viewSize = 4, searchText = '', pageSize = 4} = {}, page = 0) =>
+export const loadPage = ({permission, viewSize = 4, searchText = '', pageSize = 4} = {}, page = 0) =>
     searchFeaturedMaps(page * pageSize, page === 0 ? viewSize : pageSize, searchText)
         .map((result) => ({permission, result: result && result.ExtResourceList || []}))
         .map(resultToProps);
@@ -127,7 +128,7 @@ const loadPage = ({permission, viewSize = 4, searchText = '', pageSize = 4} = {}
 /*
  * add viewSize and previousItems props to control previous and current items in the grid view
  */
-const updateItemsLifecycle = compose(
+export const updateItemsLifecycle = compose(
     withState('viewSize', 'onChangeSize', 4),
     withState('previousItems', 'onUpdatePreviousItems', []),
     lifecycle({
@@ -155,7 +156,7 @@ const updateItemsLifecycle = compose(
     })
 );
 
-module.exports = {
+export default {
     loadPage,
     updateItemsLifecycle
 };

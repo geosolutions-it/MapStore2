@@ -5,19 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, defaultProps, withProps} = require('recompose');
-const {createSelector} = require('reselect');
-const {connect} = require('react-redux');
-const {filterHiddenWidgets} = require('./widgetsPermission');
-const { toggleCollapse } = require('../../actions/widgets');
-const {trayWidgets} = require('../../selectors/widgetsTray');
 
+import { connect } from 'react-redux';
+import { compose, defaultProps, withProps } from 'recompose';
+import { createSelector } from 'reselect';
+
+import { toggleCollapse } from '../../actions/widgets';
+import WidgetsBarComp from '../../components/widgets/view/WidgetsBar';
+import { trayWidgets } from '../../selectors/widgetsTray';
+import { filterHiddenWidgets } from './widgetsPermission';
 
 /**
  * Button bar with the list of all the widgets to minimize/expand.
  * note: hides some widgets to user that do not have access too, using `filterHiddenWidgets` enhancer.
  */
-module.exports = compose(
+export default compose(
     connect(
         createSelector(
             trayWidgets,
@@ -44,4 +46,4 @@ module.exports = compose(
             ...(btnDefaultProps || {})
         }
     }))
-)(require('../../components/widgets/view/WidgetsBar'));
+)(WidgetsBarComp);

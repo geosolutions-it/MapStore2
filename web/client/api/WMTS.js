@@ -5,20 +5,26 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../libs/ajax');
-const {getConfigProp} = require('../utils/ConfigUtils');
+import axios from '../libs/ajax';
 
-const urlUtil = require('url');
-const assign = require('object-assign');
-
-const xml2js = require('xml2js');
+import { getConfigProp } from '../utils/ConfigUtils';
+import urlUtil from 'url';
+import assign from 'object-assign';
+import xml2js from 'xml2js';
 
 const capabilitiesCache = {};
 
-const {castArray} = require('lodash');
+import { castArray } from 'lodash';
+import { getEPSGCode } from '../utils/CoordinatesUtils';
 
-const {getEPSGCode} = require('../utils/CoordinatesUtils');
-const { getOperations, getOperation, getRequestEncoding, getDefaultStyleIdentifier, getDefaultFormat} = require('../utils/WMTSUtils');
+import {
+    getOperations,
+    getOperation,
+    getRequestEncoding,
+    getDefaultStyleIdentifier,
+    getDefaultFormat
+} from '../utils/WMTSUtils';
+
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
     return urlUtil.format(assign({}, parsed, {search: null}, {
@@ -114,4 +120,4 @@ const Api = {
     }
 };
 
-module.exports = Api;
+export default Api;

@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var PrintPreview = require('../PrintPreview');
+import expect from 'expect';
 
-var ReactTestUtils = require('react-dom/test-utils');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PrintPreview from '../PrintPreview';
+import ReactTestUtils from 'react-dom/test-utils';
 
 window.PDFJS = {
     getDocument: () => ({

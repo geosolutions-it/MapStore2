@@ -6,25 +6,67 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const {bindActionCreators} = require('redux');
-const {createSelector, createStructuredSelector} = require('reselect');
-const {widgetBuilderAvailable, wfsDownloadAvailable} = require('../../../selectors/controls');
-const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive, featureCollectionResultSelector} = require('../../../selectors/query');
-const { getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, getAttributeFilter, hasSupportedGeometry, timeSyncActive, showTimeSync, isEditingAllowedSelector} = require('../../../selectors/featuregrid');
-const {isCesium} = require('../../../selectors/maptype');
-const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
-const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector, selectedLayerNameSelector, multiSelect} = require('../../../selectors/featuregrid');
-const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
-const {toolbarEvents, pageEvents} = require('../index');
-const {getFilterRenderer} = require('../../../components/data/featuregrid/filterRenderers');
-const {isDescribeLoaded, isFilterActive} = require('../../../selectors/query');
-const {getFeatureTypeProperties, isGeometryType} = require('../../../utils/ogc/WFS/base');
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createSelector, createStructuredSelector } from 'reselect';
+
+import {
+    clearChangeConfirmed,
+    closeFeatureGrid,
+    closeFeatureGridConfirmed,
+    deleteFeatures,
+    toggleTool
+} from '../../../actions/featuregrid';
+import ConfirmClearComp from '../../../components/data/featuregrid/dialog/ConfirmClear';
+import ConfirmDeleteComp from '../../../components/data/featuregrid/dialog/ConfirmDelete';
+import ConfirmFeatureCloseComp from '../../../components/data/featuregrid/dialog/ConfirmFeatureClose';
+import EmptyRowsViewComp from '../../../components/data/featuregrid/EmptyRowsView';
+import { getFilterRenderer } from '../../../components/data/featuregrid/filterRenderers';
+import FooterComp from '../../../components/data/featuregrid/Footer';
+import HeaderComp from '../../../components/data/featuregrid/Header';
+import ToolbarComp from '../../../components/data/featuregrid/toolbars/Toolbar';
+import { wfsDownloadAvailable, widgetBuilderAvailable } from '../../../selectors/controls';
+import {
+    chartDisabledSelector,
+    getAttributeFilter,
+    getTitleSelector,
+    hasChangesSelector,
+    hasGeometrySelector,
+    hasNewFeaturesSelector,
+    hasSupportedGeometry,
+    isDrawingSelector,
+    isEditingAllowedSelector,
+    isSavedSelector,
+    isSavingSelector,
+    isSimpleGeomSelector,
+    modeSelector,
+    multiSelect,
+    selectedFeaturesCount,
+    selectedLayerNameSelector,
+    showAgainSelector,
+    showPopoverSyncSelector,
+    showTimeSync,
+    timeSyncActive
+} from '../../../selectors/featuregrid';
+import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
+import { isCesium } from '../../../selectors/maptype';
+import {
+    featureCollectionResultSelector,
+    featureLoadingSelector,
+    isDescribeLoaded,
+    isFilterActive,
+    isSyncWmsActive,
+    paginationInfo,
+    resultsSelector
+} from '../../../selectors/query';
+import { getFeatureTypeProperties, isGeometryType } from '../../../utils/ogc/WFS/base';
+import { pageEvents, toolbarEvents } from '../index';
+import settings from './AttributeSelector';
 
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
-}))(require('../../../components/data/featuregrid/EmptyRowsView'));
+}))(EmptyRowsViewComp);
 const Toolbar = connect(
     createStructuredSelector({
         saving: isSavingSelector,
@@ -57,7 +99,7 @@ const Toolbar = connect(
         timeSync: timeSyncActive
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
-)(require('../../../components/data/featuregrid/toolbars/Toolbar'));
+)(ToolbarComp);
 
 
 const Header = connect(
@@ -67,7 +109,7 @@ const Header = connect(
     {
         onClose: toolbarEvents.onClose
     }
-)(require('../../../components/data/featuregrid/Header'));
+)(HeaderComp);
 
 // loading={props.featureLoading} totalFeatures={props.totalFeatures} resultSize={props.resultSize}/
 const Footer = connect(
@@ -85,25 +127,25 @@ const Footer = connect(
             virtualScroll
         })),
     pageEvents
-)(require('../../../components/data/featuregrid/Footer'));
+)(FooterComp);
 const DeleteDialog = connect(
     createSelector(selectedFeaturesCount, (count) => ({count})), {
         onClose: () => toggleTool("deleteConfirm", false),
         onConfirm: () => deleteFeatures()
-    })(require('../../../components/data/featuregrid/dialog/ConfirmDelete'));
+    })(ConfirmDeleteComp);
 const ClearDialog = connect(
     createSelector(selectedFeaturesCount, (count) => ({count})), {
         onClose: () => toggleTool("clearConfirm", false),
         onConfirm: () => clearChangeConfirmed()
-    })(require('../../../components/data/featuregrid/dialog/ConfirmClear'));
+    })(ConfirmClearComp);
 const FeatureCloseDialog = connect(() => {}
     , {
         onClose: () => closeFeatureGridConfirmed(),
         onConfirm: () => closeFeatureGrid()
-    })(require('../../../components/data/featuregrid/dialog/ConfirmFeatureClose'));
+    })(ConfirmFeatureCloseComp);
 
 const panels = {
-    settings: require('./AttributeSelector')
+    settings
 };
 
 const dialogs = {
@@ -117,53 +159,61 @@ const panelDefaultProperties = {
     }
 };
 
-module.exports = {
-    getPanels: (tools = {}) =>
-        Object.keys(tools)
-            .filter(t => tools[t] && panels[t])
-            .map(t => {
-                const Panel = panels[t];
-                return <Panel key={t} {...(panelDefaultProperties[t] || {})} />;
-            }),
-    getHeader: () => {
-        return <Header ><Toolbar /></Header>;
-    },
-    getFooter: (props) => {
-        return ( props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;
-    },
-    getEmptyRowsView: () => {
-        return EmptyRowsView;
-    },
-    getFilterRenderers: createSelector((d) => d,
-        (describe) =>
-            describe ? (getFeatureTypeProperties(describe) || []).reduce( (out, cur) => ({
-                ...out,
-                [cur.name]: connect(
-                    createSelector(
-                        (state) => getAttributeFilter(state, cur.name),
-                        modeSelector,
-                        (filter, mode) => {
-                            const props = {
-                                value: filter && (filter.rawValue || filter.value),
-                                ...(isGeometryType(cur) ? {
-                                    filterEnabled: filter?.enabled,
-                                    filterDeactivated: filter?.deactivated
-                                } : {})
-                            };
-                            const editProps = !isGeometryType(cur) ? {
-                                disabled: true,
-                                tooltipMsgId: "featuregrid.filter.tooltips.editMode"
-                            } : {};
-                            return mode === "EDIT" ? {...props, ...editProps} : props;
-                        }
-                    ))(getFilterRenderer(isGeometryType(cur) ? 'geometry' : cur.localType, {name: cur.name}))
-            }), {}) : {}),
-    getDialogs: (tools = {}) => {
-        return Object.keys(tools)
-            .filter(t => tools[t] && dialogs[t])
-            .map(t => {
-                const Dialog = dialogs[t];
-                return <Dialog key={t} />;
-            });
-    }
+export const getPanels = (tools = {}) =>
+    Object.keys(tools)
+        .filter(t => tools[t] && panels[t])
+        .map(t => {
+            const Panel = panels[t];
+            return <Panel key={t} {...(panelDefaultProperties[t] || {})} />;
+        });
+export const getHeader = () => {
+    return <Header ><Toolbar /></Header>;
+};
+export const getFooter = (props) => {
+    return ( props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;
+};
+export const getEmptyRowsView = () => {
+    return EmptyRowsView;
+};
+export const getFilterRenderers = createSelector((d) => d,
+    (describe) =>
+        describe ? (getFeatureTypeProperties(describe) || []).reduce( (out, cur) => ({
+            ...out,
+            [cur.name]: connect(
+                createSelector(
+                    (state) => getAttributeFilter(state, cur.name),
+                    modeSelector,
+                    (filter, mode) => {
+                        const props = {
+                            value: filter && (filter.rawValue || filter.value),
+                            ...(isGeometryType(cur) ? {
+                                filterEnabled: filter?.enabled,
+                                filterDeactivated: filter?.deactivated
+                            } : {})
+                        };
+                        const editProps = !isGeometryType(cur) ? {
+                            disabled: true,
+                            tooltipMsgId: "featuregrid.filter.tooltips.editMode"
+                        } : {};
+                        return mode === "EDIT" ? {...props, ...editProps} : props;
+                    }
+                ))(getFilterRenderer(isGeometryType(cur) ? 'geometry' : cur.localType, {name: cur.name}))
+        }), {}) : {});
+export const getDialogs = (tools = {}) => {
+    return Object.keys(tools)
+        .filter(t => tools[t] && dialogs[t])
+        .map(t => {
+            const Dialog = dialogs[t];
+            return <Dialog key={t} />;
+        });
+};
+
+
+export default {
+    getPanels,
+    getHeader,
+    getFooter,
+    getEmptyRowsView,
+    getFilterRenderers,
+    getDialogs
 };

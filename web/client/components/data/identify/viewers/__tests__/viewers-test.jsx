@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var HTMLViewer = require('../HTMLViewer');
-var JSONViewer = require('../JSONViewer');
-var TextViewer = require('../TextViewer');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import HTMLViewer from '../HTMLViewer';
+import JSONViewer from '../JSONViewer';
+import TextViewer from '../TextViewer';
 
 const SimpleRowViewer = (props) => {
     return <div>{['name', 'description'].map((key) => <span key={key}>{key}:{props[key]}</span>)}</div>;

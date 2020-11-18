@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -6,9 +7,10 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {Grid, Row, Col} = require('react-bootstrap');
-const ToolsContainer = require('./containers/ToolsContainer');
+import React from 'react';
+
+import { Grid, Row, Col } from 'react-bootstrap';
+import ToolsContainer from './containers/ToolsContainer';
 
 /**
  * GridContainerPlugin. This is a plugin that works as container
@@ -66,7 +68,7 @@ class GridContainer extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     GridContainerPlugin: GridContainer,
     reducers: {}
 };

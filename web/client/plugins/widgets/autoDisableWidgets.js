@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {createSelector} = require('reselect');
-const {connect} = require('react-redux');
+import { createSelector } from 'reselect';
 
-const {rightPanelOpenSelector, bottomPanelOpenSelector} = require('../../selectors/maplayout');
-const {isCesium} = require('../../selectors/maptype');
+import { connect } from 'react-redux';
+import { rightPanelOpenSelector, bottomPanelOpenSelector } from '../../selectors/maplayout';
+import { isCesium } from '../../selectors/maptype';
 
 /**
  * enhances the component disabling it (setting `enabled` property to `false`) when rightPanel, bottomPanel are open or when the maptype is cesium.
@@ -25,4 +25,4 @@ const autoDisableWidgets = connect(
         })
     )
 );
-module.exports = autoDisableWidgets;
+export default autoDisableWidgets;

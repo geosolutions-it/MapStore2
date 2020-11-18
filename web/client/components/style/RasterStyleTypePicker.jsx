@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Combobox = require('react-widgets').Combobox;
+import React from 'react';
 
-const PropTypes = require('prop-types');
-const {getMessageById} = require('../../utils/LocaleUtils');
+import { Combobox } from 'react-widgets';
+import PropTypes from 'prop-types';
+import { getMessageById } from '../../utils/LocaleUtils';
 
 class RasterStyleTypePicker extends React.Component {
     static propTypes = {
@@ -48,4 +48,4 @@ class RasterStyleTypePicker extends React.Component {
     }
 }
 
-module.exports = RasterStyleTypePicker;
+export default RasterStyleTypePicker;

@@ -26,6 +26,7 @@
         "pageInfoShowMore": "Ergebnisse {count} von {total}",
         "showMore": "Zeig mehr...",
         "collapse": "Kollabiert",
+        "Links": "Links",
         "Forbidden": "Verboten",
         "layerNameChangeError": {
             "title": "Namensänderungsfehler",

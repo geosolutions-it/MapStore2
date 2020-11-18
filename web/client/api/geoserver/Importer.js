@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../../libs/ajax');
+import axios from '../../libs/ajax';
 
 
 var Api = {
@@ -92,4 +92,4 @@ var Api = {
     }
 };
 
-module.exports = Api;
+export default Api;

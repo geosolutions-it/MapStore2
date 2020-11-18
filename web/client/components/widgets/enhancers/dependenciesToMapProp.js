@@ -5,12 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {set} = require('../../../utils/ImmutableUtils');
-const {shallowEqual, branch, withPropsOnChange} = require('recompose');
+import { set } from '../../../utils/ImmutableUtils';
+
+import { shallowEqual, branch, withPropsOnChange } from 'recompose';
+
 /**
  * Syncs map center
  */
-module.exports = (prop) => branch(
+export default (prop) => branch(
     ({mapSync} = {}) => mapSync,
     withPropsOnChange(
         ({ mapSync, dependencies = {} } = {}, { mapSync: newMapSync, dependencies: newDependencies }) =>

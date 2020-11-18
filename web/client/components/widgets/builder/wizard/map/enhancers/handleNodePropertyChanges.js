@@ -6,9 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 // handle property changes
-const { withHandlers } = require('recompose');
-const {belongsToGroup} = require('../../../../../../utils/LayersUtils');
-const { findIndex, castArray } = require('lodash');
+
+import { castArray, findIndex } from 'lodash';
+import { withHandlers } from 'recompose';
+
+import {belongsToGroup} from '../../../../../../utils/LayersUtils';
+
 /**
  * Add to the TOC or the Node editor some handlers for TOC nodes
  * add to the wrapped component the following methods:
@@ -19,7 +22,7 @@ const { findIndex, castArray } = require('lodash');
  * These method will call the method `onChange` from props mapping accordingly
  * @prop {function} onChange callback with arguments : (path, value) -> path will be something like: `map.layers[2].title` or `map.groups[1].title`, `map[somethingElse]`
  */
-module.exports = withHandlers({
+export default withHandlers({
     /**
      * Changes the layer property
      */

@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const SideCard = require('./SideCard');
-const PropTypes = require('prop-types');
-const {Row, Col} = require('react-bootstrap');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
+
+import SideCard from './SideCard';
+
 /**
  * Component for rendering a list of SideCard.
  * @memberof components.misc.cardgrids
@@ -59,4 +61,4 @@ class SideGrid extends React.Component {
     }
 }
 
-module.exports = SideGrid;
+export default SideGrid;

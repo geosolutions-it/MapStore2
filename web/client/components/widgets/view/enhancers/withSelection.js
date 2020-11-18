@@ -5,7 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, branch, withProps, withHandlers} = require('recompose');
+import { branch, compose, withHandlers, withProps } from 'recompose';
+
 /**
  * Enables selection for widgets for WidgetView.
  * If the prop `selectionActive = true`, add selection-active class to the container and add the `disabled` class to
@@ -14,7 +15,7 @@ const { compose, branch, withProps, withHandlers} = require('recompose');
  * @prop isWidgetSelectable optional filter function that checks if a widget is selectable. By default all widgets are selectable.
  * @prop onWidgetSelected handler called when a widget has been selected
  */
-module.exports = branch(
+export default branch(
     ({ selectionActive }) => selectionActive,
     compose(
         withProps(({ className }) => ({

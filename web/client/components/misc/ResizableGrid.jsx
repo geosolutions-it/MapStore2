@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDataGrid = require('react-data-grid');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import ReactDataGrid from 'react-data-grid';
+import PropTypes from 'prop-types';
 
 /**
  * Component for rendering a feature grid.
@@ -120,4 +121,4 @@ class ResizableGrid extends React.Component {
     };
 }
 
-module.exports = ResizableGrid;
+export default ResizableGrid;

@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {getGoogleMercatorScales} = require('../../utils/MapUtils');
-const {findDOMNode} = require('react-dom');
-const DropdownList = require('react-widgets').DropdownList;
-const {Row, Col, Overlay, Popover, Label} = require('react-bootstrap');
-const {getMessageById} = require('../../utils/LocaleUtils');
-const Message = require('../I18N/Message').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { getGoogleMercatorScales } from '../../utils/MapUtils';
+import { findDOMNode } from 'react-dom';
+import { DropdownList } from 'react-widgets';
+import { Row, Col, Overlay, Popover, Label } from 'react-bootstrap';
+import { getMessageById } from '../../utils/LocaleUtils';
+import Message from '../I18N/Message';
 
 class ScaleDenominator extends React.Component {
     static propTypes = {
@@ -94,4 +95,4 @@ class ScaleDenominator extends React.Component {
     }
 }
 
-module.exports = ScaleDenominator;
+export default ScaleDenominator;

@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const expect = require('expect');
-const handleNodeSelection = require('../handleNodeSelection');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+
+import handleNodeSelection from '../handleNodeSelection';
 
 describe('handleNodeSelection enhancer', () => {
     beforeEach((done) => {
