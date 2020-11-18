@@ -27,6 +27,7 @@ import {
     MODES,
     closeFeatureGridConfirm,
     clearChangeConfirmed,
+    saveSuccess,
     CLEAR_CHANGES,
     TOGGLE_TOOL,
     closeFeatureGridConfirmed,
@@ -114,6 +115,7 @@ import {
     disableMultiSelect,
     selectFeaturesOnMapClickResult,
     enableGeometryFilterOnEditMode,
+    updateSelectedOnSaveOrCloseFeatureGrid,
     handleBoxSelectionDrawEnd,
     activateBoxSelectionTool,
     deactivateBoxSelectionTool,
@@ -1047,8 +1049,8 @@ describe('featuregrid Epics', () => {
     });
 
     it('test askChangesConfirmOnFeatureGridClose', (done) => {
-        testEpic(askChangesConfirmOnFeatureGridClose, 3, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(3);
+        testEpic(askChangesConfirmOnFeatureGridClose, 2, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
@@ -1058,9 +1060,6 @@ describe('featuregrid Epics', () => {
                     expect(action.type).toBe(UPDATE_FILTER);
                     expect(action.update).toExist();
                     expect(action.update.enabled).toBe(false);
-                    break;
-                case SELECT_FEATURES:
-                    expect(action.type).toBe(SELECT_FEATURES);
                     break;
                 default:
                     expect(true).toBe(false);
@@ -1750,7 +1749,32 @@ describe('featuregrid Epics', () => {
             }
         }));
     });
-
+    describe('updateSelectedOnSaveOrCloseFeatureGrid', () => {
+        it('on Save', (done) => {
+            testEpic(
+                updateSelectedOnSaveOrCloseFeatureGrid,
+                1,
+                saveSuccess(),
+                ([a]) => {
+                    expect(a.type).toEqual(SELECT_FEATURES);
+                    expect(a.features.length).toEqual(0);
+                    done();
+                }
+            );
+        });
+        it('on Close', (done) => {
+            testEpic(
+                updateSelectedOnSaveOrCloseFeatureGrid,
+                1,
+                closeFeatureGrid(),
+                ([a]) => {
+                    expect(a.type).toEqual(SELECT_FEATURES);
+                    expect(a.features.length).toEqual(0);
+                    done();
+                }
+            );
+        });
+    });
     it('featureGridSort', done => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
@@ -2017,12 +2041,19 @@ describe('featuregrid Epics', () => {
         }, done);
     });
     it('enableGeometryFilterOnEditMode epic', (done) => {
-        const epicResponse = actions => {
-            expect(actions[0].type).toBe(UPDATE_FILTER);
+        const epicResponse = ([action]) => {
+            expect(action.type).toEqual(UPDATE_FILTER);
+            expect(action.append).toBeFalsy();
+            expect(action.update).toEqual({
+                attribute: "geometry", // state.query.featureTypes["editing:polygons"] --> of type gml:...
+                enabled: true,
+                type: "geometry"
+            });
             done();
         };
 
         const featureGridState1 = {
+            query: state.query,
             featuregrid: {
                 mode: "EDIT",
                 filters: {}

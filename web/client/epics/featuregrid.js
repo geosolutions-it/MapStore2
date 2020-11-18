@@ -849,7 +849,7 @@ export const askChangesConfirmOnFeatureGridClose = (action$, store) => action$.o
         return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
     }
     return Rx.Observable.of(closeFeatureGrid(), updateFilter({
-        attribute: findGeometryProperty(describeSelector(state)).propName,
+        attribute: findGeometryProperty(describeSelector(state))?.propName,
         enabled: false,
         type: "geometry"
     }));

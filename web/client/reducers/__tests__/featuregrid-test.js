@@ -338,6 +338,7 @@ describe('Test the featuregrid reducer', () => {
         state = featuregrid(state, updateFilter(multiselectUpdate, true));
         expect(state.filters).toExist();
         expect(state.filters[update.attribute]).toExist();
+        expect(state.filters[update.attribute].attribute).toEqual(update.attribute);
         expect(state.filters[update.attribute].value).toEqual(
             [ { attribute: 'ATTRIBUTE', method: 'METHOD_1' },
                 { attribute: 'ATTRIBUTE', method: 'METHOD_2' } ]);
