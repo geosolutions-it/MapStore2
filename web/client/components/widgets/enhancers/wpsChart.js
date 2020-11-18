@@ -5,11 +5,15 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const {compose, withProps} = require('recompose');
-const {isObject, isNil} = require('lodash');
-const wpsAggregate = require('../../../observables/wps/aggregate');
-const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
-const Rx = require('rxjs');
+
+import { isNil, isObject } from 'lodash';
+import { compose, withProps } from 'recompose';
+import Rx from 'rxjs';
+
+import wpsAggregate from '../../../observables/wps/aggregate';
+import { getWpsUrl } from '../../../utils/LayersUtils';
+import propsStreamFactory from '../../misc/enhancers/propsStreamFactory';
+
 const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
     AggregationResults.map((res) => ({
         ...GroupByAttributes.reduce((a, p, i) => {
@@ -48,7 +52,6 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.groupByAttributes === o2.groupByAttributes
     && o1.viewParams === o2.viewParams;
 
-const {getWpsUrl} = require('../../../utils/LayersUtils');
 
 const dataStreamFactory = ($props) =>
     $props
@@ -77,7 +80,7 @@ const dataStreamFactory = ($props) =>
                     }).do(onLoadError)
                     ).startWith({loading: true})
         );
-module.exports = compose(
+export default compose(
     withProps( () => ({
         dataStreamFactory
     })),

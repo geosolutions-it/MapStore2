@@ -6,15 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const PropTypes = require('prop-types');
-const React = require('react');
+import PropTypes from 'prop-types';
 
-const Message = require('../locale/Message');
-
-const {StylePolygon, StylePolyline, StylePoint} = require('./index');
-const StylePanel = require('../../components/import/style/StylePanel');
-
-const Dialog = require('../../components/misc/StandardDialog');
+import React from 'react';
+import Message from '../locale/Message';
+import { StylePolygon, StylePolyline, StylePoint } from './index';
+import StylePanel from '../../components/import/style/StylePanel';
+import Dialog from '../../components/misc/StandardDialog';
 
 class StyleDialog extends React.Component {
     static propTypes = {
@@ -97,4 +95,4 @@ class StyleDialog extends React.Component {
     }
 }
 
-module.exports = StyleDialog;
+export default StyleDialog;

@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const dndTree = require('./enhancers/dndTree');
-require('./css/toc.css');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import dndTree from './enhancers/dndTree';
+import './css/toc.css';
 
 class TOC extends React.Component {
     static propTypes = {
@@ -56,4 +57,4 @@ class TOC extends React.Component {
     }
 }
 
-module.exports = dndTree(TOC);
+export default dndTree(TOC);

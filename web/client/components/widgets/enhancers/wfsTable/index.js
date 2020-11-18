@@ -5,17 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { includes, merge } = require('lodash');
-const { compose, withProps, createEventHandler, withHandlers, withStateHandlers, defaultProps } = require('recompose');
+import { includes, merge } from 'lodash';
+import { compose, createEventHandler, defaultProps, withHandlers, withProps, withStateHandlers } from 'recompose';
 
-
-const { getFeatureTypeProperties } = require('../../../../utils/ogc/WFS/base');
-const propsStreamFactory = require('../../../misc/enhancers/propsStreamFactory');
-
-const triggerFetch = require('./triggerFetch');
-const describeFetch = require('./describeFetch');
-const virtualScrollFetch = require('./virtualScrollFetch');
-const noPaginationFetch = require('./noPaginationFetch');
+import { getFeatureTypeProperties } from '../../../../utils/ogc/WFS/base';
+import propsStreamFactory from '../../../misc/enhancers/propsStreamFactory';
+import describeFetch from './describeFetch';
+import noPaginationFetch from './noPaginationFetch';
+import triggerFetch from './triggerFetch';
+import virtualScrollFetch from './virtualScrollFetch';
 
 const fetchDataStream = (props$, pages$, virtualScroll = true) =>
     triggerFetch(props$)
@@ -66,7 +64,7 @@ const dataStreamFactory = ($props) => {
  *  - propertyName: an array of property name to optimize download.
  *  - columnSettings: will be merged with grid columnSettings to setup column width and so on
 */
-module.exports = compose(
+export default compose(
     defaultProps({
         virtualScroll: true,
         size: 20,

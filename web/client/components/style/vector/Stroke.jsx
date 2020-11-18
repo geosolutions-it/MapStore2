@@ -6,22 +6,24 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {Row, Col} = require('react-bootstrap');
-const {isNil, isEqual} = require('lodash');
-const tinycolor = require("tinycolor2");
-const Slider = require('react-nouislider');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { Row, Col } from 'react-bootstrap';
+import { isNil, isEqual } from 'lodash';
+import tinycolor from 'tinycolor2';
+import Slider from 'react-nouislider';
 
 // number localizer?
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
+
 // not sure this is needed, TODO check!
 numberLocalizer();
-const Message = require('../../I18N/Message').default;
-const OpacitySlider = require('../../TOC/fragments/OpacitySlider');
-const ColorSelector = require('../ColorSelector').default;
-const DashArray = require('./DashArray');
-const {addOpacityToColor} = require('../../../utils/VectorStyleUtils');
+import Message from '../../I18N/Message';
+import OpacitySlider from '../../TOC/fragments/OpacitySlider';
+import ColorSelector from '../ColorSelector';
+import DashArray from './DashArray';
+import { addOpacityToColor } from '../../../utils/VectorStyleUtils';
 
 /**
  * Styler for the stroke properties of a vector style
@@ -128,4 +130,4 @@ class Stroke extends React.Component {
     }
 }
 
-module.exports = Stroke;
+export default Stroke;

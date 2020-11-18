@@ -5,17 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const Spinner = require('react-spinkit');
-const {Grid, Row, Panel, Label, Table, Glyphicon, Tooltip} = require('react-bootstrap');
 
-const Message = require('../../I18N/Message').default;
-const TaskProgress = require('./TaskProgress');
-const Button = require('../../misc/Button').default;
-const {getbsStyleForState} = require('../../../utils/ImporterUtils');
-const OverlayTrigger = require('../../misc/OverlayTrigger').default;
-require("./style/importer.css");
+import React from 'react';
+import PropTypes from 'prop-types';
+import Spinner from 'react-spinkit';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+
+import Message from '../../I18N/Message';
+import TaskProgress from './TaskProgress';
+import { getbsStyleForState } from '../../../utils/ImporterUtils';
+import { Grid, Row, Panel, Label, Table, Glyphicon, Tooltip } from 'react-bootstrap';
+import './style/importer.css';
+import Button from '../misc/Button';
 
 class Task extends React.Component {
     static propTypes = {
@@ -166,4 +167,4 @@ class Task extends React.Component {
     };
 }
 
-module.exports = Task;
+export default Task;

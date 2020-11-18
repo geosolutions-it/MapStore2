@@ -6,20 +6,20 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {compose} = require('recompose');
-const { FormGroup, FormControl } = require('react-bootstrap');
-const {isNil} = require('lodash');
-const IntlNumberFormControl = require('../../../I18N/IntlNumberFormControl');
+import {isNil} from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormControl, FormGroup } from 'react-bootstrap';
+import {compose} from 'recompose';
+
+import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
+import coordinateTypePreset from '../enhancers/coordinateTypePreset';
+import decimalToAeronautical from '../enhancers/decimalToAeronautical';
+import tempAeronauticalValue from '../enhancers/tempAeronauticalValue';
 
 /**
  * This component renders a coordiante inpout for aetronautical degrees
 */
-
-const decimalToAeronautical = require('../enhancers/decimalToAeronautical');
-const coordinateTypePreset = require('../enhancers/coordinateTypePreset');
-const tempAeronauticalValue = require('../enhancers/tempAeronauticalValue');
 
 class AeronauticalCoordinateEditor extends React.Component {
 
@@ -232,7 +232,7 @@ class AeronauticalCoordinateEditor extends React.Component {
     }
 }
 
-module.exports = compose(
+export default compose(
     coordinateTypePreset,
     decimalToAeronautical,
     tempAeronauticalValue

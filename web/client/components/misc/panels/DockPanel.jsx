@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Dock = require('react-dock').default;
-const BorderLayout = require('../../layout/BorderLayout');
-const {withState} = require('recompose');
-const PanelHeader = require('./PanelHeader');
+import React from 'react';
+
+import Dock from 'react-dock';
+import BorderLayout from '../../layout/BorderLayout';
+import { withState } from 'recompose';
+import PanelHeader from './PanelHeader';
 
 /**
  * Component for rendering a DockPanel
@@ -34,7 +35,7 @@ const PanelHeader = require('./PanelHeader');
  * @prop {bool} hideHeader hide header
  */
 
-module.exports = withState('fullscreen', 'onFullscreen', false)(
+export default withState('fullscreen', 'onFullscreen', false)(
     ({
         fluid,
         className = '',

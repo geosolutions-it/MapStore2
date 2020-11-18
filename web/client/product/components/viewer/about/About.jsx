@@ -1,4 +1,5 @@
-var PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,14 +7,15 @@ var PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const InfoButton = require('../../../../components/buttons/InfoButton');
-const Dialog = require('../../../../components/misc/Dialog');
-const AboutContent = require('./AboutContent');
-const {Message} = require('../../../../components/I18N/I18N');
-const aboutImg = require('../../../assets/img/Blank.gif');
-const assign = require('object-assign');
-const {Glyphicon} = require('react-bootstrap');
+import React from 'react';
+
+import InfoButton from '../../../../components/buttons/InfoButton';
+import Dialog from '../../../../components/misc/Dialog';
+import AboutContent from './AboutContent';
+import { Message } from '../../../../components/I18N/I18N';
+import aboutImg from '../../../assets/img/Blank.gif';
+import assign from 'object-assign';
+import { Glyphicon } from 'react-bootstrap';
 
 class About extends React.Component {
     static propTypes = {
@@ -70,4 +72,4 @@ class About extends React.Component {
     }
 }
 
-module.exports = About;
+export default About;

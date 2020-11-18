@@ -5,10 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const { Row, Col, Glyphicon } = require('react-bootstrap');
-const Button = require('../../misc/Button').default;
-const Message = require('../../I18N/Message').default;
+
+import React from 'react';
+import { Row, Col, Glyphicon } from 'react-bootstrap';
+
+import Message from '../../I18N/Message';
+import Button from '../../misc/Button';
 
 /**
  * Common header component for builder content. With close button and icon
@@ -16,7 +18,7 @@ const Message = require('../../I18N/Message').default;
  * @memberof components.widgets.builder
  * @prop {function} onClose
  */
-module.exports = ({onClose = () => {}, children} = {}) =>
+export default ({onClose = () => {}, children} = {}) =>
     (<div className="mapstore-flex-container">
         <div className="m-header bg-body widgets-builder-header">
             <Row>

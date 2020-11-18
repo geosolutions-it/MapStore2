@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const Header = require('../Header');
-const expect = require('expect');
+import ReactDOM from 'react-dom';
+import Header from '../Header';
+import expect from 'expect';
 
 describe('TOC Header', () => {
     beforeEach((done) => {

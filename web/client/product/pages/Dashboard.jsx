@@ -5,18 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
-const { get, isNil } = require('lodash');
-const url = require('url');
+
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { get, isNil } from 'lodash';
+import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 
-const { loadDashboard, resetDashboard } = require('../../actions/dashboard');
-const { checkLoggedUser } = require('../../actions/security');
-
-const Page = require('../../containers/Page');
-const BorderLayout = require('../../components/layout/BorderLayout');
+import { loadDashboard, resetDashboard } from '../../actions/dashboard';
+import { checkLoggedUser } from '../../actions/security';
+import Page from '../../containers/Page';
+import BorderLayout from '../../components/layout/BorderLayout';
 
 /**
   * @name Dashboard
@@ -79,7 +80,7 @@ class DashboardPage extends React.Component {
     }
 }
 
-module.exports = connect((state) => ({
+export default connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {

@@ -1,6 +1,6 @@
-const { compose, withStateHandlers, defaultProps, withProps} = require('recompose');
-const propsStreamFactory = require('../../../misc/enhancers/propsStreamFactory');
-const {isObject} = require("lodash");
+import { compose, withStateHandlers, defaultProps, withProps } from 'recompose';
+import propsStreamFactory from '../../../misc/enhancers/propsStreamFactory';
+import { isObject } from 'lodash';
 const stop = stream$ => stream$.filter(() => false);
 
 const sameParentFilter = ({parentsFilter: f1}, {parentsFilter: f2}) => f1 === f2;
@@ -13,7 +13,7 @@ const dataStreamFactory = prop$ => {
     return resetStream(prop$).startWith({busy: false});
 };
 
-module.exports = compose(
+export default compose(
     defaultProps({
         clearable: true,
         stopPropagation: true,

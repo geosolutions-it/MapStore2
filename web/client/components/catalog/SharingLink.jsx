@@ -5,14 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../I18N/Message').default;
-const {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
-const Button = require('../misc/Button').default;
-const OverlayTrigger = require('../misc/OverlayTrigger').default;
-const PropTypes = require('prop-types');
-const CopyToClipboard = require('react-copy-to-clipboard');
-const {addAuthenticationToUrl} = require('../../utils/SecurityUtils');
+import React from 'react';
+
+import Message from '../I18N/Message';
+import { FormControl, FormGroup, Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import PropTypes from 'prop-types';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { addAuthenticationToUrl } from '../../utils/SecurityUtils';
+import Button from '../misc/Button';
 
 class SharingLink extends React.Component {
     static propTypes = {
@@ -65,4 +66,4 @@ class SharingLink extends React.Component {
     }
 }
 
-module.exports = SharingLink;
+export default SharingLink;

@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,14 +7,14 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
+import Button from '../misc/Button';
+import PropTypes from 'prop-types';
 
-const {Glyphicon, Tooltip} = require('react-bootstrap');
-const Button = require('../misc/Button').default;
-const Message = require('../I18N/Message').default;
-const OverlayTrigger = require('../misc/OverlayTrigger').default;
-
-const ConfigUtils = require('../../utils/ConfigUtils').default;
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import Message from '../I18N/Message';
+import ConfigUtils from '../../utils/ConfigUtils';
 
 /**
  * Button for Go to Full MapStore2.
@@ -79,4 +79,4 @@ class GoFullButton extends React.Component {
     };
 }
 
-module.exports = GoFullButton;
+export default GoFullButton;

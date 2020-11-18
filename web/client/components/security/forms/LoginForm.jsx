@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {FormControl, FormGroup, ControlLabel, Alert} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
-const Button = require('../../misc/Button').default;
-const PropTypes = require('prop-types');
-const Message = require('../../I18N/Message').default;
-const {getMessageById} = require('../../../utils/LocaleUtils');
+import React from 'react';
+import { FormControl, FormGroup, ControlLabel, Alert } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
+
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import Button from '../../misc/Button';
 
 /**
  * A Form to login menu for user details:
@@ -168,4 +169,4 @@ class LoginForm extends React.Component {
     };
 }
 
-module.exports = LoginForm;
+export default LoginForm;

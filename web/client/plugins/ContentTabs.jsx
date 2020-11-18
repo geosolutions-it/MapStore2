@@ -5,16 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const { Row, Col, Grid, Nav, NavItem} = require('react-bootstrap');
-const ToolsContainer = require('./containers/ToolsContainer');
-const Message = require('../components/I18N/Message').default;
 
-const {connect} = require('react-redux');
-const assign = require('object-assign');
-const {createSelector} = require('reselect');
-const {onTabSelected} = require('../actions/contenttabs');
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, Grid, Nav, NavItem, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+
+import { onTabSelected } from '../actions/contenttabs';
+import Message from '../components/I18N/Message';
+import contenttabsEpics from '../epics/contenttabs';
+import contenttabsReducers from '../reducers/contenttabs';
+import ToolsContainer from './containers/ToolsContainer';
 
 const selectedSelector = createSelector(
     state => state && state.contenttabs && state.contenttabs.selected,
@@ -104,7 +107,7 @@ class ContentTabs extends React.Component {
     handleSelect = () => {}
 }
 
-module.exports = {
+export default {
     ContentTabsPlugin: assign(connect(selectedSelector, {
         onSelect: onTabSelected
     })(ContentTabs), {
@@ -115,6 +118,6 @@ module.exports = {
             glyph: 'dashboard'
         }
     }),
-    reducers: {contenttabs: require('../reducers/contenttabs').default},
-    epics: require('../epics/contenttabs').default
+    reducers: {contenttabs: contenttabsReducers},
+    epics: contenttabsEpics
 };

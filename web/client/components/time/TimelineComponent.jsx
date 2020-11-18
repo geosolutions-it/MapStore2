@@ -5,12 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const moment = require('moment');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import moment from 'moment';
 
 // const vis = require('vis/index-timeline-graph2d'); // debug version. Doesn't work with uglify plugin, probably because of this issue: https://github.com/almende/vis/issues/3290
-const vis = require('vis/dist/vis-timeline-graph2d.min');
+import vis from 'vis/dist/vis-timeline-graph2d.min';
+
 /*
  * This override enables editing for BackgroundItem
  */
@@ -41,10 +43,18 @@ vis.timeline.components.items.BackgroundItem.prototype._createDomElement = funct
     }
 };
 
-require('vis/dist/vis-timeline-graph2d.min.css');
+import 'vis/dist/vis-timeline-graph2d.min.css';
 
-
-const { difference, differenceBy, keys, intersection, intersectionBy, each, omit, assign } = require('lodash');
+import {
+    difference,
+    differenceBy,
+    keys,
+    intersection,
+    intersectionBy,
+    each,
+    omit,
+    assign
+} from 'lodash';
 
 const noop = () => { };
 
@@ -305,4 +315,4 @@ class Timeline extends React.Component {
     }
 }
 
-module.exports = Timeline;
+export default Timeline;

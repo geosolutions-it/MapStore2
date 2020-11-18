@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const triggerFetch = require('../triggerFetch');
-const Rx = require("rxjs");
-const axios = require('../../../../../../libs/ajax');
+import expect from 'expect';
+
+import triggerFetch from '../triggerFetch';
+import Rx from 'rxjs';
+import axios from '../../../../../../libs/ajax';
 const triggerInterceptors = (config) => {
     if (config.url.indexOf("rules/count") !== -1) {
         config.url = "base/web/client/test-resources/geofence/rest/rules/count";

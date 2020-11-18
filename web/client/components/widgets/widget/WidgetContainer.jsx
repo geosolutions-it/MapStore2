@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../I18N/Message').default;
-const BorderLayout = require('../../layout/BorderLayout');
-const ConfirmModal = require('../../maps/modals/ConfirmModal');
+import React from 'react';
+
+import Message from '../../I18N/Message';
+import BorderLayout from '../../layout/BorderLayout';
+import ConfirmModal from '../../maps/modals/ConfirmModal';
 
 /**
  * Base container for widgets.
@@ -22,7 +23,7 @@ const ConfirmModal = require('../../maps/modals/ConfirmModal');
  * @prop {function} toggleDeleteConfirm method triggered on delete confirm
  * @prop {function} onDelete function to call when user confirms delete
  */
-module.exports = ({
+export default ({
     id,
     title,
     confirmDelete = false,

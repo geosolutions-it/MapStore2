@@ -6,17 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Glyphicon} = require('react-bootstrap');
-const {keys, isArray, isObject, isString} = require('lodash');
-const Message = require('../../../I18N/Message').default;
-const Button = require('../../../misc/Button').default;
-const {Table} = require('react-bootstrap');
+import { isArray, isObject, isString, keys } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Glyphicon, Table } from 'react-bootstrap';
 
-const {getMessageById} = require('../../../../utils/LocaleUtils');
-const {isValidURL} = require('../../../../utils/URLUtils');
-const {isValidEmail} = require('../../../../utils/StringUtils');
+import { getMessageById } from '../../../../utils/LocaleUtils';
+import { isValidEmail } from '../../../../utils/StringUtils';
+import { isValidURL } from '../../../../utils/URLUtils';
+import Message from '../../../I18N/Message';
+import Button from '../../../misc/Button';
 
 class MetadataTemplate extends React.Component {
     static propTypes = {
@@ -149,4 +148,4 @@ class MetadataTemplate extends React.Component {
     }
 }
 
-module.exports = MetadataTemplate;
+export default MetadataTemplate;

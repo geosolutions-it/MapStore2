@@ -53,6 +53,7 @@ const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type ||
 const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
 
 export default ({
+    hasAggregateProcess,
     data = { options: {} },
     onChange = () => { },
     options = [],
@@ -106,7 +107,7 @@ export default ({
                         />
                     </Col>
                 </FormGroup>
-                <FormGroup controlId="aggregateFunction" className="mapstore-block-width">
+                {hasAggregateProcess ? <FormGroup controlId="aggregateFunction" className="mapstore-block-width">
                     <Col componentClass={ControlLabel} sm={6}>
                         <Message msgId={getLabelMessageId("aggregateFunction", data)} />
                     </Col>
@@ -118,7 +119,7 @@ export default ({
                             onChange={(val) => { onChange("options.aggregateFunction", val && val.value); }}
                         />
                     </Col>
-                </FormGroup>
+                </FormGroup> : null}
                 {formOptions.showUom ?
                     <FormGroup controlId="uom">
                         <Col componentClass={ControlLabel} sm={6}>
@@ -153,7 +154,7 @@ export default ({
                             />
                         </Col>
                     </FormGroup> : null}
-                {formOptions.advancedOptions && data.type === "bar" || data.type === "line"
+                {formOptions.advancedOptions && data.widgetType === "chart" && (data.type === "bar" || data.type === "line")
                     ? <ChartAdvancedOptions data={data} onChange={onChange} />
                     : null}
 

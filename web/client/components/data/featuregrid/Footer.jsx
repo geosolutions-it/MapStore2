@@ -1,11 +1,20 @@
-const React = require('react');
-const Message = require('../../I18N/Message').default;
-const {Glyphicon, Grid, Row, Col} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
-const Button = require('../../misc/Button').default;
-const {toPage} = require('../../../utils/FeatureGridUtils');
+/*
+ * Copyright 2018, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-module.exports = (props = {
+import React from 'react';
+import { Col, Glyphicon, Grid, Row } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
+
+import Button from '../../misc/Button';
+import { toPage } from '../../../utils/FeatureGridUtils';
+import Message from '../../I18N/Message';
+
+export default (props = {
     loading: false,
     onPageChange: () => {}
 }) => {

@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const bbox = require('@turf/bbox');
-const {withHandlers} = require('recompose');
+import bbox from '@turf/bbox';
+
+import { withHandlers } from 'recompose';
 
 /**
  * Adds a zoomToFeature handler that transforms the `currentFeature` property (array of features) into an extent, cleaning up missing geometries, triggers the callback
  * `zoomToExtent` (action) with the calculated extent and crs found in `currentFeatureCrs`.
  * Used for the identify zoomToFeature functionality.
  */
-module.exports = withHandlers({
+export default withHandlers({
     zoomToFeature: ({ zoomToExtent = () => {}, currentFeature = [], currentFeatureCrs: crs }) => () => {
         // zoom only to features that has some geometry (featureInfo returns features with no geometry for raster data).
         // layer groups may have both features with no geometry and with geometry.

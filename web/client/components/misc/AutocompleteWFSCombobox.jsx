@@ -6,14 +6,21 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const {isArray} = require('lodash');
-const PagedComboboxWithFeatures = require('./combobox/PagedComboboxWithFeatures');
-const {generateTemplateString} = require('../../utils/TemplateUtils');
-const {setObservableConfig, mapPropsStreamWithConfig, compose, withStateHandlers, withPropsOnChange, withHandlers} = require('recompose');
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+import { isArray } from 'lodash';
+import React from 'react';
+import {
+    compose,
+    mapPropsStreamWithConfig,
+    setObservableConfig,
+    withHandlers,
+    withPropsOnChange,
+    withStateHandlers
+} from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 
-const {escapeCQLStrings} = require('../../utils/FilterUtils');
+import { escapeCQLStrings } from '../../utils/FilterUtils';
+import { generateTemplateString } from '../../utils/TemplateUtils';
+import PagedComboboxWithFeatures from './combobox/PagedComboboxWithFeatures';
 
 setObservableConfig(rxjsConfig);
 const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
@@ -143,8 +150,8 @@ const addStateHandlers = compose(
     })
 );
 
-const AutocompleteWFSCombobox = addStateHandlers(PagedWFSComboboxEnhanced);
+export const AutocompleteWFSCombobox = addStateHandlers(PagedWFSComboboxEnhanced);
 
-module.exports = {
+export default {
     AutocompleteWFSCombobox
 };

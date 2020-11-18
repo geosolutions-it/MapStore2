@@ -1,13 +1,12 @@
-const PropTypes = require('prop-types');
-const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
-
-const Button = require('../../misc/Button').default;
-const Dialog = require('../../misc/Dialog');
-const Message = require('../../I18N/Message').default;
-const DownloadOptions = require('./DownloadOptions');
-const assign = require('object-assign');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
+import Dialog from '../../misc/Dialog';
+import Message from '../../I18N/Message';
+import DownloadOptions from './DownloadOptions';
+import assign from 'object-assign';
+import Button from '../../misc/Button';
 
 class DownloadDialog extends React.Component {
     static propTypes = {
@@ -105,4 +104,4 @@ class DownloadDialog extends React.Component {
     }
 }
 
-module.exports = DownloadDialog;
+export default DownloadDialog;

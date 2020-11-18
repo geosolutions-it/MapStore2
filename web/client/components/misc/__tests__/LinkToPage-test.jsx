@@ -1,7 +1,7 @@
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var LinkToPage = require('../LinkToPage');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import LinkToPage from '../LinkToPage';
 
 describe("This test for LinkToPage component", () => {
     beforeEach((done) => {

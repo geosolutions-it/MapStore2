@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
 /**
  * Component for rendering SVG previews for polygons, linestrings and points styles.
@@ -57,4 +57,4 @@ const SVGPreview = ({ type, patterns, paths, texts, backgroundColor = '#ffffff' 
         {texts && texts.map(({text, ...props}) => <text x="100" y="100" textAnchor="middle" alignmentBaseline="middle" {...props}>{text}</text>)}
     </svg>;
 
-module.exports = SVGPreview;
+export default SVGPreview;

@@ -6,13 +6,13 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-module.exports = () => {
+export default () => {
     require('../leaflet/plugins/index');
     return {
         Map: require('../leaflet/Map'),
         Layer: require('../leaflet/Layer'),
         Feature: require('../leaflet/Feature'),
-        Locate: require('../leaflet/Locate'),
+        Locate: require('../leaflet/Locate').default,
         MeasurementSupport: require('../leaflet/MeasurementSupport'),
         Overview: require('../leaflet/Overview'),
         ScaleBar: require('../leaflet/ScaleBar'),

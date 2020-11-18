@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import PropTypes from 'prop-types';
 
 class CircleThumb extends React.Component {
 
@@ -50,4 +51,4 @@ class CircleThumb extends React.Component {
     }
 }
 
-module.exports = CircleThumb;
+export default CircleThumb;

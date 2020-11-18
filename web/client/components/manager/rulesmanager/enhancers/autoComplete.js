@@ -1,7 +1,7 @@
-const Rx = require("rxjs");
-const { compose, withStateHandlers, defaultProps, createEventHandler, withProps} = require('recompose');
-const propsStreamFactory = require('../../../misc/enhancers/propsStreamFactory');
-const {isObject} = require("lodash");
+import Rx from 'rxjs';
+import { compose, withStateHandlers, defaultProps, createEventHandler, withProps } from 'recompose';
+import propsStreamFactory from '../../../misc/enhancers/propsStreamFactory';
+import { isObject } from 'lodash';
 const stop = stream$ => stream$.filter(() => false);
 
 
@@ -94,7 +94,7 @@ const dataStreamFactory = prop$ => {
  * @return {HOC}         An HOC that replaces the prop string with localized string.
  */
 
-module.exports = compose(
+export default compose(
     defaultProps({
         clearable: true,
         emptySearch: "%",

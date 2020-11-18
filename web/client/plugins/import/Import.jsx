@@ -6,15 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { compose, branch, mapPropsStream, renderComponent, renderNothing } = require('recompose');
-const { createStructuredSelector } = require('reselect');
-const DragZone = require('../../components/import/ImportDragZone');
-const { connect } = require('react-redux');
-const StyleDialog = require('./StyleDialog');
-const { configureMap } = require('../../actions/config');
-const { mapSelector } = require('../../selectors/map');
+import { compose, branch, mapPropsStream, renderComponent, renderNothing } from 'recompose';
 
-module.exports = compose(
+import { createStructuredSelector } from 'reselect';
+import DragZone from '../../components/import/ImportDragZone';
+import { connect } from 'react-redux';
+import StyleDialog from './StyleDialog';
+import { configureMap } from '../../actions/config';
+import { mapSelector } from '../../selectors/map';
+
+export default compose(
     mapPropsStream(
         props$ => props$.merge(
             props$

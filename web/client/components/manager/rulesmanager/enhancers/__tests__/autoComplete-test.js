@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { createSink, setObservableConfig} = require('recompose');
-const expect = require('expect');
-const autoComplete = require('../autoComplete');
+import React from 'react';
 
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+import ReactDOM from 'react-dom';
+import { createSink, setObservableConfig } from 'recompose';
+import expect from 'expect';
+import autoComplete from '../autoComplete';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
 
 

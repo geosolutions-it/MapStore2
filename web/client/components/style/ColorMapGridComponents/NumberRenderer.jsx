@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,13 +8,14 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {findDOMNode} = require('react-dom');
-const {Popover, Label, Overlay} = require('react-bootstrap');
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import React from 'react';
+
+import { findDOMNode } from 'react-dom';
+import { Popover, Label, Overlay } from 'react-bootstrap';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
-const {NumberPicker} = require('react-widgets');
-require('./numberpicker.css');
+import { NumberPicker } from 'react-widgets';
+import './numberpicker.css';
 
 class NumberRenderer extends React.Component {
     static propTypes = {
@@ -108,4 +110,4 @@ class NumberRenderer extends React.Component {
     };
 }
 
-module.exports = NumberRenderer;
+export default NumberRenderer;

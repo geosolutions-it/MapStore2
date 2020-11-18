@@ -5,10 +5,11 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const {compose, withStateHandlers, defaultProps} = require("recompose");
-const withLocal = require("../../../misc/enhancers/localizedProps");
+import { compose, withStateHandlers, defaultProps } from 'recompose';
 
-module.exports = compose(
+import withLocal from '../../../misc/enhancers/localizedProps';
+
+export default compose(
     defaultProps({
         filterPlaceholder: "rulesmanager.placeholders.filter"
     }),

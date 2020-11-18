@@ -5,26 +5,30 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const {connect} = require('react-redux');
-const {setVectorStyleParameter} = require('../../actions/vectorstyler');
 
-const {symbolselector} = require('../../selectors/vectorstyler');
+import { connect } from 'react-redux';
 
-const StylePolygon = connect(symbolselector, {
+import { setVectorStyleParameter } from '../../actions/vectorstyler';
+import ScaleDenominatorComp from '../../components/style/ScaleDenominator';
+import StylePointComp from '../../components/style/StylePoint';
+import StylePolygonComp from '../../components/style/StylePolygon';
+import StylePolylineComp from '../../components/style/StylePolyline';
+import { symbolselector } from '../../selectors/vectorstyler';
+
+export const StylePolygon = connect(symbolselector, {
     setStyleParameter: setVectorStyleParameter.bind(null, 'symbol')
-})(require('../../components/style/StylePolygon'));
+})(StylePolygonComp);
 
-const StylePoint = connect(symbolselector, {
+export const StylePoint = connect(symbolselector, {
     setStyleParameter: setVectorStyleParameter.bind(null, 'symbol')
-})(require('../../components/style/StylePoint'));
+})(StylePointComp);
 
-const StylePolyline = connect(symbolselector, {
+export const StylePolyline = connect(symbolselector, {
     setStyleParameter: setVectorStyleParameter.bind(null, 'symbol')
-})(require('../../components/style/StylePolyline'));
+})(StylePolylineComp);
+export const ScaleDenominator = ScaleDenominatorComp;
 
-const ScaleDenominator = require("../../components/style/ScaleDenominator");
-
-module.exports = {
+export default {
     StylePolygon,
     StylePolyline,
     StylePoint,

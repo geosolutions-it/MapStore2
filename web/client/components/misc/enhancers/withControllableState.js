@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {branch, withState} = require('recompose');
+import { branch, withState } from 'recompose';
 
 
 /**
@@ -24,7 +24,7 @@ const {branch, withState} = require('recompose');
  * @param  {[type]} initialValue [description]
  * @return {[type]}              [description]
  */
-module.exports = (propName, handlerName, initialValue) =>
+export default (propName, handlerName, initialValue) =>
     branch(
         (props = {}) => !props[handlerName],
         withState(propName, handlerName, initialValue)

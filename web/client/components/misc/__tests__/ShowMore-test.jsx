@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
+import React from 'react';
 
-const expect = require('expect');
-const ShowMore = require('../ShowMore');
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import expect from 'expect';
+import ShowMore from '../ShowMore';
 
 
 describe('ShowMore component', () => {

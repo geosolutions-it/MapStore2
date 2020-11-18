@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import {Provider} from 'react-redux';
 import HTML5Backend from 'react-dnd-html5-backend';
-const dragDropContext = require('react-dnd').DragDropContext;
+import { DragDropContext as dragDropContext } from 'react-dnd';
 
 import SectionsPreview from '../SectionsPreview';
 const Comp = dragDropContext(HTML5Backend)(SectionsPreview);

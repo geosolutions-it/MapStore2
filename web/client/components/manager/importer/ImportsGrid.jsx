@@ -5,16 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {findIndex} = require('lodash');
-const Spinner = require('react-spinkit');
-const PropTypes = require('prop-types');
-const {Table, Glyphicon, Label, Tooltip} = require('react-bootstrap');
 
-const Message = require('../../I18N/Message').default;
-const Button = require('../../misc/Button').default;
-const {getbsStyleForState} = require('../../../utils/ImporterUtils');
-const OverlayTrigger = require('../../misc/OverlayTrigger').default;
+import React from 'react';
+import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
+import { Table, Glyphicon, Label, Tooltip } from 'react-bootstrap';
+import { findIndex } from 'lodash';
+
+import Button from '../misc/Button';
+import Message from '../../I18N/Message';
+import { getbsStyleForState } from '../../../utils/ImporterUtils';
+import OverlayTrigger from '../../misc/OverlayTrigger';
 
 class ImportsGrid extends React.Component {
     static propTypes = {
@@ -119,4 +120,4 @@ class ImportsGrid extends React.Component {
     };
 }
 
-module.exports = ImportsGrid;
+export default ImportsGrid;

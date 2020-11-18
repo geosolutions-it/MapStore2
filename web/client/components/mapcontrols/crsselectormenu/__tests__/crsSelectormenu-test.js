@@ -1,8 +1,9 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { ListGroupItem } = require('react-bootstrap');
-const expect = require('expect');
-const CrsSelectorMenu = require('../CrsSelectorMenu');
+import expect from 'expect';
+import React from 'react';
+import { ListGroupItem } from 'react-bootstrap';
+import ReactDOM from 'react-dom';
+
+import CrsSelectorMenu from '../CrsSelectorMenu';
 describe('CrsSelectorMenu component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

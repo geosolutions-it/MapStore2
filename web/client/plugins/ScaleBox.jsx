@@ -6,19 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('../utils/PluginsUtils');
-const {createSelector} = require('reselect');
+import React from 'react';
 
-const {mapSelector, minZoomSelector} = require('../selectors/map');
-const {changeZoomLevel} = require('../actions/map');
-
-const HelpWrapper = require('./help/HelpWrapper');
-const Message = require('./locale/Message');
-const ScaleBox = require("../components/mapcontrols/scale/ScaleBox");
-
-const {getScales} = require('../utils/MapUtils');
-const assign = require('object-assign');
+import { connect } from '../utils/PluginsUtils';
+import { createSelector } from 'reselect';
+import { mapSelector, minZoomSelector } from '../selectors/map';
+import { changeZoomLevel } from '../actions/map';
+import HelpWrapper from './help/HelpWrapper';
+import Message from './locale/Message';
+import ScaleBox from '../components/mapcontrols/scale/ScaleBox';
+import { getScales } from '../utils/MapUtils';
+import assign from 'object-assign';
 
 const selector = createSelector([mapSelector, minZoomSelector], (map, minZoom) => ({
     minZoom,
@@ -29,7 +27,7 @@ const selector = createSelector([mapSelector, minZoomSelector], (map, minZoom) =
     )
 }));
 
-require('./scalebox/scalebox.css');
+import './scalebox/scalebox.css';
 
 class ScaleBoxTool extends React.Component {
     render() {
@@ -56,7 +54,8 @@ class ScaleBoxTool extends React.Component {
 const ScaleBoxPlugin = connect(selector, {
     onChange: changeZoomLevel
 })(ScaleBoxTool);
-module.exports = {
+
+export default {
     ScaleBoxPlugin: assign(ScaleBoxPlugin, {
         disablePluginIf: "{state('mapType') === 'cesium'}"
     }, {

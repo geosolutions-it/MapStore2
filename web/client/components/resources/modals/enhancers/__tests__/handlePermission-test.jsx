@@ -5,16 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { createSink, setObservableConfig } = require('recompose');
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+
+import { Promise } from 'es6-promise';
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createSink, setObservableConfig } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+
+import handlePermission from '../handlePermission';
+
 setObservableConfig(rxjsConfig);
-const expect = require('expect');
-const { Promise } = require('es6-promise');
 
-
-const handlePermission = require('../handlePermission');
 
 describe('handlePermission enhancer', () => {
     beforeEach((done) => {

@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 
-const Display = require('../Display');
+import Display from '../Display';
 
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {

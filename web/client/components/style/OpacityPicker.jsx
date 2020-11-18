@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,12 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
-const Slider = require('react-nouislider');
-
-require("react-nouislider/example/nouislider.css");
-require("./opacitypicker.css");
+import Slider from 'react-nouislider';
+import 'react-nouislider/example/nouislider.css';
+import './opacitypicker.css';
 
 class OpacityPicker extends React.Component {
     static propTypes = {
@@ -47,4 +47,4 @@ class OpacityPicker extends React.Component {
     }
 }
 
-module.exports = OpacityPicker;
+export default OpacityPicker;

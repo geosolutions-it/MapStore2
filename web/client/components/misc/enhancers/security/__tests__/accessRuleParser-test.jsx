@@ -6,11 +6,12 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const expect = require('expect');
-const accessRuleParser = require('../accessRuleParser');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import { createSink } from 'recompose';
+import expect from 'expect';
+import accessRuleParser from '../accessRuleParser';
 
 describe('accessRuleParser enhancer', () => {
     beforeEach((done) => {

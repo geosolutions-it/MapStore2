@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
+import React from 'react';
 
-const BaseMap = require('../BaseMap');
-const mapType = require('../enhancers/mapType');
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import BaseMap from '../BaseMap';
+import mapType from '../enhancers/mapType';
 const TestMap = mapType(BaseMap);
 
 const LAYER_OSM = {

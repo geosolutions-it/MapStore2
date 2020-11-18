@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../../libs/ajax');
-const { uniqBy, castArray } = require('lodash');
-const { getNameParts } = require('../../utils/StyleEditorUtils');
+import axios from '../../libs/ajax';
+
+import { uniqBy, castArray } from 'lodash';
+import { getNameParts } from '../../utils/StyleEditorUtils';
 
 /**
 * Api for GeoServer layers via rest
@@ -122,4 +123,4 @@ const Api = {
             .then(layerObj => axios.put(url, layerObj).then(() => layerObj));
     }
 };
-module.exports = Api;
+export default Api;

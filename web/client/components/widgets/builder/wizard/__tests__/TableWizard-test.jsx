@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const expect = require('expect');
-const TableWizard = require('../TableWizard');
+import TableWizard from '../TableWizard';
+
 describe('ChartWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

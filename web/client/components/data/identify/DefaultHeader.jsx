@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import PropTypes from 'prop-types';
 
 class DefaultHeader extends React.Component {
     static propTypes = {
@@ -19,4 +20,4 @@ class DefaultHeader extends React.Component {
     }
 }
 
-module.exports = DefaultHeader;
+export default DefaultHeader;

@@ -5,12 +5,13 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const { compose, branch, withState, withProps, withHandlers} = require('recompose');
-const deleteWidget = require('./deleteWidget');
-const { editableWidget, exportableWidget, defaultIcons, withHeaderTools} = require('./tools');
+import { compose, branch, withState, withProps, withHandlers } from 'recompose';
+
+import deleteWidget from './deleteWidget';
+import { editableWidget, exportableWidget, defaultIcons, withHeaderTools } from './tools';
 
 
-module.exports = compose(
+export default compose(
 
     deleteWidget,
     // table / chart visualization

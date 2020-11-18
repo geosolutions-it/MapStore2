@@ -5,17 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, withProps, withHandlers} = require('recompose');
-const { connect } = require('react-redux');
+import { compose, withProps, withHandlers } from 'recompose';
 
-const {setControlProperty} = require('../../../actions/controls');
-const {openFeatureGrid} = require('../../../actions/featuregrid');
-const { onEditorChange } = require('../../../actions/widgets');
-const {returnToFeatureGridSelector} = require('../../../selectors/widgets');
+import { connect } from 'react-redux';
+import { setControlProperty } from '../../../actions/controls';
+import { openFeatureGrid } from '../../../actions/featuregrid';
+import { onEditorChange } from '../../../actions/widgets';
+import { returnToFeatureGridSelector } from '../../../selectors/widgets';
+
 /**
  * Reset widgets
  */
-module.exports = compose(
+export default compose(
     connect((state) => ({
         returnToFeatureGrid: returnToFeatureGridSelector(state)}),
     {

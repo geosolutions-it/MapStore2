@@ -1,6 +1,15 @@
-const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
-const Button = require('../../../misc/Button').default;
+/*
+ * Copyright 2018, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import React from 'react';
+import {  Glyphicon } from 'react-bootstrap';
+import Button from '../../../misc/Button';
+
+
 const hideStyle = {
     width: 0,
     padding: 0,
@@ -9,14 +18,14 @@ const hideStyle = {
 const normalStyle = {};
 const getStyle = (visible) => visible ? normalStyle : hideStyle;
 
-module.exports = class SimpleTButton extends React.Component {
-    render() {
-        const {disabled, id, visible, onClick, glyph, active, className = "square-button", ...props} = this.props;
-        return (<Button {...props} bsStyle={active ? "success" : "primary"} disabled={disabled} id={`fg-${id}`}
-            style={getStyle(visible)}
-            className={className}
-            onClick={() => !disabled && onClick()}>
-            <Glyphicon glyph={glyph}/>
-        </Button>);
-    }
+export const SimpleTButton = ({disabled, id, visible, onClick, glyph, active, className = "square-button", ...props}) => {
+    return (<Button {...props} bsStyle={active ? "success" : "primary"} disabled={disabled} id={`fg-${id}`}
+        style={getStyle(visible)}
+        className={className}
+        onClick={() => !disabled && onClick()}>
+        <Glyphicon glyph={glyph}/>
+    </Button>);
 };
+
+
+export default SimpleTButton;

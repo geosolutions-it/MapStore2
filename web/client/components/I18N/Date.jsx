@@ -1,4 +1,5 @@
-var PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,8 +7,9 @@ var PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var {FormattedDate} = require('react-intl');
+import React from 'react';
+
+import { FormattedDate } from 'react-intl';
 
 class DateFormat extends React.Component {
     static propTypes = {
@@ -28,4 +30,4 @@ class DateFormat extends React.Component {
     }
 }
 
-module.exports = DateFormat;
+export default DateFormat;

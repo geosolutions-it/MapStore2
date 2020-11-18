@@ -1,5 +1,5 @@
-const PropTypes = require('prop-types');
-const { editors } = require('react-data-grid');
+import PropTypes from 'prop-types';
+import { editors } from 'react-data-grid';
 
 /**
  * Base Class of attribute editor for FeatureGrid
@@ -22,4 +22,4 @@ class AttributeEditor extends editors.SimpleTextEditor {
         this.props.onTemporaryChanges?.(false);
     }
 }
-module.exports = AttributeEditor;
+export default AttributeEditor;

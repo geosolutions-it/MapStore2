@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,15 +7,14 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Grid, Row, Col} = require('react-bootstrap');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Grid, Row, Col} from 'react-bootstrap';
+import { Combobox } from 'react-widgets';
 
-const Combobox = require('react-widgets').Combobox;
-
-const ColorMapGrid = require('./ColorMapGrid');
-
-const Button = require('../misc/Button').default;
-const Message = require('../I18N/Message').default;
+import Button from '../../misc/Button';
+import ColorMapGrid from './ColorMapGrid';
+import Message from '../I18N/Message';
 
 class PseudoColorSettings extends React.Component {
     static propTypes = {
@@ -106,4 +105,4 @@ class PseudoColorSettings extends React.Component {
     };
 }
 
-module.exports = PseudoColorSettings;
+export default PseudoColorSettings;

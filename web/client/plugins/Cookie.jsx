@@ -6,8 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {connect} = require('react-redux');
-const {setCookieVisibility, setMoreDetailsVisibility} = require('../actions/cookie');
+import { connect } from 'react-redux';
+
+import { setCookieVisibility, setMoreDetailsVisibility } from '../actions/cookie';
+import CookieComp from '../components/cookie/Cookie';
+import cookies from '../epics/cookies';
+import cookie from '../reducers/cookie';
 
 /**
   * Plugin for cookie policy.
@@ -27,10 +31,10 @@ const Cookie = connect((state) => ({
 }), {
     onSetCookieVisibility: setCookieVisibility,
     onMoreDetails: setMoreDetailsVisibility
-})(require('../components/cookie/Cookie'));
+})(CookieComp);
 
-module.exports = {
+export default {
     CookiePlugin: Cookie,
-    reducers: {cookie: require('../reducers/cookie').default},
-    epics: require('../epics/cookies').default
+    reducers: {cookie: cookie},
+    epics: cookies
 };

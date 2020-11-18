@@ -5,22 +5,23 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const PagedCombo = require('../../../../misc/combobox/PagedCombobox');
-const autoComplete = require("../../enhancers/autoComplete");
-const { compose, defaultProps, withHandlers} = require('recompose');
-const {error} = require('../../../../../actions/notifications');
-const localizedProps = require("../../../../misc/enhancers/localizedProps");
-const {getWorkspaces} = require('../../../../../observables/rulesmanager');
-const {connect} = require("react-redux");
-const {createSelector} = require("reselect");
-const {filterSelector} = require("../../../../../selectors/rulesmanager");
+import PagedCombo from '../../../../misc/combobox/PagedCombobox';
+
+import autoComplete from '../../enhancers/autoComplete';
+import { compose, defaultProps, withHandlers } from 'recompose';
+import { error } from '../../../../../actions/notifications';
+import localizedProps from '../../../../misc/enhancers/localizedProps';
+import { getWorkspaces } from '../../../../../observables/rulesmanager';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { filterSelector } from '../../../../../selectors/rulesmanager';
 
 const selector = createSelector(filterSelector, (filter) => ({
     selected: filter.workspace
 }));
 
 
-module.exports = compose(
+export default compose(
     connect(selector, {onError: error}),
     defaultProps({
         paginated: false,

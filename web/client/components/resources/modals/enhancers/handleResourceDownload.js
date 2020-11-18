@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
-const { getResource } = require('../../../../api/persistence');
+import { mapPropsStream } from 'recompose';
+import Rx from 'rxjs';
 
-const { mapPropsStream } = require('recompose');
-module.exports = mapPropsStream(props$ => {
+import { getResource } from '../../../../api/persistence';
+
+export default mapPropsStream(props$ => {
     return props$.combineLatest(
         props$
             .pluck('resource')

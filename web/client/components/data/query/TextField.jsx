@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {FormControl, Tooltip} = require('react-bootstrap');
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const OverlayTrigger = require('../../../components/misc/OverlayTrigger').default;
-const HTML = require('../../../components/I18N/HTML');
-const PropTypes = require('prop-types');
-const {isLikeOrIlike} = require('../../../utils/FilterUtils');
+import React from 'react';
+
+import { FormControl, Tooltip } from 'react-bootstrap';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import OverlayTrigger from '../../../components/misc/OverlayTrigger';
+import HTML from '../../../components/I18N/HTML';
+import PropTypes from 'prop-types';
+import { isLikeOrIlike } from '../../../utils/FilterUtils';
 
 class TextField extends React.Component {
     static propTypes = {
@@ -85,4 +86,4 @@ class TextField extends React.Component {
     };
 }
 
-module.exports = TextField;
+export default TextField;

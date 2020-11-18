@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {compose, defaultProps, createSink} = require('recompose');
-const expect = require('expect');
-const hidableWidget = require('../hidableWidget');
+
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {compose, createSink, defaultProps} from 'recompose';
+
+import hidableWidget from '../hidableWidget';
 
 // enabled collapse tools
 const hidable =

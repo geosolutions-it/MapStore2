@@ -5,18 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {connect} = require('react-redux');
 
-const {loadLocale} = require('../actions/locale');
+import assign from 'object-assign';
+import { connect } from 'react-redux';
 
-const assign = require('object-assign');
-
+import { loadLocale } from '../actions/locale';
+import LangBarComp from '../components/I18N/LangBar';
 
 const LangBar = connect((state) => ({
     currentLocale: state.locale && state.locale.current
 }), {
     onLanguageChange: loadLocale.bind(null, null)
-})(require('../components/I18N/LangBar'));
+})(LangBarComp);
 
 /**
  * Renders a menu to switch language.
@@ -25,7 +25,7 @@ const LangBar = connect((state) => ({
  * @class
  * @memberof plugins
  */
-module.exports = {
+export default {
     LanguagePlugin: assign(LangBar, {
         OmniBar: {
             name: 'language',

@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,9 +7,10 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {ProgressBar} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
+import React from 'react';
+
+import { ProgressBar } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
 
 class TaskProgress extends React.Component {
     static propTypes = {
@@ -51,4 +53,4 @@ class TaskProgress extends React.Component {
     };
 }
 
-module.exports = TaskProgress;
+export default TaskProgress;

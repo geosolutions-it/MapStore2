@@ -5,11 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Toolbar = require('../Toolbar');
-var expect = require('expect');
-const {filter} = require('lodash');
+
+import expect from 'expect';
+import {filter} from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Toolbar from '../Toolbar';
+
 const spyOn = expect.spyOn;
 
 const isVisibleButton = (el) => {

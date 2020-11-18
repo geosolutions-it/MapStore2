@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ResourceCard = require('../ResourceCard.jsx');
-var expect = require('expect');
+import React from 'react';
 
-const TestUtils = require('react-dom/test-utils');
+import ReactDOM from 'react-dom';
+import ResourceCard from '../ResourceCard.jsx';
+import expect from 'expect';
+import TestUtils from 'react-dom/test-utils';
 
 describe('This test for ResourceCard', () => {
     beforeEach((done) => {

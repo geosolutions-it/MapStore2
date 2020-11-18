@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,13 +6,14 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {Panel, Glyphicon, Tooltip} = require('react-bootstrap');
-const Button = require('../../misc/Button').default;
-const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 
-const {Message} = require('../../I18N/I18N');
-const transforms = require('./transforms');
+import React from 'react';
+import Button from '../misc/Button';
+import PropTypes from 'prop-types';
+import { Panel, Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import { Message } from '../../I18N/I18N';
+import transforms from './transforms';
 
 class Transform extends React.Component {
     static propTypes = {
@@ -77,4 +78,4 @@ class Transform extends React.Component {
     };
 }
 
-module.exports = Transform;
+export default Transform;

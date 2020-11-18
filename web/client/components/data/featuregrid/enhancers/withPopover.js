@@ -1,8 +1,8 @@
-const React = require('react');
-const Overlay = require('../../../misc/Overlay');
-const {Popover} = require('react-bootstrap');
-const {omit} = require('lodash');
-const ReactDOM = require('react-dom');
+import React from 'react';
+import Overlay from '../../../misc/Overlay';
+import { Popover } from 'react-bootstrap';
+import { omit } from 'lodash';
+import ReactDOM from 'react-dom';
 
 /**
  * An overlay popover is added to a Wrapped component
@@ -10,7 +10,7 @@ const ReactDOM = require('react-dom');
  * component because it misses the refs property
  * you can customize popover props, content and placement
 */
-module.exports = (Wrapped) => class WithPopover extends React.Component {
+export default (Wrapped) => (class WithPopover extends React.Component {
     render() {
         let target = null;
         const {popoverOptions, keyProp, ...props} = this.props;
@@ -29,4 +29,4 @@ module.exports = (Wrapped) => class WithPopover extends React.Component {
             </span>
         );
     }
-};
+});

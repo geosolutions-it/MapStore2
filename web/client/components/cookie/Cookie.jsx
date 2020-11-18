@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const PropTypes = require('prop-types');
-const React = require('react');
-const {Glyphicon, Col} = require('react-bootstrap');
-const Button = require('../../components/misc/Button').default;
-const Message = require('../../components/I18N/Message').default;
-const MoreDetails = require('./MoreDetails');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { Glyphicon, Col } from 'react-bootstrap';
+import Button from '../misc/Button';
+import Message from '../../components/I18N/Message';
+import MoreDetails from './MoreDetails';
 /**
   * Component used to show a panel with the information about cookies
   * @class Cookies
@@ -131,4 +132,4 @@ class Cookie extends React.Component {
         this.props.onSetCookieVisibility(false);
     }
 }
-module.exports = Cookie;
+export default Cookie;

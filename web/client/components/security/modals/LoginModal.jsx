@@ -6,16 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const LoginForm = require('../forms/LoginForm');
-const Button = require('../../misc/Button').default;
-const Modal = require('../../misc/Modal');
-const PropTypes = require('prop-types');
-const Message = require('../../../components/I18N/Message').default;
-const {getMessageById} = require('../../../utils/LocaleUtils');
+import React from 'react';
+import PropTypes from 'prop-types';
 
-require('../css/security.css');
-
+import LoginForm from '../forms/LoginForm';
+import Modal from '../../misc/Modal';
+import Message from '../../../components/I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import '../css/security.css';
+import Button from '../../misc/Button';
 /**
  * A Modal window to show password reset form
  */
@@ -117,4 +116,4 @@ class LoginModal extends React.Component {
     };
 }
 
-module.exports = LoginModal;
+export default LoginModal;

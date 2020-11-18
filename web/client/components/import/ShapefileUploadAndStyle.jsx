@@ -6,18 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Grid, Row, Col} = require('react-bootstrap');
-const {isString} = require('lodash');
-const Combobox = require('react-widgets').DropdownList;
-const {Promise} = require('es6-promise');
+import React from 'react';
 
-const Message = require('../../components/I18N/Message').default;
-const Button = require('../misc/Button').default;
-const {geoJSONToLayer} = require('../../utils/LayersUtils');
-const {getMessageById} = require('../../utils/LocaleUtils');
-const {
+import PropTypes from 'prop-types';
+import { Grid, Row, Col } from 'react-bootstrap';
+import { isString } from 'lodash';
+import { DropdownList as Combobox } from 'react-widgets';
+
+import Message from '../../components/I18N/Message';
+import { geoJSONToLayer } from '../../utils/LayersUtils';
+import { getMessageById } from '../../utils/LocaleUtils';
+
+import {
     recognizeExt,
     MIME_LOOKUPS,
     readKml,
@@ -27,8 +27,10 @@ const {
     readZip,
     checkShapePrj,
     shpToGeoJSON
-} = require('../../utils/FileUtils');
-const SelectShape = require('./SelectShape');
+} from '../../utils/FileUtils';
+import Button from '../misc/Button';
+import SelectShape from './SelectShape';
+import { Promise } from 'es6-promise';
 
 class ShapeFileUploadAndStyle extends React.Component {
     static propTypes = {
@@ -273,4 +275,4 @@ class ShapeFileUploadAndStyle extends React.Component {
 }
 
 
-module.exports = ShapeFileUploadAndStyle;
+export default ShapeFileUploadAndStyle;

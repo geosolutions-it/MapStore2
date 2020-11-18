@@ -5,10 +5,11 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const AccessFormatter = require('../AccessFormatter');
-const expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import AccessFormatter from '../AccessFormatter';
+import expect from 'expect';
 
 describe('Test AccessFormatter component', () => {
     beforeEach((done) => {

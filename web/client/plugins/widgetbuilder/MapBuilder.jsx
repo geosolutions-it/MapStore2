@@ -5,23 +5,26 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
-const {onEditorChange} = require('../../actions/widgets');
-const { wizardSelector, wizardStateToProps} = require('./commons');
-const layerSelector = require('./enhancers/layerSelector');
-const manageLayers = require('./enhancers/manageLayers');
-const mapToolbar = require('./enhancers/mapToolbar');
-const handleNodeEditing = require('./enhancers/handleNodeEditing');
-const mapBuilderConnectMask = require('./enhancers/connection/mapBuilderConnectMask');
-const BorderLayout = require('../../components/layout/BorderLayout');
+import React from 'react';
+import { connect } from 'react-redux';
+import { branch, compose, renderComponent, withHandlers, withProps, withState } from 'recompose';
 
-const BuilderHeader = require('./BuilderHeader');
-const { compose, branch, renderComponent, withState, withHandlers, withProps } = require('recompose');
-const handleNodeSelection = require('../../components/widgets/builder/wizard/map/enhancers/handleNodeSelection');
+import { onEditorChange } from '../../actions/widgets';
+import BorderLayout from '../../components/layout/BorderLayout';
+import handleNodeSelection from '../../components/widgets/builder/wizard/map/enhancers/handleNodeSelection';
+import ToolbarComp from '../../components/widgets/builder/wizard/map/Toolbar';
+import MapWizardComp from '../../components/widgets/builder/wizard/MapWizard';
+import BuilderHeader from './BuilderHeader';
+import { wizardSelector, wizardStateToProps } from './commons';
+import mapBuilderConnectMask from './enhancers/connection/mapBuilderConnectMask';
+import handleNodeEditing from './enhancers/handleNodeEditing';
+import layerSelector from './enhancers/layerSelector';
+import manageLayers from './enhancers/manageLayers';
+import mapToolbar from './enhancers/mapToolbar';
+import MapLayerSelectorComp from './MapLayerSelector';
+import MapSelector from './MapSelector';
 
-const Toolbar = mapToolbar(require('../../components/widgets/builder/wizard/map/Toolbar'));
-const MapSelector = require('./MapSelector');
+const Toolbar = mapToolbar(ToolbarComp);
 
 
 /*
@@ -50,7 +53,7 @@ const chooseMapEnhancer = compose(
                     }
                 }),
                 layerSelector,
-            )(require('./MapLayerSelector'))
+            )(MapLayerSelectorComp)
         )
     ),
     // add button to back to map selection
@@ -70,7 +73,7 @@ const Builder = connect(
         onChange: onEditorChange
     },
     wizardStateToProps,
-)(require('../../components/widgets/builder/wizard/MapWizard'));
+)(MapWizardComp);
 
 const mapBuilder = compose(
     chooseMapEnhancer,
@@ -83,7 +86,7 @@ const mapBuilder = compose(
 );
 
 
-module.exports = mapBuilder(({
+export default mapBuilder(({
     enabled, onClose = () => {},
     toggleLayerSelector = () => {},
     editorData = {},

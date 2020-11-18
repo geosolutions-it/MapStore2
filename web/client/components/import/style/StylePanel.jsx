@@ -6,17 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Row, Col, Alert, ButtonToolbar } from 'react-bootstrap';
+import { Promise } from 'es6-promise';
 
-const Message = require('../../I18N/Message').default;
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const PropTypes = require('prop-types');
-const {isAnnotation} = require('../../../utils/AnnotationsUtils');
-let { toVectorStyle } = require('../../../utils/StyleUtils');
-const Button = require('../../misc/Button').default;
-const { Grid, Row, Col, Alert, ButtonToolbar} = require('react-bootstrap');
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import { isAnnotation } from '../../../utils/AnnotationsUtils';
+import { toVectorStyle } from '../../../utils/StyleUtils';
 
-const {Promise} = require('es6-promise');
+import Button from '../../misc/Button';
 
 class StylePanel extends React.Component {
     static propTypes = {
@@ -242,4 +242,4 @@ class StylePanel extends React.Component {
 }
 
 
-module.exports = StylePanel;
+export default StylePanel;

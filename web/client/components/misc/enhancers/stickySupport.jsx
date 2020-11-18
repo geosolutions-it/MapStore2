@@ -38,7 +38,7 @@ import stickybits from 'stickybits';
  */
 export default () => WrappedComponent =>
 
-    class StickySupport extends Component {
+    (class StickySupport extends Component {
         static propTypes = {
             scrollContainerSelector: PropTypes.string,
             height: PropTypes.number,
@@ -113,4 +113,4 @@ export default () => WrappedComponent =>
             }
             return;
         }
-    };
+    });

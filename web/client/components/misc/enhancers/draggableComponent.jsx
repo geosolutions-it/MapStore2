@@ -6,12 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-
-const React = require('react');
-const {compose, branch} = require('recompose');
-const {DragSource: dragSource} = require('react-dnd');
-const {DropTarget: dropTarget} = require('react-dnd');
-
+import React from 'react';
+import { DragSource as dragSource, DropTarget as dropTarget } from 'react-dnd';
+import { branch, compose } from 'recompose';
 
 const itemSource = {
     beginDrag: props => ({...props})
@@ -46,7 +43,7 @@ const targetCollect = (connect, monitor) => ({
 });
 
 
-module.exports = branch(
+export default branch(
     ({isDraggable} = {}) => isDraggable,
     compose(
         dragSource('row', itemSource, sourceCollect),

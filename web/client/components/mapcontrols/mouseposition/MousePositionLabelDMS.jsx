@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const BootstrapReact = require('react-bootstrap');
-const Label = BootstrapReact.Label;
-const NumberFormat = require('../../I18N/Number');
-const {roundCoord} = require('../../../utils/CoordinatesUtils');
 
+import PropTypes from 'prop-types';
+import React from 'react';
+import {Label} from 'react-bootstrap';
+
+import { roundCoord } from '../../../utils/CoordinatesUtils';
+import NumberFormat from '../../I18N/Number';
 
 class MousePositionLabelDMS extends React.Component {
     static propTypes = {
@@ -59,4 +59,4 @@ class MousePositionLabelDMS extends React.Component {
     }
 }
 
-module.exports = MousePositionLabelDMS;
+export default MousePositionLabelDMS;

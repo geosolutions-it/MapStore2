@@ -307,7 +307,7 @@ describe('Test the featuregrid reducer', () => {
         let state = featuregrid( {newFeatures: []}, geometryChanged([feature1]));
         expect(state.changes.length).toBe(1);
         expect(state.newFeatures.length).toBe(0);
-        state = featuregrid( state, geometryChanged([feature1]));
+        state = featuregrid( state, geometryChanged([feature1, feature2]));
         expect(state.changes.length).toBe(2);
 
     });
@@ -322,11 +322,27 @@ describe('Test the featuregrid reducer', () => {
 
     });
     it('UPDATE_FILTER', () => {
-        const update = {attribute: "ATTRIBUTE", opeartor: "OPERATOR", value: "VAL", rawValue: "RAWVAL"};
+        const update = {
+            attribute: "ATTRIBUTE",
+            opeartor: "OPERATOR",
+            value: {attribute: "ATTRIBUTE", method: "METHOD_1"},
+            rawValue: "RAWVAL"
+        };
         let state = featuregrid({}, updateFilter(update));
         expect(state.filters).toExist();
         expect(state.filters[update.attribute]).toExist();
         expect(state.filters[update.attribute].value).toBe(update.value);
+
+
+        const multiselectUpdate = {...update, value: {attribute: "ATTRIBUTE", method: "METHOD_2"}};
+        state = featuregrid(state, updateFilter(multiselectUpdate, true));
+        expect(state.filters).toExist();
+        expect(state.filters[update.attribute]).toExist();
+        expect(state.filters[update.attribute].value).toEqual(
+            [ { attribute: 'ATTRIBUTE', method: 'METHOD_1' },
+                { attribute: 'ATTRIBUTE', method: 'METHOD_2' } ]);
+
+
         state = featuregrid({}, createQuery("url", {}));
         expect(state.filters).toExist();
         expect(state.filters[update.attribute]).toNotExist();

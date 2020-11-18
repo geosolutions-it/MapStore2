@@ -5,18 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {Provider} = require('react-redux');
-const {compose, defaultProps} = require('recompose');
-const expect = require('expect');
-const mapWidget = require('../../enhancers/mapWidget');
+
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import {compose, defaultProps} from 'recompose';
+
+import mapWidget from '../../enhancers/mapWidget';
+import MapWidgetComp from '../MapWidget';
 
 const MapWidget = compose(
     defaultProps({
         canEdit: true
     }),
-    mapWidget)(require('../MapWidget'));
+    mapWidget)(MapWidgetComp);
 describe('MapWidget component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
