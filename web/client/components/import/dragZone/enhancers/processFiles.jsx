@@ -127,7 +127,7 @@ const isMap = json => json && json.version && json.map;
  * Recognizes map files (JSON format) or vector data in various formats.
  * They are converted in JSON as a "files" property.
  */
-module.exports = compose(
+export default compose(
     mapPropsStream(
         props$ => {
             const { handler: onDrop, stream: drop$ } = createEventHandler();

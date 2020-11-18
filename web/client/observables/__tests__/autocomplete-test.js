@@ -6,16 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {isEmpty} = require('lodash');
-const assign = require('object-assign');
-const {createPagedUniqueAutompleteStream, singleAttributeFilter, createWFSFetchStream} = require('../autocomplete');
-const AutocompleteEditor = require('../../components/data/featuregrid/editors/AutocompleteEditor');
-const {AutocompleteWFSCombobox} = require('../../components/misc/AutocompleteWFSCombobox');
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
-const {setObservableConfig, mapPropsStreamWithConfig} = require('recompose');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { isEmpty } from 'lodash';
+import assign from 'object-assign';
+
+import {
+    createPagedUniqueAutompleteStream,
+    singleAttributeFilter,
+    createWFSFetchStream
+} from '../autocomplete';
+
+import AutocompleteEditor from '../../components/data/featuregrid/editors/AutocompleteEditor';
+import { AutocompleteWFSCombobox } from '../../components/misc/AutocompleteWFSCombobox';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+import { setObservableConfig, mapPropsStreamWithConfig } from 'recompose';
 setObservableConfig(rxjsConfig);
 const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
 const props = {

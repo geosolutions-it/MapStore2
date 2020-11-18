@@ -18,9 +18,9 @@ const Message = require('../../I18N/Message').default;
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const {convertMeasuresToGeoJSON} = require('../../../utils/MeasurementUtils');
 const {getMessageById} = require('../../../utils/LocaleUtils');
-const Toolbar = require('../../misc/toolbar/Toolbar');
+const Toolbar = require('../../misc/toolbar/Toolbar').default;
 const OverlayTriggerCustom = require('../../misc/OverlayTriggerCustom').default;
-const BorderLayout = require('../../layout/BorderLayout');
+const BorderLayout = require('../../layout/BorderLayout').default;
 const CoordinatesEditor = require('../annotations/CoordinatesEditor');
 require('./measure.css');
 
@@ -430,4 +430,4 @@ class MeasureComponent extends React.Component {
     }
 }
 
-module.exports = MeasureComponent;
+export default MeasureComponent;

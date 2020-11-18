@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     GdalAddoTransform: require("./GdalAddoTransform"),
     GdalTranslateTransform: require('./GdalTranslateTransform'),
     GdalWarpTransform: require('./GdalWarpTransform'),

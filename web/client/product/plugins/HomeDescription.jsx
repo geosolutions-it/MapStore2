@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Jumbotron, Grid, Row, Col} = require('react-bootstrap');
-const HTML = require('../../components/I18N/HTML');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Jumbotron, Grid, Row, Col } from 'react-bootstrap';
+import HTML from '../../components/I18N/HTML';
 
 /**
  * Description of MapStore rendered in the home page.
@@ -50,6 +51,6 @@ class HomeDescription extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     HomeDescriptionPlugin: HomeDescription
 };

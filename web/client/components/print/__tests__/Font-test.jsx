@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Font = require('../Font');
+import expect from 'expect';
 
-var ReactTestUtils = require('react-dom/test-utils');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Font from '../Font';
+import ReactTestUtils from 'react-dom/test-utils';
 
 const fonts = ['Font1', 'Font2'];
 

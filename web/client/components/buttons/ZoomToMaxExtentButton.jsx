@@ -6,15 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
 
-const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
-
-const OverlayTrigger = require('../misc/OverlayTrigger').default;
-
-const {getZoomForExtent, getCenterForExtent, getBbox} = require('../../utils/MapUtils');
-const {getCenter} = require('../../utils/ConfigUtils');
+import PropTypes from 'prop-types';
+import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import { getZoomForExtent, getCenterForExtent, getBbox } from '../../utils/MapUtils';
+import { getCenter } from '../../utils/ConfigUtils';
 
 
 /**
@@ -124,4 +122,4 @@ class ZoomToMaxExtentButton extends React.Component {
     };
 }
 
-module.exports = ZoomToMaxExtentButton;
+export default ZoomToMaxExtentButton;

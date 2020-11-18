@@ -5,15 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
+import expect from 'expect';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const dragDropContext = require('react-dnd').DragDropContext;
-const testBackend = require('react-dnd-test-backend');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import testBackend from 'react-dnd-test-backend';
 const CoordinatesEditor = dragDropContext(testBackend)(require('../CoordinatesEditor'));
-const TestUtils = require('react-dom/test-utils');
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
+import TestUtils from 'react-dom/test-utils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
 
 const testHandlers = {
     onChange: () => {},

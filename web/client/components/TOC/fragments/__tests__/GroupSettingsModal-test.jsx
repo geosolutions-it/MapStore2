@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const GroupSettingsModal = require('../GroupSettingsModal');
-const expect = require('expect');
+import ReactDOM from 'react-dom';
+import GroupSettingsModal from '../GroupSettingsModal';
+import expect from 'expect';
 
 describe('TOC GroupSettingsModal', () => {
     beforeEach((done) => {

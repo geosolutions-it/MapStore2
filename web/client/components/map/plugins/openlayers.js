@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-module.exports = () => {
+export default () => {
     require('../openlayers/plugins/index');
     return {
         Map: require('../openlayers/Map').default,

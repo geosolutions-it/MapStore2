@@ -6,15 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const StylesEditor = require('../StylesEditor.jsx');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import StylesEditor from '../StylesEditor.jsx';
 const constraints = {
     allowedStyles: {style: ["poly_landmarks"]},
     defaultStyle: "poly_landmarks"
 };
-const ReactTestUtils = require('react-dom/test-utils');
+import ReactTestUtils from 'react-dom/test-utils';
 const styles = [{name: "poly_landmarks", title: "poly_landmarks"}];
 describe('Styles Editor component', () => {
     beforeEach((done) => {

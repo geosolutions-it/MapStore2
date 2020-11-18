@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Button, Row} = require('react-bootstrap');
-const Message = require('../../I18N/Message').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Button, Row } from 'react-bootstrap';
+import Message from '../../I18N/Message';
 
 /**
  * Provides a base container for wizards.
@@ -83,4 +84,4 @@ class WizardComponent extends React.Component {
        );
    }
 }
-module.exports = WizardComponent;
+export default WizardComponent;

@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,8 +8,9 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {findIndex} = require('lodash');
+import React from 'react';
+
+import { findIndex } from 'lodash';
 
 class HighlightFeatureSupport extends React.Component {
     static propTypes = {
@@ -145,4 +147,4 @@ class HighlightFeatureSupport extends React.Component {
     };
 }
 
-module.exports = HighlightFeatureSupport;
+export default HighlightFeatureSupport;

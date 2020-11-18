@@ -18,7 +18,7 @@ const notAvailable = require('./not-available.png');
 const {isEqual} = require('lodash');
 let SnapshotSupport;
 const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
-const Dialog = require('../../misc/Dialog');
+const Dialog = require('../../misc/Dialog').default;
 
 const Message = require('../../I18N/Message').default;
 const Portal = require('../../misc/Portal').default;
@@ -285,4 +285,4 @@ class SnapshotPanel extends React.Component {
     };
 }
 
-module.exports = SnapshotPanel;
+export default SnapshotPanel;

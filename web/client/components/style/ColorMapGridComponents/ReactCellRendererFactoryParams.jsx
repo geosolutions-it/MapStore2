@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
 function reactCellRendererFactoryParams(ReactComponent, compParams) {
     return function(params) {
         if (params.eParentOfValue.addElementAttachedListener) {
@@ -21,4 +22,4 @@ function reactCellRendererFactoryParams(ReactComponent, compParams) {
         return null;
     };
 }
-module.exports = reactCellRendererFactoryParams;
+export default reactCellRendererFactoryParams;

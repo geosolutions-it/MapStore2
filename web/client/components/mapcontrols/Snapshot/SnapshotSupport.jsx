@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = (mapType) => {
+export default (mapType) => {
     const SnapshotSupport = require('../../map/' + mapType + '/SnapshotSupport');
     return SnapshotSupport.default || SnapshotSupport;
 };

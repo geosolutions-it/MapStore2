@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-const TestUtils = require('react-dom/test-utils');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var I18N = require('../I18N');
-var Localized = require('../Localized');
+import expect from 'expect';
+
+import TestUtils from 'react-dom/test-utils';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import I18N from '../I18N';
+import Localized from '../Localized';
 
 var ita = {
     "locale": "it-IT",

@@ -5,13 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const Message = require('../I18N/Message').default;
-const {Glyphicon, Panel} = require('react-bootstrap');
-const Dock = require('react-dock').default;
-const BorderLayout = require('../layout/BorderLayout');
-const ResizeDetector = require('react-resize-detector').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import Message from '../I18N/Message';
+import { Glyphicon, Panel } from 'react-bootstrap';
+import Dock from 'react-dock';
+import BorderLayout from '../layout/BorderLayout';
+import ResizeDetector from 'react-resize-detector';
 
 class DetailsPanel extends React.Component {
     static propTypes = {
@@ -87,4 +88,4 @@ class DetailsPanel extends React.Component {
 }
 
 
-module.exports = DetailsPanel;
+export default DetailsPanel;

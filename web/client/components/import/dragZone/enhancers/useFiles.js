@@ -6,7 +6,7 @@ const {compose, mapPropsStream, withHandlers} = require('recompose');
  * Recognizes if the file dropped is a map or a layer
  * Then a related action for loading a map or a layer is performed and throws warning if any error occurs
  */
-module.exports = compose(
+export default compose(
     withHandlers({
         useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { },
             annotationsLayer, loadAnnotations = () => {} }) =>

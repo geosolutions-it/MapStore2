@@ -7,10 +7,10 @@
  */
 
 
-const loadMore = require('./loadMore');
+import loadMore from './loadMore';
 
-const { compose, defaultProps } = require('recompose');
-const withScrollSpy = require('./withScrollSpy');
+import { compose, defaultProps } from 'recompose';
+import withScrollSpy from './withScrollSpy';
 
 /**
  * Add infinite scroll functionality to a component.
@@ -23,7 +23,7 @@ const withScrollSpy = require('./withScrollSpy');
  * @param {function} [isScrolled]  Function to check if trigger load new data eg. (div, offset) => div.scrollTop + div.clientHeight >= div.scrollHeight - offset
  * @return {HOC}                  The HOC to apply
  */
-module.exports = ({
+export default ({
     loadPage,
     scrollSpyOptions,
     loadStreamOptions,

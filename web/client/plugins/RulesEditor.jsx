@@ -6,21 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+import { createSelector } from 'reselect';
 
-const {createSelector} = require('reselect');
-const { compose } = require('recompose');
-const {connect} = require('react-redux');
-
-const { cleanEditing, saveRule, setLoading } = require("../actions/rulesmanager");
-const { activeRuleSelector, geometryStateSel } = require("../selectors/rulesmanager");
-const { isEditorActive, isLoading} = require('../selectors/rulesmanager');
-
-const RulesEditor = require('./manager/RulesEditor');
-const Toolbar = require('./manager/RulesToolbar');
-const enhancer = require("./manager/EditorEnhancer");
-
+import { cleanEditing, saveRule, setLoading } from '../actions/rulesmanager';
+import epics from "../epics/rulesmanager";
+import rulesmanager from '../reducers/rulesmanager';
+import { activeRuleSelector, geometryStateSel, isEditorActive, isLoading } from '../selectors/rulesmanager';
+import enhancer from './manager/EditorEnhancer';
+import RulesEditor from './manager/RulesEditor';
+import Toolbar from './manager/RulesToolbar';
 
 const Editor = compose(
     connect(createSelector([activeRuleSelector, geometryStateSel], (activeRule, geometryState) => ({ activeRule, geometryState })), {
@@ -85,10 +83,11 @@ const Plugin = connect(
     ), {
     }
 )(RulesEditorComponent);
-module.exports = {
+
+export default {
     RulesEditorPlugin: Plugin,
     reducers: {
-        rulesmanager: require('../reducers/rulesmanager').default
+        rulesmanager
     },
-    epics: require("../epics/rulesmanager").default
+    epics
 };

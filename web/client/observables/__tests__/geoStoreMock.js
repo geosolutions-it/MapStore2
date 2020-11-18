@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require("../../libs/ajax");
-const MockAdapter = require("axios-mock-adapter");
+import axios from '../../libs/ajax';
+
+import MockAdapter from 'axios-mock-adapter';
 const getDummySecurityRuleList = (id) => ({ "SecurityRuleList": { "SecurityRule": { "canRead": true, "canWrite": true, "user": { id, "name": "admin" } } } });
 
 /**

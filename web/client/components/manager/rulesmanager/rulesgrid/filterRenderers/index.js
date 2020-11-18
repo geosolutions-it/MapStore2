@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     RolesFilter: require('./RolesFilter'),
     UsersFilter: require('./UsersFilter'),
     WorkspacesFilter: require('./WorkspacesFilter'),

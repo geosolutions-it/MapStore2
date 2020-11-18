@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const scrollStream = require('../scrollStream');
-const Rx = require("rxjs");
+import expect from 'expect';
+
+import scrollStream from '../scrollStream';
+import Rx from 'rxjs';
 describe('rulegrid scrollStream', () => {
     it('generate pages request', (done) => {
         const moreRules = (pagesRequest) => {

@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { mapPropsStream, createEventHandler} = require('recompose');
-const Rx = require('rxjs');
+import { mapPropsStream, createEventHandler } from 'recompose';
+
+import Rx from 'rxjs';
 
 /**
  * Create a stream that implements the infinite scrolling
@@ -41,6 +42,7 @@ const loadMoreStream = (initialStream$, loadMore$, loadPage, {dataProp = "items"
             }))
     )
         .catch(error => Rx.Observable.of({ loading: false, error }));
+
 /**
  * Enhancer that implements paginated data retrival in append mode for the enhanced component.
  * Currently is made to work with `withInfiniteScroll` (see `withInfiniteScroll` enhancer.
@@ -77,7 +79,7 @@ const loadMoreStream = (initialStream$, loadMore$, loadPage, {dataProp = "items"
  * @param {function} loadPage the function that returns the stream. It must accept 2 params: `searchParams`, `page`.
  */
 
-module.exports = (loadPage = () => Rx.Observable.empty(), options) => mapPropsStream((props$) => {
+export default (loadPage = () => Rx.Observable.empty(), options) => mapPropsStream((props$) => {
     const { handler: onLoadMore, stream: loadMore$ } = createEventHandler();
     const { handler: loadFirst, stream: initialStream$ } = createEventHandler();
     return props$.combineLatest(loadMoreStream(

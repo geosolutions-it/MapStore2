@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var PrintOptions = require('../PrintOptions');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PrintOptions from '../PrintOptions';
 
 const layouts = [{
     name: 'A4'

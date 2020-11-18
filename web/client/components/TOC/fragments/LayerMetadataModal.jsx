@@ -6,19 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Glyphicon} = require('react-bootstrap');
+import React from 'react';
 
-require("./css/settingsModal.css");
-
-const Dialog = require('../../misc/Dialog');
-const Portal = require('../../misc/Portal').default;
-const Template = require('../../data/template/jsx/Template');
-const MetadataTemplate = require('./template/MetadataTemplate');
-const RenderTemplate = require("./template/index");
-
-const {isArray, isString} = require('lodash');
+import PropTypes from 'prop-types';
+import { Glyphicon } from 'react-bootstrap';
+import './css/settingsModal.css';
+import Dialog from '../../misc/Dialog';
+import Portal from '../../misc/Portal';
+import Template from '../../data/template/jsx/Template';
+import MetadataTemplate from './template/MetadataTemplate';
+import RenderTemplate from './template/index';
+import { isArray, isString } from 'lodash';
 
 class LayerMetadataModal extends React.Component {
     static propTypes = {
@@ -94,4 +92,4 @@ class LayerMetadataModal extends React.Component {
     }
 }
 
-module.exports = LayerMetadataModal;
+export default LayerMetadataModal;

@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const Header = require('../Header.jsx');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import Header from '../Header.jsx';
 describe('Rules Editor Header component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
 
-const { createDevTools } = require('redux-devtools');
-const LogMonitor = require('redux-devtools-log-monitor').default;
-const DockMonitor = require('redux-devtools-dock-monitor').default;
+import { createDevTools } from 'redux-devtools';
+import LogMonitor from 'redux-devtools-log-monitor';
+import DockMonitor from 'redux-devtools-dock-monitor';
 
-module.exports = createDevTools(
+export default createDevTools(
     <DockMonitor toggleVisibilityKey="ctrl-h"
         changePositionKey="ctrl-q">
         <LogMonitor theme="tomorrow" />

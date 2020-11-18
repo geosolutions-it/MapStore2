@@ -5,10 +5,11 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const PropTypes = require('prop-types');
-const React = require('react');
-const {isNil} = require('lodash');
-const {FormattedNumber} = require('react-intl');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { isNil } from 'lodash';
+import { FormattedNumber } from 'react-intl';
 class NumberFormat extends React.Component {
     static propTypes = {
         value: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
@@ -24,4 +25,4 @@ class NumberFormat extends React.Component {
     }
 }
 
-module.exports = NumberFormat;
+export default NumberFormat;

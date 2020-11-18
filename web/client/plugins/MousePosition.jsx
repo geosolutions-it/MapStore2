@@ -5,21 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
 
-const {connect} = require('react-redux');
-const {get} = require('lodash');
-const {mapSelector, projectionDefsSelector} = require('../selectors/map');
-const Message = require('../components/I18N/Message').default;
-const {Tooltip} = require('react-bootstrap');
-const {createSelector} = require('reselect');
+import { get } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Tooltip } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
-const assign = require('object-assign');
-const PropTypes = require('prop-types');
-
-const {changeMousePositionCrs} = require('../actions/mousePosition');
-const {registerEventListener, unRegisterEventListener} = require('../actions/map');
-const {isMouseMoveCoordinatesActiveSelector} = require('../selectors/map');
+import { registerEventListener, unRegisterEventListener } from '../actions/map';
+import { changeMousePositionCrs } from '../actions/mousePosition';
+import ToggleButton from '../components/buttons/ToggleButton';
+import Message from '../components/I18N/Message';
+import MousePositionComponent from '../components/mapcontrols/mouseposition/MousePosition';
+import mousePositionReducers from '../reducers/mousePosition';
+import { isMouseMoveCoordinatesActiveSelector, mapSelector, projectionDefsSelector } from '../selectors/map';
 
 const getDesiredPosition = (map, mousePosition, mapInfo) => {
     if (mousePosition.showCenter && map) {
@@ -66,9 +67,7 @@ const MousePositionButton = connect((state) => ({
         bsSize: "small"}
 }), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
     return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('mousemove', 'mouseposition') : dispatchProps.registerEventListener('mousemove', 'mouseposition')};
-})(require('../components/buttons/ToggleButton'));
-
-const MousePositionComponent = require('../components/mapcontrols/mouseposition/MousePosition');
+})(ToggleButton);
 
 
 class MousePosition extends React.Component {
@@ -83,7 +82,7 @@ class MousePosition extends React.Component {
     };
 
     getTemplate = (template) => {
-        return require('../components/mapcontrols/mouseposition/' + template);
+        return require('../components/mapcontrols/mouseposition/' + template).default;
     };
     render() {
         const { degreesTemplate, projectedTemplate, ...other} = this.props;
@@ -143,7 +142,7 @@ const MousePositionPlugin = connect(selector, {
     onCRSChange: changeMousePositionCrs
 })(MousePosition);
 
-module.exports = {
+export default {
     MousePositionPlugin: assign(MousePositionPlugin, {
         MapFooter: {
             name: 'mousePosition',
@@ -152,5 +151,5 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {mousePosition: require('../reducers/mousePosition').default}
+    reducers: {mousePosition: mousePositionReducers}
 };

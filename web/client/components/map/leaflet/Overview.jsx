@@ -58,4 +58,4 @@ class Overview extends React.Component {
     }
 }
 
-module.exports = Overview;
+export default Overview;

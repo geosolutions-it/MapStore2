@@ -1,4 +1,5 @@
-var PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,9 +9,10 @@ var PropTypes = require('prop-types');
  */
 
 
-var React = require('react');
-var HelpBadge = require('./HelpBadge');
-require("./help.css");
+import React from 'react';
+
+import HelpBadge from './HelpBadge';
+import './help.css';
 
 /**
  * A wrapper to add a help badge to an element.
@@ -44,4 +46,4 @@ class HelpWrapper extends React.Component {
     }
 }
 
-module.exports = HelpWrapper;
+export default HelpWrapper;

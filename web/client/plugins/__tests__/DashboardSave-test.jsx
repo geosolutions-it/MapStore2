@@ -5,20 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 
+import { triggerSave, triggerSaveAs } from '../../actions/dashboard';
+import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
+import dashboard from '../../reducers/dashboard';
 import {DashboardSave, DashboardSaveAs} from '../DashboardSave';
 import { getPluginForTest } from './pluginsTestUtils';
-import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
 
-import dashboard from '../../reducers/dashboard';
-
-import { triggerSave, triggerSaveAs } from '../../actions/dashboard';
-
-describe('DashboardSave Plugins (DashboardSave, DashboardSaveAs)', () => {
+describe.only('DashboardSave Plugins (DashboardSave, DashboardSaveAs)', () => {
     const stateMocker = createStateMocker({ dashboard });
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

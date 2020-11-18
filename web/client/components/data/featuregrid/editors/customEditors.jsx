@@ -1,7 +1,7 @@
-const React = require('react');
-const DropDownEditor = require('./DropDownEditor');
-const NumberEditor = require('./NumberEditor').default;
-const FormatEditor = require('./FormatEditor').default;
+import React from 'react';
+import DropDownEditor from './DropDownEditor';
+import NumberEditor from './NumberEditor';
+import FormatEditor from './FormatEditor';
 
 /**
  * MapStore allows for adding custom editors to Attribute Table.
@@ -47,4 +47,4 @@ const Editors = {
 };
 
 
-module.exports = Editors;
+export default Editors;

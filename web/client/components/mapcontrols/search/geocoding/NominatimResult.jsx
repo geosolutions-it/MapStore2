@@ -35,4 +35,4 @@ class NominatimResult extends React.Component {
     }
 }
 
-module.exports = NominatimResult;
+export default NominatimResult;

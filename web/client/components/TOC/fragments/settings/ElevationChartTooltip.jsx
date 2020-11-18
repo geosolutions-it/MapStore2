@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,7 +8,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
 class CustomTooltip extends React.Component {
     static propTypes = {
@@ -32,4 +33,4 @@ class CustomTooltip extends React.Component {
     }
 }
 
-module.exports = CustomTooltip;
+export default CustomTooltip;

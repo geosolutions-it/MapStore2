@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {FormGroup} = require('react-bootstrap');
-const {capitalize} = require('lodash');
-const IntlNumberFormControl = require('../../../I18N/IntlNumberFormControl');
+import {capitalize} from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {FormGroup} from 'react-bootstrap';
+
+import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 
 /**
  This component renders a coordiante inpout for decimal degrees
@@ -113,4 +114,4 @@ class DecimalCoordinateEditor extends React.Component {
     }
 }
 
-module.exports = DecimalCoordinateEditor;
+export default DecimalCoordinateEditor;

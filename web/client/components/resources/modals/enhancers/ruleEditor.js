@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {compose, withState} = require('recompose');
+import {compose, withState} from 'recompose';
 
-
-module.exports = compose(
+export default compose(
     withState('newGroup', 'onNewGroupChoose'),
     withState('newPermission', 'onNewPermissionChoose')
 );

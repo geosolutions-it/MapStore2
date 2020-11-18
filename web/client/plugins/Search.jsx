@@ -6,41 +6,50 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
-const assign = require('object-assign');
-const {get, isArray} = require('lodash');
-const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic} = require('../epics/search');
-const {defaultIconStyle} = require('../utils/SearchUtils');
-const {mapSelector} = require('../selectors/map');
-const {zoomToExtent} = require( "../actions/map");
-const {configureMap} = require( "../actions/config");
-const {setSearchBookmarkConfig} = require( "../actions/searchbookmarkconfig");
+import { get, isArray } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import MediaQuery from 'react-responsive';
+import { createSelector } from 'reselect';
 
-const {
-    resultsPurge,
-    resetSearch,
+import { removeAdditionalLayer } from '../actions/additionallayers';
+import { configureMap } from '../actions/config';
+import { toggleControl } from '../actions/controls';
+import { zoomToExtent } from '../actions/map';
+import {
     addMarker,
-    searchTextChanged,
-    textSearch,
-    selectSearchItem,
     cancelSelectedItem,
     changeActiveSearchTool,
-    zoomAndAddPoint,
-    changeFormat,
     changeCoord,
+    changeFormat,
+    resetSearch,
+    resultsPurge,
+    searchTextChanged,
+    selectSearchItem,
+    showGFI,
+    textSearch,
     updateResultsStyle,
-    showGFI
-} = require("../actions/search");
-const {
-    toggleControl
-} = require("../actions/controls");
-const {
-    removeAdditionalLayer
-} = require("../actions/additionallayers");
-const { getConfigProp } = require("../utils/ConfigUtils").default;
+    zoomAndAddPoint
+} from '../actions/search';
+import { setSearchBookmarkConfig } from '../actions/searchbookmarkconfig';
+import SearchBarComp from '../components/mapcontrols/search/SearchBar';
+import SearchResultListComp from '../components/mapcontrols/search/SearchResultList';
+import {
+    searchEpic,
+    searchItemSelected,
+    searchOnStartEpic,
+    textSearchShowGFIEpic,
+    zoomAndAddPointEpic
+} from '../epics/search';
+import mapInfoReducers from '../reducers/mapInfo';
+import searchReducers from '../reducers/search';
+import { layersSelector } from '../selectors/layers';
+import { mapSelector } from '../selectors/map';
+import ConfigUtils from '../utils/ConfigUtils';
+import { defaultIconStyle } from '../utils/SearchUtils';
+import ToggleButton from './searchbar/ToggleButton';
 
 const searchSelector = createSelector([
     state => state.search || null,
@@ -56,7 +65,7 @@ const searchSelector = createSelector([
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
     activeSearchTool: get(searchState, "activeSearchTool", "addressSearch"),
-    format: get(searchState, "format") || getConfigProp("defaultCoordinateFormat"),
+    format: get(searchState, "format") || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     selectedItems: searchState && searchState.selectedItems,
     mapInitial,
     bookmarkConfig: bookmarkConfig || {}
@@ -77,11 +86,7 @@ const SearchBar = connect(searchSelector, {
     onCancelSelectedItem: cancelSelectedItem,
     onZoomToExtent: zoomToExtent,
     onLayerVisibilityLoad: configureMap
-})(require("../components/mapcontrols/search/SearchBar").default);
-
-const {layersSelector} = require('../selectors/layers');
-
-const MediaQuery = require('react-responsive');
+})(SearchBarComp);
 
 const selector = createSelector([
     mapSelector,
@@ -97,9 +102,7 @@ const SearchResultList = connect(selector, {
     onItemClick: selectSearchItem,
     addMarker,
     showGFI
-})(require('../components/mapcontrols/search/SearchResultList').default);
-
-const ToggleButton = require('./searchbar/ToggleButton');
+})(SearchResultListComp);
 
 /**
  * Search plugin. Provides search functionalities for the map.
@@ -307,7 +310,7 @@ const SearchPlugin = connect((state) => ({
     }
     });
 
-module.exports = {
+export default {
     SearchPlugin: assign(SearchPlugin, {
         OmniBar: {
             name: 'search',
@@ -318,7 +321,7 @@ module.exports = {
     }),
     epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
     reducers: {
-        search: require('../reducers/search').default,
-        mapInfo: require('../reducers/mapInfo').default
+        search: searchReducers,
+        mapInfo: mapInfoReducers
     }
 };

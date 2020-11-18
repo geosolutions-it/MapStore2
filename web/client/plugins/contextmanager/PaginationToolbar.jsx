@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 import { connect } from 'react-redux';
-import { searchContexts } from '../../actions/contextmanager';
-import { withHandlers, renameProp, compose } from 'recompose';
-import { searchTextSelector, resultsSelector, searchParamsSelector, totalCountSelector, isLoadingSelector } from '../../selectors/contextmanager';
+import { compose, renameProp, withHandlers } from 'recompose';
 import { createSelector } from 'reselect';
+
+import { searchContexts } from '../../actions/contextmanager';
+import PaginationToolbar from '../../components/misc/PaginationToolbar';
+import { isLoadingSelector, resultsSelector, searchParamsSelector, searchTextSelector, totalCountSelector } from '../../selectors/contextmanager';
+
 export default compose(
     connect(
         createSelector(
@@ -46,5 +48,5 @@ export default compose(
             loadPage(searchText, {params: { start, limit }});
         }
     })
-)(require('../../components/misc/PaginationToolbar'));
+)(PaginationToolbar);
 

@@ -5,13 +5,14 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const PropTypes = require('prop-types');
-const React = require('react');
-const { Button, ButtonGroup, Glyphicon } = require('react-bootstrap');
 
-const Dialog = require('./Dialog');
-const assign = require('object-assign');
-const Message = require('../I18N/Message').default;
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Button, ButtonGroup, Glyphicon } from 'react-bootstrap';
+
+import Message from '../I18N/Message';
+import Dialog from './Dialog';
 
 /**
  * A Modal window to show password reset form
@@ -71,4 +72,4 @@ class ConfirmDialog extends React.Component {
     }
 }
 
-module.exports = ConfirmDialog;
+export default ConfirmDialog;

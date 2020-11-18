@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const PropTypes = require('prop-types');
-const React = require('react');
-const {Label, FormControl, FormGroup} = require('react-bootstrap');
-const Message = require('../../components/I18N/Message').default;
-const {compose} = require('redux');
-const {changeMapType} = require('../../actions/maptype');
-const {mapTypeSelector} = require('../../selectors/maptype');
-const {connect} = require('react-redux');
-const assign = require('object-assign');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { Label, FormControl, FormGroup } from 'react-bootstrap';
+import Message from '../../components/I18N/Message';
+import { compose } from 'redux';
+import { changeMapType } from '../../actions/maptype';
+import { mapTypeSelector } from '../../selectors/maptype';
+import { connect } from 'react-redux';
+import assign from 'object-assign';
 
 class MapType extends React.Component {
     static propTypes = {
@@ -54,7 +55,7 @@ const MapTypePlugin = connect((state) => ({
     onChangeMapType: compose(changeMapType, (event) => event.target.value)
 })(MapType);
 
-module.exports = {
+export default {
     MapTypePlugin: assign(MapTypePlugin, {
         OmniBar: {
             name: 'MapType',

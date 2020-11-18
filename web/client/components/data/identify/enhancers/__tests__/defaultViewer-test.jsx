@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const expect = require('expect');
-const ReactDOM = require('react-dom');
-const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../defaultViewer');
-const TestUtils = require('react-dom/test-utils');
+
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
+
+import {defaultViewerDefaultProps, defaultViewerHandlers} from '../defaultViewer';
 
 describe("test defaultViewer enhancers", () => {
     beforeEach((done) => {

@@ -5,8 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { withProps } = require('recompose');
-module.exports = withProps(({
+
+import { withProps } from 'recompose';
+
+export default withProps(({
     coordinate = "lat"
 }) => ({
     maxDegrees: coordinate === "lat" ? 90 : 180,

@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,11 +7,12 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {NavDropdown, Button, Glyphicon, MenuItem} = require('react-bootstrap');
-const {connect} = require("react-redux");
-const {partial} = require('lodash');
-const Message = require('../locale/Message');
+import React from 'react';
+
+import { NavDropdown, Button, Glyphicon, MenuItem } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { partial } from 'lodash';
+import Message from '../locale/Message';
 
 class OmniBarMenu extends React.Component {
     static propTypes = {
@@ -51,4 +53,4 @@ class OmniBarMenu extends React.Component {
     }
 }
 
-module.exports = connect()(OmniBarMenu);
+export default connect()(OmniBarMenu);

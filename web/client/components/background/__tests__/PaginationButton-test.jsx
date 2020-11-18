@@ -1,9 +1,8 @@
-const expect = require('expect');
-
-const React = require('react');
-const ReactDOM = require('react-dom');
-const PaginationButton = require('../PaginationButton');
-const ReactTestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PaginationButton from '../PaginationButton';
+import ReactTestUtils from 'react-dom/test-utils';
 
 describe("test the PaginationButton", () => {
     beforeEach((done) => {

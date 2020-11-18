@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
-const {toggleControl} = require('../../actions/controls');
-const {FormGroup} = require('react-bootstrap');
-const ToggleBtn = require('../../components/buttons/ToggleButton');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import { connect } from 'react-redux';
+import { toggleControl } from '../../actions/controls';
+import { FormGroup } from 'react-bootstrap';
+import ToggleBtn from '../../components/buttons/ToggleButton';
+import PropTypes from 'prop-types';
 
 class ToggleServicesConfig extends React.Component {
     static propTypes = {
@@ -34,7 +35,7 @@ class ToggleServicesConfig extends React.Component {
     }
 }
 
-module.exports = connect((state) => ({
+export default connect((state) => ({
     enabled: state.controls && state.controls.searchservicesconfig && state.controls.searchservicesconfig.enabled || false,
     pressedStyle: "default",
     defaultStyle: "primary",

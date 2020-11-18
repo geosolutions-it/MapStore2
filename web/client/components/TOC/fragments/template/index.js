@@ -7,15 +7,16 @@
  */
 
 /* eslint-disable */
-const Bootstrap = require('react-bootstrap');
-const Message = require('../../../I18N/Message').default;
+import Bootstrap from 'react-bootstrap';
 
-const React = require('react');
+import Message from '../../../I18N/Message';
+import React from 'react';
 
 const RenderTemplate = function(comp, props) {
     let model = props.model;
     return eval(comp);
 };
+
 /* eslint-enable */
 
-module.exports = RenderTemplate;
+export default RenderTemplate;

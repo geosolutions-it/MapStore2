@@ -6,28 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-
+import {connect} from 'react-redux';
+import { compose, defaultProps, getContext, withPropsOnChange } from 'recompose';
 import {createSelector} from 'reselect';
-import { compose, defaultProps, withPropsOnChange, getContext} from 'recompose';
-import { createPlugin } from '../utils/PluginsUtils';
+
+import {setControlProperty} from '../actions/controls';
+import {getLayerCapabilities} from '../actions/layerCapabilities';
+import {hideSettings, updateNode, updateSettings, updateSettingsParams} from '../actions/layers';
+import {toggleStyleEditor} from '../actions/styleeditor';
+import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
+import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
+import { activeTabSettingsSelector, initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
+import {elementSelector, groupsSelector, layerSettingSelector, layersSelector} from '../selectors/layers';
+import {currentLocaleLanguageSelector, currentLocaleSelector} from '../selectors/locale';
+import {isLocalizedLayerStylesEnabledSelector} from '../selectors/localizedLayerStyles';
+import {mapLayoutValuesSelector} from '../selectors/maplayout';
+import {isAdminUserSelector} from '../selectors/security';
 import {
     getDimension
 } from '../utils/LayersUtils';
-import {hideSettings, updateSettings, updateNode, updateSettingsParams} from '../actions/layers';
-import {getLayerCapabilities} from '../actions/layerCapabilities';
-import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
-import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
+import { createPlugin } from '../utils/PluginsUtils';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
-import { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } from '../selectors/controls';
-import {layerSettingSelector, layersSelector, groupsSelector, elementSelector} from '../selectors/layers';
-import {mapLayoutValuesSelector} from '../selectors/maplayout';
-import {currentLocaleSelector, currentLocaleLanguageSelector} from '../selectors/locale';
-import {isAdminUserSelector} from '../selectors/security';
-import {isLocalizedLayerStylesEnabledSelector} from '../selectors/localizedLayerStyles';
-import {setControlProperty} from '../actions/controls';
-import {toggleStyleEditor} from '../actions/styleeditor';
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,

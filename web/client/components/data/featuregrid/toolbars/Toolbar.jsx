@@ -1,8 +1,8 @@
-const React = require('react');
-const {ButtonGroup, Glyphicon, Checkbox} = require('react-bootstrap');
-require("./toolbar.css");
-const Message = require('../../../I18N/Message').default;
-const withHint = require("../enhancers/withHint");
+import React from 'react';
+import { ButtonGroup, Glyphicon, Checkbox } from 'react-bootstrap';
+import './toolbar.css';
+import Message from '../../../I18N/Message';
+import withHint from '../enhancers/withHint';
 const TButton = withHint(require("./TButton"));
 const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {
     if (isDrawing) {
@@ -16,6 +16,7 @@ const getSaveMessageId = ({saving, saved}) => {
     }
     return "featuregrid.toolbar.saveChanges";
 };
+
 /**
  * Standard Toolbar for the FeatureGrid plugin.
  *
@@ -28,7 +29,7 @@ const getSaveMessageId = ({saving, saved}) => {
  * @param {bool} showSyncOnMapButton shows / hide the show on map button (defaults to true)
  * @param {bool} showTimeSyncButton shows / hide the timeSync button (defaults to false)
 */
-module.exports = ({
+export default ({
     disableToolbar,
     disableDownload,
     disableZoomAll = false,

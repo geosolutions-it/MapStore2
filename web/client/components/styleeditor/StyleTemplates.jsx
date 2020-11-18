@@ -6,25 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { head } = require('lodash');
-const { Form, FormGroup, FormControl: FormControlRB, ControlLabel, Alert } = require('react-bootstrap');
+import React from 'react';
 
-const BorderLayout = require('../layout/BorderLayout');
-const emptyState = require('../misc/enhancers/emptyState');
-const Loader = require('../misc/Loader');
+import { head } from 'lodash';
+import { Form, FormGroup, FormControl as FormControlRB, ControlLabel, Alert } from 'react-bootstrap';
+import BorderLayout from '../layout/BorderLayout';
+import emptyState from '../misc/enhancers/emptyState';
+import Loader from '../misc/Loader';
+import SquareCard from '../misc/cardgrids/SquareCard';
+import withLocal from '../misc/enhancers/localizedProps';
 
-const SquareCard = require('../misc/cardgrids/SquareCard');
-const withLocal = require("../misc/enhancers/localizedProps");
-
-const Filter = withLocal('filterPlaceholder')(require('../misc/Filter'));
+const Filter = withLocal('filterPlaceholder')(require('../misc/Filter').default);
 const FormControl = withLocal('placeholder')(FormControlRB);
 
-const ResizableModal = require('../misc/ResizableModal').default;
-const Portal = require('../misc/Portal').default;
-const Message = require('../I18N/Message').default;
-const HTML = require('../I18N/HTML');
-const SVGPreview = require('./SVGPreview');
+import ResizableModal from '../misc/ResizableModal';
+import Portal from '../misc/Portal';
+import Message from '../I18N/Message';
+import HTML from '../I18N/HTML';
+import SVGPreview from './SVGPreview';
 
 const SideGrid = emptyState(
     ({items}) => items.length === 0,
@@ -32,7 +31,7 @@ const SideGrid = emptyState(
         title: <Message msgId="styleeditor.filterMatchNotFound"/>,
         glyph: '1-stilo'
     }
-)(require('../misc/cardgrids/SideGrid'));
+)(require('../misc/cardgrids/SideGrid')).default;
 
 const validateAlphaNumeric = ({title, _abstract}) => {
     const regex = /^[a-zA-Z0-9\s]*$/;
@@ -159,4 +158,4 @@ const StyleTemplates = ({
     </BorderLayout>
 );
 
-module.exports = StyleTemplates;
+export default StyleTemplates;

@@ -5,15 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
-const url = require('url');
+
+import url from 'url';
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import {connect} from 'react-redux';
+
+import {loadMapConfig, loadNewMap} from '../../actions/config';
+import {initMap} from '../../actions/map';
+import MapViewerContainer from '../../containers/MapViewer';
+import MapViewerCmp from '../components/viewer/MapViewerCmp';
+
 const urlQuery = url.parse(window.location.href, true).query;
-const MapViewerCmp = require('../components/viewer/MapViewerCmp');
-const {loadNewMap, loadMapConfig} = require('../../actions/config');
-const {initMap} = require('../../actions/map');
-const MapViewerContainer = require('../../containers/MapViewer');
 
 /**
  * Main page for the Map. It is used to render the main page (or context)
@@ -49,7 +53,7 @@ class MapViewerPage extends React.Component {
     }
 }
 
-module.exports = connect((state) => ({
+export default connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {

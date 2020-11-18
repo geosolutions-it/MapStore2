@@ -5,13 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const PagedCombobox = require('../combobox/PagedCombobox');
-const TestUtils = require('react-dom/test-utils');
-const {Tooltip} = require('react-bootstrap');
-const AutocompleteListItem = require('../../data/query/AutocompleteListItem');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PagedCombobox from '../combobox/PagedCombobox';
+import TestUtils from 'react-dom/test-utils';
+import { Tooltip } from 'react-bootstrap';
+import AutocompleteListItem from '../../data/query/AutocompleteListItem';
 
 describe("This test for PagedCombobox component", () => {
     beforeEach((done) => {

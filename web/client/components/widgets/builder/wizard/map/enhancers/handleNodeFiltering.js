@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { head} = require('lodash');
-const { withProps } = require('recompose');
+import { head } from 'lodash';
+import { withProps } from 'recompose';
 
 const addFilteredAttributesGroups = (nodes, filters) => {
     return nodes.reduce((newNodes, currentNode) => {
@@ -47,6 +47,6 @@ const addNodeFilters = ({ nodes, filterText, currentLocale }) => addFilteredAttr
     }
 ]);
 
-module.exports = withProps((props) => ({
+export default withProps((props) => ({
     nodes: addNodeFilters(props)
 }));

@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {compose, withPropsOnChange, withHandlers} = require('recompose');
-const { getStartEnd } = require('../../../utils/TimeUtils');
+import { compose, withPropsOnChange, withHandlers } from 'recompose';
+
+import { getStartEnd } from '../../../utils/TimeUtils';
 
 /**
  * Enhances timeline with cursors for playback and time range.
  * Also draws backgrounds for the 2 ranges and add needed options to make time range draggable.
  *
  */
-module.exports = compose(
+export default compose(
     // Playback range background
     withPropsOnChange(
         ['rangeItems', 'playbackRange', 'playbackEnabled', 'selectedLayer'],

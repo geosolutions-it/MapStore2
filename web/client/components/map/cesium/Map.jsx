@@ -5,18 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const Cesium = require('../../../libs/cesium');
-const PropTypes = require('prop-types');
-const Rx = require('rxjs');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ConfigUtils = require('../../../utils/ConfigUtils').default;
-const ClickUtils = require('../../../utils/cesium/ClickUtils');
-const {ZOOM_TO_EXTENT_HOOK, registerHook} = require('../../../utils/MapUtils');
-const {reprojectBbox} = require('../../../utils/CoordinatesUtils');
+import Cesium from '../../../libs/cesium';
 
-const assign = require('object-assign');
-const {throttle} = require('lodash');
+import PropTypes from 'prop-types';
+import Rx from 'rxjs';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ConfigUtils from '../../../utils/ConfigUtils';
+import ClickUtils from '../../../utils/cesium/ClickUtils';
+import { ZOOM_TO_EXTENT_HOOK, registerHook } from '../../../utils/MapUtils';
+import { reprojectBbox } from '../../../utils/CoordinatesUtils';
+import assign from 'object-assign';
+import { throttle } from 'lodash';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -389,4 +389,4 @@ class CesiumMap extends React.Component {
     };
 }
 
-module.exports = CesiumMap;
+export default CesiumMap;

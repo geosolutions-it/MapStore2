@@ -5,13 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
+import React from 'react';
 
-const SwipeHeader = require('../SwipeHeader.jsx');
-
-const expect = require('expect');
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import SwipeHeader from '../SwipeHeader.jsx';
+import expect from 'expect';
 
 describe('SwipeHeader', () => {
 

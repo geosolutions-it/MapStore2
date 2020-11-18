@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-var InlineSpinner = require('../InlineSpinner');
+import InlineSpinner from '../InlineSpinner';
 
 describe('InlineSpinner', () => {
     beforeEach((done) => {

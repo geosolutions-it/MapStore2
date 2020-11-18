@@ -91,4 +91,4 @@ class SnapshotQueue extends React.Component {
     };
 }
 
-module.exports = SnapshotQueue;
+export default SnapshotQueue;

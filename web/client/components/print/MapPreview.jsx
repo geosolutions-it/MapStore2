@@ -5,15 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
 
-const assign = require('object-assign');
-
-const ScaleBox = require("../mapcontrols/scale/ScaleBox");
-const {Button, Glyphicon} = require('react-bootstrap');
-
-const {getMapZoom} = require('../../utils/PrintUtils');
+import PropTypes from 'prop-types';
+import assign from 'object-assign';
+import ScaleBox from '../mapcontrols/scale/ScaleBox';
+import { Button, Glyphicon } from 'react-bootstrap';
+import { getMapZoom } from '../../utils/PrintUtils';
 
 let PMap;
 let Layer;
@@ -156,4 +154,4 @@ class MapPreview extends React.Component {
     }
 }
 
-module.exports = MapPreview;
+export default MapPreview;

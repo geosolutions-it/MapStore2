@@ -59,4 +59,4 @@ class ScaleBar extends React.Component {
     }
 }
 
-module.exports = ScaleBar;
+export default ScaleBar;

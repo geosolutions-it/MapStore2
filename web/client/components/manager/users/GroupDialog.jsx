@@ -6,20 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const UsersTable = require('./UsersTable');
-const {Alert, Tabs, Tab, Button, Glyphicon, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const PropTypes = require('prop-types');
+import React from 'react';
 
-const Dialog = require('../../../components/misc/Dialog');
-const assign = require('object-assign');
-const Message = require('../../../components/I18N/Message').default;
-const Spinner = require('react-spinkit');
-const {findIndex} = require('lodash');
-const PagedCombobox = require('../../misc/combobox/PagedCombobox');
-const CloseConfirmButton = require('./CloseConfirmButton').default;
-
-require('./style/userdialog.css');
+import UsersTable from './UsersTable';
+import { Alert, Tabs, Tab, Button, Glyphicon, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import Dialog from '../../../components/misc/Dialog';
+import assign from 'object-assign';
+import Message from '../../../components/I18N/Message';
+import Spinner from 'react-spinkit';
+import { findIndex } from 'lodash';
+import PagedCombobox from '../../misc/combobox/PagedCombobox';
+import CloseConfirmButton from './CloseConfirmButton';
+import './style/userdialog.css';
 
 const PAGINATION_LIMIT = 5;
 
@@ -348,4 +347,4 @@ class GroupDialog extends React.Component {
     };
 }
 
-module.exports = GroupDialog;
+export default GroupDialog;

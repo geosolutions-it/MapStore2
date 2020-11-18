@@ -9,7 +9,7 @@
 
 import React from 'react';
 
-const ConfigUtils = require('../../utils/ConfigUtils').default;
+import ConfigUtils from '../../utils/ConfigUtils';
 
 const withContainer = (Component) => {
     return (props) => {

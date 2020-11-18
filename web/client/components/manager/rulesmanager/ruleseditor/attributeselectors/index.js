@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     Role: require("./Role"),
     User: require("./User"),
     Service: require("./Service"),

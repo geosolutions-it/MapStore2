@@ -5,20 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
 
-const {connect} = require('react-redux');
-const {Button, Grid, Glyphicon} = require('react-bootstrap');
-const {editUser} = require('../../actions/users');
-const {getUsers, usersSearchTextChanged} = require('../../actions/users');
-const SearchBar = require("../../components/search/SearchBar").default;
-const UserGrid = require('./users/UserGrid');
-const UserDialog = require('./users/UserDialog');
-const UserDeleteConfirm = require('./users/UserDeleteConfirm');
-const Message = require('../../components/I18N/Message').default;
-const assign = require('object-assign');
-const {trim} = require('lodash');
+import { trim } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Button, Glyphicon, Grid } from 'react-bootstrap';
+import { connect } from 'react-redux';
+
+import { editUser, getUsers, usersSearchTextChanged } from '../../actions/users';
+import Message from '../../components/I18N/Message';
+import SearchBar from '../../components/search/SearchBar';
+import UserDeleteConfirm from './users/UserDeleteConfirm';
+import UserDialog from './users/UserDialog';
+import UserGrid from './users/UserGrid';
 
 class UserManager extends React.Component {
     static propTypes = {
@@ -88,7 +88,7 @@ class UserManager extends React.Component {
  * @memberof plugins
  * @class
  */
-module.exports = {
+export default {
     UserManagerPlugin: assign(
         connect((state) => {
             let searchState = state && state.users;

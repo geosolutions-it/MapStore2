@@ -141,4 +141,4 @@ class LocateBtn extends React.Component {
     };
 }
 
-module.exports = LocateBtn;
+export default LocateBtn;

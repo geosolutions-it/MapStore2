@@ -82,4 +82,4 @@ class ResultList extends React.Component {
     };
 }
 
-module.exports = ResultList;
+export default ResultList;

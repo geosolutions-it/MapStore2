@@ -6,18 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {getDefaultInfoFormatValue,
-    getValidator,
-    getViewers,
-    getViewer} = require('../../../utils/MapInfoUtils');
-const HTML = require('../../../components/I18N/HTML');
-const Message = require('../../../components/I18N/Message').default;
-const {Alert, Panel, Accordion} = require('react-bootstrap');
-const ViewerPage = require('./viewers/ViewerPage');
-const {isEmpty, reverse} = require('lodash');
-const {getFormatForResponse} = require('../../../utils/IdentifyUtils');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer } from '../../../utils/MapInfoUtils';
+import HTML from '../../../components/I18N/HTML';
+import Message from '../../../components/I18N/Message';
+import { Alert, Panel, Accordion } from 'react-bootstrap';
+import ViewerPage from './viewers/ViewerPage';
+import { isEmpty, reverse } from 'lodash';
+import { getFormatForResponse } from '../../../utils/IdentifyUtils';
 
 class DefaultViewer extends React.Component {
     static propTypes = {
@@ -206,4 +204,4 @@ class DefaultViewer extends React.Component {
     }
 }
 
-module.exports = DefaultViewer;
+export default DefaultViewer;

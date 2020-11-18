@@ -6,12 +6,12 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const { compose, branch, withState, withHandlers, defaultProps, mapProps } = require('recompose');
+import { compose, branch, withState, withHandlers, defaultProps, mapProps } from 'recompose';
 
-const handleSave = require('../modals/enhancers/handleSave').default;
-const handleSaveModal = require('../modals/enhancers/handleSaveModal').default;
-const handleResourceDownload = require('../modals/enhancers/handleResourceDownload');
-const handleDetailsDownload = require('../modals/enhancers/handleDetailsDownload').default;
+import handleSave from '../modals/enhancers/handleSave';
+import handleSaveModal from '../modals/enhancers/handleSaveModal';
+import handleResourceDownload from '../modals/enhancers/handleResourceDownload';
+import handleDetailsDownload from '../modals/enhancers/handleDetailsDownload';
 
 /*
  * EditDialog
@@ -93,4 +93,4 @@ const resourceGrid = compose(
     }))
 );
 
-module.exports = resourceGrid;
+export default resourceGrid;

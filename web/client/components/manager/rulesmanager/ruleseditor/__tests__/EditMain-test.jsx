@@ -6,16 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const Provider = require('react-redux').Provider;
-const Editor = require('../EditMain.jsx');
-
-const configureMockStore = require('redux-mock-store').default;
-const { setObservableConfig } = require('recompose');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import { Provider } from 'react-redux';
+import Editor from '../EditMain.jsx';
+import configureMockStore from 'redux-mock-store';
+import { setObservableConfig } from 'recompose';
 setObservableConfig(rxjsConfig);
 const mockStore = configureMockStore();
 

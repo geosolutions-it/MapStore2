@@ -5,17 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
 
-const { wizardHandlers } = require('../../../misc/wizard/enhancers');
+import React from 'react';
+import { compose, lifecycle } from 'recompose';
 
-const TableOptions = require('./table/TableOptions');
-const WidgetOptions = require('./common/WidgetOptions');
+import { wizardHandlers } from '../../../misc/wizard/enhancers';
+import WizardContainer from '../../../misc/wizard/WizardContainer';
+import WidgetOptions from './common/WidgetOptions';
+import TableOptions from './table/TableOptions';
+
 const isChartOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
 
-const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
+const Wizard = wizardHandlers(WizardContainer);
 
-const { compose, lifecycle } = require('recompose');
 
 const triggerValidationReset = compose(lifecycle({
     UNSAFE_componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {
@@ -26,7 +28,7 @@ const triggerValidationReset = compose(lifecycle({
 })
 );
 
-module.exports = triggerValidationReset(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies }) =>
+export default triggerValidationReset(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies }) =>
     (<Wizard
         step={step}
         setPage={setPage}

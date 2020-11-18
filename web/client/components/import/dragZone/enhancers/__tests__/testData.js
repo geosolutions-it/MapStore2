@@ -19,7 +19,7 @@ const getFile = (url, fileName = "file") =>
             return new File([new Blob([res.data], {type: res.headers['response-type']})], fileName);
         });
 
-module.exports = {
+export default {
     // PDF_FILE: new File(b64toBlob('UEsDBAoAAAAAACGPaktDvrfoAQAAAAEAAAAKAAAAc2FtcGxlLnR4dGFQSwECPwAKAAAAAAAhj2pLQ7636AEAAAABAAAACgAkAAAAAAAAACAAAAAAAAAAc2FtcGxlLnR4dAoAIAAAAAAAAQAYAGILh+1EWtMBy3f86URa0wHLd/zpRFrTAVBLBQYAAAAAAQABAFwAAAApAAAAAAA=', 'application/pdf'), "file.pdf"),
     getShapeFile: () => getFile(SHP_FILE_URL, "shape.zip"),
     getGpxFile: () => getFile(GPX_FILE_URL, "file.gpx"),

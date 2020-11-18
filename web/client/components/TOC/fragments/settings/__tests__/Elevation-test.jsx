@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ReactTestUtils = require('react-dom/test-utils');
-var Elevation = require('../Elevation');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 
-var expect = require('expect');
+import Elevation from '../Elevation';
 
 describe('test Layer Properties Elevation component', () => {
     beforeEach((done) => {

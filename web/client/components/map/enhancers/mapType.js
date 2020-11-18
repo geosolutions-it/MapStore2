@@ -1,4 +1,4 @@
-const { withPropsOnChange } = require("recompose");
+import { withPropsOnChange } from 'recompose';
 
 /*
  * Copyright 2018, GeoSolutions Sas.
@@ -9,7 +9,7 @@ const { withPropsOnChange } = require("recompose");
  */
 
 
-module.exports = withPropsOnChange(
+export default withPropsOnChange(
     ['mapType', 'plugins'],
     ({mapType, plugins} = {}) => ({
         plugins: {...require('../plugins/' + mapType + '.js')(), ...plugins}

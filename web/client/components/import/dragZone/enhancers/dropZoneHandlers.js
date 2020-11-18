@@ -7,13 +7,14 @@
  */
 
 const {compose, withHandlers} = require('recompose');
+
 /**
  * Enhancer that provides a method to open file system browser of the dropzone.
  * @memberof components.import.dragZone.enhancers
  * @function
  *
  */
-module.exports = compose(
+export default compose(
     withHandlers( () => {
         let dropZone = null;
         return {

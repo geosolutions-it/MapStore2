@@ -6,9 +6,11 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const React = require('react');
-const {Row, Col} = require('react-bootstrap');
-module.exports = ({title, description}) => (<Row><Col xs={12} className="text-center">
+import React from 'react';
+
+import { Row, Col } from 'react-bootstrap';
+
+export default ({title, description}) => (<Row><Col xs={12} className="text-center">
     <div className="mapstore-step-title">{title}</div>
     <div className="mapstore-step-description">{description}</div>
 </Col>
