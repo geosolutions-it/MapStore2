@@ -145,7 +145,7 @@ export const wfsQueryEpic = (action$, store) =>
             const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
 
             const ogcFilter = mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, action.filterObj);
-            const { options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
+            const { url, options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
             const options = {
                 ...action.filterObj.pagination,
                 totalFeatures,
@@ -153,7 +153,7 @@ export const wfsQueryEpic = (action$, store) =>
                 ...queryOptions
             };
             return Rx.Observable.merge(
-                getLayerJSONFeature(layer, ogcFilter, options)
+                getLayerJSONFeature({...layer, search: {...layer.search, url}}, ogcFilter, options)
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions, action.reason))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))

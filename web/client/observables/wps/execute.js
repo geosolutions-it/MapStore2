@@ -31,7 +31,7 @@ class WPSExecuteError extends Error {
  * Construct XML payload of WPS Execute operation
  * @memberof observables.wps.execute
  * @param {string} processIdentifier WPS process idenitifier
- * @param {string} [dataInputsXML] data inputs XML contents
+ * @param {string[]} [dataInputsXML] array of XML string of each individual Input
  * @param {string} [responseFormXML] response form XML contents
  * @returns {string} XML payload
  */
@@ -51,7 +51,7 @@ export const executeProcessXML = (processIdentifier, dataInputsXML, responseForm
     ` xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">` +
     `<ows:Identifier>${processIdentifier}</ows:Identifier>` +
     `<wps:DataInputs>` +
-    (dataInputsXML || '').join('') +
+    (dataInputsXML || []).join('') +
     `</wps:DataInputs>` +
     (responseFormXML || '') +
     `</wps:Execute>`;

@@ -11,7 +11,9 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../libs/ajax';
 
 import {
-    executeProcess
+    executeProcess,
+    makeOutputsExtractor,
+    literalDataOutputExtractor
 } from '../execute';
 
 let mockAxios;
@@ -49,6 +51,26 @@ const responseWithComplexDataOutput = `<?xml version="1.0" encoding="UTF-8"?>
           <ows:Title>Zipped output files to download</ows:Title>
           <wps:Data>
               <wps:ComplexData encoding="base64" mimeType="application/zip">U2VjcmV0WklQ</wps:ComplexData>
+          </wps:Data>
+      </wps:Output>
+  </wps:ProcessOutputs>
+</wps:ExecuteResponse>`;
+
+const responseWithLiteralDataOutput = `<?xml version="1.0" encoding="UTF-8"?>
+<wps:ExecuteResponse xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en" service="WPS" serviceInstance="http://testserver/geoserver/ows?" statusLocation="http://testserver/geoserver/ows?service=WPS&amp;version=1.0.0&amp;request=GetExecutionStatus&amp;executionId=0c596a4d-7ddb-4a4e-bf35-4a64b47ee0d3" version="1.0.0">
+  <wps:Process wps:processVersion="1.0.0">
+      <ows:Identifier>TestProcess</ows:Identifier>
+      <ows:Title>test</ows:Title>
+  </wps:Process>
+  <wps:Status creationTime="2016-08-08T11:18:46.015Z">
+      <wps:ProcessSucceeded>Process succeeded.</wps:ProcessSucceeded>
+  </wps:Status>
+  <wps:ProcessOutputs>
+      <wps:Output>
+          <ows:Identifier>result</ows:Identifier>
+          <ows:Title>Zipped output files to download</ows:Title>
+          <wps:Data>
+              <wps:LiteralData>someData</wps:LiteralData>
           </wps:Data>
       </wps:Output>
   </wps:ProcessOutputs>
@@ -166,6 +188,28 @@ describe('WPS execute tests', () => {
                     expect(result.length).toBe(1);
                     expect(result[0].Identifier?.[0]).toExist();
                     expect(result[0].Data?.[0]?.ComplexData).toExist();
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            },
+            error => {
+                done(error);
+            }
+        );
+    });
+    it('executeProcess with outputsExtractor', (done) => {
+        const outputsExtractor = makeOutputsExtractor(literalDataOutputExtractor);
+
+        mockAxios.onPost().reply(200, responseWithLiteralDataOutput, { 'content-type': 'application/xml' });
+
+        executeProcess('http://testurl', mockXML, {outputsExtractor}).subscribe(
+            result => {
+                try {
+                    expect(result).toExist();
+                    expect(result.length).toBe(1);
+                    expect(result[0].identifier).toBe('result');
+                    expect(result[0].data).toBe('someData');
                     done();
                 } catch (e) {
                     done(e);

@@ -23,7 +23,7 @@ import { endsWith } from 'lodash';
  */
 export const processParameter = (identifier, dataXML) =>
     `<wps:Input>` +
-    `<wps:Identifier>${identifier}</wps:Identifier>` +
+    `<ows:Identifier>${identifier}</ows:Identifier>` +
     dataXML +
     `</wps:Input>`;
 
