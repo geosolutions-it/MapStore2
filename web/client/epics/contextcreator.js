@@ -276,7 +276,7 @@ export const resetOnShowDialog = (action$, store) => action$
     .flatMap(({dialogName, show: showDialogBool}) => {
         const state = store.getState();
         const editedTemplateId = editedTemplateSelector(state);
-        const templates = templatesSelector(state);
+        const templates = templatesSelector(state) || [];
 
         return showDialogBool ?
             Rx.Observable.of(...(dialogName === 'uploadTemplate' && !editedTemplateId ? [setFileDropStatus(), setParsedTemplate()] : []),
