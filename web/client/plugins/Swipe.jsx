@@ -11,13 +11,12 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import { getSelectedLayer } from '../selectors/layers';
-import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
+import { swipeToolStatusSelector } from '../selectors/swipe';
+import { swipeSettingsSelector, swipeModeDirectionSelector, spyModeRadiusSelector } from '../selectors/mapInfo';
 import swipe from '../reducers/swipe';
 import epics from '../epics/swipe';
-import {
-    setActive,
-    setMode
-} from '../actions/swipe';
+import { setActive } from '../actions/swipe';
+import { setMode } from '../actions/mapInfo';
 
 import { createPlugin } from '../utils/PluginsUtils';
 
@@ -27,24 +26,25 @@ import SpyGlassSupport from '../components/map/openlayers/swipe/SpyGlassSupport'
 import SwipeButton from './swipe/SwipeButton';
 
 
-export const Support = ({ mode, map, layer, active, swipeModeSettings, spyModeSettings }) => {
+export const Support = ({ mode, map, layer, active, direction, radius }) => {
     if (mode === "spy") {
-        return <SpyGlassSupport map={map} layer={layer} active={active} radius={spyModeSettings.radius} />;
+        return <SpyGlassSupport map={map} layer={layer} active={active} radius={radius} />;
     }
-    return <SliderSwipeSupport map={map} layer={layer} active={active} type={swipeModeSettings.direction} />;
+    return <SliderSwipeSupport map={map} layer={layer} active={active} type={direction} />;
 };
 
 const swipeSupportSelector = createSelector([
     getSelectedLayer,
-    layerSwipeSettingsSelector,
-    swipeModeSettingsSelector,
-    spyModeSettingsSelector
-], (layer, swipeSettings, swipeModeSettings, spyModeSettings) => ({
+    swipeToolStatusSelector,
+    swipeSettingsSelector,
+    swipeModeDirectionSelector,
+    spyModeRadiusSelector
+], (layer, swipeToolStatus, swipeModeSettings, swipeModeDirection, spyModeRadius) => ({
     layer: layer?.id,
-    active: swipeSettings.active || false,
-    swipeModeSettings,
-    spyModeSettings,
-    mode: swipeSettings?.mode || "swipe"
+    active: swipeToolStatus.active || false,
+    mode: swipeModeSettings.mode || "swipe",
+    direction: swipeModeDirection.direction,
+    radius: spyModeRadius.radius
 }));
 
 const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);
@@ -68,7 +68,7 @@ export default createPlugin(
                 target: "toolbar",
                 selector: ({ status }) => status === 'LAYER',
                 Component: connect(
-                    createSelector(layerSwipeSettingsSelector, (swipeSettings) => ({swipeSettings})),
+                    createSelector(swipeToolStatusSelector, (swipeSettings) => ({swipeSettings})),
                     {
                         onSetActive: setActive,
                         onSetSwipeMode: setMode

@@ -30,7 +30,10 @@ import {
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
-    SET_MAP_TRIGGER
+    SET_MAP_TRIGGER,
+    SET_MODE,
+    SET_SWIPE_TOOL_DIRECTION,
+    SET_SPY_TOOL_RADIUS
 } from '../actions/mapInfo';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -445,6 +448,47 @@ function mapInfo(state = initState, action) {
             configuration: {
                 ...state.configuration,
                 trigger: action.trigger
+            }
+        };
+    }
+    case SET_MODE: {
+        return {
+            ...state,
+            configuration: {
+                ...state.configuration,
+                swipe: {
+                    mode: action.mode
+                }
+            }
+        };
+    }
+    case SET_SWIPE_TOOL_DIRECTION: {
+        return {
+            ...state,
+            configuration: {
+                ...state.configuration,
+                swipe: {
+                    ...state.configuration.swipe,
+                    swipe: {
+                        ...state.configuration.swipe.swipe,
+                        direction: action.direction
+                    }
+                }
+            }
+        };
+    }
+    case SET_SPY_TOOL_RADIUS: {
+        return {
+            ...state,
+            configuration: {
+                ...state.configuration,
+                swipe: {
+                    ...state.configuration.swipe,
+                    spy: {
+                        ...state.configuration.swipe.spy,
+                        radius: action.radius
+                    }
+                }
             }
         };
     }

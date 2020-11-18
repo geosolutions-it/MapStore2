@@ -17,7 +17,10 @@ import {
     changeFormat,
     changePage,
     toggleHighlightFeature,
-    setMapTrigger
+    setMapTrigger,
+    SET_SPY_TOOL_RADIUS,
+    SET_MODE,
+    SET_SWIPE_TOOL_DIRECTION
 } from '../../actions/mapInfo';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
@@ -827,5 +830,31 @@ describe('Test the mapInfo reducer', () => {
         const action = setMapTrigger('hover');
         const state = mapInfo(undefined, action);
         expect(state.configuration.trigger).toBe('hover');
+    });
+    it('mapInfo SET_MODE', () => {
+        const action = {
+            type: SET_MODE,
+            mode: "spy"
+        };
+        const state = mapInfo(undefined, action);
+        expect(state.configuration.swipe.mode).toBe("spy");
+    });
+
+    it('mapInfo SET_SWIPE_TOOL_DIRECTION', () => {
+        const action = {
+            type: SET_SWIPE_TOOL_DIRECTION,
+            direction: "cut-vertical"
+        };
+        const state = mapInfo(undefined, action);
+        expect(state.configuration.swipe.swipe.direction).toBe("cut-vertical");
+    });
+
+    it('mapInfo SET_SPY_TOOL_RADIUS', () => {
+        const action = {
+            type: SET_SPY_TOOL_RADIUS,
+            radius: 80
+        };
+        const state = mapInfo(undefined, action);
+        expect(state.configuration.swipe.spy.radius).toBe(80);
     });
 });

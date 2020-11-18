@@ -19,6 +19,9 @@ import {
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     FEATURE_INFO_CLICK,
+    SET_MODE,
+    SET_SWIPE_TOOL_DIRECTION,
+    SET_SPY_TOOL_RADIUS,
     featureInfoClick,
     TOGGLE_EMPTY_MESSAGE_GFI,
     toggleEmptyMessageGFI,
@@ -40,7 +43,10 @@ import {
     TOGGLE_HIGHLIGHT_FEATURE,
     toggleHighlightFeature,
     SET_MAP_TRIGGER,
-    setMapTrigger
+    setMapTrigger,
+    setMode,
+    setSpyToolRadius,
+    setSwipeToolDirection
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -163,5 +169,28 @@ describe('Test correctness of the map actions', () => {
     });
     it('setMapTrigger', () => {
         expect(setMapTrigger('hover')).toEqual({type: SET_MAP_TRIGGER, trigger: 'hover' });
+    });
+    it('should set mode with default being swipe', () => {
+        const defaultAction = setMode();
+        expect(defaultAction).toExist();
+        expect(defaultAction.type).toBe(SET_MODE);
+        expect(defaultAction.mode).toBe("swipe");
+
+        const action = setMode("spy");
+        expect(action).toExist();
+        expect(action.type).toBe(SET_MODE);
+        expect(action.mode).toBe("spy");
+    });
+    it('should set swipe direction', () => {
+        const action = setSwipeToolDirection("cut-vertical");
+        expect(action).toExist();
+        expect(action.type).toBe(SET_SWIPE_TOOL_DIRECTION);
+        expect(action.direction).toBe("cut-vertical");
+    });
+    it('should set spy tool radius', () => {
+        const action = setSpyToolRadius(80);
+        expect(action).toExist();
+        expect(action.type).toBe(SET_SPY_TOOL_RADIUS);
+        expect(action.radius).toBe(80);
     });
 });

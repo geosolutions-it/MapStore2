@@ -33,9 +33,51 @@ export const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 export const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
 export const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
 export const SET_MAP_TRIGGER = 'IDENTIFY:SET_MAP_TRIGGER';
+export const SET_MODE = "SWIPE:SET_MODE";
+export const SET_SWIPE_TOOL_DIRECTION = "SWIPE:SET_SWIPE_TOOL_DIRECTION";
+export const SET_SPY_TOOL_RADIUS = "SWIPE:SET_SPY_TOOL_RADIUS";
 
 export const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 export const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
+
+/**
+* Sets the mode of the Swipe tool i.e. either swipe or spy
+* @memberof actions.mapInfo
+* @param {string} mode
+* @return {object} of type `SET_MODE` with mode
+*/
+export function setMode(mode = "swipe") {
+    return {
+        type: SET_MODE,
+        mode
+    };
+}
+
+/**
+* Sets the cut direction of the swipe tool
+* @memberof actions.mapInfo
+* @param {string} direction cut-vertical or cut-horizontal
+* @return {object} of type `SET_SWIPE_TOOL_DIRECTION` with direction
+*/
+export function setSwipeToolDirection(direction) {
+    return {
+        type: SET_SWIPE_TOOL_DIRECTION,
+        direction
+    };
+}
+
+/**
+* Sets the radius of the spyglass mode
+* @memberof actions.mapInfo
+* @param {number} radius
+* @return {object} of type `SET_SPY_TOOL_RADIUS` with radius
+*/
+export function setSpyToolRadius(radius) {
+    return {
+        type: SET_SPY_TOOL_RADIUS,
+        radius
+    };
+}
 
 /**
  * Private

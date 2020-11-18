@@ -201,3 +201,15 @@ export const mapTriggerSelector = state => {
     }
     return state.mapInfo.configuration.trigger;
 };
+
+export const swipeSettingsSelector = state => {
+    return state?.mapInfo?.configuration?.swipe || { mode: 'swipe' };
+};
+
+export const swipeModeDirectionSelector = state => {
+    return state?.mapInfo?.configuration?.swipe?.swipe || { direction: 'cut-vertical' };
+};
+
+export const spyModeRadiusSelector = state => {
+    return state?.mapInfo?.configuration?.swipe?.spy || { radius: 80 };
+};

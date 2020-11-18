@@ -49,7 +49,7 @@ describe('SwipePlugin', () => {
                 active: true,
                 map,
                 layer: "test-layer-id",
-                swipeModeSettings: {direction: "cut-vertical"}
+                direction: "cut-vertical"
             };
 
             ReactDOM.render(<Support {...props} />, document.getElementById("container"));
@@ -62,7 +62,7 @@ describe('SwipePlugin', () => {
                 active: true,
                 map,
                 layer: "test-layer-id",
-                spyModeSettings: {radius: 80}
+                radius: 80
             };
             ReactDOM.render(<Support {...props} />, document.getElementById("container"));
             const swiper = document.getElementsByClassName("mapstore-swipe-slider")[0];

@@ -28,7 +28,7 @@ describe('SwipeSettings', () => {
         const props = {
             configuring: true,
             toolMode: "swipe",
-            swipeModeSettings: { direction: "cut-vertical"}
+            direction: "cut-vertical"
         };
 
         ReactDOM.render(<SwipeSettings {...props} />, document.getElementById("container"));
@@ -41,7 +41,7 @@ describe('SwipeSettings', () => {
         const props = {
             configuring: true,
             toolMode: "spy",
-            spyModeSettings: { radius: 80}
+            radius: 80
         };
 
         ReactDOM.render(<SwipeSettings {...props} />, document.getElementById("container"));

@@ -15,8 +15,10 @@ import {find} from 'lodash';
 
 import Message from '../components/I18N/Message';
 import DockabePanel from '../components/misc/panels/DockablePanel';
-import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
-const { setActive, setSwipeToolDirection, setSpyToolRadius } = require('../actions/swipe');
+import { swipeToolStatusSelector } from '../selectors/swipe';
+import { swipeSettingsSelector, swipeModeDirectionSelector, spyModeRadiusSelector } from '../selectors/mapInfo';
+const { setActive } = require('../actions/swipe');
+const { setSwipeToolDirection, setSpyToolRadius } = require('../actions/mapInfo');
 
 const swipeTypeOptions = [{
     label: 'Horizontal',
@@ -26,14 +28,14 @@ const swipeTypeOptions = [{
     value: 'cut-vertical'
 }];
 
-const SpyRadiusConfiguration = ({spyModeSettings, onSetSpyToolRadius}) => {
+const SpyRadiusConfiguration = ({onSetSpyToolRadius, radius}) => {
     return (<div className="mapstore-swipe-settings-spy">
         <h4><Message msgId="toc.radius" /></h4>
         <div className="mapstore-slider with-tooltip">
             <Slider
                 tooltips
                 step={10}
-                start={[spyModeSettings.radius]}
+                start={[radius]}
                 range={{
                     'min': [20],
                     'max': [100]
@@ -44,14 +46,14 @@ const SpyRadiusConfiguration = ({spyModeSettings, onSetSpyToolRadius}) => {
     </div>);
 };
 
-const SwipeTypeConfiguration = ({swipeModeSettings, onSetSwipeToolDirection}) => {
+const SwipeTypeConfiguration = ({onSetSwipeToolDirection, direction}) => {
     return (<div className="mapstore-swipe-settings-slider">
         <h4><Message msgId="toc.direction" /></h4>
         <Select
             styles={{ menuPortal: base => ({ ...base, zIndex: 3100 }) }}
             onChange={({value}) => onSetSwipeToolDirection(value)}
             clearable={false}
-            value={find(swipeTypeOptions, ['value', swipeModeSettings.direction])}
+            value={find(swipeTypeOptions, ['value', direction])}
             options={swipeTypeOptions}/>
     </div>);
 };
@@ -60,8 +62,8 @@ export const SwipeSettings = (
     {
         configuring,
         toolMode,
-        swipeModeSettings,
-        spyModeSettings,
+        direction,
+        radius,
         onSetConfigurationActive = () => {},
         onSetSpyToolRadius = () => {},
         onSetSwipeToolDirection = () => {}
@@ -81,24 +83,25 @@ export const SwipeSettings = (
             glyph="transfer">
             {toolMode === "spy"
                 ? <SpyRadiusConfiguration
-                    spyModeSettings={spyModeSettings}
+                    radius={radius}
                     onSetSpyToolRadius={onSetSpyToolRadius} />
                 : <SwipeTypeConfiguration
-                    swipeModeSettings={swipeModeSettings}
+                    direction={direction}
                     onSetSwipeToolDirection={onSetSwipeToolDirection} />}
         </DockabePanel>
     </div>);
 };
 
 const selector = createSelector([
-    layerSwipeSettingsSelector,
-    swipeModeSettingsSelector,
-    spyModeSettingsSelector
-], (swipeSettings, swipeModeSettings, spyModeSettings) => ({
-    configuring: swipeSettings?.configuring || false,
-    toolMode: swipeSettings?.mode || "swipe",
-    swipeModeSettings,
-    spyModeSettings
+    swipeSettingsSelector,
+    swipeModeDirectionSelector,
+    spyModeRadiusSelector,
+    swipeToolStatusSelector
+], (swipeSettings, swipeModeDirection, spyModeRadius, swipeToolStatus) => ({
+    configuring: swipeToolStatus?.configuring || false,
+    toolMode: swipeSettings.mode || "swipe",
+    direction: swipeModeDirection.direction,
+    radius: spyModeRadius.radius
 }));
 
 export default connect(selector, {

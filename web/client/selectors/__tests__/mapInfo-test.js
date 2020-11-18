@@ -24,7 +24,10 @@ import {
     itemIdSelector,
     filterNameListSelector,
     overrideParamsSelector,
-    mapTriggerSelector
+    mapTriggerSelector,
+    swipeSettingsSelector,
+    swipeModeDirectionSelector,
+    spyModeRadiusSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -348,5 +351,41 @@ describe('Test mapinfo selectors', () => {
         expect(mapTriggerSelector({mapInfo: { configuration: {} }})).toBe('click');
         // when mapInfo is present
         expect(mapTriggerSelector({mapInfo: { configuration: { trigger: 'hover' } }})).toBe('hover');
+    });
+    it('test swipeSettingsSelector', () => {
+        const state = {
+            mapInfo:
+            { configuration:
+                { swipe: {
+                    mode: "swipe"
+                } }
+            }};
+        expect(swipeSettingsSelector(state).mode).toBe('swipe');
+    });
+    it('test swipeModeDirectionSelector', () => {
+        const state = {
+            mapInfo:
+            { configuration:
+                { swipe: {
+                    mode: "swipe",
+                    swipe: {
+                        direction: "cut-vertical"
+                    }
+                } }
+            }};
+        expect(swipeModeDirectionSelector(state).direction).toBe('cut-vertical');
+    });
+    it('test spyModeRadiusSelector', () => {
+        const state = {
+            mapInfo:
+            { configuration:
+                { swipe: {
+                    mode: "swipe",
+                    spy: {
+                        radius: 50
+                    }
+                } }
+            }};
+        expect(spyModeRadiusSelector(state).radius).toBe(50);
     });
 });

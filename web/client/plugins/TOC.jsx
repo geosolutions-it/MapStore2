@@ -29,7 +29,7 @@ const {
     layerSettingSelector,
     layerMetadataSelector,
     wfsDownloadSelector} = require('../selectors/layers');
-const { layerSwipeSettingsSelector } = require('../selectors/swipe');
+const { swipeToolStatusSelector } = require('../selectors/swipe');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector, currentLocaleLanguageSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
@@ -88,7 +88,7 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         layerSettingSelector,
-        layerSwipeSettingsSelector,
+        swipeToolStatusSelector,
         layerMetadataSelector,
         wfsDownloadSelector,
         mapSelector,
@@ -646,7 +646,7 @@ const checkPluginsEnhancer = branch(
  *             selector: ({ status }) => status === 'LAYER',
  *             // The component to render. It receives as props the same object passed to the `selector` function.
  *             Component: connect(...)(MyButton)
- *                 createSelector(layerSwipeSettingsSelector, (swipeSettings) => ({swipeSettings})),
+ *                 createSelector(swipeToolStatusSelector, (swipeSettings) => ({swipeSettings})),
  *             // ...
  *         },
  * // ...
