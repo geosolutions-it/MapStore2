@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -12,6 +12,12 @@ const assign = require('object-assign');
 
 const ExpanderPlugin = require('../components/buttons/ToggleButton');
 
+/**
+ * Expander plugin. Adds the '...' button to the Toolbar plugin to hide some buttons.
+ * @name Expander
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     ExpanderPlugin: assign(ExpanderPlugin, {
         Toolbar: {

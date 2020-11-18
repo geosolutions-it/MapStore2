@@ -10,8 +10,8 @@ const axios = require('../libs/ajax');
 const _ = require('lodash');
 
 const urlUtil = require('url');
-const ConfigUtils = require('../utils/ConfigUtils');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const {cleanDuplicatedQuestionMarks} = require('../utils/ConfigUtils');
+const {makeNumericEPSG, makeBboxFromOWS, extractCrsFromURN} = require('../utils/CoordinatesUtils');
 const assign = require('object-assign');
 
 const parseUrl = (url) => {
@@ -52,7 +52,7 @@ var Api = {
                                         * So we place references as they are.
                                         */
                                         if (elName === "references" && dcel.value) {
-                                            let urlString = dcel.value.content && ConfigUtils.cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
+                                            let urlString = dcel.value.content && cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
                                             finalEl = {
                                                 value: urlString,
                                                 scheme: dcel.value.scheme
@@ -132,22 +132,22 @@ var Api = {
 
                                                 const crsValue = el.value?.crs ?? '';
                                                 const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];
-                                                const epsg = CoordinatesUtils.makeNumericEPSG(crsValue.match(/EPSG:[0-9]+/)?.[0]);
+                                                const epsg = makeNumericEPSG(crsValue.match(/EPSG:[0-9]+/)?.[0]);
 
                                                 let lc = el.value.lowerCorner;
                                                 let uc = el.value.upperCorner;
 
-                                                const extractedCrs = epsg || (CoordinatesUtils.extractCrsFromURN(urn) || _.last(crsValue.split(':')));
+                                                const extractedCrs = epsg || (extractCrsFromURN(urn) || _.last(crsValue.split(':')));
 
                                                 if (!extractedCrs) {
                                                     crs = 'EPSG:4326';
                                                 } else if (extractedCrs.slice(0, 5) === 'EPSG:') {
-                                                    crs = CoordinatesUtils.makeNumericEPSG(extractedCrs);
+                                                    crs = makeNumericEPSG(extractedCrs);
                                                     if (!crs) {
                                                         throw new Error(`No suitable EPSG numeric conversion found for "${extractedCrs}"`);
                                                     }
                                                 } else {
-                                                    crs = CoordinatesUtils.makeNumericEPSG(`EPSG:${extractedCrs}`);
+                                                    crs = makeNumericEPSG(`EPSG:${extractedCrs}`);
                                                     if (!crs) {
                                                         throw new Error(`No suitable EPSG numeric conversion found for "${extractedCrs}"`);
                                                     }
@@ -157,7 +157,7 @@ var Api = {
                                                     lc = [lc[1], lc[0]];
                                                     uc = [uc[1], uc[0]];
                                                 }
-                                                bbox = CoordinatesUtils.makeBboxFromOWS(lc, uc);
+                                                bbox = makeBboxFromOWS(lc, uc);
                                             }
                                             obj.boundingBox = {
                                                 extent: bbox,
@@ -178,7 +178,7 @@ var Api = {
                                                 * So we place references as they are.
                                                 */
                                                 if (elName === "references" && dcel.value) {
-                                                    let urlString = dcel.value.content && ConfigUtils.cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
+                                                    let urlString = dcel.value.content && cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
                                                     finalEl = {
                                                         value: urlString,
                                                         scheme: dcel.value.scheme

@@ -19,8 +19,10 @@ import MapEditorModal from './mapEditor/MapEditorModal';
 import {openSelector, ownerSelector} from '../selectors/mapEditor';
 
 /**
- * Plugin for GeoStory side panel editor
- * @name GeoStoryEditor
+ * Wraps the MapViewer in a modal to allow to edit a map with the usual plugins.
+ * Used with {@link #plugins.GeoStoryEditor|GeoStoryEditor}.
+ * @name MapEditor
+ * @class
  * @memberof plugins
  */
 export default createPlugin('MapEditor', {

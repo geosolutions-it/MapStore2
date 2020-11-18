@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const Rx = require('rxjs');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 
 const { Glyphicon } = require('react-bootstrap');
 const RButton = require('../../components/misc/Button').default;

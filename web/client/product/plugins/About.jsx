@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const {toggleControl} = require('../../actions/controls');
 
 const About = connect((state) => ({
@@ -21,6 +21,12 @@ const About = connect((state) => ({
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 
+/**
+ * Plugin for the "About" window in mapstore.
+ * @name About
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     AboutPlugin: assign(About,
         {

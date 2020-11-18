@@ -11,7 +11,7 @@ const moment = require('moment');
 const momentLocalizer = require('react-widgets/lib/localizers/moment');
 momentLocalizer(moment);
 const utcDateWrapper = require('../../misc/enhancers/utcDateWrapper').default;
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const {getDateTimeFormat} = require('../../../utils/TimeUtils');
 const {DateTimePicker} = require('react-widgets');
 

@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
 const {loadLocale} = require('../actions/locale');
@@ -32,7 +32,7 @@ const {Glyphicon, FormGroup, Row, Col} = require('react-bootstrap');
 const assign = require('object-assign');
 
 const SettingsPanel = require('./settings/SettingsPanel');
-const LocaleUtils = require('../utils/LocaleUtils');
+const {getSupportedLocales} = require('../utils/LocaleUtils');
 const {Panel} = require('react-bootstrap');
 const Dialog = require('../components/misc/Dialog');
 
@@ -97,7 +97,7 @@ class SettingsButton extends React.Component {
                         </Row>
                         <Row>
                             <Col xs={12}>
-                                <LangBar dropdown={false} locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
+                                <LangBar dropdown={false} locales={getSupportedLocales()} key="langSelector"/>
                             </Col>
                         </Row>
                     </FormGroup>
@@ -176,6 +176,15 @@ const SettingsPlugin = connect((state) => ({
     toggleControl: toggleControl.bind(null, 'settings', null)
 })(SettingsButton);
 
+
+/**
+ * Settings window to configure some details of the current map.
+ * Is also a container for settings coming from the other plugins.
+ * Renders in {@link #plugins.BurgerMenu|BurgerMenu} an entry to open this window.
+ * @name Settings
+ * @class
+ * @memberof plugins
+ */
 module.exports = {
     SettingsPlugin: assign(SettingsPlugin, {
         Toolbar: {

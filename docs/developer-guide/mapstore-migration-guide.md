@@ -5,7 +5,7 @@ Updating MapStore could mean:
 - updating an existing installation
 - updating a MapStore project created for a previous version
 
-To update an existing installation you usually have to do nothing except eventually to execute queries on your database to update the changes to the database schema. 
+To update an existing installation you usually have to do nothing except eventually to execute queries on your database to update the changes to the database schema.
 
 In case of a project it becomes a little more complicated, depending on the customization.
 
@@ -21,11 +21,44 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2020.02.00 to 2020.03.00
 
+### Eslint config
+
+Now eslint configuration is shared in a separate npm module. To update your custom project you have to remove the following files:
+
+- `.eslintignore`
+- `.eslintconfig`
+
+And add to `package.json` the following entry, in the root:
+
+```json
+        "eslintConfig": {
+            "extends": [
+                "@mapstore/eslint-config-mapstore"
+            ],
+            "parserOptions": {
+                "babelOptions": {
+                    "configFile": "./MapStore2/build/babel.config.js"
+                }
+            }
+        },
+```
+
+If you have aproject that includes MapStore as a dependency, you can run `npm run updateDevDeps` to finalize the update. Otherwise make you sure to include:
+
+- devDependencies:
+  - add `"@mapstore/eslint-config-mapstore": "1.0.1",`
+  - delete `babel-eslint`
+- dependencies:
+  - update `"eslint": "7.8.1"
+
+
 ### App structure review
+
 From this version some base components of MapStore App (`StandardApp`, `StandardStore`...) has been restructured and better organized. Here a list of the breaking change you can find in a depending project
 
 - `web/client/product/main.jsx` has been updated to new `import` and `export` syntax (removed `require` and `exports.module`). So if you are importing it (usually in your `app.jsx`) you have to use the `import` syntax or use `require(...).default` in your project. The same for the other files.
 - New structure of arguments in web/client/stores/StandardStore.js
+
 ```js
 const appStore = (
     {
@@ -46,7 +79,7 @@ const appStore = (
 - Moved standard epics, standard reducers and standard rootReducer function from web/client/stores/StandardStore.js to a separated file web/client/stores/defaultOptions.js
 
 
-- loading extensions functionalities inside StandardApp has been moved to an specific withExtensions HOC, so if you are not using `main.js` but directly `StandardApp` and you need extensions you need to add this HOC to your StandardApp 
+- loading extensions functionalities inside StandardApp has been moved to an specific withExtensions HOC, so if you are not using `main.js` but directly `StandardApp` and you need extensions you need to add this HOC to your StandardApp
 
 ## Migration from 2020.01.00 to 2020.02.00
 

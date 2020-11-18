@@ -28,6 +28,6 @@ describe('MediaSelector component', () => {
             <MediaSelector />
         </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-mediaList')).toExist();
+        expect(container.querySelector('.ms-media-list')).toBeTruthy();
     });
 });

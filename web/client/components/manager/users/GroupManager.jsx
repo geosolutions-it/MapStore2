@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-// const Message = require('../I18N/Message');
+// const Message = require('../I18N/Message').default;
 const {ListGroup, ListGroupItem, Glyphicon} = require('react-bootstrap');
 
 const Button = require('../../misc/Button').default;

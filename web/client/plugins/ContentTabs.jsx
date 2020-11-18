@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { Row, Col, Grid, Nav, NavItem} = require('react-bootstrap');
 const ToolsContainer = require('./containers/ToolsContainer');
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 
 const {connect} = require('react-redux');
 const assign = require('object-assign');
@@ -29,9 +29,9 @@ const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${inde
  * @memberof plugins
  * @class
  * @classdesc
- * ContentTabs plugin is used in home page allowing to switch between contained plugins (i.e. Maps and Dashboards plugins).
- * <br/>Each contained plugin has to have the contenttabs configuration property in its plugin configuration.
- * The key property is mandatory following and position property is used to order give tabs order.
+ * ContentTabs plugin is used in {@link #pages.Maps|home page} allowing to switch between contained plugins (i.e. Maps and Dashboards plugins).
+ * <br/>Each contained plugin must have the contenttabs configuration property in its plugin configuration.
+ * The key property is mandatory and position property is used to order give tabs order.
  * An example of the contenttabs config in Maps plugin
  * @example
  *   ContentTabs: {
@@ -116,5 +116,5 @@ module.exports = {
         }
     }),
     reducers: {contenttabs: require('../reducers/contenttabs').default},
-    epics: require('../epics/contenttabs')
+    epics: require('../epics/contenttabs').default
 };

@@ -12,8 +12,10 @@ import { createPlugin } from '../utils/PluginsUtils';
 const FilterLayer = () => null;
 
 /**
- * Plugin that activate the FilterLayer button in the TOC.
- * Requires the QueryPanel Plugin To Work
+ * Plugin that activate the FilterLayer button in the {@link #plugins.TOC|TOC}.
+ * **Requires the {@link #plugins.QueryPanel|QueryPanel} plugin to work**
+ * @name FilterLayer
+ * @class
  * @memberof plugins
  * @requires plugins.QueryPanel
  */

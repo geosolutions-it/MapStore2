@@ -9,8 +9,8 @@ const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const FeatureInfo = require('../FeatureInfo');
-const MapInfoUtils = require('../../../../../utils/MapInfoUtils');
-const defaultInfoFormat = MapInfoUtils.getAvailableInfoFormat();
+const {getAvailableInfoFormat} = require('../../../../../utils/MapInfoUtils');
+const defaultInfoFormat = getAvailableInfoFormat();
 const TestUtils = require('react-dom/test-utils');
 
 const formatCards = {

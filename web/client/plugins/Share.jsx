@@ -13,10 +13,10 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import ConfigUtils from '../utils/ConfigUtils';
-import ShareUtils from '../utils/ShareUtils';
+import {getApiUrl, getConfigUrl} from '../utils/ShareUtils';
 import {getExtentFromViewport} from '../utils/CoordinatesUtils';
 import { versionSelector } from '../selectors/version';
-import * as shareEpics from '../epics/queryparams';
+import shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';
@@ -28,7 +28,7 @@ import { clickPointSelector} from '../selectors/mapInfo';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
- * You can share it on socials networks(facebook,twitter,google+,linkedin)
+ * You can share it on socials networks(facebook,twitter,google+,linkedIn)
  * copying the direct link
  * copying the embedded code
  * using the QR code with mobile apps
@@ -43,7 +43,6 @@ import { updateUrlOnScrollSelector } from '../selectors/geostory';
  * @prop {function} [onClose] function to call on close window event.
  * @prop {function} [getCount] function used to get the count for social links.
  * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
- * @prop {boolean} []
  */
 
 const Share = connect(createSelector([
@@ -58,8 +57,8 @@ const Share = connect(createSelector([
 ], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({
     isVisible,
     shareUrl: location.href,
-    shareApiUrl: ShareUtils.getApiUrl(location.href),
-    shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
+    shareApiUrl: getApiUrl(location.href),
+    shareConfigUrl: getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
     center: map && map.center && ConfigUtils.getCenter(map.center),

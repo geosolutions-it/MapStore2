@@ -9,7 +9,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { loadLocale } from '../../actions/locale';
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getUserLocale} from '../../utils/LocaleUtils';
 import castArray from 'lodash/castArray';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
@@ -17,6 +17,13 @@ import PluginsUtils from '../../utils/PluginsUtils';
 import { augmentStore } from '../../utils/StateUtils';
 import { LOAD_EXTENSIONS, PLUGIN_UNINSTALLED } from '../../actions/contextcreator';
 
+/**
+ * This HOC adds to StandardApp (or whatever customization) the
+ * possibility to dynamically load extensions. For more info see
+ * MapStore developer documentation about extensions.
+ * @param {Component} AppComponent the App component
+ * @returns the App component that loads the extensions. The new component accepts the additional prop `enableExtensions` that can be set to `false` if need to disable this loading.
+ */
 function withExtensions(AppComponent) {
 
     class WithExtensions extends Component {
@@ -29,7 +36,7 @@ function withExtensions(AppComponent) {
 
         static defaultProps = {
             pluginsDef: { plugins: {}, requires: {} },
-            enableExtensions: false
+            enableExtensions: true
         };
 
         state = {
@@ -54,7 +61,7 @@ function withExtensions(AppComponent) {
             if (translations.length > 0) {
                 ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
             }
-            const locale = LocaleUtils.getUserLocale();
+            const locale = getUserLocale();
             store.dispatch(loadLocale(null, locale));
         };
 

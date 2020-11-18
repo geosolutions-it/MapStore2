@@ -13,7 +13,7 @@ const { connect } = require('react-redux');
 const { isLoggedIn } = require('../../selectors/security');
 
 const Button = require('../../components/misc/Button').default;
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 
 class EmptyGeostories extends React.Component {
     static propTypes = {

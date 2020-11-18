@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -22,6 +22,16 @@ import { geostoryIdSelector } from '../../selectors/geostory';
 import { isLoggedIn } from '../../selectors/security';
 import BorderLayout from '../../components/layout/BorderLayout';
 
+/**
+  * @name GeoStory
+  * @memberof pages
+  * @class
+  * @classdesc
+  * This is the main container page for GeoStory.
+  * It handles all the routing and initial loading functionalities dedicated to GeoStory contents and
+  * it is a container for the GeoStory plugins.
+  *
+  */
 class GeoStoryPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,

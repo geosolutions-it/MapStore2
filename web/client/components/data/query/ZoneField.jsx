@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,8 +10,9 @@ const React = require('react');
 const {isEqual} = require('lodash');
 
 const ComboField = require('./ComboField');
+const PropTypes = require('prop-types');
 
-const FilterUtils = require('../../../utils/FilterUtils');
+const {toOGCFilter} = require('../../../utils/FilterUtils');
 
 class ZoneField extends React.Component {
     static propTypes = {
@@ -156,7 +156,7 @@ class ZoneField extends React.Component {
             }
         }
 
-        const filter = FilterUtils.toOGCFilter(this.props.typeName, filterObj, this.props.wfs, this.props.sort || {
+        const filter = toOGCFilter(this.props.typeName, filterObj, this.props.wfs, this.props.sort || {
             sortBy: this.props.searchAttribute,
             sortOrder: "ASC"
         });

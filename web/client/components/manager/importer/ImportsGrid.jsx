@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,13 +6,15 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
-const ImporterUtils = require('../../../utils/ImporterUtils');
-const {Table, Glyphicon, Label, Tooltip} = require('react-bootstrap');
-const Button = require('../../misc/Button').default;
-const OverlayTrigger = require('../../misc/OverlayTrigger');
 const {findIndex} = require('lodash');
+const Spinner = require('react-spinkit');
+const PropTypes = require('prop-types');
+const {Table, Glyphicon, Label, Tooltip} = require('react-bootstrap');
+
+const Message = require('../../I18N/Message').default;
+const Button = require('../../misc/Button').default;
+const {getbsStyleForState} = require('../../../utils/ImporterUtils');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 
 class ImportsGrid extends React.Component {
     static propTypes = {
@@ -49,10 +50,6 @@ class ImportsGrid extends React.Component {
         clearInterval(this.interval);
     }
 
-    getbsStyleForState = (state) => {
-        return ImporterUtils.getbsStyleForState(state);
-    };
-
     renderLoadingMessage = (importObj) => {
         switch (importObj.message) {
         case "deleting":
@@ -80,7 +77,7 @@ class ImportsGrid extends React.Component {
         let tooltip = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={importObj && importObj.id}>
             <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadImport(importObj.id); }} >{importObj.id}</a></td>
-            <td key="state"><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label>
+            <td key="state"><Label bsStyle={getbsStyleForState(importObj.state)}>{importObj.state}</Label>
                 {this.renderLoadingImport(importObj)}
                 {this.renderImportErrorMessage(importObj)}
             </td>

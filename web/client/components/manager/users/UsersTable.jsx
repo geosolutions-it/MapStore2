@@ -10,8 +10,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {Glyphicon, Table, Tooltip} = require('react-bootstrap');
 const Button = require('../../misc/Button').default;
-const OverlayTrigger = require('../../misc/OverlayTrigger');
-const Message = require('../../I18N/Message');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
+const Message = require('../../I18N/Message').default;
 
 class UsersTable extends React.Component {
     static propTypes = {

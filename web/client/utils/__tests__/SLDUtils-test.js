@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const {jsonToSLD, vecStyleToSLD} = require('../SLDUtils');
+import expect from 'expect';
+
+import { jsonToSLD, vecStyleToSLD } from '../SLDUtils';
 
 const rasterstylerstate = {
     redband: {band: '1', contrast: 'GammaValue', algorithm: "none", gammaValue: 1, min: 1, max: 255},

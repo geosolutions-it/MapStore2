@@ -7,7 +7,7 @@
  */
 
 const {withHandlers, defaultProps} = require('recompose');
-const MapInfoUtils = require('../../../../utils/MapInfoUtils');
+const {getDefaultInfoFormatValue, getValidator} = require('../../../../utils/MapInfoUtils');
 
 /**
  * Enhancer for setting page index of Default Viewer in DefaultViewer/IdentifyContainer plugin
@@ -32,8 +32,8 @@ const defaultViewerHandlers = withHandlers({
  * @class
  */
 const defaultViewerDefaultProps = defaultProps({
-    format: MapInfoUtils.getDefaultInfoFormatValue(),
-    validator: MapInfoUtils.getValidator
+    format: getDefaultInfoFormatValue(),
+    validator: getValidator
 });
 
 module.exports = {

@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,12 +7,13 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const mapUtils = require('../../utils/MapUtils');
+const PropTypes = require('prop-types');
+const {getGoogleMercatorScales} = require('../../utils/MapUtils');
 const {findDOMNode} = require('react-dom');
 const DropdownList = require('react-widgets').DropdownList;
 const {Row, Col, Overlay, Popover, Label} = require('react-bootstrap');
-const LocaleUtils = require('../../utils/LocaleUtils');
-const Message = require('../I18N/Message');
+const {getMessageById} = require('../../utils/LocaleUtils');
+const Message = require('../I18N/Message').default;
 
 class ScaleDenominator extends React.Component {
     static propTypes = {
@@ -35,8 +35,8 @@ class ScaleDenominator extends React.Component {
     state = {error: false};
 
     UNSAFE_componentWillMount() {
-        let scales = mapUtils.getGoogleMercatorScales(0, 21);
-        this.scales = [{value: null, text: LocaleUtils.getMessageById(this.context.messages, "scaledenominator.none") || 'None'}, ...scales.map((v) => ({value: v, text: `${v.toFixed(0)}`}))];
+        let scales = getGoogleMercatorScales(0, 21);
+        this.scales = [{value: null, text: getMessageById(this.context.messages, "scaledenominator.none") || 'None'}, ...scales.map((v) => ({value: v, text: `${v.toFixed(0)}`}))];
     }
 
     onChange = (t, {value: v}) => {

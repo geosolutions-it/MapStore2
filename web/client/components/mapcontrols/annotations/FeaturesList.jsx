@@ -5,15 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {Glyphicon, ControlLabel} = require('react-bootstrap');
-const uuidv1 = require('uuid/v1');
-const bbox = require('@turf/bbox');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const cs = require('classnames');
-const Message = require('../../I18N/Message');
-const {get} = require('lodash');
-const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
+import React from 'react';
+import {Glyphicon, ControlLabel} from 'react-bootstrap';
+import uuidv1 from 'uuid/v1';
+import bbox from '@turf/bbox';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import cs from 'classnames';
+import Message from '../../I18N/Message';
+import {get} from 'lodash';
+import {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} from '../../../utils/AnnotationsUtils';
 
 /**
  * Feature List component for Annotation Viewer.
@@ -213,4 +213,4 @@ FeaturesList.defaultProps = {
     isMeasureEditDisabled: true
 };
 
-module.exports = FeaturesList;
+export default FeaturesList;

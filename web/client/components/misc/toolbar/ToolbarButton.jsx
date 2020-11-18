@@ -7,7 +7,7 @@
   */
 const React = require('react');
 const {compose} = require('recompose');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const { omit } = require('lodash');
 
 const {Glyphicon} = require('react-bootstrap');

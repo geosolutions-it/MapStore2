@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {FormGroup, ControlLabel, FormControl, Label} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const Slider = require('react-nouislider');
 const assign = require('object-assign');
 const PropTypes = require('prop-types');

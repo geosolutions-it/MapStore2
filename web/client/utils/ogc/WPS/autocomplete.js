@@ -1,6 +1,6 @@
 // const wfsRequestBuilder = require('../WFS/RequestBuilder');
 // const {getFeature, property, query} = wfsRequestBuilder({wfsVersion: "1.1.0"});
-const FilterUtils = require('../../FilterUtils');
+const {isFilterValid, toOGCFilterParts} = require('../../FilterUtils');
 const filterBuilder = require('../Filter/FilterBuilder');
 const {and} = filterBuilder({});
 
@@ -12,8 +12,8 @@ const getWpsPayload = ({layerName, layerFilter, attribute, maxFeatures, startInd
     + '</ogc:PropertyIsLike>'
         : '';
 
-    const layerFilterObj = layerFilter && !layerFilter.disabled && FilterUtils.isFilterValid(layerFilter)
-        ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc")
+    const layerFilterObj = layerFilter && !layerFilter.disabled && isFilterValid(layerFilter)
+        ? toOGCFilterParts(layerFilter, "1.1.0", "ogc")
         : [];
 
     const filter = attributeFilterObj.length > 0 || layerFilterObj.length > 0

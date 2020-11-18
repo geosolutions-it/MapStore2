@@ -14,7 +14,9 @@ const service = {
     type
 };
 import expect from 'expect';
-import LayersUtils from '../../utils/LayersUtils';
+import {
+    getLayerId
+} from '../../utils/LayersUtils';
 
 import {
     addLayersMapViewerUrl,
@@ -285,7 +287,7 @@ describe('Test correctness of the catalog actions', () => {
                 expect(action.layer).toExist();
                 const layer = action.layer;
                 expect(layer.id).toExist();
-                expect(layer.id).toBe(LayersUtils.getLayerId(action.layer, []));
+                expect(layer.id).toBe(getLayerId(action.layer, []));
             } else if (action.type === CHANGE_LAYER_PROPERTIES) {
                 expect(action.layer).toExist();
                 expect(action.newProperties).toExist();
@@ -308,7 +310,7 @@ describe('Test correctness of the catalog actions', () => {
                 expect(action.layer).toExist();
                 const layer = action.layer;
                 expect(layer.id).toExist();
-                expect(layer.id).toBe(LayersUtils.getLayerId(action.layer, []));
+                expect(layer.id).toBe(getLayerId(action.layer, []));
             } else if (action.type === CHANGE_LAYER_PROPERTIES) {
                 expect(action.layer).toExist();
                 expect(action.newProperties).toExist();
@@ -331,7 +333,7 @@ describe('Test correctness of the catalog actions', () => {
                 expect(action.layer).toExist();
                 const layer = action.layer;
                 expect(layer.id).toExist();
-                expect(layer.id).toBe(LayersUtils.getLayerId(action.layer, []));
+                expect(layer.id).toBe(getLayerId(action.layer, []));
             } else if (action.type === DESCRIBE_ERROR) {
                 expect(action.layer).toExist();
                 expect(action.error).toExist();

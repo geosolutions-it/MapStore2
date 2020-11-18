@@ -11,8 +11,8 @@ const PropTypes = require('prop-types');
 const Slider = require('react-nouislider');
 const ElevationChart = require('./ElevationChart');
 const {Grid} = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
-const LayersUtils = require('../../../../utils/LayersUtils');
+const Message = require('../../../I18N/Message').default;
+const {getDimension} = require('../../../../utils/LayersUtils');
 require('react-widgets/lib/less/react-widgets.less');
 require("./css/elevation.css");
 
@@ -32,7 +32,7 @@ module.exports = class extends React.Component {
         showElevationChart: true,
         containerWidth: 500,
         elevationText: <Message msgId="elevation"/>,
-        getDimension: LayersUtils.getDimension
+        getDimension: getDimension
     };
 
     shouldComponentUpdate(nextProps) {

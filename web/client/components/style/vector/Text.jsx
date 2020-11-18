@@ -16,8 +16,8 @@ const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 // not sure this is needed, TODO check!
 numberLocalizer();
 
-const Message = require('../../I18N/Message');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+const Message = require('../../I18N/Message').default;
+const {getMessageById} = require('../../../utils/LocaleUtils');
 const {createFont} = require('../../../utils/AnnotationsUtils');
 
 /**
@@ -60,9 +60,9 @@ class Text extends React.Component {
 
     render() {
         const messages = {
-            emptyList: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
-            open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
-            emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
+            emptyList: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
+            open: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
+            emptyFilter: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
         const {style} = this.props;
         return (<div className={"ms-text-style"}>

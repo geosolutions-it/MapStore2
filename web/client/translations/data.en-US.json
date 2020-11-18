@@ -97,6 +97,8 @@
             "propertiesFormatDescription": "Shows feature info results as properties list",
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Customize feature info results format",
+            "hideFormatTitle": "DISABLE IDENTIFY",
+            "hideFormatDescription": "Disable the feature info for this layer",
             "templateFormatInfoAlert1": "Click on edit button to add a new template.",
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
@@ -514,7 +516,6 @@
             "removeLayer": "Remove layer",
             "loadingerror": "The layer has not been loaded correctly or not available.",
             "measure": "Measure",
-            "backgroundSwitcher": "Backgrounds",
             "layers": "Layers",
             "drawerButton": "Layers",
             "refreshTitle": "Update layers",
@@ -947,7 +948,6 @@
             "settingsPanel": "This is the helptext for the SettingsPanel",
             "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
-            "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "infoButton": "This is the helptext for the InfoButton",
             "locateBtn": "This is the helptext for the LocateBtn",
@@ -1543,7 +1543,7 @@
             "deselectall": "Clear Selection",
             "backtosearch": "Back to search",
             "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
-            "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{total} Items}}",
+            "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item} other {{total} Items}}",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
             "pagination": {
                 "page": "Page",
@@ -1577,8 +1577,8 @@
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
                     "date": "Type a date or an expression. Use {format} for the date.",
                     "geometry": {
-                        "disabled": "Filter clicking on the map",
-                        "enabled": "Click on the map to filter the results",
+                        "disabled": "Filter clicking on the map / Hold ctrl and click to filter multiple",
+                        "enabled": "Click on the map to filter the results / Hold ctrl and click to filter multiple",
                         "applied": "Remove the filter by mouse click"
                     }
                 }
@@ -1808,25 +1808,26 @@
                 "bar": "Display Legend",
                 "gauge": "Display labels"
             },
-            "displayCartesian": {
-                "line": "Hide Grid",
-                "bar": "Hide Grid"
-            },
-            "xAxisAngle":{
-                "line": "X Axis: Label rotation angle °",
-                "bar": "X Axis: Label rotation angle °"
-            },
-            "yAxis":{
-                "line": "Hide Y axis",
-                "bar": "Hide Y axis"
-            },
-            "yAxisLabel":{
-                "line": "Legend Label",
-                "bar": "Legend Label"
-            },
-            "advancedOptions":{
-                "line": "Advanced Options",
-                "bar": "Advanced Options"
+            "advanced": {
+              "displayCartesian": "Hide Grid",
+              "xAxis": "X axis",
+              "xAxisAngle": "Label rotation",
+              "hideLabels": "Hide labels",
+              "xAxisType": "Type",
+              "forceTicks": "Never skip labels",
+              "maxXAxisLabels": "The labels can not anyway be more than {max}",
+              "yAxis":  "Y axis",
+              "yAxisType": "Type",
+              "yAxisLabel": "Legend Label",
+              "title": "Advanced Options",
+              "legend": "Legend",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Linear",
+                "category": "Category",
+                "log": "Log",
+                "date": "Date"
+              }
             },
             "tray": {
                 "title": "Widgets",
@@ -2281,6 +2282,7 @@
             "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "geostory": {
+            "storyResources": "Story Resources",
             "geostoreMap": "MapStore Maps",
             "loadingSpinner": "Loading Story",
             "addTitleSection": "Add Title Section",
@@ -2506,7 +2508,8 @@
             "mediaList" : {
                 "removeResourceTitle": "Are you sure?",
                 "confirmRemoveResource": "Do you want to remove this media resource from the story?",
-                "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?"
+                "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?",
+                "resultsCount": "{count} of {total} {total, plural, one {Result} other {Results}}"
             },
             "imageList": {
                 "emptyList": "Click on the plus button to add a new image. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>here</a>"

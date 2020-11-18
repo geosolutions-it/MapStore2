@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const {FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
 

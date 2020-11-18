@@ -218,4 +218,11 @@ OlLocate.prototype.setStrings = function(newStrings) {
     this.options.strings = assign({}, this.options.strings, newStrings);
 };
 
+OlLocate.prototype.setTrackingOptions = function(options) {
+    if (this.geolocate) {
+        this.geolocate.setTrackingOptions(options);
+        this.options.locateOptions = {...options};
+    }
+};
+
 export default OlLocate;

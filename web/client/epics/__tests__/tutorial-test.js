@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {getActionsFromStepEpic, switchTutorialEpic, switchGeostoryTutorialEpic} = require('../tutorial');
-const {SETUP_TUTORIAL, updateTutorial, initTutorial} = require('../../actions/tutorial');
-const {geostoryLoaded, setEditing} = require('../../actions/geostory');
-const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
-const { onLocationChanged } = require('connected-react-router');
+import { getActionsFromStepEpic, switchTutorialEpic, switchGeostoryTutorialEpic } from '../tutorial';
+import { SETUP_TUTORIAL, updateTutorial, initTutorial } from '../../actions/tutorial';
+import { geostoryLoaded, setEditing } from '../../actions/geostory';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { onLocationChanged } from 'connected-react-router';
 
 describe('tutorial Epics', () => {
     const GEOSTORY_EDIT_STEPS = [{

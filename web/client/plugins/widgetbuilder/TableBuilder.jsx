@@ -12,7 +12,7 @@ const {get} = require('lodash');
 const { isGeometryType } = require('../../utils/ogc/WFS/base');
 const { compose, renameProps, branch, renderComponent, mapPropsStream } = require('recompose');
 const InfoPopover = require('../../components/widgets/widget/InfoPopover');
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 const BorderLayout = require('../../components/layout/BorderLayout');
 
 const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } = require('../../actions/widgets');

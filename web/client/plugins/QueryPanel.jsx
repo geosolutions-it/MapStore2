@@ -35,19 +35,23 @@ const {
 } = require('../selectors/queryform');
 
 const {isEqual} = require('lodash');
-const LayersUtils = require('../utils/LayersUtils');
+const {
+    toggleByType,
+    sortUsing,
+    sortLayers
+} = require('../utils/LayersUtils');
 
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
 const QueryPanelHeader = require('../components/data/query/QueryPanelHeader');
-const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
-const autocompleteEpics = require('../epics/autocomplete');
+const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery').default;
+const autocompleteEpics = require('../epics/autocomplete').default;
 const {bindActionCreators} = require('redux');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const layerFilterEpics = require('../epics/layerfilter');
+const layerFilterEpics = require('../epics/layerfilter').default;
 
-const ResizableModal = require('../components/misc/ResizableModal');
-const Portal = require('../components/misc/Portal');
+const ResizableModal = require('../components/misc/ResizableModal').default;
+const Portal = require('../components/misc/Portal').default;
 
 
 const {
@@ -389,7 +393,7 @@ class QueryPanel extends React.Component {
  *   - typeName {string} the workspace + layer name on geoserver
  *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
  *   - srsName {string} The projection of the requested features fetched via wfs
- *
+
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
  * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer to hide
  * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
@@ -435,10 +439,10 @@ const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,
     retrieveLayerData: getLayerCapabilities,
-    onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
-    onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
+    onToggleGroup: toggleByType('groups', toggleNode),
+    onToggleLayer: toggleByType('layers', toggleNode),
     onToggleQuery: toggleControl.bind(null, 'queryPanel', null),
-    onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
+    onSort: sortUsing(sortLayers, sortNode),
     onSettings: showSettings,
     onInit: initQueryPanel,
     onZoomToExtent: zoomToExtent,
@@ -458,5 +462,5 @@ module.exports = {
         query: require('../reducers/query').default,
         layerFilter: require('../reducers/layerFilter').default
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform'), ...layerFilterEpics}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform').default, ...layerFilterEpics}
 };

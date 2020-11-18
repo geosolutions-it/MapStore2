@@ -133,26 +133,26 @@ describe('Test the featuregrid reducer', () => {
     it('selectFeature', () => {
         // TODO FIX this test or the reducer
         // single select
-        let state = featuregrid( undefined, selectFeatures([1, 2]));
-        expect(state.select).toExist();
-        expect(state.select.length).toBe(1);
-        expect(state.select[0]).toBe(1);
-        state = featuregrid( state, selectFeatures([1, 2]));
-        expect(state.select).toExist();
-        expect(state.select.length).toBe(1);
-        expect(state.select[0]).toBe(1);
-        // check multiselect true, append false
-        state = featuregrid(undefined, {type: 'UNKNOWN'});
-        state = featuregrid({...state, multiselect: true}, selectFeatures([1, 2], false));
-        expect(state.select).toExist();
-        expect(state.select.length).toBe(1);
-        expect(state.select[0]).toBe(1);
-
-        // check multiselect true, append true
-        state = featuregrid( state, selectFeatures([3], true));
+        let state = featuregrid( undefined, selectFeatures([{id: '1'}, {id: '2'}]));
         expect(state.select).toExist();
         expect(state.select.length).toBe(2);
-        expect(state.select[1]).toBe(3);
+        expect(state.select[0]).toEqual({id: '1'});
+        state = featuregrid( state, selectFeatures([{id: '3'}, {id: '4'}]));
+        expect(state.select).toExist();
+        expect(state.select.length).toBe(2);
+        expect(state.select[0]).toEqual({id: '3'});
+        // check multiselect true, append false
+        state = featuregrid(undefined, {type: 'UNKNOWN'});
+        state = featuregrid({...state, multiselect: true}, selectFeatures([{id: '1'}, {id: '2'}], false));
+        expect(state.select).toExist();
+        expect(state.select.length).toBe(2);
+        expect(state.select[0]).toEqual({id: '1'});
+
+        // check multiselect true, append true and also duplicates
+        state = featuregrid( state, selectFeatures([{id: '3'}, {id: '3'}], true));
+        expect(state.select).toExist();
+        expect(state.select.length).toBe(3);
+        expect(state.select[1]).toEqual({id: '2'});
     });
 
     it('clearSelection', () => {

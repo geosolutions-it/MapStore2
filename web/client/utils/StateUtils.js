@@ -1,9 +1,17 @@
+/**
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import { createStore as createReduxStore, applyMiddleware, compose, combineReducers }  from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import logger from 'redux-logger';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import {wrapEpics} from "./EpicsUtils";
 import ConfigUtils from './ConfigUtils';
+import isEmpty from 'lodash/isEmpty';
 import { BehaviorSubject } from 'rxjs';
 
 /**
@@ -40,7 +48,7 @@ export const setStore = (store, name = PERSISTED_STORE_NAME) => {
  *
  * @param {string} name optional name (if you want to restore more than one store)
  */
-export const getStore = (name = PERSISTED_STORE_NAME) => {
+export const getStore = (name = 'persisted.reduxStore') => {
     return ConfigUtils.getConfigProp(name) || {};
 };
 
@@ -125,7 +133,7 @@ const fetchEpic = (storeName = PERSISTED_STORE_NAME, name = 'rootEpic') => {
  * @param {string} name optional name (if you want to persist more than one store)
  */
 export const getState = (name) => {
-    return getStore(name) && getStore(name).getState() || {};
+    return !isEmpty(getStore(name)) && getStore(name)?.getState() || {};
 };
 
 /**
@@ -197,13 +205,18 @@ export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} }
 export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     const rootReducer = fetchReducer();
     const reducer = (state, action) => {
+        const initialStoreKeys = Object.keys(rootReducer({}, {}));
         const newState = {...state, ...rootReducer(state, action)};
-        return Object.keys(reducers).reduce((previous, current) => {
-            return {
-                ...previous,
-                [current]: reducers[current](previous[current], action)
-            };
-        }, newState);
+        return Object.keys(reducers)
+            // avoid to update the state twice
+            // if the original store contains the same reducers
+            .filter((key) => initialStoreKeys.indexOf(key) === -1)
+            .reduce((previous, current) => {
+                return {
+                    ...previous,
+                    [current]: reducers[current](previous[current], action)
+                };
+            }, newState);
     };
     (store || getStore()).replaceReducer(reducer);
     const rootEpic = fetchEpic();
@@ -211,11 +224,4 @@ export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     wrapEpics(epics).forEach((epic) => {
         rootEpic.next(epic);
     });
-};
-
-export default {
-    createStore,
-    updateStore,
-    setStore,
-    getState
 };

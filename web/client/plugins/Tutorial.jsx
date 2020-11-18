@@ -16,7 +16,7 @@ const I18N = require('../components/I18N/I18N');
 const {Glyphicon} = require('react-bootstrap');
 const {createSelector} = require('reselect');
 const {tutorialSelector} = require('../selectors/tutorial');
-const epics = require('../epics/tutorial');
+const epics = require('../epics/tutorial').default;
 
 /**
  * Tutorial plugin. Enables the steps of tutorial.

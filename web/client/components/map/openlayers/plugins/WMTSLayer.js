@@ -13,8 +13,8 @@ import head from 'lodash/head';
 import last from 'lodash/last';
 
 
-import SecurityUtils from '../../../../utils/SecurityUtils';
-import WMTSUtils from '../../../../utils/WMTSUtils';
+import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import MapUtils from '../../../../utils/MapUtils';
 import { isVectorFormat} from '../../../../utils/VectorTileUtils';
@@ -99,7 +99,7 @@ const createLayer = options => {
         extent = projection.getExtent();
     }
     const queryParameters = {};
-    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
+    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
 
     // TODO: support tileSizes from  matrix

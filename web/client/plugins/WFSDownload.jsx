@@ -73,7 +73,7 @@ module.exports = {
         onClose: () => toggleControl("wfsdownload")
     }
     )(DownloadDialog),
-    epics: require('../epics/wfsdownload'),
+    epics: require('../epics/wfsdownload').default,
     reducers: {
         wfsdownload: require('../reducers/wfsdownload').default
     }

@@ -14,7 +14,7 @@ const {
     Popover
 } = require('react-bootstrap');
 
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const OverlayTrigger = require('../../misc/OverlayTrigger').default;
 
 /**
  * Enhancer to add a popover to a component that triggers on mouse hover.

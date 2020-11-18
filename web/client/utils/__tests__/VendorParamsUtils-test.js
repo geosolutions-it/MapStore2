@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const { optionsToVendorParams} = require('../VendorParamsUtils');
+import expect from 'expect';
+
+import { optionsToVendorParams } from '../VendorParamsUtils';
 describe('VendorParamUtils ', () => {
 
     it('optionsToVendorParams', () => {

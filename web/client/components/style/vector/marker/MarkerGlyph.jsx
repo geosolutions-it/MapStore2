@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const Filter = require('../../../misc/Filter');
 const MarkerPropertyPicker = require( "../../MarkerPropertyPicker").default;
-const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message').default;
 
 /**
  * Styler for the glyph, color and shape

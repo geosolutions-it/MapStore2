@@ -11,7 +11,7 @@
  */
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
-import SecurityUtils from '../utils/SecurityUtils';
+import {getToken, getRefreshToken} from '../utils/SecurityUtils';
 import { loadMaps } from './maps';
 import ConfigUtils from '../utils/ConfigUtils';
 
@@ -134,8 +134,8 @@ export function refreshSuccess(userDetails, authProvider) {
 
 export function refreshAccessToken() {
     return (dispatch) => {
-        const accessToken = SecurityUtils.getToken();
-        const refreshToken = SecurityUtils.getRefreshToken();
+        const accessToken = getToken();
+        const refreshToken = getRefreshToken();
         AuthenticationAPI.refreshToken(accessToken, refreshToken).then((response) => {
             dispatch(refreshSuccess(response, AuthenticationAPI.authProviderName));
         }).catch(() => {

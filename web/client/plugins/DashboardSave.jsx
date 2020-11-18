@@ -21,7 +21,7 @@ import dashboard from '../reducers/dashboard';
 
 /**
  * Save dialog component enhanced for dashboard
- *
+ *  @ignore
  */
 const SaveBaseDialog = compose(
     connect(createSelector(
@@ -39,7 +39,12 @@ const SaveBaseDialog = compose(
     handleSaveModal
 )(require('../components/resources/modals/Save'));
 
-
+/**
+ * Implements "save" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @class
+ * @name DashboardSave
+ * @memberof plugins
+ */
 export const DashboardSave = createPlugin('DashboardSave', {
     component: compose(
         connect(createSelector(
@@ -72,6 +77,12 @@ export const DashboardSave = createPlugin('DashboardSave', {
     }
 });
 
+/**
+ * Implements "save as" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @class
+ * @name DashboardSaveAs
+ * @memberof plugins
+ */
 export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
     component: compose(
         connect(createSelector(

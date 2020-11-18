@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var ConfigUtils = require('../ConfigUtils');
+import expect from 'expect';
+
+import ConfigUtils from '../ConfigUtils';
 var lconfig = {};
 var testMap = {
     "defaultSourceType": "gxp_wmssource",

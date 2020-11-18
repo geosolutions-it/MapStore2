@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,21 +7,23 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const {UserDetails, PasswordReset, UserMenu, Login, LoginNav } = require('./login/index');
-const epics = require('../epics/login');
+const epics = require('../epics/login').default;
 const { comparePendingChanges } = require('../epics/pendingChanges');
 
 require('./login/login.css');
 
 /**
-  * Login Plugin. Allow to login/logout or show user info and reset password tools
+  * Login Plugin. Allow to login/logout or show user info and reset password tools.
+  * It renders a menu in {@link #plugins.OmniBar|OmniBar} plugin.
   * @class Login
   * @memberof plugins
   * @static
   *
   * @prop {string} cfg.id identifier of the Plugin, by default `"mapstore-login-menu"`
-  * @prop {object} cfg.menuStyle inline style for the menu, by defualt:
+  * @prop {object} cfg.menuStyle inline style for the menu, by default:
   * ```
   * menuStyle: {
   *      zIndex: 30

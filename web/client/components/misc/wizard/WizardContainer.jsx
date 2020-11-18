@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {Row} = require('react-bootstrap');
 const Button = require('../Button').default;
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 /**
  * Provides a base container for wizards.

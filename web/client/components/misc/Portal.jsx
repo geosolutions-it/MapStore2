@@ -7,6 +7,9 @@
  ectory of this source tree.
  */
 
-const withContainer = require('./WithContainer');
+import withContainer from './WithContainer';
+import {Portal} from 'react-overlays';
 
-module.exports = withContainer(require('react-overlays').Portal);
+const PortalComp = withContainer(Portal);
+
+export default PortalComp;

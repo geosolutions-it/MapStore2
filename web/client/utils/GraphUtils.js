@@ -12,7 +12,7 @@
      * allPairs is the input array, which contains length 2 arrays
      * visited is a dictionary for keeping track of whether a node is visited
      */
-const bfs = (id, allPairs, visited) => {
+export const bfs = (id, allPairs, visited) => {
     const q = [];
     const curr = [];
     let i;
@@ -40,7 +40,7 @@ const bfs = (id, allPairs, visited) => {
     // return everything in the current "group"
     return curr;
 };
-const findGroups = (pairs) => {
+export const findGroups = (pairs) => {
     let visited = {};
     let groups = [];
     for (let i = 0, length = pairs.length; i < length; i += 1) {
@@ -68,7 +68,3 @@ const findGroups = (pairs) => {
  * @name GraphUtils
  * @memberof utils
  */
-module.exports = {
-    bfs,
-    findGroups
-};

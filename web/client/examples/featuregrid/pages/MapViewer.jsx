@@ -14,7 +14,7 @@ const {connect} = require('react-redux');
 
 const url = require('url');
 
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 
 const {loadMapConfig} = require('../../../actions/config');
 

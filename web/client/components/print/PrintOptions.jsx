@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,8 +7,9 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {Radio} = require('react-bootstrap');
-const LocaleUtils = require('../../utils/LocaleUtils');
+const {getMessageById} = require('../../utils/LocaleUtils');
 
 class PrintOptions extends React.Component {
     static propTypes = {
@@ -44,7 +44,7 @@ class PrintOptions extends React.Component {
             checked={this.props.selected === option.value}
             onChange={this.onChange}
             value={option.value}
-        >{LocaleUtils.getMessageById(this.context.messages, option.label)}</Radio>);
+        >{getMessageById(this.context.messages, option.label)}</Radio>);
     };
 
     render() {

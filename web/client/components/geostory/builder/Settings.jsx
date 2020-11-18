@@ -145,26 +145,26 @@ export default ({
             </div>
             {settings.isLogoEnabled && (
                 <>
-                <Thumbnail
-                    thumbnail={settings?.thumbnail?.data || settings?.thumbnail?.url}
-                    onUpdate={(data, files) => {
-                        onUpdateSettings("thumbnail", { data, url: files?.[0]?.preview });
-                        onUpdateSettings("thumbnailErrors", undefined);
-                    }}
-                    onRemove={() => {
-                        onUpdateSettings("thumbnail", undefined);
-                        onUpdateSettings("thumbnailErrors", undefined);
-                    }}
-                    onError={(errors) => onUpdateSettings("thumbnailErrors", errors)}
-                    message={<Message msgId="geostory.builder.settings.logoPlaceholder"/>}
-                    thumbnailOptions={{
-                        width: 300,
-                        height: 150,
-                        type: 'image/png',
-                        contain: true
-                    }}
-                />
-                {settings.thumbnailErrors && settings.thumbnailErrors.length > 0 &&
+                    <Thumbnail
+                        thumbnail={settings?.thumbnail?.data || settings?.thumbnail?.url}
+                        onUpdate={(data, files) => {
+                            onUpdateSettings("thumbnail", { data, url: files?.[0]?.preview });
+                            onUpdateSettings("thumbnailErrors", undefined);
+                        }}
+                        onRemove={() => {
+                            onUpdateSettings("thumbnail", undefined);
+                            onUpdateSettings("thumbnailErrors", undefined);
+                        }}
+                        onError={(errors) => onUpdateSettings("thumbnailErrors", errors)}
+                        message={<Message msgId="geostory.builder.settings.logoPlaceholder"/>}
+                        thumbnailOptions={{
+                            width: 300,
+                            height: 150,
+                            type: 'image/png',
+                            contain: true
+                        }}
+                    />
+                    {settings.thumbnailErrors && settings.thumbnailErrors.length > 0 &&
                     <Alert bsStyle="danger" className="text-center">
                         <div><Message msgId="map.error"/></div>
                         {settings.thumbnailErrors.indexOf('FORMAT') !== -1 && <div><Message msgId="map.errorFormat" /></div>}

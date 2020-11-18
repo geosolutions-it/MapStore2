@@ -977,7 +977,7 @@ describe('Geostory Epics', () => {
             actions.map(a => {
                 switch (a.type) {
                 case UPDATE:
-                    expect(a.element.resourceId.length).toEqual(36);
+                    expect(a.element.resourceId.length).toEqual(10);
                     expect(a.element.type).toEqual(mediaType);
                     expect(a.mode).toEqual("merge");
                     expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}]`);
@@ -986,7 +986,7 @@ describe('Geostory Epics', () => {
                     expect(a.owner).toEqual("geostore");
                     break;
                 case ADD_RESOURCE:
-                    expect(a.id.length).toEqual(36); // uuid
+                    expect(a.id.length).toEqual(10); // uuid
                     expect(a.mediaType).toEqual(mediaType);
                     expect(a.data).toEqual({
                         id: "resourceId",

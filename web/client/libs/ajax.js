@@ -9,8 +9,9 @@
 const axios = require('axios');
 const combineURLs = require('axios/lib/helpers/combineURLs');
 const url = require('url');
-const ConfigUtils = require('../utils/ConfigUtils');
-const SecurityUtils = require('../utils/SecurityUtils');
+const ConfigUtils = require('../utils/ConfigUtils').default;
+const {isAuthenticationActivated, getAuthenticationRule, getToken,
+    getBasicAuthHeader} = require('../utils/SecurityUtils');
 
 const assign = require('object-assign');
 const {isObject, omitBy, isNil} = require('lodash');
@@ -40,11 +41,11 @@ const corsDisabled = [];
  * authentication method based on the request URL.
  */
 function addAuthenticationToAxios(axiosConfig) {
-    if (!axiosConfig || !axiosConfig.url || !SecurityUtils.isAuthenticationActivated()) {
+    if (!axiosConfig || !axiosConfig.url || !isAuthenticationActivated()) {
         return axiosConfig;
     }
     const axiosUrl = combineURLs(axiosConfig.baseURL || '', axiosConfig.url);
-    const rule = SecurityUtils.getAuthenticationRule(axiosUrl);
+    const rule = getAuthenticationRule(axiosUrl);
 
     switch (rule && rule.method) {
     case 'browserWithCredentials':
@@ -54,7 +55,7 @@ function addAuthenticationToAxios(axiosConfig) {
     }
     case 'authkey':
     {
-        const token = SecurityUtils.getToken();
+        const token = getToken();
         if (!token) {
             return axiosConfig;
         }
@@ -70,7 +71,7 @@ function addAuthenticationToAxios(axiosConfig) {
         return axiosConfig;
     }
     case 'basic':
-        const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
+        const basicAuthHeader = getBasicAuthHeader();
         if (!basicAuthHeader) {
             return axiosConfig;
         }
@@ -78,7 +79,7 @@ function addAuthenticationToAxios(axiosConfig) {
         return axiosConfig;
     case 'bearer':
     {
-        const token = SecurityUtils.getToken();
+        const token = getToken();
         if (!token) {
             return axiosConfig;
         }

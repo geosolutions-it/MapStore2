@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getMessageById} from '../../utils/LocaleUtils';
 import PropTypes from 'prop-types';
 import Message from '../../components/I18N/Message';
 
@@ -55,7 +55,7 @@ class ShareSocials extends React.Component {
         if (this.props.getCount) {
             countProps.getCount = this.props.getCount;
         }
-        const title = this.props.sharedTitle || LocaleUtils.getMessageById(this.context.messages, "share.sharedTitle");
+        const title = this.props.sharedTitle || getMessageById(this.context.messages, "share.sharedTitle");
 
         return (
             <div className="social-links">

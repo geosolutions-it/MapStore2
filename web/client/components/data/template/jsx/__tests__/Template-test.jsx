@@ -128,10 +128,10 @@ describe("Test JSX Template", () => {
                 expect(cmpDom).toExist();
 
                 comp = ReactDOM.render(
-                    <Template template="<div id='template'/>" model={{id: "temp"}} />
+                    <Template template="<div id='template'/>" model={{id: "temp"}} renderContent={(component)=> {
+                        expect(component).toContain('template');
+                    }} />
                     , document.getElementById("container"));
-                const cmpDom1 = document.getElementById("temp");
-                expect(cmpDom1).toExist();
                 done();
             } catch (ex) {
                 done(ex);

@@ -10,7 +10,7 @@ const React = require('react');
 const Select = require('react-select').default;
 const {Checkbox} = require('react-bootstrap');
 const {get, head} = require('lodash');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 
 /**
  * Download Options Form. Shows a selector of the options to perform a WFS download

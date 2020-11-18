@@ -5,21 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
-const {
-    getFormattedBearingValue,
-    degToDms,
-    convertUom,
-    isValidGeometry
-} = require('../MeasureUtils');
-const {
+import expect from 'expect';
+
+import { getFormattedBearingValue, degToDms, convertUom, isValidGeometry } from '../MeasureUtils';
+
+import {
     lineFeature,
     lineFeatureInvalid,
     lineFeatureInvalid2,
     polyFeatureClosed,
     polyFeatureNotClosedInvalid,
     polyFeatureNotClosedInvalid2
-} = require('../../test-resources/drawsupport/features');
+} from '../../test-resources/drawsupport/features';
 
 
 describe('MeasureUtils', () => {

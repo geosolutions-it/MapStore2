@@ -15,7 +15,7 @@ const {get} = require('lodash');
 const Button = require('../components/misc/Button').default;
 const withMask = require('../components/misc/enhancers/withMask');
 const {isLoggedIn} = require('../selectors/security');
-const Message = require('../components/I18N/Message');
+const Message = require('../components/I18N/Message').default;
 const ResourceUnavailable = require('../components/errors/ResourceUnavailable');
 const {feedbackMaskSelector} = require('../selectors/feedbackmask');
 const {isSharedStory} = require('../selectors/geostory');
@@ -81,5 +81,5 @@ module.exports = {
     reducers: {
         feedbackMask: require('../reducers/feedbackMask').default
     },
-    epics: require('../epics/feedbackMask')
+    epics: require('../epics/feedbackMask').default
 };

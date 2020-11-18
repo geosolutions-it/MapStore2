@@ -8,14 +8,14 @@
 
 import { get } from 'lodash';
 
-import FeatureInfoUtils from './FeatureInfoUtils';
+import {INFO_FORMATS} from './FeatureInfoUtils';
 
 export const getFormatForResponse = (res, props) => {
     const {format, queryParams = {}} = res;
     // handle WMS/WMTS.., and also WFS
     return queryParams.info_format
         || queryParams.outputFormat
-        || format && FeatureInfoUtils.INFO_FORMATS[format]
+        || format && INFO_FORMATS[format]
         || props.format;
 };
 

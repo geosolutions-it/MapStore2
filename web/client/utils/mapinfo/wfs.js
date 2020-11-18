@@ -8,14 +8,14 @@
 
 const {Observable} = require('rxjs');
 
-const CoordinatesUtils = require('../CoordinatesUtils');
+const {normalizeSRS} = require('../CoordinatesUtils');
 const { getLayerUrl } = require('../LayersUtils');
 const { isObject } = require('lodash');
 const { optionsToVendorParams } = require('../VendorParamsUtils');
 const { describeFeatureType, getFeature } = require('../../api/WFS');
 const { extractGeometryAttributeName } = require('../WFSLayerUtils');
 
-const SecurityUtils = require('../SecurityUtils');
+const {addAuthenticationToSLD} = require('../SecurityUtils');
 const assign = require('object-assign');
 
 /**
@@ -32,7 +32,7 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
      * center point is re-projected then is built a box of 101x101pixel around it
      */
     return {
-        request: SecurityUtils.addAuthenticationToSLD({
+        request: addAuthenticationToSLD({
             point, // THIS WILL NOT BE PASSED TO FINAL REQUEST, BUT USED IN getRetrieveFlow
             service: 'WFS',
             version: '1.1.1',
@@ -41,7 +41,7 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
             exceptions: 'application/json',
             id: layer.id,
             typeName: layer.name,
-            srs: CoordinatesUtils.normalizeSRS(map.projection) || 'EPSG:4326',
+            srs: normalizeSRS(map.projection) || 'EPSG:4326',
             feature_count: maxItems,
             ...assign({ params })
         }, layer),

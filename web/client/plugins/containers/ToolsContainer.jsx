@@ -21,10 +21,10 @@ const HelpBadge = connect((state) => ({
     changeHelpwinVisibility
 })(require('../../components/help/HelpBadge'));
 
-const Message = require('../../components/I18N/Message');
+const Message = require('../../components/I18N/Message').default;
 
 const {Tooltip, Panel, Collapse, Glyphicon} = require('react-bootstrap');
-const OverlayTrigger = require('../../components/misc/OverlayTrigger');
+const OverlayTrigger = require('../../components/misc/OverlayTrigger').default;
 const Button = require('../../components/misc/Button').default;
 
 const {setControlProperty, toggleControl} = require('../../actions/controls');
@@ -34,7 +34,7 @@ const assign = require('object-assign');
 
 /**
  * A container for tools.
- * @memberof plugins.containers.ToolsContainer
+ * @memberof plugins.containers
  * @class ToolsContainer
  * @static
  * @prop {object[]} tools An array of tools. Each tool have this shape. the first in order wins:
@@ -43,7 +43,7 @@ const assign = require('object-assign');
  *    tool: {boolean|node} if boolean and true, renders the plugins itself, if object, renders this object as a react component,
  *    exclusive: if true, gets a selector to make it active or not, setting active property of the tool. tool.toggleControl | tool.name is used from controls state to retrieve the status of the tool
  *    toggle: same as above, but sets also bsStyle
- *    action: if present, this action will be binded to the context and associated to the tool as eventSelector (default onClick)
+ *    action: if present, this action will be bind to the context and associated to the tool as eventSelector (default onClick)
  * }
  * ```
  *

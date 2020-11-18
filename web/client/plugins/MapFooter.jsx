@@ -34,6 +34,13 @@ const fixedTools = [
     {element: <FixedContainer key="scalebar" id="footer-scalebar-container" />}
 ];
 
+
+/**
+ * Footer for MapViewer. Can contain several plugins.
+ * @name MapFooter
+ * @class
+ * @memberof plugins
+ */
 class MapFooter extends React.Component {
     static propTypes = {
         className: PropTypes.string,

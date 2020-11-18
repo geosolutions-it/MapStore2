@@ -21,8 +21,8 @@ import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } 
   * @class
   * @classdesc
   * Context page allow to load a map viewer with a configuration stored at a specific id.
-  * pluginsConfig property will be downloaded using the provided contextId wuth the map.
-  * If `default` map is used, the standard configuration from localConfig.plugins will be used.
+  * `pluginsConfig` property will be downloaded using the provided `contextId` with the map.
+  * If `default` map is used, the standard configuration from `localConfig.plugins` will be used.
   *
   * Requirements:
   *

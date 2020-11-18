@@ -12,7 +12,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { mapSelector } from './map';
 import { isPluginInContext } from './context';
 import { currentLocaleSelector } from './locale';
-import MapInfoUtils from '../utils/MapInfoUtils';
+import {getValidator} from '../utils/MapInfoUtils';
 import { isCesium } from './maptype';
 import { isMouseMoveIdentifyActiveSelector as identifyFloatingTool } from '../selectors/map';
 import { pluginsSelectorCreator } from './localConfig';
@@ -100,7 +100,8 @@ export const identifyOptionsSelector = createStructuredSelector({
     format: generalInfoFormatSelector,
     map: mapSelector,
     point: clickPointSelector,
-    currentLocale: currentLocaleSelector
+    currentLocale: currentLocaleSelector,
+    maxItems: (state) => get(state, "mapInfo.configuration.maxItems")
 });
 
 export const isHighlightEnabledSelector = (state = {}) => state.mapInfo && state.mapInfo.highlight;
@@ -122,7 +123,7 @@ export const validResponsesSelector = createSelector(
     generalInfoFormatSelector,
     identifyFloatingTool,
     (requests, responses, format, renderEmpty) => {
-        const validatorFormat = MapInfoUtils.getValidator(format);
+        const validatorFormat = getValidator(format);
         return requests.length === responses.length && validatorFormat.getValidResponses(responses, renderEmpty);
     });
 
@@ -200,4 +201,3 @@ export const mapTriggerSelector = state => {
     }
     return state.mapInfo.configuration.trigger;
 };
-

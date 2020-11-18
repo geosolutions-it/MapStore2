@@ -15,6 +15,14 @@ const {loadNewMap, loadMapConfig} = require('../../actions/config');
 const {initMap} = require('../../actions/map');
 const MapViewerContainer = require('../../containers/MapViewer');
 
+/**
+ * Main page for the Map. It is used to render the main page (or context)
+ * It renders the plugins dedicated to the map (depending on mobile/desktop/embedded... mode),
+ * and it triggers the initial actions to load the map config (using the parameter received in `match` property).
+ * @name MapViewer
+ * @class
+ * @memberof pages
+ */
 class MapViewerPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,

@@ -468,7 +468,6 @@
             }
             position: relative;
             z-index: 1;
-            height: 100%;
 
             .ms-column-contents {
                 .add-bar {
@@ -1249,6 +1248,27 @@
     .ol-viewport {
         cursor: unset !important;
     }
+
+    // When the geostory is used as a separated app
+    // the rendering of content of columns is wrongly computed
+    // because of the rule height: 100% applied to all contents
+    // (rule height: 100% is needed for background media contents).
+    // We should use height auto for the contents of columns
+    // to ensure the right computations of the height
+    .ms-section .ms-section-contents {
+        height: auto;
+        .ms-content-column .ms-visibility-container,
+        .ms-content-column .ms-media.ms-media-image,
+        .ms-content-column .ms-media.ms-media-image > img,
+        .ms-content-column .ms-media.ms-media-video,
+        .ms-content-column .ms-content.ms-content-video,
+        .ms-content-column .ms-content.ms-content-video .ms-content-body,
+        .ms-content-column .ms-content.ms-content-map,
+        .ms-content-column .ms-content.ms-content-map .ms-content-body {
+            height: auto;
+        }
+    }
+
 }
 
 .ms-expand-media-button {

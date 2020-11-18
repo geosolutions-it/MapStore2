@@ -1,24 +1,47 @@
 
-const Rx = require('rxjs');
-const {isString, get, head, castArray} = require('lodash');
-const moment = require('moment');
-const {wrapStartStop} = require('../observables/epics');
+import Rx from 'rxjs';
+import { isString, get, head, castArray } from 'lodash';
+import moment from 'moment';
+import { wrapStartStop } from '../observables/epics';
+import { CHANGE_MAP_VIEW } from '../actions/map';
 
+import {
+    SELECT_TIME,
+    RANGE_CHANGED,
+    ENABLE_OFFSET,
+    SET_MAP_SYNC,
+    AUTOSELECT,
+    timeDataLoading,
+    rangeDataLoaded,
+    onRangeChanged,
+    selectLayer
+} from '../actions/timeline';
 
-const { CHANGE_MAP_VIEW } = require('../actions/map');
+import { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } from '../actions/dimension';
+import { REMOVE_NODE } from '../actions/layers';
+import { error } from '../actions/notifications';
+import { getLayerFromId } from '../selectors/layers';
 
-const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, SET_MAP_SYNC, AUTOSELECT, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
-const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
+import {
+    rangeSelector,
+    selectedLayerName,
+    selectedLayerUrl,
+    isAutoSelectEnabled,
+    selectedLayerSelector,
+    timelineLayersSelector,
+    multidimOptionsSelectorCreator,
+    isMapSync
+} from '../selectors/timeline';
 
-const {REMOVE_NODE} = require('../actions/layers');
-const {error} = require('../actions/notifications');
+import {
+    layerTimeSequenceSelectorCreator,
+    timeDataSelector,
+    offsetTimeSelector,
+    currentTimeSelector
+} from '../selectors/dimension';
 
-const {getLayerFromId} = require('../selectors/layers');
-const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector, timelineLayersSelector, multidimOptionsSelectorCreator, isMapSync } = require('../selectors/timeline');
-const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
-
-const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
-const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');
+import { getNearestDate, roundRangeResolution, isTimeDomainInterval } from '../utils/TimeUtils';
+import { getHistogram, describeDomains, getDomainValues } from '../api/MultiDim';
 
 const TIME_DIMENSION = "time";
 // const DEFAULT_RESOLUTION = "P1W";
@@ -158,132 +181,137 @@ const loadRangeData = (id, timeData, getState) => {
 };
 
 
-module.exports = {
-    /**
-     * when a time is selected from timeline, tries to snap to nearest value and set the current time
-     */
-    setTimelineCurrentTime: (action$, {getState = () => {}} = {}) =>
-        action$.ofType(SELECT_TIME)
-            .throttleTime(100) // avoid multiple request in case of mouse events drag and click
-            .switchMap( ({time, group}) => {
-                const state = getState();
+/**
+ * when a time is selected from timeline, tries to snap to nearest value and set the current time
+ */
+export const setTimelineCurrentTime = (action$, {getState = () => {}} = {}) =>
+    action$.ofType(SELECT_TIME)
+        .throttleTime(100) // avoid multiple request in case of mouse events drag and click
+        .switchMap( ({time, group}) => {
+            const state = getState();
 
-                if (snap && group) {
-                    return snapTime(state, group, time)
-                        .switchMap( t => {
-                            const currentViewRange = rangeSelector(state);
-                            const {
-                                start,
-                                end
-                            } = currentViewRange || {};
-                            let actions = [];
-                            // re- center the view is snapped time is out of view range
-                            if (start && end && (moment(t).isBefore(start) || moment(t).isAfter(end))) {
-                                const rangeDistance = moment(end).diff(start);
-                                actions = [onRangeChanged({
-                                    start: moment(t).subtract(rangeDistance / 2),
-                                    end: moment(t).add(rangeDistance / 2)
-                                })];
-                            }
-                            return Rx.Observable.from([...actions, setCurrentTime(t)]);
-                        })
-                        .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
-                    ;
-                }
-                return Rx.Observable.of(setCurrentTime(time));
-            }),
-    /**
-     * Initializes the time line
-     */
-    setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, AUTOSELECT)
-        .exhaustMap(() =>
-            isAutoSelectEnabled(getState())
-            && get(timelineLayersSelector(getState()), "[0].id")
-            && !selectedLayerSelector(getState())
-                ? Rx.Observable.of(selectLayer(get(timelineLayersSelector(getState()), "[0].id")))
-                    .concat(
-                        Rx.Observable.of(1).switchMap( () =>
-                            snapTime(getState(), get(timelineLayersSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
-                                .filter( v => v)
-                                .map(time => setCurrentTime(time)))
-                    )
-                : Rx.Observable.empty()
-        ),
-    /**
-     * When offset is initiated this epic sets both initial current time and offset if any does not exist
-     * The policy is:
-     *  - if current time is not defined, it will be placed to the center of the current timeline's viewport. If the viewport is undefined it is set to "now"
-     *  - if offsetTime is not defined, it will be placed at 1/ RATIO * (current viewport size) distance from current time (to make it visible). If viewport is not defined, 1 day from the current time
-     *  - At the end, if the viewport is not defined, it will be placed to center the current time. This way the range will be visible when the timeline is available.
-     *
-     */
-    settingInitialOffsetValue: (action$, {getState = () => {}} = {}) =>
-        action$.ofType(ENABLE_OFFSET)
-            .switchMap( (action) => {
-                const RATIO = 5; // ratio of the size of the offset to set relative to the current viewport, if set
-                const state = getState();
-                const time = currentTimeSelector(state);
-                const currentViewRange = rangeSelector(state);
-                // find out current viewport range, if exist, to define a good offset to use as default
-                if (action.enabled) {
-                    const {
-                        start = 0,
-                        end = 1000 * 60 * 60 * 24 * RATIO // this makes the offset 1 day by default, if timeline is not initialized
-                    } = currentViewRange || {};
-                    const currentOffset = offsetTimeSelector(state);
-                    const rangeDistance = moment(end).diff(start);
-                    // Set current moment, if not set yet, to current viewport center. otherwise, it is set to now.
-                    let currentMoment = currentViewRange ? moment(start).add(rangeDistance / 2).toISOString() : moment(new Date()).toISOString();
+            if (snap && group) {
+                return snapTime(state, group, time)
+                    .switchMap( t => {
+                        const currentViewRange = rangeSelector(state);
+                        const {
+                            start,
+                            end
+                        } = currentViewRange || {};
+                        let actions = [];
+                        // re- center the view is snapped time is out of view range
+                        if (start && end && (moment(t).isBefore(start) || moment(t).isAfter(end))) {
+                            const rangeDistance = moment(end).diff(start);
+                            actions = [onRangeChanged({
+                                start: moment(t).subtract(rangeDistance / 2),
+                                end: moment(t).add(rangeDistance / 2)
+                            })];
+                        }
+                        return Rx.Observable.from([...actions, setCurrentTime(t)]);
+                    })
+                    .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
+                ;
+            }
+            return Rx.Observable.of(setCurrentTime(time));
+        });
+/**
+ * Initializes the time line
+ */
+export const setupTimelineExistingSettings = (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, AUTOSELECT)
+    .exhaustMap(() =>
+        isAutoSelectEnabled(getState())
+        && get(timelineLayersSelector(getState()), "[0].id")
+        && !selectedLayerSelector(getState())
+            ? Rx.Observable.of(selectLayer(get(timelineLayersSelector(getState()), "[0].id")))
+                .concat(
+                    Rx.Observable.of(1).switchMap( () =>
+                        snapTime(getState(), get(timelineLayersSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
+                            .filter( v => v)
+                            .map(time => setCurrentTime(time)))
+                )
+            : Rx.Observable.empty()
+    );
+/**
+ * When offset is initiated this epic sets both initial current time and offset if any does not exist
+ * The policy is:
+ *  - if current time is not defined, it will be placed to the center of the current timeline's viewport. If the viewport is undefined it is set to "now"
+ *  - if offsetTime is not defined, it will be placed at 1/ RATIO * (current viewport size) distance from current time (to make it visible). If viewport is not defined, 1 day from the current time
+ *  - At the end, if the viewport is not defined, it will be placed to center the current time. This way the range will be visible when the timeline is available.
+ *
+ */
+export const settingInitialOffsetValue = (action$, {getState = () => {}} = {}) =>
+    action$.ofType(ENABLE_OFFSET)
+        .switchMap( (action) => {
+            const RATIO = 5; // ratio of the size of the offset to set relative to the current viewport, if set
+            const state = getState();
+            const time = currentTimeSelector(state);
+            const currentViewRange = rangeSelector(state);
+            // find out current viewport range, if exist, to define a good offset to use as default
+            if (action.enabled) {
+                const {
+                    start = 0,
+                    end = 1000 * 60 * 60 * 24 * RATIO // this makes the offset 1 day by default, if timeline is not initialized
+                } = currentViewRange || {};
+                const currentOffset = offsetTimeSelector(state);
+                const rangeDistance = moment(end).diff(start);
+                // Set current moment, if not set yet, to current viewport center. otherwise, it is set to now.
+                let currentMoment = currentViewRange ? moment(start).add(rangeDistance / 2).toISOString() : moment(new Date()).toISOString();
 
-                    const initialOffsetTime = moment(time ? time : currentMoment).add(rangeDistance / RATIO);
-                    let setTime = action.enabled && !time ? Rx.Observable.of(setCurrentTime(currentMoment)) : Rx.Observable.empty();
-                    let setOff = action.enabled && !currentOffset || action.enabled && moment(currentOffset).diff(time) < 0 ? Rx.Observable.of(setCurrentOffset(initialOffsetTime.toISOString()))
-                        : Rx.Observable.empty();
-                    const centerToCurrentViewRange = currentViewRange ? Rx.Observable.empty() : Rx.Observable.of(
-                        onRangeChanged({
-                            start: moment(currentMoment).add(-1 * rangeDistance / 2),
-                            end: moment(currentMoment).add(rangeDistance / 2)
-                        })
-                    );
-                    return setTime.concat(setOff).concat(centerToCurrentViewRange);
-                }
-                return Rx.Observable.of(setCurrentOffset());
-            // disable by setting off the offset
-            }),
-    /**
-     * Update the time data when the timeline range changes, or when the layer dimension data is
-     * updated (for instance when a layer is added to the map)
-     */
-    updateRangeDataOnRangeChange: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(RANGE_CHANGED)
-            .merge(
-                action$.ofType(CHANGE_MAP_VIEW).filter(() => isMapSync(getState())),
-                action$.ofType(SET_MAP_SYNC)
-            )
-            .debounceTime(400)
-            .merge(action$.ofType(UPDATE_LAYER_DIMENSION_DATA).debounceTime(50))
-            .switchMap( () => {
-                const timeData = timeDataSelector(getState()) || {};
-                const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain
-                    // when data is already fully downloaded, no need to refresh, except if the mapSync is active
-                    && (isTimeDomainInterval(timeData[id].domain)) || isMapSync(getState()));
-                // update range data for every layer that need to sync with histogram/domain
-                return Rx.Observable.merge(
-                    ...layerIds.map(id =>
-                        loadRangeData(id, timeData[id], getState).map(({ range, histogram, domain }) => rangeDataLoaded(
-                            id,
-                            range,
-                            histogram,
-                            domain
-                        ))
-                            .startWith(timeDataLoading(id, true))
-                            .catch(() => Rx.Observable.of(error({
-                                uid: "error_with_timeline_update",
-                                title: "timeline.errors.multidim_error_title",
-                                message: "timeline.errors.multidim_error_message"
-                            })))
-                            .concat( Rx.Observable.of(timeDataLoading(id, false)))
-                    ));
+                const initialOffsetTime = moment(time ? time : currentMoment).add(rangeDistance / RATIO);
+                let setTime = action.enabled && !time ? Rx.Observable.of(setCurrentTime(currentMoment)) : Rx.Observable.empty();
+                let setOff = action.enabled && !currentOffset || action.enabled && moment(currentOffset).diff(time) < 0 ? Rx.Observable.of(setCurrentOffset(initialOffsetTime.toISOString()))
+                    : Rx.Observable.empty();
+                const centerToCurrentViewRange = currentViewRange ? Rx.Observable.empty() : Rx.Observable.of(
+                    onRangeChanged({
+                        start: moment(currentMoment).add(-1 * rangeDistance / 2),
+                        end: moment(currentMoment).add(rangeDistance / 2)
+                    })
+                );
+                return setTime.concat(setOff).concat(centerToCurrentViewRange);
+            }
+            return Rx.Observable.of(setCurrentOffset());
+        // disable by setting off the offset
+        });
+/**
+ * Update the time data when the timeline range changes, or when the layer dimension data is
+ * updated (for instance when a layer is added to the map)
+ */
+export const updateRangeDataOnRangeChange = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(RANGE_CHANGED)
+        .merge(
+            action$.ofType(CHANGE_MAP_VIEW).filter(() => isMapSync(getState())),
+            action$.ofType(SET_MAP_SYNC)
+        )
+        .debounceTime(400)
+        .merge(action$.ofType(UPDATE_LAYER_DIMENSION_DATA).debounceTime(50))
+        .switchMap( () => {
+            const timeData = timeDataSelector(getState()) || {};
+            const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain
+                // when data is already fully downloaded, no need to refresh, except if the mapSync is active
+                && (isTimeDomainInterval(timeData[id].domain)) || isMapSync(getState()));
+            // update range data for every layer that need to sync with histogram/domain
+            return Rx.Observable.merge(
+                ...layerIds.map(id =>
+                    loadRangeData(id, timeData[id], getState).map(({ range, histogram, domain }) => rangeDataLoaded(
+                        id,
+                        range,
+                        histogram,
+                        domain
+                    ))
+                        .startWith(timeDataLoading(id, true))
+                        .catch(() => Rx.Observable.of(error({
+                            uid: "error_with_timeline_update",
+                            title: "timeline.errors.multidim_error_title",
+                            message: "timeline.errors.multidim_error_message"
+                        })))
+                        .concat( Rx.Observable.of(timeDataLoading(id, false)))
+                ));
 
-            })
+        });
+
+export default {
+    setTimelineCurrentTime,
+    setupTimelineExistingSettings,
+    settingInitialOffsetValue,
+    updateRangeDataOnRangeChange
 };

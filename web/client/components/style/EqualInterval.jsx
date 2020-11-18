@@ -21,7 +21,7 @@ const ColorRampItem = require('./EqualIntervalComponents/ColorRampItem');
 const colorsSchema = require("./EqualIntervalComponents/ColorRamp");
 const colors = require("./EqualIntervalComponents/ExtendColorBrewer");
 
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 const Button = require('../misc/Button').default;
 
 class EqualInterval extends React.Component {

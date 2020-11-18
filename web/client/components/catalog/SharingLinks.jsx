@@ -9,12 +9,12 @@ const React = require('react');
 const PropTypes = require('prop-types');
 
 const SharingLink = require('./SharingLink');
-const Message = require('../I18N/Message');
+const Message = require('../I18N/Message').default;
 
 const {Popover, Glyphicon} = require('react-bootstrap');
 
 const Button = require('../misc/Button').default;
-const OverlayTrigger = require('../misc/OverlayTrigger');
+const OverlayTrigger = require('../misc/OverlayTrigger').default;
 
 class SharingLinks extends React.Component {
     static propTypes = {

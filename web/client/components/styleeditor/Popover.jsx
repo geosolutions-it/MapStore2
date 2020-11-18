@@ -261,63 +261,63 @@ export function ControlledPopover({
 
     return (
         <>
-        <div
-            className="ms-popover"
-            ref={swatch}>
-            {cloneElement(children, {
-                onClick: (event) => {
-                    event.stopPropagation();
-                    const newOpen = !open;
-                    onOpen(newOpen);
-                }
-            })}
-        </div>
-        {containerNode && open
-            ? createPortal(
-                <div
-                    className="ms-popover-overlay"
-                    ref={overlay}
-                    style={{
-                        position: 'fixed',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '100%',
-                        height: '100%',
-                        top: 0,
-                        left: 0,
-                        pointerEvents: 'none',
-                        ...styles?.overlay
-                    }}>
+            <div
+                className="ms-popover"
+                ref={swatch}>
+                {cloneElement(children, {
+                    onClick: (event) => {
+                        event.stopPropagation();
+                        const newOpen = !open;
+                        onOpen(newOpen);
+                    }
+                })}
+            </div>
+            {containerNode && open
+                ? createPortal(
                     <div
+                        className="ms-popover-overlay"
+                        ref={overlay}
                         style={{
-                            position: 'absolute',
+                            position: 'fixed',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             width: '100%',
                             height: '100%',
                             top: 0,
-                            left: 0
-                        }}
-                    />
-                    <div
-                        ref={popover}
-                        style={{
-                            pointerEvents: 'auto',
-                            ...styles?.picker
+                            left: 0,
+                            pointerEvents: 'none',
+                            ...styles?.overlay
                         }}>
-                        {content}
-                    </div>
-                    <div
-                        className="ms-popover-arrow"
-                        style={{
-                            position: 'absolute',
-                            borderTop: `${margin - 1}px solid transparent`,
-                            borderBottom: `${margin - 1}px solid transparent`,
-                            borderRight: `${margin - 1}px solid #ffffff`,
-                            filter: 'drop-shadow(-4px 2px 4px rgba(0, 0, 0, 0.2))',
-                            ...styles?.arrow
-                        }}/>
-                </div>, containerNode)
-            : null }
+                        <div
+                            style={{
+                                position: 'absolute',
+                                width: '100%',
+                                height: '100%',
+                                top: 0,
+                                left: 0
+                            }}
+                        />
+                        <div
+                            ref={popover}
+                            style={{
+                                pointerEvents: 'auto',
+                                ...styles?.picker
+                            }}>
+                            {content}
+                        </div>
+                        <div
+                            className="ms-popover-arrow"
+                            style={{
+                                position: 'absolute',
+                                borderTop: `${margin - 1}px solid transparent`,
+                                borderBottom: `${margin - 1}px solid transparent`,
+                                borderRight: `${margin - 1}px solid #ffffff`,
+                                filter: 'drop-shadow(-4px 2px 4px rgba(0, 0, 0, 0.2))',
+                                ...styles?.arrow
+                            }}/>
+                    </div>, containerNode)
+                : null }
         </>
     );
 }

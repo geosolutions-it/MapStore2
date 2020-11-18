@@ -10,10 +10,10 @@ const PropTypes = require('prop-types');
 const Rx = require('rxjs');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils').default;
 const ClickUtils = require('../../../utils/cesium/ClickUtils');
-const mapUtils = require('../../../utils/MapUtils');
-const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+const {ZOOM_TO_EXTENT_HOOK, registerHook} = require('../../../utils/MapUtils');
+const {reprojectBbox} = require('../../../utils/CoordinatesUtils');
 
 const assign = require('object-assign');
 const {throttle} = require('lodash');
@@ -51,7 +51,9 @@ class CesiumMap extends React.Component {
         standardHeight: 512,
         zoomToHeight: 80000000,
         registerHooks: true,
-        hookRegister: mapUtils,
+        hookRegister: {
+            registerHook
+        },
         viewerOptions: {
             orientation: {
                 heading: 0,
@@ -333,9 +335,9 @@ class CesiumMap extends React.Component {
         this.pauserStream$ = pauserStream$;
     };
     registerHooks = () => {
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
+        this.props.hookRegister.registerHook(ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
             // TODO: manage padding and maxZoom
-            const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');
+            const bounds = reprojectBbox(extent, crs, 'EPSG:4326');
             if (this.map.camera.flyTo) {
                 const rectangle = Cesium.Rectangle.fromDegrees(
                     bounds[0], // west,

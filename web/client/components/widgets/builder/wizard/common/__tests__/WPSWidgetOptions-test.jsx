@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {get} = require('lodash');
-const describeStates = require('../../../../../../test-resources/wfs/describe-states.json');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
-const wfsChartOptions = require('../wfsChartOptions');
-const WPSWidgetOptions = wfsChartOptions(require('../WPSWidgetOptions'));
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {get} from 'lodash';
+import describeStates from '../../../../../../test-resources/wfs/describe-states.json';
+import ReactTestUtils from 'react-dom/test-utils';
+import expect from 'expect';
+import wfsChartOptions from '../wfsChartOptions';
+import BasePanel from '../WPSWidgetOptions';
+const WPSWidgetOptions = wfsChartOptions(BasePanel);
 describe('WPSWidgetOptions component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -56,20 +57,6 @@ describe('WPSWidgetOptions component', () => {
         ReactTestUtils.Simulate.change(inputs[4]);
         expect(spyonChange.calls[3].arguments[0]).toBe("legend");
         expect(spyonChange.calls[3].arguments[1]).toBe(true);
-
-        ReactTestUtils.Simulate.change(inputs[6]);
-        expect(spyonChange.calls[4].arguments[0]).toBe("cartesian");
-        expect(spyonChange.calls[4].arguments[1]).toBe(false);
-
-        ReactTestUtils.Simulate.change(inputs[7]);
-        expect(spyonChange.calls[5].arguments[0]).toBe("yAxis");
-        expect(spyonChange.calls[5].arguments[1]).toBe(true);
-
-        ReactTestUtils.Simulate.change(inputs[8], { target: { value: 'Y axis label' } });
-        expect(spyonChange.calls[6].arguments[0]).toBe("yAxisLabel");
-        expect(spyonChange.calls[6].arguments[1]).toBe("Y axis label");
-
-
     });
     it('Test WPSWidgetOptions onChange for counter context', () => {
         const actions = {
@@ -122,7 +109,7 @@ describe('WPSWidgetOptions component', () => {
         const slider = document.getElementsByClassName('mapstore-slider');
         expect(slider).toExist();
         const tooltip = document.getElementsByClassName('noUi-tooltip')[0];
-        expect(tooltip.innerText).toBe("45");
+        expect(tooltip.innerText).toBe("45°");
 
     });
 });

@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 
-import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
+import {testEpic} from './epicTestUtils';
 
 import {
     loadMediaEditorDataEpic,
@@ -18,7 +18,8 @@ import {
     reloadMediaResources,
     importInLocalSource,
     editRemoteMap,
-    removeMediaEpic
+    removeMediaEpic,
+    updateSelectedItem
 } from '../mediaEditor';
 import {
     show as showMapEditor,
@@ -39,7 +40,10 @@ import {
     SELECT_ITEM,
     UPDATE_ITEM,
     LOAD_MEDIA,
-    SET_MEDIA_SERVICE
+    SET_MEDIA_SERVICE,
+    LOADING_MEDIA_LIST,
+    selectItem,
+    LOADING_SELECTED_MEDIA
 } from '../../actions/mediaEditor';
 
 describe('MediaEditor Epics', () => {
@@ -50,7 +54,7 @@ describe('MediaEditor Epics', () => {
         const mediaType = "image";
         const resultData = {
             resources: [{id: "resId", type: "image"}],
-            totalCount: 1
+            totalCount: 2
         };
         const sourceId = "geostory";
         testEpic(loadMediaEditorDataEpic, NUM_ACTIONS, loadMedia(params, mediaType, sourceId), (actions) => {
@@ -62,6 +66,8 @@ describe('MediaEditor Epics', () => {
                     expect(a.mediaType).toEqual(mediaType);
                     expect(a.sourceId).toEqual(sourceId);
                     expect(a.resultData).toEqual(resultData);
+                    break;
+                case LOADING_MEDIA_LIST:
                     break;
                 default: expect(true).toEqual(false);
                     break;
@@ -78,25 +84,34 @@ describe('MediaEditor Epics', () => {
             },
             mediaEditor: {
                 settings: {
-                    sourceId
+                    sourceId,
+                    sources: {
+                        [sourceId]: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });
     });
     it('loadMediaEditorDataEpic with show and 0 resources', (done) => {
-        const NUM_ACTIONS = 1;
+        const NUM_ACTIONS = 2;
         const sourceId = "geostory";
-        testEpic(addTimeoutEpic(loadMediaEditorDataEpic, 10), NUM_ACTIONS, show("geostory"), (actions) => {
+        testEpic(loadMediaEditorDataEpic, NUM_ACTIONS, show("geostory"), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
-                case TEST_TIMEOUT:
-                    done();
+                case LOAD_MEDIA_SUCCESS:
+                    expect(a.resultData.resources).toEqual([]);
+                    expect(a.resultData.totalCount).toEqual(0);
+                    break;
+                case LOADING_MEDIA_LIST:
                     break;
                 default: expect(true).toEqual(false);
                     break;
                 }
             });
+            done();
         }, {
             geostory: {
                 currentStory: {
@@ -105,7 +120,12 @@ describe('MediaEditor Epics', () => {
             },
             mediaEditor: {
                 settings: {
-                    sourceId
+                    sourceId,
+                    sources: {
+                        [sourceId]: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });
@@ -144,7 +164,12 @@ describe('MediaEditor Epics', () => {
                 },
                 selected: "id",
                 settings: {
-                    sourceId: "geostory"
+                    sourceId: "geostory",
+                    sources: {
+                        geostory: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });
@@ -190,7 +215,12 @@ describe('MediaEditor Epics', () => {
                 },
                 selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
                 settings: {
-                    sourceId: "geostory"
+                    sourceId: "geostory",
+                    sources: {
+                        geostory: {
+                            type: 'geostory'
+                        }
+                    }
                 }
             }
         });
@@ -422,7 +452,12 @@ describe('MediaEditor Epics', () => {
             mediaEditor: {
                 settings: {
                     sourceId,
-                    mediaType: "image"
+                    mediaType: "image",
+                    sources: {
+                        [sourceId]: {
+                            type: 'geostory'
+                        }
+                    }
                 },
                 selected: "resId"
             }
@@ -441,6 +476,8 @@ describe('MediaEditor Epics', () => {
                 case LOAD_MEDIA_SUCCESS:
                     expect(a.sourceId).toEqual(sourceId);
                     expect(a.resultData.totalCount).toEqual(0);
+                    break;
+                case LOADING_MEDIA_LIST:
                     break;
                 default: expect(true).toEqual(false);
                     break;
@@ -513,6 +550,29 @@ describe('MediaEditor Epics', () => {
                             type: 'geostore',
                             baseURL: 'rest/geostore/',
                             category: 'MAP'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    it('should look for getData api hook updateSelectedItem', (done) => {
+        const NUM_ACTIONS = 2;
+        const id = 'id';
+        testEpic(updateSelectedItem, NUM_ACTIONS, selectItem(id), (actions) => {
+            expect(actions.map(({ type }) => type)).toEqual([
+                LOADING_SELECTED_MEDIA, // true
+                LOADING_SELECTED_MEDIA // false
+            ]);
+            done();
+        }, {
+            mediaEditor: {
+                settings: {
+                    sourceId: 'geostory',
+                    sources: {
+                        geostory: {
+                            type: 'geostory'
                         }
                     }
                 }

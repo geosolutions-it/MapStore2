@@ -25,6 +25,7 @@ const showMapSaveAsSelector = state => state.controls && state.controls.mapSaveA
  * Plugin for Create/Clone a Map. Saves the map as a new Resource (using the persistence API).
  * @prop {boolean} [cfg.disablePermission=false] disable the permission selector in the tool. Can be used in context when permissions are not needed (resources are private only/using plugin with another API)
  * @name SaveAs
+ * @class
  * @memberof plugins
  */
 export default createPlugin('SaveAs', {

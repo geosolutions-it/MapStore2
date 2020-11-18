@@ -8,7 +8,7 @@
 import { isString, isNil } from 'lodash';
 import { Observable } from 'rxjs';
 
-import MapInfoUtils from '../utils/MapInfoUtils';
+import {getIdentifyFlow} from '../utils/MapInfoUtils';
 import axios from '../libs/ajax';
 import {parseURN} from '../utils/CoordinatesUtils';
 
@@ -26,8 +26,8 @@ import {parseURN} from '../utils/CoordinatesUtils';
  */
 export const getFeatureInfo = (basePath, param, layer, {attachJSON, itemId = null} = {}) => {
     const defaultIdentifyFlow = (params) => Observable.defer(() => axios.get(basePath, { params }));
-    const specificIdentifyFlow = (params) => MapInfoUtils.getIdentifyFlow(layer, basePath, params);
-    const retrieveFlow = MapInfoUtils.getIdentifyFlow(layer, basePath, param)
+    const specificIdentifyFlow = (params) => getIdentifyFlow(layer, basePath, params);
+    const retrieveFlow = getIdentifyFlow(layer, basePath, param)
         ? specificIdentifyFlow
         : defaultIdentifyFlow;
     // TODO: We should move MapInfoUtils parts of the API here, with specific implementations.

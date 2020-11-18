@@ -5,16 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
-const FileUtils = require('../FileUtils');
-const axios = require('../../libs/ajax');
+import expect from 'expect';
+
+import {readJson, readZip, checkShapePrj} from '../FileUtils';
+import axios from '../../libs/ajax';
 
 describe('FilterUtils', () => {
     it('Test read local json file', (done) => {
         const jsonFile = new File(["[]"], "file.json", {
             type: "application/json"
         });
-        FileUtils.readJson(jsonFile).then((res) => {
+        readJson(jsonFile).then((res) => {
             expect(res instanceof Array).toBe(true);
             done();
         });
@@ -22,8 +23,8 @@ describe('FilterUtils', () => {
 
     it('checkShapePrj', (done) => {
         axios.get("base/web/client/test-resources/TestShape.zip", { responseType: "blob" }).then(({data}) => {
-            FileUtils.readZip(data).then((buffer) => {
-                FileUtils.checkShapePrj(buffer).then((warnings) => {
+            readZip(data).then((buffer) => {
+                checkShapePrj(buffer).then((warnings) => {
                     expect(warnings.length).toBe(1);
                     done();
                 });

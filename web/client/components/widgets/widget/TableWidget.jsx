@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Message = require('../../I18N/Message');
+const Message = require('../../I18N/Message').default;
 const BorderLayout = require('../../layout/BorderLayout');
 const LoadingSpinner = require('../../misc/LoadingSpinner');
 const EmptyRowsView = require('../../data/featuregrid/EmptyRowsView');
@@ -65,7 +65,7 @@ module.exports = getWidgetFilterRenderers(({
             <FeatureGrid
                 emptyRowsView={() => <EmptyRowsView loading={loading} />}
                 gridEvents={gridEvents}
-                sortable={false}
+                sortable
                 defaultSize={false}
                 columnSettings={columnSettings}
                 pageEvents={pageEvents}
