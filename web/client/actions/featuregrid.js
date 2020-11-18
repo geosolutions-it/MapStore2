@@ -73,7 +73,7 @@ export function hideSyncPopover() {
         type: HIDE_SYNC_POPOVER
     };
 }
-export function fatureGridQueryResult(features, pages) {
+export function featureGridQueryResult(features, pages) {
     return {
         type: GRID_QUERY_RESULT,
         features, pages

@@ -90,7 +90,7 @@ import {
     STOP_SYNC_WMS,
     startSyncWMS,
     storeAdvancedSearchFilter,
-    fatureGridQueryResult,
+    featureGridQueryResult,
     LOAD_MORE_FEATURES,
     SET_TIME_SYNC,
     updateFilter,
@@ -348,7 +348,7 @@ export const featureGridSort = (action$, store) =>
                 queryOptionsSelector(store.getState())
             ))
                 .merge(action$.ofType(QUERY_RESULT)
-                    .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                    .map((ra) => featureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
                     .takeUntil(action$.ofType(QUERY_ERROR))
                     .take(1)
                 )
@@ -572,7 +572,7 @@ export const featureGridChangePage = (action$, store) =>
                         features = selectedFeaturesSelector(store.getState());
                     }
                     // TODO: Handle pagination when multi-select due to control
-                    return fatureGridQueryResult(features, [get(ra, "filterObj.pagination.startIndex")]);
+                    return featureGridQueryResult(features, [get(ra, "filterObj.pagination.startIndex")]);
                 })
                 .take(1)
                 .takeUntil(action$.ofType(QUERY_ERROR))
@@ -599,7 +599,7 @@ export const featureGridReloadPageOnSaveSuccess = (action$, store) =>
             refreshLayerVersion(selectedLayerIdSelector(store.getState()))
         )
             .merge(action$.ofType(QUERY_RESULT)
-                .map((ra) => Rx.Observable.of(clearChanges(), fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                .map((ra) => Rx.Observable.of(clearChanges(), featureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
                 )
                 .mergeAll()
                 .takeUntil(action$.ofType(QUERY_ERROR))
@@ -1050,7 +1050,7 @@ export const virtualScrollLoadFeatures = (action$, {getState}) =>
                             { endPage, startPage },
                             { pages: oldPages, features: oldFeatures || [] },
                             { size, startIndex, maxStoredPages});
-                        return fatureGridQueryResult(features, pages);
+                        return featureGridQueryResult(features, pages);
                     }).take(1).takeUntil(action$.ofType(QUERY_ERROR))
                 ).merge(
                     action$.ofType(FEATURE_LOADING).filter(() => nPs.length > 0)
