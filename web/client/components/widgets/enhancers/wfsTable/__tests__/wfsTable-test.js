@@ -15,7 +15,7 @@ import { createSink, setObservableConfig } from 'recompose';
 import axios from "../../../../../libs/ajax";
 import wfsTable from '../index';
 
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
 let mockAxios;
 
