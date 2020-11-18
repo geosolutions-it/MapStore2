@@ -5,15 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
 
-const SharingLink = require('./SharingLink');
-const Message = require('../I18N/Message').default;
-
-const {Popover, Button, Glyphicon} = require('react-bootstrap');
-
-const OverlayTrigger = require('../misc/OverlayTrigger').default;
+import PropTypes from 'prop-types';
+import SharingLink from './SharingLink';
+import Message from '../I18N/Message';
+import { Popover, Button, Glyphicon } from 'react-bootstrap';
+import OverlayTrigger from '../misc/OverlayTrigger';
 
 class SharingLinks extends React.Component {
     static propTypes = {
@@ -46,4 +44,4 @@ class SharingLinks extends React.Component {
     }
 }
 
-module.exports = SharingLinks;
+export default SharingLinks;

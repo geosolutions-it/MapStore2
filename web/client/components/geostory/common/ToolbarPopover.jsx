@@ -6,12 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {
-    Popover,
-    OverlayTrigger
-} = require('react-bootstrap');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Popover, OverlayTrigger } from 'react-bootstrap';
 
 /**
  * Toolbar for AddBar.

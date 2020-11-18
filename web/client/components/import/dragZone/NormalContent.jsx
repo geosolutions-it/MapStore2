@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const { Glyphicon } = require('react-bootstrap');
-const DropText = require('./DropText');
+import React from 'react';
+
+import { Glyphicon } from 'react-bootstrap';
+import DropText from './DropText';
 
 
-module.exports = (props) => (<div>
+export default (props) => (<div>
     <div>
         <Glyphicon
             glyph="upload"

@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
-const ContainerDimensions = require('react-container-dimensions').default;
-const Loader = require('./Loader');
+import ContainerDimensions from 'react-container-dimensions';
+import Loader from './Loader';
 
 /**
  * Default Loading View component
@@ -19,7 +19,7 @@ const Loader = require('./Loader');
  * @param  {String} [className="loader-container"] className for the container
  * @param  {Object} [contentStyle={}}]             object to customize content style
  */
-module.exports = ({width: ww, height: hh, className = "loader-container", contentStyle = {}}) => (<div className={className} >
+export default ({width: ww, height: hh, className = "loader-container", contentStyle = {}}) => (<div className={className} >
     <ContainerDimensions>
         {({width = 200, height = 200}) => {
             const w = ww || (height > 0 ? Math.min(width, height) : width);

@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Dock = require('react-dock').default;
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import Dock from 'react-dock';
+import PropTypes from 'prop-types';
 
 /**
  * Component for rendering a dockablePanel panel.
@@ -110,4 +111,4 @@ class DockablePanel extends React.Component {
     };
 }
 
-module.exports = DockablePanel;
+export default DockablePanel;

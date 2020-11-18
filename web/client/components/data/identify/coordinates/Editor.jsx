@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const CoordinatesRow = require('../../../misc/coordinateeditors/CoordinatesRow');
-const {isEmpty} = require('lodash');
+import React from 'react';
+
+import CoordinatesRow from '../../../misc/coordinateeditors/CoordinatesRow';
+import { isEmpty } from 'lodash';
 
 const Editor = (props) => (
     <CoordinatesRow
@@ -36,4 +37,4 @@ const Editor = (props) => (
         removeVisible={false}
     />);
 
-module.exports = Editor;
+export default Editor;

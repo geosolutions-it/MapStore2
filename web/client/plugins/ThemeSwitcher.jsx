@@ -6,19 +6,22 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {connect} = require('react-redux');
-const {selectTheme} = require('../actions/theme');
-const assign = require('object-assign');
-const themes = require('../themes');
+import assign from 'object-assign';
+import { connect } from 'react-redux';
+
+import { selectTheme } from '../actions/theme';
+import ThemeSwitcher from '../components/theme/ThemeSwitcher';
+import theme from '../reducers/theme';
+import themes from '../themes';
 
 const ThemeSwitcherPlugin = connect((s) => ({
     selectedTheme: s && s.theme && s.theme.selectedTheme || themes[0],
     themes
 }), {
     onThemeSelected: selectTheme
-})(require('../components/theme/ThemeSwitcher'));
+})(ThemeSwitcher);
 
-module.exports = {
+export default {
     ThemeSwitcherPlugin: assign(ThemeSwitcherPlugin, {
         GridContainer: {
             id: 'themeSwitcher',
@@ -29,6 +32,6 @@ module.exports = {
         }
     }),
     reducers: {
-        theme: require('../reducers/theme').default
+        theme
     }
 };

@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import expect from 'expect';
+import {isString} from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
-import expect from 'expect';
-import {isString} from 'lodash';
+
 import wpsChart from '../wpsChart';
 
 describe('wpsChart enhancer', () => {

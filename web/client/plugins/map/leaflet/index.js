@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-module.exports = {
+export default {
     LMap: require('../../../components/map/leaflet/Map'),
     Layer: require('../../../components/map/leaflet/Layer'),
     Feature: require('../../../components/map/leaflet/Feature'),

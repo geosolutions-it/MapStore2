@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Toolbar = require('../misc/toolbar/Toolbar');
+import React from 'react';
 
-require('./css/previewbutton.css');
+import PropTypes from 'prop-types';
+import Toolbar from '../misc/toolbar/Toolbar';
+import './css/previewbutton.css';
 
 class PreviewButton extends React.Component {
     static propTypes = {
@@ -65,4 +65,4 @@ class PreviewButton extends React.Component {
     }
 }
 
-module.exports = PreviewButton;
+export default PreviewButton;

@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const API = require('../SLDService');
+import expect from 'expect';
+
+import API from '../SLDService';
 
 const layer = {
     url: 'http://localhost:8080/geoserver/wms',

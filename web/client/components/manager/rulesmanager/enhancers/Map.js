@@ -5,10 +5,11 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const {compose, withStateHandlers, defaultProps, withPropsOnChange, withProps} = require("recompose");
-const {getCenterForExtent, getZoomForExtent} = require("../../../../utils/MapUtils");
-const {reprojectBbox} = require("../../../../utils/CoordinatesUtils");
-const {isEmpty} = require("lodash");
+import { compose, withStateHandlers, defaultProps, withPropsOnChange, withProps } from 'recompose';
+
+import { getCenterForExtent, getZoomForExtent } from '../../../../utils/MapUtils';
+import { reprojectBbox } from '../../../../utils/CoordinatesUtils';
+import { isEmpty } from 'lodash';
 const defaultBaseLayer = {
     group: "background",
     id: "mapnik__0",
@@ -22,7 +23,7 @@ const defaultBaseLayer = {
 };
 
 
-module.exports = compose(
+export default compose(
     defaultProps({
         onMapReady: () => {},
         baseLayer: defaultBaseLayer

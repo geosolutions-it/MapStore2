@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { urlParts } = require('../utils/URLUtils');
-const url = require('url');
-const { sortBy, head, castArray, isNumber, isString, uniq } = require('lodash');
-const assign = require('object-assign');
-const chroma = require('chroma-js');
-const {getLayerUrl} = require('../utils/LayersUtils');
+import { urlParts } from '../utils/URLUtils';
+
+import url from 'url';
+import { sortBy, head, castArray, isNumber, isString, uniq } from 'lodash';
+import assign from 'object-assign';
+import chroma from 'chroma-js';
+import { getLayerUrl } from '../utils/LayersUtils';
 
 const supportedColorBrewer = uniq(Object.keys(chroma.brewer).map((key) => key.toLocaleLowerCase()))
     .map((key) => ({
@@ -462,4 +463,4 @@ const API = {
     }
 };
 
-module.exports = API;
+export default API;

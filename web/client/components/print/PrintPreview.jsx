@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,10 +7,10 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
 
-const {Button, Glyphicon} = require('react-bootstrap');
-const {Document, Page} = require('react-pdf');
+import { Button, Glyphicon } from 'react-bootstrap';
+import { Document, Page } from 'react-pdf';
 
 class PrintPreview extends React.Component {
     static propTypes = {
@@ -109,4 +110,4 @@ class PrintPreview extends React.Component {
     };
 }
 
-module.exports = PrintPreview;
+export default PrintPreview;

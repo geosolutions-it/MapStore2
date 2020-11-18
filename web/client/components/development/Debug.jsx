@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var url = require('url');
+import React from 'react';
+
+import url from 'url';
 if (!global.Symbol) {
     require("babel-polyfill");
 }
@@ -26,4 +27,4 @@ class Debug extends React.Component {
     }
 }
 
-module.exports = Debug;
+export default Debug;

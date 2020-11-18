@@ -6,41 +6,88 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const {connect} = require('../utils/PluginsUtils');
-const assign = require('object-assign');
-const Message = require('../components/I18N/Message').default;
-const PropTypes = require('prop-types');
+import React from 'react';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import { Glyphicon } from 'react-bootstrap';
+import { createSelector } from 'reselect';
+import isEmpty from 'lodash/isEmpty';
+import ContainerDimensions from 'react-container-dimensions';
+import Dock from 'react-dock';
 
-const {Glyphicon} = require('react-bootstrap');
-const {on, toggleControl} = require('../actions/controls');
-const {createSelector} = require('reselect');
-const isEmtpy = require('lodash/isEmpty');
+import { createPlugin, connect } from '../utils/PluginsUtils';
+import Message from '../components/I18N/Message';
+import { on, toggleControl } from '../actions/controls';
+import AnnotationsEditorComp from '../components/mapcontrols/annotations/AnnotationsEditor';
+import AnnotationsComp from '../components/mapcontrols/annotations/Annotations';
+import annotationsReducer from '../reducers/annotations';
+import {
+    cancelRemoveAnnotation,
+    confirmRemoveAnnotation,
+    editAnnotation,
+    newAnnotation,
+    removeAnnotation,
+    cancelEditAnnotation,
+    saveAnnotation,
+    toggleAdd,
+    validationError,
+    removeAnnotationGeometry,
+    toggleStyle,
+    setStyle,
+    restoreStyle,
+    highlight,
+    cleanHighlight,
+    showAnnotation,
+    cancelShowAnnotation,
+    filterAnnotations,
+    closeAnnotations,
+    cancelCloseAnnotations,
+    confirmCloseAnnotations,
+    startDrawing,
+    setUnsavedChanges,
+    toggleUnsavedChangesModal,
+    changedProperties,
+    setUnsavedStyle,
+    toggleUnsavedStyleModal,
+    addText,
+    download,
+    loadAnnotations,
+    changeSelected,
+    resetCoordEditor,
+    changeRadius,
+    changeText,
+    toggleUnsavedGeometryModal,
+    addNewFeature,
+    setInvalidSelected,
+    highlightPoint,
+    confirmDeleteFeature,
+    toggleDeleteFtModal,
+    changeFormat,
+    openEditor,
+    updateSymbols,
+    setErrorSymbol,
+    toggleVisibilityAnnotation,
+    loadDefaultStyles,
+    changeGeometryTitle,
+    filterMarker,
+    toggleShowAgain,
+    hideMeasureWarning,
+    initPlugin,
+    geometryHighlight,
+    unSelectFeature
+} from '../actions/annotations';
 
-const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
-    saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
-    highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
-    cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, setUnsavedChanges, toggleUnsavedChangesModal,
-    changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
-    changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
-    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
-    setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles, changeGeometryTitle, filterMarker, toggleShowAgain, hideMeasureWarning,
-    initPlugin, geometryHighlight, unSelectFeature
-} = require('../actions/annotations');
-const annotationsEpics = require('../epics/annotations').default;
-const {selectFeatures} = require('../actions/draw');
-const {setAnnotationMeasurement} = require('../actions/measurement');
-
-const { zoomToExtent } = require('../actions/map');
-
-const { annotationsInfoSelector, annotationsListSelector } = require('../selectors/annotations');
-const { mapLayoutValuesSelector } = require('../selectors/maplayout');
+import annotationsEpics from '../epics/annotations';
+import { selectFeatures } from '../actions/draw';
+import { setAnnotationMeasurement } from '../actions/measurement';
+import { zoomToExtent } from '../actions/map';
+import { annotationsInfoSelector, annotationsListSelector } from '../selectors/annotations';
+import { mapLayoutValuesSelector } from '../selectors/maplayout';
 const commonEditorActions = {
     onUpdateSymbols: updateSymbols,
     onSetErrorSymbol: setErrorSymbol,
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
-    onChangePointType: changePointType,
     onChangeFormat: changeFormat,
     onConfirmDeleteFeature: confirmDeleteFeature,
     onCleanHighlight: cleanHighlight,
@@ -90,13 +137,13 @@ const AnnotationsEditor = connect(annotationsInfoSelector,
     {
         onCancel: cancelShowAnnotation,
         ...commonEditorActions
-    })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
+    })(AnnotationsEditorComp);
 
 const AnnotationsInfoViewer = connect(annotationsInfoSelector,
     {
         ...commonEditorActions,
         onEdit: openEditor
-    })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
+    })(AnnotationsEditorComp);
 
 const panelSelector = createSelector([annotationsListSelector], (list) => ({
     ...list,
@@ -124,10 +171,7 @@ const Annotations = connect(panelSelector, {
     onZoom: zoomToExtent,
     onLoadAnnotations: loadAnnotations,
     onLoadDefaultStyles: loadDefaultStyles
-})(require('../components/mapcontrols/annotations/Annotations'));
-
-const ContainerDimensions = require('react-container-dimensions').default;
-const Dock = require('react-dock').default;
+})(AnnotationsComp);
 
 class AnnotationsPanel extends React.Component {
     static propTypes = {
@@ -229,15 +273,15 @@ const annotationsSelector = createSelector([
 ], (active, dockStyle, list) => ({
     active,
     dockStyle,
-    width: !isEmtpy(list?.selected) ? 660 : 330
+    width: !isEmpty(list?.selected) ? 660 : 330
 }));
 
 const AnnotationsPlugin = connect(annotationsSelector, {
     toggleControl: conditionalToggle
 })(AnnotationsPanel);
 
-module.exports = {
-    AnnotationsPlugin: assign(AnnotationsPlugin, {
+export default createPlugin('Annotations', {
+    component: assign(AnnotationsPlugin, {
         disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }"
     }, {
         BurgerMenu: {
@@ -251,7 +295,7 @@ module.exports = {
         }
     }),
     reducers: {
-        annotations: require('../reducers/annotations').default
+        annotations: annotationsReducer
     },
     epics: annotationsEpics(AnnotationsInfoViewer)
-};
+});

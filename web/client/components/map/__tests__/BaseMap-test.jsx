@@ -11,7 +11,6 @@ import expect from 'expect';
 
 import BaseMap from '../BaseMap';
 import mapType from '../enhancers/mapType';
-
 const TestMap = mapType(BaseMap);
 
 const LAYER_OSM = {

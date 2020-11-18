@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const BootstrapReact = require('react-bootstrap');
-const Badge = BootstrapReact.Badge;
-const PropTypes = require('prop-types');
 
-const {isString} = require('lodash');
-const {getMessageById} = require('../../utils/LocaleUtils');
+import { isString } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {Badge} from 'react-bootstrap';
+
+import { getMessageById } from '../../utils/LocaleUtils';
 
 /**
  * A badge to show that there is a help text available for the parent component.
@@ -58,4 +58,4 @@ class HelpBadge extends React.Component {
     }
 }
 
-module.exports = HelpBadge;
+export default HelpBadge;

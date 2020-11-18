@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
 
-const {ConfirmDelete, ConfirmFeatureClose, ConfirmClear} = require('../dialog');
-const expect = require('expect');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import { ConfirmClear, ConfirmDelete, ConfirmFeatureClose } from '../dialog';
 
 describe('FeatureGrid confirm dialogs', () => {
     beforeEach((done) => {

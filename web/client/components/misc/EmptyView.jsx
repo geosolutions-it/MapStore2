@@ -5,9 +5,9 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const React = require('react');
+import React from 'react';
 
-const FitIcon = require('./FitIcon');
+import FitIcon from './FitIcon';
 
 /**
  * A component to display an empty page.
@@ -23,7 +23,7 @@ const FitIcon = require('./FitIcon');
  * @param  {string|node} [description]         The description to display
  * @param  {string|node} [content]             Additional content for the empty view (e.g. buttons...)
  */
-module.exports = ({
+export default ({
     style = {},
     mainViewStyle = {},
     contentStyle = {},

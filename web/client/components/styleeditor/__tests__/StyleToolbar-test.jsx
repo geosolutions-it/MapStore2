@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const StyleToolbar = require('../StyleToolbar');
-const expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import StyleToolbar from '../StyleToolbar';
+import expect from 'expect';
 
 describe('test StyleToolbar module component', () => {
     beforeEach((done) => {

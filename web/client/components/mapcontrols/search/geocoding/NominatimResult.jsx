@@ -1,4 +1,5 @@
-var PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,7 +8,7 @@ var PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
+import React from 'react';
 
 
 class NominatimResult extends React.Component {
@@ -35,4 +36,4 @@ class NominatimResult extends React.Component {
     }
 }
 
-module.exports = NominatimResult;
+export default NominatimResult;

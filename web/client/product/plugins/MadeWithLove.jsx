@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const MadeWithLove = require('../components/viewer/MadeWithLove');
+import MadeWithLove from '../components/viewer/MadeWithLove';
 
-module.exports = {
+export default {
     MadeWithLovePlugin: MadeWithLove,
     reducers: {}
 };

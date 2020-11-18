@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var I18N = require('../../../../components/I18N/I18N');
-var gsLogo = require('../../../assets/img/geosolutions-brand.png');
-var msLogo = require('../../../assets/img/mapstore-logo-0.20.png');
+import React from 'react';
+
+import I18N from '../../../../components/I18N/I18N';
+import gsLogo from '../../../assets/img/geosolutions-brand.png';
+import msLogo from '../../../assets/img/mapstore-logo-0.20.png';
 
 class About extends React.Component {
     render() {
@@ -52,4 +53,4 @@ class About extends React.Component {
     }
 }
 
-module.exports = About;
+export default About;

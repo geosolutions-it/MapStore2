@@ -1,4 +1,4 @@
-const {compose, withStateHandlers} = require('recompose');
+import { compose, withStateHandlers } from 'recompose';
 
 const addState = compose(
     withStateHandlers((props) => ({
@@ -51,4 +51,4 @@ const addState = compose(
 );
 
 
-module.exports = addState;
+export default addState;

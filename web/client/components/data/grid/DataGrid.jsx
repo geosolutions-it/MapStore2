@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const PropTypes = require('prop-types');
-const Grid = require('react-data-grid');
-const ReactDOM = require('react-dom');
+import PropTypes from 'prop-types';
+
+import Grid from 'react-data-grid';
+import ReactDOM from 'react-dom';
 
 class DataGrid extends Grid {
     static propTypes = {
@@ -80,4 +81,4 @@ class DataGrid extends Grid {
     }
 }
 
-module.exports = DataGrid;
+export default DataGrid;

@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {API} = require('../searchText');
-const axios = require('axios');
+import expect from 'expect';
+
+import { API } from '../searchText';
+import axios from 'axios';
 
 describe('Test correctness of the searchText APIs', () => {
 

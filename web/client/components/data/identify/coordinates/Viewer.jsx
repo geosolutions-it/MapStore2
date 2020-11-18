@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const { Row, Col } = require('react-bootstrap');
-const {isNil} = require('lodash');
-const NumberFormat = require('../../../I18N/Number');
-const decimalToAeronautical = require('../../../misc/coordinateeditors/enhancers/decimalToAeronautical');
+import React from 'react';
+
+import { Row, Col } from 'react-bootstrap';
+import { isNil } from 'lodash';
+import NumberFormat from '../../../I18N/Number';
+import decimalToAeronautical from '../../../misc/coordinateeditors/enhancers/decimalToAeronautical';
 
 /**
  * Format 1 decimal coordinate into degrees, minutes, seconds, direction format.
@@ -34,7 +35,7 @@ const AeronauticalCoordinate = decimalToAeronautical(({
  * Display coordinates in "decimal" or "aeronautical" formats.
  * TODO: maybe is better move formatting components in some common place.
  */
-module.exports = ({
+export default ({
     integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 0},
     decimalFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 4, minimumFractionDigits: 4},
     coordinate = {},

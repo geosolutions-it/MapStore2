@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const DropdownList = require('react-widgets').DropdownList;
-const {getMessageById} = require('../../utils/LocaleUtils');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import { DropdownList } from 'react-widgets';
+import { getMessageById } from '../../utils/LocaleUtils';
+import PropTypes from 'prop-types';
 
 class MarkNameSelector extends React.Component {
     static propTypes = {
@@ -45,4 +46,4 @@ class MarkNameSelector extends React.Component {
     }
 }
 
-module.exports = MarkNameSelector;
+export default MarkNameSelector;

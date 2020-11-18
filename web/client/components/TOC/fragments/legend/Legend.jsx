@@ -1,12 +1,24 @@
-const urlUtil = require('url');
-const PropTypes = require('prop-types');
-const React = require('react');
-const {isArray} = require('lodash');
+/**
+ * Copyright 2015, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const Message = require('../../../I18N/Message').default;
-const {clearNilValuesForParams, addAuthenticationToSLD, addAuthenticationParameter} = require('../../../../utils/SecurityUtils');
+import urlUtil from 'url';
 
-const assign = require('object-assign');
+import { isArray } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import {
+    addAuthenticationParameter,
+    addAuthenticationToSLD,
+    clearNilValuesForParams
+} from '../../../../utils/SecurityUtils';
+import Message from '../../../I18N/Message';
 
 class Legend extends React.Component {
     static propTypes = {
@@ -93,4 +105,4 @@ class Legend extends React.Component {
     }
 }
 
-module.exports = Legend;
+export default Legend;

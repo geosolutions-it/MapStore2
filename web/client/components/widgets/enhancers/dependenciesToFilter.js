@@ -5,27 +5,29 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, withPropsOnChange } = require('recompose');
-const { find, isEmpty} = require('lodash');
 
-const {getViewportGeometry} = require('../../../utils/CoordinatesUtils');
-const {toOGCFilterParts} = require('../../../utils/FilterUtils');
-const filterBuilder = require('../../../utils/ogc/Filter/FilterBuilder');
-const fromObject = require('../../../utils/ogc/Filter/fromObject');
-const { getDependencyLayerParams, composeFilterObject } = require('./utils');
-const { composeAttributeFilters } = require('../../../utils/FilterUtils');
+import { find, isEmpty } from 'lodash';
+import { compose, withPropsOnChange } from 'recompose';
+
+import { getViewportGeometry } from '../../../utils/CoordinatesUtils';
+import { composeAttributeFilters, toOGCFilterParts } from '../../../utils/FilterUtils';
+import { read } from '../../../utils/ogc/Filter/CQL/parser';
+import filterBuilder from '../../../utils/ogc/Filter/FilterBuilder';
+import fromObject from '../../../utils/ogc/Filter/fromObject';
+import { composeFilterObject, getDependencyLayerParams } from './utils';
+
 const getCqlFilter = (layer, dependencies) => {
     const params = getDependencyLayerParams(layer, dependencies);
     const cqlFilterKey = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
     return params && cqlFilterKey && params[cqlFilterKey];
 };
-const { read } = require('../../../utils/ogc/Filter/CQL/parser');
+
 const getLayerFilter = ({layerFilter} = {}) => layerFilter;
 
 /**
  * Merges filter object and dependencies map into an ogc filter
  */
-module.exports = compose(
+export default compose(
     withPropsOnChange(
         ({mapSync, geomProp, dependencies = {}, layer, quickFilters, options } = {}, nextProps = {}, filter) =>
             mapSync !== nextProps.mapSync

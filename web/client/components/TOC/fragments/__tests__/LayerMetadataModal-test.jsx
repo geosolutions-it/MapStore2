@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import { Promise } from 'es6-promise';
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 
-const LayerMetadataModal = require('../LayerMetadataModal');
-const RenderTemplate = require("../template/index");
-const expect = require('expect');
-const TestUtils = require('react-dom/test-utils');
-const {Promise} = require('es6-promise');
+import LayerMetadataModal from '../LayerMetadataModal';
+import RenderTemplate from '../template/index';
 
 const onToolsActions = {
     onHideLayerMetadata: () => {}

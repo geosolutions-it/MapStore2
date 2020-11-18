@@ -6,21 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ROADMAP = require('./assets/img/ROADMAP.jpg');
-const TERRAIN = require('./assets/img/TERRAIN.jpg');
-const SATELLITE = require('./assets/img/SATELLITE.jpg');
-const Aerial = require('./assets/img/Aerial.jpg');
-const mapnik = require('./assets/img/mapnik.jpg');
-const s2cloodless = require('./assets/img/s2cloudless.jpg');
-const empty = require('./assets/img/none.jpg');
-const unknown = require('./assets/img/dafault.jpg');
-const Night2012 = require('./assets/img/NASA_NIGHT.jpg');
-const AerialWithLabels = require('./assets/img/AerialWithLabels.jpg');
-const OpenTopoMap = require('./assets/img/OpenTopoMap.jpg');
+import ROADMAP from './assets/img/ROADMAP.jpg';
+
+import TERRAIN from './assets/img/TERRAIN.jpg';
+import SATELLITE from './assets/img/SATELLITE.jpg';
+import Aerial from './assets/img/Aerial.jpg';
+import mapnik from './assets/img/mapnik.jpg';
+import s2cloodless from './assets/img/s2cloudless.jpg';
+import empty from './assets/img/none.jpg';
+import unknown from './assets/img/dafault.jpg';
+import Night2012 from './assets/img/NASA_NIGHT.jpg';
+import AerialWithLabels from './assets/img/AerialWithLabels.jpg';
+import OpenTopoMap from './assets/img/OpenTopoMap.jpg';
 
 // TODO REMOVE these once they are removed from all maps see issue #3304
-const HYBRID = require('./assets/img/HYBRID.jpg');
-const mapquestOsm = require('./assets/img/mapquest-osm.jpg');
+import HYBRID from './assets/img/HYBRID.jpg';
+
+import mapquestOsm from './assets/img/mapquest-osm.jpg';
 
 const thumbs = {
     google: {
@@ -54,4 +56,4 @@ const thumbs = {
     }
 };
 
-module.exports = thumbs;
+export default thumbs;

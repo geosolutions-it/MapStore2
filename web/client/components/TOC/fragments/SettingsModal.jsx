@@ -6,24 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
-const {isNil} = require('lodash');
+import React from 'react';
 
-require("./css/settingsModal.css");
-
-const Dialog = require('../../misc/Dialog');
-const ConfirmButton = require('../../buttons/ConfirmButton');
-const General = require('./settings/General');
-const Display = require('./settings/Display');
-const WMSStyle = require('./settings/WMSStyle');
-const Elevation = require('./settings/Elevation');
-const FeatureInfoFormat = require('./settings/FeatureInfoFormat');
-const Portal = require('../../misc/Portal').default;
-const assign = require('object-assign');
-const Message = require('../../I18N/Message').default;
-const {getDimension} = require('../../../utils/LayersUtils');
+import PropTypes from 'prop-types';
+import { Button, Glyphicon, Tabs, Tab } from 'react-bootstrap';
+import { isNil } from 'lodash';
+import './css/settingsModal.css';
+import Dialog from '../../misc/Dialog';
+import ConfirmButton from '../../buttons/ConfirmButton';
+import General from './settings/General';
+import Display from './settings/Display';
+import WMSStyle from './settings/WMSStyle';
+import Elevation from './settings/Elevation';
+import FeatureInfoFormat from './settings/FeatureInfoFormat';
+import Portal from '../../misc/Portal';
+import assign from 'object-assign';
+import Message from '../../I18N/Message';
+import { getDimension } from '../../../utils/LayersUtils';
 
 class SettingsModal extends React.Component {
     static propTypes = {
@@ -249,4 +248,4 @@ class SettingsModal extends React.Component {
     };
 }
 
-module.exports = SettingsModal;
+export default SettingsModal;

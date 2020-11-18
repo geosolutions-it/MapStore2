@@ -6,38 +6,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import './print/print.css';
 
-const {connect} = require('react-redux');
+import { head } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Accordion, Col, Glyphicon, Grid, Panel, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
-const {getMessageById} = require('../utils/LocaleUtils');
-const {reprojectBbox} = require('../utils/CoordinatesUtils');
-const {defaultGetZoomForExtent, mapUpdated, getResolutions} = require('../utils/MapUtils');
-const Dialog = require('../components/misc/Dialog');
-
-const {Grid, Row, Col, Panel, Accordion, Glyphicon} = require('react-bootstrap');
-
-const {toggleControl, setControlProperty} = require('../actions/controls');
-const { printSubmit, printError, printSubmitting, configurePrintMap} = require('../actions/print');
-
-const {mapSelector} = require('../selectors/map');
-const {layersSelector} = require('../selectors/layers');
-
-const {createSelector} = require('reselect');
-
-const assign = require('object-assign');
-
-const {head} = require('lodash');
-
-const {scalesSelector} = require('../selectors/map');
-const {currentLocaleSelector, currentLocaleLanguageSelector} = require('../selectors/locale');
-const {isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector} = require('../selectors/localizedLayerStyles');
-const {mapTypeSelector} = require('../selectors/maptype');
-
-const Message = require('../components/I18N/Message').default;
-
-require('./print/print.css');
+import { setControlProperty, toggleControl } from '../actions/controls';
+import { configurePrintMap, printError, printSubmit, printSubmitting } from '../actions/print';
+import Message from '../components/I18N/Message';
+import Dialog from '../components/misc/Dialog';
+import printReducers from '../reducers/print';
+import { layersSelector } from '../selectors/layers';
+import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
+import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
+import { mapSelector, scalesSelector } from '../selectors/map';
+import { mapTypeSelector } from '../selectors/maptype';
+import { reprojectBbox } from '../utils/CoordinatesUtils';
+import { getMessageById } from '../utils/LocaleUtils';
+import { defaultGetZoomForExtent, getResolutions, mapUpdated } from '../utils/MapUtils';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -84,7 +75,7 @@ require('./print/print.css');
  * }
  */
 
-module.exports = {
+export default {
     PrintPlugin: assign({
         loadPlugin: (resolve) => {
             require.ensure('./print/index', () => {
@@ -105,7 +96,7 @@ module.exports = {
                     MapPreview,
                     PrintSubmit,
                     PrintPreview
-                } = require('./print/index');
+                } = require('./print/index').default;
 
                 const {
                     preloadData,
@@ -492,5 +483,5 @@ module.exports = {
             doNotHide: true
         }
     }),
-    reducers: {print: require('../reducers/print').default}
+    reducers: {print: printReducers}
 };

@@ -6,9 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const { compose, defaultProps, withHandlers } = require('recompose');
-const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
-const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
+import { compose, defaultProps, withHandlers } from 'recompose';
+
+import resourceGrid from '../../components/resources/enhancers/resourceGrid';
+import withShareTool from '../../components/resources/enhancers/withShareTool';
+import ResourceGrid from '../../components/resources/ResourceGrid';
+
 const Grid = compose(
     withHandlers({
         onSaveSuccess: (props) => () => {
@@ -29,6 +32,6 @@ const Grid = compose(
         defaultProps({ shareOptions: {embedOptions: { showTOCToggle: false }, advancedSettingsVisibility: { bbox: true } }}),
         withShareTool
     )
-)(require('../../components/resources/ResourceGrid'));
+)(ResourceGrid);
 
-module.exports = Grid;
+export default Grid;

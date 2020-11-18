@@ -5,13 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const mainApp = require('../main').default;
-const expect = require('expect');
-const assign = require('object-assign');
-const ConfigUtils = require('../../utils/ConfigUtils').default;
-const {includes} = require('lodash');
+
+import expect from 'expect';
+import {includes} from 'lodash';
+import assign from 'object-assign';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import ConfigUtils from '../../utils/ConfigUtils';
+import mainApp from '../main';
 
 class AppComponent extends React.Component {
     render() {

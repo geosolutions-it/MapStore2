@@ -6,18 +6,41 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { connect } = require('react-redux');
-const { compose, withProps, withHandlers } = require('recompose');
-const { createSelector } = require('reselect');
-const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive, getEditingWidget, getWidgetsDependenciesGroups } = require('../selectors/widgets');
-const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, selectWidget } = require('../actions/widgets');
-const { showConnectionsSelector, dashboardResource, isDashboardLoading, isBrowserMobile } = require('../selectors/dashboard');
-const { currentLocaleLanguageSelector } = require('../selectors/locale');
-const { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } = require('../selectors/localizedLayerStyles');
-const ContainerDimensions = require('react-container-dimensions').default;
+import PropTypes from 'prop-types';
+import React from 'react';
+import ContainerDimensions from 'react-container-dimensions';
+import { connect } from 'react-redux';
+import { compose, withHandlers, withProps } from 'recompose';
+import { createSelector } from 'reselect';
 
-const PropTypes = require('prop-types');
+import {
+    changeLayout,
+    deleteWidget,
+    editWidget,
+    exportCSV,
+    exportImage,
+    selectWidget,
+    updateWidgetProperty
+} from '../actions/widgets';
+import Dashboard from '../components/dashboard/Dashboard';
+import widgetsReducers from '../reducers/widgets';
+import {
+    dashboardResource,
+    isBrowserMobile,
+    isDashboardLoading,
+    showConnectionsSelector
+} from '../selectors/dashboard';
+import { currentLocaleLanguageSelector } from '../selectors/locale';
+import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
+import {
+    dependenciesSelector,
+    getDashboardWidgets,
+    getDashboardWidgetsLayout,
+    getEditingWidget,
+    getWidgetsDependenciesGroups,
+    isWidgetSelectionActive
+} from '../selectors/widgets';
+
 const WidgetsView = compose(
     connect(
         createSelector(
@@ -80,7 +103,7 @@ const WidgetsView = compose(
                         || editingWidget.widgetType === "map") && !target.mapSync
                 ) && target.id !== editingWidget.id
     })
-)(require('../components/dashboard/Dashboard'));
+)(Dashboard);
 
 /**
  * Dashboard Plugin. Renders the main dashboard UI.
@@ -109,9 +132,9 @@ class DashboardPlugin extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     DashboardPlugin,
     reducers: {
-        widgets: require('../reducers/widgets').default
+        widgets: widgetsReducers
     }
 };

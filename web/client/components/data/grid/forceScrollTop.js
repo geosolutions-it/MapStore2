@@ -5,8 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, branch, withHandlers, mapPropsStream, createEventHandler } = require('recompose');
-const Rx = require('rxjs');
+import { compose, branch, withHandlers, mapPropsStream, createEventHandler } from 'recompose';
+
+import Rx from 'rxjs';
+
 /**
  * This enhancer forces the `DataGrid` to scroll to top when a sort or a filter event is performed.
  * This is a workaround needed in a virtualScroll context, because the virtual scroll enhancer doesn't take care
@@ -16,7 +18,7 @@ const Rx = require('rxjs');
  * The forced refresh is implemented by updating the `scrollToTopCounter` property every time
  * a sort or a filter event is triggered.
  */
-module.exports = branch(
+export default branch(
     ({ virtualScroll }) => virtualScroll,
     compose(
         mapPropsStream( props$ => {

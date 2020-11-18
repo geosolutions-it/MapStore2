@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {get} = require('lodash');
+import React from 'react';
 
-const Toolbar = require('../../misc/toolbar/Toolbar');
-
-const {generateTemplateString} = require('../../../utils/TemplateUtils');
+import PropTypes from 'prop-types';
+import { get } from 'lodash';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import { generateTemplateString } from '../../../utils/TemplateUtils';
 
 class SearchResult extends React.Component {
     static propTypes = {
@@ -72,4 +71,4 @@ class SearchResult extends React.Component {
     }
 }
 
-module.exports = SearchResult;
+export default SearchResult;

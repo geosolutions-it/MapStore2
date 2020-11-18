@@ -5,18 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const {connect} = require('../utils/PluginsUtils');
-const assign = require('object-assign');
 
-const { changeLayerParams } = require('../actions/layers');
-const { loadFields, loadClassification, changeConfiguration, cancelDirty, setDirty,
-    setInvalidInput, resetInvalidInput } = require('../actions/thematic');
-const { getSelectedLayer } = require('../selectors/layers');
+import assign from 'object-assign';
 
-const API = require('../api/SLDService');
+import { changeLayerParams } from '../actions/layers';
+import {
+    cancelDirty,
+    changeConfiguration,
+    loadClassification,
+    loadFields,
+    resetInvalidInput,
+    setDirty,
+    setInvalidInput
+} from '../actions/thematic';
+import API from '../api/SLDService';
+import epics from '../epics/thematic';
+import { getSelectedLayer } from '../selectors/layers';
+import { isAdminUserSelector } from '../selectors/security';
+import { connect } from '../utils/PluginsUtils';
 
-const { isAdminUserSelector } = require('../selectors/security');
-const epics = require('../epics/thematic').default;
 /**
  * Plugin that adds thematic styles for wms layers, through attribute classification.
  *
@@ -84,7 +91,7 @@ const epics = require('../epics/thematic').default;
  */
 
 
-module.exports = {
+export default {
     ThematicLayerPlugin: assign({
         loadPlugin: (resolve)=> {
             require.ensure(['../components/TOC/fragments/settings/ThematicLayer'], () => {
@@ -123,7 +130,7 @@ module.exports = {
                     onDirtyStyle: setDirty,
                     onInvalidInput: setInvalidInput,
                     onValidInput: resetInvalidInput
-                })(require('../components/TOC/fragments/settings/ThematicLayer'));
+                })(require('../components/TOC/fragments/settings/ThematicLayer').default);
                 resolve(ThematicLayer);
             });
         }, enabler: (state) => state.layerSettings && state.layerSettings.expanded
@@ -141,5 +148,5 @@ module.exports = {
     reducers: {
         thematic: require('../reducers/thematic').default
     },
-    epics: epics(require('../api/SLDService'))
+    epics: epics(require('../api/SLDService').default)
 };

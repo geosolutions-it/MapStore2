@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {injectIntl} = require('react-intl');
-const PropTypes = require('prop-types');
-const {omit} = require('lodash');
-const { compose, branch, getContext, withProps, withPropsOnChange, mapProps } = require('recompose');
+import { injectIntl } from 'react-intl';
+
+import PropTypes from 'prop-types';
+import { omit } from 'lodash';
+import { compose, branch, getContext, withProps, withPropsOnChange, mapProps } from 'recompose';
 
 const omitProps = keys => mapProps(props => omit(props, keys));
 
@@ -36,7 +37,7 @@ const defaults = {
  * @example
  * addI18NProps(['formatNumber'])(MyCmp); // MyCmp will receive `formatNumber` from current locale Intl object as a property
  */
-module.exports = (propsToAdd = []) => compose(
+export default (propsToAdd = []) => compose(
     // check intl and inject (or add default dummy object)
     getContext({intl: PropTypes.object}),
     branch(

@@ -14,7 +14,7 @@ import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 
 import {Provider} from 'react-redux';
 import HTML5Backend from 'react-dnd-html5-backend';
-const dragDropContext = require('react-dnd').DragDropContext;
+import { DragDropContext as dragDropContext } from 'react-dnd';
 
 const Comp = dragDropContext(HTML5Backend)(Builder);
 

@@ -6,25 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
-const Message = require('../../I18N/Message').default;
-
-const SwitchPanel = require('../../misc/switch/SwitchPanel');
-const {Row, Col} = require('react-bootstrap');
-const Select = require('react-select').default;
-
-
-const GeometricOperationSelector = require('./GeometricOperationSelector');
-const GroupField = require('./GroupField');
-const {isSameUrl} = require('../../../utils/URLUtils');
+import Message from '../../I18N/Message';
+import SwitchPanel from '../../misc/switch/SwitchPanel';
+import { Row, Col } from 'react-bootstrap';
+import Select from 'react-select';
+import GeometricOperationSelector from './GeometricOperationSelector';
+import GroupField from './GroupField';
+import { isSameUrl } from '../../../utils/URLUtils';
 
 
 const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => isSameUrl(origSearchUrl, url) || isSameUrl(origSearchUrl, (search && search.url));
 // bbox make not sense with cross layer filter
 const getAllowedSpatialOperations = (spatialOperations) => (spatialOperations || []).filter( ({id} = {}) => id !== "BBOX");
 
-module.exports = ({
+export default ({
     crossLayerExpanded = true,
     spatialOperations,
     expandCrossLayerFilterPanel = () => {},

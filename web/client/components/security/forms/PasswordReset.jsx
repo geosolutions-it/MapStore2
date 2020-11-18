@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {FormControl, FormGroup, ControlLabel, Alert} = require('react-bootstrap');
-const PropTypes = require('prop-types');
-const Message = require('../../../components/I18N/Message').default;
-const {getMessageById} = require('../../../utils/LocaleUtils');
+import React from 'react';
+
+import { FormControl, FormGroup, ControlLabel, Alert } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import Message from '../../../components/I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 /**
  * A DropDown menu for user details:
@@ -140,4 +141,4 @@ class PasswordReset extends React.Component {
     };
 }
 
-module.exports = PasswordReset;
+export default PasswordReset;

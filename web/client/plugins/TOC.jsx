@@ -5,59 +5,67 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const PropTypes = require('prop-types');
-const React = require('react');
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
-const { compose, branch, withPropsOnChange} = require('recompose');
+import PropTypes from 'prop-types';
 
-const {Glyphicon} = require('react-bootstrap');
+import React from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { compose, branch, withPropsOnChange } from 'recompose';
+import { Glyphicon } from 'react-bootstrap';
 
-const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-    moveNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
-    browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
-    download} = require('../actions/layers');
-const {openQueryBuilder} = require("../actions/layerFilter");
-const {getLayerCapabilities} = require('../actions/layerCapabilities');
-const {zoomToExtent} = require('../actions/map');
-const {error} = require('../actions/notifications');
-const {
+import {
+    changeLayerProperties,
+    changeGroupProperties,
+    toggleNode,
+    contextNode,
+    moveNode,
+    showSettings,
+    hideSettings,
+    updateSettings,
+    updateNode,
+    removeNode,
+    browseData,
+    selectNode,
+    filterLayers,
+    refreshLayerVersion,
+    hideLayerMetadata,
+    download
+} from '../actions/layers';
+
+import { openQueryBuilder } from '../actions/layerFilter';
+import { getLayerCapabilities } from '../actions/layerCapabilities';
+import { zoomToExtent } from '../actions/map';
+import { error } from '../actions/notifications';
+
+import {
     groupsSelector,
     layersSelector,
     selectedNodesSelector,
     layerFilterSelector,
     layerSettingSelector,
     layerMetadataSelector,
-    wfsDownloadSelector} = require('../selectors/layers');
-const { layerSwipeSettingsSelector } = require('../selectors/swipe');
-const {mapSelector, mapNameSelector} = require('../selectors/map');
-const {currentLocaleSelector, currentLocaleLanguageSelector} = require("../selectors/locale");
-const {widgetBuilderAvailable} = require('../selectors/controls');
-const {generalInfoFormatSelector} = require("../selectors/mapInfo");
-const {userSelector} = require('../selectors/security');
-const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
+    wfsDownloadSelector
+} from '../selectors/layers';
 
-const {
-    getNode,
-    toggleByType
-} = require('../utils/LayersUtils');
-const {getScales} = require('../utils/MapUtils');
-const {getMessageById} = require('../utils/LocaleUtils');
-
-const Message = require('../components/I18N/Message').default;
-const assign = require('object-assign');
-
-const layersIcon = require('./toolbar/assets/img/layers.png');
-
-const {isObject, head, find} = require('lodash');
-
-const {setControlProperties, setControlProperty} = require('../actions/controls');
-const {createWidget} = require('../actions/widgets');
-
-const {getMetadataRecordById} = require("../actions/catalog");
-
-const {activeSelector} = require("../selectors/catalog");
-const {isCesium} = require('../selectors/maptype');
+import { layerSwipeSettingsSelector } from '../selectors/swipe';
+import { mapSelector, mapNameSelector } from '../selectors/map';
+import { currentLocaleSelector, currentLocaleLanguageSelector } from '../selectors/locale';
+import { widgetBuilderAvailable } from '../selectors/controls';
+import { generalInfoFormatSelector } from '../selectors/mapInfo';
+import { userSelector } from '../selectors/security';
+import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
+import { getNode, toggleByType } from '../utils/LayersUtils';
+import { getScales } from '../utils/MapUtils';
+import { getMessageById } from '../utils/LocaleUtils';
+import Message from '../components/I18N/Message';
+import assign from 'object-assign';
+import layersIcon from './toolbar/assets/img/layers.png';
+import { isObject, head, find } from 'lodash';
+import { setControlProperties, setControlProperty } from '../actions/controls';
+import { createWidget } from '../actions/widgets';
+import { getMetadataRecordById } from '../actions/catalog';
+import { activeSelector } from '../selectors/catalog';
+import { isCesium } from '../selectors/maptype';
 
 const addFilteredAttributesGroups = (nodes, filters) => {
     return nodes.reduce((newNodes, currentNode) => {
@@ -155,12 +163,12 @@ const tocSelector = createSelector(
     })
 );
 
-const TOC = require('../components/TOC/TOC');
-const Header = require('../components/TOC/Header');
-const Toolbar = require('../components/TOC/Toolbar');
-const DefaultGroup = require('../components/TOC/DefaultGroup');
-const DefaultLayer = require('../components/TOC/DefaultLayer');
-const DefaultLayerOrGroup = require('../components/TOC/DefaultLayerOrGroup');
+import TOC from '../components/TOC/TOC';
+import Header from '../components/TOC/Header';
+import Toolbar from '../components/TOC/Toolbar';
+import DefaultGroup from '../components/TOC/DefaultGroup';
+import DefaultLayer from '../components/TOC/DefaultLayer';
+import DefaultLayerOrGroup from '../components/TOC/DefaultLayerOrGroup';
 
 class LayerTree extends React.Component {
     static propTypes = {
@@ -888,9 +896,9 @@ const TOCPlugin = connect(tocSelector, {
     checkPluginsEnhancer
 )(LayerTree));
 
-const API = require('../api/catalog').default;
+import API from '../api/catalog';
 
-module.exports = {
+export default {
     TOCPlugin: assign(TOCPlugin, {
         Toolbar: {
             name: 'toc',

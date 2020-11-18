@@ -5,20 +5,23 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
-const {compose} = require('recompose');
-const {createSelector} = require('reselect');
-const {push} = require('connected-react-router');
-const {Button} = require('react-bootstrap');
-const {get} = require('lodash');
 
-const withMask = require('../components/misc/enhancers/withMask');
-const {isLoggedIn} = require('../selectors/security');
-const Message = require('../components/I18N/Message').default;
-const ResourceUnavailable = require('../components/errors/ResourceUnavailable');
-const {feedbackMaskSelector} = require('../selectors/feedbackmask');
-const {isSharedStory} = require('../selectors/geostory');
+import { push } from 'connected-react-router';
+import { get } from 'lodash';
+import React from 'react';
+import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+import { createSelector } from 'reselect';
+
+import ResourceUnavailable from '../components/errors/ResourceUnavailable';
+import Message from '../components/I18N/Message';
+import withMask from '../components/misc/enhancers/withMask';
+import epics from '../epics/feedbackMask';
+import feedbackMask from '../reducers/feedbackMask';
+import { feedbackMaskSelector } from '../selectors/feedbackmask';
+import { isSharedStory } from '../selectors/geostory';
+import { isLoggedIn } from '../selectors/security';
 
 const feedbackMaskPluginSelector = createSelector([
     feedbackMaskSelector,
@@ -76,10 +79,10 @@ const FeedbackMaskPlugin = compose(
         })
 )(() => null);
 
-module.exports = {
+export default {
     FeedbackMaskPlugin,
     reducers: {
-        feedbackMask: require('../reducers/feedbackMask').default
+        feedbackMask
     },
-    epics: require('../epics/feedbackMask').default
+    epics
 };

@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require("react");
-const expect = require('expect');
-const ReactDOM = require('react-dom');
-const UserGroups = require('../UserGroups');
+import React from 'react';
+
+import expect from 'expect';
+import ReactDOM from 'react-dom';
+import UserGroups from '../UserGroups';
 const user1 = {
     id: 1,
     name: "USER1",

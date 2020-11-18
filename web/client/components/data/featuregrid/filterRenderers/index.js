@@ -6,12 +6,13 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const {withProps} = require('recompose');
-const DefaultFilter = require('./DefaultFilter');
-const StringFilter = require('./StringFilter');
-const NumberFilter = require('./NumberFilter');
-const DateTimeFilter = require('./DateTimeFilter').default;
-const GeometryFilter = require('./GeometryFilter').default;
+import { withProps } from 'recompose';
+
+import DateTimeFilter from './DateTimeFilter';
+import DefaultFilter from './DefaultFilter';
+import GeometryFilter from './GeometryFilter';
+import NumberFilter from './NumberFilter';
+import StringFilter from './StringFilter';
 
 const types = {
     "defaultFilter": (type) => withProps(() =>({type: type}))(DefaultFilter),
@@ -23,8 +24,11 @@ const types = {
     "date-time": () => withProps(() =>({type: "date-time"}))(DateTimeFilter),
     "geometry": () => GeometryFilter
 };
-module.exports = {
-    getFilterRenderer: (type, props) => types[type] ? types[type](type, props) : types.defaultFilter(type, props),
+
+export const getFilterRenderer = (type, props) => types[type] ? types[type](type, props) : types.defaultFilter(type, props);
+
+export default {
+    getFilterRenderer,
     DefaultFilter,
     StringFilter,
     NumberFilter,

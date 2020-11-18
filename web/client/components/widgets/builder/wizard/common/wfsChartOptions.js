@@ -8,8 +8,6 @@
 
 import {compose, withProps} from 'recompose';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
-
-
 import {find} from 'lodash';
 
 const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)

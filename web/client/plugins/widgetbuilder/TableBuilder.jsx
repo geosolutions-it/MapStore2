@@ -15,6 +15,7 @@ import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import Message from '../../components/I18N/Message';
 import BorderLayout from '../../components/layout/BorderLayout';
 
+import BuilderHeader from './BuilderHeader';
 import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
 
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
@@ -27,6 +28,7 @@ import { wizardStateToProps, wizardSelector} from './commons';
 import TableWizard from '../../components/widgets/builder/wizard/TableWizard';
 import BaseToolbar from '../../components/widgets/builder/wizard/table/Toolbar';
 import LayerSelector from './LayerSelector';
+
 const Builder = connect(
     wizardSelector,
     {
@@ -55,7 +57,6 @@ const Builder = connect(
     ))
 )(TableWizard));
 
-import BuilderHeader from './BuilderHeader';
 const Toolbar = compose(
     connect(wizardSelector, {
         openFilterEditor,

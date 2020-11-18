@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-const PropTypes = require('prop-types');
-var {Button, Glyphicon} = require('react-bootstrap');
+import React from 'react';
 
-const OverlayTrigger = require('../misc/OverlayTrigger').default;
-
-var ImageButton = require('./ImageButton');
+import PropTypes from 'prop-types';
+import { Button, Glyphicon } from 'react-bootstrap';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import ImageButton from './ImageButton';
 
 /**
  * Toggle button with tooltip and icons or image support.
@@ -107,4 +106,4 @@ class ToggleButton extends React.Component {
     }
 }
 
-module.exports = ToggleButton;
+export default ToggleButton;

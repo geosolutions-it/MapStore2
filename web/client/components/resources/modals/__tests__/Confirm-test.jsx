@@ -1,7 +1,8 @@
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ConfirmModal = require('../ConfirmModal');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import ConfirmModal from '../ConfirmModal';
 
 describe("ConfirmDialog component", () => {
     beforeEach((done) => {
