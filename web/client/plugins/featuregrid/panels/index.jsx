@@ -41,7 +41,6 @@ import {
     isSavingSelector,
     isSimpleGeomSelector,
     modeSelector,
-    multiSelect,
     selectedFeaturesCount,
     selectedLayerNameSelector,
     showAgainSelector,
