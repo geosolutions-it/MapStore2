@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,13 +7,13 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {round} = require('lodash');
-const {Message, DateFormat} = require('../I18N/I18N');
-const Spinner = require('react-spinkit');
-const {Glyphicon, ProgressBar, Table, Alert} = require('react-bootstrap');
+import React from 'react';
 
-const Dropzone = require('react-dropzone');
+import { round } from 'lodash';
+import { Message, DateFormat } from '../I18N/I18N';
+import Spinner from 'react-spinkit';
+import { Glyphicon, ProgressBar, Table, Alert } from 'react-bootstrap';
+import Dropzone from 'react-dropzone';
 
 class FileUploader extends React.Component {
     static propTypes = {
@@ -147,4 +148,4 @@ class FileUploader extends React.Component {
     };
 }
 
-module.exports = FileUploader;
+export default FileUploader;

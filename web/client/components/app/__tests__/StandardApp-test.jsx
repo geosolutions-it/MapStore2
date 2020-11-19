@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const PropTypes = require('prop-types');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const StandardApp = require('../StandardApp').default;
-const ConfigUtils = require('../../../utils/ConfigUtils').default;
+import expect from 'expect';
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import StandardApp from '../StandardApp';
+import ConfigUtils from '../../../utils/ConfigUtils';
 
 class mycomponent extends React.Component {
     static propTypes = {

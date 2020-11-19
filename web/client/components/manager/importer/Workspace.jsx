@@ -5,14 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Select = require('react-select').default;
-const PropTypes = require('prop-types');
-const {FormControl, Button, Alert} = require('react-bootstrap');
-const Message = require('../../I18N/Message').default;
-const {getMessageById} = require('../../../utils/LocaleUtils');
+import React from 'react';
 
-module.exports = class extends React.Component {
+import Select from 'react-select';
+import PropTypes from 'prop-types';
+import { FormControl, Button, Alert } from 'react-bootstrap';
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
+
+export default class extends React.Component {
     static propTypes = {
         enabled: PropTypes.bool,
         status: PropTypes.object,
@@ -109,4 +110,4 @@ module.exports = class extends React.Component {
             this.props.createWorkspace(name, this.props.datastoreTemplates);
         }
     };
-};
+}

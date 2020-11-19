@@ -5,27 +5,27 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-const { castArray } = require('lodash');
-var CesiumLayer = require('../Layer.jsx');
-var expect = require('expect');
-var Cesium = require('../../../../libs/cesium');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { castArray } from 'lodash';
+import CesiumLayer from '../Layer';
+import expect from 'expect';
+import Cesium from '../../../../libs/cesium';
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
-require('../../../../utils/cesium/Layers');
-require('../plugins/OSMLayer');
-require('../plugins/TileProviderLayer');
-require('../plugins/WMSLayer');
-require('../plugins/WMTSLayer');
-require('../plugins/BingLayer');
-require('../plugins/GraticuleLayer');
-require('../plugins/OverlayLayer');
-require('../plugins/MarkerLayer');
+import '../../../../utils/cesium/Layers';
+import '../plugins/OSMLayer';
+import '../plugins/TileProviderLayer';
+import '../plugins/WMSLayer';
+import '../plugins/WMTSLayer';
+import '../plugins/BingLayer';
+import '../plugins/GraticuleLayer';
+import '../plugins/OverlayLayer';
+import '../plugins/MarkerLayer';
 
-const {setStore} = require('../../../../utils/SecurityUtils');
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
+import {setStore} from '../../../../utils/SecurityUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
 
 window.CESIUM_BASE_URL = "node_modules/cesium/Build/Cesium";
 

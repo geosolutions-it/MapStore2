@@ -5,19 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
-const {Button, Grid, Glyphicon} = require('react-bootstrap');
-const {editGroup} = require('../../actions/usergroups');
-const {getUserGroups, groupSearchTextChanged} = require('../../actions/usergroups');
-const SearchBar = require("../../components/search/SearchBar").default;
-const GroupsGrid = require('./users/GroupGrid');
-const GroupDialog = require('./users/GroupDialog');
-const GroupDeleteConfirm = require('./users/GroupDeleteConfirm');
-const Message = require('../../components/I18N/Message').default;
-const assign = require('object-assign');
-const {trim} = require('lodash');
+
+import { trim } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Button, Glyphicon, Grid } from 'react-bootstrap';
+import { connect } from 'react-redux';
+
+import { editGroup, getUserGroups, groupSearchTextChanged } from '../../actions/usergroups';
+import Message from '../../components/I18N/Message';
+import SearchBar from '../../components/search/SearchBar';
+import GroupDeleteConfirm from './users/GroupDeleteConfirm';
+import GroupDialog from './users/GroupDialog';
+import GroupsGrid from './users/GroupGrid';
 
 class GroupManager extends React.Component {
     static propTypes = {
@@ -89,7 +90,7 @@ class GroupManager extends React.Component {
  * @memberof plugins
  * @class
  */
-module.exports = {
+export default {
     GroupManagerPlugin: assign(
         connect((state) => {
             let searchState = state && state.usergroups;

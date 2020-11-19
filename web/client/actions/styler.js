@@ -11,7 +11,7 @@ export const SET_STYLER_LAYER = 'SET_STYLER_LAYER';
 export const STYLE_SAVE_ERROR = 'STYLE_SAVE_ERROR';
 export const STYLER_RESET = 'STYLER_RESET';
 
-import { getLayer } from '../api/geoserver/Layers';
+import Layers from '../api/geoserver/Layers';
 import { saveStyle } from '../api/geoserver/Styles';
 
 export  function setStylerLayer(layer) {
@@ -43,7 +43,7 @@ export  function reset(layer) {
 }
 export  function saveLayerDefaultStyle(geoserverBaseUrl, layerName, style) {
     return (dispatch) => {
-        return getLayer(geoserverBaseUrl, layerName).then((layer) => {
+        return Layers.getLayer(geoserverBaseUrl, layerName).then((layer) => {
             saveStyle(geoserverBaseUrl, layer.defaultStyle && layer.defaultStyle.name, style).then(()=> {
                 dispatch(styleSaved(layer.defaultStyle.name, style));
             }).catch((e) => {styleSaveError(layerName, layer.defaultStyle, e); });

@@ -5,22 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const CesiumMap = require('../Map.jsx');
-const CesiumLayer = require('../Layer.jsx');
-const expect = require('expect');
-const Cesium = require('../../../../libs/cesium');
-const {
+import React from 'react';
+import ReactDOM from 'react-dom';
+import CesiumMap from '../Map';
+import CesiumLayer from '../Layer';
+import expect from 'expect';
+import Cesium from '../../../../libs/cesium';
+import {
     getHook,
     ZOOM_TO_EXTENT_HOOK,
     registerHook,
     createRegisterHooks
-} = require('../../../../utils/MapUtils');
+} from '../../../../utils/MapUtils';
 
 
-require('../../../../utils/cesium/Layers');
-require('../plugins/OSMLayer');
+import '../../../../utils/cesium/Layers';
+import '../plugins/OSMLayer';
 
 window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
 

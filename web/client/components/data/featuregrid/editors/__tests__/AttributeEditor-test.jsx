@@ -1,7 +1,8 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const AttributeEditor = require('../AttributeEditor');
-var expect = require('expect');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import AttributeEditor from '../AttributeEditor';
 
 let testColumn = {
     key: 'columnKey'

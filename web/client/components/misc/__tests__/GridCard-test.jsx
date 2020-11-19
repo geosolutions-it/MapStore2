@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const GridCard = require('../GridCard.jsx');
-const expect = require('expect');
+import React from 'react';
 
-const TestUtils = require('react-dom/test-utils');
+import ReactDOM from 'react-dom';
+import GridCard from '../GridCard.jsx';
+import expect from 'expect';
+import TestUtils from 'react-dom/test-utils';
 
 describe('This test for GridCard', () => {
     beforeEach((done) => {

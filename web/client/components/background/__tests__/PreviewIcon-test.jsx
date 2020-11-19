@@ -1,9 +1,8 @@
-const expect = require('expect');
-
-const React = require('react');
-const ReactDOM = require('react-dom');
-const PreviewIcon = require('../PreviewIcon');
-const ReactTestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PreviewIcon from '../PreviewIcon';
+import ReactTestUtils from 'react-dom/test-utils';
 
 describe("test the PreviewIcon", () => {
     beforeEach((done) => {

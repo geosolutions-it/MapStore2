@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { compose, defaultProps, setDisplayName } from 'recompose';
+
 import withBackButton from './withBackButton';
 import layerSelector from './layerSelector';
 import layerSelectorConnect from './connection/layerSelectorConnect';
 import canGenerateCharts from '../../../observables/widgets/canGenerateCharts';
+
 const chartLayerSelector = compose(
     setDisplayName('ChartLayerSelector'),
     layerSelectorConnect,

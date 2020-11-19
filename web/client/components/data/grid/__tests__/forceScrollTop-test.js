@@ -1,12 +1,11 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { createSink, setObservableConfig} = require('recompose');
-const expect = require('expect');
-
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createSink, setObservableConfig } from 'recompose';
+import expect from 'expect';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
 
-const forceScrollTop = require('../forceScrollTop');
+import forceScrollTop from '../forceScrollTop';
 describe('DataGrid forceScrollTop enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

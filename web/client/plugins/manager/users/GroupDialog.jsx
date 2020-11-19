@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -5,10 +6,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {bindActionCreators} = require('redux');
-const {connect} = require('react-redux');
-const {editGroup, changeGroupMetadata, saveGroup, searchUsers} = require('../../../actions/usergroups');
+import { bindActionCreators } from 'redux';
 
+import { changeGroupMetadata, editGroup, saveGroup, searchUsers } from '../../../actions/usergroups';
+import GroupDialog from '../../../components/manager/users/GroupDialog';
 
 const mapStateToProps = (state) => {
     const usergroups = state && state.usergroups;
@@ -30,4 +31,4 @@ const mapDispatchToProps = (dispatch) => {
     }, dispatch);
 };
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(require('../../../components/manager/users/GroupDialog'));
+export default connect(mapStateToProps, mapDispatchToProps)(GroupDialog);

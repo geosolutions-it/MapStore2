@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { withStateHandlers, withProps, compose} = require("recompose");
-const withResizeSpy = require('../../misc/enhancers/withResizeSpy');
+import { withStateHandlers, withProps, compose } from 'recompose';
+
+import withResizeSpy from '../../misc/enhancers/withResizeSpy';
 
 /**
  * Makes the map adaptive to the container and allow auto-resize on dimension's change.
  * @param {number} debounceTime debounce time on resize event
  */
-module.exports = (debounceTime = 0) => compose(
+export default (debounceTime = 0) => compose(
     withStateHandlers(
         () => ({
             resize: 0

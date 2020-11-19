@@ -5,21 +5,23 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, withProps, withState, withHandlers } = require('recompose');
-const { get } = require('lodash');
 
-const withControllableState = require('../../../../../misc/enhancers/withControllableState');
-const {splitMapAndLayers} = require('../../../../../../utils/LayersUtils');
-const mapToNodes = require('./mapToNodes');
-const withSelectedNode = require('./withSelectedNode');
-const withCapabilitiesRetrieval = require('./withCapabilitiesRetrieval');
+import { get } from 'lodash';
+import { compose, withHandlers, withProps, withState } from 'recompose';
 
+import {splitMapAndLayers} from '../../../../../../utils/LayersUtils';
+import withControllableState from '../../../../../misc/enhancers/withControllableState';
+import { settingsLifecycle } from '../../../../../TOC/enhancers/tocItemsSettings';
+import Display from '../../../../../TOC/fragments/settings/Display';
 /* TABS definitions */
-const General = require('../../../../../TOC/fragments/settings/General');
-const Display = require('../../../../../TOC/fragments/settings/Display');
-const WMSStyle = withCapabilitiesRetrieval(require('../../../../../TOC/fragments/settings/WMSStyle'));
-const handleNodePropertyChanges = require('./handleNodePropertyChanges');
-const { settingsLifecycle } = require('../../../../../TOC/enhancers/tocItemsSettings');
+import General from '../../../../../TOC/fragments/settings/General';
+import WMSStyleComp from '../../../../../TOC/fragments/settings/WMSStyle';
+import handleNodePropertyChanges from './handleNodePropertyChanges';
+import mapToNodes from './mapToNodes';
+import withCapabilitiesRetrieval from './withCapabilitiesRetrieval';
+import withSelectedNode from './withSelectedNode';
+
+const WMSStyle = withCapabilitiesRetrieval(WMSStyleComp);
 
 const withDefaultTabs = withProps((props) => ({
     tabs: props.tabs || [{
@@ -47,6 +49,7 @@ const withDefaultTabs = withProps((props) => ({
         Component: WMSStyle
     }]
 }));
+
 /**
  * Manages internal TOC node editor state exposing only
  * @prop {string} editNode the ID of the node to edit
@@ -56,7 +59,7 @@ const withDefaultTabs = withProps((props) => ({
  * // `path` can be something like `map.layers[idx].prop` (path definition of lodash get, set)
  * <EnhancedNodeEditor editNode={"LAYER_1"} map={map} onChange={(path, value) => set(map, path, value)} /> // set could be immutable version of lodash set
  */
-module.exports = compose(
+export default compose(
     // select selected node
     mapToNodes,
     withSelectedNode,

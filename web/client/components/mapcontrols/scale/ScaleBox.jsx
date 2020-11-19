@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Form, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const {getGoogleMercatorScales} = require('../../../utils/MapUtils');
-const PropTypes = require('prop-types');
-const {isEqual} = require('lodash');
+import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
+
+import { getGoogleMercatorScales } from '../../../utils/MapUtils';
 
 class ScaleBox extends React.Component {
     static propTypes = {
@@ -87,4 +88,4 @@ class ScaleBox extends React.Component {
     }
 }
 
-module.exports = ScaleBox;
+export default ScaleBox;

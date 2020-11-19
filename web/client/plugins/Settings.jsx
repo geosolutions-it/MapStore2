@@ -5,36 +5,32 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
 
-const {loadLocale} = require('../actions/locale');
+import './settings/css/settings.css';
 
-const {toggleControl} = require('../actions/controls');
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, FormGroup, Glyphicon, Panel, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { ActionCreators } from 'redux-undo';
+
+import { toggleControl } from '../actions/controls';
+import { loadLocale } from '../actions/locale';
+import LangBarComp from '../components/I18N/LangBar';
+import HistoryBar from '../components/mapcontrols/navigationhistory/HistoryBar';
+import Dialog from '../components/misc/Dialog';
+import { getSupportedLocales } from '../utils/LocaleUtils';
+import Message from './locale/Message';
+import SettingsPanel from './settings/SettingsPanel';
 
 const LangBar = connect((state) => ({
     currentLocale: state.locale && state.locale.current
 }), {
     onLanguageChange: loadLocale.bind(null, null)
-})(require('../components/I18N/LangBar'));
+})(LangBarComp);
 
-require('./settings/css/settings.css');
-
-const HistoryBar = require('../components/mapcontrols/navigationhistory/HistoryBar');
-const { ActionCreators } = require('redux-undo');
 const {undo, redo} = ActionCreators;
-
-const Message = require('./locale/Message');
-
-const {Glyphicon, FormGroup, Row, Col} = require('react-bootstrap');
-
-const assign = require('object-assign');
-
-const SettingsPanel = require('./settings/SettingsPanel');
-const {getSupportedLocales} = require('../utils/LocaleUtils');
-const {Panel} = require('react-bootstrap');
-const Dialog = require('../components/misc/Dialog');
 
 class SettingsButton extends React.Component {
     static propTypes = {
@@ -185,7 +181,7 @@ const SettingsPlugin = connect((state) => ({
  * @class
  * @memberof plugins
  */
-module.exports = {
+export default {
     SettingsPlugin: assign(SettingsPlugin, {
         Toolbar: {
             name: 'settings',

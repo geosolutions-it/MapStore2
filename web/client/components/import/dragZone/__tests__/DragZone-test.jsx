@@ -1,8 +1,7 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-
-const expect = require('expect');
-const DragZone = require('../DragZone');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import DragZone from '../DragZone';
 describe('DragZone component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

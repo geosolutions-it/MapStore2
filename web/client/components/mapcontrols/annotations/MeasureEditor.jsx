@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const { FormControl, FormGroup } = require('react-bootstrap');
-const { isNumber } = require('lodash');
-const { convertUom } = require('../../../utils/MeasureUtils');
-const { getUnits } = require('../../../utils/CoordinatesUtils');
-const IntlNumberFormControl = require('../../I18N/IntlNumberFormControl');
+import React from 'react';
+
+import { FormControl, FormGroup } from 'react-bootstrap';
+import { isNumber } from 'lodash';
+import { convertUom } from '../../../utils/MeasureUtils';
+import { getUnits } from '../../../utils/CoordinatesUtils';
+import IntlNumberFormControl from '../../I18N/IntlNumberFormControl';
 
 // convert to valueUom if it is a valid number
 const toValue = (value, uom, valueUom) => (isNumber(parseFloat(value)) && !isNaN(parseFloat(value)))
@@ -22,9 +23,16 @@ const toLocalValue = (value, uom, valueUom) =>
         ? parseFloat(convertUom(value, valueUom, uom).toFixed(4))
         : value;
 
-const { compose, withHandlers, withPropsOnChange, withState, withStateHandlers, defaultProps} = require('recompose');
+import {
+    compose,
+    withHandlers,
+    withPropsOnChange,
+    withState,
+    withStateHandlers,
+    defaultProps
+} from 'recompose';
 
-module.exports = compose(
+export default compose(
     defaultProps({
         valueUom: 'm',
         displayUom: 'm',

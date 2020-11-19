@@ -1,7 +1,7 @@
-const React = require('react');
-const {find} = require('lodash');
-const PropTypes = require('prop-types');
-const {Glyphicon} = require('react-bootstrap');
+import React from 'react';
+import { find } from 'lodash';
+import PropTypes from 'prop-types';
+import { Glyphicon } from 'react-bootstrap';
 
 class StringSelector extends React.Component {
     static propTypes = {
@@ -88,4 +88,4 @@ class StringSelector extends React.Component {
     };
 }
 
-module.exports = StringSelector;
+export default StringSelector;

@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import { Glyphicon } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 class PaginationButton extends React.Component {
     static propTypes = {
@@ -48,4 +49,4 @@ class PaginationButton extends React.Component {
     }
 }
 
-module.exports = PaginationButton;
+export default PaginationButton;

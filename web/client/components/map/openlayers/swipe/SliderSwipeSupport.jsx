@@ -5,9 +5,9 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import React, {useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+import {Glyphicon} from 'react-bootstrap';
 import Draggable from 'react-draggable';
-const {Glyphicon} = require('react-bootstrap');
 
 import EffectSupport from './EffectSupport';
 

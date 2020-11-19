@@ -16,7 +16,7 @@ import {changePage} from '../../../actions/mapInfo';
 import Viewer from './DefaultViewer';
 import {isArray, isUndefined} from 'lodash';
 import SwipeHeader from './SwipeHeader';
-const {isMouseMoveIdentifyActiveSelector: identifyFloatingTool } = require('../../../selectors/map');
+import { isMouseMoveIdentifyActiveSelector as identifyFloatingTool } from '../../../selectors/map';
 
 /**
  * Container that render only the selected result

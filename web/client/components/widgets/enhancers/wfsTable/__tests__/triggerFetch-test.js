@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const Rx = require('rxjs');
 
-const expect = require('expect');
-const triggerFetch = require('../triggerFetch');
+import expect from 'expect';
+import Rx from 'rxjs';
+
+import triggerFetch from '../triggerFetch';
 
 describe('triggerFetch stream', () => {
 

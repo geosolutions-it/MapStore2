@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const {Button, Glyphicon} = require('react-bootstrap');
-const {toggleControl} = require('../../actions/controls');
+import React from 'react';
+
+import { connect } from 'react-redux';
+import { Button, Glyphicon } from 'react-bootstrap';
+import { toggleControl } from '../../actions/controls';
 
 class ToggleButton extends React.Component {
     static propTypes = {
@@ -28,7 +30,7 @@ class ToggleButton extends React.Component {
     }
 }
 
-module.exports = connect((state) => ({
+export default connect((state) => ({
     pressed: state.controls && state.controls.search && state.controls.search.enabled || false
 }), {
     onToggle: toggleControl.bind(null, 'search', null)

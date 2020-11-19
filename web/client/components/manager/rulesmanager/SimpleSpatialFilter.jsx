@@ -5,19 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {find} = require('lodash');
-const PropTypes = require('prop-types');
-const {Row, Col, Panel, Glyphicon} = require('react-bootstrap');
-const wk = require("wellknown");
-const ComboField = require("../../data/query/ComboField");
+import React from 'react';
 
-const ComboFieldListItem = require('../../data/query/ComboFieldListItem');
-const RoiCql = require("./RoiCql");
-
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const SwitchPanel = require('../../misc/switch/SwitchPanel');
-const I18N = require('../../I18N/I18N');
+import { find } from 'lodash';
+import PropTypes from 'prop-types';
+import { Row, Col, Panel, Glyphicon } from 'react-bootstrap';
+import wk from 'wellknown';
+import ComboField from '../../data/query/ComboField';
+import ComboFieldListItem from '../../data/query/ComboFieldListItem';
+import RoiCql from './RoiCql';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import SwitchPanel from '../../misc/switch/SwitchPanel';
+import I18N from '../../I18N/I18N';
 
 class SpatialFilter extends React.Component {
     static propTypes = {
@@ -207,4 +206,4 @@ class SpatialFilter extends React.Component {
     }
 }
 
-module.exports = SpatialFilter;
+export default SpatialFilter;

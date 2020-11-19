@@ -5,10 +5,10 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const {compose, withStateHandlers} = require("recompose");
 
+import {compose, withStateHandlers} from "recompose";
 
-module.exports = compose(
+export default compose(
     withStateHandlers(() => ({}),
         {
             toggleModal: () => (modal) => ({

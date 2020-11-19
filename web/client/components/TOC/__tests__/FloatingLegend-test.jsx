@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const FloatingLegend = require('../FloatingLegend');
-const expect = require('expect');
-const TestUtils = require('react-dom/test-utils');
+import ReactDOM from 'react-dom';
+import FloatingLegend from '../FloatingLegend';
+import expect from 'expect';
+import TestUtils from 'react-dom/test-utils';
 
 describe('tests FloatingLegend component', () => {
     beforeEach((done) => {

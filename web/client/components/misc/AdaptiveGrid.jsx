@@ -5,15 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const forceScrollTop = require('../data/grid/forceScrollTop');
+import React from 'react';
+import ContainerDimensions from 'react-container-dimensions';
+
+import DataGrid from  '../data/grid/DataGrid';
+import forceScrollTop from '../data/grid/forceScrollTop';
+
 /*
 * NOTE: forceScrollTop is a workaround to avoid to show empty rows during virtual scrolling.
 * TODO: investigate where is the proper place to apply this enhancer. Notice that it do not allow to
 * call Grid method directly by ref (as for instance RulesGrid does).
 */
-const Grid = forceScrollTop(require('../data/grid/DataGrid'));
-const ContainerDimensions = require('react-container-dimensions').default;
+
+const Grid = forceScrollTop(DataGrid);
 
 /**
  * A react-data-grid that adapts to container
@@ -22,7 +26,7 @@ const ContainerDimensions = require('react-container-dimensions').default;
  * @param  {props} props The props to pass to the ResizableGrid
  * @return {[type]}       [description]
  */
-module.exports = (props) => (<ContainerDimensions>
+export default (props) => (<ContainerDimensions>
     { ({ width, height }) =>
         <div className={props.className}>
             <Grid

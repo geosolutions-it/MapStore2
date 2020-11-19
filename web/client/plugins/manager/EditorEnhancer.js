@@ -1,15 +1,14 @@
-const {compose, withStateHandlers, defaultProps, withPropsOnChange} = require('recompose');
-const propsStreamFactory = require('../../components/misc/enhancers/propsStreamFactory');
-const Rx = require("rxjs");
-const {isEmpty} = require("lodash");
-
-const {connect} = require("react-redux");
-const {changeDrawingStatus} = require("../../actions/draw");
-const {error} = require("../../actions/notifications");
+import { compose, withStateHandlers, defaultProps, withPropsOnChange } from 'recompose';
+import propsStreamFactory from '../../components/misc/enhancers/propsStreamFactory';
+import Rx from 'rxjs';
+import { isEmpty } from 'lodash';
+import { connect } from 'react-redux';
+import { changeDrawingStatus } from '../../actions/draw';
+import { error } from '../../actions/notifications';
 
 const sameLayer = ({activeRule: f1}, {activeRule: f2}) => f1.layer === f2.layer;
 const emitStop = stream$ => stream$.filter(() => false).startWith({});
-const {getStylesAndAttributes} = require("../../observables/rulesmanager");
+import { getStylesAndAttributes } from '../../observables/rulesmanager';
 const dataStreamFactory = prop$ => {
     return prop$.distinctUntilChanged((oP, nP) => sameLayer(oP, nP))
         .filter(({activeRule}) => activeRule.layer && activeRule.workspace)
@@ -27,7 +26,7 @@ const dataStreamFactory = prop$ => {
         }).let(emitStop);
 };
 
-module.exports = compose(connect(() => ({}), {
+export default compose(connect(() => ({}), {
     onChangeDrawingStatus: changeDrawingStatus,
     onError: error
 }),

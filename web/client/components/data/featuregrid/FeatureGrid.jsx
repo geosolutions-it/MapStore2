@@ -5,14 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const AdaptiveGrid = require('../../misc/AdaptiveGrid');
 
-const {featuresToGrid} = require('./enhancers/editor');
-const rowRenderer = require('./renderers/RowRenderer');
-const {isValidValueForPropertyName, isProperty} = require('../../../utils/FeatureGridUtils');
+import PropTypes from 'prop-types';
+import React from 'react';
 
+import { isProperty, isValidValueForPropertyName } from '../../../utils/FeatureGridUtils';
+import AdaptiveGrid from '../../misc/AdaptiveGrid';
+import featuresToGrid from './enhancers/editor';
+import rowRenderer from './renderers/RowRenderer';
 
 /**
  * A component that gets the describeFeatureType and the features to display
@@ -96,4 +96,4 @@ class FeatureGrid extends React.PureComponent {
         />);
     }
 }
-module.exports = featuresToGrid(FeatureGrid);
+export default featuresToGrid(FeatureGrid);

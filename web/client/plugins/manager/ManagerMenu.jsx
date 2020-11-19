@@ -5,14 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
 
-const {connect} = require('react-redux');
-
-const assign = require('object-assign');
-const { isPageConfigured } = require("../../selectors/plugins");
-const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import assign from 'object-assign';
+import { isPageConfigured } from '../../selectors/plugins';
+import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 
 const Container = connect(() => ({
     noCaret: true,
@@ -21,10 +20,10 @@ const Container = connect(() => ({
     title: <Glyphicon glyph="1-menu-manage"/>
 }))(DropdownButton);
 
-const ToolsContainer = require('../containers/ToolsContainer');
-const Message = require('../locale/Message');
-const { itemSelected } = require('../../actions/manager');
-require('../burgermenu/burgermenu.css');
+import ToolsContainer from '../containers/ToolsContainer';
+import Message from '../locale/Message';
+import { itemSelected } from '../../actions/manager';
+import '../burgermenu/burgermenu.css';
 
 class ManagerMenu extends React.Component {
     static propTypes = {
@@ -146,7 +145,7 @@ const RULE_MANAGER_ID = 'rulesmanager';
  * @class
  * @prop {boolean} cfg.enableContextManager: enable context manager menu entry, default `true`
  */
-module.exports = {
+export default {
     ManagerMenuPlugin: assign(connect((state) => ({
         enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
         enableImporter: isPageConfigured(IMPORTER_ID)(state),

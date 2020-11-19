@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Tooltip} = require("react-bootstrap");
-const OverlayTrigger = require('../../misc/OverlayTrigger').default;
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
-const {NumberPicker} = require('react-widgets');
+import { NumberPicker } from 'react-widgets';
 
 class NumberField extends React.Component {
     static propTypes = {
@@ -142,4 +143,4 @@ class NumberField extends React.Component {
     };
 }
 
-module.exports = NumberField;
+export default NumberField;

@@ -6,11 +6,13 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const {isArray} = require('lodash');
-const PagedCombobox = require('./combobox/PagedCombobox');
-const {setObservableConfig, mapPropsStreamWithConfig, compose, withStateHandlers} = require('recompose');
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+import { isArray } from 'lodash';
+import React from 'react';
+import { compose, mapPropsStreamWithConfig, setObservableConfig, withStateHandlers } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+
+import PagedCombobox from './combobox/PagedCombobox';
+
 setObservableConfig(rxjsConfig);
 const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
 
@@ -127,8 +129,8 @@ const addStateHandlers = compose(
     })
 );
 
-const AutocompleteCombobox = addStateHandlers(PagedComboboxEnhanced);
+export const AutocompleteCombobox = addStateHandlers(PagedComboboxEnhanced);
 
-module.exports = {
+export default {
     AutocompleteCombobox
 };

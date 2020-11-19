@@ -96,7 +96,7 @@ var createVectorLayer = function(options, features = []) {
         style: style // TODO: ol nativeStyle should not be taken from the store
     });
     layer.setOpacity = function(layerOpacity = 1) {
-        const originalStyle = { ...layer.options.style || {}};
+        const originalStyle = { ...(layer.options.style || {})};
         const {fillOpacity = 1, opacity = 1 } = originalStyle;
         const opacityStyle = {
             ...originalStyle,

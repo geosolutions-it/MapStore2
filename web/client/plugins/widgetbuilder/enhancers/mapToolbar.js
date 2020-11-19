@@ -5,19 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, branch, withProps } = require('recompose');
-const {connect} = require('react-redux');
-const { insertWidget, setPage, onEditorChange} = require('../../../actions/widgets');
-const manageLayers = require('./manageLayers');
-const handleNodeEditing = require('./handleNodeEditing');
-const handleRemoveLayer = require('./handleMapRemoveLayer');
-const handleMapZoomLayer = require("./handleMapZoomLayer").default;
-const { wizardSelector, wizardStateToProps } = require('../commons');
+import { compose, branch, withProps } from 'recompose';
 
-const mapBuilderConnect = require('./connection/mapBuilderConnect');
-const withConnectButton = require('./connection/withConnectButton');
-const withExitButton = require('./withExitButton');
-module.exports = compose(
+import { connect } from 'react-redux';
+import { insertWidget, setPage, onEditorChange } from '../../../actions/widgets';
+import manageLayers from './manageLayers';
+import handleNodeEditing from './handleNodeEditing';
+import handleRemoveLayer from './handleMapRemoveLayer';
+import handleMapZoomLayer from './handleMapZoomLayer';
+import { wizardSelector, wizardStateToProps } from '../commons';
+import mapBuilderConnect from './connection/mapBuilderConnect';
+import withConnectButton from './connection/withConnectButton';
+import withExitButton from './withExitButton';
+
+export default compose(
     connect(wizardSelector, {
         setPage,
         onChange: onEditorChange,

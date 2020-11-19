@@ -6,16 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Dropzone = require('react-dropzone');
-const Spinner = require('react-spinkit');
+import React from 'react';
 
-const {getMessageById} = require('../../utils/LocaleUtils');
-
-const JSZip = require('jszip');
-const {readZip, recognizeExt, MIME_LOOKUPS} = require('../../utils/FileUtils');
-const {Promise} = require('es6-promise');
+import PropTypes from 'prop-types';
+import Dropzone from 'react-dropzone';
+import Spinner from 'react-spinkit';
+import { getMessageById } from '../../utils/LocaleUtils';
+import JSZip from 'jszip';
+import { readZip, recognizeExt, MIME_LOOKUPS } from '../../utils/FileUtils';
+import { Promise } from 'es6-promise';
 
 class SelectShape extends React.Component {
     static propTypes = {
@@ -83,4 +82,4 @@ class SelectShape extends React.Component {
     };
 }
 
-module.exports = SelectShape;
+export default SelectShape;

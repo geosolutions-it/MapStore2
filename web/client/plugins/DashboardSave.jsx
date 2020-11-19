@@ -5,19 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React from 'react';
+import {Glyphicon} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { compose, withProps } from 'recompose';
 import { createSelector } from 'reselect';
-import {Glyphicon} from 'react-bootstrap';
+
+import { saveDashboard, triggerSave, triggerSaveAs } from '../actions/dashboard';
 import Message from '../components/I18N/Message';
+import handleSaveModal from '../components/resources/modals/enhancers/handleSaveModal';
+import Save from '../components/resources/modals/Save';
+import dashboard from '../reducers/dashboard';
+import { dashboardResource, getDashboardSaveErrors, isDashboardLoading, isShowSaveAsOpen, isShowSaveOpen } from '../selectors/dashboard';
 import { isLoggedIn, userSelector } from '../selectors/security';
 import { widgetsConfig } from '../selectors/widgets';
-import { isShowSaveOpen, isShowSaveAsOpen, dashboardResource, isDashboardLoading, getDashboardSaveErrors } from '../selectors/dashboard';
-import { saveDashboard, triggerSave, triggerSaveAs } from '../actions/dashboard';
-import handleSaveModal from '../components/resources/modals/enhancers/handleSaveModal';
 import { createPlugin } from '../utils/PluginsUtils';
-import dashboard from '../reducers/dashboard';
 
 /**
  * Save dialog component enhanced for dashboard
@@ -37,7 +40,7 @@ const SaveBaseDialog = compose(
         category: "DASHBOARD"
     }),
     handleSaveModal
-)(require('../components/resources/modals/Save'));
+)(Save);
 
 /**
  * Implements "save" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}

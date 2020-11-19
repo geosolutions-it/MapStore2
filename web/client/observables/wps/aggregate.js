@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {castArray} = require('lodash');
+import { castArray } from 'lodash';
+
 const applyTemplate = ({featureType, aggregationAttribute, groupByAttributes = [], aggregateFunction, viewParams, filter = ""}) => `<?xml version="1.0" encoding="UTF-8"?>
 <wps:Execute service="WPS"   version="1.0.0"
     xmlns="http://www.opengis.net/wps/1.0.0"
@@ -65,11 +66,11 @@ const applyTemplate = ({featureType, aggregationAttribute, groupByAttributes = [
     </wps:ResponseForm>
 </wps:Execute>`;
 
-const axios = require('../../libs/ajax');
+import axios from '../../libs/ajax';
+import Rx from 'rxjs';
+import { getWPSURL } from './common';
 
-const Rx = require('rxjs');
-const {getWPSURL} = require('./common');
-module.exports = (url, options, requestOptions = {}) =>
+export default (url, options, requestOptions = {}) =>
     Rx.Observable.defer(() =>
         axios.post(getWPSURL(url), applyTemplate(options), {
             headers: {'Content-Type': 'text/xml'},

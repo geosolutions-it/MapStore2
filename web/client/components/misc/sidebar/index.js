@@ -6,10 +6,11 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const Sidebar = require('./Sidebar');
-const SidebarHeader = require('./SidebarHeader');
+import Sidebar from './Sidebar';
 
-module.exports = {
+import SidebarHeader from './SidebarHeader';
+
+export default {
     Sidebar,
     SidebarHeader
 };

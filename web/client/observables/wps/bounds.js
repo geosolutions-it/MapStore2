@@ -35,11 +35,11 @@ const applyTemplate = ({wfsGetFeature}) => `<?xml version="1.0" encoding="UTF-8"
     </wps:ResponseForm>
 </wps:Execute>`;
 
-const axios = require('../../libs/ajax');
+import axios from '../../libs/ajax';
+import Rx from 'rxjs';
+import { getWPSURL } from './common';
 
-const Rx = require('rxjs');
-const {getWPSURL} = require('./common');
-module.exports = (url, options, requestOptions = {}) =>
+export default (url, options, requestOptions = {}) =>
     Rx.Observable.defer(() =>
         axios.post(getWPSURL(url), applyTemplate(options), {
             headers: {'Content-Type': 'text/xml'},

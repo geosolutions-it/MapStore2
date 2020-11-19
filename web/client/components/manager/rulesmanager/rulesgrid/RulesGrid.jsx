@@ -5,18 +5,15 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const PropTypes = require('prop-types');
-const RuleRenderer = require('./renderers/RuleRenderer');
+import React from 'react';
 
-const EmptyView = require('../../../misc/EmptyView');
-
-
-const { Draggable } = require('react-data-grid-addons');
-
-const DataGrid = require('../../../data/grid/DataGrid');
+import PropTypes from 'prop-types';
+import RuleRenderer from './renderers/RuleRenderer';
+import EmptyView from '../../../misc/EmptyView';
+import { Draggable } from 'react-data-grid-addons';
+import DataGrid from '../../../data/grid/DataGrid';
 const { Container: DraggableContainer, DropTargetRowContainer: dropTargetRowContainer } = Draggable;
-const PriorityActionCell = require("./renderers/PriorityActionCell");
+import PriorityActionCell from './renderers/PriorityActionCell';
 const RowRenderer = dropTargetRowContainer(RuleRenderer);
 
 class RulesGrid extends React.Component {
@@ -124,4 +121,4 @@ class RulesGrid extends React.Component {
     };
 }
 
-module.exports = RulesGrid;
+export default RulesGrid;

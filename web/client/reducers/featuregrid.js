@@ -259,8 +259,7 @@ function featuregrid(state = emptyResultsState, action) {
             deleteConfirm: false,
             drawing: false,
             newFeatures: [],
-            changes: [],
-            select: []
+            changes: []
         });
     }
     case CREATE_NEW_FEATURE: {
@@ -286,10 +285,10 @@ function featuregrid(state = emptyResultsState, action) {
         const newFeaturesChanges = action.features.filter(f => f._new) || [];
         return assign({}, state, {
             newFeatures: newFeaturesChanges.length > 0 ? applyNewChanges(state.newFeatures, newFeaturesChanges, null, {geometry: {...head(newFeaturesChanges).geometry} }) : state.newFeatures,
-            changes: [...(state && state.changes || []), ...(action.features.filter(f => !f._new).map(f => ({
+            changes: action.features.filter(f => !f._new).map((f, index) => ({
                 id: f.id,
-                updated: {geometry: head(action.features).geometry}
-            })))],
+                updated: {geometry: action.features[index].geometry}
+            })),
             drawing: false
         });
     }

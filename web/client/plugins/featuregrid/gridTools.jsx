@@ -1,11 +1,11 @@
-const React = require('react');
-const bbox = require('@turf/bbox');
-const {zoomToExtent} = require('../../actions/map');
-const Message = require('../../components/I18N/Message').default;
-const {Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../components/misc/OverlayTrigger').default;
+import React from 'react';
+import bbox from '@turf/bbox';
+import { zoomToExtent } from '../../actions/map';
+import Message from '../../components/I18N/Message';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../components/misc/OverlayTrigger';
 
-module.exports = [{
+export default [{
     name: '',
     key: "geometry",
     width: 35,

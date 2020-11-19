@@ -6,12 +6,12 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const {compose, mapPropsStreamWithConfig, defaultProps} = require('recompose');
+import { compose, mapPropsStreamWithConfig, defaultProps } from 'recompose';
 
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
-
-const Rx = require('rxjs');
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+import Rx from 'rxjs';
 const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
+
 /**
  * This enhancer allows a component to implement a function (passed as property)
  * called `dataStreamFactory`, that returns a stream of props. The props from the stream
@@ -34,7 +34,7 @@ const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
  * // later in the render method
  * return <AutoCount dataStreamFactory={$props => $props.scan( (acc) => acc + 1, 0).map(count => ({count}))} />;
  */
-module.exports = compose(
+export default compose(
     defaultProps({
         dataStreamFactory: () => Rx.Observable.of({})
     }),

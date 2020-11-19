@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
+import React from 'react';
 
-const WorkspacesFilter = require('../WorkspacesFilter');
-const {Provider} = require('react-redux');
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import WorkspacesFilter from '../WorkspacesFilter';
+import { Provider } from 'react-redux';
 
 describe('WorkspacesFilter', () => {
     beforeEach((done) => {

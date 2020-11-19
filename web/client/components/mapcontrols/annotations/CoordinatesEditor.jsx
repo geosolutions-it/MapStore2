@@ -6,22 +6,30 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {FormGroup, ControlLabel, MenuItem, DropdownButton: DropdownButtonRB, Glyphicon: GlyphiconRB} = require('react-bootstrap');
-const Select = require('react-select').default;
+import React from 'react';
 
-const tooltip = require('../../misc/enhancers/tooltip');
+import PropTypes from 'prop-types';
+
+import {
+    FormGroup,
+    ControlLabel,
+    MenuItem,
+    DropdownButton as DropdownButtonRB,
+    Glyphicon as GlyphiconRB
+} from 'react-bootstrap';
+
+import Select from 'react-select';
+import tooltip from '../../misc/enhancers/tooltip';
 const Glyphicon = tooltip(GlyphiconRB);
 const DropdownButton = tooltip(DropdownButtonRB);
-const {head, isNaN, get, isEmpty} = require('lodash');
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const draggableContainer = require('../../misc/enhancers/draggableContainer');
-const Message = require('../../I18N/Message').default;
-const {validateCoords, coordToArray} = require('../../../utils/AnnotationsUtils');
-const CoordinatesRow = require('../../misc/coordinateeditors/CoordinatesRow');
-const MeasureEditor = require('./MeasureEditor');
+import { head, isNaN, get, isEmpty } from 'lodash';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import draggableContainer from '../../misc/enhancers/draggableContainer';
+import Message from '../../I18N/Message';
+import { validateCoords, coordToArray } from '../../../utils/AnnotationsUtils';
+import CoordinatesRow from '../../misc/coordinateeditors/CoordinatesRow';
+import MeasureEditor from './MeasureEditor';
 
 /**
  * Geometry editor for annotation Features.
@@ -383,4 +391,4 @@ class CoordinatesEditor extends React.Component {
     }
 }
 
-module.exports = draggableContainer(CoordinatesEditor);
+export default draggableContainer(CoordinatesEditor);

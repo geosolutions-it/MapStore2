@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {isString} = require('lodash');
-const {containsHTML} = require('../../../../../utils/StringUtils');
+import {isString} from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import {containsHTML} from '../../../../../utils/StringUtils';
 
 const alwaysExcluded = ["exclude", "titleStyle", "listStyle", "componentStyle", "title", "feature"];
 
@@ -100,4 +101,4 @@ class PropertiesViewer extends React.Component {
     };
 }
 
-module.exports = PropertiesViewer;
+export default PropertiesViewer;

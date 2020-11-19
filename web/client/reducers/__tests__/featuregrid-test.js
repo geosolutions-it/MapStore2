@@ -307,7 +307,7 @@ describe('Test the featuregrid reducer', () => {
         let state = featuregrid( {newFeatures: []}, geometryChanged([feature1]));
         expect(state.changes.length).toBe(1);
         expect(state.newFeatures.length).toBe(0);
-        state = featuregrid( state, geometryChanged([feature1]));
+        state = featuregrid( state, geometryChanged([feature1, feature2]));
         expect(state.changes.length).toBe(2);
 
     });

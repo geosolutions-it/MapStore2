@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2018, GeoSolutions Sas.
 * All rights reserved.
@@ -6,17 +5,19 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const { compose, branch, withState, withHandlers, defaultProps, mapProps } = require('recompose');
+import { branch, compose, defaultProps, mapProps, withHandlers, withState } from 'recompose';
 
-const handleSave = require('../modals/enhancers/handleSave').default;
-const handleSaveModal = require('../modals/enhancers/handleSaveModal').default;
-const handleResourceDownload = require('../modals/enhancers/handleResourceDownload');
-const handleDetailsDownload = require('../modals/enhancers/handleDetailsDownload').default;
+import handleDetailsDownload from '../modals/enhancers/handleDetailsDownload';
+import handleResourceDownload from '../modals/enhancers/handleResourceDownload';
+import handleSave from '../modals/enhancers/handleSave';
+import handleSaveModal from '../modals/enhancers/handleSaveModal';
+import Save from '../modals/Save';
 
 /*
  * EditDialog
  * Automatically downloads missing data and manage resource changes. Manages save, triggering onSaveSuccess
  */
+
 const EditDialog = compose(
     handleResourceDownload,
     withHandlers({
@@ -39,7 +40,7 @@ const EditDialog = compose(
             )
         )
     )
-)(require('../modals/Save'));
+)(Save);
 
 const resourceGrid = compose(
     withState('resource', 'setResource'),
@@ -93,4 +94,4 @@ const resourceGrid = compose(
     }))
 );
 
-module.exports = resourceGrid;
+export default resourceGrid;

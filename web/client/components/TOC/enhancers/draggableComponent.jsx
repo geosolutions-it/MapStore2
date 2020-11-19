@@ -1,6 +1,6 @@
-const ReactDOM = require('react-dom');
-const {DragSource: dragSource, DropTarget: dropTarget} = require('react-dnd');
-const {compose, branch} = require('recompose');
+import ReactDOM from 'react-dom';
+import { DragSource as dragSource, DropTarget as dropTarget } from 'react-dnd';
+import { compose, branch } from 'recompose';
 
 const dragSpec = {
     beginDrag: (props) => {
@@ -135,7 +135,7 @@ const dropCollect = (connect, monitor) => {
 * @memberof components.TOC.enhancers
 * @param {string} type Type of an item in dnd interactions. Dropping a source onto a target requires them to have identical types
 */
-module.exports = (type, ...args) => {
+export default (type, ...args) => {
     return branch(
         ({isDraggable} = {}) => isDraggable,
         compose(

@@ -6,17 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const {compose} = require("recompose");
+import PropTypes from 'prop-types';
+import React from 'react';
+import ContainerDimensions from 'react-container-dimensions';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+import { createSelector } from 'reselect';
 
-const {createSelector} = require('reselect');
-const {selectedRules, filterSelector, isEditorActive, triggerLoadSel} = require('../selectors/rulesmanager');
-
-const ContainerDimensions = require('react-container-dimensions').default;
-const PropTypes = require('prop-types');
-const {rulesSelected, setLoading, setFilter} = require("../actions/rulesmanager");
-const {error} = require('../actions/notifications');
+import { error } from '../actions/notifications';
+import { rulesSelected, setFilter, setLoading } from '../actions/rulesmanager';
+import rulesgridComp from '../components/manager/rulesmanager/rulesgrid/enhancers/rulesgrid';
+import RulesGridComp from '../components/manager/rulesmanager/rulesgrid/RulesGrid';
+import rulesmanager from '../reducers/rulesmanager';
+import { filterSelector, isEditorActive, selectedRules, triggerLoadSel } from '../selectors/rulesmanager';
 
 const ruelsSelector = createSelector([selectedRules, filterSelector, triggerLoadSel], (rules, filters, triggerLoad) => {
     return {
@@ -27,9 +29,9 @@ const ruelsSelector = createSelector([selectedRules, filterSelector, triggerLoad
 });
 const rulesGridEnhancer = compose(
     connect( ruelsSelector, {onSelect: rulesSelected, onLoadError: error, setLoading, setFilters: setFilter}),
-    require('../components/manager/rulesmanager/rulesgrid/enhancers/rulesgrid'));
+    rulesgridComp);
 
-const RulesGrid = rulesGridEnhancer(require('../components/manager/rulesmanager/rulesgrid/RulesGrid'));
+const RulesGrid = rulesGridEnhancer(RulesGridComp);
 
 /**
   * @name RulesDataGrid
@@ -72,7 +74,8 @@ const RulesDataGridPlugin = connect(
         // onUnmount: () => setEditorAvailable(false)
     }
 )(RulesDataGrid);
-module.exports = {
+
+export default {
     RulesDataGridPlugin,
-    reducers: {rulesmanager: require('../reducers/rulesmanager').default}
+    reducers: {rulesmanager}
 };

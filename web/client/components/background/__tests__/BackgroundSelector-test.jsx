@@ -1,8 +1,7 @@
-const expect = require('expect');
-
-const React = require('react');
-const ReactDOM = require('react-dom');
-const BackgroundSelector = require('../BackgroundSelector');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import BackgroundSelector from '../BackgroundSelector';
 
 describe("test the BackgroundSelector", () => {
     beforeEach((done) => {

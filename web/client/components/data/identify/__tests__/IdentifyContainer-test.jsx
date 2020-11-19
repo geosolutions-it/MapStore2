@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const expect = require('expect');
-const ReactDOM = require('react-dom');
-const IdentifyContainer = require('../IdentifyContainer');
-const TestUtils = require('react-dom/test-utils');
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
-const getFeatureButtons = require('../../../../plugins/identify/featureButtons');
+import React from 'react';
+
+import expect from 'expect';
+import ReactDOM from 'react-dom';
+import IdentifyContainer from '../IdentifyContainer';
+import TestUtils from 'react-dom/test-utils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import getFeatureButtons from '../../../../plugins/identify/featureButtons';
 
 describe("test IdentifyContainer", () => {
     beforeEach((done) => {

@@ -6,13 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Glyphicon, SplitButton, MenuItem} = require('react-bootstrap');
+import React from 'react';
 
-
-const Message = require('../../components/I18N/Message').default;
-const tooltip = require('../../components/misc/enhancers/tooltip');
+import PropTypes from 'prop-types';
+import { Glyphicon, SplitButton, MenuItem } from 'react-bootstrap';
+import Message from '../../components/I18N/Message';
+import tooltip from '../../components/misc/enhancers/tooltip';
 
 const SplitButtonT = tooltip(SplitButton);
 const splitToolButtonConfig = {
@@ -84,4 +83,4 @@ SwipeButton.defaultProps = {
     onSetActive: () => { }
 };
 
-module.exports =  SwipeButton;
+export default SwipeButton;

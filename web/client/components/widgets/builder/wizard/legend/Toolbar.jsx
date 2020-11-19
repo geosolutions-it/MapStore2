@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
 
+import React from 'react';
 
-const Toolbar = require('../../../../misc/toolbar/Toolbar');
+import Toolbar from '../../../../misc/toolbar/Toolbar';
+
 const getBackTooltipId = step => {
     switch (step) {
     case 1:
@@ -32,7 +33,7 @@ const getSaveTooltipId = (step, {id} = {}) => {
     return "widgets.builder.wizard.addTheWidget";
 };
 
-module.exports = ({ step = 0, editorData = {}, valid, stepButtons = [], onFinish = () => { }, setPage = () => { }} = {}) => (<Toolbar btnDefaultProps={{
+export default ({ step = 0, editorData = {}, valid, stepButtons = [], onFinish = () => { }, setPage = () => { }} = {}) => (<Toolbar btnDefaultProps={{
     bsStyle: "primary",
     bsSize: "sm"
 }}

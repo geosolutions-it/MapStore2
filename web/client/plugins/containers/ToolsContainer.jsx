@@ -6,30 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import { partial } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Button, Collapse, Glyphicon, Panel, Tooltip } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
-const {connect} = require('react-redux');
-const {compose} = require('redux');
-
-const {changeHelpText, changeHelpwinVisibility} = require('../../actions/help');
+import { setControlProperty, toggleControl } from '../../actions/controls';
+import { changeHelpText, changeHelpwinVisibility } from '../../actions/help';
+import HelpBadgeComp from '../../components/help/HelpBadge';
+import Message from '../../components/I18N/Message';
+import OverlayTrigger from '../../components/misc/OverlayTrigger';
 
 const HelpBadge = connect((state) => ({
     isVisible: state.controls && state.controls.help && state.controls.help.enabled
 }), {
     changeHelpText,
     changeHelpwinVisibility
-})(require('../../components/help/HelpBadge'));
+})(HelpBadgeComp);
 
-const Message = require('../../components/I18N/Message').default;
-
-const {Button, Tooltip, Panel, Collapse, Glyphicon} = require('react-bootstrap');
-const OverlayTrigger = require('../../components/misc/OverlayTrigger').default;
-
-const {setControlProperty, toggleControl} = require('../../actions/controls');
-const {partial} = require('lodash');
-
-const assign = require('object-assign');
 
 /**
  * A container for tools.
@@ -211,4 +208,4 @@ class ToolsContainer extends React.Component {
     };
 }
 
-module.exports = ToolsContainer;
+export default ToolsContainer;

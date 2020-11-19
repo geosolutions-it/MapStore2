@@ -1,4 +1,5 @@
-var PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,9 +9,10 @@ var PropTypes = require('prop-types');
  */
 
 
-var React = require('react');
-var ToggleButton = require('../buttons/ToggleButton');
-require("./help.css");
+import React from 'react';
+
+import ToggleButton from '../buttons/ToggleButton';
+import './help.css';
 
 /**
  * A toggle button class for enabling / disabling help modus
@@ -48,4 +50,4 @@ class HelpToggleBtn extends React.Component {
     }
 }
 
-module.exports = HelpToggleBtn;
+export default HelpToggleBtn;

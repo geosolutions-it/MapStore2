@@ -5,24 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {find} = require('lodash');
-const PropTypes = require('prop-types');
-const {Row, Col, Panel, Glyphicon} = require('react-bootstrap');
 
-const ComboField = require('./ComboField');
-const GeometryDetails = require('./GeometryDetails');
+import { find } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, Glyphicon, Panel, Row } from 'react-bootstrap';
 
-const {AutocompleteWFSCombobox} = require('../../misc/AutocompleteWFSCombobox');
-const ComboFieldListItem = require('./ComboFieldListItem');
-const {createWFSFetchStream} = require('../../../observables/autocomplete');
-
-const ZoneField = require('./ZoneField');
-
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const SwitchPanel = require('../../misc/switch/SwitchPanel');
-const I18N = require('../../I18N/I18N');
-const IntlNumberFormControl = require("../../I18N/IntlNumberFormControl");
+import { createWFSFetchStream } from '../../../observables/autocomplete';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import I18N from '../../I18N/I18N';
+import IntlNumberFormControl from '../../I18N/IntlNumberFormControl';
+import { AutocompleteWFSCombobox } from '../../misc/AutocompleteWFSCombobox';
+import SwitchPanel from '../../misc/switch/SwitchPanel';
+import ComboField from './ComboField';
+import ComboFieldListItem from './ComboFieldListItem';
+import GeometryDetails from './GeometryDetails';
+import ZoneField from './ZoneField';
 
 class SpatialFilter extends React.Component {
     static propTypes = {
@@ -380,4 +378,4 @@ class SpatialFilter extends React.Component {
     };
 }
 
-module.exports = SpatialFilter;
+export default SpatialFilter;

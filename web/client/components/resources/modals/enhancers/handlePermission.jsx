@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const Rx = require('rxjs');
-const { mapPropsStream, compose, branch, withStateHandlers } = require('recompose');
-const GeoStoreDAO = require('../../../../api/GeoStoreDAO');
+
+import { branch, compose, mapPropsStream, withStateHandlers } from 'recompose';
+import Rx from 'rxjs';
+
+import GeoStoreDAO from '../../../../api/GeoStoreDAO';
 
 /**
  * retrieves groups for permission handling and returns as props
@@ -68,7 +70,7 @@ const manageLocalPermissionChanges = withStateHandlers(
     }
 );
 
-module.exports = ( API = GeoStoreDAO ) => branch(
+export default ( API = GeoStoreDAO ) => branch(
     ({ disablePermission }) => !disablePermission,
     compose(
         retrieveGroups(API),
