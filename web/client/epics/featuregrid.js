@@ -291,7 +291,10 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
         return updateQuery(filter, update.type);
     }
     let u = update;
-    return updateQuery(gridUpdateToQueryUpdate(u, wfsFilter(store.getState())), u.type);
+    if (append && !!update?.attribute) {
+        u = getAttributeFilters(store.getState())[update?.attribute];
+    }
+    return updateQuery(gridUpdateToQueryUpdate(u, wfsFilter(store.getState())), u?.type);
 };
 
 
