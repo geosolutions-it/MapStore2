@@ -392,12 +392,12 @@
             },
             "geostories": {
                 "newGeostory": "Neue GeoStory",
-                "title": "GeoStory ({count})",
+                "title": "GeoStories ({count})",
                 "titleNoCount": "GeoStories",
                 "create": "GeoStory erstellen",
                 "noGeostoryAvailable": "Kein GeoStory verfügbar",
                 "createANewOne": "Erstelle eine neue",
-                "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten",
+                "deleteError": "Beim Löschen der GeoStory ist ein Fehler aufgetreten",
                 "errorLoadingGeostories": "Beim Laden von GeoStories ist ein Fehler aufgetreten"
             }
         },
