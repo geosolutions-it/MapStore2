@@ -363,12 +363,10 @@ export const featureGridSort = (action$, store) =>
 export const featureGridUpdateGeometryFilter = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID).flatMap(() => Rx.Observable.merge(
         action$.ofType(UPDATE_FILTER)
-            .take(1)
             .filter(({update = {}}) => !!update.value)
             .map(updateFilterFunc(store)),
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry')
-            .take(1)
             .filter(({update = {}}) => !update.enabled)
             .map(updateFilterFunc(store)),
         action$.ofType(UPDATE_FILTER)
