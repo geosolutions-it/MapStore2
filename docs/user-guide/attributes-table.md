@@ -12,9 +12,9 @@ Accessing this panel the user can perform the following main operations:
 
 * Set two type of [filters](filtering-layers.md#advanced_search) through the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button or <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button 
 
-* Download the grid data through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button 
+* Download the grid data through the <img src="../img/button/download_attribute_table.jpg" class="ms-docbutton"/> button 
 
-* Customize the Attribute table display through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
+* Customize the attribute table display through the <img src="../img/button/customize_attribute_table.jpg" class="ms-docbutton"/> button
 
 * Create [Widgets](widgets.md) through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
 
