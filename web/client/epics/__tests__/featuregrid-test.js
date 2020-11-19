@@ -2226,22 +2226,28 @@ describe('featuregrid Epics', () => {
             expect(actions[0].status).toBe('start');
         }, {}, done);
     });
-    it('deactivateBoxSelectionTool', (done) => {
+    describe('deactivateBoxSelectionTool', () => {
         const startActions = [
             updateFilter({
                 type: 'geometry',
                 enabled: false
             })];
-        testEpic(deactivateBoxSelectionTool, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
-            expect(actions[0].status).toBe('end');
-        }, {}, done);
-        testEpic(deactivateBoxSelectionTool, 1, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
-            expect(actions[0].status).toBe('end');
-        }, {}, done);
+        it('on filter disable', (done) => {
+            testEpic(deactivateBoxSelectionTool, 1, startActions, actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+                expect(actions[0].status).toBe('end');
+            }, {}, done);
+        });
+        it('on FG close', (done) => {
+            testEpic(deactivateBoxSelectionTool, 1, closeFeatureGrid(), actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+                expect(actions[0].status).toBe('end');
+            }, {}, done);
+        });
+
+
     });
     it('disableMultiSelect epic', (done) => {
         const geomFilter = {

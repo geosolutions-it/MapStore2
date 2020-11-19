@@ -531,7 +531,7 @@ export const activateBoxSelectionTool = (action$) =>
 export const deactivateBoxSelectionTool = (action$) =>
     Rx.Observable.merge(
         action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
-        action$.ofType(CLOSE_FEATURE_GRID_CONFIRM)
+        action$.ofType(CLOSE_FEATURE_GRID)
     ).switchMap(() => {
         return Rx.Observable.of(changeBoxSelectionStatus("end"));
     });
