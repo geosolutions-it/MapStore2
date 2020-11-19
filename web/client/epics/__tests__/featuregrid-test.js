@@ -50,7 +50,8 @@ import {
     DISABLE_TOOLBAR,
     DEACTIVATE_GEOMETRY_FILTER,
     SET_SELECTION_OPTIONS,
-    SELECT_FEATURES
+    SELECT_FEATURES,
+    SET_PAGINATION
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
@@ -2098,7 +2099,7 @@ describe('featuregrid Epics', () => {
             featureGridState2
         );
     });
-    it('featureGridUpdateFilter with geometry filter', (done) => {
+    it('featureGridUpdateFilter with geometry filter disable virtual scroll and trigger update query on every filter update', (done) => {
         const startActions = [openFeatureGrid(), createQuery(), updateFilter({
             type: 'geometry',
             enabled: true
@@ -2106,13 +2107,30 @@ describe('featuregrid Epics', () => {
             type: 'geometry',
             enabled: true,
             value: {}
+        }), updateFilter({
+            type: 'geometry',
+            enabled: true,
+            value: { something: "else"}
+        }), updateFilter({
+            type: 'geometry',
+            enabled: false
         })];
-        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(UPDATE_QUERY);
-            expect(actions[0].reason).toBe('geometry');
+        testEpic(featureGridUpdateGeometryFilter, 5, startActions, ([setPaginationAction, updateQueryAction, updateQueryAction2, resetPaginationAction, updateQueryAction3]) => {
+            expect(setPaginationAction.type).toBe(SET_PAGINATION); // disable virtual scroll
+            expect(setPaginationAction.size).toBe(100000);
+            expect(updateQueryAction.type).toBe(UPDATE_QUERY);
+            expect(updateQueryAction.reason).toBe('geometry');
+            expect(updateQueryAction2.type).toBe(UPDATE_QUERY);
+            expect(updateQueryAction2.reason).toBe('geometry');
+            expect(resetPaginationAction.type).toBe(SET_PAGINATION);
+            expect(resetPaginationAction.size).toBe(20);
+            expect(updateQueryAction3.type).toBe(UPDATE_QUERY);
+            expect(updateQueryAction3.reason).toBe('geometry');
         }, {
             featuregrid: {
+                pagination: {
+                    size: 20
+                },
                 selectedLayer: 'layer'
             },
             layers: [{
@@ -2121,31 +2139,28 @@ describe('featuregrid Epics', () => {
             }]
         }, done);
     });
-    it('featureGridUpdateFilter initiates query when geometry filter is disabled after feature grid opens', done => {
+    it('featureGridUpdateFilter restore virtual scroll when closed', (done) => {
         const startActions = [openFeatureGrid(), createQuery(), updateFilter({
             type: 'geometry',
-            enabled: false
-        })];
-
-        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(UPDATE_QUERY);
-            expect(actions[0].reason).toBe('geometry');
+            enabled: true
+        }), updateFilter({
+            type: 'geometry',
+            enabled: true,
+            value: {}
+        }), closeFeatureGrid()];
+        testEpic(featureGridUpdateGeometryFilter, 3, startActions, ([setPaginationAction, updateQueryAction, resetPaginationAction]) => {
+            expect(setPaginationAction.type).toBe(SET_PAGINATION); // disable virtual scroll
+            expect(setPaginationAction.size).toBe(100000);
+            expect(updateQueryAction.type).toBe(UPDATE_QUERY);
+            expect(updateQueryAction.reason).toBe('geometry');
+            expect(resetPaginationAction.type).toBe(SET_PAGINATION);
+            expect(resetPaginationAction.size).toBe(20);
         }, {
             featuregrid: {
-                selectedLayer: 'layer',
-                filters: {
-                    geom: {
-                        attribute: 'geom',
-                        enabled: true,
-                        type: 'geometry',
-                        value: {
-                            attribute: 'geom',
-                            method: 'Circle',
-                            operation: 'INTERSECTS'
-                        }
-                    }
-                }
+                pagination: {
+                    size: 20
+                },
+                selectedLayer: 'layer'
             },
             layers: [{
                 id: 'layer',

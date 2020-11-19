@@ -100,7 +100,8 @@ import {
     disableToolbar,
     FEATURES_MODIFIED,
     deactivateGeometryFilter as  deactivateGeometryFilterAction,
-    setSelectionOptions
+    setSelectionOptions,
+    setPagination
 } from '../actions/featuregrid';
 
 import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
@@ -129,7 +130,8 @@ import {
     queryOptionsSelector,
     getAttributeFilters,
     selectedLayerSelector,
-    multiSelect
+    multiSelect,
+    paginationSelector
 } from '../selectors/featuregrid';
 
 import { error, warning } from '../actions/notifications';
@@ -201,7 +203,7 @@ const setupDrawSupport = (state, original) => {
 
 // pagination selector
 const getPagination = (state, {page, size} = {}) => {
-    let currentPagination = get(state, "featuregrid.pagination");
+    let currentPagination = paginationSelector(state);
     let maxFeatures = size !== undefined ? size : currentPagination.size;
     return {
         startIndex: page !== undefined ? page * maxFeatures : currentPagination.page * maxFeatures,
@@ -282,6 +284,7 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
     const {id} = selectedLayerSelector(store.getState());
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
     if (filterObj) {
+        // TODO: make append with advanced filters work
         const attributesFilter = getAttributeFilters(store.getState()) || {};
         const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
             return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
@@ -357,29 +360,69 @@ export const featureGridSort = (action$, store) =>
                 )
         );
 /**
- * Performs the query when the geometry filter is updated
+ * Performs the query when the geometry filter is updated.
  * @memberof epics.featuregrid
  */
 export const featureGridUpdateGeometryFilter = (action$, store) =>
-    action$.ofType(OPEN_FEATURE_GRID).flatMap(() => Rx.Observable.merge(
-        action$.ofType(UPDATE_FILTER)
-            .take(1)
-            .filter(({update = {}}) => !!update.value)
-            .map(updateFilterFunc(store)),
-        action$.ofType(UPDATE_FILTER)
-            .filter(({update = {}}) => update.type === 'geometry')
-            .take(1)
-            .filter(({update = {}}) => !update.enabled)
-            .map(updateFilterFunc(store)),
-        action$.ofType(UPDATE_FILTER)
-            .filter(({update = {}}) => update.type === 'geometry')
-            .distinctUntilChanged(({update: update1}, {update: update2}) => {
-                return !update1.enabled && update2.enabled && !update1.value && !update2.value ||
-                    update1.value === update2.value;
-            })
-            .skip(1)
-            .map(updateFilterFunc(store))
-    ).takeUntil(action$.ofType(CLOSE_FEATURE_GRID)));
+    action$.ofType(OPEN_FEATURE_GRID).switchMap(() => {
+        const originalSize = paginationSelector(store.getState())?.size;
+        return action$
+            .ofType(UPDATE_FILTER)
+            // Enable event do not contain any value, only the "enable=true".
+            // It starts this "geometric filter sub-flow" where:
+            // - every UPDATE_FILTER to the geometry causes an `updateQuery`.
+            // - on first geometric filter request the virtual scrolling is disabled (by setting page size to a big value)
+            // - when exit (reset filter/close feature grid) the virtual scrolling is restored, if modified
+            // Disabling the virtual scrolling on first geometric filter prevents the user to
+            // do some other quick filters or sorting operation before to apply a geometric filter
+            .filter(({ update = {} }) => update.type === 'geometry' && update.enabled && !update.value)
+            .switchMap(() => {
+                // flag to see if virtualScroll page size has been modified
+                let virtualScrollSet = false;
+                return action$.ofType(UPDATE_FILTER)
+                    .filter(({ update = {} }) => update.type === 'geometry')
+                    .switchMap((a, i) => {
+                        if (i === 0) {
+                            virtualScrollSet = true;
+                            // setting the page size to a big value, we allow
+                            // feature selection, ignoring the virtual scrolling
+                            return Rx.Observable.from([
+                                setPagination(100000), updateFilterFunc(store)(a)
+                            ]);
+                        }
+                        return Rx.Observable.of(updateFilterFunc(store)(a));
+                    })
+                    .takeUntil(Rx.Observable.merge(
+                        action$.ofType(UPDATE_FILTER)
+                            .filter(({ update = {} }) => update.type === 'geometry' && !update.enabled),
+                        action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
+                    ))
+                    .merge(
+                        // when reset geometric filter, needs to reload
+                        action$.ofType(UPDATE_FILTER)
+                            .filter(({ update = {} }) => update.type === 'geometry' && !update.enabled)
+                            .take(1)
+                            .switchMap(a => {
+                                // reset the pagination to the original value if changed.
+                                if (virtualScrollSet) {
+                                    return Rx.Observable.of(setPagination(originalSize), updateFilterFunc(store)(a));
+                                }
+                                return updateFilterFunc(store)(a);
+                            })
+                            // if closed, do not need to update
+                            .takeUntil(action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE))
+                    )
+                    // if closed for other causes, need to restore anyway the pagination
+                    .merge(
+                        action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE).take(1).switchMap(() => {
+                            if (virtualScrollSet) {
+                                return Rx.Observable.of(setPagination(originalSize));
+                            }
+                            return Rx.Observable.empty();
+                        })
+                    );
+            });
+    });
 /**
  * Performs the query when the text filters are updated
  * @memberof epics.featuregrid

@@ -46,7 +46,8 @@ import {
     LOAD_MORE_FEATURES,
     SET_UP,
     SET_TIME_SYNC,
-    UPDATE_EDITORS_OPTIONS
+    UPDATE_EDITORS_OPTIONS,
+    SET_PAGINATION
 } from '../actions/featuregrid';
 
 import { FEATURE_TYPE_LOADED, QUERY_CREATE } from '../actions/wfsquery';
@@ -164,6 +165,15 @@ function featuregrid(state = emptyResultsState, action) {
                 size: action.size !== undefined ? action.size : state.pagination.size
             }
         });
+    }
+    case SET_PAGINATION: {
+        return {
+            ...state,
+            pagination: {
+                ...(state.pagination ?? {}),
+                size: action.size
+            }
+        };
     }
     case SELECT_FEATURES: {
         const features = action.features.filter(f => f.id !== 'empty_row');

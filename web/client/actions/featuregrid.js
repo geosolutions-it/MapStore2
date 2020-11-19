@@ -62,6 +62,7 @@ export const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
 export const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
 export const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
 export const SET_TIME_SYNC = "FEATUREGRID:SET_TIME_SYNC";
+export const SET_PAGINATION = "FEATUREGRID:SET_PAGINATION";
 
 export function toggleShowAgain() {
     return {
@@ -368,4 +369,9 @@ export const deactivateGeometryFilter = (deactivated) => ({
 export const setTimeSync = value => ({
     type: SET_TIME_SYNC,
     value
+});
+
+export const setPagination = (size) => ({
+    type: SET_PAGINATION,
+    size
 });
