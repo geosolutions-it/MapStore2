@@ -99,9 +99,14 @@ In order to filter a numerical filed matching the records *greater than* or *equ
 
 #### Quick Filter by clicked point
 
-If the user wants to filter records in the Attribute Table simply by clicking on the map, he can activate the  **Filter clicking on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (the button became blue) and then click on the map over the features he need to select. The list of records in the [Attribute Table](attributes-table.md) will be automatically filtered by matching with the selected point in the map.
+If the user wants to filter records in the Attribute Table simply by clicking on the map, he can activate the  **Filter clicking on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (the button became blue) and then click on the map over the features he need to select and he can add or remove features from the filter list by Ctrl + click. 
+The list of records in the [Attribute Table](attributes-table.md) will be automatically filtered by matching with the selected points in the map.
 
 <img src="../img/filtering-layers/filter_geometry.gif" class="ms-docimage"/>
+
+!!! note
+    The features on map are selctable olso by drawing a selection area on map, as follows:
+    <img src="../img/filtering-layers/filter_geometries.gif" class="ms-docimage"/>
 
 The user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
 
@@ -185,3 +190,4 @@ In order to better understand this type of filter, let's make an example. We sup
 In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
 
 <img src="../img/filtering-layers/layer_filter.gif" class="ms-docimage"/>
+
