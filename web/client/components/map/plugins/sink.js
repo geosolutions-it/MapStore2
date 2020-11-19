@@ -6,10 +6,11 @@
 * LICENSE file in the root directory of this source tree.
 */
 const { createSink } = require('recompose');
+
 /**
  * Dummy implementation of mapType for tests
  */
-module.exports = () => {
+export default () => {
     return {
         Map: createSink(() => {}),
         Layer: createSink(() => {}),

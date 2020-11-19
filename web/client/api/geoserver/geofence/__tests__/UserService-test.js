@@ -7,22 +7,28 @@
  */
 
 const BASE_URL = "TEST";
-const UserService = require('../UserService')({
+
+import MockAdapter from 'axios-mock-adapter';
+import expect from 'expect';
+
+import axios from '../../../../libs/ajax';
+import ROLES from '../../../../test-resources/geoserver/rest/roles.json';
+import USERS from '../../../../test-resources/geoserver/rest/users.json';
+import userServiceFactory from '../UserService';
+
+const UserService = userServiceFactory({
     addBaseUrlGS: (options ) => ({ baseURL: BASE_URL, ...options }),
     getUserService: () => {}
 });
+
 // geoserver provides it's default group by default
 // service specific. to test path like /security/usergroup/service/geostore/users.json
-const ServiceSpecificUserService = require('../UserService')({
+
+const ServiceSpecificUserService = userServiceFactory({
     addBaseUrlGS: (options) => ({ baseURL: BASE_URL, ...options }),
     getUserService: () => "geostore"
 });
-const USERS = require('../../../../test-resources/geoserver/rest/users.json');
-const ROLES = require('../../../../test-resources/geoserver/rest/roles.json');
-const expect = require('expect');
 
-const axios = require('../../../../libs/ajax');
-const MockAdapter = require('axios-mock-adapter');
 
 let mockAxios;
 

@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {DropdownList} = require('react-widgets');
-const {getAvailableInfoFormat, getLabelFromValue} = require('../../../../utils/MapInfoUtils');
-const {Grid} = require('react-bootstrap');
-const Message = require('../../../I18N/Message').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { DropdownList } from 'react-widgets';
+import { getAvailableInfoFormat, getLabelFromValue } from '../../../../utils/MapInfoUtils';
+import { Grid } from 'react-bootstrap';
+import Message from '../../../I18N/Message';
+
 /**
  * FeatureInfoFormat shows the infoformat selected for that layer or the default one taken
  * from the general settings.
@@ -23,7 +25,7 @@ const Message = require('../../../I18N/Message').default;
  * @prop {string} [generalInfoFormat] the infoFormat value set in the general settings
  * @prop {function} [onInfoFormatChange] it updates the infoFormat and/or viewer for the given layer
  */
-module.exports = class extends React.Component {
+export default class extends React.Component {
     static propTypes = {
         element: PropTypes.object,
         label: PropTypes.object,
@@ -74,4 +76,4 @@ module.exports = class extends React.Component {
             </Grid>
         );
     }
-};
+}

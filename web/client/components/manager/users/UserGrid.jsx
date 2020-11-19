@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Grid, Row, Col} = require('react-bootstrap');
-const UserCard = require('./UserCard');
-const PropTypes = require('prop-types');
-const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message').default;
+import React from 'react';
 
-const {getMessageById} = require('../../../utils/LocaleUtils');
+import { Grid, Row, Col } from 'react-bootstrap';
+import UserCard from './UserCard';
+import PropTypes from 'prop-types';
+import Spinner from 'react-spinkit';
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 class UsersGrid extends React.Component {
     static propTypes = {
@@ -108,4 +108,4 @@ class UsersGrid extends React.Component {
     }
 }
 
-module.exports = UsersGrid;
+export default UsersGrid;

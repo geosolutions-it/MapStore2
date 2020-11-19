@@ -5,14 +5,16 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require("react");
-const PropTypes = require("prop-types");
-const {FormGroup, Row, Col} = require("react-bootstrap");
-const Message = require('../../../../I18N/Message').default;
-const {toNumber, isNumber} = require("lodash");
-const withLocalized = require("../../../../misc/enhancers/localizedProps");
-const {compose, defaultProps} = require("recompose");
-const IntlNumberFormControl = require('../../../../I18N/IntlNumberFormControl');
+
+import {isNumber, toNumber} from "lodash";
+import PropTypes from "prop-types";
+import React from "react";
+import {Col, FormGroup, Row} from "react-bootstrap";
+import {compose, defaultProps} from "recompose";
+
+import IntlNumberFormControl from '../../../../I18N/IntlNumberFormControl';
+import Message from '../../../../I18N/Message';
+import withLocalized from "../../../../misc/enhancers/localizedProps";
 
 class Priority extends React.Component {
     static propTypes = {
@@ -57,7 +59,7 @@ class Priority extends React.Component {
     }
 }
 
-module.exports = compose(
+export default compose(
     defaultProps({
         placeholder: "rulesmanager.placeholders.priority"
     }),

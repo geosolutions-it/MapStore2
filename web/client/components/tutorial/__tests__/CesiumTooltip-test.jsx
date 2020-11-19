@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const CesiumTooltip = require('../steps/CesiumTooltip');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import CesiumTooltip from '../steps/CesiumTooltip';
 
 describe("Test the Cesium tooltip component", () => {
 

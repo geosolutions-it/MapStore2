@@ -11,8 +11,9 @@ import ReactDOM from 'react-dom';
 import {get} from 'lodash';
 import expect from 'expect';
 import CounterWizard, { isCounterOptionsValid } from '../CounterWizard';
-
 import describeStates from '../../../../../test-resources/wfs/describe-states.json';
+
+
 describe('CounterWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

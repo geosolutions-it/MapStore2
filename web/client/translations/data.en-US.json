@@ -27,6 +27,7 @@
         "showMore": "Show more...",
         "collapse": "Collapse",
         "expand": "Expand",
+        "Links": "Links",
         "Forbidden": "Forbidden",
         "layerNameChangeError": {
             "title": "Name change error",

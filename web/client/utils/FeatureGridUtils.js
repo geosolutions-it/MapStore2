@@ -6,21 +6,21 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { get, findIndex, isNil, fill, isArray } from 'lodash';
+import { fill, findIndex, get, isArray, isNil } from 'lodash';
 
 import {
+    findGeometryProperty,
     getFeatureTypeProperties,
+    getPropertyDesciptor,
     isGeometryType,
     isValid,
-    isValidValueForPropertyName as isValidValueForPropertyNameBase,
-    findGeometryProperty,
-    getPropertyDesciptor
+    isValidValueForPropertyName as isValidValueForPropertyNameBase
 } from './ogc/WFS/base';
 
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
 
-const getBlockIdx = (indexes = [], size = 0, rowIdx) => findIndex(indexes, (startIdx) => startIdx <= rowIdx && rowIdx < startIdx + size);
+export const getBlockIdx = (indexes = [], size = 0, rowIdx) => findIndex(indexes, (startIdx) => startIdx <= rowIdx && rowIdx < startIdx + size);
 
 /** Features are stored in an array grupped by block of pages. The page could be loaded unorderd
  * This function recover the correct rowIndex in features, given the array of indexes

@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
 
-const brand = require('../../assets/img/geosolutions-brand.png');
+import brand from '../../assets/img/geosolutions-brand.png';
 
 class Brand extends React.Component {
     render() {
@@ -19,4 +19,4 @@ class Brand extends React.Component {
     }
 }
 
-module.exports = Brand;
+export default Brand;

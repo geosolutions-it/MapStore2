@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const url = require('url');
-const Theme = require('../Theme');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import url from 'url';
+import Theme from '../Theme';
 
 describe('Theme', () => {
     beforeEach((done) => {

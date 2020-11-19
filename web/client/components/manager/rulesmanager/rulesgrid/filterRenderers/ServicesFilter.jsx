@@ -5,21 +5,21 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const PagedCombo = require('../../../../misc/combobox/PagedCombobox');
-const fixedOptions = require("../../enhancers/fixedOptions");
-const localizedProps = require("../../../../misc/enhancers/localizedProps");
-const { compose, defaultProps, withHandlers, withPropsOnChange} = require('recompose');
+import PagedCombo from '../../../../misc/combobox/PagedCombobox';
 
-const {connect} = require("react-redux");
-const {createSelector} = require("reselect");
-const {filterSelector, servicesSelector} = require("../../../../../selectors/rulesmanager");
+import fixedOptions from '../../enhancers/fixedOptions';
+import localizedProps from '../../../../misc/enhancers/localizedProps';
+import { compose, defaultProps, withHandlers, withPropsOnChange } from 'recompose';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { filterSelector, servicesSelector } from '../../../../../selectors/rulesmanager';
 
 const selector = createSelector(filterSelector, servicesSelector, (filter, services) => ({
     selected: filter.service,
     services
 }));
 
-module.exports = compose(
+export default compose(
     connect(selector),
     defaultProps({
         size: 5,

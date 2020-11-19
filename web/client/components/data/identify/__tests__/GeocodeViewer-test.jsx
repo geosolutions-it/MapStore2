@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const GeocodeViewer = require('../GeocodeViewer.jsx');
-const TestUtils = require('react-dom/test-utils');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import GeocodeViewer from '../GeocodeViewer.jsx';
+import TestUtils from 'react-dom/test-utils';
 
 describe('GeocodeViewer', () => {
     beforeEach((done) => {

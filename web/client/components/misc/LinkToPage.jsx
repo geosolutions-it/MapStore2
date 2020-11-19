@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,8 +7,9 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {Button} = require('react-bootstrap');
+import React from 'react';
+
+import { Button } from 'react-bootstrap';
 
 class LinkToPage extends React.Component {
     static propTypes = {
@@ -41,4 +43,4 @@ class LinkToPage extends React.Component {
     };
 }
 
-module.exports = LinkToPage;
+export default LinkToPage;

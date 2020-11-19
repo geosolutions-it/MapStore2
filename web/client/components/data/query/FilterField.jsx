@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const ComboField = require('./ComboField');
-const assign = require('object-assign');
-const {getMessageById} = require('../../../utils/LocaleUtils');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import ComboField from './ComboField';
+import assign from 'object-assign';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 class FilterField extends React.Component {
     static propTypes = {
@@ -119,4 +120,4 @@ class FilterField extends React.Component {
     };
 }
 
-module.exports = FilterField;
+export default FilterField;

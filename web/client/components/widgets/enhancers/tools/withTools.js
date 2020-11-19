@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const { compose, withPropsOnChange } = require('recompose');
-const Toolbar = require('../../../misc/toolbar/Toolbar');
+import React from 'react';
+import {compose, withPropsOnChange} from 'recompose';
+
+import Toolbar from '../../../misc/toolbar/Toolbar';
 
 const isTool = t => t.target === "tools";
 const hasTools = (tt = []) => tt.filter(isTool).length > 0;
@@ -15,7 +16,7 @@ const hasTools = (tt = []) => tt.filter(isTool).length > 0;
 /**
  * Transforms widgetTools into leftItems for the widget.
  */
-module.exports = () =>
+export default () =>
     compose(
         withPropsOnChange(
             ['topLeftItems', 'widgetTools'],

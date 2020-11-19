@@ -5,16 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const { compose } = require('recompose');
-const TOC = require('../../../../TOC/TOC');
-const DefaultLayerOrGroup = require('../../../../TOC/DefaultLayerOrGroup');
-const DefaultGroup = require('../../../../TOC/DefaultGroup');
-const DefaultLayer = require('../../../../TOC/DefaultLayer');
 
-const handleNodePropertyChanges = require('./enhancers/handleNodePropertyChanges');
-const handleNodeFiltering = require('./enhancers/handleNodeFiltering');
-const mapToNodes = require('./enhancers/mapToNodes');
+import React from 'react';
+import { compose } from 'recompose';
+
+import DefaultGroup from '../../../../TOC/DefaultGroup';
+import DefaultLayer from '../../../../TOC/DefaultLayer';
+import DefaultLayerOrGroup from '../../../../TOC/DefaultLayerOrGroup';
+import TOC from '../../../../TOC/TOC';
+import handleNodeFiltering from './enhancers/handleNodeFiltering';
+import handleNodePropertyChanges from './enhancers/handleNodePropertyChanges';
+import mapToNodes from './enhancers/mapToNodes';
 
 const enhanceTOC = compose(
     mapToNodes,
@@ -22,7 +23,7 @@ const enhanceTOC = compose(
     handleNodePropertyChanges,
 );
 
-module.exports = enhanceTOC(({
+export default enhanceTOC(({
     changeLayerPropertyByGroup = () => {},
     changeLayerProperty = () => {},
     changeGroupProperty = () => {},

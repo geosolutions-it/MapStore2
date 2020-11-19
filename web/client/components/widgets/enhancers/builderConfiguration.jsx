@@ -11,7 +11,6 @@ import pingAggregateProcess from '../../../observables/widgets/pingAggregateProc
 import {Message, HTML} from "../../I18N/I18N";
 const TYPES = "ALL";
 import {findGeometryProperty} from '../../../utils/ogc/WFS/base';
-
 /**
  * Enhancer that retrieves information about the featureType attributes and the aggregate process
  * to find out proper information

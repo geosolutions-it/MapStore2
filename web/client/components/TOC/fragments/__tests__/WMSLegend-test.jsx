@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var WMSLegend = require('../WMSLegend');
+import React from 'react';
 
-var expect = require('expect');
+import ReactDOM from 'react-dom';
+import WMSLegend from '../WMSLegend';
+import expect from 'expect';
 
 describe('test WMSLegend module component', () => {
     beforeEach((done) => {

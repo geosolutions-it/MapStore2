@@ -6,24 +6,43 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const Portal = require('../../misc/Portal').default;
-const GeometryEditor = require('./GeometryEditor');
-const Manager = require('../../style/vector/Manager');
-const Message = require('../../I18N/Message').default;
-const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, ControlLabel, Checkbox } = require('react-bootstrap');
-const ReactQuill = require('react-quill');
-require('react-quill/dist/quill.snow.css');
-const { isFunction, isEmpty, head } = require('lodash');
-const {getGeometryGlyphInfo, getGeometryType, getComponents, coordToArray, validateCoords} = require('../../../utils/AnnotationsUtils');
-const ConfirmDialog = require('../../misc/ConfirmDialog');
-const assign = require('object-assign');
-const {handleExpression} = require('../../../utils/PluginsUtils');
-const defaultConfig = require('./AnnotationsConfig');
-const FeaturesList = require('./FeaturesList').default;
-const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
+import 'react-quill/dist/quill.snow.css';
+
+import { head, isEmpty, isFunction } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {
+    Checkbox,
+    Col,
+    ControlLabel,
+    FormControl,
+    FormGroup,
+    Glyphicon,
+    Grid,
+    Nav,
+    NavItem,
+    Row
+} from 'react-bootstrap';
+import ReactQuill from 'react-quill';
+
+import {
+    coordToArray,
+    getComponents,
+    getGeometryGlyphInfo,
+    getGeometryType,
+    validateCoords
+} from '../../../utils/AnnotationsUtils';
+import { MEASURE_TYPE } from '../../../utils/MeasurementUtils';
+import { handleExpression } from '../../../utils/PluginsUtils';
+import Message from '../../I18N/Message';
+import ConfirmDialog from '../../misc/ConfirmDialog';
+import Portal from '../../misc/Portal';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import Manager from '../../style/vector/Manager';
+import defaultConfig from './AnnotationsConfig';
+import FeaturesList from './FeaturesList';
+import GeometryEditor from './GeometryEditor';
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -60,7 +79,6 @@ const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
  * @prop {function} onCancelRemove triggered when the user cancels removal
  * @prop {function} onCancelClose triggered when the user cancels closing
  * @prop {function} onConfirmClose triggered when the user confirms closing
-  * @prop {function} onChangePointType triggered when the user switches between the point stylers
  * @prop {function} onStartDrawing triggered before the user starts the drawing process
  * @prop {object} editedFields fields of the annotation
  * @prop {object} drawingText it contains info of the text annotation, 'drawing' if being added or 'show' used to show the modal to add the relative value
@@ -164,7 +182,6 @@ class AnnotationsEditor extends React.Component {
         onResetCoordEditor: PropTypes.func,
         onHighlightPoint: PropTypes.func,
         onSetStyle: PropTypes.func,
-        onChangePointType: PropTypes.func,
         onStartDrawing: PropTypes.func,
         onZoom: PropTypes.func,
         editing: PropTypes.object,
@@ -717,7 +734,6 @@ class AnnotationsEditor extends React.Component {
                                     this.props.onSetUnsavedChanges(true);
                                 }}
                                 pointType={this.props.pointType}
-                                onChangePointType={this.props.onChangePointType}
                                 style={this.props.selected && this.props.selected.style || this.props.editing.style}
                                 width={this.props.width}
                                 symbolsPath={this.props.symbolsPath}
@@ -843,4 +859,4 @@ class AnnotationsEditor extends React.Component {
     }
 }
 
-module.exports = AnnotationsEditor;
+export default AnnotationsEditor;

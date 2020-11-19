@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { createSink } = require('recompose');
-const expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import { createSink } from 'recompose';
+import expect from 'expect';
 const CMP = () => <div><div id="mydiv" style={{ height: "100px", overflow: "auto" }}><div style={{height: "1000px"}}></div></div></div>;
-const withScrollSpy = require('../withScrollSpy');
+import withScrollSpy from '../withScrollSpy';
 
 describe('withScrollSpy enhancer', () => {
     beforeEach((done) => {

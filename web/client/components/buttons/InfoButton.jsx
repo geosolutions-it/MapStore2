@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,14 +6,16 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Button = BootstrapReact.Button;
-var Glyphicon = BootstrapReact.Glyphicon;
-var ImageButton = require('./ImageButton');
-const Dialog = require('../misc/Dialog');
-require('./css/infoButton.css');
-const assign = require('object-assign');
+
+import './css/infoButton.css';
+
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {Button, Glyphicon} from 'react-bootstrap';
+
+import Dialog from '../misc/Dialog';
+import ImageButton from './ImageButton';
 
 /**
  * A button to show a simple information window.
@@ -114,4 +116,4 @@ class InfoButton extends React.Component {
     };
 }
 
-module.exports = InfoButton;
+export default InfoButton;

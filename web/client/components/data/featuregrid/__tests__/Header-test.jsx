@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Header = require('../Header');
-const Toolbar = require('../toolbars/Toolbar');
-const expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import Header from '../Header';
+import Toolbar from '../toolbars/Toolbar';
+import expect from 'expect';
 
 describe('Test for TopToolbar component', () => {
     beforeEach((done) => {

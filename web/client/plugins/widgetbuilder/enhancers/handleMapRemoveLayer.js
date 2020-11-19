@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { withHandlers } = require('recompose');
+import { withHandlers } from 'recompose';
 
 const enhancer = withHandlers({
     onRemoveSelected: ({ selectedLayers = [], removeLayersById = () => { }, onNodeSelect = () => { } }) => () => {
@@ -15,4 +15,4 @@ const enhancer = withHandlers({
     }
 });
 
-module.exports = enhancer;
+export default enhancer;

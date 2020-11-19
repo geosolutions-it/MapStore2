@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Button, Glyphicon, Table, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger').default;
-const Message = require('../../I18N/Message').default;
+import React from 'react';
+
+import { Button, Glyphicon, Table, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import Message from '../../I18N/Message';
 
 class UsersTable extends React.Component {
     static propTypes = {
@@ -45,4 +47,4 @@ class UsersTable extends React.Component {
     }
 }
 
-module.exports = UsersTable;
+export default UsersTable;

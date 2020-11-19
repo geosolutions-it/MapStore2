@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,9 +8,10 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Choice = require('./Choice');
-const {isFunction} = require('lodash');
+import React from 'react';
+
+import Choice from './Choice';
+import { isFunction } from 'lodash';
 
 class Sheet extends React.Component {
     static propTypes = {
@@ -53,4 +55,4 @@ class Sheet extends React.Component {
     }
 }
 
-module.exports = Sheet;
+export default Sheet;

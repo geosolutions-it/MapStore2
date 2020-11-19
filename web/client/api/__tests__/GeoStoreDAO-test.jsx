@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const API = require('../GeoStoreDAO');
-const axios = require("../../libs/ajax");
-const MockAdapter = require("axios-mock-adapter");
+import expect from 'expect';
+
+import API from '../GeoStoreDAO';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
 
 let mockAxios;
 

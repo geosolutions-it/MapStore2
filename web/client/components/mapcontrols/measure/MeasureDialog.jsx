@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {isEqual} = require('lodash');
-const MeasureComponent = require('./MeasureComponent');
-const DockablePanel = require('../../misc/panels/DockablePanel');
-const Message = require('../../I18N/Message').default;
-const Dialog = require('../../misc/Dialog');
-const {Glyphicon} = require('react-bootstrap');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { isEqual } from 'lodash';
+import MeasureComponent from './MeasureComponent';
+import DockablePanel from '../../misc/panels/DockablePanel';
+import Message from '../../I18N/Message';
+import Dialog from '../../misc/Dialog';
+import { Glyphicon } from 'react-bootstrap';
 
 class MeasureDialog extends React.Component {
     static propTypes = {
@@ -101,4 +102,4 @@ class MeasureDialog extends React.Component {
     }
 }
 
-module.exports = MeasureDialog;
+export default MeasureDialog;

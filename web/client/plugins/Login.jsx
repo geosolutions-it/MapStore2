@@ -6,14 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const assign = require('object-assign');
-const {UserDetails, PasswordReset, UserMenu, Login, LoginNav } = require('./login/index');
-const epics = require('../epics/login').default;
-const { comparePendingChanges } = require('../epics/pendingChanges');
+import './login/login.css';
 
-require('./login/login.css');
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import epics from '../epics/login';
+import { comparePendingChanges } from '../epics/pendingChanges';
+import security from '../reducers/security';
+import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/index';
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -55,7 +57,7 @@ class LoginTool extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     LoginPlugin: assign(LoginTool, {
         OmniBar: {
             name: "login",
@@ -65,7 +67,7 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {security: require('../reducers/security').default},
+    reducers: {security},
     epics: {
         ...epics,
         comparePendingChanges

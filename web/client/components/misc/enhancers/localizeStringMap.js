@@ -7,15 +7,17 @@
  */
 
 
-const PropTypes = require('prop-types');
-const {castArray} = require('lodash');
-const {getContext, mapProps, compose} = require('recompose');
-const {getLocalizedProp} = require('../../../utils/LocaleUtils');
+import PropTypes from 'prop-types';
+
+import { castArray } from 'lodash';
+import { getContext, mapProps, compose } from 'recompose';
+import { getLocalizedProp } from '../../../utils/LocaleUtils';
 
 const accumulate = (props, locale) => (acc = {}, propName) => ({
     ...acc,
     [propName]: props[propName] && getLocalizedProp(locale, props[propName])
 });
+
 /**
  * Converts the props indicated as arguments into localized strings checking if they are map of localized strings, like this:
  * ```
@@ -34,7 +36,7 @@ const accumulate = (props, locale) => (acc = {}, propName) => ({
  * //...
  * <Input placeholder={{title}} />
  */
-module.exports = (propNames) => compose(
+export default (propNames) => compose(
     getContext({
         locale: PropTypes.string
     }),

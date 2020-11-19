@@ -6,21 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Node = require('./Node');
+import React from 'react';
 
-const { isObject, castArray, find} = require('lodash');
-const { Grid, Row, Col, Glyphicon} = require('react-bootstrap');
-const draggableComponent = require('./enhancers/draggableComponent');
-const VisibilityCheck = require('./fragments/VisibilityCheck');
-const Title = require('./fragments/Title');
-const WMSLegend = require('./fragments/WMSLegend');
-const LayersTool = require('./fragments/LayersTool');
-const OpacitySlider = require('./fragments/OpacitySlider');
-const ToggleFilter = require('./fragments/ToggleFilter');
-const withTooltip = require('../data/featuregrid/enhancers/withTooltip');
-const localizedProps = require('../misc/enhancers/localizedProps');
+import PropTypes from 'prop-types';
+import Node from './Node';
+import { isObject, castArray, find } from 'lodash';
+import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
+import draggableComponent from './enhancers/draggableComponent';
+import VisibilityCheck from './fragments/VisibilityCheck';
+import Title from './fragments/Title';
+import WMSLegend from './fragments/WMSLegend';
+import LayersTool from './fragments/LayersTool';
+import OpacitySlider from './fragments/OpacitySlider';
+import ToggleFilter from './fragments/ToggleFilter';
+import withTooltip from '../data/featuregrid/enhancers/withTooltip';
+import localizedProps from '../misc/enhancers/localizedProps';
 
 const GlyphIndicator = localizedProps('tooltip')(withTooltip(Glyphicon));
 
@@ -213,4 +213,4 @@ class DefaultLayer extends React.Component {
     };
 }
 
-module.exports = draggableComponent('LayerOrGroup', DefaultLayer);
+export default draggableComponent('LayerOrGroup', DefaultLayer);

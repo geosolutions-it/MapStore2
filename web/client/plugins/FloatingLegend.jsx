@@ -6,23 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const assign = require('object-assign');
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
-const {reverse, head, get} = require('lodash');
-const {updateNode} = require('../actions/layers');
-const {resizeLegend, expandLegend} = require('../actions/floatinglegend');
-const {layersSelector} = require('../selectors/layers');
-const {currentLocaleSelector} = require('../selectors/locale');
-const {mapSelector} = require('../selectors/map');
-const {boundingMapRectSelector} = require('../selectors/maplayout');
-const {isFeatureGridOpen} = require('../selectors/featuregrid');
-const {legendSizeSelector, legendExpandedSelector} = require('../selectors/floatinglegend');
-const FloatingLegend = require('../components/TOC/FloatingLegend');
-const {parseLayoutValue, getScales} = require('../utils/MapUtils');
-const {getLocalizedProp} = require('../utils/LocaleUtils');
+import { get, head, reverse } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+
+import { expandLegend, resizeLegend } from '../actions/floatinglegend';
+import { updateNode } from '../actions/layers';
+import FloatingLegend from '../components/TOC/FloatingLegend';
+import floatinglegend from '../reducers/floatinglegend';
+import { isFeatureGridOpen } from '../selectors/featuregrid';
+import { legendExpandedSelector, legendSizeSelector } from '../selectors/floatinglegend';
+import { layersSelector } from '../selectors/layers';
+import { currentLocaleSelector } from '../selectors/locale';
+import { mapSelector } from '../selectors/map';
+import { boundingMapRectSelector } from '../selectors/maplayout';
+import { getLocalizedProp } from '../utils/LocaleUtils';
+import { getScales, parseLayoutValue } from '../utils/MapUtils';
 
 /**
  * FloatingLegend plugin.
@@ -120,11 +122,11 @@ const FloatingLegendPlugin = connect(floatingLegendSelector, {
     onExpand: expandLegend
 })(FloatingLegendComponent);
 
-module.exports = {
+export default {
     FloatingLegendPlugin: assign(FloatingLegendPlugin, {
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}"
     }),
     reducers: {
-        floatinglegend: require('../reducers/floatinglegend').default
+        floatinglegend
     }
 };

@@ -5,12 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
 
-const expect = require('expect');
-const Coordinate = require('../Coordinate');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+
+import Coordinate from '../Coordinate';
+
 describe('Identify Coordinate component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

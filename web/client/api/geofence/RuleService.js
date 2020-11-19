@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../../libs/ajax');
-const { toJSONPromise } = require('./common');
+import axios from '../../libs/ajax';
+
+import { toJSONPromise } from './common';
 
 const EMPTY_RULE = {
     constraints: {},
@@ -138,4 +139,4 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
     }
 });
 
-module.exports = Api;
+export default Api;

@@ -5,33 +5,34 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React from 'react';
-import { connect } from 'react-redux';
-import { compose, withProps, withHandlers, setObservableConfig } from 'recompose';
-// TODO: externalize
-import rxjsConfig from 'recompose/rxjsObservableConfig';
-setObservableConfig(rxjsConfig);
-
-import { createSelector } from 'reselect';
-import { createPlugin } from '../utils/PluginsUtils';
-import Message from '../components/I18N/Message';
 import {Glyphicon} from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { compose, setObservableConfig, withHandlers, withProps } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+import { createSelector } from 'reselect';
 
-
-import { Controls } from '../utils/GeoStoryUtils';
-
-import { userSelector, isLoggedIn } from '../selectors/security';
-
+import { clearSaveError, saveStory, setControl } from '../actions/geostory';
+import Message from '../components/I18N/Message';
+import handleSaveModal from '../components/resources/modals/enhancers/handleSaveModal';
+import Save from '../components/resources/modals/Save';
+import geostory from '../reducers/geostory';
 import {
-    saveDialogSelector,
     currentStorySelector,
-    resourceSelector,
     loadingSelector,
+    resourceSelector,
+    saveDialogSelector,
     saveErrorSelector
 } from '../selectors/geostory';
-import { saveStory, clearSaveError, setControl } from '../actions/geostory';
-import handleSaveModal from '../components/resources/modals/enhancers/handleSaveModal';
-import geostory from '../reducers/geostory';
+import { isLoggedIn, userSelector } from '../selectors/security';
+import { Controls } from '../utils/GeoStoryUtils';
+import { createPlugin } from '../utils/PluginsUtils';
+
+// TODO: externalize
+
+setObservableConfig(rxjsConfig);
+
 
 /**
  * Save dialog component enhanced for GeoStory
@@ -60,7 +61,7 @@ const SaveBaseDialog = compose(
         category: "GEOSTORY"
     }),
     handleSaveModal
-)(require('../components/resources/modals/Save'));
+)(Save);
 
 /**
  * Implements "save" button for geostories, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}

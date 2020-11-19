@@ -5,23 +5,23 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const xml2js = require('xml2js');
-const { Observable } = require('rxjs');
-const { mapPropsStream, compose, branch, withPropsOnChange} = require('recompose');
-const { isEmpty, isEqual} = require('lodash');
+import xml2js from 'xml2js';
 
-const { composeFilterObject } = require('./utils');
-const wpsBounds = require('../../../observables/wps/bounds');
-const {composeAttributeFilters, toOGCFilter} = require('../../../utils/FilterUtils');
-const { getWpsUrl } = require('../../../utils/LayersUtils');
-const { set } = require('../../../utils/ImmutableUtils');
-const {createRegisterHooks, ZOOM_TO_EXTENT_HOOK} = require('../../../utils/MapUtils');
+import { Observable } from 'rxjs';
+import { mapPropsStream, compose, branch, withPropsOnChange } from 'recompose';
+import { isEmpty, isEqual } from 'lodash';
+import { composeFilterObject } from './utils';
+import wpsBounds from '../../../observables/wps/bounds';
+import { composeAttributeFilters, toOGCFilter } from '../../../utils/FilterUtils';
+import { getWpsUrl } from '../../../utils/LayersUtils';
+import { set } from '../../../utils/ImmutableUtils';
+import { createRegisterHooks, ZOOM_TO_EXTENT_HOOK } from '../../../utils/MapUtils';
 
 /**
  * fetches the bounds from an ogc filter based on dependencies
  * @returns {object} the map with center and zoom updated
  */
-module.exports = compose(
+export default compose(
 
     branch(
         ({mapSync, dependencies} = {}) => {

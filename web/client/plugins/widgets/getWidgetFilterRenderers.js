@@ -6,12 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const { compose, withPropsOnChange, withProps, mapPropsStream } = require('recompose');
-const { find } = require('lodash');
+import { find } from 'lodash';
+import { compose, mapPropsStream, withProps, withPropsOnChange } from 'recompose';
 
-
-const { getAttributeFields } = require('../../utils/FeatureGridUtils');
-const { getFilterRenderer } = require('../../components/data/featuregrid/filterRenderers');
+import { getFilterRenderer } from '../../components/data/featuregrid/filterRenderers';
+import { getAttributeFields } from '../../utils/FeatureGridUtils';
 
 /**
  * Uses the quickFilterStream$ to generate the value prop.
@@ -55,7 +54,7 @@ const withQuickFiltersStream = compose(
  * as a property change.
  *
  */
-const getWidgetFilterRenderers = compose(
+export const getWidgetFilterRenderers = compose(
     withQuickFiltersStream,
     withPropsOnChange(
         ["describeFeatureType", "options"],
@@ -70,4 +69,4 @@ const getWidgetFilterRenderers = compose(
     )
 );
 
-module.exports = {getWidgetFilterRenderers};
+export default {getWidgetFilterRenderers};

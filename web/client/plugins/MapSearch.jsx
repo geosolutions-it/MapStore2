@@ -5,12 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const {connect} = require('react-redux');
-const {get} = require('lodash');
-const {loadMaps, mapsSearchTextChanged, searchFilterChanged, searchFilterClearAll, loadContexts} = require('../actions/maps');
-const {searchFilterSelector, contextsSelector, loadFlagsSelector} = require('../selectors/maps');
-const {toggleControl} = require('../actions/controls');
-const ConfigUtils = require('../utils/ConfigUtils').default;
+import { connect } from 'react-redux';
+
+import { get } from 'lodash';
+
+import {
+    loadMaps,
+    mapsSearchTextChanged,
+    searchFilterChanged,
+    searchFilterClearAll,
+    loadContexts
+} from '../actions/maps';
+
+import { searchFilterSelector, contextsSelector, loadFlagsSelector } from '../selectors/maps';
+import { toggleControl } from '../actions/controls';
+import ConfigUtils from '../utils/ConfigUtils';
 /**
 * MapSearch Plugin is a plugin that allows to make a search, reset its content, show a loading spinner while search is going on and can be
 * used for different purpose (maps, wfs services)
@@ -73,7 +82,7 @@ const SearchBar = connect((state) => ({
     };
 })(require("../components/maps/search/SearchBar").default);
 
-module.exports = {
+export default {
     MapSearchPlugin: SearchBar,
     reducers: {maps: require('../reducers/maps').default}
 };

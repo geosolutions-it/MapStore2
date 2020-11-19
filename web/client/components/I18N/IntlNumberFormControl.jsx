@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const PropTypes = require('prop-types');
-const React = require('react');
-require('./css/formControlIntl.css');
-const NumericInput = require("react-numeric-input");
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import './css/formControlIntl.css';
+import NumericInput from 'react-numeric-input';
 /**
  * Localized Numeric Input. It provides an numeric input value that uses
  * separators (eg. ",",".") as they are used in the current selected language from context.
@@ -108,4 +109,4 @@ class IntlNumberFormControl extends React.Component {
     };
 }
 
-module.exports = IntlNumberFormControl;
+export default IntlNumberFormControl;

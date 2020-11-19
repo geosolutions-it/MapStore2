@@ -5,19 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {compose, withProps} = require('recompose');
-const {get} = require('lodash');
-const deleteWidget = require('./deleteWidget');
+import { compose, withProps } from 'recompose';
 
-const {editableWidget, defaultIcons, withHeaderTools} = require('./tools');
-
-const {getScales} = require('../../../utils/MapUtils');
+import { get } from 'lodash';
+import deleteWidget from './deleteWidget';
+import { editableWidget, defaultIcons, withHeaderTools } from './tools';
+import { getScales } from '../../../utils/MapUtils';
 
 /**
  * map dependencies to layers, scales and current zoom level to show legend items for current zoom.
  * Add also base tools and menu to the widget
  */
-module.exports = compose(
+export default compose(
     withProps(({ dependencies = {}, dependenciesMap = {} }) => ({
         layers: dependencies[dependenciesMap.layers] || dependencies.layers || [],
         scales: getScales(

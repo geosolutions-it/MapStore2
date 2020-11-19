@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
 
-const React = require('react');
-const Filter = require('../../../misc/Filter');
-const MarkerPropertyPicker = require( "../../MarkerPropertyPicker").default;
-const Message = require('../../../I18N/Message').default;
+import React from 'react';
+import Filter from '../../../misc/Filter';
+import MarkerPropertyPicker from '../../MarkerPropertyPicker';
+import Message from '../../../I18N/Message';
 
 /**
  * Styler for the glyph, color and shape
@@ -161,4 +161,4 @@ class MarkerGlyph extends React.Component {
     };
 }
 
-module.exports = MarkerGlyph;
+export default MarkerGlyph;

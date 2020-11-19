@@ -16,7 +16,7 @@ import {FormGroup, Glyphicon, InputGroup, MenuItem, Row} from "react-bootstrap";
 import Message from "../../I18N/Message";
 import CoordinateEntry from "../../misc/coordinateeditors/CoordinateEntry";
 import DropdownToolbarOptions from "../../misc/toolbar/DropdownToolbarOptions";
-const { zoomAndAddPoint, changeCoord} = require("../../../actions/search");
+import { zoomAndAddPoint, changeCoord } from '../../../actions/search';
 
 /**
  * CoordinateOptions for Search bar

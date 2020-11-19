@@ -6,8 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Sidebar = require('react-sidebar').default;
+import React from 'react';
+
+import Sidebar from 'react-sidebar';
+
 /**
  * MapStore generic sidebar component with good defaults
  * @class Sidebar
@@ -16,7 +18,7 @@ const Sidebar = require('react-sidebar').default;
  * @param  {Number} [width=600] Width of the sidebar
  * @param  {node} children      Content
  */
-module.exports = ({open, width = 600, children, ...props} = {}) => (<Sidebar
+export default ({open, width = 600, children, ...props} = {}) => (<Sidebar
     open={open}
     sidebarClassName="sidepanel-content"
     sidebar={children}

@@ -7,10 +7,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Message = require('../../../components/I18N/Message').default;
-const BaseThumbnail = require('../../../components/misc/Thumbnail').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import Message from '../../../components/I18N/Message';
+import BaseThumbnail from '../../../components/misc/Thumbnail';
 
 /**
  * A Dropzone area for a thumbnail.
@@ -112,4 +113,4 @@ class Thumbnail extends React.Component {
     }
 }
 
-module.exports = Thumbnail;
+export default Thumbnail;

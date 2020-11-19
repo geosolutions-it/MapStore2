@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const virtualScrollFetch = require('../virtualScrollFetch');
-const Rx = require("rxjs");
+import expect from 'expect';
 
-const axios = require('../../../../../../libs/ajax');
+import virtualScrollFetch from '../virtualScrollFetch';
+import Rx from 'rxjs';
+import axios from '../../../../../../libs/ajax';
 const rulesInterceptor = (config) => {
     if (config.url.indexOf("/rules") !== -1) {
         config.url = "base/web/client/test-resources/geofence/rest/rules/rules.xml";

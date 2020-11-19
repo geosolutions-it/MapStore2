@@ -5,18 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const I18N = require('../../I18N/I18N');
 
-const MouseLeft = require('./assets/img/MouseLeft.svg');
-const MouseRight = require('./assets/img/MouseRight.svg');
-const MouseMiddle = require('./assets/img/MouseMiddle.svg');
+import PropTypes from 'prop-types';
+import React from 'react';
 
-const TouchDrag = require('./assets/img/TouchDrag.svg');
-const TouchZoom = require('./assets/img/TouchZoom.svg');
-const TouchTilt = require('./assets/img/TouchTilt.svg');
-const TouchRotate = require('./assets/img/TouchRotate.svg');
-const PropTypes = require('prop-types');
+import * as I18N from '../../I18N/I18N';
+import MouseLeft from './assets/img/MouseLeft.svg';
+import MouseMiddle from './assets/img/MouseMiddle.svg';
+import MouseRight from './assets/img/MouseRight.svg';
+import TouchDrag from './assets/img/TouchDrag.svg';
+import TouchRotate from './assets/img/TouchRotate.svg';
+import TouchTilt from './assets/img/TouchTilt.svg';
+import TouchZoom from './assets/img/TouchZoom.svg';
 
 class CesiumTooltip extends React.Component {
     static propTypes = {
@@ -114,4 +114,4 @@ class CesiumTooltip extends React.Component {
     }
 }
 
-module.exports = CesiumTooltip;
+export default CesiumTooltip;

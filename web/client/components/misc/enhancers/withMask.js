@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {branch, nest} = require('recompose');
+import React from 'react';
+
+import { branch, nest } from 'recompose';
 /**
  * Add a grayed out mask to a component.
  * @param {function} showMask gets props as argument and returns true if the enhancer should be applied
@@ -20,6 +21,7 @@ const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, cl
         </div> : null}
     </div>),
     A);
+
 /**
  * Enhancer to gray out a component with a mask. The enhancer always adds a wrapper div with className="ms2-mask-container". if you want to avoid this use the option alwaysWrap = false.
  *
@@ -30,7 +32,7 @@ const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, cl
  *    This will cause a complete remount and re-render of the wrapped component, that may be a problem if you're using lifecycle methods, so by default is false
  *  - white: makes the mask background white, false by default
  */
-module.exports = (
+export default (
     showMask = () => {},
     maskContent = () => {},
     {

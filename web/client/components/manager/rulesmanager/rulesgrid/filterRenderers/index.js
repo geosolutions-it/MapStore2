@@ -1,8 +1,8 @@
-module.exports = {
-    RolesFilter: require('./RolesFilter'),
-    UsersFilter: require('./UsersFilter'),
-    WorkspacesFilter: require('./WorkspacesFilter'),
-    LayersFilter: require('./LayersFilter'),
-    ServicesFilter: require('./ServicesFilter'),
-    RequestsFilter: require('./RequestsFilter')
+export default {
+    RolesFilter: require('./RolesFilter').default,
+    UsersFilter: require('./UsersFilter').default,
+    WorkspacesFilter: require('./WorkspacesFilter').default,
+    LayersFilter: require('./LayersFilter').default,
+    ServicesFilter: require('./ServicesFilter').default,
+    RequestsFilter: require('./RequestsFilter').default
 };

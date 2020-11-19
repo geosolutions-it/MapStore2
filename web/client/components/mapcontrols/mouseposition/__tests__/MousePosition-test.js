@@ -5,13 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
 
-const PropTypes = require('prop-types');
-
-var React = require('react');
-var ReactDOM = require('react-dom');
-var MousePosition = require('../MousePosition');
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import MousePosition from '../MousePosition';
 
 describe('MousePosition', () => {
     beforeEach((done) => {

@@ -6,20 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import { Promise } from 'es6-promise';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Checkbox } from 'react-bootstrap';
+import Dropzone from 'react-dropzone';
+import Spinner from 'react-spinkit';
 
-const Dropzone = require('react-dropzone');
-const Spinner = require('react-spinkit');
-const {Checkbox} = require("react-bootstrap");
-
-
-const Message = require('../../I18N/Message').default;
-const ResizableModal = require('../../misc/ResizableModal').default;
-
-const {readGeoJson} = require('../../../utils/FileUtils');
-const {ANNOTATION_TYPE} = require('../../../utils/AnnotationsUtils');
-const {Promise} = require('es6-promise');
+import { ANNOTATION_TYPE } from '../../../utils/AnnotationsUtils';
+import { readGeoJson } from '../../../utils/FileUtils';
+import Message from '../../I18N/Message';
+import ResizableModal from '../../misc/ResizableModal';
 
 class SelectAnnotationsFile extends React.Component {
     static propTypes = {
@@ -100,4 +97,4 @@ class SelectAnnotationsFile extends React.Component {
     };
 }
 
-module.exports = SelectAnnotationsFile;
+export default SelectAnnotationsFile;

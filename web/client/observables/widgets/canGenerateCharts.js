@@ -5,8 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {Observable} from 'rxjs';
-import {describeFeatureType} from '../wfs';
+
+import { Observable } from 'rxjs';
+
+import { describeFeatureType } from '../wfs';
+
 /**
  * Tries to retrieve WFS info to guess if the layer passed can be used as base for a chart
  * @param  {Object} layer The layer object

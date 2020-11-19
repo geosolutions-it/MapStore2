@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,14 +8,15 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Grid, Row, Col} = require('react-bootstrap');
-const ColorPicker = require('./ColorPicker').default;
-const StyleCanvas = require('./StyleCanvas');
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import React from 'react';
+
+import { Grid, Row, Col } from 'react-bootstrap';
+import ColorPicker from './ColorPicker';
+import StyleCanvas from './StyleCanvas';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
-const {NumberPicker} = require('react-widgets');
-require('react-widgets/lib/less/react-widgets.less');
+import { NumberPicker } from 'react-widgets';
+import 'react-widgets/lib/less/react-widgets.less';
 
 class StylePolyline extends React.Component {
     static propTypes = {
@@ -56,4 +58,4 @@ class StylePolyline extends React.Component {
     }
 }
 
-module.exports = StylePolyline;
+export default StylePolyline;
