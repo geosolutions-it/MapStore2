@@ -12,7 +12,7 @@ import {compose, withProps} from 'recompose';
  */
 export default () =>
     compose(
-        withProps(({ widgetTools = [], toolsOptions = {}, updateProperty = () => { }, dataGrid = {}}) => ({
+        withProps(({maximized = {}, widgetTools = [], toolsOptions = {}, updateProperty = () => { }, dataGrid = {}}) => ({
             widgetTools: !!toolsOptions.showPin ? [
                 ...widgetTools,
                 {
@@ -21,6 +21,7 @@ export default () =>
                     glyphClassName: dataGrid.static ? "active" : undefined,
                     tooltipId: dataGrid.static ? "widgets.widget.menu.unpin" : "widgets.widget.menu.pin",
                     target: 'icons',
+                    visible: !maximized.widget,
                     onClick: () => updateProperty("dataGrid.static", !dataGrid.static)
                 }] : widgetTools
         }))

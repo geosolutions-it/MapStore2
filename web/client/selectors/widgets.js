@@ -30,12 +30,18 @@ export const getWidgetLayer = createSelector(
 
 export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 export const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
+export const getMaximizedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].maximized`);
 export const getVisibleFloatingWidgets = createSelector(
     getFloatingWidgets,
     getCollapsedState,
-    (widgets, collapsed) => {
-        if (widgets && collapsed) {
-            return widgets.filter(({ id } = {}) => !collapsed[id]);
+    getMaximizedState,
+    (widgets, collapsed, maximized) => {
+        if (widgets) {
+            if (maximized?.widget) {
+                return widgets.filter(({ id } = {}) => id === maximized.widget.id);
+            } else if (collapsed) {
+                return widgets.filter(({ id } = {}) => !collapsed[id]);
+            }
         }
         return widgets;
     }
