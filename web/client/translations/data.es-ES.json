@@ -1545,6 +1545,7 @@
             "backtosearch": "Volver a la búsqueda",
             "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total}} other { {total}}}",
+            "selectedInfo": "( {selected} seleccionado )",
             "pageInfo": "{totalPages, plural, =0 {ninguna Página} =1 {Página {totalPages} de {totalPages}} other {Página {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",
