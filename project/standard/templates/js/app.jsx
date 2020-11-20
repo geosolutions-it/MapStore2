@@ -39,14 +39,14 @@ ConfigUtils.setLocalConfigurationFile('MapStore2/web/client/localConfig.json');
  *     }]
  * });
  */
-const appConfig = require('@mapstore/product/appConfig');
+const appConfig = require('@mapstore/product/appConfig').default;
 
 /**
  * Define a custom list of plugins with:
  *
  * const plugins = require('./plugins');
  */
-const plugins = require('@mapstore/product/plugins');
+const plugins = require('@mapstore/product/plugins').default;
 
 checkForMissingPlugins(plugins.plugins);
 
