@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink, compose} = require('recompose');
-const expect = require('expect');
-const debounce = require('../debounce');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import { createSink, compose } from 'recompose';
+import expect from 'expect';
+import debounce from '../debounce';
 
 describe('debounce enhancer', () => {
     beforeEach((done) => {

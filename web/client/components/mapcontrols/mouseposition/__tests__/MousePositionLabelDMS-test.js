@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const MousePositionLabelDMS = require('../MousePositionLabelDMS');
-const ReactTestUtils = require('react-dom/test-utils');
-const {IntlProvider} = require('react-intl');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import MousePositionLabelDMS from '../MousePositionLabelDMS';
+import ReactTestUtils from 'react-dom/test-utils';
+import { IntlProvider } from 'react-intl';
 
 describe('MousePositionLabelDMS', () => {
     beforeEach((done) => {

@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Node = require('./Node');
-const PropTypes = require('prop-types');
-const draggableComponent = require('./enhancers/draggableComponent');
-const GroupTitle = require('./fragments/GroupTitle');
-const GroupChildren = require('./fragments/GroupChildren');
-const VisibilityCheck = require('./fragments/VisibilityCheck');
-const LayersTool = require('./fragments/LayersTool');
+import React from 'react';
+
+import Node from './Node';
+import PropTypes from 'prop-types';
+import draggableComponent from './enhancers/draggableComponent';
+import GroupTitle from './fragments/GroupTitle';
+import GroupChildren from './fragments/GroupChildren';
+import VisibilityCheck from './fragments/VisibilityCheck';
+import LayersTool from './fragments/LayersTool';
 
 class DefaultGroup extends React.Component {
     static propTypes = {
@@ -122,4 +123,4 @@ class DefaultGroup extends React.Component {
     }
 }
 
-module.exports = draggableComponent('LayerOrGroup', DefaultGroup);
+export default draggableComponent('LayerOrGroup', DefaultGroup);

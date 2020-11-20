@@ -1,6 +1,6 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Cell} = require('react-data-grid');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Cell } from 'react-data-grid';
 
 class CellRenderer extends React.Component {
     static propTypes = {
@@ -32,4 +32,4 @@ class CellRenderer extends React.Component {
     }
 }
 
-module.exports = CellRenderer;
+export default CellRenderer;

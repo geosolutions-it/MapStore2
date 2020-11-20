@@ -27,6 +27,7 @@
         "showMore": "Mostra altri...",
         "collapse": "Collassa",
         "expand": "Espandi",
+        "Links": "Collegamenti",
         "Forbidden": "Vietato",
         "layerNameChangeError": {
             "title": "Errore di modifica del nome",
@@ -1544,6 +1545,7 @@
             "backtosearch": "Ritorna alla ricerca",
             "resultInfo": "{total, plural, =0 {Nessun elemento} =1 {{total} di {total}} other {{start}-{end} di {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {Nessun elemento} =1 {{total} Elemento} other {{total} Elementi}}",
+            "selectedInfo": "( {selected} Selezionati )",
             "pageInfo": "{totalPages, plural, =0 {Nessuna pagina} =1 {Pagina {totalPages} di {totalPages}} other {Pagina {page} di {totalPages}}}",
             "pagination": {
                 "page": "Pagina",
@@ -1761,6 +1763,15 @@
             "placeHolder":{
                 "default":"Seleziona attributo"
             },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUM":"SUM",
+              "AVG":"AVG",
+              "STDDEV":"STDDEV",
+              "MIN":"MIN",
+              "MAX":"MAX",
+              "NONE": "Nessuna Operazione"
+            },
             "groupByAttributes": {
                 "line": "Attributo X",
                 "pie": "Raggruppa per",
@@ -1813,6 +1824,13 @@
               "xAxis": "Asse X",
               "xAxisAngle": "Rotazione etichetta",
               "hideLabels": "Nascondi etichette",
+              "format": "Formato",
+              "prefix": "Prefisso",
+              "suffix": "Suffisso",
+              "examples": "Esempi",
+              "formatExamples": "<div><ul><li><code>.0%</code>: percentuale arrotondata, '12%'</li><li><code>.2s</code>:Sistema internazionale con due cifre siginificative, '42M'</li><li><code>,.2r</code>: Migliaia raggruppate con due cifre siginficative '4,200'</li></ul><em>Maggior informazioni sul formato <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">qui</a>.</em> </div>",
+              "formula": "Formula",
+              "formulaExamples": "<div>Trasforma il valore utilizzando una formula. Utilizza la variable <code>value</code> nell'espressione <h5>Esempi:</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em> Maggiori informazioni sulla sintassi <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">qui</a>.</em></div>",
               "xAxisType": "Tipo",
               "forceTicks": "Non saltare le etichette",
               "maxXAxisLabels": "le etichette non possono comunque essere oltre {max}",

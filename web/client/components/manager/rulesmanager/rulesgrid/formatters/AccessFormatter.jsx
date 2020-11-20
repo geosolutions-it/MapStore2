@@ -5,7 +5,8 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
+import React from 'react';
+
 const accessField = {
     ALLOW: {
         className: 'ms-allow-cell'
@@ -15,7 +16,7 @@ const accessField = {
     }
 };
 
-module.exports = ({value = 'DENY', msClasses = accessField}) => (
+export default ({value = 'DENY', msClasses = accessField}) => (
     <div className={(msClasses[value] || {}).className || ''}>
         <div>
             {value.toUpperCase()}

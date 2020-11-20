@@ -6,12 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { connect } from 'react-redux';
+import { compose, renameProp, withHandlers } from 'recompose';
+import { createSelector } from 'reselect';
 
-const { connect } = require('react-redux');
-const { searchDashboards } = require('../../actions/dashboards');
-const { withHandlers, renameProp, compose } = require('recompose');
-const { searchTextSelector, resultsSelector, searchParamsSelector, totalCountSelector, isLoadingSelector } = require('../../selectors/dashboards');
-const { createSelector } = require('reselect');
+import { searchDashboards } from '../../actions/dashboards';
+import PaginationToolbarComp from '../../components/misc/PaginationToolbar';
+import {
+    isLoadingSelector,
+    resultsSelector,
+    searchParamsSelector,
+    searchTextSelector,
+    totalCountSelector
+} from '../../selectors/dashboards';
+
 const PaginationToolbar = compose(
     connect(
         createSelector(
@@ -46,5 +54,5 @@ const PaginationToolbar = compose(
             loadPage(searchText, { start, limit });
         }
     })
-)(require('../../components/misc/PaginationToolbar'));
-module.exports = PaginationToolbar;
+)(PaginationToolbarComp);
+export default PaginationToolbar;

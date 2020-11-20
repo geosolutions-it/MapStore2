@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {isFunction} = require('lodash');
-const {branch} = require('recompose');
-const DefaultEmptyComponent = require("../EmptyView");
+import React from 'react';
+
+import { isFunction } from 'lodash';
+import { branch } from 'recompose';
+import DefaultEmptyComponent from '../EmptyView';
 
 
 /**
@@ -25,7 +26,7 @@ const DefaultEmptyComponent = require("../EmptyView");
 * emptyState(({data=[]}) => data.length === 0)(ComponentToEnhance);
 *
 */
-module.exports = (isEmpty, emptyComponentProps, EmptyComponent = DefaultEmptyComponent) => branch(
+export default (isEmpty, emptyComponentProps, EmptyComponent = DefaultEmptyComponent) => branch(
     isEmpty,
     // TODO return proper HOC
     () => (componentProps) => <EmptyComponent {...(emptyComponentProps && isFunction(emptyComponentProps) ? emptyComponentProps(componentProps) : emptyComponentProps)} />);

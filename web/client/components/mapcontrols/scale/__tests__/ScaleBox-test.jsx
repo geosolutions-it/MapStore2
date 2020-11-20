@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ScaleBox = require('../ScaleBox');
-const {getGoogleMercatorScale} = require('../../../../utils/MapUtils');
+import expect from 'expect';
 
-const TestUtils = require('react-dom/test-utils');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ScaleBox from '../ScaleBox';
+import { getGoogleMercatorScale } from '../../../../utils/MapUtils';
+import TestUtils from 'react-dom/test-utils';
 
 describe('ScaleBox', () => {
     beforeEach((done) => {

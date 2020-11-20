@@ -6,12 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const TestUtils = require('react-dom/test-utils');
+import React from 'react';
 
-const SwipeButton = require('../SwipeButton');
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import TestUtils from 'react-dom/test-utils';
+import SwipeButton from '../SwipeButton';
 
 const actions = {
     onSetActive: () => {},

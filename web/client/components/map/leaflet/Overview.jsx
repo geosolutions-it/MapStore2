@@ -1,3 +1,4 @@
+
 var PropTypes = require('prop-types');
 var React = require('react');
 var MiniMap = require('leaflet-minimap');

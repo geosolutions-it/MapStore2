@@ -6,19 +6,21 @@
 * LICENSE file in the root directory of this source tree.
 */
 import PropTypes from 'prop-types';
-import {compose, withProps, withHandlers, getContext} from 'recompose';
 import {connect} from 'react-redux';
+import {compose, getContext, withHandlers, withProps} from 'recompose';
 import {createSelector} from 'reselect';
+
 import {saveMapResource} from '../../actions/maps';
-import {mapSelector, mapInfoLoadingSelector, mapSaveErrorsSelector} from '../../selectors/map';
-import {layersSelector, groupsSelector} from '../../selectors/layers';
-import {backgroundListSelector} from '../../selectors/backgroundselector';
-import {mapOptionsToSaveSelector} from '../../selectors/mapsave';
 import handleSaveModal from '../../components/resources/modals/enhancers/handleSaveModal';
-import { userSelector } from '../../selectors/security';
+import Save from '../../components/resources/modals/Save';
+import {backgroundListSelector} from '../../selectors/backgroundselector';
+import {contextResourceSelector, currentContextSelector} from '../../selectors/context';
+import {groupsSelector, layersSelector} from '../../selectors/layers';
+import {mapInfoLoadingSelector, mapSaveErrorsSelector, mapSelector} from '../../selectors/map';
+import {mapOptionsToSaveSelector} from '../../selectors/mapsave';
 import {mapTypeSelector} from '../../selectors/maptype';
-import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../../selectors/searchconfig';
-import {currentContextSelector, contextResourceSelector} from '../../selectors/context';
+import {bookmarkSearchConfigSelector, textSearchConfigSelector} from '../../selectors/searchconfig';
+import { userSelector } from '../../selectors/security';
 import MapUtils from '../../utils/MapUtils';
 
 const saveSelector = createSelector(
@@ -76,7 +78,7 @@ const SaveBaseDialog = compose(
         }
     }),
     handleSaveModal
-)(require('../../components/resources/modals/Save'));
+)(Save);
 
 export default SaveBaseDialog;
 

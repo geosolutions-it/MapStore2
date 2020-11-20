@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
 import expect from 'expect';
+import React from 'react';
 import ReactDOM from 'react-dom';
-const {createSink} = require('recompose');
+import {createSink} from 'recompose';
 
 import {handlingUnsupportedProjection} from '../handlingUnsupportedProjection';
 

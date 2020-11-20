@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const src = require("../product/plugins/attribution/geosolutions-brand.png");
-const {connect} = require('react-redux');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import src from '../product/plugins/attribution/geosolutions-brand.png';
+import { connect } from 'react-redux';
 
 class RulesManagerFooter extends React.Component {
 
@@ -40,13 +41,14 @@ class RulesManagerFooter extends React.Component {
         );
     }
 }
+
 /**
  * Footer plugin for {@link #plugins.RulesEditor}
  * @name RulesManager
  * @class
  * @memberof plugins
  */
-module.exports = {
+export default {
     RulesManagerFooterPlugin: connect(({rulesmanager}) => ({loading: rulesmanager.loading}))(RulesManagerFooter),
     reducers: {}
 };

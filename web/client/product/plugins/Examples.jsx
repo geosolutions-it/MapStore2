@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {Grid, Row, Col} = require('react-bootstrap');
-const Examples = require('../components/home/Examples');
-const MailingLists = require('../components/home/MailingLists');
+import React from 'react';
+
+import { Grid, Row, Col } from 'react-bootstrap';
+import Examples from '../components/home/Examples';
+import MailingLists from '../components/home/MailingLists';
 
 class ExamplesPlugin extends React.Component {
     render() {
@@ -26,6 +27,6 @@ class ExamplesPlugin extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     ExamplesPlugin: ExamplesPlugin
 };

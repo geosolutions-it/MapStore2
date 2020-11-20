@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Button, Col, ControlLabel, FormControl as FC, FormGroup, Glyphicon, OverlayTrigger, Tooltip} from "react-bootstrap";
-import Message from "../../I18N/Message";
 import {inRange} from 'lodash';
-import * as NumberFormControl from '../../I18N/IntlNumberFormControl';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {Button, Col, ControlLabel, FormControl as FC, FormGroup, Glyphicon, OverlayTrigger, Tooltip} from "react-bootstrap";
 
+import NumberFormControl from '../../I18N/IntlNumberFormControl';
+import Message from "../../I18N/Message";
 import localizedProps from '../../misc/enhancers/localizedProps';
+
 const FormControl = localizedProps('placeholder')(FC);
 const IntlNumberFormControl = localizedProps('placeholder')(NumberFormControl);
 

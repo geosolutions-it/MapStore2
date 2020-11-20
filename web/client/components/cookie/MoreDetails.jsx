@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import PropTypes from 'prop-types';
 
 /**
   * More Details cookie page. Page with complete description about cookies used in the application.
@@ -26,4 +27,4 @@ class MoreDetails extends React.Component {
         return <div className="cookie-seeMore" dangerouslySetInnerHTML={{__html: this.props.html} } />;
     }
 }
-module.exports = MoreDetails;
+export default MoreDetails;

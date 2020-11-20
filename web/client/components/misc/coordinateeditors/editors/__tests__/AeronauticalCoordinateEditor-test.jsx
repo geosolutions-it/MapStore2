@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
-const AeronauticalCoordinateEditor = require('../AeronauticalCoordinateEditor');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+
+import AeronauticalCoordinateEditor from '../AeronauticalCoordinateEditor';
 
 describe('AeronauticalCoordinateEditor enhancer', () => {
     beforeEach((done) => {

@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { SketchPicker } = require('react-color');
-const tinycolor = require('tinycolor2');
+import React from 'react';
+
+import { SketchPicker } from 'react-color';
+import tinycolor from 'tinycolor2';
 
 /**
  * Inline widget structure for Style Editor (Editor)
@@ -18,7 +19,7 @@ const tinycolor = require('tinycolor2');
  * @prop {function} Widget the component selector (triggered by clicking on widget button), props {token = {}, value = '', onChange = () => {}}
  */
 
-module.exports = [
+export default [
     {
         type: 'color',
         active: token => token.type === 'atom' && tinycolor(token.string).isValid(),

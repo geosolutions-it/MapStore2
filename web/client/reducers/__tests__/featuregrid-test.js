@@ -80,8 +80,12 @@ import {
     sizeChange,
     storeAdvancedSearchFilter,
     setUp,
-    setTimeSync
+    setTimeSync,
+    setPagination
 } from '../../actions/featuregrid';
+
+import { paginationSelector } from '../../selectors/featuregrid';
+
 
 import { featureTypeLoaded, createQuery } from '../../actions/wfsquery';
 import { changeDrawingStatus } from '../../actions/draw';
@@ -307,7 +311,7 @@ describe('Test the featuregrid reducer', () => {
         let state = featuregrid( {newFeatures: []}, geometryChanged([feature1]));
         expect(state.changes.length).toBe(1);
         expect(state.newFeatures.length).toBe(0);
-        state = featuregrid( state, geometryChanged([feature1]));
+        state = featuregrid( state, geometryChanged([feature1, feature2]));
         expect(state.changes.length).toBe(2);
 
     });
@@ -322,11 +326,28 @@ describe('Test the featuregrid reducer', () => {
 
     });
     it('UPDATE_FILTER', () => {
-        const update = {attribute: "ATTRIBUTE", opeartor: "OPERATOR", value: "VAL", rawValue: "RAWVAL"};
+        const update = {
+            attribute: "ATTRIBUTE",
+            opeartor: "OPERATOR",
+            value: {attribute: "ATTRIBUTE", method: "METHOD_1"},
+            rawValue: "RAWVAL"
+        };
         let state = featuregrid({}, updateFilter(update));
         expect(state.filters).toExist();
         expect(state.filters[update.attribute]).toExist();
         expect(state.filters[update.attribute].value).toBe(update.value);
+
+
+        const multiselectUpdate = {...update, value: {attribute: "ATTRIBUTE", method: "METHOD_2"}};
+        state = featuregrid(state, updateFilter(multiselectUpdate, true));
+        expect(state.filters).toExist();
+        expect(state.filters[update.attribute]).toExist();
+        expect(state.filters[update.attribute].attribute).toEqual(update.attribute);
+        expect(state.filters[update.attribute].value).toEqual(
+            [ { attribute: 'ATTRIBUTE', method: 'METHOD_1' },
+                { attribute: 'ATTRIBUTE', method: 'METHOD_2' } ]);
+
+
         state = featuregrid({}, createQuery("url", {}));
         expect(state.filters).toExist();
         expect(state.filters[update.attribute]).toNotExist();
@@ -367,5 +388,9 @@ describe('Test the featuregrid reducer', () => {
     it('setTimeSync ', () => {
         expect(featuregrid({}, setTimeSync(true)).timeSync).toBe(true);
         expect(featuregrid({}, setTimeSync(false)).timeSync).toBe(false);
+    });
+    it('setPagination', () => {
+        const newState = featuregrid(undefined, setPagination(10000));
+        expect(paginationSelector({ featuregrid: newState })).toEqual({page: 0, size: 10000});
     });
 });

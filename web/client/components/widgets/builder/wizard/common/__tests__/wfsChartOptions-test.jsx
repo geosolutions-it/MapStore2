@@ -5,11 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const expect = require('expect');
-const wfsChartOptions = require('../wfsChartOptions');
+
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+
+import wfsChartOptions from '../wfsChartOptions';
+
 const featureTypeProperties = [
     {
         "name": "Integer",
@@ -115,31 +118,42 @@ describe('wfsChartOptions enhancer', () => {
             }));
             ReactDOM.render(<Sink data={data} featureTypeProperties={featureTypeProperties} />, document.getElementById("container"));
         };
+        const NUM_OPS = [
+            "Count",
+            "Sum",
+            "Average",
+            "StdDev",
+            "Min",
+            "Max",
+            "None"];
+        const NO_NUM_OPS = [
+            "Count", "None"
+        ];
         it('Integer', (done) => {
-            checkOptions({ aggregationAttribute: "Integer" }, props => expect(props.aggregationOptions.length).toBeGreaterThan(1), done);
+            checkOptions({ aggregationAttribute: "Integer" }, props => expect(props.aggregationOptions.every(({ value }) => NUM_OPS.includes(value))).toBeTruthy(), done);
         });
         it('Long', (done) => {
-            checkOptions({ aggregationAttribute: "Long" }, props => expect(props.aggregationOptions.length).toBeGreaterThan(1), done);
+            checkOptions({ aggregationAttribute: "Long" }, props => expect(props.aggregationOptions.every(({ value }) => NUM_OPS.includes(value))).toBeTruthy(), done);
         });
         it('Float', (done) => {
-            checkOptions({ aggregationAttribute: "Float" }, props => expect(props.aggregationOptions.length).toBeGreaterThan(1), done);
+            checkOptions({ aggregationAttribute: "Float" }, props => expect(props.aggregationOptions.every(({ value }) => NUM_OPS.includes(value))).toBeTruthy(), done);
         });
         it('Double Precision', (done) => {
-            checkOptions({ aggregationAttribute: "Double_Precision" }, props => expect(props.aggregationOptions.length).toBeGreaterThan(1), done);
+            checkOptions({ aggregationAttribute: "Double_Precision" }, props => expect(props.aggregationOptions.every(({ value }) => NUM_OPS.includes(value))).toBeTruthy(), done);
         });
         it('String', (done) => {
-            checkOptions({ aggregationAttribute: "String" }, props => expect(props.aggregationOptions.length).toBe(1), done);
+            checkOptions({ aggregationAttribute: "String" }, props => expect(props.aggregationOptions.every(({ value }) => NO_NUM_OPS.includes(value))), done);
         });
         it('Time', (done) => {
-            checkOptions({ aggregationAttribute: "Time" }, props => expect(props.aggregationOptions.length).toBe(1), done);
+            checkOptions({ aggregationAttribute: "Time" }, props => expect(props.aggregationOptions.every(({ value }) => NO_NUM_OPS.includes(value))).toBeTruthy(), done);
         });
 
         it('Date', (done) => {
-            checkOptions({ aggregationAttribute: "Date" }, props => expect(props.aggregationOptions.length).toBe(1), done);
+            checkOptions({ aggregationAttribute: "Date" }, props => expect(props.aggregationOptions.every(({ value }) => NO_NUM_OPS.includes(value))).toBeTruthy(), done);
         });
 
         it('DateTime', (done) => {
-            checkOptions({ aggregationAttribute: "DateTime" }, props => expect(props.aggregationOptions.length).toBe(1), done);
+            checkOptions({ aggregationAttribute: "DateTime" }, props => expect(props.aggregationOptions.every(({ value }) => NO_NUM_OPS.includes(value))).toBeTruthy(), done);
         });
     });
 });

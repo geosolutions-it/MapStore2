@@ -1,39 +1,43 @@
-const React = require('react');
-const loadingState = require('../../misc/enhancers/loadingState');
-const emptyState = require('../../misc/enhancers/emptyState');
-const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
-const {compose, defaultProps} = require('recompose');
-const {get} = require('lodash');
-const {Observable} = require('rxjs');
-const {describeFeatureType} = require('../../../observables/wfs');
-const {describeProcess} = require('../../../observables/wps/describe');
-const {Message, HTML} = require("../../I18N/I18N");
-const TYPES = "ALL";
-const {findGeometryProperty} = require('../../../utils/ogc/WFS/base');
+import React from 'react';
+import loadingState from '../../misc/enhancers/loadingState';
+import emptyState from '../../misc/enhancers/emptyState';
+import propsStreamFactory from '../../misc/enhancers/propsStreamFactory';
+import {compose, defaultProps} from 'recompose';
+import {get} from 'lodash';
+import {Observable} from 'rxjs';
+import {describeFeatureType} from '../../../observables/wfs';
+import pingAggregateProcess from '../../../observables/widgets/pingAggregateProcess';
 
+import {Message, HTML} from "../../I18N/I18N";
+const TYPES = "ALL";
+import {findGeometryProperty} from '../../../utils/ogc/WFS/base';
 /**
- * Enhancer that retrieves information about the featuretype attributes and the aggregate process
+ * Enhancer that retrieves information about the featureType attributes and the aggregate process
  * to find out proper information
+ * @param {boolean} options.needsWPS true if the builder needs also WPS
  */
-module.exports = compose(
+export default ({needsWPS} = {}) => compose(
     defaultProps({
         dataStreamFactory: ($props, {onEditorChange = () => {}, onConfigurationError = () => {}} = {}) =>
             $props
                 .distinctUntilChanged( ({layer = {}} = {}, {layer: newLayer} = {})=> layer.name === newLayer.name)
-                .switchMap( ({layer} = {}) => Observable.forkJoin(describeFeatureType({layer}), describeProcess(layer.url, "gs:Aggregate"))
+                .switchMap(({ layer } = {}) => Observable.forkJoin(
+                    describeFeatureType({ layer }),
+                    // if the builder needWPS service, then if missing it emits an exception
+                    // otherwise, it simply sets the flag to false
+                    ...(needsWPS ? [pingAggregateProcess(layer)] : [pingAggregateProcess(layer).catch( () => Observable.of(false))]))
                     .do(([result]) => {
                         const geomProp = get(findGeometryProperty(result.data || {}), "name");
                         if (geomProp) {
                         // set the geometry property (needed for synchronization with a map or any other sort of spatial filter)
                             onEditorChange("geomProp", geomProp);
                         }
-
                     })
-                    .map(([result]) => get(result, "data.featureTypes[0].properties") || [])
-                    .map(featureTypeProperties => ({
+                    .map(([result, hasAggregateProcess]) => ({
+                        hasAggregateProcess: !!hasAggregateProcess,
                         loading: false,
                         types: TYPES,
-                        featureTypeProperties
+                        featureTypeProperties: get(result, "data.featureTypes[0].properties") || []
                     })
                     ))
                 .catch( e => {

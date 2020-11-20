@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+
+import { LOCATION_CHANGE } from 'connected-react-router';
 import Rx from 'rxjs';
 
-import { setCookieVisibility, setDetailsCookieHtml, SET_MORE_DETAILS_VISIBILITY } from '../actions/cookie';
-import axios from '../libs/ajax';
+import { SET_MORE_DETAILS_VISIBILITY, setCookieVisibility, setDetailsCookieHtml } from '../actions/cookie';
 import { CHANGE_LOCALE } from '../actions/locale';
-import { LOCATION_CHANGE } from 'connected-react-router';
-
+import axios from '../libs/ajax';
 
 /**
  * Show the cookie policy notification

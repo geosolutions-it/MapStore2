@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../../../libs/ajax');
-const { pickBy } = require('lodash');
-const { convertRuleGS2GF, convertRuleGF2GS } = require('../../../utils/RuleServiceUtils');
+import axios from '../../../libs/ajax';
+
+import { pickBy } from 'lodash';
+import { convertRuleGS2GF, convertRuleGF2GS } from '../../../utils/RuleServiceUtils';
 
 
 const EMPTY_RULE = {
@@ -166,4 +167,4 @@ const Api = ({ addBaseUrl, addBaseUrlGS, getGeoServerInstance }) => ({
     }
 });
 
-module.exports = Api;
+export default Api;

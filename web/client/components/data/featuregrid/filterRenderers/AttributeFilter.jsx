@@ -6,11 +6,12 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {getMessageById} = require('../../../../utils/LocaleUtils');
-const {Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../../misc/OverlayTrigger').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { getMessageById } from '../../../../utils/LocaleUtils';
+import { Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../../misc/OverlayTrigger';
 
 class AttributeFilter extends React.PureComponent {
     static propTypes = {
@@ -65,4 +66,4 @@ class AttributeFilter extends React.PureComponent {
     }
 }
 
-module.exports = AttributeFilter;
+export default AttributeFilter;

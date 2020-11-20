@@ -1,4 +1,4 @@
-const {connect} = require('react-redux');
-const { createSelector } = require('reselect');
-const { mapTypeSelector } = require('../../../selectors/maptype');
-module.exports = connect(createSelector(mapTypeSelector, mapType => ({mapType})));
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { mapTypeSelector } from '../../../selectors/maptype';
+export default connect(createSelector(mapTypeSelector, mapType => ({mapType})));

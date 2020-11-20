@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var PropTypes = require('prop-types');
+import React from 'react';
+
+import PropTypes from 'prop-types';
 
 /**
  * Header of MapStore, rendered in the home page (big full-width image).
@@ -28,6 +29,6 @@ class Header extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     HeaderPlugin: Header
 };

@@ -211,5 +211,26 @@ describe('Widget Chart: data conversions ', () => {
             });
 
         });
+
+        it('check yAxis, prefix, format, suffix', () => {
+            testAllTypes({
+                ...DATASET_1,
+                yAxisOpts: { tickPrefix: "test", format: ".2s", tickSuffix: "W/h" }
+            }, ({ layout }) => {
+                // bottom margin is optimized
+                expect(layout.yaxis.tickprefix).toBe("test");
+                expect(layout.yaxis.tickformat).toBe(".2s");
+                expect(layout.yaxis.ticksuffix).toBe("W/h");
+            });
+        });
+        it('check formula', () => {
+            testAllTypes({
+                ...DATASET_1,
+                formula: "value * 2"
+            }, ({ data }) => {
+                // bottom margin is optimized
+                data[0].y.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.series[0].dataKey] * 2));
+            });
+        });
     });
 });

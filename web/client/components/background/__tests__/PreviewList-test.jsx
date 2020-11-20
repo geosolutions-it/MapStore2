@@ -1,9 +1,8 @@
-const expect = require('expect');
-
-const React = require('react');
-const ReactDOM = require('react-dom');
-const PreviewList = require('../PreviewList');
-const ReactTestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PreviewList from '../PreviewList';
+import ReactTestUtils from 'react-dom/test-utils';
 
 describe("test the PreviewList", () => {
     beforeEach((done) => {

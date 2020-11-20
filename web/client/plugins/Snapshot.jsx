@@ -6,21 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
+import assign from 'object-assign';
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
-const {onCreateSnapshot, changeSnapshotState, saveImage, onRemoveSnapshot, onSnapshotError} = require('../actions/snapshot');
-
-const {mapSelector} = require('../selectors/map');
-const {layersSelector} = require('../selectors/layers');
-const {mapTypeSelector} = require('../selectors/maptype');
-
-const {toggleControl} = require('../actions/controls');
-
-const assign = require('object-assign');
-const Message = require('./locale/Message');
-const {Glyphicon} = require('react-bootstrap');
+import { toggleControl } from '../actions/controls';
+import {
+    changeSnapshotState,
+    onCreateSnapshot,
+    onRemoveSnapshot,
+    onSnapshotError,
+    saveImage
+} from '../actions/snapshot';
+import SnapshotPanelComp from "../components/mapcontrols/Snapshot/SnapshotPanel";
+import SnapshotQueueComp from "../components/mapcontrols/Snapshot/SnapshotQueue";
+import snapshotReducers from '../reducers/snapshot';
+import { layersSelector } from '../selectors/layers';
+import { mapSelector } from '../selectors/map';
+import { mapTypeSelector } from '../selectors/maptype';
+import Message from './locale/Message';
 
 const snapshotSelector = createSelector([
     mapSelector,
@@ -43,7 +49,7 @@ const SnapshotPanel = connect(snapshotSelector, {
     onStatusChange: changeSnapshotState,
     downloadImg: saveImage,
     toggleControl: toggleControl.bind(null, 'snapshot', null)
-})(require("../components/mapcontrols/Snapshot/SnapshotPanel"));
+})(SnapshotPanelComp);
 
 const SnapshotPlugin = connect((state) => ({
     queue: state.snapshot && state.snapshot.queue || []
@@ -51,10 +57,10 @@ const SnapshotPlugin = connect((state) => ({
     downloadImg: saveImage,
     onSnapshotError,
     onRemoveSnapshot
-})(require("../components/mapcontrols/Snapshot/SnapshotQueue"));
+})(SnapshotQueueComp);
 
 
-module.exports = {
+export default {
     SnapshotPlugin: assign(SnapshotPlugin, {
         Toolbar: {
             name: 'snapshot',
@@ -80,6 +86,6 @@ module.exports = {
         }
     }),
     reducers: {
-        snapshot: require('../reducers/snapshot').default
+        snapshot: snapshotReducers
     }
 };

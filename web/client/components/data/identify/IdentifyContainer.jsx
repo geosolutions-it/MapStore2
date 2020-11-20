@@ -6,18 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Row} = require('react-bootstrap');
-const {get} = require('lodash');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const Message = require('../../I18N/Message').default;
-const DockablePanel = require('../../misc/panels/DockablePanel');
-const GeocodeViewer = require('./GeocodeViewer');
-const ResizableModal = require('../../misc/ResizableModal').default;
-const Portal = require('../../misc/Portal').default;
-const Coordinate = require('./coordinates/Coordinate');
-const {responseValidForEdit} = require('../../../utils/IdentifyUtils');
-const LayerSelector = require('./LayerSelector').default;
+import React from 'react';
+
+import { Row } from 'react-bootstrap';
+import { get } from 'lodash';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import Message from '../../I18N/Message';
+import DockablePanel from '../../misc/panels/DockablePanel';
+import GeocodeViewer from './GeocodeViewer';
+import ResizableModal from '../../misc/ResizableModal';
+import Portal from '../../misc/Portal';
+import Coordinate from './coordinates/Coordinate';
+import { responseValidForEdit } from '../../../utils/IdentifyUtils';
+import LayerSelector from './LayerSelector';
+
 /**
  * Component for rendering Identify Container inside a Dockable container
  * @memberof components.data.identify
@@ -29,7 +31,7 @@ const LayerSelector = require('./LayerSelector').default;
  * @prop {function} getToolButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
  * @prop {function} getFeatureButtons must return an array of buttons relating to feature interaction, eg (props) => [{ glyph: 'zoom-to', tooltip: 'Zoom to Extent'}]
  */
-module.exports = props => {
+export default props => {
     const {
         enabled,
         requests = [],

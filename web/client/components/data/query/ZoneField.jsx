@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {isEqual} = require('lodash');
+import React from 'react';
 
-const ComboField = require('./ComboField');
-const PropTypes = require('prop-types');
-
-const {toOGCFilter} = require('../../../utils/FilterUtils');
+import { isEqual } from 'lodash';
+import ComboField from './ComboField';
+import PropTypes from 'prop-types';
+import { toOGCFilter } from '../../../utils/FilterUtils';
 
 class ZoneField extends React.Component {
     static propTypes = {
@@ -243,4 +242,4 @@ class ZoneField extends React.Component {
     };
 }
 
-module.exports = ZoneField;
+export default ZoneField;

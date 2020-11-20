@@ -7,7 +7,7 @@
 */
 import assign from 'object-assign';
 
-import { head, get, uniqBy } from 'lodash';
+import { head, get, uniqBy, isArray } from 'lodash';
 
 import {
     SELECT_FEATURES,
@@ -46,7 +46,8 @@ import {
     LOAD_MORE_FEATURES,
     SET_UP,
     SET_TIME_SYNC,
-    UPDATE_EDITORS_OPTIONS
+    UPDATE_EDITORS_OPTIONS,
+    SET_PAGINATION
 } from '../actions/featuregrid';
 
 import { FEATURE_TYPE_LOADED, QUERY_CREATE } from '../actions/wfsquery';
@@ -165,6 +166,15 @@ function featuregrid(state = emptyResultsState, action) {
             }
         });
     }
+    case SET_PAGINATION: {
+        return {
+            ...state,
+            pagination: {
+                ...(state.pagination ?? {}),
+                size: action.size
+            }
+        };
+    }
     case SELECT_FEATURES: {
         const features = action.features.filter(f => f.id !== 'empty_row');
         if (state.multiselect && action.append) {
@@ -259,8 +269,7 @@ function featuregrid(state = emptyResultsState, action) {
             deleteConfirm: false,
             drawing: false,
             newFeatures: [],
-            changes: [],
-            select: []
+            changes: []
         });
     }
     case CREATE_NEW_FEATURE: {
@@ -286,10 +295,10 @@ function featuregrid(state = emptyResultsState, action) {
         const newFeaturesChanges = action.features.filter(f => f._new) || [];
         return assign({}, state, {
             newFeatures: newFeaturesChanges.length > 0 ? applyNewChanges(state.newFeatures, newFeaturesChanges, null, {geometry: {...head(newFeaturesChanges).geometry} }) : state.newFeatures,
-            changes: [...(state && state.changes || []), ...(action.features.filter(f => !f._new).map(f => ({
+            changes: action.features.filter(f => !f._new).map((f, index) => ({
                 id: f.id,
-                updated: {geometry: head(action.features).geometry}
-            })))],
+                updated: {geometry: action.features[index].geometry}
+            })),
             drawing: false
         });
     }
@@ -354,6 +363,30 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case UPDATE_FILTER : {
         const {attribute} = (action.update || {});
+        if (attribute && action.append) {
+            const value = state.filters[attribute].value;
+            let oldVal = [];
+            if (value?.attribute) {
+                oldVal = [value];
+            }
+
+            if (isArray(value)) {
+                oldVal = value;
+            }
+
+            const newValue = [...oldVal, action.update.value];
+            return assign({}, state, {
+                filters: {
+                    [attribute]: {
+                        attribute: attribute,
+                        enabled: true,
+                        type: "geometry",
+                        operator: "OR",
+                        value: newValue
+                    }
+                }
+            });
+        }
         if (attribute) {
             return assign({}, state, {
                 filters: {

@@ -27,6 +27,7 @@
         "showMore": "Mostrar más...",
         "collapse": "Colapso",
         "expand": "Expandir",
+        "Links": "Enlaces",
         "Forbidden": "Prohibido",
         "layerNameChangeError": {
             "title": "Error de cambio de nombre",
@@ -1544,6 +1545,7 @@
             "backtosearch": "Volver a la búsqueda",
             "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total}} other { {total}}}",
+            "selectedInfo": "( {selected} seleccionado )",
             "pageInfo": "{totalPages, plural, =0 {ninguna Página} =1 {Página {totalPages} de {totalPages}} other {Página {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",
@@ -1761,6 +1763,15 @@
             "placeHolder":{
                 "default":"Seleccionar atributo"
             },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUM": "SUM",
+              "AVG": "AVG",
+              "STDDEV": "STDDEV",
+              "MIN": "MIN",
+              "MAX": "MAX",
+              "NONE": "Sin operación"
+            },
             "groupByAttributes": {
                 "line": "Atributo X",
                 "pie": "Agrupar por",
@@ -1813,6 +1824,13 @@
               "xAxis": "Eje X",
               "xAxisAngle": "Rotación de etiquetas",
               "hideLabels": "Ocultar etiquetas",
+              "format": "Formato",
+              "prefix": "Prefijo",
+              "suffix": "Sufijo",
+              "examples": "Ejemplos",
+              "formatExamples": "<div> <ul> <li> <code> .0% </code>: porcentaje redondeado, '12% '</li> <li> <code> .2s </code>: SI -prefijo con dos dígitos significativos, '42M' </li> <li> <code>, .2r </code>: miles agrupados con dos dígitos significativos '4200' </li> </ul> <em> Más información sobre la sintaxis de formato <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\"> aquí</a>.</em></div> ",
+              "formula": "Fórmula",
+              "formulaExamples": "<div> Transforma el valor usando una fórmula. Usa la variable <code> valor </code> en la expresión: <h5> Ejemplos </h5> <ul> <li> <code> valor + 2 </code></li><li> <code> value / 100 </code> </li> </ul><em> Más información sobre la sintaxis <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">aquí</a>.</em></div> ",
               "xAxisType": "Tipo",
               "forceTicks": "Nunca omita etiquetas",
               "maxXAxisLabels": "De todos modos, las etiquetas no pueden ser más de {max}",

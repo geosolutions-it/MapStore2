@@ -5,15 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {connect} = require('react-redux');
-const {downloadFeatures, onDownloadOptionChange, onFormatOptionsFetch} = require('../actions/wfsdownload');
-const {toggleControl, setControlProperty} = require('../actions/controls');
+import { connect } from 'react-redux';
 
-const {createSelector} = require('reselect');
-const {wfsURL, wfsFilter} = require('../selectors/query');
-const {getSelectedLayer} = require('../selectors/layers');
+import { downloadFeatures, onDownloadOptionChange, onFormatOptionsFetch } from '../actions/wfsdownload';
+import { toggleControl, setControlProperty } from '../actions/controls';
+import { createSelector } from 'reselect';
+import { wfsURL, wfsFilter } from '../selectors/query';
+import { getSelectedLayer } from '../selectors/layers';
+import DownloadDialog from '../components/data/download/DownloadDialog';
 
-const DownloadDialog = require('../components/data/download/DownloadDialog');
 /**
  * Provides advanced export functionalities using WFS.
  * @memberof plugins
@@ -42,7 +42,7 @@ const DownloadDialog = require('../components/data/download/DownloadDialog');
  *  }
  * }
  */
-module.exports = {
+export default {
     WFSDownloadPlugin: connect(createSelector(
         wfsURL,
         wfsFilter,

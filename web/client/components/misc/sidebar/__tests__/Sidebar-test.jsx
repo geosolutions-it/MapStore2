@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Sidebar = require('../Sidebar');
-const SidebarHeader = require('../SidebarHeader');
+
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Sidebar from '../Sidebar';
+import SidebarHeader from '../SidebarHeader';
 
 describe("Sidebar component", () => {
     beforeEach((done) => {

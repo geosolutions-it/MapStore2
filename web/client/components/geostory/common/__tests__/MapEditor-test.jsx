@@ -16,7 +16,7 @@ import get from 'lodash/get';
 const dragDropContext = DragDropContext;
 const  TestMapEditor = dragDropContext(testBackend)(MapEditor);
 
-const {Provider} = require('react-redux');
+import { Provider } from 'react-redux';
 // mock the store for empty map type
 const store = {
     getState: () => ({

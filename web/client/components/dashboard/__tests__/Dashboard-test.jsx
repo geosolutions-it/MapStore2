@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const Dashboard = require('../Dashboard');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import Dashboard from '../Dashboard';
 describe('WidgetsView component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

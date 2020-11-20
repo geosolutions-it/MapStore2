@@ -1,9 +1,11 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
-const {isEmpty} = require('lodash');
-const Editor = require('../Editor');
+import expect from 'expect';
+import {isEmpty} from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+
+import Editor from '../Editor';
+
 describe('Identify Coordinate Editor component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

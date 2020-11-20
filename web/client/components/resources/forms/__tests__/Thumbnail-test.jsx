@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Thumbnail = require('../Thumbnail.jsx');
-var expect = require('expect');
-const TestUtils = require('react-dom/test-utils');
+
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
+
+import Thumbnail from '../Thumbnail.jsx';
 
 describe('This test for Thumbnail', () => {
 

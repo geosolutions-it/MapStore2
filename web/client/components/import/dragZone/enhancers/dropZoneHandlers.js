@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {compose, withHandlers} = require('recompose');
+import { compose, withHandlers } from 'recompose';
+
 /**
  * Enhancer that provides a method to open file system browser of the dropzone.
  * @memberof components.import.dragZone.enhancers
  * @function
  *
  */
-module.exports = compose(
+export default compose(
     withHandlers( () => {
         let dropZone = null;
         return {

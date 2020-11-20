@@ -6,10 +6,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {FormControl} = require('react-bootstrap');
-const PropTypes = require('prop-types');
-const {getSupportedLocales} = require('../../utils/LocaleUtils');
+import React from 'react';
+
+import { FormControl } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { getSupportedLocales } from '../../utils/LocaleUtils';
 
 class LangSelector extends React.Component {
     static propTypes = {
@@ -50,4 +51,4 @@ class LangSelector extends React.Component {
     };
 }
 
-module.exports = LangSelector;
+export default LangSelector;

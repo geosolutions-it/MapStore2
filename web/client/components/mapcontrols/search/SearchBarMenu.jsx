@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {Glyphicon, DropdownButton} = require('react-bootstrap');
-const tooltip = require('../../misc/enhancers/tooltip');
-const React = require('react');
-const uuidv1 = require('uuid/v1');
+import { Glyphicon, DropdownButton } from 'react-bootstrap';
+
+import tooltip from '../../misc/enhancers/tooltip';
+import React from 'react';
+import uuidv1 from 'uuid/v1';
 
 const DropdownButtonT = tooltip(DropdownButton);
 
@@ -43,4 +44,4 @@ const SearchBarMenu = ({
         {menuItems.length ? menuItems.map(menuItem => menuItem) : null}
     </DropdownButtonT>
 );
-module.exports = SearchBarMenu;
+export default SearchBarMenu;

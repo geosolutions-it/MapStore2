@@ -6,15 +6,16 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const assign = require('object-assign');
-const _ = require('lodash');
-const Select = require('react-select').default;
-const Spinner = require('react-spinkit');
-const {Table, Button, Glyphicon} = require('react-bootstrap');
-const Message = require('../I18N/Message').default;
-const {getMessageById} = require('../../utils/LocaleUtils');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import assign from 'object-assign';
+import _ from 'lodash';
+import Select from 'react-select';
+import Spinner from 'react-spinkit';
+import { Table, Button, Glyphicon } from 'react-bootstrap';
+import Message from '../I18N/Message';
+import { getMessageById } from '../../utils/LocaleUtils';
 
 /**
 * Map permission editor
@@ -261,4 +262,4 @@ class PermissionEditor extends React.Component {
     };
 }
 
-module.exports = PermissionEditor;
+export default PermissionEditor;

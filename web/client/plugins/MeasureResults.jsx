@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,14 +5,14 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
 
-const Message = require('./locale/Message');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
 
-const {changeMeasurement} = require('../actions/measurement');
-
-const {MeasureDialog} = require('./measure/index');
+import { changeMeasurement } from '../actions/measurement';
+import Message from './locale/Message';
+import { MeasureDialog } from './measure/index';
 
 class MeasureComponent extends React.Component {
     static propTypes = {
@@ -66,7 +65,7 @@ const MeasureResultsPlugin = connect((state) => {
     toggleMeasure: changeMeasurement
 })(MeasureComponent);
 
-module.exports = {
+export default {
     MeasureResultsPlugin,
     reducers: {measurement: require('../reducers/measurement').default}
 };

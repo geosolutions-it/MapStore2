@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const SettingsModal = require('../SettingsModal');
-const expect = require('expect');
+import ReactDOM from 'react-dom';
+import SettingsModal from '../SettingsModal';
+import expect from 'expect';
 
 describe('TOC SettingsModal', () => {
     beforeEach((done) => {

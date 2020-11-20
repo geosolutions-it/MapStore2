@@ -6,22 +6,22 @@
   * LICENSE file in the root directory of this source tree.
   */
 
+import urlUtil from 'url';
 
-const axios = require('../libs/ajax');
+import { castArray, isNil, isObject } from 'lodash';
+import Rx from 'rxjs';
+import { parseString } from 'xml2js';
+import { stripPrefix } from 'xml2js/lib/processors';
 
-const urlUtil = require('url');
-const Rx = require('rxjs');
-const {castArray, isNil} = require('lodash');
-const {parseString} = require('xml2js');
-const {stripPrefix} = require('xml2js/lib/processors');
+import axios from '../libs/ajax';
+import { getWFSFilterData } from '../utils/FilterUtils';
+import { getCapabilitiesUrl } from '../utils/LayersUtils';
+import { interceptOGCError } from '../utils/ObservableUtils';
+import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 
-const {interceptOGCError} = require('../utils/ObservableUtils');
-const {getCapabilitiesUrl} = require('../utils/LayersUtils');
-const {getWFSFilterData} = require('../utils/FilterUtils');
-const requestBuilder = require('../utils/ogc/WFS/RequestBuilder');
 const {getFeature, query, sortBy, propertyName} = requestBuilder({ wfsVersion: "1.1.0" });
 
-const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} = {}) => {
+export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} = {}) => {
     const parsed = urlUtil.parse(describeFeatureTypeURL || search.url || url, true);
     return urlUtil.format(
         {
@@ -38,7 +38,7 @@ const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} = {}) =
             }
         });
 };
-const toLayerCapabilitiesURL = ({name, search = {}, url} = {}) => {
+export const toLayerCapabilitiesURL = ({name, search = {}, url} = {}) => {
     const URL = getCapabilitiesUrl({name, url: search && search.url || url });
     const parsed = urlUtil.parse(URL, true);
     return urlUtil.format(
@@ -53,11 +53,9 @@ const toLayerCapabilitiesURL = ({name, search = {}, url} = {}) => {
             }
         });
 };
-const Url = require('url');
-const { isObject } = require('lodash');
 
 // this is a workaround for https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
-const workaroundGEOS7233 = ({ totalFeatures, features, ...rest } = {}, { startIndex } = {}, originalSize) => {
+export const workaroundGEOS7233 = ({ totalFeatures, features, ...rest } = {}, { startIndex } = {}, originalSize) => {
     if (originalSize > totalFeatures && originalSize === startIndex + features.length && totalFeatures === features.length) {
         return {
             ...rest,
@@ -74,7 +72,7 @@ const workaroundGEOS7233 = ({ totalFeatures, features, ...rest } = {}, { startIn
 };
 
 
-const getPagination = (filterObj = {}, options = {}) =>
+export const getPagination = (filterObj = {}, options = {}) =>
     filterObj.pagination
     || !isNil(options.startIndex)
         && !isNil(options.maxFeatures)
@@ -89,14 +87,14 @@ const getPagination = (filterObj = {}, options = {}) =>
  * @param {number} totalFeatures optional number to use in case of a previews request, needed to workaround GEOS-7233.
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
-const getJSONFeature = (searchUrl, filterObj, options = {}) => {
+export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
     const data = getWFSFilterData(filterObj, options);
 
-    const urlParsedObj = Url.parse(searchUrl, true);
+    const urlParsedObj = urlUtil.parse(searchUrl, true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
     params.service = 'WFS';
     params.outputFormat = 'json';
-    const queryString = Url.format({
+    const queryString = urlUtil.format({
         protocol: urlParsedObj.protocol,
         host: urlParsedObj.host,
         pathname: urlParsedObj.pathname,
@@ -122,7 +120,7 @@ const getJSONFeature = (searchUrl, filterObj, options = {}) => {
  * @param {object} options params that can contain `totalFeatures` and sort options
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
-const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...options } = {}) =>
+export const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...options } = {}) =>
     getJSONFeature(searchUrl, filterObj, options)
         .catch(error => {
             if (error.name === "OGCError" && error.code === 'NoApplicableCode') {
@@ -145,7 +143,7 @@ const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...options }
  * retro compatibility the filter object can contain pagination info, typeName and so on.
  * @param {object} options the options (pagination, totalFeatures and so on ...)
  */
-const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptions, propertyName: pn, ...options} = {}) =>
+export const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptions, propertyName: pn, ...options} = {}) =>
     // TODO: Apply sort workaround for no primary keys
     getJSONFeature(search.url || url,
         filter && typeof filter === 'object' ? {
@@ -180,20 +178,23 @@ const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptio
             throw error;
         });
 
-module.exports = {
+export const describeFeatureType = ({layer}) =>
+    Rx.Observable.defer(() =>
+        axios.get(toDescribeURL(layer))).let(interceptOGCError);
+export const getLayerWFSCapabilities = ({layer}) =>
+    Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer)))
+        .let(interceptOGCError)
+        .switchMap( response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
+            tagNameProcessors: [stripPrefix],
+            explicitArray: false,
+            mergeAttrs: true
+        }, callback))(response.data)
+        );
+
+export default {
     getJSONFeature,
     getLayerJSONFeature,
     getJSONFeatureWA,
-    describeFeatureType: ({layer}) =>
-        Rx.Observable.defer(() =>
-            axios.get(toDescribeURL(layer))).let(interceptOGCError),
-    getLayerWFSCapabilities: ({layer}) =>
-        Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer)))
-            .let(interceptOGCError)
-            .switchMap( response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
-                tagNameProcessors: [stripPrefix],
-                explicitArray: false,
-                mergeAttrs: true
-            }, callback))(response.data)
-            )
+    describeFeatureType,
+    getLayerWFSCapabilities
 };

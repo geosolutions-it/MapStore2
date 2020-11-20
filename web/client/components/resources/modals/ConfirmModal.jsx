@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Modal = require('../../misc/Modal');
-const Message = require('../../I18N/Message').default;
-const { Button } = require('react-bootstrap');
+import React from 'react';
 
-module.exports = ({
+import Modal from '../../misc/Modal';
+import Message from '../../I18N/Message';
+import { Button } from 'react-bootstrap';
+
+export default ({
     title = <Message msgId="warning" />,
     cancelText = <Message msgId="no" />,
     confirmText = <Message msgId="yes" />,

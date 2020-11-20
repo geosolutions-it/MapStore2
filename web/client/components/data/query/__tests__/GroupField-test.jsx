@@ -5,12 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const expect = require('expect');
-
-const GroupField = require('../GroupField.jsx');
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import GroupField from '../GroupField.jsx';
 
 describe('GroupField', () => {
 

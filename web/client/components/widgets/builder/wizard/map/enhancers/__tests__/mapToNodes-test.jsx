@@ -1,3 +1,4 @@
+import expect from 'expect';
 /*
  * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
@@ -5,11 +6,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const expect = require('expect');
-const mapToNodes = require('../mapToNodes');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+
+import mapToNodes from '../mapToNodes';
 
 describe('mapToNodes enhancer', () => {
     beforeEach((done) => {

@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const axios = require('../../../libs/ajax');
-const MockAdapter = require("axios-mock-adapter");
-const SAMPLE_IMPORTS_1 = require('../../../test-resources/importer/imports.json');
+import expect from 'expect';
+
+import axios from '../../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+import SAMPLE_IMPORTS_1 from '../../../test-resources/importer/imports.json';
 const BASE_URL = '/GEOSERVER_TEST/';
-const Importer = require('../Importer');
+import Importer from '../Importer';
 describe('GeoServer Importer API', () => {
     let mock;
     beforeEach(() => {

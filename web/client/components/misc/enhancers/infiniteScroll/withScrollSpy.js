@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const ReactDom = require('react-dom');
-require('rxjs');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import ReactDom from 'react-dom';
+import 'rxjs';
+
 /**
  * Enhancer that calls the prop handler `onLoadMore` when the user scrolls and reaches the end of the div.
  * The enhancer manages also some props for various optimizations:
@@ -30,7 +32,7 @@ require('rxjs');
  * // ... or with pagination
  * <Cmp onLoadMore={() => console.log("NEED MORE DATA")} items={[]}/>;
  */
-module.exports = ({
+export default ({
     dataProp = "items",
     querySelector,
     closest = false,
@@ -39,7 +41,7 @@ module.exports = ({
     pageSize = 10,
     offsetSize = 200
 } = {}) => (Component) =>
-    class WithInfiniteScroll extends React.Component {
+    (class WithInfiniteScroll extends React.Component {
 
     static propTypes = {
         hasMore: PropTypes.func,
@@ -113,4 +115,4 @@ module.exports = ({
     render() {
         return <Component {...this.props} />;
     }
-    };
+    });

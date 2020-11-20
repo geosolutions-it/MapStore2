@@ -5,20 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {compose} = require('recompose');
-const { connect } = require('react-redux');
-const {createSelector} = require('reselect');
-const { mapInfoSelector, mapIdSelector } = require('../../selectors/map');
-const { userSelector } = require('../../selectors/security');
+import { compose } from 'recompose';
 
-
-const accessRuleParser = require('../../components/misc/enhancers/security/accessRuleParser');
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { mapInfoSelector, mapIdSelector } from '../../selectors/map';
+import { userSelector } from '../../selectors/security';
+import accessRuleParser from '../../components/misc/enhancers/security/accessRuleParser';
 
 /*
  * Transforms the rules into the real flags.
  * handle tools options and editing options
  */
-module.exports = (...args) => compose(
+export default (...args) => compose(
     connect(
         createSelector(
             mapIdSelector,

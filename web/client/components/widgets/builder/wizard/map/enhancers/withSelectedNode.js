@@ -8,8 +8,10 @@
 /**
  * Works with handleNodeSelection and mapToNode to retrieve node in `nodes` with the `editNode` id.
  */
-const { isMatch } = require('lodash');
-const { withProps } = require('recompose');
+
+import { isMatch } from 'lodash';
+import { withProps } from 'recompose';
+
 const traverse = (branch = [], filter, fn) => {
     for (let i in branch) {
         if (branch[i] !== null && typeof(branch[i]) === "object") {
@@ -20,7 +22,8 @@ const traverse = (branch = [], filter, fn) => {
         }
     }
 };
-module.exports = withProps(({ nodes = {}, editNode }) => {
+
+export default withProps(({ nodes = {}, editNode }) => {
     let selectedNode = {};
     editNode && traverse(nodes, { id: editNode }, (resultNode)=>{
         selectedNode = resultNode;

@@ -1,4 +1,3 @@
-var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,10 +5,12 @@ var PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
 
-var I18N = require('../../../components/I18N/I18N');
-var LangSelector = require('../../../components/I18N/LangSelector');
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import I18N from '../../../components/I18N/I18N';
+import LangSelector from '../../../components/I18N/LangSelector';
 
 class Language extends React.Component {
     static propTypes = {
@@ -24,4 +25,4 @@ class Language extends React.Component {
     }
 }
 
-module.exports = Language;
+export default Language;

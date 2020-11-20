@@ -1,7 +1,7 @@
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const StyleCanvas = require('../StyleCanvas');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import StyleCanvas from '../StyleCanvas';
 
 let shapeStyle = {
     color: { r: 0, g: 0, b: 255, a: 1 },

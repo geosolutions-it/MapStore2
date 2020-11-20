@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Timeline = require('../TimelineComponent');
-const expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import Timeline from '../TimelineComponent';
+import expect from 'expect';
 const TEST_ITEMS = [{ id: '1', start: new Date(0), end: new Date(0), type: 'point', content: '' }, { id: '2', start: new Date(970821881894), end: new Date(970821881894), type: 'point', content: '' }];
 describe('test TimelineComponent module component', () => {
     beforeEach((done) => {

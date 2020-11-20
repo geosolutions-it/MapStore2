@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {withProps, compose} = require('recompose');
-const withMapConnect = require('./withMapConnect');
+import { withProps, compose } from 'recompose';
+
+import withMapConnect from './withMapConnect';
 
 const isTargetForOtherWidgets = (allDependenciesMap, widgetType, editorData) => widgetType === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(editorData.id) !== -1).length > 0 ).length === 0;
 
@@ -14,7 +15,7 @@ const isTargetForOtherWidgets = (allDependenciesMap, widgetType, editorData) => 
  * Viewport connection configuration support (for widget builders of charts, table, counter)
  *
  */
-module.exports = compose(
+export default compose(
     withProps(({ editorData = {}, widgets = [] }) => {
         const allDependenciesMap = widgets.filter(({mapSync, dependenciesMap}) => mapSync && dependenciesMap).map(({dependenciesMap}) => dependenciesMap);
         return {

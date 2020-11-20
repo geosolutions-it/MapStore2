@@ -6,24 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {DropdownList} = require('react-widgets');
-const Message = require('../../../I18N/Message').default;
-const {Grid, Row, Col, FormGroup, ControlLabel, Checkbox} = require('react-bootstrap');
-const {clamp, isNil, isNumber} = require('lodash');
-const Legend = require('../legend/Legend');
-const IntlNumberFormControl = require('../../../I18N/IntlNumberFormControl');
-const InfoPopover = require('../../../widgets/widget/InfoPopover');
-require('react-widgets/lib/less/react-widgets.less');
+import 'react-widgets/lib/less/react-widgets.less';
 
-module.exports = class extends React.Component {
+import { clamp, isNil, isNumber } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Checkbox, Col, ControlLabel, FormGroup, Grid, Row } from 'react-bootstrap';
+import { DropdownList } from 'react-widgets';
+
+import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
+import Message from '../../../I18N/Message';
+import InfoPopover from '../../../widgets/widget/InfoPopover';
+import Legend from '../legend/Legend';
+
+export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
         element: PropTypes.object,
         formats: PropTypes.array,
         settings: PropTypes.object,
         onChange: PropTypes.func,
+        containerWidth: PropTypes.number,
+        currentLocaleLanguage: PropTypes.string,
         isLocalizedLayerStylesEnabled: PropTypes.bool
     };
 
@@ -45,23 +49,6 @@ module.exports = class extends React.Component {
         },
         containerStyle: {overflowX: 'auto'},
         containerWidth: 0
-    };
-
-    updateState = (props) =>{
-        if (props.settings && props.settings.options) {
-            this.setState({
-                ...this.state,
-                opacity: !isNil(props.settings.options.opacity) ? Math.round(props.settings.options.opacity * 100) : this.state.opacity,
-                legendOptions: {
-                    ...this.state.legendOptions,
-                    legendHeight: props.element.legendOptions && !isNil(props.element.legendOptions.legendHeight) ?
-                        props.element.legendOptions.legendHeight : this.state.legendOptions.legendHeight,
-                    legendWidth: props.element.legendOptions && !isNil(props.element.legendOptions.legendWidth) ?
-                        props.element.legendOptions.legendWidth : this.state.legendOptions.legendWidth
-                },
-                containerWidth: this.containerRef.current && this.containerRef.current.clientWidth
-            });
-        }
     };
 
     componentDidMount() {
@@ -114,20 +101,6 @@ module.exports = class extends React.Component {
         }
         return null;
     };
-
-    setOverFlow = () =>{
-        return this.state.legendOptions.legendWidth > this.state.containerWidth;
-    };
-
-    useLegendOptions = () =>{
-        return (
-            this.getValidationState("legendWidth") !== 'error' &&
-            this.getValidationState("legendHeight") !== 'error' &&
-            isNumber(this.state.legendOptions.legendHeight) &&
-            isNumber(this.state.legendOptions.legendWidth)
-        );
-    };
-
     render() {
         return (
             <Grid
@@ -257,4 +230,35 @@ module.exports = class extends React.Component {
             </Grid>
         );
     }
-};
+    updateState = (props) =>{
+        if (props.settings && props.settings.options) {
+            this.setState({
+                ...this.state,
+                opacity: !isNil(props.settings.options.opacity) ? Math.round(props.settings.options.opacity * 100) : this.state.opacity,
+                legendOptions: {
+                    ...this.state.legendOptions,
+                    legendHeight: props.element.legendOptions && !isNil(props.element.legendOptions.legendHeight) ?
+                        props.element.legendOptions.legendHeight : this.state.legendOptions.legendHeight,
+                    legendWidth: props.element.legendOptions && !isNil(props.element.legendOptions.legendWidth) ?
+                        props.element.legendOptions.legendWidth : this.state.legendOptions.legendWidth
+                },
+                containerWidth: this.containerRef.current && this.containerRef.current.clientWidth
+            });
+        }
+    };
+
+    setOverFlow = () =>{
+        return this.state.legendOptions.legendWidth > this.state.containerWidth;
+    };
+
+    useLegendOptions = () =>{
+        return (
+            this.getValidationState("legendWidth") !== 'error' &&
+            this.getValidationState("legendHeight") !== 'error' &&
+            isNumber(this.state.legendOptions.legendHeight) &&
+            isNumber(this.state.legendOptions.legendWidth)
+        );
+    };
+
+
+}

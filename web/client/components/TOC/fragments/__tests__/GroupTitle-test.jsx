@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const GroupTitle = require('../GroupTitle');
+import React from 'react';
 
-const expect = require('expect');
-const ReactTestUtils = require('react-dom/test-utils');
-const {getTooltip} = require('../../../../utils/TOCUtils');
+import ReactDOM from 'react-dom';
+import GroupTitle from '../GroupTitle';
+import expect from 'expect';
+import ReactTestUtils from 'react-dom/test-utils';
+import { getTooltip } from '../../../../utils/TOCUtils';
 
 describe('test GroupTitle module component', () => {
     beforeEach((done) => {

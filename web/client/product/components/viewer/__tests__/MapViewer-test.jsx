@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Provider = require('react-redux').Provider;
-const MapViewerCmp = require('../MapViewerCmp');
-const MapViewerContainer = require('../../../../containers/MapViewer');
-const configureStore = require('redux-mock-store').default;
-const thunkMiddleware = require('redux-thunk');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import MapViewerCmp from '../MapViewerCmp';
+import MapViewerContainer from '../../../../containers/MapViewer';
+import configureStore from 'redux-mock-store';
+import thunkMiddleware from 'redux-thunk';
 const mockStore = configureStore([thunkMiddleware]);
 const store = mockStore({});
 const location = document.location;

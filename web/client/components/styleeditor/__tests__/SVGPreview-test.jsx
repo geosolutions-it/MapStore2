@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const SVGPreview = require('../SVGPreview');
+import React from 'react';
 
-const expect = require('expect');
+import ReactDOM from 'react-dom';
+import SVGPreview from '../SVGPreview';
+import expect from 'expect';
 
 describe('test SVGPreview module component', () => {
     beforeEach((done) => {

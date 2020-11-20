@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PaginationButton = require('./PaginationButton');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import PaginationButton from './PaginationButton';
+import PropTypes from 'prop-types';
 
 class PreviewList extends React.Component {
     static propTypes = {
@@ -61,4 +62,4 @@ class PreviewList extends React.Component {
     }
 }
 
-module.exports = PreviewList;
+export default PreviewList;

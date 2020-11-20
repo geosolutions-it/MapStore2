@@ -6,15 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const assign = require('object-assign');
-const { defaultProps, compose } = require('recompose');
-const {createSelector} = require('reselect');
-const { play, pause, stop, STATUS } = require('../actions/playback');
-const {currentTimeSelector} = require('../selectors/dimension');
-const { statusSelector, loadingSelector } = require('../selectors/playback');
+import assign from 'object-assign';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose, defaultProps } from 'recompose';
+import { createSelector } from 'reselect';
 
-const { connect } = require('react-redux');
+import { STATUS, pause, play, stop } from '../actions/playback';
+import playback from '../epics/playback';
+import dimensionReducers from '../reducers/dimension';
+import playbackReducers from '../reducers/playback';
+import { currentTimeSelector } from '../selectors/dimension';
+import { loadingSelector, statusSelector } from '../selectors/playback';
+import PlaybackComp from './playback/Playback';
 
 const Playback = compose(
     defaultProps({
@@ -36,7 +40,7 @@ const Playback = compose(
             stop
         }
     )
-)(require('./playback/Playback'));
+)(PlaybackComp);
 
 /**
   * Playback Plugin. Shows the playback controls for {@link #plugins.Timeline|Timeline}
@@ -54,7 +58,7 @@ class PlaybackPlugin extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     PlaybackPlugin: assign(PlaybackPlugin, {
         noRoot: true,
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
@@ -64,9 +68,9 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: require('../epics/playback').default,
+    epics: playback,
     reducers: {
-        playback: require('../reducers/playback').default,
-        dimension: require('../reducers/dimension').default
+        playback: playbackReducers,
+        dimension: dimensionReducers
     }
 };

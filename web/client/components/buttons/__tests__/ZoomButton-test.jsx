@@ -5,14 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ZoomButton = require('../ZoomButton');
-var expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import ZoomButton from '../ZoomButton';
+import expect from 'expect';
 
 // initializes Redux store
-var Provider = require('react-redux').Provider;
-var store = require('./../../../examples/myapp/stores/myappstore');
+import { Provider } from 'react-redux';
+
+import store from './../../../examples/myapp/stores/myappstore';
 
 describe('This test for ZoomButton', () => {
     beforeEach((done) => {

@@ -2,7 +2,7 @@ import { compose, mapPropsStream, withPropsOnChange } from "recompose";
 import { find, pick } from 'lodash';
 
 import Rx from 'rxjs';
-const loadingState = require('../../components/misc/enhancers/loadingState');
+import loadingState from '../../components/misc/enhancers/loadingState';
 
 import getPluginsConfig from '../../observables/config/getPluginsConfig';
 /**

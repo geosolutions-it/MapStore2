@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const ConfigUtils = require('../../../utils/ConfigUtils').default;
-require('../../assets/css/viewer.css');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import ConfigUtils from '../../../utils/ConfigUtils';
+import '../../assets/css/viewer.css';
 let oldLocation;
 
 class MapViewerComponent extends React.Component {
@@ -85,4 +86,4 @@ class MapViewerComponent extends React.Component {
     }
 }
 
-module.exports = MapViewerComponent;
+export default MapViewerComponent;
