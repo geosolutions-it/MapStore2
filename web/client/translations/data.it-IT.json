@@ -1620,8 +1620,8 @@
             "downloadFilteredDataSet": "Scarica set di dati filtrati",
             "advancedOptions": "Opzioni avanzate",
             "compression": "Compressione",
-            "tileWidth": "Larghezza piastrella",
-            "tileHeight": "Altezza piastrella",
+            "tileWidth": "Larghezza tile",
+            "tileHeight": "Altezza tile",
             "quality": "Qualità",
             "error": {
                 "title": "Errore durante l'esportazione",
