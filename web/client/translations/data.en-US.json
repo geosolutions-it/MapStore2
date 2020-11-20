@@ -1579,7 +1579,7 @@
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
                     "date": "Type a date or an expression. Use {format} for the date.",
                     "geometry": {
-                        "disabled": "Filter clicking on the map / Hold ctrl and click to filter multiple",
+                        "disabled": "Filter on map. Click for point filter / Alt + drag for box filter. Hold (also) CTRL to add the filters to the current ones",
                         "enabled": "Click on the map to filter the results / Hold ctrl and click to filter multiple",
                         "applied": "Remove the filter by mouse click"
                     }
