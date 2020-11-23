@@ -1050,17 +1050,12 @@ describe('featuregrid Epics', () => {
     });
 
     it('test askChangesConfirmOnFeatureGridClose', (done) => {
-        testEpic(askChangesConfirmOnFeatureGridClose, 2, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(2);
+        testEpic(askChangesConfirmOnFeatureGridClose, 1, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
-                    break;
-                case UPDATE_FILTER:
-                    expect(action.type).toBe(UPDATE_FILTER);
-                    expect(action.update).toExist();
-                    expect(action.update.enabled).toBe(false);
                     break;
                 default:
                     expect(true).toBe(false);
@@ -2115,9 +2110,10 @@ describe('featuregrid Epics', () => {
             type: 'geometry',
             enabled: false
         })];
-        testEpic(featureGridUpdateGeometryFilter, 5, startActions, ([setPaginationAction, updateQueryAction, updateQueryAction2, resetPaginationAction, updateQueryAction3]) => {
+        testEpic(featureGridUpdateGeometryFilter, 6, startActions, ([setPaginationAction, selectFeaturesAction, updateQueryAction, updateQueryAction2, resetPaginationAction, updateQueryAction3]) => {
             expect(setPaginationAction.type).toBe(SET_PAGINATION); // disable virtual scroll
             expect(setPaginationAction.size).toBe(100000);
+            expect(selectFeaturesAction.type).toBe(SELECT_FEATURES); // reset current selected when enter in this filter mode.
             expect(updateQueryAction.type).toBe(UPDATE_QUERY);
             expect(updateQueryAction.reason).toBe('geometry');
             expect(updateQueryAction2.type).toBe(UPDATE_QUERY);
@@ -2148,13 +2144,20 @@ describe('featuregrid Epics', () => {
             enabled: true,
             value: {}
         }), closeFeatureGrid()];
-        testEpic(featureGridUpdateGeometryFilter, 3, startActions, ([setPaginationAction, updateQueryAction, resetPaginationAction]) => {
+        testEpic(featureGridUpdateGeometryFilter, 6, startActions, ([setPaginationAction, selectFeaturesAction, updateQueryAction, resetPaginationAction, updateFilterAction, updateQuery]) => {
             expect(setPaginationAction.type).toBe(SET_PAGINATION); // disable virtual scroll
             expect(setPaginationAction.size).toBe(100000);
             expect(updateQueryAction.type).toBe(UPDATE_QUERY);
+            expect(selectFeaturesAction.type).toBe(SELECT_FEATURES); // reset current selected when enter in this filter mode.
             expect(updateQueryAction.reason).toBe('geometry');
             expect(resetPaginationAction.type).toBe(SET_PAGINATION);
             expect(resetPaginationAction.size).toBe(20);
+            expect(resetPaginationAction.size).toBe(20);
+            // the filter is reset
+            expect(updateFilterAction.type).toBe(UPDATE_FILTER);
+            expect(updateFilterAction.update.enabled).toBe(false);
+            expect(updateFilterAction.update.attribute).toBe("geometry");
+            expect(updateQuery.type).toBe(UPDATE_QUERY); // ensure that also the query is updated at all.
         }, {
             featuregrid: {
                 pagination: {
@@ -2162,6 +2165,7 @@ describe('featuregrid Epics', () => {
                 },
                 selectedLayer: 'layer'
             },
+            query: state.query,
             layers: [{
                 id: 'layer',
                 name: 'layer'
