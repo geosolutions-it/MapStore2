@@ -67,7 +67,7 @@ class DownloadDialog extends React.Component {
             {name: 'image/jpeg', label: 'JPEG', type: 'raster', validServices: ['wps']},
             {name: 'application/wfs-collection-1.0', label: 'wfs-collection-1.0', type: 'vector', validServices: ['wps']},
             {name: 'application/wfs-collection-1.1', label: 'wfs-collection-1.1', type: 'vector', validServices: ['wps']},
-            {name: 'application/zip', label: 'ZIP', type: 'vector', validServices: ['wps']},
+            {name: 'application/zip', label: 'Shapefile', type: 'vector', validServices: ['wps']},
             {name: 'text/csv', label: 'CSV', type: 'vector', validServices: ['wps']}
         ],
         formatsLoading: false,
