@@ -1645,7 +1645,7 @@
         },
         "exportDataResults": {
             "title": "Datenergebnisse exportieren",
-            "emptyStateMessage": "Keine Ergebnisse gefunden"
+            "emptyStateMessage": "Die Exportliste ist leer"
         },
         "widgets": {
             "types": {

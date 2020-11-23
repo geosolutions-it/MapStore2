@@ -155,7 +155,7 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(5);
+        expect(btn.length).toBe(4);
         TestUtils.Simulate.click(btn[0]);
         expect(spyZoom).toHaveBeenCalledWith({
             maxx: 10,
@@ -508,7 +508,7 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName('btn');
-        expect(btn.length).toBe(5);
+        expect(btn.length).toBe(4);
         expect(btn[0].style.cursor).toBe('default');
     });
     describe('Widget tool', () => {

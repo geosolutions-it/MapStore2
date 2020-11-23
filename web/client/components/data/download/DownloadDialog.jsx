@@ -60,10 +60,15 @@ class DownloadDialog extends React.Component {
         service: 'wfs',
         wfsFormats: [],
         formats: [
-            {name: 'application/json', label: 'GeoJSON', validServices: ['wps']},
-            {name: 'image/tiff', label: 'TIFF', validServices: ['wps']},
-            {name: 'application/wfs-collection-1.0', label: 'wfs-collection-1.0', validServices: ['wps']},
-            {name: 'application/wfs-collection-1.1', label: 'wfs-collection-1.1', validServices: ['wps']}
+            {name: 'application/json', label: 'GeoJSON', type: 'vector', validServices: ['wps']},
+            {name: 'application/arcgrid', label: 'ArcGrid', type: 'raster', validServices: ['wps']},
+            {name: 'image/tiff', label: 'TIFF', type: 'raster', validServices: ['wps']},
+            {name: 'image/png', label: 'PNG', type: 'raster', validServices: ['wps']},
+            {name: 'image/jpeg', label: 'JPEG', type: 'raster', validServices: ['wps']},
+            {name: 'application/wfs-collection-1.0', label: 'wfs-collection-1.0', type: 'vector', validServices: ['wps']},
+            {name: 'application/wfs-collection-1.1', label: 'wfs-collection-1.1', type: 'vector', validServices: ['wps']},
+            {name: 'application/zip', label: 'ZIP', type: 'vector', validServices: ['wps']},
+            {name: 'text/csv', label: 'CSV', type: 'vector', validServices: ['wps']}
         ],
         formatsLoading: false,
         srsList: [
@@ -85,7 +90,9 @@ class DownloadDialog extends React.Component {
     componentDidUpdate(oldProps) {
         if (this.props.enabled !== oldProps.enabled && this.props.enabled) {
             this.props.onClearDownloadOptions();
-            this.props.onCheckWPSAvailability(this.props.url || this.props.layer.url);
+            if (this.props.layer.type === 'wms') {
+                this.props.onCheckWPSAvailability(this.props.url || this.props.layer.url);
+            }
         }
     }
 
@@ -98,7 +105,9 @@ class DownloadDialog extends React.Component {
     };
 
     render() {
-        const findValidFormats  = fmt => this.props.formats.filter(({validServices}) => !validServices || findIndex(validServices, x => x === fmt) > -1);
+        const findValidFormats  = fmt => this.props.formats.filter(({validServices, type = 'vector'}) =>
+            (!validServices || findIndex(validServices, x => x === fmt) > -1) &&
+            (type === 'vector' && this.props.layer.search?.url || type === 'raster' && !this.props.layer.search?.url));
         const validWFSFormats = findValidFormats('wfs');
         const validWPSFormats = findValidFormats('wps');
         const wfsFormats = validWFSFormats.length > 0 ?
@@ -124,6 +133,8 @@ class DownloadDialog extends React.Component {
                             srsList={this.props.srsList}
                             defaultSrs={this.props.defaultSrs}
                             wpsOptionsVisible={this.props.service === 'wps'}
+                            wpsAdvancedOptionsVisible={!this.props.layer.search?.url}
+                            downloadFilteredVisible={!!this.props.layer.search?.url}
                             layer={this.props.layer}
                             virtualScroll={this.props.virtualScroll}/>}
             </div>

@@ -9,12 +9,12 @@
 import React from 'react';
 import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
 
-import emptyState from '../../../misc/enhancers/emptyState';
-import OverlayTrigger from '../../../misc/OverlayTrigger';
-import Loader from '../../../misc/Loader';
-import Message from '../../../I18N/Message';
+import emptyState from '../../misc/enhancers/emptyState';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import Loader from '../../misc/Loader';
+import Message from '../../I18N/Message';
 
-import { getLayerTitle } from '../../../../utils/LayersUtils';
+import { getLayerTitle } from '../../../utils/LayersUtils';
 
 const failButton = (
     <Button

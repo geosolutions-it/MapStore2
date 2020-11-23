@@ -8,8 +8,6 @@
 
 export const CHECK_WPS_AVAILABILITY = "LAYERDOWNLOAD:CHECK_WPS_AVAILABILITY";
 export const CHECKING_WPS_AVAILABILITY = "LAYERDOWNLOAD:CHECKING_WPS_AVAILABILITY";
-export const SET_EXPORT_DATA_RESULTS = "LAYERDOWNLOAD:SET_EXPORT_DATA_RESULTS";
-export const REMOVE_EXPORT_DATA_RESULT = "LAYERDOWNLOAD:REMOVE_EXPORT_DATA_RESULT";
 export const DOWNLOAD_FEATURES = "LAYERDOWNLOAD:DOWNLOAD_FEATURES";
 export const DOWNLOAD_FINISHED = "LAYERDOWNLOAD:DOWNLOAD_FINISHED";
 export const DOWNLOAD_OPTIONS_CHANGE = "LAYERDOWNLOAD:FORMAT_SELECTED";
@@ -17,6 +15,17 @@ export const CLEAR_DOWNLOAD_OPTIONS = "LAYERDOWNLOAD:CLEAR_DOWNLOAD_OPTIONS";
 export const FORMAT_OPTIONS_FETCH = "LAYERDOWNLOAD:FORMAT_FETCH";
 export const FORMAT_OPTIONS_UPDATE = "LAYERDOWNLOAD:FORMAT_UPDATE";
 export const SET_SERVICE = "LAYERDOWNLOAD:SET_SERVICE";
+export const SET_EXPORT_DATA_RESULTS = "LAYERDOWNLOAD:SET_EXPORT_DATA_RESULTS";
+export const ADD_EXPORT_DATA_RESULT = "LAYERDOWNLOAD:ADD_EXPORT_DATA_RESULT";
+export const UPDATE_EXPORT_DATA_RESULT = "LAYERDOWNLOAD:UPDATE_EXPORT_DATA_RESULT";
+export const REMOVE_EXPORT_DATA_RESULT = "LAYERDOWNLOAD:REMOVE_EXPORT_DATA_RESULT";
+export const REMOVE_EXPORT_DATA_RESULTS = "LAYERDOWNLOAD:REMOVE_EXPORT_DATA_RESULTS";
+export const CHECK_EXPORT_DATA_ENTRIES = "LAYERDOWNLOAD:CHECK_EXPORT_DATA_ENTRIES";
+export const CHECKING_EXPORT_DATA_ENTRIES = "LAYERDOWNLOAD:CHECKING_EXPORT_DATA_ENTRIES";
+export const SERIALIZE_COOKIE = "LAYERDOWNLOAD:SERIALIZE_COOKIE";
+export const SHOW_INFO_BUBBLE_MESSAGE = "LAYERDOWNLOAD:SHOW_INFO_BUBBLE_MESSAGE";
+export const SHOW_INFO_BUBBLE = "LAYERDOWNLOAD:SHOW_INFO_BUBBLE";
+export const SET_INFO_BUBBLE_MESSAGE = "LAYERDOWNLOAD:SET_INFO_BUBBLE_MESSAGE";
 
 /**
  * Actions for WFS Download
@@ -103,4 +112,64 @@ export const onDownloadFinished = () => ({
 export const setService = (service) => ({
     type: SET_SERVICE,
     service
+});
+
+
+export const setExportDataResults = (results) => ({
+    type: SET_EXPORT_DATA_RESULTS,
+    results
+});
+
+export const addExportDataResult = (result) => ({
+    type: ADD_EXPORT_DATA_RESULT,
+    result
+});
+
+export const updateExportDataResult = (id, newProps) => ({
+    type: UPDATE_EXPORT_DATA_RESULT,
+    id,
+    newProps
+});
+
+export const removeExportDataResult = (id) => ({
+    type: REMOVE_EXPORT_DATA_RESULT,
+    id
+});
+
+export const removeExportDataResults = (ids) => ({
+    type: REMOVE_EXPORT_DATA_RESULTS,
+    ids
+});
+
+export const checkExportDataEntries = () => ({
+    type: CHECK_EXPORT_DATA_ENTRIES
+});
+
+export const checkingExportDataEntries = (checking) => ({
+    type: CHECKING_EXPORT_DATA_ENTRIES,
+    checking
+});
+
+export const serializeCookie = () => ({
+    type: SERIALIZE_COOKIE
+});
+
+export const showInfoBubbleMessage = (msgId, msgParams, level, duration) => ({
+    type: SHOW_INFO_BUBBLE_MESSAGE,
+    msgId,
+    msgParams,
+    level,
+    duration
+});
+
+export const showInfoBubble = (show) => ({
+    type: SHOW_INFO_BUBBLE,
+    show
+});
+
+export const setInfoBubbleMessage = (msgId, msgParams, level) => ({
+    type: SET_INFO_BUBBLE_MESSAGE,
+    msgId,
+    msgParams,
+    level
 });

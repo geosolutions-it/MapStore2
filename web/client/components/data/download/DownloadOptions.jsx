@@ -33,6 +33,8 @@ class DownloadOptions extends React.Component {
         onChange: PropTypes.func,
         defaultSrs: PropTypes.string,
         wpsOptionsVisible: PropTypes.bool,
+        wpsAdvancedOptionsVisible: PropTypes.bool,
+        downloadFilteredVisible: PropTypes.bool,
         layer: PropTypes.object,
         formatsLoading: PropTypes.bool,
         virtualScroll: PropTypes.bool
@@ -44,6 +46,8 @@ class DownloadOptions extends React.Component {
         formats: [],
         srsList: [],
         wpsOptionsVisible: false,
+        wpsAdvancedOptionsVisible: false,
+        downloadFilteredVisible: false,
         virtualScroll: true
     };
 
@@ -74,8 +78,8 @@ class DownloadOptions extends React.Component {
             {this.props.wpsOptionsVisible &&
                 <DownloadWPSOptions
                     cropDataSetVisible
-                    donwloadFilteredVisible={this.props.downloadOptions?.selectedFormat !== 'image/tiff'}
-                    advancedOptionsVisible={this.props.downloadOptions?.selectedFormat === 'image/tiff'}
+                    donwloadFilteredVisible={this.props.downloadFilteredVisible}
+                    advancedOptionsVisible={this.props.wpsAdvancedOptionsVisible}
                     cropDataSetEnabled={this.props.downloadOptions.cropDataSet}
                     downloadFilteredEnabled={this.props.downloadOptions.downloadFilteredDataSet}
                     selectedCompression={this.props.downloadOptions.compression}

@@ -1646,7 +1646,7 @@
         },
         "exportDataResults": {
             "title": "Export data results",
-            "emptyStateMessage": "No results found"
+            "emptyStateMessage": "Export list is empty"
         },
         "widgets": {
             "types": {

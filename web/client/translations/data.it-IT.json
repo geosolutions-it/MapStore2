@@ -1646,7 +1646,7 @@
         },
         "exportDataResults": {
             "title": "Esporta i risultati dei dati",
-            "emptyStateMessage": "Nessun risultato trovato"
+            "emptyStateMessage": "L'elenco di esportazione è vuoto"
         },
         "widgets": {
             "types": {

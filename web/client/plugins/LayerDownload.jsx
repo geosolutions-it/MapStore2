@@ -14,7 +14,9 @@ import {
     checkWPSAvailability,
     onDownloadOptionChange,
     onFormatOptionsFetch,
-    clearDownloadOptions
+    clearDownloadOptions,
+    removeExportDataResult,
+    checkExportDataEntries
 } from '../actions/layerdownload';
 import { toggleControl, setControlProperty } from '../actions/controls';
 
@@ -26,12 +28,19 @@ import {
     formatsLoadingSelector,
     serviceSelector,
     checkingWPSAvailabilitySelector,
-    wfsFilterSelector
+    wfsFilterSelector,
+    exportDataResultsControlEnabledSelector,
+    exportDataResultsSelector,
+    showInfoBubbleSelector,
+    infoBubbleMessageSelector,
+    checkingExportDataEntriesSelector
 } from '../selectors/layerdownload';
 import { wfsURL } from '../selectors/query';
 import { getSelectedLayer } from '../selectors/layers';
+import { currentLocaleSelector } from '../selectors/locale';
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
+import ExportDataResultsComponent from '../components/data/download/ExportDataResultsComponent';
 
 import * as epics from '../epics/layerdownload';
 import layerdownload from '../reducers/layerdownload';
@@ -93,6 +102,22 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         TOC: {
             doNotHide: true,
             name: "LayerDownload"
+        },
+        MapFooter: {
+            name: "LayerDownload",
+            position: 1,
+            tool: connect(createStructuredSelector({
+                active: exportDataResultsControlEnabledSelector,
+                showInfoBubble: showInfoBubbleSelector,
+                infoBubbleMessage: infoBubbleMessageSelector,
+                checkingExportDataEntries: checkingExportDataEntriesSelector,
+                results: exportDataResultsSelector,
+                currentLocale: currentLocaleSelector
+            }), {
+                onToggle: toggleControl.bind(null, 'exportDataResults', 'enabled'),
+                onActive: checkExportDataEntries,
+                onRemoveResult: removeExportDataResult
+            })(ExportDataResultsComponent)
         }
     },
     epics,

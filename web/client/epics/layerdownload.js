@@ -13,45 +13,66 @@ import { saveAs } from 'file-saver';
 import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 import uuidv1 from 'uuid/v1';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import {
     FORMAT_OPTIONS_FETCH,
     DOWNLOAD_FEATURES,
     CHECK_WPS_AVAILABILITY,
+    SHOW_INFO_BUBBLE_MESSAGE,
+    ADD_EXPORT_DATA_RESULT,
+    REMOVE_EXPORT_DATA_RESULT,
+    UPDATE_EXPORT_DATA_RESULT,
+    CHECK_EXPORT_DATA_ENTRIES,
+    SERIALIZE_COOKIE,
     checkingWPSAvailability,
     onDownloadFinished,
     updateFormats,
     onDownloadOptionChange,
-    setService
-} from '../actions/layerdownload';
-import {
-    REMOVE_EXPORT_DATA_RESULT,
+    setService,
+    showInfoBubble,
+    setInfoBubbleMessage,
+    setExportDataResults,
+    removeExportDataResults,
+    checkingExportDataEntries,
+    serializeCookie,
     addExportDataResult,
     updateExportDataResult,
     showInfoBubbleMessage
-} from '../actions/exportdataresults';
+} from '../actions/layerdownload';
 import { TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { DOWNLOAD } from '../actions/layers';
 import { createQuery } from '../actions/wfsquery';
 import { error } from '../actions/notifications';
+import {
+    LOGIN_SUCCESS,
+    LOGOUT
+} from '../actions/security';
+import {
+    MAP_CONFIG_LOADED
+} from '../actions/config';
 
+import { serviceSelector, exportDataResultsSelector } from '../selectors/layerdownload';
 import { queryPanelSelector, wfsDownloadSelector } from '../selectors/controls';
 import { getSelectedLayer } from '../selectors/layers';
-import { serviceSelector } from '../selectors/layerdownload';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapBboxSelector } from '../selectors/map';
+import {
+    isLoggedIn,
+    userSelector
+} from '../selectors/security';
 
 import { getLayerWFSCapabilities } from '../observables/wfs';
 import { describeProcess } from '../observables/wps/describe';
 import { download } from '../observables/wps/download';
-import { referenceOutputExtractor, makeOutputsExtractor } from '../observables/wps/execute';
+import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
 import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
 import { toOGCFilter, mergeFiltersToOGC } from '../utils/FilterUtils';
 import { getByOutputFormat } from '../utils/FileFormatUtils';
 import { getLayerTitle } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
-
+import { interceptOGCError } from '../utils/ObservableUtils';
 
 const DOWNLOAD_FORMATS_LOOKUP = {
     "gml3": "GML3.1",
@@ -141,6 +162,22 @@ const wpsExecuteErrorToMessage = e => {
         };
     }
     }
+};
+
+const restoreExportDataResultsFromCookie = (state) => {
+    const user = userSelector(state);
+
+    if (user?.id) {
+        const cookies = document.cookie.split(';');
+        const userExportDataResultsCookie = cookies.filter(cookie => cookie.indexOf(`exportDataResults_${user.id}=`) > -1)[0];
+
+        if (userExportDataResultsCookie) {
+            const { results } = JSON.parse(decodeURIComponent(userExportDataResultsCookie.split('=')[1]));
+            return Rx.Observable.of(setExportDataResults(results.filter(({status}) => status !== 'pending')));
+        }
+    }
+
+    return Rx.Observable.empty();
 };
 
 /*
@@ -331,3 +368,72 @@ export const closeExportDownload = (action$, store) =>
     action$.ofType(TOGGLE_CONTROL)
         .filter((a) => a.control === "queryPanel" && !queryPanelSelector(store.getState()) && wfsDownloadSelector(store.getState()))
         .switchMap( () => Rx.Observable.of(toggleControl("layerdownload")));
+
+export const showInfoBubbleMessageEpic = (action$) => action$
+    .ofType(SHOW_INFO_BUBBLE_MESSAGE)
+    .concatMap((action = {}) => Rx.Observable.of(setInfoBubbleMessage(action.msgId, action.msgParams, action.level), showInfoBubble(true)).delay(10) // the delay is to ensure that transition animation always triggers
+        .concat(Rx.Observable.of(showInfoBubble(false)).delay(action.duration || 3000))
+        .concat(Rx.Observable.empty().delay(1000)/* this is set to the duration of css transition animation in layerdownload.less*/));
+
+export const checkExportDataEntriesEpic = (action$, store) => action$
+    .ofType(CHECK_EXPORT_DATA_ENTRIES)
+    .exhaustMap(() => {
+        const state = store.getState();
+        const results = exportDataResultsSelector(state) || [];
+        const validResults = results.filter(({status}) => status === 'completed');
+
+        return validResults.length > 0 ? Rx.Observable.forkJoin(validResults
+            .map((validResult) => {
+                const { result } = validResult;
+                const executionIdStart = result.indexOf('executionId=');
+                const executionIdSlice = result.slice(executionIdStart);
+                const executionIdEnd = executionIdSlice.indexOf('&');
+                const executionId = (executionIdEnd > -1 ? executionIdSlice.slice(0, executionIdEnd) : executionIdSlice).slice(12);
+                const urlEnd = result.indexOf('?');
+                const url = result.slice(0, urlEnd);
+
+                return getExecutionStatus(url, executionId)
+                    .let(interceptOGCError)
+                    .catch(() => {
+                        return Rx.Observable.of(null);
+                    })
+                    .map(reqResult => !reqResult ? validResult.id : null);
+            })
+        ).flatMap(checkedResults => {
+            return Rx.Observable.of(
+                removeExportDataResults(checkedResults.filter(res => !!res)),
+                serializeCookie(),
+                checkingExportDataEntries(false)
+            );
+        }).startWith(checkingExportDataEntries(true)) : Rx.Observable.empty();
+    });
+
+export const serializeCookieOnExportDataChange = (action$, store) => action$
+    .ofType(ADD_EXPORT_DATA_RESULT, REMOVE_EXPORT_DATA_RESULT, UPDATE_EXPORT_DATA_RESULT, SERIALIZE_COOKIE)
+    .filter(() => isLoggedIn(store.getState()))
+    .do(() => {
+        const state = store.getState();
+        const results = exportDataResultsSelector(state);
+        const { id } = userSelector(state);
+
+        const json = JSON.stringify({results});
+
+        document.cookie = `exportDataResults_${id}=${encodeURIComponent(json)}`;
+    })
+    .flatMap(() => Rx.Observable.empty());
+
+export const resetExportDataResultsOnLogout = (action$) => action$
+    .ofType(MAP_CONFIG_LOADED)
+    .switchMap(() => action$
+        .ofType(LOGOUT)
+        .switchMap(() => Rx.Observable.of(setExportDataResults([])))
+        .takeUntil(action$.ofType(LOCATION_CHANGE))
+    );
+
+export const setExportDataResultsOnLoginSuccessAndMapConfigLoaded = (action$, store) => action$
+    .ofType(MAP_CONFIG_LOADED)
+    .switchMap(() => restoreExportDataResultsFromCookie(store.getState()).concat(action$
+        .ofType(LOGIN_SUCCESS)
+        .switchMap(() => restoreExportDataResultsFromCookie(store.getState()))
+        .takeUntil(action$.ofType(LOCATION_CHANGE))
+    ));

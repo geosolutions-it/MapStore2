@@ -306,7 +306,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateDownloadTool && status === 'LAYER' && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
+                {this.props.activateTool.activateDownloadTool && status === 'LAYER' && (this.props.selectedLayers[0].type === 'wms' || this.props.selectedLayers[0].search) && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
                     <OverlayTrigger
                         key="downloadTool"
                         placement="top"
