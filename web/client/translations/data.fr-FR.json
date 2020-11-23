@@ -391,14 +391,14 @@
                 "unsavedMapCancelButtonText": "Fermer"
             },
             "geostories": {
-                "newGeostory": "Nouvelle RécitCarte",
-                "title": "Stories ({count})",
-                "titleNoCount": "Stories",
-                "create": "Créer une RécitCarte",
-                "noGeostoryAvailable": "Aucune RécitCarte disponible",
-                "createANewOne": "Créer une nouvelle RécitCarte",
-                "deleteError": "Une erreur s'est produite lors de la suppression de la RécitCarte",
-                "errorLoadingGeostories": "Une erreur s'est produite lors du chargement des RécitCartes"
+                "newGeostory": "Nouvelle GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                "create": "Créer GeoStory",
+                "noGeostoryAvailable": "Pas de GeoStory disponible",
+                "createANewOne": "Créer une nouvelle GeoStory",
+                "deleteError": "Une erreur s'est produite lors de la suppression du GeoStory",
+                "errorLoadingGeostories": "Une erreur s'est produite lors du chargement de GeoStories"
             }
         },
         "map": {

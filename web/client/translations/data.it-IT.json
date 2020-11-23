@@ -391,14 +391,14 @@
                 "unsavedMapCancelButtonText": "No"
             },
             "geostories": {
-                "newGeostory": "Nuova Storia",
-                "title": "Storie ({count})",
-                "titleNoCount": "Storie",
-                "create": "Crea Storia",
-                "noGeostoryAvailable": "Nessuna storia disponibile",
-                "createANewOne": "Creane una",
-                "deleteError": "C'è stato un errore eliminando la risorsa",
-                "errorLoadingGeostories": "C'è stato un errore caricando le storie"
+                "newGeostory": "Nuova GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                "create": "Crea GeoStory",
+                "noGeostoryAvailable": "Nessuna GeoStory disponibile",
+                "createANewOne": "Crea una nuova GeoStory",
+                "deleteError": "Si è verificato un errore durante l'eliminazione della GeoStory",
+                "errorLoadingGeostories": "Si è verificato un errore durante il caricamento di GeoStories"
             }
         },
         "map": {
