@@ -1580,9 +1580,9 @@
                     "number": "Tapez un nombre ou une expression... Exemples : 10, > 2, < 10",
                     "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
                     "geometry": {
-                        "disabled": "Filtrez en cliquant sur la carte/ Maintenez ctrl et cliquez pour filtrer plusieurs",
-                        "enabled": "Cliquez sur la carte pour filtrer les résultats / Maintenez ctrl et cliquez pour filtrer plusieurs",
-                        "applied": "Supprimez le filtre en cliquant sur la carte"
+                        "disabled": "Filtrer en cliquant sur la carte / Alt + glisser la souris pour dessiner un filtre de boîte. Maintenez également la touche Ctrl pour ajouter plus de fonctionnalités au filtre actuel",
+                        "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
+                        "applied": "Nettoyer la sélection"
                     }
                 }
             },
