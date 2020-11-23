@@ -282,7 +282,7 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
 const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
     // If an advanced filter is present it's filterFields should be composed with the action'
     const {id} = selectedLayerSelector(store.getState());
-    const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
+    const filterObj = {...get(store.getState(), `featuregrid.advancedFilters["${id}"]`)};
     if (filterObj) {
         // TODO: make append with advanced filters work
         const attributesFilter = getAttributeFilters(store.getState()) || {};
