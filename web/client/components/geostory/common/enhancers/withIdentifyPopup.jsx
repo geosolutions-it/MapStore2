@@ -115,12 +115,13 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
 /**
  * Add identify popup support to base map and throws mapInfo requests
  */
-export const  withPopupSupport =  branch(({map: {mapInfoControl = false} = {}}) => mapInfoControl,
+export const  withPopupSupport =  branch(({map: {mapInfoControl = false} = {}}) => true,
     compose(
         withIdentifyRequest,
         withStateHandlers(({'popups': []}), {
             onClick: (_state, {getFeatureInfoHandler = () => {}}) => ({rawPos: coordinates = [], ...point}, layerInfo) =>  {
                 getFeatureInfoHandler({point, layerInfo});
+                console.log("I WAS CLICKED");
                 return {popups: [{ position: {  coordinates}, id: uuidv1() }]};
             },
             onPopupClose: () => () => ({popups: []})

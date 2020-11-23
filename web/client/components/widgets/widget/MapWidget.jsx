@@ -33,8 +33,10 @@ export default ({
     onDelete = () => {},
     headerStyle,
     env
-} = {}) =>
-    (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
+} = {}) => {
+    const { size: {height: mapHeight, width: mapWidth} } = map;
+    const enableIdentifyOnMap = mapHeight > 400 && mapWidth > 400;
+    return (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={topRightItems}
     >
@@ -45,6 +47,7 @@ export default ({
                 </div>
             }>
             <MapView
+                tools={enableIdentifyOnMap ? ['popup'] : []}
                 updateProperty={updateProperty}
                 id={id}
                 map={omit(map, 'mapStateSource')}
@@ -57,3 +60,4 @@ export default ({
         </BorderLayout>
 
     </WidgetContainer>);
+};
