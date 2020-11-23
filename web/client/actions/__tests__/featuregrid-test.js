@@ -79,7 +79,7 @@ import {
     SET_UP,
     setTimeSync,
     SET_TIME_SYNC,
-    fatureGridQueryResult,
+    featureGridQueryResult,
     GRID_QUERY_RESULT,
     moreFeatures,
     LOAD_MORE_FEATURES,
@@ -322,9 +322,9 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval.type).toBe(STORE_ADVANCED_SEARCH_FILTER);
         expect(retval.filterObj).toBe(filterObj);
     });
-    it('Test fatureGridQueryResult', () => {
+    it('Test featureGridQueryResult', () => {
         const pages = [];
-        const retval = fatureGridQueryResult(features, pages);
+        const retval = featureGridQueryResult(features, pages);
         expect(retval).toExist();
         expect(retval.type).toBe(GRID_QUERY_RESULT);
         expect(retval.features).toBe(features);

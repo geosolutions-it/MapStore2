@@ -391,14 +391,14 @@
                 "unsavedMapCancelButtonText": "No"
             },
             "geostories": {
-                "newGeostory": "Nuova Storia",
-                "title": "Storie ({count})",
-                "titleNoCount": "Storie",
-                "create": "Crea Storia",
-                "noGeostoryAvailable": "Nessuna storia disponibile",
-                "createANewOne": "Creane una",
-                "deleteError": "C'è stato un errore eliminando la risorsa",
-                "errorLoadingGeostories": "C'è stato un errore caricando le storie"
+                "newGeostory": "Nuova GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                "create": "Crea GeoStory",
+                "noGeostoryAvailable": "Nessuna GeoStory disponibile",
+                "createANewOne": "Crea una nuova GeoStory",
+                "deleteError": "Si è verificato un errore durante l'eliminazione della GeoStory",
+                "errorLoadingGeostories": "Si è verificato un errore durante il caricamento di GeoStories"
             }
         },
         "map": {
@@ -1545,6 +1545,7 @@
             "backtosearch": "Ritorna alla ricerca",
             "resultInfo": "{total, plural, =0 {Nessun elemento} =1 {{total} di {total}} other {{start}-{end} di {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {Nessun elemento} =1 {{total} Elemento} other {{total} Elementi}}",
+            "selectedInfo": "( {selected} Selezionati )",
             "pageInfo": "{totalPages, plural, =0 {Nessuna pagina} =1 {Pagina {totalPages} di {totalPages}} other {Pagina {page} di {totalPages}}}",
             "pagination": {
                 "page": "Pagina",
@@ -1578,9 +1579,9 @@
                     "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
                     "date":"Digita una data o un'espressione. Utilizza {format} per la data",
                     "geometry": {
-                        "disabled": "Filtra facendo clic sulla mappa / Tieni premuto ctrl e fai clic per filtrare più elementi",
-                        "enabled": "Fai clic sulla mappa per filtrare i risultati / Tieni premuto ctrl e fai clic per filtrare più elementi",
-                        "applied": "Rimuovi il filtro applicato con il click sulla mappa"
+                      "disabled": "Filtra facendo click sulla mappa / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
+                      "enabled": "Clicca per selezionare le features / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
+                      "applied": "Pulisci la selezione"
                     }
                 }
             },

@@ -992,6 +992,9 @@ export const isFilterValid = (f = {}) =>
         && f.crossLayerFilter.collectGeometries.queryCollection
         && f.crossLayerFilter.collectGeometries.queryCollection.geometryName
         && f.crossLayerFilter.collectGeometries.queryCollection.typeName);
+const composeSpatialFields = (...spatialFields) => {
+    return flatten(spatialFields.filter(v => !!v));
+};
 export const composeAttributeFilters = (filters, logic = "AND", spatialFieldOperator = "AND") => {
     const rootGroup = {
         id: new Date().getTime(),
@@ -1002,7 +1005,7 @@ export const composeAttributeFilters = (filters, logic = "AND", spatialFieldOper
         return ({
             groupFields: filter.groupFields.concat(filterFields.length > 0 && groupFields.map(g => ({groupId: g.index === 0 && rootGroup.id || `${g.groupId}_${idx}`, logic: g.logic, id: `${g.id}_${idx}`, index: 1 + g.index })) || []),
             filterFields: filter.filterFields.concat(filterFields.map(f => ({...f, groupId: `${f.groupId}_${idx}`}))),
-            spatialField: spatialField ? [...filter.spatialField, spatialField] : filter.spatialField,
+            spatialField: composeSpatialFields(filter.spatialField, spatialField),
             spatialFieldOperator
         });
     }, {groupFields: [rootGroup], filterFields: [], spatialField: []});

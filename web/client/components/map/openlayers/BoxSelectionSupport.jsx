@@ -16,7 +16,12 @@ const BoxSelectionSupport = (props) => {
 
     useEffect(() => {
         if (status === "start") {
-            dragBox = new DragBox({});
+            dragBox = new DragBox({
+                condition: function(mapBrowserEvent) {
+                    const originalEvent = (mapBrowserEvent.originalEvent);
+                    return (originalEvent.altKey);
+                }
+            });
             map.addInteraction(dragBox);
         } else if (status === "end") {
             map.removeInteraction(dragBox);

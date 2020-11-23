@@ -72,6 +72,5 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter2.spatialField).toEqual(gridUpdate2.value);
         expect(queryUpdateFilter2.filterFields).toBe(undefined);
         expect(queryUpdateFilter2.spatialFieldOperator).toBe("OR");
-        expect(queryUpdateFilter2.groupFields).toEqual([{id: 1, logic: "OR", index: 0}]);
     });
 });

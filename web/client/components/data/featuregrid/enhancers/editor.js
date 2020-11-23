@@ -122,10 +122,9 @@ const featuresToGrid = compose(
         })
     ),
     withPropsOnChange(
-        ["features", "newFeatures", "isFocused", "virtualScroll"],
+        ["features", "newFeatures", "isFocused", "virtualScroll", "pagination"],
         props => {
-            const multipleSelect = props.select.length > 1;
-            const rowsCount = (multipleSelect || props.isFocused || !props.virtualScroll) && props.rows && props.rows.length || (props.pagination && props.pagination.totalFeatures) || 0;
+            const rowsCount = (props.isFocused || !props.virtualScroll) && props.rows && props.rows.length || (props.pagination && props.pagination.totalFeatures) || 0;
             return {
                 rowsCount
             };

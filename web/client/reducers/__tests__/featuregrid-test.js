@@ -80,8 +80,12 @@ import {
     sizeChange,
     storeAdvancedSearchFilter,
     setUp,
-    setTimeSync
+    setTimeSync,
+    setPagination
 } from '../../actions/featuregrid';
+
+import { paginationSelector } from '../../selectors/featuregrid';
+
 
 import { featureTypeLoaded, createQuery } from '../../actions/wfsquery';
 import { changeDrawingStatus } from '../../actions/draw';
@@ -338,6 +342,7 @@ describe('Test the featuregrid reducer', () => {
         state = featuregrid(state, updateFilter(multiselectUpdate, true));
         expect(state.filters).toExist();
         expect(state.filters[update.attribute]).toExist();
+        expect(state.filters[update.attribute].attribute).toEqual(update.attribute);
         expect(state.filters[update.attribute].value).toEqual(
             [ { attribute: 'ATTRIBUTE', method: 'METHOD_1' },
                 { attribute: 'ATTRIBUTE', method: 'METHOD_2' } ]);
@@ -383,5 +388,9 @@ describe('Test the featuregrid reducer', () => {
     it('setTimeSync ', () => {
         expect(featuregrid({}, setTimeSync(true)).timeSync).toBe(true);
         expect(featuregrid({}, setTimeSync(false)).timeSync).toBe(false);
+    });
+    it('setPagination', () => {
+        const newState = featuregrid(undefined, setPagination(10000));
+        expect(paginationSelector({ featuregrid: newState })).toEqual({page: 0, size: 10000});
     });
 });

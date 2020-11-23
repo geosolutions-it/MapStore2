@@ -177,7 +177,7 @@ export const applyAllChanges = (orig, changes = {}) => applyChanges(orig, change
 export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
     return {
         ...oldFilterObj,
-        groupFields: isArray(value) ? [{id: 1, logic: "OR", index: 0}] : [{
+        groupFields: [{
             id: 1,
             logic: "AND",
             index: 0

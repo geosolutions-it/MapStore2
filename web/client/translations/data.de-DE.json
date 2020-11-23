@@ -392,12 +392,12 @@
             },
             "geostories": {
                 "newGeostory": "Neue GeoStory",
-                "title": "GeoStory ({count})",
+                "title": "GeoStories ({count})",
                 "titleNoCount": "GeoStories",
                 "create": "GeoStory erstellen",
                 "noGeostoryAvailable": "Kein GeoStory verfügbar",
                 "createANewOne": "Erstelle eine neue",
-                "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten",
+                "deleteError": "Beim Löschen der GeoStory ist ein Fehler aufgetreten",
                 "errorLoadingGeostories": "Beim Laden von GeoStories ist ein Fehler aufgetreten"
             }
         },
@@ -1544,6 +1544,7 @@
             "backtosearch": "Zurück zur suche",
             "resultInfo": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{start}-{end} von {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {Keine Artikel} =1 {{total}} other {{total}}}",
+            "selectedInfo": "( {selected} ausgewählt )",
             "pageInfo": "{totalPages, plural, =0 {keine Seite} =1 {Seite {totalPages} von {totalPages}} other {Seite {page} von {totalPages}}}",
             "pagination": {
                 "page": "Seite",
@@ -1577,9 +1578,9 @@
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
                     "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
                     "geometry": {
-                        "disabled": "Filterklick auf die Karte / Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere zu filtern",
-                        "enabled": "Klicken Sie auf die Karte, um die Ergebnisse zu filtern / Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere zu filtern",
-                        "applied": "Entfernen Sie den Filter per Mausklick"
+                        "disabled": "Filter Klicken auf Karte / Alt + Maus ziehen, um einen Box-Filter zu zeichnen. Halten Sie auch die Strg-Taste gedrückt, um dem aktuellen Filter weitere Funktionen hinzuzufügen",
+                        "enabled": "Klicken Sie auf die Karte, um ein Feature auszuwählen / Alt + Maus ziehen, um einen Boxfilter zu zeichnen. Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere Features auszuwählen",
+                        "applied": "Auswahl bereinigen"
                     }
                 }
             },

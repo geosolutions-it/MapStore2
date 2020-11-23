@@ -41,7 +41,6 @@ import {
     isSavingSelector,
     isSimpleGeomSelector,
     modeSelector,
-    multiSelect,
     selectedFeaturesCount,
     selectedLayerNameSelector,
     showAgainSelector,
@@ -117,12 +116,10 @@ const Footer = connect(
         createStructuredSelector(paginationInfo),
         featureLoadingSelector,
         state => state && state.featuregrid && !!state.featuregrid.virtualScroll,
-        multiSelect,
         selectedFeaturesCount,
-        (pagination, loading, virtualScroll, multiselect, count) => ({
+        (pagination, loading, virtualScroll, selected) => ({
             ...pagination,
-            resultSize: multiselect ? count : pagination.resultSize,
-            totalFeatures: multiselect ? count : pagination.totalFeatures,
+            selected,
             loading,
             virtualScroll
         })),
