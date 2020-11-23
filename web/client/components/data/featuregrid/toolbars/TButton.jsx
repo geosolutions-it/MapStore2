@@ -15,15 +15,14 @@ const hideStyle = {
 };
 const normalStyle = {};
 const getStyle = (visible) => visible ? normalStyle : hideStyle;
-
-export const SimpleTButton = ({disabled, id, visible, onClick, glyph, active, className = "square-button", ...props}) => {
-    return (<Button {...props} bsStyle={active ? "success" : "primary"} disabled={disabled} id={`fg-${id}`}
-        style={getStyle(visible)}
-        className={className}
-        onClick={() => !disabled && onClick()}>
-        <Glyphicon glyph={glyph}/>
-    </Button>);
-};
-
-
-export default SimpleTButton;
+export default class SimpleTButton extends React.Component {
+    render() {
+        const { disabled, id, visible, onClick, glyph, active, className = "square-button", ...props } = this.props;
+        return (<Button {...props} bsStyle={active ? "success" : "primary"} disabled={disabled} id={`fg-${id}`}
+            style={getStyle(visible)}
+            className={className}
+            onClick={() => !disabled && onClick()}>
+            <Glyphicon glyph={glyph} />
+        </Button>);
+    }
+}
