@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 import { isEqual} from 'lodash';
 import uuidv1 from 'uuid/v1';
 import MapInfoViewer from '../MapInfoViewer';
-import {getFeatureInfo} from '../../../../api/identify';
+import {getFeatureInfo} from '../../../api/identify';
 
 import {
     getAvailableInfoFormatValues,
@@ -20,10 +20,10 @@ import {
     buildIdentifyRequest,
     filterRequestParams,
     getValidator
-} from '../../../../utils/MapInfoUtils';
+} from '../../../utils/MapInfoUtils';
 
 // verify if 'application/json' is available if not use default
-export const getDefaultInfoFormat = () => {
+const getDefaultInfoFormat = () => {
     const availableInfoFormats = getAvailableInfoFormatValues();
     return availableInfoFormats.indexOf('application/json') !== -1
         ? 'application/json'
@@ -157,5 +157,3 @@ export const withOnClick = withPropsOnChange(
         }
     })
 );
-
-
