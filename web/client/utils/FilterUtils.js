@@ -994,7 +994,7 @@ export const isFilterValid = (f = {}) =>
         && f.crossLayerFilter.collectGeometries.queryCollection.typeName);
 const composeSpatialFields = (...spatialFields) => {
     return flatten(spatialFields.filter(v => !!v));
-}
+};
 export const composeAttributeFilters = (filters, logic = "AND", spatialFieldOperator = "AND") => {
     const rootGroup = {
         id: new Date().getTime(),
