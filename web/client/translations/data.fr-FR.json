@@ -1700,6 +1700,8 @@
                     "textPlaceholder": "Entrez le texte...",
                     "useThisMap": "Utiliser cette carte",
                     "configureMapOptions": "Configurer les options de la carte",
+                    "enableIdentifyTool": "Activer l'outil d'identification",
+                    "disableIdentifyTool": "Désactiver l'outil d'identification",
                     "preview": "Aperçu",
                     "addLayer": "Ajouter une couche à la carte",
                     "useTheSelectedLayer": "Utiliser la couche sélectionnée",

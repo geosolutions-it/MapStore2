@@ -1699,6 +1699,8 @@
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",
                     "configureMapOptions": "Configure map options",
+                    "enableIdentifyTool": "Enable identify tool",
+                    "disableIdentifyTool": "Disable identify tool",
                     "preview": "Preview",
                     "addLayer": "Add a layer to the map",
                     "useTheSelectedLayer": "Use the selected layer",

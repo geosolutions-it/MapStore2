@@ -1699,6 +1699,8 @@
                     "textPlaceholder": "Introduzca texto...",
                     "useThisMap": "Usar este mapa",
                     "configureMapOptions": "Configurar opciones de mapa",
+                    "enableIdentifyTool": "Habilitar herramienta de identificación",
+                    "disableIdentifyTool": "Deshabilitar la herramienta de identificación",
                     "preview": "Vista previa",
                     "addLayer": "Agregar una capa al mapa",
                     "useTheSelectedLayer": "Usar la capa seleccionada",

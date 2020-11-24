@@ -33,7 +33,7 @@ buttons={buttons || [...(step === 0 ? tocButtons : []), {
     visible: dashBoardEditing && editorData?.widgetType === "map",
     glyph: "info-sign",
     bsStyle: editorData?.enableIdentify ? "success" : "primary",
-    tooltipId: "Enable identify on map" // TODO: Change tool tip based on enabled or not
+    tooltipId: editorData?.enableIdentify ? "widgets.builder.wizard.disableIdentifyTool" : "widgets.builder.wizard.enableIdentifyTool"
 },
 {
     onClick: () => toggleLayerSelector(true),

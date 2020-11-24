@@ -1699,6 +1699,8 @@
                     "textPlaceholder": "Inserisci il testo...",
                     "useThisMap": "Usa questa mappa",
                     "configureMapOptions": "Configura opzioni mappa",
+                    "enableIdentifyTool": "Attiva lo strumento di identificazione",
+                    "disableIdentifyTool": "Disabilita lo strumento di identificazione",
                     "preview": "Anteprima",
                     "addLayer": "Aggiungi un livello alla mappa",
                     "useTheSelectedLayer": "Usa il livello selezionato",
