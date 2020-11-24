@@ -54,7 +54,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @class
  * @prop {object[]} formats An array of name-label objects for the allowed formats available.
  * @prop {object[]} srsList An array of name-label objects for the allowed srs available. Use name:'native' to omit srsName param in wfs filter
- * @prop {string} defaultSrs Deafult selected srs
+ * @prop {string} defaultSrs Default selected srs
  * @prop {string} closeGlyph The icon to use for close the dialog
  * @example
  * {
