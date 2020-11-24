@@ -33,7 +33,7 @@ class Toolbar extends React.Component {
         style: PropTypes.object,
         settings: PropTypes.object,
         layerMetadata: PropTypes.object,
-        wfsdownload: PropTypes.object,
+        layerdownload: PropTypes.object,
         maxDepth: PropTypes.number,
         metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func])
     };
@@ -130,7 +130,7 @@ class Toolbar extends React.Component {
         },
         settings: {},
         layerMetadata: {},
-        wfsdownload: {},
+        layerdownload: {},
         metadataTemplate: null
     };
 
@@ -244,7 +244,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYER_LOAD_ERROR') && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYER_LOAD_ERROR') && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
                     <OverlayTrigger
                         key="settings"
                         placement="top"
@@ -254,7 +254,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateLayerFilterTool && (status === 'LAYER' || status === 'LAYER_LOAD_ERROR') && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                {this.props.activateTool.activateLayerFilterTool && (status === 'LAYER' || status === 'LAYER_LOAD_ERROR') && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
                     <OverlayTrigger
                         key="queryPanel"
                         placement="top"
@@ -264,7 +264,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
                     <OverlayTrigger
                         key="featuresGrid"
                         placement="top"
@@ -274,7 +274,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {(this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'LAYERS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') || this.props.activateTool.activateRemoveGroup && (status === 'GROUP' || status === 'GROUPS' || status === 'GROUP_LOAD_ERROR' || status === 'GROUPS_LOAD_ERROR')) && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                {(this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'LAYERS' || status === 'LAYER_LOAD_ERROR' || status === 'LAYERS_LOAD_ERROR') || this.props.activateTool.activateRemoveGroup && (status === 'GROUP' || status === 'GROUPS' || status === 'GROUP_LOAD_ERROR' || status === 'GROUPS_LOAD_ERROR')) && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
                     <OverlayTrigger
                         key="removeNode"
                         placement="top"
@@ -296,7 +296,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && this.props.selectedLayers[0].search !== 'vector' && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
+                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && this.props.selectedLayers[0].search !== 'vector' && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
                     <OverlayTrigger
                         key="widgets"
                         placement="top"
@@ -306,17 +306,17 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateDownloadTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
+                {this.props.activateTool.activateDownloadTool && status === 'LAYER' && (this.props.selectedLayers[0].type === 'wms' || this.props.selectedLayers[0].search) && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
                     <OverlayTrigger
                         key="downloadTool"
                         placement="top"
                         overlay={<Tooltip id="toc-tooltip-downloadTool">{this.props.text.downloadToolTooltip}</Tooltip>}>
-                        <Button bsStyle={this.props.wfsdownload.expanded ? "success" : "primary"} className="square-button-md" onClick={this.download}>
+                        <Button bsStyle={this.props.layerdownload.expanded ? "success" : "primary"} className="square-button-md" onClick={this.download}>
                             <Glyphicon glyph="download" />
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
+                {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && !this.props.settings.expanded && !this.props.layerdownload.expanded ?
                     <OverlayTrigger
                         key="layerMetadata"
                         placement="top"
@@ -357,7 +357,7 @@ class Toolbar extends React.Component {
 
     download = () => {
         this.props.onToolsActions.onDownload({
-            url: this.props.selectedLayers[0].search.url || this.props.selectedLayers[0].url,
+            url: this.props.selectedLayers[0].search?.url || this.props.selectedLayers[0].url,
             name: this.props.selectedLayers[0].name,
             id: this.props.selectedLayers[0].id
         });

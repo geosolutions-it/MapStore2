@@ -1611,16 +1611,43 @@
                 "createNewChart": "Create a chart for the selected layer"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Export Data",
             "format": "File Format",
             "srs":  "Spatial Reference System",
             "export": "Export",
             "downloadonlycurrentpage": "Download only current page",
+            "cropDataSet": "Crop dataset to current viewport",
+            "downloadFilteredDataSet": "Download filtered dataset",
+            "advancedOptions": "Advanced options",
+            "compression": "Compression",
+            "tileWidth": "Tile width",
+            "tileHeight": "Tile height",
+            "quality": "Quality",
             "error": {
                 "title": "Error during export",
-                "invalidOutputFormat": "The selected export format is not available"
-            }
+                "invalidOutputFormat": "The selected export format is not available",
+                "downloadEstimatorTitle": "DownloadEstimator error",
+                "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+            },
+            "exportResultsMessages": {
+                "newExport": "The file will be available here when the export completes",
+                "exportFailure": "Export for layer \"{layerTitle}\" failed! Open export results dialog for more information.",
+                "exportSuccess": "Export for layer \"{layerTitle}\" finished successfully.",
+                "invalidHref": "The response from server did not contain a valid url address for exported files!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Download process failed! The server has returned the following exception report: \"{exceptionReport}\"",
+                "badResponse": "Download process failed! The server has returned incorrect data, error code: \"{errorCode}\"",
+                "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
+                "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
+                "unexpectedError": "Unexpected error occurred"
+            },
+            "noSupportedServiceFound": "The server doesn't support WFS or WPS download for this layer!"
+        },
+        "exportDataResults": {
+            "title": "Export data results",
+            "emptyStateMessage": "Export list is empty"
         },
         "widgets": {
             "types": {
@@ -2723,7 +2750,7 @@
             "descriptionGeorchestra": "Shows the version of GeOrchestra in map settings tool",
             "title": "Version"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Allows to download data from the Attribute Table",
             "title": "Download Data"
           },

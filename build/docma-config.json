@@ -197,6 +197,12 @@
             "web/client/epics/tutorial.js",
             "web/client/epics/wfsquery.js",
 
+            "web/client/observables/index.jsdoc",
+            "web/client/observables/wps/index.jsdoc",
+            "web/client/observables/wps/common.js",
+            "web/client/observables/wps/execute.js",
+            "web/client/observables/wps/download.js",
+
             "web/client/utils/index.jsdoc",
             "web/client/utils/CoordinatesUtils.js",
             "web/client/utils/ImmutableUtils.js",
@@ -298,7 +304,7 @@
                 "web/client/plugins/UserExtensions.jsx",
                 "web/client/plugins/UserSession.jsx",
                 "web/client/plugins/Version.jsx",
-                "web/client/plugins/WFSDownload.jsx",
+                "web/client/plugins/LayerDownload.jsx",
                 "web/client/plugins/Widgets.jsx",
                 "web/client/plugins/WidgetsBuilder.jsx",
                 "web/client/plugins/WidgetsTray.jsx",

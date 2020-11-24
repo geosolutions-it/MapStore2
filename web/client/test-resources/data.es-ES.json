@@ -803,7 +803,7 @@
                 "more": "más"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exportar los datos",
             "format": "Formato de fichero",
             "export": "Exportaciones",

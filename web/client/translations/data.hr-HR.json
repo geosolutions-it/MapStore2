@@ -1364,7 +1364,7 @@
                 "createNewChart": "Kreiraj grafikon za odabrani sloj"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Izvezi podatke",
             "format": "Format datoteke",
             "srs":  "Koordinatni sustav",

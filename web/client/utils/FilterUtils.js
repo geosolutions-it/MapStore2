@@ -27,7 +27,7 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
     return toFilter(read(cqlFilter));
 };
 
-import { get, isNil, isUndefined, isArray, find, findIndex, flatten } from 'lodash';
+import { get, isNil, isUndefined, isArray, find, findIndex, isString, flatten } from 'lodash';
 let FilterUtils;
 
 export const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
@@ -1048,6 +1048,42 @@ export const normalizeFilterCQL = (filter, nativeCrs) => {
     return filter;
 };
 
+/**
+ * Merges cql filter strings, with mapstore filter objects to make a single OGC filter string
+ * @param {string} opts.ogcVersion ogc version string of final ogc filter
+ * @param {string} opts.nsPlaceholder xlmns placeholder to use
+ * @param {boolean} opts.addXmlnsToRoot add xmlns information to root ogc:Filter element
+ * @param {string[]} opts.xmlnsToAdd xmlns strings to add to root ogc:Filter element if addXmlnsToRoot is true
+ * @param {...string|object} filters filters to merge
+ */
+export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
+    const {
+        nsPlaceholder = 'ogc',
+        ogcVersion: ogcVersionOpt = '2.0',
+        addXmlnsToRoot = false,
+        xmlnsToAdd = []
+    } = opts;
+    const fb = filterBuilder({
+        filterNS: nsPlaceholder,
+        wfsVersion: ogcVersionOpt,
+        gmlVersion: wfsToGmlVersion(ogcVersionOpt)
+    });
+    const toFilter = fromObject(fb);
+
+    const filterString = fb.filter(fb.and(
+        ...flatten(filters
+            .filter(filter => !!filter && (isString(filter) || isFilterValid(filter) && !filter.disabled))
+            .map(filter => isString(filter) ? [toFilter(read(filter))] : toOGCFilterParts(filter, ogcVersionOpt, nsPlaceholder)))
+    ));
+
+    if (addXmlnsToRoot) {
+        const filterTagEnd = filterString.indexOf('>');
+        return `${filterString.slice(0, filterTagEnd)}${xmlnsToAdd.length > 0 ? ` ${xmlnsToAdd.join(' ')}` : ''}${filterString.slice(filterTagEnd)}`;
+    }
+
+    return filterString;
+};
+
 FilterUtils = {
     processOGCFilterGroup,
     processOGCFilterFields,
@@ -1069,5 +1105,6 @@ FilterUtils = {
     cqlListField,
     toOGCFilter,
     reprojectFilterInNativeCrs,
-    processOGCSpatialFilter
+    processOGCSpatialFilter,
+    mergeFiltersToOGC
 };

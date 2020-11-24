@@ -1338,7 +1338,7 @@
                 "createNewChart": "Create a chart for the selected layer"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Export Data",
             "format": "File Format",
             "srs":  "Spatial Reference System",
