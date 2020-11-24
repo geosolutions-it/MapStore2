@@ -17,7 +17,7 @@ const getSaveTooltipId = (step, { id } = {}) => {
     return "widgets.builder.wizard.addTheWidget";
 };
 
-export default ({ step = 0, buttons, tocButtons = [], stepButtons = [], editorData = {}, setPage = () => { }, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
+export default ({ step = 0, buttons, tocButtons = [], stepButtons = [], dashBoardEditing = false, editorData = {}, setPage = () => { }, onFinish = () => { }, toggleLayerSelector = () => { }, onChange = () => {} } = {}) => (<Toolbar btnDefaultProps={{
     bsStyle: "primary",
     bsSize: "sm"
 }}
@@ -26,7 +26,16 @@ buttons={buttons || [...(step === 0 ? tocButtons : []), {
     visible: step === 1,
     glyph: "arrow-left",
     tooltipId: "widgets.builder.wizard.configureMapOptions"
-}, ...stepButtons, {
+},
+...stepButtons,
+{
+    onClick: () => onChange("enableIdentify", !editorData?.enableIdentify),
+    visible: dashBoardEditing && editorData?.widgetType === "map",
+    glyph: "info-sign",
+    bsStyle: editorData?.enableIdentify ? "success" : "primary",
+    tooltipId: "Enable identify on map" // TODO: Change tool tip based on enabled or not
+},
+{
     onClick: () => toggleLayerSelector(true),
     visible: step === 0,
     glyph: "plus",

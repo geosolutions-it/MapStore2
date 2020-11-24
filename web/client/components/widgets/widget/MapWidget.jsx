@@ -32,10 +32,11 @@ export default ({
     loading = false,
     onDelete = () => {},
     headerStyle,
-    env
+    env,
+    enableIdentify
 } = {}) => {
     const { size: {height: mapHeight, width: mapWidth} } = map;
-    const enableIdentifyOnMap = mapHeight > 400 && mapWidth > 400;
+    const enableIdentifyOnMap = enableIdentify && mapHeight > 400 && mapWidth > 400;
     return (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={topRightItems}
@@ -50,7 +51,10 @@ export default ({
                 tools={enableIdentifyOnMap ? ['popup'] : []}
                 updateProperty={updateProperty}
                 id={id}
-                map={omit(map, 'mapStateSource')}
+                map={{
+                    ...omit(map, 'mapStateSource'),
+                    mapInfoControl: true
+                }}
                 mapStateSource={mapStateSource}
                 hookRegister={hookRegister}
                 layers={map && map.layers}
