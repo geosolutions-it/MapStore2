@@ -21,6 +21,26 @@ export const inputFilterObjSpatial = {
         }
     }
 };
+export const spatialFilterMultiple = {
+    spatialFieldOperator: "OR",
+    spatialField: [{
+        "operation": "INTERSECTS",
+        "attribute": "geometry",
+        "geometry": {
+            "type": "Polygon",
+            "projection": "EPSG:4326",
+            "coordinates": [[[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]]]
+        }
+    },{
+        "operation": "INTERSECTS",
+        "attribute": "geometry",
+        "geometry": {
+            "type": "Polygon",
+            "projection": "EPSG:4326",
+            "coordinates": [[[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]]]
+        }
+    }]
+};
 export const inputQuickFiltersStateAbbr = {
     state_abbr: {
         rawValue: "I",
@@ -113,4 +133,15 @@ export const resultQuickFiltersAndDependenciesQF = `<ogc:Filter><ogc:And><ogc:An
 export const resultQuickFiltersAndDependenciesFilter = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And></ogc:And></ogc:Filter>`;
 
 export const resultSpatialAndQuickFilters = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And><ogc:Intersects><ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></ogc:Intersects></ogc:And></ogc:Filter>`;
+export const resultSpatialFilterMultiple =
+    "<ogc:Filter><ogc:And><ogc:Or>"
+    + "<ogc:Intersects>"
+    + "<ogc:PropertyName>geometry</ogc:PropertyName>"
+    + "<gml:Polygon srsName=\"EPSG:4326\"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+    + "</ogc:Intersects>"
+    + "<ogc:Intersects>"
+    + "<ogc:PropertyName>geometry</ogc:PropertyName>"
+    + "<gml:Polygon srsName=\"EPSG:4326\"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+    + "</ogc:Intersects>"
+    + "</ogc:Or></ogc:And></ogc:Filter>";
 

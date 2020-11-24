@@ -15,6 +15,8 @@ import dependenciesToFilter from '../dependenciesToFilter';
 import {
     inputFilterObjSpatial,
     inputQuickFiltersStateAbbr,
+    spatialFilterMultiple,
+    resultSpatialFilterMultiple,
     inputLayerFilterSTATENAME,
     resultFilterOnly,
     resultFilterObjRes1,
@@ -121,6 +123,14 @@ describe('widgets dependenciesToFilter enhancer', () => {
             done();
         }));
         ReactDOM.render(<Sink filter={inputFilterObjSpatial}/>, document.getElementById("container"));
+    });
+    it('dependenciesToFilter with custom spatialFieldOpeartor filter', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toExist();
+            expect(props.filter).toBe(resultSpatialFilterMultiple);
+            done();
+        }));
+        ReactDOM.render(<Sink filter={spatialFilterMultiple} />, document.getElementById("container"));
     });
     it('dependenciesToFilter with mapsync and spatial filter', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
