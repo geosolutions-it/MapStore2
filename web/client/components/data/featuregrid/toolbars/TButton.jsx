@@ -5,8 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { forwardRef } from 'react';
 
 import { Button, Glyphicon } from 'react-bootstrap';
 
@@ -17,26 +16,14 @@ const hideStyle = {
 };
 const normalStyle = {};
 const getStyle = (visible) => visible ? normalStyle : hideStyle;
-export default class SimpleTButton extends React.Component {
-    propTypes = {
-        disabled: PropTypes.bool,
-        id: PropTypes.string,
-        visible: PropTypes.bool,
-        onClick: PropTypes.func,
-        glyph: PropTypes.string,
-        active: PropTypes.bool,
-        className: PropTypes.string
-    }
-    defaultProps = {
-        className: "square-button"
-    }
-    render() {
-        const { disabled, id, visible, onClick, glyph, active, className = "square-button", ...props } = this.props;
-        return (<Button {...props} bsStyle={active ? "success" : "primary"} disabled={disabled} id={`fg-${id}`}
-            style={getStyle(visible)}
-            className={className}
-            onClick={() => !disabled && onClick()}>
-            <Glyphicon glyph={glyph} />
-        </Button>);
-    }
-}
+export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, glyph, active, className = "square-button", ...props }, ref) => {
+    return (<Button ref={ref} {...props} bsStyle={active ? "success" : "primary"} disabled={disabled} id={`fg-${id}`}
+        style={getStyle(visible)}
+        className={className}
+        onClick={() => !disabled && onClick()}>
+        <Glyphicon glyph={glyph} />
+    </Button>);
+});
+
+
+export default SimpleTButton;
