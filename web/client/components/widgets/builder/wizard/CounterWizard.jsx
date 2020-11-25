@@ -5,31 +5,45 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const React = require('react');
-const {isNil} = require('lodash');
-const { compose, lifecycle } = require('recompose');
 
-const {wizardHandlers} = require('../../../misc/wizard/enhancers');
-const loadingState = require('../../../misc/enhancers/loadingState')(({loading, data}) => loading || !data, {width: 500, height: 200});
-const wfsChartOptions = require('./common/wfsChartOptions');
-const noAttributes = require('./common/noAttributesEmptyView');
+import {isNil} from 'lodash';
+import React from 'react';
+import { compose, lifecycle } from 'recompose';
 
-const CounterOptions = wfsChartOptions(noAttributes(({options = []}) => options.length === 0)(require('./common/WPSWidgetOptions')));
-const WidgetOptions = require('./common/WidgetOptions');
+import loadingEnhancer from '../../../misc/enhancers/loadingState';
+import {wizardHandlers} from '../../../misc/wizard/enhancers';
+import WizardContainer from '../../../misc/wizard/WizardContainer';
+import dependenciesToFilter from '../../enhancers/dependenciesToFilter';
+import dependenciesToOptions from '../../enhancers/dependenciesToOptions';
+import dependenciesToWidget from '../../enhancers/dependenciesToWidget';
+import emptyChartState from '../../enhancers/emptyChartState';
+import errorChartState from '../../enhancers/errorChartState';
+import wpsCounter from '../../enhancers/wpsCounter';
+import Counter from '../../widget/CounterView';
+import noAttributes from './common/noAttributesEmptyView';
+import wfsChartOptions from './common/wfsChartOptions';
+import WidgetOptions from './common/WidgetOptions';
+import WPSChartOptions from './common/WPSWidgetOptions';
 
-const wpsCounter = require('../../enhancers/wpsCounter');
-const dependenciesToFilter = require('../../enhancers/dependenciesToFilter');
-const dependenciesToOptions = require('../../enhancers/dependenciesToOptions');
-const dependenciesToWidget = require('../../enhancers/dependenciesToWidget');
-const emptyChartState = require('../../enhancers/emptyChartState');
-const errorChartState = require('../../enhancers/errorChartState');
+const loadingState = loadingEnhancer(({loading, data}) => loading || !data, {width: 500, height: 200});
 
-const isCounterOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute;
+const CounterOptions = compose(
+    // reset all groupByAttributes (e.g. if change widget type, the value can remain)
+    lifecycle({
+        componentDidMount() {
+            this.props.onChange && this.props.onChange("options.groupByAttributes", undefined);
+        }
+    }),
+    wfsChartOptions,
+    noAttributes(({ options = [] }) => options.length === 0)
+)(WPSChartOptions);
+
+export const isCounterOptionsValid = (options = {}, { hasAggregateProcess }) => options.aggregateFunction && options.aggregationAttribute && hasAggregateProcess;
 const triggerSetValid = compose(
     lifecycle({
-        UNSAFE_componentWillReceiveProps: ({ valid, data = [], options = {}, setValid = () => { }, error } = {}) => {
+        UNSAFE_componentWillReceiveProps: ({ valid, data = [], options = {}, setValid = () => { }, error, hasAggregateProcess } = {}) => {
             const isNowValid = !isNil(data[0]) && !error;
-            if (!!valid !== !!isNowValid && isCounterOptionsValid(options)) {
+            if (!!valid !== !!isNowValid && isCounterOptionsValid(options, { hasAggregateProcess })) {
                 setValid(isNowValid);
             }
         }
@@ -52,20 +66,19 @@ const sampleProps = {
         height: 100
     }
 };
+const Wizard = wizardHandlers(WizardContainer);
 
-const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
-
-const Counter = require('../../widget/CounterView');
 const Preview = enhancePreview(Counter);
-const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid = () => { } }) =>
-    !isCounterOptionsValid(data.options)
+const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid = () => { }, hasAggregateProcess }) =>
+    !isCounterOptionsValid(data.options, { hasAggregateProcess })
         ? <Counter
             {...sampleProps}
-            data={[{data: 42}]}
+            data={[{ data: 42 }]}
             options={data.options}
-            series={[{dataKey: "data"}]} />
+            series={[{ dataKey: "data" }]} />
         : <Preview
+            hasAggregateProcess={hasAggregateProcess}
             {...sampleProps}
             valid={valid}
             dependenciesMap={data.dependenciesMap}
@@ -80,19 +93,21 @@ const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid =
             options={data.options} />;
 
 const enhanceWizard = compose(lifecycle({
-    UNSAFE_componentWillReceiveProps: ({data = {}, valid, setValid = () => {}} = {}) => {
-        if (valid && !isCounterOptionsValid(data.options)) {
+    UNSAFE_componentWillReceiveProps: ({ data = {}, valid, setValid = () => { }, hasAggregateProcess } = {}) => {
+        if (valid && !isCounterOptionsValid(data.options, { hasAggregateProcess })) {
             setValid(false);
         }
-    }})
+    }
+})
 );
-module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, valid, formOptions, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies}) =>
+export default enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, valid, formOptions, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies, hasAggregateProcess }) =>
     (<Wizard
         step={step}
         setPage={setPage}
         onFinish={onFinish}
-        isStepValid={n => n === 1 ? isCounterOptionsValid(data.options) : true} hideButtons>
+        isStepValid={n => n === 1 ? isCounterOptionsValid(data.options, { hasAggregateProcess }) : true} hideButtons>
         <CounterOptions
+            hasAggregateProcess={hasAggregateProcess}
             dependencies={dependencies}
             key="chart-options"
             formOptions={formOptions}
@@ -102,11 +117,12 @@ module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, se
             onChange={onChange}
             layer={data.layer || layer}
             sampleChart={<CounterPreview
+                hasAggregateProcess={hasAggregateProcess}
                 data={data}
                 valid={valid}
                 layer={data.layer || layer}
                 dependencies={dependencies}
-                setValid={v => setValid(v && isCounterOptionsValid(data.options))} />}
+                setValid={v => setValid(v && isCounterOptionsValid(data.options, { hasAggregateProcess }))} />}
         />
         <WidgetOptions
             key="widget-options"
@@ -114,10 +130,11 @@ module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, se
             onChange={onChange}
             layer={data.layer || layer}
             sampleChart={<CounterPreview
+                hasAggregateProcess={hasAggregateProcess}
                 data={data}
                 valid={valid}
                 layer={data.layer || layer}
                 dependencies={dependencies}
-                setValid={v => setValid(v && isCounterOptionsValid(data.options))} />}
+                setValid={v => setValid(v && isCounterOptionsValid(data.options, { hasAggregateProcess }))} />}
         />
     </Wizard>));

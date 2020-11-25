@@ -7,13 +7,15 @@
  */
 
 
-const loadingState = require('../../misc/enhancers/loadingState')();
-const errorChartState = require('../enhancers/errorChartState');
-const emptyChartState = require('../enhancers/emptyChartState');
-const FormatNumber = require('../../I18N/Number');
-const {compose} = require('recompose');
-const {get} = require('lodash');
-const {Textfit} = require('react-textfit');
+import loadingStateFactory from '../../misc/enhancers/loadingState';
+
+const loadingState = loadingStateFactory();
+import errorChartState from '../enhancers/errorChartState';
+import emptyChartState from '../enhancers/emptyChartState';
+import FormatNumber from '../../I18N/Number';
+import { compose } from 'recompose';
+import { get } from 'lodash';
+import { Textfit } from 'react-textfit';
 const Counter = ({ value = "", uom = "", ...props } = {}) => (<Textfit
     mode="single"
     forceSingleModeWidth={false}
@@ -27,8 +29,9 @@ const enhanceCounter = compose(
     errorChartState,
     emptyChartState
 );
-const React = require('react');
-module.exports = enhanceCounter(({ series = [], data = [], options = {}, style = {
+import React from 'react';
+
+export default enhanceCounter(({ series = [], data = [], options = {}, style = {
     width: "100%",
     height: "100%",
     transform: "translate(-50%, -50%)",

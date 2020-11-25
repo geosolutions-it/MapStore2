@@ -5,29 +5,24 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
+import CAPABILITIES from 'raw-loader!../../test-resources/wms/GetCapabilities-1.3.0.xml';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import TOCItemsSettingsPlugin from '../TOCItemsSettings';
-import { getPluginForTest } from './pluginsTestUtils';
-
+import { setControlProperty } from '../../actions/controls';
+import { UPDATE_NODE, addLayer, selectNode, showSettings } from '../../actions/layers';
+import { INIT_STYLE_SERVICE } from '../../actions/styleeditor';
+import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
+import controls from '../../reducers/controls';
+import layers from '../../reducers/layers';
 import StyleEditor from '../StyleEditor';
 import ThematicLayer from '../ThematicLayer';
-
-import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
-
-import { addLayer, selectNode, showSettings, UPDATE_NODE } from '../../actions/layers';
-import { INIT_STYLE_SERVICE } from '../../actions/styleeditor';
-
-import layers from '../../reducers/layers';
-import controls from '../../reducers/controls';
-
-import { setControlProperty } from '../../actions/controls';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-
-import CAPABILITIES from 'raw-loader!../../test-resources/wms/GetCapabilities-1.3.0.xml';
+import TOCItemsSettingsPlugin from '../TOCItemsSettings';
+import { getPluginForTest } from './pluginsTestUtils';
 
 const STYLE_EDITOR_ITEM = {
     ...StyleEditor.StyleEditorPlugin.TOCItemsSettings,

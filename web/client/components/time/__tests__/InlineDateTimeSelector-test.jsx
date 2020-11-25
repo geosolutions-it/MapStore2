@@ -1,8 +1,8 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const TestUtils = require('react-dom/test-utils');
-const expect = require('expect');
-const InlineDateTimeSelector = require('../InlineDateTimeSelector');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
+import expect from 'expect';
+import InlineDateTimeSelector from '../InlineDateTimeSelector';
 describe('InlineDateTimeSelector component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

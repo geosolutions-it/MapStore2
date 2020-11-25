@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,10 +7,11 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const { SketchPicker } = require('react-color');
-require('./colorenderer.css');
-const {getWindowSize} = require('../../../utils/AgentUtils');
+import React from 'react';
+
+import { SketchPicker } from 'react-color';
+import './colorenderer.css';
+import { getWindowSize } from '../../../utils/AgentUtils';
 
 class ColorPickerRenderer extends React.Component {
     static propTypes = {
@@ -93,4 +95,4 @@ class ColorPickerRenderer extends React.Component {
     };
 }
 
-module.exports = ColorPickerRenderer;
+export default ColorPickerRenderer;

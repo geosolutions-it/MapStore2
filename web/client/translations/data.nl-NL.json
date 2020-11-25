@@ -1609,7 +1609,7 @@
                 "createNewChart": "Maak een grafiek voor de geselecteerde laag"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exporteer Data",
             "format": "Bestandsformaat",
             "srs":  "Coördinaten ReferentieSysteem",
@@ -2702,7 +2702,7 @@
             "descriptionGeorchestra": "Toont de versie van GeOrchestra in de tool voor kaartinstellingen",
             "title": "Versie"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Maakt het mogelijk om gegevens uit de attributentabel te downloaden",
             "title": "Data Downloaden"
           },

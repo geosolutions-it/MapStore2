@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const expect = require('expect');
-const LegendWizard = require('../LegendWizard');
+import LegendWizard from '../LegendWizard';
+
 describe('LegendWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

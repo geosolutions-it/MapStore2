@@ -16,7 +16,7 @@ import {find} from 'lodash';
 import Message from '../components/I18N/Message';
 import DockabePanel from '../components/misc/panels/DockablePanel';
 import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
-const { setActive, setSwipeToolDirection, setSpyToolRadius } = require('../actions/swipe');
+import { setActive, setSwipeToolDirection, setSpyToolRadius } from '../actions/swipe';
 
 const swipeTypeOptions = [{
     label: 'Horizontal',

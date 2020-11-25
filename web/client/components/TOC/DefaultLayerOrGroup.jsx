@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -6,7 +7,7 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
+import React from 'react';
 
 class DefaultLayerOrGroup extends React.Component {
     static propTypes = {
@@ -24,4 +25,4 @@ class DefaultLayerOrGroup extends React.Component {
     }
 }
 
-module.exports = DefaultLayerOrGroup;
+export default DefaultLayerOrGroup;

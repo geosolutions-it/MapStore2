@@ -1,9 +1,12 @@
-const React = require('react');
-const {ButtonGroup, Glyphicon, Checkbox} = require('react-bootstrap');
-require("./toolbar.css");
-const Message = require('../../../I18N/Message').default;
-const withHint = require("../enhancers/withHint");
-const TButton = withHint(require("./TButton"));
+import './toolbar.css';
+
+import React from 'react';
+import { ButtonGroup, Checkbox, Glyphicon } from 'react-bootstrap';
+
+import Message from '../../../I18N/Message';
+import withHint from '../enhancers/withHint';
+import TButtonComp from "./TButton";
+const TButton = withHint(TButtonComp);
 const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {
     if (isDrawing) {
         return "featuregrid.toolbar.stopDrawGeom";
@@ -16,6 +19,7 @@ const getSaveMessageId = ({saving, saved}) => {
     }
     return "featuregrid.toolbar.saveChanges";
 };
+
 /**
  * Standard Toolbar for the FeatureGrid plugin.
  *
@@ -28,7 +32,7 @@ const getSaveMessageId = ({saving, saved}) => {
  * @param {bool} showSyncOnMapButton shows / hide the show on map button (defaults to true)
  * @param {bool} showTimeSyncButton shows / hide the timeSync button (defaults to false)
 */
-module.exports = ({
+export default ({
     disableToolbar,
     disableDownload,
     disableZoomAll = false,
@@ -148,7 +152,7 @@ module.exports = ({
             active={isDownloadOpen}
             visible={displayDownload && mode === "VIEW"}
             onClick={events.download}
-            glyph="features-grid-download"/>
+            glyph="download"/>
         <TButton
             id="grid-settings"
             keyProp="grid-settings"

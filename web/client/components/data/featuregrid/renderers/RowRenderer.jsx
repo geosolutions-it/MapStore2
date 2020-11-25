@@ -1,6 +1,6 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const cellRenderer = require('./CellRenderer');
+import React from 'react';
+import PropTypes from 'prop-types';
+import cellRenderer from './CellRenderer';
 
 class RowRenderer extends React.Component {
     static propTypes = {
@@ -21,4 +21,4 @@ class RowRenderer extends React.Component {
 
 }
 
-module.exports = RowRenderer;
+export default RowRenderer;

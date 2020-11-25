@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { withHandlers} = require('recompose');
-const {trim} = require('lodash');
-const moment = require('moment');
+import { withHandlers } from 'recompose';
+
+import { trim } from 'lodash';
+import moment from 'moment';
 
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
-const { getStartEnd } = require('../../../utils/TimeUtils');
+import { getStartEnd } from '../../../utils/TimeUtils';
 
 
 /**
@@ -19,7 +20,7 @@ const { getStartEnd } = require('../../../utils/TimeUtils');
  * It also disables auto-move on click, when range is enabled.
  *
  */
-module.exports = withHandlers({
+export default withHandlers({
     /**
      * manages click on group label or on timeline (to select current time with one click)
      *

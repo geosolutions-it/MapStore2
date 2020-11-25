@@ -8,16 +8,9 @@
 
 import isEqual from 'lodash/isEqual';
 
-import {
-    getStyleMetadataService,
-    readClassification,
-    readRasterClassification,
-    getColor,
-    getCapabilitiesUrl
-} from './SLDService';
-
 import axios from '../libs/ajax';
 import StylesAPI from './geoserver/Styles';
+import SLDService from './SLDService';
 
 const SUPPORTED_CLASSIFICATION_METHODS = [
     'equalInterval',
@@ -83,7 +76,7 @@ const API = {
             if (cache[serviceBaseUrl]) {
                 return new Promise(resolve => resolve(cache[serviceBaseUrl]));
             }
-            const styleServiceCapabilitiesUrl = getCapabilitiesUrl({
+            const styleServiceCapabilitiesUrl = SLDService.getCapabilitiesUrl({
                 url: serviceBaseUrl
             });
             // request style service only if the styleService is not declared in cfg
@@ -176,7 +169,7 @@ export function classificationVector({
         && values.ramp !== properties.ramp
         && params?.method === 'customInterval'
         && !values.classification) {
-        const { colors: colorsString } = getColor(undefined, values.ramp, params.intervals);
+        const { colors: colorsString } = SLDService.getColor(undefined, values.ramp, params.intervals);
         const colors = colorsString.split(',');
         return new Promise((resolve) =>
             resolve(
@@ -207,8 +200,8 @@ export function classificationVector({
                 name: 'custom',
                 colors: params.classification.map((entry) => entry.color)
             };
-        const rampParams = getColor(undefined, params.ramp, params.intervals, customRamp);
-        return axios.get(getStyleMetadataService(layer, {
+        const rampParams = SLDService.getColor(undefined, params.ramp, params.intervals, customRamp);
+        return axios.get(SLDService.getStyleMetadataService(layer, {
             intervals: params.intervals,
             method: params.method,
             attribute: params.attribute,
@@ -219,7 +212,7 @@ export function classificationVector({
                 return updateRules(ruleId, rules, (rule) => ({
                     ...rule,
                     ...values,
-                    classification: readClassification(data),
+                    classification: SLDService.readClassification(data),
                     errorId: undefined
                 }));
             })
@@ -278,8 +271,8 @@ export function classificationRaster({
     if (needsRequest) {
         const customRamp = params.ramp === 'custom' && params.classification.length > 0
             && { name: 'custom', colors: params.classification.map((entry) => entry.color) };
-        const rampParams = getColor(undefined, params.ramp, params.intervals, customRamp);
-        return axios.get(getStyleMetadataService(layer, {
+        const rampParams = SLDService.getColor(undefined, params.ramp, params.intervals, customRamp);
+        return axios.get(SLDService.getStyleMetadataService(layer, {
             intervals: params.intervals,
             continuous: params.continuous,
             method: params.method,
@@ -290,7 +283,7 @@ export function classificationRaster({
                 return updateRules(ruleId, rules, (rule) => ({
                     ...rule,
                     ...values,
-                    classification: readRasterClassification(data),
+                    classification: SLDService.readRasterClassification(data),
                     errorId: undefined
                 }));
             })

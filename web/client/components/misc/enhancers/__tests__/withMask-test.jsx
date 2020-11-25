@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const withMask = require('../withMask');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import withMask from '../withMask';
 
 describe('withMask enhancer', () => {
     beforeEach((done) => {

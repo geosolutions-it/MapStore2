@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,9 +8,10 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var {ListGroup, Panel} = require('react-bootstrap');
-var MapItem = require('./MapItem');
+import React from 'react';
+
+import { ListGroup, Panel } from 'react-bootstrap';
+import MapItem from './MapItem';
 
 class MapList extends React.Component {
     static propTypes = {
@@ -46,4 +48,4 @@ class MapList extends React.Component {
     }
 }
 
-module.exports = MapList;
+export default MapList;

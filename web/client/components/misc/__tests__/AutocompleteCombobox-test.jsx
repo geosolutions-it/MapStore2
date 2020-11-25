@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {AutocompleteCombobox} = require('../AutocompleteCombobox');
-const {createPagedUniqueAutompleteStream} = require('../../../observables/autocomplete');
+import expect from 'expect';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { AutocompleteCombobox } from '../AutocompleteCombobox';
+import { createPagedUniqueAutompleteStream } from '../../../observables/autocomplete';
 
 describe("This test for AutocompleteCombobox component", () => {
     beforeEach((done) => {

@@ -6,16 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
-const { getLayerJSONFeature } = require('../../../../observables/wfs');
-const { getCurrentPaginationOptions, updatePages } = require('../../../../utils/FeatureGridUtils');
+import Rx from 'rxjs';
+
+import { getLayerJSONFeature } from '../../../../observables/wfs';
+import { getCurrentPaginationOptions, updatePages } from '../../../../utils/FeatureGridUtils';
+
 /**
  * Create an operator that resonds to a fetch data trigger event to retrives data on scroll.
  * @param {Observable} pages$ the stream of virtual scroll pages requests
  * @returns a function that can be merged with stream of
  * props to retrieve data using virtual scroll.
  */
-module.exports = pages$ => props$ => props$.switchMap(({
+export default pages$ => props$ => props$.switchMap(({
     layer = {},
     size = 20,
     maxStoredPages = 5,

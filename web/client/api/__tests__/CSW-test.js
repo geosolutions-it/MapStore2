@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const API = require('../CSW');
+import expect from 'expect';
+
+import API from '../CSW';
 
 describe('Test correctness of the CSW APIs', () => {
     it('getRecords ISO Metadata Profile', (done) => {

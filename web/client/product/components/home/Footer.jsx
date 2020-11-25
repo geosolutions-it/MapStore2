@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var MailingLists = require('./MailingLists');
-const MadeWithLove = require('../../assets/img/mwlii.png');
+import React from 'react';
+
+import MailingLists from './MailingLists';
+import MadeWithLove from '../../assets/img/mwlii.png';
 
 class Footer extends React.Component {
     render() {
@@ -25,4 +26,4 @@ class Footer extends React.Component {
     }
 }
 
-module.exports = Footer;
+export default Footer;

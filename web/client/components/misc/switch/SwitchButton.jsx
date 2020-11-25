@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import PropTypes from 'prop-types';
 /**
  * Graphical Switch button.
  * @param {boolean} [checked=false] the status of the button
@@ -16,6 +17,7 @@ const PropTypes = require('prop-types');
 class SwitchButton extends React.Component {
 
     static propTypes = {
+        disabled: PropTypes.bool,
         className: PropTypes.string,
         checked: PropTypes.bool,
         onChange: PropTypes.func,
@@ -32,6 +34,7 @@ class SwitchButton extends React.Component {
     render() {
         return (<label className={`mapstore-switch-btn ${this.props.className}`}>
             <input type="checkbox"
+                disabled={this.props.disabled}
                 checked={this.props.checked}
                 onChange={() => this.props.onChange(!this.props.checked)}
             />
@@ -40,4 +43,4 @@ class SwitchButton extends React.Component {
     }
 }
 
-module.exports = SwitchButton;
+export default SwitchButton;

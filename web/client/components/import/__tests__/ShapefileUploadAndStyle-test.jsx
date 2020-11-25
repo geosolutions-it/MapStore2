@@ -1,7 +1,7 @@
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ShapefileUploadAndStyle = require('../ShapefileUploadAndStyle');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ShapefileUploadAndStyle from '../ShapefileUploadAndStyle';
 
 describe("Test ShapefileUploadAndStyle component", () => {
     beforeEach((done) => {

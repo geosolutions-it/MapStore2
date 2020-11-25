@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const expect = require('expect');
-const Content = require('../Content');
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import Content from '../Content';
 describe('Content component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

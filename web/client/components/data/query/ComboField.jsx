@@ -5,18 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const assign = require('object-assign');
-const {getMessageById} = require('../../../utils/LocaleUtils');
+import React from 'react';
 
-const PropTypes = require('prop-types');
-const {Tooltip} = require('react-bootstrap');
-
-const OverlayTrigger = require('../../misc/OverlayTrigger').default;
-
-const {DropdownList, Multiselect} = require('react-widgets');
-
-const Message = require('../../../components/I18N/Message').default;
+import assign from 'object-assign';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import PropTypes from 'prop-types';
+import { Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import { DropdownList, Multiselect } from 'react-widgets';
+import Message from '../../../components/I18N/Message';
 
 class ComboField extends React.Component {
     static propTypes = {
@@ -156,4 +153,4 @@ class ComboField extends React.Component {
     }
 }
 
-module.exports = ComboField;
+export default ComboField;

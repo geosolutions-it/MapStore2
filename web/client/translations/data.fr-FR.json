@@ -27,6 +27,7 @@
         "showMore": "Montrer plus...",
         "collapse": "réduire",
         "expand": "étendre",
+        "Links": "Liens",
         "Forbidden": "Interdit",
         "layerNameChangeError": {
             "title": "Erreur de changement de nom",
@@ -390,14 +391,14 @@
                 "unsavedMapCancelButtonText": "Fermer"
             },
             "geostories": {
-                "newGeostory": "Nouvelle RécitCarte",
-                "title": "Stories ({count})",
-                "titleNoCount": "Stories",
-                "create": "Créer une RécitCarte",
-                "noGeostoryAvailable": "Aucune RécitCarte disponible",
-                "createANewOne": "Créer une nouvelle RécitCarte",
-                "deleteError": "Une erreur s'est produite lors de la suppression de la RécitCarte",
-                "errorLoadingGeostories": "Une erreur s'est produite lors du chargement des RécitCartes"
+                "newGeostory": "Nouvelle GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                "create": "Créer GeoStory",
+                "noGeostoryAvailable": "Pas de GeoStory disponible",
+                "createANewOne": "Créer une nouvelle GeoStory",
+                "deleteError": "Une erreur s'est produite lors de la suppression du GeoStory",
+                "errorLoadingGeostories": "Une erreur s'est produite lors du chargement de GeoStories"
             }
         },
         "map": {
@@ -1545,6 +1546,7 @@
             "backtosearch": "Retour à la recherche",
             "resultInfo": "{total, plural, =0 {aucun objet} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {aucun objet} =1 {{total} Objet} other {{total} Objets}}",
+            "selectedInfo": "( {selected} sélectionné )",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} de {totalPages}} other {Page {page} de {totalPages}}}",
             "pagination": {
                 "page": "Page",
@@ -1578,9 +1580,9 @@
                     "number": "Tapez un nombre ou une expression... Exemples : 10, > 2, < 10",
                     "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
                     "geometry": {
-                        "disabled": "Filtrez en cliquant sur la carte/ Maintenez ctrl et cliquez pour filtrer plusieurs",
-                        "enabled": "Cliquez sur la carte pour filtrer les résultats / Maintenez ctrl et cliquez pour filtrer plusieurs",
-                        "applied": "Supprimez le filtre en cliquant sur la carte"
+                        "disabled": "Filtrer en cliquant sur la carte / Alt + glisser la souris pour dessiner un filtre de boîte. Maintenez également la touche Ctrl pour ajouter plus de fonctionnalités au filtre actuel",
+                        "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
+                        "applied": "Nettoyer la sélection"
                     }
                 }
             },
@@ -1610,16 +1612,43 @@
                 "createNewChart": "Créer un graphique pour le calque sélectionné"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exporter des données",
             "format": "Format de fichier",
             "srs": "Système de référence spatiale",
             "export": "Export",
             "downloadonlycurrentpage": "Télécharger uniquement la page actuelle",
+            "cropDataSet": "Recadrer le jeu de données dans la fenêtre courante",
+            "downloadFilteredDataSet": "Télécharger l'ensemble de données filtré",
+            "advancedOptions": "Options avancées",
+            "compression": "Compression",
+            "tileWidth": "Largeur de tuile",
+            "tileHeight": "Hauteur des carreaux",
+            "quality": "Qualité",
             "error": {
                 "title": "Erreur lors de l'export",
-                "invalidOutputFormat": "Le format d'export sélectionné n'est pas disponible"
-            }
+                "invalidOutputFormat": "Le format d'export sélectionné n'est pas disponible",
+                "downloadEstimatorTitle": "Erreur DownloadEstimator",
+                "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez."
+            },
+            "exportResultsMessages": {
+                "newExport": "Die Datei ist hier verfügbar, wenn der Export abgeschlossen ist",
+                "exportFailure": "L'exportation pour le calque \"{layerTitle}\" a échoué! Ouvrez la boîte de dialogue des résultats d'exportation pour plus d'informations.",
+                "exportSuccess": "L'exportation pour le calque \"{layerTitle}\" s'est terminée avec succès.",
+                "invalidHref": "La réponse du serveur ne contenait pas d'adresse URL valide pour les fichiers exportés!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Le processus de téléchargement a échoué! Le serveur a renvoyé le rapport d'exception suivant: \"{exceptionReport}\"",
+                "badResponse": "Le processus de téléchargement a échoué! Le serveur a renvoyé des données incorrectes, code d'erreur: \"{errorCode}\"",
+                "executeProcessXhrFailed": "La requête ExecuteProcess a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
+                "getExecutionStatusXhrFailed": "La demande GetExecutionStatus a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
+                "unexpectedError": "Une erreur inattendue s'est produite"
+            },
+            "noSupportedServiceFound": "Le serveur ne prend pas en charge le téléchargement WFS ou WPS pour cette couche!"
+        },
+        "exportDataResults": {
+            "title": "Exporter les résultats des données",
+            "emptyStateMessage": "La liste d'exportation est vide"
         },
         "widgets": {
             "types": {
@@ -1762,6 +1791,15 @@
             "placeHolder": {
                 "default": "Sélectionnez un attribut"
             },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUM": "SUM",
+              "AVG": "AVG",
+              "STDDEV": "STDDEV",
+              "MIN": "MIN",
+              "MAX": "MAX",
+              "NONE": "Aucune opération"
+            },
             "groupByAttributes": {
                 "line": "Attributs X",
                 "pie": "Grouper par",
@@ -1809,25 +1847,33 @@
                 "bar": "Afficher la légende",
                 "gauge": "Afficher les étiquettes"
             },
-            "displayCartesian": {
-                "line": "Masquer la grille",
-                "bar": "Masquer la grille"
-            },
-            "xAxisAngle": {
-                "line": "Axe X: Angle de rotation de l'étiquette °",
-                "bar": "Axe X: Angle de rotation de l'étiquette °"
-            },
-            "yAxis": {
-                "line": "Masquer l'axe Y",
-                "bar": "Masquer l'axe Y"
-            },
-            "yAxisLabel": {
-                "line": "Étiquette de légende",
-                "bar": "Étiquette de légende"
-            },
-            "advancedOptions": {
-                "line": "Options avancées",
-                "bar": "Options avancées"
+            "advanced": {
+              "displayCartesian": "Masquer la grille",
+              "xAxis": "Axe X",
+              "xAxisAngle": "Rotation des étiquettes",
+              "hideLabels": "Masquer les libellés",
+              "format": "Format",
+              "prefix": "Prefix",
+              "suffix": "Suffixe",
+              "examples": "Exemples",
+              "formatExamples": "<div><ul><li><code>.0%</code>: pourcentage arrondi, '12%'</li><li><code>.2s</code>:SI -préfixe avec deux chiffres significatifs, '42M' </li> <li> <code>,.2r</code>: groupé des milliers avec deux chiffres significatifs '4 200'</li> </ul> <em>Plus d'informations sur la syntaxe de formatage <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\"> ici</a>.</em> </div> ",
+              "formula": "Formule",
+              "formulaExamples": "<div> Transformez la valeur à l'aide d'une formule. Utilisez la variable <code> valeur </code> dans l'expression: <h5> Exemples </h5> <ul> <li> <code> valeur + 2 </code></li><li> <code> valeur / 100 </code> </li> </ul> <em>Plus d'informations sur la syntaxe <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">ici </a>.</em></div> ",
+              "xAxisType": "Type",
+              "forceTicks": "Ne sauter les étiquettes",
+              "maxXAxisLabels": "Les libellés ne peuvent de toute façon pas dépasser {max}",
+              "yAxis": "axe Y",
+              "yAxisType": "Type",
+              "yAxisLabel": "Légende Libellé",
+              "title": "Options avancées",
+              "legend": "Legend",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Linear",
+                "category": "Catégorie",
+                "log": "Logarithme",
+                "date": "Date"
+              }
             },
             "tray": {
                 "title": "Widgets",
@@ -2694,7 +2740,7 @@
             "descriptionGeorchestra": "Affiche la version de GeOrchestra dans l'outil de paramètres de carte",
             "title": "Version"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Permet de télécharger des données de la table d'attributs",
             "title": "Télécharger les données"
           },
@@ -2757,8 +2803,8 @@
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
-                    "activatePlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
-                    "deactivatePlugin": "Désactiver le chargement de ce plugin au démarrage",
+                    "activatePlugin": "Activer ce plugin au chargement du contexte",
+                    "deactivatePlugin": "Désactiver ce plugin au chargement du contexte",
                     "editConfiguration": "Modifier la configuration du plugin",
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",

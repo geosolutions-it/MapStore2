@@ -5,20 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-require("../assets/css/maps.css");
 
-const {connect} = require('react-redux');
+import url from 'url';
 
-const url = require('url');
+import PropTypes from 'prop-types';
+import React from 'react';
+import {connect} from 'react-redux';
+
+import {resetControls} from '../../actions/controls';
+import {loadMaps} from '../../actions/maps';
+import Page from '../../containers/Page';
+import ConfigUtils from '../../utils/ConfigUtils';
+
+import("../assets/css/maps.css");
+
 const urlQuery = url.parse(window.location.href, true).query;
-const ConfigUtils = require('../../utils/ConfigUtils').default;
 
-const {resetControls} = require('../../actions/controls');
-const {loadMaps} = require('../../actions/maps');
-
-const Page = require('../../containers/Page');
 
 /**
   * @name Maps
@@ -61,7 +63,7 @@ class MapsPage extends React.Component {
     }
 }
 
-module.exports = connect((state) => ({
+export default connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {

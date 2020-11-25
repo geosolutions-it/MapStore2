@@ -5,14 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../../libs/ajax');
-const { toJSONPromise } = require('./common');
+import axios from '../../libs/ajax';
+
+import { toJSONPromise } from './common';
 
 /**
  * Implementation for GeoFence API of UserService that uses GeoFence REST API
  * This implementation interacts with the Stand-Alone version of GeoFence.
  */
-module.exports = ({ addBaseUrl }) => ({
+export default ({ addBaseUrl }) => ({
     getRolesCount: (filter = " ") => {
         const encodedFilter = encodeURIComponent(`%${filter}%`);
         return axios.get(`/groups/count/${encodedFilter}`, addBaseUrl({

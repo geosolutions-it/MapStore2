@@ -27,6 +27,7 @@ import {
     MODES,
     closeFeatureGridConfirm,
     clearChangeConfirmed,
+    saveSuccess,
     CLEAR_CHANGES,
     TOGGLE_TOOL,
     closeFeatureGridConfirmed,
@@ -49,8 +50,8 @@ import {
     DISABLE_TOOLBAR,
     DEACTIVATE_GEOMETRY_FILTER,
     SET_SELECTION_OPTIONS,
-    DESELECT_FEATURES,
-    SELECT_FEATURES
+    SELECT_FEATURES,
+    SET_PAGINATION
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
@@ -115,6 +116,7 @@ import {
     disableMultiSelect,
     selectFeaturesOnMapClickResult,
     enableGeometryFilterOnEditMode,
+    updateSelectedOnSaveOrCloseFeatureGrid,
     handleBoxSelectionDrawEnd,
     activateBoxSelectionTool,
     deactivateBoxSelectionTool,
@@ -1048,15 +1050,12 @@ describe('featuregrid Epics', () => {
     });
 
     it('test askChangesConfirmOnFeatureGridClose', (done) => {
-        testEpic(askChangesConfirmOnFeatureGridClose, 2, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(2);
+        testEpic(askChangesConfirmOnFeatureGridClose, 1, closeFeatureGridConfirm(), actions => {
+            expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
-                    break;
-                case SELECT_FEATURES:
-                    expect(action.type).toBe(SELECT_FEATURES);
                     break;
                 default:
                     expect(true).toBe(false);
@@ -1746,7 +1745,32 @@ describe('featuregrid Epics', () => {
             }
         }));
     });
-
+    describe('updateSelectedOnSaveOrCloseFeatureGrid', () => {
+        it('on Save', (done) => {
+            testEpic(
+                updateSelectedOnSaveOrCloseFeatureGrid,
+                1,
+                saveSuccess(),
+                ([a]) => {
+                    expect(a.type).toEqual(SELECT_FEATURES);
+                    expect(a.features.length).toEqual(0);
+                    done();
+                }
+            );
+        });
+        it('on Close', (done) => {
+            testEpic(
+                updateSelectedOnSaveOrCloseFeatureGrid,
+                1,
+                closeFeatureGrid(),
+                ([a]) => {
+                    expect(a.type).toEqual(SELECT_FEATURES);
+                    expect(a.features.length).toEqual(0);
+                    done();
+                }
+            );
+        });
+    });
     it('featureGridSort', done => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
@@ -2013,12 +2037,19 @@ describe('featuregrid Epics', () => {
         }, done);
     });
     it('enableGeometryFilterOnEditMode epic', (done) => {
-        const epicResponse = actions => {
-            expect(actions[0].type).toBe(UPDATE_FILTER);
+        const epicResponse = ([action]) => {
+            expect(action.type).toEqual(UPDATE_FILTER);
+            expect(action.append).toBeFalsy();
+            expect(action.update).toEqual({
+                attribute: "geometry", // state.query.featureTypes["editing:polygons"] --> of type gml:...
+                enabled: true,
+                type: "geometry"
+            });
             done();
         };
 
         const featureGridState1 = {
+            query: state.query,
             featuregrid: {
                 mode: "EDIT",
                 filters: {}
@@ -2063,7 +2094,7 @@ describe('featuregrid Epics', () => {
             featureGridState2
         );
     });
-    it('featureGridUpdateFilter with geometry filter', (done) => {
+    it('featureGridUpdateFilter with geometry filter disable virtual scroll and trigger update query on every filter update', (done) => {
         const startActions = [openFeatureGrid(), createQuery(), updateFilter({
             type: 'geometry',
             enabled: true
@@ -2071,13 +2102,31 @@ describe('featuregrid Epics', () => {
             type: 'geometry',
             enabled: true,
             value: {}
+        }), updateFilter({
+            type: 'geometry',
+            enabled: true,
+            value: { something: "else"}
+        }), updateFilter({
+            type: 'geometry',
+            enabled: false
         })];
-        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(UPDATE_QUERY);
-            expect(actions[0].reason).toBe('geometry');
+        testEpic(featureGridUpdateGeometryFilter, 6, startActions, ([setPaginationAction, selectFeaturesAction, updateQueryAction, updateQueryAction2, resetPaginationAction, updateQueryAction3]) => {
+            expect(setPaginationAction.type).toBe(SET_PAGINATION); // disable virtual scroll
+            expect(setPaginationAction.size).toBe(100000);
+            expect(selectFeaturesAction.type).toBe(SELECT_FEATURES); // reset current selected when enter in this filter mode.
+            expect(updateQueryAction.type).toBe(UPDATE_QUERY);
+            expect(updateQueryAction.reason).toBe('geometry');
+            expect(updateQueryAction2.type).toBe(UPDATE_QUERY);
+            expect(updateQueryAction2.reason).toBe('geometry');
+            expect(resetPaginationAction.type).toBe(SET_PAGINATION);
+            expect(resetPaginationAction.size).toBe(20);
+            expect(updateQueryAction3.type).toBe(UPDATE_QUERY);
+            expect(updateQueryAction3.reason).toBe('geometry');
         }, {
             featuregrid: {
+                pagination: {
+                    size: 20
+                },
                 selectedLayer: 'layer'
             },
             layers: [{
@@ -2086,32 +2135,37 @@ describe('featuregrid Epics', () => {
             }]
         }, done);
     });
-    it('featureGridUpdateFilter initiates query when geometry filter is disabled after feature grid opens', done => {
+    it('featureGridUpdateFilter restore virtual scroll when closed', (done) => {
         const startActions = [openFeatureGrid(), createQuery(), updateFilter({
             type: 'geometry',
-            enabled: false
-        })];
-
-        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(UPDATE_QUERY);
-            expect(actions[0].reason).toBe('geometry');
+            enabled: true
+        }), updateFilter({
+            type: 'geometry',
+            enabled: true,
+            value: {}
+        }), closeFeatureGrid()];
+        testEpic(featureGridUpdateGeometryFilter, 6, startActions, ([setPaginationAction, selectFeaturesAction, updateQueryAction, resetPaginationAction, updateFilterAction, updateQuery]) => {
+            expect(setPaginationAction.type).toBe(SET_PAGINATION); // disable virtual scroll
+            expect(setPaginationAction.size).toBe(100000);
+            expect(updateQueryAction.type).toBe(UPDATE_QUERY);
+            expect(selectFeaturesAction.type).toBe(SELECT_FEATURES); // reset current selected when enter in this filter mode.
+            expect(updateQueryAction.reason).toBe('geometry');
+            expect(resetPaginationAction.type).toBe(SET_PAGINATION);
+            expect(resetPaginationAction.size).toBe(20);
+            expect(resetPaginationAction.size).toBe(20);
+            // the filter is reset
+            expect(updateFilterAction.type).toBe(UPDATE_FILTER);
+            expect(updateFilterAction.update.enabled).toBe(false);
+            expect(updateFilterAction.update.attribute).toBe("geometry");
+            expect(updateQuery.type).toBe(UPDATE_QUERY); // ensure that also the query is updated at all.
         }, {
             featuregrid: {
-                selectedLayer: 'layer',
-                filters: {
-                    geom: {
-                        attribute: 'geom',
-                        enabled: true,
-                        type: 'geometry',
-                        value: {
-                            attribute: 'geom',
-                            method: 'Circle',
-                            operation: 'INTERSECTS'
-                        }
-                    }
-                }
+                pagination: {
+                    size: 20
+                },
+                selectedLayer: 'layer'
             },
+            query: state.query,
             layers: [{
                 id: 'layer',
                 name: 'layer'
@@ -2176,22 +2230,28 @@ describe('featuregrid Epics', () => {
             expect(actions[0].status).toBe('start');
         }, {}, done);
     });
-    it('deactivateBoxSelectionTool', (done) => {
+    describe('deactivateBoxSelectionTool', () => {
         const startActions = [
             updateFilter({
                 type: 'geometry',
                 enabled: false
             })];
-        testEpic(deactivateBoxSelectionTool, 1, startActions, actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
-            expect(actions[0].status).toBe('end');
-        }, {}, done);
-        testEpic(deactivateBoxSelectionTool, 1, closeFeatureGridConfirm(), actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
-            expect(actions[0].status).toBe('end');
-        }, {}, done);
+        it('on filter disable', (done) => {
+            testEpic(deactivateBoxSelectionTool, 1, startActions, actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+                expect(actions[0].status).toBe('end');
+            }, {}, done);
+        });
+        it('on FG close', (done) => {
+            testEpic(deactivateBoxSelectionTool, 1, closeFeatureGrid(), actions => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(CHANGE_BOX_SELECTION_STATUS);
+                expect(actions[0].status).toBe('end');
+            }, {}, done);
+        });
+
+
     });
     it('disableMultiSelect epic', (done) => {
         const geomFilter = {
@@ -2208,38 +2268,6 @@ describe('featuregrid Epics', () => {
         }, {}, done);
     });
     describe('selectFeaturesOnMapClickResult epic', () => {
-        it('should deselect feature that is already selected and clicked when ctrl or metaKey held', (done) => {
-            const stateObj = {
-                featuregrid: {
-                    multiselect: true,
-                    select: [{id: "ft_id"}, {id: "ft_id_2"}]
-                }
-            };
-            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
-            testEpic(selectFeaturesOnMapClickResult, 1, startActions, actions => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toEqual(DESELECT_FEATURES);
-                expect(actions[0].features).toEqual([{id: "ft_id"}]);
-            }, stateObj, done);
-        });
-        it('should update geometry filter with enabled false when only feature selected is clicked, ctrl and metaKey are held', (done) => {
-            const stateObj = {
-                featuregrid: {
-                    multiselect: true,
-                    select: [{id: "ft_id"}]
-                }
-            };
-            const startActions = [querySearchResponse({features: [{id: "ft_id"}]}, "", {}, {}, "geometry")];
-            testEpic(selectFeaturesOnMapClickResult, 3, startActions, actions => {
-                expect(actions.length).toBe(3);
-                expect(actions[0].type).toEqual(UPDATE_FILTER);
-                expect(actions[0].update.enabled).toBe(false);
-                expect(actions[1].type).toEqual(DESELECT_FEATURES);
-                expect(actions[1].features).toEqual([{id: "ft_id"}]);
-                expect(actions[2].type).toBe(SET_SELECTION_OPTIONS);
-                expect(actions[2].multiselect).toBe(false);
-            }, stateObj, done);
-        });
         it('should append to selected features, ctrl and metaKey are held', (done) => {
             const stateObj = {
                 featuregrid: {

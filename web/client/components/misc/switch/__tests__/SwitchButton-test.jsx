@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 
-const expect = require('expect');
-const SwitchButton = require('../SwitchButton');
+import SwitchButton from '../SwitchButton';
+
 describe('SwitchButton component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -37,5 +38,11 @@ describe('SwitchButton component', () => {
         const input = document.getElementsByTagName('input')[0];
         ReactTestUtils.Simulate.change(input); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
+    });
+    it('Test disabled', () => {
+        ReactDOM.render(<SwitchButton disabled />, document.getElementById("container"));
+        const input = document.getElementsByTagName('input')[0];
+        expect(input.disabled).toBeTruthy();
+
     });
 });

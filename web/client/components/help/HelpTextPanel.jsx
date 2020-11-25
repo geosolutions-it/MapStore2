@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,12 +7,11 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {Panel, Glyphicon} = require('react-bootstrap');
+import React from 'react';
 
-const Dialog = require('../misc/Dialog');
-
-require("./help.css");
+import { Panel, Glyphicon } from 'react-bootstrap';
+import Dialog from '../misc/Dialog';
+import './help.css';
 
 /**
  * A panel showning th current selectd help text.
@@ -66,4 +66,4 @@ class HelpTextPanel extends React.Component {
     }
 }
 
-module.exports = HelpTextPanel;
+export default HelpTextPanel;

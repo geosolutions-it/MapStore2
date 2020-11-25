@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const GrabMap = require("./GrabMap");
+
 /**
  * The Preview for Leaflet.
  * The preview can use the same React Class.

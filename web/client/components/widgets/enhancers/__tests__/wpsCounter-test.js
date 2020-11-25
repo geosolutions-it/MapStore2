@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const expect = require('expect');
-const wpsCounter = require('../wpsCounter');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+
+import wpsCounter from '../wpsCounter';
 
 describe('wpsChart enhancer', () => {
     beforeEach((done) => {

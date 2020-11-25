@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Radio} = require('react-bootstrap');
-const {getMessageById} = require('../../utils/LocaleUtils');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Radio } from 'react-bootstrap';
+import { getMessageById } from '../../utils/LocaleUtils';
 
 class PrintOptions extends React.Component {
     static propTypes = {
@@ -62,4 +63,4 @@ class PrintOptions extends React.Component {
     };
 }
 
-module.exports = PrintOptions;
+export default PrintOptions;

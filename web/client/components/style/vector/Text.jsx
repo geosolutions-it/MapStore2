@@ -6,19 +6,19 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const Combobox = require('react-widgets').Combobox;
-const Slider = require('react-nouislider');
-const IntlNumberFormControl = require('../../I18N/IntlNumberFormControl');
+import PropTypes from 'prop-types';
 
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import React from 'react';
+import { Combobox } from 'react-widgets';
+import Slider from 'react-nouislider';
+import IntlNumberFormControl from '../../I18N/IntlNumberFormControl';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 // not sure this is needed, TODO check!
 numberLocalizer();
 
-const Message = require('../../I18N/Message').default;
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const {createFont} = require('../../../utils/AnnotationsUtils');
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import { createFont } from '../../../utils/AnnotationsUtils';
 
 /**
  * Styler for the stroke properties of a vector style
@@ -226,4 +226,4 @@ class Text extends React.Component {
     }
 }
 
-module.exports = Text;
+export default Text;

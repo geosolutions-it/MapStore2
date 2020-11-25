@@ -7,15 +7,16 @@
 */
 
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const Combobox = require('react-widgets').Combobox;
-const {Glyphicon, Tooltip} = require('react-bootstrap');
-const AutocompleteListItem = require('./AutocompleteListItem');
-const {getMessageById} = require('../../../utils/LocaleUtils');
-const {isLikeOrIlike} = require('../../../utils/FilterUtils');
-const OverlayTrigger = require('../../../components/misc/OverlayTrigger').default;
-const HTML = require('../../../components/I18N/HTML');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { Combobox } from 'react-widgets';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import AutocompleteListItem from './AutocompleteListItem';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import { isLikeOrIlike } from '../../../utils/FilterUtils';
+import OverlayTrigger from '../../../components/misc/OverlayTrigger';
+import HTML from '../../../components/I18N/HTML';
 /**
  * Combobox with remote autocomplete functionality.
  * @memberof components.query
@@ -167,4 +168,4 @@ class AutocompleteField extends React.Component {
     };
 }
 
-module.exports = AutocompleteField;
+export default AutocompleteField;

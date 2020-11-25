@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const ZoneField = require('../ZoneField.jsx');
-const {featureCollection} = require('../../../../test-resources/featureCollectionZone.js');
-
-const expect = require('expect');
+import ReactDOM from 'react-dom';
+import ZoneField from '../ZoneField.jsx';
+import { featureCollection } from '../../../../test-resources/featureCollectionZone.js';
+import expect from 'expect';
 
 describe('ZoneField', () => {
 

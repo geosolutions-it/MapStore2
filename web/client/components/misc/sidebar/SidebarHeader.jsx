@@ -5,5 +5,6 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const React = require('react');
-module.exports = ({title} = {}) => <div className="sidebar-title"><h3 className="sidebar-title ">{title}</h3></div>;
+import React from 'react';
+
+export default ({title} = {}) => <div className="sidebar-title"><h3 className="sidebar-title ">{title}</h3></div>;

@@ -5,12 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {bindActionCreators} = require('redux');
-const {connect} = require('react-redux');
-const assign = require('object-assign');
-const {getUserGroups, editGroup, deleteGroup} = require('../../../actions/usergroups');
-const PaginationToolbar = require('./GroupsPaginationToolbar');
+
+import assign from 'object-assign';
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { deleteGroup, editGroup, getUserGroups } from '../../../actions/usergroups';
+import GroupGrid from '../../../components/manager/users/GroupGrid';
+import PaginationToolbar from './GroupsPaginationToolbar';
 
 const mapStateToProps = (state) => {
     const usergroups = state && state.usergroups;
@@ -43,4 +46,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         }
     });
 };
-module.exports = connect(mapStateToProps, mapDispatchToProps, mergeProps, {pure: false})(require('../../../components/manager/users/GroupGrid'));
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps, {pure: false})(GroupGrid);

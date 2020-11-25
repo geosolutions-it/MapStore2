@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,12 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
-const {Button, Glyphicon} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
-
-const Message = require('../I18N/Message').default;
+import { Button, Glyphicon } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
+import Message from '../I18N/Message';
 
 class PrintSubmit extends React.Component {
     static propTypes = {
@@ -43,4 +43,4 @@ class PrintSubmit extends React.Component {
     }
 }
 
-module.exports = PrintSubmit;
+export default PrintSubmit;

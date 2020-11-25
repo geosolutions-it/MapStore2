@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const AttributesEditor = require('../AttributesEditor.jsx');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import AttributesEditor from '../AttributesEditor.jsx';
 const constraints = {
     attributes: {
         attribute: {access: "READONLY", name: "cat"}

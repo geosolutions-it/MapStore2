@@ -6,21 +6,23 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {Row, Col} = require('react-bootstrap');
-const {isNil} = require('lodash');
-const tinycolor = require("tinycolor2");
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { Row, Col } from 'react-bootstrap';
+import { isNil } from 'lodash';
+import tinycolor from 'tinycolor2';
 
 // number localizer?
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
+
 // not sure this is needed, TODO check!
 numberLocalizer();
 
-const Message = require('../../I18N/Message').default;
-const OpacitySlider = require('../../TOC/fragments/OpacitySlider');
-const ColorSelector = require('../ColorSelector').default;
-const {addOpacityToColor} = require('../../../utils/VectorStyleUtils');
+import Message from '../../I18N/Message';
+import OpacitySlider from '../../TOC/fragments/OpacitySlider';
+import ColorSelector from '../ColorSelector';
+import { addOpacityToColor } from '../../../utils/VectorStyleUtils';
 
 /**
  * Styler for the stroke properties of a vector style
@@ -77,4 +79,4 @@ class Fill extends React.Component {
     }
 }
 
-module.exports = Fill;
+export default Fill;

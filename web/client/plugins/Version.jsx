@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
-const {versionSelector} = require('../selectors/version');
-const Message = require('../components/I18N/Message').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { versionSelector } from '../selectors/version';
+import Message from '../components/I18N/Message';
 
 /**
   * Version Plugin. Shows current MapStore2 version in settings panel
@@ -36,7 +37,7 @@ const Version = connect((state) => ({
     }
     });
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
 class Empty extends React.Component {
     render() {
@@ -44,7 +45,7 @@ class Empty extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     VersionPlugin: assign(Empty, {
         Settings: {
             tool: <Version key="version"/>,

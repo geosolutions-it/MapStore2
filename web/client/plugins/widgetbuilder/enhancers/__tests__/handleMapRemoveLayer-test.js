@@ -9,11 +9,12 @@
 */
 
 // dependencies
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const ReactTestUtils = require('react-dom/test-utils');
-const handleMapRemoveLayer = require('../handleMapRemoveLayer');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import ReactTestUtils from 'react-dom/test-utils';
+import handleMapRemoveLayer from '../handleMapRemoveLayer';
 const CMP = handleMapRemoveLayer((props) => <button id="CMP" onClick={() => props.onRemoveSelected()} />);
 
 describe('handleMapRemoveLayer enhancer', function() {

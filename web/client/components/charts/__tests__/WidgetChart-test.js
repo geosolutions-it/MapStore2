@@ -167,7 +167,7 @@ describe('Widget Chart: data conversions ', () => {
                 // LAYOUT
 
                 // minimal margins, bottom automatic
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
+                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
 
                 // colors generated are the defaults, generated on series (1 color for series, so 1)
                 expect(layout.colorway).toEqual(defaultColorGenerator(1, COLOR_DEFAULTS));
@@ -190,50 +190,47 @@ describe('Widget Chart: data conversions ', () => {
                 expect(data[0].name).toEqual("TEST_LABEL");
             });
         });
-        it('xAxisAngle and relative bottom margin', () => {
-            testAllTypes({
-                ...DATASET_1,
-                xAxisAngle: 0
-            }, ({ layout }) => {
-                // bottom margin is optimized
-                expect(layout.margin).toEqual({ t: 5, b: 25, l: 5, r: 5, pad: 4 });
-                expect(layout.xaxis.tickangle).toEqual(0);
-            });
-            testAllTypes({
-                ...DATASET_1,
-                xAxisAngle: 90
-            }, ({ layout }) => {
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
-                expect(layout.xaxis.tickangle).toEqual(90);
-            });
-        });
-        it('yAxis amd relative left margin', () => {
-            testAllTypes({
-                ...DATASET_1
-            }, ({ layout }) => {
-                // bottom margin is optimized
-                expect(layout.yaxis.showticklabels).toBe(false); // false by default
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
-            });
-            testAllTypes({
-                ...DATASET_1,
-                yAxis: true
-            }, ({ layout }) => {
-                // bottom margin is optimized
-                expect(layout.yaxis.showticklabels).toBe(true);
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: undefined, r: 5, pad: 4 });
-            });
-        });
         it('cartesian to show/hide grid', () => {
             testAllTypes({
                 ...DATASET_1,
                 cartesian: true
             }, ({ layout }) => {
                 // bottom margin is optimized
-                expect(layout.yaxis.showgrid).toBe(true); // false by default
-                expect(layout.margin).toEqual({ t: 5, b: undefined, l: 5, r: 5, pad: 4 });
+                expect(layout.yaxis.showgrid).toBe(true);
+                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
             });
 
+        });
+        it('nTicks passed to force to show all labels, max nTicks', () => {
+            testAllTypes({
+                ...DATASET_1,
+                xAxisOpts: { nTicks: 200}
+            }, ({ layout }) => {
+                // bottom margin is optimized
+                expect(layout.xaxis.nticks).toBe(200);
+            });
+
+        });
+
+        it('check yAxis, prefix, format, suffix', () => {
+            testAllTypes({
+                ...DATASET_1,
+                yAxisOpts: { tickPrefix: "test", format: ".2s", tickSuffix: "W/h" }
+            }, ({ layout }) => {
+                // bottom margin is optimized
+                expect(layout.yaxis.tickprefix).toBe("test");
+                expect(layout.yaxis.tickformat).toBe(".2s");
+                expect(layout.yaxis.ticksuffix).toBe("W/h");
+            });
+        });
+        it('check formula', () => {
+            testAllTypes({
+                ...DATASET_1,
+                formula: "value * 2"
+            }, ({ data }) => {
+                // bottom margin is optimized
+                data[0].y.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.series[0].dataKey] * 2));
+            });
         });
     });
 });

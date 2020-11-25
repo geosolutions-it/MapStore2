@@ -11,7 +11,7 @@
 /**
   * Buttons for Identify Tool Toolbar
   */
-module.exports = ({
+export default ({
     showHighlightFeatureButton,
     currentFeature,
     highlight,

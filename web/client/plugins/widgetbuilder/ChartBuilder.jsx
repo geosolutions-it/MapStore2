@@ -37,7 +37,7 @@ const Builder = connect(
     },
     wizardStateToProps
 )(compose(
-    builderConfiguration,
+    builderConfiguration({needWPS: false}),
     renameProps({
         editorData: "data",
         onEditorChange: "onChange"

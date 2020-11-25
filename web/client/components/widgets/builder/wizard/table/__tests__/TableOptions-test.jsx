@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { get } = require('lodash');
-const describeStates = require('../../../../../../test-resources/wfs/describe-states.json');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
+import expect from 'expect';
+import { get } from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 
-const TableOptions = require('../TableOptions');
+import describeStates from '../../../../../../test-resources/wfs/describe-states.json';
+import TableOptions from '../TableOptions';
+
 describe('TableOptions component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

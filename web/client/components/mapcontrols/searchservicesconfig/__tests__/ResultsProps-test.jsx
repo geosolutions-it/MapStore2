@@ -6,12 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
-const ResultsProps = require('../ResultsProps');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import ResultsProps from '../ResultsProps';
 
 describe("test ResultProps component", () => {
     beforeEach((done) => {

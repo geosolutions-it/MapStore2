@@ -1,8 +1,9 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const expect = require('expect');
-const clickHandlers = require('../customTimesHandlers');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+
+import clickHandlers from '../customTimesHandlers';
 const CURRENT_TIME = "2016-01-01T00:00:00.001Z";
 const CURRENT_OFFSET = "2017-01-01T00:00:00.001Z";
 const CURRENT_PLAYBACK_START = "2016-01-01T00:00:00.001Z";

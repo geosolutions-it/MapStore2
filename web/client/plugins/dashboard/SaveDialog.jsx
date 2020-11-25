@@ -5,21 +5,27 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { connect } = require('react-redux');
-const { compose } = require('recompose');
-const { createSelector } = require('reselect');
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+import { createSelector } from 'reselect';
 
-const { userSelector } = require('../../selectors/security');
-const { widgetsConfig } = require('../../selectors/widgets');
-const { isShowSaveOpen, dashboardResource, isDashboardLoading, getDashboardSaveErrors } = require('../../selectors/dashboard');
-const { saveDashboard, triggerSave } = require('../../actions/dashboard');
-const handleSaveModal = require('../../components/resources/modals/enhancers/handleSaveModal').default;
+import { saveDashboard, triggerSave } from '../../actions/dashboard';
+import handleSaveModal from '../../components/resources/modals/enhancers/handleSaveModal';
+import Save from '../../components/resources/modals/Save';
+import {
+    dashboardResource,
+    getDashboardSaveErrors,
+    isDashboardLoading,
+    isShowSaveOpen
+} from '../../selectors/dashboard';
+import { userSelector } from '../../selectors/security';
+import { widgetsConfig } from '../../selectors/widgets';
 
 /**
  * Save dialog component enhanced for dashboard
  *
  */
-module.exports = compose(
+export default compose(
     connect(createSelector(
         isShowSaveOpen,
         dashboardResource,
@@ -33,4 +39,4 @@ module.exports = compose(
         onSave: saveDashboard
     }),
     handleSaveModal
-)(require('../../components/resources/modals/Save'));
+)(Save);

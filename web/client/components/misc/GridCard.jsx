@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Toolbar = require('./toolbar/Toolbar');
-require('./style/gridcard.css');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import Toolbar from './toolbar/Toolbar';
+import './style/gridcard.css';
 
 class GridCard extends React.Component {
     static propTypes = {
@@ -54,4 +55,4 @@ class GridCard extends React.Component {
     }
 }
 
-module.exports = GridCard;
+export default GridCard;

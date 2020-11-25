@@ -6,20 +6,32 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {Alert, Tabs, Tab, Button, Glyphicon, Checkbox, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const tooltip = require('../../../components/misc/enhancers/tooltip');
-const GlyphiconTooltip = tooltip(Glyphicon);
-const Dialog = require('../../../components/misc/Dialog');
-const UserGroups = require('./UserGroups');
-const assign = require('object-assign');
-const Message = require('../../../components/I18N/Message').default;
-const Spinner = require('react-spinkit');
-const {findIndex} = require('lodash');
-const CloseConfirmButton = require('./CloseConfirmButton').default;
+import PropTypes from 'prop-types';
 
-require('./style/userdialog.css');
+import React from 'react';
+
+import {
+    Alert,
+    Tabs,
+    Tab,
+    Button,
+    Glyphicon,
+    Checkbox,
+    FormControl,
+    FormGroup,
+    ControlLabel
+} from 'react-bootstrap';
+
+import tooltip from '../../../components/misc/enhancers/tooltip';
+const GlyphiconTooltip = tooltip(Glyphicon);
+import Dialog from '../../../components/misc/Dialog';
+import UserGroups from './UserGroups';
+import assign from 'object-assign';
+import Message from '../../../components/I18N/Message';
+import Spinner from 'react-spinkit';
+import { findIndex } from 'lodash';
+import CloseConfirmButton from './CloseConfirmButton';
+import './style/userdialog.css';
 
 /**
  * A Modal window to show password reset form
@@ -328,4 +340,4 @@ class UserDialog extends React.Component {
     };
 }
 
-module.exports = UserDialog;
+export default UserDialog;

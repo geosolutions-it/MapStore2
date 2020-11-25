@@ -5,12 +5,12 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const addI18NProps = require('../../../components/I18N/enhancers/addI18NProps');
+import addI18NProps from '../../../components/I18N/enhancers/addI18NProps';
 
 // number format localization for measurements
 const addFormatNumber = addI18NProps(['formatNumber']);
 
-module.exports = {
+export default {
     LMap: require('../../../components/map/openlayers/Map').default,
     Layer: require('../../../components/map/openlayers/Layer').default,
     Feature: require('../../../components/map/openlayers/Feature').default,

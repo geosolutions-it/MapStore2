@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const { describeDomains, getHistogram, getDomainValues, getMultidimURL } = require('../MultiDim');
+import expect from 'expect';
+
+import { describeDomains, getHistogram, getDomainValues, getMultidimURL } from '../MultiDim';
 
 describe('MultiDim API', () => {
     it('describeDomains', (done) => {

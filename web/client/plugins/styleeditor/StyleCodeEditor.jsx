@@ -6,59 +6,48 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState }  from 'react';
-
-import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
-import inlineWidgets from './inlineWidgets';
+import isObject from 'lodash/isObject';
+import React, { useState }  from 'react';
+import { Alert, Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
 import {
     editStyleCode,
-    updateEditorMetadata,
-    errorStyle
+    errorStyle,
+    updateEditorMetadata
 } from '../../actions/styleeditor';
-
+import SLDService from '../../api/SLDService';
 import {
-    getColors,
-    methods
-} from '../../api/SLDService';
-
-import { getEditorMode } from '../../utils/StyleEditorUtils';
-
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
-import {
-    codeStyleSelector,
-    geometryTypeSelector,
-    formatStyleSelector,
-    loadingStyleSelector,
-    errorStyleSelector,
-    layerPropertiesSelector,
-    getUpdatedLayer,
-    styleServiceSelector,
-    editorMetadataSelector,
-    canEditStyleSelector
-} from '../../selectors/styleeditor';
-
-import {
-    scalesSelector,
-    mapSelector
-} from '../../selectors/map';
-
+    classificationRaster,
+    classificationVector
+} from '../../api/StyleEditor';
+import Message from '../../components/I18N/Message';
+import BorderLayout from '../../components/layout/BorderLayout';
+import Loader from '../../components/misc/Loader';
+import Toolbar from '../../components/misc/toolbar/Toolbar';
 import TextareaEditor from '../../components/styleeditor/Editor';
 import VisualStyleEditor from '../../components/styleeditor/VisualStyleEditor';
-
-import BorderLayout from '../../components/layout/BorderLayout';
-import Toolbar from '../../components/misc/toolbar/Toolbar';
-import Message from '../../components/I18N/Message';
-import Loader from '../../components/misc/Loader';
-
-import { Alert, Glyphicon } from 'react-bootstrap';
-import { createShallowSelector } from '../../utils/ReselectUtils';
 import {
-    classificationVector,
-    classificationRaster
-} from '../../api/StyleEditor';
+    mapSelector,
+    scalesSelector
+} from '../../selectors/map';
+import {
+    canEditStyleSelector,
+    codeStyleSelector,
+    editorMetadataSelector,
+    errorStyleSelector,
+    formatStyleSelector,
+    geometryTypeSelector,
+    getUpdatedLayer,
+    layerPropertiesSelector,
+    loadingStyleSelector,
+    styleServiceSelector
+} from '../../selectors/styleeditor';
+import { createShallowSelector } from '../../utils/ReselectUtils';
+import { getEditorMode } from '../../utils/StyleEditorUtils';
+import inlineWidgets from './inlineWidgets';
 
 const styleUpdateTypes = {
     'classificationVector': classificationVector,
@@ -114,7 +103,7 @@ const ConnectedVisualStyleEditor = connect(
             fonts: styleService.fonts || [],
             methods: (geometryType === 'raster'
                 ? styleService?.classificationMethods?.raster
-                : styleService?.classificationMethods?.vector) || methods
+                : styleService?.classificationMethods?.vector) || SLDService.methods
         })
     ),
     {
@@ -123,7 +112,7 @@ const ConnectedVisualStyleEditor = connect(
 )(VisualStyleEditor);
 
 ConnectedVisualStyleEditor.defaultProps = {
-    getColors,
+    getColors: SLDService.getColors,
     styleUpdateTypes
 };
 

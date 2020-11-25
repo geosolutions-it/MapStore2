@@ -5,11 +5,11 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const expect = require('expect');
-const RulesGrid = require('../RulesGrid');
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import RulesGrid from '../RulesGrid';
 
 
 describe('Test RulesGrid component', () => {

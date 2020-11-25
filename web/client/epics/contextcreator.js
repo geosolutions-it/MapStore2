@@ -225,9 +225,9 @@ export const deleteTemplateEpic = (action$, store) => action$
     .ofType(DELETE_TEMPLATE)
     .switchMap(({resource}) => deleteResource(resource).map(() => {
         const state = store.getState();
-        const newContext = newContextSelector(state);
+        const templates = templatesSelector(state) || [];
 
-        return setTemplates(get(newContext, 'templates', []).filter(template => template.id !== resource.id));
+        return setTemplates(templates.filter(template => template.id !== resource.id));
     }).let(wrapStartStop(
         loading(true, "loading"),
         loading(false, "loading"),
@@ -247,7 +247,7 @@ export const editTemplateEpic = (action$, store) => action$
     .ofType(EDIT_TEMPLATE)
     .switchMap(({id}) => {
         const state = store.getState();
-        const template = find(get(newContextSelector(state), 'templates', []), t => t.id === id) || {};
+        const template = find(templatesSelector(state), t => t.id === id) || {};
 
         return (id ? Rx.Observable.defer(() => Api.getData(id)) : Rx.Observable.of(null))
             .switchMap(data => Rx.Observable.of(
@@ -275,9 +275,8 @@ export const resetOnShowDialog = (action$, store) => action$
     .ofType(SHOW_DIALOG)
     .flatMap(({dialogName, show: showDialogBool}) => {
         const state = store.getState();
-        const context = newContextSelector(state) || {};
         const editedTemplateId = editedTemplateSelector(state);
-        const templates = context.templates || [];
+        const templates = templatesSelector(state) || [];
 
         return showDialogBool ?
             Rx.Observable.of(...(dialogName === 'uploadTemplate' && !editedTemplateId ? [setFileDropStatus(), setParsedTemplate()] : []),

@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var createReactClass = require('create-react-class');
-var assign = require('object-assign');
-const {CSSTransitionGroup} = require('react-transition-group');
+import React from 'react';
+
+import createReactClass from 'create-react-class';
+import assign from 'object-assign';
+import { CSSTransitionGroup } from 'react-transition-group';
 
 var Node = createReactClass({
     displayName: 'Node',
@@ -66,4 +68,4 @@ var Node = createReactClass({
     }
 });
 
-module.exports = Node;
+export default Node;

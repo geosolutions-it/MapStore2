@@ -6,16 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { get } = require('lodash');
-const { FormGroup, ControlLabel, FormControl, Label, Checkbox } = require('react-bootstrap');
-const Slider = require('react-nouislider');
-const assign = require('object-assign');
-const PropTypes = require('prop-types');
-const Select = require("react-select").default;
+import React from 'react';
 
-const Message = require('../../I18N/Message').default;
-const {getMessageById} = require('../../../utils/LocaleUtils');
+import { get } from 'lodash';
+import { FormGroup, ControlLabel, FormControl, Label, Checkbox } from 'react-bootstrap';
+import Slider from 'react-nouislider';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import Select from 'react-select';
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 function validate(service = {}) {
     return service.displayName && service.displayName.length > 0;
@@ -146,4 +146,4 @@ class ResultsProps extends React.Component {
     };
 }
 
-module.exports = { Element: ResultsProps, validate};
+export default { Element: ResultsProps, validate};

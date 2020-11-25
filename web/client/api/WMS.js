@@ -6,21 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const urlUtil = require('url');
-const assign = require('object-assign');
-const xml2js = require('xml2js');
-const {isArray, castArray, get} = require('lodash');
+import urlUtil from 'url';
 
-const axios = require('../libs/ajax');
-const {getConfigProp} = require('../utils/ConfigUtils');
-const {getWMSBoundingBox} = require('../utils/CoordinatesUtils');
-const _ = require('lodash');
+import _ from 'lodash';
+import assign from 'object-assign';
+import xml2js from 'xml2js';
+
+import axios from '../libs/ajax';
+import { getConfigProp } from '../utils/ConfigUtils';
+import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 
 const capabilitiesCache = {};
 
 
 export const parseUrl = (urls) => {
-    const url = (isArray(urls) && urls || urls.split(','))[0];
+    const url = (_.isArray(urls) && urls || urls.split(','))[0];
     const parsed = urlUtil.parse(url, true);
     return urlUtil.format(assign({}, parsed, {search: null}, {
         query: assign({
@@ -52,21 +52,21 @@ export const parseUrl = (urls) => {
 export const extractCredits = attribution => {
     const title = attribution && attribution.Title;
     const logo = attribution.LogoURL && {
-        ...(get(attribution, 'LogoURL.$') || {}),
-        format: get(attribution, 'LogoURL.Format') // e.g. image/png
+        ...(_.get(attribution, 'LogoURL.$') || {}),
+        format: _.get(attribution, 'LogoURL.Format') // e.g. image/png
     };
-    const link = get(attribution, 'OnlineResource.$["xlink:href"]');
+    const link = _.get(attribution, 'OnlineResource.$["xlink:href"]');
     return {
         title,
         logo,
-        imageUrl: get(attribution, 'LogoURL.OnlineResource.$["xlink:href"]'),
+        imageUrl: _.get(attribution, 'LogoURL.OnlineResource.$["xlink:href"]'),
         link
     };
 };
 
 
 export const flatLayers = (root) => {
-    return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
+    return root.Layer ? (_.isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
         return previous.concat(flatLayers(current)).concat(current.Layer && current.Name ? [current] : []);
     }, []) : root.Name && [root] || [];
 };
@@ -81,7 +81,7 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
     const rootFormats = root.Request && root.Request.GetMap && root.Request.GetMap.Format || [];
     const layersObj = flatLayers(root);
-    const layers = isArray(layersObj) ? layersObj : [layersObj];
+    const layers = _.isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
         .filter((layer) => !text || layer.Name.toLowerCase().indexOf(text.toLowerCase()) !== -1 || layer.Title && layer.Title.toLowerCase().indexOf(text.toLowerCase()) !== -1 || layer.Abstract && layer.Abstract.toLowerCase().indexOf(text.toLowerCase()) !== -1);
     return {
@@ -99,8 +99,8 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
 };
 
 export const getDimensions = (layer) => {
-    return castArray(layer.Dimension || layer.dimension || []).map((dim, index) => {
-        const extent = (layer.Extent && castArray(layer.Extent)[index] || layer.extent && castArray(layer.extent)[index]);
+    return _.castArray(layer.Dimension || layer.dimension || []).map((dim, index) => {
+        const extent = (layer.Extent && _.castArray(layer.Extent)[index] || layer.extent && _.castArray(layer.extent)[index]);
         return {
             name: dim.$.name,
             units: dim.$.units,
@@ -196,10 +196,10 @@ export const describeLayers = (url, layers) => {
         decriptions = Array.isArray(decriptions) ? decriptions : [decriptions];
         // make it compatible with json format of describe layer
         return decriptions.map(desc => ({
-            ...desc && desc.$ || {},
+            ...(desc && desc.$ || {}),
             layerName: desc && desc.$ && desc.$.name,
             query: {
-                ...desc && desc.query && desc.query.$ || {}
+                ...(desc && desc.query && desc.query.$ || {})
             }
         }));
     });
@@ -208,13 +208,13 @@ export const textSearch = (url, startPosition, maxRecords, text) => {
     return getRecords(url, startPosition, maxRecords, text);
 };
 export const parseLayerCapabilities = (capabilities, layer, lyrs) => {
-    const layers = castArray(lyrs || _.get(capabilities, "capability.layer.layer"));
+    const layers = _.castArray(lyrs || _.get(capabilities, "capability.layer.layer"));
     return layers.reduce((previous, capability) => {
         if (previous) {
             return previous;
         }
         if (!capability.name && capability.layer) {
-            return parseLayerCapabilities(capabilities, layer, castArray(capability.layer));
+            return parseLayerCapabilities(capabilities, layer, _.castArray(capability.layer));
         } else if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2) {
             return layer.name === capability.name && capability;
         } else if (capability.name && capability.name.split(":").length === 2) {
