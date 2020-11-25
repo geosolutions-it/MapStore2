@@ -271,30 +271,30 @@ export const filterArrayToFilterObject = (filterArr) => {
 function cleanJSONSymbolizer(symbolizer) {
     const symbolizerWithoutUndefined = omitBy(symbolizer, isUndefined);
     const newSymbolizer = Object.keys(symbolizerWithoutUndefined).reduce((acc, key) => {
-        switch(key) {
-            case 'haloColor':
-            case 'haloWidth':
-                return symbolizerWithoutUndefined.kind === 'Text' && symbolizerWithoutUndefined.haloWidth === 0
-                    ? acc
-                    : { ...acc, [key]: symbolizerWithoutUndefined[key] };
-            case 'outlineWidth':
-            case 'outlineColor':
-            case 'outlineOpacity':
-                return symbolizerWithoutUndefined.kind === 'Fill' && symbolizerWithoutUndefined.outlineWidth === 0
-                    ? acc
-                    : { ...acc, [key]: symbolizerWithoutUndefined[key] };
-            case 'strokeWidth':
-            case 'strokeColor':
-            case 'strokeOpacity':
-                return symbolizerWithoutUndefined.kind === 'Mark' && symbolizerWithoutUndefined.strokeWidth === 0
-                    ? acc
-                    : { ...acc, [key]: symbolizerWithoutUndefined[key] };
-            case 'graphicFill':
-            case 'graphicStroke':
-                return { ...acc, [key]: cleanJSONSymbolizer(symbolizerWithoutUndefined[key]) };
-            default:
-                return { ...acc, [key]: symbolizerWithoutUndefined[key] };
-        } 
+        switch (key) {
+        case 'haloColor':
+        case 'haloWidth':
+            return symbolizerWithoutUndefined.kind === 'Text' && symbolizerWithoutUndefined.haloWidth === 0
+                ? acc
+                : { ...acc, [key]: symbolizerWithoutUndefined[key] };
+        case 'outlineWidth':
+        case 'outlineColor':
+        case 'outlineOpacity':
+            return symbolizerWithoutUndefined.kind === 'Fill' && symbolizerWithoutUndefined.outlineWidth === 0
+                ? acc
+                : { ...acc, [key]: symbolizerWithoutUndefined[key] };
+        case 'strokeWidth':
+        case 'strokeColor':
+        case 'strokeOpacity':
+            return symbolizerWithoutUndefined.kind === 'Mark' && symbolizerWithoutUndefined.strokeWidth === 0
+                ? acc
+                : { ...acc, [key]: symbolizerWithoutUndefined[key] };
+        case 'graphicFill':
+        case 'graphicStroke':
+            return { ...acc, [key]: cleanJSONSymbolizer(symbolizerWithoutUndefined[key]) };
+        default:
+            return { ...acc, [key]: symbolizerWithoutUndefined[key] };
+        }
     }, {});
     return newSymbolizer;
 }
