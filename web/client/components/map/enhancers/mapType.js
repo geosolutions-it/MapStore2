@@ -11,32 +11,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function mapType(Component) {
-    /*
-    function WithMapType(props) {
-        const isMounted = useRef(true);
-        useEffect(() => {
-            isMounted.current = true;
-            return () => {
-                isMounted.current = false;
-            };
-        }, []);
-        const [plugins, setPlugins] = useState(DEFAULT_MAP_PLUGINS);
-        useEffect(() => {
-            if (isMounted.current && props.mapType) {
-                import('../plugins/' + props.mapType + '.js')
-                    .then((mod) => {
-                        setPlugins(mod.default());
-                    });
-            }
-        }, [props.mapType]);
-        return <Component {...props} plugins={plugins}/>;
-    }
-    */
-
     class WithMapType extends React.Component {
 
         static propTypes = {
-            mapType: PropTypes.string
+            mapType: PropTypes.string,
+            onMapTypeLoaded: PropTypes.func
+        };
+
+        static defaultProps = {
+            onMapTypeLoaded: () => {}
         };
 
         state = {
@@ -71,11 +54,14 @@ function mapType(Component) {
                             this.setState({
                                 plugins: mod.default()
                             });
+                            this.props.onMapTypeLoaded();
                         }
                     });
             }
         }
     }
+
+    WithMapType.displayName = `${Component.displayName}WithMapType`;
 
     return WithMapType;
 }
