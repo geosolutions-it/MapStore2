@@ -325,9 +325,10 @@ export const cancelCloseAnnotations = () => {
         type: CANCEL_CLOSE_ANNOTATIONS
     };
 };
-export const startDrawing = () => {
+export const startDrawing = (options = {}) => {
     return {
-        type: START_DRAWING
+        type: START_DRAWING,
+        options
     };
 };
 export const toggleUnsavedChangesModal = () => {

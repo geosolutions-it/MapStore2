@@ -132,6 +132,7 @@ import GeometryEditor from './GeometryEditor';
  * @prop {function} onFilterMarker triggered when marker/glyph name is specified for filtering
  * @prop {object[]} annotations list of annotations
  * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features
+ * @prop {boolean} geodesic enable to draw a geodesic geometry (supported only for Circle)
  * @prop {function} onHideMeasureWarning triggered when warning is ignored with "Don't show again" flag
  * @prop {boolean} showAgain flag for checkbox on the measure annotation popup warning
  * @prop {boolean} showPopupWarning flag to show warning modal on navigating to measurement panel from annotation
@@ -236,6 +237,7 @@ class AnnotationsEditor extends React.Component {
         onFilterMarker: PropTypes.func,
         annotations: PropTypes.array,
         measurementAnnotationEdit: PropTypes.bool,
+        geodesic: PropTypes.bool,
         onHideMeasureWarning: PropTypes.func,
         showAgain: PropTypes.bool,
         showPopupWarning: PropTypes.bool,
@@ -260,6 +262,7 @@ class AnnotationsEditor extends React.Component {
         stylerType: "marker",
         annotations: [],
         measurementAnnotationEdit: false,
+        geodesic: false,
         onInitPlugin: () => {}
     };
     /**
@@ -493,6 +496,7 @@ class AnnotationsEditor extends React.Component {
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}
                     setPopupWarning={this.setPopupWarning}
                     showPopupWarning={this.props.showPopupWarning}
+                    geodesic={this.props.geodesic}
                 />
                 }
             </div>

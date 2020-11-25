@@ -34,7 +34,8 @@ const FeaturesList = (props) => {
         isMeasureEditDisabled,
         onSetAnnotationMeasurement,
         showPopupWarning,
-        setPopupWarning
+        setPopupWarning,
+        geodesic
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);
@@ -44,7 +45,7 @@ const FeaturesList = (props) => {
         onAddGeometry(type);
         type === "Text" && onAddText();
         onSetStyle(style);
-        onStartDrawing();
+        onStartDrawing({geodesic});
         setTabValue('coordinates');
     };
     return (

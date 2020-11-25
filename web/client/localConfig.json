@@ -39,7 +39,12 @@
       }, {
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
-      }],
+      },
+      {
+        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it(\\:443|\\:80)?\\/geoserver/.*",
+        "authkeyParamName": "authkey",
+        "method": "authkey"
+    }],
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
@@ -303,7 +308,8 @@
           }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Swipe", {
             "name": "Annotations",
             "cfg": {
-              "measurementAnnotationEdit": false
+              "measurementAnnotationEdit": false,
+              "geodesic": true
             }
           },
             {
