@@ -39,12 +39,7 @@
       }, {
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
-      },
-      {
-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it(\\:443|\\:80)?\\/geoserver/.*",
-        "authkeyParamName": "authkey",
-        "method": "authkey"
-    }],
+      }],
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
@@ -357,7 +352,7 @@
                   "spatialMethodOptions": [
                       {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
                       {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
-                      {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+                      {"id": "Circle", "name": "queryform.spatialfilter.methods.circle", "geodesic": true},
                       {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
                   ]
               }
