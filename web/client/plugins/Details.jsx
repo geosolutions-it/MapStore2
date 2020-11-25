@@ -51,6 +51,7 @@ const DetailsPlugin = ({
     return showAsModal ?
         <ResizableModal
             bodyClassName="details-viewer-modal"
+            fitContent
             showFullscreen
             show={active}
             size="lg"

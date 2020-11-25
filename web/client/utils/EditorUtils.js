@@ -75,11 +75,11 @@ export const customEntityTransform = (entity, text) => {
     if (entity.type === 'IMAGE') {
         const alignment = entity.data.alignment;
 
-        if (alignment && alignment.length) {
-            return `<div style="text-align:'${alignment};'"><img src="${entity.data.src}" alt="${entity.data.alt}" style="height:'${entity.data.height}', width: '${entity.data.width}'" /></div>`;
-        }
+        const alignmentStyle = !alignment || alignment === 'none' ?
+            'display: block; margin: 0 auto 0 auto;' :
+            `float: ${alignment};`;
 
-        return `<img src="${entity.data.src}" alt="${entity.data.alt}" style="height:'${entity.data.height}', width: '${entity.data.width}'" />`;
+        return `<img src="${entity.data.src}" alt="${entity.data.alt}" style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}" />`;
     }
 
     if (entity.type === 'EMBEDDED_LINK') {
