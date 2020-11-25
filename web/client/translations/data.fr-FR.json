@@ -2803,8 +2803,8 @@
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
-                    "activatePlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
-                    "deactivatePlugin": "Désactiver le chargement de ce plugin au démarrage",
+                    "activatePlugin": "Activer ce plugin au chargement du contexte",
+                    "deactivatePlugin": "Désactiver ce plugin au chargement du contexte",
                     "editConfiguration": "Modifier la configuration du plugin",
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",
