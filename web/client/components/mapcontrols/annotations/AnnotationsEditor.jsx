@@ -493,6 +493,8 @@ class AnnotationsEditor extends React.Component {
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}
                     setPopupWarning={this.setPopupWarning}
                     showPopupWarning={this.props.showPopupWarning}
+                    defaultPointType={this.getConfig().defaultPointType}
+                    defaultStyles={this.props.defaultStyles}
                 />
                 }
             </div>
@@ -745,7 +747,6 @@ class AnnotationsEditor extends React.Component {
                                 defaultShapeSize={this.props.defaultShapeSize}
                                 defaultShapeFillColor={this.props.defaultShapeFillColor}
                                 defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
-                                defaultPointType={this.getConfig().defaultPointType}
                                 defaultStyles={this.props.defaultStyles}
                                 lineDashOptions={this.props.lineDashOptions}
                                 markersOptions={this.getConfig()}
