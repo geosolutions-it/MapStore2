@@ -10,7 +10,7 @@ module.exports = {
     plugins: {
         LayerSelectorPlugin: require('./plugins/LayerSelector'),
         MapPlugin: require('../../plugins/Map'),
-        WFSDownload: require('../../plugins/WFSDownload'),
+        LayerDownload: require('../../plugins/LayerDownload').default,
         FeatureEditor: require('../../plugins/FeatureEditor').default,
         QueryPanel: require('../../plugins/QueryPanel'),
         Notifications: require('../../plugins/Notifications')

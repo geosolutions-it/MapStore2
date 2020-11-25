@@ -97,7 +97,7 @@ export const getSelectedLayer = state => {
 export const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
 export const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
 export const layerMetadataSelector = (state) => state.layers && state.layers.layerMetadata || {expanded: false, metadataRecord: {}, maskLoading: false};
-export const wfsDownloadSelector = (state) => state.controls && state.controls.wfsdownload ? { expanded: state.controls.wfsdownload.enabled } : {expanded: false};
+export const wfsDownloadSelector = (state) => state.controls && state.controls.layerdownload ? { expanded: state.controls.layerdownload.enabled } : {expanded: false};
 
 export const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
 export const currentBackgroundSelector = (state) => {

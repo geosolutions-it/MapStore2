@@ -1,0 +1,6 @@
+/**
+ * Observable routines to work with WPS
+ * @see {@link https://docs.geoserver.org/stable/en/user/services/wps/|GeoServer documentation} for details
+ * @name observables.wps
+ *
+ */

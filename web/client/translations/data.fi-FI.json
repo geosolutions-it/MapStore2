@@ -1407,7 +1407,7 @@
         "createNewChart": "Luo kaavio valitulle tasolle"
       }
     },
-    "wfsdownload": {
+    "layerdownload": {
       "title": "Vie tietoja",
       "format": "Tiedostomuoto",
       "srs": "SRS",
@@ -2321,7 +2321,7 @@
         "descriptionGeorchestra": "Näyttää GeOrchestra-version kartta-asetukset -työkalussa",
         "title": "Versio"
       },
-      "WFSDownload": {
+      "LayerDownload": {
         "description": "Mahdollistaa tietojen lataamisen attribuuttitaulusta",
         "title": "Lataa tiedot"
       },

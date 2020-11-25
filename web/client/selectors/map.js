@@ -56,7 +56,8 @@ export const configuredMinZoomSelector = state => {
 // END localConfig selectors
 
 export const mapLimitsSelector = state => get(mapSelector(state), "limits");
-export const minZoomSelector = state => get(mapLimitsSelector(state), "minZoom" );
+export const mapBboxSelector = state => get(mapSelector(state), "bbox");
+export const minZoomSelector = state => get(mapLimitsSelector(state), "minZoom");
 export const resolutionsSelector = state => get(mapSelector(state), "resolutions");
 
 /**

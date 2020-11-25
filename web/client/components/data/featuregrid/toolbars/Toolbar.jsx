@@ -152,7 +152,7 @@ export default ({
             active={isDownloadOpen}
             visible={displayDownload && mode === "VIEW"}
             onClick={events.download}
-            glyph="features-grid-download"/>
+            glyph="download"/>
         <TButton
             id="grid-settings"
             keyProp="grid-settings"

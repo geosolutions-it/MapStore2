@@ -391,14 +391,14 @@
                 "unsavedMapCancelButtonText": "No"
             },
             "geostories": {
-                "newGeostory": "Nuova Storia",
-                "title": "Storie ({count})",
-                "titleNoCount": "Storie",
-                "create": "Crea Storia",
-                "noGeostoryAvailable": "Nessuna storia disponibile",
-                "createANewOne": "Creane una",
-                "deleteError": "C'è stato un errore eliminando la risorsa",
-                "errorLoadingGeostories": "C'è stato un errore caricando le storie"
+                "newGeostory": "Nuova GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                "create": "Crea GeoStory",
+                "noGeostoryAvailable": "Nessuna GeoStory disponibile",
+                "createANewOne": "Crea una nuova GeoStory",
+                "deleteError": "Si è verificato un errore durante l'eliminazione della GeoStory",
+                "errorLoadingGeostories": "Si è verificato un errore durante il caricamento di GeoStories"
             }
         },
         "map": {
@@ -1545,6 +1545,7 @@
             "backtosearch": "Ritorna alla ricerca",
             "resultInfo": "{total, plural, =0 {Nessun elemento} =1 {{total} di {total}} other {{start}-{end} di {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {Nessun elemento} =1 {{total} Elemento} other {{total} Elementi}}",
+            "selectedInfo": "( {selected} Selezionati )",
             "pageInfo": "{totalPages, plural, =0 {Nessuna pagina} =1 {Pagina {totalPages} di {totalPages}} other {Pagina {page} di {totalPages}}}",
             "pagination": {
                 "page": "Pagina",
@@ -1578,9 +1579,9 @@
                     "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
                     "date":"Digita una data o un'espressione. Utilizza {format} per la data",
                     "geometry": {
-                        "disabled": "Filtra facendo clic sulla mappa / Tieni premuto ctrl e fai clic per filtrare più elementi",
-                        "enabled": "Fai clic sulla mappa per filtrare i risultati / Tieni premuto ctrl e fai clic per filtrare più elementi",
-                        "applied": "Rimuovi il filtro applicato con il click sulla mappa"
+                      "disabled": "Filtra facendo click sulla mappa / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
+                      "enabled": "Clicca per selezionare le features / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
+                      "applied": "Pulisci la selezione"
                     }
                 }
             },
@@ -1610,16 +1611,43 @@
                 "createNewChart": "crea un grafico per il livello selezionato"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Esporta dati",
             "format": "Formato file",
             "srs": "Sistema di riferimento",
             "export": "Esporta",
             "downloadonlycurrentpage": "Scarica solo la pagina corrente",
+            "cropDataSet": "Ritaglia il set di dati nella finestra corrente",
+            "downloadFilteredDataSet": "Scarica set di dati filtrati",
+            "advancedOptions": "Opzioni avanzate",
+            "compression": "Compressione",
+            "tileWidth": "Larghezza tile",
+            "tileHeight": "Altezza tile",
+            "quality": "Qualità",
             "error": {
                 "title": "Errore durante l'esportazione",
-                "invalidOutputFormat": "Il formato selezionato non è disponibile"
-            }
+                "invalidOutputFormat": "Il formato selezionato non è disponibile",
+                "downloadEstimatorTitle": "Errore DownloadEstimator",
+                "downloadEstimatorFailed": "Richiesta DownloadEstimator non riuscita, il che significa che il file esportato supera i limiti del server configurato. Prova a modificare le opzioni di download o aggiungi un filtro al tuo livello e riprova."
+            },
+            "exportResultsMessages": {
+                "newExport": "Il file sarà disponibile qui al termine dell'esportazione",
+                "exportFailure": "Esportazione per il livello \"{layerTitle}\" non riuscita! Apri la finestra di dialogo dei risultati di esportazione per ulteriori informazioni.",
+                "exportSuccess": "L'esportazione per il livello \"{layerTitle}\" è terminata correttamente.",
+                "invalidHref": "La risposta dal server non conteneva un indirizzo URL valido per i file esportati!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Processo di download fallito! Il server ha restituito il seguente rapporto di eccezione: \"{exceptionReport}\"",
+                "badResponse": "Processo di download fallito! Il server ha restituito dati errati, codice di errore: \"{errorCode}\"",
+                "executeProcessXhrFailed": "Richiesta ExecuteProcess non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
+                "getExecutionStatusXhrFailed": "Richiesta GetExecutionStatus non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
+                "unexpectedError": "Si è verificato un errore imprevisto"
+            },
+            "noSupportedServiceFound": "Il server non supporta il download WFS o WPS per questo livello!"
+        },
+        "exportDataResults": {
+            "title": "Esporta i risultati dei dati",
+            "emptyStateMessage": "L'elenco di esportazione è vuoto"
         },
         "widgets": {
             "types": {
@@ -2711,7 +2739,7 @@
             "descriptionGeorchestra": "Mostra la versione di GeOrchestra nellla finestra di settings",
             "title": "Versione"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Consente di scaricare dati dalla tabella degli attributi",
             "title": "Scarica dati"
           },

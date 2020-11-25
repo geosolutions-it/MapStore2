@@ -391,14 +391,14 @@
                 "unsavedMapCancelButtonText": "Close"
             },
             "geostories": {
-                "newGeostory": "New StoryMap",
-                "title": "StoryMaps ({count})",
-                "titleNoCount": "StoryMaps",
-                "create": "Create StoryMap",
-                "noGeostoryAvailable": "No StoryMap available",
-                "createANewOne": "Create a new StoryMap",
-                "deleteError": "There was an error deleting the StoryMap",
-                "errorLoadingGeostories": "There was an error loading StoryMaps"
+                "newGeostory": "New GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                  "create": "Create GeoStory",
+                "noGeostoryAvailable": "No GeoStory available",
+                "createANewOne": "Create a new GeoStory",
+                "deleteError": "There was an error deleting the GeoStory",
+                "errorLoadingGeostories": "There was an error loading GeoStories"
             }
         },
         "map": {
@@ -1545,6 +1545,7 @@
             "backtosearch": "Back to search",
             "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item} other {{total} Items}}",
+            "selectedInfo": "( {selected} Selected )",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
             "pagination": {
                 "page": "Page",
@@ -1578,9 +1579,9 @@
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
                     "date": "Type a date or an expression. Use {format} for the date.",
                     "geometry": {
-                        "disabled": "Filter clicking on the map / Hold ctrl and click to filter multiple",
-                        "enabled": "Click on the map to filter the results / Hold ctrl and click to filter multiple",
-                        "applied": "Remove the filter by mouse click"
+                        "disabled": "Filter clicking on map / Alt + mouse drag to draw a box filter. Hold also ctrl to add more features to the current filter",
+                        "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
+                        "applied": "Clean the selection"
                     }
                 }
             },
@@ -1610,16 +1611,43 @@
                 "createNewChart": "Create a chart for the selected layer"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Export Data",
             "format": "File Format",
             "srs":  "Spatial Reference System",
             "export": "Export",
             "downloadonlycurrentpage": "Download only current page",
+            "cropDataSet": "Crop dataset to current viewport",
+            "downloadFilteredDataSet": "Download filtered dataset",
+            "advancedOptions": "Advanced options",
+            "compression": "Compression",
+            "tileWidth": "Tile width",
+            "tileHeight": "Tile height",
+            "quality": "Quality",
             "error": {
                 "title": "Error during export",
-                "invalidOutputFormat": "The selected export format is not available"
-            }
+                "invalidOutputFormat": "The selected export format is not available",
+                "downloadEstimatorTitle": "DownloadEstimator error",
+                "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+            },
+            "exportResultsMessages": {
+                "newExport": "The file will be available here when the export completes",
+                "exportFailure": "Export for layer \"{layerTitle}\" failed! Open export results dialog for more information.",
+                "exportSuccess": "Export for layer \"{layerTitle}\" finished successfully.",
+                "invalidHref": "The response from server did not contain a valid url address for exported files!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Download process failed! The server has returned the following exception report: \"{exceptionReport}\"",
+                "badResponse": "Download process failed! The server has returned incorrect data, error code: \"{errorCode}\"",
+                "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
+                "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
+                "unexpectedError": "Unexpected error occurred"
+            },
+            "noSupportedServiceFound": "The server doesn't support WFS or WPS download for this layer!"
+        },
+        "exportDataResults": {
+            "title": "Export data results",
+            "emptyStateMessage": "Export list is empty"
         },
         "widgets": {
             "types": {
@@ -2722,7 +2750,7 @@
             "descriptionGeorchestra": "Shows the version of GeOrchestra in map settings tool",
             "title": "Version"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Allows to download data from the Attribute Table",
             "title": "Download Data"
           },
