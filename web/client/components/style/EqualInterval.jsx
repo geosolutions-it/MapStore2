@@ -18,7 +18,7 @@ import Message from '../I18N/Message';
 import colorsSchema from './EqualIntervalComponents/ColorRamp';
 import ColorRampItem from './EqualIntervalComponents/ColorRampItem';
 import colors from './EqualIntervalComponents/ExtendColorBrewer';
-import Button from '../../misc/Button';
+import Button from '../misc/Button';
 
 numberLocalizer();
 

@@ -9,8 +9,8 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import Button from '../misc/Button';
 import { Panel, ButtonToolbar, Tooltip } from 'react-bootstrap';
+import Button from '../../misc/Button';
 import OverlayTrigger from '../../misc/OverlayTrigger';
 import ComboField from './ComboField';
 import NumberField from './NumberField';

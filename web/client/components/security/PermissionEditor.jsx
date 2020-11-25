@@ -16,7 +16,7 @@ import Spinner from 'react-spinkit';
 import { Table, Glyphicon } from 'react-bootstrap';
 import Message from '../I18N/Message';
 import { getMessageById } from '../../utils/LocaleUtils';
-import Button from '../../misc/Button';
+import Button from '../misc/Button';
 
 /**
 * Map permission editor

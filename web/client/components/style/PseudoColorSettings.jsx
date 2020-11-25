@@ -12,7 +12,7 @@ import React from 'react';
 import { Grid, Row, Col} from 'react-bootstrap';
 import { Combobox } from 'react-widgets';
 
-import Button from '../../misc/Button';
+import Button from '../misc/Button';
 import ColorMapGrid from './ColorMapGrid';
 import Message from '../I18N/Message';
 
