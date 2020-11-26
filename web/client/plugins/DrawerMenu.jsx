@@ -12,7 +12,7 @@ import { partialRight } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button as ButtonB, Glyphicon, Panel } from 'react-bootstrap';
+import { Glyphicon, Panel } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
@@ -23,6 +23,7 @@ import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import MenuComp from './drawer/Menu';
 import Section from './drawer/Section';
 import Message from './locale/Message';
+import ButtonB from '../components/misc/Button';
 
 const Button = tooltip(ButtonB);
 

@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
 import PropTypes from 'prop-types';
-import { Glyphicon, Button, Tooltip } from 'react-bootstrap';
-import OverlayTrigger from '../../components/misc/OverlayTrigger';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
 import Sidebar from 'react-sidebar';
+
+import OverlayTrigger from '../../components/misc/OverlayTrigger';
 import { Resizable } from 'react-resizable';
 import Message from '../../components/I18N/Message';
+import Button from '../../components/misc/Button';
 
 class Menu extends React.Component {
     static propTypes = {

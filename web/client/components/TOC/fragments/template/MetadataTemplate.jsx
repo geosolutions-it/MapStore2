@@ -9,12 +9,13 @@
 import { isArray, isObject, isString, keys } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Glyphicon, Table } from 'react-bootstrap';
+import { Glyphicon, Table } from 'react-bootstrap';
 
 import { getMessageById } from '../../../../utils/LocaleUtils';
 import { isValidEmail } from '../../../../utils/StringUtils';
 import { isValidURL } from '../../../../utils/URLUtils';
 import Message from '../../../I18N/Message';
+import Button from '../../../misc/Button';
 
 class MetadataTemplate extends React.Component {
     static propTypes = {

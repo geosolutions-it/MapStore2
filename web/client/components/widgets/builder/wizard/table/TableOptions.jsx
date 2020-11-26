@@ -8,7 +8,7 @@
 
 import { castArray, includes, uniq } from 'lodash';
 import React from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import {compose, withHandlers, withProps} from 'recompose';
 
 import { isGeometryType } from '../../../../../utils/ogc/WFS/base';
@@ -16,6 +16,7 @@ import AttributeTable from '../../../../data/featuregrid/AttributeTable';
 import Message from '../../../../I18N/Message';
 import StepHeader from '../../../../misc/wizard/StepHeader';
 import noAttributes from '../common/noAttributesEmptyView';
+import Button from '../../../../misc/Button';
 
 const updatePropertyName = (arr, name, hide) => {
     const names = castArray(name);

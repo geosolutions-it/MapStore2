@@ -7,16 +7,16 @@
  */
 
 import React from 'react';
-
 import PropTypes from 'prop-types';
-import { ButtonGroup, Button, Glyphicon, Tooltip } from 'react-bootstrap';
-import OverlayTrigger from '../misc/OverlayTrigger';
+import { ButtonGroup, Glyphicon, Tooltip } from 'react-bootstrap';
 import { head } from 'lodash';
+import Proj4js from 'proj4';
+
+import OverlayTrigger from '../misc/OverlayTrigger';
 import ConfirmModal from '../maps/modals/ConfirmModal';
 import LayerMetadataModal from './fragments/LayerMetadataModal';
-import Proj4js from 'proj4';
 import Message from '../I18N/Message';
-
+import Button from '../misc/Button';
 
 class Toolbar extends React.Component {
 

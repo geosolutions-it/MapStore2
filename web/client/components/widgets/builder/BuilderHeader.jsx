@@ -5,10 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
-import { Button, Row, Col, Glyphicon } from 'react-bootstrap';
+import React from 'react';
+import { Row, Col, Glyphicon } from 'react-bootstrap';
+
 import Message from '../../I18N/Message';
+import Button from '../../misc/Button';
 
 /**
  * Common header component for builder content. With close button and icon

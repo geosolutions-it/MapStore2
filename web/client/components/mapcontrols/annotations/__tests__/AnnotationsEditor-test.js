@@ -138,7 +138,7 @@ describe("test the AnnotationsEditor Panel", () => {
         toolBarButtons = btnGroup.querySelectorAll('button');
         removeBtn = toolBarButtons[1];
         expect(toolBarButtons.length).toBe(4);
-        expect(removeBtn.disabled).toBe(true);
+        expect(removeBtn.classList.contains('disabled')).toBe(true);
 
     });
 

@@ -9,8 +9,9 @@
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, ButtonGroup, Glyphicon } from 'react-bootstrap';
+import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 
+import Button from '../misc/Button';
 import Message from '../I18N/Message';
 import Dialog from './Dialog';
 

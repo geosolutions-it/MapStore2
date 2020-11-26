@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -8,9 +7,11 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import Button from '../misc/Button';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
 
 class ZoomButton extends React.Component {

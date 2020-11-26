@@ -8,7 +8,8 @@
 import React from 'react';
 
 import Dropzone from 'react-dropzone';
-import { Button as RButton, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
+import RButton from '../../misc/Button';
 import tooltip from '../../misc/enhancers/tooltip';
 const Button = tooltip(RButton);
 

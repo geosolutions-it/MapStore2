@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { Button, Carousel, CarouselItem, Panel } from 'react-bootstrap';
+import { Carousel, CarouselItem, Panel } from 'react-bootstrap';
 
 import I18N from '../../../components/I18N/I18N';
 import viewer3d from '../../assets/img/3DViewer.jpg';
@@ -20,6 +20,7 @@ import queryform from '../../assets/img/QueryForm.jpg';
 import rasterstyler from '../../assets/img/rasterstyler.jpg';
 import scalebar from '../../assets/img/ScaleBar.jpg';
 import viewer from '../../assets/img/Viewer.jpg';
+import Button from '../../../components/misc/Button';
 
 const carouselImages = {
     viewer,

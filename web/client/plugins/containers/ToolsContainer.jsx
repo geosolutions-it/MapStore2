@@ -10,7 +10,7 @@ import { partial } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Collapse, Glyphicon, Panel, Tooltip } from 'react-bootstrap';
+import { Collapse, Glyphicon, Panel, Tooltip } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -19,6 +19,7 @@ import { changeHelpText, changeHelpwinVisibility } from '../../actions/help';
 import HelpBadgeComp from '../../components/help/HelpBadge';
 import Message from '../../components/I18N/Message';
 import OverlayTrigger from '../../components/misc/OverlayTrigger';
+import Button from '../../components/misc/Button';
 
 const HelpBadge = connect((state) => ({
     isVisible: state.controls && state.controls.help && state.controls.help.enabled

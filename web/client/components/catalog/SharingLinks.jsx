@@ -10,7 +10,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SharingLink from './SharingLink';
 import Message from '../I18N/Message';
-import { Popover, Button, Glyphicon } from 'react-bootstrap';
+import { Popover, Glyphicon } from 'react-bootstrap';
+import Button from '../misc/Button';
 import OverlayTrigger from '../misc/OverlayTrigger';
 
 class SharingLinks extends React.Component {

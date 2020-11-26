@@ -8,10 +8,9 @@
  */
 
 import React, { useState } from 'react';
-import { Button as ButtonRB } from 'react-bootstrap';
-
 
 import tooltip from '../../misc/enhancers/tooltip';
+import ButtonRB from '../../misc/Button';
 const Button = tooltip(ButtonRB);
 import LoadingSpinner from '../../misc/LoadingSpinner';
 

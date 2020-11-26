@@ -8,8 +8,9 @@
 
 import React from 'react';
 import { toPairs, get } from 'lodash';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 
+import Button from '../misc/Button';
 import HTML from '../I18N/HTML';
 import Message from '../I18N/Message';
 

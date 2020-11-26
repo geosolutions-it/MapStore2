@@ -9,12 +9,14 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Panel, Button, Glyphicon } from 'react-bootstrap';
+import { Panel, Glyphicon } from 'react-bootstrap';
 import SwitchButton from './SwitchButton';
 import SwitchToolbar from './SwitchToolbar';
 import Toolbar from '../toolbar/Toolbar';
-const ErrorIcon = () => <Button className="square-button-sm no-border switch-error"><Glyphicon glyph="exclamation-mark" className="text-danger" /></Button>;
+import Button from '../../misc/Button';
 import LoadingView from '../LoadingView';
+
+const ErrorIcon = () => <Button className="square-button-sm no-border switch-error"><Glyphicon glyph="exclamation-mark" className="text-danger" /></Button>;
 const LoadingIcon = () => <div className="switch-loading"><LoadingView size="small"/></div>;
 class SwitchPanel extends React.Component {
 

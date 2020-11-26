@@ -11,14 +11,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { isEqual, delay } from 'lodash';
-import { Glyphicon, Panel, Grid, Row, Col, Button as ButtonB } from 'react-bootstrap';
-import { Resizable } from 'react-resizable';
+import { Glyphicon, Panel, Grid, Row, Col } from 'react-bootstrap';
 import ContainerDimensions from 'react-container-dimensions';
+import { Resizable } from 'react-resizable';
+
+
+import ButtonB from '../misc/Button';
 import tooltip from '../misc/enhancers/tooltip';
-const Button = tooltip(ButtonB);
 import SideGrid from '../misc/cardgrids/SideGrid';
 import OpacitySlider from './fragments/OpacitySlider';
 import WMSLegend from './fragments/WMSLegend';
+const Button = tooltip(ButtonB);
 
 /**
  * Component for rendering a legend component.

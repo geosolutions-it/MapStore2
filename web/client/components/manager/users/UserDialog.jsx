@@ -14,7 +14,6 @@ import {
     Alert,
     Tabs,
     Tab,
-    Button,
     Glyphicon,
     Checkbox,
     FormControl,
@@ -32,7 +31,7 @@ import Spinner from 'react-spinkit';
 import { findIndex } from 'lodash';
 import CloseConfirmButton from './CloseConfirmButton';
 import './style/userdialog.css';
-
+import Button from '../../../components/misc/Button';
 /**
  * A Modal window to show password reset form
  */

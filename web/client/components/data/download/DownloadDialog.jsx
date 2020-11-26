@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { findIndex } from 'lodash';
 import assign from 'object-assign';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 
 import Loader from '../../misc/Loader';
@@ -18,6 +18,7 @@ import Dialog from '../../misc/Dialog';
 import Message from '../../I18N/Message';
 import EmptyView from '../../misc/EmptyView';
 import DownloadOptions from './DownloadOptions';
+import Button from '../../misc/Button';
 
 class DownloadDialog extends React.Component {
     static propTypes = {

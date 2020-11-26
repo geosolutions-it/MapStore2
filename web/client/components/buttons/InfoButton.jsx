@@ -12,7 +12,8 @@ import './css/infoButton.css';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Button, Glyphicon} from 'react-bootstrap';
+import {Glyphicon} from 'react-bootstrap';
+import Button from '../misc/Button';
 
 import Dialog from '../misc/Dialog';
 import ImageButton from './ImageButton';

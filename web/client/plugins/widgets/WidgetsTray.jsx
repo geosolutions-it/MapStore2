@@ -12,14 +12,18 @@ import { connect } from 'react-redux';
 import { compose, withProps, withState, lifecycle, mapPropsStream } from 'recompose';
 import { createSelector } from 'reselect';
 import tooltip from '../../components/misc/enhancers/tooltip';
-import { Glyphicon, Button as BButton } from 'react-bootstrap';
-const Button = tooltip(BButton);
+import { Glyphicon } from 'react-bootstrap';
 import { getVisibleFloatingWidgets } from '../../selectors/widgets';
 import { toggleCollapseAll, toggleTray } from '../../actions/widgets';
 import { trayWidgets } from '../../selectors/widgetsTray';
 import { filterHiddenWidgets } from './widgetsPermission';
 import BorderLayout from '../../components/layout/BorderLayout';
 import WidgetsBar from './WidgetsBar';
+import BButton from '../../components/misc/Button';
+
+const Button = tooltip(BButton);
+
+
 /**
  * Button that allows collapse/Expand functionality of the tray.
  * @param {object} props

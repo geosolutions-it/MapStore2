@@ -7,9 +7,10 @@
  */
 
 import React from 'react';
-import { Button, Col, Glyphicon, Grid, Row } from 'react-bootstrap';
+import { Col, Glyphicon, Grid, Row } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 
+import Button from '../../misc/Button';
 import { toPage } from '../../../utils/FeatureGridUtils';
 import Message from '../../I18N/Message';
 

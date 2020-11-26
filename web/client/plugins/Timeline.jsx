@@ -10,7 +10,7 @@ import { head, isString } from 'lodash';
 import moment from 'moment';
 import assign from 'object-assign';
 import React from 'react';
-import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
     branch,
@@ -44,7 +44,7 @@ import {
 } from '../selectors/timeline';
 import Timeline from './timeline/Timeline';
 import TimelineToggle from './timeline/TimelineToggle';
-
+import ButtonRB from '../components/misc/Button';
 const Button = tooltip(ButtonRB);
 
 const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
