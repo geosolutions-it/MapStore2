@@ -19,7 +19,7 @@ import {
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
     showMapinfoMarker, hideMapinfoMarker, setCurrentEditFeatureQuery,
-    SET_MAP_TRIGGER
+    SET_MAP_TRIGGER, CLEAR_WARNING
 } from '../actions/mapInfo';
 
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
@@ -210,8 +210,8 @@ export const closeFeatureAndAnnotationEditing = (action$, {getState = () => {}} 
             ? Rx.Observable.of(closeAnnotations())
             : Rx.Observable.of(purgeMapInfoResults())
     );
-export const hideMarkerOnIdentifyClose = (action$) =>
-    action$.ofType(CLOSE_IDENTIFY)
+export const hideMarkerOnIdentifyCloseOrClearWarning = (action$) =>
+    action$.ofType(CLOSE_IDENTIFY, CLEAR_WARNING)
         .flatMap(() => Rx.Observable.of(hideMapinfoMarker()));
 export const changeMapPointer = (action$, store) =>
     action$.ofType(CHANGE_MOUSE_POINTER)
@@ -408,10 +408,10 @@ export const removePopupOnUnregister = (action$, {getState}) =>
             return observable;
         });
 /**
- * Triggers remove popup on LOCATION_CHANGE or PURGE_MAPINFO_RESULTS
+ * Triggers remove popup on LOCATION_CHANGE, PURGE_MAPINFO_RESULTS or CLEAR_WARNING
  */
 export const removePopupOnLocationChangeEpic = (action$, {getState}) =>
-    action$.ofType(LOCATION_CHANGE, PURGE_MAPINFO_RESULTS)
+    action$.ofType(LOCATION_CHANGE, PURGE_MAPINFO_RESULTS, CLEAR_WARNING)
         .switchMap(() => {
             let observable = Rx.Observable.empty();
             const popups = getState()?.mapPopups?.popups || [];
@@ -444,7 +444,7 @@ export default {
     handleMapInfoMarker,
     closeFeatureGridFromIdentifyEpic,
     closeFeatureAndAnnotationEditing,
-    hideMarkerOnIdentifyClose,
+    hideMarkerOnIdentifyCloseOrClearWarning,
     changeMapPointer,
     onMapClick,
     onUpdateFeatureInfoClickPoint,
