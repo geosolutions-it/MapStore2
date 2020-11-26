@@ -7,7 +7,7 @@
  */
 
 import React, { forwardRef } from 'react';
-import  Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import Button from '../../../misc/Button';
 
 
