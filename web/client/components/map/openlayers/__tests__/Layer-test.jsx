@@ -2576,6 +2576,33 @@ describe('Openlayers layer', () => {
             map={map} />, document.getElementById("container"));
         expect(layer.layer.getSource()).toExist();
     });
+    it('render wfs layer with error', () => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
+            return [200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<ows:ExceptionReport xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+            "  <ows:Exception exceptionCode=\"InvalidParameterValue\" locator=\"srsname\">\n" +
+            "    <ows:ExceptionText>msWFSGetFeature(): WFS server error. Invalid GetFeature Request</ows:ExceptionText>\n" +
+            "  </ows:Exception>\n" +
+            "</ows:ExceptionReport>"];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource()).toExist();
+        layer.layer.getSource().on('vectorerror', (e)=>{
+            expect(e).toBeTruthy();
+        });
+    });
     it('test second render wfs layer', (done) => {
         let clearCalled = false;
         mockAxios.onGet().reply(r => {

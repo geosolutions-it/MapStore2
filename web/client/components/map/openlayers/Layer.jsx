@@ -294,6 +294,10 @@ export default class OpenlayersLayer extends React.Component {
             this.imageLoadEndStream$ = imageLoadEndStream$;
             this.imageStopStream$ = imageStopStream$;
 
+            this.layer.getSource().on('vectorerror', () => {
+                this.props.onLayerLoad(options.id, {error: true});
+            });
+
             if (options.refresh) {
                 let counter = 0;
                 this.refreshTimer = setInterval(() => {
