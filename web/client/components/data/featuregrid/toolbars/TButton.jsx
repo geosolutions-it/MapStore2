@@ -10,9 +10,6 @@ import React, { forwardRef } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import Button from '../../../misc/Button';
 
-
-import { Glyphicon } from 'react-bootstrap';
-
 const hideStyle = {
     width: 0,
     padding: 0,
