@@ -133,14 +133,20 @@ describe('BaseMap', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('test cesium map', () => {
-        const map = ReactDOM.render(<TestMap mapType="cesium" id="myMap" layers={SAMPLE_LAYERS_1} />, document.getElementById("container"));
-        expect(map).toExist();
-        const el = ReactDOM.findDOMNode(map);
-        expect(el).toExist();
-        expect(el.id).toBe("myMap");
-        expect(el.querySelector('canvas')).toExist();
-
+    it('test cesium map', (done) => {
+        const map = ReactDOM.render(<TestMap
+            mapType="cesium"
+            id="myMap"
+            layers={SAMPLE_LAYERS_1}
+            onMapTypeLoaded={() => {
+                expect(map).toBeTruthy();
+                const el = ReactDOM.findDOMNode(map);
+                expect(el).toBeTruthy();
+                expect(el.id).toBe("myMap");
+                expect(el.querySelector('canvas')).toBeTruthy();
+                done();
+            }}
+        />, document.getElementById("container"));
     });
 
 });

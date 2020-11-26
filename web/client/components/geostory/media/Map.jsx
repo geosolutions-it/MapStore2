@@ -36,7 +36,8 @@ export default compose(
     size,
     showCaption,
     caption: contentCaption,
-    mapType = "leaflet" // default for when map MediaViewer is not connected to redux
+    mapType = "leaflet", // default for when map MediaViewer is not connected to redux
+    onMapTypeLoaded
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
@@ -107,6 +108,7 @@ export default compose(
                 tools={isMapInfoControlActive ? ["popup"] : []}
                 options={applyDefaults(updatedMapOptions)}
                 mapType={mapType}
+                onMapTypeLoaded={onMapTypeLoaded}
             />
             {expandable && !editMap &&
         <Button
