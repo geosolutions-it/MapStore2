@@ -171,7 +171,7 @@ const property = {
         type: 'slider',
         label,
         config: {
-            range: { min: 0, max: 100 },
+            range: { min: 1, max: 100 },
             format: {
                 from: value => Math.round(value),
                 to: value => Math.round(value) + ' px'
