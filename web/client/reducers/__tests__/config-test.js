@@ -8,7 +8,8 @@
 import expect from 'expect';
 
 import mapConfig from '../config';
-import { DETAILS_LOADED, MAP_CREATED } from '../../actions/maps';
+import { MAP_CREATED } from '../../actions/maps';
+import { DETAILS_LOADED } from '../../actions/details';
 
 
 describe('Test the mapConfig reducer', () => {
