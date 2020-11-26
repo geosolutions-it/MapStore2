@@ -14,7 +14,7 @@ export default ({response, layer, rowViewer}) => {
     const RowViewer = (layer && layer.rowViewer) || rowViewer || PropertiesViewer;
     return (
         <div className="mapstore-json-viewer">
-            {(response.features || []).map((feature, i) => {
+            {(response?.features || []).map((feature, i) => {
                 return <RowViewer key={i} feature={feature} title={feature.id + ''} exclude={["bbox"]} {...feature.properties}/>;
             })}
         </div>
