@@ -1755,6 +1755,8 @@
                     "confirmDelete": "Sei sicuro?",
                     "downloadData": "Scarica dati",
                     "exportImage": "Esporta immagine",
+                    "maximize": "Massimizza",
+                    "minimize": "Minimizzare",
                     "pin": "Blocca",
                     "unpin": "Sblocca",
                     "hide": "Nascondi",

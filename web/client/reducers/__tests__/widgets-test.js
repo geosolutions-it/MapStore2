@@ -23,6 +23,7 @@ import {
     toggleCollapse,
     toggleCollapseAll,
     toggleTray,
+    toggleMaximize,
     DEFAULT_TARGET
 } from '../../actions/widgets';
 
@@ -296,5 +297,67 @@ describe('Test the widgets reducer', () => {
         expect(widget.map.zoom).toBe(4);
         expect(widget.map.layers.length).toBe(1);
         expect(widget.map.layers[0].params.CQL_FILTER).toBe("some cql");
+    });
+    it('widgets toggleMaximize', () => {
+        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
+        const id = 'a7122cc0-f7a9-11e8-8602-03b7e0c9537b';
+        const widgetToMaximize = initialState.containers.floating.widgets.filter(w => w.id === id)[0];
+
+        // first toggle
+        let resultState = widgets({
+            ...initialState
+        }, toggleMaximize(widgetToMaximize));
+
+        expect(resultState).toExist();
+        let floating = resultState.containers.floating;
+        expect(floating).toExist();
+        expect(floating.layout).toExist();
+        expect(floating.layout.length).toBe(1);
+        expect(floating.layout[0].i).toBe(id);
+        expect(floating.layout[0].x).toBe(0);
+        expect(floating.layout[0].y).toBe(0);
+        expect(floating.layout[0].w).toBe(1);
+        expect(floating.layout[0].h).toBe(1);
+        expect(floating.layouts).toExist();
+        expect(floating.layouts.xxs).toExist();
+        expect(floating.layouts.xxs.length).toBe(1);
+        expect(floating.layouts.xxs[0].i).toBe(id);
+        expect(floating.layouts.xxs[0].x).toBe(0);
+        expect(floating.layouts.xxs[0].y).toBe(0);
+        expect(floating.layouts.xxs[0].w).toBe(1);
+        expect(floating.layouts.xxs[0].h).toBe(1);
+        expect(floating.maximized).toExist();
+        expect(floating.maximized.layout).toEqual(initialState.containers.floating.layout);
+        expect(floating.maximized.layouts).toEqual(initialState.containers.floating.layouts);
+        expect(floating.maximized.widget).toEqual(widgetToMaximize);
+        expect(floating.widgets).toExist();
+        const newWidget = floating.widgets.filter(w => w.id === id)[0];
+        expect(newWidget).toExist();
+        expect(newWidget.dataGrid).toExist();
+        expect(newWidget.dataGrid.isDraggable).toBe(false);
+        expect(newWidget.dataGrid.isResizable).toBe(false);
+
+        // second toggle
+        resultState = widgets({
+            ...resultState
+        }, toggleMaximize(widgetToMaximize));
+
+        expect(resultState).toExist();
+        floating = resultState.containers.floating;
+        expect(floating).toExist();
+        expect(floating.layout).toEqual(initialState.containers.floating.layout);
+        expect(floating.layouts).toEqual(initialState.containers.floating.layouts);
+        expect(floating.maximized).toEqual({});
+    });
+    it('widgets toggleMaximize on static widget', () => {
+        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
+        const id = 'b1786030-f7a9-11e8-8602-03b7e0c9537b';
+        const widgetToMaximize = initialState.containers.floating.widgets.filter(w => w.id === id)[0];
+
+        const resultState = widgets({
+            ...initialState
+        }, toggleMaximize(widgetToMaximize));
+
+        expect(resultState).toEqual(initialState);
     });
 });

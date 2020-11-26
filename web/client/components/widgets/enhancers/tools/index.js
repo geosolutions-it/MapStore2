@@ -8,6 +8,7 @@
 import {compose} from 'recompose';
 
 import collapsibleWidgetEnhancer from './collapsibleWidget';
+import maximizableWidgetEnhancer from './maximizableWidget';
 import editableWidgetEnhancer from './editableWidget';
 import exportableWidgetEnhancer from './exportableWidget';
 import hidableWidgetEnhancer from './hidableWidget';
@@ -26,12 +27,14 @@ export const withInfo = withInfoEnhancer;
 export const editableWidget = editableWidgetEnhancer;
 export const exportableWidget = exportableWidgetEnhancer;
 export const collapsibleWidget = collapsibleWidgetEnhancer;
+export const maximizableWidget = maximizableWidgetEnhancer;
 /**
  * widgets icons of collapse/pin
  */
 export const defaultIcons = () => compose(
     pinnableWidget(),
     collapsibleWidget(),
+    maximizableWidget(),
     withInfo()
 );
 /**
