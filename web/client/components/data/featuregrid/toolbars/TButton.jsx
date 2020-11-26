@@ -11,7 +11,7 @@ import { Glyphicon } from 'react-bootstrap';
 import Button from '../../../misc/Button';
 
 
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 
 const hideStyle = {
     width: 0,
