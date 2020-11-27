@@ -51,7 +51,7 @@ export const layerInfoSetupLayersEpic = (action$, store) => action$
                 ...extractLayerData(layer),
                 selected: false,
                 syncStatus: 'none'
-            }))),
+            })).reverse()),
             loading(false)
         );
     });
