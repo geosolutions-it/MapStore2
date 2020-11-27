@@ -61,6 +61,7 @@ const DetailsPlugin = ({
     return showAsModal ?
         <ResizableModal
             bodyClassName="details-viewer-modal"
+            fitContent
             showFullscreen
             show={active}
             size="lg"
@@ -107,7 +108,7 @@ export default createPlugin('Details', {
             name: 'details',
             position: 2,
             priority: 0,
-            tooltip: <Message msgId="details.title" />,
+            tooltip: "details.title",
             alwaysVisible: true,
             doNotHide: true,
             icon: <Glyphicon glyph="sheet"/>,
