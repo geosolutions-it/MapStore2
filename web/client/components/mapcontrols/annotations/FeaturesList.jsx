@@ -219,7 +219,9 @@ FeaturesList.defaultProps = {
     onStyleGeometry: () => {},
     onSetAnnotationMeasurement: () => {},
     onSelectFeature: () => {},
-    isMeasureEditDisabled: true
+    setTabValue: () => {},
+    isMeasureEditDisabled: true,
+    defaultPointType: 'marker'
 };
 
 export default FeaturesList;
