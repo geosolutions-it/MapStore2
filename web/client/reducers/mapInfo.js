@@ -121,7 +121,9 @@ function receiveResponse(state, action, type) {
 }
 const initState = {
     enabled: true,
-    configuration: {}
+    configuration: {
+        swipe: {}
+    }
 };
 
 /**
