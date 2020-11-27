@@ -478,7 +478,7 @@
             "FeedbackMask",
             "StyleEditor"
         ],
-        "embedded": [{
+        "embedded": ["Details", {
                 "name": "Map",
                 "cfg": {
                     "tools": ["locate"],

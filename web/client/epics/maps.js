@@ -11,22 +11,20 @@ import assign from 'object-assign';
 import {push} from 'connected-react-router';
 import {basicError, basicSuccess} from '../utils/NotificationUtils';
 import GeoStoreApi from '../api/GeoStoreDAO';
-import { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo, configureMap } from '../actions/config';
-import { get, isArray, isEqual, isObject, isNil, find, pick, omit, keys, zip, mapValues } from 'lodash';
+import { MAP_SAVED, mapSaveError, mapSaved, loadMapInfo, configureMap } from '../actions/config';
+import { get, isArray, isEqual, isObject, isNil, pick, omit, keys, zip, mapValues } from 'lodash';
 import {
     MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
-    DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
-    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE, MAP_DELETED,
+    DELETE_MAP, MAPS_LOAD_MAP,
+    SAVE_MAP_RESOURCE, MAP_DELETED,
     SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL, LOAD_CONTEXTS, ATTRIBUTE_UPDATED, RELOAD_MAPS,
-    updateDetails, mapsLoading, mapsLoaded,
+    mapsLoading, mapsLoaded,
     mapDeleting, mapDeleted, loadError,
-    detailsLoaded,
     getMapResourcesByCategory,
     mapUpdating, savingMap, mapCreated, loadMaps, loadContexts, setContexts, setSearchFilter, loading,
-    invalidateFeaturedMaps, openDetailsPanel
+    invalidateFeaturedMaps
 } from '../actions/maps';
 import { DASHBOARD_DELETED } from '../actions/dashboards';
-import { closeFeatureGrid } from '../actions/featuregrid';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import { setTabsHidden } from '../actions/contenttabs';
 import {
@@ -38,9 +36,6 @@ import {
     contextsSelector,
     searchFilterSelector
 } from '../selectors/maps';
-import {
-    mapIdSelector, mapInfoDetailsUriFromIdSelector
-} from '../selectors/map';
 import { mapTypeSelector } from '../selectors/maptype';
 import { userRoleSelector } from '../selectors/security';
 import {
@@ -52,7 +47,6 @@ import { deleteResourceById } from '../utils/ObservableUtils';
 import { getIdFromUri } from '../utils/MapUtils';
 
 import { getErrorMessage } from '../utils/LocaleUtils';
-import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
 import { createResource, updateResource, getResource, searchListByAttributes, updateResourceAttribute } from "../api/persistence";
 import { wrapStartStop } from '../observables/epics';
 
@@ -302,65 +296,6 @@ export const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
             }).startWith(mapDeleting(mapId));
         });
 
-export const fetchDataForDetailsPanel = (action$, store) =>
-    action$.ofType(OPEN_DETAILS_PANEL)
-        .switchMap(() => {
-            const state = store.getState();
-            const detailsUri = mapInfoDetailsUriFromIdSelector(state);
-            const detailsId = getIdFromUri(detailsUri);
-            return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
-                .then(data => data))
-                .switchMap((details) => {
-                    return Rx.Observable.of(
-                        closeFeatureGrid(),
-                        updateDetails(details)
-                    );
-                }).startWith(toggleControl("details", "enabled"))
-                .catch(() => {
-                    return Rx.Observable.of(
-                        basicError({message: "maps.feedback.errorFetchingDetailsOfMap"}),
-                        updateDetails(NO_DETAILS_AVAILABLE)
-                    );
-                });
-        });
-
-export const closeDetailsPanelEpic = (action$) =>
-    action$.ofType(CLOSE_DETAILS_PANEL)
-        .switchMap(() => Rx.Observable.from( [
-            toggleControl("details", "enabled")
-        ])
-        );
-
-export const storeDetailsInfoEpic = (action$, store) =>
-    action$.ofType(MAP_INFO_LOADED)
-        .switchMap(() => {
-            const mapId = mapIdSelector(store.getState());
-            return !mapId ?
-                Rx.Observable.empty() :
-                Rx.Observable.fromPromise(
-                    GeoStoreApi.getResourceAttributes(mapId)
-                )
-                    .switchMap((attributes) => {
-                        let details = find(attributes, {name: 'details'});
-                        const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
-                        let detailsSettings = {};
-
-                        if (!details || details.value === EMPTY_RESOURCE_VALUE) {
-                            return Rx.Observable.empty();
-                        }
-
-                        try {
-                            detailsSettings = JSON.parse(detailsSettingsAttribute.value);
-                        } catch (e) {
-                            detailsSettings = {};
-                        }
-
-                        return Rx.Observable.of(
-                            detailsLoaded(mapId, details.value, detailsSettings),
-                            ...(detailsSettings.showAtStartup ? [openDetailsPanel()] : [])
-                        );
-                    });
-        });
 /**
  * Create or update map resource with persistence api
  */
@@ -440,8 +375,5 @@ export default {
     mapsLoadContextsEpic,
     mapsSetupFilterOnLogin,
     deleteMapAndAssociatedResourcesEpic,
-    fetchDataForDetailsPanel,
-    closeDetailsPanelEpic,
-    storeDetailsInfoEpic,
     mapSaveMapResourceEpic
 };

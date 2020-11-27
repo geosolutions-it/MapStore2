@@ -17,14 +17,12 @@ import {
     ATTRIBUTE_UPDATED,
     PERMISSIONS_LIST_LOADING,
     THUMBNAIL_ERROR,
-    UPDATE_DETAILS,
     MAPS_SEARCH_TEXT_CHANGED,
     SEARCH_FILTER_CHANGED,
     SET_SEARCH_FILTER,
     SET_CONTEXTS,
     LOADING,
-    METADATA_CHANGED,
-    SHOW_DETAILS
+    METADATA_CHANGED
 } from '../actions/maps';
 
 import assign from 'object-assign';
@@ -115,9 +113,6 @@ function maps(state = {
             metadata: assign({}, state.metadata, {[action.prop]: action.value })
         });
     }
-    case SHOW_DETAILS: {
-        return assign({}, state, {showMapDetails: action.showMapDetails});
-    }
     case MAPS_LIST_LOADING:
         return assign({}, state, {
             loading: true,
@@ -202,9 +197,6 @@ function maps(state = {
         }
         );
         return newState;
-    }
-    case UPDATE_DETAILS: {
-        return {...state, detailsText: action.detailsText};
     }
     default:
         return state;

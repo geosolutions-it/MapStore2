@@ -29,7 +29,7 @@ import PaginationToolbarBase from '../components/misc/PaginationToolbar';
 
 import EmptyMaps from './maps/EmptyMaps';
 
-import {loadMaps, setShowMapDetails} from '../actions/maps';
+import {loadMaps} from '../actions/maps';
 
 import mapsReducer from '../reducers/maps';
 import maptypeReducer from '../reducers/maptype';
@@ -73,7 +73,6 @@ class Maps extends React.Component {
         title: PropTypes.any,
         onGoToMap: PropTypes.func,
         loadMaps: PropTypes.func,
-        setShowMapDetails: PropTypes.func,
         showMapDetails: PropTypes.bool,
         maps: PropTypes.array,
         searchText: PropTypes.string,
@@ -92,7 +91,6 @@ class Maps extends React.Component {
         mapType: "leaflet",
         onGoToMap: () => {},
         loadMaps: () => {},
-        setShowMapDetails: () => {},
         fluid: false,
         title: <h3><Message msgId="manager.maps_title" /></h3>,
         mapsOptions: {start: 0, limit: 12},
@@ -146,7 +144,7 @@ const mapsPluginSelector = createSelector([
 
 const MapsPlugin = compose(
     connect(mapsPluginSelector, {
-        loadMaps, setShowMapDetails
+        loadMaps
     }),
     emptyState(
         ({maps = [], loading}) => !loading && maps.length === 0,
