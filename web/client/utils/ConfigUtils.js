@@ -23,7 +23,7 @@ const centerPropType = PropTypes.shape({
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-let localConfigFile = 'localConfig.json';
+let localConfigFile = 'configs/localConfig.json';
 
 let defaultConfig = {
     // TODO: these should be changed tp relative paths, without /mapstore/ or / (to avoid the needing of overriding in default cases)
@@ -33,7 +33,7 @@ let defaultConfig = {
     translationsPath: "translations",
     extensionsRegistry: "extensions.json",
     extensionsFolder: "",
-    configurationFolder: "",
+    configurationFolder: "configs/",
     contextPluginsConfiguration: 'pluginsConfig.json',
     projectionDefs: [],
     themePrefix: "ms2",
