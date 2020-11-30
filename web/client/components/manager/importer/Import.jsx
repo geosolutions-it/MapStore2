@@ -5,16 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import Spinner from 'react-spinkit';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+
 import Message from '../../I18N/Message';
 import TaskProgress from './TaskProgress';
 import { getbsStyleForState } from '../../../utils/ImporterUtils';
-import { Grid, Row, Panel, Label, Table, Button, Glyphicon, Tooltip } from 'react-bootstrap';
-import OverlayTrigger from '../../misc/OverlayTrigger';
+import { Grid, Row, Panel, Label, Table, Glyphicon, Tooltip } from 'react-bootstrap';
 import './style/importer.css';
+import Button from '../misc/Button';
 
 class Task extends React.Component {
     static propTypes = {

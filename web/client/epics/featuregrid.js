@@ -282,14 +282,23 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
 const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
     // If an advanced filter is present it's filterFields should be composed with the action'
     const {id} = selectedLayerSelector(store.getState());
-    const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
+    const filterObj = {...get(store.getState(), `featuregrid.advancedFilters["${id}"]`)};
     if (filterObj) {
         // TODO: make append with advanced filters work
         const attributesFilter = getAttributeFilters(store.getState()) || {};
         const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
             return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
         }, {});
-        const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", "AND");
+        // WORKAROUND:
+        // the column filter has priority over the advanced filter's one, because filterUtils parsing
+        // of spatial field actually do not support advanced spatialField compositions like: sp1 AND (sp2 OR sp3 OR sp4)
+        // TODO: should support because filterObj.spatialFilter AND (sp1 OR sp2)
+        let spatialFieldOperator = "AND";
+        if (columnsFilters.spatialField) {
+            filterObj.spatialField = undefined;
+            spatialFieldOperator = columnsFilters.spatialFieldOperator;
+        }
+        const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", spatialFieldOperator);
         const filter = {...filterObj, ...composedFilterFields};
         return updateQuery(filter, update.type);
     }
@@ -384,10 +393,15 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
                     .switchMap((a, i) => {
                         if (i === 0) {
                             virtualScrollSet = true;
-                            // setting the page size to a big value, we allow
-                            // feature selection, ignoring the virtual scrolling
+
                             return Rx.Observable.from([
-                                setPagination(100000), updateFilterFunc(store)(a)
+                                // setting the page size to a big value, we allow
+                                // feature selection, ignoring the virtual scrolling
+                                setPagination(100000),
+                                // reset previous selected features from the feature grid
+                                // (can not merge selected from checkboxes with filtered)
+                                selectFeatures([]),
+                                updateFilterFunc(store)(a)
                             ]);
                         }
                         return Rx.Observable.of(updateFilterFunc(store)(a));
@@ -407,18 +421,25 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
                                 if (virtualScrollSet) {
                                     return Rx.Observable.of(setPagination(originalSize), updateFilterFunc(store)(a));
                                 }
-                                return updateFilterFunc(store)(a);
+                                return Rx.Observable.of(updateFilterFunc(store)(a));
                             })
                             // if closed, do not need to update
                             .takeUntil(action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE))
                     )
-                    // if closed for other causes, need to restore anyway the pagination
                     .merge(
                         action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE).take(1).switchMap(() => {
+                            // if closed. the filter must be reset or a reopen (e.g. from advanced filter)
+                            // could make inconsistent the UI.
+                            const resetFilter = updateFilter({
+                                attribute: findGeometryProperty(describeSelector(store.getState()))?.name,
+                                enabled: false,
+                                type: "geometry"
+                            });
+                            // if closed for other causes, need to restore anyway the pagination
                             if (virtualScrollSet) {
-                                return Rx.Observable.of(setPagination(originalSize));
+                                return Rx.Observable.of(setPagination(originalSize), resetFilter, updateFilterFunc(store)(resetFilter));
                             }
-                            return Rx.Observable.empty();
+                            return Rx.Observable.of(resetFilter, updateFilterFunc(store)(resetFilter));
                         })
                     );
             });
@@ -767,6 +788,7 @@ export const resetEditingOnFeatureGridClose = (action$, store) => action$.ofType
                 .switchMap(() => Rx.Observable.of(drawSupportReset())))
 
 );
+
 export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID)
         .switchMap( () => {
@@ -894,11 +916,7 @@ export const askChangesConfirmOnFeatureGridClose = (action$, store) => action$.o
     if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
         return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
     }
-    return Rx.Observable.of(closeFeatureGrid(), updateFilter({
-        attribute: findGeometryProperty(describeSelector(state))?.propName,
-        enabled: false,
-        type: "geometry"
-    }));
+    return Rx.Observable.of(closeFeatureGrid());
 });
 export const onClearChangeConfirmedFeatureGrid = (action$) => action$.ofType(CLEAR_CHANGES_CONFIRMED)
     .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false)));

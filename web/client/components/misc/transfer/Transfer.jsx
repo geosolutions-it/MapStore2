@@ -8,8 +8,9 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, ButtonGroup} from 'react-bootstrap';
+import {ButtonGroup} from 'react-bootstrap';
 
+import Button from '../Button';
 import {getMessageById} from '../../../utils/LocaleUtils';
 import Message from '../../I18N/Message';
 import Filter from '../Filter';

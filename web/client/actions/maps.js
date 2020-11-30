@@ -33,35 +33,13 @@ export const LOAD_CONTEXTS = 'MAPS:LOAD_CONTEXTS';
 export const SET_CONTEXTS = 'MAPS:SET_CONTEXTS';
 export const LOADING = 'MAPS:LOADING';
 export const METADATA_CHANGED = 'METADATA_CHANGED';
-export const SHOW_DETAILS_SHEET = 'MAPS:SHOW_DETAILS_SHEET';
-export const HIDE_DETAILS_SHEET = 'MAPS:HIDE_DETAILS_SHEET';
-export const UPDATE_DETAILS = 'MAPS:UPDATE_DETAILS';
-export const SHOW_DETAILS = 'MAPS:SHOW_DETAILS';
-export const SAVE_RESOURCE_DETAILS = 'MAPS:SAVE_RESOURCE_DETAILS';
 export const DO_NOTHING = 'MAPS:DO_NOTHING';
 export const DELETE_MAP = 'MAPS:DELETE_MAP';
 export const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
-export const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
-export const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
-export const TOGGLE_DETAILS_EDITABILITY = 'DETAILS:TOGGLE_DETAILS_EDITABILITY';
-export const DETAILS_LOADED = 'DETAILS:DETAILS_LOADED';
-export const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
-export const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
 export const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 export const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
 export const RELOAD_MAPS = 'MAPS:RELOAD_MAPS';
 export const INVALIDATE_FEATURED_MAPS = "FEATURED_MAPS:INVALIDATE";
-
-/**
- * saves details section in the resurce map on geostore
- * @memberof actions.maps
- * @return {action}        type `SAVE_RESOURCE_DETAILS`
-*/
-export function saveResourceDetails() {
-    return {
-        type: SAVE_RESOURCE_DETAILS
-    };
-}
 
 /**
  * mapsLoading action, type `MAPS_LIST_LOADING`
@@ -197,19 +175,6 @@ export function mapsLoaded(maps, params, searchText) {
 }
 
 /**
- * shows or hides map details, type `MAPS:SHOW_DETAILS`
- * @memberof actions.maps
- * @prop {boolean} showMapDetails flag used to trigger the showing/hiding of the map details
- * @return {action}        type `MAPS:SHOW_DETAILS`
-*/
-export function setShowMapDetails(showMapDetails) {
-    return {
-        type: SHOW_DETAILS,
-        showMapDetails
-    };
-}
-
-/**
  * When a error occurred during maps loading
  * @memberof actions.maps
  * @param  {object} e the error
@@ -266,16 +231,6 @@ export function mapUpdating(resourceId) {
     return {
         type: MAP_UPDATING,
         resourceId
-    };
-}
-/**
- * Toggle editability of details for the current map
- * @memberof actions.maps
- * @return {action}            type `TOGGLE_DETAILS_EDITABILITY`
- */
-export function toggleDetailsEditability() {
-    return {
-        type: TOGGLE_DETAILS_EDITABILITY
     };
 }
 
@@ -412,18 +367,6 @@ export function deleteMap(resourceId, options) {
 }
 
 /**
- * updates details section
- * @memberof actions.maps
- * @return {action}        type `UPDATE_DETAILS`
-*/
-export function updateDetails(detailsText) {
-    return {
-        type: UPDATE_DETAILS,
-        detailsText
-    };
-}
-
-/**
  * setUnsavedChanged
  * @memberof actions.maps
  * @return {action}        type `SET_UNSAVED_CHANGES`
@@ -432,50 +375,6 @@ export function setUnsavedChanged(value) {
     return {
         type: SET_UNSAVED_CHANGES,
         value
-    };
-}
-/**
- * openDetailsPanel
- * @memberof actions.maps
- * @return {action}        type `OPEN_DETAILS_PANEL`
-*/
-export function openDetailsPanel() {
-    return {
-        type: OPEN_DETAILS_PANEL
-    };
-}
-/**
- * closeDetailsPanel
- * @memberof actions.maps
- * @return {action}        type `CLOSE_DETAILS_PANEL`
-*/
-export function closeDetailsPanel() {
-    return {
-        type: CLOSE_DETAILS_PANEL
-    };
-}
-/**
- * detailsLoaded
- * @memberof actions.maps
- * @return {action}        type `DETAILS_LOADED`
-*/
-export function detailsLoaded(mapId, detailsUri, detailsSettings) {
-    return {
-        type: DETAILS_LOADED,
-        mapId,
-        detailsUri,
-        detailsSettings
-    };
-}
-/**
- * detailsSaving
- * @memberof actions.maps
- * @return {action}        type `DETAILS_SAVING`
-*/
-export function detailsSaving(saving) {
-    return {
-        type: DETAILS_SAVING,
-        saving
     };
 }
 /**
@@ -520,20 +419,6 @@ export const reloadMaps = () => ({
  */
 export const invalidateFeaturedMaps = () => ({
     type: INVALIDATE_FEATURED_MAPS
-});
-/**
- * Shows the read only details sheet
- * @memberof actions.maps
- */
-export const showDetailsSheet = () => ({
-    type: SHOW_DETAILS_SHEET
-});
-/**
- * Hides the read only details sheet
- * @memberof actions.maps
- */
-export const hideDetailsSheet = () => ({
-    type: HIDE_DETAILS_SHEET
 });
 
 /**

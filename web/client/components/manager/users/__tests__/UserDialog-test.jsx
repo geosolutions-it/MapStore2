@@ -189,7 +189,7 @@ describe("Test UserDialog Component", () => {
             }} />, document.getElementById("container"));
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
-        expect(domnode.getElementsByClassName("btn-primary")[0].disabled).toBe(true);
+        expect(domnode.getElementsByClassName("btn-primary")[0].classList.contains('disabled')).toBe(true);
         expect(domnode.getElementsByClassName("spinner").length).toNotBe(0);
     });
     it('displays the success style', () => {

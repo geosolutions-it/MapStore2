@@ -10,7 +10,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ScrollUp from 'react-scroll-up';
 import Message from '../components/I18N/Message';
-import { Glyphicon, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Glyphicon, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import Button from '../components/misc/Button';
 
 /**
  * ScrollUp Plugin. Show a button that allows to scroll to the top of the page. Only for full pages.

@@ -19,9 +19,9 @@ import {
     onDownloadFinished,
     onFormatOptionsFetch,
     updateFormats
-} from '../wfsdownload';
+} from '../layerdownload';
 
-describe('Test correctness of the wfsdownload actions', () => {
+describe('Test correctness of the layerdownload actions', () => {
     it('test downloadFeatures action', () => {
         let {type, url, filterObj, downloadOptions} = downloadFeatures("url", "filterObj", "downloadOptions");
         expect(type).toBe(DOWNLOAD_FEATURES);

@@ -7,7 +7,7 @@
 */
 
 import { compose, defaultProps, withHandlers } from 'recompose';
-import { deleteMap, reloadMaps, updateAttribute, invalidateFeaturedMaps, showDetailsSheet, hideDetailsSheet } from '../../actions/maps'; // TODO: externalize
+import { deleteMap, reloadMaps, updateAttribute, invalidateFeaturedMaps } from '../../actions/maps'; // TODO: externalize
 import { userSelector } from '../../selectors/security';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -22,9 +22,7 @@ export default compose(
         reloadMaps,
         onShowSuccessNotification: () => success({ title: "success", message: "resources.successSaved" }),
         invalidateFeaturedMaps,
-        onUpdateAttribute: updateAttribute,
-        onShowDetailsSheet: showDetailsSheet,
-        onHideDetailsSheet: hideDetailsSheet
+        onUpdateAttribute: updateAttribute
     }),
     withHandlers({
         onSaveSuccess: (props) => () => {

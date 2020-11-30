@@ -749,7 +749,7 @@ describe("test the CoordinatesEditor Panel", () => {
         let firstDelButton = buttons[5];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
-        expect(firstDelButton.disabled).toBe(true);
+        expect(firstDelButton.classList.contains('disabled')).toBe(true);
     });
 
     it('CoordinatesEditor as LineString editor, 4 rows, remove first invalid row', () => {

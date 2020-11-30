@@ -30,6 +30,7 @@ export default ({
     topRightItems,
     confirmDelete = false,
     loading = false,
+    dataGrid = {},
     onDelete = () => {},
     headerStyle,
     env
@@ -37,6 +38,7 @@ export default ({
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={topRightItems}
+        isDraggable={dataGrid.isDraggable}
     >
         <BorderLayout
             footer={

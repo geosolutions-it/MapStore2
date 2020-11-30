@@ -6,16 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import './css/settingsModal.css';
 
+import React from 'react';
 import PropTypes from 'prop-types';
+import { Glyphicon, Tabs, Tab } from 'react-bootstrap';
+import assign from 'object-assign';
+
 import General from './settings/General';
 import Dialog from '../../misc/Dialog';
 import Portal from '../../misc/Portal';
 import Message from '../../I18N/Message';
-import { Button, Glyphicon, Tabs, Tab } from 'react-bootstrap';
-import assign from 'object-assign';
-import './css/settingsModal.css';
+
+import Button from '../../misc/Button';
 
 class GroupSettingsModal extends React.Component {
     static propTypes = {

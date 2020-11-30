@@ -9,7 +9,7 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
-import { Glyphicon, Button } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import ConfirmButton from '../components/buttons/ConfirmButton';
 import Dialog from '../components//misc/Dialog';
 import Portal from '../components/misc/Portal';
@@ -22,6 +22,7 @@ import WFSServiceProps from '../components/mapcontrols/searchservicesconfig/WFSS
 import ResultsProps from '../components/mapcontrols/searchservicesconfig/ResultsProps.jsx';
 import WFSOptionalProps from '../components/mapcontrols/searchservicesconfig/WFSOptionalProps.jsx';
 import PropTypes from 'prop-types';
+import Button from '../components/misc/Button';
 
 /**
  * Text Search Services Editor Plugin. Allow to add and edit additional

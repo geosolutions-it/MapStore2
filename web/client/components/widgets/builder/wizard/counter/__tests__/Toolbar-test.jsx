@@ -38,9 +38,9 @@ describe('CounterWizard Toolbar component', () => {
         expect(buttons[0].querySelector('.glyphicon-filter')).toExist();
         // filter should not enabled because valid means also that
         // there are some attributes
-        expect(buttons[0].disabled).toBe(true);
+        expect(buttons[0].classList.contains('disabled')).toBe(true);
         expect(buttons[1].querySelector('.glyphicon-arrow-right')).toExist();
-        expect(buttons[1].disabled).toBe(true);
+        expect(buttons[1].classList.contains('disabled')).toBe(true);
         ReactDOM.render(<Toolbar step={0} valid />, document.getElementById("container"));
         expect(container.querySelectorAll('button')[1].disabled).toBe(false);
         expect(container.querySelectorAll('button')[1].disabled).toBeFalsy();
@@ -65,7 +65,7 @@ describe('CounterWizard Toolbar component', () => {
         expect(buttons[0].querySelector('.glyphicon-test')).toExist();
         expect(buttons[1].querySelector('.glyphicon-filter')).toExist();
         expect(buttons[2].querySelector('.glyphicon-arrow-right')).toExist();
-        expect(buttons[2].disabled).toBe(true);
+        expect(buttons[2].classList.contains('disabled')).toBe(true);
         ReactDOM.render(<Toolbar step={0} valid />, document.getElementById("container"));
         expect(container.querySelectorAll('button')[1].disabled).toBeFalsy();
     });

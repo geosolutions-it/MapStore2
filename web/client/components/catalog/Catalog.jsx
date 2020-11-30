@@ -16,7 +16,6 @@ import {
     FormGroup,
     Alert,
     Pagination,
-    Button,
     Panel,
     Form,
     InputGroup,
@@ -24,6 +23,7 @@ import {
     Glyphicon
 } from 'react-bootstrap';
 
+import Button from '../misc/Button';
 import Select from 'react-select';
 import BorderLayout from '../layout/BorderLayout';
 import { getMessageById } from '../../utils/LocaleUtils';

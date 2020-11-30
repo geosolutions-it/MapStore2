@@ -14,8 +14,6 @@ import assign from 'object-assign';
 import SearchResult from './SearchResult';
 import I18N from '../../I18N/I18N';
 
-import OverlayTriggerCustom from '../../misc/OverlayTriggerCustom';
-
 import { showGFIForService, layerIsVisibleForGFI } from '../../../utils/SearchUtils';
 
 export default class SearchResultList extends React.Component {
@@ -73,7 +71,6 @@ export default class SearchResultList extends React.Component {
                     disabled,
                     glyph: 'info-sign',
                     tooltipId: visible && disabled ? 'search.layerMustBeVisible' : 'search.showGFI',
-                    customOverlayTrigger: OverlayTriggerCustom, // to make sure that a tooltip is triggered in chrome when the button is disabled
                     onClick: e => {
                         e.stopPropagation();
                         this.props.showGFI(item);

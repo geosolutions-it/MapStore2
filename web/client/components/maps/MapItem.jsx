@@ -10,7 +10,6 @@ import { isFunction } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-    Button,
     Glyphicon,
     ListGroupItem,
     Tooltip
@@ -18,6 +17,7 @@ import {
 
 import I18N from '../I18N/I18N';
 import OverlayTrigger from '../misc/OverlayTrigger';
+import Button from '../misc/Button';
 
 class MapItem extends React.Component {
     static propTypes = {

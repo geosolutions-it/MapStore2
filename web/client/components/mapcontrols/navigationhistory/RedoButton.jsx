@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -9,9 +8,11 @@ import PropTypes from 'prop-types';
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
 
-import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../misc/OverlayTrigger';
+import Button from '../../misc/Button';
 
 class RedoBtn extends React.Component {
     static propTypes = {

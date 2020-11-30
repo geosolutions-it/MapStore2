@@ -391,14 +391,14 @@
                 "unsavedMapCancelButtonText": "Fermer"
             },
             "geostories": {
-                "newGeostory": "Nouvelle RécitCarte",
-                "title": "Stories ({count})",
-                "titleNoCount": "Stories",
-                "create": "Créer une RécitCarte",
-                "noGeostoryAvailable": "Aucune RécitCarte disponible",
-                "createANewOne": "Créer une nouvelle RécitCarte",
-                "deleteError": "Une erreur s'est produite lors de la suppression de la RécitCarte",
-                "errorLoadingGeostories": "Une erreur s'est produite lors du chargement des RécitCartes"
+                "newGeostory": "Nouvelle GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                "create": "Créer GeoStory",
+                "noGeostoryAvailable": "Pas de GeoStory disponible",
+                "createANewOne": "Créer une nouvelle GeoStory",
+                "deleteError": "Une erreur s'est produite lors de la suppression du GeoStory",
+                "errorLoadingGeostories": "Une erreur s'est produite lors du chargement de GeoStories"
             }
         },
         "map": {
@@ -1580,9 +1580,9 @@
                     "number": "Tapez un nombre ou une expression... Exemples : 10, > 2, < 10",
                     "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
                     "geometry": {
-                        "disabled": "Filtrez en cliquant sur la carte/ Maintenez ctrl et cliquez pour filtrer plusieurs",
-                        "enabled": "Cliquez sur la carte pour filtrer les résultats / Maintenez ctrl et cliquez pour filtrer plusieurs",
-                        "applied": "Supprimez le filtre en cliquant sur la carte"
+                        "disabled": "Filtrer en cliquant sur la carte / Alt + glisser la souris pour dessiner un filtre de boîte. Maintenez également la touche Ctrl pour ajouter plus de fonctionnalités au filtre actuel",
+                        "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
+                        "applied": "Nettoyer la sélection"
                     }
                 }
             },
@@ -1612,16 +1612,43 @@
                 "createNewChart": "Créer un graphique pour le calque sélectionné"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exporter des données",
             "format": "Format de fichier",
             "srs": "Système de référence spatiale",
             "export": "Export",
             "downloadonlycurrentpage": "Télécharger uniquement la page actuelle",
+            "cropDataSet": "Recadrer le jeu de données dans la fenêtre courante",
+            "downloadFilteredDataSet": "Télécharger l'ensemble de données filtré",
+            "advancedOptions": "Options avancées",
+            "compression": "Compression",
+            "tileWidth": "Largeur de tuile",
+            "tileHeight": "Hauteur des carreaux",
+            "quality": "Qualité",
             "error": {
                 "title": "Erreur lors de l'export",
-                "invalidOutputFormat": "Le format d'export sélectionné n'est pas disponible"
-            }
+                "invalidOutputFormat": "Le format d'export sélectionné n'est pas disponible",
+                "downloadEstimatorTitle": "Erreur DownloadEstimator",
+                "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez."
+            },
+            "exportResultsMessages": {
+                "newExport": "Die Datei ist hier verfügbar, wenn der Export abgeschlossen ist",
+                "exportFailure": "L'exportation pour le calque \"{layerTitle}\" a échoué! Ouvrez la boîte de dialogue des résultats d'exportation pour plus d'informations.",
+                "exportSuccess": "L'exportation pour le calque \"{layerTitle}\" s'est terminée avec succès.",
+                "invalidHref": "La réponse du serveur ne contenait pas d'adresse URL valide pour les fichiers exportés!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Le processus de téléchargement a échoué! Le serveur a renvoyé le rapport d'exception suivant: \"{exceptionReport}\"",
+                "badResponse": "Le processus de téléchargement a échoué! Le serveur a renvoyé des données incorrectes, code d'erreur: \"{errorCode}\"",
+                "executeProcessXhrFailed": "La requête ExecuteProcess a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
+                "getExecutionStatusXhrFailed": "La demande GetExecutionStatus a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
+                "unexpectedError": "Une erreur inattendue s'est produite"
+            },
+            "noSupportedServiceFound": "Le serveur ne prend pas en charge le téléchargement WFS ou WPS pour cette couche!"
+        },
+        "exportDataResults": {
+            "title": "Exporter les résultats des données",
+            "emptyStateMessage": "La liste d'exportation est vide"
         },
         "widgets": {
             "types": {
@@ -1729,6 +1756,8 @@
                     "confirmDelete": "Êtes-vous sûr?",
                     "downloadData": "Télécharger les données",
                     "exportImage": "Exporter l'image",
+                    "maximize": "Maximiser",
+                    "minimize": "Minimiser",
                     "pin": "Épingler",
                     "unpin": "Détacher",
                     "hide": "Cacher",
@@ -2713,7 +2742,7 @@
             "descriptionGeorchestra": "Affiche la version de GeOrchestra dans l'outil de paramètres de carte",
             "title": "Version"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Permet de télécharger des données de la table d'attributs",
             "title": "Télécharger les données"
           },
@@ -2776,8 +2805,8 @@
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
-                    "activatePlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
-                    "deactivatePlugin": "Désactiver le chargement de ce plugin au démarrage",
+                    "activatePlugin": "Activer ce plugin au chargement du contexte",
+                    "deactivatePlugin": "Désactiver ce plugin au chargement du contexte",
                     "editConfiguration": "Modifier la configuration du plugin",
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",

@@ -31,13 +31,15 @@ import {
     HIDE_MAPINFO_MARKER,
     GET_VECTOR_INFO,
     SET_CURRENT_EDIT_FEATURE_QUERY,
+    CLEAR_WARNING,
     loadFeatureInfo,
     featureInfoClick,
     closeIdentify,
     toggleHighlightFeature,
     editLayerFeatures,
     updateFeatureInfoClickPoint,
-    purgeMapInfoResults
+    purgeMapInfoResults,
+    clearWarning
 } from '../../actions/mapInfo';
 
 import { REMOVE_MAP_POPUP } from '../../actions/mapPopups';
@@ -51,7 +53,7 @@ import {
     featureInfoClickOnHighligh,
     closeFeatureInfoOnCatalogOpenEpic,
     identifyEditLayerFeaturesEpic,
-    hideMarkerOnIdentifyClose,
+    hideMarkerOnIdentifyCloseOrClearWarning,
     onUpdateFeatureInfoClickPoint,
     removePopupOnLocationChangeEpic,
     removePopupOnUnregister,
@@ -928,9 +930,16 @@ describe('identify Epics', () => {
         }, done);
     });
 
-    it('hideMapMarkerOnIdentifyClose', (done) => {
+    it('hideMarkerOnIdentifyCloseOrClearWarning on closeIdentify', (done) => {
         const startActions = [closeIdentify()];
-        testEpic(hideMarkerOnIdentifyClose, 1, startActions, actions => {
+        testEpic(hideMarkerOnIdentifyCloseOrClearWarning, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(HIDE_MAPINFO_MARKER);
+        }, {}, done);
+    });
+    it('hideMarkerOnIdentifyCloseOrClearWarning on clearWarning', (done) => {
+        const startActions = [clearWarning()];
+        testEpic(hideMarkerOnIdentifyCloseOrClearWarning, 1, startActions, actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(HIDE_MAPINFO_MARKER);
         }, {}, done);
@@ -1011,6 +1020,29 @@ describe('identify Epics', () => {
         it('checks that all works with some popups with LOCATION_CHANGE as trigger', done => {
             const NUM_ACTIONS = 1;
             testEpic(removePopupOnLocationChangeEpic, NUM_ACTIONS, {type: LOCATION_CHANGE}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{id, type}] = actions;
+                expect(type).toBe(REMOVE_MAP_POPUP);
+                expect(id).toBe("id");
+                done();
+            }, {
+                mapPopups: {
+                    popups: [{id: "id"}]
+                }
+            });
+        });
+        it('removePopupOnLocationChangeEpic with CLEAR_WARNING as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(addTimeoutEpic(removePopupOnLocationChangeEpic, 50), NUM_ACTIONS, {type: CLEAR_WARNING}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{type}] = actions;
+                expect(type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+        });
+        it('checks that all works with some popups with CLEAR_WARNING as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(removePopupOnLocationChangeEpic, NUM_ACTIONS, {type: CLEAR_WARNING}, (actions) => {
                 expect(actions.length).toBe(1);
                 const [{id, type}] = actions;
                 expect(type).toBe(REMOVE_MAP_POPUP);

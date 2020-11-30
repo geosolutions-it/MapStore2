@@ -5,15 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
+import React from 'react';
 import Spinner from 'react-spinkit';
-import Message from '../../I18N/Message';
 import PropTypes from 'prop-types';
-import { getbsStyleForState } from '../../../utils/ImporterUtils';
-import { Table, Glyphicon, Button, Label, Tooltip } from 'react-bootstrap';
-import OverlayTrigger from '../../misc/OverlayTrigger';
+import { Table, Glyphicon, Label, Tooltip } from 'react-bootstrap';
 import { findIndex } from 'lodash';
+
+import Button from '../misc/Button';
+import Message from '../../I18N/Message';
+import { getbsStyleForState } from '../../../utils/ImporterUtils';
+import OverlayTrigger from '../../misc/OverlayTrigger';
 
 class ImportsGrid extends React.Component {
     static propTypes = {

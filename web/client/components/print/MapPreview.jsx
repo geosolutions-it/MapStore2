@@ -9,10 +9,11 @@
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 
 import { getMapZoom } from '../../utils/PrintUtils';
 import ScaleBox from '../mapcontrols/scale/ScaleBox';
+import Button from '../misc/Button';
 
 let PMap;
 let Layer;

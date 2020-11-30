@@ -263,6 +263,42 @@ export const filterArrayToFilterObject = (filterArr) => {
     };
 };
 
+/**
+ * Remove all invalid properties from a json symbolizer used by style editor
+ * @param  {object} symbolizer symbolizer object
+ * @return  {object} symbolizer without unused properties
+ */
+function cleanJSONSymbolizer(symbolizer) {
+    const symbolizerWithoutUndefined = omitBy(symbolizer, isUndefined);
+    const newSymbolizer = Object.keys(symbolizerWithoutUndefined).reduce((acc, key) => {
+        switch (key) {
+        case 'haloColor':
+        case 'haloWidth':
+            return symbolizerWithoutUndefined.kind === 'Text' && symbolizerWithoutUndefined.haloWidth === 0
+                ? acc
+                : { ...acc, [key]: symbolizerWithoutUndefined[key] };
+        case 'outlineWidth':
+        case 'outlineColor':
+        case 'outlineOpacity':
+            return symbolizerWithoutUndefined.kind === 'Fill' && symbolizerWithoutUndefined.outlineWidth === 0
+                ? acc
+                : { ...acc, [key]: symbolizerWithoutUndefined[key] };
+        case 'strokeWidth':
+        case 'strokeColor':
+        case 'strokeOpacity':
+            return symbolizerWithoutUndefined.kind === 'Mark' && symbolizerWithoutUndefined.strokeWidth === 0
+                ? acc
+                : { ...acc, [key]: symbolizerWithoutUndefined[key] };
+        case 'graphicFill':
+        case 'graphicStroke':
+            return { ...acc, [key]: cleanJSONSymbolizer(symbolizerWithoutUndefined[key]) };
+        default:
+            return { ...acc, [key]: symbolizerWithoutUndefined[key] };
+        }
+    }, {});
+    return newSymbolizer;
+}
+
 export function parseJSONStyle(style) {
 
     if (!(style && style.rules)) {
@@ -293,7 +329,7 @@ export function parseJSONStyle(style) {
                             : undefined,
                         ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                         symbolizers: [
-                            omitBy({
+                            cleanJSONSymbolizer({
                                 ...omit(rule, [
                                     'ruleId',
                                     'classification',
@@ -306,7 +342,7 @@ export function parseJSONStyle(style) {
                                 ]),
                                 kind: rule.symbolizerKind || 'Fill',
                                 color: entry.color
-                            }, isUndefined)
+                            })
                         ]
                     };
                 });
@@ -325,7 +361,7 @@ export function parseJSONStyle(style) {
                     name: rule.name || '',
                     ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                     symbolizers: [
-                        omitBy({
+                        cleanJSONSymbolizer({
                             ...omit(rule, [
                                 'ruleId',
                                 'classification',
@@ -339,7 +375,7 @@ export function parseJSONStyle(style) {
                             ]),
                             kind: 'Raster',
                             ...(colorMap && { colorMap })
-                        }, isUndefined)
+                        })
                     ]
                 };
             }
@@ -350,7 +386,7 @@ export function parseJSONStyle(style) {
                 ...rule,
                 filter,
                 symbolizers: (rule?.symbolizers || [])
-                    .map((symbolizer) => omitBy(symbolizer, isUndefined))
+                    .map((symbolizer) => cleanJSONSymbolizer(symbolizer))
             };
         }))
     };

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -8,11 +7,13 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
 import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
+import { Panel, Table, Glyphicon, Tooltip } from 'react-bootstrap';
+
 import Message from '../../I18N/Message';
-import { Panel, Table, Button, Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../misc/OverlayTrigger';
+import Button from '../misc/Button';
 
 class TransformsGrid extends React.Component {
     static propTypes = {

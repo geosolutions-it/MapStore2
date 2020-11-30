@@ -26,7 +26,7 @@ const state = {
         queryPanel: {
             enabled: true
         },
-        wfsdownload: {
+        layerdownload: {
             available: true,
             enabled: true
         },

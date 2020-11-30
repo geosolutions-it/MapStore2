@@ -9,7 +9,7 @@ import React from 'react';
 
 import Rx from 'rxjs';
 import Message from '../../components/I18N/Message';
-import { Button as RButton, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import { setCollapsed } from '../../actions/timeline';
 import { isCollapsed, hasLayers } from '../../selectors/timeline';
 import { compose, withHandlers, withProps, renderNothing, branch, mapPropsStream } from 'recompose';
@@ -17,6 +17,7 @@ import tooltip from '../../components/misc/enhancers/tooltip';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import withPopover from '../../components/data/featuregrid/enhancers/withPopover';
+import RButton from '../../components/misc/Button';
 
 /**
  * Creates the properties to toggle the hint popover.

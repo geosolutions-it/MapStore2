@@ -6,12 +6,13 @@
 * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
+import { Col, ButtonGroup } from 'react-bootstrap';
 
+import Button from '../../misc/Button';
 import StylesList from './StylesList';
 import Message from '../../I18N/Message';
 import Filter from '../../misc/Filter';
 import Portal from '../../misc/Portal';
-import { Col, Button, ButtonGroup } from 'react-bootstrap';
 import ResizableModal from '../../misc/ResizableModal';
 import BorderLayout from '../../layout/BorderLayout';
 

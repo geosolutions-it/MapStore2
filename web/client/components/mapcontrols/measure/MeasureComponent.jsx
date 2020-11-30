@@ -20,7 +20,6 @@ import {convertUom, getFormattedBearingValue} from '../../../utils/MeasureUtils'
 import Message from '../../I18N/Message';
 import NumberFormat from '../../I18N/Number';
 import BorderLayout from '../../layout/BorderLayout';
-import OverlayTriggerCustom from '../../misc/OverlayTriggerCustom';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import CoordinatesEditor from '../annotations/CoordinatesEditor';
 
@@ -371,8 +370,7 @@ class MeasureComponent extends React.Component {
                                                 this.props.measurement.features,
                                                 this.props.measurement.textLabels,
                                                 this.props.uom
-                                            ),
-                                            customOverlayTrigger: OverlayTriggerCustom
+                                            )
                                         },
                                         {
                                             glyph: exportToAnnotation ? 'floppy-disk' : 'comment',

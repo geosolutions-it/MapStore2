@@ -42,7 +42,7 @@ describe('MediaModal component', () => {
             const buttons = document.querySelectorAll("button");
             expect(buttons.length).toBe(4);
             const applyBtn = buttons[3];
-            expect(applyBtn.disabled).toBe(false);
+            expect(applyBtn.classList.contains('disabled')).toBe(false);
         });
         it('when is adding a new resource', () => {
             ReactDOM.render(
@@ -52,7 +52,7 @@ describe('MediaModal component', () => {
             const buttons = document.querySelectorAll("button");
             expect(buttons.length).toBe(4);
             const applyBtn = buttons[3];
-            expect(applyBtn.disabled).toBe(true);
+            expect(applyBtn.classList.contains('disabled')).toBe(true);
         });
         it('when is editing a resource', () => {
             ReactDOM.render(
@@ -62,7 +62,7 @@ describe('MediaModal component', () => {
             const buttons = document.querySelectorAll("button");
             expect(buttons.length).toBe(4);
             const applyBtn = buttons[3];
-            expect(applyBtn.disabled).toBe(true);
+            expect(applyBtn.classList.contains('disabled')).toBe(true);
         });
     });
 });

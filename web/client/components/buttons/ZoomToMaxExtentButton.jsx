@@ -9,7 +9,8 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import Button from '../misc/Button';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import { getZoomForExtent, getCenterForExtent, getBbox } from '../../utils/MapUtils';
 import { getCenter } from '../../utils/ConfigUtils';

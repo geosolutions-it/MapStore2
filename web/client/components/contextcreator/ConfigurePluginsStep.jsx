@@ -9,11 +9,12 @@
 import React from 'react';
 import {compose, withState, lifecycle, getContext} from 'recompose';
 import {get} from 'lodash';
-import {Glyphicon, Button, Tooltip, OverlayTrigger, Alert} from 'react-bootstrap';
+import {Glyphicon, Tooltip, OverlayTrigger, Alert} from 'react-bootstrap';
 import {Controlled as Codemirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
 
+import Button from '../misc/Button';
 import Transfer from '../misc/transfer/Transfer';
 import ResizableModal from '../misc/ResizableModal';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';

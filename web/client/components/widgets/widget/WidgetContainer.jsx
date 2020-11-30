@@ -28,7 +28,7 @@ export default ({
     title,
     confirmDelete = false,
     className,
-    handle = "draggableHandle",
+    isDraggable = true,
     toggleDeleteConfirm = () => {},
     onDelete = () => {},
     icons,
@@ -38,7 +38,7 @@ export default ({
     children
 }) =>
     (<div className="mapstore-widget-card" id={id}>
-        <BorderLayout className={className} header={(<div style={headerStyle} className={`mapstore-widget-info ${handle ? handle : ""}`}>
+        <BorderLayout className={className} header={(<div style={headerStyle} className={`mapstore-widget-info ${isDraggable ? 'draggableHandle' : ''}`}>
             <div className="mapstore-widget-header">
                 <span className="widget-icons">{icons}</span>
                 {topLeftItems}

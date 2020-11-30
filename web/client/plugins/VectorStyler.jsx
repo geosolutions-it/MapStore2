@@ -11,7 +11,7 @@ import './vectorstyler/vectorstyler.css';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Col, FormControl, Glyphicon, Grid, Panel, PanelGroup, Row } from 'react-bootstrap';
+import { Col, FormControl, Glyphicon, Grid, Panel, PanelGroup, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Combobox } from 'react-widgets';
 import { createSelector } from 'reselect';
@@ -32,6 +32,8 @@ import { getWindowSize } from '../utils/AgentUtils';
 import { vecStyleToSLD } from '../utils/SLDUtils';
 import Message from './locale/Message';
 import { ScaleDenominator, StylePoint, StylePolygon, StylePolyline } from './vectorstyler/index';
+import Button from '../components/misc/Button';
+
 
 class VectorStyler extends React.Component {
     static propTypes = {

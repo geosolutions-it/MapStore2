@@ -11,7 +11,7 @@ import './rasterstyler/rasterstyler.css';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Col, Glyphicon, Grid, Panel, PanelGroup, Row } from 'react-bootstrap';
+import { Col, Glyphicon, Grid, Panel, PanelGroup, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Combobox } from 'react-widgets';
 import { createSelector } from 'reselect';
@@ -34,6 +34,7 @@ import {
     RasterStyleTypePicker,
     RedBandSelector
 } from './rasterstyler/index';
+import Button from '../components/misc/Button';
 
 class RasterStyler extends React.Component {
     static propTypes = {

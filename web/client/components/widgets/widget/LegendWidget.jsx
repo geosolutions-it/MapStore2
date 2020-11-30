@@ -20,12 +20,14 @@ export default ({
     headerStyle,
     confirmDelete = false,
     topRightItems,
+    dataGrid = {},
     onDelete = () => {},
     ...props
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={topRightItems}
+        isDraggable={dataGrid.isDraggable}
     >
         <LegendView {...props} />
     </WidgetContainer>

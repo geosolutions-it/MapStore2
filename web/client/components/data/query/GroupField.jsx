@@ -8,7 +8,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import OverlayTrigger from '../../misc/OverlayTrigger';
 import FilterField from './FilterField';
@@ -21,6 +21,7 @@ import SwitchPanel from '../../misc/switch/SwitchPanel';
 import StringSelector from '../../misc/StringSelector';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import I18N from '../../I18N/I18N';
+import Button from '../../misc/Button';
 
 class GroupField extends React.Component {
     static propTypes = {

@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-
-import PropTypes from 'prop-types';
-import { Button, Glyphicon, Tabs, Tab } from 'react-bootstrap';
-import { isNil } from 'lodash';
 import './css/settingsModal.css';
+
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Glyphicon, Tabs, Tab } from 'react-bootstrap';
+import assign from 'object-assign';
+import { isNil } from 'lodash';
+
 import Dialog from '../../misc/Dialog';
 import ConfirmButton from '../../buttons/ConfirmButton';
 import General from './settings/General';
@@ -20,9 +22,9 @@ import WMSStyle from './settings/WMSStyle';
 import Elevation from './settings/Elevation';
 import FeatureInfoFormat from './settings/FeatureInfoFormat';
 import Portal from '../../misc/Portal';
-import assign from 'object-assign';
 import Message from '../../I18N/Message';
 import { getDimension } from '../../../utils/LayersUtils';
+import Button from '../../misc/Button';
 
 class SettingsModal extends React.Component {
     static propTypes = {

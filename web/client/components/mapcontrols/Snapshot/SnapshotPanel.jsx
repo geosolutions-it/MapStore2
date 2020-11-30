@@ -12,9 +12,10 @@ import './css/snapshot.css';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Alert, Button, Col, Glyphicon, Grid, Image, Panel, Row, Table } from 'react-bootstrap';
+import { Alert, Col, Glyphicon, Grid, Image, Panel, Row, Table } from 'react-bootstrap';
 
 import ConfigUtils from '../../../utils/ConfigUtils';
+import Button from '../../misc/Button';
 import { DateFormat } from '../../I18N/I18N';
 import Message from '../../I18N/Message';
 import Dialog from '../../misc/Dialog';

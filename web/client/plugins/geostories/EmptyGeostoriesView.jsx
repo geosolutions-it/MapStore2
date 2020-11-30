@@ -7,13 +7,13 @@
  */
 
 import React from 'react';
-
 import PropTypes from 'prop-types';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { Button } from 'react-bootstrap';
+
 import { isLoggedIn } from '../../selectors/security';
 import Message from '../../components/I18N/Message';
+import Button from '../../components/misc/Button';
 
 class EmptyGeostories extends React.Component {
     static propTypes = {

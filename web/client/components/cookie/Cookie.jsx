@@ -8,7 +8,8 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { Button, Glyphicon, Col } from 'react-bootstrap';
+import { Glyphicon, Col } from 'react-bootstrap';
+import Button from '../misc/Button';
 import Message from '../../components/I18N/Message';
 import MoreDetails from './MoreDetails';
 /**

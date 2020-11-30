@@ -10,12 +10,13 @@ import _ from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Glyphicon, Table } from 'react-bootstrap';
+import { Glyphicon, Table } from 'react-bootstrap';
 import Select from 'react-select';
 import Spinner from 'react-spinkit';
 
 import {getMessageById} from '../../../../utils/LocaleUtils';
 import Message from '../../../I18N/Message';
+import Button from '../../../misc/Button';
 
 class PermissionEditor extends React.Component {
     static propTypes = {

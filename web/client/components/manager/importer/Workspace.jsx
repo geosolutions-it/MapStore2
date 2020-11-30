@@ -5,13 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
+import React from 'react';
 import Select from 'react-select';
 import PropTypes from 'prop-types';
-import { FormControl, Button, Alert } from 'react-bootstrap';
+import { FormControl, Alert } from 'react-bootstrap';
+
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
+import Button from '../misc/Button';
 
 export default class extends React.Component {
     static propTypes = {
