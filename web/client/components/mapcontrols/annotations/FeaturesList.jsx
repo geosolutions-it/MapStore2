@@ -33,7 +33,9 @@ const FeaturesList = (props) => {
         isMeasureEditDisabled,
         onSetAnnotationMeasurement,
         showPopupWarning,
-        setPopupWarning
+        setPopupWarning,
+        defaultStyles,
+        defaultPointType
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);
@@ -69,7 +71,7 @@ const FeaturesList = (props) => {
                             visible: isMeasureEditDisabled,
                             disabled: !isValidFeature,
                             onClick: () => {
-                                const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}];
+                                const style = [{ ...defaultStyles.POINT?.[defaultPointType], highlight: true, id: uuidv1()}];
                                 onClickGeometry("Point", style);
                             },
                             tooltip: <Message msgId="annotations.titles.marker" />
@@ -210,7 +212,9 @@ FeaturesList.defaultProps = {
     onStyleGeometry: () => {},
     onSetAnnotationMeasurement: () => {},
     onSelectFeature: () => {},
-    isMeasureEditDisabled: true
+    setTabValue: () => {},
+    isMeasureEditDisabled: true,
+    defaultPointType: 'marker'
 };
 
 export default FeaturesList;
