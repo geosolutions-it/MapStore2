@@ -18,3 +18,13 @@
 .details-viewer-modal {
     padding: 8px !important;
 }
+
+/////////////////////
+// LIBRARIES FIX
+/////////////////////
+// issue in react-draft-wysiwyg align not working on multi line paragraph TODO: unify with GeoStory's fix in a separated less file for editor
+.ms-details-draftjs-editor {
+        .public-DraftStyleDefault-ltr {
+        text-align: inherit;
+    }
+}
