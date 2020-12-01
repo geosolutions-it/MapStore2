@@ -154,7 +154,50 @@ const createLayer = (options, map) => {
                 crossOrigin: options.crossOrigin,
                 attributions: toOLAttributions(options.credits),
                 params: queryParameters,
-                ratio: options.ratio || 1
+                ratio: options.ratio || 1,
+                imageLoadFunction: function(image, src) {
+                    // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
+                    var img = image.getImage();
+
+                    if (typeof window.btoa === 'function' && src.length >= 2000) {
+                        const xhr = new XMLHttpRequest();
+                        // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
+                        const dataEntries = src.split("&");
+                        let url;
+                        let params = "";
+                        for (let i = 0; i < dataEntries.length; i++) {
+                            if (i === 0) {
+                                url = dataEntries[i];
+                            } else {
+                                params = params + "&" + dataEntries[i];
+                            }
+                        }
+                        xhr.open('POST', url, true);
+
+                        xhr.responseType = 'arraybuffer';
+                        xhr.onload = function() {
+                            if (this.status === 200) {
+                                const uInt8Array = new Uint8Array(this.response);
+                                let i = uInt8Array.length;
+                                const binaryString = new Array(i);
+                                while (i--) {
+                                    binaryString[i] = String.fromCharCode(uInt8Array[i]);
+                                }
+                                const data = binaryString.join('');
+                                const type = xhr.getResponseHeader('content-type');
+                                if (type.indexOf('image') === 0) {
+                                    img.src = 'data:' + type + ';base64,' + window.btoa(data);
+                                }
+                            }
+                        };
+                        // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
+                        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xhr.send(params);
+
+                    } else {
+                        img.src = src;
+                    }
+                }
             })
         });
     }
