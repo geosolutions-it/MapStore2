@@ -25,8 +25,39 @@ export default compose(
     }),
     widthProvider({ overrideWidthProvider: true }),
     withProps(({width}) => ({
-        width: width < 480 ? width - WIDGET_MOBILE_RIGHT_SPACE : width
+        width: width < 480 ? width - WIDGET_MOBILE_RIGHT_SPACE : width,
+        toolsOptions: { showMaximize: true }
     })),
+    withProps(({width, height, maximized} = {}) => {
+        const maximizedStyle = maximized?.widget ? {
+            width: '100%',
+            height: '100%',
+            marginTop: 0,
+            bottom: 'auto',
+            top: 0,
+            left: 0,
+            zIndex: 1330
+        } : {};
+        const maximizedProps = maximized?.widget ? {
+            width,
+            useDefaultWidthProvider: false,
+            rowHeight: height - 50,
+            breakpoints: { xxs: 0 },
+            cols: { xxs: 1 }
+        } : {};
+
+        return ({
+            className: "on-map",
+            breakpoints: { md: 480, xxs: 0 },
+            cols: { md: 6, xxs: 1 },
+            style: {
+                position: 'absolute',
+                zIndex: 50,
+                ...maximizedStyle
+            },
+            ...maximizedProps
+        });
+    }),
     emptyState(
         ({widgets = []} = {}) => widgets.length === 0,
         ({loading}) => ({
