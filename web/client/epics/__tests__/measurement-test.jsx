@@ -35,14 +35,14 @@ describe('measurement epics', () => {
                     ],
                     "textLabels": [
                         {
-                            "text": "2,937,911.16 m | 061.17° T",
+                            "text": "2,937,911.16 m | 061.17°",
                             "position": [
                                 -127.53661546263791,
                                 46.54526898530547
                             ]
                         },
                         {
-                            "text": "1,837,281.12 m | 140.72° T",
+                            "text": "1,837,281.12 m | 140.72°",
                             "position": [
                                 -101.23884662739748,
                                 42.09680198161091
@@ -67,14 +67,14 @@ describe('measurement epics', () => {
         ],
         "textLabels": [
             {
-                "text": "2,937,911.16 m | 061.17° T",
+                "text": "2,937,911.16 m | 061.17°",
                 "position": [
                     -127.53661546263791,
                     46.54526898530547
                 ]
             },
             {
-                "text": "1,837,281.12 m | 140.72° T",
+                "text": "1,837,281.12 m | 140.72°",
                 "position": [
                     -101.23884662739748,
                     42.09680198161091
@@ -137,8 +137,8 @@ describe('measurement epics', () => {
                 expect(resultFeatures.length).toBe(4);
                 expect(resultFeatures[0].geometry).toExist();
                 expect(resultFeatures[0].geometry.textLabels).toExist();
-                expect(resultFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17° T");
-                expect(resultFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72° T");
+                expect(resultFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17°");
+                expect(resultFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72°");
                 expect(resultFeatures[0].properties).toExist();
                 expect(resultFeatures[0].properties.geometryGeodesic).toExist();
                 done();
@@ -163,8 +163,8 @@ describe('measurement epics', () => {
                 expect(innerFeatures[0].geometry).toExist();
                 expect(innerFeatures[0].geometry.type).toBe('LineString');
                 expect(innerFeatures[0].geometry.textLabels).toExist();
-                expect(innerFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17° T");
-                expect(innerFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72° T");
+                expect(innerFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17°");
+                expect(innerFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72°");
                 done();
             }, null);
     });
