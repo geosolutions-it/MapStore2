@@ -48,7 +48,7 @@ import {
 } from '../selectors/queryform';
 
 import { changeDrawingStatus } from '../actions/draw';
-import { getLayerJSONFeature } from '../observables/wfs';
+import { getLayerJSONFeature, getJSONFeatureWA } from '../observables/wfs';
 import { describeFeatureTypeToAttributes } from '../utils/FeatureTypeUtils';
 import * as notifications from '../actions/notifications';
 import { find } from 'lodash';
