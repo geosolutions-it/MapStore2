@@ -272,6 +272,7 @@
         justify-content: flex-end;
     }
     .coordinates-row-container {
+        font-size: @font-size-small;
         flex: 1 1 auto;
         overflow: hidden auto;
         .glyphicon-menu-hamburger{
@@ -280,6 +281,9 @@
             vertical-align: middle;
         }
         .coordinateRow.aeronautical{
+            span.react-numeric-input{
+                width: 100%
+            }
             .input-group-addon {
                 padding: 4px 6px;
             }
@@ -451,7 +455,7 @@
             }
         }
         .coordinateRow {
-            padding-left: 8px;
+            padding-left: 2px;
             margin: 0;
             .coordinate {
                 display: flex;
