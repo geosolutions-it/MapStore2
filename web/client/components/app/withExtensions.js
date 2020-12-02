@@ -145,11 +145,21 @@ function withExtensions(AppComponent) {
                                 };
                                 return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
                             });
+                        }).catch(e => {
+                            // log the errors before re-throwing
+                            console.error(`Error loading MapStore extension "${pluginName}":`, e); // eslint-disable-line
+                            return null;
                         });
                     })).then((loaded) => {
-                        callback(loaded.reduce((previous, current) => {
-                            return { ...previous, ...current.plugin };
-                        }, {}), loaded.map(p => p.translations).filter(p => p !== ""));
+                        callback(
+                            loaded
+                                .filter(l => l !== null) // exclude extensions that triggered errors
+                                .reduce((previous, current) => {
+                                    return { ...previous, ...current.plugin };
+                                }, {}),
+                            loaded
+                                .filter(l => l !== null) // exclude extensions that triggered errors
+                                .map(p => p.translations).filter(p => p !== ""));
                     }).catch(() => {
                         callback({}, []);
                     });
