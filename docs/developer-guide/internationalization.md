@@ -32,7 +32,7 @@ You can configure MapStore to provide to the user only a restricted list of sele
     "locales": {
         "supportedLocales": {
             "en": {
-                "code": "en-EN",
+                "code": "en-US",
                 "description": "English"
             },
             "it": {
@@ -48,16 +48,18 @@ Setting locales in localConfig.json file is doable only for supported locales pr
 The default behavior is to use those already configured in "supportedLocales" object.
 You can customize the messages by editing the data.code-CODE.json files.
 
-You can also add the `defaultUserLocale` property to localConfig.json to override the initial user locale:
+The `locale` property determines the language to use for the application. If not specified, the language will be selected checking the browser's locale first. If the browser locale is not supported, MapStore will select the first language available in `supportedLocales`.
+
+Example of localConfig.json with the optional locale property.
 ```javascript
 {
-    "defaultUserLocale": "it-IT",
+    "locale": "it-IT", // locale code
 
     "defaultState": {
         "locales": {
             "supportedLocales": {
                 "en": {
-                    "code": "en-EN",
+                    "code": "en-US",
                     "description": "English"
                 },
                 "it": {
@@ -69,8 +71,7 @@ You can also add the `defaultUserLocale` property to localConfig.json to overrid
     }
 }
 ```
-MapStore will select the initial user locale based on the browser language and the supported locales if the `defaultUserLocale` is not defined.
-The property `defaultUserLocale` could be useful inside custom application where the locale is stored in other sources rather than using the browser language:
+The property `locale` could be useful inside custom application where the locale is stored in other sources rather than using the browser language:
 
 ```javascript
 // example
@@ -78,9 +79,9 @@ import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
 import cookies from 'js-cookie';
 
 // ...
-const defaultUserLocale = cookies.get('default_app_locale');
-if (defaultUserLocale) {
-  setConfigProp('defaultUserLocale', defaultUserLocale);
+const locale = cookies.get('app_locale'); // locale code it-IT for example
+if (locale) {
+  setConfigProp('locale', locale);
 }
 // ...
 ```

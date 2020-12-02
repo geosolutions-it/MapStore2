@@ -60,7 +60,7 @@ function withExtensions(AppComponent) {
             if (translations.length > 0) {
                 ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
             }
-            const locale =  ConfigUtils.getConfigProp('defaultUserLocale');
+            const locale =  ConfigUtils.getConfigProp('locale');
             store.dispatch(loadLocale(null, locale));
         };
 

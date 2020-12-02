@@ -171,7 +171,7 @@ class StandardApp extends React.Component {
         if (this.props.onInit) {
             this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
         } else {
-            const locale = ConfigUtils.getConfigProp('defaultUserLocale');
+            const locale = ConfigUtils.getConfigProp('locale');
             this.store.dispatch(loadLocale(null, locale));
             this.afterInit(config);
         }
