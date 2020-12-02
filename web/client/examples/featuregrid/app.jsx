@@ -14,7 +14,6 @@ const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');
 
 const ConfigUtils = require('../../utils/ConfigUtils').default;
-const {getUserLocale} = require('../../utils/LocaleUtils');
 const {getPlugins} = require('../../utils/PluginsUtils');
 
 
@@ -27,7 +26,7 @@ function startApp() {
 
     store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
     ConfigUtils.loadConfiguration().then(() => {
-        let locale = getUserLocale();
+        let locale = ConfigUtils.getConfigProp('defaultUserLocale');
         store.dispatch(loadLocale('../../translations', locale));
     });
 
