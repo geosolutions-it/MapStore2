@@ -51,7 +51,7 @@ You can customize the messages by editing the data.code-CODE.json files.
 You can also add the `defaultUserLocale` property to localConfig.json to override the initial user locale:
 ```javascript
 {
-    "defaultUserLocale": "it",
+    "defaultUserLocale": "it-IT",
 
     "defaultState": {
         "locales": {
