@@ -48,6 +48,43 @@ Setting locales in localConfig.json file is doable only for supported locales pr
 The default behavior is to use those already configured in "supportedLocales" object.
 You can customize the messages by editing the data.code-CODE.json files.
 
+You can also add the `defaultUserLocale` property to localConfig.json to override the initial user locale:
+```javascript
+{
+    "defaultUserLocale": "it",
+
+    "defaultState": {
+        "locales": {
+            "supportedLocales": {
+                "en": {
+                    "code": "en-EN",
+                    "description": "English"
+                },
+                "it": {
+                    "code": "it-IT",
+                    "description": "Italiano"
+                }
+            }
+        }
+    }
+}
+```
+MapStore will select the initial user locale based on the browser language and the supported locales if the `defaultUserLocale` is not defined.
+The property `defaultUserLocale` could be useful inside custom application where the locale is stored in other sources rather than using the browser language:
+
+```javascript
+// example
+import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
+import cookies from 'js-cookie';
+
+// ...
+const defaultUserLocale = cookies.get('default_app_locale');
+if (defaultUserLocale) {
+  setConfigProp('defaultUserLocale', defaultUserLocale);
+}
+// ...
+```
+
 # How to add a new language
 
 Let's say we want to add the russian language.
