@@ -9,6 +9,7 @@
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 
 import Button from '../misc/Button';
@@ -35,7 +36,8 @@ class ConfirmDialog extends React.Component {
         confirmButtonContent: PropTypes.node,
         confirmButtonDisabled: PropTypes.bool,
         closeText: PropTypes.node,
-        confirmButtonBSStyle: PropTypes.string
+        confirmButtonBSStyle: PropTypes.string,
+        focusConfirm: PropTypes.bool
     };
 
     static defaultProps = {
@@ -48,8 +50,13 @@ class ConfirmDialog extends React.Component {
         confirmButtonDisabled: false,
         confirmButtonContent: <Message msgId="confirm" /> || "Confirm",
         closeText: <Message msgId="close" />,
-        includeCloseButton: true
+        includeCloseButton: true,
+        focusConfirm: false
     };
+
+    componentDidMount() {
+        this.props.focusConfirm && ReactDOM.findDOMNode(this.confirm).focus();
+    }
 
     render() {
         return (<Dialog draggable={this.props.draggable} onClickOut={this.props.onClose} id="confirm-dialog" modal={this.props.modal} style={assign({}, this.props.style, { display: this.props.show ? "block" : "none" })}>
@@ -64,13 +71,15 @@ class ConfirmDialog extends React.Component {
             </div>
             <div role="footer">
                 <ButtonGroup>
-                    <Button onClick={this.props.onConfirm} disabled={this.props.confirmButtonDisabled} bsStyle={this.props.confirmButtonBSStyle}>{this.props.confirmButtonContent}
+                    <Button ref={this.setConfirmRef} onClick={this.props.onConfirm} disabled={this.props.confirmButtonDisabled} bsStyle={this.props.confirmButtonBSStyle}>{this.props.confirmButtonContent}
                     </Button>
                     <Button onClick={this.props.onClose}>{this.props.closeText}</Button>
                 </ButtonGroup>
             </div>
         </Dialog>);
     }
+
+    setConfirmRef = (c) => { this.confirm = c; return this.confirm; };
 }
 
 export default ConfirmDialog;
