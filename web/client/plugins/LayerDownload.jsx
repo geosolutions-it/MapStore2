@@ -48,8 +48,7 @@ import layerdownload from '../reducers/layerdownload';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
- * Provides advanced export functionalities using WFS and WPS. Further, the tool allows to download data
- * from wfs or wps services
+ * Provides advanced data export functionalities using [WPS download process](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html) or using WFS service, if WPS download process is missing. 
  * @memberof plugins
  * @name LayerDownload
  * @class
