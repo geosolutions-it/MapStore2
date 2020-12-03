@@ -74,9 +74,6 @@ import { createPlugin } from '../utils/PluginsUtils';
  *     "defaultSrs": "native"
  *  }
  * }
- * In some of the objects you can provide in the formats array, it's possible to specify a validServices property along with
- * the format name. validServices is an array with services that provide that specific format. The case where, wfs and wps are
- * specified but the wps pligin is not available, wfs is used instead.
  */
 const LayerDownloadPlugin = createPlugin('LayerDownload', {
     component: connect(createStructuredSelector({
