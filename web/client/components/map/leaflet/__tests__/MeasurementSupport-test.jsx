@@ -341,7 +341,7 @@ describe('Leaflet MeasurementSupport', () => {
             }
         };
         let distanceStr = L.GeometryUtil.readableDistance(distance, isMetric, isFeet, isNauticalMile, precision, options);
-        expect(distanceStr).toBe("080° T");
+        expect(distanceStr).toBe("080°");
     });
     it('test L.GeometryUtil.readableDistance length with trehsold', () => {
         const distance = 1;
@@ -558,7 +558,7 @@ describe('Leaflet MeasurementSupport', () => {
         L.Draw.Polyline.prototype._markers = [L.marker([50.5, 30.5]), L.marker([52.5, 30.5])];
 
         let distanceStr = L.Draw.Polyline.prototype._getMeasurementString();
-        expect(distanceStr).toBe("084.8239° T");
+        expect(distanceStr).toBe("084.8239°");
 
     });
 
