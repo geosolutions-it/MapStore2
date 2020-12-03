@@ -48,7 +48,8 @@ import layerdownload from '../reducers/layerdownload';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
- * Provides advanced export functionalities using WFS and WPS.
+ * Provides advanced export functionalities using WFS and WPS. Further, the tool allows to download data
+ * from wfs or wps services
  * @memberof plugins
  * @name LayerDownload
  * @class
@@ -74,6 +75,9 @@ import { createPlugin } from '../utils/PluginsUtils';
  *     "defaultSrs": "native"
  *  }
  * }
+ * In some of the objects you can provide in the formats array, it's possible to specify a validServices property along with
+ * the format name. validServices is an array with services that provide that specific format. The case where, wfs and wps are
+ * specified but the wps pligin is not available, wfs is used instead.
  */
 const LayerDownloadPlugin = createPlugin('LayerDownload', {
     component: connect(createStructuredSelector({
