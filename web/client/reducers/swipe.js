@@ -7,7 +7,7 @@
  */
 
 import assign from 'object-assign';
-import { SET_ACTIVE, SET_MODE, SET_SWIPE_TOOL_DIRECTION, SET_SPY_TOOL_RADIUS } from '../actions/swipe';
+import { SET_ACTIVE, SET_MODE, SET_SWIPE_TOOL_DIRECTION, SET_SPY_TOOL_RADIUS, SET_SWIPE_TOOL_CONFIG } from '../actions/swipe';
 
 export default (state = {}, action) => {
     switch (action.type) {
@@ -30,6 +30,9 @@ export default (state = {}, action) => {
             radius: action.radius
         };
         return assign({}, state, {spy: newSpySetting});
+    }
+    case SET_SWIPE_TOOL_CONFIG: {
+        return assign({}, state, action.config);
     }
     default:
         return state;

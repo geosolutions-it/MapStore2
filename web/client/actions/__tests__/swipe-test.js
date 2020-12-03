@@ -12,10 +12,12 @@ import {
     setMode,
     setSpyToolRadius,
     setSwipeToolDirection,
+    setSwipeToolConfig,
     SET_ACTIVE,
     SET_MODE,
     SET_SWIPE_TOOL_DIRECTION,
-    SET_SPY_TOOL_RADIUS
+    SET_SPY_TOOL_RADIUS,
+    SET_SWIPE_TOOL_CONFIG
 } from '../swipe';
 
 describe('Test correctness of the swipe actions', () => {
@@ -52,5 +54,12 @@ describe('Test correctness of the swipe actions', () => {
         expect(action).toExist();
         expect(action.type).toBe(SET_SPY_TOOL_RADIUS);
         expect(action.radius).toBe(80);
+    });
+    it('should set tool configuration', () => {
+        const config = { mode: "spy", spy: {radius: 50.00} };
+        const action = setSwipeToolConfig(config);
+        expect(action).toExist();
+        expect(action.type).toBe(SET_SWIPE_TOOL_CONFIG);
+        expect(action.config).toEqual(config);
     });
 });

@@ -10,6 +10,20 @@ const SET_ACTIVE = "SWIPE:SET_ACTIVE";
 const SET_MODE = "SWIPE:SET_MODE";
 const SET_SWIPE_TOOL_DIRECTION = "SWIPE:SET_SWIPE_TOOL_DIRECTION";
 const SET_SPY_TOOL_RADIUS = "SWIPE:SET_SPY_TOOL_RADIUS";
+const SET_SWIPE_TOOL_CONFIG = "SWIPE:SET_SWIPE_TOOL_CONFIG";
+
+/**
+ * Sets the configuration for swipe tool, for example from persisted state
+ * @memberof actions.swipe
+ * @param {object} config the tool configuration like { mode: "spy", spy: {radius: 50.00} }
+ * @return {object} of type `SET_SWIPE_TOOL_CONFIG` with config
+ */
+function setSwipeToolConfig(config) {
+    return {
+        type: SET_SWIPE_TOOL_CONFIG,
+        config
+    };
+}
 
 /**
 * Sets the status of boolean values of the swipe redux state
@@ -70,8 +84,10 @@ export {
     setMode,
     setSwipeToolDirection,
     setSpyToolRadius,
+    setSwipeToolConfig,
     SET_ACTIVE,
     SET_MODE,
     SET_SWIPE_TOOL_DIRECTION,
-    SET_SPY_TOOL_RADIUS
+    SET_SPY_TOOL_RADIUS,
+    SET_SWIPE_TOOL_CONFIG
 };

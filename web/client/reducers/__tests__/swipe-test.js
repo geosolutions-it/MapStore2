@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { SET_ACTIVE, SET_SPY_TOOL_RADIUS, SET_MODE, SET_SWIPE_TOOL_DIRECTION  } from '../../actions/swipe';
+import { SET_ACTIVE, SET_SPY_TOOL_RADIUS, SET_MODE, SET_SWIPE_TOOL_DIRECTION, SET_SWIPE_TOOL_CONFIG  } from '../../actions/swipe';
 import swipe from '../swipe';
 
 describe('Swipe tool REDUCERS', () => {
@@ -56,5 +56,14 @@ describe('Swipe tool REDUCERS', () => {
         };
         const state = swipe({}, action);
         expect(state.spy.radius).toBe(80);
+    });
+    it('should update swipe tool state with config', () => {
+        const action = {
+            type: SET_SWIPE_TOOL_CONFIG,
+            config: { mode: "spy", spy: {radius: 50.00} }
+        };
+        const state = swipe({}, action);
+        expect(state.mode).toBe("spy");
+        expect(state.spy.radius).toBe(50.00);
     });
 });

@@ -9,8 +9,9 @@
 import Rx from 'rxjs';
 
 import { SELECT_NODE } from '../actions/layers';
-import { setActive } from '../actions/swipe';
+import { setActive, setSwipeToolConfig } from '../actions/swipe';
 import { layerSwipeSettingsSelector } from '../selectors/swipe';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 
 /**
  * Ensures that swipeSettings active is changed back to false when a layer is deselected in TOC or group is selected
@@ -29,6 +30,13 @@ export const resetLayerSwipeSettingsEpic = (action$, store) =>
                 : Rx.Observable.empty();
         });
 
+export const updateSwipeToolConfigMapConfigRawData = action$ =>
+    action$.ofType(MAP_CONFIG_LOADED)
+        .switchMap(({config}) => {
+            return Rx.Observable.of(setSwipeToolConfig(config.swipe || {}));
+        });
+
 export default {
-    resetLayerSwipeSettingsEpic
+    resetLayerSwipeSettingsEpic,
+    updateSwipeToolConfigMapConfigRawData
 };

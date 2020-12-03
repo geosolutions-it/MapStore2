@@ -6,12 +6,18 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import { getSelectedLayer } from '../selectors/layers';
-import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
+import {
+    layerSwipeSettingsSelector,
+    swipeModeSettingsSelector,
+    spyModeSettingsSelector,
+    swipeToolConfigurationSelector
+} from '../selectors/swipe';
+import { registerCustomSaveHandler } from '../selectors/mapsave';
 import swipe from '../reducers/swipe';
 import epics from '../epics/swipe';
 import {
@@ -28,6 +34,9 @@ import SwipeButton from './swipe/SwipeButton';
 
 
 export const Support = ({ mode, map, layer, active, swipeModeSettings, spyModeSettings }) => {
+    useEffect(() => {
+        registerCustomSaveHandler('swipe', swipeToolConfigurationSelector);
+    }, []);
     if (mode === "spy") {
         return <SpyGlassSupport map={map} layer={layer} active={active} radius={spyModeSettings.radius} />;
     }
