@@ -54,7 +54,7 @@
     "file-loader": "2.0.0",
     "glob": "7.1.1",
     "html-loader": "0.5.1",
-    "html-webpack-plugin": "3.2.0",
+    "html-webpack-plugin": "4.5.0",
     "jsdoc-jsx": "0.1.0",
     "karma": "4.3.0",
     "karma-chrome-launcher": "3.1.0",
@@ -92,10 +92,10 @@
     "style-loader": "0.12.4",
     "url-loader": "0.5.7",
     "vusion-webfonts-generator": "0.4.1",
-    "webpack": "4.41.5",
+    "webpack": "5.9.0",
     "webpack-bundle-size-analyzer": "2.0.2",
-    "webpack-cli": "3.3.6",
-    "webpack-dev-server": "3.7.2"
+    "webpack-cli": "4.2.0",
+    "webpack-dev-server": "3.11.0"
   },
   "dependencies": {
     "@boundlessgeo/jsonix": "2.4.3",
@@ -274,9 +274,9 @@
     "i18n": "node  utility/translations/findMissingTranslations.js",
     "postinstall": "node utility/build/postInstall.js",
     "clean": "rimraf ./web/client/dist",
-    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js --progress --colors --config build/prod-webpack.config.js",
+    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js --progress --color --config build/prod-webpack.config.js",
     "analyze": "npm run clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
-    "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
+    "start": "webpack-dev-server --progress --color --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
     "startprod": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client  --config build/prod-webpack.config.js",
     "examples": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client --config build/examples-webpack.config.js",
     "test": "karma start ./build/karma.conf.single-run.js --colors",
@@ -286,7 +286,7 @@
     "lint": "eslint web/client --ext .jsx,.js",
     "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./build/karma.conf.single-run.js --browsers FirefoxHeadless --reporters dots,junit,coverage,coveralls && docma -c build/docma-config.json --dest web/docs",
     "generate-icons": "node ./build/generateIcons.js",
-    "build-extension": "rimraf ./build/extensions/dist && mkdirp ./build/extensions/dist && webpack --progress  --colors --config build/extensions/prod-webpack.config.js",
+    "build-extension": "rimraf ./build/extensions/dist && mkdirp ./build/extensions/dist && webpack --progress  --color --config build/extensions/prod-webpack.config.js",
     "run-extension": "webpack-dev-server --progress --colors --port 8081 --hot --inline --config build/extensions/webpack.config.js --content-base build/extensions"
   },
   "author": "GeoSolutions",
