@@ -14,7 +14,6 @@ import { isPluginInContext } from './context';
 import { currentLocaleSelector } from './locale';
 import {getValidator} from '../utils/MapInfoUtils';
 import { isCesium } from './maptype';
-import { isMouseMoveIdentifyActiveSelector as identifyFloatingTool } from '../selectors/map';
 import { pluginsSelectorCreator } from './localConfig';
 /**
  * selects mapinfo state
@@ -121,10 +120,9 @@ export const validResponsesSelector = createSelector(
     requestsSelector,
     responsesSelector,
     generalInfoFormatSelector,
-    identifyFloatingTool,
-    (requests, responses, format, renderEmpty) => {
+    (requests, responses, format) => {
         const validatorFormat = getValidator(format);
-        return requests.length === responses.length && validatorFormat.getValidResponses(responses, renderEmpty);
+        return requests.length === responses.length && validatorFormat.getValidResponses(responses);
     });
 
 export const currentResponseSelector = createSelector(
