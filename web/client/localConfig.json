@@ -318,11 +318,6 @@
                   "bbox": true,
                   "centerAndZoom": true
                 }
-              },
-              "override": {
-                "Toolbar": {
-                  "alwaysVisible": false
-                }
               }
             },
             {

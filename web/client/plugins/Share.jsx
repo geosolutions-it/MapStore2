@@ -102,14 +102,6 @@ export const SharePlugin = assign(Share, {
         text: <Message msgId="share.title"/>,
         icon: <Glyphicon glyph="share-alt"/>,
         action: toggleControl.bind(null, 'share', null)
-    },
-    Toolbar: {
-        name: 'share',
-        position: 2,
-        priority: 0,
-        tooltip: "share.title",
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
     }
 });
 
