@@ -45,18 +45,6 @@ describe('Share Plugin', () => {
         done();
     });
 
-    it('Checks Share plugin supported containers', () => {
-        const controls = {
-            share: {
-                enabled: true
-            }
-        };
-        const { containers } = getPluginForTest(SharePlugin, { controls }, {
-            ToolbarPlugin: {}
-        });
-        expect(Object.keys(containers)).toContain('Toolbar');
-    });
-
     it('test Share plugin on close', (done) => {
         const controls = {
             share: {
