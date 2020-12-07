@@ -25,7 +25,7 @@ import {
     head,
     last
 } from 'lodash';
-
+import turfCircle from '@turf/circle';
 import lineIntersect from '@turf/line-intersect';
 import polygonToLinestring from '@turf/polygon-to-linestring';
 import greatCircle from '@turf/great-circle';
@@ -1011,7 +1011,9 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
 
     return [lc[0], lc[1], uc[0], uc[1]];
 };
-
+export const getPolygonFromCircle = (center, radius, units = "meters", steps = 100) => {
+    return turfCircle(center, radius, {steps, units});
+};
 
 CoordinatesUtils = {
     setCrsLabels,
@@ -1065,7 +1067,8 @@ CoordinatesUtils = {
     extractCrsFromURN,
     crsCodeTable,
     makeNumericEPSG,
-    makeBboxFromOWS
+    makeBboxFromOWS,
+    getPolygonFromCircle
 
 };
 export default CoordinatesUtils;
