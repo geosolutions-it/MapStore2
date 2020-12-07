@@ -58,6 +58,7 @@ export default createPlugin('Locate', {
         Map: {
             name: "Locate",
             Tool: connect((state) => ({
+                maxZoom: 18, // <-- ho aggiunto questo, ma come faccio a farglielo passare da config, perchè le cfg prop sono passate al component e non ai tool
                 status: state.locate && state.locate.state,
                 messages: state.locale && state.locale.messages ? state.locale.messages.locate : undefined
             }), {

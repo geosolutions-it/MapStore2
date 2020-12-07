@@ -15,7 +15,7 @@ const defaultOpt = {
     }
 };
 
-const LocateTool = ({map, mapType, status, messages, changeLocateState, onLocateError}) => {
+const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState, onLocateError}) => {
     const locateInstance = useRef();
     const [loaded, Impl, error] = useMapTool(mapType, 'locate');
     useEffect(() => {
@@ -36,9 +36,16 @@ const LocateTool = ({map, mapType, status, messages, changeLocateState, onLocate
 
     useEffect(() => {
         if (loaded) {
+            const options = {
+                ...defaultOpt,
+                locateOptions: {
+                    ...defaultOpt.locateOptions,
+                    maxZoom: maxZoom
+                }
+            };
             locateInstance.current = new Impl();
             locateInstance.current.start({
-                map, options: defaultOpt, messages, status, onStateChange, onLocationError
+                map, options, messages, status, onStateChange, onLocationError
             });
         }
         return () => {
