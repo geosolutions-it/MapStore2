@@ -15,6 +15,6 @@ module.exports = require('../buildConfig')(
         code: path.join(__dirname)
     },
     extractThemesPlugin,
-    false,
+    true,
     "/dist/"
 );

@@ -1,28 +1,66 @@
-const themeEntries = require('../themes.js').themeEntries;
-const extractThemesPlugin = require('../themes.js').extractThemesPlugin;
-
 const path = require("path");
 const assign = require('object-assign');
 
-module.exports = assign(require('../buildConfig')(
-    {
-        extensions: path.join(__dirname, "app")
+const shared = require('../moduleFederation').shared;
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+
+
+const prod = true;
+const paths = {
+    base: path.join(__dirname, "..", ".."),
+    dist: path.join(__dirname, "dist"),
+    framework: path.join(__dirname, "..", "..", "web", "client"),
+    code: path.join(__dirname)
+};
+module.exports = {
+    target: "web",
+    mode: prod ? "production" : "development",
+    entry: {},
+    optimization: {
+        concatenateModules: true,
+        minimize: !!false,
+        chunkIds: "named"
     },
-    themeEntries,
-    {
-        base: path.join(__dirname, "..", ".."),
-        dist: path.join(__dirname, "dist"),
-        framework: path.join(__dirname, "..", "..", "web", "client"),
-        code: path.join(__dirname)
+    resolve: {
+        fallback: {
+            timers: false,
+            stream: false
+        },
+        extensions: [".js", ".jsx"]
     },
-    extractThemesPlugin,
-    true,
-    "/dist/"
-), {
+    plugins: [new ModuleFederationPlugin({
+        name: 'SampleExtension',
+        filename: "sampleExtension.js",
+        exposes: {
+            './plugin': path.join(__dirname, "plugins", "SampleExtension")
+        },
+        shared
+    })],
+    module: {
+        noParse: [/html2canvas/],
+        rules: [
+            {
+                test: /\.jsx?$/,
+                exclude: /(ol\.js)$|(Cesium\.js)$/,
+                use: [{
+                    loader: "babel-loader",
+                    options: {
+                        configFile: path.join(__dirname, '..', 'babel.config.js')
+                    }
+                }],
+                include: [
+                    paths.code,
+                    paths.framework
+                ]
+            }
+        ].concat(prod ? [{
+            test: /\.html$/,
+            loader: 'html-loader'
+        }] : [])
+    },
     output: {
-        path: path.join(__dirname, "dist"),
-        publicPath: "/dist/",
-        filename: "[name].js",
-        chunkFilename: "[name].js"
+        publicPath: './',
+        path: path.join(__dirname, "dist")
+
     }
-});
+};

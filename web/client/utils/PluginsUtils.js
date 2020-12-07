@@ -10,12 +10,47 @@ import React from 'react';
 import assign from 'object-assign';
 import { omit, isObject, head, isArray, isString, isFunction, memoize, get, endsWith } from 'lodash';
 import {connect as originalConnect} from 'react-redux';
-import axios from '../libs/ajax';
 import url from 'url';
 import curry from 'lodash/curry';
 import { combineEpics as originalCombineEpics } from 'redux-observable';
 import { combineReducers as originalCombineReducers } from 'redux';
 import {wrapEpics} from "./EpicsUtils";
+
+
+function loadScript(src) {
+    return new Promise(function(resolve, reject) {
+        const s = document.createElement('script');
+        let r = false;
+        s.type = 'text/javascript';
+        s.src = src;
+        s.async = true;
+        s.onerror = function (err) {
+            reject(err, s);
+        };
+        s.onload = s.onreadystatechange = function () {
+            // console.log(this.readyState); // uncomment this line to see which ready states are called.
+            if (!r && (!this.readyState || this.readyState === 'complete')) {
+                r = true;
+                resolve();
+            }
+        };
+        const t = document.getElementsByTagName('script')[0];
+        t.parentElement.insertBefore(s, t);
+    });
+}
+
+/* eslint-disable */
+const dynamicFederation = (scope, module) => {
+    return (new Promise(resolve => resolve(__webpack_init_sharing__ && __webpack_init_sharing__("default")))).then(() => {
+        const container = window[scope];
+        return container.init(__webpack_share_scopes__.default);
+    }).then(() => {
+        return window[scope].get(module).then((factory) => {
+            const Module = factory();
+            return Module;
+        });
+    })
+};
 
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 
@@ -90,9 +125,6 @@ const parseExpression = (state = {}, context = {}, value) => {
     const searchExpression = /^\{(.*)\}$/;
     const expression = searchExpression.exec(value);
     const request = url.parse(location.href, true);
-    const dispatch = (action) => {
-        return () => state("store").dispatch(action.apply(null, arguments));
-    };
     if (expression !== null) {
         return eval(expression[1]);
     }
@@ -302,36 +334,8 @@ const getPluginImplementation = (impl, stateSelector) => {
  * @param {string} source plugin source code
  * @param {function} callback function called with the plugin implementation
  */
-export const importPlugin = (source, callback) => {
-    /* eslint-disable */
-    // save a reference to webpack require functionality (usable to load compiled bundles)
-    const r = __webpack_require__;
-    // evaluate compiled bundle(s) (this will append a new bundle definition in webpackJsonp)
-    eval(source);
-    // extract bundle(s) definiton
-    const lastLoaded = window.webpackJsonp[window.webpackJsonp.length - 1][1];
-
-    // for every bundle, we call the related definition code
-    Object.keys(lastLoaded).forEach(source => {
-        // exported will contain the bundle exported code
-        const exported = {};
-        lastLoaded[source](null, exported, r);
-        const pluginDef = exported.default || exported;
-        // return the plugin as a lazy loaded one
-        const plugin = {
-            loadPlugin: (loaded) => {
-                if (loaded) {
-                    loaded(pluginDef)
-                } else {
-                    return Promise.resolve(pluginDef)
-                }
-            }
-        }
-        callback(pluginDef.name, plugin);
-    });
-    // remove loaded bundle from the webpack list
-    window.webpackJsonp.pop();
-    /* eslint-enable */
+export const importPlugin = (pluginName) => {
+    return dynamicFederation(pluginName, "./plugin");
 };
 
 /**
@@ -396,8 +400,8 @@ export const getPluginDescriptor = (state, plugins, pluginsConfig, pluginDef, lo
     const id = isObject(pluginDef) ? pluginDef.id : null;
     const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
     const isDefault = isObject(pluginDef) ? typeof pluginDef.isDefault === 'undefined' && true || pluginDef.isDefault : true;
-    const pluginKey = (isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin';
-    const impl = plugins[pluginKey];
+    const pluginKey = (isObject(pluginDef) ? pluginDef.name : pluginDef);
+    const impl = plugins[pluginKey] ?? plugins[pluginKey + 'Plugin'];
     if (!impl) {
         return null;
     }
@@ -518,6 +522,8 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
     };
 };
 
+/* eslint-enable */
+
 /**
  * Loads a plugin compiled bundle from the given url.
  *
@@ -537,14 +543,11 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
  * @param {string} pluginUrl url (relative or absolute) of a plugin compiled bundle to load
  * @returns {Promise} a Promise that resolves to a lazy plugin object.
  */
-export const loadPlugin = (pluginUrl) => {
-    return new Promise((resolve, reject = () => { }) => {
-        axios.get(pluginUrl).then(response => {
-            importPlugin(response.data, (name, plugin) => resolve({ name, plugin }));
-        }).catch(e => {
-            reject(e);
-        });
-    });
+export const loadPlugin = (pluginUrl, pluginName) => {
+    return loadScript(pluginUrl)
+        .then(() =>importPlugin(pluginName))
+        .then((plugin) => ({ name: pluginName, plugin}));
+
 };
 
 /**

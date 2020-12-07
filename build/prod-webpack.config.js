@@ -4,8 +4,7 @@ const assign = require('object-assign');
 const themeEntries = require('./themes.js').themeEntries;
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const DynamicPublicPathPlugin = require("dynamic-public-path-webpack-plugin");
-
+const ModuleFederationPlugin = require('./moduleFederation').plugin;
 const paths = {
     base: path.join(__dirname, ".."),
     dist: path.join(__dirname, "..", "web", "client", "dist"),
@@ -23,7 +22,7 @@ module.exports = require('./buildConfig')(
     ),
     themeEntries,
     paths,
-    extractThemesPlugin,
+    [extractThemesPlugin, ModuleFederationPlugin],
     true,
     "dist/",
     undefined,
@@ -47,10 +46,5 @@ module.exports = require('./buildConfig')(
             hash: true,
             filename: 'api.html'
         })
-    ].concat(Object.keys(require('./examples')).map(function(example) {
-        return new DynamicPublicPathPlugin({
-            externalGlobal: 'window.mapStoreDist',
-            chunkName: example
-        });
-    }))
+    ]
 );

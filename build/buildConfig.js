@@ -6,7 +6,7 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
+const castArray = require('lodash').castArray;
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
@@ -21,7 +21,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
  *  - framework: root folder of the MapStore2 framework
  *  - code: root folder(s) for javascript / jsx code, can be an array with several folders (e.g. framework code and
  *    project code)
- * @param {object} extractThemesPlugin plugin to be used for bundling css (usually defined in themes.js)
+ * @param {object} plugins plugin to be added
  * @param {boolean} prod flag for production / development mode (true = production)
  * @param {string} publicPath web public path for loading bundles (e.g. dist/)
  * @param {string} cssPrefix prefix to be appended on every generated css rule (e.g. ms2)
@@ -30,16 +30,15 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
  * @param {object} proxy webpack-devserver custom proxy configuration object
  * @returns a webpack configuration object
  */
-module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
+module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
+    target: "web",
     entry: assign({
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
     }, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
-        minimize: !!prod,
-        moduleIds: "named",
-        chunkIds: "named"
+        minimize: !!prod
     },
     output: {
         path: paths.dist,
@@ -70,10 +69,14 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         }),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(paths.framework, "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
-        new NoEmitOnErrorsPlugin(),
-        extractThemesPlugin
-    ].concat(prod && prodPlugins || []),
+        new NoEmitOnErrorsPlugin()]
+        .concat(castArray(plugins))
+        .concat(prod && prodPlugins || []),
     resolve: {
+        fallback: {
+            timers: false,
+            stream: false
+        },
         extensions: [".js", ".jsx"],
         alias: assign({}, {
             jsonix: '@boundlessgeo/jsonix',
@@ -213,5 +216,5 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         }
     },
 
-    devtool: !prod ? 'eval' : undefined
+    devtool: !prod ? 'eval-source-map' : undefined
 });

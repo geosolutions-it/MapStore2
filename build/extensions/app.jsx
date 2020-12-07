@@ -41,23 +41,21 @@ const startApp = (messages) => {
         }
         updateStore({ reducers: { ...getReducers(plugins), ...extensionReducers }, epics: { ...getEpics(plugins), ...extensionEpics } });
     };
-    import(/* webpackChunkName: "extensions/index" */`./extensions`).then(extensions => {
-        const Container = connect((state) => ({
-            pluginsState: { zoom: state.map && state.map.zoom },
-            pluginsConfig: pluginsConfig
-        }))(PluginsContainer);
+    const Container = connect((state) => ({
+        pluginsState: { zoom: state.map && state.map.zoom },
+        pluginsConfig: pluginsConfig
+    }))(PluginsContainer);
 
-        const App = ({ mergedPlugins }) => {
-            return (<Provider store={store}>
-                <Localized messages={messages} locale={LOCALE}>
-                    <Theme version="noversion" path="../../dist/themes">
-                        <Container plugins={mergedPlugins} onPluginLoaded={updatePlugins}/>
-                    </Theme>
-                </Localized>
-            </Provider>);
-        };
-        const merged = getPlugins({ ...plugins, ...extensions.default });
-        ReactDOM.render(<App mergedPlugins={merged} />, document.getElementById("container"));
-    });
+    const App = ({ mergedPlugins }) => {
+        return (<Provider store={store}>
+            <Localized messages={messages} locale={LOCALE}>
+                <Theme version="noversion" path="../../dist/themes">
+                    <Container plugins={mergedPlugins} onPluginLoaded={updatePlugins}/>
+                </Theme>
+            </Localized>
+        </Provider>);
+    };
+    const merged = getPlugins({ ...plugins });
+    ReactDOM.render(<App mergedPlugins={merged} />, document.getElementById("container"));
 };
 startApp({...rootTranslations.messages, ...bundleTranslations.messages});
