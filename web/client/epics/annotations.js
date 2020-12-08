@@ -7,7 +7,7 @@
  */
 
 import Rx from 'rxjs';
-import { head, findIndex, castArray, isArray, find, isUndefined, values } from 'lodash';
+import { head, findIndex, castArray, isArray, find, values } from 'lodash';
 import assign from 'object-assign';
 import axios from 'axios';
 import uuidv1 from 'uuid/v1';
@@ -15,7 +15,7 @@ import { saveAs } from 'file-saver';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { TOGGLE_CONTROL, toggleControl, setControlProperty } from '../actions/controls';
-import { addLayer, updateNode, changeLayerProperties, removeLayer } from '../actions/layers';
+import { addLayer, updateNode, changeLayerProperties, removeLayer, CHANGE_LAYER_PROPERTIES } from '../actions/layers';
 import { changeMeasurement } from '../actions/measurement';
 import { error } from '../actions/notifications';
 import { closeFeatureGrid } from '../actions/featuregrid';
@@ -202,23 +202,25 @@ export default (viewer) => ({
         .switchMap(() => {
             const annotationsLayer = annotationsLayerSelector(store.getState());
             if (annotationsLayer) {
+                const {visibility = false, features: annotationFeatures = []} = annotationsLayer;
                 // parsing old style structure
-                let features = (annotationsLayer.features || []).map(ftColl => {
-                    return {...ftColl, style: {}, features: (ftColl.features || []).map(ft => {
-                        let styleType = ft.properties.isCircle && "Circle" || ft.properties.isText && "Text" || ft.geometry.type;
-                        let extraStyles = [];
-                        if (styleType === "Circle") {
-                            extraStyles.push({...DEFAULT_ANNOTATIONS_STYLES.Point, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint"});
-                        }
-                        if (styleType === "LineString") {
-                            extraStyles.concat(getStartEndPointsForLinestring());
-                        }
-                        return {...ft,
-                            style: isArray(ft.style) ? ft.style.map(ftStyle => {
-                                const {symbolUrlCustomized, ...filteredStyle} = ftStyle;
-                                return filteredStyle;
-                            }) : [{...ftColl.style[styleType], id: ftColl.style[styleType].id || uuidv1(), symbolUrlCustomized: undefined}].concat(extraStyles)};
-                    })};
+                let features = annotationFeatures.map(ftColl => {
+                    return {...ftColl,  properties: {...ftColl.properties, visibility}, style: {},
+                        features: (ftColl.features || []).map(ft => {
+                            let styleType = ft.properties.isCircle && "Circle" || ft.properties.isText && "Text" || ft.geometry.type;
+                            let extraStyles = [];
+                            if (styleType === "Circle") {
+                                extraStyles.push({...DEFAULT_ANNOTATIONS_STYLES.Point, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint"});
+                            }
+                            if (styleType === "LineString") {
+                                extraStyles.concat(getStartEndPointsForLinestring());
+                            }
+                            return {...ft,
+                                style: isArray(ft.style) ? ft.style.map(ftStyle => {
+                                    const {symbolUrlCustomized, ...filteredStyle} = ftStyle;
+                                    return filteredStyle;
+                                }) : [{...ftColl.style[styleType], id: ftColl.style[styleType].id || uuidv1(), symbolUrlCustomized: undefined}].concat(extraStyles)};
+                        })};
                 });
 
                 return Rx.Observable.of(updateNode('annotations', 'layer', {
@@ -422,7 +424,7 @@ export default (viewer) => ({
             ]
             );
         }),
-    highlighAnnotationEpic: (action$, store) => action$.ofType(HIGHLIGHT)
+    highlightAnnotationEpic: (action$, store) => action$.ofType(HIGHLIGHT)
         .switchMap((action) => {
             return Rx.Observable.of(
                 updateNode('annotations', 'layer', {
@@ -436,15 +438,16 @@ export default (viewer) => ({
                 })
             );
         }),
-    showHideAnnotationEpic: (action$, store) => action$.ofType(TOGGLE_ANNOTATION_VISIBILITY)
+    showHideAnnotationEpic: (action$, store) => action$.ofType(TOGGLE_ANNOTATION_VISIBILITY, CHANGE_LAYER_PROPERTIES)
         .switchMap((action) => {
-            return Rx.Observable.of(
-                updateNode('annotations', 'layer', {
-                    features: annotationsLayerSelector(store.getState()).features.map(f => f.properties.id === action.id ? assign({}, f, {
-                        properties: {...f.properties, visibility: !isUndefined(f.properties.visibility) ? !f.properties.visibility : false}
-                    }) : f)
-                })
-            );
+            const feature = (f, visibility = false) => assign({}, f, {
+                properties: {...f.properties, visibility}
+            });
+            let isLayerPropertyChange = action.layer === "annotations";
+            const features = annotationsLayerSelector(store.getState()).features.map(f => isLayerPropertyChange ? feature(f, action?.newProperties?.visibility)
+                : (f.properties.id === action.id) ? feature(f, !f.properties?.visibility) : f);
+            const layerVisibility = !!features.filter(f => f.properties.visibility).length;
+            return Rx.Observable.of(updateNode('annotations', 'layer', {features, visibility: layerVisibility}));
         }),
     cleanHighlightAnnotationEpic: (action$, store) => action$.ofType(CLEAN_HIGHLIGHT)
         .switchMap(() => {
