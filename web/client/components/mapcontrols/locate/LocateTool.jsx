@@ -1,5 +1,6 @@
 import {useEffect, useRef} from 'react';
 import useMapTool from "../../../map/hooks/use-map-tool";
+import { set } from '../../../utils/ImmutableUtils';
 
 const defaultOpt = {
     follow: true, // follow with zoom and pan the user's location
@@ -15,7 +16,7 @@ const defaultOpt = {
     }
 };
 
-const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState, onLocateError}) => {
+const LocateTool = ({map, mapType, status, messages, cfg, changeLocateState, onLocateError}) => {
     const locateInstance = useRef();
     const [loaded, Impl, error] = useMapTool(mapType, 'locate');
     useEffect(() => {
@@ -36,13 +37,7 @@ const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState,
 
     useEffect(() => {
         if (loaded) {
-            const options = {
-                ...defaultOpt,
-                locateOptions: {
-                    ...defaultOpt.locateOptions,
-                    maxZoom: maxZoom
-                }
-            };
+            const options = cfg.maxZoom ? set("locateOptions.maxZoom", cfg.maxZoom, defaultOpt) : defaultOpt;
             locateInstance.current = new Impl();
             locateInstance.current.start({
                 map, options, messages, status, onStateChange, onLocationError

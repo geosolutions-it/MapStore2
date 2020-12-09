@@ -30,6 +30,7 @@ import LocateTool from "../components/mapcontrols/locate/LocateTool";
   *
   * @prop {string} cfg.style CSS to apply to the button
   * @prop {string} cfg.text The button text, if any
+  * @prop {number} cfg.maxZoom The maximum zoom for automatic view setting to the user location
   * @prop {string} cfg.className the class name for the button
   *
   */
@@ -58,7 +59,6 @@ export default createPlugin('Locate', {
         Map: {
             name: "Locate",
             Tool: connect((state) => ({
-                maxZoom: 18, // <-- ho aggiunto questo, ma come faccio a farglielo passare da config, perchè le cfg prop sono passate al component e non ai tool
                 status: state.locate && state.locate.state,
                 messages: state.locale && state.locale.messages ? state.locale.messages.locate : undefined
             }), {
