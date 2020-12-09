@@ -1,5 +1,4 @@
 const path = require("path");
-const assign = require('object-assign');
 
 const shared = require('../moduleFederation').shared;
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
