@@ -169,7 +169,7 @@ export const getValidator = (format) => {
         getNoValidResponses: () => []
     };
     return {
-        getValidResponses: (responses, renderEmpty = false) => {
+        getValidResponses: (responses) => {
             return responses.reduce((previous, current) => {
                 if (current) {
                     let infoFormat;
@@ -181,7 +181,7 @@ export const getValidator = (format) => {
                     if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
                         infoFormat = current.queryParams.outputFormat;
                     }
-                    const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current], renderEmpty);
+                    const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
                     return [...previous, ...valid];
                 }
                 return [...previous];
