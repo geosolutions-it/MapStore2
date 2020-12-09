@@ -16,7 +16,10 @@ import { combineEpics as originalCombineEpics } from 'redux-observable';
 import { combineReducers as originalCombineReducers } from 'redux';
 import {wrapEpics} from "./EpicsUtils";
 
-
+/**
+ * Loads a script inside the current page.
+ * @param {string} src the URL where to load the script
+ */
 function loadScript(src) {
     return new Promise(function(resolve, reject) {
         const s = document.createElement('script');
@@ -24,10 +27,10 @@ function loadScript(src) {
         s.type = 'text/javascript';
         s.src = src;
         s.async = true;
-        s.onerror = function (err) {
+        s.onerror = function(err) {
             reject(err, s);
         };
-        s.onload = s.onreadystatechange = function () {
+        s.onload = s.onreadystatechange = function() {
             // console.log(this.readyState); // uncomment this line to see which ready states are called.
             if (!r && (!this.readyState || this.readyState === 'complete')) {
                 r = true;
@@ -39,6 +42,21 @@ function loadScript(src) {
     });
 }
 
+/**
+ * Allows to load a federate module dynamically.
+ * Typically published in this way:
+ * ```
+ * plugins: [new ModuleFederationPlugin({
+        name: 'Scope', // this is the scope
+        filename: "sampleExtension.js",
+        exposes: { // the keys of this object are the modules inside the scope "Scope"
+            './plugin': path.join(__dirname, "plugins", "SampleExtension")
+        },
+        shared
+    })],
+ * @param {sting} scope the scope
+ * @param {string} module the module
+ */
 /* eslint-disable */
 const dynamicFederation = (scope, module) => {
     return (new Promise(resolve => resolve(__webpack_init_sharing__ && __webpack_init_sharing__("default")))).then(() => {
@@ -525,15 +543,16 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
 /* eslint-enable */
 
 /**
- * Loads a plugin compiled bundle from the given url.
+ * Loads a plugin compiled bundle from the given URL.
  *
- * Compiled plugin bundles can be created using the dynamic import syntax with the webChunkName comment.
+ * Compiled plugin bundles can be created using the module federation plugin. They require the
+ * main project also use Module federation plugin.
  *
  * @example named bundle plugin
  * import(&#47;* webpackChunkName: "extensions/dummy-extension" *&#47; './plugins/Extension')
  *
  * @example load and use an external plugin
- * loadPlugin("dist/plugins/myplugin").then(lazy => {
+ * loadPlugin("dist/plugins/myPlugin").then(lazy => {
  *      lazy.loadPlugin((plugin) => {
  *          const Comp = plugin.component;
  *          ReactDOM.render(Comp, document.getElementById('container'));
