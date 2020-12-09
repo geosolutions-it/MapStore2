@@ -90,6 +90,11 @@ export const DEFAULT_ANNOTATIONS_STYLES = {
 export const ANNOTATION_TYPE = "ms2-annotations";
 
 /**
+ * The constant for annotations
+ */
+export const ANNOTATIONS = "annotations";
+
+/**
  * return two styles object for start and end point.
  * usually added to a LineString
  * @return {object[]} the two styles

@@ -358,11 +358,11 @@ describe('annotations Epics', () => {
     it('edit annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
-            if (actions.length >= 6) {
-                expect(actions[2].type).toBe(CHANGE_LAYER_PROPERTIES);
-                expect(actions[3].type).toBe(UPDATE_NODE);
-                expect(actions[4].type).toBe(CHANGE_DRAWING_STATUS);
-                expect(actions[5].type).toBe(HIDE_MAPINFO_MARKER);
+            if (actions.length >= 8) {
+                expect(actions[4].type).toBe(CHANGE_LAYER_PROPERTIES);
+                expect(actions[5].type).toBe(UPDATE_NODE);
+                expect(actions[6].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[7].type).toBe(HIDE_MAPINFO_MARKER);
                 done();
             }
         });
@@ -384,6 +384,8 @@ describe('annotations Epics', () => {
             const actions = store.getActions();
             if (actions.length >= 2) {
                 expect(actions[1].type).toBe(UPDATE_NODE);
+                const features = actions[1].options.features[0];
+                expect(features.features[0].style.length).toBe(2);
                 done();
             }
         });
@@ -582,6 +584,25 @@ describe('annotations Epics', () => {
         });
         const action = toggleVisibilityAnnotation('1');
         tempStore.dispatch(action);
+    });
+    it('test showHideAnnotationEpic on non-annotation layer', (done) => {
+        store = mockStore({
+            layers: {
+                flat: [
+                    {id: "1", features: [{properties: {id: '1'}}]}
+                ]
+            }
+        });
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 1) {
+                const types = actions.map(a=>a.type);
+                expect(types.includes(UPDATE_NODE)).toBe(false);
+                done();
+            }
+        });
+        const action = changeLayerProperties('1', {visibility: true});
+        store.dispatch(action);
     });
     it('toggle annotation visibility on CHANGE_LAYER_PROPERTIES', (done) => {
         const tempStore = mockStore({
