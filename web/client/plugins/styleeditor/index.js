@@ -110,30 +110,19 @@ export const StyleList = compose(
         createSelector(
             [
                 statusStyleSelector,
-                getAllStyles,
-                getUpdatedLayer
+                getAllStyles
             ],
-            (status, { defaultStyle, enabledStyle, availableStyles }, layer) => ({
+            (status, { defaultStyle, enabledStyle, availableStyles }) => ({
                 status,
                 defaultStyle,
                 enabledStyle,
-                availableStyles,
-                layer
+                availableStyles
             })
         ),
         {
-            onSelect: updateSettingsParams,
-            onInit: getLayerCapabilities
+            onSelect: updateSettingsParams
         }
     ),
-    lifecycle({
-        componentWillMount() {
-            if (this.props.onInit && this.props.layer && this.props.availableStyles.length === 0) {
-                this.props.onInit(this.props.layer);
-            }
-        }
-    }),
-    loadingEnhancers(({ layer = {} }) => layer && layer.capabilitiesLoading),
     withState('filterText', 'onFilter', ''),
     withMask(
         ({ status, readOnly }) => status === 'template' && !readOnly,
