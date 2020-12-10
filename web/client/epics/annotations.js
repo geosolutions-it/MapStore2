@@ -375,7 +375,7 @@ export default (viewer) => ({
         }),
     startDrawingMultiGeomEpic: (action$, store) => action$.ofType(START_DRAWING)
         .filter(() => store.getState().annotations.editing.features && !!store.getState().annotations.editing.features.length || store.getState().annotations.featureType === "Circle")
-        .switchMap( ({options: opts}) => {
+        .switchMap( ({options: {geodesic}} = {options: {} }) => {
             const state = store.getState();
             const feature = state.annotations.editing;
             const type = state.annotations.featureType;
