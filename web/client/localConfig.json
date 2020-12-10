@@ -357,7 +357,7 @@
                   "spatialMethodOptions": [
                       {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
                       {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
-                      {"id": "Circle", "name": "queryform.spatialfilter.methods.circle", "geodesic": true},
+                      {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
                       {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
                   ]
               }
