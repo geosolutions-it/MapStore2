@@ -205,7 +205,25 @@ export const toggleStyleEditorEpic = (action$, store) =>
             if (!layer || layer && !layer.url) return Rx.Observable.empty();
 
             const geoserverName = findGeoServerName(layer);
-            if (!geoserverName) return Rx.Observable.empty();
+            if (!geoserverName) {
+                return getLayerCapabilities(layer)
+                    .switchMap((capabilities) => {
+                        const layerCapabilities = formatCapabitiliesOptions(capabilities);
+                        if (!layerCapabilities.availableStyles) {
+                            return Rx.Observable.of(
+                                errorStyle('availableStyles', { status: 401 }),
+                                loadedStyle()
+                            );
+                        }
+
+                        return Rx.Observable.of(
+                            updateSettingsParams({ availableStyles: layerCapabilities.availableStyles  }),
+                            updateNode(layer.id, 'layer', { ...layerCapabilities }),
+                            loadedStyle()
+                        );
+
+                    }).startWith(loadingStyle('global'));
+            }
 
             const layerUrl = layer.url.split(geoserverName);
             const baseUrl = `${layerUrl[0]}${geoserverName}`;
