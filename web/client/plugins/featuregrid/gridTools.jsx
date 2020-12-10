@@ -11,8 +11,8 @@ export default [{
     width: 35,
     frozen: true,
     events: {
-        onClick: (p, opts, describe, {crs} = {}) => {
-            return p.geometry ? zoomToExtent(bbox(p), crs || "EPSG:4326") : {type: "NONE"};
+        onClick: (p, opts, describe, {crs, maxZoom} = {}) => {
+            return p.geometry ? zoomToExtent(bbox(p), crs || "EPSG:4326", maxZoom) : {type: "NONE"};
         }
     },
     formatter: ({value} = {}) => value ? <Glyphicon glyph="zoom-to" /> :
