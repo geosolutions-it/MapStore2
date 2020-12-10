@@ -20,7 +20,6 @@ import { CLOSE_IDENTIFY, HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, purgeMapInf
 import { configureMap } from '../../actions/config';
 
 import {
-    editAnnotation,
     confirmRemoveAnnotation,
     saveAnnotation,
     startDrawing,
@@ -43,7 +42,7 @@ import {
     LOADING,
     SET_DEFAULT_STYLE,
     toggleVisibilityAnnotation,
-    geometryHighlight
+    geometryHighlight, EDIT_ANNOTATION
 } from '../../actions/annotations';
 
 import { TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
@@ -356,17 +355,29 @@ describe('annotations Epics', () => {
         store.dispatch(action);
     });
     it('edit annotation', (done) => {
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 8) {
-                expect(actions[4].type).toBe(CHANGE_LAYER_PROPERTIES);
-                expect(actions[5].type).toBe(UPDATE_NODE);
-                expect(actions[6].type).toBe(CHANGE_DRAWING_STATUS);
-                expect(actions[7].type).toBe(HIDE_MAPINFO_MARKER);
-                done();
-            }
-        });
-        editAnnotation('1')(store.dispatch, store.getState);
+        const state = {
+            annotations: {editing: defaultState.annotations.editing, featureType: "Point"},
+            layers: {flat: [{id: "annotations", features: [{...ft, properties: {id: '1'}}]}]}
+        };
+        const feature = state.layers.flat[0].features[0];
+        testEpic(addTimeoutEpic(editAnnotationEpic, 100), 3, { type: EDIT_ANNOTATION, feature,
+            featureType: feature.geometry.type
+        }, actions => {
+            expect(actions.length).toBe(3);
+            actions.map((action) => {
+                switch (action.type) {
+                case CHANGE_LAYER_PROPERTIES:
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    break;
+                case HIDE_MAPINFO_MARKER:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
     });
     it('update annotations layer with LineString Feature, with old style structure, MAP_CONFIG_LOADED', (done) => {
         let action = configureMap({});

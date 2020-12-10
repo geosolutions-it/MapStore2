@@ -449,8 +449,9 @@ export default (viewer) => ({
             });
             let isLayerPropertyChange = action.layer === ANNOTATIONS;
             const annotationLayers = annotationsLayerSelector(store.getState());
-            // Update visibility based on layer property change from TOC or annotation panel
-            if (!isEmpty(annotationLayers)) {
+
+            // Update visibility of annotations from TOC or annotation panel
+            if (!isEmpty(annotationLayers) && (isLayerPropertyChange || action.id)) {
                 const features = (annotationLayers.features || []).map(f => isLayerPropertyChange ? feature(f, action?.newProperties?.visibility)
                     : (f.properties.id === action.id) ? feature(f, !f.properties?.visibility) : f);
                 const layerVisibility = !!features?.filter(f => f.properties.visibility)?.length;
