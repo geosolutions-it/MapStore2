@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import Extension from "../components/Extension";
 import Rx from "rxjs";
 import { changeZoomLevel } from "../../../web/client/actions/map";
-
+import '../assets/style.css';
 export default {
     name: "SampleExtension",
     component: connect(state => ({

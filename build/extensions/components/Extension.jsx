@@ -1,17 +1,8 @@
 import React from "react";
 import Message from "../../../web/client/components/I18N/Message";
 
-const style = {
-    backgroundColor: "rgba(255,255,255,.9)",
-    borderRadius: 10,
-    maxWidth: 550,
-    padding: 10,
-    margin: 10,
-    position: "absolute",
-    top: 50, zIndex: 1000
-};
 const Extension = ({ value = 0, onIncrease, changeZoomLevel }) => {
-    return (<div id="SAMPLE_EXTENSION" style={style}>
+    return (<div id="SAMPLE_EXTENSION" >
         <h2>Extension Sample</h2>
         <div>This is a sample extension plugin. The following tools demonstrate the correct binding inside MapStore</div>
         <h3>State and epics</h3>

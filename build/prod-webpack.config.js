@@ -1,5 +1,4 @@
 const path = require("path");
-const assign = require('object-assign');
 
 const themeEntries = require('./themes.js').themeEntries;
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
@@ -13,13 +12,11 @@ const paths = {
 };
 
 module.exports = require('./buildConfig')(
-    assign({
+    {
         "mapstore2": path.join(paths.code, "product", "app"),
         "embedded": path.join(paths.code, "product", "embedded"),
         "ms2-api": path.join(paths.code, "product", "api")
     },
-    require('./examples')
-    ),
     themeEntries,
     paths,
     [extractThemesPlugin, ModuleFederationPlugin],

@@ -73,7 +73,6 @@ The extension definition will import or define all the needed dependencies (comp
 
 ### Testing your extension
 
-The extension source code has to be stored *INSIDE* the MapStore source code tree. We suggest to modify the sample app in the `build/extensions` folder.
 Edit the `plugins/SampleExtension.jsx` file to create your own extension (and add any additional files you may need).
 
 To run the sample app (with your extension) in developer mode, use the following command:
@@ -98,9 +97,10 @@ You will find the built javascript in `build/extensions/dist/extension.js`
 
 To distribute your extension so that it can be uploaded to a running MapStore instance and included in a context, you have to create a zip file with the following content:
 
-* the js bundle built above, renamed to a convenient file name (e.g. `my-wonderful-extension.js`)
+* the file named `index.js` is the main entry point, for the module.
 * an `index.json` file that describes the extension, an example follows
-* optionally, a translations folder with localized message files used by the extension (in one or more languages of your choice)
+* `assets` folder, that contains additional bundles (js, css) came out from the bundle compilation. All additional files (js chunks, css ...) must stay in this folder.
+* optionally, a `translations` folder with localized message files used by the extension (in one or more languages of your choice)
 
 ...note: You will find both the `index.json` file and a sample translation folder in `build/extensions/bundle`.
 
@@ -108,8 +108,16 @@ To distribute your extension so that it can be uploaded to a running MapStore in
 my-extension.zip
 |── index.js
 ├── index.json
+├── assets
+    ├── css
+        └── 123.abcd.css
+        └── ...
+    └── js
+        └── 456.abcd.js
+        └── ...
 └── translations
     └── data.en_EN.json
+    └── ...
 ```
 
 #### index.json
@@ -117,7 +125,8 @@ my-extension.zip
 The `index.json file should contain all the information about the extension:
 
 * An `id` that identifies the extension
-* A `version` to show in UI. Semantic versioning is suggested.
+* A `version` to show in UI. Semantic versioning is suggested.+
+
 * `title` and `description` to display in UI, mnemonic hints for the administrator
 * `plugins` the list of plugins that it adds to the application, with all the data useful for the context manager. Format of the JSON object for plugins is suggested [here](https://github.com/georchestra/mapstore2-georchestra/issues/15#issuecomment-564974270)
 

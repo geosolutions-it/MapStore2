@@ -216,5 +216,5 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
         }
     },
 
-    devtool: !prod ? 'eval-source-map' : undefined
+    devtool: !prod ? 'eval' : undefined
 });

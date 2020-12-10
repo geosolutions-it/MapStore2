@@ -21,6 +21,43 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2020.02.00 to 2020.03.00
 
+### Update to webpack 6
+
+`package.json`
+
+- Replace all `--colors` with `--color` in your scripts that use webpack / webpack-dev-server.
+- Align `dependencies` and devDependencies:
+  - If you are using `jszip`, you need to add this to `dependencies`:
+    - `"stream": "0.0.2",`
+  - Update the following dev dependencies
+
+```text
+"html-webpack-plugin": "4.5.0",
+"webpack": "5.9.0",
+"webpack-cli": "4.2.0",
+"webpack-dev-server": "3.11.0"
+```
+
+- To support extensions in your project, you need to add `ModuleFederationPlugin` to your `prod-webpack.config.js` and `webpack.config.js`
+
+```javascript
+const ModuleFederationPlugin = require('./MapStore/build/moduleFederation').plugin;
+module.exports = require('./buildConfig')(
+    assign({
+        "mapstore2": path.join(paths.code, "product", "app"),
+        "embedded": path.join(paths.code, "product", "embedded"),
+        "ms2-api": path.join(paths.code, "product", "api")
+    },
+    require('./examples')
+    ),
+    themeEntries,
+    paths,
+    extractThemesPlugin,
+    [extractThemesPlugin, ModuleFederationPlugin], // <-- this  parameter has been changed, now it accepts also array of the plugins you want to add bot in prod and dev
+```
+
+- Other the other changes required are applied automatically in `buildConfig.js`.
+
 ### Eslint config
 
 Now eslint configuration is shared in a separate npm module. To update your custom project you have to remove the following files:
