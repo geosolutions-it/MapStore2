@@ -26,6 +26,7 @@ import {
     last
 } from 'lodash';
 import turfCircle from '@turf/circle';
+
 import lineIntersect from '@turf/line-intersect';
 import polygonToLinestring from '@turf/polygon-to-linestring';
 import greatCircle from '@turf/great-circle';
@@ -1011,6 +1012,7 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
 
     return [lc[0], lc[1], uc[0], uc[1]];
 };
+
 
 /**
  * helper use to create a geojson Feature with a Polygon geometry
