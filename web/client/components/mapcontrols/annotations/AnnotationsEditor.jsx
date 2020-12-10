@@ -262,7 +262,7 @@ class AnnotationsEditor extends React.Component {
         stylerType: "marker",
         annotations: [],
         measurementAnnotationEdit: false,
-        geodesic: false,
+        geodesic: true,
         onInitPlugin: () => {}
     };
     /**

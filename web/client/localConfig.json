@@ -308,8 +308,7 @@
           }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Swipe", {
             "name": "Annotations",
             "cfg": {
-              "measurementAnnotationEdit": false,
-              "geodesic": true
+              "measurementAnnotationEdit": false
             }
           },
             {
