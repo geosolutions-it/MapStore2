@@ -85,7 +85,7 @@ public class UploadPluginController {
         boolean addTranslations = false;
         while(entry != null) {
             if (!entry.isDirectory()) {
-                if (entry.getName().toLowerCase().endsWith("bundle.js")) {
+                if (entry.getName().toLowerCase().endsWith("index.js")) {
                     bundleName = entry.getName();
                     File tempBundle = File.createTempFile("mapstore-bundle", ".js");
                     storeAsset(zip, tempBundle);
