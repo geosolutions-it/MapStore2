@@ -13,7 +13,7 @@ import isEqual from 'lodash/isEqual';
 import union from 'lodash/union';
 import isArray from 'lodash/isArray';
 import assign from 'object-assign';
-
+import axios from '../../../../libs/ajax';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
 
@@ -159,40 +159,33 @@ const createLayer = (options, map) => {
                     // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
                     var img = image.getImage();
 
-                    if (typeof window.btoa === 'function' && src.length >= 2000) {
-                        const xhr = new XMLHttpRequest();
+                    if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || Infinity)) {
                         // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
-                        const dataEntries = src.split("&");
-                        let url;
-                        let params = "";
-                        for (let i = 0; i < dataEntries.length; i++) {
-                            if (i === 0) {
-                                url = dataEntries[i];
-                            } else {
-                                params = params + "&" + dataEntries[i];
-                            }
-                        }
-                        xhr.open('POST', url, true);
+                        const [url, ...dataEntries] = src.split("&");
 
-                        xhr.responseType = 'arraybuffer';
-                        xhr.onload = function() {
-                            if (this.status === 200) {
-                                const uInt8Array = new Uint8Array(this.response);
+                        // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
+                        axios.post(url, "&" + dataEntries.join("&"), {
+                            headers: {
+                                "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+                            },
+                            responseType: 'arraybuffer'
+                        }).then(response => {
+                            if (response.status === 200) {
+                                const uInt8Array = new Uint8Array(response.data);
                                 let i = uInt8Array.length;
                                 const binaryString = new Array(i);
                                 while (i--) {
                                     binaryString[i] = String.fromCharCode(uInt8Array[i]);
                                 }
-                                const data = binaryString.join('');
-                                const type = xhr.getResponseHeader('content-type');
+                                const dataImg = binaryString.join('');
+                                const type = response.headers['content-type'];
                                 if (type.indexOf('image') === 0) {
-                                    img.src = 'data:' + type + ';base64,' + window.btoa(data);
+                                    img.src = 'data:' + type + ';base64,' + window.btoa(dataImg);
                                 }
                             }
-                        };
-                        // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
-                        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        xhr.send(params);
+                        }).catch(e => {
+                            console.error(e);
+                        });
 
                     } else {
                         img.src = src;
@@ -213,7 +206,38 @@ const createLayer = (options, map) => {
             resolutions: options.resolutions || MapUtils.getResolutions(),
             tileSize: options.tileSize ? options.tileSize : 256,
             origin: options.origin ? options.origin : [extent[0], extent[1]]
-        })
+        }),
+        tileLoadFunction: (tile, src) => {
+            if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || Infinity)) {
+                const [url, ...dataEntries] = src.split("&");
+
+                // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
+                axios.post(url, "&" + dataEntries.join("&"), {
+                    headers: {
+                        "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+                    },
+                    responseType: 'arraybuffer'
+                }).then(response => {
+                    if (response.status === 200) {
+                        const uInt8Array = new Uint8Array(response.data);
+                        let i = uInt8Array.length;
+                        const binaryString = new Array(i);
+                        while (i--) {
+                            binaryString[i] = String.fromCharCode(uInt8Array[i]);
+                        }
+                        const dataImg = binaryString.join('');
+                        const type = response.headers?.['content-type'];
+                        if (type.indexOf('image') === 0) {
+                            tile.getImage().src = 'data:' + type + ';base64,' + window.btoa(dataImg);
+                        }
+                    }
+                }).catch(e => {
+                    console.error(e);
+                });
+            } else {
+                tile.getImage().src = src;
+            }
+        }
     }, options);
     const wmsSource = new TileWMS({ ...sourceOptions });
     const layerConfig = {
@@ -235,6 +259,7 @@ const createLayer = (options, map) => {
             })
         });
     } else {
+
         layer = new TileLayer({
             ...layerConfig,
             source: wmsSource

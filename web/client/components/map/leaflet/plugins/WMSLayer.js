@@ -9,7 +9,7 @@ const React = require('react');
 const Message = require('../../../../components/I18N/Message').default;
 const Layers = require('../../../../utils/leaflet/Layers');
 const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
-
+import axios from '../../../../libs/ajax';
 const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
 const L = require('leaflet');
 const objectAssign = require('object-assign');
