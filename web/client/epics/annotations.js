@@ -443,6 +443,8 @@ export default (viewer) => ({
             );
         }),
     showHideAnnotationEpic: (action$, store) => action$.ofType(TOGGLE_ANNOTATION_VISIBILITY, CHANGE_LAYER_PROPERTIES)
+        .filter(action=>
+            (action.type === CHANGE_LAYER_PROPERTIES && action.layer === ANNOTATIONS) || (action.type === TOGGLE_ANNOTATION_VISIBILITY))
         .switchMap((action) => {
             const feature = (f, visibility = false) => assign({}, f, {
                 properties: {...f.properties, visibility}
@@ -451,7 +453,7 @@ export default (viewer) => ({
             const annotationLayers = annotationsLayerSelector(store.getState());
 
             // Update visibility of annotations from TOC or annotation panel
-            if (!isEmpty(annotationLayers) && (isLayerPropertyChange || action.id)) {
+            if (!isEmpty(annotationLayers)) {
                 const features = (annotationLayers.features || []).map(f => isLayerPropertyChange ? feature(f, action?.newProperties?.visibility)
                     : (f.properties.id === action.id) ? feature(f, !f.properties?.visibility) : f);
                 const layerVisibility = !!features?.filter(f => f.properties.visibility)?.length;
