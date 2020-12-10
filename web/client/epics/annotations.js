@@ -381,7 +381,7 @@ export default (viewer) => ({
             const type = state.annotations.featureType;
             const defaultTextAnnotation = state.annotations.defaultTextAnnotation;
             const multiGeom = multiGeometrySelector;
-            const geodesic = type === "Circle" ? opts.geodesic : undefined;
+            const geodesic = type === "Circle" && geodesic;
             const drawOptions = {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeom,
