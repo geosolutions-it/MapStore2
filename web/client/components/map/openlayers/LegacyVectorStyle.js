@@ -454,7 +454,7 @@ export function getStyle(options, isDrawing = false, textValues = []) {
             })
         };
 
-        if (geomType === "Point") {
+        if (geomType === "Point" || geomType === "MultiPoint") {
             style = {
                 image: new Circle(assign({}, style, {radius: options.style.radius || 5}))
             };

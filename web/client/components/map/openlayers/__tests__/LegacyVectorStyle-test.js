@@ -8,8 +8,8 @@
 import expect from 'expect';
 import { getStyle, styleFunction, firstPointOfPolylineStyle, lastPointOfPolylineStyle, startEndPolylineStyle } from '../LegacyVectorStyle';
 
-import {geomCollFeature} from '../../../../test-resources/drawsupport/features';
-import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
+import {geomCollFeature, multipointFt, lineStringFt} from '../../../../test-resources/drawsupport/features';
+import {DEFAULT_ANNOTATIONS_STYLES, STYLE_CIRCLE} from '../../../../utils/AnnotationsUtils';
 
 import Feature from 'ol/Feature';
 import {Point, LineString, MultiLineString, Polygon, MultiPolygon} from 'ol/geom';
@@ -415,5 +415,35 @@ describe('Test LegacyVectorStyle', () => {
         }));
         expect(styleGenerated).toExist();
     });
+    it('test getStyle with FeatureCollection', () => {
+        const styleFunc = getStyle({
+            features: [{...lineStringFt, type: "FeatureCollection"}],
+            style: {
+                color: "ff0000",
+                opacity: 0.5,
+                ...DEFAULT_ANNOTATIONS_STYLES
+            }
+        }, false, ["textValue"]);
+        expect(styleFunc).toExist();
 
+        const styleGenerated = styleFunc(new Feature({
+            geometry: new LineString([
+                [100.0, 0.0], [101.0, 1.0]
+            ])
+        })
+        );
+        expect(styleGenerated).toExist();
+    });
+    it('test getStyle with MultiPoint', () => {
+        const styleObject = getStyle({
+            features: [multipointFt],
+            style: {
+                color: "ff0000",
+                opacity: 0.5,
+                ...STYLE_CIRCLE
+            }
+        }, false, []);
+        expect(styleObject).toExist();
+        expect(styleObject.image_).toExist();
+    });
 });
