@@ -9,7 +9,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Col, Grid, Label, Overlay, Popover, Row } from 'react-bootstrap';
+import { Col, Grid, Label, Overlay, Popover, Row } from 'react-bootstrap';
 import { findDOMNode } from 'react-dom';
 import { Combobox, NumberPicker } from 'react-widgets';
 import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
@@ -18,6 +18,7 @@ import Message from '../I18N/Message';
 import colorsSchema from './EqualIntervalComponents/ColorRamp';
 import ColorRampItem from './EqualIntervalComponents/ColorRampItem';
 import colors from './EqualIntervalComponents/ExtendColorBrewer';
+import Button from '../misc/Button';
 
 numberLocalizer();
 

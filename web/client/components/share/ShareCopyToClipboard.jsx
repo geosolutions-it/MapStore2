@@ -9,7 +9,8 @@
 import React from 'react';
 import RCopyToClipboard from 'react-copy-to-clipboard';
 import tooltip from '../misc/enhancers/tooltip';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
+import Button from '../misc/Button';
 
 const CopyToClipboard = tooltip(RCopyToClipboard);
 

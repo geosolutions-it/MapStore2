@@ -29,6 +29,7 @@ class SpatialFilter extends React.Component {
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
         spatialPanelExpanded: PropTypes.bool,
+        showDetailsButton: PropTypes.bool,
         showDetailsPanel: PropTypes.bool,
         withContainer: PropTypes.bool,
         actions: PropTypes.object,
@@ -44,6 +45,7 @@ class SpatialFilter extends React.Component {
         useMapProjection: true,
         spatialField: {},
         spatialPanelExpanded: true,
+        showDetailsButton: true,
         showDetailsPanel: false,
         withContainer: true,
         spatialMethodOptions: [],
@@ -236,7 +238,7 @@ class SpatialFilter extends React.Component {
     };
     renderButtons = () => {
         const buttons = [];
-        const showDetails = this.props.spatialField.geometry
+        const showDetails = this.props.showDetailsButton && this.props.spatialField.geometry
             && (this.props.spatialField.method
                 && this.props.spatialField.method === "BBOX"
                 || this.props.spatialField.method === "Circle");

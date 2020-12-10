@@ -10,7 +10,6 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
-import { Responsive } from 'react-grid-layout';
 
 import WidgetsView from '../WidgetsView';
 
@@ -50,23 +49,6 @@ describe('WidgetsView component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
         expect(el).toExist();
-    });
-    it('Test WidgetsView with width=460', () => {
-        const WIDGET_MOBILE_RIGHT_SPACE = 34;
-        const width = 460;
-        const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} useDefaultWidthProvider={false} width={width}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
-        expect(innerLayout).toExist();
-        expect(innerLayout.props.width).toEqual(width - WIDGET_MOBILE_RIGHT_SPACE);
-    });
-    it('Test WidgetsView with width=640', () => {
-        const width = 640;
-        const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} useDefaultWidthProvider={false} width={width}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
-        expect(innerLayout).toExist();
-        expect(innerLayout.props.width).toEqual(width);
     });
     it('handler editWidget', () => {
         const actions = {

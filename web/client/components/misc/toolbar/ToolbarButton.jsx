@@ -5,15 +5,16 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-import React from 'react';
 
+import React from 'react';
 import { compose } from 'recompose';
 import Message from '../../I18N/Message';
 import { omit } from 'lodash';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import Loader from '../Loader';
 import tooltip from '../enhancers/buttonTooltip';
 import popover from '../enhancers/popover';
+import Button from '../../misc/Button';
 
 /**
  * Button for @see components.misc.toolbar.Toolbar. Exposes all the props of a react-bootstrap button, plus glyph and text

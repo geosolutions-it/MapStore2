@@ -8,12 +8,12 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Col, Row, Form, FormGroup, FormControl, Button } from 'react-bootstrap';
+import { Col, Row, Form, FormGroup, FormControl } from 'react-bootstrap';
 import I18N from '../../../components/I18N/I18N';
 import googleGroups from '../../assets/img/groups_logo.png';
 import LinkedinGroup from '../../assets/img/linkedin_group.png';
 import { Follow } from 'react-twitter-widgets';
-
+import Button from '../../../components/misc/Button';
 
 class MailingLists extends React.Component {
     static contextTypes = {

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import proj4js from 'proj4';
-import { Glyphicon, Button, Label } from 'react-bootstrap';
+import { Glyphicon, Label } from 'react-bootstrap';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { reproject, getUnits } from '../../../utils/CoordinatesUtils';
 import MousePositionLabelDMS from './MousePositionLabelDMS';
@@ -17,6 +17,8 @@ import MousePositionLabelYX from './MousePositionLabelYX';
 import CRSSelector from './CRSSelector';
 import Message from '../../I18N/Message';
 import { isNumber } from 'lodash';
+import Button from '../../misc/Button';
+
 import './mousePosition.css';
 /**
  * MousePosition is a component that shows the coordinate of the mouse position in a selected crs.

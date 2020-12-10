@@ -43,6 +43,7 @@ export default getWidgetFilterRenderers(({
     pages,
     error,
     pagination = {},
+    dataGrid = {},
     virtualScroll = true
 }) =>
     (<WidgetContainer
@@ -50,6 +51,7 @@ export default getWidgetFilterRenderers(({
         title={title}
         headerStyle={headerStyle}
         icons={icons}
+        isDraggable={dataGrid.isDraggable}
         confirmDelete={confirmDelete}
         onDelete={onDelete}
         toggleDeleteConfirm={toggleDeleteConfirm}

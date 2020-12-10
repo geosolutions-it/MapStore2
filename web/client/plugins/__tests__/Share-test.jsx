@@ -45,6 +45,22 @@ describe('Share Plugin', () => {
         done();
     });
 
+    it('Checks Share plugin supported containers', () => {
+        const controls = {
+            share: {
+                enabled: true
+            }
+        };
+        const { containers } = getPluginForTest(SharePlugin, { controls }, {
+            ToolbarPlugin: {},
+            BurgerMenuPlugin: {}
+        });
+        expect(Object.keys(containers).length).toBe(2);
+        expect(Object.keys(containers)).toEqual(['BurgerMenu', 'Toolbar']);
+        expect(containers.Toolbar).toContain({alwaysVisible: true, doNotHide: true});
+        expect(containers.BurgerMenu).toContain({position: 1000, priority: 1, doNotHide: true});
+    });
+
     it('test Share plugin on close', (done) => {
         const controls = {
             share: {

@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,10 +7,12 @@ import PropTypes from 'prop-types';
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 import Message from '../I18N/Message';
+import Button from '../misc/Button';
 
 class PrintSubmit extends React.Component {
     static propTypes = {

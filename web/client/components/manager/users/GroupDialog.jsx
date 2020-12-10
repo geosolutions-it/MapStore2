@@ -7,15 +7,16 @@
  */
 
 import React from 'react';
-
-import UsersTable from './UsersTable';
-import { Alert, Tabs, Tab, Button, Glyphicon, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
+import { Alert, Tabs, Tab, Glyphicon, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Dialog from '../../../components/misc/Dialog';
 import assign from 'object-assign';
-import Message from '../../../components/I18N/Message';
 import Spinner from 'react-spinkit';
 import { findIndex } from 'lodash';
+
+import Button from '../../../components/misc/Button';
+import UsersTable from './UsersTable';
+import Dialog from '../../../components/misc/Dialog';
+import Message from '../../../components/I18N/Message';
 import PagedCombobox from '../../misc/combobox/PagedCombobox';
 import CloseConfirmButton from './CloseConfirmButton';
 import './style/userdialog.css';

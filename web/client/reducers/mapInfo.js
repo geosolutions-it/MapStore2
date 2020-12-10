@@ -47,12 +47,12 @@ import { getValidator } from '../utils/MapInfoUtils';
  * @param {boolean} isVector type of the response received is vector or not
  */
 const isIndexValid = (state, responses, requestIndex, isVector) => {
-    const {configuration, requests, queryableLayers, index} = state;
+    const {configuration, requests, queryableLayers = [], index} = state;
     const {infoFormat} = configuration || {};
 
     // Index when first response received is valid
-    const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]], true);
-    const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses, true);
+    const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]]);
+    const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses);
     return ((isUndefined(index) && !!validResponse.length)
         || (!isVector && requests.length === inValidResponse.filter(res=>res).length)
         || (isUndefined(index) && isVector && requests.filter(r=>isEmpty(r)).length === queryableLayers.length) // Check if all requested layers are vector

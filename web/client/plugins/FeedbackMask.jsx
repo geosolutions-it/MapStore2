@@ -9,7 +9,6 @@
 import { push } from 'connected-react-router';
 import { get } from 'lodash';
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { createSelector } from 'reselect';
@@ -22,6 +21,7 @@ import feedbackMask from '../reducers/feedbackMask';
 import { feedbackMaskSelector } from '../selectors/feedbackmask';
 import { isSharedStory } from '../selectors/geostory';
 import { isLoggedIn } from '../selectors/security';
+import Button from '../components/misc/Button';
 
 const feedbackMaskPluginSelector = createSelector([
     feedbackMaskSelector,

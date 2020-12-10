@@ -4,7 +4,7 @@ import { head } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Alert, Button, Glyphicon, Grid, Row } from 'react-bootstrap';
+import { Alert, Glyphicon, Grid, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Spinner from 'react-spinkit';
 import { Combobox } from 'react-widgets';
@@ -26,6 +26,8 @@ import { getWindowSize } from '../utils/AgentUtils';
 import Message from './locale/Message';
 import Raster from './RasterStyler';
 import Vector from './VectorStyler';
+import Button from '../components/misc/Button';
+
 class Styler extends React.Component {
     /** @constructor */
     static propTypes = {

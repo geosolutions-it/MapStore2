@@ -12,7 +12,7 @@ import {compose, withProps} from 'recompose';
  */
 export default () =>
     compose(
-        withProps(({ widgetTools = [], dataGrid = {}, toggleCollapse = () => {}, toolsOptions = {}}) => ({
+        withProps(({maximized = {}, widgetTools = [], dataGrid = {}, toggleCollapse = () => {}, toolsOptions = {}}) => ({
             widgetTools: !!toolsOptions.showCollapse ? [
                 ...widgetTools,
                 {
@@ -20,7 +20,7 @@ export default () =>
                     target: "icons",
                     tooltipId: "widgets.widget.menu.collapse",
                     // pinned can not be collapsed, hidden can not be collapsed because they do not appear in the tray
-                    visible: !dataGrid.static,
+                    visible: !maximized.widget && !dataGrid.static,
                     onClick: () => toggleCollapse()
                 }
             ] : widgetTools

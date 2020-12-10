@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -8,10 +7,12 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
-
-import { Grid, Row, Col, Button } from 'react-bootstrap';
+import { Grid, Row, Col} from 'react-bootstrap';
 import { Combobox } from 'react-widgets';
+
+import Button from '../misc/Button';
 import ColorMapGrid from './ColorMapGrid';
 import Message from '../I18N/Message';
 

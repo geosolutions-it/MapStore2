@@ -140,7 +140,7 @@ describe('QueryBuilder', () => {
 
         const queryButton = document.getElementById('query-toolbar-query');
         expect(queryButton).toExist();
-        expect(queryButton.getAttribute("disabled")).toBe('');
+        expect(queryButton.classList.contains("disabled")).toBe(true);
         // check presence of attribute, spatial and cross layer filter
         expect(document.querySelectorAll('.mapstore-switch-panel').length).toBe(3);
     });

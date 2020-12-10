@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
 import PropTypes from 'prop-types';
-import { Button, Tooltip } from 'react-bootstrap';
+import { Tooltip } from 'react-bootstrap';
+
 import OverlayTrigger from '../misc/OverlayTrigger';
 import { getSupportedLocales } from '../../utils/LocaleUtils';
-
+import Button from '../misc/Button';
 
 class LangBar extends React.Component {
     static propTypes = {

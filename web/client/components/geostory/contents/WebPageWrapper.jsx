@@ -8,9 +8,10 @@
 
 import React from 'react';
 import Dialog from '../../misc/StandardDialog';
-import { FormControl, ControlLabel, FormGroup, Button } from 'react-bootstrap';
+import { FormControl, ControlLabel, FormGroup } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setWebPageUrl } from '../../../actions/geostory';
+import Button from '../../misc/Button';
 import Message from '../../I18N/Message';
 import Portal from '../../misc/Portal';
 import PropTypes from 'prop-types';

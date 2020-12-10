@@ -10,9 +10,10 @@ import { trim } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Glyphicon, Grid } from 'react-bootstrap';
+import { Glyphicon, Grid } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
+import Button from '../../components/misc/Button';
 import { editGroup, getUserGroups, groupSearchTextChanged } from '../../actions/usergroups';
 import Message from '../../components/I18N/Message';
 import SearchBar from '../../components/search/SearchBar';

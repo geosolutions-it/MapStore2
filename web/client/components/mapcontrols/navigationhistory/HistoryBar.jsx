@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2015, GeoSolutions Sas.
@@ -7,11 +6,13 @@ import PropTypes from 'prop-types';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
-import { ButtonGroup, Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { ButtonGroup, Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../misc/OverlayTrigger';
 import ImageButton from '../../buttons/ImageButton';
+import Button from '../../misc/Button';
 
 class HistoryBar extends React.Component {
     static propTypes = {
