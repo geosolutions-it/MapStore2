@@ -13,7 +13,7 @@ import {compose, withProps} from 'recompose';
  */
 export default () =>
     compose(
-        withProps(({ widgetTools = [], toolsOptions = {}, canEdit, updateProperty = () => { }, hide = false}) => ({
+        withProps(({maximized = {}, widgetTools = [], toolsOptions = {}, canEdit, updateProperty = () => { }, hide = false}) => ({
             widgetTools: !!toolsOptions.showHide
                 ? [
                     ...widgetTools,
@@ -23,7 +23,7 @@ export default () =>
                         active: hide,
                         textId: hide ? "widgets.widget.menu.unhide" : "widgets.widget.menu.hide",
                         tooltipId: hide ? "widgets.widget.menu.unhideDescription" : "widgets.widget.menu.hideDescription",
-                        visible: canEdit,
+                        visible: !maximized.widget && canEdit,
                         onClick: () => updateProperty("hide", !hide)
                     }
                 ] : widgetTools}

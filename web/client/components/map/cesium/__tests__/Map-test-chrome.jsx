@@ -15,7 +15,7 @@ import {
     getHook,
     ZOOM_TO_EXTENT_HOOK,
     registerHook,
-    createRegisterHooks
+    createRegisterHooks, GET_PIXEL_FROM_COORDINATES_HOOK, GET_COORDINATES_FROM_PIXEL_HOOK
 } from '../../../../utils/MapUtils';
 
 
@@ -247,7 +247,9 @@ describe('CesiumMap', () => {
             const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
             expect(map).toExist();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(getHook(ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(getHook(ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
+            expect(getHook(GET_PIXEL_FROM_COORDINATES_HOOK)).toBeFalsy();
+            expect(getHook(GET_COORDINATES_FROM_PIXEL_HOOK)).toBeFalsy();
         });
         it("with custom hookRegister", () => {
             const customHooRegister = createRegisterHooks();

@@ -9,7 +9,7 @@ import React from 'react';
 
 import Modal from '../../misc/Modal';
 import Message from '../../I18N/Message';
-import { Button } from 'react-bootstrap';
+import Button from '../../misc/Button';
 
 export default ({
     title = <Message msgId="warning" />,

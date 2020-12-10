@@ -7,20 +7,30 @@
  */
 
 import React from 'react';
-import {connect} from 'react-redux';
-import {get} from "lodash";
-import {Glyphicon} from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { get } from "lodash";
+import { Glyphicon } from 'react-bootstrap';
 
-import Message from '../components/I18N/Message';
-import {mapIdSelector, mapInfoDetailsUriFromIdSelector, mapInfoDetailsSettingsFromIdSelector} from '../selectors/map';
-import {mapLayoutValuesSelector} from '../selectors/maplayout';
-import {openDetailsPanel, closeDetailsPanel, NO_DETAILS_AVAILABLE} from "../actions/maps";
+import {
+    openDetailsPanel,
+    closeDetailsPanel,
+    NO_DETAILS_AVAILABLE
+} from "../actions/details";
+
+import { mapIdSelector, mapInfoDetailsUriFromIdSelector, mapInfoDetailsSettingsFromIdSelector } from '../selectors/map';
+import { detailsTextSelector } from '../selectors/details';
+import { mapLayoutValuesSelector } from '../selectors/maplayout';
 
 import DetailsViewer from '../components/resources/modals/fragments/DetailsViewer';
 import DetailsPanel from '../components/details/DetailsPanel';
 
+import Message from '../components/I18N/Message';
 import ResizableModal from '../components/misc/ResizableModal';
-import {createPlugin} from '../utils/PluginsUtils';
+
+import { createPlugin } from '../utils/PluginsUtils';
+
+import details from '../reducers/details';
+import * as epics from '../epics/details';
 
 /**
  * Allow to show details for the map.
@@ -51,6 +61,7 @@ const DetailsPlugin = ({
     return showAsModal ?
         <ResizableModal
             bodyClassName="details-viewer-modal"
+            fitContent
             showFullscreen
             show={active}
             size="lg"
@@ -70,7 +81,7 @@ export default createPlugin('Details', {
     component: connect((state) => ({
         active: get(state, "controls.details.enabled"),
         dockStyle: mapLayoutValuesSelector(state, {height: true}),
-        detailsText: state.maps.detailsText,
+        detailsText: detailsTextSelector(state),
         showAsModal: mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal
     }), {
         onClose: closeDetailsPanel
@@ -97,7 +108,7 @@ export default createPlugin('Details', {
             name: 'details',
             position: 2,
             priority: 0,
-            tooltip: <Message msgId="details.title" />,
+            tooltip: "details.title",
             alwaysVisible: true,
             doNotHide: true,
             icon: <Glyphicon glyph="sheet"/>,
@@ -111,5 +122,9 @@ export default createPlugin('Details', {
                 return { style: {display: "none"} };
             }
         }
+    },
+    epics,
+    reducers: {
+        details
     }
 });

@@ -29,13 +29,13 @@ describe('Identify Coordinate Editor component', () => {
         const spyonChange = expect.spyOn(actions, 'onSubmit');
         ReactDOM.render(<Editor onSubmit={actions.onSubmit} />, document.getElementById("container"));
         const button = document.querySelector('span > button');
-        expect(button.disabled).toBe(true);
+        expect(button.classList.contains('disabled')).toBe(true);
         const latLonFields = document.querySelectorAll('input');
         ReactTestUtils.Simulate.focus(latLonFields[0]);
         ReactTestUtils.Simulate.change(latLonFields[0], { target: { value: 20} }); // <-- trigger event callback
         ReactTestUtils.Simulate.focus(latLonFields[1]);
         ReactTestUtils.Simulate.change(latLonFields[1], { target: { value: 10} }); // <-- trigger event callback
-        expect(button.disabled).toBe(false);
+        expect(button.classList.contains('disabled')).toBe(false);
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
         expect(isEmpty(spyonChange.calls[0].arguments[0])).toBe(false);

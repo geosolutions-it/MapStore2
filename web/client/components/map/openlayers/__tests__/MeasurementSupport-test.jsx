@@ -477,8 +477,8 @@ describe('Openlayers MeasurementSupport', () => {
         changedFeatures = spyOnChangeGeometry.calls[1].arguments[0];
         expect(spyOnChangeGeometry).toHaveBeenCalled();
         expect(changedFeatures[1].geometry.textLabels).toExist();
-        expect(changedFeatures[1].geometry.textLabels[0].text).toBe("4.99 m | 180° T");
-        expect(changedFeatures[1].geometry.textLabels[1].text).toBe("5.09 m | 168° T");
+        expect(changedFeatures[1].geometry.textLabels[0].text).toBe("4.99 m | 180°");
+        expect(changedFeatures[1].geometry.textLabels[1].text).toBe("5.09 m | 168°");
         expect(cmp.textLabels.length).toBe(4);
         expect(cmp.textLabels[2].type).toBe("LineString");
         expect(cmp.textLabels[2].textId).toBe(1);
@@ -522,8 +522,8 @@ describe('Openlayers MeasurementSupport', () => {
         expect(spyOnChangeGeometry).toHaveBeenCalled();
         let changedFeatures = spyOnChangeGeometry.calls[0].arguments[0];
         expect(changedFeatures[0].geometry.textLabels).toExist();
-        expect(changedFeatures[0].geometry.textLabels[0].text).toBe("4.99 m | 180° T");
-        expect(changedFeatures[0].geometry.textLabels[1].text).toBe("5.09 m | 168° T");
+        expect(changedFeatures[0].geometry.textLabels[0].text).toBe("4.99 m | 180°");
+        expect(changedFeatures[0].geometry.textLabels[1].text).toBe("5.09 m | 168°");
 
         // Hide show length and bearing combination label
         cmp = renderMeasurement({
@@ -602,7 +602,7 @@ describe('Openlayers MeasurementSupport', () => {
         expect(changedFeatures.length).toBe(1);
         expect(changedFeatures[0].type).toBe("Feature");
         expect(changedFeatures[0].geometry.coordinates.length).toBe(2);
-        expect(changedFeatures[0].properties.values[0].formattedValue).toContain("T");
+        expect(changedFeatures[0].properties.values[0].formattedValue).toNotContain("T");
         expect(changedFeatures[0].properties.values[0].type).toContain("bearing");
     });
     it('test drawState restore on geomType change', () => {

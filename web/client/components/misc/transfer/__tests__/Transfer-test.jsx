@@ -82,10 +82,10 @@ describe('Transfer component', () => {
         expect(moveButtonsContainer).toExist();
         const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
         expect(moveButtons.length).toBe(4);
-        expect(moveButtons[0].hasAttribute('disabled')).toBe(false);
-        expect(moveButtons[1].hasAttribute('disabled')).toBe(true);
-        expect(moveButtons[2].hasAttribute('disabled')).toBe(true);
-        expect(moveButtons[3].hasAttribute('disabled')).toBe(false);
+        expect(moveButtons[0].classList.contains('disabled')).toBe(false);
+        expect(moveButtons[1].classList.contains('disabled')).toBe(true);
+        expect(moveButtons[2].classList.contains('disabled')).toBe(true);
+        expect(moveButtons[3].classList.contains('disabled')).toBe(false);
 
         TestUtils.Simulate.click(moveButtons[0]);
         TestUtils.Simulate.click(moveButtons[3]);
@@ -111,10 +111,10 @@ describe('Transfer component', () => {
         expect(moveButtonsContainer).toExist();
         const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
         expect(moveButtons.length).toBe(4);
-        expect(moveButtons[0].hasAttribute('disabled')).toBe(false);
-        expect(moveButtons[1].hasAttribute('disabled')).toBe(false);
-        expect(moveButtons[2].hasAttribute('disabled')).toBe(true);
-        expect(moveButtons[3].hasAttribute('disabled')).toBe(false);
+        expect(moveButtons[0].classList.contains('disabled')).toBe(false);
+        expect(moveButtons[1].classList.contains('disabled')).toBe(false);
+        expect(moveButtons[2].classList.contains('disabled')).toBe(true);
+        expect(moveButtons[3].classList.contains('disabled')).toBe(false);
 
         TestUtils.Simulate.click(moveButtons[1]);
 
@@ -130,10 +130,10 @@ describe('Transfer component', () => {
         expect(moveButtonsContainer).toExist();
         const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
         expect(moveButtons.length).toBe(4);
-        expect(moveButtons[0].hasAttribute('disabled')).toBe(true);
-        expect(moveButtons[1].hasAttribute('disabled')).toBe(true);
-        expect(moveButtons[2].hasAttribute('disabled')).toBe(true);
-        expect(moveButtons[3].hasAttribute('disabled')).toBe(true);
+        expect(moveButtons[0].classList.contains('disabled')).toBe(true);
+        expect(moveButtons[1].classList.contains('disabled')).toBe(true);
+        expect(moveButtons[2].classList.contains('disabled')).toBe(true);
+        expect(moveButtons[3].classList.contains('disabled')).toBe(true);
     });
     it('Filter test', () => {
         ReactDOM.render(<Transfer leftColumn={testLeftColumn} rightColumn={{...testRightColumn, filterText: "item5"}}

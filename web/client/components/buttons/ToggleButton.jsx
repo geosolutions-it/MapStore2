@@ -9,10 +9,10 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
+import Button from '../misc/Button';
 import ImageButton from './ImageButton';
-
 /**
  * Toggle button with tooltip and icons or image support.
  * @memberof components.buttons

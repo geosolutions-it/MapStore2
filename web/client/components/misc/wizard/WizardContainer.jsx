@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
 import PropTypes from 'prop-types';
-import { Button, Row } from 'react-bootstrap';
+import {Row} from 'react-bootstrap';
+
 import Message from '../../I18N/Message';
+import Button from '../../misc/Button';
 
 /**
  * Provides a base container for wizards.

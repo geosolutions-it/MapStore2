@@ -17,7 +17,8 @@ import {
     RESET_MAP_SAVE_ERROR
 } from '../actions/config';
 
-import { MAP_CREATED, DETAILS_LOADED } from '../actions/maps';
+import { MAP_CREATED } from '../actions/maps';
+import { DETAILS_LOADED } from '../actions/details';
 import assign from 'object-assign';
 import ConfigUtils from '../utils/ConfigUtils';
 import { set, unset } from '../utils/ImmutableUtils';

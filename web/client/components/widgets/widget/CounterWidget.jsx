@@ -31,6 +31,7 @@ export default ({
     headerStyle,
     icons,
     topRightItems,
+    dataGrid = {},
     toggleTableView = () => {},
     toggleDeleteConfirm = () => {},
     onDelete = () => {},
@@ -39,6 +40,7 @@ export default ({
         className="counter-widget"
         id={`widget-chart-${id}`}
         title={title}
+        isDraggable={dataGrid.isDraggable}
         icons={icons}
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
         confirmDelete={confirmDelete}

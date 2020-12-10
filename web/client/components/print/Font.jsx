@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -9,9 +8,11 @@ import PropTypes from 'prop-types';
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
 
 import Choice from './Choice';
-import { Grid, Row, Col, Button, Glyphicon } from 'react-bootstrap';
+import Button from '../misc/Button';
 import IntlNumberFormControl from '../I18N/IntlNumberFormControl';
 
 class Font extends React.Component {

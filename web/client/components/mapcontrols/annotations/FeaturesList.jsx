@@ -12,7 +12,6 @@ import bbox from '@turf/bbox';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import cs from 'classnames';
 import Message from '../../I18N/Message';
-import OverlayTriggerCustom from '../../misc/OverlayTriggerCustom';
 import {get} from 'lodash';
 import {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} from '../../../utils/AnnotationsUtils';
 
@@ -34,7 +33,9 @@ const FeaturesList = (props) => {
         isMeasureEditDisabled,
         onSetAnnotationMeasurement,
         showPopupWarning,
-        setPopupWarning
+        setPopupWarning,
+        defaultStyles,
+        defaultPointType
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);
@@ -63,19 +64,17 @@ const FeaturesList = (props) => {
                             onClick: () => {
                                 showPopupWarning ? setPopupWarning(true) : onSetAnnotationMeasurement();
                             },
-                            tooltip: <Message msgId="annotations.editMeasurement" />,
-                            customOverlayTrigger: OverlayTriggerCustom
+                            tooltip: <Message msgId="annotations.editMeasurement" />
                         },
                         {
                             glyph: 'point-plus',
                             visible: isMeasureEditDisabled,
                             disabled: !isValidFeature,
                             onClick: () => {
-                                const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}];
+                                const style = [{ ...defaultStyles.POINT?.[defaultPointType], highlight: true, id: uuidv1()}];
                                 onClickGeometry("Point", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.marker" />,
-                            customOverlayTrigger: OverlayTriggerCustom
+                            tooltip: <Message msgId="annotations.titles.marker" />
                         },
                         {
                             glyph: 'polyline-plus',
@@ -86,8 +85,7 @@ const FeaturesList = (props) => {
                                     .concat(getStartEndPointsForLinestring());
                                 onClickGeometry("LineString", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.line" />,
-                            customOverlayTrigger: OverlayTriggerCustom
+                            tooltip: <Message msgId="annotations.titles.line" />
                         },
                         {
                             glyph: 'polygon-plus',
@@ -98,8 +96,7 @@ const FeaturesList = (props) => {
                                     {...DEFAULT_ANNOTATIONS_STYLES.Polygon, highlight: true, id: uuidv1()}];
                                 onClickGeometry("Polygon", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.polygon" />,
-                            customOverlayTrigger: OverlayTriggerCustom
+                            tooltip: <Message msgId="annotations.titles.polygon" />
                         },
                         {
                             glyph: 'font-add',
@@ -110,8 +107,7 @@ const FeaturesList = (props) => {
                                     {...DEFAULT_ANNOTATIONS_STYLES.Text, highlight: true, type: "Text", title: "Text Style", id: uuidv1()}];
                                 onClickGeometry("Text", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.text" />,
-                            customOverlayTrigger: OverlayTriggerCustom
+                            tooltip: <Message msgId="annotations.titles.text" />
                         },
                         {
                             glyph: '1-circle-add',
@@ -124,8 +120,7 @@ const FeaturesList = (props) => {
                                 ];
                                 onClickGeometry("Circle", style);
                             },
-                            tooltip: <Message msgId="annotations.titles.circle" />,
-                            customOverlayTrigger: OverlayTriggerCustom
+                            tooltip: <Message msgId="annotations.titles.circle" />
                         }
                     ]}
                 />
@@ -217,7 +212,9 @@ FeaturesList.defaultProps = {
     onStyleGeometry: () => {},
     onSetAnnotationMeasurement: () => {},
     onSelectFeature: () => {},
-    isMeasureEditDisabled: true
+    setTabValue: () => {},
+    isMeasureEditDisabled: true,
+    defaultPointType: 'marker'
 };
 
 export default FeaturesList;

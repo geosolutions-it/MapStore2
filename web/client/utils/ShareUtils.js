@@ -7,6 +7,10 @@
  */
 import Url from 'url';
 import { trimStart, replace } from 'lodash';
+
+export const CENTERANDZOOM = 'centerAndZoom';
+export const MARKERANDZOOM = 'markerAndZoom';
+export const BBOX = 'bbox';
 /**
  * Utility functions for Share tools.
  * @memberof utils

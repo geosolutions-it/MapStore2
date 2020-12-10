@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -8,10 +7,11 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
+import { ListGroup, ListGroupItem,  Glyphicon } from 'react-bootstrap';
 
-// const Message = require('../I18N/Message').default;
-import { ListGroup, ListGroupItem, Button, Glyphicon } from 'react-bootstrap';
+import Button from '../misc/Button';
 
 class GroupManager extends React.Component {
     static propTypes = {

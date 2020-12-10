@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /*
  * Copyright 2017, GeoSolutions Sas.
@@ -9,8 +8,10 @@ import PropTypes from 'prop-types';
  */
 
 import React from 'react';
+import Button from '../misc/Button';
+import PropTypes from 'prop-types';
 
-import { Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import Message from '../I18N/Message';
 import ConfigUtils from '../../utils/ConfigUtils';

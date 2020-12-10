@@ -6,14 +6,15 @@
 * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
-import { Button, Col, Glyphicon, Grid, Row } from 'react-bootstrap';
+import { Col, Glyphicon, Grid, Row } from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
-import AvailableStylesComp from "../AvailableStyles";
-import DefaultStyleComp from "../DefaultStyle";
+import AvailableStylesComp from '../AvailableStyles';
+import DefaultStyleComp from '../DefaultStyle';
 import filterEnhancer from '../enhancers/filterstyles';
 import StylesList from '../StylesList';
 import enhancer from './enhancers/style';
+import Button from '../../../misc/Button';
 
 const DefaultStyle = filterEnhancer(DefaultStyleComp);
 const AvailableStyles = filterEnhancer(AvailableStylesComp);

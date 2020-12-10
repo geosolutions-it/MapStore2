@@ -5,9 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { forwardRef } from 'react';
 
-import { Button, Glyphicon } from 'react-bootstrap';
+import React, { forwardRef } from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import Button from '../../../misc/Button';
 
 const hideStyle = {
     width: 0,

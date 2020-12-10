@@ -7,7 +7,9 @@
  */
 
 import React from 'react';
-import { Button, Col, Glyphicon, Grid, Row } from 'react-bootstrap';
+import { Col, Glyphicon, Grid, Row } from 'react-bootstrap';
+import Button from '../../misc/Button';
+
 
 export default (props = {
     onDownloadToggle: () => {}

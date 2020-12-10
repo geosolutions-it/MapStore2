@@ -36,6 +36,7 @@ export const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
 
 export const TOGGLE_COLLAPSE = "WIDGET:TOGGLE_COLLAPSE";
 export const TOGGLE_COLLAPSE_ALL = "WIDGET:TOGGLE_COLLAPSE_ALL";
+export const TOGGLE_MAXIMIZE = "WIDGET:TOGGLE_MAXIMIZE";
 export const TOGGLE_TRAY = "WIDGET:TOGGLE_TRAY";
 
 /**
@@ -280,6 +281,16 @@ export const toggleCollapse = (widget, target = DEFAULT_TARGET) => ({
  */
 export const toggleCollapseAll = (target = DEFAULT_TARGET) => ({
     type: TOGGLE_COLLAPSE_ALL,
+    target
+});
+
+/**
+ * Toggles a widget to fill the whole available grid, or reverts to previous state
+ * @param {object} widget widget to maximize
+ */
+export const toggleMaximize = (widget, target = DEFAULT_TARGET) => ({
+    type: TOGGLE_MAXIMIZE,
+    widget,
     target
 });
 

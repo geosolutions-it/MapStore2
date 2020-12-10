@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -9,8 +8,9 @@ import PropTypes from 'prop-types';
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { Button } from 'react-bootstrap';
+import Button from '../../misc/Button';
 import Modal from '../../misc/Modal';
 import Spinner from 'react-spinkit';
 

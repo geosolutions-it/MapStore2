@@ -18,10 +18,12 @@ export default ({
     id, title, text,
     headerStyle,
     topRightItems,
+    dataGrid = {},
     confirmDelete = false,
     onDelete = () => {}
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
+        isDraggable={dataGrid.isDraggable}
         icons={icons}
         topLeftItems={topLeftItems}
         topRightItems={topRightItems}

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -7,19 +6,19 @@ import PropTypes from 'prop-types';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React from 'react';
-
-import { Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
-import Modal from '../../misc/Modal';
 
+import Modal from '../../misc/Modal';
 import {
     checkOperatorValidity,
     setupCrossLayerFilterDefaults,
     isCrossLayerFilterValid,
     isFilterEmpty
 } from '../../../utils/FilterUtils';
-
+import Button from '../../misc/Button';
 import Toolbar from '../../misc/toolbar/Toolbar';
 
 class QueryToolbar extends React.Component {

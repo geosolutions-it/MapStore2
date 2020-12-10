@@ -10,7 +10,7 @@ import { trim } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Glyphicon, Grid } from 'react-bootstrap';
+import { Glyphicon, Grid } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 import { editUser, getUsers, usersSearchTextChanged } from '../../actions/users';
@@ -19,6 +19,7 @@ import SearchBar from '../../components/search/SearchBar';
 import UserDeleteConfirm from './users/UserDeleteConfirm';
 import UserDialog from './users/UserDialog';
 import UserGrid from './users/UserGrid';
+import Button from '../../components/misc/Button';
 
 class UserManager extends React.Component {
     static propTypes = {

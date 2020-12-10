@@ -7,15 +7,14 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import LoginForm from '../forms/LoginForm';
-import { Button } from 'react-bootstrap';
 import Modal from '../../misc/Modal';
-import PropTypes from 'prop-types';
 import Message from '../../../components/I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import '../css/security.css';
-
+import Button from '../../misc/Button';
 /**
  * A Modal window to show password reset form
  */

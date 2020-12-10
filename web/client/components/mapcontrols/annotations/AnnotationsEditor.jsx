@@ -335,7 +335,7 @@ class AnnotationsEditor extends React.Component {
                                 onClick: () => {
                                     this.setState({removing: this.props.id});
                                 }
-                            }, {  // TODO should this be included on geometry card
+                            }, {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
                                 visible: true,
@@ -396,7 +396,7 @@ class AnnotationsEditor extends React.Component {
                             {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
-                                disabled: Object.keys(this.validate()).length !== 0,
+                                disabled: Object.keys(this.validate()).length !== 0 || this.props.unsavedChanges,
                                 visible: !this.props.selected,
                                 onClick: () => {
                                     const {newFeature, ...features} = this.props.editing;
@@ -493,6 +493,8 @@ class AnnotationsEditor extends React.Component {
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}
                     setPopupWarning={this.setPopupWarning}
                     showPopupWarning={this.props.showPopupWarning}
+                    defaultPointType={this.getConfig().defaultPointType}
+                    defaultStyles={this.props.defaultStyles}
                 />
                 }
             </div>
@@ -585,6 +587,7 @@ class AnnotationsEditor extends React.Component {
                     this.state.removing && this.setState({removing: null});
                     this.props.onCancelRemove();
                 }}
+                focusConfirm={this.props.removing}
                 onConfirm={() => {
                     if (this.state.removing) {
                         this.setState({removing: null});
@@ -745,7 +748,6 @@ class AnnotationsEditor extends React.Component {
                                 defaultShapeSize={this.props.defaultShapeSize}
                                 defaultShapeFillColor={this.props.defaultShapeFillColor}
                                 defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
-                                defaultPointType={this.getConfig().defaultPointType}
                                 defaultStyles={this.props.defaultStyles}
                                 lineDashOptions={this.props.lineDashOptions}
                                 markersOptions={this.getConfig()}
@@ -818,14 +820,17 @@ class AnnotationsEditor extends React.Component {
     }
 
     save = () => {
-        const errors = this.validate();
-        if (Object.keys(errors).length === 0) {
-            this.props.onError({});
-            this.props.selected ? this.props.onAddNewFeature() :
+        if (!isEmpty(this.props.selected)) {
+            this.props.onAddNewFeature();
+        } else {
+            const errors = this.validate();
+            if (Object.keys(errors).length === 0) {
+                this.props.onError({});
                 this.props.onSave(this.props.id, assign({}, this.props.editedFields),
                     this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
-        } else {
-            this.props.onError(errors);
+            } else {
+                this.props.onError(errors);
+            }
         }
     };
 

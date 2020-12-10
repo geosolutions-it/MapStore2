@@ -127,7 +127,10 @@ export default props => {
                                 loaded={loaded}
                                 setIndex={setIndex}
                                 missingResponses={missingResponses}
-                                emptyResponses={emptyResponses}/>
+                                emptyResponses={emptyResponses}
+                                validator={validator}
+                                format={format}
+                            />
                             <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
                                 buttons={getFeatureButtons(props)}

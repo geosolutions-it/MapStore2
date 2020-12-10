@@ -7,14 +7,15 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React from 'react';
-import { Button, Glyphicon, Alert } from 'react-bootstrap';
+import { Glyphicon, Alert } from 'react-bootstrap';
+import assign from 'object-assign';
+
 import Dialog from '../../misc/Dialog';
 import Portal from '../../misc/Portal';
 import Message from '../../I18N/Message';
 import Spinner from '../../misc/spinners/BasicSpinner/BasicSpinner';
-import assign from 'object-assign';
+import Button from '../../misc/Button';
 
 class RefreshLayers extends React.Component {
     static propTypes = {

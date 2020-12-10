@@ -13,24 +13,6 @@ import { testEpic } from './epicTestUtils';
 import { SET_ACTIVE } from '../../actions/swipe';
 
 describe('SWIPE EPICS', () => {
-    it('reset activation of layer swipe tool if it was active', done => {
-        const state = {
-            swipe: {
-                active: true
-            }
-        };
-
-        testEpic(
-            resetLayerSwipeSettingsEpic,
-            1,
-            selectNode('layerId', 'layer', false),
-            actions => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toEqual(SET_ACTIVE);
-                expect(actions[0].active).toEqual(false);
-                done();
-            }, state, done);
-    });
     it('reset activation of layer swipe tool selected nodeType is group', done => {
         const state = {
             swipe: {

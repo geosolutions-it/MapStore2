@@ -8,12 +8,12 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Button, Glyphicon, Tooltip} from 'react-bootstrap';
+import {Glyphicon, Tooltip} from 'react-bootstrap';
 
 import Message from '../../I18N/Message';
 import OverlayTrigger from '../../misc/OverlayTrigger';
 import defaultIcon from '../../misc/spinners/InlineSpinner/img/spinner.gif';
-
+import Button from '../../misc/Button';
 import('./css/locate.css');
 
 let checkingGeoLocation = false;

@@ -10,8 +10,9 @@ import './style/usercard.css';
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 
+import Button from '../../misc/Button';
 import Message from '../../../components/I18N/Message';
 import GridCard from '../../misc/GridCard';
 

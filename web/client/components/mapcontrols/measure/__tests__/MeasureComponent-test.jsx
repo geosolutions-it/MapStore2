@@ -238,7 +238,7 @@ describe("test the MeasureComponent", () => {
         cmp = ReactDOM.render(
             <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled bearingMeasureValueEnabled trueBearingLabel = {<Message msgId="True Bearing"/>}/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("<h3><strong>045° T</strong></h3>");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>045°</strong></h3>");
 
         const bearingTitleText = TestUtils.findRenderedDOMComponentWithClass(cmp, 'form-group');
         expect(bearingTitleText.textContent).toContain('True Bearing');
@@ -246,17 +246,17 @@ describe("test the MeasureComponent", () => {
         cmp = ReactDOM.render(
             <MeasureComponent measurement={{...measurement, bearing: 135.235648, trueBearing: {...measurement.trueBearing, fractionDigits: 4}}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("<h3><strong>135.2356° T</strong></h3>");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>135.2356°</strong></h3>");
 
         cmp = ReactDOM.render(
             <MeasureComponent measurement={{...measurement, bearing: 225.83202, trueBearing: {...measurement.trueBearing, fractionDigits: 2}}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("<h3><strong>225.83° T</strong></h3>");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>225.83°</strong></h3>");
 
         cmp = ReactDOM.render(
             <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("<h3><strong>315° T</strong></h3>");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>315°</strong></h3>");
     });
 
     it('test uom format area and lenght', () => {
@@ -458,13 +458,13 @@ describe("test the MeasureComponent", () => {
 
         const buttons = document.querySelectorAll('button');
         expect(buttons.length).toBe(7);
-        expect(buttons[0].disabled).toBe(false);
-        expect(buttons[1].disabled).toBe(false);
-        expect(buttons[2].disabled).toBe(false);
-        expect(buttons[3].disabled).toBe(false);
-        expect(buttons[4].disabled).toBe(false);
-        expect(buttons[5].disabled).toBe(true); // Add as layer button
-        expect(buttons[6].disabled).toBe(false);
+        expect(buttons[0].classList.contains('disabled')).toBe(false);
+        expect(buttons[1].classList.contains('disabled')).toBe(false);
+        expect(buttons[2].classList.contains('disabled')).toBe(false);
+        expect(buttons[3].classList.contains('disabled')).toBe(false);
+        expect(buttons[4].classList.contains('disabled')).toBe(false);
+        expect(buttons[5].classList.contains('disabled')).toBe(true); // Add as layer button
+        expect(buttons[6].classList.contains('disabled')).toBe(false);
         expect(buttons[6].childNodes[0].className).toContain('floppy-disk');
 
         // Save annotation
