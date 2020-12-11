@@ -108,7 +108,7 @@ function withExtensions(AppComponent) {
 
         removeExtension = (plugin) => {
             this.setState({
-                removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"]
+                removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"] // TODO: check
             });
         };
 
@@ -134,8 +134,8 @@ function withExtensions(AppComponent) {
                             const impl = loaded.plugin?.default ?? loaded.plugin;
                             augmentStore({ reducers: impl?.reducers ?? {}, epics: impl?.epics ?? {} });
                             const pluginDef = {
-                                [pluginName]: {
-                                    [pluginName]: {
+                                [pluginName + "Plugin"]: {
+                                    [pluginName + "Plugin"]: {
                                         loadPlugin: (resolve) => {
                                             resolve(impl);
                                         }
