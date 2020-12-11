@@ -381,7 +381,7 @@ export default (viewer) => ({
             const type = state.annotations.featureType;
             const defaultTextAnnotation = state.annotations.defaultTextAnnotation;
             const multiGeom = multiGeometrySelector;
-            const geodesic = type === "Circle" && geodesic;
+            const geodesicEnabled = type === "Circle" && geodesic;
             const drawOptions = {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeom,
@@ -393,7 +393,7 @@ export default (viewer) => ({
                 defaultTextAnnotation,
                 transformToFeatureCollection: true,
                 addClickCallback: true,
-                geodesic
+                geodesic: geodesicEnabled
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, ANNOTATIONS, [feature], drawOptions, assign({}, feature.style, {highlight: false})));
         }),
