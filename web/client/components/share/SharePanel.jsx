@@ -85,7 +85,8 @@ class SharePanel extends React.Component {
         selectedTab: PropTypes.string,
         formatCoords: PropTypes.string,
         point: PropTypes.object,
-        isScrollPosition: PropTypes.bool
+        isScrollPosition: PropTypes.bool,
+        hideMarker: PropTypes.func
     };
 
     static defaultProps = {
@@ -102,7 +103,8 @@ class SharePanel extends React.Component {
         settings: {},
         onUpdateSettings: () => {},
         formatCoords: "decimal",
-        isScrollPosition: false
+        isScrollPosition: false,
+        hideMarker: () => {}
     };
 
     state = {
