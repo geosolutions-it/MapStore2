@@ -1,5 +1,7 @@
 const assign = require('object-assign');
 const nodePath = require('path');
+const webpack = require('webpack');
+
 
 module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
     browsers,
@@ -10,17 +12,26 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
 
     singleRun,
 
-    frameworks: [ 'mocha' ],
+    frameworks: [ 'mocha', 'webpack' ],
 
     basePath,
 
     files,
 
+    plugins: [
+        require('karma-chrome-launcher'),
+        'karma-webpack',
+        'karma-mocha',
+        'karma-mocha-reporter',
+        'karma-coverage'
+
+    ],
+
     preprocessors: {
-        [testFile]: [ 'webpack', 'sourcemap' ]
+        [testFile]: [ 'webpack', 'coverage' ]
     },
 
-    reporters: [ 'mocha', 'coverage', 'coveralls' ],
+    reporters: [ 'mocha', 'coverage' ],
 
     junitReporter: {
         outputDir: './web/target/karma-tests-results',
@@ -44,6 +55,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     webpack: {
         devtool: 'eval',
         mode: 'development',
+
         module: {
             rules: [
                 {
@@ -106,14 +118,26 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
             ]
         },
         resolve: {
+            fallback: {
+                timers: false,
+                stream: false
+            },
             alias: assign({}, {
                 jsonix: '@boundlessgeo/jsonix',
                 // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
-                proj4: '@geosolutions/proj4',
+                // proj4: '@geosolutions/proj4',
                 "react-joyride": '@geosolutions/react-joyride'
             }, alias),
             extensions: ['.js', '.json', '.jsx']
-        }
+        },
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env.NODE_ENV': JSON.stringify('development')
+            }),
+            new webpack.ProvidePlugin({
+                process: 'process/browser'
+            })
+        ]
     },
     webpackServer: {
         noInfo: true
