@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var LocateBtn = require('../LocateBtn');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 
-const ReactTestUtils = require('react-dom/test-utils');
+import LocateBtn from '../LocateBtn';
 
 describe("test the Locate Button", () => {
     beforeEach((done) => {
@@ -74,7 +74,7 @@ describe("test the Locate Button", () => {
         // check if the button was correctly disabled
         const button = ReactTestUtils.findRenderedDOMComponentWithTag(component, "button");
         expect(button).toExist();
-        expect(button.disabled).toEqual(true);
+        expect(button.classList.contains('disabled')).toEqual(true);
     });
 
 });

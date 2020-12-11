@@ -5,14 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const deleteWidget = require('./deleteWidget');
-const {compose} = require('recompose');
-const {editableWidget, hidableWidget, defaultIcons, withHeaderTools} = require('./tools');
+import deleteWidget from './deleteWidget';
+
+import { compose } from 'recompose';
+import { editableWidget, hidableWidget, defaultIcons, withHeaderTools } from './tools';
 
 /**
  * enhancers for the text widget
  */
-module.exports = compose(
+export default compose(
     deleteWidget,
     editableWidget(),
     hidableWidget(),

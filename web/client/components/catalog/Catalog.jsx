@@ -5,19 +5,31 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const { isNil, has, omit } = require("lodash");
-const assign = require("object-assign");
-const PropTypes = require("prop-types");
-const React = require("react");
-const { FormControl, FormGroup, Alert, Pagination, Button, Panel, Form, InputGroup, ControlLabel, Glyphicon } = require("react-bootstrap");
+import { isNil, has, omit } from 'lodash';
 
-const Select = require("react-select").default;
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-const BorderLayout = require("../layout/BorderLayout");
-const LocaleUtils = require("../../utils/LocaleUtils");
-const Message = require("../I18N/Message");
-const RecordGrid = require("./RecordGrid");
-const Loader = require('../misc/Loader');
+import {
+    FormControl,
+    FormGroup,
+    Alert,
+    Pagination,
+    Panel,
+    Form,
+    InputGroup,
+    ControlLabel,
+    Glyphicon
+} from 'react-bootstrap';
+
+import Button from '../misc/Button';
+import Select from 'react-select';
+import BorderLayout from '../layout/BorderLayout';
+import { getMessageById } from '../../utils/LocaleUtils';
+import Message from '../I18N/Message';
+import RecordGrid from './RecordGrid';
+import Loader from '../misc/Loader';
 
 class Catalog extends React.Component {
     static propTypes = {
@@ -163,7 +175,7 @@ class Catalog extends React.Component {
         const startKeys = has(this.props.services, 'default_map_backgrounds') ? ['default_map_backgrounds'] : [];
         return startKeys.concat(Object.keys(omit(this.props.services, 'default_map_backgrounds'))).map(s => {
             return assign({}, this.props.services[s], {
-                label: LocaleUtils.getMessageById(this.context.messages, this.props.services[s].title), value: s
+                label: getMessageById(this.context.messages, this.props.services[s].title), value: s
             });
         });
     };
@@ -301,10 +313,10 @@ class Catalog extends React.Component {
                 textOverflow: "ellipsis"
             }}
             value={this.props.searchText}
-            placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
+            placeholder={getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
             onChange={this.onSearchTextChange}
             onKeyDown={this.onKeyDown} />);
-        return this.props.wrapOptions ? (<Panel collapsible defaultExpanded={false} header={LocaleUtils.getMessageById(this.context.messages, "catalog.options")}>
+        return this.props.wrapOptions ? (<Panel collapsible defaultExpanded={false} header={getMessageById(this.context.messages, "catalog.options")}>
             {textSearch}
         </Panel>) : textSearch;
     }
@@ -321,13 +333,13 @@ class Catalog extends React.Component {
                     <FormGroup controlId="service" key="service">
                         <InputGroup>
                             <Select
-                                clearValueText={LocaleUtils.getMessageById(this.context.messages, "catalog.clearValueText")}
-                                noResultsText={LocaleUtils.getMessageById(this.context.messages, "catalog.noResultsText")}
+                                clearValueText={getMessageById(this.context.messages, "catalog.clearValueText")}
+                                noResultsText={getMessageById(this.context.messages, "catalog.noResultsText")}
                                 clearable
                                 options={this.getServices()}
                                 value={this.props.selectedService}
                                 onChange={(val) => this.props.onChangeSelectedService(val && val.value ? val.value : "")}
-                                placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
+                                placeholder={getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
                             {this.isValidServiceSelected() && this.props.selectedService !== 'default_map_backgrounds' ? (<InputGroup.Addon className="btn"
                                 onClick={() => this.props.onChangeCatalogMode("edit", false)}>
                                 <Glyphicon glyph="pencil" />
@@ -374,4 +386,4 @@ class Catalog extends React.Component {
     };
 }
 
-module.exports = Catalog;
+export default Catalog;

@@ -5,23 +5,26 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {Grid, Row, Col, Button, Glyphicon} = require('react-bootstrap');
+import React from 'react';
+import { Col, Glyphicon, Grid, Row } from 'react-bootstrap';
 
-const filterEnhancer = require("../enhancers/filterstyles");
-const DefaultStyle = filterEnhancer(require("../DefaultStyle"));
-const AvailableStyles = filterEnhancer(require("../AvailableStyles"));
+import Message from '../../../I18N/Message';
+import AvailableStylesComp from '../AvailableStyles';
+import DefaultStyleComp from '../DefaultStyle';
+import filterEnhancer from '../enhancers/filterstyles';
+import StylesList from '../StylesList';
+import enhancer from './enhancers/style';
+import Button from '../../../misc/Button';
 
-const StylesList = require("../StylesList");
-const Message = require("../../../I18N/Message");
+const DefaultStyle = filterEnhancer(DefaultStyleComp);
+const AvailableStyles = filterEnhancer(AvailableStylesComp);
 
-const enhancer = require("./enhancers/style");
 const getAvailables = (styles, {allowedStyles = {}}) => {
     const allow = allowedStyles.style || [];
     return styles.filter(s => allow.indexOf(s.name) !== -1);
 };
 
-module.exports = enhancer(({styles = [], constraints = {}, setOption = () => {}, active = false, toggleModal = () => {}, modal}) => {
+export default enhancer(({styles = [], constraints = {}, setOption = () => {}, active = false, toggleModal = () => {}, modal}) => {
     return (
         <div style={{position: "relative"}}>
             <Grid className="ms-rule-editor" fluid style={{top: 0, bottom: 60, position: "absolute", width: '100%', display: active ? 'block' : 'none'}}>

@@ -9,5 +9,8 @@
 import main from './main';
 import appConfig from './appConfig';
 import pluginsDef from './plugins';
+import { checkForMissingPlugins } from '../utils/DebugUtils';
+
+checkForMissingPlugins(pluginsDef.plugins);
 
 main(appConfig, pluginsDef);

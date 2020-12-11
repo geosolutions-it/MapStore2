@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,14 +6,14 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
+import React from 'react';
 
-const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
-
-const OverlayTrigger = require('../misc/OverlayTrigger');
-
-const mapUtils = require('../../utils/MapUtils');
-const configUtils = require('../../utils/ConfigUtils');
+import PropTypes from 'prop-types';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import Button from '../misc/Button';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import { getZoomForExtent, getCenterForExtent, getBbox } from '../../utils/MapUtils';
+import { getCenter } from '../../utils/ConfigUtils';
 
 
 /**
@@ -96,21 +95,21 @@ class ZoomToMaxExtentButton extends React.Component {
         if (maxExtent &&
             Object.prototype.toString.call(maxExtent) === '[object Array]') {
             // zoom by the max. extent defined in the map's config
-            newZoom = mapUtils.getZoomForExtent(maxExtent, mapSize, 0, 21);
+            newZoom = getZoomForExtent(maxExtent, mapSize, 0, 21);
 
             // center by the max. extent defined in the map's config
-            newCenter = mapUtils.getCenterForExtent(maxExtent, proj);
+            newCenter = getCenterForExtent(maxExtent, proj);
 
             // do not reproject for 0/0
             if (newCenter.x !== 0 || newCenter.y !== 0) {
                 // reprojects the center object
-                newCenter = configUtils.getCenter(newCenter, "EPSG:4326");
+                newCenter = getCenter(newCenter, "EPSG:4326");
             }
 
         }
 
         // we compute the new bbox
-        let bbox = mapUtils.getBbox(newCenter, newZoom, mapSize);
+        let bbox = getBbox(newCenter, newZoom, mapSize);
 
         // adapt the map view by calling the corresponding action
         this.props.changeMapView(newCenter, newZoom, bbox, this.props.mapConfig.size, null, this.props.mapConfig.projection);
@@ -119,9 +118,9 @@ class ZoomToMaxExtentButton extends React.Component {
     zoomToInitialExtent = () => {
         // zooming to the initial extent based on initial map configuration
         var mapConfig = this.props.mapInitialConfig;
-        let bbox = mapUtils.getBbox(mapConfig.center, mapConfig.zoom, this.props.mapConfig.size);
+        let bbox = getBbox(mapConfig.center, mapConfig.zoom, this.props.mapConfig.size);
         this.props.changeMapView(mapConfig.center, mapConfig.zoom, bbox, this.props.mapConfig.size, null, this.props.mapConfig.projection);
     };
 }
 
-module.exports = ZoomToMaxExtentButton;
+export default ZoomToMaxExtentButton;

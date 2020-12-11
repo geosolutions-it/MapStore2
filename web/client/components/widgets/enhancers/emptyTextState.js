@@ -1,8 +1,8 @@
-const React = require('react');
-const Message = require('../../I18N/Message');
-const emptyState = require('../../misc/enhancers/emptyState');
+import React from 'react';
+import Message from '../../I18N/Message';
+import emptyState from '../../misc/enhancers/emptyState';
 
-module.exports = emptyState(
+export default emptyState(
     ({text} = {}) => !text,
     ({iconFit} = {}) => ({
         iconFit,

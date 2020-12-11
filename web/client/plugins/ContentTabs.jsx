@@ -5,16 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const { Row, Col, Grid, Nav, NavItem} = require('react-bootstrap');
-const ToolsContainer = require('./containers/ToolsContainer');
-const Message = require('../components/I18N/Message');
 
-const {connect} = require('react-redux');
-const assign = require('object-assign');
-const {createSelector} = require('reselect');
-const {onTabSelected} = require('../actions/contenttabs');
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, Grid, Nav, NavItem, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+
+import { onTabSelected } from '../actions/contenttabs';
+import Message from '../components/I18N/Message';
+import contenttabsEpics from '../epics/contenttabs';
+import contenttabsReducers from '../reducers/contenttabs';
+import ToolsContainer from './containers/ToolsContainer';
 
 const selectedSelector = createSelector(
     state => state && state.contenttabs && state.contenttabs.selected,
@@ -29,9 +32,9 @@ const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${inde
  * @memberof plugins
  * @class
  * @classdesc
- * ContentTabs plugin is used in home page allowing to switch between contained plugins (i.e. Maps and Dashboards plugins).
- * <br/>Each contained plugin has to have the contenttabs configuration property in its plugin configuration.
- * The key property is mandatory following and position property is used to order give tabs order.
+ * ContentTabs plugin is used in {@link #pages.Maps|home page} allowing to switch between contained plugins (i.e. Maps and Dashboards plugins).
+ * <br/>Each contained plugin must have the contenttabs configuration property in its plugin configuration.
+ * The key property is mandatory and position property is used to order give tabs order.
  * An example of the contenttabs config in Maps plugin
  * @example
  *   ContentTabs: {
@@ -104,7 +107,7 @@ class ContentTabs extends React.Component {
     handleSelect = () => {}
 }
 
-module.exports = {
+export default {
     ContentTabsPlugin: assign(connect(selectedSelector, {
         onSelect: onTabSelected
     })(ContentTabs), {
@@ -115,6 +118,6 @@ module.exports = {
             glyph: 'dashboard'
         }
     }),
-    reducers: {contenttabs: require('../reducers/contenttabs').default},
-    epics: require('../epics/contenttabs')
+    reducers: {contenttabs: contenttabsReducers},
+    epics: contenttabsEpics
 };

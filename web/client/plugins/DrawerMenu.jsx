@@ -6,28 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
+import './drawer/drawer.css';
 
-const Message = require('./locale/Message');
+import { partialRight } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Glyphicon, Panel } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
-const {toggleControl, setControlProperty} = require('../actions/controls');
+import { setControlProperty, toggleControl } from '../actions/controls';
+import { changeMapStyle } from '../actions/map';
+import tooltip from '../components/misc/enhancers/tooltip';
+import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import MenuComp from './drawer/Menu';
+import Section from './drawer/Section';
+import Message from './locale/Message';
+import ButtonB from '../components/misc/Button';
 
-const {changeMapStyle} = require('../actions/map');
-
-const {Button: ButtonB, Glyphicon, Panel} = require('react-bootstrap');
-
-const Section = require('./drawer/Section');
-
-const {partialRight} = require('lodash');
-
-const assign = require('object-assign');
-
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const tooltip = require('../components/misc/enhancers/tooltip');
 const Button = tooltip(ButtonB);
+
 
 const menuSelector = createSelector([
     state => state.controls.drawer && state.controls.drawer.enabled,
@@ -46,9 +45,7 @@ const Menu = connect(menuSelector, {
     onResize: setControlProperty.bind(null, 'drawer', 'resizedWidth'),
     onChoose: partialRight(setControlProperty.bind(null, 'drawer', 'menu'), true),
     changeMapStyle: changeMapStyle
-})(require('./drawer/Menu'));
-
-require('./drawer/drawer.css');
+})(MenuComp);
 
 const DrawerButton = connect(state => ({
     disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
@@ -80,7 +77,9 @@ const DrawerButton = connect(state => ({
 );
 
 /**
- * DrawerMenu plugin. Shows a left menu with some pluins rendered inside it (typically the TOC).
+ * DrawerMenu plugin. It is a container for other plugins.
+ * It shows a collapsible panel on the left with some plugins rendered inside it (typically the {@link #plugins.TOC|TOC})
+ * and a button on the top-left corner to open this panel.
  * @prop {string} cfg.glyph glyph icon to use for the button
  * @prop {object} cfg.menuButtonStyle Css inline style for the button. Display property will be overridden by the hideButton/forceDrawer options.
  * @prop {string} cfg.buttonClassName class for the toggle button
@@ -179,7 +178,7 @@ const DrawerMenuPlugin = connect((state) => ({
     toggleMenu: toggleControl.bind(null, 'drawer', null)
 })(DrawerMenu);
 
-module.exports = {
+export default {
     DrawerMenuPlugin: assign(DrawerMenuPlugin, {
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
         FloatingLegend: {

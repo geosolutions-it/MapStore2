@@ -24,7 +24,8 @@ import {
     availableDependenciesSelector,
     availableDependenciesForEditingWidgetSelector,
     returnToFeatureGridSelector,
-    isTrayEnabled
+    isTrayEnabled,
+    getVisibleFloatingWidgets
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -288,5 +289,250 @@ describe('widgets selectors', () => {
                 tray: false
             }
         })).toBe(false);
+    });
+    it('getVisibleFloatingWidgets with collapsed', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        collapsed: {
+                            'widget2': {
+                                layout: [{
+                                    i: 'widget2'
+                                }],
+                                layouts: {
+                                    xxs: [{
+                                        i: 'widget2'
+                                    }]
+                                }
+                            }
+                        },
+                        widgets: [{
+                            widgetType: "table",
+                            id: "widget1"
+                        }, {
+                            widgetType: "table",
+                            id: "widget2",
+                            layer: {
+                                name: "layername"
+                            }
+                        },
+                        {
+                            widgetType: "map",
+                            id: "widget3",
+                            layer: {
+                                name: "layername"
+                            }
+                        }],
+                        layout: [{
+                            i: 'widget1'
+                        }, {
+                            i: 'widget3'
+                        }],
+                        layouts: {
+                            xxs: [{
+                                i: 'widget1'
+                            }, {
+                                i: 'widget3'
+                            }]
+                        }
+                    }
+                }
+            }
+        };
+        const result = getVisibleFloatingWidgets(state);
+        expect(result).toExist();
+        expect(result.length).toBe(2);
+        expect(result[0].id).toBe('widget1');
+        expect(result[1].id).toBe('widget3');
+    });
+    it('getVisibleFloatingWidgets with maximized', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        maximized: {
+                            layout: [{
+                                i: 'widget1'
+                            }, {
+                                i: 'widget2'
+                            }, {
+                                i: 'widget3'
+                            }],
+                            layouts: {
+                                xxs: [{
+                                    i: 'widget1'
+                                }, {
+                                    i: 'widget2'
+                                }, {
+                                    i: 'widget3'
+                                }]
+                            },
+                            widget: {
+                                widgetType: "map",
+                                id: "widget3",
+                                layer: {
+                                    name: "layername"
+                                }
+                            }
+                        },
+                        widgets: [{
+                            widgetType: "table",
+                            id: "widget1"
+                        }, {
+                            widgetType: "table",
+                            id: "widget2",
+                            layer: {
+                                name: "layername"
+                            }
+                        },
+                        {
+                            widgetType: "map",
+                            id: "widget3",
+                            layer: {
+                                name: "layername"
+                            }
+                        }],
+                        layout: [{
+                            i: 'widget3'
+                        }],
+                        layouts: {
+                            xxs: [{
+                                i: 'widget3'
+                            }]
+                        }
+                    }
+                }
+            }
+        };
+        const result = getVisibleFloatingWidgets(state);
+        expect(result).toExist();
+        expect(result.length).toBe(1);
+        expect(result[0].id).toBe('widget3');
+    });
+    it('getVisibleFloatingWidgets with maximized and collapsed', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        maximized: {
+                            layout: [{
+                                i: 'widget1'
+                            }, {
+                                i: 'widget2'
+                            }, {
+                                i: 'widget3'
+                            }],
+                            layouts: {
+                                xxs: [{
+                                    i: 'widget1'
+                                }, {
+                                    i: 'widget2'
+                                }, {
+                                    i: 'widget3'
+                                }]
+                            },
+                            widget: {
+                                widgetType: "map",
+                                id: "widget3",
+                                layer: {
+                                    name: "layername"
+                                }
+                            }
+                        },
+                        collapsed: {
+                            'widget2': {
+                                layout: [{
+                                    i: 'widget2'
+                                }],
+                                layouts: {
+                                    xxs: [{
+                                        i: 'widget2'
+                                    }]
+                                }
+                            }
+                        },
+                        widgets: [{
+                            widgetType: "table",
+                            id: "widget1"
+                        }, {
+                            widgetType: "table",
+                            id: "widget2",
+                            layer: {
+                                name: "layername"
+                            }
+                        },
+                        {
+                            widgetType: "map",
+                            id: "widget3",
+                            layer: {
+                                name: "layername"
+                            }
+                        }],
+                        layout: [{
+                            i: 'widget3'
+                        }],
+                        layouts: {
+                            xxs: [{
+                                i: 'widget3'
+                            }]
+                        }
+                    }
+                }
+            }
+        };
+        const result = getVisibleFloatingWidgets(state);
+        expect(result).toExist();
+        expect(result.length).toBe(1);
+        expect(result[0].id).toBe('widget3');
+    });
+    it('getVisibleFloatingWidgets with no collapsed or maximized', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [{
+                            widgetType: "table",
+                            id: "widget1"
+                        }, {
+                            widgetType: "table",
+                            id: "widget2",
+                            layer: {
+                                name: "layername"
+                            }
+                        },
+                        {
+                            widgetType: "map",
+                            id: "widget3",
+                            layer: {
+                                name: "layername"
+                            }
+                        }],
+                        layout: [{
+                            i: 'widget1'
+                        }, {
+                            i: 'widget2'
+                        }, {
+                            i: 'widget3'
+                        }],
+                        layouts: {
+                            xxs: [{
+                                i: 'widget1'
+                            }, {
+                                i: 'widget2'
+                            }, {
+                                i: 'widget3'
+                            }]
+                        }
+                    }
+                }
+            }
+        };
+        const result = getVisibleFloatingWidgets(state);
+        expect(result).toExist();
+        expect(result.length).toBe(3);
+        expect(result[0].id).toBe('widget1');
+        expect(result[1].id).toBe('widget2');
+        expect(result[2].id).toBe('widget3');
     });
 });

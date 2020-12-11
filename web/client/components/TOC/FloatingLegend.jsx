@@ -6,19 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const PropTypes = require('prop-types');
-const {isEqual, delay} = require('lodash');
+import React from 'react';
 
-const {Glyphicon, Panel, Grid, Row, Col, Button: ButtonB} = require('react-bootstrap');
-const {Resizable} = require('react-resizable');
-const ContainerDimensions = require('react-container-dimensions').default;
-const tooltip = require('../misc/enhancers/tooltip');
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import { isEqual, delay } from 'lodash';
+import { Glyphicon, Panel, Grid, Row, Col } from 'react-bootstrap';
+import ContainerDimensions from 'react-container-dimensions';
+import { Resizable } from 'react-resizable';
+
+
+import ButtonB from '../misc/Button';
+import tooltip from '../misc/enhancers/tooltip';
+import SideGrid from '../misc/cardgrids/SideGrid';
+import OpacitySlider from './fragments/OpacitySlider';
+import WMSLegend from './fragments/WMSLegend';
 const Button = tooltip(ButtonB);
-const SideGrid = require('../misc/cardgrids/SideGrid');
-const OpacitySlider = require('./fragments/OpacitySlider');
-const WMSLegend = require('./fragments/WMSLegend');
 
 /**
  * Component for rendering a legend component.
@@ -229,4 +232,4 @@ class FloatingLegend extends React.Component {
     };
 }
 
-module.exports = FloatingLegend;
+export default FloatingLegend;

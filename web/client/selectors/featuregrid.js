@@ -140,6 +140,7 @@ export const showPopoverSyncSelector = state => get(state, "featuregrid.showPopo
 export const isSavingSelector = state => state && state.featuregrid && state.featuregrid.saving;
 export const isSavedSelector = state => state && state.featuregrid && state.featuregrid.saved;
 export const isDrawingSelector = state => state && state.featuregrid && state.featuregrid.drawing;
+export const multiSelect = state => get(state, "featuregrid.multiselect", false);
 
 export const hasNewFeaturesOrChanges = state => hasNewFeaturesSelector(state) || hasChangesSelector(state);
 export const isSimpleGeomSelector = state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state));
@@ -183,3 +184,4 @@ export const isEditingAllowedSelector = state => {
 
     return (editingAllowedRoles.indexOf(role) !== -1 || canEdit) && !isCesium(state);
 };
+export const paginationSelector = state => get(state, "featuregrid.pagination");

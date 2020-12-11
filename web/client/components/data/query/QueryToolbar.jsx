@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,13 +6,20 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
 
-const {Button} = require('react-bootstrap');
-const {isEqual} = require('lodash');
-const Modal = require('../../misc/Modal');
-const { checkOperatorValidity, setupCrossLayerFilterDefaults, isCrossLayerFilterValid, isFilterEmpty} = require('../../../utils/FilterUtils');
-const Toolbar = require('../../misc/toolbar/Toolbar');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { isEqual } from 'lodash';
+
+import Modal from '../../misc/Modal';
+import {
+    checkOperatorValidity,
+    setupCrossLayerFilterDefaults,
+    isCrossLayerFilterValid,
+    isFilterEmpty
+} from '../../../utils/FilterUtils';
+import Button from '../../misc/Button';
+import Toolbar from '../../misc/toolbar/Toolbar';
 
 class QueryToolbar extends React.Component {
     static propTypes = {
@@ -269,4 +276,4 @@ class QueryToolbar extends React.Component {
     }
 }
 
-module.exports = QueryToolbar;
+export default QueryToolbar;

@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,14 +7,15 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
-const {deleteUser} = require('../../../actions/users');
-const {Alert} = require('react-bootstrap');
-const Confirm = require('../../../components/misc/ConfirmDialog');
-const UserCard = require('../../../components/manager/users/UserCard');
-const Message = require('../../../components/I18N/Message');
-const {findIndex} = require('lodash');
+import React from 'react';
+
+import { connect } from 'react-redux';
+import { deleteUser } from '../../../actions/users';
+import { Alert } from 'react-bootstrap';
+import Confirm from '../../../components/misc/ConfirmDialog';
+import UserCard from '../../../components/manager/users/UserCard';
+import Message from '../../../components/I18N/Message';
+import { findIndex } from 'lodash';
 
 class UserDeleteConfirm extends React.Component {
     static propTypes = {
@@ -62,7 +64,7 @@ class UserDeleteConfirm extends React.Component {
     }
 }
 
-module.exports = connect((state) => {
+export default connect((state) => {
     let usersState = state && state.users;
     if (!usersState) return {};
     let users = usersState && usersState.users;

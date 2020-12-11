@@ -225,7 +225,7 @@ describe('ContentToolbar component', () => {
             const buttons = document.getElementsByTagName('button');
             expect(buttons).toBeTruthy();
             expect(buttons.length).toBe(1);
-            expect(buttons[0].disabled).toBe(true);
+            expect(buttons[0].classList.contains('disabled')).toBe(true);
         });
     });
 

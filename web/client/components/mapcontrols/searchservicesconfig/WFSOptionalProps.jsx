@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {FormGroup, ControlLabel, FormControl, Label} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
-const Slider = require('react-nouislider');
-const assign = require('object-assign');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import { FormGroup, ControlLabel, FormControl, Label } from 'react-bootstrap';
+import Message from '../../I18N/Message';
+import Slider from 'react-nouislider';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
 
 function validate() {
     return true;
@@ -79,4 +80,4 @@ class WFSOptionalProps extends React.Component {
     };
 }
 
-module.exports = {Element: WFSOptionalProps, validate};
+export default {Element: WFSOptionalProps, validate};

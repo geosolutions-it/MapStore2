@@ -8,8 +8,8 @@
 
 import { createSelector } from 'reselect';
 
-import MapInfoUtils from '../utils/MapInfoUtils';
-import LayersUtils from '../utils/LayersUtils';
+import {getMarkerLayer, defaultQueryableFilter} from '../utils/MapInfoUtils';
+import { denormalizeGroups } from '../utils/LayersUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
@@ -45,7 +45,7 @@ export const layerSelectorWithMarkers = createSelector(
         newLayers = newLayers.concat(overlayLayers);
         if ( markerPosition ) {
             // A separate layer for feature highlight is required because the SRS is different
-            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfoHighLight", { features: markerPosition.features }, undefined, {
+            newLayers.push(getMarkerLayer("GetFeatureInfoHighLight", { features: markerPosition.features }, undefined, {
                 overrideOLStyle: true,
                 featuresCrs: markerPosition.featuresCrs,
                 style: { ...defaultIconStyle, ...{
@@ -57,12 +57,12 @@ export const layerSelectorWithMarkers = createSelector(
                 }}
             }));
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
-            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
+            newLayers.push(getMarkerLayer("GetFeatureInfo", coords));
         }
         if ( highlightPoint ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(highlightPoint.latlng) : highlightPoint.latlng;
-            newLayers.push(MapInfoUtils.getMarkerLayer("Annotations", coords));
-            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", {
+            newLayers.push(getMarkerLayer("Annotations", coords));
+            newLayers.push(getMarkerLayer("GetFeatureInfo", {
                 ...coords
 
             }));
@@ -70,7 +70,7 @@ export const layerSelectorWithMarkers = createSelector(
 
         if (geocoder && geocoder.markerPosition) {
             let geocoderStyle = isObject(geocoder.style) && geocoder.style || {};
-            newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
+            newLayers.push(getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
                 {
                     overrideOLStyle: true,
                     style: {...defaultIconStyle, ...geocoderStyle}
@@ -83,7 +83,7 @@ export const layerSelectorWithMarkers = createSelector(
 );
 
 export const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
-export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
+export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 export const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
 export const getSelectedLayers = state => {
@@ -97,7 +97,7 @@ export const getSelectedLayer = state => {
 export const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
 export const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
 export const layerMetadataSelector = (state) => state.layers && state.layers.layerMetadata || {expanded: false, metadataRecord: {}, maskLoading: false};
-export const wfsDownloadSelector = (state) => state.controls && state.controls.wfsdownload ? { expanded: state.controls.wfsdownload.enabled } : {expanded: false};
+export const wfsDownloadSelector = (state) => state.controls && state.controls.layerdownload ? { expanded: state.controls.layerdownload.enabled } : {expanded: false};
 
 export const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
 export const currentBackgroundSelector = (state) => {
@@ -132,7 +132,7 @@ export const elementSelector = (state) => {
 * @param {object} state the state
 * @return {array} the queriable layers
 */
-export const queryableLayersSelector = state => layersSelector(state).filter(MapInfoUtils.defaultQueryableFilter);
+export const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
 /**
  * Return loading error state for selected layer
  * @param {object} state the state
@@ -144,4 +144,4 @@ export const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(stat
  * @param {object} state the state
  * @return {array} the queriable selected layers
  */
-export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(MapInfoUtils.defaultQueryableFilter);
+export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(defaultQueryableFilter);

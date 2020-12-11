@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
-const assign = require('object-assign');
-const PropTypes = require('prop-types');
+import React from 'react';
+
+import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import Message from '../../I18N/Message';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
 
 // const weburl = new RegExp(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/);
 function validate(service = {}) {
@@ -99,4 +100,4 @@ class WFSServiceProps extends React.Component {
     };
 }
 
-module.exports = { Element: WFSServiceProps, validate};
+export default { Element: WFSServiceProps, validate};

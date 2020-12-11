@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Grid, Row, Col, Alert, Glyphicon} = require('react-bootstrap');
-const ResizableModal = require('../../../components/misc/ResizableModal');
-const Portal = require('../../../components/misc/Portal');
-const SecurityUtils = require('../../../utils/SecurityUtils');
-const Message = require('../../../components/I18N/Message');
-const {isArray, isObject, isString} = require('lodash');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Grid, Row, Col, Alert, Glyphicon } from 'react-bootstrap';
+import ResizableModal from '../../../components/misc/ResizableModal';
+import Portal from '../../../components/misc/Portal';
+import { getUserAttributes } from '../../../utils/SecurityUtils';
+import Message from '../../../components/I18N/Message';
+import { isArray, isObject, isString } from 'lodash';
 
 /**
  * A Modal window to show password reset form
@@ -55,7 +56,7 @@ class UserDetails extends React.Component {
 
     renderAttributes = () => {
         if (this.props.user && this.props.user.attribute) {
-            const userAttributes = SecurityUtils.getUserAttributes(this.props.user);
+            const userAttributes = getUserAttributes(this.props.user);
             if (userAttributes && userAttributes.length > 0) {
                 const userInfo = this.getUserInfo();
                 const attributesObj = userAttributes.reduce((a, b) => b.nam !== 'UUID' ? {...a, [b.name]: b.value } : {...a}, {});
@@ -104,4 +105,4 @@ class UserDetails extends React.Component {
     }
 }
 
-module.exports = UserDetails;
+export default UserDetails;

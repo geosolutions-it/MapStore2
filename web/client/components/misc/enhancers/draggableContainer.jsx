@@ -1,8 +1,8 @@
 
-const React = require('react');
-const {compose, branch} = require('recompose');
+import React from 'react';
+import { compose, branch } from 'recompose';
 
-module.exports = compose(
+export default compose(
     branch(
         ({isDraggable = true}) => isDraggable,
         Component => ({onSort, isDraggable, items = [], containerId, ...props}) => {

@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Button, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
-const LocaleUtils = require('../../utils/LocaleUtils');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Tooltip } from 'react-bootstrap';
 
+import OverlayTrigger from '../misc/OverlayTrigger';
+import { getSupportedLocales } from '../../utils/LocaleUtils';
+import Button from '../misc/Button';
 
 class LangBar extends React.Component {
     static propTypes = {
@@ -25,7 +26,7 @@ class LangBar extends React.Component {
     };
 
     static defaultProps = {
-        locales: LocaleUtils.getSupportedLocales(),
+        locales: getSupportedLocales(),
         code: 'en-US',
         onLanguageChange: function() {},
         onFlagSelected: () => {},
@@ -56,4 +57,4 @@ class LangBar extends React.Component {
     };
 }
 
-module.exports = LangBar;
+export default LangBar;

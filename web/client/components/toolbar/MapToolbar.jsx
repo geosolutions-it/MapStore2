@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,14 +6,15 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
 
-const {Collapse, Panel, Button, ButtonGroup, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Collapse, Panel, ButtonGroup, Tooltip } from 'react-bootstrap';
+import assign from 'object-assign';
 
-const assign = require('object-assign');
-
-const HelpBadge = require('../help/HelpBadge');
+import Button from '../misc/Button';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import HelpBadge from '../help/HelpBadge';
 
 
 /**
@@ -121,4 +122,4 @@ class MapToolbar extends React.Component {
     };
 }
 
-module.exports = MapToolbar;
+export default MapToolbar;

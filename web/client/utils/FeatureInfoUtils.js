@@ -1,5 +1,12 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const INFO_FORMATS = {
+export const INFO_FORMATS = {
     "TEXT": "text/plain",
     "HTML": "text/html",
     "JSONP": "text/javascript",
@@ -10,7 +17,7 @@ const INFO_FORMATS = {
     "TEMPLATE": "application/json"
 };
 
-const INFO_FORMATS_BY_MIME_TYPE = {
+export const INFO_FORMATS_BY_MIME_TYPE = {
     "text/plain": "TEXT",
     "text/html": "HTML",
     "text/javascript": "JSONP",
@@ -24,7 +31,7 @@ const regexpXML = /^[\s\S]*<gml:featureMembers[^>]*>([\s\S]*)<\/gml:featureMembe
 const regexpBody = /^[\s\S]*<body[^>]*>([\s\S]*)<\/body>[\s\S]*$/i;
 const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
 
-function parseHTMLResponse(res) {
+export function parseHTMLResponse(res) {
     if ( typeof res.response === "string" && res.response.indexOf("<?xml") !== 0 ) {
         let match = res.response.match(regexpBody);
         if ( res.layerMetadata && res.layerMetadata.regex ) {
@@ -35,7 +42,7 @@ function parseHTMLResponse(res) {
     return false;
 }
 
-function parseXMLResponse(res) {
+export function parseXMLResponse(res) {
     if ( typeof res.response === "string" && res.response.indexOf("<?xml") !== -1 ) {
         let match = res.response.match(regexpXML);
         return match && match[1] && match[1].trim().length > 0;
@@ -43,14 +50,13 @@ function parseXMLResponse(res) {
     return false;
 }
 
-const Validator = {
+export const Validator = {
     HTML: {
         /**
          *Parse the HTML to get only the valid html responses
          */
-        getValidResponses(responses, renderEmpty) {
-            if (renderEmpty) return responses.filter(parseHTMLResponse);
-            return responses;
+        getValidResponses(responses) {
+            return responses.filter(parseHTMLResponse);
         },
         /**
          * Parse the HTML to get only the NOT valid html responses
@@ -63,10 +69,8 @@ const Validator = {
         /**
          *Parse the TEXT to get only the valid text responses
          */
-        getValidResponses(responses, renderEmpty) {
-            let result = responses.filter(({response}) => response !== "" && (typeof response === "string" && response.indexOf("<?xml") !== 0));
-            if (renderEmpty) result = result.filter(({response}) => (typeof response === "string" && response.indexOf("no features were found") !== 0));
-            return result;
+        getValidResponses(responses) {
+            return responses.filter((res) => res.response !== "" && (typeof res.response === "string" && res.response.indexOf("no features were found") !== 0) && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
         },
         /**
          * Parse the TEXT to get only the NOT valid text responses
@@ -79,10 +83,8 @@ const Validator = {
         /**
          *Parse the JSON to get only the valid json responses
          */
-        getValidResponses(responses, renderEmpty) {
-            let result = responses.filter(({response}) => response && response.features);
-            if (renderEmpty) result = result.filter(({response}) => renderEmpty && response.features.length);
-            return result;
+        getValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
@@ -95,10 +97,8 @@ const Validator = {
         /**
          *Parse the JSON to get only the valid json responses
          */
-        getValidResponses(responses, renderEmpty) {
-            let result = responses.filter(({response}) => response && response.features);
-            if (renderEmpty) result = result.filter(({response}) => renderEmpty && response.features.length);
-            return result;
+        getValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
@@ -136,7 +136,7 @@ const Validator = {
         }
     }
 };
-const Parser = {
+export const Parser = {
     HTML: {
         getBody(html) {
             return html.replace(regexpBody, '$1').trim();
@@ -153,11 +153,3 @@ const Parser = {
         }
     }
 };
-
-module.exports = {
-    INFO_FORMATS,
-    INFO_FORMATS_BY_MIME_TYPE,
-    Validator,
-    Parser,
-    parseXMLResponse,
-    parseHTMLResponse};

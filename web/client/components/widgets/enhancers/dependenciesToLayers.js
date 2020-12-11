@@ -5,20 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { compose, withPropsOnChange } = require('recompose');
-const { find, isEmpty, isEqual} = require('lodash');
+import { compose, withPropsOnChange } from 'recompose';
 
-const FilterUtils = require('../../../utils/FilterUtils');
-const { optionsToVendorParams } = require('../../../utils/VendorParamsUtils');
-const { arrayUpdate } = require('../../../utils/ImmutableUtils');
-
-const {composeFilterObject} = require('./utils');
+import { find, isEmpty, isEqual } from 'lodash';
+import { composeAttributeFilters, toCQLFilter } from '../../../utils/FilterUtils';
+import { optionsToVendorParams } from '../../../utils/VendorParamsUtils';
+import { arrayUpdate } from '../../../utils/ImmutableUtils';
+import { composeFilterObject } from './utils';
 
 /**
  * Merges dependencies quickFilters and filter into a cql filter for a layer
  * @returns {object} the map with layers updated or not
  */
-module.exports = compose(
+export default compose(
     withPropsOnChange(
         ({mapSync, dependencies = {}, map = {} } = {}, nextProps = {}, filter) =>
             mapSync !== nextProps.mapSync
@@ -39,10 +38,10 @@ module.exports = compose(
                     filterObjCollection = {...filterObjCollection, ...composeFilterObject(filterObj, dependencies.quickFilters, dependencies.options)};
                 }
                 if (dependencies.filter) {
-                    filterObjCollection = {...filterObjCollection, ...FilterUtils.composeAttributeFilters([filterObjCollection, dependencies.filter])};
+                    filterObjCollection = {...filterObjCollection, ...composeAttributeFilters([filterObjCollection, dependencies.filter])};
                 }
-                if (!isEmpty(filterObjCollection) && FilterUtils.toCQLFilter(filterObjCollection)) {
-                    cqlFilter = FilterUtils.toCQLFilter(filterObjCollection);
+                if (!isEmpty(filterObjCollection) && toCQLFilter(filterObjCollection)) {
+                    cqlFilter = toCQLFilter(filterObjCollection);
                     layersUpdatedWithCql = arrayUpdate(
                         false,
                         {

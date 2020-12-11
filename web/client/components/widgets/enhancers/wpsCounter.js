@@ -5,10 +5,11 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const {compose, withProps} = require('recompose');
-const wpsAggregate = require('../../../observables/wps/aggregate');
-const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
-const Rx = require('rxjs');
+import { compose, withProps } from 'recompose';
+
+import wpsAggregate from '../../../observables/wps/aggregate';
+import propsStreamFactory from '../../misc/enhancers/propsStreamFactory';
+import Rx from 'rxjs';
 const wpsAggregateToCounterData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
     AggregationResults.map( (res) => ({
         ...GroupByAttributes.reduce( (a, p, i) => ({...a, [p]: res[i]}), {}),
@@ -19,7 +20,7 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.viewParams === o2.viewParams;
-const {getWpsUrl} = require('../../../utils/LayersUtils');
+import { getWpsUrl } from '../../../utils/LayersUtils';
 
 /**
  * Stream of props -> props to retrieve data from WPS aggregate process on params changes.
@@ -39,12 +40,12 @@ const dataStreamFactory = ($props) =>
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
                 wpsAggregate(getWpsUrl(layer), {featureType: layer.name, ...options, filter}, {
                     timeout: 15000
-                }).map((response) => ({
+                }).map((data) => ({
                     loading: false,
                     isAnimationActive: false,
                     error: undefined,
-                    data: wpsAggregateToCounterData(response.data),
-                    series: [{dataKey: `${response.data.AggregationFunctions[0]}(${response.data.AggregationAttribute})`}]
+                    data: wpsAggregateToCounterData(data),
+                    series: [{dataKey: `${data.AggregationFunctions[0]}(${data.AggregationAttribute})`}]
                 })).do(onLoad)
                     .catch((e) => Rx.Observable.of({
                         loading: false,
@@ -53,7 +54,8 @@ const dataStreamFactory = ($props) =>
                     }).do(onLoadError)
                     ).startWith({loading: true})
         );
-module.exports = compose(
+
+export default compose(
     withProps( () => ({
         dataStreamFactory
     })),

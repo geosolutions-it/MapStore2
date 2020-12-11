@@ -7,24 +7,37 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const Rx = require('rxjs');
-const {split, get, isNil} = require('lodash');
-const { LOCATION_CHANGE, push } = require('connected-react-router');
+import Rx from 'rxjs';
 
-const {FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE, feedbackMaskLoading, feedbackMaskLoaded, feedbackMaskEnabled, detectedNewPage} = require('../actions/feedbackMask');
-const { LOGIN_SUCCESS, LOGOUT, LOGIN_PROMPT_CLOSED, loginRequired } = require('../actions/security');
-const {LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
-const { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } = require('../actions/geostory');
-const { LOAD_CONTEXT, LOAD_FINISHED, CONTEXT_LOAD_ERROR } = require('../actions/context');
-const {START_RESOURCE_LOAD: LOAD_CONTEXT_CONTEXTCREATOR, LOAD_FINISHED: LOAD_FINISHED_CONTEXTCREATOR,
-    CONTEXT_LOAD_ERROR: CONTEXT_LOAD_ERROR_CONTEXTCREATOR} = require('../actions/contextcreator');
-const {INIT_MAP} = require('../actions/map');
-const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR} = require('../actions/config');
+import { split, get, isNil } from 'lodash';
+import { LOCATION_CHANGE, push } from 'connected-react-router';
 
-const {mapSelector} = require('../selectors/map');
-const {isLoggedIn} = require('../selectors/security');
-const {isSharedStory} = require('../selectors/geostory');
-const {pathnameSelector} = require('../selectors/router');
+import {
+    FEEDBACK_MASK_ENABLED,
+    DETECTED_NEW_PAGE,
+    feedbackMaskLoading,
+    feedbackMaskLoaded,
+    feedbackMaskEnabled,
+    detectedNewPage
+} from '../actions/feedbackMask';
+
+import { LOGIN_SUCCESS, LOGOUT, LOGIN_PROMPT_CLOSED, loginRequired } from '../actions/security';
+import { LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR } from '../actions/dashboard';
+import { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } from '../actions/geostory';
+import { LOAD_CONTEXT, LOAD_FINISHED, CONTEXT_LOAD_ERROR } from '../actions/context';
+
+import {
+    START_RESOURCE_LOAD as LOAD_CONTEXT_CONTEXTCREATOR,
+    LOAD_FINISHED as LOAD_FINISHED_CONTEXTCREATOR,
+    CONTEXT_LOAD_ERROR as CONTEXT_LOAD_ERROR_CONTEXTCREATOR
+} from '../actions/contextcreator';
+
+import { INIT_MAP } from '../actions/map';
+import { MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR } from '../actions/config';
+import { mapSelector } from '../selectors/map';
+import { isLoggedIn } from '../selectors/security';
+import { isSharedStory } from '../selectors/geostory';
+import { pathnameSelector } from '../selectors/router';
 
 
 /**
@@ -36,7 +49,7 @@ const {pathnameSelector} = require('../selectors/router');
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
-const updateVisibility = (action$, loadActions, isEnabled = () => {}, mode) =>
+export const updateVisibility = (action$, loadActions, isEnabled = () => {}, mode) =>
     Rx.Observable.concat(
         Rx.Observable.of(feedbackMaskLoading(mode)),
         action$.ofType(...loadActions)
@@ -55,7 +68,7 @@ const updateVisibility = (action$, loadActions, isEnabled = () => {}, mode) =>
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
-const updateMapVisibility = (action$, store) =>
+export const updateMapVisibility = (action$, store) =>
     action$.ofType(INIT_MAP)
         .switchMap(({disableFeedbackMask}) => {
             const loadActions = [MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR];
@@ -78,7 +91,7 @@ const updateMapVisibility = (action$, store) =>
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
-const updateDashboardVisibility = action$ =>
+export const updateDashboardVisibility = action$ =>
     action$.ofType(LOAD_DASHBOARD)
         .switchMap(() => {
             const loadActions = [DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR];
@@ -97,7 +110,7 @@ const updateDashboardVisibility = action$ =>
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
-const updateGeoStoryFeedbackMaskVisibility = action$ =>
+export const updateGeoStoryFeedbackMaskVisibility = action$ =>
     action$.ofType(LOAD_GEOSTORY)
         .switchMap(() => {
             const loadActions = [GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR];
@@ -117,7 +130,7 @@ const updateGeoStoryFeedbackMaskVisibility = action$ =>
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
-const updateContextFeedbackMaskVisibility = action$ =>
+export const updateContextFeedbackMaskVisibility = action$ =>
     action$.ofType(LOAD_CONTEXT)
         .switchMap(() => {
             const loadActions = [LOAD_FINISHED, CONTEXT_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR];
@@ -138,7 +151,7 @@ const updateContextFeedbackMaskVisibility = action$ =>
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
-const updateContextCreatorFeedbackMaskVisibility = action$ =>
+export const updateContextCreatorFeedbackMaskVisibility = action$ =>
     action$.ofType(LOAD_CONTEXT_CONTEXTCREATOR)
         .switchMap(() => {
             const loadActions = [LOAD_FINISHED_CONTEXTCREATOR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR];
@@ -159,7 +172,7 @@ const updateContextCreatorFeedbackMaskVisibility = action$ =>
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
-const detectNewPage = (action$, store) =>
+export const detectNewPage = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .filter(action => {
             const pathname = action.payload && action.payload.location && action.payload.location.pathname;
@@ -178,12 +191,14 @@ const detectNewPage = (action$, store) =>
  * Prompts login when page some resource is not accessible and you're not logged in.
  * @param {stream} action$ the action stream
  */
-const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login required logic (403) condition from feedback mask
+export const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login required logic (403) condition from feedback mask
     action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR)
-        .filter((action) => action.error
-            && action.error.status === 403
-            && (pathnameSelector(store.getState()).indexOf("new") === -1 // new map has different handling (see redirectUnauthorizedUserOnNewMap, TODO: uniform different behaviour)
-                || pathnameSelector(store.getState()).indexOf("newgeostory") >= 0)) // geostory can use this (that is the same of the dashboard)
+        .filter((action) => {
+            const pathname = pathnameSelector(store.getState());
+            return action.error
+                && action.error.status === 403
+                && pathname.indexOf("new") === -1 && !(pathname.match(/dashboard/) !== null && pathname.match(/dashboard\/[0-9]+/) === null); // new map geostory and dashboard has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
+        })
         .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(
             () =>
@@ -196,17 +211,28 @@ const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login requ
                     ).takeUntil(action$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE))
         );
 
+export const redirectUnauthorizedUserOnNewLoadError = (action$, { getState = () => {}}) =>
+    action$.ofType(MAP_CONFIG_LOAD_ERROR, LOAD_GEOSTORY_ERROR, DASHBOARD_LOAD_ERROR)
+        .filter((action) => action.error &&
+            action.error.status === 403 &&
+            (pathnameSelector(getState()).indexOf("new") !== -1 ||
+             pathnameSelector(getState()).match(/dashboard\/[0-9]+/) === null &&
+             pathnameSelector(getState()).match(/dashboard/) !== null))
+        .filter(() => !isLoggedIn(getState()))
+        .switchMap(() => Rx.Observable.of(push('/'))); // go to home page
+
 /**
  * Epics for feedbackMask functionality
  * @name epics.feedbackMask
  * @type {Object}
  */
-module.exports = {
+export default {
     updateMapVisibility,
     updateContextFeedbackMaskVisibility,
     updateContextCreatorFeedbackMaskVisibility,
     updateDashboardVisibility,
     updateGeoStoryFeedbackMaskVisibility,
     detectNewPage,
-    feedbackMaskPromptLogin
+    feedbackMaskPromptLogin,
+    redirectUnauthorizedUserOnNewLoadError
 };

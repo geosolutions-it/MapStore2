@@ -14,4 +14,4 @@ const colorsSchema = [
     {name: "Land", schema: "Dem", max: 12}, {name: "Water", schema: "Dem", max: 12}, {name: "CDA", schema: "Dem", max: 12},
     {name: "Simple", schema: "Dem", max: 7}];
 
-module.exports = colorsSchema;
+export default colorsSchema;

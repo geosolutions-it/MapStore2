@@ -1,8 +1,9 @@
-const React = require('react');
-const Confirm = require('../../../misc/ConfirmDialog');
-const Portal = require('../../../misc/Portal');
-const Message = require('../../../I18N/Message');
-module.exports = ({
+import React from 'react';
+import Confirm from '../../../misc/ConfirmDialog';
+import Portal from '../../../misc/Portal';
+import Message from '../../../I18N/Message';
+
+export default ({
     onClose = () => {},
     saving = false,
     onConfirm = () => {}

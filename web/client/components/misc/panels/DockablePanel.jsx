@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {branch, renameProps} = require('recompose');
-const BorderLayout = require('../../layout/BorderLayout');
-const DockPanel = require('./DockPanel');
-const ResizableModal = require('../ResizableModal');
+import React from 'react';
+
+import { branch, renameProps } from 'recompose';
+import BorderLayout from '../../layout/BorderLayout';
+import DockPanel from './DockPanel';
+import ResizableModal from '../ResizableModal';
 
 /**
  * Component for rendering a DockPanel or Modal based on dock props.
@@ -37,7 +38,7 @@ const Modal = renameProps({
     );
 });
 
-module.exports = branch(
+export default branch(
     ({dock}) => !dock,
     () => props => <Modal {...props}/>
 )(DockPanel);

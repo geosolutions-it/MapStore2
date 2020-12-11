@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {isArray, head, isNaN} = require('lodash');
-function degToDms(deg) {
+import { isArray, head, isNaN } from 'lodash';
+
+export function degToDms(deg) {
     // convert decimal deg to minutes and seconds
     var d = Math.floor(deg);
     var minfloat = (deg - d) * 60;
@@ -18,7 +19,7 @@ function degToDms(deg) {
     return "" + d + "° " + m + "' " + s + "'' ";
 }
 
-function getFormattedBearingValue(azimuth = 0, {measureTrueBearing = false, fractionDigits =  0} = {}) {
+export function getFormattedBearingValue(azimuth = 0, {measureTrueBearing = false, fractionDigits =  0} = {}) {
     let bearing = "";
     if (!measureTrueBearing) {
         if (azimuth >= 0 && azimuth < 90) {
@@ -38,14 +39,14 @@ function getFormattedBearingValue(azimuth = 0, {measureTrueBearing = false, frac
             prefix = "0";
         }
         const adjValue = fractionDigits > 0  ? azimuth.toFixed(fractionDigits) : Math.floor(azimuth);
-        bearing =  prefix + adjValue + "° " + "T";
+        bearing =  prefix + adjValue + "°";
     }
 
     return bearing;
 }
 
 
-const CONVERSION_RATE = {
+export const CONVERSION_RATE = {
     // length
     "yd": {
         "ft": 3,
@@ -145,7 +146,7 @@ const CONVERSION_RATE = {
     }
 };
 
-function convertUom(value, source = "m", dest = "m") {
+export function convertUom(value, source = "m", dest = "m") {
     if (!!CONVERSION_RATE[source] && !!CONVERSION_RATE[source][dest]) {
         return value * CONVERSION_RATE[source][dest];
     }
@@ -153,13 +154,13 @@ function convertUom(value, source = "m", dest = "m") {
 }
 
 
-const validateCoord = c => (!isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
+export const validateCoord = c => (!isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
 
 /**
  * validate a geometry feature,
  * if invalid return an empty one
 */
-const validateFeatureCoordinates = ({coordinates, type} = {}) => {
+export const validateFeatureCoordinates = ({coordinates, type} = {}) => {
     let filteredCoords = coordinates;
     if (type === "LineString") {
         filteredCoords = coordinates.filter(validateCoord);
@@ -179,19 +180,11 @@ const validateFeatureCoordinates = ({coordinates, type} = {}) => {
     return filteredCoords;
 };
 
-const isValidGeometry = ({coordinates, type} = {}) => {
+export const isValidGeometry = ({coordinates, type} = {}) => {
     if (!type || !coordinates || coordinates && isArray(coordinates) && coordinates.length === 0) {
         return false;
     }
     let validatedCoords = validateFeatureCoordinates({coordinates, type});
     validatedCoords = type === "Polygon" ? head(validatedCoords) : validatedCoords;
     return validatedCoords.length > 0;
-};
-
-module.exports = {
-    validateFeatureCoordinates,
-    isValidGeometry,
-    convertUom,
-    getFormattedBearingValue,
-    degToDms
 };

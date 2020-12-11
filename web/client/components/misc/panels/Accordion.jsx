@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Panel, Accordion} = require('react-bootstrap');
-const SideCard = require('../cardgrids/SideCard');
+import React from 'react';
+
+import { Panel, Accordion } from 'react-bootstrap';
+import SideCard from '../cardgrids/SideCard';
 
 /**
  * Component for rendering an Accordion with Side Card as header.
@@ -22,7 +23,7 @@ const SideCard = require('../cardgrids/SideCard');
  * @prop {array} panels array of objects head contains data of sidecard and body is an High-Order Component, e.g. {id: 'panel:000', head: { }, body: () => null }
  */
 
-module.exports = ({
+export default ({
     activePanel,
     fillContainer,
     className,
@@ -38,7 +39,7 @@ module.exports = ({
                 (<Panel
                     key={i}
                     eventKey={panel.id}
-                    className={activePanel === panel.id ? 'ms-selected' : ''}
+                    className={activePanel === panel.id && panel.id !== 'HIDDEN' ? 'ms-selected' : ''}
                     header={panel.head && <a role="tab">
                         <SideCard
                             {...panel.head}

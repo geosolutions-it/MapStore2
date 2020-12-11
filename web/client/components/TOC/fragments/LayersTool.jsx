@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
-const Message = require('../../I18N/Message');
+import React from 'react';
+
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import Message from '../../I18N/Message';
 
 class LayersTool extends React.Component {
     static propTypes = {
@@ -39,4 +41,4 @@ class LayersTool extends React.Component {
     }
 }
 
-module.exports = LayersTool;
+export default LayersTool;

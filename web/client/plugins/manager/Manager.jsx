@@ -5,13 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const { itemSelected } = require('../../actions/manager');
-const {Nav, NavItem, Glyphicon} = require('react-bootstrap');
-const {connect} = require('react-redux');
-const {Message} = require('../../components/I18N/I18N');
-require('./style/manager.css');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { itemSelected } from '../../actions/manager';
+import { Nav, NavItem, Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Message } from '../../components/I18N/I18N';
+import './style/manager.css';
 
 class Manager extends React.Component {
     static propTypes = {
@@ -81,7 +82,15 @@ class Manager extends React.Component {
     }
 }
 
-module.exports = {
+/**
+ * Base container for Manager plugins like {@link #plugins.UserManager|UserManager} or
+ * {@link #plugins.GroupManager|GroupManager}
+ * usually rendered in {@link #pages.Manager|Manager Page}.
+ * @name Manager
+ * @class
+ * @memberof plugins
+ */
+export default {
     ManagerPlugin: connect((state, ownProps) => ({
         selectedTool: ownProps.tool
     }),

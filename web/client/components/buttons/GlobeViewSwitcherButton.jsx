@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,11 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
-const ToggleButton = require('./ToggleButton');
-const {Tooltip} = require('react-bootstrap');
-const Message = require('../I18N/Message');
+import ToggleButton from './ToggleButton';
+import { Tooltip } from 'react-bootstrap';
+import Message from '../I18N/Message';
 
 /**
  * Toggle button for 3d. Wraps {@link #components.buttons.ToggleButton} with some defaults
@@ -89,4 +90,4 @@ class GlobeViewSwitcherButton extends React.Component {
     }
 }
 
-module.exports = GlobeViewSwitcherButton;
+export default GlobeViewSwitcherButton;

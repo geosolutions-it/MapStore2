@@ -6,17 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Message = require('../../../../I18N/Message');
-const tooltip = require('../../../../misc/enhancers/tooltip');
-const { isObject } = require('lodash');
+import { isObject } from 'lodash';
+import React from 'react';
+import { NavItem as BSNavItem, Col, Glyphicon, Nav, Row } from 'react-bootstrap';
 
-const { Row, Col, Nav, NavItem: BSNavItem, Glyphicon } = require('react-bootstrap');
+import Message from '../../../../I18N/Message';
+import tooltip from '../../../../misc/enhancers/tooltip';
+
 const NavItem = tooltip(BSNavItem);
+
 /**
  * Provides a node (layer or group) property editor for the TOC
  */
-module.exports = ({
+export default ({
     settings, element = {}, tabs = [], activeTab, width, groups,
     isLocalizedLayerStylesEnabled,
     setActiveTab = () => { }, onUpdateParams = () => { }, onRetrieveLayerData = () => { }, realtimeUpdate, ...props} = {}) =>

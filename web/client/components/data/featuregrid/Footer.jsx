@@ -1,10 +1,20 @@
-const React = require('react');
-const Message = require('../../I18N/Message');
-const {Button, Glyphicon, Grid, Row, Col} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
-const {toPage} = require('../../../utils/FeatureGridUtils');
+/*
+ * Copyright 2018, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-module.exports = (props = {
+import React from 'react';
+import { Col, Glyphicon, Grid, Row } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
+
+import Button from '../../misc/Button';
+import { toPage } from '../../../utils/FeatureGridUtils';
+import Message from '../../I18N/Message';
+
+export default (props = {
     loading: false,
     onPageChange: () => {}
 }) => {
@@ -12,7 +22,8 @@ module.exports = (props = {
     return (<Grid className="bg-body data-grid-bottom-toolbar" fluid style={{width: "100%"}}>
         <Row className="featuregrid-toolbar-margin">
             <Col md={3}>
-                <span><Message msgId={props.virtualScroll && "featuregrid.resultInfoVirtual" || "featuregrid.resultInfo"} msgParams={{start: page * size + 1, end: page * size + resultSize, total}} /></span>
+                <span><Message msgId={props.virtualScroll && "featuregrid.resultInfoVirtual" || "featuregrid.resultInfo"} msgParams={{start: page * size + 1, end: page * size + resultSize, total, selected: props.selected ?? 0}} /></span>
+                &nbsp;{props.selected > 0 ? <span><Message msgId="featuregrid.selectedInfo" msgParams={{ selected: props.selected ?? 0 }} /></span> : null}
             </Col>
             { !props.virtualScroll ? (<Col className="text-center" md={6}>
                 <Button

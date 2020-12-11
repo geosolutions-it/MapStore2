@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const Rx = require('rxjs');
-const {compose, withState, mapPropsStream} = require('recompose');
-const { addSearch } = require('../../../observables/wms');
-const { recordToLayer } = require('../../../utils/CatalogUtils');
+import Rx from 'rxjs';
+
+import { compose, withState, mapPropsStream } from 'recompose';
+import { addSearch } from '../../../observables/wms';
+import { recordToLayer } from '../../../utils/CatalogUtils';
 
 /**
  * enhancer for CompactCatalog (or a container) to validate a selected record,
@@ -16,7 +17,7 @@ const { recordToLayer } = require('../../../utils/CatalogUtils');
  * canProceed = false and error as props.
  * TODO: this can become a more general validate enhancer
  */
-module.exports = compose(
+export default compose(
     withState('selected', "setSelected", null),
     withState('layer', "setLayer", null),
     mapPropsStream(props$ =>

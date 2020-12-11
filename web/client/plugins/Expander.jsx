@@ -1,18 +1,23 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
 
-const {Glyphicon} = require('react-bootstrap');
-const assign = require('object-assign');
+import { Glyphicon } from 'react-bootstrap';
+import assign from 'object-assign';
+import ExpanderPlugin from '../components/buttons/ToggleButton';
 
-const ExpanderPlugin = require('../components/buttons/ToggleButton');
-
-module.exports = {
+/**
+ * Expander plugin. Adds the '...' button to the Toolbar plugin to hide some buttons.
+ * @name Expander
+ * @class
+ * @memberof plugins
+ */
+export default {
     ExpanderPlugin: assign(ExpanderPlugin, {
         Toolbar: {
             name: 'expand',

@@ -5,14 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const { isWidgetSelectionActive } = require('../../../../selectors/widgets');
-const withMask = require('../../../../components/misc/enhancers/withMask');
-const { connect } = require('react-redux');
-const {createSelector} = require('reselect');
-const {compose} = require('recompose');
-const React = require('react');
-const Message = require('../../../../components/I18N/Message');
-module.exports = compose(
+import { isWidgetSelectionActive } from '../../../../selectors/widgets';
+
+import withMask from '../../../../components/misc/enhancers/withMask';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { compose } from 'recompose';
+import React from 'react';
+import Message from '../../../../components/I18N/Message';
+
+export default compose(
     connect(createSelector(isWidgetSelectionActive, (widgetSelectionActive) => ({ widgetSelectionActive }))),
     withMask(
         ({ widgetSelectionActive }) => widgetSelectionActive,

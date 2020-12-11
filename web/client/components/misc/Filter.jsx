@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {FormGroup, FormControl, Glyphicon, InputGroup, OverlayTrigger, Tooltip} = require('react-bootstrap');
+import './style/filter.css';
 
-require('./style/filter.css');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormControl, FormGroup, Glyphicon, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 class Filter extends React.Component {
 
@@ -67,4 +67,4 @@ class Filter extends React.Component {
     }
 }
 
-module.exports = Filter;
+export default Filter;

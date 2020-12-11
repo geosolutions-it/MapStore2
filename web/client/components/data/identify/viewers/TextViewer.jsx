@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,7 +8,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
 
 class TextViewer extends React.Component {
     static propTypes = {
@@ -23,4 +24,4 @@ class TextViewer extends React.Component {
     }
 }
 
-module.exports = TextViewer;
+export default TextViewer;

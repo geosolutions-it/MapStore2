@@ -5,23 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Rx = require('rxjs');
-const Message = require('../../components/I18N/Message');
+import React from 'react';
 
-const { Button: RButton, Glyphicon } = require('react-bootstrap');
-const { setCollapsed } = require('../../actions/timeline');
-const { isCollapsed, hasLayers } = require('../../selectors/timeline');
-
-
-const { compose, withHandlers, withProps, renderNothing, branch, mapPropsStream } = require('recompose');
-const tooltip = require('../../components/misc/enhancers/tooltip');
-
-
-const {createSelector} = require('reselect');
-const { connect } = require('react-redux');
-
-const withPopover = require('../../components/data/featuregrid/enhancers/withPopover');
+import Rx from 'rxjs';
+import Message from '../../components/I18N/Message';
+import { Glyphicon } from 'react-bootstrap';
+import { setCollapsed } from '../../actions/timeline';
+import { isCollapsed, hasLayers } from '../../selectors/timeline';
+import { compose, withHandlers, withProps, renderNothing, branch, mapPropsStream } from 'recompose';
+import tooltip from '../../components/misc/enhancers/tooltip';
+import { createSelector } from 'reselect';
+import { connect } from 'react-redux';
+import withPopover from '../../components/data/featuregrid/enhancers/withPopover';
+import RButton from '../../components/misc/Button';
 
 /**
  * Creates the properties to toggle the hint popover.
@@ -78,7 +74,7 @@ const ToggleButton = (props) => (<Button
  * Toggle button for timeline hide (collapse)/show functionality for timeline.
  * Visible in the WidgetsTray, when present
  */
-module.exports = compose(
+export default compose(
     connect(
         createSelector(
             isCollapsed,

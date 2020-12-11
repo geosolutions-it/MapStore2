@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,13 +6,15 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Tooltip} = require("react-bootstrap");
-const OverlayTrigger = require('../../misc/OverlayTrigger');
-const LocaleUtils = require('../../../utils/LocaleUtils');
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
-const {NumberPicker} = require('react-widgets');
+import { NumberPicker } from 'react-widgets';
 
 class NumberField extends React.Component {
     static propTypes = {
@@ -126,13 +127,13 @@ class NumberField extends React.Component {
     changeNumber = (value) => {
         if (this.props.operator === "><") {
             if (value.lowBound !== null && value.lowBound !== undefined && ( value.upBound !== null && value.upBound !== undefined) && value.lowBound >= value.upBound) {
-                this.props.onUpdateExceptionField(this.props.fieldRowId, LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.numberfield.wrong_range"));
+                this.props.onUpdateExceptionField(this.props.fieldRowId, getMessageById(this.context.messages, "queryform.attributefilter.numberfield.wrong_range"));
             } else if (this.props.fieldException) {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, null);
             }
         } else {
             if (this.props.isRequired && ( value === null || value === undefined)) {
-                this.props.onUpdateExceptionField(this.props.fieldRowId, LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.numberfield.isRequired"));
+                this.props.onUpdateExceptionField(this.props.fieldRowId, getMessageById(this.context.messages, "queryform.attributefilter.numberfield.isRequired"));
             } else if (this.props.fieldException) {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, null);
             }
@@ -142,4 +143,4 @@ class NumberField extends React.Component {
     };
 }
 
-module.exports = NumberField;
+export default NumberField;

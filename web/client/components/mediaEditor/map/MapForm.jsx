@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import {isEqual} from 'lodash';
 
 import {show} from '../../../actions/mapEditor';
-import LocaleUtils from '../../../utils/LocaleUtils';
+import {getMessageById} from '../../../utils/LocaleUtils';
 import {MediaTypes} from '../../../utils/GeoStoryUtils';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
@@ -190,7 +190,7 @@ export const MapForm = ({
                     </ControlLabel>
                     <FormControl
                         type={field.type}
-                        placeholder={LocaleUtils.getMessageById(messages, field.placeholder)}
+                        placeholder={getMessageById(messages, field.placeholder)}
                         value={properties[field.id] || ""}
                         onChange={(event) => {
                             setProperties({

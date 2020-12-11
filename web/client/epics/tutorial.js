@@ -6,20 +6,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
-const {START_TUTORIAL, UPDATE_TUTORIAL, INIT_TUTORIAL, CHANGE_PRESET, closeTutorial, setupTutorial} = require('../actions/tutorial');
-const {CHANGE_MAP_VIEW} = require('../actions/map');
-const {MAPS_LIST_LOADED} = require('../actions/maps');
-const {TOGGLE_3D} = require('../actions/globeswitcher');
-const {modeSelector} = require('../selectors/geostory');
-const {CHANGE_MODE} = require('../actions/geostory');
-const { creationStepSelector } = require('../selectors/contextcreator');
-const { CONTEXT_TUTORIALS } = require('../actions/contextcreator');
+import Rx from 'rxjs';
+
+import {
+    START_TUTORIAL,
+    UPDATE_TUTORIAL,
+    INIT_TUTORIAL,
+    CHANGE_PRESET,
+    closeTutorial,
+    setupTutorial
+} from '../actions/tutorial';
+
+import { CHANGE_MAP_VIEW } from '../actions/map';
+import { MAPS_LIST_LOADED } from '../actions/maps';
+import { TOGGLE_3D } from '../actions/globeswitcher';
+import { modeSelector } from '../selectors/geostory';
+import { CHANGE_MODE } from '../actions/geostory';
+import { creationStepSelector } from '../selectors/contextcreator';
+import { CONTEXT_TUTORIALS } from '../actions/contextcreator';
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
     || path.match(/\/(\w+)\//) && path.replace(/\/(\w+)\//, "$1");
-const { LOCATION_CHANGE } = require('connected-react-router');
-const {isEmpty, isArray, isObject} = require('lodash');
+import { LOCATION_CHANGE } from 'connected-react-router';
+import { isEmpty, isArray, isObject } from 'lodash';
 
 /**
  * Closes the tutorial if 3D button has been toggled
@@ -28,7 +37,7 @@ const {isEmpty, isArray, isObject} = require('lodash');
  * @return {external:Observable}
  */
 
-const closeTutorialEpic = (action$) =>
+export const closeTutorialEpic = (action$) =>
     action$.ofType(START_TUTORIAL)
         .audit(() => action$.ofType(TOGGLE_3D))
         .switchMap( () => Rx.Observable.of(closeTutorial()));
@@ -40,7 +49,7 @@ const closeTutorialEpic = (action$) =>
  * @return {external:Observable}
  */
 
-const switchTutorialEpic = (action$, store) =>
+export const switchTutorialEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .filter(action =>
             action.payload
@@ -86,7 +95,7 @@ const switchTutorialEpic = (action$, store) =>
  * It changes the Geostory tutorial when changing mode only
  * when changing to edit the tutorial is shown if not disabled
 */
-const switchGeostoryTutorialEpic = (action$, store) =>
+export const switchGeostoryTutorialEpic = (action$, store) =>
     action$.ofType(CHANGE_MODE)
         .switchMap( ({mode}) => {
             const id = "geostory";
@@ -109,7 +118,7 @@ const switchGeostoryTutorialEpic = (action$, store) =>
  * @param {external:Observable} action$ manages `CHANGE_PRESET`
  * @param {external:Observable} store
  */
-const changePresetEpic = (action$, store) =>
+export const changePresetEpic = (action$, store) =>
     action$.ofType(CHANGE_PRESET)
         .switchMap(({preset, presetGroup, ignoreDisabled}) => {
             const state = store.getState();
@@ -129,7 +138,7 @@ const changePresetEpic = (action$, store) =>
  * @return {external:Observable}
  */
 
-const getActionsFromStepEpic = (action$) =>
+export const getActionsFromStepEpic = (action$) =>
     action$.ofType(UPDATE_TUTORIAL)
         .filter(action => action.tour && action.tour.step && action.tour.step.action && action.tour.step.action[action.tour.action])
         .switchMap( (action) => {
@@ -144,7 +153,7 @@ const getActionsFromStepEpic = (action$) =>
  * @type {Object}
  */
 
-module.exports = {
+export default {
     closeTutorialEpic,
     switchTutorialEpic,
     getActionsFromStepEpic,

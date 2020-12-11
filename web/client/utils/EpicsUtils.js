@@ -1,4 +1,12 @@
 /**
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
  * Default wrapper for the epics. This avoids to close all epics system for unhandled exceptions.
  * It allows also to identify the error showing in console the name of the epic that triggered the exception and the error.
  * At the end, it throws the exception again so it can be automatically intercepted in dev tools.

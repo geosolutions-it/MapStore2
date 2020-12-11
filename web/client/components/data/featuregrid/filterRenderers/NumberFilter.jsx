@@ -6,11 +6,13 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const AttributeFilter = require('./AttributeFilter');
-const {trim} = require('lodash');
-const {compose, withHandlers, withState, defaultProps} = require('recompose');
+import AttributeFilter from './AttributeFilter';
+
+import { trim } from 'lodash';
+import { compose, withHandlers, withState, defaultProps } from 'recompose';
 const EXPRESSION_REGEX = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?\s*(-?\d*\.?\d*)\s*/;
-module.exports = compose(
+
+export default compose(
     defaultProps({
         onValueChange: () => {}
     }),

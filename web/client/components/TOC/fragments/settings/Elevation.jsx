@@ -6,17 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Slider = require('react-nouislider');
-const ElevationChart = require('./ElevationChart');
-const {Grid} = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
-const LayersUtils = require('../../../../utils/LayersUtils');
-require('react-widgets/lib/less/react-widgets.less');
-require("./css/elevation.css");
+import React from 'react';
 
-module.exports = class extends React.Component {
+import PropTypes from 'prop-types';
+import Slider from 'react-nouislider';
+import ElevationChart from './ElevationChart';
+import { Grid } from 'react-bootstrap';
+import Message from '../../../I18N/Message';
+import { getDimension } from '../../../../utils/LayersUtils';
+import 'react-widgets/lib/less/react-widgets.less';
+import './css/elevation.css';
+
+export default class extends React.Component {
     static propTypes = {
         elevationText: PropTypes.node,
         element: PropTypes.object,
@@ -32,7 +33,7 @@ module.exports = class extends React.Component {
         showElevationChart: true,
         containerWidth: 500,
         elevationText: <Message msgId="elevation"/>,
-        getDimension: LayersUtils.getDimension
+        getDimension: getDimension
     };
 
     shouldComponentUpdate(nextProps) {
@@ -119,4 +120,4 @@ module.exports = class extends React.Component {
         });
         return range;
     };
-};
+}

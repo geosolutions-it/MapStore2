@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isNil} = require('lodash');
-const {set} = require('./ImmutableUtils');
-const {colorToRgbaStr} = require('./ColorUtils');
-const axios = require('axios');
-const SLDParser = require('geostyler-sld-parser').default;
-const GeoCSSParser = require('geostyler-geocss-parser').default;
+import { isNil } from 'lodash';
+
+import { set } from './ImmutableUtils';
+import { colorToRgbaStr } from './ColorUtils';
+import axios from 'axios';
+import SLDParser from 'geostyler-sld-parser';
+import GeoCSSParser from 'geostyler-geocss-parser';
 const StyleParsers = {
     sld: new SLDParser(),
     css: new GeoCSSParser()
@@ -23,7 +24,7 @@ const StyleParsers = {
  * @param {string[]} attributes to use as filter list
  * @return {boolean} the result of the check
 */
-const isAttrPresent = (style = {}, attributes) => (attributes.filter(prop => !isNil(style[prop])).length > 0);
+export const isAttrPresent = (style = {}, attributes) => (attributes.filter(prop => !isNil(style[prop])).length > 0);
 
 /**
  * check if the style is assignable to an ol.Stroke style
@@ -31,7 +32,7 @@ const isAttrPresent = (style = {}, attributes) => (attributes.filter(prop => !is
  * @param {string[]} attibutes of a stroke style
  * @return {boolean} if the style is compatible with an ol.Stroke
 */
-const isStrokeStyle = (style = {}, attributes = ["color", "opacity", "dashArray", "dashOffset", "lineCap", "lineJoin", "weight"]) => {
+export const isStrokeStyle = (style = {}, attributes = ["color", "opacity", "dashArray", "dashOffset", "lineCap", "lineJoin", "weight"]) => {
     return isAttrPresent(style, attributes);
 };
 
@@ -41,7 +42,7 @@ const isStrokeStyle = (style = {}, attributes = ["color", "opacity", "dashArray"
  * @param {string[]} attibutes of a fill style
  * @return {boolean} if the style is compatible with an ol.Fill style
 */
-const isFillStyle = (style = {}, attributes = ["fillColor", "fillOpacity"]) => {
+export const isFillStyle = (style = {}, attributes = ["fillColor", "fillOpacity"]) => {
     return isAttrPresent(style, attributes);
 };
 
@@ -51,7 +52,7 @@ const isFillStyle = (style = {}, attributes = ["fillColor", "fillOpacity"]) => {
  * @param {string[]} attibutes of a text style
  * @return {boolean} if the style is compatible with an ol.Text style
 */
-const isTextStyle = (style = {}, attributes = ["label", "font", "fontFamily", "fontSize", "fontStyle", "fontWeight", "textAlign", "textRotationDeg"]) => {
+export const isTextStyle = (style = {}, attributes = ["label", "font", "fontFamily", "fontSize", "fontStyle", "fontWeight", "textAlign", "textRotationDeg"]) => {
     return isAttrPresent(style, attributes);
 };
 
@@ -63,7 +64,7 @@ const isTextStyle = (style = {}, attributes = ["label", "font", "fontFamily", "f
  * @param {string[]} attibutes of a circle style
  * @return {boolean} if the style is compatible with an ol.Circle style
 */
-const isCircleStyle = (style = {}, attributes = ["radius"]) => {
+export const isCircleStyle = (style = {}, attributes = ["radius"]) => {
     return isAttrPresent(style, attributes);
 };
 
@@ -73,7 +74,7 @@ const isCircleStyle = (style = {}, attributes = ["radius"]) => {
  * @param {string[]} attibutes of a marker style
  * @return {boolean} if the style is compatible with an ol.Icon style
 */
-const isMarkerStyle = (style = {}, attributes = ["iconGlyph", "iconShape", "iconUrl"]) => {
+export const isMarkerStyle = (style = {}, attributes = ["iconGlyph", "iconShape", "iconUrl"]) => {
     return isAttrPresent(style, attributes);
 };
 
@@ -83,7 +84,7 @@ const isMarkerStyle = (style = {}, attributes = ["iconGlyph", "iconShape", "icon
  * @param {string[]} attibutes of a symbol style
  * @return {boolean} if the style is compatible with an ol.Icon style
 */
-const isSymbolStyle = (style = {}, attributes = ["symbolUrl"]) => {
+export const isSymbolStyle = (style = {}, attributes = ["symbolUrl"]) => {
     return isAttrPresent(style, attributes);
 };
 
@@ -93,7 +94,7 @@ const isSymbolStyle = (style = {}, attributes = ["symbolUrl"]) => {
  * @param {object} style to check
  * @return {string} the name
 */
-const getStylerTitle = (style = {}) => {
+export const getStylerTitle = (style = {}) => {
     if (isMarkerStyle(style)) {
         return "Marker";
     }
@@ -120,7 +121,7 @@ const getStylerTitle = (style = {}) => {
  * TODO needs maptype management (although, on leaflet they must interact
  * on the original  geojson feature)
 */
-let geometryFunctions = {
+export let geometryFunctions = {
     "centerPoint": {
         type: "Point",
         func: () => {}
@@ -145,7 +146,7 @@ let geometryFunctions = {
 * @param {string} item to be returned
 * @return {string|function} the geometry function or the type
 */
-const getGeometryFunction = (functionName, item) => {
+export const getGeometryFunction = (functionName, item) => {
     return geometryFunctions[functionName] && geometryFunctions[functionName][item];
 };
 
@@ -155,7 +156,7 @@ const getGeometryFunction = (functionName, item) => {
  * @param {function} func the implementation of the function
  * @param {type} geometry type associated with this function
 */
-const registerGeometryFunctions = (functionName, func, type) => {
+export const registerGeometryFunctions = (functionName, func, type) => {
     if (functionName && func && type) {
         geometryFunctions[functionName] = {func, type};
     } else {
@@ -169,7 +170,7 @@ const registerGeometryFunctions = (functionName, func, type) => {
  * @param {number} opacity to add
  * @return {object} color updated
 */
-const addOpacityToColor = (color = "#FFCC33", opacity = 0.2) => (set("a", opacity, color));
+export const addOpacityToColor = (color = "#FFCC33", opacity = 0.2) => (set("a", opacity, color));
 
 /**
  * creates an has string from a string
@@ -177,7 +178,7 @@ const addOpacityToColor = (color = "#FFCC33", opacity = 0.2) => (set("a", opacit
  * @param {string} str to hash
  * @return the hash number
 */
-const hashCode = function(str) {
+export const hashCode = function(str) {
     let hash = 0;
     let i;
     let chr;
@@ -204,7 +205,7 @@ let SymbolsStyles = {
 * @param {number} sha unique id generated from the json stringify of the style object
 * @param {object} styleItems object to register {style, base64, svg} etc.
 */
-const registerStyle = (sha, styleItems) => {
+export const registerStyle = (sha, styleItems) => {
     if (sha && styleItems) {
         SymbolsStyles[sha] = styleItems;
     } else {
@@ -215,7 +216,7 @@ const registerStyle = (sha, styleItems) => {
 /**
 * reset Styles
 */
-const setSymbolsStyles = (symbStyles = {}) => {
+export const setSymbolsStyles = (symbStyles = {}) => {
     SymbolsStyles = symbStyles;
 };
 
@@ -225,7 +226,7 @@ const setSymbolsStyles = (symbStyles = {}) => {
 * @param {string} item to be returned. Default is 'style'
 * @return {object} the style object
 */
-const fetchStyle = (sha, item = "style") => {
+export const fetchStyle = (sha, item = "style") => {
     return SymbolsStyles[sha] && SymbolsStyles[sha][item];
 };
 
@@ -233,7 +234,7 @@ const fetchStyle = (sha, item = "style") => {
 * get SymbolStyles
 * @return {object} the object containing all the symbols Styles
 */
-const getSymbolsStyles = () => {
+export const getSymbolsStyles = () => {
     return SymbolsStyles;
 };
 
@@ -242,7 +243,7 @@ const getSymbolsStyles = () => {
 * @param {object} style object
 * @return {number} the sha
 */
-const hashAndStringify = (style) => {
+export const hashAndStringify = (style) => {
     // style to has in case we want to exclude in future some props
     if (style) {
         return hashCode(JSON.stringify(style));
@@ -254,13 +255,13 @@ const hashAndStringify = (style) => {
  * takes a dom element and parses it to a string
  * @param {object} domNode to parse
 */
-const domNodeToString = (domNode) => {
+export const domNodeToString = (domNode) => {
     let element = document.createElement("div");
     element.appendChild(domNode);
     return element.innerHTML;
 };
 
-const createSvgUrl = (style = {}, url) => {
+export const createSvgUrl = (style = {}, url) => {
     /**
      * it loads an svg and it overrides some style option,
      * then it create and object URL that can be cached in a dictionary
@@ -319,7 +320,7 @@ const createSvgUrl = (style = {}, url) => {
         });
 };
 
-const createStylesAsync = (styles = []) => {
+export const createStylesAsync = (styles = []) => {
     return styles.map(style => {
         return isSymbolStyle(style) && !fetchStyle(hashAndStringify(style)) ? createSvgUrl(style, style.symbolUrl || style.symbolUrlCustomized)
             .then(symbolUrlCustomized => {
@@ -332,32 +333,6 @@ const createStylesAsync = (styles = []) => {
     });
 };
 
-const getStyleParser = (format = 'sld') => {
+export const getStyleParser = (format = 'sld') => {
     return StyleParsers[format];
-};
-
-module.exports = {
-    getGeometryFunction,
-    SymbolsStyles,
-    registerStyle,
-    fetchStyle,
-    hashCode,
-    hashAndStringify,
-    domNodeToString,
-    createSvgUrl,
-    registerGeometryFunctions,
-    geometryFunctions,
-    getStylerTitle,
-    isAttrPresent,
-    addOpacityToColor,
-    isMarkerStyle,
-    isSymbolStyle,
-    isTextStyle,
-    isCircleStyle,
-    isStrokeStyle,
-    isFillStyle,
-    getSymbolsStyles,
-    setSymbolsStyles,
-    createStylesAsync,
-    getStyleParser
 };

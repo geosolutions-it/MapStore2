@@ -5,32 +5,35 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {createSelector} = require('reselect');
-const PropTypes = require('prop-types');
-const assign = require('object-assign');
-const { Glyphicon, Dropdown, Button: ButtonRB, ListGroupItem } = require('react-bootstrap');
-const tooltip = require('../components/misc/enhancers/tooltip');
-const Button = tooltip(ButtonRB);
-const Message = require('../components/I18N/Message');
-const {changeMapCrs} = require('../actions/map');
-const {setInputValue} = require('../actions/crsselector');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
-const {isCesium} = require('../selectors/maptype');
-const {connect} = require('react-redux');
-const CrsSelectorMenu = require('../components/mapcontrols/crsselectormenu/CrsSelectorMenu');
-const {projectionDefsSelector, projectionSelector} = require('../selectors/map');
-const {bottomPanelOpenSelector} = require('../selectors/maplayout');
-const {printSelector, measureSelector} = require('../selectors/controls');
-const {editingSelector} = require('../selectors/annotations');
-const {crsInputValueSelector} = require('../selectors/crsselector');
-const {currentBackgroundSelector} = require('../selectors/layers');
-const {queryPanelSelector} = require('../selectors/controls');
-const {modeSelector} = require('../selectors/featuregrid');
-const {error} = require('../actions/notifications');
-const {userRoleSelector} = require('../selectors/security');
 
-const {indexOf, has, includes} = require('lodash');
+import { has, includes, indexOf } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Dropdown, Glyphicon, ListGroupItem } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+
+import { setInputValue } from '../actions/crsselector';
+import { changeMapCrs } from '../actions/map';
+import { error } from '../actions/notifications';
+import Message from '../components/I18N/Message';
+import CrsSelectorMenu from '../components/mapcontrols/crsselectormenu/CrsSelectorMenu';
+import tooltip from '../components/misc/enhancers/tooltip';
+import crsselectorReducers from '../reducers/crsselector';
+import { editingSelector } from '../selectors/annotations';
+import { measureSelector, printSelector, queryPanelSelector } from '../selectors/controls';
+import { crsInputValueSelector } from '../selectors/crsselector';
+import { modeSelector } from '../selectors/featuregrid';
+import { currentBackgroundSelector } from '../selectors/layers';
+import { projectionDefsSelector, projectionSelector } from '../selectors/map';
+import { bottomPanelOpenSelector } from '../selectors/maplayout';
+import { isCesium } from '../selectors/maptype';
+import { userRoleSelector } from '../selectors/security';
+import { filterCRSList, getAvailableCRS, normalizeSRS } from '../utils/CoordinatesUtils';
+import ButtonRB from '../components/misc/Button';
+const Button = tooltip(ButtonRB);
+
 
 class Selector extends React.Component {
     static propTypes = {
@@ -50,7 +53,7 @@ class Selector extends React.Component {
         currentRole: PropTypes.string
     };
     static defaultProps = {
-        availableCRS: CoordinatesUtils.getAvailableCRS(),
+        availableCRS: getAvailableCRS(),
         setCrs: ()=> {},
         typeInput: () => {},
         enabled: true,
@@ -62,14 +65,14 @@ class Selector extends React.Component {
         let list = [];
         let availableCRS = {};
         if (Object.keys(this.props.availableCRS).length) {
-            availableCRS = CoordinatesUtils.filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
+            availableCRS = filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
         }
         for (let crs in availableCRS) {
             if (availableCRS.hasOwnProperty(crs)) {
                 list.push({value: crs});
             }
         }
-        const currentCRS = CoordinatesUtils.normalizeSRS(this.props.selected, this.props.filterAllowedCRS);
+        const currentCRS = normalizeSRS(this.props.selected, this.props.filterAllowedCRS);
         const compatibleCrs = ['EPSG:4326', 'EPSG:3857', 'EPSG:900913'];
         const changeCrs = (crs) => {
             if ( indexOf(compatibleCrs, crs) > -1 || this.props.currentBackground.type === "wms" || this.props.currentBackground.type === "empty" ||
@@ -179,7 +182,7 @@ const crsSelector = connect(
   *   }
   * }
 */
-module.exports = {
+export default {
     CRSSelectorPlugin: assign(crsSelector, {
         disablePluginIf: "{state('mapType') === 'leaflet'}",
         MapFooter: {
@@ -189,6 +192,6 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {crsselector: require('../reducers/crsselector').default},
+    reducers: {crsselector: crsselectorReducers},
     epics: {}
 };

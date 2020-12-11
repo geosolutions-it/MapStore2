@@ -59,7 +59,8 @@ import {
     FILTER_MARKER,
     HIDE_MEASURE_WARNING,
     TOGGLE_SHOW_AGAIN,
-    INIT_PLUGIN
+    INIT_PLUGIN,
+    UNSELECT_FEATURE
 } from '../actions/annotations';
 
 import {
@@ -368,6 +369,24 @@ function annotations(state = {validationErrors: {}}, action) {
             showUnsavedGeometryModal: false
         });
     }
+    case UNSELECT_FEATURE: {
+        let editing = state.editing;
+        const selected = state.selected;
+        const ftChangedIndex = findIndex(editing.features, (f) => f.properties.id === selected.properties.id);
+        const selectedGeoJSON = editing.features[ftChangedIndex];
+        const styleChanged = castArray(selectedGeoJSON.style).map(s => ({...s, highlight: false}));
+        editing = set(`features[${ftChangedIndex}]`, set("style", styleChanged, selectedGeoJSON), editing);
+        let newState = set(`editing.features`, editing.features.map(f => {
+            return set("properties.canEdit", false, f);
+        }), state);
+        return assign({}, newState, {
+            drawing: false,
+            coordinateEditorEnabled: false,
+            unsavedGeometry: false,
+            selected: null,
+            showUnsavedGeometryModal: false
+        });
+    }
     case ADD_NEW_FEATURE: {
         let selected = state.selected;
         let newState = state;
@@ -605,7 +624,11 @@ function annotations(state = {validationErrors: {}}, action) {
         let geojsonFt = set("geometry.type", type === "Text" ? "Point" : type === "Circle" ? "Polygon" : type, selected);
         geojsonFt = set("geometry.coordinates", type === "Circle" ? [[]] : [], geojsonFt);
         geojsonFt = set("geometry", type === "Point" || type === "Text" ? null : geojsonFt.geometry, geojsonFt);
-        let newState = set(`editing.tempFeatures`, state.editing.features, state);
+
+        // Reset highlight properties of other features except the selected feature
+        const editingFeatures = state.editing.features.filter(({properties: prop})=> prop?.id !== selected?.properties?.id)?.map((ft = {})=>{ ft.style = ft?.style?.map(s=> {s.highlight = false; return s;}) || []; return ft;});
+        let newState = set(`editing.tempFeatures`, editingFeatures, state);
+
         return assign({}, state, {
             drawing: !newState.drawing,
             featureType: type,

@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const colors = require('./ExtendColorBrewer');
-const Message = require('../../I18N/Message');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import colors from './ExtendColorBrewer';
+import Message from '../../I18N/Message';
 
 /**
  * @name ColorRampItem
@@ -33,4 +34,4 @@ ColorRampItem.propTypes = {
     item: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 };
 
-module.exports = ColorRampItem;
+export default ColorRampItem;

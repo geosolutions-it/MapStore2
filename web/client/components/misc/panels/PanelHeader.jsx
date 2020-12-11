@@ -6,8 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Button, Glyphicon, Grid, Row, Col} = require('react-bootstrap');
+import React from 'react';
+
+import { Glyphicon, Grid, Row, Col } from 'react-bootstrap';
+import Button from '../../misc/Button';
 
 /* eslint-disable */
 const fullscreenGlyph = {
@@ -28,6 +30,7 @@ const fullscreenGlyph = {
         false: 'chevron-right'
     }
 };
+
 /* eslint-enable */
 
 /**
@@ -46,7 +49,7 @@ const fullscreenGlyph = {
  * @prop {function} onFullscreen return state of fullscreen
  */
 
-module.exports = ({
+export default ({
     position = 'right',
     onClose,
     bsStyle = 'default',

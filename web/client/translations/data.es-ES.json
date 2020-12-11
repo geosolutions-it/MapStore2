@@ -27,6 +27,7 @@
         "showMore": "Mostrar más...",
         "collapse": "Colapso",
         "expand": "Expandir",
+        "Links": "Enlaces",
         "Forbidden": "Prohibido",
         "layerNameChangeError": {
             "title": "Error de cambio de nombre",
@@ -97,6 +98,8 @@
             "propertiesFormatDescription": "Muestra resultados de información de la capa como lista de propiedades",
             "templateFormatTitle": "PLANTILLA",
             "templateFormatDescription": "Personalizar el formato de resultados de información de la capa",
+            "hideFormatTitle": "DESACTIVAR IDENTIFICAR",
+            "hideFormatDescription": "Deshabilite la información de la entidad para esta capa",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "tooltip": {
@@ -388,14 +391,14 @@
                 "unsavedMapCancelButtonText": "Cerrar"
             },
             "geostories": {
-                "newGeostory": "Nuevo Story",
-                "title": "Stories ({count})",
-                "titleNoCount": "Stories",
-                "create": "Crear Story",
-                "noGeostoryAvailable": "No hay story disponible",
-                "createANewOne": "Crea uno nuevo",
-                "deleteError": "Hubo un error al eliminar el recurso",
-                "errorLoadingGeostories": "Hubo un error al cargar los stories"
+                "newGeostory": "Nuevo GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                "create": "Crear GeoStory",
+                "noGeostoryAvailable": "No hay GeoStory disponible",
+                "createANewOne": "Crea una nueva GeoStory",
+                "deleteError": "Hubo un error al eliminar GeoStory",
+                "errorLoadingGeostories": "Hubo un error al cargar GeoStories"
             }
         },
         "map": {
@@ -514,7 +517,6 @@
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
             "measure": "Medir",
-            "backgroundSwitcher": "Fondos",
             "layers": "Capas",
             "drawerButton": "Capas",
             "refreshTitle": "Refrescar capas",
@@ -947,7 +949,6 @@
             "settingsPanel": "Esta es la ayuda para el panel de configuración",
             "gohome": "Esta es la ayuda Inicio",
             "measureComponent": " Herramientas para medir",
-            "backgroundSwitcher": "Esta es la ayuda para el selector de capa de fondo",
             "layerSwitcher": "Esta es la ayuda para el selector de capa",
             "infoButton": "Esta es la ayuda para el botón de Información",
             "locateBtn": "Esta es la ayuda para el botón Localízame",
@@ -1257,7 +1258,8 @@
             "wrongMarkerAndZoomParamTitle": "Marcador y parámetro de zoom no válidos",
             "wrongMarkerAndZoomParamMessage": "El parámetro de marcador y zoom debe ser marker=lon,lat&zoom=value y (+|- 90° lat, +|-180° lon, <=+35 zoom)",
             "showHomeButton": "Enlace al inicio de MapStore",
-            "addCenterAndZoomParam": "Agregar centro y hacer zoom para compartir el enlace",
+            "addCenterAndZoomParam": "Agregar centro y hacer zoom al enlace para compartir",
+            "addMarkerAndZoomParam": "Agregar una marca de posición y hacer zoom para compartir el vínculo",
             "zoom": "Enfocar",
             "marker": "Agregar marcador en el mapa cargado",
             "coordinate": "Coordinar",
@@ -1543,7 +1545,8 @@
             "deselectall": "Deseleccionar todos",
             "backtosearch": "Volver a la búsqueda",
             "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
-            "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total} de {total}} other { {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total}} other { {total}}}",
+            "selectedInfo": "( {selected} seleccionado )",
             "pageInfo": "{totalPages, plural, =0 {ninguna Página} =1 {Página {totalPages} de {totalPages}} other {Página {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",
@@ -1577,9 +1580,9 @@
                     "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
                     "date": "Escriba una fecha o una expresión. Usa {format} para la fecha.",
                     "geometry": {
-                        "disabled": "Filtrar haciendo clic en el mapa",
-                        "enabled": "Haga clic en el mapa para filtrar los resultados",
-                        "applied": "Eliminar el filtro haciendo clic con el mouse"
+                        "disabled": "Hacer clic en el filtro en el mapa / Alt + arrastrar el mouse para dibujar un filtro de cuadro. Mantenga presionada también la tecla Ctrl para agregar más funciones al filtro actual",
+                        "enabled": "Haga clic en el mapa para seleccionar una característica / Alt + arrastre del mouse para dibujar un filtro de cuadro. Mantenga presionada la tecla Ctrl y haga clic para seleccionar varias características",
+                        "applied": "Limpiar la selección"
                     }
                 }
             },
@@ -1609,16 +1612,43 @@
                 "createNewChart": "Crea un gráfico para la capa seleccionada"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exportar los datos",
             "format": "Formato de fichero",
             "srs": "Sistema de referencia espacial",
             "export": "Exportar",
             "downloadonlycurrentpage": "Descargar la página actual",
+            "cropDataSet": "Recortar el conjunto de datos a la ventana gráfica actual",
+            "downloadFilteredDataSet": "Descargar conjunto de datos filtrado",
+            "advancedOptions": "Opciones avanzadas",
+            "compression": "Compresión",
+            "tileWidth": "Ancho del azulejo",
+            "tileHeight": "Altura del azulejo",
+            "quality": "Calidad",
             "error": {
                 "title": "Error en la exportación",
-                "invalidOutputFormat": "Formato de exportación no disponible"
-            }
+                "invalidOutputFormat": "Formato de exportación no disponible",
+                "downloadEstimatorTitle": "Error de DownloadEstimator",
+                "downloadEstimatorFailed": "La solicitud de DownloadEstimator falló, lo que significa que el archivo exportado excede los límites del servidor configurado. Intente cambiar las opciones de descarga o agregue un filtro a su capa y vuelva a intentarlo."
+            },
+            "exportResultsMessages": {
+                "newExport": "El archivo estará disponible aquí cuando se complete la exportación",
+                "exportFailure": "Error al exportar la capa \"{layerTitle}\". Abra el cuadro de diálogo de resultados de exportación para obtener más información.",
+                "exportSuccess": "La exportación de la capa \"{layerTitle}\" finalizó correctamente.",
+                "invalidHref": "¡La respuesta del servidor no contenía una dirección URL válida para los archivos exportados!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "¡El proceso de descarga falló! El servidor ha devuelto el siguiente informe de excepción: \"{exceptionReport}\"",
+                "badResponse": "¡El proceso de descarga falló! El servidor ha devuelto datos incorrectos, código de error: \"{errorCode}\"",
+                "executeProcessXhrFailed": "¡La solicitud ExecuteProcess falló! El servidor puede estar mal configurado o no se puede acceder",
+                "getExecutionStatusXhrFailed": "¡La solicitud GetExecutionStatus falló! El servidor puede estar mal configurado o no se puede acceder",
+                "unexpectedError": "Ocurrió un error inesperado"
+            },
+            "noSupportedServiceFound": "¡El servidor no admite la descarga de WFS o WPS para esta capa!"
+        },
+        "exportDataResults": {
+            "title": "Exportar resultados de datos",
+            "emptyStateMessage": "La lista de exportación está vacía"
         },
         "widgets": {
              "types": {
@@ -1670,7 +1700,8 @@
                 "noLegendDescription": "El mapa conectado no tiene capas para mostrar en la leyenda",
                 "nodatainviewport": "Sin datos en la ventana gráfica actual",
                 "timeoutExpired": "El servicio tardó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
-                "genericError": "Hubo un error durante la recuperación de datos"
+                "genericError": "Hubo un error durante la recuperación de datos",
+                "genericErrorWithMessage": "Hubo un error durante la recuperación de datos: \"{message}\""
             },
             "builder": {
                 "header": {
@@ -1725,6 +1756,8 @@
                     "confirmDelete": "¿Está seguro?",
                     "downloadData": "Descargar datos",
                     "exportImage": "Exportar imagen",
+                    "maximize": "Maximizar",
+                    "minimize": "Minimizar",
                     "pin": "Alfiler",
                     "unpin": "Desprender",
                     "hide": "Esconder",
@@ -1759,6 +1792,15 @@
             "widgetOptionsTitle": "Configurar Información de widget",
             "placeHolder":{
                 "default":"Seleccionar atributo"
+            },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUM": "SUM",
+              "AVG": "AVG",
+              "STDDEV": "STDDEV",
+              "MIN": "MIN",
+              "MAX": "MAX",
+              "NONE": "Sin operación"
             },
             "groupByAttributes": {
                 "line": "Atributo X",
@@ -1807,25 +1849,33 @@
                 "bar": "Mostrar leyenda",
                 "gauge": "Mostrar etiquetas"
             },
-            "displayCartesian": {
-                "line": "Ocultar cuadrícula",
-                "bar": "Ocultar cuadrícula"
-            },
-            "xAxisAngle":{
-                "line": "Eye X: Ángulo de rotación de la etiqueta °",
-                "bar": "Eye X: Ángulo de rotación de la etiqueta °"
-            },
-            "yAxis":{
-                "line": "Ocultar el eje Y",
-                "bar": "Ocultar el eje Y"
-            },
-            "yAxisLabel":{
-                "line": "Etiqueta leyenda",
-                "bar": "Etiqueta leyenda"
-            },
-            "advancedOptions":{
-                "line": "Opciones avanzadas",
-                "bar": "Opciones avanzadas"
+            "advanced": {
+              "displayCartesian": "Ocultar cuadrícula",
+              "xAxis": "Eje X",
+              "xAxisAngle": "Rotación de etiquetas",
+              "hideLabels": "Ocultar etiquetas",
+              "format": "Formato",
+              "prefix": "Prefijo",
+              "suffix": "Sufijo",
+              "examples": "Ejemplos",
+              "formatExamples": "<div> <ul> <li> <code> .0% </code>: porcentaje redondeado, '12% '</li> <li> <code> .2s </code>: SI -prefijo con dos dígitos significativos, '42M' </li> <li> <code>, .2r </code>: miles agrupados con dos dígitos significativos '4200' </li> </ul> <em> Más información sobre la sintaxis de formato <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\"> aquí</a>.</em></div> ",
+              "formula": "Fórmula",
+              "formulaExamples": "<div> Transforma el valor usando una fórmula. Usa la variable <code> valor </code> en la expresión: <h5> Ejemplos </h5> <ul> <li> <code> valor + 2 </code></li><li> <code> value / 100 </code> </li> </ul><em> Más información sobre la sintaxis <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">aquí</a>.</em></div> ",
+              "xAxisType": "Tipo",
+              "forceTicks": "Nunca omita etiquetas",
+              "maxXAxisLabels": "De todos modos, las etiquetas no pueden ser más de {max}",
+              "yAxis": "Eje Y",
+              "yAxisType": "Tipo",
+              "yAxisLabel": "Etiqueta de leyenda",
+              "title": "Opciones avanzadas",
+              "legend": "Legend",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Lineal",
+                "category": "Categoría",
+                "log": "Log",
+                "date": "Fecha"
+              }
             },
             "tray": {
                 "title": "Widgets",
@@ -2269,6 +2319,7 @@
             "selectworkspace": "Debe seleccionar el espacio de trabajo para habilitar opciones avanzadas."
         },
         "geostory": {
+            "storyResources": "Recursos de la historia",
             "geostoreMap": "Mapas de MapStore",
             "loadingSpinner": "Cargando Historia",
             "addTitleSection": "Agregar sección de título",
@@ -2494,7 +2545,8 @@
             "mediaList" : {
                 "removeResourceTitle": "¿Estás seguro?",
                 "confirmRemoveResource": "¿Desea eliminar este recurso de medios de la historia?",
-                "confirmRemoveUsedResource": "Este recurso también se eliminará de todas las secciones / contenidos donde se usa dejándolos vacíos. ¿Quieres eliminarlo de la historia?"
+                "confirmRemoveUsedResource": "Este recurso también se eliminará de todas las secciones / contenidos donde se usa dejándolos vacíos. ¿Quieres eliminarlo de la historia?",
+                "resultsCount": "{count} de {total} {total, plural, one {Resultado} other {Resultados}}"
             },
             "imageList": {
                 "emptyList": "Haga clic en el botón más para agregar una nueva imagen. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> aquí </a>"
@@ -2690,7 +2742,7 @@
             "descriptionGeorchestra": "Muestra la versión de GeOrchestra en la herramienta de configuración de mapas",
             "title": "Versión"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Permite descargar datos de la tabla de atributos",
             "title": "Descargar Datos"
           },

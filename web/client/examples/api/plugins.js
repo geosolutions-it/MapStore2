@@ -38,7 +38,7 @@ module.exports = {
         SavePlugin: require('../../plugins/Save'),
         SaveAsPlugin: require('../../plugins/SaveAs'),
         TOCPlugin: require('../../plugins/TOC'),
-        BackgroundSelectorPlugin: require('../../plugins/BackgroundSelector'),
+        BackgroundSelectorPlugin: require('../../plugins/BackgroundSelector').default,
         MeasurePlugin: require('../../plugins/Measure'),
         TOCItemsSettingsPlugin: require('../../plugins/TOCItemsSettings'),
         IdentifyPlugin: require('../../plugins/Identify')

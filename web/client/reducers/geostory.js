@@ -182,7 +182,7 @@ export default (state = INITIAL_STATE, action) => {
     case ADD_RESOURCE: {
         const { id, mediaType: type, data } = action;
         // add last resource on top
-        return set('currentStory.resources', [{ id, type, data }, ...(state.currentStory && state.currentStory.resources || [])], state);
+        return set('currentStory.resources', uniqBy([{ id, type, data }, ...(state.currentStory && state.currentStory.resources || [])], 'id'), state);
     }
     case CHANGE_MODE: {
         return set('mode', action.mode, state);

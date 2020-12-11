@@ -5,11 +5,12 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
-const SideCard = require('../../misc/cardgrids/SideCard');
+import React from 'react';
 
-module.exports = ({styles = [], selectedStyles = [], onSelectionChange = () => {}, className = ""}) => {
+import { Glyphicon } from 'react-bootstrap';
+import SideCard from '../../misc/cardgrids/SideCard';
+
+export default ({styles = [], selectedStyles = [], onSelectionChange = () => {}, className = ""}) => {
     return (<span>
         {styles.map((r, idx) => {
             const isSelected = selectedStyles.filter(st => st === r.name).length > 0;

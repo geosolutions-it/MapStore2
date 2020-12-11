@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const { createSelector } = require('reselect');
-const { connect } = require('react-redux');
-const { Button } = require('react-bootstrap');
-const { isLoggedIn } = require('../../selectors/security');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { createSelector } from 'reselect';
+import { connect } from 'react-redux';
 
-const Message = require('../../components/I18N/Message');
+import { isLoggedIn } from '../../selectors/security';
+import Message from '../../components/I18N/Message';
+import Button from '../../components/misc/Button';
 
 class EmptyGeostories extends React.Component {
     static propTypes = {
@@ -35,7 +35,8 @@ class EmptyGeostories extends React.Component {
             : null}</div>);
     }
 }
-module.exports = connect(
+
+export default connect(
     createSelector(isLoggedIn, (loggedIn) => ({
         loggedIn: !!loggedIn
     })),

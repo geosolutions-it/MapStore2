@@ -6,33 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-const { testEpic } = require('./epicTestUtils');
-const ConfigUtils = require('../../utils/ConfigUtils');
+import expect from 'expect';
 
-const {
+import { testEpic } from './epicTestUtils';
+import ConfigUtils from '../../utils/ConfigUtils';
+
+import {
     searchGeostoriesOnMapSearch,
-    searchGeostories: searchGeostoriesEpic,
+    searchGeostories as searchGeostoriesEpic,
     reloadOnGeostories
-} = require('../geostories');
+} from '../geostories';
 
-const { storySaved } = require('../../actions/geostory');
-
-
-const {
-    SEARCH_GEOSTORIES,
-    searchGeostories,
-    LOADING,
-    GEOSTORIES_LIST_LOADED
-} = require('../../actions/geostories');
-
-const {
-    SHOW_NOTIFICATION
-} = require('../../actions/notifications');
-
-const {
-    mapsLoading
-} = require('../../actions/maps');
+import { storySaved } from '../../actions/geostory';
+import { SEARCH_GEOSTORIES, searchGeostories, LOADING, GEOSTORIES_LIST_LOADED } from '../../actions/geostories';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { mapsLoading } from '../../actions/maps';
 let getDefaults = ConfigUtils.getDefaults;
 describe('geostories epics', () => {
     beforeEach( () => {

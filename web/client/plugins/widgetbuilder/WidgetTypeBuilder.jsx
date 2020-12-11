@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
-const { compose, branch, renderComponent, withProps} = require('recompose');
+import React from 'react';
+import {connect} from 'react-redux';
+import {createSelector} from 'reselect';
+import { compose, branch, renderComponent, withProps} from 'recompose';
 
-const {getEditingWidget} = require('../../selectors/widgets');
+import {getEditingWidget} from '../../selectors/widgets';
 
 
 const mapStateToProps = createSelector(
@@ -21,20 +21,26 @@ const mapStateToProps = createSelector(
     })
 );
 
-const WidgetTypeSelector = require('./WidgetTypeSelector');
+import ChartBuilder from './ChartBuilder';
+import TextBuilder from './TextBuilder';
+import TableBuilder from './TableBuilder';
+import MapBuilder from './MapBuilder';
+import CounterBuilder from './CounterBuilder';
+import LegendBuilder from './LegendBuilder';
+import WidgetTypeSelector from './WidgetTypeSelector';
 const Builders = {
-    chart: require('./ChartBuilder'),
-    text: require('./TextBuilder'),
-    table: require('./TableBuilder'),
-    map: require('./MapBuilder'),
-    counter: require('./CounterBuilder'),
-    legend: require('./LegendBuilder')
+    chart: ChartBuilder,
+    text: TextBuilder,
+    table: TableBuilder,
+    map: MapBuilder,
+    counter: CounterBuilder,
+    legend: LegendBuilder
 };
 
 /**
  * Allows the selection of a widget type to start the related wizard
  */
-module.exports = compose(
+export default compose(
     connect(mapStateToProps),
     withProps(({ typeFilter = () => true, availableDependencies = []}) => ({
         typeFilter: (w = {}) => typeFilter(w) && !(w.type === 'legend' && availableDependencies.length === 0)

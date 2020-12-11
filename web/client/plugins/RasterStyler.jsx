@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,40 +6,35 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
+import './rasterstyler/rasterstyler.css';
 
-const {Grid, Row, Col, Panel, PanelGroup, Button, Glyphicon} = require('react-bootstrap');
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, Glyphicon, Grid, Panel, PanelGroup, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Combobox } from 'react-widgets';
+import { createSelector } from 'reselect';
 
-const Combobox = require('react-widgets').Combobox;
-
-const {getWindowSize} = require('../utils/AgentUtils');
-const {setRasterStyleParameter, setRasterLayer} = require('../actions/rasterstyler');
-const {changeLayerProperties} = require('../actions/layers');
-
-const {
-    RedBandSelector,
+import { changeLayerProperties } from '../actions/layers';
+import { setRasterLayer, setRasterStyleParameter } from '../actions/rasterstyler';
+import rasterstylerReducers from '../reducers/rasterstyler';
+import { layersSelector } from '../selectors/layers';
+import { getWindowSize } from '../utils/AgentUtils';
+import { jsonToSLD } from '../utils/SLDUtils';
+import Message from './locale/Message';
+import {
     BlueBandSelector,
-    GreenBandSelector,
-    GrayBandSelector,
-    PseudoBandSelector,
-    RasterStyleTypePicker,
     EqualInterval,
+    GrayBandSelector,
+    GreenBandSelector,
+    OpacityPicker,
+    PseudoBandSelector,
     PseudoColor,
-    OpacityPicker
-} = require('./rasterstyler/index');
-
-const {layersSelector} = require('../selectors/layers');
-
-const {createSelector} = require('reselect');
-
-const assign = require('object-assign');
-
-require('./rasterstyler/rasterstyler.css');
-
-const Message = require('./locale/Message');
-
-const {jsonToSLD} = require("../utils/SLDUtils");
+    RasterStyleTypePicker,
+    RedBandSelector
+} from './rasterstyler/index';
+import Button from '../components/misc/Button';
 
 class RasterStyler extends React.Component {
     static propTypes = {
@@ -267,7 +261,7 @@ const RasterStylerPlugin = connect(selector, {
     changeLayerProperties: changeLayerProperties
 })(RasterStyler);
 
-module.exports = {
+export default {
     RasterStylerPlugin: assign( RasterStylerPlugin,
         {
             Toolbar: {
@@ -280,5 +274,5 @@ module.exports = {
                 exclusive: true
             }
         }),
-    reducers: {rasterstyler: require('../reducers/rasterstyler').default}
+    reducers: {rasterstyler: rasterstylerReducers}
 };

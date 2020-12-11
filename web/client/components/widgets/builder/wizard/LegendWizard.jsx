@@ -5,19 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {compose} = require('recompose');
-const emptyState = require('../../../misc/enhancers/emptyState');
 
-const {wizardHandlers} = require('../../../misc/wizard/enhancers');
-const {Row, Col} = require('react-bootstrap');
-const legendWidget = require('../../enhancers/legendWidget');
+import React from 'react';
+import {Col, Row} from 'react-bootstrap';
+import {compose} from 'recompose';
 
-const WidgetOptions = require('./common/WidgetOptions');
-const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
-const StepHeader = require('../../../misc/wizard/StepHeader');
-const Message = require('../../../I18N/Message');
-const emptyLegendState = require('../../enhancers/emptyLegendState');
+import Message from '../../../I18N/Message';
+import emptyState from '../../../misc/enhancers/emptyState';
+import {wizardHandlers} from '../../../misc/wizard/enhancers';
+import StepHeader from '../../../misc/wizard/StepHeader';
+import WizardContainer from '../../../misc/wizard/WizardContainer';
+import emptyLegendState from '../../enhancers/emptyLegendState';
+import legendWidget from '../../enhancers/legendWidget';
+import LegendView from '../../widget/LegendView';
+import WidgetOptions from './common/WidgetOptions';
+
+const Wizard = wizardHandlers(WizardContainer);
 
 const enhancePreview = compose(
     legendWidget,
@@ -30,8 +33,9 @@ const enhancePreview = compose(
     ),
     emptyLegendState(false)
 );
-const LegendPreview = enhancePreview(require('../../widget/LegendView'));
-module.exports = ({
+const LegendPreview = enhancePreview(LegendView);
+
+export default ({
     onChange = () => {}, onFinish = () => {}, setPage = () => {},
     step = 0,
     dependencies,

@@ -5,15 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Col, Row, Form, FormGroup, FormControl, Button} = require('react-bootstrap');
-const I18N = require('../../../components/I18N/I18N');
+import React from 'react';
 
-const googleGroups = require('../../assets/img/groups_logo.png');
-const LinkedinGroup = require('../../assets/img/linkedin_group.png');
-const {Follow} = require('react-twitter-widgets');
-
+import PropTypes from 'prop-types';
+import { Col, Row, Form, FormGroup, FormControl } from 'react-bootstrap';
+import I18N from '../../../components/I18N/I18N';
+import googleGroups from '../../assets/img/groups_logo.png';
+import LinkedinGroup from '../../assets/img/linkedin_group.png';
+import { Follow } from 'react-twitter-widgets';
+import Button from '../../../components/misc/Button';
 
 class MailingLists extends React.Component {
     static contextTypes = {
@@ -99,4 +99,4 @@ class MailingLists extends React.Component {
     }
 }
 
-module.exports = MailingLists;
+export default MailingLists;

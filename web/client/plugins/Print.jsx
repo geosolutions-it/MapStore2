@@ -6,38 +6,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import './print/print.css';
 
-const {connect} = require('react-redux');
+import { head } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Accordion, Col, Glyphicon, Grid, Panel, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
-const LocaleUtils = require('../utils/LocaleUtils');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
-const MapUtils = require('../utils/MapUtils');
-const Dialog = require('../components/misc/Dialog');
-
-const {Grid, Row, Col, Panel, Accordion, Glyphicon} = require('react-bootstrap');
-
-const {toggleControl, setControlProperty} = require('../actions/controls');
-const { printSubmit, printError, printSubmitting, configurePrintMap} = require('../actions/print');
-
-const {mapSelector} = require('../selectors/map');
-const {layersSelector} = require('../selectors/layers');
-
-const {createSelector} = require('reselect');
-
-const assign = require('object-assign');
-
-const {head} = require('lodash');
-
-const {scalesSelector} = require('../selectors/map');
-const {currentLocaleSelector, currentLocaleLanguageSelector} = require('../selectors/locale');
-const {isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector} = require('../selectors/localizedLayerStyles');
-const {mapTypeSelector} = require('../selectors/maptype');
-
-const Message = require('../components/I18N/Message');
-
-require('./print/print.css');
+import { setControlProperty, toggleControl } from '../actions/controls';
+import { configurePrintMap, printError, printSubmit, printSubmitting } from '../actions/print';
+import Message from '../components/I18N/Message';
+import Dialog from '../components/misc/Dialog';
+import printReducers from '../reducers/print';
+import { layersSelector } from '../selectors/layers';
+import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
+import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
+import { mapSelector, scalesSelector } from '../selectors/map';
+import { mapTypeSelector } from '../selectors/maptype';
+import { reprojectBbox } from '../utils/CoordinatesUtils';
+import { getMessageById } from '../utils/LocaleUtils';
+import { defaultGetZoomForExtent, getResolutions, mapUpdated } from '../utils/MapUtils';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -84,7 +75,7 @@ require('./print/print.css');
  * }
  */
 
-module.exports = {
+export default {
     PrintPlugin: assign({
         loadPlugin: (resolve) => {
             require.ensure('./print/index', () => {
@@ -105,9 +96,15 @@ module.exports = {
                     MapPreview,
                     PrintSubmit,
                     PrintPreview
-                } = require('./print/index');
+                } = require('./print/index').default;
 
-                const PrintUtils = require('../utils/PrintUtils');
+                const {
+                    preloadData,
+                    getMapfishPrintSpecification,
+                    getLayoutName,
+                    getPrintScales,
+                    getNearestZoom
+                } = require('../utils/PrintUtils');
 
 
                 class Print extends React.Component {
@@ -170,10 +167,10 @@ module.exports = {
                         onPrint: () => {},
                         configurePrintMap: () => {},
                         printSpecTemplate: {},
-                        preloadData: PrintUtils.preloadData,
-                        getPrintSpecification: PrintUtils.getMapfishPrintSpecification,
-                        getLayoutName: PrintUtils.getLayoutName,
-                        getZoomForExtent: MapUtils.defaultGetZoomForExtent,
+                        preloadData: preloadData,
+                        getPrintSpecification: getMapfishPrintSpecification,
+                        getLayoutName: getLayoutName,
+                        getZoomForExtent: defaultGetZoomForExtent,
                         pdfUrl: null,
                         mapWidth: 370,
                         mapType: "leaflet",
@@ -230,7 +227,7 @@ module.exports = {
 
                     UNSAFE_componentWillReceiveProps(nextProps) {
                         const hasBeenOpened = nextProps.open && !this.props.open;
-                        const mapHasChanged = this.props.open && this.props.syncMapPreview && MapUtils.mapUpdated(this.props.map, nextProps.map);
+                        const mapHasChanged = this.props.open && this.props.syncMapPreview && mapUpdated(this.props.map, nextProps.map);
                         const specHasChanged = nextProps.printSpec.defaultBackground !== this.props.printSpec.defaultBackground;
                         if (hasBeenOpened || mapHasChanged || specHasChanged) {
                             this.configurePrintMap(nextProps.map, nextProps.printSpec);
@@ -253,7 +250,7 @@ module.exports = {
                     renderLayoutsAlternatives = () => {
                         return this.props.alternatives.map((alternative) =>
                             (<alternative.component key={"printoption_" + alternative.name}
-                                label={LocaleUtils.getMessageById(this.context.messages, "print.alternatives." + alternative.name)}
+                                label={getMessageById(this.context.messages, "print.alternatives." + alternative.name)}
                                 enableRegex={alternative.regex}
                             />)
                         );
@@ -287,37 +284,37 @@ module.exports = {
                                 {this.renderWarning(layout)}
                                 <Row>
                                     <Col xs={12} md={6}>
-                                        <Name label={LocaleUtils.getMessageById(this.context.messages, 'print.title')} placeholder={LocaleUtils.getMessageById(this.context.messages, 'print.titleplaceholder')} />
-                                        <Description label={LocaleUtils.getMessageById(this.context.messages, 'print.description')} placeholder={LocaleUtils.getMessageById(this.context.messages, 'print.descriptionplaceholder')} />
+                                        <Name label={getMessageById(this.context.messages, 'print.title')} placeholder={getMessageById(this.context.messages, 'print.titleplaceholder')} />
+                                        <Description label={getMessageById(this.context.messages, 'print.description')} placeholder={getMessageById(this.context.messages, 'print.descriptionplaceholder')} />
                                         <Accordion defaultActiveKey="1">
-                                            <Panel className="print-layout" header={LocaleUtils.getMessageById(this.context.messages, "print.layout")} eventKey="1" collapsible>
+                                            <Panel className="print-layout" header={getMessageById(this.context.messages, "print.layout")} eventKey="1" collapsible>
                                                 <Sheet key="sheetsize"
                                                     layouts={this.props.capabilities.layouts}
-                                                    label={LocaleUtils.getMessageById(this.context.messages, "print.sheetsize")}
+                                                    label={getMessageById(this.context.messages, "print.sheetsize")}
                                                 />
                                                 {this.renderLayoutsAlternatives()}
                                             </Panel>
-                                            <Panel className="print-legend-options" header={LocaleUtils.getMessageById(this.context.messages, "print.legendoptions")} eventKey="2" collapsible>
-                                                <Font label={LocaleUtils.getMessageById(this.context.messages, "print.legend.font")}/>
-                                                <ForceLabelsOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.forceLabels")}/>
-                                                <AntiAliasingOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.antiAliasing")}/>
-                                                <IconSizeOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.iconsSize")}/>
-                                                <LegendDpiOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.dpi")}/>
+                                            <Panel className="print-legend-options" header={getMessageById(this.context.messages, "print.legendoptions")} eventKey="2" collapsible>
+                                                <Font label={getMessageById(this.context.messages, "print.legend.font")}/>
+                                                <ForceLabelsOption label={getMessageById(this.context.messages, "print.legend.forceLabels")}/>
+                                                <AntiAliasingOption label={getMessageById(this.context.messages, "print.legend.antiAliasing")}/>
+                                                <IconSizeOption label={getMessageById(this.context.messages, "print.legend.iconsSize")}/>
+                                                <LegendDpiOption label={getMessageById(this.context.messages, "print.legend.dpi")}/>
                                             </Panel>
                                         </Accordion>
                                     </Col>
                                     <Col xs={12} md={6} style={{textAlign: "center"}}>
-                                        <Resolution label={LocaleUtils.getMessageById(this.context.messages, "print.resolution")}/>
+                                        <Resolution label={getMessageById(this.context.messages, "print.resolution")}/>
                                         <MapPreview width={mapSize.width} height={mapSize.height} mapType={this.props.mapType}
                                             onMapRefresh={() => this.configurePrintMap()}
                                             layout={layoutName}
                                             layoutSize={layout && layout.map || {width: 10, height: 10}}
-                                            resolutions={MapUtils.getResolutions()}
+                                            resolutions={getResolutions()}
                                             useFixedScales={this.props.useFixedScales}
                                             env={this.props.localizedLayerStylesEnv}
                                             {...this.props.mapPreviewOptions}
                                         />
-                                        {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={LocaleUtils.getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
+                                        {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
                                         <PrintSubmit {...this.props.submitConfig} disabled={!layout} onPrint={this.print}/>
                                         {this.renderDownload()}
                                     </Col>
@@ -379,7 +376,7 @@ module.exports = {
                         const newMap = map || this.props.map;
                         const newPrintSpec = printSpec || this.props.printSpec;
                         if (newMap && newMap.bbox && this.props.capabilities) {
-                            const bbox = CoordinatesUtils.reprojectBbox([
+                            const bbox = reprojectBbox([
                                 newMap.bbox.bounds.minx,
                                 newMap.bbox.bounds.miny,
                                 newMap.bbox.bounds.maxx,
@@ -388,8 +385,8 @@ module.exports = {
                             const mapSize = this.getMapSize();
                             if (this.props.useFixedScales) {
                                 const mapZoom = this.props.getZoomForExtent(bbox, mapSize, this.props.minZoom, this.props.maxZoom);
-                                const scales = PrintUtils.getPrintScales(this.props.capabilities);
-                                const scaleZoom = PrintUtils.getNearestZoom(newMap.zoom, scales);
+                                const scales = getPrintScales(this.props.capabilities);
+                                const scaleZoom = getNearestZoom(newMap.zoom, scales);
 
                                 this.props.configurePrintMap(newMap.center, mapZoom, scaleZoom, scales[scaleZoom],
                                     this.filterLayers(newPrintSpec), newMap.projection, this.props.currentLocale);
@@ -486,5 +483,5 @@ module.exports = {
             doNotHide: true
         }
     }),
-    reducers: {print: require('../reducers/print').default}
+    reducers: {print: printReducers}
 };

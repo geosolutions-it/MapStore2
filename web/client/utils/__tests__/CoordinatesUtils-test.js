@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var CoordinatesUtils = require('../CoordinatesUtils');
-var Proj4js = require('proj4').default;
+import expect from 'expect';
+import { isNearlyEqual } from '../MapUtils';
+
+import CoordinatesUtils from '../CoordinatesUtils';
+import Proj4js from 'proj4';
 
 describe('CoordinatesUtils', () => {
     afterEach((done) => {
@@ -761,5 +763,35 @@ describe('CoordinatesUtils', () => {
     it('makeNumericEPSG with invalid EPSG', () => {
         const epsg = 'EPSG:84';
         expect(CoordinatesUtils.makeNumericEPSG(epsg)).toBe(null);
+    });
+    it('creates a polygon with getPolygonFromCircle defaults', () => {
+        let polygon = CoordinatesUtils.getPolygonFromCircle();
+        expect(polygon).toBe(null);
+        polygon = CoordinatesUtils.getPolygonFromCircle([40, 15]);
+        expect(polygon).toBe(null);
+        polygon = CoordinatesUtils.getPolygonFromCircle(null, 6.13);
+        expect(polygon).toBe(null);
+        polygon = CoordinatesUtils.getPolygonFromCircle([40, 15], 6.13);
+        expect(polygon).toBeTruthy();
+    });
+    it('creates a polygon with getPolygonFromCircle, radius in degress', () => {
+        let polygon = CoordinatesUtils.getPolygonFromCircle([40, 15], 6.13, "degrees", 50);
+        expect(polygon.geometry.coordinates[0].length).toBe(50 + 1);
+        expect(polygon.geometry.coordinates[0][0][0]).toBe(40);
+        expect(isNearlyEqual(polygon.geometry.coordinates[0][0][1], 21.137162260837176)).toBe(true);
+        expect(polygon.geometry.coordinates[0][50][0]).toBe(40);
+        expect(isNearlyEqual(polygon.geometry.coordinates[0][50][1], 21.137162260837176)).toBe(true);
+        expect(isNearlyEqual(polygon.geometry.coordinates[0][20][0], 36.34143838801184)).toBe(true);
+        expect(isNearlyEqual(polygon.geometry.coordinates[0][20][1], 10.00834658343667)).toBe(true);
+    });
+    it('creates a polygon with getPolygonFromCircle, radius in meters', () => {
+        let polygon = CoordinatesUtils.getPolygonFromCircle([40, 15], 6000, "meters", 50);
+        expect(polygon.geometry.coordinates[0].length).toBe(50 + 1);
+        expect(polygon.geometry.coordinates[0][0][0]).toBe(40);
+        expect(isNearlyEqual(polygon.geometry.coordinates[0][0][1], 15.053959221823476)).toBe(true);
+        expect(polygon.geometry.coordinates[0][50][0]).toBe(40);
+        expect(isNearlyEqual(polygon.geometry.coordinates[0][50][1], 15.053959221823476)).toBe(true);
+        expect(isNearlyEqual(polygon.geometry.coordinates[0][20][0], 39.96717142640955)).toBe(true);
+        expect(isNearlyEqual(polygon.geometry.coordinates[0][20][1], 14.956343723081114)).toBe(true);
     });
 });

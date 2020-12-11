@@ -1,7 +1,7 @@
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const StylePolygon = require('../StylePolygon');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import StylePolygon from '../StylePolygon';
 
 let shapeStyle = {
     color: { r: 0, g: 0, b: 255, a: 1 },

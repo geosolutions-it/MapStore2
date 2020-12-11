@@ -5,16 +5,18 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const StylesList = require('./StylesList');
-const Message = require("../../I18N/Message");
-const Filter = require("../../misc/Filter");
-const Portal = require("../../misc/Portal");
-const {Col, Button, ButtonGroup} = require("react-bootstrap");
-const ResizableModal = require("../../misc/ResizableModal");
-const BorderLayout = require("../../layout/BorderLayout");
+import React from 'react';
+import { Col, ButtonGroup } from 'react-bootstrap';
 
-module.exports = ({styles = [], selectedStyles = [], onSelectionChange = () => {}, show = false, stylesFilter = '', filterPlaceholder = "Filter styles...", clearAll = () => {}, selectAll = () => {}, onFilter = () => {}, onClose = () => {}}) => {
+import Button from '../../misc/Button';
+import StylesList from './StylesList';
+import Message from '../../I18N/Message';
+import Filter from '../../misc/Filter';
+import Portal from '../../misc/Portal';
+import ResizableModal from '../../misc/ResizableModal';
+import BorderLayout from '../../layout/BorderLayout';
+
+export default ({styles = [], selectedStyles = [], onSelectionChange = () => {}, show = false, stylesFilter = '', filterPlaceholder = "Filter styles...", clearAll = () => {}, selectAll = () => {}, onFilter = () => {}, onClose = () => {}}) => {
     const filteredStyle = stylesFilter && stylesFilter.length > 0 && styles.filter(st => st.title.toLowerCase().match(stylesFilter && stylesFilter.toLowerCase())) || styles;
     return (
         <Portal>

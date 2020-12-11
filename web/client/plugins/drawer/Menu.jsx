@@ -5,13 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../components/misc/OverlayTrigger');
-const Sidebar = require('react-sidebar').default;
-const { Resizable } = require('react-resizable');
-const Message = require('../../components/I18N/Message');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import Sidebar from 'react-sidebar';
+
+import OverlayTrigger from '../../components/misc/OverlayTrigger';
+import { Resizable } from 'react-resizable';
+import Message from '../../components/I18N/Message';
+import Button from '../../components/misc/Button';
 
 class Menu extends React.Component {
     static propTypes = {
@@ -143,4 +145,4 @@ class Menu extends React.Component {
 
 }
 
-module.exports = Menu;
+export default Menu;

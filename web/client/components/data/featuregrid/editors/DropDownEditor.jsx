@@ -5,13 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const PropTypes = require('prop-types');
-const AttributeEditor = require('./AttributeEditor');
-const ControlledCombobox = require('../../../misc/combobox/ControlledCombobox');
-const {forceSelection} = require('../../../../utils/FeatureGridEditorUtils');
-const {head} = require('lodash');
-const assign = require('object-assign');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import AttributeEditor from './AttributeEditor';
+import ControlledCombobox from '../../../misc/combobox/ControlledCombobox';
+import { forceSelection } from '../../../../utils/FeatureGridEditorUtils';
+import { head } from 'lodash';
+import assign from 'object-assign';
 
 /**
  * Editor that provides a DropDown menu of a list of elements passed.
@@ -34,7 +35,8 @@ class DropDownEditor extends AttributeEditor {
         url: PropTypes.string,
         value: PropTypes.string,
         filter: PropTypes.string,
-        values: PropTypes.array
+        values: PropTypes.array,
+        labels: PropTypes.array
     };
     static defaultProps = {
         isValid: () => true,
@@ -53,12 +55,19 @@ class DropDownEditor extends AttributeEditor {
                 return false;
             }
         };
+        this.getValueByLabel = (label) => {
+            try {
+                return this.props.values[this.props.labels.indexOf(label)];
+            } catch (e) {
+                return label;
+            }
+        };
         this.getValue = () => {
             const updated = super.getValue();
             if (this.props.forceSelection) {
                 return {[this.props.column.key]: forceSelection({
                     oldValue: this.props.defaultOption,
-                    changedValue: updated[this.props.column && this.props.column.key],
+                    changedValue: this.getValueByLabel(updated[this.props.column && this.props.column.key]),
                     data: this.props.values,
                     allowEmpty: this.props.allowEmpty})};
             }
@@ -68,13 +77,21 @@ class DropDownEditor extends AttributeEditor {
             // this case is only when forceSelection and allowEmpty are falsy, but this is contractidtory!! so the default option is used
             return {[this.props.column.key]: forceSelection({
                 oldValue: this.props.defaultOption,
-                changedValue: updated[this.props.column && this.props.column.key],
+                changedValue: this.getValueByLabel(updated[this.props.column && this.props.column.key]),
                 data: this.props.values,
                 allowEmpty: this.props.allowEmpty})};
         };
     }
     render() {
-        const data = this.props.values.map(v => {return {label: v, value: v}; });
+        const self = this;
+        var data = [];
+        if (this.props.values && this.props.labels && this.props.values.lenght === this.props.labels.lenght) {
+            this.props.values.forEach(function(value, id) {
+                data.push({label: self.props.labels[id], value: value});
+            });
+        } else {
+            data = this.props.values.map(v => {return {label: v, value: v}; });
+        }
 
         const props = assign({}, {...this.props}, {
             data,
@@ -84,4 +101,4 @@ class DropDownEditor extends AttributeEditor {
     }
 }
 
-module.exports = DropDownEditor;
+export default DropDownEditor;

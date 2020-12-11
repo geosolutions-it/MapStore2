@@ -5,14 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const {
+import expect from 'expect';
+
+import {
     getDateTimeFormat,
     getUTCTimePart,
     getUTCDatePart,
     roundResolution,
     domainsToDimensionsObject
-} = require('../TimeUtils');
+} from '../TimeUtils';
+
 import { describeDomains } from '../../api/MultiDim';
 
 describe('TimeUtils', () => {

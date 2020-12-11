@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
-const {getTitleAndTooltip} = require('../../../utils/TOCUtils');
+import PropTypes from 'prop-types';
 
-require("./css/toctitle.css");
+import React from 'react';
+import { Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import { getTitleAndTooltip } from '../../../utils/TOCUtils';
+import './css/toctitle.css';
 
 class Title extends React.Component {
     static propTypes = {
@@ -68,4 +68,4 @@ class Title extends React.Component {
 }
 
 
-module.exports = Title;
+export default Title;

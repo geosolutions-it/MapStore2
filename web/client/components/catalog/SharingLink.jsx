@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,12 +5,15 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../I18N/Message');
-const {FormControl, FormGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
-const CopyToClipboard = require('react-copy-to-clipboard');
-const SecurityUtils = require('../../utils/SecurityUtils');
+import React from 'react';
+
+import Message from '../I18N/Message';
+import { FormControl, FormGroup, Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import PropTypes from 'prop-types';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { addAuthenticationToUrl } from '../../utils/SecurityUtils';
+import Button from '../misc/Button';
 
 class SharingLink extends React.Component {
     static propTypes = {
@@ -35,7 +37,7 @@ class SharingLink extends React.Component {
             return null;
         }
         // add authentication to the url if possible
-        const url = this.props.addAuthentication ? SecurityUtils.addAuthenticationToUrl(this.props.url) : this.props.url;
+        const url = this.props.addAuthentication ? addAuthenticationToUrl(this.props.url) : this.props.url;
         const messageId = this.state.showCopiedToolTip ? "catalog.copied" : "catalog.copyToClipboard";
         const tooltip =
             (<Tooltip id="tooltip">
@@ -64,4 +66,4 @@ class SharingLink extends React.Component {
     }
 }
 
-module.exports = SharingLink;
+export default SharingLink;

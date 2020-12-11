@@ -1,8 +1,9 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
-const expect = require('expect');
-const customTimesEnhancer = require('../customTimesEnhancer');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+
+import customTimesEnhancer from '../customTimesEnhancer';
 
 const TEST_LAYER = "TEST_LAYER";
 const NEW_DATE = "2018-12-20T15:07:42.981Z";

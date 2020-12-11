@@ -5,15 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var expect = require('expect');
-const TestUtils = require('react-dom/test-utils');
-var FeatureGrid = require('../FeatureGrid');
+
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
+
+import describePois from '../../../../test-resources/wfs/describe-pois.json';
+import museam from '../../../../test-resources/wfs/museam.json';
+import FeatureGrid from '../FeatureGrid';
 
 const spyOn = expect.spyOn;
-const museam = require('../../../../test-resources/wfs/museam.json');
-const describePois = require('../../../../test-resources/wfs/describe-pois.json');
 
 // TODO FIX ALL THESE TESTS (recompose)
 describe('Test for FeatureGrid component', () => {
@@ -64,8 +66,13 @@ describe('Test for FeatureGrid component', () => {
         };
         spyOn(events, "onSort");
         ReactDOM.render(<FeatureGrid virtualScroll={false} gridEvents={{onGridSort: events.onSort}} describeFeatureType={describePois} features={museam.features}/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--ascending').length).toBe(0);
         document.getElementsByClassName('react-grid-HeaderCell-sortable')[0].click();
         expect(events.onSort).toHaveBeenCalled();
+        expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--ascending').length).toBe(1);
+        document.getElementsByClassName('react-grid-HeaderCell-sortable')[0].click();
+        expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--ascending').length).toBe(0);
+        expect(document.getElementsByClassName('react-grid-HeaderCell-sortable react-grid-HeaderCell-sortable--descending').length).toBe(1);
     });
     //
     // ROW SELECTION EVENTS

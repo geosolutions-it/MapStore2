@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Message = require('../../I18N/Message');
-const SideGrid = require('../../misc/cardgrids/SideGrid');
-const FitIcon = require('../../misc/FitIcon');
+import React from 'react';
+
+import Message from '../../I18N/Message';
+import SideGrid from '../../misc/cardgrids/SideGrid';
+import FitIcon from '../../misc/FitIcon';
 
 const DEFAULT_TYPES = [{
     title: <Message msgId={"widgets.types.chart.title"} />,
@@ -49,7 +50,7 @@ const DEFAULT_TYPES = [{
     className: "ms-widget-selector-legend"
 }];
 
-module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect = () => {}}) =>
+export default ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect = () => {}}) =>
     (
         <SideGrid
             key="content"

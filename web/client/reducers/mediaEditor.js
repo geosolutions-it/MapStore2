@@ -18,7 +18,9 @@ import {
     UPDATE_ITEM,
     SET_MEDIA_SERVICE,
     SET_MEDIA_TYPE,
-    SHOW
+    SHOW,
+    LOADING_SELECTED_MEDIA,
+    LOADING_MEDIA_LIST
 } from '../actions/mediaEditor';
 import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set, unset} from '../utils/ImmutableUtils';
@@ -54,14 +56,32 @@ export const DEFAULT_STATE = {
         // all media sources available, with their type and other parameters
         sources: {
             geostory: {
-                name: "Current story", // shown in in the UI,  TODO: localize?
-                type: SourceTypes.GEOSTORY // determines the type related to the API
+                name: "geostory.storyResources",
+                type: SourceTypes.GEOSTORY, // determines the type related to the API
+                addMediaEnabled: {
+                    image: true,
+                    video: true,
+                    map: true
+                },
+                editMediaEnabled: {
+                    image: true,
+                    video: true,
+                    map: true
+                },
+                removeMediaEnabled: {
+                    image: true,
+                    video: true,
+                    map: true
+                }
             },
             geostoreMap: {
                 name: "geostory.geostoreMap", // id for Message comp
                 type: SourceTypes.GEOSTORE,
                 baseURL: "rest/geostore/",
-                category: "MAP"
+                category: "MAP",
+                editMediaEnabled: {
+                    map: true
+                }
             }
         }
     }
@@ -89,14 +109,20 @@ export default (state = DEFAULT_STATE, action) => {
             set('owner', undefined),
             set('saveState.addingMedia', false),
             set('saveState.editing', false),
-            set('settings', state.stashedSettings || DEFAULT_STATE.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED
+            set('settings', {
+                ...(state.stashedSettings || DEFAULT_STATE.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED
+                ...(state.settings?.mediaType && { mediaType: state.settings.mediaType }) // restore the latest selected media type
+            }),
             set('stashedSettings', undefined),
             unset('selected')
         )(state);
     // set adding media state (to toggle add/select in media selectors)
     case LOAD_MEDIA_SUCCESS: {
         const {resultData, params, mediaType, sourceId} = action;
-        return set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }, state);
+        return compose(
+            set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }),
+            set('loadingList', false)
+        )(state);
     }
     case UPDATE_ITEM: {
         const {item, mode} = action;
@@ -147,6 +173,10 @@ export default (state = DEFAULT_STATE, action) => {
                 mediaType: DEFAULT_STATE.settings.mediaType
             }
         };
+    case LOADING_SELECTED_MEDIA:
+        return set('loadingSelected', action.loading, state);
+    case LOADING_MEDIA_LIST:
+        return set('loadingList', true, state);
     default:
         return state;
     }

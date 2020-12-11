@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,12 +7,12 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {FormControl, Alert} = require('react-bootstrap');
-const assign = require('object-assign');
+import React from 'react';
 
-const {Message} = require('../../../I18N/I18N');
-const {findIndex} = require('lodash');
+import { FormControl, Alert } from 'react-bootstrap';
+import assign from 'object-assign';
+import { Message } from '../../../I18N/I18N';
+import { findIndex } from 'lodash';
 
 class GdalTranslateTransform extends React.Component {
     static propTypes = {
@@ -52,4 +53,4 @@ class GdalTranslateTransform extends React.Component {
     };
 }
 
-module.exports = GdalTranslateTransform;
+export default GdalTranslateTransform;

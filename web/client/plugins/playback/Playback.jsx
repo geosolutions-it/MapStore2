@@ -6,20 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { connect } = require('react-redux');
-const { createSelector } = require('reselect');
-const { compose, withState, withProps, withHandlers } = require('recompose');
-const {selectedLayerSelector} = require('../../selectors/timeline');
+import React from 'react';
 
-const { statusSelector, hasPrevNextAnimationSteps, playbackMetadataSelector } = require('../../selectors/playback');
-const { animationStepMove, STATUS } = require('../../actions/playback');
-
-
-const Message = require('../../components/I18N/Message');
-const Toolbar = require('../../components/misc/toolbar/Toolbar');
-
-const Settings = require('./Settings');
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { compose, withState, withProps, withHandlers } from 'recompose';
+import { selectedLayerSelector } from '../../selectors/timeline';
+import { statusSelector, hasPrevNextAnimationSteps, playbackMetadataSelector } from '../../selectors/playback';
+import { animationStepMove, STATUS } from '../../actions/playback';
+import Message from '../../components/I18N/Message';
+import Toolbar from '../../components/misc/toolbar/Toolbar';
+import Settings from './Settings';
 
 /**
  * Support for expand/collapse timeline
@@ -67,7 +64,7 @@ const playbackEnhancer = compose(
     playbackButtons
 );
 
-module.exports = playbackEnhancer(({
+export default playbackEnhancer(({
     status,
     statusMap,
     play = () => {},

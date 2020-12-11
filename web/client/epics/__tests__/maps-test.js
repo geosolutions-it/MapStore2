@@ -6,38 +6,49 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
+import expect from 'expect';
 
-const configureMockStore = require('redux-mock-store').default;
-const {createEpicMiddleware, combineEpics } = require('redux-observable');
-const {CALL_HISTORY_METHOD} = require('connected-react-router');
-const {
-    MAPS_LIST_LOADING, MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR,
-    CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
-    openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
-    MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted,
-    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING, LOAD_CONTEXTS
-} = require('../../actions/maps');
-const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } = require('../../actions/config');
-const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
-const {loginSuccess, logout} = require('../../actions/security');
+import { CALL_HISTORY_METHOD } from 'connected-react-router';
 
-const {
-    loadMapsEpic, getMapsResourcesByCategoryEpic,
-    closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    deleteMapAndAssociatedResourcesEpic, mapsSetupFilterOnLogin,
-    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic} = require('../maps');
-const rootEpic = combineEpics(closeDetailsPanelEpic);
-const epicMiddleware = createEpicMiddleware(rootEpic);
-const mockStore = configureMockStore([epicMiddleware]);
-const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
-const axios = require('../../libs/ajax');
-const MockAdapter = require('axios-mock-adapter');
-const { EMPTY_RESOURCE_VALUE } = require('../../utils/MapInfoUtils');
+import {
+    MAPS_LIST_LOADING,
+    MAPS_LIST_LOADED,
+    MAPS_LIST_LOAD_ERROR,
+    loadMaps,
+    MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+    getMapResourcesByCategory,
+    MAP_DELETING,
+    MAP_DELETED,
+    deleteMap,
+    mapDeleted,
+    saveMapResource,
+    MAP_CREATED,
+    SAVING_MAP,
+    MAP_UPDATING,
+    MAPS_LOAD_MAP,
+    LOADING,
+    LOAD_CONTEXTS
+} from '../../actions/maps';
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+import { MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } from '../../actions/config';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import { TOGGLE_CONTROL, SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { loginSuccess, logout } from '../../actions/security';
+
+import {
+    loadMapsEpic,
+    getMapsResourcesByCategoryEpic,
+    deleteMapAndAssociatedResourcesEpic,
+    mapsSetupFilterOnLogin,
+    mapSaveMapResourceEpic,
+    reloadMapsEpic
+} from '../maps';
+
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+import { EMPTY_RESOURCE_VALUE } from '../../utils/MapInfoUtils';
+import ConfigUtils from '../../utils/ConfigUtils';
 const params = {start: 0, limit: 12 };
 const baseUrl = "base/web/client/test-resources/geostore/";
 
@@ -55,36 +66,14 @@ const locale = {
     }
 };
 const mapId = 1;
-const mapId2 = 2;
 const mapId8 = 8;
-const detailsText = "<p>details of this map</p>";
-const detailsUri = "data/2";
 let map1 = {
     id: mapId,
     name: "name"
 };
-let map2 = {
-    id: mapId2,
-    name: "name2"
-};
 let map8 = {
     id: mapId8,
     name: "name"
-};
-const mapsState = {
-    maps: {
-        results: [map1]
-    },
-    mapInitialConfig: {
-        mapId
-    },
-    map: {
-        present: {
-            info: {
-                details: encodeURIComponent(detailsUri)
-            }
-        }
-    }
 };
 
 // category is required to support details map
@@ -132,116 +121,17 @@ const testMap2 = {
     ]
 };
 
-const mapAttributesEmptyDetails = {
-    "AttributeList": {
-        "Attribute": [
-            {
-                "name": "details",
-                "type": "STRING",
-                "value": EMPTY_RESOURCE_VALUE
-            }
-        ]
-    }
-};
-const mapAttributesWithoutDetails = {
-    "AttributeList": {
-        "Attribute": []
-    }
-};
-
 describe('maps Epics', () => {
     const oldGetDefaults = ConfigUtils.getDefaults;
-    let store;
     beforeEach(() => {
-        store = mockStore();
         ConfigUtils.getDefaults = () => ({
             geoStoreUrl: baseUrl
         });
     });
 
     afterEach(() => {
-        epicMiddleware.replaceEpic(rootEpic);
         ConfigUtils.getDefaults = oldGetDefaults;
     });
-
-    it('test closeDetailsPanel', (done) => {
-
-        store.dispatch(closeDetailsPanel());
-
-        setTimeout( () => {
-            try {
-                const actions = store.getActions();
-                expect(actions.length).toBe(2);
-                expect(actions[0].type).toBe(CLOSE_DETAILS_PANEL);
-                expect(actions[1].type).toBe(TOGGLE_CONTROL);
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, 50);
-
-    });
-    it('test fetchDataForDetailsPanel', (done) => {
-        map1.details = encodeURIComponent(detailsUri);
-        testEpic(addTimeoutEpic(fetchDataForDetailsPanel), 3, openDetailsPanel(), actions => {
-            expect(actions.length).toBe(3);
-            actions.map((action) => {
-                switch (action.type) {
-                case TOGGLE_CONTROL:
-                    expect(action.control).toBe("details");
-                    expect(action.property).toBe("enabled");
-                    break;
-                case CLOSE_FEATURE_GRID:
-                    expect(action.type).toBe(CLOSE_FEATURE_GRID);
-                    break;
-                case UPDATE_DETAILS:
-                    expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, mapsState);
-    });
-    it('test fetchDataForDetailsPanel with Error', (done) => {
-        testEpic(addTimeoutEpic(fetchDataForDetailsPanel), 2, openDetailsPanel(), actions => {
-            expect(actions.length).toBe(2);
-            actions.map((action) => {
-                switch (action.type) {
-                case TOGGLE_CONTROL:
-                    expect(action.control).toBe("details");
-                    expect(action.property).toBe("enabled");
-                    break;
-                case SHOW_NOTIFICATION:
-                    expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            locale: {
-                messages: {
-                    maps: {
-                        feedback: {
-                            errorFetchingDetailsOfMap: "maps.feedback.errorFetchingDetailsOfMap"
-                        }
-                    }
-                }
-            },
-            mapInitialConfig: {
-                mapId
-            },
-            map: {
-                present: {
-                    info: {}
-                }
-            }
-        });
-    });
-
     it('test deleteMapAndAssociatedResourcesEpic, with map, details, thumbnail errors', (done) => {
         map1.thumbnail = "wronguri/data/5/";
         map1.details = "wronguri/data/6/";
@@ -393,48 +283,6 @@ describe('maps Epics', () => {
             }
         });
     });
-    it('test storeDetailsInfoEpic', (done) => {
-        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case DETAILS_LOADED:
-                    expect(action.mapId).toBe(mapId2);
-                    expect(action.detailsUri).toBe("rest%2Fgeostore%2Fdata%2F3983%2Fraw%3Fdecode%3Ddatauri");
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {mapInitialConfig: {
-            "mapId": mapId2
-        }});
-    });
-    it('test storeDetailsInfoEpic when api returns NODATA value', (done) => {
-        const mock = new MockAdapter(axios);
-        mock.onGet().reply(200, mapAttributesEmptyDetails);
-        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
-            mock.restore();
-            done();
-        }, {mapInitialConfig: {
-            "mapId": mapId2
-        }});
-    });
-    it('test storeDetailsInfoEpic when api doesnt return details', (done) => {
-        const mock = new MockAdapter(axios);
-        mock.onGet().reply(200, mapAttributesWithoutDetails);
-        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
-            mock.restore();
-            done();
-        }, {mapInitialConfig: {
-            "mapId": mapId2
-        }});
-    });
     it('it test loadMapsEpic when search text is a special character', (done) => {
         const searchText = 'tes/t\?:;@=&';
         testEpic(loadMapsEpic, 2, loadMaps(baseUrl, searchText, params), actions => {
@@ -581,8 +429,8 @@ describe('Get Map Resource By Category Epic', () => {
         });
     });
 });
-const Persistence = require("../../api/persistence");
-const Rx = require("rxjs");
+import Persistence from '../../api/persistence';
+import Rx from 'rxjs';
 const api = {
     createResource: () => Rx.Observable.of(10),
     updateResource: () => Rx.Observable.of(10)

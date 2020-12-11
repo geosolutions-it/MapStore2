@@ -6,18 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Glyphicon, Alert } from 'react-bootstrap';
+import assign from 'object-assign';
 
-const React = require('react');
-const {Button, Glyphicon, Alert} = require('react-bootstrap');
-
-const Dialog = require('../../misc/Dialog');
-const Portal = require('../../misc/Portal');
-const Message = require('../../I18N/Message');
-
-const Spinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
-
-const assign = require('object-assign');
+import Dialog from '../../misc/Dialog';
+import Portal from '../../misc/Portal';
+import Message from '../../I18N/Message';
+import Spinner from '../../misc/spinners/BasicSpinner/BasicSpinner';
+import Button from '../../misc/Button';
 
 class RefreshLayers extends React.Component {
     static propTypes = {
@@ -102,4 +100,4 @@ class RefreshLayers extends React.Component {
     };
 }
 
-module.exports = RefreshLayers;
+export default RefreshLayers;

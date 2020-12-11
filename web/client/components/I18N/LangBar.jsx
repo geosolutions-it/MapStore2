@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {DropdownButton, MenuItem, ButtonGroup} = require('react-bootstrap');
-const {head} = require('lodash');
-const LocaleUtils = require('../../utils/LocaleUtils');
-const FlagButton = require('./FlagButton');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { DropdownButton, MenuItem, ButtonGroup } from 'react-bootstrap';
+import { head } from 'lodash';
+import { getSupportedLocales } from '../../utils/LocaleUtils';
+import FlagButton from './FlagButton';
 
 class LangBar extends React.Component {
     static propTypes = {
@@ -32,7 +33,7 @@ class LangBar extends React.Component {
     };
 
     render() {
-        const locales = LocaleUtils.getSupportedLocales();
+        const locales = getSupportedLocales();
         const currentLanguage = head(Object.keys(locales).filter(lang => locales[lang].code === this.props.currentLocale));
         return this.props.dropdown ? (
             <div
@@ -76,4 +77,4 @@ class LangBar extends React.Component {
     }
 }
 
-module.exports = LangBar;
+export default LangBar;

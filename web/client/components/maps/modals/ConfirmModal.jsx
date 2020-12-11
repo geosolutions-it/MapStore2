@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +7,12 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Button} = require('react-bootstrap');
-const Modal = require('../../misc/Modal');
-const Spinner = require('react-spinkit');
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Button from '../../misc/Button';
+import Modal from '../../misc/Modal';
+import Spinner from 'react-spinkit';
 
 /**
  * A Modal window to show a confirmation dialog
@@ -90,4 +92,4 @@ class ConfirmModal extends React.Component {
     }
 }
 
-module.exports = ConfirmModal;
+export default ConfirmModal;

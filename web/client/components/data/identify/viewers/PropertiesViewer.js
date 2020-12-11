@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropertiesViewer = require('./row/PropertiesViewer');
+import React from 'react';
 
-module.exports = ({response, layer, rowViewer}) => {
+import PropertiesViewer from './row/PropertiesViewer';
+
+export default ({response, layer, rowViewer}) => {
     const RowViewer = (layer && layer.rowViewer) || rowViewer || PropertiesViewer;
     return (
         <div className="mapstore-json-viewer">
-            {(response.features || []).map((feature, i) => {
+            {(response?.features || []).map((feature, i) => {
                 return <RowViewer key={i} feature={feature} title={feature.id + ''} exclude={["bbox"]} {...feature.properties}/>;
             })}
         </div>

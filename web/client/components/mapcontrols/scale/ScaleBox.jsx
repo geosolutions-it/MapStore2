@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +6,12 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Form, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const mapUtils = require('../../../utils/MapUtils');
-const {isEqual} = require('lodash');
+import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
+
+import { getGoogleMercatorScales } from '../../../utils/MapUtils';
 
 class ScaleBox extends React.Component {
     static propTypes = {
@@ -28,7 +29,7 @@ class ScaleBox extends React.Component {
 
     static defaultProps = {
         id: 'mapstore-scalebox',
-        scales: mapUtils.getGoogleMercatorScales(0, 28),
+        scales: getGoogleMercatorScales(0, 28),
         currentZoomLvl: 0,
         minZoom: 0,
         onChange() {},
@@ -87,4 +88,4 @@ class ScaleBox extends React.Component {
     }
 }
 
-module.exports = ScaleBox;
+export default ScaleBox;

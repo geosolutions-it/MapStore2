@@ -6,21 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Spinner = require('react-spinkit');
-const { FormControl, FormGroup, ControlLabel, InputGroup, Col } = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
-const { SimpleSelect } = require('react-selectize');
-const { isString, isObject, find } = require('lodash');
-const LocaleUtils = require('../../../../utils/LocaleUtils');
-const assign = require('object-assign');
-require('react-selectize/themes/index.css');
-const { Grid } = require('react-bootstrap');
-const { createFromSearch, flattenGroups } = require('../../../../utils/TOCUtils');
-const TOCUtils = require('../../../../utils/TOCUtils');
+import 'react-selectize/themes/index.css';
 
-const LayerNameEditField = require('./LayerNameEditField').default;
+import { find, isObject, isString } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, ControlLabel, FormControl, FormGroup, Grid, InputGroup } from 'react-bootstrap';
+import { SimpleSelect } from 'react-selectize';
+import Spinner from 'react-spinkit';
+
+import { getMessageById, getSupportedLocales } from '../../../../utils/LocaleUtils';
+import { createFromSearch, flattenGroups, getLabelName } from '../../../../utils/TOCUtils';
+import Message from '../../../I18N/Message';
+import LayerNameEditField from './LayerNameEditField';
 
 /**
  * General Settings form for layer
@@ -52,20 +51,20 @@ class General extends React.Component {
     };
 
     render() {
-        const locales = LocaleUtils.getSupportedLocales();
+        const locales = getSupportedLocales();
         const translations = isObject(this.props.element.title) ? assign({}, this.props.element.title) : { 'default': this.props.element.title };
         const { hideTitleTranslations = false } = this.props.pluginCfg;
 
         const tooltipItems = [
-            { value: "title", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.title") },
-            { value: "description", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.description") },
-            { value: "both", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.both") },
-            { value: "none", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.none") }
+            { value: "title", label: getMessageById(this.context.messages, "layerProperties.tooltip.title") },
+            { value: "description", label: getMessageById(this.context.messages, "layerProperties.tooltip.description") },
+            { value: "both", label: getMessageById(this.context.messages, "layerProperties.tooltip.both") },
+            { value: "none", label: getMessageById(this.context.messages, "layerProperties.tooltip.none") }
         ];
         const tooltipPlacementItems = [
-            { value: "top", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.top") },
-            { value: "right", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.right") },
-            { value: "bottom", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
+            { value: "top", label: getMessageById(this.context.messages, "layerProperties.tooltip.top") },
+            { value: "right", label: getMessageById(this.context.messages, "layerProperties.tooltip.right") },
+            { value: "bottom", label: getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
         ];
         const groups = this.props.groups && flattenGroups(this.props.groups);
         return (
@@ -124,13 +123,13 @@ class General extends React.Component {
                                 options={
                                     (groups || (this.props.element && this.props.element.group) || []).map(item => {
                                         if (isObject(item)) {
-                                            return {...item, label: TOCUtils.getLabelName(item.label, groups)};
+                                            return {...item, label: getLabelName(item.label, groups)};
                                         }
-                                        return { label: TOCUtils.getLabelName(item, groups), value: item };
+                                        return { label: getLabelName(item, groups), value: item };
                                     })
                                 }
-                                defaultValue={{ label: TOCUtils.getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
-                                placeholder={TOCUtils.getLabelName(this.props.element && this.props.element.group || "Default", groups)}
+                                defaultValue={{ label: getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
+                                placeholder={getLabelName(this.props.element && this.props.element.group || "Default", groups)}
                                 onChange={(value) => {
                                     this.updateEntry("group", { target: { value: value || "Default" } });
                                 }}
@@ -194,4 +193,4 @@ class General extends React.Component {
     };
 }
 
-module.exports = General;
+export default General;

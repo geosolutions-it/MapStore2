@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const API = require('../WMTS');
-const WMTSUtils = require('../../utils/WMTSUtils');
+import expect from 'expect';
+
+import API from '../WMTS';
+import { getGetTileURL } from '../../utils/WMTSUtils';
 
 describe('Test correctness of the WMTS APIs', () => {
     it('GetRecords KVP', (done) => {
@@ -21,7 +22,7 @@ describe('Test correctness of the WMTS APIs', () => {
                     expect(record.requestEncoding).toBe('KVP');
                     expect(record.queryable).toBe(true);
                     expect(record.GetTileURL).toBe("http://sample.server/geoserver/gwc/service/wmts?");
-                    expect(WMTSUtils.getGetTileURL(record)).toBe(record.GetTileURL);
+                    expect(getGetTileURL(record)).toBe(record.GetTileURL);
                 });
 
                 expect(result.records[0].format).toBe("image/png");
@@ -40,7 +41,7 @@ describe('Test correctness of the WMTS APIs', () => {
                 result.records.map(record => {
                     expect(record.requestEncoding).toBe('RESTful');
                     expect(record.queryable).toBe(false);
-                    expect(WMTSUtils.getGetTileURL(record)).toEqual(record.ResourceURL.map(({$: v}) => v.template));
+                    expect(getGetTileURL(record)).toEqual(record.ResourceURL.map(({$: v}) => v.template));
                 });
                 expect(result.records[0].style).toBe("normal");
                 expect(result.records[0].format).toBe("image/png");
@@ -65,7 +66,7 @@ describe('Test correctness of the WMTS APIs', () => {
                     expect(record.requestEncoding).toBe('KVP');
                     expect(record.queryable).toBe(true);
                     expect(record.GetTileURL).toBe("http://sample.server/geoserver/gwc/service/wmts?");
-                    expect(WMTSUtils.getGetTileURL(record)).toBe(record.GetTileURL);
+                    expect(getGetTileURL(record)).toBe(record.GetTileURL);
                 });
                 expect(result.records[0].format).toBe("image/png");
                 done();

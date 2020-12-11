@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,15 +6,18 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var I18N = require('../I18N/I18N');
-var ListGroupItem = BootstrapReact.ListGroupItem;
-var Button = BootstrapReact.Button;
-var Glyphicon = BootstrapReact.Glyphicon;
-var Tooltip = BootstrapReact.Tooltip;
-const OverlayTrigger = require('../misc/OverlayTrigger');
-var {isFunction} = require('lodash');
+import { isFunction } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {
+    Glyphicon,
+    ListGroupItem,
+    Tooltip
+} from 'react-bootstrap';
+
+import I18N from '../I18N/I18N';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import Button from '../misc/Button';
 
 class MapItem extends React.Component {
     static propTypes = {
@@ -46,4 +48,4 @@ class MapItem extends React.Component {
     }
 }
 
-module.exports = MapItem;
+export default MapItem;

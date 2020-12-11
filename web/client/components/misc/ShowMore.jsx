@@ -6,10 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const {Row, Col, Button} = require('react-bootstrap');
-const Loader = require('./Loader');
-const Message = require("../I18N/Message");
+import React from 'react';
+
+import { Row, Col } from 'react-bootstrap';
+import Loader from './Loader';
+import Message from '../I18N/Message';
+import Button from '../misc/Button';
 
 /**
  * A component to display a show more button with counting of results
@@ -23,7 +25,7 @@ const Message = require("../I18N/Message");
  * @param  {number} [pageSize] size of page
  * @param  {function} [onLoadMore] return next page
  */
-module.exports = ({items = [], total = 0, loading, skip = 0, pageSize = 4, onLoadMore = () => {}}) => (
+export default ({items = [], total = 0, loading, skip = 0, pageSize = 4, onLoadMore = () => {}}) => (
     <Row className="ms-show-more">
         <Col
             xs={12}

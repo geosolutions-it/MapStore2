@@ -1,9 +1,9 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const ColorUtils = require('../../utils/ColorUtils');
-const ColorRampItem = require('./EqualIntervalComponents/ColorRampItem');
-const DropdownList = require('react-widgets').DropdownList;
-const {head} = require('lodash');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { sameToneRangeColors } from '../../utils/ColorUtils';
+import ColorRampItem from './EqualIntervalComponents/ColorRampItem';
+import { DropdownList } from 'react-widgets';
+import { head } from 'lodash';
 
 class ColorRangeSelector extends React.Component {
 
@@ -55,7 +55,7 @@ class ColorRangeSelector extends React.Component {
         return this.props.items.map(({options = {}, ...item}) => ({
             ...item,
             options,
-            ramp: this.props.rampFunction ? this.props.rampFunction(item, options) : (ColorUtils.sameToneRangeColors(options.base, options.range, this.props.samples + 1, options.options) || ["#AAA"]).splice(1)
+            ramp: this.props.rampFunction ? this.props.rampFunction(item, options) : (sameToneRangeColors(options.base, options.range, this.props.samples + 1, options.options) || ["#AAA"]).splice(1)
         }));
     }
 
@@ -76,4 +76,4 @@ class ColorRangeSelector extends React.Component {
     }
 }
 
-module.exports = ColorRangeSelector;
+export default ColorRangeSelector;

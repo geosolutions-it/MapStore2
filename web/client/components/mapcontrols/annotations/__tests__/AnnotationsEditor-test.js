@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
+import React from 'react';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import html5Backend from 'react-dnd-html5-backend';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import AnnotationsEditorComp from '../AnnotationsEditor';
 
-const dragDropContext = require('react-dnd').DragDropContext;
-const html5Backend = require('react-dnd-html5-backend');
-const AnnotationsEditor = dragDropContext(html5Backend)(require('../AnnotationsEditor'));
-const TestUtils = require('react-dom/test-utils');
+const AnnotationsEditor = dragDropContext(html5Backend)(AnnotationsEditorComp);
 
 const actions = {
     onChangeProperties: () => {},
@@ -137,11 +138,11 @@ describe("test the AnnotationsEditor Panel", () => {
         toolBarButtons = btnGroup.querySelectorAll('button');
         removeBtn = toolBarButtons[1];
         expect(toolBarButtons.length).toBe(4);
-        expect(removeBtn.disabled).toBe(true);
+        expect(removeBtn.classList.contains('disabled')).toBe(true);
 
     });
 
-    it('test click save', () => {
+    it('test click save annotation', () => {
         const feature = {
             id: "1",
             title: 'mytitle',
@@ -173,6 +174,40 @@ describe("test the AnnotationsEditor Panel", () => {
         TestUtils.Simulate.click(saveButton);
         expect(spySave.calls.length).toEqual(1);
         expect(spyCancel.calls.length).toEqual(0);
+    });
+
+    it('test click save annotation', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const testHandlers = {
+            onAddNewFeature: () => {}
+        };
+
+        const spySaveGeometry = expect.spyOn(testHandlers, 'onAddNewFeature');
+        const defaultStyles = {POINT: {
+            marker: ["Test marker"],
+            symbol: ["Test symbol"]
+        }};
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+            selected={{features: [], properties: {isValidFeature: true}}}
+            editing={{
+                properties: feature,
+                features: [{}]
+            }}
+            defaultStyles={defaultStyles}
+            onAddNewFeature={testHandlers.onAddNewFeature}
+        />, document.getElementById("container"));
+        expect(viewer).toExist();
+
+        let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[1]);
+
+        expect(saveButton).toExist();
+        TestUtils.Simulate.click(saveButton);
+        expect(spySaveGeometry).toHaveBeenCalled();
     });
 
     it('test click cancel', () => {
@@ -482,7 +517,7 @@ describe("test the AnnotationsEditor Panel", () => {
         };
 
         const spyOnDownload = expect.spyOn(actions, 'onDownload');
-        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+        let viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
             onDownload={actions.onDownload}
             editing={{
                 features: [{id: "1"}],
@@ -491,20 +526,43 @@ describe("test the AnnotationsEditor Panel", () => {
             }}/>, document.getElementById("container"));
 
         expect(viewer).toExist();
-        const viewerNode = ReactDOM.findDOMNode(viewer);
+        let viewerNode = ReactDOM.findDOMNode(viewer);
         expect(viewerNode.className).toBe('mapstore-annotations-info-viewer');
 
-        const buttonsRow = viewerNode.querySelector('.mapstore-annotations-info-viewer-buttons .noTopMargin');
+        let buttonsRow = viewerNode.querySelector('.mapstore-annotations-info-viewer-buttons .noTopMargin');
         expect(buttonsRow).toBeTruthy();
 
-        const buttons = buttonsRow.querySelectorAll('button');
+        let buttons = buttonsRow.querySelectorAll('button');
         expect(buttons.length).toBe(4);
 
-        const downloadCurrentAnnotation = buttons[3];
-        expect(downloadCurrentAnnotation.disabled).toBe(false);
+        let downloadCurrentAnnotation = buttons[3];
+        expect(downloadCurrentAnnotation.classList.contains('disabled')).toBe(false);
 
         TestUtils.Simulate.click(downloadCurrentAnnotation);
         expect(spyOnDownload).toHaveBeenCalled();
         expect(spyOnDownload.calls[0].arguments[0]).toEqual({features: [{id: "1"}], properties: feature});
+    });
+    it('test onDownload when unsavedChanges', ()=>{
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+            onDownload={actions.onDownload}
+            unsavedChanges
+            editing={{
+                features: [{id: "1"}],
+                properties: feature,
+                newFeature: true
+            }}/>, document.getElementById("container"));
+
+        expect(viewer).toExist();
+        const viewerNode = ReactDOM.findDOMNode(viewer);
+        const buttonsRow = viewerNode.querySelector('.mapstore-annotations-info-viewer-buttons .noTopMargin');
+        const buttons = buttonsRow.querySelectorAll('button');
+        const downloadCurrentAnnotation = buttons[3];
+        expect(downloadCurrentAnnotation.classList.contains('disabled')).toBe(true);
     });
 });

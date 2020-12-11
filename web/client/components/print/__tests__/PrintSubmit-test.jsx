@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var PrintSubmit = require('../PrintSubmit');
+import expect from 'expect';
 
-var ReactTestUtils = require('react-dom/test-utils');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PrintSubmit from '../PrintSubmit';
+import ReactTestUtils from 'react-dom/test-utils';
 
 describe("Test the PrintSubmit component", () => {
     beforeEach((done) => {
@@ -42,7 +42,7 @@ describe("Test the PrintSubmit component", () => {
         const node = ReactDOM.findDOMNode(cmp);
         expect(node).toExist();
         expect(node.tagName.toLowerCase()).toBe('button');
-        expect(node.disabled).toExist();
+        expect(node.classList.contains('disabled')).toBe(true);
     });
 
     it('creates component loading', () => {

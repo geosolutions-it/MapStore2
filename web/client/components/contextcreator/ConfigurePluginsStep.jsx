@@ -9,11 +9,12 @@
 import React from 'react';
 import {compose, withState, lifecycle, getContext} from 'recompose';
 import {get} from 'lodash';
-import {Glyphicon, Button, Tooltip, OverlayTrigger, Alert} from 'react-bootstrap';
+import {Glyphicon, Tooltip, OverlayTrigger, Alert} from 'react-bootstrap';
 import {Controlled as Codemirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
 
+import Button from '../misc/Button';
 import Transfer from '../misc/transfer/Transfer';
 import ResizableModal from '../misc/ResizableModal';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';
@@ -24,7 +25,7 @@ import tutorialEnhancer from './enhancers/tutorialEnhancer';
 import Dropzone from 'react-dropzone';
 import Spinner from "react-spinkit";
 
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getMessageById} from '../../utils/LocaleUtils';
 import PropTypes from 'prop-types';
 import ConfirmModal from '../resources/modals/ConfirmModal';
 
@@ -307,7 +308,7 @@ const configurePluginsStep = ({
     const checkUpload = (files) => {
         Promise.all(files.map(file => {
             return checkZipBundle(file, allPlugins.map(p => p.name)).catch(e => {
-                throw new Error(LocaleUtils.getMessageById(messages, uploadErrors[e]));
+                throw new Error(getMessageById(messages, uploadErrors[e]));
             });
         })).then((namedFiles) => {
             onAddUpload(namedFiles);

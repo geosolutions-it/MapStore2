@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {Button} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
-const HTML = require('../../I18N/HTML');
+import React from 'react';
 
-module.exports = ({
+import Button from '../../misc/Button';
+import Message from '../../I18N/Message';
+import HTML from '../../I18N/HTML';
+
+export default ({
     openFileDialog
 }) => (<div>
     <HTML msgId="mapImport.dropZone.heading" />

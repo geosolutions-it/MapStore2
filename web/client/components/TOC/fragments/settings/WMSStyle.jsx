@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Message = require('../../../I18N/Message');
-const Select = require('react-select').default;
-const {Button, Glyphicon, Alert} = require('react-bootstrap');
-const {findIndex} = require('lodash');
-const {Grid} = require('react-bootstrap');
+import { findIndex } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {Alert, Glyphicon, Grid} from 'react-bootstrap';
+import Select from 'react-select';
+
+import Button from '../../../misc/Button';
+import Message from '../../../I18N/Message';
 
 /**
  * General Settings form for layer
@@ -96,4 +97,4 @@ class WMSStyle extends React.Component {
     };
 }
 
-module.exports = WMSStyle;
+export default WMSStyle;

@@ -6,20 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
+import { Promise } from 'es6-promise';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Checkbox } from 'react-bootstrap';
+import Dropzone from 'react-dropzone';
+import Spinner from 'react-spinkit';
 
-const Dropzone = require('react-dropzone');
-const Spinner = require('react-spinkit');
-const {Checkbox} = require("react-bootstrap");
-
-
-const Message = require('../../I18N/Message');
-const ResizableModal = require('../../misc/ResizableModal');
-
-const FileUtils = require('../../../utils/FileUtils');
-const {ANNOTATION_TYPE} = require('../../../utils/AnnotationsUtils');
-const {Promise} = require('es6-promise');
+import { ANNOTATION_TYPE } from '../../../utils/AnnotationsUtils';
+import { readGeoJson } from '../../../utils/FileUtils';
+import Message from '../../I18N/Message';
+import ResizableModal from '../../misc/ResizableModal';
 
 class SelectAnnotationsFile extends React.Component {
     static propTypes = {
@@ -82,7 +79,7 @@ class SelectAnnotationsFile extends React.Component {
     // inoltre può accettare qualsiasi collezione di features inoltre filtrare le features che hanno medesimo id
     checkfile = (files) => {
         this.setState(() => ({loading: true}));
-        Promise.all(files.map(file => FileUtils.readGeoJson(file))).then((contents) => {
+        Promise.all(files.map(file => readGeoJson(file))).then((contents) => {
             if (this.state.error) {
                 this.setState(() => ({error: null}));
             }
@@ -100,4 +97,4 @@ class SelectAnnotationsFile extends React.Component {
     };
 }
 
-module.exports = SelectAnnotationsFile;
+export default SelectAnnotationsFile;

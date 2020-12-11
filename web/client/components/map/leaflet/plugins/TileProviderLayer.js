@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Layers from '../../../../utils/leaflet/Layers';
-import L from 'leaflet';
-import TileProvider from '../../../../utils/TileConfigProvider';
+const Layers = require( '../../../../utils/leaflet/Layers');
+const L = require( 'leaflet');
+const TileProvider = require( '../../../../utils/TileConfigProvider');
 
 Layers.registerType('tileprovider', (options) => {
     let [url, opt] = TileProvider.getLayerConfig(options.provider, {maxZoom: 23, ...options});

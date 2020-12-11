@@ -6,14 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Panel, Button, Glyphicon} = require('react-bootstrap');
-const SwitchButton = require('./SwitchButton');
-const SwitchToolbar = require('./SwitchToolbar').default;
-const Toolbar = require('../toolbar/Toolbar');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Panel, Glyphicon } from 'react-bootstrap';
+import SwitchButton from './SwitchButton';
+import SwitchToolbar from './SwitchToolbar';
+import Toolbar from '../toolbar/Toolbar';
+import Button from '../../misc/Button';
+import LoadingView from '../LoadingView';
+
 const ErrorIcon = () => <Button className="square-button-sm no-border switch-error"><Glyphicon glyph="exclamation-mark" className="text-danger" /></Button>;
-const LoadingView = require('../LoadingView');
 const LoadingIcon = () => <div className="switch-loading"><LoadingView size="small"/></div>;
 class SwitchPanel extends React.Component {
 
@@ -68,4 +71,4 @@ class SwitchPanel extends React.Component {
     }
 }
 
-module.exports = SwitchPanel;
+export default SwitchPanel;

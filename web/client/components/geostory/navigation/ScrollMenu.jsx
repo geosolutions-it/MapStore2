@@ -7,10 +7,12 @@
  */
 
 import React, { useEffect, useState, useRef  } from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import debounce from 'lodash/debounce';
 import { useSwipeable } from 'react-swipeable';
 import { withResizeDetector } from 'react-resize-detector';
+
+import Button from '../../misc/Button';
 
 /**
  * One item component

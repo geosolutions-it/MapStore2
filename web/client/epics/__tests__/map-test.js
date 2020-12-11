@@ -6,23 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, redirectUnauthorizedUserOnNewMap } = require('../map');
-const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
-
-const { LOAD_MAP_INFO, configureMap, configureError} = require('../../actions/config');
-
-const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
-const MapUtils = require('../../utils/MapUtils');
-
-const {
-    CHANGE_MAP_VIEW,
-    zoomToExtent
-} = require('../../actions/map');
-
-
-const { LOGIN_SUCCESS } = require('../../actions/security');
+import { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions } from '../map';
+import { CHANGE_MAP_VIEW, zoomToExtent, CHANGE_MAP_LIMITS, changeMapCrs } from '../../actions/map';
+import { LOAD_MAP_INFO, configureMap } from '../../actions/config';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import MapUtils from '../../utils/MapUtils';
+import { LOGIN_SUCCESS } from '../../actions/security';
 
 const LAYOUT_STATE = {
     layout: {
@@ -245,23 +236,4 @@ describe('map epics', () => {
         }, state);
     });
 
-    describe('redirectUnauthorizedUserOnNewMap', () => {
-        it('should navigate to homepage when user made some changes to map, and prompt appears', (done) => {
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe('@@router/CALL_HISTORY_METHOD');
-                done();
-            };
-
-            const initState = {
-                router: {
-                    location: {
-                        pathname: '/viewer/openlayers/new'
-                    }
-                }
-            };
-
-            testEpic(redirectUnauthorizedUserOnNewMap, 1, configureError({status: 403}), epicResponse, initState);
-        });
-    });
 });

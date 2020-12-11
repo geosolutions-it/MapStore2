@@ -1,8 +1,8 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
-const Settings = require('../Settings');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import expect from 'expect';
+import Settings from '../Settings';
 describe('Timeline/Playback Settings component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

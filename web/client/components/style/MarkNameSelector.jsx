@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,9 +6,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const DropdownList = require('react-widgets').DropdownList;
-const LocaleUtils = require('../../utils/LocaleUtils');
+import React from 'react';
+
+import { DropdownList } from 'react-widgets';
+import { getMessageById } from '../../utils/LocaleUtils';
+import PropTypes from 'prop-types';
 
 class MarkNameSelector extends React.Component {
     static propTypes = {
@@ -31,12 +32,12 @@ class MarkNameSelector extends React.Component {
         return (
             <DropdownList data={
                 [
-                    {value: "circle", name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.circle") || "Circle"},
-                    {value: 'square', name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.square") || "Square"},
-                    {value: 'triangle', name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.triangle") || "Triangle"},
-                    {value: 'star', name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.star") || "Star"},
-                    {value: 'cross', name: LocaleUtils.getMessageById(this.context.messages, "markNameSelector.cross") || "Cross"},
-                    {value: 'x', 'name': LocaleUtils.getMessageById(this.context.messages, "markNameSelector.x") || "X"}
+                    {value: "circle", name: getMessageById(this.context.messages, "markNameSelector.circle") || "Circle"},
+                    {value: 'square', name: getMessageById(this.context.messages, "markNameSelector.square") || "Square"},
+                    {value: 'triangle', name: getMessageById(this.context.messages, "markNameSelector.triangle") || "Triangle"},
+                    {value: 'star', name: getMessageById(this.context.messages, "markNameSelector.star") || "Star"},
+                    {value: 'cross', name: getMessageById(this.context.messages, "markNameSelector.cross") || "Cross"},
+                    {value: 'x', 'name': getMessageById(this.context.messages, "markNameSelector.x") || "X"}
                 ]}
             valueField="value"
             textField="name"
@@ -45,4 +46,4 @@ class MarkNameSelector extends React.Component {
     }
 }
 
-module.exports = MarkNameSelector;
+export default MarkNameSelector;

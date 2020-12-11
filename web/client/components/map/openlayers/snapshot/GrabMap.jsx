@@ -5,17 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+import './snapshotMapStyle.css';
+import '../../../map/openlayers/plugins/index';
+
+import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {LMap,
-    LLayer,
-    Feature
-} from '../index';
-import assign from 'object-assign';
-import ConfigUtils from '../../../../utils/ConfigUtils';
-import './snapshotMapStyle.css';
 
-import '../../../map/openlayers/plugins/index';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import {
+    Feature,
+    LLayer,
+    LMap
+} from '../index';
 
 /**
  * GrabMap for OpenLayers map generate a fake-map, hidden, and waits for the

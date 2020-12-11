@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const ScrollUp = require('react-scroll-up').default;
-const Message = require('../components/I18N/Message');
-const {Glyphicon, Button, Tooltip, OverlayTrigger} = require('react-bootstrap');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import ScrollUp from 'react-scroll-up';
+import Message from '../components/I18N/Message';
+import { Glyphicon, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import Button from '../components/misc/Button';
 
 /**
  * ScrollUp Plugin. Show a button that allows to scroll to the top of the page. Only for full pages.
@@ -53,6 +55,6 @@ class ScrollTop extends React.Component {
 }
 
 
-module.exports = {
+export default {
     ScrollTopPlugin: ScrollTop
 };

@@ -85,6 +85,8 @@
             "propertiesFormatDescription": "Prikaz informacija o objektu kao lista svojstava",
             "templateFormatTitle": "PREDLOŽAK",
             "templateFormatDescription": "Prilagodba prikaza informacija o objektu",
+            "hideFormatTitle": "DÉSACTIVER L'IDENTIFICATION",
+            "hideFormatDescription": "Tiltsa le a funkció információit ehhez a réteghez",
             "templateFormatInfoAlert1": "Klikni na dugme za editiranje za dodavanje novog predloška.",
             "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
@@ -431,7 +433,6 @@
             "removeLayer": "Ukloni sloj",
             "loadingerror": "Sloj se nije učitao ispravno ili nije dostupan",
             "measure": "Izmjeri",
-            "backgroundSwitcher": "Podloge",
             "layers": "Slojevi",
             "drawerButton": "Slojevi",
             "refreshTitle": "Ažuriraj slojeve",
@@ -775,7 +776,6 @@
             "settingsPanel": "Ovo je pomoć za kontrolu postavki",
             "gohome": "Ovo je pomoć za kontrolu početne stranice",
             "measureComponent": "Ovo je pomoć za kontrolu mjerenja",
-            "backgroundSwitcher": "Ovo je pomoć za kontrolu promjene podloga",
             "layerSwitcher": "Ovo je pomoć za kontrolu prekidača za slojeve",
             "infoButton": "Ovo je pomoć za kontrolu dohvata informacija",
             "locateBtn": "Ovo je pomoć za kontrolu lokacije",
@@ -1364,7 +1364,7 @@
                 "createNewChart": "Kreiraj grafikon za odabrani sloj"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Izvezi podatke",
             "format": "Format datoteke",
             "srs":  "Koordinatni sustav",

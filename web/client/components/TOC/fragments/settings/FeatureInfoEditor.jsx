@@ -6,14 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const ReactQuill = require('react-quill');
-const ResizableModal = require('../../../misc/ResizableModal');
-const Portal = require('../../../misc/Portal');
-const Message = require('../../../I18N/Message');
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactQuill from 'react-quill';
+
+import Message from '../../../I18N/Message';
+import Portal from '../../../misc/Portal';
+import resizeModuleIFrametoolbarConfigFactory from '../../../misc/quillmodules/ResizeModule';
+import ResizableModal from '../../../misc/ResizableModal';
+
 const {Quill} = ReactQuill;
-const {ResizeModule, IFrame, toolbarConfig} = require('../../../misc/quillmodules/ResizeModule')(Quill);
+
+const {ResizeModule, IFrame, toolbarConfig} = resizeModuleIFrametoolbarConfigFactory(Quill);
 
 Quill.register({
     'formats/video': IFrame,
@@ -104,4 +108,4 @@ class FeatureInfoEditor extends React.Component {
     };
 }
 
-module.exports = FeatureInfoEditor;
+export default FeatureInfoEditor;

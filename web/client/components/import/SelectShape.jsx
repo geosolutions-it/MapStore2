@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,15 +6,15 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Dropzone = require('react-dropzone');
-const Spinner = require('react-spinkit');
+import React from 'react';
 
-const LocaleUtils = require('../../utils/LocaleUtils');
-
-const JSZip = require('jszip');
-const FileUtils = require('../../utils/FileUtils');
-const {Promise} = require('es6-promise');
+import PropTypes from 'prop-types';
+import Dropzone from 'react-dropzone';
+import Spinner from 'react-spinkit';
+import { getMessageById } from '../../utils/LocaleUtils';
+import JSZip from 'jszip';
+import { readZip, recognizeExt, MIME_LOOKUPS } from '../../utils/FileUtils';
+import { Promise } from 'es6-promise';
 
 class SelectShape extends React.Component {
     static propTypes = {
@@ -48,7 +47,7 @@ class SelectShape extends React.Component {
     }
 
     tryUnzip = (file) => {
-        return FileUtils.readZip(file).then((buffer) => {
+        return readZip(file).then((buffer) => {
             var zip = new JSZip();
             return zip.loadAsync(buffer);
         });
@@ -56,8 +55,8 @@ class SelectShape extends React.Component {
 
     checkFileType = (file) => {
         return new Promise((resolve, reject) => {
-            const ext = FileUtils.recognizeExt(file.name);
-            const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+            const ext = recognizeExt(file.name);
+            const type = file.type || MIME_LOOKUPS[ext];
             if (type === 'application/x-zip-compressed' ||
                 type === 'application/zip' ||
                 type === 'application/vnd.google-earth.kml+xml' ||
@@ -77,10 +76,10 @@ class SelectShape extends React.Component {
             }
             this.props.onShapeChoosen(files);
         }).catch(() => {
-            const error = LocaleUtils.getMessageById(this.context.messages, this.props.errorMessage);
+            const error = getMessageById(this.context.messages, this.props.errorMessage);
             this.props.onShapeError(error);
         });
     };
 }
 
-module.exports = SelectShape;
+export default SelectShape;

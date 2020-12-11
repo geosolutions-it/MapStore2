@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,16 +6,15 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-// const Message = require('../I18N/Message');
-const GridCard = require('../../misc/GridCard');
-const {Button, Glyphicon} = require('react-bootstrap');
-const Message = require('../../../components/I18N/Message');
+import './style/usercard.css';
 
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
 
-// const ConfirmModal = require('./modals/ConfirmModal');
-
-require('./style/usercard.css');
+import Button from '../../misc/Button';
+import Message from '../../../components/I18N/Message';
+import GridCard from '../../misc/GridCard';
 
 class GroupCard extends React.Component {
     static propTypes = {
@@ -110,4 +108,4 @@ class GroupCard extends React.Component {
     }
 }
 
-module.exports = GroupCard;
+export default GroupCard;

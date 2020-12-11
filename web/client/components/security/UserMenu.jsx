@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {DropdownButton, MenuItem, NavDropdown, Glyphicon} = require('react-bootstrap');
-const Message = require('../../components/I18N/Message');
-const ConfirmModal = require('../../components/misc/ResizableModal');
+import React from 'react';
+
+import { DropdownButton, MenuItem, NavDropdown, Glyphicon } from 'react-bootstrap';
+import Message from '../../components/I18N/Message';
+import ConfirmModal from '../../components/misc/ResizableModal';
 
 
 /**
@@ -160,4 +162,4 @@ class UserMenu extends React.Component {
     }
 }
 
-module.exports = UserMenu;
+export default UserMenu;

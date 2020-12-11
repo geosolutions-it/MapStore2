@@ -6,6 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const withContainer = require('./WithContainer');
+import withContainer from './WithContainer';
 
-module.exports = withContainer(require('react-bootstrap').Overlay);
+export default withContainer(require('react-bootstrap').Overlay);

@@ -343,7 +343,8 @@
                     }
                 }
             }, "Home", "FeatureEditor",
-            "WFSDownload",
+            "LayerDownload",
+            "ExportDataResults",
             {
               "name": "QueryPanel",
               "cfg": {
@@ -477,7 +478,7 @@
             "FeedbackMask",
             "StyleEditor"
         ],
-        "embedded": [{
+        "embedded": ["Details", {
                 "name": "Map",
                 "cfg": {
                     "tools": ["locate"],

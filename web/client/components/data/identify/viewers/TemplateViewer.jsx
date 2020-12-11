@@ -6,16 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {template} = require('lodash');
-const TemplateUtils = require('../../../../utils/TemplateUtils');
-const HtmlRenderer = require('../../../misc/HtmlRenderer');
+import React from 'react';
 
-module.exports = ({layer = {}, response}) => (
+import { template } from 'lodash';
+import { getCleanTemplate } from '../../../../utils/TemplateUtils';
+import HtmlRenderer from '../../../misc/HtmlRenderer';
+
+export default ({layer = {}, response}) => (
     <div className="ms-template-viewer">
         {response.features.map((feature, i) =>
             <div key={i}>
-                <HtmlRenderer html={template(TemplateUtils.getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1))(feature)}/>
+                <HtmlRenderer html={template(getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1))(feature)}/>
             </div>
         )}
     </div>

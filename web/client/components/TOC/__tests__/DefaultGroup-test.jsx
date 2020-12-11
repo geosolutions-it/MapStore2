@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const dragDropContext = require('react-dnd').DragDropContext;
-const testBackend = require('react-dnd-test-backend');
-const Group = dragDropContext(testBackend)(require('../DefaultGroup'));
+import expect from 'expect';
+import React from 'react';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import testBackend from 'react-dnd-test-backend';
+import ReactDOM from 'react-dom';
 
-const expect = require('expect');
+import DefaultGroup from '../DefaultGroup';
+
+const Group = dragDropContext(testBackend)(DefaultGroup);
 
 describe('test Group module component', () => {
     beforeEach((done) => {

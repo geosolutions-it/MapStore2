@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const MetadataModal = require('../Save.jsx');
-const expect = require('expect');
-const { find, get } = require('lodash');
+
+import expect from 'expect';
+import { find, get } from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import MetadataModal from '../Save';
 
 describe('This test for dashboard save form', () => {
 
@@ -149,7 +151,7 @@ describe('This test for dashboard save form', () => {
         const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
             get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
         expect(saveButton).toExist();
-        expect(saveButton.disabled).toBe(true);
+        expect(saveButton.classList.contains('disabled')).toBe(true);
     });
     it('modal save button is enabled when enableFileDrop=true and fileDropStatus === accepted', () => {
         const user = {role: 'ADMIN'};
@@ -161,7 +163,7 @@ describe('This test for dashboard save form', () => {
         const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
             get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
         expect(saveButton).toExist();
-        expect(saveButton.disabled).toBe(false);
+        expect(saveButton.classList.contains('disabled')).toBe(false);
     });
 
 });

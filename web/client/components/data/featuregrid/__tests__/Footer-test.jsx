@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var BottomToolbar = require('../Footer');
-var expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import BottomToolbar from '../Footer';
+import expect from 'expect';
 const spyOn = expect.spyOn;
 
 
@@ -37,10 +38,10 @@ describe('Test for BottomToolbar component', () => {
         ReactDOM.render(<BottomToolbar {...props}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-bottom-toolbar")[0];
         expect(el).toExist();
-        expect(document.getElementsByClassName("first-page")[0].disabled).toBe(true);
-        expect(document.getElementsByClassName("prev-page")[0].disabled).toBe(true);
-        expect(document.getElementsByClassName("next-page")[0].disabled).toBe(true);
-        expect(document.getElementsByClassName("last-page")[0].disabled).toBe(true);
+        expect(document.getElementsByClassName("first-page")[0].classList.contains('disabled')).toBe(true);
+        expect(document.getElementsByClassName("prev-page")[0].classList.contains('disabled')).toBe(true);
+        expect(document.getElementsByClassName("next-page")[0].classList.contains('disabled')).toBe(true);
+        expect(document.getElementsByClassName("last-page")[0].classList.contains('disabled')).toBe(true);
         document.getElementsByClassName("first-page")[0].click();
         document.getElementsByClassName("prev-page")[0].click();
         document.getElementsByClassName("next-page")[0].click();
@@ -56,10 +57,10 @@ describe('Test for BottomToolbar component', () => {
         ReactDOM.render(<BottomToolbar onPageChange={events.onPageChange} {...props}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-bottom-toolbar")[0];
         expect(el).toExist();
-        expect(document.getElementsByClassName("first-page")[0].disabled).toBe(false);
-        expect(document.getElementsByClassName("prev-page")[0].disabled).toBe(false);
-        expect(document.getElementsByClassName("next-page")[0].disabled).toBe(false);
-        expect(document.getElementsByClassName("last-page")[0].disabled).toBe(false);
+        expect(document.getElementsByClassName("first-page")[0].classList.contains('disabled')).toBe(false);
+        expect(document.getElementsByClassName("prev-page")[0].classList.contains('disabled')).toBe(false);
+        expect(document.getElementsByClassName("next-page")[0].classList.contains('disabled')).toBe(false);
+        expect(document.getElementsByClassName("last-page")[0].classList.contains('disabled')).toBe(false);
         document.getElementsByClassName("first-page")[0].click();
         document.getElementsByClassName("prev-page")[0].click();
         document.getElementsByClassName("next-page")[0].click();
@@ -75,10 +76,10 @@ describe('Test for BottomToolbar component', () => {
         ReactDOM.render(<BottomToolbar onPageChange={events.onPageChange} {...props}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-bottom-toolbar")[0];
         expect(el).toExist();
-        expect(document.getElementsByClassName("first-page")[0].disabled).toBe(false);
-        expect(document.getElementsByClassName("prev-page")[0].disabled).toBe(false);
-        expect(document.getElementsByClassName("next-page")[0].disabled).toBe(true);
-        expect(document.getElementsByClassName("last-page")[0].disabled).toBe(true);
+        expect(document.getElementsByClassName("first-page")[0].classList.contains('disabled')).toBe(false);
+        expect(document.getElementsByClassName("prev-page")[0].classList.contains('disabled')).toBe(false);
+        expect(document.getElementsByClassName("next-page")[0].classList.contains('disabled')).toBe(true);
+        expect(document.getElementsByClassName("last-page")[0].classList.contains('disabled')).toBe(true);
         document.getElementsByClassName("first-page")[0].click();
         document.getElementsByClassName("prev-page")[0].click();
         document.getElementsByClassName("next-page")[0].click();

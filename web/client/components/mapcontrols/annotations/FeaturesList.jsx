@@ -5,15 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {Glyphicon, ControlLabel} = require('react-bootstrap');
-const uuidv1 = require('uuid/v1');
-const bbox = require('@turf/bbox');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const cs = require('classnames');
-const Message = require('../../I18N/Message');
-const {get} = require('lodash');
-const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
+import React from 'react';
+import {Glyphicon, ControlLabel} from 'react-bootstrap';
+import uuidv1 from 'uuid/v1';
+import bbox from '@turf/bbox';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import cs from 'classnames';
+import Message from '../../I18N/Message';
+import {get} from 'lodash';
+import {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} from '../../../utils/AnnotationsUtils';
 
 /**
  * Feature List component for Annotation Viewer.
@@ -33,7 +33,9 @@ const FeaturesList = (props) => {
         isMeasureEditDisabled,
         onSetAnnotationMeasurement,
         showPopupWarning,
-        setPopupWarning
+        setPopupWarning,
+        defaultStyles,
+        defaultPointType
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);
@@ -69,7 +71,7 @@ const FeaturesList = (props) => {
                             visible: isMeasureEditDisabled,
                             disabled: !isValidFeature,
                             onClick: () => {
-                                const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}];
+                                const style = [{ ...defaultStyles.POINT?.[defaultPointType], highlight: true, id: uuidv1()}];
                                 onClickGeometry("Point", style);
                             },
                             tooltip: <Message msgId="annotations.titles.marker" />
@@ -143,16 +145,19 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
     const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
     const unselect = selected?.properties?.id === properties?.id;
-    const isValidFeature = selected?.properties?.isValidFeature || properties?.isValidFeature;
+    const selectedIsValidFeature = get(selected, "properties.isValidFeature", true);
+    const isValidFeature = selectedIsValidFeature || properties?.isValidFeature;
+    const allowCardMouseEvent = !unselect && selectedIsValidFeature;
 
     return (
         <div
             className={cs('geometry-card', {'ms-selected': unselect})}
-            onMouseEnter={() => !unselect && onGeometryHighlight(properties.id)}
-            onMouseLeave={() => !unselect && onGeometryHighlight(properties.id, false)}
+            onMouseEnter={() => allowCardMouseEvent && onGeometryHighlight(properties.id)}
+            onMouseLeave={() => allowCardMouseEvent && onGeometryHighlight(properties.id, false)}
             onClick={() =>{
                 if (unselect) {
                     onUnselectFeature();
+                    onGeometryHighlight(properties.id);
                 } else {
                     onSelectFeature([feature]);
                     setTabValue(isMeasureEditDisabled ? 'coordinates' : 'style');
@@ -207,7 +212,9 @@ FeaturesList.defaultProps = {
     onStyleGeometry: () => {},
     onSetAnnotationMeasurement: () => {},
     onSelectFeature: () => {},
-    isMeasureEditDisabled: true
+    setTabValue: () => {},
+    isMeasureEditDisabled: true,
+    defaultPointType: 'marker'
 };
 
-module.exports = FeaturesList;
+export default FeaturesList;

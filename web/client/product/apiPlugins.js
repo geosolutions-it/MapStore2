@@ -6,27 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = {
+export default {
     plugins: {
         // framework plugins
-        BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
-        DrawerMenuPlugin: require('../plugins/DrawerMenu'),
-        FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
-        GoFullPlugin: require('../plugins/GoFull'),
-        IdentifyPlugin: require('../plugins/Identify'),
-        LocatePlugin: require('../plugins/Locate'),
-        MapFooterPlugin: require('../plugins/MapFooter'),
-        MapLoadingPlugin: require('../plugins/MapLoading'),
-        MapPlugin: require('../plugins/Map'),
-        OmniBarPlugin: require('../plugins/OmniBar'),
-        SearchPlugin: require('../plugins/Search'),
-        TOCPlugin: require('../plugins/TOC'),
-        ToolbarPlugin: require('../plugins/Toolbar'),
-        ZoomAllPlugin: require('../plugins/ZoomAll')
+        DetailsPlugin: require('../plugins/Details').default,
+        DrawerMenuPlugin: require('../plugins/DrawerMenu').default,
+        FeedbackMaskPlugin: require('../plugins/FeedbackMask').default,
+        GoFullPlugin: require('../plugins/GoFull').default,
+        IdentifyPlugin: require('../plugins/Identify').default,
+        LocatePlugin: require('../plugins/Locate').default,
+        MapFooterPlugin: require('../plugins/MapFooter').default,
+        MapLoadingPlugin: require('../plugins/MapLoading').default,
+        MapPlugin: require('../plugins/Map').default,
+        OmniBarPlugin: require('../plugins/OmniBar').default,
+        SearchPlugin: require('../plugins/Search').default,
+        TOCPlugin: require('../plugins/TOC').default,
+        ToolbarPlugin: require('../plugins/Toolbar').default,
+        ZoomAllPlugin: require('../plugins/ZoomAll').default
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,
 
-        SwipeHeader: require('../components/data/identify/SwipeHeader')
+        SwipeHeader: require('../components/data/identify/SwipeHeader').default
     }
 };

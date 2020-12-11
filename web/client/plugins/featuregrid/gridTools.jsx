@@ -1,18 +1,18 @@
-const React = require('react');
-const bbox = require('@turf/bbox');
-const {zoomToExtent} = require('../../actions/map');
-const Message = require('../../components/I18N/Message');
-const {Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../components/misc/OverlayTrigger');
+import React from 'react';
+import bbox from '@turf/bbox';
+import { zoomToExtent } from '../../actions/map';
+import Message from '../../components/I18N/Message';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../components/misc/OverlayTrigger';
 
-module.exports = [{
+export default [{
     name: '',
     key: "geometry",
     width: 35,
     frozen: true,
     events: {
-        onClick: (p, opts, describe, {crs} = {}) => {
-            return p.geometry ? zoomToExtent(bbox(p), crs || "EPSG:4326") : {type: "NONE"};
+        onClick: (p, opts, describe, {crs, maxZoom} = {}) => {
+            return p.geometry ? zoomToExtent(bbox(p), crs || "EPSG:4326", maxZoom) : {type: "NONE"};
         }
     },
     formatter: ({value} = {}) => value ? <Glyphicon glyph="zoom-to" /> :

@@ -6,27 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { connect } = require('react-redux');
-const {get} = require('lodash');
-const { isGeometryType } = require('../../utils/ogc/WFS/base');
-const { compose, renameProps, branch, renderComponent, mapPropsStream } = require('recompose');
-const InfoPopover = require('../../components/widgets/widget/InfoPopover');
-const Message = require('../../components/I18N/Message');
-const BorderLayout = require('../../components/layout/BorderLayout');
+import React from 'react';
+import { connect } from 'react-redux';
+import {get} from 'lodash';
+import { isGeometryType } from '../../utils/ogc/WFS/base';
+import { compose, renameProps, branch, renderComponent, mapPropsStream } from 'recompose';
+import InfoPopover from '../../components/widgets/widget/InfoPopover';
+import Message from '../../components/I18N/Message';
+import BorderLayout from '../../components/layout/BorderLayout';
 
-const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } = require('../../actions/widgets');
+import BuilderHeader from './BuilderHeader';
+import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
 
-const builderConfiguration = require('../../components/widgets/enhancers/builderConfiguration');
-const chartLayerSelector = require('./enhancers/chartLayerSelector');
-const viewportBuilderConnect = require('./enhancers/connection/viewportBuilderConnect');
-const viewportBuilderConnectMask = require('./enhancers/connection/viewportBuilderConnectMask');
-const withExitButton = require('./enhancers/withExitButton');
-const withConnectButton = require('./enhancers/connection/withConnectButton');
-const {
-    wizardStateToProps,
-    wizardSelector
-} = require('./commons');
+import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
+import chartLayerSelector from './enhancers/chartLayerSelector';
+import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
+import viewportBuilderConnectMask from './enhancers/connection/viewportBuilderConnectMask';
+import withExitButton from './enhancers/withExitButton';
+import withConnectButton from './enhancers/connection/withConnectButton';
+import { wizardStateToProps, wizardSelector} from './commons';
+import TableWizard from '../../components/widgets/builder/wizard/TableWizard';
+import BaseToolbar from '../../components/widgets/builder/wizard/table/Toolbar';
+import LayerSelector from './LayerSelector';
 
 const Builder = connect(
     wizardSelector,
@@ -38,7 +39,7 @@ const Builder = connect(
     },
     wizardStateToProps
 )(compose(
-    builderConfiguration,
+    builderConfiguration(),
     renameProps({
         editorData: "data",
         onEditorChange: "onChange"
@@ -54,9 +55,8 @@ const Builder = connect(
                 }
             }).ignoreElements()
     ))
-)(require('../../components/widgets/builder/wizard/TableWizard')));
+)(TableWizard));
 
-const BuilderHeader = require('./BuilderHeader');
 const Toolbar = compose(
     connect(wizardSelector, {
         openFilterEditor,
@@ -69,7 +69,7 @@ const Toolbar = compose(
     viewportBuilderConnect,
     withExitButton(),
     withConnectButton(({ step }) => step === 0)
-)(require('../../components/widgets/builder/wizard/table/Toolbar'));
+)(BaseToolbar);
 
 /*
  * in case you don't have a layer selected (e.g. dashboard) the table builder
@@ -80,11 +80,11 @@ const chooseLayerEnhancer = compose(
     viewportBuilderConnectMask,
     branch(
         ({ layer } = {}) => !layer,
-        renderComponent(chartLayerSelector(require('./LayerSelector')))
+        renderComponent(chartLayerSelector(LayerSelector))
     )
 );
 
-module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData = {}, exitButton, toggleConnection, availableDependencies = [], dependencies, ...props } = {}) =>
+export default chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData = {}, exitButton, toggleConnection, availableDependencies = [], dependencies, ...props } = {}) =>
 
     (<BorderLayout
         header={

@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {generateEnvString} = require('../LayerLocalizationUtils');
+import { generateEnvString } from '../LayerLocalizationUtils';
 
 const envMock = [
     {

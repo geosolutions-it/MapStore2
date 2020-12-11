@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,13 +5,17 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
-const ImporterUtils = require('../../../utils/ImporterUtils');
-const {Table, Glyphicon, Button, Label, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
-const {findIndex} = require('lodash');
+
+import React from 'react';
+import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
+import { Table, Glyphicon, Label, Tooltip } from 'react-bootstrap';
+import { findIndex } from 'lodash';
+
+import Button from '../misc/Button';
+import Message from '../../I18N/Message';
+import { getbsStyleForState } from '../../../utils/ImporterUtils';
+import OverlayTrigger from '../../misc/OverlayTrigger';
 
 class ImportsGrid extends React.Component {
     static propTypes = {
@@ -48,10 +51,6 @@ class ImportsGrid extends React.Component {
         clearInterval(this.interval);
     }
 
-    getbsStyleForState = (state) => {
-        return ImporterUtils.getbsStyleForState(state);
-    };
-
     renderLoadingMessage = (importObj) => {
         switch (importObj.message) {
         case "deleting":
@@ -79,7 +78,7 @@ class ImportsGrid extends React.Component {
         let tooltip = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={importObj && importObj.id}>
             <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadImport(importObj.id); }} >{importObj.id}</a></td>
-            <td key="state"><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label>
+            <td key="state"><Label bsStyle={getbsStyleForState(importObj.state)}>{importObj.state}</Label>
                 {this.renderLoadingImport(importObj)}
                 {this.renderImportErrorMessage(importObj)}
             </td>
@@ -121,4 +120,4 @@ class ImportsGrid extends React.Component {
     };
 }
 
-module.exports = ImportsGrid;
+export default ImportsGrid;

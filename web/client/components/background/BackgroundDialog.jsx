@@ -13,9 +13,10 @@ import uuidv1 from 'uuid/v1';
 import {pick, omit, get, keys, isNumber, isBoolean} from 'lodash';
 import Message from '../I18N/Message';
 import ResizableModal from '../misc/ResizableModal';
-import {Form, FormGroup, ControlLabel, FormControl, Button as ButtonRB, Glyphicon} from 'react-bootstrap';
+import {Form, FormGroup, ControlLabel, FormControl, Glyphicon} from 'react-bootstrap';
+import ButtonRB from '../misc/Button';
 import Thumbnail from '../maps/forms/Thumbnail';
-import LocaleUtils from '../../utils/LocaleUtils';
+import {getMessageById} from '../../utils/LocaleUtils';
 import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
 
@@ -170,7 +171,7 @@ export default class BackgroundDialog extends React.Component {
                         <div style={{ display: 'flex', flex: 1, marginRight: 8 }}>
                             <FormControl
                                 style={{ width: '50%', marginRight: 8, minWidth: 0 }}
-                                placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.parameter")}
+                                placeholder={getMessageById(this.context.messages, "backgroundDialog.parameter")}
                                 value={val.param}
                                 onChange={e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)} />
                             {val.type === 'boolean' ?
@@ -183,7 +184,7 @@ export default class BackgroundDialog extends React.Component {
                                 </div> :
                                 <FormControl
                                     style={{ width: '50%', minWidth: 0 }}
-                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.value")}
+                                    placeholder={getMessageById(this.context.messages, "backgroundDialog.value")}
                                     value={val.val.toString()}
                                     onChange={e => this.addAdditionalParameter(e.target.value, 'val', val.id, val.type)} />}
                         </div>
@@ -194,7 +195,7 @@ export default class BackgroundDialog extends React.Component {
                             value={val.type}
                             options={this.props.parameterTypeOptions.map(({ label, ...other }) => ({
                                 ...other,
-                                label: LocaleUtils.getMessageById(this.context.messages, label)
+                                label: getMessageById(this.context.messages, label)
                             }))} />
                         <Button
                             onClick={() => this.setState({
@@ -259,7 +260,7 @@ export default class BackgroundDialog extends React.Component {
                     <ControlLabel><Message msgId="layerProperties.title"/></ControlLabel>
                     <FormControl
                         value={this.state.title}
-                        placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.titlePlaceholder")}
+                        placeholder={getMessageById(this.context.messages, "backgroundDialog.titlePlaceholder")}
                         onChange={event => this.setState({title: event.target.value})}/>
                 </FormGroup>
                 {this.renderSpecificTypeForm()}

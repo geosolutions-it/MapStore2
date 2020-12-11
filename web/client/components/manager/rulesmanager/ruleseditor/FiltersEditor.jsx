@@ -5,21 +5,21 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {Grid} = require('react-bootstrap');
-const ContainerDimensions = require('react-container-dimensions').default;
-const {Controlled: Codemirror} = require('react-codemirror2');
-require('codemirror/lib/codemirror.css');
-require('codemirror/mode/sql/sql');
-const switchEnhancer = require("./enhancers/switch");
-const filtersEnhancer = require("./enhancers/filters");
-const MapModal = require("../MapModal");
-const MapSwitch = require("../../../misc/switch/SwitchPanel");
-const SwitchPanel = switchEnhancer(MapSwitch);
-const Message = require("../../../I18N/Message");
-const SpatialFilter = require("../SimpleSpatialFilter");
+import React from 'react';
 
-const {isEmpty} = require("lodash");
+import { Grid } from 'react-bootstrap';
+import ContainerDimensions from 'react-container-dimensions';
+import { Controlled as Codemirror } from 'react-codemirror2';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/mode/sql/sql';
+import switchEnhancer from './enhancers/switch';
+import filtersEnhancer from './enhancers/filters';
+import MapModal from '../MapModal';
+import MapSwitch from '../../../misc/switch/SwitchPanel';
+const SwitchPanel = switchEnhancer(MapSwitch);
+import Message from '../../../I18N/Message';
+import SpatialFilter from '../SimpleSpatialFilter';
+import { isEmpty } from 'lodash';
 
 const spatialMethodOptions = [
     {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
@@ -29,7 +29,7 @@ const spatialMethodOptions = [
 ];
 
 
-module.exports = filtersEnhancer(({onMapReady, geometryState = {}, spatialField = {}, layer = {}, constraints = {}, active = false, setOption = () => {}, mapActive = false, actions = {}}) => {
+export default filtersEnhancer(({onMapReady, geometryState = {}, spatialField = {}, layer = {}, constraints = {}, active = false, setOption = () => {}, mapActive = false, actions = {}}) => {
     const enabled = !isEmpty(layer);
     return enabled && (
         <Grid className="ms-rule-editor" fluid style={{ width: '100%', display: active ? 'block' : 'none'}}>

@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,9 +6,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Radio} = require('react-bootstrap');
-const LocaleUtils = require('../../utils/LocaleUtils');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Radio } from 'react-bootstrap';
+import { getMessageById } from '../../utils/LocaleUtils';
 
 class PrintOptions extends React.Component {
     static propTypes = {
@@ -44,7 +45,7 @@ class PrintOptions extends React.Component {
             checked={this.props.selected === option.value}
             onChange={this.onChange}
             value={option.value}
-        >{LocaleUtils.getMessageById(this.context.messages, option.label)}</Radio>);
+        >{getMessageById(this.context.messages, option.label)}</Radio>);
     };
 
     render() {
@@ -62,4 +63,4 @@ class PrintOptions extends React.Component {
     };
 }
 
-module.exports = PrintOptions;
+export default PrintOptions;

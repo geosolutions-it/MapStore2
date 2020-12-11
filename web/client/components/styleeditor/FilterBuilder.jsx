@@ -9,7 +9,8 @@
 import React from 'react';
 import GroupField from '../data/query/GroupField';
 import Popover from './Popover';
-import { Glyphicon, Button as ButtonRB } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
+import ButtonRB from '../misc/Button';
 import tooltip from '../misc/enhancers/tooltip';
 
 const Button = tooltip(ButtonRB);

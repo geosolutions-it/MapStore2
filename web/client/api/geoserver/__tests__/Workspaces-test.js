@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var API = require('../Workspaces');
+import expect from 'expect';
+
+import API from '../Workspaces';
 
 describe('Test Workspaces rest API', () => {
     it('getWorkspaces', (done) => {

@@ -7,13 +7,14 @@
 */
 
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const assign = require('object-assign');
-const AutocompleteListItem = require('./AutocompleteListItem');
-const PagedCombobox = require('../../misc/combobox/PagedCombobox');
-const {isLikeOrIlike} = require('../../../utils/FilterUtils');
-const HTML = require('../../../components/I18N/HTML');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import assign from 'object-assign';
+import AutocompleteListItem from './AutocompleteListItem';
+import PagedCombobox from '../../misc/combobox/PagedCombobox';
+import { isLikeOrIlike } from '../../../utils/FilterUtils';
+import HTML from '../../../components/I18N/HTML';
 
 class AutocompleteFieldHOC extends React.Component {
     static propTypes = {
@@ -151,4 +152,4 @@ class AutocompleteFieldHOC extends React.Component {
     };
 }
 
-module.exports = AutocompleteFieldHOC;
+export default AutocompleteFieldHOC;

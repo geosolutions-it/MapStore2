@@ -11,7 +11,10 @@ import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import { find, get } from 'lodash';
+import { setObservableConfig } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 import ConfigureMapTemplate from '../ConfigureMapTemplates';
+setObservableConfig(rxjsConfig);
 
 describe('ConfigureMapTemplate component', () => {
     beforeEach((done) => {
@@ -65,5 +68,24 @@ describe('ConfigureMapTemplate component', () => {
         TestUtils.Simulate.click(confirmButton);
 
         expect(onDeleteSpy).toHaveBeenCalled();
+    });
+    it('ConfigureMapTemplate name is editable in SaveDialog when editedTemplate is not provided', () => {
+        const template = {
+            id: 1,
+            name: 'template',
+            description: 'desc'
+        };
+
+        ReactDOM.render(<ConfigureMapTemplate showUploadDialog mapTemplates={[template]}/>, document.getElementById("container"));
+
+        const dialog = document.getElementsByClassName('ms-map-properties')[0];
+        expect(dialog).toExist();
+        const input = Array.prototype.filter.call(dialog.getElementsByTagName('input'), inputEl => inputEl.getAttribute('placeholder') === 'saveDialog.namePlaceholder')[0];
+        expect(input).toExist();
+
+        input.value = 'x';
+        TestUtils.Simulate.change(input);
+
+        expect(input.value).toBe('x');
     });
 });

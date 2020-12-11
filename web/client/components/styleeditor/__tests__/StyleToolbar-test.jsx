@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const StyleToolbar = require('../StyleToolbar');
-const expect = require('expect');
+import React from 'react';
+
+import ReactDOM from 'react-dom';
+import StyleToolbar from '../StyleToolbar';
+import expect from 'expect';
 
 describe('test StyleToolbar module component', () => {
     beforeEach((done) => {
@@ -49,7 +50,7 @@ describe('test StyleToolbar module component', () => {
         ReactDOM.render(<StyleToolbar editEnabled status="edit"/>, document.getElementById("container"));
         const buttons = document.querySelectorAll('.btn');
         expect(buttons.length).toBe(2);
-        const disabledButtons = document.querySelectorAll('button:disabled');
+        const disabledButtons = document.querySelectorAll('button.disabled');
         expect(disabledButtons.length).toBe(0);
     });
 
@@ -68,7 +69,7 @@ describe('test StyleToolbar module component', () => {
         const checkButtons = ({present, disabled}) => {
             const buttons = document.querySelectorAll('.btn');
             expect(buttons.length).toBe(present);
-            const disabledButtons = document.querySelectorAll('button:disabled');
+            const disabledButtons = document.querySelectorAll('button.disabled');
             expect(disabledButtons.length).toBe(disabled);
         };
         ReactDOM.render(<StyleToolbar selectedStyle="" layerDefaultStyleName="polygon" editEnabled />, document.getElementById("container"));

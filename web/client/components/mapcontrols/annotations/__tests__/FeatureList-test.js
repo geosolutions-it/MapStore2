@@ -49,7 +49,56 @@ describe("test FeatureList component", () => {
         const buttons = container.querySelectorAll("button");
         expect(buttons.length).toBe(1);
     });
+    it('test geometries toolbar', () => {
+        const editing = {
+            features: [{
+                properties: {id: '1', isValidFeature: true, geometryTitle: 'Polygon'},
+                geometry: {type: "Polygon"}
+            }]
+        };
+        const actions = {
+            onAddGeometry: () => {},
+            onSetStyle: () => {},
+            onStyleGeometry: () => {},
+            onStartDrawing: () => {},
+            onAddText: () => {}
+        };
+        const defaultStyle = {POINT: {
+            marker: ["Test marker"],
+            symbol: ["Test symbol"]
+        }};
+        const spyOnAddGeometry = expect.spyOn(actions, "onAddGeometry");
+        const spyOnSetStyle = expect.spyOn(actions, "onSetStyle");
+        const spyOnStyleGeometry = expect.spyOn(actions, "onStyleGeometry");
+        const spyOnStartDrawing = expect.spyOn(actions, "onStartDrawing");
+        const spyOnAddText = expect.spyOn(actions, "onAddText");
+        ReactDOM.render(<FeaturesList editing={editing}
+            defaultStyles={defaultStyle}
+            defaultPointType={'symbol'}
+            onAddGeometry={actions.onAddGeometry}
+            onSetStyle={actions.onSetStyle}
+            onStyleGeometry={actions.onStyleGeometry}
+            onStartDrawing={actions.onStartDrawing}
+            onAddText={actions.onAddText}
+        />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
 
+        const geometriesToolbar = document.querySelector('.geometries-toolbar');
+        const buttons = geometriesToolbar.children[1].getElementsByTagName('button');
+        [...buttons].forEach((btn, index)=>{
+            TestUtils.Simulate.click(btn);
+            expect(spyOnSetStyle).toHaveBeenCalled();
+            if (index === 0) {
+                const [style] = spyOnSetStyle.calls[0].arguments[0];
+                expect(style["0"]).toEqual('Test symbol');
+            }
+            index === 3 && expect(spyOnAddText).toHaveBeenCalled();
+            expect(spyOnAddGeometry).toHaveBeenCalled();
+            expect(spyOnStartDrawing).toHaveBeenCalled();
+            expect(spyOnStyleGeometry).toHaveBeenCalled();
+        });
+    });
     it('test render with feature card', () => {
         const editing = {
             features: [{
@@ -152,10 +201,12 @@ describe("test FeatureList component", () => {
             selected: {properties: {id: '1'}}
         };
         const testHandlers = {
-            onUnselectFeature: () => {}
+            onUnselectFeature: () => {},
+            onGeometryHighlight: () => {}
         };
         const spyOnUnselectFeature = expect.spyOn(testHandlers, "onUnselectFeature");
-        ReactDOM.render(<FeaturesList {...props} onUnselectFeature={testHandlers.onUnselectFeature}/>, document.getElementById("container"));
+        const spyOnGeometryHighlight = expect.spyOn(testHandlers, "onGeometryHighlight");
+        ReactDOM.render(<FeaturesList {...props} onUnselectFeature={testHandlers.onUnselectFeature} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toBeTruthy();
 
@@ -165,6 +216,8 @@ describe("test FeatureList component", () => {
         // OnUnSelectFeature
         TestUtils.Simulate.click(featureCard[0]);
         expect(spyOnUnselectFeature).toHaveBeenCalled();
+        expect(spyOnGeometryHighlight).toHaveBeenCalled();
+        expect(spyOnGeometryHighlight.calls[0].arguments[0]).toBe('1');
     });
 
     it('test geometry highlight', () => {
@@ -207,6 +260,39 @@ describe("test FeatureList component", () => {
         expect(spyOnGeometryHighlight).toHaveBeenCalled();
         expect(spyOnGeometryHighlight.calls[1].arguments[0]).toBe('1');
         expect(spyOnGeometryHighlight.calls[1].arguments[1]).toBe(false);
+    });
 
+    it('test geometry highlight limitations', () => {
+        let props = {
+            editing: {
+                features: [{
+                    type: "Feature",
+                    properties: {id: '1', isValidFeature: false, geometryTitle: 'Polygon'},
+                    geometry: {type: "Polygon"}
+                }]
+            },
+            selected: {properties: {id: '2', isValidFeature: false}}
+        };
+        const testHandlers = {
+            onGeometryHighlight: () => {}
+        };
+        const spyOnGeometryHighlight = expect.spyOn(testHandlers, "onGeometryHighlight");
+        ReactDOM.render(<FeaturesList {...props} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
+        let container = document.getElementById('container');
+        expect(container).toBeTruthy();
+
+        let featureCard = document.getElementsByClassName('geometry-card');
+        expect(featureCard).toBeTruthy();
+
+        ReactDOM.render(<FeaturesList {...props} onGeometryHighlight={testHandlers.onGeometryHighlight}/>, document.getElementById("container"));
+        container = document.getElementById('container');
+        featureCard = document.getElementsByClassName('geometry-card');
+        // OnMouseEnter
+        TestUtils.Simulate.mouseEnter(featureCard[0]);
+        expect(spyOnGeometryHighlight).toNotHaveBeenCalled();
+
+        // OnMouseLeave
+        TestUtils.Simulate.mouseLeave(featureCard[0]);
+        expect(spyOnGeometryHighlight).toNotHaveBeenCalled();
     });
 });

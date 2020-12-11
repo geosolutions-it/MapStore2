@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { Glyphicon, Alert } = require('react-bootstrap');
-const DropText = require('./DropText');
-const Message = require('../../I18N/Message');
+import React from 'react';
+
+import { Glyphicon, Alert } from 'react-bootstrap';
+import DropText from './DropText';
+import Message from '../../I18N/Message';
 const errorMessages = {
     "FILE_NOT_SUPPORTED": <Message msgId="mapImport.errors.fileNotSupported" />,
     "PROJECTION_NOT_SUPPORTED": <Message msgId="mapImport.errors.projectionNotSupported" />
@@ -21,7 +22,7 @@ const toErrorMessage = error =>
         || <span><Message msgId="mapImport.errors.unknownError" />:<Alert bsStyle="warning">{error.message}</Alert></span>
         : <Message msgId="mapImport.errors.unknownError" />;
 
-module.exports = ({ error, ...props }) => (<div style={{
+export default ({ error, ...props }) => (<div style={{
     margin: 'auto',
     maxWidth: 550
 }}>

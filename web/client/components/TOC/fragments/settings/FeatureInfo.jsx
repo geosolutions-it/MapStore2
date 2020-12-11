@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Accordion = require('../../../misc/panels/Accordion');
-const {Glyphicon} = require('react-bootstrap');
-const Message = require('../../../I18N/Message');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import Accordion from '../../../misc/panels/Accordion';
+import { Glyphicon } from 'react-bootstrap';
+import Message from '../../../I18N/Message';
 
 /**
  * Component for rendering FeatureInfo an Accordion with current available format for get feature info
@@ -23,7 +24,7 @@ const Message = require('../../../I18N/Message');
  * @prop {function} onChange called when a format has been selected
  */
 
-module.exports = class extends React.Component {
+export default class extends React.Component {
     static propTypes = {
         element: PropTypes.object,
         defaultInfoFormat: PropTypes.object,
@@ -74,4 +75,4 @@ module.exports = class extends React.Component {
             </span>
         );
     }
-};
+}

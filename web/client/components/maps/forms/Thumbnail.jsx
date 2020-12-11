@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Message = require('../../../components/I18N/Message');
-const { getResourceIdFromURL } = require('../../../utils/ResourceUtils');
-const Thumbnail = require('../../misc/Thumbnail').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import Message from '../../../components/I18N/Message';
+import { getResourceIdFromURL } from '../../../utils/ResourceUtils';
+import Thumbnail from '../../misc/Thumbnail';
 
 const errorMessages = {
     "FORMAT": <Message msgId="map.errorFormat" />,
@@ -211,4 +212,4 @@ class MapThumbnail extends React.Component {
     };
 }
 
-module.exports = MapThumbnail;
+export default MapThumbnail;

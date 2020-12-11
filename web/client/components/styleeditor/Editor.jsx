@@ -6,28 +6,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const { Controlled: Codemirror } = require('react-codemirror2');
-const { debounce, isEqual, endsWith, isFunction } = require('lodash');
-const CM = require('codemirror/lib/codemirror');
-const BorderLayout = require('../layout/BorderLayout');
-const Loader = require('../misc/Loader');
-const InfoPopover = require('../widgets/widget/InfoPopover');
-const Message = require('../I18N/Message');
-const assign = require('object-assign');
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/addon/search/searchcursor';
+import 'codemirror/addon/selection/mark-selection';
+import 'codemirror/addon/hint/show-hint.css';
+import 'codemirror/addon/hint/show-hint';
+import 'codemirror/mode/xml/xml';
 
-require('codemirror/lib/codemirror.css');
-require('codemirror/addon/search/searchcursor');
-require('codemirror/addon/selection/mark-selection');
-require('codemirror/addon/hint/show-hint.css');
-require('codemirror/addon/hint/show-hint');
+import CM from 'codemirror/lib/codemirror';
+import { debounce, endsWith, isEqual, isFunction } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Controlled as Codemirror } from 'react-codemirror2';
+
+import Message from '../I18N/Message';
+import BorderLayout from '../layout/BorderLayout';
+import Loader from '../misc/Loader';
+import InfoPopover from '../widgets/widget/InfoPopover';
 
 /* SLD styling highlight */
-require('codemirror/mode/xml/xml');
 
-require('./mode/geocss')(CM);
-require('./hint/geocss')(CM);
+require('./mode/geocss').default(CM);
+require('./hint/geocss').default(CM);
 
 /**
  * Component for rendering a grid of style templates.
@@ -263,4 +264,4 @@ class Editor extends React.Component {
     }
 }
 
-module.exports = Editor;
+export default Editor;

@@ -6,18 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ReactDOM = require('react-dom');
-const {findIndex} = require('lodash');
-const ConfigUtils = require('../../utils/ConfigUtils');
-const { INIT_MAP } = require('../../actions/map');
-const { MAP_CONFIG_LOADED } = require('../../actions/config');
-const { CHANGE_BROWSER_PROPERTIES } = require('../../actions/browser');
+import ReactDOM from 'react-dom';
 
-const { LOCAL_CONFIG_LOADED } = require('../../actions/localConfig');
-
-
-const expect = require('expect');
-const MapStore2 = require('../MapStore2');
+import { findIndex } from 'lodash';
+import ConfigUtils from '../../utils/ConfigUtils';
+import { INIT_MAP } from '../../actions/map';
+import { MAP_CONFIG_LOADED } from '../../actions/config';
+import { CHANGE_BROWSER_PROPERTIES } from '../../actions/browser';
+import { LOCAL_CONFIG_LOADED } from '../../actions/localConfig';
+import expect from 'expect';
+import MapStore2 from '../MapStore2';
 
 const testConfig = {
     versionURL: 'base/web/client/test-resources/version.txt',

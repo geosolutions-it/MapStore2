@@ -8,9 +8,10 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, ButtonGroup} from 'react-bootstrap';
+import {ButtonGroup} from 'react-bootstrap';
 
-import LocaleUtils from '../../../utils/LocaleUtils';
+import Button from '../Button';
+import {getMessageById} from '../../../utils/LocaleUtils';
 import Message from '../../I18N/Message';
 import Filter from '../Filter';
 import Toolbar from '../../misc/toolbar/Toolbar';
@@ -42,8 +43,8 @@ const renderMoveButtons = (moveButtons) => (
 
 const localizeItem = (messages, { title, description, children, ...other}) => ({
     ...other,
-    title: title && LocaleUtils.getMessageById(messages, title),
-    description: description && LocaleUtils.getMessageById(messages, description),
+    title: title && getMessageById(messages, title),
+    description: description && getMessageById(messages, description),
     children: children && children.map(i => localizeItem(messages, i))
 });
 
@@ -77,7 +78,7 @@ const renderColumn = (
             </div>
             <Filter
                 filterText={filterText}
-                filterPlaceholder={LocaleUtils.getMessageById(messages, filterPlaceholder)}
+                filterPlaceholder={getMessageById(messages, filterPlaceholder)}
                 onFilter={onFilter}/>
         </div>
         <CardList

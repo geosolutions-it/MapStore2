@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const HtmlRenderer = require('../../../misc/HtmlRenderer');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import HtmlRenderer from '../../../misc/HtmlRenderer';
 
 const regexpBody = /^[\s\S]*<body>([\s\S]*)<\/body>[\s\S]*$/i;
 const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
@@ -34,4 +35,4 @@ class HTMLViewer extends React.Component {
     }
 }
 
-module.exports = HTMLViewer;
+export default HTMLViewer;

@@ -7,13 +7,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Form, FormGroup, FormControl, Glyphicon: GlyphiconRB, Button} = require('react-bootstrap');
-const tooltip = require('../misc/enhancers/tooltip');
+import React from 'react';
+import { padStart, isNil } from 'lodash';
+import PropTypes from 'prop-types';
+import moment from 'moment';
+import { Form, FormGroup, FormControl, Glyphicon as GlyphiconRB} from 'react-bootstrap';
+
+import tooltip from '../misc/enhancers/tooltip';
 const Glyphicon = tooltip(GlyphiconRB);
-const {padStart, isNil} = require('lodash');
-const moment = require('moment');
+import Button from '../misc/Button';
 
 class InlineDateTimeSelector extends React.Component {
     static propTypes = {
@@ -184,4 +186,4 @@ class InlineDateTimeSelector extends React.Component {
     }
 }
 
-module.exports = InlineDateTimeSelector;
+export default InlineDateTimeSelector;

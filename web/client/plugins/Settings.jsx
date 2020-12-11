@@ -1,40 +1,36 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
 
-const {loadLocale} = require('../actions/locale');
+import './settings/css/settings.css';
 
-const {toggleControl} = require('../actions/controls');
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, FormGroup, Glyphicon, Panel, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { ActionCreators } from 'redux-undo';
+
+import { toggleControl } from '../actions/controls';
+import { loadLocale } from '../actions/locale';
+import LangBarComp from '../components/I18N/LangBar';
+import HistoryBar from '../components/mapcontrols/navigationhistory/HistoryBar';
+import Dialog from '../components/misc/Dialog';
+import { getSupportedLocales } from '../utils/LocaleUtils';
+import Message from './locale/Message';
+import SettingsPanel from './settings/SettingsPanel';
 
 const LangBar = connect((state) => ({
     currentLocale: state.locale && state.locale.current
 }), {
     onLanguageChange: loadLocale.bind(null, null)
-})(require('../components/I18N/LangBar'));
+})(LangBarComp);
 
-require('./settings/css/settings.css');
-
-const HistoryBar = require('../components/mapcontrols/navigationhistory/HistoryBar');
-const { ActionCreators } = require('redux-undo');
 const {undo, redo} = ActionCreators;
-
-const Message = require('./locale/Message');
-
-const {Glyphicon, FormGroup, Row, Col} = require('react-bootstrap');
-
-const assign = require('object-assign');
-
-const SettingsPanel = require('./settings/SettingsPanel');
-const LocaleUtils = require('../utils/LocaleUtils');
-const {Panel} = require('react-bootstrap');
-const Dialog = require('../components/misc/Dialog');
 
 class SettingsButton extends React.Component {
     static propTypes = {
@@ -97,7 +93,7 @@ class SettingsButton extends React.Component {
                         </Row>
                         <Row>
                             <Col xs={12}>
-                                <LangBar dropdown={false} locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
+                                <LangBar dropdown={false} locales={getSupportedLocales()} key="langSelector"/>
                             </Col>
                         </Row>
                     </FormGroup>
@@ -176,7 +172,16 @@ const SettingsPlugin = connect((state) => ({
     toggleControl: toggleControl.bind(null, 'settings', null)
 })(SettingsButton);
 
-module.exports = {
+
+/**
+ * Settings window to configure some details of the current map.
+ * Is also a container for settings coming from the other plugins.
+ * Renders in {@link #plugins.BurgerMenu|BurgerMenu} an entry to open this window.
+ * @name Settings
+ * @class
+ * @memberof plugins
+ */
+export default {
     SettingsPlugin: assign(SettingsPlugin, {
         Toolbar: {
             name: 'settings',

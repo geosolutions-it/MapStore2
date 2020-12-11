@@ -5,13 +5,14 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {Grid, Row, Col, Glyphicon} = require('react-bootstrap');
-const Selectors = require("./attributeselectors");
-const Message = require("../../../I18N/Message");
+import React from 'react';
+
+import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
+import Selectors from './attributeselectors';
+import Message from '../../../I18N/Message';
 
 
-module.exports = ({rule = {}, setOption = () => {}, active = true}) => {
+export default ({rule = {}, setOption = () => {}, active = true}) => {
     const {grant, layer, workspace} = rule;
     const showInfo = grant !== "DENY" && layer && !workspace;
     return (

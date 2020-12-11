@@ -1,13 +1,21 @@
-var PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
+import React from 'react';
 
+import PropTypes from 'prop-types';
+
+/**
+ * Header of MapStore, rendered in the home page (big full-width image).
+ * @name Header
+ * @class
+ * @memberof plugins
+ * @prop {object} [style] the style for the main div.
+ */
 class Header extends React.Component {
     static propTypes = {
         style: PropTypes.object,
@@ -21,6 +29,6 @@ class Header extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     HeaderPlugin: Header
 };

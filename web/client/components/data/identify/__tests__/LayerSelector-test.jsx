@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const expect = require('expect');
-const ReactDOM = require('react-dom');
-const LayerSelector = require('../LayerSelector').default;
-const TestUtils = require('react-dom/test-utils');
+import React from 'react';
+
+import expect from 'expect';
+import ReactDOM from 'react-dom';
+import LayerSelector from '../LayerSelector';
+import { getValidator } from '../../../../utils/MapInfoUtils';
+import TestUtils from 'react-dom/test-utils';
 
 describe("LayerSelector component", () => {
     beforeEach((done) => {
@@ -33,10 +35,33 @@ describe("LayerSelector component", () => {
         expect(labelValue).toNotExist();
 
     });
+    it('test LayerSelector display only valid responses', () => {
+        const responses = [{layerMetadata: {title: "Test1"}, response: "no features were found"}, {layerMetadata: {title: "Test2"}, response: "GetFeatureInfo results"}];
+        ReactDOM.render(<LayerSelector loaded responses={responses} validator={getValidator} format={"text/plain"}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toExist();
+        const select = container.querySelector("#identify-layer-select");
+        expect(select).toExist();
+        const input = container.querySelector('input');
+        expect(input).toBeTruthy();
+
+        TestUtils.act(() => {
+            TestUtils.Simulate.focus(input);
+            TestUtils.Simulate.keyDown(input, { key: 'ArrowDown', keyCode: 40 });
+        });
+        const options = select.querySelectorAll(".Select-option");
+        // Invalid response - first option is hidden
+        expect(options[0].style.display).toBe('none');
+
+        // Valid response - second option is displayed
+        expect(options[1].style.display).toBe('block');
+    });
     it('test LayerSelector with value and setIndex', (done) => {
 
         let config = {
-            responses: [{layerMetadata: {title: "Layer 1"}}, {layerMetadata: {title: "Layer 2"}}],
+            responses: [
+                {layerMetadata: {title: "Layer 1"}, response: "GetFeatureInfo results1"},
+                {layerMetadata: {title: "Layer 2"}, response: "GetFeatureInfo results2"}],
             index: 0
         };
 

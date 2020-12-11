@@ -11,15 +11,18 @@
  * @type {Object}
  *
 */
-const Rx = require('rxjs');
-const axios = require('../libs/ajax');
-const {getWpsPayload} = require('../utils/ogc/WPS/autocomplete');
-const assign = require('object-assign');
-const {API} = require('../api/searchText');
-const {endsWith, head, isNil} = require('lodash');
-const url = require('url');
 
-const singleAttributeFilter = ({searchText = "", queriableAttributes = [], predicate = "ILIKE"} ) => {
+import url from 'url';
+
+import { endsWith, head, isNil } from 'lodash';
+import assign from 'object-assign';
+import Rx from 'rxjs';
+
+import {API} from '../api/searchText';
+import axios from '../libs/ajax';
+import { getWpsPayload } from '../utils/ogc/WPS/autocomplete';
+
+export const singleAttributeFilter = ({searchText = "", queriableAttributes = [], predicate = "ILIKE"} ) => {
     const attribute = head(queriableAttributes);
     const text = searchText.toLowerCase();
     let filter = `strToLowerCase(${attribute}) ${predicate} '%${text}%'`;
@@ -35,7 +38,7 @@ const singleAttributeFilter = ({searchText = "", queriableAttributes = [], predi
  * @memberof observables.autocomplete
  * @return {external:Observable} the stream used for fetching data for the autocomplete editor
 */
-const createPagedUniqueAutompleteStream = (props$) => props$
+export const createPagedUniqueAutompleteStream = (props$) => props$
     .distinctUntilChanged( ({value, currentPage}, newProps = {}) => !(newProps.value !== value || newProps.currentPage !== currentPage))
     .throttle(props => Rx.Observable.timer(props.delayDebounce || 0))
     .merge(props$.debounce(props => Rx.Observable.timer(props.delayDebounce || 0))).distinctUntilChanged()
@@ -60,7 +63,7 @@ const createPagedUniqueAutompleteStream = (props$) => props$
         return Rx.Observable.of({fetchedData: {values: [], size: 0}, busy: false});
     }).startWith({});
 
-const createWFSFetchStream = (props$) =>
+export const createWFSFetchStream = (props$) =>
     Rx.Observable.merge(
         props$.distinctUntilChanged(({value} = {}, {value: nextValue} = {}) => value === nextValue ).debounce(props => Rx.Observable.timer(props.delayDebounce || 0)),
         props$.distinctUntilChanged( ({filterProps, currentPage} = {}, {filterProps: nextFilterProps, currentPage: nextCurrentPage} ) => filterProps === nextFilterProps && currentPage === nextCurrentPage)
@@ -103,7 +106,8 @@ const createWFSFetchStream = (props$) =>
             }
             return Rx.Observable.of({fetchedData: {values: [], size: 0, features: []}, busy: false});
         }).startWith({});
-module.exports = {
+
+export default {
     createPagedUniqueAutompleteStream,
     createWFSFetchStream,
     singleAttributeFilter

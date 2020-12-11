@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const API = require('../GeoStoreDAO');
-const axios = require("../../libs/ajax");
-const MockAdapter = require("axios-mock-adapter");
+import expect from 'expect';
+
+import API from '../GeoStoreDAO';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
 
 let mockAxios;
 
@@ -197,28 +198,7 @@ describe('Test correctness of the GeoStore APIs', () => {
                     {
                         "groupName": "everyone",
                         "id": 1,
-                        "restUsers": {
-                            "User": [
-                                {
-                                    "groupsNames": "everyone",
-                                    "id": 3,
-                                    "name": "user",
-                                    "role": "USER"
-                                },
-                                {
-                                    "groupsNames": "everyone",
-                                    "id": 2,
-                                    "name": "admin",
-                                    "role": "ADMIN"
-                                },
-                                {
-                                    "groupsNames": "everyone",
-                                    "id": 1,
-                                    "name": "guest",
-                                    "role": "GUEST"
-                                }
-                            ]
-                        }
+                        "restUsers": {}
                     },
                     {
                         "description": "test",
@@ -246,28 +226,7 @@ describe('Test correctness of the GeoStore APIs', () => {
                 "UserGroup": {
                     "groupName": "everyone",
                     "id": 1,
-                    "restUsers": {
-                        "User": [
-                            {
-                                "groupsNames": "everyone",
-                                "id": 3,
-                                "name": "user",
-                                "role": "USER"
-                            },
-                            {
-                                "groupsNames": "everyone",
-                                "id": 2,
-                                "name": "admin",
-                                "role": "ADMIN"
-                            },
-                            {
-                                "groupsNames": "everyone",
-                                "id": 1,
-                                "name": "guest",
-                                "role": "GUEST"
-                            }
-                        ]
-                    }
+                    "restUsers": {}
                 }
             }
         };

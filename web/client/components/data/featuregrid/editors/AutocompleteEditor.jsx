@@ -5,12 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const PropTypes = require('prop-types');
-const AttributeEditor = require('./AttributeEditor');
-const {AutocompleteCombobox} = require('../../../misc/AutocompleteCombobox');
-const {getParsedUrl} = require('../../../../utils/ConfigUtils');
-const {createPagedUniqueAutompleteStream} = require('../../../../observables/autocomplete');
+
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import { createPagedUniqueAutompleteStream } from '../../../../observables/autocomplete';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import { AutocompleteCombobox } from '../../../misc/AutocompleteCombobox';
+import AttributeEditor from './AttributeEditor';
 
 /**
  * Editor for FeatureGrid, used for strings with auto-complete
@@ -50,8 +52,8 @@ class AutocompleteEditor extends AttributeEditor {
         };
     }
     render() {
-        return <AutocompleteCombobox {...this.props} url={getParsedUrl(this.props.url, {"outputFormat": "json"})} filter="contains" autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>;
+        return <AutocompleteCombobox {...this.props} url={ConfigUtils.getParsedUrl(this.props.url, {"outputFormat": "json"})} filter="contains" autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>;
     }
 }
 
-module.exports = AutocompleteEditor;
+export default AutocompleteEditor;

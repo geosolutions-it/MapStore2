@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var expect = require('expect');
-var ReactDOM = require('react-dom');
-var Template = require('../Template');
-const {Promise} = require('es6-promise');
+
+import {Promise} from 'es6-promise';
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Template from '../Template';
 
 describe("Test JSX Template", () => {
     beforeEach((done) => {
@@ -128,10 +130,10 @@ describe("Test JSX Template", () => {
                 expect(cmpDom).toExist();
 
                 comp = ReactDOM.render(
-                    <Template template="<div id='template'/>" model={{id: "temp"}} />
+                    <Template template="<div id='template'/>" model={{id: "temp"}} renderContent={(component)=> {
+                        expect(component).toContain('template');
+                    }} />
                     , document.getElementById("container"));
-                const cmpDom1 = document.getElementById("temp");
-                expect(cmpDom1).toExist();
                 done();
             } catch (ex) {
                 done(ex);

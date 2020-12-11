@@ -5,18 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
 
-const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
-const Message = require('../../components/I18N/Message');
-const BorderLayout = require("../../components/layout/BorderLayout");
-const Header = require("../../components/manager/rulesmanager/ruleseditor/Header");
-const MainEditor = require("../../components/manager/rulesmanager/ruleseditor/EditMain");
-const StylesEditor = require("../../components/manager/rulesmanager/ruleseditor/StylesEditor");
-const FiltersEditor = require("../../components/manager/rulesmanager/ruleseditor/FiltersEditor");
-const AttributesEditor = require("../../components/manager/rulesmanager/ruleseditor/AttributesEditor");
-const ModalDialog = require("../../components/manager/rulesmanager/ModalDialog");
+import PropTypes from 'prop-types';
+import { isSaveDisabled, isRulePristine, isRuleValid, askConfirm } from '../../utils/RulesEditorUtils';
+import Message from '../../components/I18N/Message';
+import BorderLayout from '../../components/layout/BorderLayout';
+import Header from '../../components/manager/rulesmanager/ruleseditor/Header';
+import MainEditor from '../../components/manager/rulesmanager/ruleseditor/EditMain';
+import StylesEditor from '../../components/manager/rulesmanager/ruleseditor/StylesEditor';
+import FiltersEditor from '../../components/manager/rulesmanager/ruleseditor/FiltersEditor';
+import AttributesEditor from '../../components/manager/rulesmanager/ruleseditor/AttributesEditor';
+import ModalDialog from '../../components/manager/rulesmanager/ModalDialog';
 
 
 class RuleEditor extends React.Component {
@@ -134,4 +134,4 @@ class RuleEditor extends React.Component {
 
     }
 }
-module.exports = RuleEditor;
+export default RuleEditor;

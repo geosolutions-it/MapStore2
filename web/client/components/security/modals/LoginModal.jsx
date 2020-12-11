@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,15 +6,15 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const LoginForm = require('../forms/LoginForm');
-const {Button} = require('react-bootstrap');
-const Modal = require('../../misc/Modal');
-const Message = require('../../../components/I18N/Message');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+import React from 'react';
+import PropTypes from 'prop-types';
 
-require('../css/security.css');
-
+import LoginForm from '../forms/LoginForm';
+import Modal from '../../misc/Modal';
+import Message from '../../../components/I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import '../css/security.css';
+import Button from '../../misc/Button';
 /**
  * A Modal window to show password reset form
  */
@@ -71,12 +70,12 @@ class LoginModal extends React.Component {
         return (<span role="footer">
             <Button
                 ref="submit"
-                value={LocaleUtils.getMessageById(this.context.messages, "user.signIn")}
+                value={getMessageById(this.context.messages, "user.signIn")}
                 bsStyle="primary"
                 bsSize={this.props.buttonSize}
                 className="pull-left"
                 onClick={this.loginSubmit}
-                key="submit">{LocaleUtils.getMessageById(this.context.messages, "user.signIn")}</Button>
+                key="submit">{getMessageById(this.context.messages, "user.signIn")}</Button>
             {this.props.includeCloseButton ? <Button
                 key="closeButton"
                 ref="closeButton"
@@ -117,4 +116,4 @@ class LoginModal extends React.Component {
     };
 }
 
-module.exports = LoginModal;
+export default LoginModal;

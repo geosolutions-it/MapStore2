@@ -11,7 +11,6 @@ import expect from 'expect';
 
 import BaseMap from '../BaseMap';
 import mapType from '../enhancers/mapType';
-
 const TestMap = mapType(BaseMap);
 
 const LAYER_OSM = {
@@ -133,21 +132,51 @@ describe('BaseMap', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('test openlayers map', () => {
-        const map = ReactDOM.render(<TestMap mapType="openlayers" id="myMap" layers={SAMPLE_LAYERS_1} />, document.getElementById("container"));
-        expect(map).toExist();
-        const el = ReactDOM.findDOMNode(map);
-        expect(el).toExist();
-        expect(el.id).toBe("myMap");
-        expect(el.querySelector('canvas')).toExist();
-
+    it('test openlayers map', (done) => {
+        const map = ReactDOM.render(<TestMap
+            mapType="openlayers"
+            id="myMap" layers={SAMPLE_LAYERS_1}
+            onMapTypeLoaded={() => {
+                expect(map).toBeTruthy();
+                const el = ReactDOM.findDOMNode(map);
+                expect(el).toBeTruthy();
+                expect(el.id).toBe("myMap");
+                expect(el.querySelector('canvas')).toBeTruthy();
+                done();
+            }}
+        />, document.getElementById("container"));
     });
-    it('test leaflet map', () => {
-        const map = ReactDOM.render(<TestMap mapType="leaflet" id="myMap" layers={SAMPLE_LAYERS_1} />, document.getElementById("container"));
-        expect(map).toExist();
-        const el = ReactDOM.findDOMNode(map);
-        expect(el).toExist();
-        expect(el.id).toBe("myMap");
-        expect(el.querySelector('div')).toExist();
+    it('test leaflet map', (done) => {
+        const map = ReactDOM.render(<TestMap
+            mapType="leaflet"
+            id="myMap"
+            layers={SAMPLE_LAYERS_1}
+            onMapTypeLoaded={() => {
+                expect(map).toBeTruthy();
+                const el = ReactDOM.findDOMNode(map);
+                expect(el).toBeTruthy();
+                expect(el.id).toBe("myMap");
+                expect(el.querySelector('div')).toBeTruthy();
+                done();
+            }}
+        />, document.getElementById("container"));
+    });
+    it('should allow children as tools', (done) => {
+        function MapTool({ map }) {
+            return map ? <div id="map-tool"></div> : null;
+        }
+        ReactDOM.render(
+            <TestMap
+                mapType="leaflet"
+                id="myMap"
+                layers={SAMPLE_LAYERS_1}
+                onMapTypeLoaded={() => {
+                    const mapToolNode = document.querySelector('#map-tool');
+                    expect(mapToolNode).toBeTruthy();
+                    done();
+                }}
+            >
+                <MapTool />
+            </TestMap>, document.getElementById("container"));
     });
 });

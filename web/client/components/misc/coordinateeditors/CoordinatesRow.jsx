@@ -6,16 +6,17 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Glyphicon, InputGroup} = require('react-bootstrap');
-const Toolbar = require('../toolbar/Toolbar');
-const draggableComponent = require('../enhancers/draggableComponent');
-const CoordinateEntry = require('./CoordinateEntry');
-const Message = require('../../I18N/Message');
-const {isEqual, isNumber} = require('lodash');
-const DropdownToolbarOptions = require('../toolbar/DropdownToolbarOptions');
-const OverlayTriggerCustom = require('../../misc/OverlayTriggerCustom').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Glyphicon, InputGroup } from 'react-bootstrap';
+import Toolbar from '../toolbar/Toolbar';
+import draggableComponent from '../enhancers/draggableComponent';
+import CoordinateEntry from './CoordinateEntry';
+import Message from '../../I18N/Message';
+import { isEqual, isNumber } from 'lodash';
+import DropdownToolbarOptions from '../toolbar/DropdownToolbarOptions';
+
 
 class CoordinatesRow extends React.Component {
     static propTypes = {
@@ -91,8 +92,7 @@ class CoordinatesRow extends React.Component {
                 glyph: 'trash',
                 onClick: () => {
                     this.props.onRemove(idx);
-                },
-                customOverlayTrigger: OverlayTriggerCustom
+                }
             },
             {
                 buttonConfig: {
@@ -120,8 +120,7 @@ class CoordinatesRow extends React.Component {
                 disabled: this.state.disabledApplyChange,
                 tooltipId: 'identifyCoordinateApplyChanges',
                 onClick: this.onSubmit,
-                visible: this.props.renderer !== "annotations",
-                customOverlayTrigger: OverlayTriggerCustom
+                visible: this.props.renderer !== "annotations"
             }
         ];
 
@@ -212,4 +211,4 @@ class CoordinatesRow extends React.Component {
     }
 }
 
-module.exports = draggableComponent(CoordinatesRow);
+export default draggableComponent(CoordinatesRow);

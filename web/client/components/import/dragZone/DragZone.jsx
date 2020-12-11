@@ -5,13 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Dropzone = require('react-dropzone');
-const { Button: RButton, Glyphicon } = require('react-bootstrap');
+import React from 'react';
 
-const tooltip = require('../../misc/enhancers/tooltip');
+import Dropzone from 'react-dropzone';
+import { Glyphicon } from 'react-bootstrap';
+import RButton from '../../misc/Button';
+import tooltip from '../../misc/enhancers/tooltip';
 const Button = tooltip(RButton);
-module.exports = ({
+
+export default ({
     accept,
     children,
     onRef = () => {},

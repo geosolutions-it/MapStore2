@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +7,13 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Choice = require('./Choice');
-const {Grid, Row, Col, Button, Glyphicon} = require('react-bootstrap');
-const IntlNumberFormControl = require('../I18N/IntlNumberFormControl');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
+
+import Choice from './Choice';
+import Button from '../misc/Button';
+import IntlNumberFormControl from '../I18N/IntlNumberFormControl';
 
 class Font extends React.Component {
     static propTypes = {
@@ -81,4 +84,4 @@ class Font extends React.Component {
     };
 }
 
-module.exports = Font;
+export default Font;

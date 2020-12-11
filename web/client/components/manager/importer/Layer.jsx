@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,9 +6,13 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {Panel, Button} = require('react-bootstrap');
-const Message = require("../../I18N/Message");
+
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Button from '../misc/Button';
+import { Panel } from 'react-bootstrap';
+import Message from '../../I18N/Message';
 
 
 class Layer extends React.Component {
@@ -92,4 +96,4 @@ class Layer extends React.Component {
     };
 }
 
-module.exports = Layer;
+export default Layer;

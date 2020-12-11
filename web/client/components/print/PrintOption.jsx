@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,8 +8,9 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Checkbox} = require('react-bootstrap');
+import React from 'react';
+
+import { Checkbox } from 'react-bootstrap';
 
 class PrintOption extends React.Component {
     static propTypes = {
@@ -47,4 +49,4 @@ class PrintOption extends React.Component {
     };
 }
 
-module.exports = PrintOption;
+export default PrintOption;

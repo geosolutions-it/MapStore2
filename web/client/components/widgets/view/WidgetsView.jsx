@@ -5,26 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
 
-const { pure, branch } = require('recompose');
-const { find, mapValues } = require('lodash');
-
-const { Responsive, WidthProvider: widthProvider } = require('react-grid-layout');
+import { pure, branch } from 'recompose';
+import { find, mapValues } from 'lodash';
+import { Responsive, WidthProvider as widthProvider } from 'react-grid-layout';
 const ResponsiveReactGridLayout =
     branch(
         ({ useDefaultWidthProvider = true }) => useDefaultWidthProvider,
         widthProvider
     )(Responsive);
-const withGroupColor = require('../enhancers/withGroupColor');
-const DefaultWidget = withGroupColor(require('../widget/DefaultWidget'));
+import withGroupColor from '../enhancers/withGroupColor';
+const DefaultWidget = withGroupColor(require('../widget/DefaultWidget').default);
 const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
-require('react-grid-layout/css/styles.css');
+import 'react-grid-layout/css/styles.css';
 
-const WIDGET_MOBILE_RIGHT_SPACE = 34;
-const getResponsiveWidgetWidth = width => width < 480 ? width - WIDGET_MOBILE_RIGHT_SPACE : width;
-
-module.exports = pure(({
+export default pure(({
     id,
     style,
     className = "",
@@ -48,6 +44,7 @@ module.exports = pure(({
     updateWidgetProperty = () => { },
     deleteWidget = () => { },
     toggleCollapse = ( ) => { },
+    toggleMaximize = () => { },
     editWidget = () => { },
     onLayoutChange = () => { },
     language,
@@ -62,7 +59,7 @@ module.exports = pure(({
         key={id || "widgets-view"}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
-        width={!useDefaultWidthProvider ? getResponsiveWidgetWidth(width) : undefined}
+        width={!useDefaultWidthProvider ? width : undefined}
         isResizable={canEdit}
         isDraggable={canEdit}
         draggableHandle={".draggableHandle"}
@@ -93,6 +90,8 @@ module.exports = pure(({
                         if (w) {
                             return {
                                 ...l,
+                                "isResizable": w.dataGrid && w.dataGrid.isResizable,
+                                "isDraggable": w.dataGrid && w.dataGrid.isDraggable,
                                 "static": w.dataGrid && w.dataGrid.static
                             };
                         }
@@ -114,7 +113,8 @@ module.exports = pure(({
                 enableColumnFilters={getEnableColumnFilters(w)}
                 canEdit={canEdit}
                 updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
-                toggleCollapse= {() => toggleCollapse(w)}
+                toggleCollapse={() => toggleCollapse(w)}
+                toggleMaximize={() => toggleMaximize(w)}
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)}
                 language={language}

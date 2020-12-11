@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +8,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {head} = require('lodash');
-const {FormGroup, Label, FormControl} = require('react-bootstrap');
-const Message = require('../I18N/Message');
+import React from 'react';
+
+import { head } from 'lodash';
+import { FormGroup, Label, FormControl } from 'react-bootstrap';
+import Message from '../I18N/Message';
 
 class ThemeSwitcher extends React.Component {
     static propTypes = {
@@ -43,4 +45,4 @@ class ThemeSwitcher extends React.Component {
     }
 }
 
-module.exports = ThemeSwitcher;
+export default ThemeSwitcher;

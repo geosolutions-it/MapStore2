@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {Observable} = require('rxjs');
-const bbox = require('@turf/bbox');
+import { Observable } from 'rxjs';
 
-const {changeDrawingStatus} = require('../actions/draw');
-const {zoomToExtent} = require('../actions/map');
-const {CHANGE_SPATIAL_FILTER_VALUE} = require('../actions/queryform');
+import bbox from '@turf/bbox';
+import { changeDrawingStatus } from '../actions/draw';
+import { zoomToExtent } from '../actions/map';
+import { CHANGE_SPATIAL_FILTER_VALUE } from '../actions/queryform';
 
-module.exports = {
+export default {
     updateSpatialFilterValue: action$ =>
         action$.ofType(CHANGE_SPATIAL_FILTER_VALUE)
             .switchMap( ({feature, srsName, style, options}) => Observable.of(

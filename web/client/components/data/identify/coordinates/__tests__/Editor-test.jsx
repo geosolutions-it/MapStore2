@@ -1,9 +1,11 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
-const expect = require('expect');
-const {isEmpty} = require('lodash');
-const Editor = require('../Editor');
+import expect from 'expect';
+import {isEmpty} from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+
+import Editor from '../Editor';
+
 describe('Identify Coordinate Editor component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -27,13 +29,13 @@ describe('Identify Coordinate Editor component', () => {
         const spyonChange = expect.spyOn(actions, 'onSubmit');
         ReactDOM.render(<Editor onSubmit={actions.onSubmit} />, document.getElementById("container"));
         const button = document.querySelector('span > button');
-        expect(button.disabled).toBe(true);
+        expect(button.classList.contains('disabled')).toBe(true);
         const latLonFields = document.querySelectorAll('input');
         ReactTestUtils.Simulate.focus(latLonFields[0]);
         ReactTestUtils.Simulate.change(latLonFields[0], { target: { value: 20} }); // <-- trigger event callback
         ReactTestUtils.Simulate.focus(latLonFields[1]);
         ReactTestUtils.Simulate.change(latLonFields[1], { target: { value: 10} }); // <-- trigger event callback
-        expect(button.disabled).toBe(false);
+        expect(button.classList.contains('disabled')).toBe(false);
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
         expect(isEmpty(spyonChange.calls[0].arguments[0])).toBe(false);

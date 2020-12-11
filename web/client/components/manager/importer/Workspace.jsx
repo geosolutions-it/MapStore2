@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,13 +5,17 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Select = require('react-select').default;
-const {FormControl, Button, Alert} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
-const LocaleUtils = require('../../../utils/LocaleUtils');
 
-module.exports = class extends React.Component {
+import React from 'react';
+import Select from 'react-select';
+import PropTypes from 'prop-types';
+import { FormControl, Alert } from 'react-bootstrap';
+
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import Button from '../misc/Button';
+
+export default class extends React.Component {
     static propTypes = {
         enabled: PropTypes.bool,
         status: PropTypes.object,
@@ -79,7 +82,7 @@ module.exports = class extends React.Component {
                 <FormControl
                     onChange={this.validate}
                     ref="workspaceNewName"
-                    placeholder={LocaleUtils.getMessageById(this.context.messages, "importer.workspace.new")}
+                    placeholder={getMessageById(this.context.messages, "importer.workspace.new")}
                     bsSize="small"
                     name="workspace-name"
                     key="workspace-name"
@@ -109,4 +112,4 @@ module.exports = class extends React.Component {
             this.props.createWorkspace(name, this.props.datastoreTemplates);
         }
     };
-};
+}

@@ -6,16 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const PropTypes = require('prop-types');
-const {
-    Popover,
-    Glyphicon
-} = require('react-bootstrap');
+import React from 'react';
 
-const Overlay = require('../../misc/Overlay');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import { Popover, Glyphicon } from 'react-bootstrap';
+import Overlay from '../../misc/Overlay';
+import OverlayTrigger from '../../misc/OverlayTrigger';
 /**
  * InfoPopover. A component that renders a icon with a Popover.
  * @prop {string} title the title of popover
@@ -91,4 +88,4 @@ class InfoPopover extends React.Component {
     }
 }
 
-module.exports = InfoPopover;
+export default InfoPopover;

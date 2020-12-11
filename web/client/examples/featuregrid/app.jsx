@@ -13,9 +13,9 @@ const {Provider} = require('react-redux');
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');
 
-const ConfigUtils = require('../../utils/ConfigUtils');
-const LocaleUtils = require('../../utils/LocaleUtils');
-const PluginsUtils = require('../../utils/PluginsUtils');
+const ConfigUtils = require('../../utils/ConfigUtils').default;
+const {getUserLocale} = require('../../utils/LocaleUtils');
+const {getPlugins} = require('../../utils/PluginsUtils');
 
 
 const assign = require('object-assign');
@@ -27,13 +27,13 @@ function startApp() {
 
     store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
     ConfigUtils.loadConfiguration().then(() => {
-        let locale = LocaleUtils.getUserLocale();
+        let locale = getUserLocale();
         store.dispatch(loadLocale('../../translations', locale));
     });
 
     ReactDOM.render(
         <Provider store={store}>
-            <App plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>
+            <App plugins={assign(getPlugins(plugins), {requires})}/>
         </Provider>,
         document.getElementById('container')
     );

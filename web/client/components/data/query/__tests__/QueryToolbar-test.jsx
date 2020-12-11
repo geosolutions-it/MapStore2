@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const expect = require('expect');
-const QueryToolbar = require('../QueryToolbar');
+import QueryToolbar from '../QueryToolbar';
+
 describe('QueryToolbar component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -64,10 +65,10 @@ describe('QueryToolbar component', () => {
                 }
             }];
         const checkButtonsEnabledCondition = (container) => (apply, save, discard, reset) => {
-            return expect(!container.querySelector("button#query-toolbar-query").disabled).toBe(!!apply, `expected apply to be ${apply ? 'enabled' : 'disabled'}`)
-                && expect(!container.querySelector("button#query-toolbar-save").disabled).toBe(!!save, `expected save to be ${save ? 'enabled' : 'disabled'}`)
-                && expect(!container.querySelector("button#query-toolbar-discard").disabled).toBe(!!discard, `expected discard to be ${discard ? 'enabled' : 'disabled'}`)
-                && expect(!container.querySelector("button#reset").disabled).toBe(!!reset, `expected reset to be ${reset ? 'enabled' : 'disabled'}`);
+            return expect(!container.querySelector("button#query-toolbar-query").classList.contains('disabled')).toBe(!!apply, `expected apply to be ${apply ? 'enabled' : 'disabled'}`)
+                && expect(!container.querySelector("button#query-toolbar-save").classList.contains('disabled')).toBe(!!save, `expected save to be ${save ? 'enabled' : 'disabled'}`)
+                && expect(!container.querySelector("button#query-toolbar-discard").classList.contains('disabled')).toBe(!!discard, `expected discard to be ${discard ? 'enabled' : 'disabled'}`)
+                && expect(!container.querySelector("button#reset").classList.contains('disabled')).toBe(!!reset, `expected reset to be ${reset ? 'enabled' : 'disabled'}`);
         };
         it('defaults', () => {
             ReactDOM.render(<QueryToolbar />, document.getElementById("container"));
@@ -76,7 +77,7 @@ describe('QueryToolbar component', () => {
             ReactDOM.render(<QueryToolbar advancedToolbar />, document.getElementById("container"));
             const buttons = [...container.querySelectorAll('button')];
             expect(buttons.length).toBe(4);
-            expect(buttons.filter(({ disabled }) => disabled).length).toBe(4);
+            expect(buttons.filter(({ classList }) => classList.contains('disabled')).length).toBe(4);
         });
         it('apply button is enabled when valid', () => {
             const container = document.getElementById('container');

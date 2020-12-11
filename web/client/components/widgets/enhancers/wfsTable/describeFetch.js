@@ -6,14 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rx = require('rxjs');
-const { describeFeatureType } = require('../../../../observables/wfs');
-const { getSearchUrl } = require('../../../../utils/LayersUtils');
+import Rx from 'rxjs';
+
+import { describeFeatureType } from '../../../../observables/wfs';
+import { getSearchUrl } from '../../../../utils/LayersUtils';
+
 /**
  * Retrieves feature types for the layer provideded in props. When the layer changes url,
  * @param {Obserbable} props$ props stream
  */
-module.exports = props$ =>
+export default props$ =>
     props$
         .distinctUntilChanged(({ layer: layer1 } = {}, { layer: layer2 } = {}) =>
             getSearchUrl(layer1) === getSearchUrl(layer2)

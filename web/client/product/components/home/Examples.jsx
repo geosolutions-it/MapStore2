@@ -5,23 +5,35 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
+import { Carousel, CarouselItem, Panel } from 'react-bootstrap';
 
-const I18N = require('../../../components/I18N/I18N');
-const {Panel, Button, Carousel, CarouselItem} = require('react-bootstrap');
+import I18N from '../../../components/I18N/I18N';
+import viewer3d from '../../assets/img/3DViewer.jpg';
+import api from '../../assets/img/Api.jpg';
+import featuregrid from '../../assets/img/FeatureGrid.jpg';
+import layertree from '../../assets/img/LayerTree.jpg';
+import mouseposition from '../../assets/img/MousePosition.jpg';
+import plugins from '../../assets/img/Plugins.jpg';
+import print from '../../assets/img/Print.jpg';
+import queryform from '../../assets/img/QueryForm.jpg';
+import rasterstyler from '../../assets/img/rasterstyler.jpg';
+import scalebar from '../../assets/img/ScaleBar.jpg';
+import viewer from '../../assets/img/Viewer.jpg';
+import Button from '../../../components/misc/Button';
 
 const carouselImages = {
-    viewer: require('../../assets/img/Viewer.jpg'),
-    "3dviewer": require('../../assets/img/3DViewer.jpg'),
-    mouseposition: require('../../assets/img/MousePosition.jpg'),
-    scalebar: require('../../assets/img/ScaleBar.jpg'),
-    layertree: require('../../assets/img/LayerTree.jpg'),
-    queryform: require('../../assets/img/QueryForm.jpg'),
-    featuregrid: require('../../assets/img/FeatureGrid.jpg'),
-    print: require('../../assets/img/Print.jpg'),
-    plugins: require('../../assets/img/Plugins.jpg'),
-    api: require('../../assets/img/Api.jpg'),
-    rasterstyler: require('../../assets/img/rasterstyler.jpg')
+    viewer,
+    "3dviewer": viewer3d,
+    mouseposition,
+    scalebar,
+    layertree,
+    queryform,
+    featuregrid,
+    print,
+    plugins,
+    api,
+    rasterstyler
 };
 
 class Examples extends React.Component {
@@ -90,4 +102,4 @@ class Examples extends React.Component {
     }
 }
 
-module.exports = Examples;
+export default Examples;

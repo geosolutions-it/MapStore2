@@ -1,14 +1,14 @@
-const React = require('react');
-
-const Message = require('../../I18N/Message');
-const {DropdownList} = require('react-widgets');
+import React from 'react';
+import Message from '../../I18N/Message';
+import { DropdownList } from 'react-widgets';
 
 const ListItem = ({ item } = {}) => (
     <span>
         {item && item.name ? <Message msgId={item.name} /> : null}
     </span>
 );
-module.exports = ({spatialOperations = [], onChange = () => {}, value} = {}) =>
+
+export default ({spatialOperations = [], onChange = () => {}, value} = {}) =>
     (<DropdownList
         valueField="id"
         className="geometry-operation-selector"

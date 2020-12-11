@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,12 +6,12 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {isEqual} = require('lodash');
+import React from 'react';
 
-const ComboField = require('./ComboField');
-
-const FilterUtils = require('../../../utils/FilterUtils');
+import { isEqual } from 'lodash';
+import ComboField from './ComboField';
+import PropTypes from 'prop-types';
+import { toOGCFilter } from '../../../utils/FilterUtils';
 
 class ZoneField extends React.Component {
     static propTypes = {
@@ -156,7 +155,7 @@ class ZoneField extends React.Component {
             }
         }
 
-        const filter = FilterUtils.toOGCFilter(this.props.typeName, filterObj, this.props.wfs, this.props.sort || {
+        const filter = toOGCFilter(this.props.typeName, filterObj, this.props.wfs, this.props.sort || {
             sortBy: this.props.searchAttribute,
             sortOrder: "ASC"
         });
@@ -243,4 +242,4 @@ class ZoneField extends React.Component {
     };
 }
 
-module.exports = ZoneField;
+export default ZoneField;

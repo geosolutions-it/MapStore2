@@ -5,13 +5,31 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const {compose, withProps} = require('recompose');
-const wpsAggregate = require('../../../observables/wps/aggregate');
-const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
-const Rx = require('rxjs');
+
+import { isNil, isObject } from 'lodash';
+import { compose, withProps } from 'recompose';
+import Rx from 'rxjs';
+
+import wpsAggregate from '../../../observables/wps/aggregate';
+import { getWpsUrl } from '../../../utils/LayersUtils';
+import propsStreamFactory from '../../misc/enhancers/propsStreamFactory';
+
 const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
-    AggregationResults.map( (res) => ({
-        ...GroupByAttributes.reduce( (a, p, i) => ({...a, [p]: res[i]}), {}),
+    AggregationResults.map((res) => ({
+        ...GroupByAttributes.reduce((a, p, i) => {
+            let value = res[i];
+            if (isObject(value)) {
+                if (!isNil(value.time)) {
+                    value = (new Date(value.time)).toISOString();
+                } else {
+                    throw new Error('Unknown response format from server');
+                }
+            }
+            return {
+                ...a,
+                [p]: value
+            };
+        }, {}),
         [`${AggregationFunctions[0]}(${AggregationAttribute})`]: res[res.length - 1]
     })).sort( (e1, e2) => {
         const n1 = parseFloat(e1[GroupByAttributes]);
@@ -34,7 +52,6 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.groupByAttributes === o2.groupByAttributes
     && o1.viewParams === o2.viewParams;
 
-const {getWpsUrl} = require('../../../utils/LayersUtils');
 
 const dataStreamFactory = ($props) =>
     $props
@@ -48,13 +65,13 @@ const dataStreamFactory = ($props) =>
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
                 wpsAggregate(getWpsUrl(layer), {featureType: layer.name, ...options, filter}, {
                     timeout: 15000
-                }).map((response) => ({
+                }).map((data) => ({
                     loading: false,
                     isAnimationActive: false,
                     error: undefined,
-                    data: wpsAggregateToChartData(response.data),
-                    series: [{dataKey: `${response.data.AggregationFunctions[0]}(${response.data.AggregationAttribute})`}],
-                    xAxis: {dataKey: response.data.GroupByAttributes[0]}
+                    data: wpsAggregateToChartData(data),
+                    series: [{dataKey: `${data.AggregationFunctions[0]}(${data.AggregationAttribute})`}],
+                    xAxis: {dataKey: data.GroupByAttributes[0]}
                 })).do(onLoad)
                     .catch((e) => Rx.Observable.of({
                         loading: false,
@@ -63,7 +80,7 @@ const dataStreamFactory = ($props) =>
                     }).do(onLoadError)
                     ).startWith({loading: true})
         );
-module.exports = compose(
+export default compose(
     withProps( () => ({
         dataStreamFactory
     })),

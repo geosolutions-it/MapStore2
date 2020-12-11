@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Message = require("../../plugins/locale/Message");
-const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import Message from '../../plugins/locale/Message';
+import { FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 
 
 class FeatureInfoTriggerSelector extends React.Component {
@@ -38,4 +39,4 @@ class FeatureInfoTriggerSelector extends React.Component {
     }
 }
 
-module.exports = FeatureInfoTriggerSelector;
+export default FeatureInfoTriggerSelector;

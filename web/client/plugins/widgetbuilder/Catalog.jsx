@@ -5,10 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../components/I18N/Message');
-const {defaultProps} = require('recompose');
-module.exports =
-    defaultProps({
-        title: <Message msgId="widgets.builder.wizard.selectALayer" />
-    })(require('../../components/catalog/CompactCatalog'));
+import React from 'react';
+import { defaultProps } from 'recompose';
+
+import CompactCatalog from '../../components/catalog/CompactCatalog';
+import Message from '../../components/I18N/Message';
+
+export default defaultProps({
+    title: <Message msgId="widgets.builder.wizard.selectALayer" />
+})(CompactCatalog);

@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const expect = require('expect');
-const gridPagination = require('../gridPagination');
+import ReactDOM from 'react-dom';
+import expect from 'expect';
+import gridPagination from '../gridPagination';
 const loadPage = () => {};
 const pageSize = 4;
 const CMP = gridPagination({loadPage, pageSize})(({className, bottom}) =>

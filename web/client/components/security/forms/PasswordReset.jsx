@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +6,12 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {FormControl, FormGroup, ControlLabel, Alert} = require('react-bootstrap');
-const Message = require('../../../components/I18N/Message');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+import React from 'react';
+
+import { FormControl, FormGroup, ControlLabel, Alert } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import Message from '../../../components/I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 /**
  * A DropDown menu for user details:
@@ -94,7 +95,7 @@ class PasswordReset extends React.Component {
                     type="password"
                     hasFeedback
                     onChange={this.changePassword}
-                    placeholder={LocaleUtils.getMessageById(this.context.messages, "user.newPwd")} />
+                    placeholder={getMessageById(this.context.messages, "user.newPwd")} />
             </FormGroup>
             <FormGroup validationState={this.isValid(this.state.password, this.state.passwordcheck) && this.getPwStyle() ? "success" : "error"}>
                 <ControlLabel>{this.props.passwordCheckText}</ControlLabel>
@@ -104,7 +105,7 @@ class PasswordReset extends React.Component {
                     type="password"
                     label={this.props.passwordCheckText}
                     onChange={this.changePasswordCheck}
-                    placeholder={LocaleUtils.getMessageById(this.context.messages, "user.retypePwd")} />
+                    placeholder={getMessageById(this.context.messages, "user.retypePwd")} />
             </FormGroup>
             {this.renderWarning()}
             {this.renderStatus()}
@@ -140,4 +141,4 @@ class PasswordReset extends React.Component {
     };
 }
 
-module.exports = PasswordReset;
+export default PasswordReset;

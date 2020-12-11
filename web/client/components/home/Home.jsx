@@ -5,12 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Glyphicon, Tooltip, Button} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
-const Message = require('../../components/I18N/Message');
-const ConfirmModal = require('../../components/misc/ResizableModal');
+
+import React from 'react';
+import Button from '../misc/Button';
+import PropTypes from 'prop-types';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../misc/OverlayTrigger';
+import Message from '../../components/I18N/Message';
+import ConfirmModal from '../../components/misc/ResizableModal';
 
 class Home extends React.Component {
     static propTypes = {
@@ -87,4 +89,4 @@ class Home extends React.Component {
     };
 }
 
-module.exports = Home;
+export default Home;

@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const { Responsive } = require('react-grid-layout');
-const WidgetsView = require('../WidgetsView');
-const ReactTestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+
+import WidgetsView from '../WidgetsView';
 
 const dummyWidget = {
     title: "TEST",
@@ -49,23 +49,6 @@ describe('WidgetsView component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
         expect(el).toExist();
-    });
-    it('Test WidgetsView with width=460', () => {
-        const WIDGET_MOBILE_RIGHT_SPACE = 34;
-        const width = 460;
-        const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} useDefaultWidthProvider={false} width={width}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
-        expect(innerLayout).toExist();
-        expect(innerLayout.props.width).toEqual(width - WIDGET_MOBILE_RIGHT_SPACE);
-    });
-    it('Test WidgetsView with width=640', () => {
-        const width = 640;
-        const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} useDefaultWidthProvider={false} width={width}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
-        expect(innerLayout).toExist();
-        expect(innerLayout.props.width).toEqual(width);
     });
     it('handler editWidget', () => {
         const actions = {

@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const PropTypes = require('prop-types');
-const React = require('react');
-const withSideEffect = require('react-side-effect');
-const ConfigUtils = require('../../utils/ConfigUtils');
-const {validateVersion} = require('../../selectors/version');
-const {trim} = require('lodash');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import withSideEffect from 'react-side-effect';
+import ConfigUtils from '../../utils/ConfigUtils';
+import { validateVersion } from '../../selectors/version';
+import { trim } from 'lodash';
 
 const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
@@ -82,4 +83,4 @@ class Theme extends React.Component {
     }
 }
 
-module.exports = withSideEffect(reducePropsToState, handleStateChangeOnClient)(Theme);
+export default withSideEffect(reducePropsToState, handleStateChangeOnClient)(Theme);

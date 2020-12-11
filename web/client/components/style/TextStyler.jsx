@@ -6,21 +6,22 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Grid, Row, Col} = require('react-bootstrap');
-const Combobox = require('react-widgets').Combobox;
-const assign = require('object-assign');
-const ColorSelector = require('./ColorSelector').default;
-const StyleCanvas = require('./StyleCanvas');
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Grid, Row, Col } from 'react-bootstrap';
+import { Combobox } from 'react-widgets';
+import assign from 'object-assign';
+import ColorSelector from './ColorSelector';
+import StyleCanvas from './StyleCanvas';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
-require('react-widgets/lib/less/react-widgets.less');
-const LocaleUtils = require('../../utils/LocaleUtils');
-const {createFont} = require('../../utils/AnnotationsUtils');
-const Message = require('../I18N/Message');
-const tinycolor = require("tinycolor2");
-const IntlNumberFormControl = require('../I18N/IntlNumberFormControl');
+import 'react-widgets/lib/less/react-widgets.less';
+import { getMessageById } from '../../utils/LocaleUtils';
+import { createFont } from '../../utils/AnnotationsUtils';
+import Message from '../I18N/Message';
+import tinycolor from 'tinycolor2';
+import IntlNumberFormControl from '../I18N/IntlNumberFormControl';
 
 class TextStyler extends React.Component {
     static propTypes = {
@@ -56,9 +57,9 @@ class TextStyler extends React.Component {
 
     render() {
         const messages = {
-            emptyList: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
-            open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
-            emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
+            emptyList: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
+            open: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
+            emptyFilter: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
         const {styleType, shapeStyle} = this.props;
         const style = shapeStyle[styleType];
@@ -241,4 +242,4 @@ class TextStyler extends React.Component {
     }
 }
 
-module.exports = TextStyler;
+export default TextStyler;

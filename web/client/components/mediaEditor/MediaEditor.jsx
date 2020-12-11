@@ -12,9 +12,8 @@ import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
 import localizedProps from '../misc/enhancers/localizedProps';
 import Toolbar from '../misc/toolbar/Toolbar';
-import MediaSelector from './MediaSelector';
 import MediaPreview from './MediaPreview';
-const Select = localizedProps(["placeholder", "clearValueText", "noResultsText" ])(ReactSelect);
+const Select = localizedProps(["placeholder", "clearValueText", "noResultsText"])(ReactSelect);
 
 /**
  * Full view of the media with selector and preview.
@@ -24,12 +23,9 @@ const Select = localizedProps(["placeholder", "clearValueText", "noResultsText" 
 
 export default ({
     mediaType = "image",
-    source,
-    resources,
     saveState,
     selectedItem,
-    selectedSource,
-    selectedService = "currentStory",
+    selectedService,
     services = [{
         name: "Currently used",
         id: "geostory"
@@ -37,14 +33,9 @@ export default ({
         name: "Geostore",
         id: "geostore"
     }],
-    selectItem = () => {},
-    updateItem = () => {},
-    loadItems = () => {},
-    setAddingMedia = () => {},
-    setMediaType = () => {},
-    setMediaService = () => {},
-    setEditingMedia = () => {},
-    saveMedia = () => {}
+    setMediaType = () => { },
+    setMediaService = () => { },
+    mediaSelector
 }) => (<BorderLayout
     className="ms-mediaEditor"
     header={
@@ -52,33 +43,33 @@ export default ({
             <Toolbar
                 btnDefaultProps={{ bsSize: 'sm' }}
                 buttons={[{
-                    text: <Message msgId= "mediaEditor.images"/>,
+                    text: <Message msgId="mediaEditor.images" />,
                     active: mediaType === "image",
                     bsStyle: mediaType === "image" ? "primary" : "default",
-                    onClick: () => {setMediaType("image"); },
+                    onClick: () => { setMediaType("image"); },
                     disabled: saveState && saveState.addingMedia
                 }, {
-                    text: <Message msgId= "mediaEditor.videos"/>,
+                    text: <Message msgId="mediaEditor.videos" />,
                     active: mediaType === "video",
                     bsStyle: mediaType === "video" ? "primary" : "default",
-                    onClick: () => {setMediaType("video"); },
+                    onClick: () => { setMediaType("video"); },
                     disabled: saveState && saveState.addingMedia
                 }, {
-                    text: <Message msgId= "mediaEditor.maps"/>,
+                    text: <Message msgId="mediaEditor.maps" />,
                     active: mediaType === "map",
                     bsStyle: mediaType === "map" ? "primary" : "default",
-                    onClick: () => {setMediaType("map"); },
+                    onClick: () => { setMediaType("map"); },
                     disabled: saveState && saveState.addingMedia
                 }]} />
             <div className="ms-mediaEditor-services">
                 <div className="ms-mediaEditor-label">
-                    <strong><Message msgId="mediaEditor.mediaPicker.services"/></strong>
+                    <strong><Message msgId="mediaEditor.mediaPicker.services" /></strong>
                 </div>
                 <Select
                     disabled={saveState && saveState.addingMedia}
                     noResultsText="mediaEditor.mediaPicker.noResults"
                     placeholder="mediaEditor.mediaPicker.selectService"
-                    options={services.map(s => ({label: <Message msgId={s.name}/>, value: s.id}))}
+                    options={services.map(s => ({ label: <Message msgId={s.name} />, value: s.id }))}
                     onChange={setMediaService}
                     value={selectedService}
                     clearable={false}
@@ -88,23 +79,7 @@ export default ({
     }
     columns={[
         <div key="selector" className="ms-mediaSelector">
-            <MediaSelector
-                selectedItem={selectedItem}
-                selectedSource={selectedSource}
-                resources={resources}
-                mediaType={mediaType}
-                mediaSource={source}
-                saveMedia={saveMedia}
-                loadItems={loadItems}
-                services={services}
-                selectedService={selectedService}
-                setAddingMedia={setAddingMedia}
-                setEditingMedia={setEditingMedia}
-                onMapSelected={updateItem}
-                setMediaService={setMediaService}
-                selectItem={selectItem}
-                {...saveState}
-            />
+            {mediaSelector}
         </div>
     ]}>
 

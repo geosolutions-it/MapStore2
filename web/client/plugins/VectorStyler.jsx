@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,40 +6,34 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
+import './vectorstyler/vectorstyler.css';
 
-const {Grid, Row, Col, Panel, PanelGroup, Button, Glyphicon, FormControl} = require('react-bootstrap');
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, FormControl, Glyphicon, Grid, Panel, PanelGroup, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Combobox } from 'react-widgets';
+import { createSelector } from 'reselect';
 
-const Combobox = require('react-widgets').Combobox;
-
-const {getWindowSize} = require('../utils/AgentUtils');
-const {
-    setVectorStyleParameter,
-    setVectorLayer,
+import { changeLayerProperties } from '../actions/layers';
+import {
     newVectorRule,
-    selectVectorRule,
     removeVectorRule,
-    setVectorRuleParameter} = require('../actions/vectorstyler');
-const {changeLayerProperties} = require('../actions/layers');
-const {
-    StylePolygon,
-    StylePolyline,
-    StylePoint,
-    ScaleDenominator} = require('./vectorstyler/index');
+    selectVectorRule,
+    setVectorLayer,
+    setVectorRuleParameter,
+    setVectorStyleParameter
+} from '../actions/vectorstyler';
+import vectorstylerReducers from '../reducers/vectorstyler';
+import { layersSelector } from '../selectors/layers';
+import { ruleselctor } from '../selectors/vectorstyler';
+import { getWindowSize } from '../utils/AgentUtils';
+import { vecStyleToSLD } from '../utils/SLDUtils';
+import Message from './locale/Message';
+import { ScaleDenominator, StylePoint, StylePolygon, StylePolyline } from './vectorstyler/index';
+import Button from '../components/misc/Button';
 
-const {layersSelector} = require('../selectors/layers');
-const {ruleselctor} = require('../selectors/vectorstyler');
-
-const {createSelector} = require('reselect');
-
-const assign = require('object-assign');
-
-require('./vectorstyler/vectorstyler.css');
-
-const Message = require('./locale/Message');
-
-const {vecStyleToSLD} = require("../utils/SLDUtils");
 
 class VectorStyler extends React.Component {
     static propTypes = {
@@ -282,7 +275,7 @@ const VectorStylerPlugin = connect(selector, {
     setRuleParameter: setVectorRuleParameter
 })(VectorStyler);
 
-module.exports = {
+export default {
     VectorStylerPlugin: assign( VectorStylerPlugin,
         {
             Toolbar: {
@@ -296,6 +289,6 @@ module.exports = {
             }
         }),
     reducers: {
-        vectorstyler: require('../reducers/vectorstyler').default
+        vectorstyler: vectorstylerReducers
     }
 };

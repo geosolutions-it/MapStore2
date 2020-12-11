@@ -5,25 +5,28 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../../I18N/Message');
+import  React from 'react';
+import  {
+    ButtonToolbar,
+    DropdownButton,
+    Glyphicon,
+    MenuItem as MenuItemBS
+} from 'react-bootstrap';
+import {withProps} from 'recompose';
 
-const {withProps} = require('recompose');
-const tooltip = require('../../../misc/enhancers/tooltip');
+import  Message from '../../../I18N/Message';
+import  tooltip from '../../../misc/enhancers/tooltip';
 
 const isMenuItem = ({target, visible = true}) => visible && target === "menu";
 const hasMenuItems = (tt = []) => tt.filter(isMenuItem).length > 0;
-const {
-    Glyphicon,
-    ButtonToolbar,
-    DropdownButton,
-    MenuItem: MenuItemBS
-} = require('react-bootstrap');
+
+
 const MenuItem = tooltip(MenuItemBS);
+
 /**
  * transform `widgetTools` property items with `target` = `menu` into a DropDown button to put in `topRightItems` for WidgetContainer, as a menu
  */
-module.exports = ({ className = "widget-menu", menuIcon = "option-vertical"} = {}) =>
+export default ({ className = "widget-menu", menuIcon = "option-vertical"} = {}) =>
     withProps(({ widgetTools, topRightItems = []}) => ({
         topRightItems: hasMenuItems(widgetTools)
             ? [...topRightItems, (<ButtonToolbar>

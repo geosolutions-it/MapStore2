@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {Row, Col, Pagination} = require('react-bootstrap');
-const Message = require("../I18N/Message");
-const Loader = require('../misc/Loader');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { Row, Col, Pagination } from 'react-bootstrap';
+import Message from '../I18N/Message';
+import Loader from '../misc/Loader';
 
 class PaginationToolbar extends React.Component {
     static propTypes = {
@@ -71,4 +72,4 @@ class PaginationToolbar extends React.Component {
     }
 }
 
-module.exports = PaginationToolbar;
+export default PaginationToolbar;

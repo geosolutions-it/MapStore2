@@ -6,17 +6,20 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {updateMapLayoutEpic} = require('../epics/maplayout');
-const {readQueryParamsOnMapEpic} = require('../epics/queryparams');
+import {updateMapLayoutEpic} from '../epics/maplayout';
+import {readQueryParamsOnMapEpic} from '../epics/queryparams';
+import maplayout from '../reducers/maplayout';
+import searchconfig from '../reducers/searchconfig';
+import version from '../reducers/version';
 
-module.exports = {
+export default {
     mode: "embedded",
     pages: [{
         name: "mapviewer",
         path: "/:mapId",
-        component: require('./pages/MapViewer')
+        component: require('./pages/MapViewer').default
     }],
-    pluginsDef: require('./apiPlugins.js'),
+    pluginsDef: require('./apiPlugins.js').default,
     initialState: {
         defaultState: {
             mode: "embedded",
@@ -44,9 +47,9 @@ module.exports = {
     },
     baseReducers: {
         mode: (state = 'embedded') => state,
-        version: require('../reducers/version').default,
-        maplayout: require('../reducers/maplayout').default,
-        searchconfig: require('../reducers/searchconfig').default
+        version,
+        maplayout,
+        searchconfig
     },
     baseEpics: {
         updateMapLayoutEpic,

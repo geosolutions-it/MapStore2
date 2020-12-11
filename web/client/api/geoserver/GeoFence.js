@@ -6,24 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const axios = require('../../libs/ajax');
-const assign = require('object-assign');
-const {castArray, get} = require('lodash');
-const CatalogAPI = require('../CSW');
+import { castArray, get } from 'lodash';
+import assign from 'object-assign';
 
-const ConfigUtils = require('../../utils/ConfigUtils');
+import axios from '../../libs/ajax';
+import ConfigUtils from '../../utils/ConfigUtils';
+import CatalogAPI from '../CSW';
+import RuleService from '../geofence/RuleService';
+import UserService from '../geofence/UserService';
 
 /**
  * Services to retrieve users and groups (roles)
  */
 const USER_SERVICES = {
-    geofence: require('../geofence/UserService'),
-    geoserver: require('./geofence/UserService')
+    geofence: UserService,
+    geoserve: UserService
 };
 
 const RULE_SERVICES = {
-    geofence: require('../geofence/RuleService'),
-    geoserver: require('./geofence/RuleService')
+    geofence: RuleService,
+    geoserver: RuleService
 };
 
 const LAYER_SERVICES = {
@@ -167,4 +169,4 @@ var Api = {
     }
 };
 
-module.exports = Api;
+export default Api;

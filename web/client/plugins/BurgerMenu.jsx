@@ -5,13 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
+import React from 'react';
 
-const assign = require('object-assign');
-
-const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import assign from 'object-assign';
+import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 
 const Container = connect(() => ({
     noCaret: true,
@@ -25,12 +24,10 @@ const InnerContainer = ({children, ...props}) => (
     </div>
 );
 
-const ToolsContainer = require('./containers/ToolsContainer');
-const Message = require('./locale/Message');
-
-const { createPlugin } = require('../utils/PluginsUtils');
-
-require('./burgermenu/burgermenu.css');
+import ToolsContainer from './containers/ToolsContainer';
+import Message from './locale/Message';
+import { createPlugin } from '../utils/PluginsUtils';
+import './burgermenu/burgermenu.css';
 
 class BurgerMenu extends React.Component {
     static propTypes = {
@@ -141,7 +138,27 @@ class BurgerMenu extends React.Component {
     }
 }
 
-module.exports = createPlugin(
+/**
+ * Menu button that can contain other plugins entries.
+ * Usually rendered inside {@link #plugins.OmniBar|plugins.OmniBar}
+ * You can render an item inside burger menu by adding the following to the `containers` entry of your plugin.
+ * It is a wrapper for `ToolsContainer` so all the properties of the tools of {@link #plugins.containers.ToolContainer|ToolContainer} can be used here (action, selector ...).
+ * ```
+ * BurgerMenu: {
+ *      name: 'my_entry', // name of your entry
+ *      position: 1000, // the position you want
+ *      text: <Message msgId="details.title"/>, // the text to show in the menu entry
+ *      icon: <Glyphicon glyph="sheet"/>, // the icon to use
+ *      // the following are some examples from ToolContainer property
+ *      action: openDetailsPanel, // the function to call when the menu entry is clicked
+ *      selector: a function that can return some additional properties for the menu entry. Is used typically to hide the menu returning, under certain contdition `{ style: {display: "none"} }`
+ *  },
+ * ```
+ * @name BurgerMenu
+ * @class
+ * @memberof plugins
+ */
+export default createPlugin(
     'BurgerMenu',
     {
         component: connect((state) =>({

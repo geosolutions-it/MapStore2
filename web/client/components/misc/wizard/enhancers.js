@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { compose, withHandlers, withPropsOnChange, withState } from 'recompose';
 
-const {compose, withState, withPropsOnChange, withHandlers} = require('recompose');
-const wizardHandlers = compose(
+export const wizardHandlers = compose(
     withPropsOnChange(["step"], ({skipButtonsOnSteps = [], step, hideButtons} = {}) => {
         if (skipButtonsOnSteps && skipButtonsOnSteps.indexOf(step) >= 0) {
             return {hideButtons: true};
@@ -24,7 +24,8 @@ const wizardHandlers = compose(
         }
     })
 );
-module.exports = {
+
+export default {
     /**
     * Apply this enhancer to the WizardContainer to make it controlled.
     * It controls the step and the hideButtons properties

@@ -12,12 +12,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {compose, withProps} = require('recompose');
-const StepHeader = require('../../../../misc/wizard/StepHeader');
-const emptyState = require('../../../../misc/enhancers/emptyState');
-const localizeStringMap = require('../../../../misc/enhancers/localizeStringMap');
-const Message = require('../../../../I18N/Message');
+
+import React from 'react';
+import {compose, withProps} from 'recompose';
+
+import Message from '../../../../I18N/Message';
+import emptyState from '../../../../misc/enhancers/emptyState';
+import localizeStringMap from '../../../../misc/enhancers/localizeStringMap';
+import StepHeader from '../../../../misc/wizard/StepHeader';
+import nodeEditor from './enhancers/nodeEditor';
+import NodeEditorComp from './NodeEditor';
+import TOCComp from './TOC';
+
 const TOC = emptyState(
     ({ map = {} } = {}) => !map.layers || (map.layers || []).filter(l => l.group !== 'background').length === 0,
     () => ({
@@ -25,9 +31,9 @@ const TOC = emptyState(
         title: <Message msgId="widgets.selectMap.TOC.noLayerTitle" />,
         description: <Message msgId="widgets.selectMap.TOC.noLayerDescription" />
     })
-)(require('./TOC'));
-const nodeEditor = require('./enhancers/nodeEditor');
-const Editor = nodeEditor(require('./NodeEditor'));
+)(TOCComp);
+
+const Editor = nodeEditor(NodeEditorComp);
 const EditorTitle = compose(
     nodeEditor,
     withProps(({selectedNode: layer}) => ({
@@ -37,7 +43,7 @@ const EditorTitle = compose(
 )(StepHeader);
 
 
-module.exports = ({ preview, map = {}, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { }, isLocalizedLayerStylesEnabled }) => (<div>
+export default ({ preview, map = {}, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { }, isLocalizedLayerStylesEnabled }) => (<div>
     <StepHeader title={<Message msgId={`widgets.builder.wizard.configureMapOptions`} />} />
     <div key="sample" style={{marginTop: 10}}>
         <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />

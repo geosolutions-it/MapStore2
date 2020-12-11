@@ -5,11 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Toolbar = require('../Toolbar');
-var expect = require('expect');
-const {filter} = require('lodash');
+
+import expect from 'expect';
+import {filter} from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Toolbar from '../Toolbar';
+
 const spyOn = expect.spyOn;
 
 const isVisibleButton = (el) => {
@@ -342,10 +345,10 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         let zoomAllButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(zoomAllButton)).toBe(true);
-        expect(el.children[2].disabled).toBe(true);
+        expect(el.children[2].classList.contains('disabled')).toBe(true);
         ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false}/>, document.getElementById("container"));
         zoomAllButton = document.getElementById("fg-zoom-all");
-        expect(el.children[2].disabled).toBe(false);
+        expect(el.children[2].classList.contains('disabled')).toBe(false);
     });
     describe('time sync button', () => {
         it('visibility', () => {

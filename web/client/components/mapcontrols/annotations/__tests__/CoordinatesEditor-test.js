@@ -5,15 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const expect = require('expect');
+import expect from 'expect';
+import React from 'react';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import testBackend from 'react-dnd-test-backend';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const dragDropContext = require('react-dnd').DragDropContext;
-const testBackend = require('react-dnd-test-backend');
-const CoordinatesEditor = dragDropContext(testBackend)(require('../CoordinatesEditor'));
-const TestUtils = require('react-dom/test-utils');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import CoordinatesEditorComp from '../CoordinatesEditor';
+
+const CoordinatesEditor = dragDropContext(testBackend)(CoordinatesEditorComp);
 
 const testHandlers = {
     onChange: () => {},
@@ -159,13 +161,13 @@ describe("test the CoordinatesEditor Panel", () => {
                     type: 'Polygon',
                     coordinates: [[10, 10], [6, 6], [6, 6]],
                     textLabels: [
-                        {text: '2 m | 060° T', position: [10, 10]},
-                        {text: '3 m | 078° T', position: [6, 6]},
-                        {text: '3 m | 090° T', position: [6, 6]}]},
+                        {text: '2 m | 060°', position: [10, 10]},
+                        {text: '3 m | 078°', position: [6, 6]},
+                        {text: '3 m | 090°', position: [6, 6]}]},
                 properties: {
                     values: [{
                         value: 100,
-                        formattedValue: '10 m | 070° T',
+                        formattedValue: '10 m | 070°',
                         position: [10, 10],
                         type: 'length'
                     }]}
@@ -193,9 +195,9 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         const labelTexts = TestUtils.scryRenderedDOMComponentsWithClass(editor, "label-texts");
         expect(labelTexts).toExist();
-        expect(labelTexts[0].innerText).toBe("2 m | 060° T");
-        expect(labelTexts[1].innerText).toBe("3 m | 078° T");
-        expect(labelTexts[2].innerText).toBe("3 m | 090° T");
+        expect(labelTexts[0].innerText).toBe("2 m | 060°");
+        expect(labelTexts[1].innerText).toBe("3 m | 078°");
+        expect(labelTexts[2].innerText).toBe("3 m | 090°");
         const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
         expect(submits).toExist();
         const submit = submits[0];
@@ -269,7 +271,7 @@ describe("test the CoordinatesEditor Panel", () => {
                 properties: {
                     values: [{
                         value: 100,
-                        formattedValue: '10 m | 070° T',
+                        formattedValue: '10 m | 070°',
                         position: [10, 10],
                         type: 'length'
                     }]}
@@ -296,7 +298,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(inputs).toExist();
         let labelTexts = TestUtils.scryRenderedDOMComponentsWithClass(editor, "label-texts");
         expect(labelTexts).toExist();
-        expect(labelTexts[1].innerText).toBe("10 m | 070° T");
+        expect(labelTexts[1].innerText).toBe("10 m | 070°");
         const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
         expect(submits).toExist();
         const submit = submits[0];
@@ -747,7 +749,7 @@ describe("test the CoordinatesEditor Panel", () => {
         let firstDelButton = buttons[5];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
-        expect(firstDelButton.disabled).toBe(true);
+        expect(firstDelButton.classList.contains('disabled')).toBe(true);
     });
 
     it('CoordinatesEditor as LineString editor, 4 rows, remove first invalid row', () => {

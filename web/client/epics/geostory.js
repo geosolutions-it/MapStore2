@@ -22,11 +22,7 @@ import uuid from 'uuid/v1';
 
 import axios from '../libs/ajax';
 
-const {
-    createResource,
-    updateResource,
-    getResource
-} = require('../api/persistence');
+import { createResource, updateResource, getResource } from '../api/persistence';
 
 import {
     ADD,
@@ -119,9 +115,11 @@ const updateMediaSection = (store, path) => action$ =>
             } else if (isEmpty(resource)) {
                 actions = [...actions, remove(`${path}`), hide()];
             }  else {
-            // if the resource is new, add it to the story resources list
-                resourceId = uuid();
-                actions = [...actions, addResource(resourceId, mediaType, resource)];
+                // if the resource is new, add it to the story resources list
+                // if the media editor provides an id for the new resource we should use it
+                // to fit the requirement of a specific service
+                resourceId = resource.id || uuid();
+                actions = [...actions, addResource(resourceId, mediaType, resource.data ? resource.data : resource)];
             }
             let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
             actions = [...actions, update(`${path}`, media, "merge" ), hide()];
@@ -167,10 +165,10 @@ const updateWebPageSection = path => action$ =>
             );
         });
 
-    /**
-     * Epic that handles opening webPageCreator and saves url of WebPage component
-     * @param {Observable} action$ stream of redux action
-     */
+/**
+ * Epic that handles opening webPageCreator and saves url of WebPage component
+ * @param {Observable} action$ stream of redux action
+ */
 export const openWebPageComponentCreator = action$ =>
     action$.ofType(ADD)
         .filter(({ element = {} }) => {

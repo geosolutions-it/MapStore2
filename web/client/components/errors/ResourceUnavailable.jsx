@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const emptyState = require('../misc/enhancers/emptyState');
-const Message = require('../I18N/Message');
-const HTML = require('../I18N/HTML');
+import React from 'react';
+
+import emptyState from '../misc/enhancers/emptyState';
+import Message from '../I18N/Message';
+import HTML from '../I18N/HTML';
 
 /**
  * ResourceUnavailable is an error view like the typical 404 not found page, or access denied.
@@ -46,4 +47,4 @@ const ResourceUnavailable = emptyState(
     })
 )(() => null);
 
-module.exports = ResourceUnavailable;
+export default ResourceUnavailable;

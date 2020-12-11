@@ -5,14 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {Provider} = require('react-redux');
+import expect from 'expect';
 
-const StandardAppComponent = require('../StandardAppComponent');
-
-const ConfigUtils = require('../../../utils/ConfigUtils');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import StandardAppComponent from '../StandardAppComponent';
+import ConfigUtils from '../../../utils/ConfigUtils';
 window.__DEVTOOLS__ = false;
 
 class MyPlugin extends React.Component {

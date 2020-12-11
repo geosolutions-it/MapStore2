@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {indexOf, has} = require('lodash');
-require('./css/previewicon.css');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { indexOf, has, includes } from 'lodash';
+import './css/previewicon.css';
 
 class PreviewIcon extends React.Component {
     static propTypes = {
@@ -46,7 +47,7 @@ class PreviewIcon extends React.Component {
         const compatibleWmts = this.props.layer.type === "wmts" && has(this.props.layer.allowedSRS, this.props.projection);
         const containerClass = this.props.vertical ? 'background-preview-icon-container-vertical' : 'background-preview-icon-container-horizontal';
         const type = this.props.layer.visibility ? ' bg-primary' : ' bg-body';
-        const valid = ((validCrs || compatibleWmts || this.props.layer.type === "wms" || this.props.layer.type === "empty") && !this.props.layer.invalid );
+        const valid = ((validCrs || compatibleWmts || includes(["wms", "empty", "osm"], this.props.layer.type)) && !this.props.layer.invalid );
 
         const click = !valid ? () => {} : () => {
             this.props.onToggle();
@@ -66,4 +67,4 @@ class PreviewIcon extends React.Component {
     }
 }
 
-module.exports = PreviewIcon;
+export default PreviewIcon;

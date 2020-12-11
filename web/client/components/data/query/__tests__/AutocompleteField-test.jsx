@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
+import expect from 'expect';
 
-const AutocompleteField = require('../AutocompleteField');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import AutocompleteField from '../AutocompleteField';
 
 describe('AutocompleteField', () => {
     beforeEach((done) => {

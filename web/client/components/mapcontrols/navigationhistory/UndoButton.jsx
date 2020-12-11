@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,9 +7,12 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var {Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import Button from '../../misc/Button';
 
 class UndoBtn extends React.Component {
     static propTypes = {
@@ -79,4 +82,4 @@ class UndoBtn extends React.Component {
     }
 }
 
-module.exports = UndoBtn;
+export default UndoBtn;

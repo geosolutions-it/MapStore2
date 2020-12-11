@@ -6,26 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const Message = require('../../I18N/Message');
-const LocaleUtils = require('../../../utils/LocaleUtils');
-const bbox = require('@turf/bbox');
-const {head, countBy, values, isUndefined, keys} = require('lodash');
-const assign = require('object-assign');
-const Filter = require('../../misc/Filter');
-const Loader = require('../../misc/Loader');
-const uuidv1 = require('uuid/v1');
+import bbox from '@turf/bbox';
+import { countBy, head, isUndefined, keys, values } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import uuidv1 from 'uuid/v1';
 
-const {Glyphicon, Button} = require('react-bootstrap');
-const BorderLayout = require('../../layout/BorderLayout');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const SideGrid = require('../../misc/cardgrids/SideGrid');
-const {getGeometryGlyphInfo} = require('../../../utils/AnnotationsUtils');
-
-const SelectAnnotationsFile = require("./SelectAnnotationsFile");
-
-const defaultConfig = require('./AnnotationsConfig');
+import { getGeometryGlyphInfo } from '../../../utils/AnnotationsUtils';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import Message from '../../I18N/Message';
+import BorderLayout from '../../layout/BorderLayout';
+import SideGrid from '../../misc/cardgrids/SideGrid';
+import Filter from '../../misc/Filter';
+import Loader from '../../misc/Loader';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import defaultConfig from './AnnotationsConfig';
+import SelectAnnotationsFile from './SelectAnnotationsFile';
+import Button from '../../misc/Button';
 
 /**
  * Annotations panel component.
@@ -333,7 +332,7 @@ class Annotations extends React.Component {
                     </div>
                     <div style={{padding: "0 8px", margin: "10px 0 0"}}>
                         <Filter
-                            filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
+                            filterPlaceholder={getMessageById(this.context.messages, "annotations.filter")}
                             filterText={this.props.filter}
                             onFilter={this.props.onFilter} />
                     </div>
@@ -423,4 +422,4 @@ class Annotations extends React.Component {
     };
 }
 
-module.exports = Annotations;
+export default Annotations;

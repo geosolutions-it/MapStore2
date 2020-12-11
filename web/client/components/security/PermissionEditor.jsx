@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
 * Copyright 2016, GeoSolutions Sas.
 * All rights reserved.
@@ -7,14 +6,17 @@ const PropTypes = require('prop-types');
 * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const assign = require('object-assign');
-const _ = require('lodash');
-const Select = require('react-select').default;
-const Spinner = require('react-spinkit');
-const {Table, Button, Glyphicon} = require('react-bootstrap');
-const Message = require('../I18N/Message');
-const LocaleUtils = require('../../utils/LocaleUtils');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import assign from 'object-assign';
+import _ from 'lodash';
+import Select from 'react-select';
+import Spinner from 'react-spinkit';
+import { Table, Glyphicon } from 'react-bootstrap';
+import Message from '../I18N/Message';
+import { getMessageById } from '../../utils/LocaleUtils';
+import Button from '../misc/Button';
 
 /**
 * Map permission editor
@@ -139,9 +141,9 @@ class PermissionEditor extends React.Component {
     getPermissonLabel = (perm) => {
         switch (perm) {
         case "canRead":
-            return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canView");
+            return getMessageById(this.context.messages, "map.permissions.canView");
         case "canWrite":
-            return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canWrite");
+            return getMessageById(this.context.messages, "map.permissions.canWrite");
         default:
             return perm;
         }
@@ -220,11 +222,11 @@ class PermissionEditor extends React.Component {
                         <tr key="addRowKey">
                             <td>
                                 <Select
-                                    noResultsText={LocaleUtils.getMessageById(this.context.messages, "map.permissions.noResult")}
+                                    noResultsText={getMessageById(this.context.messages, "map.permissions.noResult")}
                                     ref="newGroup"
                                     isLoading={!this.getSelectableGroups()}
                                     clearable={false}
-                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "map.permissions.selectGroup")}
+                                    placeholder={getMessageById(this.context.messages, "map.permissions.selectGroup")}
                                     options={this.getSelectableGroups()}
                                     value={this.props.newGroup && this.props.newGroup.id}
                                     onChange={this.onNewGroupChoose}/>
@@ -261,4 +263,4 @@ class PermissionEditor extends React.Component {
     };
 }
 
-module.exports = PermissionEditor;
+export default PermissionEditor;

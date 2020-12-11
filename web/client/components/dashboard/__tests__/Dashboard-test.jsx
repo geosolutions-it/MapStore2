@@ -6,10 +6,41 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const expect = require('expect');
-const Dashboard = require('../Dashboard');
+import React from 'react';
+import { Responsive } from 'react-grid-layout';
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import expect from 'expect';
+import Dashboard from '../Dashboard';
+
+const testWidget = {
+    title: "TEST",
+    id: "TEST",
+    layer: {
+        name: "test",
+        url: 'base/web/client/test-resources/widgetbuilder/aggregate',
+        wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate',
+        search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate'}},
+    options: {
+        aggregateFunction: "Count",
+        aggregationAttribute: "test",
+        groupByAttributes: "test"
+    }
+};
+
+/* eslint-disable react/prop-types */
+class TestDashboardContainer extends React.Component {
+    render() {
+        const {style, ...props} = this.props;
+        return (
+            <div style={style}>
+                <Dashboard {...props}/>
+            </div>
+        );
+    }
+}
+/* eslint-enable react/prop-types */
+
 describe('WidgetsView component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -27,22 +58,26 @@ describe('WidgetsView component', () => {
         expect(el).toNotExist();
     });
     it('DashBoard empty', () => {
-        ReactDOM.render(<Dashboard widgets={[{
-            title: "TEST",
-            id: "TEST",
-            layer: {
-                name: "test",
-                url: 'base/web/client/test-resources/widgetbuilder/aggregate',
-                wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate',
-                search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate'}},
-            options: {
-                aggregateFunction: "Count",
-                aggregationAttribute: "test",
-                groupByAttributes: "test"
-            }
-        }]}/>, document.getElementById("container"));
+        ReactDOM.render(<Dashboard widgets={[testWidget]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
         expect(el).toExist();
+    });
+    it('DashBoard with width=460', () => {
+        const WIDGET_MOBILE_RIGHT_SPACE = 34;
+        const width = 460;
+        const cmp = ReactDOM.render(<TestDashboardContainer style={{width, height: 480}} widgets={[testWidget]}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
+        expect(innerLayout).toExist();
+        expect(innerLayout.props.width).toEqual(width - WIDGET_MOBILE_RIGHT_SPACE);
+    });
+    it('DashBoard with width=640', () => {
+        const width = 640;
+        const cmp = ReactDOM.render(<TestDashboardContainer style={{width, height: 480}} widgets={[testWidget]}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
+        expect(innerLayout).toExist();
+        expect(innerLayout.props.width).toEqual(width);
     });
 });

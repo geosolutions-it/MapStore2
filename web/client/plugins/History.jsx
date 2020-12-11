@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -6,18 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
+import assign from 'object-assign';
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { ActionCreators } from 'redux-undo';
 
-const assign = require('object-assign');
+import RedoButtonComp from '../components/mapcontrols/navigationhistory/RedoButton';
+import UndoButtonComp from '../components/mapcontrols/navigationhistory/UndoButton';
+import Message from './locale/Message';
 
-const Message = require('./locale/Message');
-
-const {Glyphicon} = require('react-bootstrap');
-
-const { ActionCreators } = require('redux-undo');
 const {undo, redo} = ActionCreators;
-
+/**
+ * Renders a "undo" button in the {@link #plugins.Toolbar|Toolbar} to get back in
+ * map navigation history.
+ * @name Undo
+ * @class
+ * @memberof plugins
+ */
 const UndoButton = connect((state) => {
     let mapHistory = state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []};
     return {
@@ -25,8 +31,15 @@ const UndoButton = connect((state) => {
     };
 }, {
     onClick: undo
-})(require('../components/mapcontrols/navigationhistory/UndoButton'));
+})(UndoButtonComp);
 
+/**
+ * Renders a "redo" button in the {@link #plugins.Toolbar|Toolbar} to go forward in
+ * map navigation history.
+ * @name Redo
+ * @class
+ * @memberof plugins
+ */
 const RedoButton = connect((state) => {
     let mapHistory = state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []};
     return {
@@ -34,9 +47,9 @@ const RedoButton = connect((state) => {
     };
 }, {
     onClick: redo
-})(require('../components/mapcontrols/navigationhistory/RedoButton'));
+})(RedoButtonComp);
 
-module.exports = {
+export default {
     UndoPlugin: assign(UndoButton, {
         Toolbar: {
             name: 'undo',

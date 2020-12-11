@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Localized = require('../Localized');
-var Message = require('../Message');
-var HTML = require('../HTML');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Localized from '../Localized';
+import Message from '../Message';
+import HTML from '../HTML';
 
 const messages = {
     "testMsg": "my message"

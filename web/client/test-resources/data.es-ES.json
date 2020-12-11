@@ -207,7 +207,6 @@
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa se ha cargado correctamente",
             "measure": "Medidor",
-            "backgroundSwitcher": "Fondos",
             "layers": "Capas",
             "drawerButton": "Capas",
             "refreshTitle": "Refreascar capas",
@@ -439,7 +438,6 @@
             "settingsPanel": "Esta es la ayuda para SettingsPanel",
             "gohome": "Esta es la ayuda Home",
             "measureComponent": " MeasureComponent",
-            "backgroundSwitcher": "Esta es la ayuda para BackgroundSwitcher",
             "layerSwitcher": "Esta es la ayuda para LayerSwitcher",
             "infoButton": "Esta es la ayuda para InfoButton",
             "locateBtn": "Esta es la ayuda para LocateBtn",
@@ -805,7 +803,7 @@
                 "more": "más"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exportar los datos",
             "format": "Formato de fichero",
             "export": "Exportaciones",

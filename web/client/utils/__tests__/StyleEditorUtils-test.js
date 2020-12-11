@@ -13,9 +13,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from 'expect';
 
-const {
+import {
     generateTemporaryStyleId,
     STYLE_ID_SEPARATOR,
     generateStyleId,
@@ -27,7 +27,7 @@ const {
     stringifyNameParts,
     parseJSONStyle,
     formatJSONStyle
-} = require('../StyleEditorUtils');
+} from '../StyleEditorUtils';
 
 describe('StyleEditorUtils test', () => {
     it('test generateTemporaryStyleId', () => {
@@ -544,6 +544,201 @@ describe('StyleEditorUtils test', () => {
             kind: 'Text',
             label: 'Label',
             color: '#333333'
+        });
+    });
+    it('should remove halo if haloWidth is equal to 0', () => {
+        const style = {
+            name: 'Style',
+            rules: [ {
+                name: 'Rule',
+                symbolizers: [
+                    {
+                        allowOverlap: true,
+                        color: '#333333',
+                        fontStyle: 'normal',
+                        fontWeight: 'normal',
+                        haloColor: '#ffffff',
+                        haloWidth: 0,
+                        kind: 'Text',
+                        label: 'Label',
+                        offset: [0, 0],
+                        size: 14,
+                        symbolizerId: 'id'
+                    }
+                ]
+            }]
+        };
+
+        const formattedJSONStyle = parseJSONStyle(style);
+        expect(formattedJSONStyle.rules.length).toBe(1);
+        expect(formattedJSONStyle.rules[0].symbolizers[0]).toEqual({
+            allowOverlap: true,
+            color: '#333333',
+            fontStyle: 'normal',
+            fontWeight: 'normal',
+            kind: 'Text',
+            label: 'Label',
+            offset: [0, 0],
+            size: 14,
+            symbolizerId: 'id'
+        });
+    });
+    it('should remove outline if outlineWidth is equal to 0', () => {
+        const style = {
+            name: 'Style',
+            rules: [ {
+                name: 'Rule',
+                symbolizers: [
+                    {
+                        color: '#dddddd',
+                        fillOpacity: 1,
+                        kind: 'Fill',
+                        outlineColor: '#777777',
+                        outlineWidth: 0,
+                        symbolizerId: 'id'
+                    }
+                ]
+            }]
+        };
+
+        const formattedJSONStyle = parseJSONStyle(style);
+        expect(formattedJSONStyle.rules.length).toBe(1);
+        expect(formattedJSONStyle.rules[0].symbolizers[0]).toEqual({
+            color: '#dddddd',
+            fillOpacity: 1,
+            kind: 'Fill',
+            symbolizerId: 'id'
+        });
+    });
+    it('should remove stroke if strokeWidth is equal to 0', () => {
+        const style = {
+            name: 'Style',
+            rules: [ {
+                name: 'Rule',
+                symbolizers: [
+                    {
+                        color: '#dddddd',
+                        fillOpacity: 1,
+                        kind: 'Mark',
+                        radius: 16,
+                        rotate: 0,
+                        strokeColor: '#777777',
+                        strokeOpacity: 1,
+                        strokeWidth: 0,
+                        symbolizerId: 'id',
+                        wellKnownName: 'Circle'
+                    }
+                ]
+            }]
+        };
+
+        const formattedJSONStyle = parseJSONStyle(style);
+        expect(formattedJSONStyle.rules.length).toBe(1);
+        expect(formattedJSONStyle.rules[0].symbolizers[0]).toEqual({
+            color: '#dddddd',
+            fillOpacity: 1,
+            kind: 'Mark',
+            radius: 16,
+            rotate: 0,
+            symbolizerId: 'id',
+            wellKnownName: 'Circle'
+        });
+    });
+    it('should remove stroke in graphicStroke if strokeWidth is equal to 0', () => {
+        const style = {
+            name: 'Style',
+            rules: [ {
+                name: 'Rule',
+                symbolizers: [
+                    {
+                        cap: "round",
+                        color: "#777777",
+                        graphicStroke: {
+                            color: '#dddddd',
+                            fillOpacity: 1,
+                            kind: 'Mark',
+                            radius: 16,
+                            rotate: 0,
+                            strokeColor: '#777777',
+                            strokeOpacity: 1,
+                            strokeWidth: 0,
+                            wellKnownName: 'Circle'
+                        },
+                        join: 'round',
+                        kind: 'Line',
+                        opacity: 1,
+                        symbolizerId: 'id',
+                        width: 1
+                    }
+                ]
+            }]
+        };
+
+        const formattedJSONStyle = parseJSONStyle(style);
+        expect(formattedJSONStyle.rules.length).toBe(1);
+        expect(formattedJSONStyle.rules[0].symbolizers[0]).toEqual({
+            cap: "round",
+            color: "#777777",
+            graphicStroke: {
+                color: '#dddddd',
+                fillOpacity: 1,
+                kind: 'Mark',
+                radius: 16,
+                rotate: 0,
+                wellKnownName: 'Circle'
+            },
+            join: 'round',
+            kind: 'Line',
+            opacity: 1,
+            symbolizerId: 'id',
+            width: 1
+        });
+    });
+
+    it('should remove stroke in graphicFill if strokeWidth is equal to 0', () => {
+        const style = {
+            name: 'Style',
+            rules: [ {
+                name: 'Rule',
+                symbolizers: [
+                    {
+                        color: '#dddddd',
+                        fillOpacity: 1,
+                        graphicFill: {
+                            color: '#dddddd',
+                            fillOpacity: 1,
+                            kind: 'Mark',
+                            radius: 16,
+                            rotate: 0,
+                            strokeColor: '#777777',
+                            strokeOpacity: 1,
+                            strokeWidth: 0,
+                            wellKnownName: 'Circle'
+                        },
+                        kind: 'Fill',
+                        outlineColor: '#777777',
+                        outlineWidth: 0,
+                        symbolizerId: 'id'
+                    }
+                ]
+            }]
+        };
+
+        const formattedJSONStyle = parseJSONStyle(style);
+        expect(formattedJSONStyle.rules.length).toBe(1);
+        expect(formattedJSONStyle.rules[0].symbolizers[0]).toEqual({
+            color: '#dddddd',
+            fillOpacity: 1,
+            graphicFill: {
+                color: '#dddddd',
+                fillOpacity: 1,
+                kind: 'Mark',
+                radius: 16,
+                rotate: 0,
+                wellKnownName: 'Circle'
+            },
+            kind: 'Fill',
+            symbolizerId: 'id'
         });
     });
 });

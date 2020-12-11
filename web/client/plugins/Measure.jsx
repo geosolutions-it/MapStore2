@@ -6,22 +6,34 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const {Glyphicon} = require('react-bootstrap');
-const assign = require('object-assign');
-const {createSelector} = require('reselect');
-const Message = require('./locale/Message');
-const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, addAsLayer, init,
-    setCurrentFeature} = require('../actions/measurement');
-const {toggleControl, setControlProperty} = require('../actions/controls');
-const {MeasureDialog} = require('./measure/index');
+import assign from 'object-assign';
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
-const {highlightPoint} = require('../actions/annotations');
-const { isOpenlayers } = require('../selectors/maptype');
-const { isCoordinateEditorEnabledSelector, showAddAsAnnotationSelector, isTrueBearingEnabledSelector } = require('../selectors/measurement');
-const { showCoordinateEditorSelector, measureSelector } = require('../selectors/controls');
-const { getConfigProp } = require('../utils/ConfigUtils');
+import { highlightPoint } from '../actions/annotations';
+import { setControlProperty, toggleControl } from '../actions/controls';
+import {
+    addAnnotation,
+    addAsLayer,
+    changeCoordinates,
+    changeFormatMeasurement,
+    changeMeasurement,
+    changeUom,
+    init,
+    setCurrentFeature
+} from '../actions/measurement';
+import { measureSelector, showCoordinateEditorSelector } from '../selectors/controls';
+import { isOpenlayers } from '../selectors/maptype';
+import {
+    isCoordinateEditorEnabledSelector,
+    isTrueBearingEnabledSelector,
+    showAddAsAnnotationSelector
+} from '../selectors/measurement';
+import ConfigUtils from '../utils/ConfigUtils';
+import Message from './locale/Message';
+import { MeasureDialog } from './measure/index';
 
 const selector = (state) => {
     return {
@@ -64,9 +76,9 @@ const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
  * @prop {boolean} defaultOptions.showAddAsAnnotation: if true, shows the button addAsAnnotation in the toolbar
  * @prop {boolean} defaultOptions.showLengthAndBearingLabel: if true, shows the length and bearing data in the map as segment label and also in measurement panel
  * @prop {object} defaultOptions.trueBearing: allows measurement configuration of angular distance from true north to the object. ISO Spec (https://www.sis.se/api/document/preview/905247/)
- * @prop {boolean} defaultOptions.trueBearing.measureTrueBearing: if true, displays the measurement in true bearing (000° T).
+ * @prop {boolean} defaultOptions.trueBearing.measureTrueBearing: if true, displays the measurement in true bearing (000°).
  * @prop {integer} defaultOptions.trueBearing.fractionDigits: Value denotes the fractional digit to used for the representation of true bearing.
- * For example this enables measurement in true bearing with fractional digits of 2 (000.00° - 359.99° T)
+ * For example this enables measurement in true bearing with fractional digits of 2 (000.00° - 359.99°)
  * ```
  * "trueBearing": {
  *  "measureTrueBearing": true,
@@ -86,7 +98,7 @@ const Measure = connect(
     (measure, show) => ({
         ...measure,
         show,
-        format: measure.format || getConfigProp("defaultCoordinateFormat") || "decimal"
+        format: measure.format || ConfigUtils.getConfigProp("defaultCoordinateFormat") || "decimal"
     }
     )),
     {
@@ -103,7 +115,7 @@ const Measure = connect(
         onAddAsLayer: addAsLayer
     }, null, {pure: false})(MeasureDialog);
 
-module.exports = {
+export default {
     MeasurePlugin: assign(Measure, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: {
@@ -118,5 +130,5 @@ module.exports = {
         }
     }),
     reducers: {measurement: require('../reducers/measurement').default},
-    epics: require('../epics/measurement')
+    epics: require('../epics/measurement').default
 };

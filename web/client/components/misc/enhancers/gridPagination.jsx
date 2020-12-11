@@ -6,13 +6,15 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const {compose, branch} = require('recompose');
-const withVirtualScroll = require('./infiniteScroll/withInfiniteScroll');
-const loadMore = require('./infiniteScroll/loadMore');
-const ShowMore = require('../ShowMore');
-const Message = require("../../I18N/Message");
-const {Row, Col} = require('react-bootstrap');
+import React from 'react';
+
+import { compose, branch } from 'recompose';
+import withVirtualScroll from './infiniteScroll/withInfiniteScroll';
+import loadMore from './infiniteScroll/loadMore';
+import ShowMore from '../ShowMore';
+import Message from '../../I18N/Message';
+import { Row, Col } from 'react-bootstrap';
+
 /**
  * Add pagination functionality to a component.
  *
@@ -22,7 +24,7 @@ const {Row, Col} = require('react-bootstrap');
  * @param {object} [scrollSpyOptions]  Options for the `withScrollSpy` enhancer
  * @return {HOC} The HOC to apply
  */
-module.exports = ({loadPage, pageSize, scrollSpyOptions = {querySelector: ".ms-grid"}}) => compose(
+export default ({loadPage, pageSize, scrollSpyOptions = {querySelector: ".ms-grid"}}) => compose(
     branch(
         ({pagination} = {}) => pagination === 'show-more',
         Component => loadMore(loadPage)(props => <Component {...props} bottom={<ShowMore {...props}/>}/>)

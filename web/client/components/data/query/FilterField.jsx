@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const ComboField = require('./ComboField');
-const assign = require('object-assign');
-const LocaleUtils = require('../../../utils/LocaleUtils');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import ComboField from './ComboField';
+import assign from 'object-assign';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 class FilterField extends React.Component {
     static propTypes = {
@@ -79,7 +80,7 @@ class FilterField extends React.Component {
                         valueField={'id'}
                         textField={'name'}
                         fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
-                        placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder")}
+                        placeholder={getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder")}
                         fieldValue={this.props.filterField.attribute}
                         attType={selectedAttribute && selectedAttribute.type}
                         fieldName="attribute"
@@ -119,4 +120,4 @@ class FilterField extends React.Component {
     };
 }
 
-module.exports = FilterField;
+export default FilterField;

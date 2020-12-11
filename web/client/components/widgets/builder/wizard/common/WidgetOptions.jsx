@@ -5,12 +5,13 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const React = require('react');
-const {Row, Col, Form, FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
-const Message = require('../../../../I18N/Message');
-const StepHeader = require('../../../../misc/wizard/StepHeader');
+import React from 'react';
+import {Col, ControlLabel, Form, FormControl, FormGroup, Row} from 'react-bootstrap';
 
-module.exports = ({data = {}, onChange = () => {}, sampleChart}) => (<Row>
+import Message from '../../../../I18N/Message';
+import StepHeader from '../../../../misc/wizard/StepHeader';
+
+export default ({data = {}, onChange = () => {}, sampleChart}) => (<Row>
     <StepHeader title={<Message msgId={`widgets.widgetOptionsTitle`} />} />
     <Col key="sample" xs={12}>
         <div style={{marginBottom: "30px"}}>

@@ -5,24 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {find} = require('lodash');
-const PropTypes = require('prop-types');
-const {Row, Col, Panel, Glyphicon} = require('react-bootstrap');
 
-const ComboField = require('./ComboField');
-const GeometryDetails = require('./GeometryDetails');
+import { find } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, Glyphicon, Panel, Row } from 'react-bootstrap';
 
-const {AutocompleteWFSCombobox} = require('../../misc/AutocompleteWFSCombobox');
-const ComboFieldListItem = require('./ComboFieldListItem');
-const {createWFSFetchStream} = require('../../../observables/autocomplete');
-
-const ZoneField = require('./ZoneField');
-
-const LocaleUtils = require('../../../utils/LocaleUtils');
-const SwitchPanel = require('../../misc/switch/SwitchPanel');
-const I18N = require('../../I18N/I18N');
-const IntlNumberFormControl = require("../../I18N/IntlNumberFormControl");
+import { createWFSFetchStream } from '../../../observables/autocomplete';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import I18N from '../../I18N/I18N';
+import IntlNumberFormControl from '../../I18N/IntlNumberFormControl';
+import { AutocompleteWFSCombobox } from '../../misc/AutocompleteWFSCombobox';
+import SwitchPanel from '../../misc/switch/SwitchPanel';
+import ComboField from './ComboField';
+import ComboFieldListItem from './ComboFieldListItem';
+import GeometryDetails from './GeometryDetails';
+import ZoneField from './ZoneField';
 
 class SpatialFilter extends React.Component {
     static propTypes = {
@@ -31,6 +29,7 @@ class SpatialFilter extends React.Component {
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
         spatialPanelExpanded: PropTypes.bool,
+        showDetailsButton: PropTypes.bool,
         showDetailsPanel: PropTypes.bool,
         withContainer: PropTypes.bool,
         actions: PropTypes.object,
@@ -46,6 +45,7 @@ class SpatialFilter extends React.Component {
         useMapProjection: true,
         spatialField: {},
         spatialPanelExpanded: true,
+        showDetailsButton: true,
         showDetailsPanel: false,
         withContainer: true,
         spatialMethodOptions: [],
@@ -73,7 +73,7 @@ class SpatialFilter extends React.Component {
         return find(this.props.spatialMethodOptions, method => method && method.id === id) || null;
     };
     renderHeader = () => {
-        const spatialFilterHeader = LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
+        const spatialFilterHeader = getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
 
         return (
             <span>
@@ -103,14 +103,14 @@ class SpatialFilter extends React.Component {
                                     {...other}/>)}
                             fieldOptions={
                                 this.props.spatialMethodOptions.map((opt) => {
-                                    return LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name;
+                                    return getMessageById(this.context.messages, opt.name) || opt.name;
                                 })
                             }
-                            placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
+                            placeholder={getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
                             fieldName="method"
                             fieldRowId={new Date().getTime()}
                             fieldValue={
-                                LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "") || selectedMethod && selectedMethod.name || ""
+                                getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "") || selectedMethod && selectedMethod.name || ""
                             }
                             onUpdateField={this.updateSpatialMethod}/>
                     </Col>
@@ -238,7 +238,7 @@ class SpatialFilter extends React.Component {
     };
     renderButtons = () => {
         const buttons = [];
-        const showDetails = this.props.spatialField.geometry
+        const showDetails = this.props.showDetailsButton && this.props.spatialField.geometry
             && (this.props.spatialField.method
                 && this.props.spatialField.method === "BBOX"
                 || this.props.spatialField.method === "Circle");
@@ -293,13 +293,13 @@ class SpatialFilter extends React.Component {
                 <ComboField
                     fieldOptions={
                         this.props.spatialOperations.map((opt) => {
-                            return LocaleUtils.getMessageById(this.context.messages, opt.name);
+                            return getMessageById(this.context.messages, opt.name);
                         })
                     }
                     fieldName="operation"
                     fieldRowId={new Date().getTime()}
                     fieldValue={
-                        LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
+                        getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
                     }
                     onUpdateField={this.updateSpatialOperation}/>
             </Col>
@@ -330,7 +330,7 @@ class SpatialFilter extends React.Component {
         this.props.actions.onShowSpatialSelectionDetails(false);
 
         const method = this.props.spatialMethodOptions.filter((opt) => {
-            return value === (LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name);
+            return value === (getMessageById(this.context.messages, opt.name) || opt.name);
         })[0].id;
 
         const selectedMethod = this.getMethodFromId(method);
@@ -358,7 +358,7 @@ class SpatialFilter extends React.Component {
 
     updateSpatialOperation = (id, name, value) => {
         const operation = this.props.spatialOperations.filter((opt) => {
-            return value === LocaleUtils.getMessageById(this.context.messages, opt.name);
+            return value === getMessageById(this.context.messages, opt.name);
         })[0].id;
 
         this.props.actions.onSelectSpatialOperation(operation, name);
@@ -380,4 +380,4 @@ class SpatialFilter extends React.Component {
     };
 }
 
-module.exports = SpatialFilter;
+export default SpatialFilter;

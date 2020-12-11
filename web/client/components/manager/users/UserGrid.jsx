@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,13 +6,14 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Grid, Row, Col} = require('react-bootstrap');
-const UserCard = require('./UserCard');
-const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
+import React from 'react';
 
-const LocaleUtils = require('../../../utils/LocaleUtils');
+import { Grid, Row, Col } from 'react-bootstrap';
+import UserCard from './UserCard';
+import PropTypes from 'prop-types';
+import Spinner from 'react-spinkit';
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 class UsersGrid extends React.Component {
     static propTypes = {
@@ -79,7 +79,7 @@ class UsersGrid extends React.Component {
             let actions = [{
                 onClick: () => {this.props.onEdit(user); },
                 glyph: "wrench",
-                tooltip: LocaleUtils.getMessageById(this.context.messages, "users.editUser")
+                tooltip: getMessageById(this.context.messages, "users.editUser")
             }];
             if ( user && user.role === "GUEST") {
                 actions = [];
@@ -87,7 +87,7 @@ class UsersGrid extends React.Component {
                 actions.push({
                     onClick: () => {this.props.onDelete(user && user.id); },
                     glyph: "remove-circle",
-                    tooltip: LocaleUtils.getMessageById(this.context.messages, "users.deleteUser")
+                    tooltip: getMessageById(this.context.messages, "users.deleteUser")
                 });
             }
 
@@ -108,4 +108,4 @@ class UsersGrid extends React.Component {
     }
 }
 
-module.exports = UsersGrid;
+export default UsersGrid;

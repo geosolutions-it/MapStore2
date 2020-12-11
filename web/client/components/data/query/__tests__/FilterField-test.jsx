@@ -5,14 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
 
-const FilterField = require('../FilterField.jsx');
-const ComboField = require('../ComboField.jsx');
-const DateField = require('../DateField.jsx');
-
-const expect = require('expect');
+import ReactDOM from 'react-dom';
+import FilterField from '../FilterField.jsx';
+import ComboField from '../ComboField.jsx';
+import DateField from '../DateField.jsx';
+import expect from 'expect';
 
 describe('FilterField', () => {
 

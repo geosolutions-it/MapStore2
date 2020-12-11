@@ -5,20 +5,26 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const axios = require('../libs/ajax');
-const ConfigUtils = require('../utils/ConfigUtils');
+import axios from '../libs/ajax';
 
-const urlUtil = require('url');
-const assign = require('object-assign');
-
-const xml2js = require('xml2js');
+import { getConfigProp } from '../utils/ConfigUtils';
+import urlUtil from 'url';
+import assign from 'object-assign';
+import xml2js from 'xml2js';
 
 const capabilitiesCache = {};
 
-const {castArray} = require('lodash');
+import { castArray } from 'lodash';
+import { getEPSGCode } from '../utils/CoordinatesUtils';
 
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
-const { getOperations, getOperation, getRequestEncoding, getDefaultStyleIdentifier, getDefaultFormat} = require('../utils/WMTSUtils');
+import {
+    getOperations,
+    getOperation,
+    getRequestEncoding,
+    getDefaultStyleIdentifier,
+    getDefaultFormat
+} from '../utils/WMTSUtils';
+
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
     return urlUtil.format(assign({}, parsed, {search: null}, {
@@ -38,7 +44,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {
     let SRSList = [];
     let len = TileMatrixSet.length;
     for (let i = 0; i < len; i++) {
-        SRSList.push(CoordinatesUtils.getEPSGCode(TileMatrixSet[i]["ows:SupportedCRS"]));
+        SRSList.push(getEPSGCode(TileMatrixSet[i]["ows:SupportedCRS"]));
     }
     const layersObj = root.Layer;
     const layers = castArray(layersObj);
@@ -68,7 +74,7 @@ const Api = {
     parseUrl,
     getRecords: function(url, startPosition, maxRecords, text) {
         const cached = capabilitiesCache[url];
-        if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+        if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
                 resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, url));
             });
@@ -87,7 +93,7 @@ const Api = {
     },
     getCapabilities: (url) => {
         const cached = capabilitiesCache[url];
-        if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+        if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
                 resolve(cached.data);
             });
@@ -114,4 +120,4 @@ const Api = {
     }
 };
 
-module.exports = Api;
+export default Api;

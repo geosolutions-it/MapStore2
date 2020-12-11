@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,18 +6,19 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import 'react-widgets/lib/less/react-widgets.less';
 
-const {Grid, Row, Col} = require('react-bootstrap');
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Col, Grid, Row } from 'react-bootstrap';
+import { Combobox, NumberPicker } from 'react-widgets';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 
-const Combobox = require('react-widgets').Combobox;
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import { getMessageById } from '../../utils/LocaleUtils';
+import Message from '../I18N/Message';
+
 numberLocalizer();
-const {NumberPicker} = require('react-widgets');
-require('react-widgets/lib/less/react-widgets.less');
 
-const Message = require('../I18N/Message');
-const LocaleUtils = require('../../utils/LocaleUtils');
 
 class BandSelector extends React.Component {
     static propTypes = {
@@ -68,10 +68,10 @@ class BandSelector extends React.Component {
                     </Col>
                     <Col xs={4}>
                         <Combobox data={[
-                            {value: "none", name: LocaleUtils.getMessageById(this.context.messages, "bandselector.enha.none")},
-                            {value: 'Normalize', name: LocaleUtils.getMessageById(this.context.messages, "bandselector.enha.Normalize")},
-                            {value: 'Histogram', name: LocaleUtils.getMessageById(this.context.messages, "bandselector.enha.Histogram")},
-                            {value: 'GammaValue', 'name': LocaleUtils.getMessageById(this.context.messages, "bandselector.enha.GammaValue")}]}
+                            {value: "none", name: getMessageById(this.context.messages, "bandselector.enha.none")},
+                            {value: 'Normalize', name: getMessageById(this.context.messages, "bandselector.enha.Normalize")},
+                            {value: 'Histogram', name: getMessageById(this.context.messages, "bandselector.enha.Histogram")},
+                            {value: 'GammaValue', 'name': getMessageById(this.context.messages, "bandselector.enha.GammaValue")}]}
                         valueField="value"
                         textField="name"
                         value={this.props.contrast}
@@ -88,10 +88,10 @@ class BandSelector extends React.Component {
                     { this.props.contrast === "Normalize" ?
                         <Col xs={4}>
                             <Combobox data={[
-                                {value: "none", name: LocaleUtils.getMessageById(this.context.messages, "bandselector.algorithm.none")},
-                                {value: 'StretchToMinimumMaximum', name: LocaleUtils.getMessageById(this.context.messages, "bandselector.algorithm.StretchToMinimumMaximum")},
-                                {value: 'ClipToMinimumMaximum', name: LocaleUtils.getMessageById(this.context.messages, "bandselector.algorithm.ClipToMinimumMaximum")},
-                                {value: 'ClipToZero', 'name': LocaleUtils.getMessageById(this.context.messages, "bandselector.algorithm.ClipToZero")}]}
+                                {value: "none", name: getMessageById(this.context.messages, "bandselector.algorithm.none")},
+                                {value: 'StretchToMinimumMaximum', name: getMessageById(this.context.messages, "bandselector.algorithm.StretchToMinimumMaximum")},
+                                {value: 'ClipToMinimumMaximum', name: getMessageById(this.context.messages, "bandselector.algorithm.ClipToMinimumMaximum")},
+                                {value: 'ClipToZero', 'name': getMessageById(this.context.messages, "bandselector.algorithm.ClipToZero")}]}
                             valueField="value"
                             textField="name"
                             value={this.props.algorithm}
@@ -127,4 +127,4 @@ class BandSelector extends React.Component {
     }
 }
 
-module.exports = BandSelector;
+export default BandSelector;

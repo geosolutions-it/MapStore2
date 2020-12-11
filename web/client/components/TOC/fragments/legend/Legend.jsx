@@ -1,12 +1,24 @@
-const urlUtil = require('url');
-const PropTypes = require('prop-types');
-const React = require('react');
-const {isArray} = require('lodash');
+/**
+ * Copyright 2015, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-const Message = require('../../../I18N/Message');
-const SecurityUtils = require('../../../../utils/SecurityUtils');
+import urlUtil from 'url';
 
-const assign = require('object-assign');
+import { isArray } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import {
+    addAuthenticationParameter,
+    addAuthenticationToSLD,
+    clearNilValuesForParams
+} from '../../../../utils/SecurityUtils';
+import Message from '../../../I18N/Message';
 
 class Legend extends React.Component {
     static propTypes = {
@@ -50,7 +62,7 @@ class Legend extends React.Component {
 
             let urlObj = urlUtil.parse(url);
 
-            const cleanParams = SecurityUtils.clearNilValuesForParams(layer.params);
+            const cleanParams = clearNilValuesForParams(layer.params);
             let query = assign({}, {
                 service: "WMS",
                 request: "GetLegendGraphic",
@@ -64,10 +76,10 @@ class Legend extends React.Component {
                 LEGEND_OPTIONS: props.legendOptions
             }, layer.legendParams || {},
             props.language && layer.localizedLayerStyles ? {LANGUAGE: props.language} : {},
-            SecurityUtils.addAuthenticationToSLD(cleanParams || {}, props.layer),
+            addAuthenticationToSLD(cleanParams || {}, props.layer),
             cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
             props.scales && props.currentZoomLvl && props.scaleDependent ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
-            SecurityUtils.addAuthenticationParameter(url, query);
+            addAuthenticationParameter(url, query);
 
             return urlUtil.format({
                 host: urlObj.host,
@@ -93,4 +105,4 @@ class Legend extends React.Component {
     }
 }
 
-module.exports = Legend;
+export default Legend;

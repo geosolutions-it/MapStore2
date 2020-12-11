@@ -6,27 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { connect } = require('react-redux');
+import React from 'react';
+import { connect } from 'react-redux';
 
-const { compose, renameProps, branch, renderComponent } = require('recompose');
+import { compose, renameProps, branch, renderComponent } from 'recompose';
 
-const BorderLayout = require('../../components/layout/BorderLayout');
+import BorderLayout from '../../components/layout/BorderLayout';
 
-const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } = require('../../actions/widgets');
+import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
 
-const builderConfiguration = require('../../components/widgets/enhancers/builderConfiguration');
-const chartLayerSelector = require('./enhancers/chartLayerSelector');
-const viewportBuilderConnect = require('./enhancers/connection/viewportBuilderConnect');
-const viewportBuilderConnectMask = require('./enhancers/connection/viewportBuilderConnectMask');
+import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
+import counterLayerSelector from './enhancers/counterLayerSelector';
+import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
+import viewportBuilderConnectMask from './enhancers/connection/viewportBuilderConnectMask';
 
-const withExitButton = require('./enhancers/withExitButton');
-const withConnectButton = require('./enhancers/connection/withConnectButton');
+import withExitButton from './enhancers/withExitButton';
+import withConnectButton from './enhancers/connection/withConnectButton';
+import CounterWizard from '../../components/widgets/builder/wizard/CounterWizard';
+import BuilderHeader from './BuilderHeader';
+import BaseToolbar from '../../components/widgets/builder/wizard/counter/Toolbar';
+import LayerSelector from './LayerSelector';
 
-const {
-    wizardStateToProps,
-    wizardSelector
-} = require('./commons');
+import {wizardStateToProps, wizardSelector} from './commons';
 
 const Builder = connect(
     wizardSelector,
@@ -38,14 +39,14 @@ const Builder = connect(
     },
     wizardStateToProps
 )(compose(
-    builderConfiguration,
+    builderConfiguration({ needsWPS: true }),
     renameProps({
         editorData: "data",
         onEditorChange: "onChange"
     })
-)(require('../../components/widgets/builder/wizard/CounterWizard')));
+)(CounterWizard));
 
-const BuilderHeader = require('./BuilderHeader');
+
 const Toolbar = compose(
     connect(
         wizardSelector, {
@@ -59,7 +60,7 @@ const Toolbar = compose(
     viewportBuilderConnect,
     withExitButton(),
     withConnectButton(({ step }) => step === 0)
-)(require('../../components/widgets/builder/wizard/counter/Toolbar'));
+)(BaseToolbar);
 
 /*
  * in case you don't have a layer selected (e.g. dashboard) the chart builder
@@ -70,11 +71,11 @@ const chooseLayerEnhancer = compose(
     viewportBuilderConnectMask,
     branch(
         ({ layer } = {}) => !layer,
-        renderComponent(chartLayerSelector(require('./LayerSelector')))
+        renderComponent(counterLayerSelector(LayerSelector))
     )
 );
 
-module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, editorData, toggleConnection, availableDependencies = [], dependencies, ...props } = {}) =>
+export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, editorData, toggleConnection, availableDependencies = [], dependencies, ...props } = {}) =>
 
     (<BorderLayout
         header={<BuilderHeader onClose={onClose}><Toolbar

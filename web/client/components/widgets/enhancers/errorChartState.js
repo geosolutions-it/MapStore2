@@ -1,15 +1,17 @@
-const React = require('react');
-const Message = require('../../I18N/Message');
-const emptyState = require('../../misc/enhancers/emptyState');
+import React from 'react';
+import Message from '../../I18N/Message';
+import emptyState from '../../misc/enhancers/emptyState';
 
 const getErrorMessage = (error = {}) => {
     if (error.code === "ECONNABORTED") {
         return <Message msgId="widgets.errors.timeoutExpired" />;
     }
-    return <Message msgId="widgets.errors.genericError" />;
+    return error.message ?
+        <Message msgId="widgets.errors.genericErrorWithMessage" msgParams={{message: error.message}}/> :
+        <Message msgId="widgets.errors.genericError"/>;
 };
 
-module.exports = emptyState(
+export default emptyState(
     ({error}) => error,
     ({error, iconFit} = {}) => ({
         glyph: "warning-sign",

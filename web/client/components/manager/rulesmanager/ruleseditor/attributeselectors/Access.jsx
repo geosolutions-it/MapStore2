@@ -5,13 +5,15 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require("react");
-const PagedCombo = require('../../../../misc/combobox/PagedCombobox');
-const {Row, Col} = require('react-bootstrap');
-const fixedOptions = require("../../enhancers/fixedOptions");
-const localizedProps = require("../../../../misc/enhancers/localizedProps");
-const { compose, defaultProps, withHandlers, withPropsOnChange} = require('recompose');
-const Message = require('../../../../I18N/Message');
+
+import React from "react";
+import {Col, Row} from 'react-bootstrap';
+import { compose, defaultProps, withHandlers, withPropsOnChange } from 'recompose';
+
+import Message from '../../../../I18N/Message';
+import PagedCombo from '../../../../misc/combobox/PagedCombobox';
+import localizedProps from "../../../../misc/enhancers/localizedProps";
+import fixedOptions from "../../enhancers/fixedOptions";
 
 const AccessSelector = (props) => (
     <Row className={props.disabled ? 'ms-disabled' : ''}>
@@ -23,7 +25,7 @@ const AccessSelector = (props) => (
         </Col>
     </Row>);
 
-module.exports = compose(
+export default compose(
     defaultProps({
         size: 5,
         textField: "label",

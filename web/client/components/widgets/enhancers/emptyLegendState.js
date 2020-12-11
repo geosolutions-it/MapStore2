@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const emptyState = require('../../misc/enhancers/emptyState');
-const Message = require('../../I18N/Message');
+import React from 'react';
 
-module.exports = (asTooltip = true) => emptyState(
+import emptyState from '../../misc/enhancers/emptyState';
+import Message from '../../I18N/Message';
+
+export default (asTooltip = true) => emptyState(
     ({ layers = [] }) => layers.length === 0,
     {
         [asTooltip ? "tooltip" : "title"]: <Message msgId="widgets.errors.noLegend" />,

@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,22 +7,25 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {Button, Col, Grid, Row, Image, Glyphicon, Table, Panel, Alert} = require('react-bootstrap');
-const {DateFormat} = require('../../I18N/I18N');
-require("./css/snapshot.css");
+import './css/snapshot.css';
 
-const ConfigUtils = require('../../../utils/ConfigUtils');
-const shotingImg = require('./shoting.gif');
-const notAvailable = require('./not-available.png');
-const {isEqual} = require('lodash');
+import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Alert, Col, Glyphicon, Grid, Image, Panel, Row, Table } from 'react-bootstrap';
+
+import ConfigUtils from '../../../utils/ConfigUtils';
+import Button from '../../misc/Button';
+import { DateFormat } from '../../I18N/I18N';
+import Message from '../../I18N/Message';
+import Dialog from '../../misc/Dialog';
+import Portal from '../../misc/Portal';
+import BasicSpinner from '../../misc/spinners/BasicSpinner/BasicSpinner';
+import notAvailable from './not-available.png';
+import shotingImg from './shoting.gif';
+import snapshotSupportComp from './SnapshotSupport';
+
 let SnapshotSupport;
-const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
-const Dialog = require('../../misc/Dialog');
-
-const Message = require('../../I18N/Message');
-const Portal = require('../../misc/Portal');
-
 /**
  * SnapshotPanel allow to export a snapshot of the current map, showing a
  * preview of the snapshot, with some info about the map.
@@ -94,12 +97,12 @@ class SnapshotPanel extends React.Component {
     };
 
     UNSAFE_componentWillMount() {
-        SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
+        SnapshotSupport = snapshotSupportComp(this.props.mapType);
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType) {
-            SnapshotSupport = require('./SnapshotSupport')(newProps.mapType);
+            SnapshotSupport = snapshotSupportComp(newProps.mapType);
         }
     }
 
@@ -285,4 +288,4 @@ class SnapshotPanel extends React.Component {
     };
 }
 
-module.exports = SnapshotPanel;
+export default SnapshotPanel;

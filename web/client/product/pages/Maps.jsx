@@ -1,26 +1,35 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
 
-require("../assets/css/maps.css");
+import url from 'url';
 
-const {connect} = require('react-redux');
+import PropTypes from 'prop-types';
+import React from 'react';
+import {connect} from 'react-redux';
 
-const url = require('url');
+import {resetControls} from '../../actions/controls';
+import {loadMaps} from '../../actions/maps';
+import Page from '../../containers/Page';
+import ConfigUtils from '../../utils/ConfigUtils';
+
+import("../assets/css/maps.css");
+
 const urlQuery = url.parse(window.location.href, true).query;
-const ConfigUtils = require('../../utils/ConfigUtils');
 
-const {resetControls} = require('../../actions/controls');
-const {loadMaps} = require('../../actions/maps');
 
-const Page = require('../../containers/Page');
-
+/**
+  * @name Maps
+  * @memberof pages
+  * @class
+  * @classdesc
+  * This is the home page of MapStore.
+  * Renders plugins and triggers the initial load action for loading contents in the page.
+  */
 class MapsPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
@@ -54,7 +63,7 @@ class MapsPage extends React.Component {
     }
 }
 
-module.exports = connect((state) => ({
+export default connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {

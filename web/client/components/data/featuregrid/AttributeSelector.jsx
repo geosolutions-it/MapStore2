@@ -1,8 +1,17 @@
-const React = require('react');
-const {Checkbox} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+/*
+ * Copyright 2018, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-module.exports = ({
+import React from 'react';
+import { Checkbox } from 'react-bootstrap';
+
+import Message from '../../I18N/Message';
+
+export default ({
     style = {},
     titleMsg = "featuregrid.columns",
     onChange = () => {},

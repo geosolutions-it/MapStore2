@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {get} = require('lodash');
-const ConfigUtils = require('../utils/ConfigUtils');
+import { get } from 'lodash';
+
+import ConfigUtils from '../utils/ConfigUtils';
 
 const getRecords = (url, startPosition, maxRecords, text) => {
     const backgroundList = get(ConfigUtils.getDefaults(), 'initialState.defaultState.catalog.default.staticServices.default_map_backgrounds.backgrounds');
@@ -26,7 +27,8 @@ const getRecords = (url, startPosition, maxRecords, text) => {
 };
 
 const reset = () => {};
-module.exports = {
+
+export default {
     getRecords,
     reset,
     textSearch: (url, startPosition, maxRecords, text) => getRecords(url, startPosition, maxRecords, text)

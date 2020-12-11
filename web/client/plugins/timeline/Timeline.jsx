@@ -5,30 +5,34 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const { connect } = require('react-redux');
-const { isString, differenceBy, isNil } = require('lodash');
-const { currentTimeSelector } = require('../../selectors/dimension');
+import React from 'react';
 
+import { connect } from 'react-redux';
+import { isString, differenceBy, isNil } from 'lodash';
+import { currentTimeSelector } from '../../selectors/dimension';
+import { selectTime, selectLayer, onRangeChanged } from '../../actions/timeline';
 
-const { selectTime, selectLayer, onRangeChanged } = require('../../actions/timeline');
-const { itemsSelector, loadingSelector, selectedLayerSelector, currentTimeRangeSelector, rangeSelector, timelineLayersSelector } = require('../../selectors/timeline');
-const { moveTime, setCurrentOffset } = require('../../actions/dimension');
-const { selectPlaybackRange } = require('../../actions/playback');
-const { playbackRangeSelector, statusSelector } = require('../../selectors/playback');
-const { createStructuredSelector, createSelector } = require('reselect');
-const { createShallowSelectorCreator } = require('../../utils/ReselectUtils');
+import {
+    itemsSelector,
+    loadingSelector,
+    selectedLayerSelector,
+    currentTimeRangeSelector,
+    rangeSelector,
+    timelineLayersSelector
+} from '../../selectors/timeline';
 
-const { compose, withPropsOnChange, defaultProps } = require('recompose');
-const withMask = require('../../components/misc/enhancers/withMask');
-const Message = require('../../components/I18N/Message');
-const LoadingSpinner = require('../../components/misc/LoadingSpinner');
-
-
-const customTimesHandlers = require('../../components/time/enhancers/customTimesHandlers');
-const customTimesEnhancer = require('../../components/time/enhancers/customTimesEnhancer');
-
-const moment = require('moment');
+import { moveTime, setCurrentOffset } from '../../actions/dimension';
+import { selectPlaybackRange } from '../../actions/playback';
+import { playbackRangeSelector, statusSelector } from '../../selectors/playback';
+import { createStructuredSelector, createSelector } from 'reselect';
+import { createShallowSelectorCreator } from '../../utils/ReselectUtils';
+import { compose, withPropsOnChange, defaultProps } from 'recompose';
+import withMask from '../../components/misc/enhancers/withMask';
+import Message from '../../components/I18N/Message';
+import LoadingSpinner from '../../components/misc/LoadingSpinner';
+import customTimesHandlers from '../../components/time/enhancers/customTimesHandlers';
+import customTimesEnhancer from '../../components/time/enhancers/customTimesEnhancer';
+import moment from 'moment';
 /**
  * Optimization to skip re-render when the layers update properties that are not needed.
  * Typically `loading` attribute
@@ -196,6 +200,6 @@ const enhance = compose(
         {white: true}
     )
 );
-const Timeline = require('../../components/time/TimelineComponent');
+import Timeline from '../../components/time/TimelineComponent';
 
-module.exports = enhance(Timeline);
+export default enhance(Timeline);

@@ -5,32 +5,34 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-const {testEpic} = require('./epicTestUtils');
-const {
+import expect from 'expect';
+
+import { testEpic } from './epicTestUtils';
+
+import {
     openWidgetEditor,
     initEditorOnNew,
     closeWidgetEditorOnFinish,
     handleWidgetsFilterPanel,
     initEditorOnNewChart
-} = require('../widgetsbuilder');
-const {
-    createWidget, editWidget, insertWidget,
-    openFilterEditor, createChart,
+} from '../widgetsbuilder';
+
+import {
+    createWidget,
+    editWidget,
+    insertWidget,
+    openFilterEditor,
+    createChart,
     EDIT_NEW,
     EDITOR_CHANGE
-} = require('../../actions/widgets');
-const {
-    CLOSE_FEATURE_GRID
-} = require('../../actions/featuregrid');
+} from '../../actions/widgets';
 
-const {FEATURE_TYPE_SELECTED} = require('../../actions/wfsquery');
-const {LOAD_FILTER, search} = require('../../actions/queryform');
-const {
-    CHANGE_DRAWING_STATUS
-} = require('../../actions/draw');
-const { SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const {addLayer} = require('../../actions/layers');
+import { CLOSE_FEATURE_GRID } from '../../actions/featuregrid';
+import { FEATURE_TYPE_SELECTED } from '../../actions/wfsquery';
+import { LOAD_FILTER, search } from '../../actions/queryform';
+import { CHANGE_DRAWING_STATUS } from '../../actions/draw';
+import { SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { addLayer } from '../../actions/layers';
 
 describe('widgetsbuilder epic', () => {
     it('openWidgetEditor with New', (done) => {

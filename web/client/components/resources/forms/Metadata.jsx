@@ -13,12 +13,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const moment = require('moment');
-const {FormControl: BFormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const ConfigUtils = require('../../../utils/ConfigUtils');
-const FormControl = require('../../misc/enhancers/localizedProps')('placeholder')(BFormControl);
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormControl as BFormControl, ControlLabel, FormGroup } from 'react-bootstrap';
+
+import ConfigUtils from '../../../utils/ConfigUtils';
+import localizedProps from '../../misc/enhancers/localizedProps';
+
+const FormControl = localizedProps('placeholder')(BFormControl);
 
 /**
  * A DropDown menu for user details:
@@ -115,4 +118,4 @@ class Metadata extends React.Component {
 }
 
 
-module.exports = Metadata;
+export default Metadata;

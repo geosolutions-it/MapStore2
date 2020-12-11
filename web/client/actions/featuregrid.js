@@ -50,6 +50,7 @@ export const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
 export const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
 export const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
 export const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
+export const UPDATE_EDITORS_OPTIONS = 'FEATUREGRID:UPDATE_EDITORS_OPTIONS';
 
 export const MODES = {
     EDIT: "EDIT",
@@ -61,6 +62,7 @@ export const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
 export const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
 export const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
 export const SET_TIME_SYNC = "FEATUREGRID:SET_TIME_SYNC";
+export const SET_PAGINATION = "FEATUREGRID:SET_PAGINATION";
 
 export function toggleShowAgain() {
     return {
@@ -72,7 +74,7 @@ export function hideSyncPopover() {
         type: HIDE_SYNC_POPOVER
     };
 }
-export function fatureGridQueryResult(features, pages) {
+export function featureGridQueryResult(features, pages) {
     return {
         type: GRID_QUERY_RESULT,
         features, pages
@@ -115,6 +117,13 @@ export function selectFeatures(features, append) {
  * Configures some options for the feature grid
  * @param {object} options options to set up
  */
+export const updateCustomEditorsOptions = (payload) => {
+    return {
+        type: UPDATE_EDITORS_OPTIONS,
+        payload
+    };
+};
+
 export function setUp(options) {
     return {
         type: SET_UP,
@@ -206,10 +215,11 @@ export function setLayer(id) {
         id
     };
 }
-export function updateFilter(update) {
+export function updateFilter(update, append = false) {
     return {
         type: UPDATE_FILTER,
-        update
+        update,
+        append
     };
 }
 export function toggleTool(tool, value) {
@@ -359,4 +369,9 @@ export const deactivateGeometryFilter = (deactivated) => ({
 export const setTimeSync = value => ({
     type: SET_TIME_SYNC,
     value
+});
+
+export const setPagination = (size) => ({
+    type: SET_PAGINATION,
+    size
 });

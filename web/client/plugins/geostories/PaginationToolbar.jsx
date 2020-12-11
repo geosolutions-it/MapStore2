@@ -6,12 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { connect } from 'react-redux';
+import { compose, renameProp, withHandlers } from 'recompose';
+import { createSelector } from 'reselect';
 
-const { connect } = require('react-redux');
-const { searchGeostories } = require('../../actions/geostories');
-const { withHandlers, renameProp, compose } = require('recompose');
-const { searchTextSelector, resultsSelector, searchParamsSelector, totalCountSelector, isLoadingSelector } = require('../../selectors/geostories');
-const { createSelector } = require('reselect');
+import { searchGeostories } from '../../actions/geostories';
+import PaginationToolbarComp from '../../components/misc/PaginationToolbar';
+import {
+    isLoadingSelector,
+    resultsSelector,
+    searchParamsSelector,
+    searchTextSelector,
+    totalCountSelector
+} from '../../selectors/geostories';
+
 const PaginationToolbar = compose(
     connect(
         createSelector(
@@ -46,5 +54,5 @@ const PaginationToolbar = compose(
             loadPage(searchText, { start, limit });
         }
     })
-)(require('../../components/misc/PaginationToolbar'));
-module.exports = PaginationToolbar;
+)(PaginationToolbarComp);
+export default PaginationToolbar;

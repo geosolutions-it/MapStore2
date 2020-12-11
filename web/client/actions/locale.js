@@ -11,7 +11,7 @@ import { Promise } from 'es6-promise';
 
 import axios from '../libs/ajax';
 import { error } from './notifications';
-import LocaleUtils from '../utils/LocaleUtils';
+import {getUserLocale} from '../utils/LocaleUtils';
 import ConfigUtils from '../utils/ConfigUtils';
 
 export const CHANGE_LOCALE = 'CHANGE_LOCALE';
@@ -63,7 +63,7 @@ export function loadLocale(translationFolder, language) {
     return (dispatch) => {
         let locale = language;
         if (!locale) {
-            locale = LocaleUtils.getUserLocale();
+            locale = getUserLocale();
         }
         const folders = castArray(translationFolder || ConfigUtils.getConfigProp('translationsPath'));
         Promise.all(folders.map((folder) => {

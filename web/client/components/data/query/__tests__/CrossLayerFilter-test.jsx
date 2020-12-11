@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
+import React from 'react';
 
-const expect = require('expect');
-const CrossLayerFilter = require('../CrossLayerFilter');
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import expect from 'expect';
+import CrossLayerFilter from '../CrossLayerFilter';
 describe('CrossLayerFilter component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

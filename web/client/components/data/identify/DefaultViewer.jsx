@@ -6,15 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const MapInfoUtils = require('../../../utils/MapInfoUtils');
-const HTML = require('../../../components/I18N/HTML');
-const Message = require('../../../components/I18N/Message');
-const {Alert, Panel, Accordion} = require('react-bootstrap');
-const ViewerPage = require('./viewers/ViewerPage');
-const {isEmpty, reverse} = require('lodash');
-const {getFormatForResponse} = require('../../../utils/IdentifyUtils');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer } from '../../../utils/MapInfoUtils';
+import HTML from '../../../components/I18N/HTML';
+import Message from '../../../components/I18N/Message';
+import { Alert, Panel, Accordion } from 'react-bootstrap';
+import ViewerPage from './viewers/ViewerPage';
+import { isEmpty, reverse } from 'lodash';
+import { getFormatForResponse } from '../../../utils/IdentifyUtils';
 
 class DefaultViewer extends React.Component {
     static propTypes = {
@@ -42,15 +43,15 @@ class DefaultViewer extends React.Component {
     };
 
     static defaultProps = {
-        format: MapInfoUtils.getDefaultInfoFormatValue(),
+        format: getDefaultInfoFormatValue(),
         responses: [],
         requests: [],
         missingResponses: 0,
         collapsible: false,
         headerOptions: {},
         container: Accordion,
-        validator: MapInfoUtils.getValidator,
-        viewers: MapInfoUtils.getViewers(),
+        validator: getValidator,
+        viewers: getViewers(),
         style: {
             position: "relative",
             marginBottom: 0
@@ -74,7 +75,7 @@ class DefaultViewer extends React.Component {
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses, this.props.renderEmpty) : responses;
+        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses) : responses;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
@@ -91,7 +92,7 @@ class DefaultViewer extends React.Component {
      */
     getCurrentResponse = (response) => {
         const validator = this.props.validator(this.props.format);
-        return validator.getValidResponses([response], true);
+        return validator.getValidResponses([response]);
     }
 
     renderEmptyLayers = () => {
@@ -146,7 +147,7 @@ class DefaultViewer extends React.Component {
             const PageHeader = this.props.header;
             let customViewer;
             if (layerMetadata?.viewer?.type) {
-                customViewer = MapInfoUtils.getViewer(layerMetadata.viewer.type);
+                customViewer = getViewer(layerMetadata.viewer.type);
             }
             return (<Panel
                 eventKey={i}
@@ -203,4 +204,4 @@ class DefaultViewer extends React.Component {
     }
 }
 
-module.exports = DefaultViewer;
+export default DefaultViewer;

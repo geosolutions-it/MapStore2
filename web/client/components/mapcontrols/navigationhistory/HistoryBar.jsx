@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,10 +6,13 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var {ButtonGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
-var ImageButton = require('../../buttons/ImageButton');
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import { ButtonGroup, Glyphicon, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import ImageButton from '../../buttons/ImageButton';
+import Button from '../../misc/Button';
 
 class HistoryBar extends React.Component {
     static propTypes = {
@@ -73,4 +76,4 @@ class HistoryBar extends React.Component {
     };
 }
 
-module.exports = HistoryBar;
+export default HistoryBar;

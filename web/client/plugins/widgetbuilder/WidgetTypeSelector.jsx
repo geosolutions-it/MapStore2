@@ -5,23 +5,26 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../components/I18N/Message');
-const {onEditorChange} = require('../../actions/widgets');
-const {connect} = require('react-redux');
-const BorderLayout = require('../../components/layout/BorderLayout');
-const BuilderHeader = require('./BuilderHeader');
+import React from 'react';
+import { connect } from 'react-redux';
+
+import { onEditorChange } from '../../actions/widgets';
+import Message from '../../components/I18N/Message';
+import BorderLayout from '../../components/layout/BorderLayout';
+import WidgetTypeSelector from '../../components/widgets/builder/WidgetTypeSelector';
+import BuilderHeader from './BuilderHeader';
+
 const TypeSelector = connect(
     () => ({}),
     {
         onSelect: (type) => onEditorChange("widgetType", type)
     }
-)(require('../../components/widgets/builder/WidgetTypeSelector'));
+)(WidgetTypeSelector);
 
 /**
  * Builder page that shows the type selector
  */
-module.exports = ({enabled, onClose = () => {}, typeFilter} = {}) =>
+export default ({enabled, onClose = () => {}, typeFilter} = {}) =>
 
     (<BorderLayout
         className="bg-body"

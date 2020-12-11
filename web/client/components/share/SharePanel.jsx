@@ -27,7 +27,7 @@ import {
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange } from 'lodash';
-import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
+import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
@@ -52,6 +52,7 @@ import OverlayTrigger from '../misc/OverlayTrigger';
  * @prop {string} [shareConfigUrl] the url of the config to use for shareAPI
  * @prop {function} [onClose] function to call on close window event.
  * @prop {getCount} [getCount] function used to get the count for social links.
+ * @prop {object} [advancedSettings] object with properties/settings for bbox, coordinates, zoom and marker fields
  */
 class SharePanel extends React.Component {
     static propTypes = {
@@ -76,7 +77,8 @@ class SharePanel extends React.Component {
         advancedSettings: PropTypes.shape({
             bbox: PropTypes.bool,
             homeButton: PropTypes.bool,
-            centerAndZoom: PropTypes.bool
+            centerAndZoom: PropTypes.bool,
+            defaultEnabled: PropTypes.bool
         }),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
@@ -105,7 +107,8 @@ class SharePanel extends React.Component {
 
     state = {
         eventKey: 1,
-        showAdvanced: true
+        showAdvanced: true,
+        defaultLoaded: false
     };
 
     UNSAFE_componentWillMount() {
@@ -117,6 +120,7 @@ class SharePanel extends React.Component {
         const bbox = join(this.props.bbox, ',');
         const coordinate = this.getCoordinates(this.props);
         this.setState({
+            ...this.state,
             bbox,
             eventKey: tabs[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
@@ -125,18 +129,48 @@ class SharePanel extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        const newBbox = join(newProps.bbox, ',');
         if (!isEqual(this.props.zoom, newProps.zoom) ||
             !isEqual(this.props.point, newProps.point) ||
             !isEqual(this.props.center, newProps.center) ||
-            !isEqual(this.props.bbox, newProps.bbox)) {
-            const coordinate = this.getCoordinates(newProps);
-            this.setState({
-                bbox: newBbox,
-                zoom: newProps.zoom,
-                coordinate
+            !isEqual(this.props.bbox, newProps.bbox) ||
+            !isEqual(this.props.isVisible, newProps.isVisible)) {
+            this.initializeDefaults(newProps);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        const {settings = {}, isVisible,  onSubmitClickPoint: showMarker, hideMarker} = this.props || {};
+        if (!isEqual(settings.markerEnabled, prevProps.settings.markerEnabled) && isVisible) {
+            const [lng, lat] = this.state.coordinate;
+            let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, this.props.point));
+            settings.markerEnabled ? showMarker(newPoint) : hideMarker();
+        }
+    }
+
+    initializeDefaults = (props) => {
+        const coordinate = this.getCoordinates(props);
+        const {settings = {}, advancedSettings = {}, zoom, isVisible, onUpdateSettings, bbox: newBbox = []} = props || {};
+        const isCenterAndZoomDefault = advancedSettings.centerAndZoom && advancedSettings.defaultEnabled === CENTERANDZOOM || false;
+        const isMarkerAndZoomDefault = advancedSettings.centerAndZoom && advancedSettings.defaultEnabled === MARKERANDZOOM || false;
+        const enableDefaultBBox = advancedSettings.bbox && advancedSettings.defaultEnabled === BBOX || false;
+
+        // Default option to be enabled upon opening Share panel (if any)
+        if (!this.state.defaultLoaded && props.isVisible) {
+            onUpdateSettings({
+                ...settings,
+                centerAndZoomEnabled: isCenterAndZoomDefault || isMarkerAndZoomDefault,
+                markerEnabled: isMarkerAndZoomDefault,
+                bboxEnabled: enableDefaultBBox
             });
         }
+        this.setState({
+            bbox: join(newBbox, ','),
+            zoom,
+            coordinate,
+            defaultLoaded: isVisible,
+            isCenterAndZoomDefault,
+            isMarkerAndZoomDefault
+        });
     }
 
     /**
@@ -231,6 +265,18 @@ class SharePanel extends React.Component {
         return isValidLatLng.length > 0 ? lonLat : [x, y];
     }
 
+    setMarkerSetting = () => {
+        const {isCenterAndZoomDefault, isMarkerAndZoomDefault} = this.state || {};
+        const {centerAndZoomEnabled} = this.props?.settings || {};
+        let markerSetting = {};
+        if ((isCenterAndZoomDefault && centerAndZoomEnabled) || centerAndZoomEnabled) {
+            markerSetting = { markerEnabled: false};
+        } else if (isMarkerAndZoomDefault) {
+            markerSetting = {markerEnabled: !this.props.settings.centerAndZoomEnabled};
+        }
+        return markerSetting;
+    }
+
     renderAdvancedSettings = () => {
         return (
             <SwitchPanel
@@ -243,7 +289,8 @@ class SharePanel extends React.Component {
                         this.props.onUpdateSettings({
                             ...this.props.settings,
                             bboxEnabled: !this.props.settings.bboxEnabled,
-                            centerAndZoomEnabled: false
+                            centerAndZoomEnabled: false,
+                            markerEnabled: false
                         })}>
                     <Message msgId="share.addBboxParam" />
                 </Checkbox>}
@@ -253,12 +300,13 @@ class SharePanel extends React.Component {
                         this.props.onUpdateSettings({
                             ...this.props.settings,
                             centerAndZoomEnabled: !this.props.settings.centerAndZoomEnabled,
+                            ...this.setMarkerSetting(),
                             bboxEnabled: false
                         });
-                        this.props.hideMarker();
+                        this.props.settings.centerAndZoomEnabled && this.props.hideMarker();
                     }
                     }>
-                    <Message msgId="share.addCenterAndZoomParam" />
+                    <Message msgId={this.props.settings.markerEnabled ? "share.addMarkerAndZoomParam" : "share.addCenterAndZoomParam"} />
                 </Checkbox>}
                 {this.props.advancedSettings.homeButton && <Checkbox
                     checked={this.props.settings.showHome}

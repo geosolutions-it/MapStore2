@@ -6,8 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const withContainer = require('./WithContainer');
-const {Modal} = require('react-bootstrap');
+import assign from 'object-assign';
+import { Modal } from 'react-bootstrap';
+
+import withContainer from './WithContainer';
 
 /**
   * This allow do disable event propagation if used
@@ -27,9 +29,8 @@ class FixedModal extends Modal {
     }
 }
 
-const assign = require('object-assign');
 
-module.exports = assign(withContainer(FixedModal), {
+export default assign(withContainer(FixedModal), {
     Body: Modal.Body,
     Dialog: Modal.Dialog,
     Footer: Modal.Footer,

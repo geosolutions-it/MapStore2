@@ -6,11 +6,12 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const LocaleUtils = require('../../../../utils/LocaleUtils');
-const {Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../../misc/OverlayTrigger');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import { getMessageById } from '../../../../utils/LocaleUtils';
+import { Tooltip } from 'react-bootstrap';
+import OverlayTrigger from '../../../misc/OverlayTrigger';
 
 class AttributeFilter extends React.PureComponent {
     static propTypes = {
@@ -38,13 +39,13 @@ class AttributeFilter extends React.PureComponent {
         if (this.props.column.filterable === false) {
             return <span/>;
         }
-        const placeholder = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId) || "Search";
+        const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Search";
         let inputKey = 'header-filter-' + this.props.column.key;
         return (<input disabled={this.props.disabled} key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={this.props.value} onChange={this.handleChange}/>);
     }
     renderTooltip = (cmp) => {
-        if (this.props.tooltipMsgId && LocaleUtils.getMessageById(this.context.messages, this.props.tooltipMsgId)) {
-            return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{LocaleUtils.getMessageById(this.context.messages, this.props.tooltipMsgId)}</Tooltip>}>
+        if (this.props.tooltipMsgId && getMessageById(this.context.messages, this.props.tooltipMsgId)) {
+            return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{getMessageById(this.context.messages, this.props.tooltipMsgId)}</Tooltip>}>
                 {cmp}
             </OverlayTrigger>);
         }
@@ -65,4 +66,4 @@ class AttributeFilter extends React.PureComponent {
     }
 }
 
-module.exports = AttributeFilter;
+export default AttributeFilter;

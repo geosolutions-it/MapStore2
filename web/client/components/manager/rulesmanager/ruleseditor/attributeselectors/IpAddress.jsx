@@ -5,13 +5,15 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require("react");
-const PropTypes = require("prop-types");
-const {FormControl, FormGroup, Row, Col} = require("react-bootstrap");
-const Message = require('../../../../I18N/Message');
-const {checkIp} = require('../../../../../utils/RulesEditor');
-const withLocalized = require("../../../../misc/enhancers/localizedProps");
-const {compose, defaultProps} = require("recompose");
+
+import PropTypes from "prop-types";
+import React from "react";
+import {Col, FormControl, FormGroup, Row} from "react-bootstrap";
+import {compose, defaultProps} from "recompose";
+
+import {checkIp} from '../../../../../utils/RulesEditorUtils';
+import Message from '../../../../I18N/Message';
+import withLocalized from "../../../../misc/enhancers/localizedProps";
 
 class IpAddress extends React.Component {
     static propTypes = {
@@ -55,7 +57,7 @@ class IpAddress extends React.Component {
     }
 }
 
-module.exports = compose(
+export default compose(
     defaultProps({
         placeholder: "rulesmanager.placeholders.ip"
     }),

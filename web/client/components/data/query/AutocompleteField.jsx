@@ -7,15 +7,16 @@
 */
 
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const Combobox = require('react-widgets').Combobox;
-const {Glyphicon, Tooltip} = require('react-bootstrap');
-const AutocompleteListItem = require('./AutocompleteListItem');
-const LocaleUtils = require('../../../utils/LocaleUtils');
-const {isLikeOrIlike} = require('../../../utils/FilterUtils');
-const OverlayTrigger = require('../../../components/misc/OverlayTrigger');
-const HTML = require('../../../components/I18N/HTML');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import { Combobox } from 'react-widgets';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
+import AutocompleteListItem from './AutocompleteListItem';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import { isLikeOrIlike } from '../../../utils/FilterUtils';
+import OverlayTrigger from '../../../components/misc/OverlayTrigger';
+import HTML from '../../../components/I18N/HTML';
 /**
  * Combobox with remote autocomplete functionality.
  * @memberof components.query
@@ -101,9 +102,9 @@ class AutocompleteField extends React.Component {
             options.push({ label: '', value: '', disabled: true, pagination: this.renderPagination() });
         }
         const messages = {
-            emptyList: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
-            open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
-            emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
+            emptyList: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
+            open: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
+            emptyFilter: getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
         const tooltip = (<Tooltip id={"autocompleteField-tooltip" + (this.props.filterField && this.props.filterField.rowId)}>
             <HTML msgId="queryform.attributefilter.tooltipTextField"/></Tooltip>);
@@ -167,4 +168,4 @@ class AutocompleteField extends React.Component {
     };
 }
 
-module.exports = AutocompleteField;
+export default AutocompleteField;

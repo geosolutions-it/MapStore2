@@ -6,25 +6,43 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const Portal = require('../../misc/Portal');
-const GeometryEditor = require('./GeometryEditor');
-const Manager = require('../../style/vector/Manager');
-const Message = require('../../I18N/Message');
-const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, ControlLabel, Checkbox } = require('react-bootstrap');
-const ReactQuill = require('react-quill');
-require('react-quill/dist/quill.snow.css');
-const { isFunction, isEmpty, head } = require('lodash');
-const {getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
-const ConfirmDialog = require('../../misc/ConfirmDialog');
-const assign = require('object-assign');
-const PluginsUtils = require('../../../utils/PluginsUtils');
-const defaultConfig = require('./AnnotationsConfig');
-const FeaturesList = require('./FeaturesList');
-const {getComponents, coordToArray, validateCoords} = require('../../../utils/AnnotationsUtils');
-const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
+import 'react-quill/dist/quill.snow.css';
+
+import { head, isEmpty, isFunction } from 'lodash';
+import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {
+    Checkbox,
+    Col,
+    ControlLabel,
+    FormControl,
+    FormGroup,
+    Glyphicon,
+    Grid,
+    Nav,
+    NavItem,
+    Row
+} from 'react-bootstrap';
+import ReactQuill from 'react-quill';
+
+import {
+    coordToArray,
+    getComponents,
+    getGeometryGlyphInfo,
+    getGeometryType,
+    validateCoords
+} from '../../../utils/AnnotationsUtils';
+import { MEASURE_TYPE } from '../../../utils/MeasurementUtils';
+import { handleExpression } from '../../../utils/PluginsUtils';
+import Message from '../../I18N/Message';
+import ConfirmDialog from '../../misc/ConfirmDialog';
+import Portal from '../../misc/Portal';
+import Toolbar from '../../misc/toolbar/Toolbar';
+import Manager from '../../style/vector/Manager';
+import defaultConfig from './AnnotationsConfig';
+import FeaturesList from './FeaturesList';
+import GeometryEditor from './GeometryEditor';
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -61,7 +79,6 @@ const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
  * @prop {function} onCancelRemove triggered when the user cancels removal
  * @prop {function} onCancelClose triggered when the user cancels closing
  * @prop {function} onConfirmClose triggered when the user confirms closing
-  * @prop {function} onChangePointType triggered when the user switches between the point stylers
  * @prop {function} onStartDrawing triggered before the user starts the drawing process
  * @prop {object} editedFields fields of the annotation
  * @prop {object} drawingText it contains info of the text annotation, 'drawing' if being added or 'show' used to show the modal to add the relative value
@@ -121,6 +138,7 @@ const {MEASURE_TYPE} = require('../../../utils/MeasurementUtils');
  * @prop {function} onToggleShowAgain triggered when interacting with the checkbox on measure annotation warning popup
  * @prop {function} onInitPlugin triggered when annotation editor is mounted
  * @prop {function} onGeometryHighlight triggered onMouseEnter and onMouseLeave of the geometry card
+ * @prop {function} onUnSelectFeature triggered on unselecting a geometry card
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -164,7 +182,6 @@ class AnnotationsEditor extends React.Component {
         onResetCoordEditor: PropTypes.func,
         onHighlightPoint: PropTypes.func,
         onSetStyle: PropTypes.func,
-        onChangePointType: PropTypes.func,
         onStartDrawing: PropTypes.func,
         onZoom: PropTypes.func,
         editing: PropTypes.object,
@@ -224,7 +241,8 @@ class AnnotationsEditor extends React.Component {
         showPopupWarning: PropTypes.bool,
         onToggleShowAgain: PropTypes.func,
         onInitPlugin: PropTypes.func,
-        onGeometryHighlight: PropTypes.func
+        onGeometryHighlight: PropTypes.func,
+        onUnSelectFeature: PropTypes.func
     };
 
     static defaultProps = {
@@ -284,7 +302,7 @@ class AnnotationsEditor extends React.Component {
         if (isFunction(validator)) {
             return validator;
         }
-        return PluginsUtils.handleExpression({}, {}, '{(function(value) {return ' + validator + ';})}');
+        return handleExpression({}, {}, '{(function(value) {return ' + validator + ';})}');
     };
 
     renderViewButtons = () => {
@@ -317,7 +335,7 @@ class AnnotationsEditor extends React.Component {
                                 onClick: () => {
                                     this.setState({removing: this.props.id});
                                 }
-                            }, {  // TODO should this be included on geometry card
+                            }, {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
                                 visible: true,
@@ -378,7 +396,7 @@ class AnnotationsEditor extends React.Component {
                             {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
-                                disabled: Object.keys(this.validate()).length !== 0,
+                                disabled: Object.keys(this.validate()).length !== 0 || this.props.unsavedChanges,
                                 visible: !this.props.selected,
                                 onClick: () => {
                                     const {newFeature, ...features} = this.props.editing;
@@ -469,12 +487,14 @@ class AnnotationsEditor extends React.Component {
                     onStyleGeometry={this.props.onStyleGeometry}
                     onSelectFeature={this.props.onSelectFeature}
                     drawing={this.props.drawing}
-                    onUnselectFeature={this.props.onResetCoordEditor}
+                    onUnselectFeature={this.props.onUnSelectFeature}
                     onGeometryHighlight={this.props.onGeometryHighlight}
                     isMeasureEditDisabled={this.isMeasureEditDisabled()}
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}
                     setPopupWarning={this.setPopupWarning}
                     showPopupWarning={this.props.showPopupWarning}
+                    defaultPointType={this.getConfig().defaultPointType}
+                    defaultStyles={this.props.defaultStyles}
                 />
                 }
             </div>
@@ -567,6 +587,7 @@ class AnnotationsEditor extends React.Component {
                     this.state.removing && this.setState({removing: null});
                     this.props.onCancelRemove();
                 }}
+                focusConfirm={this.props.removing}
                 onConfirm={() => {
                     if (this.state.removing) {
                         this.setState({removing: null});
@@ -716,7 +737,6 @@ class AnnotationsEditor extends React.Component {
                                     this.props.onSetUnsavedChanges(true);
                                 }}
                                 pointType={this.props.pointType}
-                                onChangePointType={this.props.onChangePointType}
                                 style={this.props.selected && this.props.selected.style || this.props.editing.style}
                                 width={this.props.width}
                                 symbolsPath={this.props.symbolsPath}
@@ -728,7 +748,6 @@ class AnnotationsEditor extends React.Component {
                                 defaultShapeSize={this.props.defaultShapeSize}
                                 defaultShapeFillColor={this.props.defaultShapeFillColor}
                                 defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
-                                defaultPointType={this.getConfig().defaultPointType}
                                 defaultStyles={this.props.defaultStyles}
                                 lineDashOptions={this.props.lineDashOptions}
                                 markersOptions={this.getConfig()}
@@ -801,14 +820,17 @@ class AnnotationsEditor extends React.Component {
     }
 
     save = () => {
-        const errors = this.validate();
-        if (Object.keys(errors).length === 0) {
-            this.props.onError({});
-            this.props.selected ? this.props.onAddNewFeature() :
+        if (!isEmpty(this.props.selected)) {
+            this.props.onAddNewFeature();
+        } else {
+            const errors = this.validate();
+            if (Object.keys(errors).length === 0) {
+                this.props.onError({});
                 this.props.onSave(this.props.id, assign({}, this.props.editedFields),
                     this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
-        } else {
-            this.props.onError(errors);
+            } else {
+                this.props.onError(errors);
+            }
         }
     };
 
@@ -842,4 +864,4 @@ class AnnotationsEditor extends React.Component {
     }
 }
 
-module.exports = AnnotationsEditor;
+export default AnnotationsEditor;

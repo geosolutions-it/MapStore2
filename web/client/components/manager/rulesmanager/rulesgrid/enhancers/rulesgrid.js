@@ -1,15 +1,23 @@
-const React = require("react");
-const { compose, withPropsOnChange, withHandlers, withStateHandlers, defaultProps, createEventHandler } = require('recompose');
-const propsStreamFactory = require('../../../../misc/enhancers/propsStreamFactory');
-const triggerFetch = require("./triggerFetch");
-const virtualScrollFetch = require("./virtualScrollFetch");
-const reorderRules = require("./reorderRules");
-const scrollStream = require("./scrollStream");
-const filtersStream = require("./filtersStream");
-const FilterRenderers = require("../filterRenderers");
-const Message = require('../../../../I18N/Message');
-const AccessFormatter = require('../formatters/AccessFormatter');
-const {getRow, flattenPages, getOffsetFromTop} = require('../../../../../utils/RulesGridUtils');
+import React from 'react';
+import {
+    compose,
+    createEventHandler,
+    defaultProps,
+    withHandlers,
+    withPropsOnChange,
+    withStateHandlers
+} from 'recompose';
+
+import { flattenPages, getOffsetFromTop, getRow } from '../../../../../utils/RulesGridUtils';
+import Message from '../../../../I18N/Message';
+import propsStreamFactory from '../../../../misc/enhancers/propsStreamFactory';
+import FilterRenderers from '../filterRenderers';
+import AccessFormatter from '../formatters/AccessFormatter';
+import filtersStream from './filtersStream';
+import reorderRules from './reorderRules';
+import scrollStream from './scrollStream';
+import triggerFetch from './triggerFetch';
+import virtualScrollFetch from './virtualScrollFetch';
 
 const emitStop = stream$ => stream$.filter(() => false).startWith({});
 const triggerLoadStream = prop$ => prop$.distinctUntilChanged(({triggerLoad}, nP) => triggerLoad === nP.triggerLoad)
@@ -36,7 +44,7 @@ const dataStreamFactory = $props => {
 
 };
 
-module.exports = compose(
+export default compose(
     defaultProps({
         sortable: false,
         size: 20,

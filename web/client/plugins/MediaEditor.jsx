@@ -24,8 +24,10 @@ import {
 import MediaModal from './mediaEditor/MediaModal';
 
 /**
- * Plugin for GeoStory side panel editor
- * @name GeoStoryEditor
+ * Renders a modal to browse and select media files (video, image, map... ).
+ * Used by {@link #plugins.GeoStoryEditor|GeoStoryEditor}
+ * @name MediaEditor
+ * @class
  * @memberof plugins
  */
 export default createPlugin('MediaEditor', {

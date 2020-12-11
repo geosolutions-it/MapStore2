@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from 'expect';
-import {updatePages} from '../FeatureGridUtils';
+import {updatePages, gridUpdateToQueryUpdate} from '../FeatureGridUtils';
 
 
 describe('FeatureGridUtils', () => {
@@ -49,5 +49,28 @@ describe('FeatureGridUtils', () => {
         expect(pages).toBeTruthy();
         expect(newFeatures).toBeTruthy();
         expect(newFeatures.length).toBe(120);
+    });
+
+    it('gridUpdateToQueryUpdate', () => {
+        const gridUpdate1 = {
+            type: "geometry",
+            attribute: "ATTRIBUTE",
+            opeartor: "OPERATOR",
+            value: {attribute: "ATTRIBUTE", method: "METHOD_1"},
+            rawValue: "RAWVAL"
+        };
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.spatialField).toEqual(gridUpdate1.value);
+        expect(queryUpdateFilter.filterFields).toBe(undefined);
+
+        // value as array
+        const gridUpdate2 = {
+            ...gridUpdate1,
+            value: [{attribute: "ATTRIBUTE", method: "METHOD_1"}, {attribute: "ATTRIBUTE", method: "METHOD_2"}]
+        };
+        const queryUpdateFilter2 = gridUpdateToQueryUpdate(gridUpdate2, {});
+        expect(queryUpdateFilter2.spatialField).toEqual(gridUpdate2.value);
+        expect(queryUpdateFilter2.filterFields).toBe(undefined);
+        expect(queryUpdateFilter2.spatialFieldOperator).toBe("OR");
     });
 });

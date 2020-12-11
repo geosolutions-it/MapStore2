@@ -1,4 +1,3 @@
-var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,8 +5,11 @@ var PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactIntl = require('react-intl');
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import * as ReactIntl from 'react-intl';
+
 var FormattedHTMLMessage = ReactIntl.FormattedHTMLMessage;
 
 class Message extends React.Component {
@@ -25,4 +27,4 @@ class Message extends React.Component {
     }
 }
 
-module.exports = Message;
+export default Message;

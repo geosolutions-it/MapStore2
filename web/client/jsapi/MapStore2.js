@@ -5,34 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
 
-const StandardApp = require('../components/app/StandardApp').default;
-const {
-    standardReducers,
-    standardEpics,
-    standardRootReducerFunc
-} = require('../stores/defaultOptions');
+import url from 'url';
 
-const LocaleUtils = require('../utils/LocaleUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
-const {connect} = require('react-redux');
+import { merge, partialRight } from 'lodash';
+import assign from 'object-assign';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
 
-const {configureMap, loadMapConfig} = require('../actions/config');
-const { initMap } = require('../actions/map');
-const {generateActionTrigger} = require('../epics/jsapi');
-
-const url = require('url');
-
-const ThemeUtils = require('../utils/ThemeUtils');
-
-const assign = require('object-assign');
-const {partialRight, merge} = require('lodash');
-
-const defaultConfig = require('../config.json');
-
-const localConfig = require('../localConfig.json');
+import { configureMap, loadMapConfig } from '../actions/config';
+import { initMap } from '../actions/map';
+import StandardApp from '../components/app/StandardApp';
+import defaultConfig from '../config.json';
+import { generateActionTrigger } from '../epics/jsapi';
+import localConfig from '../localConfig.json';
+import { standardEpics, standardReducers, standardRootReducerFunc } from '../stores/defaultOptions';
+import ConfigUtils from '../utils/ConfigUtils';
+import { ensureIntl } from '../utils/LocaleUtils';
+import { renderFromLess } from '../utils/ThemeUtils';
 
 const defaultPlugins = {
     "mobile": localConfig.plugins.embedded,
@@ -170,7 +161,7 @@ const MapStore2 = {
      * });
      */
     create(container, opts, pluginsDef, component) {
-        const embedded = require('../containers/Embedded');
+        const embedded = require('../containers/Embedded').default;
         const options = merge({}, this.defaultOptions || {}, opts);
         const {initialState, storeOpts} = options;
 
@@ -188,14 +179,14 @@ const MapStore2 = {
             componentConfig,
             version: versionSelector(state),
             loadAfterTheme: loadAfterThemeSelector(state)
-        }))(require('../components/app/StandardContainer'));
+        }))(require('../components/app/StandardContainer').default);
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
         const appStore = require('../stores/StandardStore').default.bind(null, {
             initialState: initialState || {},
             appReducers: {
-                security: require('../reducers/security'),
-                version: require('../reducers/version'),
+                security: require('../reducers/security').default,
+                version: require('../reducers/version').default,
                 ...standardReducers
             },
             appEpics: {
@@ -221,7 +212,7 @@ const MapStore2 = {
                 dom.id = 'custom_theme';
                 document.head.appendChild(dom);
             }
-            ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
+            renderFromLess(options.style, 'custom_theme', 'themes/default/');
         }
         const defaultThemeCfg = {
             prefixContainer: '#' + container
@@ -353,7 +344,7 @@ const MapStore2 = {
 
 if (!global.Intl ) {
     // Ensure Intl is loaded, then call the given callback
-    LocaleUtils.ensureIntl();
+    ensureIntl();
 }
 
-module.exports = MapStore2;
+export default MapStore2;

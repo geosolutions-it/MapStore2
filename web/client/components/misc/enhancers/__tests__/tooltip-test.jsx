@@ -6,12 +6,12 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var tooltip = require('../tooltip');
+import expect from 'expect';
 
-const {Button} = require('react-bootstrap');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import tooltip from '../tooltip';
+import { Button } from 'react-bootstrap';
 describe("tooltip enhancer", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

@@ -6,16 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { createSink, setObservableConfig } = require('recompose');
-const expect = require('expect');
-const wfsTable = require('../index');
-const MockAdapter = require("axios-mock-adapter");
-const axios = require("../../../../../libs/ajax");
+import MockAdapter from "axios-mock-adapter";
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createSink, setObservableConfig } from 'recompose';
 
+import axios from "../../../../../libs/ajax";
+import wfsTable from '../index';
 
-const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
 let mockAxios;
 

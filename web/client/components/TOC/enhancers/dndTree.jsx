@@ -1,7 +1,7 @@
-const React = require('react');
-const {compose, branch, withState} = require('recompose');
-const isArray = require('lodash/isArray');
-const flatten = require('lodash/flatten');
+import React from 'react';
+import { compose, branch, withState } from 'recompose';
+import isArray from 'lodash/isArray';
+import flatten from 'lodash/flatten';
 
 const changeNode = (nodes, id, objToMerge) => {
     const targetIndex = nodes.findIndex(node => node.id === id);
@@ -83,4 +83,4 @@ const dndTree = branch(
     )
 );
 
-module.exports = dndTree;
+export default dndTree;

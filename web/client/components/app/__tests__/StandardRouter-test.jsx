@@ -5,15 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const PropTypes = require('prop-types');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {Provider} = require('react-redux');
+import expect from 'expect';
 
-const StandardRouter = require('../StandardRouter').default;
-
-const ConfigUtils = require('../../../utils/ConfigUtils');
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import StandardRouter from '../StandardRouter';
+import ConfigUtils from '../../../utils/ConfigUtils';
 
 class mycomponent extends React.Component {
     static propTypes = {

@@ -6,19 +6,20 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const assign = require('object-assign');
-const {Grid, Row, Col} = require('react-bootstrap');
-const ColorSelector = require('./ColorSelector').default;
-const StyleCanvas = require('./StyleCanvas');
-const Slider = require('react-nouislider');
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
+import PropTypes from 'prop-types';
+
+import React from 'react';
+import assign from 'object-assign';
+import { Grid, Row, Col } from 'react-bootstrap';
+import ColorSelector from './ColorSelector';
+import StyleCanvas from './StyleCanvas';
+import Slider from 'react-nouislider';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
-require('react-widgets/lib/less/react-widgets.less');
-const Message = require('../I18N/Message');
-const {isNil} = require('lodash');
-const tinycolor = require("tinycolor2");
+import 'react-widgets/lib/less/react-widgets.less';
+import Message from '../I18N/Message';
+import { isNil } from 'lodash';
+import tinycolor from 'tinycolor2';
 
 class StylePolygon extends React.Component {
     static propTypes = {
@@ -124,4 +125,4 @@ class StylePolygon extends React.Component {
     }
 }
 
-module.exports = StylePolygon;
+export default StylePolygon;

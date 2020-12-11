@@ -1,20 +1,29 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
-const Page = require('../../containers/Page');
 
-const {resetControls} = require('../../actions/controls');
+import PropTypes from 'prop-types';
+import React from 'react';
+import {connect} from 'react-redux';
 
+import {resetControls} from '../../actions/controls';
+import Page from '../../containers/Page';
 
-require('../assets/css/manager.css');
+import('../assets/css/manager.css');
 
+/**
+  * @name Manager
+  * @memberof pages
+  * @class
+  * @classdesc
+  * This is the main container page for user administration page.
+  * it is a container for the Manager plugins.
+  *
+  */
 class Manager extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
@@ -46,7 +55,7 @@ class Manager extends React.Component {
     }
 }
 
-module.exports = connect((state) => {
+export default connect((state) => {
     return {
         mode: 'desktop',
         messages: state.locale && state.locale.messages || {}

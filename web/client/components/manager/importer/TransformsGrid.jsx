@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,11 +6,14 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
-const {Panel, Table, Button, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+import React from 'react';
+import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
+import { Panel, Table, Glyphicon, Tooltip } from 'react-bootstrap';
+
+import Message from '../../I18N/Message';
+import OverlayTrigger from '../../misc/OverlayTrigger';
+import Button from '../misc/Button';
 
 class TransformsGrid extends React.Component {
     static propTypes = {
@@ -72,4 +75,4 @@ class TransformsGrid extends React.Component {
     }
 }
 
-module.exports = TransformsGrid;
+export default TransformsGrid;

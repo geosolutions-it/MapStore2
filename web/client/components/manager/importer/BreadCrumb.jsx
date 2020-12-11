@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,8 +7,9 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../I18N/Message');
+import React from 'react';
+
+import Message from '../../I18N/Message';
 
 class BreadCrumb extends React.Component {
     static propTypes = {
@@ -63,4 +65,4 @@ class BreadCrumb extends React.Component {
     }
 }
 
-module.exports = BreadCrumb;
+export default BreadCrumb;

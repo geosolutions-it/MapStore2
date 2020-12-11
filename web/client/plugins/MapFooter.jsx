@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const ToolsContainer = require('./containers/ToolsContainer');
-const { lifecycle } = require('recompose');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import ToolsContainer from './containers/ToolsContainer';
+import { lifecycle } from 'recompose';
 
 let fixedElements = {};
 const fix = lifecycle({
@@ -34,6 +35,13 @@ const fixedTools = [
     {element: <FixedContainer key="scalebar" id="footer-scalebar-container" />}
 ];
 
+
+/**
+ * Footer for MapViewer. Can contain several plugins.
+ * @name MapFooter
+ * @class
+ * @memberof plugins
+ */
 class MapFooter extends React.Component {
     static propTypes = {
         className: PropTypes.string,
@@ -85,7 +93,7 @@ class MapFooter extends React.Component {
     }
 }
 
-module.exports = {
+export default {
     MapFooterPlugin: MapFooter,
     reducers: {}
 };

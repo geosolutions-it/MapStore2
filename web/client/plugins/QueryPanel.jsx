@@ -5,87 +5,90 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const PropTypes = require('prop-types');
-const React = require('react');
-const {connect} = require('react-redux');
 
-const Sidebar = require('react-sidebar').default;
-const {createSelector} = require('reselect');
-const {changeLayerProperties, changeGroupProperties, toggleNode,
-    sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
-const Message = require('./locale/Message');
+import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import Sidebar from 'react-sidebar';
+import { bindActionCreators } from 'redux';
+import { createSelector } from 'reselect';
 
-
-const {getLayerCapabilities} = require('../actions/layerCapabilities');
-
-const {storeCurrentFilter, discardCurrentFilter, applyFilter} = require('../actions/layerFilter');
-
-
-const {zoomToExtent} = require('../actions/map');
-const {toggleControl} = require('../actions/controls');
-
-const {groupsSelector, selectedLayerLoadingErrorSelector} = require('../selectors/layers');
-const {mapSelector} = require('../selectors/map');
-const {isDashboardAvailable} = require('../selectors/dashboard');
-const {
-    crossLayerFilterSelector,
-    availableCrossLayerFilterLayersSelector,
-    storedFilterSelector,
-    appliedFilterSelector
-} = require('../selectors/queryform');
-
-const {isEqual} = require('lodash');
-const LayersUtils = require('../utils/LayersUtils');
-
-// include application component
-const QueryBuilder = require('../components/data/query/QueryBuilder');
-const QueryPanelHeader = require('../components/data/query/QueryPanelHeader');
-const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
-const autocompleteEpics = require('../epics/autocomplete');
-const {bindActionCreators} = require('redux');
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const layerFilterEpics = require('../epics/layerfilter');
-
-const ResizableModal = require('../components/misc/ResizableModal');
-const Portal = require('../components/misc/Portal');
-
-
-const {
-    // QueryBuilder action functions
-    addGroupField,
-    addFilterField,
-    removeFilterField,
-    updateFilterField,
-    updateExceptionField,
-    updateLogicCombo,
-    removeGroupField,
-    changeCascadingValue,
-    expandAttributeFilterPanel,
-    expandSpatialFilterPanel,
-    expandCrossLayerFilterPanel,
-    selectSpatialMethod,
-    selectViewportSpatialMethod,
-    selectSpatialOperation,
-    removeSpatialSelection,
-    changeSpatialFilterValue,
-    showSpatialSelectionDetails,
-    setCrossLayerFilterParameter,
+import { toggleControl } from '../actions/controls';
+import { changeDrawingStatus } from '../actions/draw';
+import { getLayerCapabilities } from '../actions/layerCapabilities';
+import { applyFilter, discardCurrentFilter, storeCurrentFilter } from '../actions/layerFilter';
+import {
+    changeGroupProperties,
+    changeLayerProperties,
+    hideSettings,
+    removeNode,
+    showSettings,
+    sortNode,
+    toggleNode,
+    updateNode,
+    updateSettings
+} from '../actions/layers';
+import { zoomToExtent } from '../actions/map';
+import {
     addCrossLayerFilterField,
-    updateCrossLayerFilterField,
+    addFilterField,
+    addGroupField,
+    changeCascadingValue,
+    changeDwithinValue,
+    changeSpatialFilterValue,
+    expandAttributeFilterPanel,
+    expandCrossLayerFilterPanel,
+    expandSpatialFilterPanel,
     removeCrossLayerFilterField,
+    removeFilterField,
+    removeGroupField,
+    removeSpatialSelection,
+    reset,
     resetCrossLayerFilter,
     search,
-    reset,
-    changeDwithinValue,
-    zoneGetValues,
-    zoneSearch,
+    selectSpatialMethod,
+    selectSpatialOperation,
+    selectViewportSpatialMethod,
+    setCrossLayerFilterParameter,
+    showSpatialSelectionDetails,
+    toggleMenu,
+    updateCrossLayerFilterField,
+    updateExceptionField,
+    updateFilterField,
+    updateLogicCombo,
     zoneChange,
-    toggleMenu
-} = require('../actions/queryform');
+    zoneGetValues,
+    zoneSearch
+} from '../actions/queryform';
+import { initQueryPanel } from '../actions/wfsquery';
+import QueryBuilder from '../components/data/query/QueryBuilder';
+import QueryPanelHeader from '../components/data/query/QueryPanelHeader';
+import Portal from '../components/misc/Portal';
+import ResizableModal from '../components/misc/ResizableModal';
+import autocompleteEpics from '../epics/autocomplete';
+import layerFilterEpics from '../epics/layerfilter';
+import queryFormEpics from '../epics/queryform';
+import {featureTypeSelectedEpic, redrawSpatialFilterEpic, viewportSelectedEpic, wfsQueryEpic} from '../epics/wfsquery';
+import layerFilterReducers from '../reducers/layerFilter';
+import queryReducers from '../reducers/query';
+import queryformReducers from '../reducers/queryform';
+import { isDashboardAvailable } from '../selectors/dashboard';
+import { groupsSelector, selectedLayerLoadingErrorSelector } from '../selectors/layers';
+import { mapSelector } from '../selectors/map';
+import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import {
+    appliedFilterSelector,
+    availableCrossLayerFilterLayersSelector,
+    crossLayerFilterSelector,
+    storedFilterSelector
+} from '../selectors/queryform';
+import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
+import Message from './locale/Message';
 
-const {initQueryPanel} = require('../actions/wfsquery');
+// include application component
 
-const {changeDrawingStatus} = require('../actions/draw');
+
 const onReset = reset.bind(null, "query");
 // connecting a Dumb component to the store
 // makes it a smart component
@@ -389,7 +392,7 @@ class QueryPanel extends React.Component {
  *   - typeName {string} the workspace + layer name on geoserver
  *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
  *   - srsName {string} The projection of the requested features fetched via wfs
- *
+
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
  * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer to hide
  * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
@@ -435,10 +438,10 @@ const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,
     retrieveLayerData: getLayerCapabilities,
-    onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
-    onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
+    onToggleGroup: toggleByType('groups', toggleNode),
+    onToggleLayer: toggleByType('layers', toggleNode),
     onToggleQuery: toggleControl.bind(null, 'queryPanel', null),
-    onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
+    onSort: sortUsing(sortLayers, sortNode),
     onSettings: showSettings,
     onInit: initQueryPanel,
     onZoomToExtent: zoomToExtent,
@@ -451,12 +454,12 @@ const QueryPanelPlugin = connect(tocSelector, {
 })(QueryPanel);
 
 
-module.exports = {
+export default {
     QueryPanelPlugin,
     reducers: {
-        queryform: require('../reducers/queryform').default,
-        query: require('../reducers/query').default,
-        layerFilter: require('../reducers/layerFilter').default
+        queryform: queryformReducers,
+        query: queryReducers,
+        layerFilter: layerFilterReducers
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform'), ...layerFilterEpics}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...queryFormEpics, ...layerFilterEpics}
 };

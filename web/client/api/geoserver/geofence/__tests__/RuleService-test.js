@@ -7,17 +7,20 @@
  */
 
 const BASE_URL = "TEST";
-const RuleService = require('../RuleService')({
+
+import MockAdapter from 'axios-mock-adapter';
+import expect from 'expect';
+
+import axios from '../../../../libs/ajax';
+import GF_RULE from '../../../../test-resources/geofence/rest/rules/full_rule1.json';
+import GS_RULE from '../../../../test-resources/geoserver/rest/geofence/full_rule1.json';
+import RULES from '../../../../test-resources/geoserver/rest/geofence/rules.json';
+import ruleServiceFactory from '../RuleService';
+
+const RuleService = ruleServiceFactory({
     addBaseUrl: (opts) => ({...opts, baseURL: BASE_URL}),
     getGeoServerInstance: () => ({url: BASE_URL})
 });
-const RULES = require('../../../../test-resources/geoserver/rest/geofence/rules.json');
-const GF_RULE = require('../../../../test-resources/geofence/rest/rules/full_rule1.json');
-const GS_RULE = require('../../../../test-resources/geoserver/rest/geofence/full_rule1.json');
-const expect = require('expect');
-
-const axios = require('../../../../libs/ajax');
-const MockAdapter = require('axios-mock-adapter');
 
 let mockAxios;
 

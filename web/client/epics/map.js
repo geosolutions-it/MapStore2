@@ -6,45 +6,42 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const Rx = require('rxjs');
-const {changeLayerProperties} = require('../actions/layers');
+import Rx from 'rxjs';
 
-const {
+import { changeLayerProperties, clearLayers } from '../actions/layers';
+
+import {
     CREATION_ERROR_LAYER,
     INIT_MAP,
     ZOOM_TO_EXTENT,
     CHANGE_MAP_CRS,
     changeMapView,
     changeMapLimits
-} = require('../actions/map');
-const {configuredExtentCrsSelector, configuredRestrictedExtentSelector, configuredMinZoomSelector, mapSelector, mapIdSelector} = require('../selectors/map');
+} from '../actions/map';
 
+import {
+    configuredExtentCrsSelector,
+    configuredRestrictedExtentSelector,
+    configuredMinZoomSelector,
+    mapSelector,
+    mapIdSelector
+} from '../selectors/map';
 
-const { loadMapInfo} = require('../actions/config');
-const {LOGIN_SUCCESS} = require('../actions/security');
+import { loadMapInfo, MAP_CONFIG_LOADED } from '../actions/config';
+import { LOGIN_SUCCESS } from '../actions/security';
+import { currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId } from '../selectors/layers';
+import { mapTypeSelector } from '../selectors/maptype';
+import { mapPaddingSelector } from '../selectors/maplayout';
+import { setControlProperty, resetControls } from '../actions/controls';
+import { isSupportedLayer } from '../utils/LayersUtils';
+import MapUtils from '../utils/MapUtils';
+import CoordinatesUtils from '../utils/CoordinatesUtils';
+import { warning } from '../actions/notifications';
+import { clearWarning as clearMapInfoWarning } from '../actions/mapInfo';
+import { removeAllAdditionalLayers } from '../actions/additionallayers';
+import { head, isArray, isObject, mapValues } from 'lodash';
 
-const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
-const {mapTypeSelector} = require('../selectors/maptype');
-const { mapPaddingSelector } = require('../selectors/maplayout');
-
-const {setControlProperty} = require('../actions/controls');
-const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
-const {isSupportedLayer} = require('../utils/LayersUtils');
-const MapUtils = require('../utils/MapUtils');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
-
-const {warning} = require('../actions/notifications');
-const {resetControls} = require('../actions/controls');
-const {clearLayers} = require('../actions/layers');
-const {clearWarning: clearMapInfoWarning} = require('../actions/mapInfo');
-const {removeAllAdditionalLayers} = require('../actions/additionallayers');
-const { head, isArray, isObject, mapValues } = require('lodash');
-
-const { isLoggedIn } = require('../selectors/security');
-const {pathnameSelector} = require('../selectors/router');
-const { push } = require('connected-react-router');
-
-const handleCreationBackgroundError = (action$, store) =>
+export const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     // added delay because the CREATION_ERROR_LAYER needs to be initialized after MAP_CONFIG_LOADED
         .delay(500)
@@ -81,7 +78,7 @@ const handleCreationBackgroundError = (action$, store) =>
                     position: "tc"
                 }));
         });
-const handleCreationLayerError = (action$, store) =>
+export const handleCreationLayerError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     // added delay because the CREATION_ERROR_LAYER needs to be initialized after MAP_CONFIG_LOADED
         .delay(500)
@@ -93,7 +90,7 @@ const handleCreationLayerError = (action$, store) =>
             ]) : Rx.Observable.empty();
         });
 
-const resetLimitsOnInit = (action$, store) =>
+export const resetLimitsOnInit = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED, CHANGE_MAP_CRS)
         .switchMap(() => {
             const confExtentCrs = configuredExtentCrsSelector(store.getState());
@@ -102,7 +99,7 @@ const resetLimitsOnInit = (action$, store) =>
             return Rx.Observable.of(changeMapLimits({ restrictedExtent, crs: confExtentCrs, minZoom}));
         });
 
-const resetMapOnInit = action$ =>
+export const resetMapOnInit = action$ =>
     action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(
         removeAllAdditionalLayers(),
         resetControls(),
@@ -114,7 +111,7 @@ const resetMapOnInit = action$ =>
  * Convert and normalize the extent into an array `minx,miny,maxx, maxy`
  * @param {object|array} extent extent object to normalize
  */
-const toBoundsArray = extent => {
+export const toBoundsArray = extent => {
     // clean up extent
     if (isArray(extent)) {
         return extent.map((val) => {
@@ -147,7 +144,7 @@ const toBoundsArray = extent => {
  * @param {object} action
  * @param {object} mapState the map object in state
  */
-const legacyZoomToExtent = (action, mapState) => {
+export const legacyZoomToExtent = (action, mapState) => {
     let zoom = 0;
     let {extent = []} = action;
     let bounds = CoordinatesUtils.reprojectBbox(extent, action.crs, mapState.bbox && mapState.bbox.crs || "EPSG:4326");
@@ -187,7 +184,7 @@ const legacyZoomToExtent = (action, mapState) => {
  * (mapping libraries have maxZoom and padding support). Otherwise, triggers a changeMapView to emulate the same operation.
  * @memberof epics.map
  */
-const zoomToExtentEpic = (action$, {getState = () => {} }) =>
+export const zoomToExtentEpic = (action$, {getState = () => {} }) =>
     action$.ofType(ZOOM_TO_EXTENT).switchMap(( action ) => {
         const extent = toBoundsArray(action.extent);
         if (!extent) {
@@ -211,7 +208,7 @@ const zoomToExtentEpic = (action$, {getState = () => {} }) =>
  * @memberof epics.map
  * @param {object} action$
  */
-const checkMapPermissions = (action$, {getState = () => {} }) =>
+export const checkMapPermissions = (action$, {getState = () => {} }) =>
     action$.ofType(LOGIN_SUCCESS)
         .filter(() => {
             const mapId = mapIdSelector(getState());
@@ -222,18 +219,12 @@ const checkMapPermissions = (action$, {getState = () => {} }) =>
             return loadMapInfo(mapId);
         });
 
-const redirectUnauthorizedUserOnNewMap = (action$, { getState = () => {}}) =>
-    action$.ofType(MAP_CONFIG_LOAD_ERROR)
-        .filter((action) => action.error && action.error.status === 403 && pathnameSelector(getState()).indexOf("new") !== -1)
-        .filter(() => !isLoggedIn(getState()))
-        .switchMap(() => Rx.Observable.of(push('/'))); // go to home page
 
-module.exports = {
+export default {
     checkMapPermissions,
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit,
     resetLimitsOnInit,
-    zoomToExtentEpic,
-    redirectUnauthorizedUserOnNewMap
+    zoomToExtentEpic
 };

@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,15 +6,17 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Row, Col, Alert, ButtonToolbar } from 'react-bootstrap';
+import { Promise } from 'es6-promise';
 
-const Message = require('../../I18N/Message');
-const LocaleUtils = require('../../../utils/LocaleUtils');
-const {isAnnotation} = require('../../../utils/AnnotationsUtils');
-let { toVectorStyle } = require('../../../utils/StyleUtils');
-const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
+import Message from '../../I18N/Message';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import { isAnnotation } from '../../../utils/AnnotationsUtils';
+import { toVectorStyle } from '../../../utils/StyleUtils';
 
-const {Promise} = require('es6-promise');
+import Button from '../../misc/Button';
 
 class StylePanel extends React.Component {
     static propTypes = {
@@ -212,7 +213,7 @@ class StylePanel extends React.Component {
                 }
             }
             this.props.onSuccess(this.props.layers.length > 1
-                ? isAnnotationLayer ? "Annotation" : this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success")
+                ? isAnnotationLayer ? "Annotation" : this.props.layers[0].name + getMessageById(this.context.messages, "shapefile.success")
                 : undefined);
 
             this.props.onLayerAdded(this.props.selected);
@@ -241,4 +242,4 @@ class StylePanel extends React.Component {
 }
 
 
-module.exports = StylePanel;
+export default StylePanel;

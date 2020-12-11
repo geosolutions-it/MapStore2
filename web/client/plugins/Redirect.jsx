@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,9 +6,11 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const assign = require('object-assign');
-const {connect} = require('react-redux');
+import React from 'react';
+
+import PropTypes from 'prop-types';
+import assign from 'object-assign';
+import { connect } from 'react-redux';
 
 class RedirectComponent extends React.Component {
     static propTypes = {
@@ -43,7 +44,12 @@ const Redirect = connect((state) => ({
     userDetails: state.security || null
 }))(RedirectComponent);
 
-
-module.exports = {
+/**
+ * Utility plugin to redirect not logged users to the home page.
+ * @name Redirect
+ * @class
+ * @memberof plugins
+ */
+export default {
     RedirectPlugin: assign(Redirect, {}
     )};

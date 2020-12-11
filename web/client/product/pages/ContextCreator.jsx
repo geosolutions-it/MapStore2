@@ -16,6 +16,16 @@ import {clearContextCreator, loadContext} from '../../actions/contextcreator';
 import Page from '../../containers/Page';
 import BorderLayout from '../../components/layout/BorderLayout';
 
+/**
+  * @name ContextCreator
+  * @memberof pages
+  * @class
+  * @classdesc
+  * This is the main container page for ContextCreator.
+  * It handles all the initial of context and
+  * it is a container for the ContextCreator plugins.
+  *
+  */
 class ContextCreator extends React.Component {
     static propTypes = {
         mode: PropTypes.string,

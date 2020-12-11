@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -6,9 +5,10 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const PropTypes = require('prop-types');
 const React = require('react');
-const ConfigUtils = require('../../../../utils/ConfigUtils');
-const ProxyUtils = require('../../../../utils/ProxyUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils').default;
+const {getProxyUrl} = require('../../../../utils/ProxyUtils');
 const {isEqual} = require('lodash');
 const html2canvas = require('html2canvas');
 const canvg = require('canvg-browser');
@@ -58,7 +58,7 @@ class GrabLMap extends React.Component {
     componentDidMount() {
         this.mapDiv = document.getElementById(this.props.mapId);
         this.proxy = null;
-        let proxyUrl = ProxyUtils.getProxyUrl();
+        let proxyUrl = getProxyUrl();
         if (proxyUrl) {
             if ( typeof proxyUrl === 'object') {
                 proxyUrl = proxyUrl.url;
@@ -335,4 +335,4 @@ class GrabLMap extends React.Component {
     };
 }
 
-module.exports = GrabLMap;
+module.exports =  GrabLMap;

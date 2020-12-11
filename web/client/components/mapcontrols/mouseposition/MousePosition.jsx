@@ -5,19 +5,21 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const PropTypes = require('prop-types');
-const React = require('react');
-const proj4js = require('proj4').default;
-const {Glyphicon, Button, Label} = require('react-bootstrap');
-const CopyToClipboard = require('react-copy-to-clipboard');
-const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-const MousePositionLabelDMS = require('./MousePositionLabelDMS');
-const MousePositionLabelYX = require('./MousePositionLabelYX');
-const CRSSelector = require('./CRSSelector');
-const Message = require('../../I18N/Message');
-const {isNumber} = require('lodash');
+import PropTypes from 'prop-types';
 
-require('./mousePosition.css');
+import React from 'react';
+import proj4js from 'proj4';
+import { Glyphicon, Label } from 'react-bootstrap';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { reproject, getUnits } from '../../../utils/CoordinatesUtils';
+import MousePositionLabelDMS from './MousePositionLabelDMS';
+import MousePositionLabelYX from './MousePositionLabelYX';
+import CRSSelector from './CRSSelector';
+import Message from '../../I18N/Message';
+import { isNumber } from 'lodash';
+import Button from '../../misc/Button';
+
+import './mousePosition.css';
 /**
  * MousePosition is a component that shows the coordinate of the mouse position in a selected crs.
  * @class
@@ -84,9 +86,9 @@ class MousePosition extends React.Component {
             // if we repoject null coordinates we can end up with -0.00 instead of 0.00
             ({x, y} = {x: 0, y: 0, z});
         } else if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.props.crs)) {
-            ({x, y} = CoordinatesUtils.reproject([x, y], this.props.mousePosition.crs, this.props.crs));
+            ({x, y} = reproject([x, y], this.props.mousePosition.crs, this.props.crs));
         }
-        let units = CoordinatesUtils.getUnits(this.props.crs);
+        let units = getUnits(this.props.crs);
         if (units === "degrees") {
             return {lat: y, lng: x, z};
         }
@@ -94,7 +96,7 @@ class MousePosition extends React.Component {
     };
 
     getTemplateComponent = () => {
-        return CoordinatesUtils.getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
+        return getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
     };
 
     render() {
@@ -136,4 +138,4 @@ class MousePosition extends React.Component {
     }
 }
 
-module.exports = MousePosition;
+export default MousePosition;

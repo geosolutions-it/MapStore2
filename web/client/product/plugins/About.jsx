@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -6,22 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const Message = require('../../components/I18N/Message');
-const {toggleControl} = require('../../actions/controls');
+import assign from 'object-assign';
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+
+import { toggleControl } from '../../actions/controls';
+import Message from '../../components/I18N/Message';
+import AboutComp from '../components/viewer/about/About';
 
 const About = connect((state) => ({
     enabled: state.controls && state.controls.about && state.controls.about.enabled || false,
     withButton: false
 }), {
     onClose: toggleControl.bind(null, 'about', null)
-})(require('../components/viewer/about/About'));
+})(AboutComp);
 
-const assign = require('object-assign');
-const {Glyphicon} = require('react-bootstrap');
 
-module.exports = {
+/**
+ * Plugin for the "About" window in mapstore.
+ * @name About
+ * @class
+ * @memberof plugins
+ */
+export default {
     AboutPlugin: assign(About,
         {
             BurgerMenu: {

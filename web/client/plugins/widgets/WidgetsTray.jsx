@@ -5,21 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const { connect } = require('react-redux');
-const { compose, withProps, withState, lifecycle, mapPropsStream } = require('recompose');
-const { createSelector } = require('reselect');
-const tooltip = require('../../components/misc/enhancers/tooltip');
+import React from 'react';
 
-const { Glyphicon, Button: BButton } = require('react-bootstrap');
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose, withProps, withState, lifecycle, mapPropsStream } from 'recompose';
+import { createSelector } from 'reselect';
+import tooltip from '../../components/misc/enhancers/tooltip';
+import { Glyphicon } from 'react-bootstrap';
+import { getVisibleFloatingWidgets } from '../../selectors/widgets';
+import { toggleCollapseAll, toggleTray } from '../../actions/widgets';
+import { trayWidgets } from '../../selectors/widgetsTray';
+import { filterHiddenWidgets } from './widgetsPermission';
+import BorderLayout from '../../components/layout/BorderLayout';
+import WidgetsBar from './WidgetsBar';
+import BButton from '../../components/misc/Button';
+
 const Button = tooltip(BButton);
-const { getVisibleFloatingWidgets } = require('../../selectors/widgets');
-const { toggleCollapseAll, toggleTray } = require('../../actions/widgets');
-const { trayWidgets } = require('../../selectors/widgetsTray');
-const { filterHiddenWidgets } = require('./widgetsPermission');
-const BorderLayout = require('../../components/layout/BorderLayout');
-const WidgetsBar = require('./WidgetsBar');
+
+
 /**
  * Button that allows collapse/Expand functionality of the tray.
  * @param {object} props
@@ -104,7 +108,8 @@ class WidgetsTray extends React.Component {
             : null;
     }
 }
-module.exports = compose(
+
+export default compose(
     withState("expanded", "setExpanded", false),
     connect(createSelector(
         trayWidgets,

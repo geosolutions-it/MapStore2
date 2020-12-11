@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,18 +7,19 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Spinner = require('react-spinkit');
-const Message = require('../../I18N/Message');
-const ImportsGrid = require('./ImportsGrid');
-const Workspace = require('./Workspace');
-const FileUploader = require('../../file/FileUploader');
-const Task = require('./Task');
-const Import = require('./Import');
-const Transform = require('./Transform');
-const {Grid, Col, Row, Alert} = require('react-bootstrap');
-const BreadCrumb = require('./BreadCrumb');
-const {head} = require('lodash');
+import React from 'react';
+
+import Spinner from 'react-spinkit';
+import Message from '../../I18N/Message';
+import ImportsGrid from './ImportsGrid';
+import Workspace from './Workspace';
+import FileUploader from '../../file/FileUploader';
+import Task from './Task';
+import Import from './Import';
+import Transform from './Transform';
+import { Grid, Col, Row, Alert } from 'react-bootstrap';
+import BreadCrumb from './BreadCrumb';
+import { head } from 'lodash';
 
 class Importer extends React.Component {
     static propTypes = {
@@ -258,4 +260,4 @@ class Importer extends React.Component {
     };
 }
 
-module.exports = Importer;
+export default Importer;

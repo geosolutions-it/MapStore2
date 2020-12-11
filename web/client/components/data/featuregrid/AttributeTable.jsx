@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDataGrid = require('react-data-grid');
-const Message = require('../../I18N/Message');
+import React from 'react';
 
-module.exports = ({
+import ReactDataGrid from 'react-data-grid';
+import Message from '../../I18N/Message';
+
+export default ({
     style = {},
     titleMsg = "featuregrid.columns",
     onChange = () => { },

@@ -1,4 +1,5 @@
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,11 +8,13 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-// const Message = require('../I18N/Message');
-const Select = require('react-select').default;
-const Message = require('../../I18N/Message');
-const {findIndex} = require('lodash');
+import React from 'react';
+
+// const Message = require('../I18N/Message').default;
+import Select from 'react-select';
+
+import Message from '../../I18N/Message';
+import { findIndex } from 'lodash';
 
 // const ConfirmModal = require('./modals/ConfirmModal');
 // const GroupManager = require('./GroupManager');
@@ -79,4 +82,4 @@ class UserCard extends React.Component {
 
 */
 
-module.exports = UserCard;
+export default UserCard;

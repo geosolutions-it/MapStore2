@@ -5,17 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const CesiumMap = require('../Map.jsx');
-const CesiumLayer = require('../Layer.jsx');
-const expect = require('expect');
-const Cesium = require('../../../../libs/cesium');
-const MapUtils = require('../../../../utils/MapUtils');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import CesiumMap from '../Map';
+import CesiumLayer from '../Layer';
+import expect from 'expect';
+import Cesium from '../../../../libs/cesium';
+import {
+    getHook,
+    ZOOM_TO_EXTENT_HOOK,
+    registerHook,
+    createRegisterHooks, GET_PIXEL_FROM_COORDINATES_HOOK, GET_COORDINATES_FROM_PIXEL_HOOK
+} from '../../../../utils/MapUtils';
 
 
-require('../../../../utils/cesium/Layers');
-require('../plugins/OSMLayer');
+import '../../../../utils/cesium/Layers';
+import '../plugins/OSMLayer';
 
 window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
 
@@ -229,27 +234,29 @@ describe('CesiumMap', () => {
             onMapViewChanges={testHandlers.onMapViewChanges}
         />, document.getElementById("container"));
         // computing the bounding box for the new center and the new zoom
-        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        const hook = getHook(ZOOM_TO_EXTENT_HOOK);
         // update the map with the new center and the new zoom so we can check our computed bouding box
         expect(hook).toExist();
 
         hook([10, 10, 20, 20], {crs: "EPSG:4326", duration: 0});
         // unregister hook
-        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        registerHook(ZOOM_TO_EXTENT_HOOK);
     });
     describe("hookRegister", () => {
         it("default", () => {
             const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
             expect(map).toExist();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(getHook(ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
+            expect(getHook(GET_PIXEL_FROM_COORDINATES_HOOK)).toBeFalsy();
+            expect(getHook(GET_COORDINATES_FROM_PIXEL_HOOK)).toBeFalsy();
         });
         it("with custom hookRegister", () => {
-            const customHooRegister = MapUtils.createRegisterHooks();
+            const customHooRegister = createRegisterHooks();
             const map = ReactDOM.render(<CesiumMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
             expect(map).toExist();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(customHooRegister.getHook(ZOOM_TO_EXTENT_HOOK)).toExist();
         });
     });
 

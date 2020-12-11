@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Toolbar = require('../misc/toolbar/Toolbar');
-const ResizableModal = require('../misc/ResizableModal');
-const Portal = require('../misc/Portal');
-const Message = require('../I18N/Message');
-const { Alert } = require('react-bootstrap');
+import React from 'react';
+
+import Toolbar from '../misc/toolbar/Toolbar';
+import ResizableModal from '../misc/ResizableModal';
+import Portal from '../misc/Portal';
+import Message from '../I18N/Message';
+import { Alert } from 'react-bootstrap';
 
 /**
  * Component for rendering Toolbar for Style Editor.
@@ -172,4 +173,4 @@ const StyleToolbar = ({
     </div>
 );
 
-module.exports = StyleToolbar;
+export default StyleToolbar;

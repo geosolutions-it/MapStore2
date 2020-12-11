@@ -72,7 +72,8 @@ import {
     filterMarker,
     initPlugin,
     hideMeasureWarning,
-    toggleShowAgain
+    toggleShowAgain,
+    unSelectFeature
 } from '../../actions/annotations';
 
 import { PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
@@ -288,7 +289,7 @@ describe('Test the annotations reducer', () => {
             drawing: false,
             editing: {
                 features: [{
-                    style: {...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}
+                    style: [{...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}]
                 }]
             }}, {
             type: TOGGLE_ADD,
@@ -300,7 +301,7 @@ describe('Test the annotations reducer', () => {
         expect(state.drawing).toBe(true);
         state = annotations({drawing: true, editing: {
             features: [{
-                style: {...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}
+                style: [{...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}]
             }]
         }}, {
             type: TOGGLE_ADD
@@ -312,7 +313,7 @@ describe('Test the annotations reducer', () => {
             drawing: false,
             editing: {
                 features: [{
-                    style: {"Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon, type: "Polygon"}
+                    style: [{"Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon, type: "Polygon"}]
                 }]
             }}, {
             type: TOGGLE_ADD,
@@ -482,7 +483,10 @@ describe('Test the annotations reducer', () => {
                     properties: {
                         canEdit: false,
                         id: "sadga"
-                    }
+                    },
+                    style: [
+                        {"color": "#ffcc33", "highlight": true, "type": "Circle", "id": "sadga"},
+                        {"iconGlyph": "comment", "iconShape": "square", "iconColor": "blue", "highlight": true, "type": "Point", "title": "Center Style"}]
                 }]
             }}, {
             type: TOGGLE_ADD,
@@ -493,6 +497,9 @@ describe('Test the annotations reducer', () => {
         expect(state.selected.properties.isValidFeature).toBe(false);
         expect(state.selected.properties.canEdit).toBe(true);
         expect(state.editing.features.length).toBe(2); // circle is added to editing features
+        const styles = state.editing.features[0].style;
+        expect(styles[0].highlight).toBe(false); // Reset highlight properties of other features
+        expect(styles[1].highlight).toBe(false);
         expect(state.featureType).toBe("Circle");
         expect(state.drawing).toBe(true);
     });
@@ -1670,5 +1677,38 @@ describe('Test the annotations reducer', () => {
         }, toggleShowAgain(false));
         expect(state.showAgain).toBeTruthy();
         expect(state.showAgain).toBe(true);
+    });
+    it('unSelectFeature', ()=>{
+        const selected = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "LineString",
+                coordinates: [1, 1]
+            },
+            style: [
+                {...DEFAULT_ANNOTATIONS_STYLES.LineString},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false}
+            ]
+        };
+        const state = annotations({
+            editing: {
+                features: [selected, {...selected, properties: {...selected.properties, id: "2"}}]
+            },
+            selected
+        }, unSelectFeature());
+        expect(state.drawing).toBe(false);
+        expect(state.coordinateEditorEnabled).toBe(false);
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.selected).toBeFalsy();
+        expect(state.showUnsavedGeometryModal).toBe(false);
+        const features = state.editing.features;
+        expect(features[0].properties.canEdit).toBe(false);
+        expect(features[1].properties.canEdit).toBe(false);
     });
 });
