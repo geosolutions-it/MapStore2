@@ -1,6 +1,7 @@
 const assign = require('object-assign');
 const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 const DefinePlugin = require("webpack/lib/DefinePlugin");
+const ProvidePlugin = require("webpack/lib/ProvidePlugin");
 const NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -66,6 +67,9 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
             'process.env': {
                 'NODE_ENV': prod ? '"production"' : '""'
             }
+        }),
+        new ProvidePlugin({
+            Buffer: ['buffer', 'Buffer']
         }),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(paths.framework, "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
