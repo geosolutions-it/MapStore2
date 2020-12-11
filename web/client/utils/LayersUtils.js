@@ -528,7 +528,7 @@ export const saveLayer = (layer) => {
         tooltipOptions: undefined,
         tooltipPlacement: undefined,
         legendOptions: undefined
-    }
+    };
 
     return assign(defautLayer,
         layer,
