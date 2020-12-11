@@ -8,19 +8,21 @@
 
 
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
-const dependencies = require('../package.json').dependencies;
-const excludes = [
-    "react-draft-wysiwyg", "html-to-draftjs", "geostyler-geocss-parser", "@geosolutions/wkt-parser", "@turf/bbox-polygon"
-];
-const includes = ['react-redux', 'react-bootstrap'];
-const deps = Object.keys(dependencies)
-    .filter(d => !excludes.includes(d))
-    .reduce((acc, d) => ({
-        ...acc,
-        [d]: dependencies[d]
-    }),
-    {});
+// TODO: a finest system should check package.json dependencies to share them all.
+// here some code that started to do this (with some fixes for issues with module resolution).
+// const dependencies = require('../package.json').dependencies;
+// const excludes = [
+//     "react-draft-wysiwyg", "html-to-draftjs", "geostyler-geocss-parser", "@geosolutions/wkt-parser", "@turf/bbox-polygon"
+// ];
+// const deps = Object.keys(dependencies)
+//     .filter(d => !excludes.includes(d))
+//     .reduce((acc, d) => ({
+//         ...acc,
+//         [d]: dependencies[d]
+//     }),
+//     {});
 
+// the shared libraries, to use both in all federated modules (extensions/main product)
 const shared = {
     "url": {
         eager: true,
@@ -68,6 +70,7 @@ const shared = {
  * Exports the option and common tools to support module federation.
  */
 module.exports = {
+    // the plugin to use in main product
     plugin: new ModuleFederationPlugin({
         name: 'mapstore',
         library: { type: 'var', name: 'mapstore' },

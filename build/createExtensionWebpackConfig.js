@@ -6,9 +6,11 @@ const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPl
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 /**
  * Produces a webpack configuration that allow to create a MapStore extension.
+ * It works together with the ModuleFederationPlugin present in MapStore's webpack configuration.
  * @param {object} cfg configuration passed to this utility function
  * @param {boolean} cfg.prod discriminates the production or development environment
  * @param {string} cfg.name the name of the plugin/extension
+ * @param {object} cfg.exposes this is the main entry point of the module federation plugin. For MapStore extension plugin it must be { './plugin': "path/to/the/plugin/file>"}
  * @param {object} cfg.alias aliases for the JS build
  * @param {object} cfg.publicPath the publicPath, useful for debugging
  * @param {string} cfg.destination the destination folder of the build packages
