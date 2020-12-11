@@ -327,7 +327,7 @@ const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
 };
 
-export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent || impl.isMapStorePlugin;
+export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype?.isReactComponent || impl.isMapStorePlugin;
 
 const getPluginImplementation = (impl, stateSelector) => {
     return isMapStorePlugin(impl) ? impl : impl(stateSelector);
@@ -418,8 +418,8 @@ export const getPluginDescriptor = (state, plugins, pluginsConfig, pluginDef, lo
     const id = isObject(pluginDef) ? pluginDef.id : null;
     const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
     const isDefault = isObject(pluginDef) ? typeof pluginDef.isDefault === 'undefined' && true || pluginDef.isDefault : true;
-    const pluginKey = (isObject(pluginDef) ? pluginDef.name : pluginDef);
-    const impl = plugins[pluginKey] ?? plugins[pluginKey + 'Plugin'];
+    const pluginKey = (isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin';
+    const impl = plugins[pluginKey];
     if (!impl) {
         return null;
     }
