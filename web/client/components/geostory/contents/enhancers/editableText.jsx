@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import '@geosolutions/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { EditorState, Modifier, RichUtils } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
+import { Editor } from '@geosolutions/react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
 
 import {

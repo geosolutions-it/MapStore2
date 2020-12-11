@@ -8,7 +8,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { openlink } from 'react-draft-wysiwyg';
+import { openlink } from '@geosolutions/react-draft-wysiwyg';
 
 function findLinkEntities(contentBlock, callback, contentState) {
     contentBlock.findEntityRanges(

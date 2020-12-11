@@ -15,7 +15,7 @@ import {
     Dropdown,
     DropdownOption,
     stopPropagation,
-    getFirstIcon } from 'react-draft-wysiwyg';
+    getFirstIcon } from '@geosolutions/react-draft-wysiwyg';
 
 export const EXTERNAL_LINK = "External Link";
 
