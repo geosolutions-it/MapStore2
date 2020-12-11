@@ -10,6 +10,7 @@ import Rx from 'rxjs';
 
 import { SELECT_NODE } from '../actions/layers';
 import { setActive } from '../actions/swipe';
+import { LOCATION_CHANGE } from 'connected-react-router';
 import { layerSwipeSettingsSelector } from '../selectors/swipe';
 
 /**
@@ -29,6 +30,22 @@ export const resetLayerSwipeSettingsEpic = (action$, store) =>
                 : Rx.Observable.empty();
         });
 
+export const deactivateSwipeToolOnSwitchMaps = (action$, store) =>
+    action$.ofType(LOCATION_CHANGE)
+        .switchMap(() => {
+            const swipeSettings = layerSwipeSettingsSelector(store.getState());
+            return swipeSettings.active
+                ? Rx.Observable.of(setActive(false))
+                : Rx.Observable.empty();
+        });
+
+/**
+ * Deactivates the swipe tool when maps are switched
+ * @memberof epics.swipe
+ * @param {external:Observable} action$ manages ``
+ * @return {external:Observable}
+ */
 export default {
-    resetLayerSwipeSettingsEpic
+    resetLayerSwipeSettingsEpic,
+    deactivateSwipeToolOnSwitchMaps
 };
