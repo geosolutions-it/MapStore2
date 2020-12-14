@@ -21,7 +21,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2020.02.00 to 2020.03.00
 
-### Update to webpack 6
+### Update to webpack 5
 
 `package.json`
 
