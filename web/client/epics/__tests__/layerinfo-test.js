@@ -60,6 +60,47 @@ const wmsCapabilities = `<?xml version="1.0" encoding="UTF-8"?>
     </Contents>
 </Capabilities>`;
 
+
+const wmsWithwosrkspace = `<?xml version="1.0" encoding="UTF-8"?><WMS_Capabilities version="1.3.0" updateSequence="5167" xmlns="http://www.opengis.net/wms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wms http://gs-stable.geo-solutions.it/geoserver/schemas/wms/1.3.0/capabilities_1_3_0.xsd">
+<Capability>
+  <Layer>
+    <Title/>
+    <Abstract/>
+    <!--Limited list of EPSG projections:-->
+    <BoundingBox CRS="CRS:84" minx="-124.73142200000001" miny="-43.648056" maxx="148.47914100000003" maxy="49.371735"/>
+    <Layer queryable="1" opaque="0">
+      <Name>states_test</Name>
+      <Title>states_test</Title>
+      <Abstract>states_test</Abstract>
+      <KeywordList>
+        <Keyword>features</Keyword>
+        <Keyword>states</Keyword>
+      </KeywordList>
+      <CRS>EPSG:4326</CRS>
+      <CRS>CRS:84</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-124.73142200000001</westBoundLongitude>
+        <eastBoundLongitude>-66.969849</eastBoundLongitude>
+        <southBoundLatitude>24.955967</southBoundLatitude>
+        <northBoundLatitude>49.371735</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:84" minx="-124.73142200000001" miny="24.955967" maxx="-66.969849" maxy="49.371735"/>
+      <BoundingBox CRS="EPSG:4326" minx="24.955967" miny="-124.73142200000001" maxx="49.371735" maxy="-66.969849"/>
+      <Style>
+        <Name>polygon</Name>
+        <Title>A boring default style</Title>
+        <Abstract>A sample style that just prints out a transparent red interior with a red outline</Abstract>
+        <LegendURL width="20" height="20">
+          <Format>image/png</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://gs-stable.geo-solutions.it/geoserver/topp/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=states_test"/>
+        </LegendURL>
+      </Style>
+    </Layer>
+  </Layer>
+</Capability>
+</WMS_Capabilities>
+`;
+
 describe('layerinfo epics', () => {
     let mockAxios;
     beforeEach(() => {
@@ -258,6 +299,52 @@ describe('layerinfo epics', () => {
             expect(actions[14].type).toBe(LOADING);
             expect(actions[14].value).toBe(false);
             expect(actions[14].name).toBe('syncingLayers');
+        }, {
+            layerinfo: {
+                layers: testLayers
+            }
+        }, done);
+    });
+    it('layerInfoSyncLayersEpic with error when layer name has changed', (done) => {
+        const testLayers = [{
+            id: 'layer2',
+            name: 'layer2 name',
+            title: 'layer2 title',
+            description: 'layer2 description',
+            type: 'wms',
+            layerObj: {
+                name: 'layer2 name',
+                title: 'layer2 title',
+                description: 'layer2 description',
+                id: 'layer2',
+                type: 'wms',
+                url: '/layer2url'
+            },
+            selected: true,
+            syncStatus: 'none'
+        }];
+
+        mockAxios.onGet(/\/layer2url.*/).reply(200, wmsWithwosrkspace);
+
+        testEpic(layerInfoSyncLayersEpic, 6, syncLayers([testLayers[0]]), actions => {
+            expect(actions[0].type).toBe(RESET_SYNC_STATUS);
+            expect(actions[1].type).toBe(LOADING);
+            expect(actions[1].value).toBe(true);
+            expect(actions[1].name).toBe('syncingLayers');
+            expect(actions[2].type).toBe(SET_ERROR);
+            expect(actions[2].error).toNotExist();
+            expect(actions[3].type).toBe(UPDATE_LAYER);
+            expect(actions[3].layer).toExist();
+            expect(actions[3].layer.id).toBe(testLayers[0].id);
+            expect(actions[3].layer.syncStatus).toBe('none');
+            expect(actions[4].type).toBe(UPDATE_LAYER);
+            expect(actions[4].layer).toExist();
+            expect(actions[4].layer.id).toBe(testLayers[0].id);
+            expect(actions[4].layer.syncStatus).toBe('updating');
+            expect(actions[5].type).toBe(UPDATE_LAYER);
+            expect(actions[5].layer).toExist();
+            expect(actions[5].layer.id).toBe(testLayers[0].id);
+            expect(actions[5].layer.syncStatus).toBe('error');
         }, {
             layerinfo: {
                 layers: testLayers
