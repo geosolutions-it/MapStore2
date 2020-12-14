@@ -375,12 +375,13 @@ export default (viewer) => ({
         }),
     startDrawingMultiGeomEpic: (action$, store) => action$.ofType(START_DRAWING)
         .filter(() => store.getState().annotations.editing.features && !!store.getState().annotations.editing.features.length || store.getState().annotations.featureType === "Circle")
-        .switchMap( () => {
+        .switchMap( ({options: {geodesic}} = {options: {} }) => {
             const state = store.getState();
             const feature = state.annotations.editing;
             const type = state.annotations.featureType;
             const defaultTextAnnotation = state.annotations.defaultTextAnnotation;
             const multiGeom = multiGeometrySelector;
+            const geodesicEnabled = type === "Circle" && geodesic;
             const drawOptions = {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeom,
@@ -391,7 +392,8 @@ export default (viewer) => ({
                 editFilter: (f) => f.getProperties().canEdit,
                 defaultTextAnnotation,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: geodesicEnabled
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, ANNOTATIONS, [feature], drawOptions, assign({}, feature.style, {highlight: false})));
         }),

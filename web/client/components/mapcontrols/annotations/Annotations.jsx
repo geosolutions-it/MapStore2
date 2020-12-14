@@ -146,7 +146,8 @@ class Annotations extends React.Component {
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
         textRotationStep: PropTypes.number,
-        measurementAnnotationEdit: PropTypes.bool
+        measurementAnnotationEdit: PropTypes.bool,
+        geodesic: PropTypes.bool
     };
 
     static contextTypes = {
@@ -368,6 +369,7 @@ class Annotations extends React.Component {
             textRotationStep={this.props.textRotationStep}
             annotations={this.props.annotations}
             measurementAnnotationEdit={this.props.measurementAnnotationEdit}
+            geodesic={this.props.geodesic}
         />;
     };
 
