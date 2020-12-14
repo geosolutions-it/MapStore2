@@ -381,7 +381,10 @@ class MeasureComponent extends React.Component {
                                                     this.props.measurement.textLabels,
                                                     this.props.uom,
                                                     !exportToAnnotation,
-                                                    this.props.measurement.id
+                                                    {
+                                                        id: this.props.measurement.id,
+                                                        visibility: this.props.measurement.visibility
+                                                    }
                                                 );
                                             },
                                             disabled: (this.props.measurement.features || []).length === 0,

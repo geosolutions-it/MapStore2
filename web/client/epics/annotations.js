@@ -7,7 +7,7 @@
  */
 
 import Rx from 'rxjs';
-import { head, findIndex, castArray, isArray, find, values, isEmpty } from 'lodash';
+import { head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined } from 'lodash';
 import assign from 'object-assign';
 import axios from 'axios';
 import uuidv1 from 'uuid/v1';
@@ -15,7 +15,7 @@ import { saveAs } from 'file-saver';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { TOGGLE_CONTROL, toggleControl, setControlProperty } from '../actions/controls';
-import { addLayer, updateNode, changeLayerProperties, removeLayer, CHANGE_LAYER_PROPERTIES } from '../actions/layers';
+import { addLayer, updateNode, removeLayer, CHANGE_LAYER_PROPERTIES } from '../actions/layers';
 import { changeMeasurement } from '../actions/measurement';
 import { error } from '../actions/notifications';
 import { closeFeatureGrid } from '../actions/featuregrid';
@@ -56,7 +56,8 @@ import {
     TOGGLE_ANNOTATION_VISIBILITY,
     LOAD_DEFAULT_STYLES,
     GEOMETRY_HIGHLIGHT,
-    UNSELECT_FEATURE
+    UNSELECT_FEATURE,
+    toggleVisibilityAnnotation
 } from '../actions/annotations';
 import { FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE, changeDrawingStatus } from '../actions/draw';
 
@@ -250,7 +251,7 @@ export default (viewer) => ({
             };
             const isMeasureType = feature.properties?.type === MEASURE_TYPE || false;
             let actions = [
-                changeLayerProperties(ANNOTATIONS, {visibility: false}),
+                toggleVisibilityAnnotation(feature?.properties?.id, false),
                 changeDrawingStatus("drawOrEdit", type, ANNOTATIONS, [feature], drawOptions, assign({}, feature.style, {
                     highlight: false
                 })),
@@ -263,24 +264,28 @@ export default (viewer) => ({
     newAnnotationEpic: (action$) => action$.ofType(NEW_ANNOTATION)
         .switchMap(() => {
             return Rx.Observable.from([
-                changeLayerProperties(ANNOTATIONS, {visibility: false}),
                 hideMapinfoMarker()
             ]);
         }),
     addAnnotationEpic: (action$, store) => action$.ofType(ADD_NEW_FEATURE)
         .switchMap(() => {
+            const state = store.getState();
+            const feature = state.annotations.editing;
             return Rx.Observable.from([
-                changeLayerProperties(ANNOTATIONS, {visibility: false}),
+                toggleVisibilityAnnotation(feature?.properties?.id, false),
                 getSelectDrawStatus(store.getState()),
                 hideMapinfoMarker()
             ]);
         }),
     setEditingFeatureEpic: (action$, store) => action$.ofType(SET_EDITING_FEATURE)
-        .switchMap(() => Rx.Observable.of(
-            changeLayerProperties(ANNOTATIONS, {visibility: false}),
-            getSelectDrawStatus(store.getState()),
-            hideMapinfoMarker()
-        )),
+        .switchMap((action) => {
+            const {properties, visibility} = action.feature || {};
+            return Rx.Observable.of(
+                toggleVisibilityAnnotation(properties.id, visibility),
+                getSelectDrawStatus(store.getState()),
+                hideMapinfoMarker()
+            );
+        }),
     disableInteractionsEpic: (action$, store) => action$.ofType(TOGGLE_STYLE)
         .switchMap(() => {
             const isStylingActive = store.getState() && store.getState().annotations && store.getState().annotations.styling;
@@ -355,15 +360,15 @@ export default (viewer) => ({
                     handleClickOnLayer: true
                 })
             ]).concat([
-                changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {}),
-                changeLayerProperties(ANNOTATIONS, {visibility: true})
+                changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {})
             ]));
         }),
     cancelEditAnnotationEpic: (action$, store) => action$.ofType(CANCEL_EDIT_ANNOTATION)
-        .switchMap(() => {
+        .switchMap((action) => {
+            const {id, visibility} = action?.properties || {};
             return Rx.Observable.from([
                 changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {}),
-                changeLayerProperties(ANNOTATIONS, {visibility: true})
+                toggleVisibilityAnnotation(id, visibility)
             ]);
         }),
     purgeMapInfoEpic: (action$, store) => action$.ofType( PURGE_MAPINFO_RESULTS)
@@ -454,7 +459,7 @@ export default (viewer) => ({
             // Update visibility of annotations from TOC or annotation panel
             if (!isEmpty(annotationLayers)) {
                 const features = (annotationLayers.features || []).map(f => isLayerPropertyChange ? feature(f, action?.newProperties?.visibility)
-                    : (f.properties.id === action.id) ? feature(f, !f.properties?.visibility) : f);
+                    : (f.properties.id === action.id) ? feature(f, !isUndefined(action.visibility) ? action.visibility : !f.properties?.visibility) : f);
                 const layerVisibility = !!features?.filter(f => f.properties.visibility)?.length;
                 return Rx.Observable.of(updateNode(ANNOTATIONS, 'layer', {features, visibility: layerVisibility}));
             }
@@ -506,10 +511,11 @@ export default (viewer) => ({
             ]);
         }),
     confirmCloseAnnotationsEpic: (action$, store) => action$.ofType(CONFIRM_CLOSE_ANNOTATIONS)
-        .switchMap(() => {
+        .switchMap((action) => {
+            const {id, visibility} = action?.properties || {};
             return Rx.Observable.from((
                 store.getState().controls.annotations && store.getState().controls.annotations.enabled ?
-                    [toggleControl(ANNOTATIONS)] : [])
+                    [toggleControl(ANNOTATIONS), toggleVisibilityAnnotation(id, visibility)] : [])
                 .concat([purgeMapInfoResults()]));
         }),
     downloadAnnotations: (action$, {getState}) => action$.ofType(DOWNLOAD)

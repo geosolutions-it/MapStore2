@@ -142,12 +142,13 @@ describe('Test the measurement reducer', () => {
             bearingMeasureEnabled: false,
             len: 0,
             area: 700
-        }, setAnnotationMeasurement([{type: 'Feature', geometry: {type: 'LineString'}}], 1));
+        }, setAnnotationMeasurement([{type: 'Feature', geometry: {type: 'LineString'}}], {id: 1, visibility: true}));
         expect(state.features).toEqual([{type: 'Feature', geometry: {type: 'LineString'}}]);
         expect(state.geomTypeSelected).toEqual(['LineString']);
         expect(state.updatedByUI).toBe(true);
         expect(state.exportToAnnotation).toBe(true);
-        expect(state.id).toEqual(1);
+        expect(state.id).toBe(1);
+        expect(state.visibility).toBe(true);
         expect(state.geomType).toEqual("LineString");
     });
     it('SET_MEASUREMENT_CONFIG', () => {
