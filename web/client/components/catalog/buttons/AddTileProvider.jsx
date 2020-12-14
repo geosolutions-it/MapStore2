@@ -8,10 +8,9 @@
  */
 
 import React from 'react';
-import { Button as ButtonRB } from 'react-bootstrap';
-
 
 import tooltip from '../../misc/enhancers/tooltip';
+import ButtonRB from '../../misc/Button';
 const Button = tooltip(ButtonRB);
 
 import { tileProviderToLayer } from '../../../utils/CatalogUtils';

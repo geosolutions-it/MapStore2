@@ -41,7 +41,6 @@ import {
     isSavingSelector,
     isSimpleGeomSelector,
     modeSelector,
-    multiSelect,
     selectedFeaturesCount,
     selectedLayerNameSelector,
     showAgainSelector,
@@ -87,7 +86,7 @@ const Toolbar = connect(
         disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar || !isDescribeLoaded(state, selectedLayerNameSelector(state)),
         displayDownload: wfsDownloadAvailable,
         disableDownload: state => (resultsSelector(state) || []).length === 0,
-        isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
+        isDownloadOpen: state => state && state.controls && state.controls.layerdownload && state.controls.layerdownload.enabled,
         isSyncActive: isSyncWmsActive,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         disableZoomAll: (state) => state && state.featuregrid.virtualScroll || featureCollectionResultSelector(state).features.length === 0,
@@ -117,12 +116,10 @@ const Footer = connect(
         createStructuredSelector(paginationInfo),
         featureLoadingSelector,
         state => state && state.featuregrid && !!state.featuregrid.virtualScroll,
-        multiSelect,
         selectedFeaturesCount,
-        (pagination, loading, virtualScroll, multiselect, count) => ({
+        (pagination, loading, virtualScroll, selected) => ({
             ...pagination,
-            resultSize: multiselect ? count : pagination.resultSize,
-            totalFeatures: multiselect ? count : pagination.totalFeatures,
+            selected,
             loading,
             virtualScroll
         })),

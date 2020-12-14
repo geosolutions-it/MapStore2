@@ -391,14 +391,14 @@
                 "unsavedMapCancelButtonText": "Cerrar"
             },
             "geostories": {
-                "newGeostory": "Nuevo Story",
-                "title": "Stories ({count})",
-                "titleNoCount": "Stories",
-                "create": "Crear Story",
-                "noGeostoryAvailable": "No hay story disponible",
-                "createANewOne": "Crea uno nuevo",
-                "deleteError": "Hubo un error al eliminar el recurso",
-                "errorLoadingGeostories": "Hubo un error al cargar los stories"
+                "newGeostory": "Nuevo GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                "create": "Crear GeoStory",
+                "noGeostoryAvailable": "No hay GeoStory disponible",
+                "createANewOne": "Crea una nueva GeoStory",
+                "deleteError": "Hubo un error al eliminar GeoStory",
+                "errorLoadingGeostories": "Hubo un error al cargar GeoStories"
             }
         },
         "map": {
@@ -1258,7 +1258,8 @@
             "wrongMarkerAndZoomParamTitle": "Marcador y parámetro de zoom no válidos",
             "wrongMarkerAndZoomParamMessage": "El parámetro de marcador y zoom debe ser marker=lon,lat&zoom=value y (+|- 90° lat, +|-180° lon, <=+35 zoom)",
             "showHomeButton": "Enlace al inicio de MapStore",
-            "addCenterAndZoomParam": "Agregar centro y hacer zoom para compartir el enlace",
+            "addCenterAndZoomParam": "Agregar centro y hacer zoom al enlace para compartir",
+            "addMarkerAndZoomParam": "Agregar una marca de posición y hacer zoom para compartir el vínculo",
             "zoom": "Enfocar",
             "marker": "Agregar marcador en el mapa cargado",
             "coordinate": "Coordinar",
@@ -1545,6 +1546,7 @@
             "backtosearch": "Volver a la búsqueda",
             "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total}} other { {total}}}",
+            "selectedInfo": "( {selected} seleccionado )",
             "pageInfo": "{totalPages, plural, =0 {ninguna Página} =1 {Página {totalPages} de {totalPages}} other {Página {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",
@@ -1578,9 +1580,9 @@
                     "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
                     "date": "Escriba una fecha o una expresión. Usa {format} para la fecha.",
                     "geometry": {
-                        "disabled": "Filtrar haciendo clic en el mapa/ Mantenga presionada la tecla Ctrl y haga clic para filtrar múltiples",
-                        "enabled": "Haga clic en el mapa para filtrar los resultados / Mantenga presionada la tecla Ctrl y haga clic para filtrar múltiples",
-                        "applied": "Eliminar el filtro haciendo clic con el mouse"
+                        "disabled": "Hacer clic en el filtro en el mapa / Alt + arrastrar el mouse para dibujar un filtro de cuadro. Mantenga presionada también la tecla Ctrl para agregar más funciones al filtro actual",
+                        "enabled": "Haga clic en el mapa para seleccionar una característica / Alt + arrastre del mouse para dibujar un filtro de cuadro. Mantenga presionada la tecla Ctrl y haga clic para seleccionar varias características",
+                        "applied": "Limpiar la selección"
                     }
                 }
             },
@@ -1610,16 +1612,43 @@
                 "createNewChart": "Crea un gráfico para la capa seleccionada"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Exportar los datos",
             "format": "Formato de fichero",
             "srs": "Sistema de referencia espacial",
             "export": "Exportar",
             "downloadonlycurrentpage": "Descargar la página actual",
+            "cropDataSet": "Recortar el conjunto de datos a la ventana gráfica actual",
+            "downloadFilteredDataSet": "Descargar conjunto de datos filtrado",
+            "advancedOptions": "Opciones avanzadas",
+            "compression": "Compresión",
+            "tileWidth": "Ancho del azulejo",
+            "tileHeight": "Altura del azulejo",
+            "quality": "Calidad",
             "error": {
                 "title": "Error en la exportación",
-                "invalidOutputFormat": "Formato de exportación no disponible"
-            }
+                "invalidOutputFormat": "Formato de exportación no disponible",
+                "downloadEstimatorTitle": "Error de DownloadEstimator",
+                "downloadEstimatorFailed": "La solicitud de DownloadEstimator falló, lo que significa que el archivo exportado excede los límites del servidor configurado. Intente cambiar las opciones de descarga o agregue un filtro a su capa y vuelva a intentarlo."
+            },
+            "exportResultsMessages": {
+                "newExport": "El archivo estará disponible aquí cuando se complete la exportación",
+                "exportFailure": "Error al exportar la capa \"{layerTitle}\". Abra el cuadro de diálogo de resultados de exportación para obtener más información.",
+                "exportSuccess": "La exportación de la capa \"{layerTitle}\" finalizó correctamente.",
+                "invalidHref": "¡La respuesta del servidor no contenía una dirección URL válida para los archivos exportados!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "¡El proceso de descarga falló! El servidor ha devuelto el siguiente informe de excepción: \"{exceptionReport}\"",
+                "badResponse": "¡El proceso de descarga falló! El servidor ha devuelto datos incorrectos, código de error: \"{errorCode}\"",
+                "executeProcessXhrFailed": "¡La solicitud ExecuteProcess falló! El servidor puede estar mal configurado o no se puede acceder",
+                "getExecutionStatusXhrFailed": "¡La solicitud GetExecutionStatus falló! El servidor puede estar mal configurado o no se puede acceder",
+                "unexpectedError": "Ocurrió un error inesperado"
+            },
+            "noSupportedServiceFound": "¡El servidor no admite la descarga de WFS o WPS para esta capa!"
+        },
+        "exportDataResults": {
+            "title": "Exportar resultados de datos",
+            "emptyStateMessage": "La lista de exportación está vacía"
         },
         "widgets": {
              "types": {
@@ -1729,6 +1758,8 @@
                     "confirmDelete": "¿Está seguro?",
                     "downloadData": "Descargar datos",
                     "exportImage": "Exportar imagen",
+                    "maximize": "Maximizar",
+                    "minimize": "Minimizar",
                     "pin": "Alfiler",
                     "unpin": "Desprender",
                     "hide": "Esconder",
@@ -2713,7 +2744,7 @@
             "descriptionGeorchestra": "Muestra la versión de GeOrchestra en la herramienta de configuración de mapas",
             "title": "Versión"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Permite descargar datos de la tabla de atributos",
             "title": "Descargar Datos"
           },

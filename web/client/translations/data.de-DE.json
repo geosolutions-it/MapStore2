@@ -392,12 +392,12 @@
             },
             "geostories": {
                 "newGeostory": "Neue GeoStory",
-                "title": "GeoStory ({count})",
+                "title": "GeoStories ({count})",
                 "titleNoCount": "GeoStories",
                 "create": "GeoStory erstellen",
                 "noGeostoryAvailable": "Kein GeoStory verfügbar",
                 "createANewOne": "Erstelle eine neue",
-                "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten",
+                "deleteError": "Beim Löschen der GeoStory ist ein Fehler aufgetreten",
                 "errorLoadingGeostories": "Beim Laden von GeoStories ist ein Fehler aufgetreten"
             }
         },
@@ -1259,6 +1259,7 @@
             "wrongMarkerAndZoomParamMessage": "Marker und Zoomparameter müssen sein marker=lon,lat&zoom=value und (+|- 90° lat, +|-180° lon, <=+35 zoom)",
             "showHomeButton": "Link zur MapStore-Startseite",
             "addCenterAndZoomParam": "Fügen Sie die Mitte hinzu und zoomen Sie zum Freigabelink",
+            "addMarkerAndZoomParam": "Fügen Sie dem Freigabelink eine Ortsmarke hinzu und zoomen Sie",
             "zoom": "Zoomen",
             "marker": "Markierung auf geladener Karte hinzufügen",
             "coordinate": "Koordinate",
@@ -1544,6 +1545,7 @@
             "backtosearch": "Zurück zur suche",
             "resultInfo": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{start}-{end} von {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {Keine Artikel} =1 {{total}} other {{total}}}",
+            "selectedInfo": "( {selected} ausgewählt )",
             "pageInfo": "{totalPages, plural, =0 {keine Seite} =1 {Seite {totalPages} von {totalPages}} other {Seite {page} von {totalPages}}}",
             "pagination": {
                 "page": "Seite",
@@ -1577,9 +1579,9 @@
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
                     "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
                     "geometry": {
-                        "disabled": "Filterklick auf die Karte / Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere zu filtern",
-                        "enabled": "Klicken Sie auf die Karte, um die Ergebnisse zu filtern / Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere zu filtern",
-                        "applied": "Entfernen Sie den Filter per Mausklick"
+                        "disabled": "Filter Klicken auf Karte / Alt + Maus ziehen, um einen Box-Filter zu zeichnen. Halten Sie auch die Strg-Taste gedrückt, um dem aktuellen Filter weitere Funktionen hinzuzufügen",
+                        "enabled": "Klicken Sie auf die Karte, um ein Feature auszuwählen / Alt + Maus ziehen, um einen Boxfilter zu zeichnen. Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere Features auszuwählen",
+                        "applied": "Auswahl bereinigen"
                     }
                 }
             },
@@ -1609,16 +1611,43 @@
                 "createNewChart": "Erstellen Sie ein Diagramm für die ausgewählte Ebene"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Daten exportieren",
             "format": "Dateiformat",
             "srs": "Räumliches Bezugssystem",
             "export": "Export",
             "downloadonlycurrentpage": "Nur aktuelle Ansicht herunterladen",
+            "cropDataSet": "Zuschneiden des Datensatzes in das aktuelle Ansichtsfenster",
+            "downloadFilteredDataSet": "Laden Sie den gefilterten Datensatz herunter",
+            "advancedOptions": "Erweiterte Optionen",
+            "compression": "Kompression",
+            "tileWidth": "Fliesenbreite",
+            "tileHeight": "Fliesenhöhe",
+            "quality": "Qualität",
             "error": {
                 "title": "Fehler beim Export",
-                "invalidOutputFormat": "Das ausgewählte Exportformat ist nicht verfügbar"
-            }
+                "invalidOutputFormat": "Das ausgewählte Exportformat ist nicht verfügbar",
+                "downloadEstimatorTitle": "DownloadEstimator-Fehler",
+                "downloadEstimatorFailed": "Die DownloadEstimator-Anforderung ist fehlgeschlagen. Dies bedeutet, dass die exportierte Datei die konfigurierten Serverlimits überschreitet. Versuchen Sie, die Download-Optionen zu ändern oder Filter zu Ihrer Ebene hinzuzufügen, und versuchen Sie es erneut."
+            },
+            "exportResultsMessages": {
+                "newExport": "Die Datei ist hier verfügbar, wenn der Export abgeschlossen ist",
+                "exportFailure": "Export für Layer \"{layerTitle}\" fehlgeschlagen! Öffnen Sie den Dialog mit den Exportergebnissen, um weitere Informationen zu erhalten.",
+                "exportSuccess": "Der Export für die Ebene \"{layerTitle}\" wurde erfolgreich abgeschlossen.",
+                "invalidHref": "Die Antwort vom Server enthielt keine gültige URL-Adresse für exportierte Dateien!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Download-Vorgang fehlgeschlagen! Der Server hat den folgenden Ausnahmebericht zurückgegeben: \"{exceptionReport}\"",
+                "badResponse": "Download-Vorgang fehlgeschlagen! Der Server hat falsche Daten zurückgegeben, Fehlercode: \"{errorCode}\"",
+                "executeProcessXhrFailed": "ExecuteProcess-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
+                "getExecutionStatusXhrFailed": "GetExecutionStatus-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
+                "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
+            },
+            "noSupportedServiceFound": "Der Server unterstützt keinen WFS- oder WPS-Download für diese Ebene!"
+        },
+        "exportDataResults": {
+            "title": "Datenergebnisse exportieren",
+            "emptyStateMessage": "Die Exportliste ist leer"
         },
         "widgets": {
             "types": {
@@ -1728,6 +1757,8 @@
                     "confirmDelete": "Bist du sicher?",
                     "downloadData": "Daten herunterladen",
                     "exportImage": "Bild exportieren",
+                    "maximize": "Maximieren",
+                    "minimize": "Minimieren",
                     "pin": "Pin",
                     "unpin": "Unpin",
                     "hide": "Verbergen",
@@ -2712,7 +2743,7 @@
             "descriptionGeorchestra": "Zeigt die Version von GeOrchestra in den Karteneinstellungen an",
             "title": "Ausführung"
           },
-          "WFSDownload": {
+          "LayerDownload": {
             "description": "Ermöglicht das Herunterladen von Daten aus der Attributtabelle",
             "title": "Daten herunterladen"
           },

@@ -25,6 +25,7 @@ import {
     head,
     last
 } from 'lodash';
+import turfCircle from '@turf/circle';
 
 import lineIntersect from '@turf/line-intersect';
 import polygonToLinestring from '@turf/polygon-to-linestring';
@@ -406,6 +407,27 @@ export const reprojectBbox = function(bbox, source, dest, normalize = true) {
         }
     }
     return projPoints;
+};
+export const bboxToFeatureGeometry = (bbox) => {
+    const bboxObj = isArray(bbox) ? {
+        minx: bbox[0],
+        miny: bbox[1],
+        maxx: bbox[2],
+        maxy: bbox[3]
+    } : bbox;
+
+    const {minx, miny, maxx, maxy} = bboxObj;
+
+    return {
+        type: "Polygon",
+        coordinates: [[
+            [minx, miny],
+            [minx, maxy],
+            [maxx, maxy],
+            [maxx, miny],
+            [minx, miny]
+        ]]
+    };
 };
 export const getCompatibleSRS = (srs, allowedSRS) => {
     if (srs === 'EPSG:900913' && !allowedSRS['EPSG:900913'] && allowedSRS['EPSG:3857']) {
@@ -992,6 +1014,23 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
 };
 
 
+/**
+ * helper use to create a geojson Feature with a Polygon geometry
+ * starting from circle data
+ * @see https://turfjs.org/docs/#circle
+ * @param {number[]} center in the form of [x, y]
+ * @param {number} radius
+ * @param {string} [units="degrees"] the unit measure
+ * @param {number} [steps=100] number of vertices of the polygon
+ */
+export const getPolygonFromCircle = (center, radius, units = "degrees", steps = 100) => {
+    if (!center || !radius) {
+        return null;
+    }
+    return turfCircle(center, radius, {steps, units});
+};
+
+
 CoordinatesUtils = {
     setCrsLabels,
     getUnits,
@@ -1044,7 +1083,8 @@ CoordinatesUtils = {
     extractCrsFromURN,
     crsCodeTable,
     makeNumericEPSG,
-    makeBboxFromOWS
+    makeBboxFromOWS,
+    getPolygonFromCircle
 
 };
 export default CoordinatesUtils;

@@ -75,7 +75,7 @@ class DefaultViewer extends React.Component {
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses, this.props.renderEmpty) : responses;
+        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses) : responses;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
@@ -92,7 +92,7 @@ class DefaultViewer extends React.Component {
      */
     getCurrentResponse = (response) => {
         const validator = this.props.validator(this.props.format);
-        return validator.getValidResponses([response], true);
+        return validator.getValidResponses([response]);
     }
 
     renderEmptyLayers = () => {

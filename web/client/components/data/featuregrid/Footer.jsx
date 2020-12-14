@@ -7,9 +7,10 @@
  */
 
 import React from 'react';
-import { Button, Col, Glyphicon, Grid, Row } from 'react-bootstrap';
+import { Col, Glyphicon, Grid, Row } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 
+import Button from '../../misc/Button';
 import { toPage } from '../../../utils/FeatureGridUtils';
 import Message from '../../I18N/Message';
 
@@ -21,7 +22,8 @@ export default (props = {
     return (<Grid className="bg-body data-grid-bottom-toolbar" fluid style={{width: "100%"}}>
         <Row className="featuregrid-toolbar-margin">
             <Col md={3}>
-                <span><Message msgId={props.virtualScroll && "featuregrid.resultInfoVirtual" || "featuregrid.resultInfo"} msgParams={{start: page * size + 1, end: page * size + resultSize, total}} /></span>
+                <span><Message msgId={props.virtualScroll && "featuregrid.resultInfoVirtual" || "featuregrid.resultInfo"} msgParams={{start: page * size + 1, end: page * size + resultSize, total, selected: props.selected ?? 0}} /></span>
+                &nbsp;{props.selected > 0 ? <span><Message msgId="featuregrid.selectedInfo" msgParams={{ selected: props.selected ?? 0 }} /></span> : null}
             </Col>
             { !props.virtualScroll ? (<Col className="text-center" md={6}>
                 <Button

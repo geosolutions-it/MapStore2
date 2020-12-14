@@ -1313,7 +1313,7 @@
                 "syncOnMap": "Sync map with filter"
             }
         },
-        "wfsdownload": {
+        "layerdownload": {
             "title": "Export Data",
             "format": "File Format",
             "srs":  "Spatial Reference System",

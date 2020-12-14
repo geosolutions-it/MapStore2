@@ -132,6 +132,7 @@ import GeometryEditor from './GeometryEditor';
  * @prop {function} onFilterMarker triggered when marker/glyph name is specified for filtering
  * @prop {object[]} annotations list of annotations
  * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features
+ * @prop {boolean} geodesic enable to draw a geodesic geometry (supported only for Circle)
  * @prop {function} onHideMeasureWarning triggered when warning is ignored with "Don't show again" flag
  * @prop {boolean} showAgain flag for checkbox on the measure annotation popup warning
  * @prop {boolean} showPopupWarning flag to show warning modal on navigating to measurement panel from annotation
@@ -236,6 +237,7 @@ class AnnotationsEditor extends React.Component {
         onFilterMarker: PropTypes.func,
         annotations: PropTypes.array,
         measurementAnnotationEdit: PropTypes.bool,
+        geodesic: PropTypes.bool,
         onHideMeasureWarning: PropTypes.func,
         showAgain: PropTypes.bool,
         showPopupWarning: PropTypes.bool,
@@ -260,6 +262,7 @@ class AnnotationsEditor extends React.Component {
         stylerType: "marker",
         annotations: [],
         measurementAnnotationEdit: false,
+        geodesic: true,
         onInitPlugin: () => {}
     };
     /**
@@ -335,7 +338,7 @@ class AnnotationsEditor extends React.Component {
                                 onClick: () => {
                                     this.setState({removing: this.props.id});
                                 }
-                            }, {  // TODO should this be included on geometry card
+                            }, {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
                                 visible: true,
@@ -396,7 +399,7 @@ class AnnotationsEditor extends React.Component {
                             {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
-                                disabled: Object.keys(this.validate()).length !== 0,
+                                disabled: Object.keys(this.validate()).length !== 0 || this.props.unsavedChanges,
                                 visible: !this.props.selected,
                                 onClick: () => {
                                     const {newFeature, ...features} = this.props.editing;
@@ -493,6 +496,9 @@ class AnnotationsEditor extends React.Component {
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}
                     setPopupWarning={this.setPopupWarning}
                     showPopupWarning={this.props.showPopupWarning}
+                    geodesic={this.props.geodesic}
+                    defaultPointType={this.getConfig().defaultPointType}
+                    defaultStyles={this.props.defaultStyles}
                 />
                 }
             </div>
@@ -585,6 +591,7 @@ class AnnotationsEditor extends React.Component {
                     this.state.removing && this.setState({removing: null});
                     this.props.onCancelRemove();
                 }}
+                focusConfirm={this.props.removing}
                 onConfirm={() => {
                     if (this.state.removing) {
                         this.setState({removing: null});
@@ -745,7 +752,6 @@ class AnnotationsEditor extends React.Component {
                                 defaultShapeSize={this.props.defaultShapeSize}
                                 defaultShapeFillColor={this.props.defaultShapeFillColor}
                                 defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
-                                defaultPointType={this.getConfig().defaultPointType}
                                 defaultStyles={this.props.defaultStyles}
                                 lineDashOptions={this.props.lineDashOptions}
                                 markersOptions={this.getConfig()}
@@ -818,14 +824,17 @@ class AnnotationsEditor extends React.Component {
     }
 
     save = () => {
-        const errors = this.validate();
-        if (Object.keys(errors).length === 0) {
-            this.props.onError({});
-            this.props.selected ? this.props.onAddNewFeature() :
+        if (!isEmpty(this.props.selected)) {
+            this.props.onAddNewFeature();
+        } else {
+            const errors = this.validate();
+            if (Object.keys(errors).length === 0) {
+                this.props.onError({});
                 this.props.onSave(this.props.id, assign({}, this.props.editedFields),
                     this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
-        } else {
-            this.props.onError(errors);
+            } else {
+                this.props.onError(errors);
+            }
         }
     };
 

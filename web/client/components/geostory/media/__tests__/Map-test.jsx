@@ -29,24 +29,30 @@ describe('Map component', () => {
         ReactDOM.render(<Provider store={mockStore}><Map /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const mediaMapNode = container.querySelector('.ms-media-map');
-        expect(mediaMapNode).toExist();
+        expect(mediaMapNode).toBeTruthy();
     });
-    it('should show buttons to expand map', () => {
+    it('should show buttons to expand map', (done) => {
         const mockStore = { subscribe: () => {}, getState: () => ({}) };
-        ReactDOM.render(<Provider store={mockStore}><Map expandable /></Provider>, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const mediaMapNode = container.querySelector('.ms-media-map');
-        expect(mediaMapNode).toExist();
-        expect(mediaMapNode.children.length).toBe(2);
-        expect(document.body.children.length).toBe(1);
-        const expandMediaButtonNode = mediaMapNode.querySelector('.ms-expand-media-button');
-        expect(expandMediaButtonNode).toExist();
-        ReactTestUtils.Simulate.click(expandMediaButtonNode);
-        expect(mediaMapNode.children.length).toBe(0);
-        expect(document.body.children.length).toBe(2);
-        expect(document.body.children[1].getAttribute('class')).toBe('ms-expanded-media-container');
+        ReactDOM.render(<Provider store={mockStore}>
+            <Map expandable
+                onMapTypeLoaded={() => {
+                    const container = document.getElementById('container');
+                    const mediaMapNode = container.querySelector('.ms-media-map');
+                    expect(mediaMapNode).toBeTruthy();
+                    expect(mediaMapNode.children.length).toBe(2);
+                    expect(document.body.children.length).toBe(1);
+                    const expandMediaButtonNode = mediaMapNode.querySelector('.ms-expand-media-button');
+                    expect(expandMediaButtonNode).toBeTruthy();
+                    ReactTestUtils.Simulate.click(expandMediaButtonNode);
+                    expect(mediaMapNode.children.length).toBe(0);
+                    expect(document.body.children.length).toBe(2);
+                    expect(document.body.children[1].getAttribute('class')).toBe('ms-expanded-media-container');
+                    done();
+                }}
+            />
+        </Provider>, document.getElementById("container"));
     });
-    it('should use cursor pointer with active map info control', () => {
+    it('should use cursor pointer with active map info control', (done) => {
         const MAP = {
             layers: [],
             mapInfoControl: true
@@ -55,14 +61,17 @@ describe('Map component', () => {
             <Map
                 id="map"
                 mapType="openlayers"
-                map={MAP} />,
+                map={MAP}
+                onMapTypeLoaded={() => {
+                    const container = document.getElementById('container');
+                    const mediaMapNode = container.querySelector('.ms-media-map');
+                    expect(mediaMapNode).toBeTruthy();
+                    const mapContainer = container.querySelector('#media-map');
+                    expect(mapContainer).toBeTruthy();
+                    expect(mapContainer.style.cursor).toBe('pointer');
+                    done();
+                }}
+            />,
             document.getElementById("container"));
-
-        const container = document.getElementById('container');
-        const mediaMapNode = container.querySelector('.ms-media-map');
-        expect(mediaMapNode).toExist();
-        const mapContainer = container.querySelector('#media-map');
-        expect(mapContainer).toExist();
-        expect(mapContainer.style.cursor).toBe('pointer');
     });
 });

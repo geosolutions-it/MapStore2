@@ -77,6 +77,47 @@ describe("The SharePanel component", () => {
         expect(document.querySelector('h4').innerHTML).toBe("<span>share.directLinkTitle</span>");
 
     });
-
-
+    it('test centerAndZoom and marker options in the panel', () => {
+        const actions = {
+            onUpdateSettings: () => {},
+            hideMarker: () => {}
+        };
+        const spyOnUpdateSettings = expect.spyOn(actions, "onUpdateSettings");
+        const spyOnHideMarker = expect.spyOn(actions, "hideMarker");
+        let panel = ReactDOM.render(<SharePanel hideMarker={actions.hideMarker} onUpdateSettings={actions.onUpdateSettings} settings={{markerEnabled: false, centerAndZoomEnabled: true}} advancedSettings={{centerAndZoom: true, defaultEnabled: "centerAndZoom"}} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        expect(panel).toBeTruthy();
+        const cmpDom = ReactDOM.findDOMNode(panel);
+        expect(cmpDom).toBeTruthy();
+        const checkBoxes = document.querySelectorAll("input[type=checkbox]");
+        const checkBoxCenterAndZoom = checkBoxes[1];
+        const checkBoxAddMarker = checkBoxes[2];
+        expect(checkBoxCenterAndZoom).toBeTruthy();
+        expect(checkBoxCenterAndZoom.checked).toBe(true);
+        expect(checkBoxAddMarker).toBeTruthy();
+        expect(checkBoxAddMarker.checked).toBe(false);
+        ReactTestUtils.Simulate.change(checkBoxAddMarker);
+        expect(spyOnUpdateSettings.calls[0].arguments[0]).toEqual({markerEnabled: true, centerAndZoomEnabled: true});
+        ReactTestUtils.Simulate.change(checkBoxCenterAndZoom);
+        expect(spyOnUpdateSettings).toHaveBeenCalled();
+        expect(spyOnUpdateSettings.calls[1].arguments[0]).toEqual({markerEnabled: false, centerAndZoomEnabled: false, bboxEnabled: false});
+        expect(spyOnHideMarker).toHaveBeenCalled();
+    });
+    it('test panel with enable default ', () => {
+        const actions = {
+            onUpdateSettings: () => {},
+            onSubmitClickPoint: () => {}
+        };
+        const spyOnUpdateSettings = expect.spyOn(actions, "onUpdateSettings");
+        const spyOnSubmitClickPoint = expect.spyOn(actions, "onSubmitClickPoint");
+        let panel = ReactDOM.render(
+            <SharePanel onUpdateSettings={actions.onUpdateSettings} settings={{markerEnabled: false}} shareUrl="www.geo-solutions.it" isVisible={false} />, document.getElementById("container"));
+        expect(panel).toBeTruthy();
+        panel = ReactDOM.render(<SharePanel settings={{markerEnabled: true}} advancedSettings={{centerAndZoom: true, defaultEnabled: "markerAndZoom"}} onUpdateSettings={actions.onUpdateSettings} onSubmitClickPoint={actions.onSubmitClickPoint} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        expect(panel).toBeTruthy();
+        const cmpDom = ReactDOM.findDOMNode(panel);
+        expect(cmpDom).toBeTruthy();
+        expect(spyOnUpdateSettings).toHaveBeenCalled();
+        expect(spyOnUpdateSettings.calls[0].arguments[0]).toEqual({ markerEnabled: true, centerAndZoomEnabled: true, bboxEnabled: false });
+        expect(spyOnSubmitClickPoint).toHaveBeenCalled();
+    });
 });

@@ -55,7 +55,7 @@ const formatCards = {
     HIDDEN: {
         titleId: 'layerProperties.hideFormatTitle',
         descId: 'layerProperties.hideFormatDescription',
-        glyph: 'ext-empty'
+        glyph: 'hide-marker'
     },
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',

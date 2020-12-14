@@ -15,26 +15,16 @@ import MockAdapter from 'axios-mock-adapter';
 import {
     deleteMap,
     DELETE_MAP,
-    saveResourceDetails,
-    SAVE_RESOURCE_DETAILS,
     doNothing,
     DO_NOTHING,
     setUnsavedChanged,
     SET_UNSAVED_CHANGES,
-    openDetailsPanel,
-    OPEN_DETAILS_PANEL,
-    closeDetailsPanel,
-    CLOSE_DETAILS_PANEL,
     MAP_UPDATING,
     mapUpdating,
-    DETAILS_LOADED,
-    detailsLoaded,
     ATTRIBUTE_UPDATED,
     attributeUpdated,
     THUMBNAIL_ERROR,
     thumbnailError,
-    TOGGLE_DETAILS_EDITABILITY,
-    toggleDetailsEditability,
     MAPS_SEARCH_TEXT_CHANGED,
     mapsSearchTextChanged,
     MAPS_LIST_LOAD_ERROR,
@@ -43,8 +33,6 @@ import {
     mapError,
     METADATA_CHANGED,
     metadataChanged,
-    setShowMapDetails,
-    SHOW_DETAILS,
     updateAttribute,
     SAVE_MAP_RESOURCE,
     saveMapResource
@@ -145,10 +133,6 @@ describe('Test correctness of the maps actions', () => {
         expect(a.type).toBe(MAPS_SEARCH_TEXT_CHANGED);
         expect(a.text).toBe("TEXT");
     });
-    it('toggleDetailsEditability', () => {
-        const a = toggleDetailsEditability();
-        expect(a.type).toBe(TOGGLE_DETAILS_EDITABILITY);
-    });
     it('loadError', () => {
         const a = loadError();
         expect(a.type).toBe(MAPS_LIST_LOAD_ERROR);
@@ -172,13 +156,6 @@ describe('Test correctness of the maps actions', () => {
         expect(a.value).toBe(value);
     });
 
-    it('setShowMapDetails', () => {
-        const showMapDetails = true;
-        const action = setShowMapDetails(showMapDetails);
-        expect(action.type).toBe(SHOW_DETAILS);
-        expect(action.showMapDetails).toBe(showMapDetails);
-
-    });
     it('deleteMap', () => {
         const resourceId = 1;
         const someOpt = {
@@ -198,29 +175,9 @@ describe('Test correctness of the maps actions', () => {
         expect(a.type).toBe(SET_UNSAVED_CHANGES);
         expect(a.value).toBe(value);
     });
-    it('openDetailsPanel', () => {
-        const a = openDetailsPanel();
-        expect(a.type).toBe(OPEN_DETAILS_PANEL);
-    });
-    it('closeDetailsPanel', () => {
-        const a = closeDetailsPanel();
-        expect(a.type).toBe(CLOSE_DETAILS_PANEL);
-    });
     it('doNothing', () => {
         const a = doNothing();
         expect(a.type).toBe(DO_NOTHING);
-    });
-    it('saveResourceDetails', () => {
-        const a = saveResourceDetails();
-        expect(a.type).toBe(SAVE_RESOURCE_DETAILS);
-    });
-    it('detailsLoaded', () => {
-        const mapId = 1;
-        const detailsUri = "sada/da/";
-        const a = detailsLoaded(mapId, detailsUri);
-        expect(a.type).toBe(DETAILS_LOADED);
-        expect(a.detailsUri).toBe(detailsUri);
-        expect(a.mapId).toBe(mapId);
     });
     it('saveMapResource', () => {
         const resource = {};

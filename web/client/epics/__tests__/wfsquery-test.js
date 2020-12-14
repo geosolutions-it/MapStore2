@@ -63,7 +63,12 @@ describe('wfsquery Epics', () => {
                 }
             });
             done();
-        }, {});
+        }, {
+            layers: {
+                selected: ['layerId'],
+                flat: [{id: 'layerId'}]
+            }
+        });
     });
     it('wfsQueryEpic passes query options', (done) => {
         const expectedResult = require('../../test-resources/wfs/museam.json');
@@ -82,13 +87,19 @@ describe('wfsquery Epics', () => {
                 }
             });
             done();
-        }, {});
+        }, {
+            layers: {
+                selected: ['layerId'],
+                flat: [{id: 'layerId'}]
+            }
+        });
     });
     describe('wfsQueryEpic timedimension', () => {
         const BASE_URL = "/WFS";
         const DATE = "20180101T00:00:00";
         const BASE_TIME_TEST_STATE = {
             layers: {
+                selected: ['TEST_LAYER'],
                 flat: [{
                     id: "TEST_LAYER",
                     title: "Test Layer",
@@ -208,6 +219,11 @@ describe('wfsquery Epics', () => {
                 }
             });
             done();
-        }, {});
+        }, {
+            layers: {
+                selected: ['layerId'],
+                flat: [{id: 'layerId'}]
+            }
+        });
     });
 });

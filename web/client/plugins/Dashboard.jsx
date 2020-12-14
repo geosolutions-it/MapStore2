@@ -12,6 +12,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import { connect } from 'react-redux';
 import { compose, withHandlers, withProps } from 'recompose';
 import { createSelector } from 'reselect';
+import { isEmpty } from 'lodash';
 
 import {
     changeLayout,
@@ -20,7 +21,8 @@ import {
     exportCSV,
     exportImage,
     selectWidget,
-    updateWidgetProperty
+    updateWidgetProperty,
+    toggleMaximize
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
@@ -38,7 +40,8 @@ import {
     getDashboardWidgetsLayout,
     getEditingWidget,
     getWidgetsDependenciesGroups,
-    isWidgetSelectionActive
+    isWidgetSelectionActive,
+    getMaximizedState
 } from '../selectors/widgets';
 
 const WidgetsView = compose(
@@ -57,8 +60,9 @@ const WidgetsView = compose(
             currentLocaleLanguageSelector,
             isLocalizedLayerStylesEnabledSelector,
             localizedLayerStylesEnvSelector,
+            getMaximizedState,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env) => ({
+                env, maximized) => ({
                 resource,
                 loading,
                 canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
@@ -66,11 +70,12 @@ const WidgetsView = compose(
                 dependencies,
                 selectionActive,
                 editingWidget,
-                widgets,
+                widgets: !isEmpty(maximized) ? widgets.filter(w => w.id === maximized.widget.id) : widgets,
                 groups,
                 showGroupColor,
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
-                env
+                env,
+                maximized
             })
         ), {
             editWidget,
@@ -79,7 +84,8 @@ const WidgetsView = compose(
             exportImage,
             deleteWidget,
             onWidgetSelected: selectWidget,
-            onLayoutChange: changeLayout
+            onLayoutChange: changeLayout,
+            toggleMaximize
         }
     ),
     withProps(() => ({

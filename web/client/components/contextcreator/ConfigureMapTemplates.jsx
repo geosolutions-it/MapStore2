@@ -177,6 +177,7 @@ export default ({
             user={user}
             loading={loading && (loadFlags.templateSaving || loadFlags.templateLoading)}
             resource={editedTemplate}
+            isNewResource={!editedTemplate}
             clickOutEnabled={false}
             category="TEMPLATE"
             show={showUploadDialog}

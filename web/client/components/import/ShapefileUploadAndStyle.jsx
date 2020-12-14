@@ -9,6 +9,10 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import { Grid, Row, Col } from 'react-bootstrap';
+import { isString } from 'lodash';
+import { DropdownList as Combobox } from 'react-widgets';
+
 import Message from '../../components/I18N/Message';
 import { geoJSONToLayer } from '../../utils/LayersUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
@@ -24,10 +28,7 @@ import {
     checkShapePrj,
     shpToGeoJSON
 } from '../../utils/FileUtils';
-
-import { Grid, Row, Col, Button } from 'react-bootstrap';
-import { isString } from 'lodash';
-import { DropdownList as Combobox } from 'react-widgets';
+import Button from '../misc/Button';
 import SelectShape from './SelectShape';
 import { Promise } from 'es6-promise';
 

@@ -5,13 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
+import 'react-widgets/lib/less/react-widgets.less';
+
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Col, Row, Panel, Label, Button, Alert } from 'react-bootstrap';
+import { Grid, Col, Row, Panel, Label, Alert } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 import { DropdownList } from 'react-widgets';
-import 'react-widgets/lib/less/react-widgets.less';
+
+import Button from '../misc/Button';
 import { Message } from '../../I18N/I18N';
 import { getbsStyleForState } from '../../../utils/ImporterUtils';
 import Layer from './Layer';

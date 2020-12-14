@@ -9,9 +9,10 @@
 import { findIndex } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Alert, Button, Glyphicon, Grid} from 'react-bootstrap';
+import {Alert, Glyphicon, Grid} from 'react-bootstrap';
 import Select from 'react-select';
 
+import Button from '../../../misc/Button';
 import Message from '../../../I18N/Message';
 
 /**

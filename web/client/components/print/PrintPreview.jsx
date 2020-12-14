@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -7,10 +6,14 @@ import PropTypes from 'prop-types';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
-import { Button, Glyphicon } from 'react-bootstrap';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Glyphicon } from 'react-bootstrap';
 import { Document, Page } from 'react-pdf';
+import Button from '../misc/Button';
+
 
 class PrintPreview extends React.Component {
     static propTypes = {

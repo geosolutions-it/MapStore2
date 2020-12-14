@@ -7,7 +7,7 @@
  */
 import React from 'react';
 
-import { Button } from 'react-bootstrap';
+import Button from '../../misc/Button';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
 

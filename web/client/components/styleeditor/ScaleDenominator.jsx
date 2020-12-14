@@ -7,7 +7,7 @@
  */
 
 import React, { useState } from 'react';
-import { Glyphicon, Button as ButtonRB } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import isNaN from 'lodash/isNaN';
 import Select from 'react-select';
 import Popover from './Popover';
@@ -17,6 +17,7 @@ import localizedProps from '../misc/enhancers/localizedProps';
 
 const ReactSelectCreatable = localizedProps(['placeholder', 'noResultsText'])(Select.Creatable);
 
+import ButtonRB from '../misc/Button';
 const Button = tooltip(ButtonRB);
 
 function ScaleFieldRenderer({ label, currentZoom }) {

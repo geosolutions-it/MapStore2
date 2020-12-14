@@ -7,14 +7,16 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Row, Col, Alert, ButtonToolbar } from 'react-bootstrap';
+import { Promise } from 'es6-promise';
 
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
-import PropTypes from 'prop-types';
 import { isAnnotation } from '../../../utils/AnnotationsUtils';
 import { toVectorStyle } from '../../../utils/StyleUtils';
-import { Grid, Row, Col, Button, Alert, ButtonToolbar } from 'react-bootstrap';
-import { Promise } from 'es6-promise';
+
+import Button from '../../misc/Button';
 
 class StylePanel extends React.Component {
     static propTypes = {

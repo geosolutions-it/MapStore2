@@ -42,7 +42,18 @@ import { updateUrlOnScrollSelector } from '../selectors/geostory';
  * @prop {boolean} [showAPI] default true, if false, hides the API entry of embed.
  * @prop {function} [onClose] function to call on close window event.
  * @prop {function} [getCount] function used to get the count for social links.
- * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
+ * @prop {object} [cfg.advancedSettings] show advanced settings (bbox param, centerAndZoom param or home button) f.e {bbox: true, homeButton: true, centerAndZoom: true}
+ * @prop {boolean} [cfg.advancedSettings.bbox] if true, the share url is generated with the bbox param
+ * @prop {boolean} [cfg.advancedSettings.centerAndZoom] if true, the share url is generated with the center and zoom params
+ * @prop {string} [cfg.advancedSettings.defaultEnabled] the value can either be "bbox", "centerAndZoom", "markerAndZoom". Based on the value, the checkboxes corresponding to the param will be enabled by default
+ * For example this will display marker, coordinates and zoom fields with the marker enabled by default generating share url with respective params
+ * ```
+ * "cfg": {
+ *  "bbox": true,
+ *  "centerAndZoom": true,
+ *  "defaultEnabled": "markerAndZoom"
+ *  }
+ * ```
  */
 
 const Share = connect(createSelector([
@@ -88,7 +99,19 @@ export const SharePlugin = assign(Share, {
     BurgerMenu: {
         name: 'share',
         position: 1000,
+        priority: 1,
+        doNotHide: true,
         text: <Message msgId="share.title"/>,
+        icon: <Glyphicon glyph="share-alt"/>,
+        action: toggleControl.bind(null, 'share', null)
+    },
+    Toolbar: {
+        name: 'share',
+        alwaysVisible: true,
+        position: 2,
+        priority: 0,
+        doNotHide: true,
+        tooltip: "share.title",
         icon: <Glyphicon glyph="share-alt"/>,
         action: toggleControl.bind(null, 'share', null)
     }

@@ -8,7 +8,8 @@
 
 import React from 'react';
 
-import { Button, Glyphicon, Grid, Row, Col } from 'react-bootstrap';
+import { Glyphicon, Grid, Row, Col } from 'react-bootstrap';
+import Button from '../../misc/Button';
 
 /* eslint-disable */
 const fullscreenGlyph = {

@@ -9,8 +9,9 @@
 import {inRange} from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Button, Col, ControlLabel, FormControl as FC, FormGroup, Glyphicon, OverlayTrigger, Tooltip} from "react-bootstrap";
+import { Col, ControlLabel, FormControl as FC, FormGroup, Glyphicon, OverlayTrigger, Tooltip} from "react-bootstrap";
 
+import Button from '../../misc/Button';
 import NumberFormControl from '../../I18N/IntlNumberFormControl';
 import Message from "../../I18N/Message";
 import localizedProps from '../../misc/enhancers/localizedProps';

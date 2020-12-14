@@ -45,7 +45,7 @@
                 }
               }
             },
-            "WFSDownload",
+            "LayerDownload",
             "LayerSelector",
             "Notifications"
         ],
@@ -58,7 +58,7 @@
                 "name": "Map"
             },
             "FeatureEditor",
-            "WFSDownload",
+            "LayerDownload",
             "Notifications"
         ]
     },

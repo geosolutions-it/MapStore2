@@ -10,7 +10,7 @@ import { has, includes, indexOf } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button as ButtonRB, Dropdown, Glyphicon, ListGroupItem } from 'react-bootstrap';
+import { Dropdown, Glyphicon, ListGroupItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
@@ -31,7 +31,7 @@ import { bottomPanelOpenSelector } from '../selectors/maplayout';
 import { isCesium } from '../selectors/maptype';
 import { userRoleSelector } from '../selectors/security';
 import { filterCRSList, getAvailableCRS, normalizeSRS } from '../utils/CoordinatesUtils';
-
+import ButtonRB from '../components/misc/Button';
 const Button = tooltip(ButtonRB);
 
 

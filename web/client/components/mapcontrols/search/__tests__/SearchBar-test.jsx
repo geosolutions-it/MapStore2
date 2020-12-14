@@ -415,7 +415,7 @@ describe("test the SearchBar", () => {
         expect(buttons.length).toBe(2);
         const searchButton = buttons[0];
         expect(searchButton).toExist();
-        expect(searchButton.disabled).toBe(true);
+        expect(searchButton.classList.contains('disabled')).toBe(true);
         expect(cog).toExist();
     });
     it('test reset active search tool when no bookmark config', () => {

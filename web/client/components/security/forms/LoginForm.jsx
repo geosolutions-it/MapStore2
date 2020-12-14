@@ -7,12 +7,13 @@
  */
 
 import React from 'react';
-
-import { FormControl, FormGroup, ControlLabel, Button, Alert } from 'react-bootstrap';
+import { FormControl, FormGroup, ControlLabel, Alert } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 import PropTypes from 'prop-types';
+
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
+import Button from '../../misc/Button';
 
 /**
  * A Form to login menu for user details:

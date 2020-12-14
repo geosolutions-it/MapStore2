@@ -24,7 +24,7 @@ export const getDependencyLayerParams = (layer, dependencies) =>
             "params",
             {}
         );
-export const composeFilterObject = (filterObj, quickFilters, options) => {
+export const composeFilterObject =  (filterObj, quickFilters, options) => {
     const quickFiltersForVisibleProperties = quickFilters && options &&
         Object.keys(quickFilters)
             .filter(qf => find(options.propertyName, f => f === qf))
@@ -37,7 +37,7 @@ export const composeFilterObject = (filterObj, quickFilters, options) => {
         return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
     }, {});
     if (!isEmpty(filterObj) || !isEmpty(columnsFilters)) {
-        const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters]);
+        const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], undefined, filterObj?.spatialFieldOperator);
         return {...filterObj, ...composedFilterFields};
     }
     return {};

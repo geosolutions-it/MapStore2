@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -7,9 +6,11 @@ import PropTypes from 'prop-types';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
-import { Panel, Button, Glyphicon, Tooltip } from 'react-bootstrap';
+import React from 'react';
+import Button from '../misc/Button';
+import PropTypes from 'prop-types';
+import { Panel, Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../misc/OverlayTrigger';
 import { Message } from '../../I18N/I18N';
 import transforms from './transforms';

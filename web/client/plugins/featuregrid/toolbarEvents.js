@@ -26,7 +26,7 @@ export default {
     clearFeatureEditing: () => toggleTool("clearConfirm", true),
     deleteGeometry: () => deleteGeometry(),
     deleteFeatures: () => toggleTool("deleteConfirm", true),
-    download: () => toggleControl("wfsdownload"),
+    download: () => toggleControl("layerdownload"),
     settings: () => toggleTool("settings"),
     switchEditMode: () => toggleEditMode(),
     startEditingFeature: () => startEditingFeature(),

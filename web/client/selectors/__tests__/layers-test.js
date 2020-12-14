@@ -321,7 +321,7 @@ describe('Test layers selectors', () => {
     });
 
     it('test wfsDownloadSelector', () => {
-        const props = wfsDownloadSelector({ controls: { wfsdownload: { enabled: true } } });
+        const props = wfsDownloadSelector({ controls: { layerdownload: { enabled: true } } });
         expect(props).toEqual({ expanded: true });
     });
 

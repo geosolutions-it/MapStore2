@@ -15,8 +15,7 @@ import {
     loadError,
     mapCreated,
     mapDeleting,
-    mapsSearchTextChanged,
-    setShowMapDetails
+    mapsSearchTextChanged
 } from '../../actions/maps';
 
 const sampleMap = {
@@ -51,11 +50,6 @@ describe('Test the maps reducer', () => {
     it('on mapsSearchTextChanged action', () => {
         let state = maps(null, mapsSearchTextChanged("TEST"));
         expect(state.searchText).toBe("TEST");
-    });
-    it('on setShowMapDetails action', () => {
-        let bool = false;
-        let state = maps({showMapDetails: true}, setShowMapDetails(bool));
-        expect(state.showMapDetails).toBe(bool);
     });
     it('on mapSearchText', () => {
         let state = maps(null, mapsLoading("TEST", {

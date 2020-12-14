@@ -26,7 +26,7 @@ import highlightReducers from '../reducers/highlight';
 export default {
     FeatureGridPlugin: connect((state) => ({
         open: state.query && state.query.open,
-        exportEnabled: state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.available,
+        exportEnabled: state && state.controls && state.controls.layerdownload && state.controls.layerdownload.available,
         features: state.query && state.query.result && state.query.result.features,
         filterObj: state.query && state.query.filterObj,
         searchUrl: state.query && state.query.searchUrl,
@@ -48,7 +48,7 @@ export default {
     }),
     {
         selectFeatures,
-        exportAction: () => toggleControl("wfsdownload"),
+        exportAction: () => toggleControl("layerdownload"),
         changeMapView,
         onQuery: query,
         setDockSize: dockSizeFeatures

@@ -1,18 +1,20 @@
-import PropTypes from 'prop-types';
 
 /*
- * Copyright 2016, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
+* Copyright 2016, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
+
 import { toggleControl } from '../../actions/controls';
+import Button from '../../components/misc/Button';
+
 
 class ToggleButton extends React.Component {
     static propTypes = {

@@ -22,6 +22,7 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
     var proj = projection.getCode();
     const onError = () => {
         source.removeLoadedExtent(extent);
+        source.dispatchEvent('vectorerror');
     };
     getFeature(options.url, options.name, {
         // bbox: extent.join(',') + ',' + proj,

@@ -45,7 +45,7 @@ import Translate from 'ol/interaction/Translate';
 import Modify from 'ol/interaction/Modify';
 import Select from 'ol/interaction/Select';
 import {unByKey} from 'ol/Observable';
-import {getCenter} from 'ol/extent';
+import {getCenter, getWidth} from 'ol/extent';
 import {fromCircle, circular} from 'ol/geom/Polygon';
 
 const geojsonFormat = new GeoJSON();
@@ -414,8 +414,15 @@ export default class DrawSupport extends React.Component {
                 let newFeature;
                 if (drawMethod === "Circle") {
                     newDrawMethod = "Polygon";
-                    const radius = drawnGeom.getRadius();
-                    let center = drawnGeom.getCenter();
+                    let radius;
+                    let center;
+                    if (this.props.options.geodesic) {
+                        radius = getWidth(drawnGeom.getExtent()) / 2;
+                        center = getCenter(drawnGeom.getExtent());
+                    } else {
+                        radius = drawnGeom.getRadius();
+                        center = drawnGeom.getCenter();
+                    }
                     const coordinates = this.polygonCoordsFromCircle(center, radius);
                     newFeature = this.getNewFeature(newDrawMethod, coordinates);
                     // TODO verify center is projected in 4326 and is an array

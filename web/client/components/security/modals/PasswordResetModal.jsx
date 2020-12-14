@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -8,13 +7,14 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 
+import PropTypes from 'prop-types';
+import Spinner from 'react-spinkit';
 import React from 'react';
 
 import PasswordReset from '../forms/PasswordReset';
 import Message from '../../../components/I18N/Message';
-import { Button } from 'react-bootstrap';
+import Button from '../../misc/Button';
 import Modal from '../../misc/Modal';
-import Spinner from 'react-spinkit';
 
 /**
  * A Modal window to show password reset form

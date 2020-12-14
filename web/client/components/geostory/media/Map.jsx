@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import { compose, withState } from 'recompose';
-import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 
 import MapView from '../common/MapView';
 import { applyDefaults } from '../../../utils/GeoStoryUtils';
@@ -16,6 +16,7 @@ import Portal from '../../../components/misc/Portal';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import { withResizeDetector } from 'react-resize-detector';
 
+import ButtonRB from '../../misc/Button';
 const Button = tooltip(ButtonRB);
 
 export default compose(
@@ -36,7 +37,8 @@ export default compose(
     size,
     showCaption,
     caption: contentCaption,
-    mapType = "leaflet" // default for when map MediaViewer is not connected to redux
+    mapType = "leaflet", // default for when map MediaViewer is not connected to redux
+    onMapTypeLoaded
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
@@ -107,6 +109,7 @@ export default compose(
                 tools={isMapInfoControlActive ? ["popup"] : []}
                 options={applyDefaults(updatedMapOptions)}
                 mapType={mapType}
+                onMapTypeLoaded={onMapTypeLoaded}
             />
             {expandable && !editMap &&
         <Button

@@ -345,10 +345,10 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         let zoomAllButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(zoomAllButton)).toBe(true);
-        expect(el.children[2].disabled).toBe(true);
+        expect(el.children[2].classList.contains('disabled')).toBe(true);
         ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false}/>, document.getElementById("container"));
         zoomAllButton = document.getElementById("fg-zoom-all");
-        expect(el.children[2].disabled).toBe(false);
+        expect(el.children[2].classList.contains('disabled')).toBe(false);
     });
     describe('time sync button', () => {
         it('visibility', () => {

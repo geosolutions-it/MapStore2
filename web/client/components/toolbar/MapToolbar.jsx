@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 
 /**
  * Copyright 2016, GeoSolutions Sas.
@@ -7,11 +6,14 @@ import PropTypes from 'prop-types';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
-import { Collapse, Panel, Button, ButtonGroup, Tooltip } from 'react-bootstrap';
-import OverlayTrigger from '../misc/OverlayTrigger';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Collapse, Panel, ButtonGroup, Tooltip } from 'react-bootstrap';
 import assign from 'object-assign';
+
+import Button from '../misc/Button';
+import OverlayTrigger from '../misc/OverlayTrigger';
 import HelpBadge from '../help/HelpBadge';
 
 

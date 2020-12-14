@@ -13,9 +13,10 @@ import assign from 'object-assign';
 import _ from 'lodash';
 import Select from 'react-select';
 import Spinner from 'react-spinkit';
-import { Table, Button, Glyphicon } from 'react-bootstrap';
+import { Table, Glyphicon } from 'react-bootstrap';
 import Message from '../I18N/Message';
 import { getMessageById } from '../../utils/LocaleUtils';
+import Button from '../misc/Button';
 
 /**
 * Map permission editor

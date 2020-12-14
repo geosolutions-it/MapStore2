@@ -202,4 +202,45 @@ describe('StandardApp withExtensions', () => {
             done();
         }, 0);
     });
+    it('If one extension errors the other extensions continue to work', (done) => {
+        ConfigUtils.setConfigProp("extensionsFolder", "myfolder/");
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet(/localConfig/).reply(200, {});
+        mockAxios.onGet(/extensions/).reply(200, {
+            My: {
+                bundle: "myplugin.js",
+                translations: "translations"
+            },
+            Error: {
+                bundle: "nodata"
+            }
+        });
+        mockAxios.onGet(/myplugin/).reply(200, "window.webpackJsonp.push([[\"myplugin\"], {\"a\": function(e, n, t) {n.default={}} }])");
+        mockAxios.onGet(/nodata/).reply(404);
+        mockAxios.onGet(/translations/).reply(200, {});
+        const store = () => ({
+            dispatch() { },
+            getState() {
+                return {};
+            },
+            subscribe() {
+            },
+            replaceReducer() { }
+        });
+        ConfigUtils.setConfigProp("persisted.reduxStore", store());
+        const MyApp = ({ plugins }) => {
+            if (plugins) {
+                expect(plugins.My).toExist();
+                expect(plugins.Error).toNotExist();
+                expect(mockAxios.history.get.length).toBe(4);
+                expect(mockAxios.history.get[2].url).toBe("myfolder/myplugin.js");
+                expect(mockAxios.history.get[3].url).toBe("myfolder/nodata");
+                done();
+            }
+        };
+        const app = ReactDOM.render(<StandardAppWithExtensions appStore={store} enableExtensions appComponent={MyApp} />, document.getElementById("container"));
+        expect(app).toExist();
+
+
+    });
 });

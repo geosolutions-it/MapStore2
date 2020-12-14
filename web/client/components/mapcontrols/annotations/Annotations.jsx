@@ -11,7 +11,7 @@ import { countBy, head, isUndefined, keys, values } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import uuidv1 from 'uuid/v1';
 
 import { getGeometryGlyphInfo } from '../../../utils/AnnotationsUtils';
@@ -24,6 +24,7 @@ import Loader from '../../misc/Loader';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import defaultConfig from './AnnotationsConfig';
 import SelectAnnotationsFile from './SelectAnnotationsFile';
+import Button from '../../misc/Button';
 
 /**
  * Annotations panel component.
@@ -145,7 +146,8 @@ class Annotations extends React.Component {
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
         textRotationStep: PropTypes.number,
-        measurementAnnotationEdit: PropTypes.bool
+        measurementAnnotationEdit: PropTypes.bool,
+        geodesic: PropTypes.bool
     };
 
     static contextTypes = {
@@ -367,6 +369,7 @@ class Annotations extends React.Component {
             textRotationStep={this.props.textRotationStep}
             annotations={this.props.annotations}
             measurementAnnotationEdit={this.props.measurementAnnotationEdit}
+            geodesic={this.props.geodesic}
         />;
     };
 

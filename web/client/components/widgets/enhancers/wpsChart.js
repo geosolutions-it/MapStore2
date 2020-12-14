@@ -65,13 +65,13 @@ const dataStreamFactory = ($props) =>
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
                 wpsAggregate(getWpsUrl(layer), {featureType: layer.name, ...options, filter}, {
                     timeout: 15000
-                }).map((response) => ({
+                }).map((data) => ({
                     loading: false,
                     isAnimationActive: false,
                     error: undefined,
-                    data: wpsAggregateToChartData(response.data),
-                    series: [{dataKey: `${response.data.AggregationFunctions[0]}(${response.data.AggregationAttribute})`}],
-                    xAxis: {dataKey: response.data.GroupByAttributes[0]}
+                    data: wpsAggregateToChartData(data),
+                    series: [{dataKey: `${data.AggregationFunctions[0]}(${data.AggregationAttribute})`}],
+                    xAxis: {dataKey: data.GroupByAttributes[0]}
                 })).do(onLoad)
                     .catch((e) => Rx.Observable.of({
                         loading: false,
