@@ -205,9 +205,7 @@ export default (viewer) => ({
                 const {visibility = false, features: annotationFeatures = []} = annotationsLayer;
                 // parsing old style structure
                 let features = annotationFeatures.map(ftColl => {
-                    // Update visibility property of the annotation feature
-                    const properties = {...ftColl.properties, visibility};
-                    return {...ftColl,  properties, style: {}, features: (ftColl.features || []).map(ft => {
+                    return {...ftColl, style: {}, features: (ftColl.features || []).map(ft => {
                         let styleType = ft.properties.isCircle && "Circle" || ft.properties.isText && "Text" || ft.geometry.type;
                         let extraStyles = [];
                         if (styleType === "Circle") {
@@ -230,7 +228,8 @@ export default (viewer) => ({
                 return Rx.Observable.of(updateNode(ANNOTATIONS, 'layer', {
                     rowViewer: viewer,
                     features,
-                    style: {}
+                    style: {},
+                    visibility
                 }));
             }
             return Rx.Observable.empty();
@@ -503,8 +502,7 @@ export default (viewer) => ({
         .switchMap(() => {
             return Rx.Observable.from([
                 cleanHighlight(),
-                changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {}),
-                changeLayerProperties(ANNOTATIONS, {visibility: true})
+                changeDrawingStatus("clean", store.getState().annotations?.featureType || '', ANNOTATIONS, [], {})
             ]);
         }),
     confirmCloseAnnotationsEpic: (action$, store) => action$.ofType(CONFIRM_CLOSE_ANNOTATIONS)

@@ -42,7 +42,7 @@ import {
     LOADING,
     SET_DEFAULT_STYLE,
     toggleVisibilityAnnotation,
-    geometryHighlight, EDIT_ANNOTATION
+    geometryHighlight, EDIT_ANNOTATION, CLEAN_HIGHLIGHT
 } from '../../actions/annotations';
 
 import { TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
@@ -635,6 +635,26 @@ describe('annotations Epics', () => {
         });
         const action = changeLayerProperties('annotations', {visibility: true});
         tempStore.dispatch(action);
+    });
+    it('test on close annotations panel', (done) => {
+        const state = {
+            controls: {annotations: {enabled: false}}
+        };
+        testEpic(addTimeoutEpic(closeAnnotationsEpic, 100), 2, toggleControl("annotations"), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                case CLEAN_HIGHLIGHT:
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("clean");
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
     });
     it('save annotation', (done) => {
         const state = {
