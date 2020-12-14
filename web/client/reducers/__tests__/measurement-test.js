@@ -19,7 +19,8 @@ import {
     init,
     setAnnotationMeasurement,
     setMeasurementConfig,
-    setCurrentFeature
+    setCurrentFeature,
+    changeGeometry
 } from '../../actions/measurement';
 
 import { RESET_CONTROLS, setControlProperty } from '../../actions/controls';
@@ -173,5 +174,17 @@ describe('Test the measurement reducer', () => {
             currentFeature: 4
         }, setCurrentFeature());
         expect(state.currentFeature).toBe(2);
+    });
+    it('CHANGED_GEOMETRY', () => {
+        let state = measurement({
+            geomType: "LineString",
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            len: 0,
+            area: 700,
+            features: []
+        }, changeGeometry([{type: "Feature", geometry: {type: "LineString"}}]));
+        expect(state.currentFeature).toBe(0); // current feature index in the features array
     });
 });

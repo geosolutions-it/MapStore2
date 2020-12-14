@@ -137,6 +137,7 @@ function measurement(state = defaultState, action) {
             ...state,
             features,
             geomTypeSelected,
+            currentFeature: features.length - 1, // current feature is the last feature added
             updatedByUI: false,
             isDrawing: false,
             ...(isEmpty(features) && {exportToAnnotation: false})
