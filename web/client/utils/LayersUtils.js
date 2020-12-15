@@ -483,7 +483,8 @@ export const geoJSONToLayer = (geoJSON, id) => {
     };
 };
 export const saveLayer = (layer) => {
-    var defautLayer = {
+
+    return assign({
         id: undefined,
         features: undefined,
         format: undefined,
@@ -527,12 +528,12 @@ export const saveLayer = (layer) => {
         thematic: undefined,
         tooltipOptions: undefined,
         tooltipPlacement: undefined,
-        legendOptions: undefined
-    };
-
-    return assign(defautLayer,
-        layer,
-        layer.thumbURL && layer.thumbURL.split(':')[0] === 'blob' ? { thumbURL: undefined } : { thumbURL: layer.thumbURL });
+        legendOptions: undefined,
+        tileSize: undefined,
+        version: undefined
+    },
+    layer,
+    layer.thumbURL && layer.thumbURL.split(':')[0] === 'blob' ? { thumbURL: undefined } : { thumbURL: layer.thumbURL });
 };
 /**
 * default initial constant regex rule for searching for a /geoserver/ string in a url

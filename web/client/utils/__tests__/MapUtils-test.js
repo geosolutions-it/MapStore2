@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
+import chai from 'chai';
 
-import { keys, sortBy } from 'lodash';
+import { keys, sortBy, find, cloneDeep } from 'lodash';
 
 import {
     RESOLUTIONS_HOOK,
@@ -48,6 +49,24 @@ const MULTI_POINT = "MultiPoint";
 const MULTI_LINE_STRING = "MultiLineString";
 const MULTI_POLYGON = "MultiPolygon";
 const GEOMETRY_COLLECTION = "GeometryCollection";
+const checkMapConfiguration = function(saved, expected, layersIDList) {
+    // Clone and seperated layers
+    var savedWithoutLayers = cloneDeep(saved);
+    var expectedWithoutLayers = cloneDeep(expected);
+    var layersSaved;
+    var layersExpected;
+    delete savedWithoutLayers.map.layers;
+    delete expectedWithoutLayers.map.layers;
+    // Separated layers
+    layersSaved = saved.map.layers;
+    layersExpected = expected.map.layers;
+    // Check only deep map
+    chai.expect(savedWithoutLayers).to.deep.include(expectedWithoutLayers);
+    // Check Layers at least expected fields
+    layersIDList.forEach(function(id) {
+        chai.expect(find(layersSaved, {id: id})).to.deep.include(find(layersExpected, {id: id}));
+    });
+};
 describe('Test the MapUtils', () => {
     it('dpi2dpm', () => {
         const inch2mm = 25.4;
@@ -257,7 +276,7 @@ describe('Test the MapUtils', () => {
             };
 
             const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
-            expect(saved).toEqual({
+            checkMapConfiguration(saved, {
                 map: {
                     center: {crs: 'EPSG:4326', x: 0, y: 0},
                     backgrounds: [],
@@ -489,7 +508,7 @@ describe('Test the MapUtils', () => {
                     zoom: 10
                 },
                 version: 2
-            });
+            }, flat.map(function(l) {return l.id;}));
         });
 
         it('save map configuration with backgrounds', () => {
@@ -618,7 +637,7 @@ describe('Test the MapUtils', () => {
             };
 
             const saved = saveMapConfiguration(mapConfig, flat, groups, backgrounds, '', {});
-            expect(saved).toEqual({
+            checkMapConfiguration(saved, {
                 map: {
                     center: {crs: 'EPSG:4326', x: 0, y: 0},
                     backgrounds: [{id: 'layer005', thumbnail: 'data'}],
@@ -948,7 +967,7 @@ describe('Test the MapUtils', () => {
                     zoom: 10
                 },
                 version: 2
-            });
+            }, flat.map(function(l) {return l.id;}));
         });
 
         it('save map configuration with map options', () => {
@@ -1052,7 +1071,7 @@ describe('Test the MapUtils', () => {
                 }
             };
             const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
-            expect(saved).toEqual({
+            checkMapConfiguration(saved, {
                 map: {
                     center: { crs: 'EPSG:4326', x: 0, y: 0 },
                     backgrounds: [],
@@ -1261,7 +1280,7 @@ describe('Test the MapUtils', () => {
                     zoom: 10
                 },
                 version: 2
-            });
+            }, flat.map(function(l) {return l.id;}));
         });
 
         it('save map configuration with tile matrix', () => {
@@ -1354,7 +1373,7 @@ describe('Test the MapUtils', () => {
             };
 
             const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
-            expect(saved).toEqual({
+            checkMapConfiguration(saved, {
                 map: {
                     center: {crs: 'EPSG:4326', x: 0, y: 0},
                     backgrounds: [],
@@ -1547,7 +1566,7 @@ describe('Test the MapUtils', () => {
                     }
                 },
                 version: 2
-            });
+            }, flat.map(function(l) {return l.id;}));
         });
         it('save map configuration with annotations with geodesic lines', () => {
             const flat = [
@@ -1631,7 +1650,7 @@ describe('Test the MapUtils', () => {
             };
 
             const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
-            expect(saved).toEqual({
+            checkMapConfiguration(saved, {
                 version: 2,
                 map: {
                     center: {
@@ -1733,7 +1752,7 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined
                     }],
                     text_search_config: '', bookmark_search_config: {} }
-            });
+            }, flat.map(function(l) {return l.id;}));
         });
 
         it('save map configuration with tile matrix and map info configuration', () => {
@@ -1789,7 +1808,7 @@ describe('Test the MapUtils', () => {
                 zoom: 10
             };
             const saved = saveMapConfiguration(mapConfig, flat, groups, [], '',  {}, { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
-            expect(saved).toEqual({
+            checkMapConfiguration(saved, {
                 map: {
                     center: {crs: 'EPSG:4326', x: 0, y: 0},
                     backgrounds: [],
@@ -1891,7 +1910,7 @@ describe('Test the MapUtils', () => {
                     showEmptyMessageGFI: false
                 },
                 version: 2
-            });
+            }, flat.map(function(l) {return l.id;}));
         });
 
         it('save map configuration with tile matrix and map info configuration', () => {
@@ -1947,7 +1966,7 @@ describe('Test the MapUtils', () => {
                 zoom: 10
             };
             const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {}, { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
-            expect(saved).toEqual({
+            checkMapConfiguration(saved, {
                 map: {
                     center: {crs: 'EPSG:4326', x: 0, y: 0},
                     backgrounds: [],
@@ -2049,7 +2068,7 @@ describe('Test the MapUtils', () => {
                     showEmptyMessageGFI: false
                 },
                 version: 2
-            });
+            }, flat.map(function(l) {return l.id;}));
         });
 
         it('save map configuration with bookmark config', () => {
@@ -2145,7 +2164,7 @@ describe('Test the MapUtils', () => {
                     options: {west: -123, south: 42, east: -60, north: 53},
                     title: 'Vancover', layerVisibilityReload: true
                 }]});
-            expect(saved).toEqual({
+            checkMapConfiguration(saved, {
                 map: {
                     center: {crs: 'EPSG:4326', x: 0, y: 0},
                     backgrounds: [],
@@ -2382,7 +2401,7 @@ describe('Test the MapUtils', () => {
                     zoom: 10
                 },
                 version: 2
-            });
+            }, flat.map(function(l) {return l.id;}));
         });
     });
 
