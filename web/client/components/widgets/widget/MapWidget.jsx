@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { omit, isEmpty } from 'lodash';
+import { omit } from 'lodash';
 import React from 'react';
 import { withHandlers } from 'recompose';
 
@@ -33,11 +33,10 @@ export default ({
     dataGrid = {},
     onDelete = () => {},
     headerStyle,
-    env,
-    maximized
+    env
 } = {}) => {
-    const { mapInfoControl } = map;
-    const enablePopupTools = !isEmpty(maximized) && maximized.widget.widgetType === "map" && mapInfoControl;
+    const { size: {height: mapHeight, width: mapWidth}, mapInfoControl } = map;
+    const enablePopupTools = mapHeight > 400 && mapWidth > 400 && mapInfoControl;
     return (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={topRightItems}
