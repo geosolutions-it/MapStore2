@@ -36,7 +36,7 @@ export default compose(
             bottom: 'auto',
             top: 0,
             left: 0,
-            zIndex: 1330
+            zIndex: 99
         } : {};
         const maximizedProps = maximized?.widget ? {
             width,
