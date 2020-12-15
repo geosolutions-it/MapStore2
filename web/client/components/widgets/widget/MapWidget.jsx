@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { omit } from 'lodash';
+import { omit, isEmpty } from 'lodash';
 import React from 'react';
 import { withHandlers } from 'recompose';
 
@@ -34,10 +34,10 @@ export default ({
     onDelete = () => {},
     headerStyle,
     env,
-    enableIdentify
+    maximized
 } = {}) => {
-    const { size: {height: mapHeight, width: mapWidth} } = map;
-    const enableIdentifyOnMap = enableIdentify && mapHeight > 400 && mapWidth > 400;
+    const { mapInfoControl } = map;
+    const enablePopupTools = !isEmpty(maximized) && maximized.widget.widgetType === "map" && mapInfoControl;
     return (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={topRightItems}
@@ -50,12 +50,11 @@ export default ({
                 </div>
             }>
             <MapView
-                tools={enableIdentifyOnMap ? ['popup'] : []}
+                tools={enablePopupTools ? ['popup'] : []}
                 updateProperty={updateProperty}
                 id={id}
                 map={{
-                    ...omit(map, 'mapStateSource'),
-                    mapInfoControl: true
+                    ...omit(map, 'mapStateSource')
                 }}
                 mapStateSource={mapStateSource}
                 hookRegister={hookRegister}

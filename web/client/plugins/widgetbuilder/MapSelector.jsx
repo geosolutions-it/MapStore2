@@ -16,7 +16,7 @@ export default compose(
     connect(
         () => ({}), {
             onMapSelected: ({ map }) => onEditorChange("map", normalizeMap(map)),
-            onSetIdentifyTrue: () => onEditorChange("enableIdentify", true),
+            onSetIdentifyTrue: () => onEditorChange("map.mapInfoControl", true),
             onResetChange: onEditorChange
 
         }),

@@ -29,11 +29,11 @@ buttons={buttons || [...(step === 0 ? tocButtons : []), {
 },
 ...stepButtons,
 {
-    onClick: () => onChange("enableIdentify", !editorData?.enableIdentify),
+    onClick: () => onChange("map.mapInfoControl", !editorData?.map?.mapInfoControl),
     visible: dashBoardEditing && editorData?.widgetType === "map",
     glyph: "info-sign",
-    bsStyle: editorData?.enableIdentify ? "success" : "primary",
-    tooltipId: editorData?.enableIdentify ? "widgets.builder.wizard.disableIdentifyTool" : "widgets.builder.wizard.enableIdentifyTool"
+    bsStyle: editorData?.map?.mapInfoControl ? "success" : "primary",
+    tooltipId: editorData?.map?.mapInfoControl ? "widgets.builder.wizard.disableIdentifyTool" : "widgets.builder.wizard.enableIdentifyTool"
 },
 {
     onClick: () => toggleLayerSelector(true),
