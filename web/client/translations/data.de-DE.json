@@ -1727,6 +1727,8 @@
                     "textPlaceholder": "Text eingeben...",
                     "useThisMap": "Benutze diese Karte",
                     "configureMapOptions": "Kartenoptionen konfigurieren",
+                    "enableIdentifyTool": "Identifizierungswerkzeug aktivieren",
+                    "disableIdentifyTool": "Identifizierungswerkzeug deaktivieren",
                     "preview": "Vorschau",
                     "addLayer": "Fügt der Karte eine Ebene hinzu",
                     "useTheSelectedLayer": "Verwende die ausgewählte Ebene",

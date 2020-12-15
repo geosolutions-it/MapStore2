@@ -12,6 +12,7 @@ import getProjectionDefs from '../../map/enhancers/getProjectionDefs';
 import { handlingUnsupportedProjection } from '../../map/enhancers/handlingUnsupportedProjection';
 import mapType from '../../map/enhancers/mapType';
 import onMapViewChanges from '../../map/enhancers/onMapViewChanges';
+import {withOnClick, withPopupSupport} from '../../common/enhancers/withIdentifyPopup';
 import BaseMap from '../../map/BaseMap';
 
 export default compose(
@@ -19,6 +20,8 @@ export default compose(
     autoResize(0),
     autoMapType,
     mapType,
+    withPopupSupport,
+    withOnClick,
     getProjectionDefs,
     handlingUnsupportedProjection
 )(BaseMap);

@@ -17,7 +17,7 @@ import '../../../../../../libs/bindings/rxjsRecompose';
 const handleMapSelect = compose(
     withState('selected', "setSelected", null),
     withHandlers({
-        onMapChoice: ({ onMapSelected = () => { }, selectedSource = {}, includeMapId = false } = {}) => map =>
+        onMapChoice: ({ onMapSelected = () => { }, onSetIdentifyTrue = () => {}, selectedSource = {}, includeMapId = false } = {}) => map =>
             (typeof map.id === 'string'
                 ? axios.get(map.id).then(response => response.data)
                 : GeoStoreDAO.getData(map.id, {baseURL: selectedSource.baseURL})
@@ -43,7 +43,7 @@ const handleMapSelect = compose(
                 return onMapSelected({
                     map: res
                 });
-            })
+            }).then(() => onSetIdentifyTrue()) // enable identify tool on map widgets
     }),
     mapPropsStream(props$ =>
         props$.distinctUntilKeyChanged('selected').filter(({ selected } = {}) => selected).startWith({})

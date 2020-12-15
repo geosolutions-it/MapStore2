@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import loadingState from '../../misc/enhancers/loadingState';
-import {defaultViewerHandlers, defaultViewerDefaultProps} from '../../data/identify/enhancers/defaultViewer';
+import loadingState from '../misc/enhancers/loadingState';
+import {defaultViewerHandlers, defaultViewerDefaultProps} from '../data/identify/enhancers/defaultViewer';
 import { compose, defaultProps, withStateHandlers} from 'recompose';
-import Viewer from '../../data/identify/DefaultViewer';
+import Viewer from '../data/identify/DefaultViewer';
 import {isArray} from 'lodash';
-import SwipeHeader from '../../data/identify/SwipeHeader';
+import SwipeHeader from '../data/identify/SwipeHeader';
 
 /**
  * Container that render only the selected result
