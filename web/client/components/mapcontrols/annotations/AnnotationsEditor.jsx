@@ -320,7 +320,7 @@ class AnnotationsEditor extends React.Component {
                                 tooltipId: "annotations.back",
                                 visible: this.props.showBack,
                                 onClick: () => {
-                                    this.props.onCancelEdit();
+                                    this.props.onCancelEdit(this.props?.feature?.properties);
                                     this.props.onCancel(); this.props.onCleanHighlight();
                                 }
                             }, {
@@ -376,7 +376,7 @@ class AnnotationsEditor extends React.Component {
                                         this.props.onToggleUnsavedChangesModal();
                                     } else {
                                         this.props.onResetCoordEditor();
-                                        this.props.onCancelEdit();
+                                        this.props.onCancelEdit(this.props.editing?.properties);
                                         // Reset geometry editor tab
                                         this.setState({...this.state, tabValue: 'coordinates'});
                                     }
@@ -516,7 +516,7 @@ class AnnotationsEditor extends React.Component {
                 show
                 modal
                 onClose={this.props.onCancelClose}
-                onConfirm={this.props.onConfirmClose}
+                onConfirm={()=> this.props.onConfirmClose(this.props.editing?.properties)}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
@@ -530,7 +530,7 @@ class AnnotationsEditor extends React.Component {
                 onClose={this.props.onToggleUnsavedChangesModal}
                 onConfirm={() => {
                     this.props.selected && this.props.onResetCoordEditor();
-                    this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal();
+                    this.props.onCancelEdit(this.props.editing?.properties); this.props.onToggleUnsavedChangesModal();
                 }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
@@ -855,7 +855,7 @@ class AnnotationsEditor extends React.Component {
 
     setAnnotationMeasurement = () => {
         // Excluding geometry types not supported by measurement
-        this.props.onSetAnnotationMeasurement(this.props.editing.features.filter(f=> f.geometry.type !== 'Point' && !f.properties.isCircle), this.props.editing?.properties.id);
+        this.props.onSetAnnotationMeasurement(this.props.editing.features.filter(f=> f.geometry.type !== 'Point' && !f.properties.isCircle), this.props.editing?.properties);
         this.hideWarning();
     }
 

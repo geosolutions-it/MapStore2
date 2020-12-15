@@ -13,7 +13,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { find } from 'lodash';
 import configureMockStore from 'redux-mock-store';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
-import { ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES, changeLayerProperties } from '../../actions/layers';
+import { ADD_LAYER, UPDATE_NODE, changeLayerProperties, changeGroupProperties } from '../../actions/layers';
 import { CHANGE_DRAWING_STATUS, drawingFeatures, DRAWING_FEATURE, selectFeatures } from '../../actions/draw';
 import { set } from '../../utils/ImmutableUtils';
 import { CLOSE_IDENTIFY, HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, purgeMapInfoResults } from '../../actions/mapInfo';
@@ -42,7 +42,9 @@ import {
     LOADING,
     SET_DEFAULT_STYLE,
     toggleVisibilityAnnotation,
-    geometryHighlight, EDIT_ANNOTATION
+    geometryHighlight, EDIT_ANNOTATION, CLEAN_HIGHLIGHT, TOGGLE_ANNOTATION_VISIBILITY,
+    addNewFeature,
+    setEditingFeature
 } from '../../actions/annotations';
 
 import { TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
@@ -51,18 +53,18 @@ import annotationsEpics from '../annotations';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 
 const {
-    addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
+    addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, setEditingFeatureEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlightAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, highlightGeometryEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, hideAnnotationGroupEpic, highlightGeometryEpic
 } = annotationsEpics({});
 
-const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
+const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, setEditingFeatureEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlightAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, highlightGeometryEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, hideAnnotationGroupEpic, highlightGeometryEpic
 );
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -317,30 +319,6 @@ describe('annotations Epics', () => {
             done();
         }, state);
     });
-    it('add annotations layer on first save', (done) => {
-        store = mockStore({
-            annotations: {
-                editing: {
-                    style: {}
-                },
-                originalStyle: {}
-            },
-            layers: {
-                flat: []
-            }
-        });
-        let action = saveAnnotation('1', {}, {}, {}, true, {});
-
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(ADD_LAYER);
-                done();
-            }
-        });
-
-        store.dispatch(action);
-    });
     it('update annotations layer, MAP_CONFIG_LOADED', (done) => {
         let action = configureMap({});
 
@@ -366,7 +344,7 @@ describe('annotations Epics', () => {
             expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
-                case CHANGE_LAYER_PROPERTIES:
+                case TOGGLE_ANNOTATION_VISIBILITY:
                     break;
                 case CHANGE_DRAWING_STATUS:
                     break;
@@ -488,7 +466,7 @@ describe('annotations Epics', () => {
             if (actions.length >= 2) {
                 expect(actions[1].type).toBe(UPDATE_NODE);
                 expect(actions[1].options.features.length).toBe(1);
-                expect(actions[1].options.features[0].properties.visibility).toBe(false);
+                expect(actions[1].options.visibility).toBe(false);
                 done();
             }
         });
@@ -577,7 +555,81 @@ describe('annotations Epics', () => {
         const action = confirmRemoveAnnotation('1', 'geometry');
         tempStore.dispatch(action);
     });
-    it('toggle annotation visibility', (done) => {
+    it('add annotation', (done) => {
+        const state = {
+            draw: {drawMethod: "Test"},
+            annotations: {editing: defaultState.annotations.editing, featureType: "Point"},
+            layers: {flat: [{id: "annotations", features: [{...ft, properties: {id: '1'}}]}]}
+        };
+        testEpic(addTimeoutEpic(addAnnotationEpic, 100), 3, addNewFeature(), actions => {
+            expect(actions.length).toBe(3);
+            actions.map((action) => {
+                switch (action.type) {
+                case TOGGLE_ANNOTATION_VISIBILITY:
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    break;
+                case HIDE_MAPINFO_MARKER:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
+    });
+    it('add annotations layer on first save', (done) => {
+        store = mockStore({
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
+            layers: {
+                flat: []
+            }
+        });
+        let action = saveAnnotation('1', {}, {}, {}, true, {});
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 4) {
+                expect(actions[1].type).toBe(ADD_LAYER);
+                expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[3].type).toBe("ANNOTATIONS:VISIBILITY");
+                expect(actions[3].visibility).toBe(true);
+                expect(actions[3].id).toBe("1");
+                done();
+            }
+        });
+
+        store.dispatch(action);
+    });
+    it('set measurement editing feature annotation', (done) => {
+        const state = {
+            draw: {drawMethod: "Test"},
+            annotations: {editing: defaultState.annotations.editing, featureType: "LineString"},
+            layers: {flat: [{id: "annotations", features: [{...ft, properties: {id: '1'}}]}]}
+        };
+        testEpic(addTimeoutEpic(setEditingFeatureEpic, 100), 3, setEditingFeature({...ft, visibility: false}), actions => {
+            expect(actions.length).toBe(3);
+            actions.map((action) => {
+                switch (action.type) {
+                case TOGGLE_ANNOTATION_VISIBILITY:
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    break;
+                case HIDE_MAPINFO_MARKER:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
+    });
+    it('toggle annotation visibility to set annotation layer visibility', (done) => {
         const tempStore = mockStore({
             layers: {
                 flat: [
@@ -590,6 +642,28 @@ describe('annotations Epics', () => {
             if (actions.length >= 2) {
                 expect(actions[0].type).toBe("ANNOTATIONS:VISIBILITY");
                 expect(actions[1].type).toBe(UPDATE_NODE);
+                expect(actions[1].options.visibility).toBe(false);
+                expect(actions[1].options.features[0].properties).toEqual({id: "1", visibility: false});
+                done();
+            }
+        });
+        const action = toggleVisibilityAnnotation('1');
+        tempStore.dispatch(action);
+    });
+    it('toggle annotation visibility of one feature/annotation', (done) => {
+        const tempStore = mockStore({
+            layers: {
+                flat: [
+                    {id: "annotations", features: [{properties: {id: '1', visibility: false}}]}
+                ]
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = tempStore.getActions();
+            if (actions.length >= 2) {
+                expect(actions[0].type).toBe("ANNOTATIONS:VISIBILITY");
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                expect(actions[1].options.features[0].properties).toEqual({id: "1", visibility: true});
                 done();
             }
         });
@@ -636,13 +710,58 @@ describe('annotations Epics', () => {
         const action = changeLayerProperties('annotations', {visibility: true});
         tempStore.dispatch(action);
     });
+    it('toggle annotation visibility on CHANGE_GROUP_PROPERTIES', (done) => {
+        const tempStore = mockStore({
+            layers: {
+                flat: [
+                    {id: "annotations", features: [{properties: {id: '1'}}], visibility: false}
+                ],
+                groups: [
+                    {
+                        id: 1, title: "Group1", nodes: ["annotations"]
+                    }
+                ]
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = tempStore.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                expect(actions[1].options.features.length).toBe(1);
+                expect(actions[1].options.features[0].properties).toEqual({"id": "1", "visibility": true});
+                done();
+            }
+        });
+        const action = changeGroupProperties(1, {visibility: true});
+        tempStore.dispatch(action);
+    });
+    it('test on close annotations panel', (done) => {
+        const state = {
+            controls: {annotations: {enabled: false}}
+        };
+        testEpic(addTimeoutEpic(closeAnnotationsEpic, 100), 2, toggleControl("annotations"), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                case CLEAN_HIGHLIGHT:
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("clean");
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
+    });
     it('save annotation', (done) => {
         const state = {
             annotations: {featureType: "Point"},
             layers: {flat: [{id: "annotations", features: [{...ft, properties: {id: '1'}}]}]}
         };
-        testEpic(addTimeoutEpic(saveAnnotationEpic, 100), 3, saveAnnotation('1', {}, {}), actions => {
-            expect(actions.length).toBe(3);
+        testEpic(addTimeoutEpic(saveAnnotationEpic, 100), 2, saveAnnotation('1', {}, {}), actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                 case UPDATE_NODE:
@@ -650,10 +769,6 @@ describe('annotations Epics', () => {
                 case CHANGE_DRAWING_STATUS:
                     expect(action.owner).toBe('annotations');
                     expect(action.method).toBe('Point');
-                    break;
-                case CHANGE_LAYER_PROPERTIES:
-                    expect(action.newProperties).toEqual({visibility: true});
-                    expect(action.layer).toBe('annotations');
                     break;
                 default:
                     expect(false).toBe(true);
@@ -672,7 +787,7 @@ describe('annotations Epics', () => {
             const actions = customStore.getActions();
             if (actions.length >= 3) {
                 expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
-                expect(actions[2].type).toBe(CHANGE_LAYER_PROPERTIES);
+                expect(actions[2].type).toBe(TOGGLE_ANNOTATION_VISIBILITY);
                 done();
             }
         });

@@ -100,7 +100,7 @@ describe('measurement epics', () => {
         testEpic(
             addTimeoutEpic(addAnnotationFromMeasureEpic, 10),
             NUMBER_OF_ACTIONS, [
-                addAnnotation(features, textLabels, uom, false, 1)
+                addAnnotation(features, textLabels, uom, false, {id: 1})
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 expect(actions[0].type).toBe("TOGGLE_CONTROL");
@@ -115,6 +115,8 @@ describe('measurement epics', () => {
                 expect(actions[3].feature.features[1].geometry.type).toBe("Point");
                 expect(actions[3].feature.features[2].geometry.type).toBe("Point");
                 expect(actions[3].feature.features[3].geometry.type).toBe("Point");
+                expect(actions[3].feature.properties.id).toBe(1);
+                expect(actions[3].feature.visibility).toBe(true);
                 done();
             }, null);
     });
@@ -125,7 +127,7 @@ describe('measurement epics', () => {
         testEpic(
             addTimeoutEpic(addAnnotationFromMeasureEpic, 10),
             NUMBER_OF_ACTIONS, [
-                addAnnotation(features, textLabels, uom, true, 1)
+                addAnnotation(features, textLabels, uom, true, {id: 1, visibility: false})
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 const resultFeatures = actions[3].feature.features;
@@ -141,6 +143,7 @@ describe('measurement epics', () => {
                 expect(resultFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72°");
                 expect(resultFeatures[0].properties).toExist();
                 expect(resultFeatures[0].properties.geometryGeodesic).toExist();
+                expect(actions[3].feature.visibility).toBe(false);
                 done();
             }, null);
     });
@@ -232,7 +235,7 @@ describe('measurement epics', () => {
             }, state);
     });
     it('test closeMeasureEpics', (done) => {
-        const NUMBER_OF_ACTIONS = 2;
+        const NUMBER_OF_ACTIONS = 1;
         const state = {
             controls: {
                 measure: {
@@ -249,9 +252,6 @@ describe('measurement epics', () => {
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 expect(actions[0].type).toBe("ANNOTATIONS:CLEAN_HIGHLIGHT");
-                expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
-                expect(actions[1].newProperties).toEqual({"visibility": true});
-                expect(actions[1].layer).toBe("annotations");
                 done();
             }, state);
     });

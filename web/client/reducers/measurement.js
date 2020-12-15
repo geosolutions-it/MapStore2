@@ -151,7 +151,7 @@ function measurement(state = defaultState, action) {
         };
     }
     case SET_ANNOTATION_MEASUREMENT: {
-        let {features} = action;
+        let {features, properties} = action;
         const geomTypeSelected = getGeomTypeSelected(features);
         return {
             ...state,
@@ -160,7 +160,8 @@ function measurement(state = defaultState, action) {
             updatedByUI: true,
             isDrawing: false,
             exportToAnnotation: true,
-            id: action.id
+            id: properties.id,
+            visibility: properties.visibility
         };
     }
     case SET_TEXT_LABELS: {
