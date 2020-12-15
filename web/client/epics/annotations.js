@@ -15,7 +15,7 @@ import { saveAs } from 'file-saver';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { TOGGLE_CONTROL, toggleControl, setControlProperty } from '../actions/controls';
-import { addLayer, updateNode, removeLayer, CHANGE_LAYER_PROPERTIES } from '../actions/layers';
+import { addLayer, updateNode, removeLayer, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES } from '../actions/layers';
 import { changeMeasurement } from '../actions/measurement';
 import { error } from '../actions/notifications';
 import { closeFeatureGrid } from '../actions/featuregrid';
@@ -79,8 +79,9 @@ import { createSvgUrl } from '../utils/VectorStyleUtils';
 
 import { isFeatureGridOpen } from '../selectors/featuregrid';
 import { queryPanelSelector, measureSelector } from '../selectors/controls';
-import { annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector } from '../selectors/annotations';
+import { annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector, editingSelector } from '../selectors/annotations';
 import { mapNameSelector } from '../selectors/map';
+import { groupsSelector } from '../selectors/layers';
 
 
 import symbolMissing from '../product/assets/symbols/symbolMissing.svg';
@@ -191,7 +192,7 @@ const mergeGeometry = (features) => {
 const createNewFeature = (action) => {
     return {
         type: "FeatureCollection",
-        properties: assign({}, action.properties, action.fields, {id: action.id}),
+        properties: assign({}, action.properties, action.fields, {id: action.id}, {visibility: true}),
         features: action.geometry,
         style: assign({}, action.style, {highlight: false})
     };
@@ -360,7 +361,8 @@ export default (viewer) => ({
                     handleClickOnLayer: true
                 })
             ]).concat([
-                changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {})
+                changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {}),
+                ...(action.newFeature ? [toggleVisibilityAnnotation(action.id, true)] : [])
             ]));
         }),
     cancelEditAnnotationEpic: (action$, store) => action$.ofType(CANCEL_EDIT_ANNOTATION)
@@ -448,20 +450,42 @@ export default (viewer) => ({
         }),
     showHideAnnotationEpic: (action$, store) => action$.ofType(TOGGLE_ANNOTATION_VISIBILITY, CHANGE_LAYER_PROPERTIES)
         .filter(action=>
-            (action.type === CHANGE_LAYER_PROPERTIES && action.layer === ANNOTATIONS) || (action.type === TOGGLE_ANNOTATION_VISIBILITY))
+            (action.type === CHANGE_LAYER_PROPERTIES && action.layer === ANNOTATIONS && !isUndefined(action.newProperties.visibility))
+            || (action.type === TOGGLE_ANNOTATION_VISIBILITY))
         .switchMap((action) => {
             const feature = (f, visibility = false) => assign({}, f, {
                 properties: {...f.properties, visibility}
             });
+            const state = store.getState();
             let isLayerPropertyChange = action.layer === ANNOTATIONS;
-            const annotationLayers = annotationsLayerSelector(store.getState());
+            const annotationLayers = annotationsLayerSelector(state);
+            const isAnnotationEditing =  !isEmpty(editingSelector(state));
 
             // Update visibility of annotations from TOC or annotation panel
             if (!isEmpty(annotationLayers)) {
-                const features = (annotationLayers.features || []).map(f => isLayerPropertyChange ? feature(f, action?.newProperties?.visibility)
-                    : (f.properties.id === action.id) ? feature(f, !isUndefined(action.visibility) ? action.visibility : !f.properties?.visibility) : f);
+                // Update any missing visibility properties of the annotation (Happens with old annotation)
+                let features = (annotationLayers.features || []).map(ft=> ({...ft, properties: {...ft.properties, visibility: isUndefined(ft.properties.visibility) ? true : ft.properties.visibility}}));
+                features = features.map(f => isLayerPropertyChange ? feature(f, action?.newProperties?.visibility)
+                    : (f.properties.id === action.id)
+                        ? feature(f, !isUndefined(action.visibility) ? action.visibility : !f.properties.visibility) : f);
                 const layerVisibility = !!features?.filter(f => f.properties.visibility)?.length;
-                return Rx.Observable.of(updateNode(ANNOTATIONS, 'layer', {features, visibility: layerVisibility}));
+                return Rx.Observable.of(updateNode(ANNOTATIONS, 'layer', {features,
+                    // Update visibility of the layer when not in edit mode
+                    ...(!isAnnotationEditing && {visibility: layerVisibility})
+                }));
+            }
+            return Rx.Observable.empty();
+        }),
+    hideAnnotationGroupEpic: (action$, store) => action$.ofType(CHANGE_GROUP_PROPERTIES)
+        .filter(action=> {
+            const groupUpdated = head((groupsSelector(store.getState()) || []).filter(group => group.id === action.group));
+            return findIndex(groupUpdated.nodes, node => node.id === ANNOTATIONS) !== -1 && !isUndefined(action.newProperties.visibility);
+        }).switchMap(action=> {
+            const state = store.getState();
+            const annotationLayers = annotationsLayerSelector(state);
+            if (!isEmpty(annotationLayers) && !isEmpty(annotationLayers.features)) {
+                const features = annotationLayers.features.map(ft=> ({...ft, properties: {...ft.properties, visibility: action.newProperties.visibility}}));
+                return Rx.Observable.of(updateNode(ANNOTATIONS, 'layer', {features}));
             }
             return Rx.Observable.empty();
         }),
