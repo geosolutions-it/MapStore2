@@ -629,7 +629,7 @@ describe('annotations Epics', () => {
             done();
         }, state);
     });
-    it('toggle annotation visibility to enable the annotation layer', (done) => {
+    it('toggle annotation visibility to set annotation layer visibility', (done) => {
         const tempStore = mockStore({
             layers: {
                 flat: [
