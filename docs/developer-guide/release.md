@@ -35,6 +35,7 @@ Replacing:
 - [ ]  If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy by updating the `branch` parameter in the build configuration page to `YYYY.XX.xx`
 - [ ] Fix `pom.xml` to stable versions ( no `-SNAPSHOT` in release).
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
+- [ ] Increment version in package.json.
 - [ ] Test on QA [http://qa.mapstore.geo-solutions.it/mapstore/](http://qa.mapstore.geo-solutions.it/mapstore/)
     * Any fix must be done on **YYYY.XX.mm**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
