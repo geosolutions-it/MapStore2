@@ -71,7 +71,7 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
                 use: [{
                     loader: 'url-loader',
                     options: {
-                        name: "assets/img/[path][name][chunkhash:8].[ext]",
+                        name: "assets/img/[path][name][hash].[ext]",
                         limit: 8192
                     }
                 }] // inline base64 URLs for <=8k images, direct URLs for the rest

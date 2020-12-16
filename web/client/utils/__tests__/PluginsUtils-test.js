@@ -11,7 +11,6 @@ import {Provider} from 'react-redux';
 import expect from 'expect';
 import PluginsUtils from '../PluginsUtils';
 import assign from 'object-assign';
-import axios from '../../libs/ajax';
 
 import MapSearchPlugin from '../../plugins/MapSearch';
 
