@@ -22,11 +22,11 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
     mode: prod ? "production" : "development",
     entry: {},
     optimization: {
-        concatenateModules: true,
-        minimize: !!false
+        minimize: !!prod
     },
     resolve: {
         fallback: {
+            path: false,
             timers: false,
             stream: false
         },
@@ -47,13 +47,15 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
         rules: [
             {
                 test: /\.css$/,
-                use: [prod ? MiniCssExtractPlugin.loader : "style-loader", // because HMR do not work with mini-css plugin
+                use: [
+                    prod ? MiniCssExtractPlugin.loader : "style-loader", // because HMR do not work with mini-css plugin
                     {
                         loader: 'css-loader',
                         options: {
                             minimize: true
                         }
-                    }]
+                    }
+                ]
             },
             {
                 test: /\.jsx?$/,
@@ -64,7 +66,16 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
                         configFile: path.join(__dirname, 'babel.config.js')
                     }
                 }]
-            }
+            }, {
+                test: /\.(png|jpg|gif)$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        name: "assets/img/[path][name][chunkhash:8].[ext]",
+                        limit: 8192
+                    }
+                }] // inline base64 URLs for <=8k images, direct URLs for the rest
+            },
         ]
     },
     output: {
