@@ -8,9 +8,11 @@
 
 
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
-// TODO: a finest system should check package.json dependencies to share them all.
-// here some code that started to do this (with some fixes for issues with module resolution).
+
+// Takes package.json dependencies to share them all.
 const dependencies = require('../package.json').dependencies;
+
+// excludes some problematic modules from sharing
 const excludes = [
     "react-draft-wysiwyg", "html-to-draftjs", "geostyler-geocss-parser", "@geosolutions/wkt-parser", "@turf/bbox-polygon"
 ];
