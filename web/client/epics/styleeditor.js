@@ -206,6 +206,12 @@ export const toggleStyleEditorEpic = (action$, store) =>
 
             const geoserverName = findGeoServerName(layer);
             if (!geoserverName) {
+                if (layer.availableStyles) {
+                    return Rx.Observable.of(
+                        updateSettingsParams({ availableStyles: layer.availableStyles  }),
+                        loadedStyle()
+                    );
+                }
                 return getLayerCapabilities(layer)
                     .switchMap((capabilities) => {
                         const layerCapabilities = formatCapabitiliesOptions(capabilities);
