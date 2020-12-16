@@ -23,7 +23,8 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
         'karma-webpack',
         'karma-mocha',
         'karma-mocha-reporter',
-        'karma-coverage'
+        'karma-coverage',
+        'karma-firefox-launcher'
 
     ],
 
