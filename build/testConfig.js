@@ -1,7 +1,7 @@
 const assign = require('object-assign');
 const nodePath = require('path');
 const webpack = require('webpack');
-
+const ProvidePlugin = require("webpack/lib/ProvidePlugin");
 
 module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
     browsers,
@@ -131,6 +131,9 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
             extensions: ['.js', '.json', '.jsx']
         },
         plugins: [
+            new ProvidePlugin({
+                Buffer: ['buffer', 'Buffer']
+            }),
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': JSON.stringify('development')
             }),

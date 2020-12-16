@@ -35,6 +35,7 @@ describe('StandardApp withExtensions', () => {
         mockAxios = null;
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        document.head.innerHTML = '';
         ConfigUtils.setLocalConfigurationFile('localConfig.json');
         ConfigUtils.setConfigProp("persisted.reduxStore", undefined);
         setTimeout(done);
@@ -43,11 +44,10 @@ describe('StandardApp withExtensions', () => {
         mockAxios = new MockAdapter(axios);
         mockAxios.onGet(/localconfig/i).reply(200, {});
         mockAxios.onGet(/extensions\.json/i).reply(200, {
-            MyPlugin: {
-                bundle: "myplugin.js"
+            My: {
+                bundle: "base/web/client/test-resources/extensions/myextension.js"
             }
         });
-        mockAxios.onGet(/myplugin/i).reply(200, "(window.webpackJsonp = window.webpackJsonp || []).push([[\"myplugin\"], {\"Extension.jsx\": function(e, n, t) {n.default = {name: \"My\"};}}]);");
         const store = () => ({
             dispatch() { },
             getState() {
@@ -139,14 +139,13 @@ describe('StandardApp withExtensions', () => {
         mockAxios = new MockAdapter(axios);
         mockAxios.onGet(/localconfig/i).reply(200, {});
         mockAxios.onGet(/extensions\.json/i).reply(200, {
-            OtherPlugin: {
-                bundle: "myplugin.js"
+            Other: {
+                bundle: "base/web/client/test-resources/extensions/otherextension.js"
             },
-            MyPlugin: {
-                bundle: "myplugin.js"
+            My: {
+                bundle: "base/web/client/test-resources/extensions/myextension.js"
             }
         });
-        mockAxios.onGet(/myplugin/i).reply(200, "(window.webpackJsonp = window.webpackJsonp || []).push([[\"myplugin\"], {\"Extension.jsx\": function(e, n, t) {n.default = {name: \"My\"};}}]);");
         const store = () => ({
             dispatch() { },
             getState() {
@@ -172,16 +171,15 @@ describe('StandardApp withExtensions', () => {
         ReactDOM.render(<StandardAppWithExtensions appStore={store} appComponent={MyApp} enableExtensions />, document.getElementById("container"));
     });
     it('extensions assets are loaded from external folder if configured', (done) => {
-        ConfigUtils.setConfigProp("extensionsFolder", "myfolder/");
+        ConfigUtils.setConfigProp("extensionsFolder", "base/");
         mockAxios = new MockAdapter(axios);
         mockAxios.onGet(/localConfig/).reply(200, {});
-        mockAxios.onGet(/extensions/).reply(200, {
+        mockAxios.onGet(/extensions\.json/i).reply(200, {
             My: {
-                bundle: "myplugin.js",
+                bundle: "web/client/test-resources/extensions/myextension.js",
                 translations: "translations"
             }
         });
-        mockAxios.onGet(/myplugin/).reply(200, "window.webpackJsonp.push([[\"myplugin\"], {\"a\": function(e, n, t) {n.default={}} }])");
         mockAxios.onGet(/translations/).reply(200, {});
         const store = () => ({
             dispatch() { },
@@ -197,26 +195,23 @@ describe('StandardApp withExtensions', () => {
         const app = ReactDOM.render(<StandardAppWithExtensions appStore={store} enableExtensions />, document.getElementById("container"));
         expect(app).toExist();
         setTimeout(() => {
-            expect(mockAxios.history.get.length).toBe(3);
-            expect(mockAxios.history.get[2].url).toBe("myfolder/myplugin.js");
+            expect(document.head.getElementsByTagName("script").length).toBe(1);
+            expect(document.head.getElementsByTagName("script").item(0).src).toContain("base/");
             done();
-        }, 0);
+        }, 500);
     });
     it('If one extension errors the other extensions continue to work', (done) => {
-        ConfigUtils.setConfigProp("extensionsFolder", "myfolder/");
         mockAxios = new MockAdapter(axios);
         mockAxios.onGet(/localConfig/).reply(200, {});
         mockAxios.onGet(/extensions/).reply(200, {
             My: {
-                bundle: "myplugin.js",
+                bundle: "base/web/client/test-resources/extensions/myextension.js",
                 translations: "translations"
             },
             Error: {
-                bundle: "nodata"
+                bundle: "base/web/client/test-resources/extensions/nodata.js"
             }
         });
-        mockAxios.onGet(/myplugin/).reply(200, "window.webpackJsonp.push([[\"myplugin\"], {\"a\": function(e, n, t) {n.default={}} }])");
-        mockAxios.onGet(/nodata/).reply(404);
         mockAxios.onGet(/translations/).reply(200, {});
         const store = () => ({
             dispatch() { },
@@ -230,11 +225,8 @@ describe('StandardApp withExtensions', () => {
         ConfigUtils.setConfigProp("persisted.reduxStore", store());
         const MyApp = ({ plugins }) => {
             if (plugins) {
-                expect(plugins.My).toExist();
-                expect(plugins.Error).toNotExist();
-                expect(mockAxios.history.get.length).toBe(4);
-                expect(mockAxios.history.get[2].url).toBe("myfolder/myplugin.js");
-                expect(mockAxios.history.get[3].url).toBe("myfolder/nodata");
+                expect(plugins.MyPlugin).toExist();
+                expect(plugins.ErrorPlugin).toNotExist();
                 done();
             }
         };

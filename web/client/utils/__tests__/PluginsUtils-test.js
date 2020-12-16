@@ -358,30 +358,6 @@ describe('PluginsUtils', () => {
         });
     });
 
-    it('importPlugin', (done) => {
-        axios.get('base/web/client/test-resources/lazy/dummy.js').then(source => {
-            PluginsUtils.importPlugin(source.data, (name, plugin) => {
-                expect(name).toBe('Dummy');
-                plugin.loadPlugin((pluginDef) => {
-                    expect(pluginDef).toExist();
-                    expect(pluginDef.component).toExist();
-                    done();
-                });
-            });
-        });
-    });
-
-    it('loadPlugin', (done) => {
-        PluginsUtils.loadPlugin('base/web/client/test-resources/lazy/dummy.js').then(({name, plugin}) => {
-            expect(name).toBe('Dummy');
-            plugin.loadPlugin((pluginDef) => {
-                expect(pluginDef).toExist();
-                expect(pluginDef.component).toExist();
-                done();
-            });
-        });
-    });
-
     it('combineReducers', () => {
         const P1 = {
             reducers: {

@@ -37,8 +37,13 @@ function loadScript(src) {
                 resolve();
             }
         };
-        const t = document.getElementsByTagName('script')[0];
-        t.parentElement.insertBefore(s, t);
+        const t = document.getElementsByTagName('script')?.[0];
+        if (t) {
+            t.parentElement.insertBefore(s, t);
+        } else {
+            document.head.appendChild(s);
+        }
+
     });
 }
 
@@ -142,6 +147,9 @@ export const getPluginConfiguration = (cfg, plugin) => {
 const parseExpression = (state = {}, context = {}, value) => {
     const searchExpression = /^\{(.*)\}$/;
     const expression = searchExpression.exec(value);
+    const dispatch = (action, ...rest) => {
+        return () => state("store").dispatch(action.apply(null, [action, ...rest]));
+    };
     const request = url.parse(location.href, true);
     if (expression !== null) {
         return eval(expression[1]);

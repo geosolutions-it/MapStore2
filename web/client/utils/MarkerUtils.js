@@ -17,11 +17,14 @@ const css = {
 import baseImageUrl from '../components/mapcontrols/annotations/img/markers_default.png';
 import shadowImageUrl from '../components/mapcontrols/annotations/img/markers_shadow.png';
 
-const baseImage = new Image();
-const shadowImage = new Image();
+const getImages = () => {
+    const baseImage = new Image();
+    const shadowImage = new Image();
 
-baseImage.src = baseImageUrl;
-shadowImage.src = shadowImageUrl;
+    baseImage.src = baseImageUrl;
+    shadowImage.src = shadowImageUrl;
+    return [shadowImage, baseImage];
+};
 
 const getNodeOfType = (node, condition) => {
     if (condition(node)) {
@@ -63,7 +66,7 @@ const extraMarkers = {
         'pink', 'green-dark', 'green', 'green-light', 'black'],
     shapes: ['circle', 'square', 'star', 'penta'],
     icons: [baseImageUrl, shadowImageUrl],
-    images: [shadowImage, baseImage]
+    images: getImages()
 };
 
 const getOffsets = (color, shape) => {
@@ -73,7 +76,8 @@ const MarkerUtils = {
     extraMarkers: assign({}, extraMarkers, {
         getOffsets,
         markerToDataUrl: ({iconColor, iconShape, iconGlyph}) => {
-            if (MarkerUtils.extraMarkers.images) {
+            const images = getImages();
+            if (images) {
                 let canvas = document.createElement('canvas');
                 const size = extraMarkers.size;
                 canvas.width = size[0];
@@ -83,8 +87,8 @@ const MarkerUtils = {
                 const ctx = canvas.getContext("2d");
 
                 const offSet = getOffsets(iconColor, iconShape);
-                ctx.drawImage(extraMarkers.images[0], 4, 31, 35, 16); // shadowImage
-                ctx.drawImage(extraMarkers.images[1], Math.abs(offSet[0]), Math.abs(offSet[1]), size[0], size[1], 0, 0, size[0], size[1]); // iconImage
+                ctx.drawImage(images[0], 4, 31, 35, 16); // shadowImage
+                ctx.drawImage(images[1], Math.abs(offSet[0]), Math.abs(offSet[1]), size[0], size[1], 0, 0, size[0], size[1]); // iconImage
                 // glyph
                 ctx.font = "14px FontAwesome";
                 ctx.fillStyle = "rgb(255,255,255)";
