@@ -46,6 +46,7 @@ export default ({
         this.width = undefined;
         this.height = undefined;
         this.skipOnMount = props.skipOnMount;
+        this.div = null;
         this.onResize = debounce((...args) => this.props.onResize(...args), debounceTime !== undefined ? debounceTime : props.debounceTime || 1000);
         this.ro = new ResizeObserver((entries) => {
             entries.forEach((entry) => {
@@ -74,9 +75,15 @@ export default ({
     }
     componentDidMount() {
         this.isMounded = true;
-        const div = this.findDomNode();
-        if (div) {
-            this.ro.observe(div);
+        this.div = this.findDomNode();
+        if (this.div) {
+            this.ro.observe(this.div);
+        }
+    }
+    componentDidUpdate() {
+        this.div = this.findDomNode();
+        if (this.div) {
+            this.ro.observe(this.div);
         }
     }
     componentWillUnmount() {
