@@ -382,7 +382,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                 }),
                 image: isDrawing ? image : null,
                 fill: new Fill(tempStyle.fill ? tempStyle.fill : {
-                    color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 1)
+                    color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", isNil(tempStyle.fillOpacity) ? 1 : tempStyle.fillOpacity)
                 })
             })
         ];
