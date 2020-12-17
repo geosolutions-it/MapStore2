@@ -24,12 +24,12 @@ import it.geosolutions.mapstore.ConfigController.ResourceNotAllowedException;
 
 public class ConfigControllerTest {
     ConfigController controller;
-    
+
     @Before
     public void setUp() {
         controller = new ConfigController();
     }
-    
+
     @Test
     public void testLoadAllowedResource() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
@@ -40,7 +40,7 @@ public class ConfigControllerTest {
         assertEquals("{}", resource.trim());
         tempResource.delete();
     }
-    
+
     @Test
     public void testLoadNotAllowedResource() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
@@ -55,7 +55,7 @@ public class ConfigControllerTest {
         }
         tempResource.delete();
     }
-    
+
     @Test
     public void testLoadFromDataDir() throws IOException {
         File dataDir = TestUtils.getDataDir();
@@ -92,26 +92,26 @@ public class ConfigControllerTest {
     @Test
     public void testLoadAsset() throws IOException {
     	ServletContext context = Mockito.mock(ServletContext.class);
-        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/bundle.js"));
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/index.js"));
         Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
         String resource = new String(controller.loadAsset("localConfig"), "UTF-8");
         assertEquals("console.log('hello')", resource.trim());
         tempResource.delete();
     }
-    
+
     @Test
     public void testLoadAssetFromDataDir() throws IOException {
     	File dataDir = TestUtils.getDataDir();
-        File tempResource = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/bundle.js"), dataDir, "bundle.js");
+        File tempResource = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/index.js"), dataDir, "index.js");
         controller.setDataDir(dataDir.getAbsolutePath());
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        String resource = new String(controller.loadAsset("bundle.js"), "UTF-8");
+        String resource = new String(controller.loadAsset("index.js"), "UTF-8");
         assertEquals("console.log('hello')", resource.trim());
         tempResource.delete();
     }
-    
+
     @Test
     public void testOverrides() throws IOException {
         File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/localConfigFull.json"));
@@ -125,7 +125,7 @@ public class ConfigControllerTest {
         assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore2.geo-solutions.it\"}}", resource.trim());
         tempResource.delete();
     }
-    
+
     @Test
     public void testPatch() throws IOException {
         File dataDir = TestUtils.getDataDir();

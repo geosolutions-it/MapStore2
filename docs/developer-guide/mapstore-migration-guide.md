@@ -19,7 +19,35 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2020.02.00 to 2020.03.00
+## Migration from 2020.02.00 to 2021.01.00
+
+### Update to webpack 5 - Module federation
+
+MapStore migrated to webpack 5 and provided the extension system using "Webpack Module Federation". Here the steps to update the existing files in your project.
+
+**package.json**:
+
+- dev server scripts changed syntax. now you need to use `webpack serve` instead of `webpack-dev-server`. Replace also all `--colors` with `--color` in your scripts that use webpack / webpack-dev-server.
+- Align `dependencies` and `devDependencies` with MapStore's one, reading the `package.json`, as usual.
+- To support extensions in your project, you need to add `ModuleFederationPlugin` to your `prod-webpack.config.js` and `webpack.config.js`
+
+```javascript
+const ModuleFederationPlugin = require('./MapStore/build/moduleFederation').plugin; // <-- new line
+module.exports = require('./buildConfig')(
+    assign({
+        "mapstore2": path.join(paths.code, "product", "app"),
+        "embedded": path.join(paths.code, "product", "embedded"),
+        "ms2-api": path.join(paths.code, "product", "api")
+    },
+    require('./examples')
+    ),
+    themeEntries,
+    paths,
+    extractThemesPlugin,
+    [extractThemesPlugin, ModuleFederationPlugin], // <-- this parameter has been changed, now it accepts also array of the plugins you want to add bot in prod and dev
+```
+
+Other the other changes required are applied automatically in `buildConfig.js`.
 
 ### Eslint config
 
