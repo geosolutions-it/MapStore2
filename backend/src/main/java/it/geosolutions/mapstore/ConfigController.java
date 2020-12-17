@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,6 +20,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,10 +33,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.HandlerMapping;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
+
 import it.geosolutions.mapstore.utils.ResourceUtils;
 
 /**
@@ -51,42 +55,42 @@ import it.geosolutions.mapstore.utils.ResourceUtils;
  *    example: header.height=headerHeight,header.url=headerUrl
  *
  * The overrides technique allows to take some values to insert in the config json from a simple Java properties file.
- * 
+ *
  */
 @Controller
 public class ConfigController {
     private ObjectMapper jsonMapper = new ObjectMapper();
-    
+
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public class ResourceNotFoundException extends RuntimeException {
         public ResourceNotFoundException(String message) {
             super(message);
         }
     }
-    
+
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public class ResourceNotAllowedException extends RuntimeException {
         public ResourceNotAllowedException(String message) {
             super(message);
         }
     }
-    
+
     @Value("${datadir.location:}") private String dataDir = "";
     @Value("${allowed.resources:localConfig,pluginsConfig,extensions,config,new}") private String allowedResources = "localConfig,pluginsConfig,extensions,config,new";
     @Value("${overrides.mappings:}") private String mappings;
     @Value("${overrides.config:}") private String overrides = "";
-    
+
     @Autowired
     private ServletContext context;
-    
+
     /**
      * Loads the resource, from the configured location (datadir or web root).
      * Both locations are tested and the resource is returned from the first location found.
      * The resource name should be in the allowed.resources list.
-     * 
-     * It is also possible to store in datadir files in the json-patch format (with a .json.patch extension) 
+     *
+     * It is also possible to store in datadir files in the json-patch format (with a .json.patch extension)
      * so that the final resource is built merging a static configuration with a patch.
-     * 
+     *
      * @param {String} resourceName name of the resource to load (e.g. localConfig)
      * @param {boolean} overrides apply overrides from the configured properties file (if any)
      */
@@ -97,17 +101,27 @@ public class ConfigController {
         }
         throw new ResourceNotAllowedException("Resource is not allowed");
     }
-    
+
+    /**
+     * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
+     * Allows loading externalized assets (javascript bundles, translation files, and so on).
+     * The rest of the URL from /loadasset/ is intended to be the path to resource.
+     */
+    @RequestMapping(value="/loadasset/**", method = RequestMethod.GET)
+    public @ResponseBody byte[] loadAsset(HttpServletRequest request) throws IOException {
+    	String resourcePath = ((String) request.getAttribute(
+    	        HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE)).split("/loadasset/")[0];
+    	// TODO: prevent directory transversing
+		return loadAsset(resourcePath);
+    }
     /**
      * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
      * Allows loading externalized assets (javascript bundles, translation files, and so on.
-     * @param resourceName path of the asset to load
+     * @param resourcePath path of the asset to load
      */
-    @RequestMapping(value="/loadasset", method = RequestMethod.GET)
-    public @ResponseBody byte[] loadAsset(@RequestParam("resource") String resourceName) throws IOException {
-		return readResource(resourceName, false, "").getBytes("UTF-8");
+    public @ResponseBody byte[] loadAsset(String resourcePath) throws IOException {
+		return readResource(resourcePath, false, "").getBytes("UTF-8");
     }
-    
     private String readResource(String resourceName, boolean applyOverrides, String patchName) throws IOException {
     	Optional<File> resource = ResourceUtils.findResource(dataDir, context, resourceName);
     	Optional<File> resourcePatch = patchName.isEmpty() ? Optional.empty() : ResourceUtils.findResource(dataDir, context, patchName);
@@ -118,7 +132,7 @@ public class ConfigController {
     }
 
     private String readResourceFromFile(File file, boolean applyOverrides, Optional<File> patch) throws IOException {
-        
+
         try (Stream<String> stream =
                 Files.lines( Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8); ) {
             Properties props = readOverrides();
@@ -134,7 +148,7 @@ public class ConfigController {
             });
             return contentBuilder.toString();
         }
-        
+
     }
 
     private String resourceWithPatch(Stream<String> stream, Properties props, Optional<File> patch) throws IOException {
@@ -149,10 +163,10 @@ public class ConfigController {
         }
         return jsonObject.toString();
     }
-    
+
     /**
      * Applies the given patch to a JSON tree (orig)
-     * 
+     *
      * @param orig
      * @param patch
      * @return
@@ -192,7 +206,7 @@ public class ConfigController {
         JsonNode jsonObject = jsonMapper.readTree(json);
         return jsonObject;
     }
-    
+
     private JsonNode fillMapping(String mapping, Properties props, JsonNode jsonObject) throws IOException {
         String[] parts = mapping.split("=");
         if (parts.length != 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
@@ -204,7 +218,7 @@ public class ConfigController {
             return setJsonProperty(jsonObject, path.split("\\."), value);
         }
     }
-    
+
     private JsonNode setJsonProperty(JsonNode jsonObject, String[] path, String value) throws IOException {
         String propertyPath = "/" + StringUtils.join(path, "/");
         JsonPatch patch = jsonMapper.readValue("[{\"op\":\"replace\",\"path\":\""+propertyPath+"\",\"value\":\""+value+"\"}]", JsonPatch.class);
@@ -222,7 +236,7 @@ public class ConfigController {
             public boolean test(String p) {
                 return p.equals(resourceName);
             }
-            
+
         });
     }
 

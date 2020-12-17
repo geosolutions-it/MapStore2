@@ -11,7 +11,6 @@ import {Provider} from 'react-redux';
 import expect from 'expect';
 import PluginsUtils from '../PluginsUtils';
 import assign from 'object-assign';
-import axios from '../../libs/ajax';
 
 import MapSearchPlugin from '../../plugins/MapSearch';
 
@@ -355,30 +354,6 @@ describe('PluginsUtils', () => {
             expect(resp.myproperty).toBe(true);
             expect(resp.isMapStorePlugin).toBe(true);
             done();
-        });
-    });
-
-    it('importPlugin', (done) => {
-        axios.get('base/web/client/test-resources/lazy/dummy.js').then(source => {
-            PluginsUtils.importPlugin(source.data, (name, plugin) => {
-                expect(name).toBe('Dummy');
-                plugin.loadPlugin((pluginDef) => {
-                    expect(pluginDef).toExist();
-                    expect(pluginDef.component).toExist();
-                    done();
-                });
-            });
-        });
-    });
-
-    it('loadPlugin', (done) => {
-        PluginsUtils.loadPlugin('base/web/client/test-resources/lazy/dummy.js').then(({name, plugin}) => {
-            expect(name).toBe('Dummy');
-            plugin.loadPlugin((pluginDef) => {
-                expect(pluginDef).toExist();
-                expect(pluginDef.component).toExist();
-                done();
-            });
         });
     });
 
