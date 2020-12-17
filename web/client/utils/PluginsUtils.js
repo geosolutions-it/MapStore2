@@ -10,12 +10,70 @@ import React from 'react';
 import assign from 'object-assign';
 import { omit, isObject, head, isArray, isString, isFunction, memoize, get, endsWith } from 'lodash';
 import {connect as originalConnect} from 'react-redux';
-import axios from '../libs/ajax';
 import url from 'url';
 import curry from 'lodash/curry';
 import { combineEpics as originalCombineEpics } from 'redux-observable';
 import { combineReducers as originalCombineReducers } from 'redux';
 import {wrapEpics} from "./EpicsUtils";
+
+/**
+ * Loads a script inside the current page.
+ * @param {string} src the URL where to load the script
+ */
+function loadScript(src) {
+    return new Promise(function(resolve, reject) {
+        const s = document.createElement('script');
+        let r = false;
+        s.type = 'text/javascript';
+        s.src = src;
+        s.async = true;
+        s.onerror = function(err) {
+            reject(err, s);
+        };
+        s.onload = s.onreadystatechange = function() {
+            // console.log(this.readyState); // uncomment this line to see which ready states are called.
+            if (!r && (!this.readyState || this.readyState === 'complete')) {
+                r = true;
+                resolve();
+            }
+        };
+        const t = document.getElementsByTagName('script')?.[0];
+        if (t) {
+            t.parentElement.insertBefore(s, t);
+        } else {
+            document.head.appendChild(s);
+        }
+
+    });
+}
+
+/**
+ * Allows to load a federate module dynamically.
+ * Typically published in this way:
+ * ```
+ * plugins: [new ModuleFederationPlugin({
+        name: 'Scope', // this is the scope
+        filename: "sampleExtension.js",
+        exposes: { // the keys of this object are the modules inside the scope "Scope"
+            './plugin': path.join(__dirname, "plugins", "SampleExtension")
+        },
+        shared
+    })],
+ * @param {sting} scope the scope
+ * @param {string} module the module
+ */
+/* eslint-disable */
+const dynamicFederation = (scope, module) => {
+    return (new Promise(resolve => resolve(__webpack_init_sharing__ && __webpack_init_sharing__("default")))).then(() => {
+        const container = window[scope];
+        return container.init(__webpack_share_scopes__.default);
+    }).then(() => {
+        return window[scope].get(module).then((factory) => {
+            const Module = factory();
+            return Module;
+        });
+    })
+};
 
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 
@@ -89,10 +147,10 @@ export const getPluginConfiguration = (cfg, plugin) => {
 const parseExpression = (state = {}, context = {}, value) => {
     const searchExpression = /^\{(.*)\}$/;
     const expression = searchExpression.exec(value);
-    const request = url.parse(location.href, true);
-    const dispatch = (action) => {
-        return () => state("store").dispatch(action.apply(null, arguments));
+    const dispatch = (action, ...rest) => {
+        return () => state("store").dispatch(action.apply(null, [action, ...rest]));
     };
+    const request = url.parse(location.href, true);
     if (expression !== null) {
         return eval(expression[1]);
     }
@@ -277,7 +335,7 @@ const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
 };
 
-export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent || impl.isMapStorePlugin;
+export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype?.isReactComponent || impl.isMapStorePlugin;
 
 const getPluginImplementation = (impl, stateSelector) => {
     return isMapStorePlugin(impl) ? impl : impl(stateSelector);
@@ -302,36 +360,8 @@ const getPluginImplementation = (impl, stateSelector) => {
  * @param {string} source plugin source code
  * @param {function} callback function called with the plugin implementation
  */
-export const importPlugin = (source, callback) => {
-    /* eslint-disable */
-    // save a reference to webpack require functionality (usable to load compiled bundles)
-    const r = __webpack_require__;
-    // evaluate compiled bundle(s) (this will append a new bundle definition in webpackJsonp)
-    eval(source);
-    // extract bundle(s) definiton
-    const lastLoaded = window.webpackJsonp[window.webpackJsonp.length - 1][1];
-
-    // for every bundle, we call the related definition code
-    Object.keys(lastLoaded).forEach(source => {
-        // exported will contain the bundle exported code
-        const exported = {};
-        lastLoaded[source](null, exported, r);
-        const pluginDef = exported.default || exported;
-        // return the plugin as a lazy loaded one
-        const plugin = {
-            loadPlugin: (loaded) => {
-                if (loaded) {
-                    loaded(pluginDef)
-                } else {
-                    return Promise.resolve(pluginDef)
-                }
-            }
-        }
-        callback(pluginDef.name, plugin);
-    });
-    // remove loaded bundle from the webpack list
-    window.webpackJsonp.pop();
-    /* eslint-enable */
+export const importPlugin = (pluginName) => {
+    return dynamicFederation(pluginName, "./plugin");
 };
 
 /**
@@ -518,16 +548,19 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
     };
 };
 
+/* eslint-enable */
+
 /**
- * Loads a plugin compiled bundle from the given url.
+ * Loads a plugin compiled bundle from the given URL.
  *
- * Compiled plugin bundles can be created using the dynamic import syntax with the webChunkName comment.
+ * Compiled plugin bundles can be created using the module federation plugin. They require the
+ * main project also use Module federation plugin.
  *
  * @example named bundle plugin
  * import(&#47;* webpackChunkName: "extensions/dummy-extension" *&#47; './plugins/Extension')
  *
  * @example load and use an external plugin
- * loadPlugin("dist/plugins/myplugin").then(lazy => {
+ * loadPlugin("dist/plugins/myPlugin").then(lazy => {
  *      lazy.loadPlugin((plugin) => {
  *          const Comp = plugin.component;
  *          ReactDOM.render(Comp, document.getElementById('container'));
@@ -537,14 +570,11 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
  * @param {string} pluginUrl url (relative or absolute) of a plugin compiled bundle to load
  * @returns {Promise} a Promise that resolves to a lazy plugin object.
  */
-export const loadPlugin = (pluginUrl) => {
-    return new Promise((resolve, reject = () => { }) => {
-        axios.get(pluginUrl).then(response => {
-            importPlugin(response.data, (name, plugin) => resolve({ name, plugin }));
-        }).catch(e => {
-            reject(e);
-        });
-    });
+export const loadPlugin = (pluginUrl, pluginName) => {
+    return loadScript(pluginUrl)
+        .then(() =>importPlugin(pluginName))
+        .then((plugin) => ({ name: pluginName, plugin}));
+
 };
 
 /**
