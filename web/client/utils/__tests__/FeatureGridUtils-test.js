@@ -9,7 +9,7 @@ import expect from 'expect';
 import {updatePages, gridUpdateToQueryUpdate} from '../FeatureGridUtils';
 
 
-describe('FeatureGridUtils', () => {
+describe.only('FeatureGridUtils', () => {
     it('Test updatePages when needPages * size is less then features', () => {
         const oldFeatures = Array(350);
         const features = Array(60);
@@ -55,7 +55,7 @@ describe('FeatureGridUtils', () => {
         const gridUpdate1 = {
             type: "geometry",
             attribute: "ATTRIBUTE",
-            opeartor: "OPERATOR",
+            operator: "OPERATOR",
             value: {attribute: "ATTRIBUTE", method: "METHOD_1"},
             rawValue: "RAWVAL"
         };
@@ -72,5 +72,38 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter2.spatialField).toEqual(gridUpdate2.value);
         expect(queryUpdateFilter2.filterFields).toBe(undefined);
         expect(queryUpdateFilter2.spatialFieldOperator).toBe("OR");
+    });
+    it('gridUpdateToQueryUpdate with multiple strings', () => {
+        const gridUpdate1 = {
+            type: "string",
+            attribute: "ATTRIBUTE",
+            operator: "ilike",
+            value: "str1, str2",
+            rawValue: "str1, str2"
+        };
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.filterFields.length).toBe(2);
+        expect(queryUpdateFilter.filterFields[0].value).toBe("str1");
+        expect(queryUpdateFilter.filterFields[0].operator).toBe("ilike");
+        expect(queryUpdateFilter.filterFields[1].value).toBe("str2");
+        expect(queryUpdateFilter.filterFields[1].operator).toBe("ilike");
+    });
+    it('gridUpdateToQueryUpdate with multiple numbers', () => {
+        const gridUpdate1 = {
+            type: "number",
+            attribute: "ATTRIBUTE",
+            operator: null,
+            value: "> 300, 69, < 10",
+            rawValue: "> 300, 69, < 10"
+        };
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.filterFields.length).toBe(3);
+        expect(queryUpdateFilter.filterFields[0].value).toBe(300);
+        expect(queryUpdateFilter.filterFields[0].operator).toBe(">");
+        expect(queryUpdateFilter.filterFields[1].value).toBe(69);
+        expect(queryUpdateFilter.filterFields[1].operator).toBe("=");
+        expect(queryUpdateFilter.filterFields[2].value).toBe(10);
+        expect(queryUpdateFilter.filterFields[2].operator).toBe("<");
+
     });
 });

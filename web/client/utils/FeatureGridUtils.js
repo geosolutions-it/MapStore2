@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { fill, findIndex, get, isArray, isNil } from 'lodash';
+import { identity, trim, fill, findIndex, get, isArray, isNil, isString } from 'lodash';
 
 import {
     findGeometryProperty,
@@ -174,7 +174,59 @@ export const createNewAndEditingFilter = (hasChanges, newFeatures, changes) => f
 export const hasValidNewFeatures = (newFeatures = [], describeFeatureType) => newFeatures.map(f => isValid(f, describeFeatureType)).reduce((acc, cur) => cur && acc, true);
 export const applyAllChanges = (orig, changes = {}) => applyChanges(orig, changes[orig.id] || {});
 
+export const EXPRESSION_REGEX = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?\s*(-?\d*\.?\d*)\s*/;
+
+export const getOperatorAndValue = (value, type) => {
+    if (type === "string") {
+        return {newVal: trim(value), operator: "ilike"};
+    }
+    const match = EXPRESSION_REGEX.exec(value);
+    let operator = "=";
+    let newVal;
+    if (match) {
+        operator = match[1] || "=";
+        // replace with standard operators
+        if (operator === "!==" | operator === "!=") {
+            operator = "<>";
+        } else if (operator === "===" | operator === "==") {
+            operator = "=";
+        }
+        newVal = parseFloat(match[2]);
+    } else {
+        newVal = parseFloat(value, 10);
+    }
+    return {newVal, operator};
+};
+
 export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
+
+    if ((type === 'string' || type === 'number') && isString(value) && value?.indexOf(",") !== -1) {
+        const multipleValues = value?.split(",").filter(identity) || [];
+        const cleanFilterFields = oldFilterObj.filterFields?.filter((field) => attribute === field.attribute) || [];
+        return {
+            ...oldFilterObj,
+            groupFields: [{
+                id: 1,
+                logic: "OR",
+                index: 0
+            }],
+            filterFields: cleanFilterFields.concat(multipleValues.map((v) => {
+                let {operator: op, newVal} = getOperatorAndValue(v, type);
+
+                return {
+                    attribute,
+                    rowId: Date.now(),
+                    type: type,
+                    groupId: 1,
+                    operator: op,
+                    value: newVal
+                };
+            })),
+            spatialField: oldFilterObj.spatialField,
+            spatialFieldOperator: oldFilterObj.spatialFieldOperator
+        };
+    }
+
     return {
         ...oldFilterObj,
         groupFields: [{
