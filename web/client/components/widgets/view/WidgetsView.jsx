@@ -20,9 +20,6 @@ const DefaultWidget = withGroupColor(require('../widget/DefaultWidget').default)
 const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
 import 'react-grid-layout/css/styles.css';
 
-const WIDGET_MOBILE_RIGHT_SPACE = 34;
-const getResponsiveWidgetWidth = width => width < 480 ? width - WIDGET_MOBILE_RIGHT_SPACE : width;
-
 export default pure(({
     id,
     style,
@@ -47,6 +44,7 @@ export default pure(({
     updateWidgetProperty = () => { },
     deleteWidget = () => { },
     toggleCollapse = ( ) => { },
+    toggleMaximize = () => { },
     editWidget = () => { },
     onLayoutChange = () => { },
     language,
@@ -61,7 +59,7 @@ export default pure(({
         key={id || "widgets-view"}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
-        width={!useDefaultWidthProvider ? getResponsiveWidgetWidth(width) : undefined}
+        width={!useDefaultWidthProvider ? width : undefined}
         isResizable={canEdit}
         isDraggable={canEdit}
         draggableHandle={".draggableHandle"}
@@ -92,6 +90,8 @@ export default pure(({
                         if (w) {
                             return {
                                 ...l,
+                                "isResizable": w.dataGrid && w.dataGrid.isResizable,
+                                "isDraggable": w.dataGrid && w.dataGrid.isDraggable,
                                 "static": w.dataGrid && w.dataGrid.static
                             };
                         }
@@ -113,7 +113,8 @@ export default pure(({
                 enableColumnFilters={getEnableColumnFilters(w)}
                 canEdit={canEdit}
                 updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
-                toggleCollapse= {() => toggleCollapse(w)}
+                toggleCollapse={() => toggleCollapse(w)}
+                toggleMaximize={() => toggleMaximize(w)}
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)}
                 language={language}

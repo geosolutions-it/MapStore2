@@ -2,6 +2,7 @@ const path = require("path");
 
 const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
 const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
+const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
 
 module.exports = require('./MapStore2/build/buildConfig')(
     {
@@ -16,7 +17,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
         framework: path.join(__dirname, "MapStore2", "web", "client"),
         code: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
     },
-    extractThemesPlugin,
+    [extractThemesPlugin, ModuleFederationPlugin],
     false,
     "dist/",
     '.__PROJECTNAME__',

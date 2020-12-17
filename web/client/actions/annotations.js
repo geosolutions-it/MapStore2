@@ -168,10 +168,11 @@ export const addText = () => {
     };
 };
 
-export const toggleVisibilityAnnotation = (id) => {
+export const toggleVisibilityAnnotation = (id, visibility) => {
     return {
         type: TOGGLE_ANNOTATION_VISIBILITY,
-        id
+        id,
+        visibility
     };
 };
 
@@ -206,9 +207,10 @@ export const cancelRemoveAnnotation = () => {
         type: CANCEL_REMOVE_ANNOTATION
     };
 };
-export const cancelEditAnnotation = () => {
+export const cancelEditAnnotation = (properties) => {
     return {
-        type: CANCEL_EDIT_ANNOTATION
+        type: CANCEL_EDIT_ANNOTATION,
+        properties
     };
 };
 export const saveAnnotation = (id, fields, geometry, style, newFeature, properties) => {
@@ -292,9 +294,10 @@ export const closeAnnotations = () => {
         type: CLOSE_ANNOTATIONS
     };
 };
-export const confirmCloseAnnotations = () => {
+export const confirmCloseAnnotations = (properties) => {
     return {
-        type: CONFIRM_CLOSE_ANNOTATIONS
+        type: CONFIRM_CLOSE_ANNOTATIONS,
+        properties
     };
 };
 export const setUnsavedChanges = (unsavedChanges) => {
@@ -325,9 +328,10 @@ export const cancelCloseAnnotations = () => {
         type: CANCEL_CLOSE_ANNOTATIONS
     };
 };
-export const startDrawing = () => {
+export const startDrawing = (options = {}) => {
     return {
-        type: START_DRAWING
+        type: START_DRAWING,
+        options
     };
 };
 export const toggleUnsavedChangesModal = () => {

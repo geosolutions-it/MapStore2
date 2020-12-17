@@ -2,6 +2,7 @@ const path = require("path");
 
 const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
 const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
+const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const paths = {
@@ -19,7 +20,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
     },
     themeEntries,
     paths,
-    extractThemesPlugin,
+    [extractThemesPlugin, ModuleFederationPlugin],
     true,
     "dist/",
     '.__PROJECTNAME__',

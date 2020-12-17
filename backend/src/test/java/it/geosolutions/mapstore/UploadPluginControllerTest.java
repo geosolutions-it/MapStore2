@@ -53,7 +53,7 @@ public class UploadPluginControllerTest {
         String result = controller.uploadPlugin(zipStream);
         assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
         String extensions = TestUtils.getContent(tempExtensions);
-        assertEquals("{\"MyPlugin\":{\"bundle\":\"dist/extensions/My/myplugin.js\",\"translations\":\"dist/extensions/My/translations\"}}", extensions);
+        assertEquals("{\"My\":{\"bundle\":\"dist/extensions/My/index.js\",\"translations\":\"dist/extensions/My/translations\"}}", extensions);
         tempConfig.delete();
         tempExtensions.delete();
     }
@@ -80,7 +80,7 @@ public class UploadPluginControllerTest {
         String result = controller.uploadPlugin(zipStream);
         assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
         String extensions = TestUtils.getContent(tempExtensions);
-        assertEquals("{\"MyPlugin\":{\"bundle\":\"dist/extensions/My/myplugin.js\",\"translations\":\"dist/extensions/My/translations\"}}", extensions);
+        assertEquals("{\"My\":{\"bundle\":\"dist/extensions/My/index.js\",\"translations\":\"dist/extensions/My/translations\"}}", extensions);
         tempConfig.delete();
         tempExtensions.delete();
     }
@@ -137,7 +137,7 @@ public class UploadPluginControllerTest {
         });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         controller.uploadPlugin(zipStream);
-        assertTrue(new File(tempDist.getAbsolutePath() + File.separator + "My" + File.separator + "myplugin.js").exists());
+        assertTrue(new File(tempDist.getAbsolutePath() + File.separator + "My" + File.separator + "index.js").exists());
         tempConfig.delete();
         tempExtensions.delete();
     }
@@ -164,7 +164,7 @@ public class UploadPluginControllerTest {
         try {
             controller.uploadPlugin(zipStream);
             fail();
-        } catch(IOException e) {
+        } catch(Throwable e) {
             assertNotNull(e);
         }
         
@@ -180,7 +180,7 @@ public class UploadPluginControllerTest {
         File tempExtensions = TestUtils.copyTo(UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir, "extensions.json");
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         controller.uploadPlugin(zipStream);
-        assertTrue(new File(dataDir.getAbsolutePath() + File.separator + "dist" + File.separator + "extensions" + File.separator + "My" + File.separator + "myplugin.js").exists());
+        assertTrue(new File(dataDir.getAbsolutePath() + File.separator + "dist" + File.separator + "extensions" + File.separator + "My" + File.separator + "index.js").exists());
         tempConfig.delete();
         tempExtensions.delete();
     }
@@ -203,7 +203,7 @@ public class UploadPluginControllerTest {
         controller.uploadPlugin(zipStream);
         // we save to dataDir1
         assertTrue(new File(dataDir1.getAbsolutePath() + File.separator + "dist" + File.separator
-                + "extensions" + File.separator + "My" + File.separator + "myplugin.js").exists());
+                + "extensions" + File.separator + "My" + File.separator + "index.js").exists());
         tempConfig.delete();
         tempExtensions.delete();
     }
@@ -229,9 +229,9 @@ public class UploadPluginControllerTest {
         File pluginFolder = new File(tempDist.getAbsolutePath() + File.separator + "My");
         pluginFolder.mkdirs();
         assertTrue(pluginFolder.exists());
-        TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/bundle.js"), pluginFolder, "myplugin.js");
+        TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/index.js"), pluginFolder, "index.js");
         String result = controller.uninstallPlugin("My");
-        assertEquals("{\"bundle\":\"dist/extensions/My/bundle.js\",\"translations\":\"dist/extensions/My/translations\"}", result);
+        assertEquals("{\"bundle\":\"dist/extensions/My/index.js\",\"translations\":\"dist/extensions/My/translations\"}", result);
         String extensions = TestUtils.getContent(tempExtensions);
         assertEquals("{}", extensions);
         String plugins = TestUtils.getContent(tempConfig);
@@ -253,9 +253,9 @@ public class UploadPluginControllerTest {
         File pluginFolder = new File(dataDir.getAbsolutePath() + File.separator + "dist" + File.separator + "extensions" + File.separator + "My");
         pluginFolder.mkdirs();
         assertTrue(pluginFolder.exists());
-        TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/bundle.js"), pluginFolder, "myplugin.js");
+        TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/index.js"), pluginFolder, "myplugin.js");
         String result = controller.uninstallPlugin("My");
-        assertEquals("{\"bundle\":\"dist/extensions/My/bundle.js\",\"translations\":\"dist/extensions/My/translations\"}", result);
+        assertEquals("{\"bundle\":\"dist/extensions/My/index.js\",\"translations\":\"dist/extensions/My/translations\"}", result);
         String extensions = TestUtils.getContent(tempExtensions);
         assertEquals("{}", extensions);
         String plugins = TestUtils.getContent(tempConfig);

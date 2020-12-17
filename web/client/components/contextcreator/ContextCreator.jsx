@@ -252,7 +252,7 @@ export default class ContextCreator extends React.Component {
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
                     extraToolbarButtons: extraToolbarButtons('general-settings'),
-                    disableNext: !this.props.resource.name || !this.props.resource.name.length ||
+                    disableNext: !this.props.resource.name ||
                         !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length ||
                         this.props.loading || !this.props.isValidContextName || !this.props.contextNameChecked,
                     component:

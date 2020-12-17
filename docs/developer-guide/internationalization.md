@@ -32,7 +32,7 @@ You can configure MapStore to provide to the user only a restricted list of sele
     "locales": {
         "supportedLocales": {
             "en": {
-                "code": "en-EN",
+                "code": "en-US",
                 "description": "English"
             },
             "it": {
@@ -47,6 +47,44 @@ You can configure MapStore to provide to the user only a restricted list of sele
 Setting locales in localConfig.json file is doable only for supported locales present in LocaleUtils.js.
 The default behavior is to use those already configured in "supportedLocales" object.
 You can customize the messages by editing the data.code-CODE.json files.
+
+The `locale` property determines the language to use for the application. If not specified, the language will be selected checking the browser's locale first. If the browser locale is not supported, MapStore will select the first language available in `supportedLocales`.
+
+Example of localConfig.json with the optional locale property.
+```javascript
+{
+    "locale": "it-IT", // locale code
+
+    "defaultState": {
+        "locales": {
+            "supportedLocales": {
+                "en": {
+                    "code": "en-US",
+                    "description": "English"
+                },
+                "it": {
+                    "code": "it-IT",
+                    "description": "Italiano"
+                }
+            }
+        }
+    }
+}
+```
+The property `locale` could be useful inside custom application where the locale is stored in other sources rather than using the browser language:
+
+```javascript
+// example
+import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
+import cookies from 'js-cookie';
+
+// ...
+const locale = cookies.get('app_locale'); // locale code it-IT for example
+if (locale) {
+  setConfigProp('locale', locale);
+}
+// ...
+```
 
 # How to add a new language
 

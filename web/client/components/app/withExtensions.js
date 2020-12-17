@@ -9,7 +9,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { loadLocale } from '../../actions/locale';
-import {getUserLocale} from '../../utils/LocaleUtils';
 import castArray from 'lodash/castArray';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
@@ -61,7 +60,7 @@ function withExtensions(AppComponent) {
             if (translations.length > 0) {
                 ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
             }
-            const locale = getUserLocale();
+            const locale =  ConfigUtils.getConfigProp('locale');
             store.dispatch(loadLocale(null, locale));
         };
 
@@ -109,7 +108,7 @@ function withExtensions(AppComponent) {
 
         removeExtension = (plugin) => {
             this.setState({
-                removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"]
+                removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"] // TODO: check
             });
         };
 
@@ -131,25 +130,34 @@ function withExtensions(AppComponent) {
                     const plugins = response.data;
                     Promise.all(Object.keys(plugins).map((pluginName) => {
                         const bundlePath = this.getAssetPath(plugins[pluginName].bundle);
-                        return PluginsUtils.loadPlugin(bundlePath).then((loaded) => {
-                            return loaded.plugin.loadPlugin().then((impl) => {
-                                augmentStore({ reducers: impl.reducers || {}, epics: impl.epics || {} });
-                                const pluginDef = {
-                                    [pluginName]: {
-                                        [pluginName]: {
-                                            loadPlugin: (resolve) => {
-                                                resolve(impl);
-                                            }
+                        return PluginsUtils.loadPlugin(bundlePath, pluginName).then((loaded) => {
+                            const impl = loaded.plugin?.default ?? loaded.plugin;
+                            augmentStore({ reducers: impl?.reducers ?? {}, epics: impl?.epics ?? {} });
+                            const pluginDef = {
+                                [pluginName + "Plugin"]: {
+                                    [pluginName + "Plugin"]: {
+                                        loadPlugin: (resolve) => {
+                                            resolve(impl);
                                         }
                                     }
-                                };
-                                return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
-                            });
+                                }
+                            };
+                            return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
+                        }).catch(e => {
+                            // log the errors before re-throwing
+                            console.error(`Error loading MapStore extension "${pluginName}":`, e); // eslint-disable-line
+                            return null;
                         });
                     })).then((loaded) => {
-                        callback(loaded.reduce((previous, current) => {
-                            return { ...previous, ...current.plugin };
-                        }, {}), loaded.map(p => p.translations).filter(p => p !== ""));
+                        callback(
+                            loaded
+                                .filter(l => l !== null) // exclude extensions that triggered errors
+                                .reduce((previous, current) => {
+                                    return { ...previous, ...current.plugin };
+                                }, {}),
+                            loaded
+                                .filter(l => l !== null) // exclude extensions that triggered errors
+                                .map(p => p.translations).filter(p => p !== ""));
                     }).catch(() => {
                         callback({}, []);
                     });

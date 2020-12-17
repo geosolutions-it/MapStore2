@@ -80,7 +80,7 @@ describe('ConfigurePluginsStep component', () => {
         };
         ReactDOM.render(<ConfigurePluginsStep uploadEnabled onAddUpload={onAddUpload}/>, document.getElementById("container"));
         const dropZone = document.body.querySelector(".dropzone");
-        axios.get("base/web/client/test-resources/plugin.zip", { responseType: "blob" }).then(({ data }) => {
+        axios.get("base/web/client/test-resources/extension.zip", { responseType: "blob" }).then(({ data }) => {
             TestUtils.Simulate.drop(dropZone, {
                 dataTransfer: {
                     files: [data]

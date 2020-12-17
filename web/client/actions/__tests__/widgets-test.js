@@ -26,6 +26,7 @@ import {
     EXPORT_IMAGE,
     DEPENDENCY_SELECTOR_KEY,
     TOGGLE_TRAY,
+    TOGGLE_MAXIMIZE,
     createChart,
     NEW_CHART,
     exportCSV,
@@ -45,7 +46,8 @@ import {
     setPage,
     setupDependencySelector,
     toggleDependencySelector,
-    toggleTray
+    toggleTray,
+    toggleMaximize
 } from '../widgets';
 
 describe('Test correctness of the widgets actions', () => {
@@ -201,6 +203,13 @@ describe('Test correctness of the widgets actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(TOGGLE_TRAY);
         expect(retval.value).toBe(true);
+    });
+    it('toggleMaximize', () => {
+        const retval = toggleMaximize('widget', 'target');
+        expect(retval).toExist();
+        expect(retval.type).toBe(TOGGLE_MAXIMIZE);
+        expect(retval.widget).toBe('widget');
+        expect(retval.target).toBe('target');
     });
 
 });

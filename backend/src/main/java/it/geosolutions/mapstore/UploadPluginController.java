@@ -46,9 +46,9 @@ import it.geosolutions.mapstore.utils.ResourceUtils;
  *  - extensions.registry: json file where uploaded extensions are registered (default: extensions.json)
  *  - context.plugins.config: json file where context creator plugins are configured (default: pluginsConfig.json)
  *  - context.plugins.savepatch: uses json-patch format for the context creator plugins configuration (default: true)
- *  
+ *
  *  When a datadir is available, the pluginsConfig.json original file is not touched, a pluginsConfig.json.patch file is
- *  used, in json-patch format to list only the uploaded extensions.  
+ *  used, in json-patch format to list only the uploaded extensions.
  */
 @Controller
 public class UploadPluginController {
@@ -57,13 +57,13 @@ public class UploadPluginController {
     @Value("${extensions.registry:extensions.json}") private String extensionsConfig = "extensions.json";
     @Value("${context.plugins.config:pluginsConfig.json}") private String pluginsConfig = "pluginsConfig.json";
     @Value("${context.plugins.savepatch:true}") private Boolean pluginsConfigAsPatch = true;
-    
+
     private ObjectMapper jsonMapper = new ObjectMapper();
     private JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(false);
-    
+
     @Autowired
     ServletContext context;
-    
+
     /**
      * Stores and uploaded plugin zip bundle.
      * The zip bundle must be POSTed as the body of the request.
@@ -85,7 +85,7 @@ public class UploadPluginController {
         boolean addTranslations = false;
         while(entry != null) {
             if (!entry.isDirectory()) {
-                if (entry.getName().toLowerCase().endsWith(".js")) {
+                if (entry.getName().toLowerCase().endsWith("index.js")) {
                     bundleName = entry.getName();
                     File tempBundle = File.createTempFile("mapstore-bundle", ".js");
                     storeAsset(zip, tempBundle);
@@ -110,12 +110,18 @@ public class UploadPluginController {
                     tempFiles.put(tempAsset, "asset/" + entry.getName());
                     addTranslations = true;
                 }
+                // all files inside assets directory must be added to assets
+                if (entry.getName().toLowerCase().startsWith("assets/")) {
+                    File tempAsset = File.createTempFile(entry.getName(), ".tmp");
+                    storeAsset(zip, tempAsset);
+                    tempFiles.put(tempAsset, "asset/" + entry.getName());
+                }
             }
             entry = zip.getNextEntry();
         }
         String pluginBundle = bundlesPath + "/" + pluginName + "/" + bundleName;
         String translations = addTranslations ? bundlesPath + "/" + pluginName + "/translations" : null;
-        addExtension(pluginName + "Plugin", pluginBundle, translations);
+        addExtension(pluginName, pluginBundle, translations);
         for(File tempFile : tempFiles.keySet()) {
             String type = tempFiles.get(tempFile);
             if ("js".equals(type)) {
@@ -126,7 +132,7 @@ public class UploadPluginController {
                 moveAsset(tempFile, assetPath);
             }
         }
-       
+
         zip.close();
         if (plugin == null) {
             throw new IOException("Invalid bundle: index.json missing");
@@ -138,7 +144,7 @@ public class UploadPluginController {
         // we use patch files only if we have a datadir
         return pluginsConfigAsPatch && canUseDataDir();
     }
-    
+
     private boolean canUseDataDir() {
         return dataDir.isEmpty() ? false
             : Stream.of(dataDir.split(",")).filter(new Predicate<String>() {
@@ -147,12 +153,12 @@ public class UploadPluginController {
                     return !folder.trim().isEmpty() && new File(folder).exists();
                 }
             }).count() > 0;
-        
+
     }
 
     /**
      * Removes an installed plugin extension.
-     * 
+     *
      * @param pluginName name of the extension to be removed
      */
     @Secured({"ROLE_ADMIN"})
@@ -160,7 +166,7 @@ public class UploadPluginController {
     public @ResponseBody String uninstallPlugin(@PathVariable String pluginName)
             throws IOException {
         ObjectNode configObj = getExtensionConfig();
-        String key = pluginName + "Plugin";
+        String key = pluginName;
         if (configObj.has(key)) {
             JsonNode pluginConfig = configObj.get(key);
             String pluginBundle = pluginConfig.get("bundle").asText();
@@ -278,12 +284,12 @@ public class UploadPluginController {
             storeJSONConfig(config, pluginsConfig);
         }
     }
-	
+
     private void addPluginConfigurationAsPatch(JsonNode json) throws IOException {
         ArrayNode config = null;
         String configPath = pluginsConfig + ".patch";
         Optional<File> pluginsConfigFile = findResource(configPath);
-        
+
         if (pluginsConfigFile.isPresent()) {
             try (FileInputStream input = new FileInputStream(pluginsConfigFile.get())) {
                 config = (ArrayNode)readJSON(input);
@@ -304,7 +310,7 @@ public class UploadPluginController {
             if (remove >= 0) {
                 config.remove(remove);
             }
-            
+
             ObjectNode plugin = new ObjectNode(jsonNodeFactory);
             plugin.put("op", "add");
             plugin.put("path", "/plugins/-");
@@ -326,7 +332,7 @@ public class UploadPluginController {
         	throw new FileNotFoundException(pluginsConfig);
         }
     }
-    
+
     private ArrayNode getPluginsConfigurationPatch() throws IOException {
         Optional<File> pluginsConfigFile = findResource(pluginsConfig + ".patch");
         if (pluginsConfigFile.isPresent()) {
@@ -342,7 +348,7 @@ public class UploadPluginController {
             throws FileNotFoundException, IOException {
         ResourceUtils.storeJSONConfig(getWriteStorage(), context, config, configName);
     }
-    
+
     private void addExtension(String pluginName, String pluginBundle, String translations)
             throws FileNotFoundException, IOException {
         ObjectNode config = null;
@@ -370,7 +376,7 @@ public class UploadPluginController {
             storeJSONConfig(config, extensionsConfig);
         }
     }
-    
+
     private ObjectNode getExtensionConfig() throws IOException {
         Optional<File> extensionsConfigFile = findResource(extensionsConfig);
         if (extensionsConfigFile.isPresent()) {
@@ -405,10 +411,10 @@ public class UploadPluginController {
     public void setDataDir(String dataDir) {
         this.dataDir = dataDir;
     }
-    
+
     public void setContext(ServletContext context) {
         this.context = context;
     }
-    
-    
+
+
 }

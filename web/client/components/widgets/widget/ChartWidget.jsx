@@ -33,6 +33,7 @@ const ChartWidget = ({
     showTable,
     topRightItems,
     confirmDelete = false,
+    dataGrid = {},
     onDelete = () => {},
     toggleTableView = () => {},
     toggleDeleteConfirm = () => {},
@@ -40,6 +41,7 @@ const ChartWidget = ({
     (<WidgetContainer
         id={`widget-chart-${id}`}
         headerStyle={headerStyle}
+        isDraggable={dataGrid.isDraggable}
         title={title}
         icons={icons}
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}

@@ -442,27 +442,20 @@ describe('MapInfoUtils', () => {
             },
             undefined
         ];
-        const floatingToolEnabled = true;
 
         let validator = getValidator();
         let validResponses = validator.getValidResponses(response);
-        let validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
-        expect(validResponses.length).toBe(2);
-        expect(validResponsesFloatingTool.length).toBe(1);
+        expect(validResponses.length).toBe(1);
 
         // Validate format 'PROPERTIES'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
         validResponses = validator.getValidResponses(response);
-        validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
-        expect(validResponses.length).toBe(2);
-        expect(validResponsesFloatingTool.length).toBe(1);
+        expect(validResponses.length).toBe(1);
 
         // Validate format 'JSON'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
         validResponses = validator.getValidResponses(response);
-        validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
-        expect(validResponses.length).toBe(2);
-        expect(validResponsesFloatingTool.length).toBe(1);
+        expect(validResponses.length).toBe(1);
     });
 
     it('getNoValidResponses for vector layer', ()=>{

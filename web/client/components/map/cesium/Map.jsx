@@ -13,7 +13,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import ClickUtils from '../../../utils/cesium/ClickUtils';
-import { ZOOM_TO_EXTENT_HOOK, registerHook } from '../../../utils/MapUtils';
+import {
+    ZOOM_TO_EXTENT_HOOK,
+    registerHook,
+    GET_PIXEL_FROM_COORDINATES_HOOK,
+    GET_COORDINATES_FROM_PIXEL_HOOK
+} from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import assign from 'object-assign';
 import { throttle } from 'lodash';
@@ -335,6 +340,12 @@ class CesiumMap extends React.Component {
         this.pauserStream$ = pauserStream$;
     };
     registerHooks = () => {
+        // Unregister hooks as coming from a leaflet or openlayer map retains hooks
+        // causing issue in feature info click
+        this.props.hookRegister.registerHook(GET_PIXEL_FROM_COORDINATES_HOOK);
+        this.props.hookRegister.registerHook(GET_COORDINATES_FROM_PIXEL_HOOK);
+
+        // Register hook
         this.props.hookRegister.registerHook(ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
             // TODO: manage padding and maxZoom
             const bounds = reprojectBbox(extent, crs, 'EPSG:4326');

@@ -11,7 +11,7 @@ import getProjectionDefs from '../../map/enhancers/getProjectionDefs';
 import onMapViewChanges from '../../map/enhancers/onMapViewChanges';
 import {compose} from 'recompose';
 import { handlingUnsupportedProjection } from '../../map/enhancers/handlingUnsupportedProjection';
-import {withOnClick, withPopupSupport} from './enhancers/withIdentifyPopup';
+import {withOnClick, withPopupSupport} from '../../common/enhancers/withIdentifyPopup';
 import BaseMap from '../../map/BaseMap';
 
 export default compose(

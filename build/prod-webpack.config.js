@@ -1,11 +1,9 @@
 const path = require("path");
-const assign = require('object-assign');
 
 const themeEntries = require('./themes.js').themeEntries;
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const DynamicPublicPathPlugin = require("dynamic-public-path-webpack-plugin");
-
+const ModuleFederationPlugin = require('./moduleFederation').plugin;
 const paths = {
     base: path.join(__dirname, ".."),
     dist: path.join(__dirname, "..", "web", "client", "dist"),
@@ -14,16 +12,14 @@ const paths = {
 };
 
 module.exports = require('./buildConfig')(
-    assign({
+    {
         "mapstore2": path.join(paths.code, "product", "app"),
         "embedded": path.join(paths.code, "product", "embedded"),
         "ms2-api": path.join(paths.code, "product", "api")
     },
-    require('./examples')
-    ),
     themeEntries,
     paths,
-    extractThemesPlugin,
+    [extractThemesPlugin, ModuleFederationPlugin],
     true,
     "dist/",
     undefined,
@@ -47,10 +43,5 @@ module.exports = require('./buildConfig')(
             hash: true,
             filename: 'api.html'
         })
-    ].concat(Object.keys(require('./examples')).map(function(example) {
-        return new DynamicPublicPathPlugin({
-            externalGlobal: 'window.mapStoreDist',
-            chunkName: example
-        });
-    }))
+    ]
 );
