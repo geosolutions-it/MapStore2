@@ -9,7 +9,7 @@ import expect from 'expect';
 import {updatePages, gridUpdateToQueryUpdate} from '../FeatureGridUtils';
 
 
-describe.only('FeatureGridUtils', () => {
+describe('FeatureGridUtils', () => {
     it('Test updatePages when needPages * size is less then features', () => {
         const oldFeatures = Array(350);
         const features = Array(60);
@@ -104,6 +104,50 @@ describe.only('FeatureGridUtils', () => {
         expect(queryUpdateFilter.filterFields[1].operator).toBe("=");
         expect(queryUpdateFilter.filterFields[2].value).toBe(10);
         expect(queryUpdateFilter.filterFields[2].operator).toBe("<");
+
+    });
+    it('gridUpdateToQueryUpdate with multiple numbers and multiple strings', () => {
+        const gridUpdate1 = {
+            type: "number",
+            attribute: "ATTR_2_NUMERIC",
+            operator: null,
+            value: "> 300, 69, < 10",
+            rawValue: "> 300, 69, < 10"
+        };
+
+        const oldFilterObject = {
+            "groupFields": [{"id": "ATTR_1_STRING", "logic": "OR", "groupId": 1, "index": 0}],
+            "filterFields": [
+                {
+                    "attribute": "ATTR_1_STRING",
+                    "rowId": 1608204971082,
+                    "type": "string",
+                    "groupId": "ATTR_1_STRING",
+                    "operator": "ilike",
+                    "value": "cat"
+                },
+                {"attribute": "ATTR_1_STRING",
+                    "rowId": 1608204971082,
+                    "type": "string",
+                    "groupId": "ATTR_1_STRING",
+                    "operator": "ilike",
+                    "value": "to"
+                }
+            ]};
+
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, oldFilterObject);
+        expect(queryUpdateFilter.filterFields.length).toBe(5);
+        expect(queryUpdateFilter.groupFields.length).toBe(2);
+        expect(queryUpdateFilter.filterFields[0].value).toBe("cat");
+        expect(queryUpdateFilter.filterFields[0].operator).toBe("ilike");
+        expect(queryUpdateFilter.filterFields[1].value).toBe("to");
+        expect(queryUpdateFilter.filterFields[1].operator).toBe("ilike");
+        expect(queryUpdateFilter.filterFields[2].value).toBe(300);
+        expect(queryUpdateFilter.filterFields[2].operator).toBe(">");
+        expect(queryUpdateFilter.filterFields[3].value).toBe(69);
+        expect(queryUpdateFilter.filterFields[3].operator).toBe("=");
+        expect(queryUpdateFilter.filterFields[4].value).toBe(10);
+        expect(queryUpdateFilter.filterFields[4].operator).toBe("<");
 
     });
 });

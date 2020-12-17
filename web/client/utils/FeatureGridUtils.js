@@ -206,16 +206,19 @@ export const getOperatorAndValue = (value, type) => {
 
 export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
 
+    const cleanGroupFields = oldFilterObj.groupFields?.filter((group) => attribute !== group.id && group.id !== 1 ) || [];
     if ((type === 'string' || type === 'number') && isString(value) && value?.indexOf(",") !== -1) {
         const multipleValues = value?.split(",").filter(identity) || [];
-        const cleanFilterFields = oldFilterObj.filterFields?.filter((field) => attribute === field.attribute) || [];
+        const cleanFilterFields = oldFilterObj.filterFields?.filter((field) => attribute !== field.attribute) || [];
         return {
             ...oldFilterObj,
-            groupFields: [{
-                id: 1,
-                logic: "OR",
-                index: 0
-            }],
+            groupFields: cleanGroupFields.concat([
+                {
+                    id: attribute,
+                    logic: "OR",
+                    groupId: 1,
+                    index: 0
+                }]),
             filterFields: cleanFilterFields.concat(multipleValues.map((v) => {
                 let {operator: op, newVal} = getOperatorAndValue(v, type);
 
@@ -223,7 +226,7 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
                     attribute,
                     rowId: Date.now(),
                     type: type,
-                    groupId: 1,
+                    groupId: attribute,
                     operator: op,
                     value: newVal
                 };
@@ -235,11 +238,13 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
 
     return {
         ...oldFilterObj,
-        groupFields: [{
-            id: 1,
-            logic: "AND",
-            index: 0
-        }],
+        groupFields: cleanGroupFields.concat([
+            {
+                id: attribute,
+                logic: "OR",
+                groupId: 1,
+                index: 0
+            }]),
         filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value)
             ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                 attribute,
