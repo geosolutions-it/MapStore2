@@ -10,22 +10,59 @@
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 
 // Takes package.json dependencies to share them all.
-const dependencies = require('../package.json').dependencies;
-
-// excludes some problematic modules from sharing
-const excludes = [
-    "react-draft-wysiwyg", "html-to-draftjs", "geostyler-geocss-parser", "@geosolutions/wkt-parser", "@turf/bbox-polygon"
-];
+// const dependencies = require('../package.json').dependencies;
+//
+// // excludes some problematic modules from sharing
+// const excludes = [
+//     "react-draft-wysiwyg", "html-to-draftjs", "geostyler-geocss-parser", "@geosolutions/wkt-parser", "@turf/bbox-polygon"
+// ];
 
 // the shared libraries, to use both in all federated modules (extensions/main product)
 const shared = {
-    ...Object.keys(dependencies).filter(v => !excludes.includes(v)).reduce((acc, v) => ({
-        ...acc,
-        [v]: {
-            eager: true,
-            singleton: true
-        }
-    }), {})
+    "recompose": {
+        eager: true,
+        singleton: true
+    },
+    "url": {
+        eager: true,
+        singleton: true
+    },
+    "redux-observable": {
+        eager: true,
+        singleton: true
+    },
+    "lodash": {
+        eager: true,
+        singleton: true
+    },
+    "lodash/curry": {
+        eager: true,
+        singleton: true
+    },
+    "react-intl": {
+        eager: true,
+        singleton: true
+    },
+    "bootstrap": {
+        eager: true,
+        singleton: true
+    },
+    "rxjs": {
+        eager: true,
+        singleton: true
+    },
+    "react-redux": {
+        eager: true,
+        singleton: true
+    },
+    react: {
+        eager: true,
+        singleton: true
+    },
+    'react-dom': {
+        eager: true,
+        singleton: true
+    }
 };
 
 /**
