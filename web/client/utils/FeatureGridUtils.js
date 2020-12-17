@@ -240,8 +240,8 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
         ...oldFilterObj,
         groupFields: cleanGroupFields.concat([
             {
-                id: attribute,
-                logic: "OR",
+                id: 1,
+                logic: "AND",
                 groupId: 1,
                 index: 0
             }]),

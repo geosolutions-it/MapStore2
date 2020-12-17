@@ -83,6 +83,8 @@ describe('FeatureGridUtils', () => {
         };
         const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
         expect(queryUpdateFilter.filterFields.length).toBe(2);
+        expect(queryUpdateFilter.groupFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("OR");
         expect(queryUpdateFilter.filterFields[0].value).toBe("str1");
         expect(queryUpdateFilter.filterFields[0].operator).toBe("ilike");
         expect(queryUpdateFilter.filterFields[1].value).toBe("str2");
@@ -98,6 +100,8 @@ describe('FeatureGridUtils', () => {
         };
         const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
         expect(queryUpdateFilter.filterFields.length).toBe(3);
+        expect(queryUpdateFilter.groupFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("OR");
         expect(queryUpdateFilter.filterFields[0].value).toBe(300);
         expect(queryUpdateFilter.filterFields[0].operator).toBe(">");
         expect(queryUpdateFilter.filterFields[1].value).toBe(69);
@@ -139,7 +143,9 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter.filterFields.length).toBe(5);
         expect(queryUpdateFilter.groupFields.length).toBe(2);
         expect(queryUpdateFilter.groupFields[0].id).toBe("ATTR_1_STRING");
-        expect(queryUpdateFilter.groupFields[1].id).toBe("ATTR_2_NUMERIC");
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("OR");
+        expect(queryUpdateFilter.groupFields[0].id).toBe("ATTR_1_STRING");
+        expect(queryUpdateFilter.groupFields[1].logic).toBe("OR");
         expect(queryUpdateFilter.filterFields[0].value).toBe("cat");
         expect(queryUpdateFilter.filterFields[0].operator).toBe("ilike");
         expect(queryUpdateFilter.filterFields[1].value).toBe("to");
@@ -150,6 +156,5 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter.filterFields[3].operator).toBe("=");
         expect(queryUpdateFilter.filterFields[4].value).toBe(10);
         expect(queryUpdateFilter.filterFields[4].operator).toBe("<");
-
     });
 });
