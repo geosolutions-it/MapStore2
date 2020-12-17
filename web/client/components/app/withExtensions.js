@@ -108,7 +108,7 @@ function withExtensions(AppComponent) {
 
         removeExtension = (plugin) => {
             this.setState({
-                removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"]
+                removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"] // TODO: check
             });
         };
 
@@ -130,20 +130,19 @@ function withExtensions(AppComponent) {
                     const plugins = response.data;
                     Promise.all(Object.keys(plugins).map((pluginName) => {
                         const bundlePath = this.getAssetPath(plugins[pluginName].bundle);
-                        return PluginsUtils.loadPlugin(bundlePath).then((loaded) => {
-                            return loaded.plugin.loadPlugin().then((impl) => {
-                                augmentStore({ reducers: impl.reducers || {}, epics: impl.epics || {} });
-                                const pluginDef = {
-                                    [pluginName]: {
-                                        [pluginName]: {
-                                            loadPlugin: (resolve) => {
-                                                resolve(impl);
-                                            }
+                        return PluginsUtils.loadPlugin(bundlePath, pluginName).then((loaded) => {
+                            const impl = loaded.plugin?.default ?? loaded.plugin;
+                            augmentStore({ reducers: impl?.reducers ?? {}, epics: impl?.epics ?? {} });
+                            const pluginDef = {
+                                [pluginName + "Plugin"]: {
+                                    [pluginName + "Plugin"]: {
+                                        loadPlugin: (resolve) => {
+                                            resolve(impl);
                                         }
                                     }
-                                };
-                                return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
-                            });
+                                }
+                            };
+                            return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
                         }).catch(e => {
                             // log the errors before re-throwing
                             console.error(`Error loading MapStore extension "${pluginName}":`, e); // eslint-disable-line
