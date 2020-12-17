@@ -39,9 +39,7 @@ describe('IconInput component', () => {
                 onLoad={(error, imageUrl) => {
                     try {
                         expect(imageUrl).toBe(value);
-                        const iconInputImageNode = document.querySelector('.ms-style-editor-icon-input-image');
-                        expect(iconInputImageNode).toBeTruthy();
-                        expect(iconInputImageNode.style.backgroundImage).toBeTruthy();
+                        expect(error.type).toBe('warning');
                     } catch (e) {
                         done(e);
                     }
@@ -59,8 +57,8 @@ describe('IconInput component', () => {
                 value={value}
                 onLoad={(error, imageUrl) => {
                     try {
-                        expect(error).toBe(true);
-                        expect(imageUrl).toBe(undefined);
+                        expect(error).toEqual({ type: 'error', messageId: 'imageSrcEmpty' });
+                        expect(imageUrl).toBe('');
                         const errorIconNode = document.querySelector('.glyphicon-exclamation-sign');
                         expect(errorIconNode).toBeTruthy();
                     } catch (e) {

@@ -11,9 +11,18 @@ import PropTypes from 'prop-types';
 import { FormGroup, FormControl as FormControlRB, Glyphicon as GlyphiconRB } from 'react-bootstrap';
 import localizedProps from '../misc/enhancers/localizedProps';
 import tooltip from '../misc/enhancers/tooltip';
+import withDebounceOnCallback from '../misc/enhancers/withDebounceOnCallback';
 import Loader from '../misc/Loader';
+import { validateImageSrc } from '../../utils/StyleEditorUtils';
 
-const FormControl = localizedProps('placeholder')(FormControlRB);
+function FormControlOnChange(props) {
+    return <FormControlRB { ...props } onChange={(event) => props.onChange(event.target.value)} />;
+}
+
+const FormControl = withDebounceOnCallback('onChange', 'value')(
+    localizedProps('placeholder')(FormControlOnChange)
+);
+
 const Glyphicon = tooltip(GlyphiconRB);
 
 /**
@@ -23,7 +32,7 @@ const Glyphicon = tooltip(GlyphiconRB);
  * @class
  * @prop {string} value href of the image
  * @prop {function} onChange returns the updated href value of the image
- * @prop {function} onLoad callback to check if the image has been loaded correctly arguments: error and image url
+ * @prop {function} onLoad callback to check if the image has been loaded correctly
  */
 function IconInput({
     value,
@@ -41,28 +50,36 @@ function IconInput({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(true);
     const [imageUrl, setImageUrl] = useState(value);
-    const onImgLoad = (newImageUrl) => {
-        if (isMounted.current) {
-            setLoading(false);
-            setError(false);
-            onLoad(false, newImageUrl);
-        }
-    };
-    const onImgError = () => {
-        if (isMounted.current) {
-            setLoading(false);
-            setError(true);
-            onLoad(true);
-        }
-    };
+
     const onImgSourceChange = (newImageUrl, shouldUpdate) => {
         setImageUrl(newImageUrl);
         setLoading(true);
         setError(false);
-        const img = new Image();
-        img.onload = onImgLoad.bind(null, newImageUrl);
-        img.onerror = onImgError;
-        img.src = newImageUrl;
+        validateImageSrc(newImageUrl)
+            .then((response) => {
+                if (isMounted.current) {
+                    let newError = false;
+                    if (response.isBase64) {
+                        newError = { type: 'warning', messageId: 'imageSrcNotSupportedBase64Image' };
+                    }
+                    setError(newError);
+                    setLoading(false);
+                    onLoad(newError, newImageUrl);
+                }
+            })
+            .catch((response) => {
+                if (isMounted.current) {
+                    const newError = !response.isBase64 && response.messageId === 'imageSrcLoadError'
+                        // if the image is an url and cannot be loaded
+                        // we should only warn the user
+                        // it could be only a connection issue
+                        ? { type: 'warning', messageId: response.messageId }
+                        : { type: 'error', messageId: response.messageId };
+                    setError(newError);
+                    setLoading(false);
+                    onLoad(newError, newImageUrl);
+                }
+            });
         // avoid to trigger onChange on component mount
         if (shouldUpdate) {
             onChange(newImageUrl);
@@ -83,7 +100,8 @@ function IconInput({
                     style={{ paddingRight: 26 }}
                     placeholder="styleeditor.placeholderEnterImageUrl"
                     value={value}
-                    onChange={event => onImgSourceChange(event.target.value, true)} />
+                    debounceTime={300}
+                    onChange={newImageUrl => onImgSourceChange(newImageUrl, true)} />
             </FormGroup>
             <div
                 style={{
@@ -109,10 +127,7 @@ function IconInput({
                 />}
                 {error && <Glyphicon
                     glyph="exclamation-sign"
-                    tooltipId={imageUrl.length === 0
-                        ? 'styleeditor.missingImageUrl'
-                        : 'styleeditor.invalidImageUrl'
-                    }
+                    tooltipId={`styleeditor.${error.messageId}`}
                 />}
                 {loading && <Loader size={20}/>}
             </div>

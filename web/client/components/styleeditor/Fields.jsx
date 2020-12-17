@@ -160,15 +160,28 @@ export const fields = {
         onChange
     }) => {
         const [error, setError] = useState(false);
+        const currentValue = isObject(value)
+            ? value.src
+            : value;
         return (
             <PropertyField
                 label={label}
-                invalid={error}>
+                invalid={!!(error?.type === 'error')}
+                warning={!!(error?.type === 'warning')}>
                 <IconInput
                     label={label}
-                    value={value}
-                    onChange={onChange}
-                    onLoad={(err) => setError(err)}
+                    value={currentValue}
+                    onChange={(newValue) => {
+                        onChange(newValue);
+                        setError(false);
+                    }}
+                    onLoad={(err, src) => {
+                        setError(err);
+                        if (err.type === 'error') {
+                            // send the error to VisualStyleEditor component
+                            onChange({ src, errorId: err.messageId });
+                        }
+                    }}
                 />
             </PropertyField>
         );
