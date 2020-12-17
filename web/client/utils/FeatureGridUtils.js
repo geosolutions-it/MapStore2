@@ -176,6 +176,11 @@ export const applyAllChanges = (orig, changes = {}) => applyChanges(orig, change
 
 export const EXPRESSION_REGEX = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?\s*(-?\d*\.?\d*)\s*/;
 
+/**
+ * handle parsing of raw values for string and number types
+ * @param {string} value the value in string form, with operator in case of number
+ * @param {string} type the type of the value, number or string
+ */
 export const getOperatorAndValue = (value, type) => {
     if (type === "string") {
         return {newVal: trim(value), operator: "ilike"};
@@ -197,6 +202,7 @@ export const getOperatorAndValue = (value, type) => {
     }
     return {newVal, operator};
 };
+
 
 export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
 
