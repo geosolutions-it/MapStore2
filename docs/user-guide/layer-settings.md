@@ -55,9 +55,9 @@ Through the second section of the layer settings panel it is possible to change 
 
 In particular, the user is allowed to:
 
-* Set the rendering image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif` 
+* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif` 
 
-* Set the size of the layer tile: choosing between `256` or `512`
+* Set the size of layer tiles: choosing between `256` or `512`
 
 * Set the opacity value of the layer (in %)
 
@@ -74,7 +74,7 @@ In particular, the user is allowed to:
 * A preview of the legend is shown with the applied custom values from Legend fields above.
 
 !!!Warning
-    The *Format* and *Layer tile size* options are available only for the layer added by CSW and WMS services. 
+    The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources. 
 
 ## Style
 
@@ -141,7 +141,7 @@ The editor is easy to approach thanks also to the following functions:
 
 ### Visual Editor Style
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) also allows to edit the layers style using the *Visual editor*: clicking on the <img src="../img/button/visual_editor_style_button.jpg" class="ms-docbutton"/> button a page opens allows the user to customize the style through the symbolizers, which can be: *Mark*, *Icon*, *Line*, *Fill* and *Text*. 
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) also allows to edit the layers style using a *Visual editor* with a most user friendly UI.Clicking on the <img src="../img/button/visual_editor_style_button.jpg" class="ms-docbutton"/> button a section opens so that the user can customize the style through with a visual stile editor by adding editing symbolizers, which can be: *Mark*, *Icon*, *Line*, *Fill* and *Text*. It is anyway possible to switch to the text editor mode if necessary for a more complex styling.
 
 <img src="../img/layer-settings/visual_editor_style.jpg" class="ms-docimage"  style="max-width:500px;">
 
@@ -149,9 +149,9 @@ Once a symbolizer has been added and customized, you can:
 
 <img src="../img/layer-settings/style_options.jpg" class="ms-docimage"  style="max-width:500px;">
 
-* **Filter** the symbolizer, as explained [here](filtering-layers.md#attribute-filter), by clicking the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
+* **Filter** he style rule, as explained [here](filtering-layers.md#attribute-filter), by clicking the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
 
-* Add a **Scale denominator filter** (`max` and `min` scale) within which the level will be displayed on the map by clicking the <img src="../img/button/scale_denominator_button.jpg" class="ms-docbutton"/> button.
+* Add a **Scale denominator filter** (`max` and `min` scale) to visualize the style rule only within certain scale limits. This is possible by clicking the <img src="../img/button/scale_denominator_button.jpg" class="ms-docbutton"/> button.
 
 * **Remove** the symbolizer by clicking the <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/> button.
 
@@ -167,47 +167,47 @@ The mark can have different `Shape`, `Color`, `Stroke` with different `Color` an
 
 #### Icon 
 
-With the icon panel, which opens by clicking on <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button, the editor is allowed to add an image as an icon (via its *URL*) and customize the icon `Opacity`, `Size` and `Rotation` angle:
+With the icon panel, which opens by clicking on <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button, the style editor is allowed to add an image as an icon (by specifying its *URL*) and customize the icon `Opacity`, `Size` and `Rotation` angle:
 
 <img src="../img/layer-settings/icon_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
 #### Line
 
-The line types allows you to customize the lines of the layer: clicking on the <img src="../img/button/add_line_button.jpg" class="ms-docbutton"/> button a line panel appears: 
+The line rule is used to style linear features of the layer: clicking on the <img src="../img/button/add_line_button.jpg" class="ms-docbutton"/>  button a panel allows the user to edit the corresponding properties. 
 
 <img src="../img/layer-settings/line_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The editor can change a `Stroke color`, a `Stroke width`, a `Line style` (*continuous*, *dashed*, etc), the `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). En example can be the following one:
+The editor can change a `Stroke color`, a `Stroke width`, a `Line style` (*continuous*, *dashed*, etc), the `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). An example can be the following one:
 
 <img src="../img/layer-settings/ex_line_style.gif" class="ms-docimage">
 
 #### Fill
 
-With the fill panel, which opens by clicking on <img src="../img/button/add_fill_button.jpg" class="ms-docbutton"/> button, the editor is allowed to customize the `Fill color`, the `Outline color` and the `Outline width`:
+The Fill rule is used to style polygon features. Clicking on <img src="../img/button/add_fill_button.jpg" class="ms-docbutton"/> button, the editor is allowed to customize the `Fill color`, the `Outline color` and the `Outline width`:
 
 <img src="../img/layer-settings/ex_fill_style.gif" class="ms-docimage">
 
 #### Text
 
-The text types display a formatted text on a layer: clicking on the <img src="../img/button/add_text_button.jpg" class="ms-docbutton"/> button a text panel appears: 
+The Text rule is used to style features as text labels. Text labels are positioned either at points or along linear paths derived from the geometry being labelled. Clicking on the <img src="../img/button/add_text_button.jpg" class="ms-docbutton"/> button a specific panel opens: 
 
 <img src="../img/layer-settings/text_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The editor is allowed to edit or choose the attribute of the `Label`, customized the `Font` (*DejaVu Sans*, *Serif*, etc , choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Weight` (*Normal* or *Bold*) and select the desire `Halo color` and `Halo weight`. You can also choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one:
+The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered test (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Weight` (*Normal* or *Bold*) and select the desired `Halo color` and Halo weight. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
 
 <img src="../img/layer-settings/ex_text_style.gif" class="ms-docimage">
 
 ### Style Methods 
 
-Different styles methods can be used for each symbolizer: by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, present on the panel of each symbolizer, the editor can choose between:
+Different styles methods can be used for each style rule. Clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel of each symbolizer, the editor can choose one of the following depending on the rule type:
 
 * *Simple style*
 
 * *Classification style*
 
-* *Pattern mark style*
+* *Pattern mark style*  (available only for rules of type Line and Fill)
 
-* *Patter icon style*
+* *Patter icon style*  (available only for rules of type Line and Fill)
 
 #### Simple style
 
@@ -215,31 +215,31 @@ The Simple style is the default style described above for each symbolizer.
 
 #### Classification style
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to classify the style based on the attributes of the layer. The *Classification style* is available for *Marker*, *Line*, *Fill* and *Text* by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the <img src="../img/button/classification_style_button.jpg" class="ms-docbutton"/> options from the dropdown menu. 
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to classify the style based on the attributes of the layer. The *Classification style* is available for *Marker*, *Line*, *Fill* and *Text* by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Classification style** options from the dropdown menu. 
 
 <img src="../img/layer-settings/classification_styl_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-It this case the editor is allowed to choose a `Color ramp` and `Reverse order` of the color, the `Attribute` with which to classify the level, the `Method` (*Quantile*, *Equal interval*, *Natural breaks* and *Standard deviation*), the `Intervals` (px) and the `Opacity` (%). En example of the *Classification style* for a *Fill* can be the following one:
+It this case the editor is allowed to choose a `Color ramp` and the order (with `Reverse order`) of the classification intervals colors. It is obviously possible to select the layer `Attribute` to use for the classification along with the classification `Method` (*Quantile*, *Equal interval*, *Natural breaks* and *Standard deviation*), the number of classification `Intervals` and the `Opacity` (%) of each interval range. An example of the *Classification style* for a *Fill* rule type can be the following one:
 
 <img src="../img/layer-settings/classification_style_ex.jpg" class="ms-docimage">
 
 #### Pattern mark style
 
-With the *Pattern mark style* you can edit the *Line* or the *Fill* and add a mark by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the <img src="../img/button/pattern_mark_style_button.jpg" class="ms-docbutton"/> options from the dropdown menu. 
+With the *Pattern mark style* it is possible to represent *Line* or *Fill*  style rules with a mark by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern mark style** options from the dropdown menu. 
 
 <img src="../img/layer-settings/classify_mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The editor can modify the *Mark* as explained [here](layer-settings.md#mark) and the basic [line](layer-settings.md#line) or [fill](layer-settings.md#fill) options. Take a look at the following example of the *Pattern mark style* for the *Line*.
+The style editor can configure a *Mark* as explained [here](layer-settings.md#mark) along with the usual options available for rules of type [line](layer-settings.md#line) or [fill](layer-settings.md#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
 
 <img src="../img/layer-settings/classify_mark_ex.jpg" class="ms-docimage">
 
 #### Patter icon style
 
-With the *Pattern icon style* you can edit the *Line* or the *Fill* and add an icon by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the <img src="../img/button/pattern_icon_style_button.jpg" class="ms-docbutton"/> options from the dropdown menu. 
+With the *Pattern icon style*  it is possible to represent *Line* or *Fill* style rules with an icon by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern icon style** options from the dropdown menu. 
 
 <img src="../img/layer-settings/classify_icon_style_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The editor can modify the *Icon* as explained [here](layer-settings.md#icon) and the basic [line](layer-settings.md#line) or [fill](layer-settings.md#fill) options. Take a look at the following example of the *Pattern icon style* for the *Fill*.
+The style editor can configure the *Icon* as explained [here](layer-settings.md#icon) along with the usual options available for rules of type [line](layer-settings.md#line) or [fill](layer-settings.md#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
 
