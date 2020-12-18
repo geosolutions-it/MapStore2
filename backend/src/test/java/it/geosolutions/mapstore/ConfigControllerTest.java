@@ -14,11 +14,17 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 
+
 import javax.servlet.ServletContext;
 
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.servlet.HandlerMapping;
 
 import it.geosolutions.mapstore.ConfigController.ResourceNotAllowedException;
 
@@ -33,7 +39,7 @@ public class ConfigControllerTest {
     @Test
     public void testLoadAllowedResource() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
-        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/localConfig.json"));
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/localConfig.json");
         Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
         String resource = new String(controller.loadResource("localConfig", false), "UTF-8");
@@ -44,7 +50,7 @@ public class ConfigControllerTest {
     @Test
     public void testLoadNotAllowedResource() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
-        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/localConfig.json"));
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/localConfig.json");
         Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
         try {
@@ -92,16 +98,89 @@ public class ConfigControllerTest {
     @Test
     public void testLoadAsset() throws IOException {
     	ServletContext context = Mockito.mock(ServletContext.class);
-        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/index.js"));
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/index.js");
         Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
-        String resource = new String(controller.loadAsset("localConfig"), "UTF-8");
-        assertEquals("console.log('hello')", resource.trim());
+    	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/index.js");
+    	MockHttpServletResponse response = new MockHttpServletResponse();
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/index.js");
+        controller.loadAsset(request, response);
+        assertEquals(response.getContentType(), "application/javascript");
+        assertEquals("console.log('hello')\n", response.getContentAsString()); // \n should not be there, but is not a mess
+        tempResource.delete();
+    }
+    @Test
+    public void testLoadJpegAsset() throws IOException {
+    	ServletContext context = Mockito.mock(ServletContext.class);
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/test.jpg");
+        Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
+        controller.setContext(context);
+    	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/test.jpg");
+    	MockHttpServletResponse response = new MockHttpServletResponse();
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/test.jpg");
+        controller.loadAsset(request, response);
+        assertEquals(response.getContentType(), "image/jpeg");
+        byte[] expected = FileUtils.readFileToByteArray(tempResource);
+        byte[] result = response.getContentAsByteArray();
+        assertEquals(expected.length, result.length);
+        for(int i = 0; i < expected.length; i++) {
+        	assertEquals(expected[i], result[i]);
+        }
+
+        tempResource.delete();
+    }
+    @Test
+    public void testLoadPngAsset() throws IOException {
+    	ServletContext context = Mockito.mock(ServletContext.class);
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/test.png");
+        Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
+        controller.setContext(context);
+    	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/test.jpg");
+    	MockHttpServletResponse response = new MockHttpServletResponse();
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/test.png");
+        controller.loadAsset(request, response);
+        assertEquals(response.getContentType(), "image/png");
+        byte[] expected = FileUtils.readFileToByteArray(tempResource);
+        byte[] result = response.getContentAsByteArray();
+        assertEquals(expected.length, result.length);
+        for(int i = 0; i < expected.length; i++) {
+        	assertEquals(expected[i], result[i]);
+        }
+        tempResource.delete();
+    }
+    @Test
+    public void testLoadCssAsset() throws IOException {
+    	ServletContext context = Mockito.mock(ServletContext.class);
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/style.css");
+        Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
+        controller.setContext(context);
+    	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/style.css");
+    	MockHttpServletResponse response = new MockHttpServletResponse();
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/style.css");
+        controller.loadAsset(request, response);
+        assertEquals(response.getContentType(), "text/css");
+        assertEquals(".test{background: none}\n", response.getContentAsString()); // \n should not be there, but is not a mess
         tempResource.delete();
     }
 
+
     @Test
     public void testLoadAssetFromDataDir() throws IOException {
+    	File dataDir = TestUtils.getDataDir();
+        File tempResource = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/index.js"), dataDir, "index.js");
+        controller.setDataDir(dataDir.getAbsolutePath());
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/index.js");
+    	MockHttpServletResponse response = new MockHttpServletResponse();
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/index.js");
+        controller.loadAsset(request, response);
+        assertEquals(response.getContentType(), "application/javascript");
+        assertEquals("console.log('hello')\n", response.getContentAsString()); // \n should not be there, but is not a mess
+        tempResource.delete();
+    }
+    @Test
+    public void testLoadAssetImageFromDataDir() throws IOException {
     	File dataDir = TestUtils.getDataDir();
         File tempResource = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/index.js"), dataDir, "index.js");
         controller.setDataDir(dataDir.getAbsolutePath());
@@ -114,8 +193,8 @@ public class ConfigControllerTest {
 
     @Test
     public void testOverrides() throws IOException {
-        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/localConfigFull.json"));
-        File tempProperties = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/mapstore.properties"));
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/localConfigFull.json");
+        File tempProperties = TestUtils.copyToTemp(ConfigControllerTest.class, "/mapstore.properties");
         ServletContext context = Mockito.mock(ServletContext.class);
         Mockito.when(context.getRealPath(Mockito.endsWith(".json"))).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
@@ -130,7 +209,7 @@ public class ConfigControllerTest {
     public void testPatch() throws IOException {
         File dataDir = TestUtils.getDataDir();
         controller.setDataDir(dataDir.getAbsolutePath());
-        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json"));
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
         File tempPatch = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json.patch"), dataDir,
                 "/pluginsConfig.json.patch");
         ServletContext context = Mockito.mock(ServletContext.class);

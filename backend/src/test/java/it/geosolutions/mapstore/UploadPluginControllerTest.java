@@ -35,9 +35,9 @@ public class UploadPluginControllerTest {
     public void testUploadValidBundle() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json"));
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
-        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/extensions.json"));
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
@@ -62,9 +62,9 @@ public class UploadPluginControllerTest {
     public void testUploadValidBundleReplace() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/pluginsConfigWithPlugin.json"));
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfigWithPlugin.json");
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
-        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/extensionsWithPlugin.json"));
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensionsWithPlugin.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
@@ -92,10 +92,10 @@ public class UploadPluginControllerTest {
         controller.setContext(context);
         File tempDir = TestUtils.getDataDir();
         controller.setDataDir(tempDir.getAbsolutePath());
-        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json"));
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.endsWith(".patch"))).thenReturn(tempDir.getAbsolutePath() + "/pluginsConfig.json.patch");
-        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/extensions.json"));
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
@@ -120,9 +120,9 @@ public class UploadPluginControllerTest {
     public void testCustomBundlesPath() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json"));
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
         Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
-        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/extensions.json"));
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
         controller.setBundlesPath("custom");
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
@@ -146,9 +146,9 @@ public class UploadPluginControllerTest {
     public void testUploadInvalidBundle() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json"));
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
         Mockito.when(context.getRealPath(Mockito.contains("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
-        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/extensions.json"));
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
@@ -212,9 +212,9 @@ public class UploadPluginControllerTest {
     public void testUninstallPlugin() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
-        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/pluginsConfigWithPlugin.json"));
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfigWithPlugin.json");
         Mockito.when(context.getRealPath(Mockito.contains("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
-        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/extensionsWithPlugin.json"));
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensionsWithPlugin.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {

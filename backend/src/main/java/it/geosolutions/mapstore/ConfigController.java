@@ -167,20 +167,24 @@ public class ConfigController {
     }
 
     private Resource readResourceFromFile(File file, boolean applyOverrides, Optional<File> patch) throws IOException {
-
+    	Resource resource = new Resource();
+        resource.file = file;
+        resource.type = Files.probeContentType(Paths.get(file.getAbsolutePath()));
         try (Stream<String> stream =
                 Files.lines( Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8); ) {
             Properties props = readOverrides();
             if (applyOverrides && (!"".equals(mappings) && props != null || patch.isPresent())) {
-                return resourceWithPatch(stream, props, patch);
+            	resource.data = resourceWithPatch(stream, props, patch); 
+                return resource;
             }
-            Resource resource = new Resource();
+            
+            
             try {
             	StringBuilder contentBuilder = new StringBuilder();
                 stream.forEach(new Consumer<String>() {
                     @Override
                     public void accept(String s) {
-                        contentBuilder.append(s).append("\n");
+                        contentBuilder.append(s).append("\n"); // note: this adds a new line at the end of js files too.
                     }
                 });
                 resource.data = contentBuilder.toString();
@@ -188,15 +192,12 @@ public class ConfigController {
             	// if can not read the file line by line(e.g. images) pass the file.
             	resource.file = file;
             }
-            resource.type = Files.probeContentType(Paths.get(file.getAbsolutePath()));
             return resource;
         }
 
     }
 
-    private Resource resourceWithPatch(Stream<String> stream, Properties props, Optional<File> patch) throws IOException {
-        Resource resource = new Resource();
-        resource.type = "application/json";
+    private String resourceWithPatch(Stream<String> stream, Properties props, Optional<File> patch) throws IOException {
         JsonNode jsonObject = readJsonConfig(stream);
         if (patch.isPresent()) {
             jsonObject = mergeJSON(jsonObject, jsonMapper.readValue(patch.get(), JsonPatch.class));
@@ -206,11 +207,8 @@ public class ConfigController {
             for(String mapping : mappings.split(",")) {
                 jsonObject = fillMapping(mapping, props, jsonObject);
             }
-        } else {
-
-        }
-        resource.data = jsonObject.toString();
-        return resource;
+        } 
+        return jsonObject.toString();
     }
 
     /**
