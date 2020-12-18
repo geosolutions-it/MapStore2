@@ -7,10 +7,14 @@
 */
 package it.geosolutions.mapstore;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,13 +23,19 @@ import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +69,12 @@ import it.geosolutions.mapstore.utils.ResourceUtils;
  */
 @Controller
 public class ConfigController {
+    public class Resource {
+        String data;
+        String type;
+        File file;
+    }
+
     private ObjectMapper jsonMapper = new ObjectMapper();
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -97,10 +113,19 @@ public class ConfigController {
     @RequestMapping(value="/load/{resource}", method = RequestMethod.GET)
     public @ResponseBody byte[] loadResource(@PathVariable("resource") String resourceName, @RequestParam(value="overrides", defaultValue="true") boolean applyOverrides) throws IOException {
         if (isAllowed(resourceName)) {
-            return readResource(resourceName + ".json", applyOverrides, resourceName + ".json.patch").getBytes("UTF-8");
+            return toBytes(readResource(resourceName + ".json", applyOverrides, resourceName + ".json.patch"));
         }
         throw new ResourceNotAllowedException("Resource is not allowed");
     }
+    /**
+    * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
+    * Allows loading externalized assets (javascript bundles, translation files, and so on.
+    * @param resourcePath path of the asset to load
+    */
+   public byte[] loadAsset(String resourcePath) throws IOException {
+		return toBytes(readResource(resourcePath, false, ""));
+   }
+   
 
     /**
      * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
@@ -108,21 +133,31 @@ public class ConfigController {
      * The rest of the URL from /loadasset/ is intended to be the path to resource.
      */
     @RequestMapping(value="/loadasset/**", method = RequestMethod.GET)
-    public @ResponseBody byte[] loadAsset(HttpServletRequest request) throws IOException {
+    public void loadAsset(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String resourcePath = ((String) request.getAttribute(
     	        HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE)).split("/loadasset/")[0];
-    	// TODO: prevent directory transversing
-		return loadAsset(resourcePath);
+        // TODO: prevent directory traversing
+        Resource resource = readResource(resourcePath, false, "");
+        response.setContentType(resource.type); 
+        IOUtils.copy(toStream(resource), response.getOutputStream());
     }
-    /**
-     * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
-     * Allows loading externalized assets (javascript bundles, translation files, and so on.
-     * @param resourcePath path of the asset to load
-     */
-    public @ResponseBody byte[] loadAsset(String resourcePath) throws IOException {
-		return readResource(resourcePath, false, "").getBytes("UTF-8");
+    private InputStream toStream(Resource resource) throws IOException {
+    	 // data has been processed (read in UTF-8, must be converted again)
+        if(resource.data != null) {
+        	// check mime type
+        	byte[] bytes = toBytes(resource);
+        	InputStream in = new ByteArrayInputStream(bytes);
+            return in;
+        } else if(resource.file != null) {
+        	return new FileInputStream(resource.file);
+        }
+        return null;
+
     }
-    private String readResource(String resourceName, boolean applyOverrides, String patchName) throws IOException {
+    private byte[] toBytes(Resource resource) throws UnsupportedEncodingException {
+    	return resource.data.getBytes("UTF-8");
+    }
+    private Resource readResource(String resourceName, boolean applyOverrides, String patchName) throws IOException {
     	Optional<File> resource = ResourceUtils.findResource(dataDir, context, resourceName);
     	Optional<File> resourcePatch = patchName.isEmpty() ? Optional.empty() : ResourceUtils.findResource(dataDir, context, patchName);
         if (!resource.isPresent()) {
@@ -131,7 +166,7 @@ public class ConfigController {
         return readResourceFromFile(resource.get(), applyOverrides, resourcePatch);
     }
 
-    private String readResourceFromFile(File file, boolean applyOverrides, Optional<File> patch) throws IOException {
+    private Resource readResourceFromFile(File file, boolean applyOverrides, Optional<File> patch) throws IOException {
 
         try (Stream<String> stream =
                 Files.lines( Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8); ) {
@@ -139,29 +174,43 @@ public class ConfigController {
             if (applyOverrides && (!"".equals(mappings) && props != null || patch.isPresent())) {
                 return resourceWithPatch(stream, props, patch);
             }
-            StringBuilder contentBuilder = new StringBuilder();
-            stream.forEach(new Consumer<String>() {
-                @Override
-                public void accept(String s) {
-                    contentBuilder.append(s).append("\n");
-                }
-            });
-            return contentBuilder.toString();
+            Resource resource = new Resource();
+            try {
+            	StringBuilder contentBuilder = new StringBuilder();
+                stream.forEach(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) {
+                        contentBuilder.append(s).append("\n");
+                    }
+                });
+                resource.data = contentBuilder.toString();
+            } catch (Exception e) {
+            	// if can not read the file line by line(e.g. images) pass the file.
+            	resource.file = file;
+            }
+            resource.type = Files.probeContentType(Paths.get(file.getAbsolutePath()));
+            return resource;
         }
 
     }
 
-    private String resourceWithPatch(Stream<String> stream, Properties props, Optional<File> patch) throws IOException {
+    private Resource resourceWithPatch(Stream<String> stream, Properties props, Optional<File> patch) throws IOException {
+        Resource resource = new Resource();
+        resource.type = "application/json";
         JsonNode jsonObject = readJsonConfig(stream);
         if (patch.isPresent()) {
             jsonObject = mergeJSON(jsonObject, jsonMapper.readValue(patch.get(), JsonPatch.class));
         }
         if (!"".equals(mappings) && props != null) {
+
             for(String mapping : mappings.split(",")) {
                 jsonObject = fillMapping(mapping, props, jsonObject);
             }
+        } else {
+
         }
-        return jsonObject.toString();
+        resource.data = jsonObject.toString();
+        return resource;
     }
 
     /**
