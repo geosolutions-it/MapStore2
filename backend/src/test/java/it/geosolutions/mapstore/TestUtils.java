@@ -15,6 +15,8 @@ import java.io.InputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import com.google.common.io.Files;
+
 public class TestUtils {
     public static File copyTo(InputStream resource, File dataDir, String name) throws FileNotFoundException, IOException {
         File output = new File(dataDir.getAbsolutePath() + File.separator + name);
@@ -31,10 +33,10 @@ public class TestUtils {
         return temp;
     }
 
-    public static File copyToTemp(InputStream resource) throws IOException {
-        File temp = File.createTempFile("config", ".json");
+    public static File copyToTemp(Class<ConfigControllerTest> classObj, String path) throws IOException {
+        File temp = File.createTempFile("config", "." + Files.getFileExtension(path));
         try (FileOutputStream outStream = new FileOutputStream(temp)) {
-            IOUtils.copy(resource, outStream);
+            IOUtils.copy(classObj.getResourceAsStream(path), outStream);
         }
         return temp;
     }
