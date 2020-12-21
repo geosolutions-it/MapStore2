@@ -103,12 +103,31 @@ public class ConfigControllerTest {
         controller.setContext(context);
     	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/index.js");
     	MockHttpServletResponse response = new MockHttpServletResponse();
-    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/index.js");
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "index.js");
         controller.loadAsset(request, response);
         assertEquals(response.getContentType(), "application/javascript");
         assertEquals("console.log('hello')\n", response.getContentAsString()); // \n should not be there, but is not a mess
         tempResource.delete();
     }
+    @Test
+    public void testLoadAssetFromAbsolutePathIsNotAllowed() throws IOException {
+    	ServletContext context = Mockito.mock(ServletContext.class);
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/index.js");
+        Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
+        controller.setContext(context);
+    	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/index.js");
+    	MockHttpServletResponse response = new MockHttpServletResponse();
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, new File("index.js").getAbsolutePath());
+    	Exception found = null;
+    	try {
+    		controller.loadAsset(request, response);
+    	} catch(Exception e) {
+    		found = e;
+    	} finally {
+    		tempResource.delete();
+    	}
+    	assertNotNull(found);
+    }    
     @Test
     public void testLoadJpegAsset() throws IOException {
     	ServletContext context = Mockito.mock(ServletContext.class);
@@ -117,7 +136,7 @@ public class ConfigControllerTest {
         controller.setContext(context);
     	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/test.jpg");
     	MockHttpServletResponse response = new MockHttpServletResponse();
-    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/test.jpg");
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "test.jpg");
         controller.loadAsset(request, response);
         assertEquals(response.getContentType(), "image/jpeg");
         byte[] expected = FileUtils.readFileToByteArray(tempResource);
@@ -137,7 +156,7 @@ public class ConfigControllerTest {
         controller.setContext(context);
     	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/test.jpg");
     	MockHttpServletResponse response = new MockHttpServletResponse();
-    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/test.png");
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "test.png");
         controller.loadAsset(request, response);
         assertEquals(response.getContentType(), "image/png");
         byte[] expected = FileUtils.readFileToByteArray(tempResource);
@@ -156,7 +175,7 @@ public class ConfigControllerTest {
         controller.setContext(context);
     	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/style.css");
     	MockHttpServletResponse response = new MockHttpServletResponse();
-    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/style.css");
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "style.css");
         controller.loadAsset(request, response);
         assertEquals(response.getContentType(), "text/css");
         assertEquals(".test{background: none}\n", response.getContentAsString()); // \n should not be there, but is not a mess
@@ -173,7 +192,7 @@ public class ConfigControllerTest {
         controller.setContext(context);
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/index.js");
     	MockHttpServletResponse response = new MockHttpServletResponse();
-    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "/index.js");
+    	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "index.js");
         controller.loadAsset(request, response);
         assertEquals(response.getContentType(), "application/javascript");
         assertEquals("console.log('hello')\n", response.getContentAsString()); // \n should not be there, but is not a mess
