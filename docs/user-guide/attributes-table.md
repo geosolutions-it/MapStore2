@@ -108,7 +108,7 @@ Those filters, once applied, can be visible on the map by enabling the <img src=
 
 ## Download the grid data
 
-Form the Attribute table it is also possible to download the grid data through the <img src="../img/button/down_grid_data.jpg" class="ms-docbutton"/> button. The following window opens:
+Form the Attribute table it is also possible to download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button. The following window opens:
 
 <img src="../img/attributes-table/download_grid.jpg" class="ms-docimage" style="max-width:500px;"/>
 
