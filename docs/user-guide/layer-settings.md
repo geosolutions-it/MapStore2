@@ -141,7 +141,7 @@ The editor is easy to approach thanks also to the following functions:
 
 ### Visual Editor Style
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) also allows to edit the layers style using a *Visual editor* with a most user friendly UI.Clicking on the <img src="../img/button/visual_editor_style_button.jpg" class="ms-docbutton"/> button a section opens so that the user can customize the style through with a visual stile editor by adding/editing symbolizers, which can be: *Mark*, *Icon*, *Line*, *Fill* and *Text*. It is anyway possible to switch to the text editor mode if necessary for a more complex styling.
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) also allows to edit the layers style using a *Visual editor* with a most user friendly UI.Clicking on the <img src="../img/button/visual_editor_style_button.jpg" class="ms-docbutton"/> button a section opens so that the user can customize the style through with a visual style editor by adding/editing symbolizers, which can be: *Mark*, *Icon*, *Line*, *Fill* and *Text*. It is anyway possible to switch to the text editor mode if necessary for a more complex styling.
 
 <img src="../img/layer-settings/visual_editor_style.jpg" class="ms-docimage"  style="max-width:500px;">
 
@@ -149,7 +149,7 @@ Once a symbolizer has been added and customized, you can:
 
 <img src="../img/layer-settings/style_options.jpg" class="ms-docimage"  style="max-width:500px;">
 
-* **Filter** the style rule, as explained [here](filtering-layers.md#attribute-filter), in order to apply the style only to certain layer features. It is possible by clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
+* **Filter** the style rule, as explained [here](filtering-layers.md#attribute-filter), in order to apply the style only to certain layer features. It is possible clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
 
 * Add a **Scale denominator filter** (`max` and `min` scale) to visualize the style rule only within certain scale limits. This is possible by clicking the <img src="../img/button/scale_denominator_button.jpg" class="ms-docbutton"/> button.
 
@@ -193,7 +193,7 @@ The Text rule is used to style features as text labels. Text labels are position
 
 <img src="../img/layer-settings/text_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered text (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo Weight` (*Normal* or *Bold*) and select the desired `Halo color` and Halo weight. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
+The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered text (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Halo color` and Halo weight. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
 
 <img src="../img/layer-settings/ex_text_style.gif" class="ms-docimage">
 
