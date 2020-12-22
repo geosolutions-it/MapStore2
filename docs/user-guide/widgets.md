@@ -6,9 +6,15 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to c
 !!! Note
     Some widgets (in maps or in dashboards) need some WPS back-end support to work:
 
+<<<<<<< HEAD
     - `chart` and `counter` widgets need the WPS Process `gs:Aggregate` to work.
     - The map widgets (dashboards) needs the process `gs:Bounds` to  zoom to
     filtered data, if connected to a table.
+=======
+    * The `map widgets` (dashboards) needs the WPS process `gs:Bounds` to zoom to filtered data, if connected to a table.
+    
+    * For aggregate operations, `chart` and `counter` widgets need the WPS process `gs:Aggregate` available in GeoServer to work.
+>>>>>>> b7da14dda... review
 
 ## Add a Widget
 
@@ -47,18 +53,36 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 * Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed
 
+<<<<<<< HEAD
 Just below the chart's preview, the following operations can be performed:
+=======
+Just below the chart's preview, the following configurations are available:
+>>>>>>> b7da14dda... review
 
 * Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
 
 * Define the **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between layer fields
 
+<<<<<<< HEAD
 * Define the **Operation** with which the attributes will be related
 
 * Choose the **Color** of the chart (or the **Color Ramp** for *Pie Charts*)
+=======
+* Define the aggregate **Operation** to perform for the selected attribute choosing between `No Operation`, `COUNT`, `SUM`, `AVG`, `STDDEV`, `MIN` and `MAX`
+
+!!! Note
+    The *No operation* option is used when the aggregation method is not needed for the chart. If *No Operation* is selected, no aggregation will be carried out for the chart and the WFS service will be used to generate the chart without using the WPS process `gs:Aggregate` in GeoServer.
+
+* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*)
+
+* Enable the chart's legend by activating **Display Legend**
+
+In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
+>>>>>>> b7da14dda... review
 
 * Choose to keep the legend hidden, or to **Display Legend**
 
+<<<<<<< HEAD
 In addition, only for *Bar Charts* and *Line Charts*, it is possible to access the *Advanced Options* section, where the user can:
 
 * Keep the grid visible or **Hide Grid**
@@ -73,6 +97,37 @@ In addition, only for *Bar Charts* and *Line Charts*, it is possible to access t
     In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
 
 Once the settings are done, the next step displays, for example, similar to the following:
+=======
+Through this section, the user is allowed to:
+
+* Show/Hide the chart's grid in backgroung with the **Hide Grid** control
+
+* Customize **Y axis** tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). The user can also choose to completely hide labels through the *Hide labels* control or customize them by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`). It is also possible to configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more) 
+
+<img src="../img/widgets/yaxis_options.jpg" class="ms-docimage"/>
+
+!!! Note
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation. 
+
+* Customize **X axis**  tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). As per **Y axis**, the user can completely hide labels through the *Hide labels* control or tune the rendering of tick labels with options like *Never skip labels* (it forces all ticks available in the chart to be rendered instead of simplifying the provided set based on chart size) and *Label rotation* to better adapt X axis tick labels on the charts depending on the needs. 
+
+<img src="../img/widgets/xaxis_options.jpg" class="ms-docimage"/>
+
+!!! Warning 
+    The tick labels available for the X axis by enabling the option **Never skip label** cannot be more than 200 in order to provide a clear chart and for performance reasons.
+
+* Set the **Legend Label** name
+
+<img src="../img/widgets/legend_name.jpg" class="ms-docimage"/>
+
+!!! Note
+        The tooltips of the X and Y axis labels are available by hovering the mouse over the charts. This way the labels are available even if the **Hide labels** option for the X and Y axis is enabled.  <img src="../img/widgets/label_tooltips.gif" class="ms-docimage"/>
+
+!!! Warning
+    In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
+
+Once the settings are done, the next step of the chart widget creation/configuration is displayed as follows:
+>>>>>>> b7da14dda... review
 
 <img src="../img/widgets/widget-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -90,13 +145,41 @@ Just below the chart's preview, the user is allowed to set:
 
 * The widget **Description**
 
+<<<<<<< HEAD
 !!! note
     None of these options are mandatory, you can add the widget to the map without filling in these fields.
+=======
+!!! Note
+    None of these fields are mandatory, it is possible to save/add the widget to the map without filling them.
+>>>>>>> b7da14dda... review
 
 An example of chart widget could be:
 
 <img src="../img/widgets/chart-ex.jpg" class="ms-docimage"/>
 
+<<<<<<< HEAD
+=======
+The **Chart toolbar**, displayed in the right corner of the chart allows the user to:
+
+<img src="../img/widgets/bar_charts.jpg" class="ms-docimage"/>
+
+* **Download** the chart as a `png` through the <img src="../img/button/download_png.jpg" class="ms-docbutton"/> button.
+
+* **Zoom** the chart through the <img src="../img/button/zoom_chart.jpg" class="ms-docbutton"/> button.
+
+* **Pan** the chart through the <img src="../img/button/pan_chart.jpg" class="ms-docbutton"/> button.
+
+* **Zoom in** the chart through the <img src="../img/button/zoom_in_chart.jpg" class="ms-docbutton"/> button.
+
+* **Zoom out** the chart through the <img src="../img/button/zoom_out_chart.jpg" class="ms-docbutton"/> button.
+
+* **Autoscale** to autoscale the axes to fit the plotted data automatically through the <img src="../img/button/autoscale_chart.jpg" class="ms-docbutton"/> button.
+
+* **Reset axes** to return the chart to its initial state through the <img src="../img/button/reset_axes_chart.jpg" class="ms-docbutton"/> button.
+
+* **Toggle Spike Lines** to show dashed lines for X and Y values by hovering the mouse over the chart. This is useful to better see domain values on both axis in case of complex charts. It is possible to activate that option through the <img src="../img/button/toggle_lines_chart.jpg" class="ms-docbutton"/> button.
+
+>>>>>>> b7da14dda... review
 ### Text
 
 Creating a new text widget the following window opens:
