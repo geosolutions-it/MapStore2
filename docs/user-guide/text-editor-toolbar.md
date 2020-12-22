@@ -21,7 +21,7 @@ With the *Text Editor Toolbar* it is possible to customize the text by modifying
 
 * **Indent/Outdent** <img src="../img/button/indent.jpg" class="ms-docbutton" style="max-height:15px;"/> to  indent the text in relation to the left margin or to the right margin
 
-* **Link** <img src="../img/button/link.jpg" class="ms-docbutton" style="max-height:15px;"/> to configure a hyperlink for the selected portion of text. The GeoStory editor can define hyperlinks to external web pages by choosing the *External link* option in the **Link target** dropdown menu and entering the related URL. As an alternative, it is also possible to define a hyperlinks to other sections of the same GeoStory by choosing one of the sections available in the **Link target** dropdown menu.  
+* **Link** <img src="../img/button/link.jpg" class="ms-docbutton" style="max-height:15px;"/> to configure a hyperlink for the selected portion of text. The GeoStory editor can define hyperlinks to external web pages by choosing the *External link* option in the **Link target** dropdown menu and entering the related URL. As an alternative, it is also possible to define a hyperlink to other sections of the same GeoStory by choosing one of the sections available in the **Link target** dropdown menu.  
 
 <img src="../img/text-editor-toolbar/hyperlink_menu.jpg" class="ms-docimage"/>
 
