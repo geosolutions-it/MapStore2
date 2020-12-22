@@ -94,6 +94,38 @@ describe('wfsquery Epics', () => {
             }
         });
     });
+    it('wfsQueryEpic passes filterObj', (done) => {
+        const mockAxios = new MockAdapter(axios);
+        const expectedResult = require('../../test-resources/wfs/museam.json');
+        mockAxios.onPost().reply(config => {
+            expect(config.data).toContain('<ogc:PropertyName>NAME</ogc:PropertyName>');
+            expect(config.data).toContain('<wfs:SortOrder>DESC</wfs:SortOrder>');
+            return [200, expectedResult];
+        });
+        testEpic(wfsQueryEpic, 2, query("base/web/client/test-resources/wfs/museam.json", { pagination: {maxFeatures: 20, startIndex: 0}, sortOptions: {sortBy: "NAME", sortOrder: "DESC"} }, {}), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                case QUERY_RESULT:
+                    expect(action.result).toEqual(expectedResult);
+                    expect(action.filterObj.pagination).toEqual({maxFeatures: 20, startIndex: 0});
+                    expect(action.filterObj.sortOptions).toEqual({sortBy: "NAME", sortOrder: "DESC"});
+                    break;
+                case FEATURE_LOADING:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            mockAxios.restore();
+            done();
+        }, {
+            layers: {
+                selected: ['layerId'],
+                flat: [{id: 'layerId'}]
+            }
+        });
+    });
     describe('wfsQueryEpic timedimension', () => {
         const BASE_URL = "/WFS";
         const DATE = "20180101T00:00:00";
