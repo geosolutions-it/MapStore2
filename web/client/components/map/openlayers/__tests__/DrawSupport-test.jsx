@@ -1360,6 +1360,33 @@ describe('Test DrawSupport', () => {
         expect(coords[0].length).toBe(101);
 
     });
+    it('test createOLGeometry with type in properties', () => {
+        const features = [{"type": "Feature", "id": "protected_areas.1", "geometry": {"type": "MultiPolygon", "coordinates": [[[[15.5436, 40.1345], [15.5439, 40.1358], [15.5448, 40.1376], [15.5456, 40.1397], [15.5444, 40.1419], [15.5443, 40.1439], [15.5462, 40.1446], [15.5473, 40.1455], [15.5485, 40.1464], [15.5496, 40.1482], [15.5506, 40.1483], [15.5514, 40.1473], [15.552, 40.1459], [15.5526, 40.1448], [15.5529, 40.1443], [15.5529, 40.1424], [15.552, 40.1414], [15.553, 40.1389], [15.5536, 40.137], [15.5527, 40.136], [15.5511, 40.1373], [15.5498, 40.1361], [15.5476, 40.1345], [15.5449, 40.1339], [15.5436, 40.1345]]]]}, "geometry_name": "the_geom", "properties": {"fid_1": 1, "fid": 1, "id": "214710630", "type": "protected_area", "name": "Oasi del Bussento"}, "bbox": [15.5436, 40.1339, 15.5536, 40.1483]}];
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        let support = ReactDOM.render(<DrawSupport options={{geodesic: true}} map={fakeMap}/>, document.getElementById("container"));
+        support = ReactDOM.render(<DrawSupport options={{geodesic: true}} map={fakeMap} projection={"EPSG:900913"} features={features} method="MultiPolygon" drawStatus="drawOrEdit"/>, document.getElementById("container"));
+
+        const geomType = support.drawSource.getFeatures()[0].getGeometry().getType();
+        expect(geomType).toBe("MultiPolygon");
+    });
     it('test createOLGeometry type Circle geodesic', () => {
         const support = ReactDOM.render(<DrawSupport options={{geodesic: true}}/>, document.getElementById("container"));
         const type = 'Circle';

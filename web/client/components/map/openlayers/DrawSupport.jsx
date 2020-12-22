@@ -253,7 +253,7 @@ export default class DrawSupport extends React.Component {
                         });
                     } else {
                         feature = new Feature({
-                            geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : {...geometry, ...geometry.properties, center })
+                            geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : {...geometry, radius: geometry.properties?.radius, center })
                         });
                     }
                     feature.setProperties(f.properties);
