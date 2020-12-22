@@ -18,7 +18,7 @@ Accessing this panel the user can perform the following main operations:
 
 * Using the [quick filter by attribute](filtering-layers.md#quick-filter-by-attributes)
 
-* Download the grid data through the <img src="../img/button/download_attribute_table.jpg" class="ms-docbutton"/> button 
+* Download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button 
 
 * Customize the attribute table display through the <img src="../img/button/customize_attribute_table.jpg" class="ms-docbutton"/> button
 
