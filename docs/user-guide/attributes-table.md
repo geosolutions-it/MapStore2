@@ -8,17 +8,23 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), through the <img s
 
 Accessing this panel the user can perform the following main operations:
 
-* Manage records
+* [Edit records](attributes-table.md#editing-and-removing-existing-features) through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button 
 
-* Set filters
+* Filter records in Attribute Table in different ways as described in the [Set filter](attributes-table.md#set-filters) section below
 
-* Download the grid data
+* Opening the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button
 
-* Customize the Attribute table display
+* Activating the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button 
 
-* Create [Widgets](widgets.md), with the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
+* Using the [quick filter by attribute](filtering-layers.md#quick-filter-by-attributes)
 
-* Zoom to features, with the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button
+* Download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button 
+
+* Customize the attribute table display through the <img src="../img/button/customize_attribute_table.jpg" class="ms-docbutton"/> button
+
+* Create [Widgets](widgets.md) through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
+
+* Zoom to features through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record or zoom to the page max extent through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton"/> button (available only if the virtual scrolling is disabled, it is enabled by default in MapStore). 
 
 !!!warning
     When GeoServer is set to strict CITE compliance for WFS (by default), the feature grid do not work correctly.
@@ -78,25 +84,31 @@ The user is always allowed to delete the drawn shape through the <img src="../im
 
 ### Editing and removing existing features
 
-In order to update an existing feature, it is necessary to start the *Editing session* by clicking the *Edit mode* icon <img src="../img/button/editing-button.jpg" class="ms-docbutton"/> button. If the goal is to update the Attribute Table records, the user can simply select them and type the desired text into the input field. However, it is also possible to modify the geometries associated with a record by moving the existent vertices and/or creating new ones directly from the map.
+In order to edit an existing feature, it is necessary to switch the Attribute Table in editing mode by clicking the *Edit mode* <img src="../img/button/editing-button.jpg" class="ms-docbutton"/> button. If the goal is to edit the Attribute Table records, the user can simply select them and type the desired value into the input field. However, it is also possible to modify the geometry associated with a record by editing it on the map (adding or changing its vertices).
 
 <img src="../img/attributes-table/update-polygon-shape.gif" class="ms-docimage"/>
 
-With a click on **Save changes** <img src="../img/button/save-changes.jpg" class="ms-docbutton"/> these changes will be persistent.<br> In order to delete an existing feature, the user can always, in *Edit mode*, select that feature and click on the <img src="../img/button/delete-features-button.jpg" class="ms-docbutton" /> button.
+!!! note
+    It is possible to edit the value of an attribute for multiple records at once by selecting the corresponding cell in the table and dragging the content onto the multiple cells, as follows:
+    <img src="../img/attributes-table/multiple_features.gif" class="ms-docimage" style="max-width:300px;"/>
+
+With a click on **Save changes** <img src="../img/button/save-changes.jpg" class="ms-docbutton"/> these changes will be persistent.<br> In *Edit mode*, the user can also delete some features by selecting them in the table and clicking on the <img src="../img/button/delete-features-button.jpg" class="ms-docbutton" /> button.
 
 ## Set filters
 
-In the Attribute table it is possible to apply two types of filter (better explained in the [Filtering layers](filtering-layers.md) section):
+In the Attribute table it is possible to apply filters in three ways (as explained in the [Filtering layers](filtering-layers.md) section):
 
 * [Advanced search](filtering-layers.md#advanced-search)
 
-* [Quick filter](filtering-layers.md#quick-filter)
+* [Click on map](filtering-layers.md#quick-filter-by-map-interaction)
 
-Those filters, once applied, are immediately visible on the map because the *Sync map with the filter* button <img src="../img/button/sync_en.jpg" class="ms-docbutton"/> is enabled by default. Once you disable it <img src="../img/button/sync.jpg" class="ms-docbutton"/> the filter will persist in the Attribute table but the map will not be synchronized with it.
+* [Quick filter](filtering-layers.md#quick-filter-by-attributes)
+
+Those filters, once applied, can be visible on the map by enabling the <img src="../img/button/sync.jpg" class="ms-docbutton"/> button.
 
 ## Download the grid data
 
-Form the Attribute table it is also possible to download the grid data through the <img src="../img/button/down_grid_data.jpg" class="ms-docbutton"/> button. The following window opens:
+Form the Attribute table it is also possible to download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button. The following window opens:
 
 <img src="../img/attributes-table/download_grid.jpg" class="ms-docimage" style="max-width:500px;"/>
 
