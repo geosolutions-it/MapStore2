@@ -97,18 +97,21 @@ In order to filter a numerical filed matching the records *greater than* or *equ
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
 
-#### Quick Filter by clicked point
+#### Quick Filter by map interaction
 
-If the user wants to filter records in the Attribute Table simply by clicking on the map, he can activate the  **Filter clicking on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (the button became blue) and then click on the map over the features he need to select and can add features from the filter list by pressing Ctrl + click. 
-The list of records in the [Attribute Table](attributes-table.md) will be automatically filtered by matching with the selected points in the map.
+It is possible to filter records in the [Attribute Table](attributes-table.md) by clicking on the map or doing a selection directly in a map of multiple features. The user can activate the  **Filter on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (once clicked the button turns blue) and then:
+
+* Click on the map over the features he wants to select
+
+* Add multiple features to the selection by pressing Ctrl and clicking again over other features in map 
 
 <img src="../img/filtering-layers/filter_geometry.gif" class="ms-docimage"/>
 
-!!! note
-    Features on the map can also be selected by drawing a selection area on the map by pressing Alt + click.
-    <img src="../img/filtering-layers/filter_geometries.gif" class="ms-docimage"/>
+* Add multiple features to the selection by pressing Ctrl + Alt and drawing a selection box in map
 
-The user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
+ <img src="../img/filtering-layers/filter_geometries.gif" class="ms-docimage"/>
+
+The list of records in the *Attribute Table* will be automatically filtered according to such user selection and then the user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
 
 !!! note
     The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md) it will not reappear anymore if the [Attribute Table](attributes-table.md) is re-opened in a second time.
