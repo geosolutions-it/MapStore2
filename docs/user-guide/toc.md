@@ -147,6 +147,8 @@ In this case the user is allowed to:
 
 From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> of the **Compare tool** it is possible to click on <img src="../img/button/swipe_button.jpg" class="ms-docbutton" style="max-height:25px;"/> button so that the Swipe tool is enabled on the map for the selected layer: to activate the Swipe it is also possible to simply click on the **Compare tool** button.
 
+<img src="../img/toc/swipe_on_map.jpg" class="ms-docimage" style="max-width:600px;"/>
+
 From the Compare tool dropdown <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/>, it is also possible to click on <img src="../img/button/configure_button.jpg" class="ms-docbutton" style="max-height:25px;"/>. Doing this a configuration modal opens for the selected Compare tool (*Swipe* or *Spy glass*) so that, in case of Swipe, the user can change the orientation of the swipe from *Vertical* to *Horizontal*.
 
 The user can also activate the <img src="../img/button/spy_button.jpg" class="ms-docbutton" style="max-height:25px;"/> from the same dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> in order to switch the Compare tool in **Spy glass** mode. If the *Spy glass* is active, clicking on the <img src="../img/button/configure_button.jpg" class="ms-docbutton" style="max-height:25px;"/> option, the configuration modal opens so that it is possible to change the size of the spy glass (the `radius`).
