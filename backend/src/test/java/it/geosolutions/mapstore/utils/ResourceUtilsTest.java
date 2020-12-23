@@ -16,10 +16,10 @@ import java.io.IOException;
 import java.util.Optional;
 
 import javax.servlet.ServletContext;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
 
 import it.geosolutions.mapstore.ConfigControllerTest;
 import it.geosolutions.mapstore.TestUtils;
