@@ -98,7 +98,7 @@ Once the settings are done, the next step of the chart widget creation/configura
 
 <img src="../img/widgets/widget-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-In this panel, through the toolbar, it is possible to:
+The user can:
 
 * Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
@@ -114,7 +114,6 @@ Just below the chart's preview, the user is allowed to set:
 
 !!! Note
     None of these fields are mandatory, it is possible to save/add the widget to the map without filling them.
-
 
 An example of chart widget could be:
 
