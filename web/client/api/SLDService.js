@@ -70,7 +70,9 @@ const standardColors = [{
 
 const getColor = (layer, name, intervals, customRamp) => {
     const chosenColors = layer
-        ? head((layer.thematic.colors || layer.thematic.additionalColors || []).filter(c => c.name === name))
+        ? head((layer.thematic.colors || layer.thematic.additionalColors || [])
+            .filter(c => c.name === name)
+        ) || head(standardColors.filter(c => c.name === name))
         : customRamp
             ? head([ customRamp, ...standardColors].filter(c => c.name === name))
             : head(standardColors.filter(c => c.name === name));
