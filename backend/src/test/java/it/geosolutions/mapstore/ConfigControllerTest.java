@@ -216,8 +216,25 @@ public class ConfigControllerTest {
         File tempProperties = TestUtils.copyToTemp(ConfigControllerTest.class, "/mapstore.properties");
         ServletContext context = Mockito.mock(ServletContext.class);
         Mockito.when(context.getRealPath(Mockito.endsWith(".json"))).thenReturn(tempResource.getAbsolutePath());
+        Mockito.when(context.getRealPath(Mockito.endsWith(".properties"))).thenReturn(tempProperties.getAbsolutePath());
         controller.setContext(context);
         controller.setOverrides(tempProperties.getAbsolutePath());
+        controller.setMappings("header.height=headerHeight,header.url=headerUrl");
+        String resource = new String(controller.loadResource("localConfig", true), "UTF-8");
+        assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore2.geo-solutions.it\"}}", resource.trim());
+        tempResource.delete();
+    }
+    @Test
+    public void testOverridesWithDataDir() throws IOException {
+    	File dataDir = TestUtils.getDataDir();
+        controller.setDataDir(dataDir.getAbsolutePath());
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/localConfigFull.json");
+        ServletContext context = Mockito.mock(ServletContext.class);
+        Mockito.when(context.getRealPath(Mockito.endsWith(".json"))).thenReturn(tempResource.getAbsolutePath());
+        TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/mapstore.properties"), dataDir,
+        		"/mapstore.properties");
+        controller.setContext(context);
+        controller.setOverrides("mapstore.properties");
         controller.setMappings("header.height=headerHeight,header.url=headerUrl");
         String resource = new String(controller.loadResource("localConfig", true), "UTF-8");
         assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore2.geo-solutions.it\"}}", resource.trim());
