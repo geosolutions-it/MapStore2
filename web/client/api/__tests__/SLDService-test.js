@@ -397,7 +397,7 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result[0].values).toExist();
     });
     it('check getColor with layer with thematic.colors', () => {
-        const result = API.getColor({thematic: {colors:[{
+        const result = API.getColor({thematic: {colors: [{
             name: 'green',
             colors: ['#000', '#008000', '#0f0']
         }]}}, "green", 5);
@@ -406,7 +406,7 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result.colors).toEqual("#000000,#004000,#008000,#00c000,#00ff00");
     });
     it('check getColor with layer with thematic.additionalColors', () => {
-        const result = API.getColor({thematic: {additionalColors:[{
+        const result = API.getColor({thematic: {additionalColors: [{
             name: 'green',
             colors: ['#000', '#008000', '#0f0']
         }]}}, "green", 5);
