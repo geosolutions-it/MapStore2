@@ -97,13 +97,21 @@ In order to filter a numerical filed matching the records *greater than* or *equ
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
 
-#### Quick Filter by clicked point
+#### Quick Filter by map interaction
 
-If the user wants to filter records in the Attribute Table simply by clicking on the map, he can activate the  **Filter clicking on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (the button became blue) and then click on the map over the features he need to select. The list of records in the [Attribute Table](attributes-table.md) will be automatically filtered by matching with the selected point in the map.
+It is possible to filter records in the [Attribute Table](attributes-table.md) by clicking on the map or doing a selection directly in a map of multiple features. The user can activate the  **Filter on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (once clicked the button turns blue) and then:
+
+* Click on the map over the features he wants to select
+
+* Add multiple features to the selection by pressing Ctrl and clicking again over other features in map 
 
 <img src="../img/filtering-layers/filter_geometry.gif" class="ms-docimage"/>
 
-The user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
+* Add multiple features to the selection by pressing Ctrl + Alt and drawing a selection box in map
+
+ <img src="../img/filtering-layers/filter_geometries.gif" class="ms-docimage"/>
+
+The list of records in the *Attribute Table* will be automatically filtered according to such user selection and then the user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
 
 !!! note
     The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md) it will not reappear anymore if the [Attribute Table](attributes-table.md) is re-opened in a second time.
@@ -185,3 +193,4 @@ In order to better understand this type of filter, let's make an example. We sup
 In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
 
 <img src="../img/filtering-layers/layer_filter.gif" class="ms-docimage"/>
+
