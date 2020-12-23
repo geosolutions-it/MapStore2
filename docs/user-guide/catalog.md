@@ -85,7 +85,10 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 #### Advanced Settings
 
-* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). Setting this is particularly useful when the user wants to use optimized formats by default (`png8`, `vnd.jpeg-png`) for all the layers, without having to select it for each layer in layer settings.
+* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+* *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
 * *Show metadata template*: This can be enabled when the user wants to insert in the layer description a text with metadata information
 
 !!! warning
@@ -148,7 +151,7 @@ WMS and WMTS Services are [OGC Standards](https://www.ogc.org/standards) protoco
 
 In **General Settings** the user can set the title he wants to assign to this service and the URL of the service to configure the service and its URL.
 
-In **Advanced Settings** the user can set, other than the standard options, also:
+In addition to the standard options, only for WMS catalog sources, through the **Advanced Settings** the user can configure also the following options:
 
 * *Localized styles* (only for the WMS service) if enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server so that the WMS server, if properly configured, can use that locale to:
 
@@ -160,7 +163,9 @@ In **Advanced Settings** the user can set, other than the standard options, also
 
 Enabling that option, all layers added to the map from this catalog source will be localized as described above (it is possible to tune again that setting for each single layer by opening the [Layer Settings](layer-settings.md#display) in TOC).
 
-* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). Setting this configuration property is particularly useful when the user wants to use an optimized format by default (`png8`, `vnd.jpeg-png`) for all the layers added from the catalog's source without having to select it for each layer in [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display)..
+* *Format*: the default image format for layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+* *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
 ### TMS Catalog
 
