@@ -6,15 +6,9 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to c
 !!! Note
     Some widgets (in maps or in dashboards) need some WPS back-end support to work:
 
-<<<<<<< HEAD
-    - `chart` and `counter` widgets need the WPS Process `gs:Aggregate` to work.
-    - The map widgets (dashboards) needs the process `gs:Bounds` to  zoom to
-    filtered data, if connected to a table.
-=======
     * The `map widgets` (dashboards) needs the WPS process `gs:Bounds` to zoom to filtered data, if connected to a table.
     
     * For aggregate operations, `chart` and `counter` widgets need the WPS process `gs:Aggregate` available in GeoServer to work.
->>>>>>> b7da14dda... review
 
 ## Add a Widget
 
@@ -53,21 +47,12 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 * Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed
 
-<<<<<<< HEAD
-Just below the chart's preview, the following operations can be performed:
-=======
 Just below the chart's preview, the following configurations are available:
->>>>>>> b7da14dda... review
 
 * Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
 
 * Define the **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between layer fields
 
-<<<<<<< HEAD
-* Define the **Operation** with which the attributes will be related
-
-* Choose the **Color** of the chart (or the **Color Ramp** for *Pie Charts*)
-=======
 * Define the aggregate **Operation** to perform for the selected attribute choosing between `No Operation`, `COUNT`, `SUM`, `AVG`, `STDDEV`, `MIN` and `MAX`
 
 !!! Note
@@ -78,26 +63,9 @@ Just below the chart's preview, the following configurations are available:
 * Enable the chart's legend by activating **Display Legend**
 
 In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
->>>>>>> b7da14dda... review
 
-* Choose to keep the legend hidden, or to **Display Legend**
+<img src="../img/widgets/advanced_options.jpg" class="ms-docimage"/>
 
-<<<<<<< HEAD
-In addition, only for *Bar Charts* and *Line Charts*, it is possible to access the *Advanced Options* section, where the user can:
-
-* Keep the grid visible or **Hide Grid**
-
-* Keep Y axis visible or **Hide Y axis**
-
-* Define the **X Axis Labels rotation angle**
-
-* Set the **Legend Label** name
-
-!!! warning
-    In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
-
-Once the settings are done, the next step displays, for example, similar to the following:
-=======
 Through this section, the user is allowed to:
 
 * Show/Hide the chart's grid in backgroung with the **Hide Grid** control
@@ -127,7 +95,6 @@ Through this section, the user is allowed to:
     In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
 
 Once the settings are done, the next step of the chart widget creation/configuration is displayed as follows:
->>>>>>> b7da14dda... review
 
 <img src="../img/widgets/widget-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -145,20 +112,14 @@ Just below the chart's preview, the user is allowed to set:
 
 * The widget **Description**
 
-<<<<<<< HEAD
-!!! note
-    None of these options are mandatory, you can add the widget to the map without filling in these fields.
-=======
 !!! Note
     None of these fields are mandatory, it is possible to save/add the widget to the map without filling them.
->>>>>>> b7da14dda... review
+
 
 An example of chart widget could be:
 
 <img src="../img/widgets/chart-ex.jpg" class="ms-docimage"/>
 
-<<<<<<< HEAD
-=======
 The **Chart toolbar**, displayed in the right corner of the chart allows the user to:
 
 <img src="../img/widgets/bar_charts.jpg" class="ms-docimage"/>
@@ -179,7 +140,6 @@ The **Chart toolbar**, displayed in the right corner of the chart allows the use
 
 * **Toggle Spike Lines** to show dashed lines for X and Y values by hovering the mouse over the chart. This is useful to better see domain values on both axis in case of complex charts. It is possible to activate that option through the <img src="../img/button/toggle_lines_chart.jpg" class="ms-docbutton"/> button.
 
->>>>>>> b7da14dda... review
 ### Text
 
 Creating a new text widget the following window opens:
