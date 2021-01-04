@@ -18,7 +18,6 @@ import {
     keys,
     uniq,
     uniqWith,
-    isMatch,
     isEqual,
     isEmpty,
     findIndex,
@@ -661,15 +660,7 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
 
     prepareMapObjectToCompare(filteredMap1);
     prepareMapObjectToCompare(filteredMap2);
-    // Separate Map and Layers for check
-    const filteredMap1WithoutLayers = cloneDeep(filteredMap1);
-    const filteredMap2WithoutLayers = cloneDeep(filteredMap2);
-    delete filteredMap1WithoutLayers.map.layers;
-    delete filteredMap2WithoutLayers.map.layers;
-    const layers1 = filteredMap1.map.layers;
-    const layers2 = filteredMap2.map.layers;
-    // Strictly equal for map, at least match for layers format
-    return isMatch(layers2, layers1) && isEqual(filteredMap1WithoutLayers, filteredMap2WithoutLayers);
+    return isEqual(filteredMap1, filteredMap2);
 };
 
 /**

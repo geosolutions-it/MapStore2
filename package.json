@@ -39,7 +39,6 @@
     "babel-plugin-object-assign": "1.2.1",
     "babel-plugin-react-transform": "2.0.2",
     "cesium": "1.17.0",
-    "chai": "^4.2.0",
     "copy-webpack-plugin": "5.0.2",
     "css-loader": "0.19.0",
     "denodeify": "1.2.1",
