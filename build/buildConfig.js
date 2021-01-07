@@ -8,6 +8,16 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const castArray = require('lodash').castArray;
+
+// this function adds support for object argument in buildConfig
+// but it keeps compatibility with the previous arguments structure
+function mapArgumentsToObject(args, func) {
+    if (args.length === 1) {
+        return func(args[0]);
+    }
+    const [bundles, themeEntries, paths, plugins = [], prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy] = args;
+    return func({ bundles, themeEntries, paths, plugins, prod, publicPath, cssPrefix, prodPlugins, alias, proxy });
+}
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
@@ -30,8 +40,40 @@ const castArray = require('lodash').castArray;
  * @param {object} alias aliases to be used by webpack to resolve paths (alias -> real path)
  * @param {object} proxy webpack-devserver custom proxy configuration object
  * @returns a webpack configuration object
+ * @example
+ * // It's possible to use a single object argument to pass the parameters.
+ * // this configuration is preferred and it will replace the previous arguments structure
+ * const buildConfig = require('./buildConfig');
+ * module.export = buildConfig({
+ *  bundles: {},
+ *  themeEntries: {},
+ *  paths: {
+ *      base: path.join(__dirname, ".."),
+ *      dist: path.join(__dirname, "..", "web", "client", "dist"),
+ *      framework: path.join(__dirname, "..", "web", "client"),
+ *      code: path.join(__dirname, "..", "web", "client")
+ *  },
+ *  plugins: [],
+ *  prod: false,
+ *  publicPath: "dist/"
+ * });
  */
-module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
+module.exports = (...args) => mapArgumentsToObject(args, ({
+    bundles,
+    themeEntries,
+    paths,
+    plugins = [],
+    prod,
+    publicPath,
+    cssPrefix,
+    prodPlugins,
+    alias = {},
+    proxy,
+    // new optional only for single object argument
+    projectConfig = {},
+    devServer,
+    resolveModules
+}) => ({
     target: "web",
     entry: assign(!prod ? {
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
@@ -68,6 +110,7 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
                 'NODE_ENV': prod ? '"production"' : '""'
             }
         }),
+        new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
         }),
@@ -87,7 +130,8 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
             // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
             proj4: '@geosolutions/proj4',
             "react-joyride": '@geosolutions/react-joyride'
-        }, alias)
+        }, alias),
+        ...(resolveModules && { modules: resolveModules })
     },
     module: {
         noParse: [/html2canvas/],
@@ -218,8 +262,9 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
                 target: "http://localhost:8081",
                 pathRewrite: {'/docs': '/mapstore/docs'}
             }
-        }
+        },
+        ...devServer
     },
 
     devtool: !prod ? 'eval' : undefined
-});
+}));
