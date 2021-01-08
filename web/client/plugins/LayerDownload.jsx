@@ -48,11 +48,11 @@ import layerdownload from '../reducers/layerdownload';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
- * Provides advanced export functionalities using WFS and WPS.
+ * Provides advanced data export functionalities using [WPS download process](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html) or using WFS service, if WPS download process is missing.
  * @memberof plugins
  * @name LayerDownload
  * @class
- * @prop {object[]} formats An array of name-label objects for the allowed formats available.
+ * @prop {object[]} formats An array of name-label objects for the allowed formats available. This object can contain an optional `validServices` entry, that contains an array of the  services where the formats should be used. If no "wfs" service is configured, the plugin will retrieve the list from the "WFS" service.
  * @prop {object[]} srsList An array of name-label objects for the allowed srs available. Use name:'native' to omit srsName param in wfs filter
  * @prop {string} defaultSrs Default selected srs
  * @prop {string} closeGlyph The icon to use for close the dialog

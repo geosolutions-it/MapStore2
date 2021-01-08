@@ -72,7 +72,7 @@ const getOffsets = (color, shape) => {
 const MarkerUtils = {
     extraMarkers: assign({}, extraMarkers, {
         getOffsets,
-        markerToDataUrl: ({iconColor, iconShape, iconGlyph}) => {
+        markerToDataUrl: ({ iconColor, iconShape, iconGlyph }) => {
             if (MarkerUtils.extraMarkers.images) {
                 let canvas = document.createElement('canvas');
                 const size = extraMarkers.size;

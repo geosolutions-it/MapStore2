@@ -33,6 +33,7 @@ class DownloadDialog extends React.Component {
         checkingWPSAvailability: PropTypes.bool,
         onClose: PropTypes.func,
         onExport: PropTypes.func,
+        onCheckWPSAvailability: PropTypes.func,
         onDownloadOptionChange: PropTypes.func,
         onClearDownloadOptions: PropTypes.func,
         onFormatOptionsFetch: PropTypes.func,

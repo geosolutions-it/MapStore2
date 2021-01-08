@@ -37,6 +37,7 @@ class QueryBuilder extends React.Component {
         removeButtonIcon: PropTypes.string,
         addButtonIcon: PropTypes.string,
         attributePanelExpanded: PropTypes.bool,
+        showDetailsButton: PropTypes.bool,
         spatialPanelExpanded: PropTypes.bool,
         crossLayerExpanded: PropTypes.bool,
         showDetailsPanel: PropTypes.bool,
@@ -195,6 +196,7 @@ class QueryBuilder extends React.Component {
                     spatialField={this.props.spatialField}
                     spatialOperations={this.props.spatialOperations}
                     spatialMethodOptions={this.props.spatialMethodOptions}
+                    showDetailsButton={this.props.showDetailsButton}
                     spatialPanelExpanded={this.props.spatialPanelExpanded}
                     showDetailsPanel={this.props.showDetailsPanel}
                     actions={this.props.spatialFilterActions}

@@ -105,7 +105,7 @@ class MyApp extends React.Component {
         }
         return null;
     };
-    
+
     render() {
         // wait for loaded configuration before rendering
         if (this.props.mapConfig && this.props.mapConfig.map) {
@@ -283,7 +283,7 @@ module.exports = function(api) {
 Now the application is ready, to launch it in development mode, you can use the following command (launch it from the MapStore main folder):
 
 ```
-./node_modules/.bin/webpack-dev-server --config web/client/examples/myapp/webpack.config.js --progress --colors --port 8081 --content-base web/client/examples/myapp
+./node_modules/.bin/webpack-dev-server --config web/client/examples/myapp/webpack.config.js --progress --color --port 8081 --content-base web/client/examples/myapp
 ```
 
 Then point your preferred browser to the following url: [http://localhost:8081](http://localhost:8081)

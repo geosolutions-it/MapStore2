@@ -396,6 +396,35 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result.length).toBe(2);
         expect(result[0].values).toExist();
     });
+    it('check getColor with layer with thematic.colors', () => {
+        const result = API.getColor({thematic: {colors: [{
+            name: 'green',
+            colors: ['#000', '#008000', '#0f0']
+        }]}}, "green", 5);
+        expect(result.ramp).toBe("custom");
+        expect(result.colors).toBeTruthy();
+        expect(result.colors).toEqual("#000000,#004000,#008000,#00c000,#00ff00");
+    });
+    it('check getColor with layer with thematic.additionalColors', () => {
+        const result = API.getColor({thematic: {additionalColors: [{
+            name: 'green',
+            colors: ['#000', '#008000', '#0f0']
+        }]}}, "green", 5);
+        expect(result.ramp).toBe("custom");
+        expect(result.colors).toBeTruthy();
+        expect(result.colors).toEqual("#000000,#004000,#008000,#00c000,#00ff00");
+    });
+    it('check getColor with layer with thematic.additionalColors', () => {
+        const result = API.getColor({thematic: {}}, "notdefined", 5);
+        expect(result.ramp).toBe("notdefined");
+        expect(result.colors).toBeFalsy();
+    });
+    it('check getColor with standard color transformed in custom ramp', () => {
+        const result = API.getColor({thematic: {}}, "green", 5);
+        expect(result.ramp).toBe("custom");
+        expect(result.colors).toBeTruthy();
+        expect(result.colors).toEqual("#000000,#004000,#008000,#00c000,#00ff00");
+    });
     it('check getColors only standard', () => {
         const result = API.getColors(undefined, layer, 10);
         expect(result.length).toBe(5 + 36 /* 36 color brewer ramps */);

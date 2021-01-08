@@ -8,6 +8,8 @@
 import expect from 'expect';
 
 import feature from '../../test-resources/Annotation_geomColl.json';
+import MarkerUtils from '../MarkerUtils';
+
 
 import {
     getAvailableStyler,
@@ -114,7 +116,20 @@ const geodesicLineString = {
         }
     }
 };
+
 describe('Test the AnnotationsUtils', () => {
+    let old = MarkerUtils.extraMarkers.images[1];
+    beforeEach((done) => {
+        // prevent issues with lazy load in karma by faking image and preloading
+        MarkerUtils.extraMarkers.images[1] = new Image();
+        MarkerUtils.extraMarkers.images[1].onload = () => {
+            done();
+        };
+        MarkerUtils.extraMarkers.images[1].src = MarkerUtils.extraMarkers.images[0].src;
+    });
+    afterEach(() => {
+        MarkerUtils.extraMarkers.images[1] = old;
+    });
     it('getAvailableStyler for point or MultiPoint', () => {
         let stylers = getAvailableStyler({type: "Point"});
         expect(stylers.length).toBe(1);

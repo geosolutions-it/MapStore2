@@ -44,8 +44,20 @@ public class ResourceUtils {
 	 * @return
 	 */
 	public static Optional<File> findResource(String baseFolders, ServletContext context, String resourceName) {
-		String[] candidates = Stream.concat(Stream.of(baseFolders.split(",")).map(new Function<String, String>() {
+		String[] candidates = Stream.concat(Stream.of(baseFolders.split(","))
+				// remove empty string, to avoid to add "/" to the allowed paths
+				.filter(new Predicate<String>() {
 
+					@Override
+					public boolean test(String string) {
+						if(string == null || "".equals(string)) {
+							return false;
+						}
+						return true;
+					}
+					
+				})
+				.map(new Function<String, String>() {
 			@Override
 			public String apply(String f) {
 				return f + "/" + resourceName;

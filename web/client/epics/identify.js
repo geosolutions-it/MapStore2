@@ -279,7 +279,7 @@ export const zoomToVisibleAreaEpic = (action$, store) =>
         .filter(() => centerToMarkerSelector(store.getState()))
         .switchMap((action) =>
             action$.ofType(LOAD_FEATURE_INFO, ERROR_FEATURE_INFO)
-                .switchMap(() => {
+                .mergeMap(() => {
                     const state = store.getState();
                     const map = mapSelector(state);
                     const mapProjection = projectionSelector(state);
