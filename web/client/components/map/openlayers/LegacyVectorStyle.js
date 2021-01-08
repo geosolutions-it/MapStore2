@@ -376,7 +376,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
             }),
             new Style({
                 stroke: new Stroke( tempStyle.stroke ? tempStyle.stroke : {
-                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", isNil(tempStyle.opacity) ? 1 : tempStyle.opacity),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: tempStyle.weight || 1
                 }),
