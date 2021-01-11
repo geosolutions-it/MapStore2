@@ -19,9 +19,11 @@ The supported mapping engines currently supported by [MapStore](https://mapstore
 
 [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) has been designed from the beginning to provide a coherent and comprehensive experience across different devices types.
 
-The browsers supported by [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) are *Google Chrome*, *Microsoft Edge*, *Mozilla Firefox* and *Safari*.
-
 **MapStore  is based on OpenLayers, Leaflet and ReactJS, and is licensed under the Simplified BSD license.**
+
+##Supported Browsers
+
+The browsers supported by [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) are *Google Chrome*, *Microsoft Edge*, *Mozilla Firefox* and *Safari*.
 
 ##Quick Start
 
