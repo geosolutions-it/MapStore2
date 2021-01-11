@@ -452,13 +452,15 @@ describe('Test LegacyVectorStyle', () => {
             expect(styleObject).toExist();
             let polygonStyle = styleObject[1];
             expect(polygonStyle.fill_.color_).toBe("rgba(255, 255, 255, 0.2)");
+            expect(polygonStyle.stroke_.color_).toBe("rgb(255, 204, 51)");
             styleObject = getStyle({
                 features: [ft],
-                style: {...STYLE_POLYGON, fillOpacity: 0}
+                style: {...STYLE_POLYGON, fillOpacity: 0, opacity: 0}
             }, false, []);
             expect(styleObject).toExist();
             polygonStyle = styleObject[1];
             expect(polygonStyle.fill_.color_).toBe("rgba(255, 255, 255, 0)");
+            expect(polygonStyle.stroke_.color_).toBe("rgba(255, 204, 51, 0)");
         });
     });
 });
