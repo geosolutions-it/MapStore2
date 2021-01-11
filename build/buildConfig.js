@@ -69,7 +69,14 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     entry: assign({}, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
-        minimize: !!prod
+        minimize: !!prod,
+        ...(prod && {
+            splitChunks: {
+                // we should specify a maximum size per chunk
+                // this should mitigate the need to increase the max_old_space_size
+                maxSize: 10000000
+            }
+        })
     },
     output: {
         path: paths.dist,
