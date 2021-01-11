@@ -23,7 +23,7 @@ The supported mapping engines currently supported by [MapStore](https://mapstore
 
 ##Supported Browsers
 
-The browsers supported by [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) are *Google Chrome*, *Microsoft Edge*, *Mozilla Firefox* and *Safari*.
+The browsers supported by [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) are *Google Chrome*, *Microsoft Edge*, *Mozilla Firefox* and *Safari*. Ensure to have the latest version installed. 
 
 ##Quick Start
 
