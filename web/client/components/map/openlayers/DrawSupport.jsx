@@ -417,8 +417,12 @@ export default class DrawSupport extends React.Component {
                     let radius;
                     let center;
                     if (this.props.options.geodesic) {
-                        radius = getWidth(drawnGeom.getExtent()) / 2;
                         center = getCenter(drawnGeom.getExtent());
+                        const projection = this.props.map.getView().getProjection().getCode();
+                        const wgs84Coordinates = [[...center], [...drawnGeom.getCoordinates()[0][0]]].map((coordinate) => {
+                            return this.reprojectCoordinatesToWGS84(coordinate, projection);
+                        });
+                        radius = calculateDistance(wgs84Coordinates, 'haversine');
                     } else {
                         radius = drawnGeom.getRadius();
                         center = drawnGeom.getCenter();

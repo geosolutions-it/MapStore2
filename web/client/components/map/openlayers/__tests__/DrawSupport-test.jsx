@@ -441,6 +441,50 @@ describe('Test DrawSupport', () => {
         expect(spyChangeStatus.calls.length).toBe(1);
     });
 
+    it('end drawing a circle with geodesic and return it in a feature coll', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            addInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+        const feature = new Feature({
+            geometry: new Polygon([[[1260849.5330228335,5858838.541278879],[1260859.0793005147,5858837.601047362],[1260868.258714169,5858834.816486563],[1260876.718499052,5858830.294608947],[1260884.133547016,5858824.209192757],[1260890.2189007471,5858816.794103065],[1260894.7407046938,5858808.3343035225],[1260897.5251918244,5858799.154904525],[1260898.4653608864,5858789.608668577],[1260897.5250876388,5858780.062453353],[1260894.7405121839,5858770.883113368],[1260890.2186492207,5858762.423402156],[1260884.1332747655,5858755.0084166415],[1260876.7182475254,5858748.923104642],[1260868.258521659,5858744.401315351],[1260859.079196329,5858741.616813564],[1260849.5330228335,5858740.676602772],[1260839.9868493383,5858741.616813564],[1260830.8075240082,5858744.401315351],[1260822.3477981421,5858748.923104642],[1260814.9327709018,5858755.0084166415],[1260808.8473964466,5858762.423402156],[1260804.3255334836,5858770.883113368],[1260801.5409580288,5858780.062453353],[1260800.6006847809,5858789.608668577],[1260801.5408538429,5858799.154904525],[1260804.3253409734,5858808.3343035225],[1260808.8471449201,5858816.794103065],[1260814.9324986509,5858824.209192757],[1260822.347546615,5858830.294608947],[1260830.807331498,5858834.816486563],[1260839.9867451526,5858837.601047362],[1260849.5330228335,5858838.541278879]]]),
+            name: 'My CICRLE'
+        })
+        const features = JSON.parse(`[{"type":"FeatureCollection","id":"a163c5a0-541c-11eb-bb33-0bdb72af1884","geometry":null,"features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[]]},"properties":{"id":"a20c61b0-541c-11eb-bb33-0bdb72af1884","isValidFeature":false,"canEdit":true,"isCircle":true,"isDrawing":true},"style":[{"color":"#ffcc33","opacity":1,"weight":3,"fillColor":"#ffffff","fillOpacity":0.2,"highlight":true,"type":"Circle","title":"Circle Style","id":"a20b5040-541c-11eb-bb33-0bdb72af1884"},{"iconGlyph":"comment","iconShape":"square","iconColor":"blue","highlight":true,"iconAnchor":[0.5,0.5],"type":"Point","title":"Center Style","filtering":false,"geometry":"centerPoint","id":"a20b5041-541c-11eb-bb33-0bdb72af1884"}]}],"newFeature":true,"properties":{"id":"a163c5a0-541c-11eb-bb33-0bdb72af1884"},"tempFeatures":[]}]`)
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const support = ReactDOM.render(
+            <DrawSupport features={features} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={features} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Circle" options={{
+                stopAfterDrawing: true,
+                geodesic: true,
+                drawEnabled: true,
+                transformToFeatureCollection: true
+            }}
+            onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: feature
+        });
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: feature
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyEnd.calls[0].arguments[0].features[0].properties.radius).toBe(33.653);
+    });
+
+
     it('tests a replace of geodesic circle feature ', () => {
         const fakeMap = {
             addLayer: () => {},
