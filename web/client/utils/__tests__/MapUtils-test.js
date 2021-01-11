@@ -229,7 +229,15 @@ describe('Test the MapUtils', () => {
                     url: "",
                     visibility: true,
                     catalogURL: "url",
-                    origin: [100000, 100000]
+                    origin: [100000, 100000],
+                    extendedParams: {
+                        fromExtension1: {
+                            testBool: true
+                        },
+                        fromPlugin2: {
+                            name: "plugin"
+                        }
+                    }
                 }
             ];
 
@@ -478,7 +486,15 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        extendedParams: {
+                            fromExtension1: {
+                                testBool: true
+                            },
+                            fromPlugin2: {
+                                name: "plugin"
+                            }
+                        }
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
