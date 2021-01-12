@@ -136,7 +136,8 @@ export const featureTypeSelectedEpic = (action$, store) =>
 export const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY)
         .switchMap(action => {
-            const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
+            const defaultSortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
+            const sortOptions = action?.filterObj?.sortOptions || defaultSortOptions;
             const totalFeatures = paginationInfo.totalFeatures(store.getState());
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             // getSelected Layer and merge layerFilter and cql_filter in params  with action filter
