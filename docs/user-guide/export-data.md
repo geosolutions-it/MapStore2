@@ -17,7 +17,7 @@ From the **Export Data** panel the user can:
 
 * Enable the **Crop dataset to current viewport** for downloading only the part of the layer visible on the map at that moment (this option is present in the form only if the WPS Download process is available)
 
-* Only for *Vector layer*, allows to consider for the download also an eventual filter applied to the layer using the [Filter layer tool](filtering-layers.md#query-panel)  (this option is present in the form only if the WPS Download process is available)
+* Only for *Vector layer*, allows to consider for the download also an eventual filter applied to the layer using the [Filter layer tool](filtering-layers.md#layer-filter)  (this option is present in the form only if the WPS Download process is available)
 
 <img src="../img/export_data/export_data_vector.jpg" class="ms-docimage"/>
 
