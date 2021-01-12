@@ -204,7 +204,7 @@ export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} }
  */
 export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     const rootReducer = fetchReducer();
-    const reducer = (state, action) => {
+    const reducer = persistReducer((state, action) => {
         const initialStoreKeys = Object.keys(rootReducer({}, {}));
         const newState = {...state, ...rootReducer(state, action)};
         return Object.keys(reducers)
@@ -217,8 +217,9 @@ export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
                     [current]: reducers[current](previous[current], action)
                 };
             }, newState);
-    };
+    });
     (store || getStore()).replaceReducer(reducer);
+
     const rootEpic = fetchEpic();
 
     wrapEpics(epics).forEach((epic) => {
