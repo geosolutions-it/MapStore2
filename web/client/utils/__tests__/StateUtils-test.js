@@ -157,6 +157,29 @@ describe('StateUtils', () => {
         expect(spy2.calls.length > 0).toBe(true);
         expect(spy1.calls.length).toBe(beforeUpdateCalls);
     });
+    it('augmentStore should add all reducers if called many times', () => {
+        const rootReducer = () => ({});
+        let currentReducer = rootReducer;
+        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', rootReducer);
+        const store = {
+            replaceReducer: (reducer) => {
+                currentReducer = reducer;
+            }
+        };
+        augmentStore({ reducers: {
+            map: () => {
+                return {};
+            }
+        }}, store);
+        augmentStore({ reducers: {
+            controls: () => {
+                return {};
+            }
+        } }, store);
+        const newState = currentReducer({}, {});
+        expect(Object.keys(newState)).toEqual([ 'map', 'controls' ]);
+        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', undefined);
+    });
     it('should use the new added reducers (augmentStore)', () => {
         const rootReducer = () => ({});
         setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', rootReducer);
