@@ -30,21 +30,16 @@
       }
     },
     {
-      "name": "Swipe"
-    },
-    {
-      "name": "ExportDataResults"
-    },
-    {
-      "name": "SearchByBookmark"
-    },
-    {
       "name": "Notifications",
       "mandatory": true,
       "hidden": true
     },
     {
       "name": "DrawerMenu",
+      "hidden": true
+    },
+    {
+      "name": "Swipe",
       "hidden": true
     },
     {
@@ -76,7 +71,8 @@
         "AddGroup"
       ],
       "dependencies": [
-        "DrawerMenu"
+        "DrawerMenu",
+        "Swipe"
       ]
     },
     {
@@ -380,13 +376,18 @@
       }
     },
     {
+      "name": "SearchByBookmark",
+      "mandatory": false
+    },
+    {
       "name": "Search",
       "glyph": "search",
       "title": "plugins.Search.title",
       "description": "plugins.Search.description",
       "dependencies": [
         "OmniBar",
-        "SearchServicesConfig"
+        "SearchServicesConfig",
+        "SearchByBookmark"
       ],
       "defaultConfig": {
         "withToggle": [
