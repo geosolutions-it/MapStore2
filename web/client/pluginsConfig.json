@@ -39,10 +39,6 @@
       "hidden": true
     },
     {
-      "name": "Swipe",
-      "hidden": true
-    },
-    {
       "name": "TOC",
       "glyph": "1-layer",
       "symbol": "layers",
@@ -62,7 +58,8 @@
         "TOCItemsSettings",
         "FeatureEditor",
         "FilterLayer",
-        "AddGroup"
+        "AddGroup",
+        "Swipe"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
@@ -71,8 +68,7 @@
         "AddGroup"
       ],
       "dependencies": [
-        "DrawerMenu",
-        "Swipe"
+        "DrawerMenu"
       ]
     },
     {
@@ -376,8 +372,10 @@
       }
     },
     {
-      "name": "SearchByBookmark",
-      "mandatory": false
+      "name": "Swipe"
+    },
+    {
+      "name": "SearchByBookmark"
     },
     {
       "name": "Search",
@@ -386,9 +384,9 @@
       "description": "plugins.Search.description",
       "dependencies": [
         "OmniBar",
-        "SearchServicesConfig",
-        "SearchByBookmark"
+        "SearchServicesConfig"
       ],
+      "children": ["SearchByBookmark"],
       "defaultConfig": {
         "withToggle": [
           "max-width: 768px",
