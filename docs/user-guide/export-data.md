@@ -17,14 +17,14 @@ From the **Export Data** panel the user can:
 
 * Enable the **Crop dataset to current viewport** for downloading only the part of the layer visible on the map at that moment (this option is present in the form only if the WPS Download process is available)
 
-* Only for *Vector layer*, allows to consider for the download also an eventual filter applied to the layer using the **Filter layer tool**  (this option is present in the form only if the WPS Download process is available)
+* Only for *Vector layer*, allows to consider for the download also an eventual filter applied to the layer using the [Filter layer tool](filtering-layers.md#query-panel)  (this option is present in the form only if the WPS Download process is available)
 
 <img src="../img/export_data/export_data_vector.jpg" class="ms-docimage"/>
 
 * Only for *Raster layer* (and if the WPS Download process is available) the user can open the **Advanced options** to choose:
 
-- The **Compression** type used to store internal tiles (`CCITT RLE`, `LZW`, `JPEG`, `ZLip`, `PackBits` or `Deflate`), the Quality (from 0 to 1), tile width and height (`px`)
-- The **Compression** quality for lossy compression (JPEG). Value is in the range [0 : 1] where 0 is for worst quality/higher compression and 1 is for best quality/lower compression
+- The **Compression type** used to store internal tiles (`CCITT RLE`, `LZW`, `JPEG`, `ZLip`, `PackBits` or `Deflate`)
+- The **Compression quality** for lossy compression (JPEG). Value is in the range [0 : 1] where 0 is for worst quality/higher compression and 1 is for best quality/lower compression
 - Tile **Width** of internal tiles, in pixels
 - Tile **Height** of internal tiles, in pixels
 
