@@ -38,6 +38,7 @@ describe('StandardApp withExtensions', () => {
         document.head.innerHTML = '';
         ConfigUtils.setLocalConfigurationFile('localConfig.json');
         ConfigUtils.setConfigProp("persisted.reduxStore", undefined);
+        ConfigUtils.setConfigProp("translationsPath", "translations");
         setTimeout(done);
     });
     it('extensions plugins are available if extensions are enabled', (done) => {
@@ -134,6 +135,44 @@ describe('StandardApp withExtensions', () => {
             expect(mockAxios.history.get[2].url).toBe("extensions.json");
             done();
         }, 0);
+    });
+    it('PLUGIN_UNINSTALLED removes extension translations', (done) => {
+        ConfigUtils.setConfigProp("translationsPath", ["translations", "dist/extensions/My/translations"]);
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet(/localconfig/i).reply(200, {});
+        mockAxios.onGet(/extensions\.json/i).reply(200, {
+            Other: {
+                bundle: "base/web/client/test-resources/extensions/otherextension.js"
+            },
+            My: {
+                bundle: "base/web/client/test-resources/extensions/myextension.js"
+            }
+        });
+        const store = () => ({
+            dispatch() { },
+            getState() {
+                return {};
+            },
+            subscribe() {
+            },
+            addActionListener(listener) {
+                listener({
+                    type: PLUGIN_UNINSTALLED,
+                    plugin: "My",
+                    cfg: {
+                        translations: "dist/extensions/My/translations"
+                    }
+                });
+            },
+            replaceReducer: () => { }
+
+        });
+        setStore(store());
+        const MyApp = () => {
+            expect(ConfigUtils.getConfigProp("translationsPath").length).toBe(1);
+            done();
+        };
+        ReactDOM.render(<StandardAppWithExtensions appStore={store} appComponent={MyApp} enableExtensions />, document.getElementById("container"));
     });
     it('PLUGIN_UNINSTALLED action triggers removing an extension from available plugins', (done) => {
         mockAxios = new MockAdapter(axios);
