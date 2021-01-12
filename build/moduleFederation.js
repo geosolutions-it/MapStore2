@@ -25,7 +25,8 @@ const shared = {
     },
     "url": {
         eager: true,
-        singleton: true
+        singleton: true,
+        requiredVersion: "0.11.0",
     },
     "redux-observable": {
         eager: true,
@@ -49,19 +50,26 @@ const shared = {
     },
     "rxjs": {
         eager: true,
-        singleton: true
+        singleton: true,
+        requiredVersion: "5.1.1",
+    },
+    "babel": {
+        eager: true,
+        singleton: true,
     },
     "react-redux": {
         eager: true,
         singleton: true
     },
-    react: {
+    "react": {
         eager: true,
-        singleton: true
+        singleton: true,
+        requiredVersion: "16.10.1",
     },
     'react-dom': {
         eager: true,
-        singleton: true
+        singleton: true,
+        requiredVersion: "16.10.1",
     }
 };
 
