@@ -144,6 +144,8 @@ In this case the user is allowed to:
 
 * [Create Widgets](widgets.md) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
 
+* [Export](export-data.md) the data of the selected layer <img src="../img/button/export_data.jpg" class="ms-docbutton"/>
+
 * Open the **Compare tool** where it is possible to *Swipe* or *Spy* the selected layer <img src="../img/button/compare_tool_button.jpg" class="ms-docbutton"/>. 
 
 From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> of the **Compare tool** it is possible to click on <img src="../img/button/swipe_button.jpg" class="ms-docbutton" style="max-height:25px;"/> button so that the Swipe tool is enabled on the map for the selected layer: to activate the Swipe it is also possible to simply click on the **Compare tool** button.
