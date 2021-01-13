@@ -107,6 +107,8 @@ export const isHighlightEnabledSelector = (state = {}) => state.mapInfo && state
 
 export const indexSelector = (state = {}) => state && state.mapInfo && state.mapInfo.index;
 
+export const requestIdSelector = (state = {}) => state && state.mapInfo && state.mapInfo.requestId;
+
 export const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
 
 export const requestsSelector = state => state?.mapInfo?.requests || [];
@@ -126,8 +128,10 @@ export const validResponsesSelector = createSelector(
     });
 
 export const currentResponseSelector = createSelector(
-    validResponsesSelector, indexSelector,
-    (responses = [], index = 0) => responses[index]
+    validResponsesSelector, requestIdSelector,
+    (responses = [], reqId) => {
+        return responses && responses.filter(r => r.layer.id === reqId)[0];
+    }
 );
 export const currentFeatureSelector = state => {
     const currentResponse = currentResponseSelector(state) || {};

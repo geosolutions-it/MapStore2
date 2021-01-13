@@ -66,6 +66,9 @@ const RESPONSE_STATE = {
                     title: 'Manhattan (NY) points of interest',
                     viewer: {},
                     featureInfo: {}
+                },
+                layer: {
+                    id: "layer_id"
                 }
             }
         ],
@@ -92,7 +95,8 @@ const RESPONSE_STATE = {
             }
         },
         clickLayer: null,
-        index: 0
+        index: 0,
+        requestId: "layer_id"
     }
 };
 const RESPONSE_STATE_WITH_FEATURES_METADATA = set('mapInfo.responses[0].layerMetadata', {

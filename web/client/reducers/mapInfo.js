@@ -102,9 +102,17 @@ function receiveResponse(state, action, type) {
 
         let indexObj;
         if (isHover) {
-            indexObj = {loaded: true, index: 0};
+            indexObj = {
+                loaded: true,
+                index: 0,
+                requestId: responses[requestIndex].layer.id // TODO check if this is needed
+            };
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
-            indexObj = {loaded: true, index: requestIndex};
+            indexObj = {
+                loaded: true,
+                index: requestIndex,
+                requestId: responses[requestIndex].layer.id
+            };
         }
 
         // Set responses and index as first response is received
@@ -382,6 +390,9 @@ function mapInfo(state = initState, action) {
                 features: intersected,
                 totalFeatures: "unknown",
                 type: "FeatureCollection"
+            },
+            layer: {
+                id: action.layer.id
             },
             queryParams: action.request,
             layerMetadata: action.metadata,

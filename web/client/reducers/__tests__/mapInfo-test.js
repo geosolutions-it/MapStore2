@@ -85,6 +85,9 @@ describe('Test the mapInfo reducer', () => {
             type: 'LOAD_FEATURE_INFO',
             data: "data",
             requestParams: "params",
+            layer: {
+                id: "layer_id"
+            },
             layerMetadata: "meta",
             reqId: 10
         };
@@ -132,7 +135,8 @@ describe('Test the mapInfo reducer', () => {
                         "prop0": "value0",
                         "prop1": {"this": "that"}
                     }
-                }]
+                }],
+                id: "layer_id"
             },
             request: {
                 lng: 10.0,
