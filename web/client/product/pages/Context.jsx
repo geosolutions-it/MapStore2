@@ -77,7 +77,7 @@ class Context extends React.Component {
         },
         wrappedContainer: MapViewerContainer
     };
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const params = this.props.match.params;
         this.oldTitle = document.title;
         this.props.loadContext(params);

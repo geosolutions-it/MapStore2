@@ -58,7 +58,7 @@ class GeoStoryPage extends React.Component {
         updateUrlOnScroll: () => {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const id = get(this.props, "match.params.gid");
         const previousId = this.props.previousId && this.props.previousId + '';
         this.props.reset();
