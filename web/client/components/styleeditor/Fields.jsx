@@ -24,6 +24,7 @@ import localizedProps from '../misc/enhancers/localizedProps';
 import PropertyField from './PropertyField';
 import MarkSelector from './MarkSelector';
 import Band from './Band';
+import IconInput from './IconInput';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
 const ReactSelect = localizedProps(['placeholder', 'noResultsText'])(Select);
@@ -155,26 +156,33 @@ export const fields = {
     image: ({
         label,
         value,
-        config: {
-            isValid
-        },
+        config: {},
         onChange
     }) => {
-
-        const valid = !isValid || isValid({ value });
+        const [error, setError] = useState(false);
+        const currentValue = isObject(value)
+            ? value.src
+            : value;
         return (
             <PropertyField
                 label={label}
-                invalid={!valid}>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <FormGroup style={{ flex: 1 }}>
-                        <FormControl
-                            placeholder="styleeditor.placeholderEnterImageUrl"
-                            value={value}
-                            onChange={event => onChange(event.target.value)}/>
-                    </FormGroup>
-                    <img src={value} style={{ width: 28, height: 28, objectFit: 'contain' }}/>
-                </div>
+                invalid={!!(error?.type === 'error')}
+                warning={!!(error?.type === 'warning')}>
+                <IconInput
+                    label={label}
+                    value={currentValue}
+                    onChange={(newValue) => {
+                        onChange(newValue);
+                        setError(false);
+                    }}
+                    onLoad={(err, src) => {
+                        setError(err);
+                        if (err.type === 'error') {
+                            // send the error to VisualStyleEditor component
+                            onChange({ src, errorId: err.messageId });
+                        }
+                    }}
+                />
             </PropertyField>
         );
     },

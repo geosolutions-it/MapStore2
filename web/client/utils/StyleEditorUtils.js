@@ -411,6 +411,49 @@ export function formatJSONStyle(style) {
     };
 }
 
+function checkBase64(base64) {
+    try {
+        window.atob(base64);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Validate an image source by its src
+ * @param  {string} src symbolizer object
+ * @return  {promise} on then return valid response { src, isBase64 } on catch return error object { messageId, isBase64 }
+ */
+export function validateImageSrc(src) {
+    return new Promise((resolve, reject) => {
+        if (!src) {
+            reject({ messageId: 'imageSrcEmpty', isBase64: false });
+        }
+        let isBase64 = false;
+        if (src.indexOf('data:image') === 0) {
+            const splitBase64 = src.split('base64,');
+            isBase64 = checkBase64(splitBase64[splitBase64.length - 1]);
+            if (!isBase64) {
+                reject({ messageId: 'imageSrcInvalidBase64', isBase64 });
+            }
+        }
+        const img = new Image();
+        img.onload = () => {
+            resolve({ src, isBase64 });
+        };
+        img.onerror = () => {
+            reject({
+                messageId: isBase64
+                    ? 'imageSrcInvalidBase64'
+                    : 'imageSrcLoadError',
+                isBase64
+            });
+        };
+        img.src = src;
+    });
+}
+
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
@@ -424,5 +467,6 @@ export default {
     getNameParts,
     stringifyNameParts,
     parseJSONStyle,
-    formatJSONStyle
+    formatJSONStyle,
+    validateImageSrc
 };

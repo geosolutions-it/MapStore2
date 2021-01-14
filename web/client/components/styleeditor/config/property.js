@@ -263,12 +263,10 @@ const property = {
             };
         }
     }),
-    image: ({ label, key = 'image', isValid }) => ({
+    image: ({ label, key = 'image' }) => ({
         type: 'image',
         label,
-        config: {
-            isValid
-        },
+        config: {},
         getValue: (value = '') => {
             return {
                 [key]: value

@@ -228,7 +228,7 @@ describe('VisualStyleEditor', () => {
                 debounceTime={DEBOUNCE_TIME}
                 onError={(error) => {
                     try {
-                        expect(error).toEqual({ messageId: 'styleeditor.emptyImageIconSymbolizer', status: 400 });
+                        expect(error).toEqual({ messageId: 'styleeditor.imageSrcEmpty', status: 400 });
                     } catch (e) {
                         done(e);
                     }

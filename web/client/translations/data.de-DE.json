@@ -2161,7 +2161,10 @@
             "customInterval": "Custom Interval",
             "styleEmpty": "Dieser Stil hat keine Regeln",
             "incompleteClassification": "Die Klassifizierung ist unvollständig, da die Einträge nicht verfügbar sind. Stellen Sie sicher, dass alle Eigenschaften korrekt bereitgestellt werden.",
-            "emptyImageIconSymbolizer": "Fehlende Bild-URL im Symbolstil",
+            "imageSrcEmpty": "Fehlende Bild-URL im Symbolstil",
+            "imageSrcLoadError": "Die angegebene Bildquelle konnte nicht geladen werden. Versuchen Sie es mit einer anderen URL oder stellen Sie sicher, dass die Quelle über MapStore erreichbar ist.",
+            "imageSrcInvalidBase64": "Dies ist kein gültiges base64-Image. Einige Style-Renderer unterstützen diesen Quelltyp nicht. Sie können stattdessen eine externe URL-Quelle verwenden.",
+            "imageSrcNotSupportedBase64Image": "Einige Style-Renderer unterstützen Base64-Images nicht, selbst wenn die aktuelle Quelle gültig ist",
             "warningTextOrderTitle": "Warnung",
             "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
         },

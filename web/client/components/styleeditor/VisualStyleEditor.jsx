@@ -111,13 +111,13 @@ function validateStyle(rules) {
             status: 400
         };
     }
-    // if the image is missing in icon symbolizer is not possible to create the rule
-    const emptyImageIconSymbolizer = find(rules, ({ symbolizers = [] }) =>
-        find(symbolizers, ({ kind, image }) => kind === 'Icon' && (image === undefined || image === ''))
+    // check if the image of icons has some error
+    const imageIconSymbolizerError = find(rules, ({ symbolizers = [] }) =>
+        find(symbolizers, ({ kind, image }) => kind === 'Icon' && image?.errorId)
     );
-    if (emptyImageIconSymbolizer) {
+    if (imageIconSymbolizerError) {
         return {
-            messageId: 'styleeditor.emptyImageIconSymbolizer',
+            messageId: `styleeditor.${imageIconSymbolizerError?.symbolizers?.[0]?.image?.errorId}`,
             status: 400
         };
     }

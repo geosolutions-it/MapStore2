@@ -2162,7 +2162,10 @@
             "customInterval": "Custom Interval",
             "styleEmpty": "Este estilo no tiene reglas",
             "incompleteClassification": "La clasificación es incompleta porque las entradas no están disponibles. Asegúrese de que todas las propiedades se proporcionan correctamente",
-            "emptyImageIconSymbolizer": "Falta la URL de la imagen en el estilo del icono",
+            "imageSrcEmpty": "Falta la URL de la imagen en el estilo del icono",
+            "imageSrcLoadError": "No se pudo cargar la fuente de la imagen proporcionada. Pruebe con una URL diferente o asegúrese de que MapStore pueda acceder a la fuente",
+            "imageSrcInvalidBase64": "Esta no es una imagen base64 válida. Algunos procesadores de estilo no son compatibles con este tipo de fuente; en su lugar, puede utilizar una fuente de URL externa",
+            "imageSrcNotSupportedBase64Image": "Algunos procesadores de estilo no admiten imágenes en base64 incluso si la fuente actual es válida",
             "warningTextOrderTitle": "Advertencia",
             "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
         },
