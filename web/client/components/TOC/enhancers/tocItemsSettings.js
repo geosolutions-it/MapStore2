@@ -27,7 +27,7 @@ export const settingsState = compose(
  * - onClose: triggers onHideSettings only if the settings doesn't change, in case of changes will trigger onShowAlertModal
  * - onSave: triggers onHideSettings
  * Lifecycle:
- * - componentWillMount: set original and initial settings of current node
+ * - UNSAFE_componentWillMount: set original and initial settings of current node
  * - componentWillReceiveProps: in case of missing description of node, it sends a get capabilities requiest to retrieve data of layer
  * - componentWillUpdate: check if current settings are not expanded and next are expanded to restore initial and original settings of component
  * @memberof enhancers.settingsLifecycle
@@ -75,7 +75,7 @@ export const settingsLifecycle = compose(
         }
     }),
     lifecycle({
-        componentWillMount() {
+        UNSAFE_componentWillMount() {
             const {
                 element = {},
                 onUpdateOriginalSettings = () => { },

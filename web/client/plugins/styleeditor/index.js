@@ -195,7 +195,7 @@ const ReadOnlyStyleList = compose(
         onInit: getLayerCapabilities
     }),
     lifecycle({
-        componentWillMount() {
+        UNSAFE_componentWillMount() {
             if (this.props.onInit && this.props.layer) {
                 this.props.onInit(this.props.layer);
             }

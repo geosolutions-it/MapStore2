@@ -38,7 +38,7 @@ export default class PopupSupport extends React.Component {
         popups: [],
         onPopupClose: () => {}
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (this.props.map) {
             // This prevent the pointermove to be sent event when stopevent is active.
             this.props.map.getContainer().querySelector('.leaflet-popup-pane').addEventListener('mousemove', this.stopPropagationOnMouseMove);
