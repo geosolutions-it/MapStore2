@@ -26,7 +26,8 @@ import {
     getNameParts,
     stringifyNameParts,
     parseJSONStyle,
-    formatJSONStyle
+    formatJSONStyle,
+    validateImageSrc
 } from '../StyleEditorUtils';
 
 describe('StyleEditorUtils test', () => {
@@ -740,5 +741,43 @@ describe('StyleEditorUtils test', () => {
             kind: 'Fill',
             symbolizerId: 'id'
         });
+    });
+    it('should return an error with empty image src (validateImageSrc)', (done) => {
+        validateImageSrc('')
+            .then(() => {})
+            .catch((error) => {
+                expect(error.isBase64).toBe(false);
+                expect(error.messageId).toBe('imageSrcEmpty');
+                done();
+            });
+    });
+    it('should return an error with an invalid image (validateImageSrc)', (done) => {
+        const invalidSrc = 'image.png';
+        validateImageSrc(invalidSrc)
+            .then(() => {})
+            .catch((error) => {
+                expect(error.isBase64).toBe(false);
+                expect(error.messageId).toBe('imageSrcLoadError');
+                done();
+            });
+    });
+    it('should return an error with invalid base64 image (validateImageSrc)', (done) => {
+        const invalidBase64Src = 'data:image/png;base64,iVBOR';
+        validateImageSrc(invalidBase64Src)
+            .then(() => {})
+            .catch((error) => {
+                expect(error.isBase64).toBe(false);
+                expect(error.messageId).toBe('imageSrcInvalidBase64');
+                done();
+            });
+    });
+    it('should return an valid response with valid base64 image (validateImageSrc)', (done) => {
+        const validBase64Src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+        validateImageSrc(validBase64Src)
+            .then((response) => {
+                expect(response.isBase64).toBe(true);
+                expect(response.src).toBe(validBase64Src);
+                done();
+            });
     });
 });

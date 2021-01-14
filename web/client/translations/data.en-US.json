@@ -2173,7 +2173,10 @@
             "customInterval": "Custom Interval",
             "styleEmpty": "This style has no rules",
             "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
-            "emptyImageIconSymbolizer": "Missing image url in the icon style",
+            "imageSrcEmpty": "Missing image source url in the icon style",
+            "imageSrcLoadError": "The provided image source could not be loaded. Try with a different url or ensure the source is reachable by MapStore",
+            "imageSrcInvalidBase64": "This is not a valid base64 image. Some style renderer does not support this type of source, you could use an external url source instead",
+            "imageSrcNotSupportedBase64Image": "Some style renderer does not support base64 images even if the current source is valid",
             "warningTextOrderTitle": "Warning",
             "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
         },
