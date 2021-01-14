@@ -20,7 +20,13 @@ const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPl
 const packageJson =  require('../package.json');
 
 const requireVersionLibs = () => {
-    return ["url", "react", "rxjs", "react-dom"].reduce((sharedConfigs, lib) => {
+    return [
+        "url",
+        "rxjs",
+        "react",
+        "react-dom",
+        "react-redux"
+    ].reduce((sharedConfigs, lib) => {
         return {
             ...sharedConfigs,
             [lib]: {
@@ -60,10 +66,6 @@ const shared = {
         singleton: true
     },
     "babel": {
-        eager: true,
-        singleton: true
-    },
-    "react-redux": {
         eager: true,
         singleton: true
     },
