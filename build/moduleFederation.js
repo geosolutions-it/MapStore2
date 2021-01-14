@@ -17,13 +17,25 @@ const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPl
 //     "react-draft-wysiwyg", "html-to-draftjs", "geostyler-geocss-parser", "@geosolutions/wkt-parser", "@turf/bbox-polygon"
 // ];
 
+const packageJson =  require('../package.json');
+
+const requireVersionLibs = () => {
+    return ["url", "react", "rxjs", "react-dom"].reduce((sharedConfigs, lib) => {
+        return {
+            ...sharedConfigs,
+            [lib]: {
+                eager: true,
+                singleton: true,
+                requiredVersion: packageJson.dependencies[lib]
+            }
+        };
+    }, {});
+};
+
+
 // the shared libraries, to use both in all federated modules (extensions/main product)
 const shared = {
     "recompose": {
-        eager: true,
-        singleton: true
-    },
-    "url": {
         eager: true,
         singleton: true
     },
@@ -47,7 +59,7 @@ const shared = {
         eager: true,
         singleton: true
     },
-    "rxjs": {
+    "babel": {
         eager: true,
         singleton: true
     },
@@ -55,14 +67,7 @@ const shared = {
         eager: true,
         singleton: true
     },
-    react: {
-        eager: true,
-        singleton: true
-    },
-    'react-dom': {
-        eager: true,
-        singleton: true
-    }
+    ...requireVersionLibs()
 };
 
 /**
