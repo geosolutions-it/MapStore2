@@ -11,6 +11,8 @@ import expect from 'expect';
 import { isEmpty, isEqual } from 'lodash';
 
 import {
+    launchUpdateFilterFunc,
+    LAUNCH_UPDATE_FILTER_FUNC,
     SELECT_FEATURES,
     selectFeatures,
     changePage,
@@ -111,6 +113,12 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval.features).toExist();
         expect(retval.features.length).toBe(features.length);
         expect(retval.type).toBe(DELETE_GEOMETRY_FEATURE);
+    });
+    it('Test deleteGeometryFeature action creator', () => {
+        const retval = launchUpdateFilterFunc({});
+        expect(retval).toBeTruthy();
+        expect(retval.updateFilterAction).toBeTruthy();
+        expect(retval.type).toBe(LAUNCH_UPDATE_FILTER_FUNC);
     });
     it('Test deleteGeometry action creator', () => {
         const retval = deleteGeometry();
