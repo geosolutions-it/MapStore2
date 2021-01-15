@@ -389,7 +389,7 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
                 // flag to see if virtualScroll page size has been modified
                 let virtualScrollSet = false;
                 return action$.ofType(UPDATE_FILTER)
-                    .filter(({ update = {} }) => update.type === 'geometry')
+                    .filter(({ update = {} }) => update.type === 'geometry' && update.enabled && !update.deactivated)
                     .switchMap((a, i) => {
                         if (i === 0) {
                             virtualScrollSet = true;
