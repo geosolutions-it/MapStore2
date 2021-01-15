@@ -432,12 +432,12 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
                         action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE).take(1).switchMap(() => {
                             // if closed. the filter must be reset or a reopen (e.g. from advanced filter)
                             // could make inconsistent the UI.
-                            // if closed for other causes, need to restore anyway the pagination
                             const resetFilter = updateFilter({
                                 attribute: findGeometryProperty(describeSelector(store.getState()))?.name,
                                 enabled: false,
                                 type: "geometry"
                             });
+                            // if closed for other causes, need to restore anyway the pagination
                             if (virtualScrollSet) {
                                 return Rx.Observable.of(setPagination(originalSize), resetFilter, launchUpdateFilterFunc(resetFilter));
                             }
@@ -447,6 +447,12 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
             });
     });
 
+/**
+ * @memberof epics.featuregrid
+ * this epic has been created because there was a non correct sequence of actions dispatched by featureGridUpdateGeometryFilter when CLOSE_FEATURE_GRID was triggered
+ * the resetFilter action is now dispatched before executing updateFilterFunc that is now using the correct data from the store
+ * see #6366
+  */
 export const launchUpdateFilterEpic = (action$, store) => action$.ofType(LAUNCH_UPDATE_FILTER_FUNC).switchMap((a) => {
     return Rx.Observable.of(updateFilterFunc(store)(a.updateFilterAction));
 });
@@ -998,7 +1004,7 @@ export const autoReopenFeatureGridOnFeatureInfoClose = (action$) =>
 export const onOpenAdvancedSearch = (action$, store) =>
     action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
         return Rx.Observable.of(
-            // temporarily hide selected features from map
+            // hide selected features from map
             selectFeatures([]),
             loadFilter(get(store.getState(), `featuregrid.advancedFilters["${selectedLayerIdSelector(store.getState())}"]`)),
             closeFeatureGrid(),
@@ -1018,10 +1024,9 @@ export const onOpenAdvancedSearch = (action$, store) =>
                     action$.ofType(TOGGLE_CONTROL)
                         .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
                         .mergeMap(() => {
-                            const selected = selectedFeaturesSelector(store.getState());
                             const {drawStatus} = (store.getState()).draw || {};
-                            const acts = (drawStatus !== 'clean' && selected.length === 0) ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
-                            return Rx.Observable.from(acts.concat(selectFeatures(selected, true), openFeatureGrid()));
+                            const acts = (drawStatus !== 'clean') ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
+                            return Rx.Observable.from(acts.concat(openFeatureGrid()));
                         }
                         )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
