@@ -47,6 +47,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
+import eu.medsea.mimeutil.MimeType;
+import eu.medsea.mimeutil.MimeUtil;
 import it.geosolutions.mapstore.utils.ResourceUtils;
 
 /**
@@ -70,6 +72,10 @@ public class ConfigController {
         String data;
         String type;
         File file;
+    }
+    
+    static {
+    	MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
     }
 
     private ObjectMapper jsonMapper = new ObjectMapper();
@@ -168,7 +174,9 @@ public class ConfigController {
     private Resource readResourceFromFile(File file, boolean applyOverrides, Optional<File> patch) throws IOException {
     	Resource resource = new Resource();
         resource.file = file;
-        resource.type = Files.probeContentType(Paths.get(file.getAbsolutePath()));
+        
+        MimeType type = MimeUtil.getMostSpecificMimeType(MimeUtil.getMimeTypes(file));
+        resource.type = type != null ? type.toString() : null;
         try (Stream<String> stream =
                 Files.lines( Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8); ) {
             Properties props = readOverrides();
