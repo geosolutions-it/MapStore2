@@ -251,7 +251,7 @@ Through the last section of the layer settings panel, it is possible to decide t
 
 In particular, the user can choose between:
 
-* **Disable Identify** to disable the feature info of the layer
+* **Disable Identify** to disable the Identify for the layer
 
 * **Text**
 
