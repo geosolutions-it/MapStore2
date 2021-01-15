@@ -30,15 +30,6 @@
       }
     },
     {
-      "name": "Swipe"
-    },
-    {
-      "name": "ExportDataResults"
-    },
-    {
-      "name": "SearchByBookmark"
-    },
-    {
       "name": "Notifications",
       "mandatory": true,
       "hidden": true
