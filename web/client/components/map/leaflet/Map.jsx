@@ -335,7 +335,9 @@ class LeafletMap extends React.Component {
                 projection: mapProj,
                 zoomOffset: this.zoomOffset,
                 onCreationError: this.props.onCreationError,
-                onClick: this.props.onClick
+                onClick: this.props.onClick,
+                resolutions: this.getResolutions(),
+                zoom: this.props.zoom
             }) : null;
         }) : null;
         return (

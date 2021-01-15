@@ -6,34 +6,35 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const L = require('leaflet');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const MockAdapter = require('axios-mock-adapter');
-const axios = require('axios');
+import L from 'leaflet';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 
-const LeafLetLayer = require('../Layer.jsx');
-const Feature = require('../Feature.jsx');
-const expect = require('expect');
+import LeafLetLayer from '../Layer.jsx';
+import Feature from '../Feature.jsx';
+import expect from 'expect';
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
-require('../../../../utils/leaflet/Layers');
-require('../plugins/OSMLayer');
-require('../plugins/GraticuleLayer');
-require('../plugins/WMSLayer');
-require('../plugins/WMTSLayer');
-require('../plugins/GoogleLayer');
-require('../plugins/BingLayer');
-require('../plugins/MapQuest');
-require('../plugins/WFSLayer');
-require('../plugins/VectorLayer');
+import '../../../../utils/leaflet/Layers';
+import '../plugins/OSMLayer';
+import '../plugins/GraticuleLayer';
+import '../plugins/WMSLayer';
+import '../plugins/WMTSLayer';
+import '../plugins/GoogleLayer';
+import '../plugins/BingLayer';
+import '../plugins/MapQuest';
+import '../plugins/WFSLayer';
+import '../plugins/VectorLayer';
 
 let mockAxios;
 
-const {setStore} = require('../../../../utils/SecurityUtils');
-const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
+import { setStore } from '../../../../utils/SecurityUtils';
+import { DEFAULT_ANNOTATIONS_STYLES } from '../../../../utils/AnnotationsUtils';
+import { setConfigProp } from '../../../../utils/ConfigUtils';
+import { getResolutions } from '../../../../utils/MapUtils';
 
 describe('Leaflet layer', () => {
     let map;
@@ -708,8 +709,8 @@ describe('Leaflet layer', () => {
                 SLD: "http://sample.server/geoserver/rest/sld?test1=aaa"
             }
         };
-        ConfigUtils.setConfigProp('useAuthenticationRules', true);
-        ConfigUtils.setConfigProp('authenticationRules', [
+        setConfigProp('useAuthenticationRules', true);
+        setConfigProp('authenticationRules', [
             {
                 urlPattern: '.*geostore.*',
                 method: 'bearer'
@@ -751,8 +752,8 @@ describe('Leaflet layer', () => {
             opacity: 1.0,
             url: "http://sample.server/geoserver/wms"
         };
-        ConfigUtils.setConfigProp('useAuthenticationRules', true);
-        ConfigUtils.setConfigProp('authenticationRules', [
+        setConfigProp('useAuthenticationRules', true);
+        setConfigProp('authenticationRules', [
             {
                 urlPattern: '.*geostore.*',
                 method: 'bearer'
@@ -946,8 +947,8 @@ describe('Leaflet layer', () => {
             ],
             url: 'http://sample.server/geoserver/gwc/service/wmts'
         };
-        ConfigUtils.setConfigProp('useAuthenticationRules', true);
-        ConfigUtils.setConfigProp('authenticationRules', [
+        setConfigProp('useAuthenticationRules', true);
+        setConfigProp('authenticationRules', [
             {
                 urlPattern: '.*geostore.*',
                 method: 'bearer'
@@ -1587,5 +1588,126 @@ describe('Leaflet layer', () => {
                 ...options
             }}
             map={map} />, document.getElementById("container"));
+    });
+
+    it('should remove layer if zoom resolution is less than minResolution', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const resolutions = getResolutions();
+        // create layers
+        let layer = ReactDOM.render(
+            <LeafLetLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    minResolution
+                }}
+                position={0}
+                map={map}
+                zoom={0}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.hasLayer(layer.layer)).toBe(true);
+
+        layer = ReactDOM.render(
+            <LeafLetLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    minResolution
+                }}
+                position={0}
+                map={map}
+                zoom={11}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        // layer removed
+        expect(map.hasLayer(layer.layer)).toBe(false);
+
+    });
+
+    it('should remove layer if zoom resolution is greater than maxResolution', () => {
+        const maxResolution = 1222; // ~ zoom 7 Web Mercator
+        const resolutions = getResolutions();
+        // create layers
+        let layer = ReactDOM.render(
+            <LeafLetLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    maxResolution
+                }}
+                position={0}
+                map={map}
+                zoom={11}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.hasLayer(layer.layer)).toBe(true);
+
+        layer = ReactDOM.render(
+            <LeafLetLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    maxResolution
+                }}
+                position={0}
+                map={map}
+                zoom={0}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        // layer removed
+        expect(map.hasLayer(layer.layer)).toBe(false);
+
+    });
+
+    it('should disable range limits with disableResolutionLimits options set to true', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const maxResolution = 39135; // ~ zoom 2 Web Mercator
+        const resolutions = getResolutions();
+        // create layers
+        let layer = ReactDOM.render(
+            <LeafLetLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    minResolution,
+                    maxResolution
+                }}
+                position={0}
+                map={map}
+                zoom={0}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        // layer removed because is outside of limits
+        expect(map.hasLayer(layer.layer)).toBe(false);
+
+        layer = ReactDOM.render(
+            <LeafLetLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    minResolution,
+                    maxResolution,
+                    disableResolutionLimits: true
+                }}
+                position={0}
+                map={map}
+                zoom={0}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.hasLayer(layer.layer)).toBe(true);
+
     });
 });

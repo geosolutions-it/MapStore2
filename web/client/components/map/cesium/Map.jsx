@@ -231,7 +231,12 @@ class CesiumMap extends React.Component {
         const map = this.map;
         const mapProj = this.props.projection;
         const children = map ? React.Children.map(this.props.children, child => {
-            return child ? React.cloneElement(child, {map: map, projection: mapProj, onCreationError: this.props.onCreationError}) : null;
+            return child ? React.cloneElement(child, {
+                map: map,
+                projection: mapProj,
+                onCreationError: this.props.onCreationError,
+                zoom: this.props.zoom
+            }) : null;
         }) : null;
         return (
             <div id={this.props.id}>

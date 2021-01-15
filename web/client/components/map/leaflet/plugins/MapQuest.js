@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/leaflet/Layers');
-const MQ = require('../../../../libs/mapquest');
+import Layers from '../../../../utils/leaflet/Layers';
+import MQ from '../../../../libs/mapquest';
 
 Layers.registerType('mapquest', {
     create: (options) => {

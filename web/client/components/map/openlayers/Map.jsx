@@ -455,7 +455,8 @@ class OpenlayersMap extends React.Component {
                 onLayerError: this.props.onLayerError,
                 onLayerLoad: this.props.onLayerLoad,
                 projection: this.props.projection,
-                onCreationError: this.props.onCreationError
+                onCreationError: this.props.onCreationError,
+                resolutions: this.getResolutions()
             }) : null;
         }) : null;
 

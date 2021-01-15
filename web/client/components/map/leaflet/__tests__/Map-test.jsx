@@ -8,7 +8,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const LeafletMap = require('../Map.jsx');
-const LeafLetLayer = require('../Layer.jsx');
+const LeafLetLayer = require('../Layer.jsx').default;
 const expect = require('expect');
 const {isNumber} = require('lodash');
 const {
