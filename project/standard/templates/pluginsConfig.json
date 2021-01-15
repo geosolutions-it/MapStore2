@@ -58,7 +58,8 @@
         "TOCItemsSettings",
         "FeatureEditor",
         "FilterLayer",
-        "AddGroup"
+        "AddGroup",
+        "Swipe"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
@@ -371,6 +372,12 @@
       }
     },
     {
+      "name": "Swipe"
+    },
+    {
+      "name": "SearchByBookmark"
+    },
+    {
       "name": "Search",
       "glyph": "search",
       "title": "plugins.Search.title",
@@ -379,6 +386,7 @@
         "OmniBar",
         "SearchServicesConfig"
       ],
+      "children": ["SearchByBookmark"],
       "defaultConfig": {
         "withToggle": [
           "max-width: 768px",

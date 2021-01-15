@@ -344,7 +344,6 @@
                 }
             }, "Home", "FeatureEditor",
             "LayerDownload",
-            "ExportDataResults",
             {
               "name": "QueryPanel",
               "cfg": {
