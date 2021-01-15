@@ -100,13 +100,14 @@ function receiveResponse(state, action, type) {
             }
         }
 
-        let indexObj;
+        let indexObj = {loaded: true, index: 0};
+        /*
         if (isHover) {
             indexObj = {loaded: true, index: 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
             indexObj = {loaded: true, index: requestIndex};
         }
-
+        */
         // Set responses and index as first response is received
         return assign({}, state, {
             ...(isVector && {requests}),

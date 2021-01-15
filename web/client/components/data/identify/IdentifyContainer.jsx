@@ -122,7 +122,7 @@ export default props => {
                         <div className="layer-col">
                             <span className="identify-icon glyphicon glyphicon-1-layer"/>
                             <LayerSelector
-                                responses={responses}
+                                responses={validResponses}
                                 index={index}
                                 loaded={loaded}
                                 setIndex={setIndex}
