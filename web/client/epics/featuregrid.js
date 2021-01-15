@@ -101,7 +101,9 @@ import {
     FEATURES_MODIFIED,
     deactivateGeometryFilter as  deactivateGeometryFilterAction,
     setSelectionOptions,
-    setPagination
+    setPagination,
+    launchUpdateFilterFunc,
+    LAUNCH_UPDATE_FILTER_FUNC
 } from '../actions/featuregrid';
 
 import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
@@ -430,20 +432,24 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
                         action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE).take(1).switchMap(() => {
                             // if closed. the filter must be reset or a reopen (e.g. from advanced filter)
                             // could make inconsistent the UI.
+                            // if closed for other causes, need to restore anyway the pagination
                             const resetFilter = updateFilter({
                                 attribute: findGeometryProperty(describeSelector(store.getState()))?.name,
                                 enabled: false,
                                 type: "geometry"
                             });
-                            // if closed for other causes, need to restore anyway the pagination
                             if (virtualScrollSet) {
-                                return Rx.Observable.of(setPagination(originalSize), resetFilter, updateFilterFunc(store)(resetFilter));
+                                return Rx.Observable.of(setPagination(originalSize), resetFilter, launchUpdateFilterFunc(resetFilter));
                             }
-                            return Rx.Observable.of(resetFilter, updateFilterFunc(store)(resetFilter));
+                            return Rx.Observable.of(resetFilter, launchUpdateFilterFunc(resetFilter));
                         })
                     );
             });
     });
+
+export const launchUpdateFilterEpic = (action$, store) => action$.ofType(LAUNCH_UPDATE_FILTER_FUNC).switchMap((a) => {
+    return Rx.Observable.of(updateFilterFunc(store)(a.updateFilterAction));
+});
 /**
  * Performs the query when the text filters are updated
  * @memberof epics.featuregrid
@@ -991,7 +997,6 @@ export const autoReopenFeatureGridOnFeatureInfoClose = (action$) =>
         );
 export const onOpenAdvancedSearch = (action$, store) =>
     action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
-        const selected = selectedFeaturesSelector(store.getState());
         return Rx.Observable.of(
             // temporarily hide selected features from map
             selectFeatures([]),
@@ -1013,6 +1018,7 @@ export const onOpenAdvancedSearch = (action$, store) =>
                     action$.ofType(TOGGLE_CONTROL)
                         .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
                         .mergeMap(() => {
+                            const selected = selectedFeaturesSelector(store.getState());
                             const {drawStatus} = (store.getState()).draw || {};
                             const acts = (drawStatus !== 'clean' && selected.length === 0) ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
                             return Rx.Observable.from(acts.concat(selectFeatures(selected, true), openFeatureGrid()));

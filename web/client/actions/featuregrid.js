@@ -51,6 +51,7 @@ export const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
 export const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
 export const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
 export const UPDATE_EDITORS_OPTIONS = 'FEATUREGRID:UPDATE_EDITORS_OPTIONS';
+export const LAUNCH_UPDATE_FILTER_FUNC = 'FEATUREGRID:LAUNCH_UPDATE_FILTER_FUNC';
 
 export const MODES = {
     EDIT: "EDIT",
@@ -374,4 +375,8 @@ export const setTimeSync = value => ({
 export const setPagination = (size) => ({
     type: SET_PAGINATION,
     size
+});
+export const launchUpdateFilterFunc = (updateFilterAction) => ({
+    type: LAUNCH_UPDATE_FILTER_FUNC,
+    updateFilterAction
 });
