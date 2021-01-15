@@ -71,7 +71,7 @@ export default props => {
         validator = () => null
     } = props;
     const latlng = point && point.latlng || null;
-    const targetResponse = validResponses[index];
+    const targetResponse = responses[index];
     const {layer} = targetResponse || {};
 
     let lngCorrected = null;

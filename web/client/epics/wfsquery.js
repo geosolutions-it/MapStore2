@@ -154,7 +154,7 @@ export const wfsQueryEpic = (action$, store) =>
                 ...queryOptions
             };
             return Rx.Observable.merge(
-                getLayerJSONFeature({...layer, search: {...layer.search, url}}, ogcFilter, options)
+                getLayerJSONFeature({...layer, name: layer.name || action.filterObj.featureTypeName, search: {...layer.search, url}}, ogcFilter, options)
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions, action.reason))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
