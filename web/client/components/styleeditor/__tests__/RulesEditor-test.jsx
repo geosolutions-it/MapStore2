@@ -615,30 +615,32 @@ describe('RulesEditor', () => {
     });
 
     it('should trigger on change callback', (done) => {
-        ReactDOM.render(
-            <RulesEditor
-                rules={[
-                    {
-                        name: 'Icon rule',
-                        ruleId: 1,
-                        symbolizers: [{
-                            kind: 'Icon',
-                            image: '',
-                            opacity: 1,
-                            size: 32,
-                            rotate: 0
-                        }]
-                    }
-                ]}
-                onChange={(newRules) => {
-                    try {
-                        expect(newRules[0].symbolizers[0].image).toBe('new-url');
-                    } catch (e) {
-                        done(e);
-                    }
-                    done();
-                }}
-            />, document.getElementById('container'));
+        TestUtils.act(() => {
+            ReactDOM.render(
+                <RulesEditor
+                    rules={[
+                        {
+                            name: 'Icon rule',
+                            ruleId: 1,
+                            symbolizers: [{
+                                kind: 'Icon',
+                                image: 'url',
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0
+                            }]
+                        }
+                    ]}
+                    onChange={(newRules) => {
+                        try {
+                            expect(newRules[0].symbolizers[0].image).toBe('new-url');
+                        } catch (e) {
+                            done(e);
+                        }
+                        done();
+                    }}
+                />, document.getElementById('container'));
+        });
         const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
         expect(ruleEditorNode).toBeTruthy();
 
@@ -650,8 +652,9 @@ describe('RulesEditor', () => {
 
         const inputNodes = symbolizersNode[0].querySelectorAll('input');
         expect(inputNodes.length).toBe(1);
-
-        TestUtils.Simulate.change(inputNodes[0], { target: { value: 'new-url' }});
+        TestUtils.act(() => {
+            TestUtils.Simulate.change(inputNodes[0], { target: { value: 'new-url' }});
+        });
     });
 
     it('should trigger on update callback', (done) => {

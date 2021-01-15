@@ -9,11 +9,12 @@
 import React from 'react';
 import Message from '../I18N/Message';
 
-function PropertyField({ children, label, tools, divider, invalid, disabled }) {
+function PropertyField({ children, label, tools, divider, invalid, warning, disabled }) {
 
     if (divider) {
         return <div className="ms-symbolizer-field-divider"></div>;
     }
+    const warningClassName = warning ? ' ms-symbolizer-value-warning' : '';
     const validationClassName = invalid ? ' ms-symbolizer-value-invalid' : '';
     const disabledClassName = disabled ? ' ms-symbolizer-value-disabled' : '';
     return (
@@ -21,7 +22,7 @@ function PropertyField({ children, label, tools, divider, invalid, disabled }) {
             className="ms-symbolizer-field">
             <div className="ms-symbolizer-label"><Message msgId={label} /></div>
             <div
-                className={'ms-symbolizer-value' + validationClassName + disabledClassName}
+                className={'ms-symbolizer-value' + validationClassName + disabledClassName + warningClassName}
                 // prevent drag and drop when interacting with property input
                 onDragStart={(event) => {
                     event.stopPropagation();
