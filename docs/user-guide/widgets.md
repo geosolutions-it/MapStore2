@@ -222,18 +222,18 @@ Through the buttons available on each widget the user can  perform the followin
 
 <img src="../img/widgets/widget-button.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* Drag and drop the widget to move it within the viewer and **resize** it thought the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
+* Drag and drop the widget to move it within the map area of the viewer and **resize** it thought the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
 <img src="../img/widgets/ded-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-* **Fix** the position and the dimension of the widget thought the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
+* **Pin** the position and the dimension of the widget thought the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
 
-* **Collapse** the widget thought the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it by clicking its icon in the *Widgets Tray*
+* **Collapse** the widget thought the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
 
 <img src="../img/widgets/collapse-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
 !!!note
-    The *Widgets Tray*, otherwise, allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at the same time <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/>.
+    The *Widgets Tray* allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at once by using the <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/> button.
 
 !!!warning
     When both **[Timeline](timeline.md)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
@@ -242,9 +242,9 @@ Through the buttons available on each widget the user can  perform the followin
 
 <img src="../img/widgets/maximize-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-* Access to the *Title* and *Description* info thought the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information was provided for the widget
+* Access to the *Title* and *Description* info thought the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
 
-<img src="../img/widgets/wid-description.jpg" class="ms-docimage"/>
+<img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 ### Access widgets menu
 
