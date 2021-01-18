@@ -44,7 +44,7 @@ How to manage users and groups is a topic present in the [Managing Users](managi
 
 ## Details
 
-Only for map type resource, it is possible to add some details to the map. In this case the *Edit properties* window is the following:
+Only resources of type map, it is possible to add details to the map. This is useful to associate some information to the map or an overview description of its content. In this case the *Edit properties* window is the following:
 
 <img src="../img/resource-properties/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -56,7 +56,7 @@ The text can be edited and some links and images can be added through the [Text 
 
 <img src="../img/resource-properties/details_sheet_buttons.jpg" class="ms-docimage"/>
 
-From here, the user is allowed to:
+Here, the user is allowed to:
 
 * Show the details **preview** <img src="../img/button/details_preview_button.jpg" class="ms-docbutton"/> 
 
@@ -72,7 +72,7 @@ From here, the user is allowed to:
 !!! warning
     The *About this map* button is visible in the [Burger Menu](menu-bar.md#burger-menu) only when the details are present on the map.
 
-* Enable the **Show at startup** <img src="../img/button/show-at-starup-button.jpg" class="ms-docbutton"/> button: the user who opens the map will see the details displayed first
+* Enable the **Show at startup** <img src="../img/button/show-at-starup-button.jpg" class="ms-docbutton"/> button. If active, as soon as the user opens the map, the details panel is visualized.
 
 * **Delete** the details sheet <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>
 
@@ -80,6 +80,6 @@ Once the details are saved, the **Show details** button <img src="../img/button/
 
 <img src="../img/resource-properties/card-map-details-button.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-Through this button it is possible to take a look at the details:
+Through this, it is possible to open the details panel also from the home page.
     
 <img src="../img/resource-properties/details-sheet.jpg" class="ms-docimage"/>
