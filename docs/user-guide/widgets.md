@@ -222,13 +222,13 @@ Through the buttons available on each widget the user can  perform the followin
 
 <img src="../img/widgets/widget-button.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* Drag and drop the widget to move it within the map area of the viewer and **resize** it thought the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
+* Drag and drop the widget to move it within the map area of the viewer and **resize** it though the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
 <img src="../img/widgets/ded-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-* **Pin** the position and the dimension of the widget thought the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
+* **Pin** the position and the dimension of the widget though the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
 
-* **Collapse** the widget thought the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
+* **Collapse** the widget though the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
 
 <img src="../img/widgets/collapse-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
@@ -238,11 +238,11 @@ Through the buttons available on each widget the user can  perform the followin
 !!!warning
     When both **[Timeline](timeline.md)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
 
-* Make the widget **Full screen** thought the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
+* Make the widget **Full screen** though the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
 <img src="../img/widgets/maximize-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-* Access to the *Title* and *Description* info thought the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
+* Access to the *Title* and *Description* info though the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
 
 <img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
 
