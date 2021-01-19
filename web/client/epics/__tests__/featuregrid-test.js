@@ -51,7 +51,9 @@ import {
     DEACTIVATE_GEOMETRY_FILTER,
     SET_SELECTION_OPTIONS,
     SELECT_FEATURES,
-    SET_PAGINATION
+    SET_PAGINATION,
+    launchUpdateFilterFunc,
+    LAUNCH_UPDATE_FILTER_FUNC
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
@@ -120,7 +122,8 @@ import {
     handleBoxSelectionDrawEnd,
     activateBoxSelectionTool,
     deactivateBoxSelectionTool,
-    deactivateSyncWmsFilterOnFeatureGridClose
+    deactivateSyncWmsFilterOnFeatureGridClose,
+    launchUpdateFilterEpic
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -794,6 +797,24 @@ describe('featuregrid Epics', () => {
         testEpic(triggerDrawSupportOnSelectionChange, 1, toggleEditMode(), epicResult, newState);
     });
 
+    it('launches update filter', () => {
+        const NUM_ACTIONS = 1;
+        testEpic(launchUpdateFilterEpic, NUM_ACTIONS, launchUpdateFilterFunc({}), (actions) => {
+            expect(actions.length).toBe(1);
+        }, {
+            featuregrid: {
+                pagination: {
+                    size: 20
+                },
+                selectedLayer: 'layer'
+            },
+            layers: [{
+                id: 'layer',
+                name: 'layer'
+            }]
+        });
+
+    });
     it('trigger draw support on multiple selection', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
@@ -2144,7 +2165,7 @@ describe('featuregrid Epics', () => {
             enabled: true,
             value: {}
         }), closeFeatureGrid()];
-        testEpic(featureGridUpdateGeometryFilter, 6, startActions, ([setPaginationAction, selectFeaturesAction, updateQueryAction, resetPaginationAction, updateFilterAction, updateQuery]) => {
+        testEpic(featureGridUpdateGeometryFilter, 6, startActions, ([setPaginationAction, selectFeaturesAction, updateQueryAction, resetPaginationAction, updateFilterAction, launchUpdateFilterAction]) => {
             expect(setPaginationAction.type).toBe(SET_PAGINATION); // disable virtual scroll
             expect(setPaginationAction.size).toBe(100000);
             expect(updateQueryAction.type).toBe(UPDATE_QUERY);
@@ -2157,7 +2178,7 @@ describe('featuregrid Epics', () => {
             expect(updateFilterAction.type).toBe(UPDATE_FILTER);
             expect(updateFilterAction.update.enabled).toBe(false);
             expect(updateFilterAction.update.attribute).toBe("geometry");
-            expect(updateQuery.type).toBe(UPDATE_QUERY); // ensure that also the query is updated at all.
+            expect(launchUpdateFilterAction.type).toBe(LAUNCH_UPDATE_FILTER_FUNC);
         }, {
             featuregrid: {
                 pagination: {
