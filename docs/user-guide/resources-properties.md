@@ -44,7 +44,7 @@ How to manage users and groups is a topic present in the [Managing Users](managi
 
 ## Details
 
-Only for map type resource, and only from the **Edit properties** button <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/), it is possible to add some details to the map. In this case the *Edit properties* window is the following:
+Only for resources of type map, it is possible to add details to the map. This is useful to associate some information to the map or an overview description of its content. In this case the *Edit properties* window is the following:
 
 <img src="../img/resource-properties/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -52,22 +52,34 @@ With a click on the **Add new details** button <img src="../img/button/add_detai
 
 <img src="../img/resource-properties/details_panel.jpg" class="ms-docimage"/>
 
-The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-toolbar.md). Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other three buttons appear, in order to:
+The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-toolbar.md). Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other buttons appear on the *Edit properties* panel.
 
-* Show the details preview <img src="../img/button/details_preview_button.jpg" class="ms-docbutton"/> 
+<img src="../img/resource-properties/details_sheet_buttons.jpg" class="ms-docimage"/>
 
-* Edit the details <img src="../img/button/edit-details-button.jpg" class="ms-docbutton"/>
+Here, the user is allowed to:
 
-* Delete the details sheet <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>
+* Show the details **preview** <img src="../img/button/details_preview_button.jpg" class="ms-docbutton"/> 
 
-Once the details are saved, the **Show details** button <img src="../img/button/details_button.jpg" class="ms-docbutton"/> appears on the map card in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/)
+* **Edit** the details <img src="../img/button/edit-details-button.jpg" class="ms-docbutton"/>
+
+* Enable the **Show as modal** <img src="../img/button/show-as-modal-button.jpg" class="ms-docbutton"/> button, to show the details on a modal when the user clicks on <img src="../img/button/about_this_map.jpg" class="ms-docbutton"/> button, which is listed in the [Burger Menu](menu-bar.md#burger-menu) options
+
+<img src="../img/resource-properties/show-as-modal.jpg" class="ms-docimage"/>
+
+!!! note
+    If the **Show as modal** button is not activated once the user opens the *About this map* button, the details are displayed on a panel. <img src="../img/resource-properties/show-as-panel.jpg" class="ms-docimage"/>
+
+!!! warning
+    The *About this map* button is visible in the [Burger Menu](menu-bar.md#burger-menu) only when the details are present on the map.
+
+* Enable the **Show at startup** <img src="../img/button/show-at-starup-button.jpg" class="ms-docbutton"/> button. If active, as soon as the user opens the map, the details panel is visualized.
+
+* **Delete** the details sheet <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>
+
+Once the details are saved, the **Show details** button <img src="../img/button/details_button.jpg" class="ms-docbutton"/> appears also on the map card in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/)
 
 <img src="../img/resource-properties/card-map-details-button.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-Through this button it is possible to take a look at the details:
+Through this, it is possible to open the details panel also from the home page.
     
 <img src="../img/resource-properties/details-sheet.jpg" class="ms-docimage"/>
-
-The details, when present, are also available from the [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton"/> inside the map viewer. Since details are added to a map, indeed, a new button called **About this map** <img src="../img/button/about_this_map.jpg" class="ms-docbutton"/> is listed between the [Burger Menu](menu-bar.md#burger-menu) options, allowing the user to access the details from a dedicated panel:
-
-<img src="../img/resource-properties/about-this-map-in-map.jpg" class="ms-docimage"/>
