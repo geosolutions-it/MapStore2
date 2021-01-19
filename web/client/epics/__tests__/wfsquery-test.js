@@ -138,6 +138,7 @@ describe('wfsquery Epics', () => {
             }
         });
     });
+    // required to load a featuretype when the layer to use is not the layer selected in TOC
     it('wfsQueryEpic passing filter object with no selected layers', (done) => {
         const expectedResult = require('../../test-resources/wfs/museam.json');
         mockAxios.onPost().reply(config => {
