@@ -153,8 +153,9 @@ export const wfsQueryEpic = (action$, store) =>
                 sortOptions,
                 ...queryOptions
             };
+            // TODO refactor, the layer that should be used should be the used when the feature grid is opened from the toc, see #6430
             return Rx.Observable.merge(
-                getLayerJSONFeature({...layer, name: layer.name || action.filterObj.featureTypeName, search: {...layer.search, url}}, ogcFilter, options)
+                getLayerJSONFeature({...layer, name: action.filterObj.featureTypeName || layer.name, search: {...layer.search, url}}, ogcFilter, options)
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions, action.reason))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
