@@ -21,6 +21,7 @@ const packageJson =  require('../package.json');
 
 const requireVersionLibs = () => {
     return [
+        "lodash",
         "url",
         "rxjs",
         "react",
@@ -46,10 +47,6 @@ const shared = {
         singleton: true
     },
     "redux-observable": {
-        eager: true,
-        singleton: true
-    },
-    "lodash": {
         eager: true,
         singleton: true
     },
