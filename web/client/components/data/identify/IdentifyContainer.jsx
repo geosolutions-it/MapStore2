@@ -71,7 +71,7 @@ export default props => {
         validator = () => null
     } = props;
     const latlng = point && point.latlng || null;
-    const targetResponse = responses[index];
+    const targetResponse = validResponses[index]; // the index is calculated on the valid responses hence using all responses leads to wrong results
     const {layer} = targetResponse || {};
 
     let lngCorrected = null;
@@ -122,7 +122,7 @@ export default props => {
                         <div className="layer-col">
                             <span className="identify-icon glyphicon glyphicon-1-layer"/>
                             <LayerSelector
-                                responses={responses}
+                                responses={validResponses}
                                 index={index}
                                 loaded={loaded}
                                 setIndex={setIndex}
