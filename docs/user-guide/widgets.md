@@ -214,38 +214,37 @@ An example of counter widget could be:
 
 ## Manage existing widgets
 
-Once widgets have been created, they will be placed on the bottom right of the map with three buttons available on their top (**Pin**, **Collapse** and **Menu**) and the *Widgets Tray* appears:
+Once widgets have been created, they will be placed on the bottom right of the map viewer and the *Widgets Tray* appears:
 
-<img src="../img/widgets/widgets-tray.jpg" class="ms-docimage"/>
+<img src="../img/widgets/widgets-tray.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-The user is now allowed to menage widgets performing the following operations:
+Through the buttons available on each widget the user can  perform the following operations:
 
-* Move and resize them
+<img src="../img/widgets/widget-button.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* Fix and expand/collapse them
-
-* Access their menu
-
-### Move and resize a widget
-
-In order to move a widget you can simply drag and drop it inside the viewport, and in order to resize it you can click in the lower right corner and drag it to the desired size:
+* Drag and drop the widget to move it within the map area of the viewer and **resize** it through the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
 <img src="../img/widgets/ded-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-### Fix and expand/collapse a widget
+* **Pin** the position and the dimension of the widget through the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
 
-The position and the dimension of a widget can be fixed with a click on the **Pin** button <img src="../img/button/pin.jpg" class="ms-docbutton"/>. <br>
-The *Widgets Tray*, otherwise, allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at the same time <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/>. A single widget can be also collapsed through the **Collapse** button <img src="../img/button/collapse2.jpg" class="ms-docbutton"/>.
+* **Collapse** the widget through the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
+
+<img src="../img/widgets/collapse-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
 !!!note
+    The *Widgets Tray* allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at once by using the <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/> button.
+
+!!!warning
     When both **[Timeline](timeline.md)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
 
-### Access widgets info
+* Make the widget **Full screen** through the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
-As soon as a description is provided for a widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget's *Title* and *Description*:
+<img src="../img/widgets/maximize-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-<img src="../img/widgets/wid-description.jpg" class="ms-docimage"/>
+* Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
 
+<img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
 ### Access widgets menu
 
 Once a widget is added to the map, it is possible to access its **Menu** through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button. For *Text*, *Table* and *Counter* widgets, the following menu appears:
