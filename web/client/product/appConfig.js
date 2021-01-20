@@ -66,29 +66,47 @@ export default {
     }, {
         name: "geostory",
         path: "/geostory/:gid",
-        component: require('./pages/GeoStory').default
+        component: require('./pages/GeoStory').default,
+        pageConfig: {
+            name: 'geostory'
+        }
     }, {
         name: "geostory",
         path: "/geostory/:gid/section/:sectionId",
-        component: require('./pages/GeoStory').default
+        component: require('./pages/GeoStory').default,
+        pageConfig: {
+            name: 'geostory'
+        }
     }, {
         name: "geostory",
         path: "/geostory/:gid/section/:sectionId/column/:columnId",
-        component: require('./pages/GeoStory').default
+        component: require('./pages/GeoStory').default,
+        pageConfig: {
+            name: 'geostory'
+        }
     }, {
         name: "geostory",
         path: "/geostory/shared/:gid",
-        component: require('./pages/GeoStory').default
+        component: require('./pages/GeoStory').default,
+        pageConfig: {
+            name: 'geostory'
+        }
     },
     {
         name: "geostory",
         path: "/geostory/shared/:gid/section/:sectionId",
-        component: require('./pages/GeoStory').default
+        component: require('./pages/GeoStory').default,
+        pageConfig: {
+            name: 'geostory'
+        }
     },
     {
         name: "geostory",
         path: "/geostory/shared/:gid/section/:sectionId/column/:columnId",
-        component: require('./pages/GeoStory').default
+        component: require('./pages/GeoStory').default,
+        pageConfig: {
+            name: 'geostory'
+        }
     }],
     initialState: {
         defaultState: {

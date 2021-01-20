@@ -15,6 +15,7 @@ module.exports = require('./buildConfig')(
     {
         "mapstore2": path.join(paths.code, "product", "app"),
         "embedded": path.join(paths.code, "product", "embedded"),
+        "geostory-embedded": path.join(paths.code, "product", "geostoryEmbedded"),
         "ms2-api": path.join(paths.code, "product", "api")
     },
     themeEntries,
@@ -42,6 +43,13 @@ module.exports = require('./buildConfig')(
             inject: 'head',
             hash: true,
             filename: 'api.html'
+        }),
+        new HtmlWebpackPlugin({
+            template: path.join(paths.framework, 'geostory-embedded-template.html'),
+            chunks: ['geostory-embedded'],
+            inject: "body",
+            hash: true,
+            filename: 'geostory-embedded.html'
         })
     ]
 );

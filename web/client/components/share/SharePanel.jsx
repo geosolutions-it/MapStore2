@@ -52,7 +52,7 @@ import OverlayTrigger from '../misc/OverlayTrigger';
  * @prop {string} [shareConfigUrl] the url of the config to use for shareAPI
  * @prop {function} [onClose] function to call on close window event.
  * @prop {getCount} [getCount] function used to get the count for social links.
- * @prop {object} [advancedSettings] object with properties/settings for bbox, coordinates, zoom and marker fields
+ * @prop {object} [advancedSettings] object with properties/settings for bbox, coordinates, zoom, marker, hideInTab
  */
 class SharePanel extends React.Component {
     static propTypes = {
@@ -78,7 +78,8 @@ class SharePanel extends React.Component {
             bbox: PropTypes.bool,
             homeButton: PropTypes.bool,
             centerAndZoom: PropTypes.bool,
-            defaultEnabled: PropTypes.bool
+            defaultEnabled: PropTypes.bool,
+            hideInTab: PropTypes.string
         }),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
@@ -126,7 +127,8 @@ class SharePanel extends React.Component {
             bbox,
             eventKey: tabs[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
-            coordinate
+            coordinate,
+            hideSettingsInTab: tabs[this.props?.advancedSettings?.hideInTab] || 0
         });
     }
 
@@ -253,7 +255,7 @@ class SharePanel extends React.Component {
                 </span>
                 <div role="body" className="share-panels">
                     {tabs}
-                    {this.props.advancedSettings && this.renderAdvancedSettings()}
+                    {this.props.advancedSettings && currentTab !== this.state.hideSettingsInTab && this.renderAdvancedSettings()}
                 </div>
             </Dialog>);
 
