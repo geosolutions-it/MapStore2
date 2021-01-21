@@ -2759,6 +2759,10 @@
             "description": "Una bandeja para colapsar, expandir widgets en el mapa.",
             "title": "Bandeja de widgets"
           },
+          "Globe": {
+            "description": "otón de la barra lateral para activar / desactivar el modo 3D",
+            "title": "3D"
+          },
           "ZoomAll": {
             "description": "Botón de barra lateral para acercar a la extensión del mapa",
             "title": "Zoom a la extensión máxima"

@@ -2760,6 +2760,10 @@
             "description": "Une barre d'outils pour réduire et développer les widgets sur la carte.",
             "title": "Barre de widgets"
           },
+          "Globe": {
+            "description": "Bouton de la barre latérale pour activer / désactiver le mode 3D",
+            "title": "3D"
+          },
           "ZoomAll": {
             "description": "Bouton de la barre latérale pour zoomer sur l'étendue de la carte",
             "title": "Zoom jusqu'à l'étendue maximale"

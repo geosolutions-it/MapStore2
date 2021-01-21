@@ -2759,6 +2759,10 @@
             "description": "Un vassoio per comprimere ed espandere i widget sulla mappa.",
             "title": "Vassoio widget"
           },
+          "Globe": {
+            "description": "Pulsante della barra laterale per attivare/disattivare la modalità 3D",
+            "title": "3D"
+          },
           "ZoomAll": {
             "description": "Pulsante della barra laterale per ingrandire l'estensione della mappa della mappa",
             "title": "Zoom al massima Estensione"

@@ -2770,6 +2770,10 @@
             "description": "A tray to collapse and expand widgets on map. ",
             "title": "Widgets Tray"
           },
+          "Globe": {
+            "description": "Sidebar button to toggle 3D mode on/off",
+            "title": "3D"
+          },
           "ZoomAll": {
             "description": "Sidebar button to zoom to the map extent of the map",
             "title": "Zoom To Max Extent"
