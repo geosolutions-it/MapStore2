@@ -46,13 +46,13 @@ Once a map has been selected, a panel opens and the layers present in the map ar
 <img src="../img/adding-widgets/wid-layers-list.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 !!!note
-    If the **Empty Map** is selected the user can:
+    If the **Empty Map** has been selected the user can:
 
-    * Create a widget map using an empty map
+    * Create a map widget using an empty map
 
     * Add layers to the map through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button, as follows: <img src="../img/adding-widgets/wid-add-layer.gif" class="ms-docimage"  style="max-width:400px;"/>
 
-On the **Configure map options** panel the user can toggle the layer visibility and set layers transparency, as explained in the [Display options](toc.md#display-options-in-panel) section. Furthermore the user can manage the layer with the new buttons present on the layer toolbar by selecting the layer on the layers list.
+On the **Configure map options** panel the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the new buttons present on the layer toolbar by selecting the layer on the layers list.
 
 <img src="../img/adding-widgets/wid-layers-new-buttons.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -60,11 +60,11 @@ Here, the user is allowed to:
 
 * **Zoom** to layers though the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button
 
-* Access [Layer Settings](layer-settings.md) though the <img src="../img/button/properties.jpg" class="ms-docbutton"/> button
+* Access [Layer Settings](layer-settings.md) through the <img src="../img/button/properties.jpg" class="ms-docbutton"/> button
 
-* **Remove** layers though the <img src="../img/button/delete.jpg" class="ms-docbutton"/> button
+* **Remove** layers through the <img src="../img/button/delete.jpg" class="ms-docbutton"/> button
 
-* Disable/Enable the [Floating Identify Tool](side-bar.md#floating-identify-tool) to retrieve information about layers on the map though the <img src="../img/button/identify_green_burron.jpg" class="ms-docbutton"/> button 
+* Disable/Enable the [Floating Identify Tool](side-bar.md#floating-identify-tool) to retrieve Identify information about layers available on the map through the <img src="../img/button/identify_green_burron.jpg" class="ms-docbutton"/> button 
 
 !!!warning
     The *Floating Identify* tool is active by default (the button is green)
