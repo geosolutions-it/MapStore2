@@ -97,7 +97,10 @@ export const updateDashboardVisibility = action$ =>
         .switchMap(() => {
             const loadActions = [DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR];
             const isEnabled = ({type}) => type === DASHBOARD_LOAD_ERROR;
-            const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'dashboard');
+            const mode = window.location.href.match('dashboard-embedded')
+                ? 'dashboardEmbedded'
+                : 'dashboard';
+            const updateObservable = updateVisibility(action$, loadActions, isEnabled, mode);
             return Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)

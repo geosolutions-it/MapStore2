@@ -1265,7 +1265,8 @@
             "wrongBboxParamTitle": "Invalid bounding box param",
             "wrongBboxParamMessage": "Bounding box params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Link to MapStore home",
-            "showSectionId": "Include scroll position"
+            "showSectionId": "Include scroll position",
+            "showConnections": "Show connections"
         },
         "snapshot": {
             "title": "Snapshot Preview",
@@ -1915,6 +1916,21 @@
                 "addACardToTheDashboard": "Add a widget to the dashboard",
                 "showConnections": "Show connections",
                 "hideConnections": "HideConnections"
+            },
+            "emptyTitle": "The dashboard is empty"
+        },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Loading Dashboard",
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard",
+                    "pleaseLogin": "This dashboard is not public",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                }
             },
             "emptyTitle": "The dashboard is empty"
         },

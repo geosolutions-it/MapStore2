@@ -1265,7 +1265,8 @@
             "coordinate": "Coordinate",
             "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
             "zoomToolTip": "Min: 1 e Max: 35",
-            "showSectionId": "Includi posizione di scorrimento"
+            "showSectionId": "Includi posizione di scorrimento",
+            "showConnections": "Mostra connessioni"
         },
         "snapshot": {
             "title": "Istantanea",
@@ -1915,6 +1916,21 @@
                 "addACardToTheDashboard": "Aggiungi un widget alla dashboard",
                 "showConnections": "Mostra connessioni",
                 "hideConnections": "Nascondi connessioni"
+            },
+            "emptyTitle": "La dashboard è vuota"
+        },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Caricamento Dashboard",
+            "errors":{
+                "loading": {
+                    "title": "Errore di caricamento della dashboard",
+                    "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard",
+                    "pleaseLogin": "Questa risorsa non è pubblica",
+                    "dashboardDoesNotExist": "La dashboard richiesta non esiste",
+                    "unknownError": "C'è stato un errore durante il caricamento della dashboard",
+                    "notFound": "Dashboard non trovata",
+                    "notAccessible": "Dashboard non accessibile"
+                }
             },
             "emptyTitle": "La dashboard è vuota"
         },
