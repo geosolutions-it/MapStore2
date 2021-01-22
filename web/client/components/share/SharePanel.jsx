@@ -27,7 +27,7 @@ import {
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange } from 'lodash';
-import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM } from '../../utils/ShareUtils';
+import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
@@ -115,20 +115,13 @@ class SharePanel extends React.Component {
     };
 
     UNSAFE_componentWillMount() {
-        const tabs = {
-            link: 1,
-            social: 2,
-            embed: 3
-        };
         const bbox = join(this.props.bbox, ',');
         const coordinate = this.getCoordinates(this.props);
         this.setState({
-            ...this.state,
             bbox,
-            eventKey: tabs[this.props.selectedTab] || 1,
+            eventKey: SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
-            coordinate,
-            hideSettingsInTab: tabs[this.props?.advancedSettings?.hideInTab] || 0
+            coordinate
         });
     }
 
@@ -255,7 +248,10 @@ class SharePanel extends React.Component {
                 </span>
                 <div role="body" className="share-panels">
                     {tabs}
-                    {this.props.advancedSettings && currentTab !== this.state.hideSettingsInTab && this.renderAdvancedSettings()}
+                    {this.props.advancedSettings
+                        && currentTab !== SHARE_TABS[this.props?.advancedSettings?.hideInTab]
+                        && this.renderAdvancedSettings()
+                    }
                 </div>
             </Dialog>);
 

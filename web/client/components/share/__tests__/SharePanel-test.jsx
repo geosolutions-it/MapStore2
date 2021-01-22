@@ -86,7 +86,6 @@ describe("The SharePanel component", () => {
         let liTags = document.querySelectorAll('li');
         expect(liTags.length).toBe(3);
         expect(panel.state.eventKey).toBe(1);
-        expect(panel.state.hideSettingsInTab).toBe(3);
         expect(document.querySelector('h4').innerHTML).toBe("<span>share.directLinkTitle</span>");
 
         let advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
