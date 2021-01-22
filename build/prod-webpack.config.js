@@ -15,7 +15,8 @@ module.exports = require('./buildConfig')(
     {
         "mapstore2": path.join(paths.code, "product", "app"),
         "embedded": path.join(paths.code, "product", "embedded"),
-        "ms2-api": path.join(paths.code, "product", "api")
+        "ms2-api": path.join(paths.code, "product", "api"),
+        "dashboard-embedded": path.join(paths.code, "product", "dashboardEmbedded")
     },
     themeEntries,
     paths,
@@ -42,6 +43,12 @@ module.exports = require('./buildConfig')(
             inject: 'head',
             hash: true,
             filename: 'api.html'
+        }), new HtmlWebpackPlugin({
+            template: path.join(paths.framework, 'dashboard-embedded-template.html'),
+            chunks: ['dashboard-embedded'],
+            inject: 'body',
+            hash: true,
+            filename: 'dashboard-embedded.html'
         })
     ]
 );
