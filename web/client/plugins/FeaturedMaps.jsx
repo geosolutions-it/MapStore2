@@ -31,6 +31,7 @@ import {scrollIntoViewId} from '../utils/DOMUtil';
 
 import featuredmaps from '../reducers/featuredmaps';
 import maptype from '../reducers/maptype';
+import { DASHBOARD_DEFAULT_SHARE_OPTIONS } from '../utils/ShareUtils';
 
 const ToolTipedNavItem = tooltip(NavItem);
 
@@ -81,16 +82,7 @@ class FeaturedMaps extends React.Component {
         }
 
         if (categoryName === 'DASHBOARD') {
-            return shareOptions || {
-                embedPanel: true,
-                advancedSettings: false,
-                shareUrlRegex: "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
-                shareUrlReplaceString: "$1dashboard-embedded.html#/$2",
-                embedOptions: {
-                    showTOCToggle: false,
-                    showConnectionsParamToggle: true
-                }
-            };
+            return shareOptions || DASHBOARD_DEFAULT_SHARE_OPTIONS;
         }
 
         return {

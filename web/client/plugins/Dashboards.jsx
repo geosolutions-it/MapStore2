@@ -25,6 +25,7 @@ import { userRoleSelector } from '../selectors/security';
 import DashboardGrid from './dashboard/DashboardsGrid';
 import EmptyDashboardsView from './dashboard/EmptyDashboardsView';
 import PaginationToolbar from './dashboard/PaginationToolbar';
+import { DASHBOARD_DEFAULT_SHARE_OPTIONS } from '../utils/ShareUtils';
 
 const dashboardsCountSelector = createSelector(
     totalCountSelector,
@@ -74,16 +75,7 @@ class Dashboards extends React.Component {
             className: 'ms-map-card-col'
         },
         maps: [],
-        shareOptions: {
-            embedPanel: true,
-            advancedSettings: false,
-            shareUrlRegex: "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
-            shareUrlReplaceString: "$1dashboard-embedded.html#/$2",
-            embedOptions: {
-                showTOCToggle: false,
-                showConnectionsParamToggle: true
-            }
-        }
+        shareOptions: DASHBOARD_DEFAULT_SHARE_OPTIONS
     };
 
     componentDidMount() {
