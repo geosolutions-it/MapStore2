@@ -8,8 +8,6 @@
 
 import Dashboard from './pages/Dashboard';
 import version from '../reducers/version';
-import dashboardEpics from '../epics/dashboard';
-import widgetsEpics from '../epics/widgets';
 
 import dashboard from '../reducers/dashboard';
 import widgets from '../reducers/widgets';
@@ -31,10 +29,6 @@ export default {
         version,
         dashboard,
         widgets
-    },
-    baseEpics: {
-        ...dashboardEpics,
-        ...widgetsEpics
     },
     storeOpts: {
         persist: {

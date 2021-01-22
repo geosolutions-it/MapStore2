@@ -44,6 +44,8 @@ import {
     getMaximizedState
 } from '../selectors/widgets';
 import dashboardReducers from '../reducers/dashboard';
+import dashboardEpics from '../epics/dashboard';
+import widgetsEpics from '../epics/widgets';
 
 const WidgetsView = compose(
     connect(
@@ -154,5 +156,9 @@ export default {
     reducers: {
         dashboard: dashboardReducers,
         widgets: widgetsReducers
+    },
+    epics: {
+        ...dashboardEpics,
+        ...widgetsEpics
     }
 };
