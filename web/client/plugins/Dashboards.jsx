@@ -39,6 +39,7 @@ const dashboardsCountSelector = createSelector(
  * @memberof plugins
  * @class
  * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
+ * @prop {boolean} cfg.shareOptions configuration applied to share panel
  */
 class Dashboards extends React.Component {
     static propTypes = {
@@ -50,7 +51,8 @@ class Dashboards extends React.Component {
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
-        fluid: PropTypes.bool
+        fluid: PropTypes.bool,
+        shareOptions: PropTypes.object
     };
 
     static contextTypes = {
@@ -71,7 +73,17 @@ class Dashboards extends React.Component {
             md: 2,
             className: 'ms-map-card-col'
         },
-        maps: []
+        maps: [],
+        shareOptions: {
+            embedPanel: true,
+            advancedSettings: false,
+            shareUrlRegex: "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+            shareUrlReplaceString: "$1dashboard-embedded.html#/$2",
+            embedOptions: {
+                showTOCToggle: false,
+                showConnectionsParamToggle: true
+            }
+        }
     };
 
     componentDidMount() {
@@ -86,6 +98,7 @@ class Dashboards extends React.Component {
             colProps={this.props.colProps}
             viewerUrl={(dashboard) => {this.context.router.history.push(`dashboard/${dashboard.id}`); }}
             getShareUrl={dashboard => `dashboard/${dashboard.id}`}
+            shareOptions={this.props.shareOptions}
             bottom={<PaginationToolbar />}
         />);
     }
