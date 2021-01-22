@@ -2454,6 +2454,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory not found",
                     "title": "Error",
                     "unknownError": "Unknown error",
                     "pleaseLogin": "Please login",
@@ -2489,6 +2490,20 @@
                 "shadowLabel": "Shadow",
                 "useAlternativeTextColor": "Use alternative text color",
                 "alternativeTextColorPopover": "<p>Warning: the selected text color could be not readable on this background.</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Loading Story",
+            "errors": {
+                "loading": {
+                    "notFound": "Geostory not found",
+                    "title": "Error",
+                    "unknownError": "Unknown error",
+                    "notAccessible": "This story is not accessible",
+                    "pleaseLogin": "Resource is not public",
+                    "geostoryNotAccessible": "You don't have permission to access this story",
+                    "geostoryDoesNotExist": "This story does not exist"
+                }
             }
         },
         "saveDialog": {

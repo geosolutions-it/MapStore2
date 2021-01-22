@@ -2443,6 +2443,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geografía no encontrada",
                     "title": "Error",
                     "unknownError": "Error desconocido",
                     "pleaseLogin": "Por favor Iniciar sesión",
@@ -2478,6 +2479,20 @@
                 "shadowLabel": "Sombra",
                 "useAlternativeTextColor": "Utilice el color de texto alternativo",
                 "alternativeTextColorPopover": "<p>Advertencia: el color del texto seleccionado puede no ser legible en este contexto.</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Cargando historia",
+            "errors": {
+                "loading": {
+                  "notFound": "Geografía no encontrada",
+                  "title": "Error",
+                  "unknownError": "Error desconocido",
+                  "notAccessible": "Esta historia no es accesible",
+                  "pleaseLogin": "El recurso no es público",
+                  "geostoryNotAccessible": "No tienes permiso para acceder a esta historia",
+                  "geostoryDoesNotExist": "Esta historia no existe"
+                }
             }
         },
         "saveDialog": {
