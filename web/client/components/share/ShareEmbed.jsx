@@ -21,7 +21,8 @@ import url from 'url';
 class ShareEmbed extends React.Component {
     static propTypes = {
         shareUrl: PropTypes.string,
-        showTOCToggle: PropTypes.bool
+        showTOCToggle: PropTypes.bool,
+        showConnectionsParamToggle: PropTypes.bool
     };
 
     static defaultProps = {
@@ -29,15 +30,29 @@ class ShareEmbed extends React.Component {
         shareUrl: ''
     };
 
-    state = {copied: false, forceDrawer: false};
+    state = {
+        copied: false,
+        forceDrawer: false,
+        connections: false
+    };
 
     renderTools = () => {
-        if (this.props.showTOCToggle) {
-            return (<Checkbox checked={this.state.forceDrawer} onChange={() => this.setState({forceDrawer: !this.state.forceDrawer})}>
+        return (<>
+            {this.props.showTOCToggle && <Checkbox
+                checked={this.state.forceDrawer}
+                onChange={() => this.setState({forceDrawer: !this.state.forceDrawer})}
+            >
                 <Message msgId="share.forceDrawer"/>
-            </Checkbox>);
-        }
-        return null;
+            </Checkbox>}
+            {this.props.showConnectionsParamToggle && <Checkbox
+                checked={this.state.connections}
+                onChange={() => this.setState({
+                    connections: !this.state.connections
+                })}
+            >
+                <Message msgId="share.showConnections"/>
+            </Checkbox>}
+        </>);
     };
 
     render() {
@@ -70,6 +85,9 @@ class ShareEmbed extends React.Component {
         const parsed = url.parse(this.props.shareUrl, true);
         if (this.state.forceDrawer) {
             parsed.query.forceDrawer = true;
+        }
+        if (this.state.connections) {
+            parsed.query.connections = true;
         }
         return url.format(parsed);
 

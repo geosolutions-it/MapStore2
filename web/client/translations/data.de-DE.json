@@ -1266,7 +1266,8 @@
             "coordinate": "Koordinate",
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu ändern / festzulegen",
             "zoomToolTip": "Min: 1 und Max: 35",
-            "showSectionId": "Bildlaufposition einschließen"
+            "showSectionId": "Bildlaufposition einschließen",
+            "showConnections": "Verbindungen anzeigen"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1915,6 +1916,21 @@
                 "addACardToTheDashboard": "Ein Widget zum Dashboard hinzufügen",
                 "showConnections": "Verbindungen anzeigen",
                 "hideConnections": "Verbindungen ausblenden"
+            },
+            "emptyTitle": "Das Dashboard ist leer"
+        },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Dashboard wird geladen",
+            "errors":{
+                "loading": {
+                    "title": "Fehler beim Laden des Dashboards",
+                    "dashboardNotAccessible": "Sie sind nicht berechtigt, auf dieses Dashboard zuzugreifen",
+                    "pleaseLogin": "Dieses Dashboard ist nicht öffentlich",
+                    "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht",
+                    "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten",
+                    "notFound": "Dashboard nicht gefunden",
+                    "notAccessible": "Dashboard nicht zugänglich"
+                }
             },
             "emptyTitle": "Das Dashboard ist leer"
         },
