@@ -9,26 +9,19 @@
 import {loadGeostoryEpic} from '../epics/geostory';
 import geostory from '../reducers/geostory';
 import version from '../reducers/version';
+import GeoStory from './pages/GeoStory';
 
 export default {
-    mode: "embedded",
     pages: [{
         name: "geostory-embedded",
         path: "/:gid",
-        component: require('./pages/GeoStory').default,
+        component: GeoStory,
         pageConfig: {
             name: 'geostory-embedded'
         }
     }],
-    pluginsDef: require('./pluginsGeostoryEmbedded').default,
-    initialState: {
-        defaultState: {
-            mode: "embedded",
-            mousePosition: {enabled: false}
-        }
-    },
+    initialState: { defaultState: {} },
     baseReducers: {
-        mode: (state = 'embedded') => state,
         version,
         geostory
     },

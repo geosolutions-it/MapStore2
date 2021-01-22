@@ -5,15 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import GeoStoryPlugin from '../plugins/GeoStory';
+import GeoStoryNavigationPlugin from '../plugins/GeoStoryNavigation';
+import FeedbackMaskPlugin from '../plugins/FeedbackMask';
+import ReactSwipe from 'react-swipeable-views';
+import SwipeHeader from '../components/data/identify/SwipeHeader';
 
 export default {
     plugins: {
-        GeoStoryPlugin: require('../plugins/GeoStory').default,
-        GeoStoryNavigationPlugin: require('../plugins/GeoStoryNavigation').default,
-        FeedbackMaskPlugin: require('../plugins/FeedbackMask').default
+        GeoStoryPlugin,
+        GeoStoryNavigationPlugin,
+        FeedbackMaskPlugin
     },
     requires: {
-        ReactSwipe: require('react-swipeable-views').default,
-        SwipeHeader: require('../components/data/identify/SwipeHeader').default
+        ReactSwipe,
+        SwipeHeader
     }
 };
