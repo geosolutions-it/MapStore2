@@ -551,3 +551,13 @@ export const DEFAULT_FONT_FAMILIES = [
     'Times New Roman',
     'Verdana'
 ];
+
+/**
+ * Get current mode of the geostory launched based on the url
+ * @return {string} - mode of the geostory
+ */
+export const getGeostoryMode = () => {
+    return window.location.href.match('geostory-embedded')
+        ? 'geostoryEmbedded'
+        : 'geostory';
+};
