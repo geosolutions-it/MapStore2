@@ -398,16 +398,30 @@ class LeafletMap extends React.Component {
             width: this.map.getSize().x
         };
         const center = this.map.getCenter();
-        this.props.onMapViewChanges({x: center.lng, y: center.lat, crs: "EPSG:4326"}, this.map.getZoom(), {
-            bounds: {
-                minx: parseFloat(bbox[0]),
-                miny: parseFloat(bbox[1]),
-                maxx: parseFloat(bbox[2]),
-                maxy: parseFloat(bbox[3])
+        const zoom = this.map.getZoom();
+        this.props.onMapViewChanges(
+            {
+                x: center.lng,
+                y: center.lat,
+                crs: "EPSG:4326"
             },
-            crs: 'EPSG:4326',
-            rotation: 0
-        }, size, this.props.id, this.props.projection );
+            zoom,
+            {
+                bounds: {
+                    minx: parseFloat(bbox[0]),
+                    miny: parseFloat(bbox[1]),
+                    maxx: parseFloat(bbox[2]),
+                    maxy: parseFloat(bbox[3])
+                },
+                crs: 'EPSG:4326',
+                rotation: 0
+            },
+            size,
+            this.props.id,
+            this.props.projection,
+            undefined, // viewerOptions
+            this.getResolutions()[zoom] // resolution
+        );
     };
 
     setMousePointer = (pointer) => {
