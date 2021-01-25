@@ -2790,6 +2790,10 @@
             "description": "Eine Taskleiste zum Ausblenden und Erweitern von Widgets auf der Karte.",
             "title": "Widgets-Fach"
           },
+          "Globe": {
+            "description": "Sidebar-Taste zum Ein- und Ausschalten des 3D-Modus",
+            "title": "3D"
+          },
           "ZoomAll": {
             "description": "Sidebar-Schaltfläche, um den Kartenausschnitt der Karte zu vergrößern",
             "title": "Maximal zoomen"
