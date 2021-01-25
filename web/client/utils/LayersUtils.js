@@ -533,6 +533,7 @@ export const saveLayer = (layer) => {
     },
     layer.params ? { params: layer.params } : {},
     layer.credits ? { credits: layer.credits } : {},
+    layer.extendedParams ? { extendedParams: layer.extendedParams } : {},
     layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {});
 };
 /**
