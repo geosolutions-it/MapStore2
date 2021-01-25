@@ -208,6 +208,25 @@
                     </configuration>
                 </execution>
                 <execution>
+                    <id>only geostory-embedded.html</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/mapstore</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/client/dist</directory>
+                                <includes>
+                                    <include>geostory-embedded.html</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
                     <id>only api.html</id>
                     <phase>process-classes</phase>
                     <goals>

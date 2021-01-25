@@ -77,6 +77,27 @@ describe("The SharePanel component", () => {
         expect(document.querySelector('h4').innerHTML).toBe("<span>share.directLinkTitle</span>");
 
     });
+    it('test hide advancedSettings in specific tab', () => {
+        const advancedSettings = {
+            homeButton: true,
+            hideInTab: 'embed'
+        };
+        let panel = ReactDOM.render(<SharePanel showAPI={false} advancedSettings={advancedSettings} getCount={() => 2} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        let liTags = document.querySelectorAll('li');
+        expect(liTags.length).toBe(3);
+        expect(panel.state.eventKey).toBe(1);
+        expect(document.querySelector('h4').innerHTML).toBe("<span>share.directLinkTitle</span>");
+
+        let advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
+        expect(advancedSettingsPanel).toBeTruthy();
+
+        const embedTab = document.getElementById('sharePanel-tabs-tab-3');
+        ReactTestUtils.Simulate.click(embedTab);
+        expect(panel.state.eventKey).toBe(3);
+        expect(document.querySelector('h4').innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
+        advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
+        expect(advancedSettingsPanel).toBeFalsy();
+    });
     it('test centerAndZoom and marker options in the panel', () => {
         const actions = {
             onUpdateSettings: () => {},

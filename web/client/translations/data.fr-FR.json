@@ -2460,6 +2460,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory introuvable",
                     "title": "Erreur",
                     "unknownError": "Erreur inconnue",
                     "pleaseLogin": "Veuillez vous connecter",
@@ -2495,6 +2496,20 @@
                 "shadowLabel": "Ombre",
                 "useAlternativeTextColor": "Utiliser la couleur de texte alternatif",
                 "alternativeTextColorPopover": "<p>Attention: la couleur du texte sélectionné pourrait être illisible sur ce fond.</p><p>Une couleur de texte alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Chargement de l'histoire",
+            "errors": {
+                "loading": {
+                  "notFound": "Geostory introuvable",
+                  "title": "Erreur",
+                  "unknownError": "Erreur inconnue",
+                  "notAccessible": "Cette histoire n'est pas accessible",
+                  "pleaseLogin": "La ressource n'est pas publique",
+                  "geostoryNotAccessible": "Vous n'êtes pas autorisé à accéder à cette histoire",
+                  "geostoryDoesNotExist": "Cette histoire n'existe pas"
+                }
             }
         },
         "saveDialog": {

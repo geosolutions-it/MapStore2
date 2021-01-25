@@ -700,6 +700,21 @@
                 "containerPosition": "header"
             }
         }],
+      "geostory-embedded": [
+        "GeoStory",
+        {
+          "name": "GeoStoryNavigation",
+          "cfg": {
+            "containerPosition": "header"
+          }
+        },
+        {
+          "name": "FeedbackMask",
+          "cfg": {
+            "containerPosition": "header"
+          }
+        }
+      ],
         "dashboard-embedded": [
           {
             "name": "Dashboard",
@@ -759,8 +774,15 @@
           {
             "name": "Share",
             "cfg": {
-              "embedPanel": false,
+              "embedPanel": true,
+              "showAPI": false,
+              "embedOptions": {
+                "showTOCToggle": false
+              },
+              "shareUrlRegex": "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+              "shareUrlReplaceString": "$1geostory-embedded.html#/$3",
               "advancedSettings": {
+                "hideInTab": "embed",
                 "homeButton": true,
                 "sectionId": true
               }
