@@ -53,7 +53,7 @@ Replacing:
 - [ ] Download `mapstore-prining.zip` [here](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/printing/target/mapstore-printing.zip) from the Releaser Jenkins build workspace
 - [ ] Check that the printing plugin is missing in the binary package to release
 - [ ] Remove manually from localConfig the entry for authentication to gs-stable from binary and war packages.
-- [ ] Upload the updated binary and war package on github release
+- [ ] Upload the updated binary, the war package and `mapstore-printing.zip` on github release
 - [ ] Publish the release
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
 - [ ] Port needed commits to master branch (Changelog changes, docs changes...)
