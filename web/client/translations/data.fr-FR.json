@@ -1266,7 +1266,8 @@
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
             "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
-            "showSectionId": "Inclure la position de défilement"
+            "showSectionId": "Inclure la position de défilement",
+            "showConnections": "Afficher les connexions"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -1916,6 +1917,21 @@
                 "addACardToTheDashboard": "Ajouter un widget au tableau de bord",
                 "showConnections": "Afficher les connexions",
                 "hideConnections": "Masquer les connexions"
+            },
+            "emptyTitle": "Le tableau de bord est vide"
+        },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Chargement du tableau de bord",
+            "errors":{
+                "loading": {
+                    "title": "Erreur lors du chargement du tableau de bord",
+                    "dashboardNotAccessible": "Vous n'êtes pas autorisé à accéder à ce tableau de bord",
+                    "pleaseLogin": "Ce tableau de bord n'est pas public",
+                    "dashboardDoesNotExist": "Le tableau de bord auquel vous tentez d'accéder n'existe pas",
+                    "unknownError": "Une erreur est survenue lors du chargement du tableau de bord",
+                    "notFound": "Tableau de bord introuvable",
+                    "notAccessible": "Tableau de bord inaccessible"
+                }
             },
             "emptyTitle": "Le tableau de bord est vide"
         },

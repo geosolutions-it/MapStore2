@@ -1265,7 +1265,8 @@
             "coordinate": "Coordinar",
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
-            "showSectionId": "Incluir posición de desplazamiento"
+            "showSectionId": "Incluir posición de desplazamiento",
+            "showConnections": "Mostrar conexiones"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",
@@ -1915,6 +1916,21 @@
                 "addACardToTheDashboard": "Agregar un widget al panel de control",
                 "showConnections": "Mostrar conexiones",
                 "hideConnections": "Ocultar conexiones"
+            },
+            "emptyTitle": "El panel de control está vacío"
+        },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Cargando panel de control",
+            "errors":{
+                "loading": {
+                    "title": "Error al cargar el panel de control",
+                    "dashboardNotAccessible": "No tiene permiso para acceder a este panel",
+                    "pleaseLogin": "Este panel no es público",
+                    "dashboardDoesNotExist": "El panel al que intenta acceder no existe",
+                    "unknownError": "Hubo un error al cargar el panel",
+                    "notFound": "Panel de control no encontrado",
+                    "notAccessible": "Panel de control no accesible"
+                }
             },
             "emptyTitle": "El panel de control está vacío"
         },

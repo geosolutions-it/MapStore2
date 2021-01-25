@@ -656,8 +656,14 @@
         }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
           "name": "Share",
           "cfg": {
-            "embedPanel": false,
-            "advancedSettings": false
+            "showAPI": false,
+            "advancedSettings": false,
+            "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+            "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
+            "embedOptions": {
+              "showTOCToggle": false,
+              "showConnectionsParamToggle": true
+            }
           }
         },
           {
@@ -694,6 +700,15 @@
                 "containerPosition": "header"
             }
         }],
+        "dashboard-embedded": [
+          {
+            "name": "Dashboard",
+            "cfg": {
+              "minLayoutWidth": 768
+            }
+          },
+          { "name": "FeedbackMask" }
+        ],
         "geostory": [
           {
             "name": "OmniBar",

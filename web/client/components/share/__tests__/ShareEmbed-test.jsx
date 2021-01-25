@@ -65,4 +65,23 @@ describe("The ShareEmbed component", () => {
         let checkboxes = inputs.filter(i => i.type === "checkbox");
         expect(checkboxes.length).toBe(0);
     });
+    it('should add connection param', () => {
+        const host = "http://localhost:8081/dashboard-embedded.html";
+        const hashPart = "#/1";
+        const expectedParam = "?connections=true";
+        const iFrameStr = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
+        const cmpSharePanel = ReactDOM.render(
+            <ShareEmbed
+                shareUrl={ host + hashPart }
+                showConnectionsParamToggle
+            />, document.getElementById("container"));
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "input");
+        const checkboxes = inputs.filter(i => i.type === "checkbox");
+        expect(checkboxes[1].checked).toBe(false);
+        ReactTestUtils.Simulate.change(checkboxes[1]);
+        const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
+        expect(checkboxes[1].checked).toBe(true);
+        expect(codeEmbed).toBeTruthy();
+        expect(codeEmbed.innerText).toEqual(iFrameStr);
+    });
 });

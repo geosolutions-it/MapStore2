@@ -16,7 +16,8 @@ module.exports = require('./MapStore2/build/buildConfig')(
     {
         '__PROJECTNAME__': path.join(__dirname, "js", "app"),
         '__PROJECTNAME__-embedded': path.join(__dirname, "MapStore2", "web", "client", "product", "embedded"),
-        '__PROJECTNAME__-api': path.join(__dirname, "MapStore2", "web", "client", "product", "api")
+        '__PROJECTNAME__-api': path.join(__dirname, "MapStore2", "web", "client", "product", "api"),
+        "dashboard-embedded": path.join(__dirname, "js", "dashboardEmbedded")
     },
     themeEntries,
     paths,
@@ -44,6 +45,13 @@ module.exports = require('./MapStore2/build/buildConfig')(
             inject: 'head',
             hash: true,
             filename: 'api.html'
+        }),
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, 'dashboard-embedded-template.html'),
+            chunks: ['dashboard-embedded'],
+            inject: 'body',
+            hash: true,
+            filename: 'dashboard-embedded.html'
         })
     ],
     {
