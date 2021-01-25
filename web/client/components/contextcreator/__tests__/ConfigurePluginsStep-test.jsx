@@ -219,4 +219,24 @@ describe('ConfigurePluginsStep component', () => {
         expect(tooltip).toExist();
         expect(tooltip.getAttribute('role')).toBe('tooltip');
     });
+    it('ConfigurePluginsStep extensions with extension specific documentation url', () => {
+        const docUrl = 'https://domain.com/documentation';
+        const plugins = [{
+            title: "Extension",
+            isExtension: true,
+            enabled: true,
+            name: "Plugin_1",
+            description: "Test plugin",
+            docUrl
+        }, {
+            title: "Internal",
+            isExtension: false
+        }];
+        ReactDOM.render(<ConfigurePluginsStep allPlugins={plugins}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const docLink = container.querySelectorAll('a');
+        expect(container.querySelectorAll(".glyphicon-question-sign").length).toBe(1);
+        expect(docLink.length).toBe(1);
+        expect(docLink[0].href).toBe(docUrl);
+    });
 });
