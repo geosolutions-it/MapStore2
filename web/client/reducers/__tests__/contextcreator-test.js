@@ -105,7 +105,11 @@ const defaultPlugins = [{
     defaultOverride: {
         parameter: 'value2'
     }
-}];
+}, {
+    name: 'NewPlugin',
+    docUrl: 'https://domain.com/documentation'
+}
+];
 
 const pluginsConfig = {plugins: defaultPlugins};
 
@@ -184,7 +188,7 @@ describe('contextcreator reducer', () => {
         expect(mapConfigSelector(state)).toEqual(data.mapConfig);
         expect(resourceSelector(state)).toEqual(resource);
         expect(plugins).toExist();
-        expect(plugins.length).toBe(4);
+        expect(plugins.length).toBe(5);
         expect(plugins[0].name).toBe(defaultPlugins[0].name);
         expect(plugins[0].title).toBe(defaultPlugins[0].title);
         expect(plugins[0].enabled).toBe(false);
@@ -227,6 +231,13 @@ describe('contextcreator reducer', () => {
         expect(plugins[3].pluginConfig.name).toEqual(defaultPlugins[4].name);
         expect(plugins[3].pluginConfig.cfg).toNotExist();
         expect(plugins[3].pluginConfig.override).toEqual(defaultPlugins[4].defaultOverride);
+        expect(plugins[4].name).toBe(defaultPlugins[5].name);
+        expect(plugins[4].title).toBe(defaultPlugins[5].title);
+        expect(plugins[4].enabled).toBe(false);
+        expect(plugins[4].isUserPlugin).toBe(false);
+        expect(plugins[4].active).toBe(false);
+        expect(plugins[4].docUrl).toExist();
+        expect(plugins[4].docUrl).toEqual("https://domain.com/documentation");
     });
     it('setResource with context with templates inside MapTemplates config', () => {
         const contextResource = {
@@ -292,7 +303,7 @@ describe('contextcreator reducer', () => {
         expect(mapConfigSelector(state)).toEqual(data.mapConfig);
         expect(resourceSelector(state)).toEqual(resource);
         expect(plugins).toExist();
-        expect(plugins.length).toBe(5);
+        expect(plugins.length).toBe(6);
         expect(plugins[0].name).toBe(defaultPlugins[0].name);
         expect(plugins[0].title).toBe(defaultPlugins[0].title);
         expect(plugins[0].enabled).toBe(false);
@@ -335,14 +346,21 @@ describe('contextcreator reducer', () => {
         expect(plugins[3].pluginConfig.name).toEqual(defaultPlugins[4].name);
         expect(plugins[3].pluginConfig.cfg).toNotExist();
         expect(plugins[3].pluginConfig.override).toEqual(defaultPlugins[4].defaultOverride);
-        expect(plugins[4].name).toBe('MapTemplates');
+        expect(plugins[4].name).toBe(defaultPlugins[5].name);
+        expect(plugins[4].title).toBe(defaultPlugins[5].title);
         expect(plugins[4].enabled).toBe(false);
         expect(plugins[4].isUserPlugin).toBe(false);
         expect(plugins[4].active).toBe(false);
-        expect(plugins[4].pluginConfig).toExist();
-        expect(plugins[4].pluginConfig.cfg).toExist();
-        expect(plugins[4].pluginConfig.cfg.allowedTemplates).toExist();
-        expect(plugins[4].pluginConfig.cfg.allowedTemplates.length).toBe(1);
+        expect(plugins[4].docUrl).toExist();
+        expect(plugins[4].docUrl).toEqual("https://domain.com/documentation");
+        expect(plugins[5].name).toBe('MapTemplates');
+        expect(plugins[5].enabled).toBe(false);
+        expect(plugins[5].isUserPlugin).toBe(false);
+        expect(plugins[5].active).toBe(false);
+        expect(plugins[5].pluginConfig).toExist();
+        expect(plugins[5].pluginConfig.cfg).toExist();
+        expect(plugins[5].pluginConfig.cfg.allowedTemplates).toExist();
+        expect(plugins[5].pluginConfig.cfg.allowedTemplates.length).toBe(1);
     });
     it('setSelectedPlugins', () => {
         const pluginsToSelect = ['Catalog', 'ZoomIn'];
@@ -489,6 +507,15 @@ describe('contextcreator reducer', () => {
         const state = contextcreator(undefined, pluginUploaded([{ name: 'myplugin' }]));
         expect(state).toExist();
         expect(state.plugins.length).toBe(1);
+        expect(state.uploadResult).toExist();
+        expect(state.uploadResult.result).toBe("ok");
+    });
+    it('pluginUploaded with documentation url', () => {
+        const state = contextcreator(undefined, pluginUploaded([{ name: 'myplugin', docUrl: 'https://domain.com/documentation' }]));
+        expect(state).toExist();
+        expect(state.plugins.length).toBe(1);
+        expect(state.plugins[0].name).toBe('myplugin');
+        expect(state.plugins[0].docUrl).toBe('https://domain.com/documentation');
         expect(state.uploadResult).toExist();
         expect(state.uploadResult.result).toBe("ok");
     });
