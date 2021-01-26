@@ -31,7 +31,7 @@ import {scrollIntoViewId} from '../utils/DOMUtil';
 
 import featuredmaps from '../reducers/featuredmaps';
 import maptype from '../reducers/maptype';
-import { DASHBOARD_DEFAULT_SHARE_OPTIONS } from '../utils/ShareUtils';
+import {DASHBOARD_DEFAULT_SHARE_OPTIONS, GEOSTORY_DEFAULT_SHARE_OPTIONS} from '../utils/ShareUtils';
 
 const ToolTipedNavItem = tooltip(NavItem);
 
@@ -67,12 +67,7 @@ class FeaturedMaps extends React.Component {
             && this.props.shareOptions[categoryName.toLowerCase()];
 
         if (categoryName === 'GEOSTORY') {
-            return shareOptions || {
-                embedPanel: false,
-                advancedSettings: {
-                    homeButton: true
-                }
-            };
+            return shareOptions || GEOSTORY_DEFAULT_SHARE_OPTIONS;
         }
 
         if (categoryName === 'MAP') {

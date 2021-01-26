@@ -22,6 +22,24 @@ export const DASHBOARD_DEFAULT_SHARE_OPTIONS = {
         showConnectionsParamToggle: true
     }
 };
+
+export const GEOSTORY_DEFAULT_SHARE_OPTIONS = {
+    embedPanel: true,
+    showAPI: false,
+    embedOptions: { showTOCToggle: false },
+    shareUrlRegex: "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+    shareUrlReplaceString: "$1geostory-embedded.html#/$3",
+    advancedSettings: {
+        hideInTab: "embed",
+        homeButton: true
+    }
+};
+
+export const SHARE_TABS = {
+    link: 1,
+    social: 2,
+    embed: 3
+};
 /**
  * Utility functions for Share tools.
  * @memberof utils
