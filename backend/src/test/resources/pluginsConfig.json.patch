@@ -1,1 +1,0 @@
-[{"op": "add", "path": "/plugins/-", "value":{"name":"My","dependencies":["Toolbar"],"extension":true}}]
