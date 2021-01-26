@@ -8,16 +8,18 @@
 import { changeMapType } from '../actions/maptype';
 
 import Rx from 'rxjs';
-import { get } from 'lodash';
 const defaultRegex = /\/(viewer)\/(\w+)\/(\w+)/;
 const findMapType = path => {
     const match = path.match(defaultRegex);
     return match && match[0] && match[0].replace(defaultRegex, '$2');
 };
 import { LOCATION_CHANGE } from 'connected-react-router';
+import { last2dMapTypeSelector } from './../selectors/globeswitcher';
+import { mapTypeSelector } from './../selectors/maptype';
+
 
 /**
- * keep the default mapType in sync when change the URL of the map for viewer
+ * restore mapType to last mapType for a 2d mode when the URL is changed
  * @memberof epics.maptype
  * @param  {external:Observable} action$ the stream of actions, acts on `LOCATION_CHANGE`
  * @param  {object} store   the store middleware API from redux `createMiddleware`
@@ -25,15 +27,18 @@ import { LOCATION_CHANGE } from 'connected-react-router';
  */
 export const syncMapType = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
-        .filter(action =>
-            action.payload
-            && action.payload
-            && action.payload.location.pathname
-            && action.payload.location.pathname.match(defaultRegex)
-            && findMapType(action.payload.location.pathname) !== get(store.getState(), "maptype.mapType"))
-        .switchMap((action) =>
-            Rx.Observable.of(changeMapType(findMapType(action.payload.location.pathname)))
-        );
+        .switchMap((action) => {
+            const pathname = action?.payload?.location?.pathname;
+            const newMapType = findMapType(pathname);
+            const currentMapType = mapTypeSelector(store.getState());
+            if (pathname.match(defaultRegex) && newMapType !== currentMapType) {
+                // this happen while mapType is changed inside viewer
+                return Rx.Observable.of(changeMapType(newMapType));
+            }
+            const last2dMapType = last2dMapTypeSelector(store.getState());
+            return currentMapType !== last2dMapType ? Rx.Observable.of(changeMapType(last2dMapType)) : Rx.Observable.empty();
+
+        });
 
 /**
  * Epics for maptype switch functionalities
