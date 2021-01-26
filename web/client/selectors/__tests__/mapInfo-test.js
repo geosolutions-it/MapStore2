@@ -24,7 +24,8 @@ import {
     itemIdSelector,
     filterNameListSelector,
     overrideParamsSelector,
-    mapTriggerSelector
+    mapTriggerSelector,
+    hoverEnabledSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -348,5 +349,13 @@ describe('Test mapinfo selectors', () => {
         expect(mapTriggerSelector({mapInfo: { configuration: {} }})).toBe('click');
         // when mapInfo is present
         expect(mapTriggerSelector({mapInfo: { configuration: { trigger: 'hover' } }})).toBe('hover');
+    });
+    it('test hoverEnabledSelector', () => {
+        // when no mapInfo object is not present in state
+        expect(hoverEnabledSelector({})).toBe(true);
+        // when no trigger in the configuration
+        expect(hoverEnabledSelector({mapInfo: { configuration: {} }})).toBe(true);
+        // when mapInfo is present
+        expect(hoverEnabledSelector({mapInfo: { configuration: { hoverEnabled: false } }})).toBe(false);
     });
 });

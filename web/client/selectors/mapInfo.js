@@ -199,3 +199,4 @@ export const mapTriggerSelector = state => {
     }
     return state.mapInfo.configuration.trigger;
 };
+export const hoverEnabledSelector = state => get(state, "mapInfo.configuration.hoverEnabled", true);
