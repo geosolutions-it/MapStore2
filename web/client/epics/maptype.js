@@ -19,7 +19,8 @@ import { mapTypeSelector } from './../selectors/maptype';
 
 
 /**
- * restore mapType to last mapType for a 2d mode when the URL is changed
+ * Keep in sync mapType in state with mapType in URL.
+ * Restores mapType to last mapType for a 2d mode when the URL is changed
  * @memberof epics.maptype
  * @param  {external:Observable} action$ the stream of actions, acts on `LOCATION_CHANGE`
  * @param  {object} store   the store middleware API from redux `createMiddleware`
