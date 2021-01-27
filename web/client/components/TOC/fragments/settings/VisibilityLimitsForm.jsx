@@ -288,7 +288,7 @@ function VisibilityLimitsForm({
                 })}
                 disabled={disableResolutionLimits || loading}
                 onChange={(option) => {
-                    // created entries do not contain zoom propery
+                    // created entries do not contain zoom property
                     const newMaxValue = option.value === undefined
                         ? {}
                         : !isNil(option.zoom)
