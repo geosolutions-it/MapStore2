@@ -19,6 +19,7 @@ import {
     toggleHighlightFeature,
     setMapTrigger
 } from '../../actions/mapInfo';
+import {changeMapType} from '../../actions/maptype';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
 import assign from 'object-assign';
@@ -827,5 +828,19 @@ describe('Test the mapInfo reducer', () => {
         const action = setMapTrigger('hover');
         const state = mapInfo(undefined, action);
         expect(state.configuration.trigger).toBe('hover');
+    });
+    it('test the result of changeMapType action - MAP_TYPE_CHANGED when passing to cesium', () => {
+        const action = changeMapType('cesium');
+        const initialState = {configuration: {hoverEnabled: true}};
+        const state = mapInfo(initialState, action);
+        expect(state.configuration.hoverEnabled).toBe(false);
+        expect(state.configuration.trigger).toBe("click");
+    });
+    it('test the result of changeMapType action - MAP_TYPE_CHANGED when passing to 2d maptype', () => {
+        const action = changeMapType('openlayers');
+        const initialState = {configuration: {hoverEnabled: false, trigger: "click"}};
+        const state = mapInfo(initialState, action);
+        expect(state.configuration.hoverEnabled).toBe(true);
+        expect(state.configuration.trigger).toBe("click");
     });
 });
