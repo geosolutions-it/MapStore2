@@ -108,7 +108,7 @@
             "visibilityLimitsValuesUpdateUndefined": "I valori di scala minimo e massimo sono stati aggiornati correttamente ma sono risultati entrambi non definiti",
             "visibilityLimitsValuesUpdate": "I valori di scala minimo e massimo sono stati aggiornati correttamente",
             "visibilityLimitsValuesError": "Non è possibile richiedere i valori di scala minimo e massimo via richiesta WMS GetCapabilities",
-            "visibilityLimitsUpdateWMSCapabilities": "Ottini i valori di scala minimi e massimi con una richiesta WMS GetCapabilities. Questa richiesta sincronizzerà anche i valori di scala minimo e massimo non definiti",
+            "visibilityLimitsUpdateWMSCapabilities": "Ottieni i valori di scala minimi e massimi con una richiesta WMS GetCapabilities. Questa richiesta sincronizzerà anche i valori di scala minimo e massimo non definiti",
             "visibilityLimitsMaxValue": "Valore massimo (escluso)",
             "visibilityLimitsMaxValuePlaceholder": "Seleziona il valore massimo",
             "visibilityLimitsMaxValueNoResultsText": "Nessuna opzione corrisponde al valore inserito",
