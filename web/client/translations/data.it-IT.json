@@ -114,7 +114,7 @@
             "visibilityLimitsMaxValueNoResultsText": "Nessuna opzione corrisponde al valore inserito",
             "visibilityLimitsCreateOption": "Aggiungi un nuovo valore {label}",
             "visibilityLimitsMinValue": "Valore minimo (incluso)",
-            "visibilityLimitsMinValuePlaceholder": "Selezione il valore minimo",
+            "visibilityLimitsMinValuePlaceholder": "Seleziona il valore minimo",
             "visibilityLimitsMinValueNoResultsText": "Nessuna opzione corrisponde al valore inserito",
             "visibilityLimitsType": "Tipo di limite",
             "visibilityLimitsScale": "Scala",
