@@ -82,7 +82,6 @@ function SelectInput({
  * Form to set min and max resolutions values from layer object
  * @memberof components.TOC
  * @name VisibilityLimitsForm
- * @class
  * @prop {node|string} title
  * @prop {object} layer
  * @prop {number} zoom
@@ -161,15 +160,28 @@ function VisibilityLimitsForm({
         };
     }, []);
 
-    function clearAlters() {
+    function clearMessages() {
         setError(undefined);
         setMessage(undefined);
+    }
+
+    function getCapabilitiesMessageId({ maxScaleDenominator, minScaleDenominator }) {
+        if (isNil(maxScaleDenominator) && isNil(minScaleDenominator)) {
+            return 'layerProperties.visibilityLimits.serverValuesUpdateUndefined';
+        }
+        if (isNil(maxScaleDenominator) && !isNil(minScaleDenominator)) {
+            return 'layerProperties.visibilityLimits.serverValuesUpdateMinScale';
+        }
+        if (!isNil(maxScaleDenominator) && isNil(minScaleDenominator)) {
+            return 'layerProperties.visibilityLimits.serverValuesUpdateMaxScale';
+        }
+        return 'layerProperties.visibilityLimits.serverValuesUpdate';
     }
 
     function handleGetCapabilities() {
         if (layer.type === 'wms' && !loading) {
             setLoading(true);
-            clearAlters();
+            clearMessages();
             getLayerCapabilities(layer)
                 .toPromise()
                 .then((capabilities) => {
@@ -182,26 +194,39 @@ function VisibilityLimitsForm({
                             && getResolutionObject(maxScaleDenominator, 'scale');
                         const newMinValue = !isNil(minScaleDenominator)
                             && getResolutionObject(minScaleDenominator, 'scale');
-                        const newMessageId = isNil(maxScaleDenominator) && isNil(minScaleDenominator)
-                            ? 'layerProperties.visibilityLimitsValuesUpdateUndefined'
-                            : 'layerProperties.visibilityLimitsValuesUpdate';
-                        setMessage(newMessageId);
-                        onChange({
-                            maxResolution: newMaxValue.resolution,
-                            minResolution: newMinValue.resolution
+                        const newMessageId = getCapabilitiesMessageId({
+                            maxScaleDenominator,
+                            minScaleDenominator
                         });
+                        setMessage(newMessageId);
+                        if (newMinValue) {
+                            setMinValue(newMinValue);
+                        }
+                        if (newMaxValue) {
+                            setMaxValue(newMaxValue);
+                        }
+                        onChange({
+                            ...(newMaxValue && { maxResolution: newMaxValue.resolution }),
+                            ...(newMinValue && { minResolution: newMinValue.resolution })
+                        });
+                        const newMinResolution = (newMinValue || minValue)?.resolution || -Infinity;
+                        const newMaxResolution = (newMaxValue || maxValue)?.resolution || Infinity;
+                        if (newMaxResolution < newMinResolution) {
+                            setError('layerProperties.visibilityLimits.rangeError');
+                        }
                         setLoading(false);
                     }
                 })
                 .catch(() => {
                     if (isMounted.current) {
                         setLoading(false);
-                        setError('layerProperties.visibilityLimitsValuesError');
+                        setError('layerProperties.visibilityLimits.serverValuesError');
                     }
                 });
         }
     }
-
+    // avoid infinite loop in the dependencies of uesEffect
+    const resolutionString = resolutions.join(',');
     useEffect(() => {
         const newMinValue = minResolution && {
             resolution: minResolution,
@@ -227,8 +252,8 @@ function VisibilityLimitsForm({
         setMaxValue(newMaxValue);
         setMinValue(newMinValue);
         setOptions(newOptions);
-        clearAlters();
-    }, [ limitsType, projection ]);
+        clearMessages();
+    }, [ dpu,  resolutionString ]);
 
     return (
         <div className="ms-visibility-limits-form">
@@ -244,7 +269,7 @@ function VisibilityLimitsForm({
                             disabled: !!(disableResolutionLimits || loading),
                             visible: layer.type === 'wms',
                             onClick: handleGetCapabilities,
-                            tooltipId: 'layerProperties.visibilityLimitsUpdateWMSCapabilities'
+                            tooltipId: 'layerProperties.visibilityLimits.updateWMSCapabilities'
                         },
                         {
                             Element: () => <SwitchButton
@@ -253,7 +278,7 @@ function VisibilityLimitsForm({
                                     onChange({
                                         disableResolutionLimits: !disableResolutionLimits
                                     });
-                                    clearAlters();
+                                    clearMessages();
                                 }}
                             />
                         }
@@ -261,7 +286,7 @@ function VisibilityLimitsForm({
                 />
             </div>
             <label htmlFor="ms-visibility-limits-max">
-                <Message msgId="layerProperties.visibilityLimitsMaxValue"/>
+                <Message msgId="layerProperties.visibilityLimits.maxValue"/>
             </label>
             <SelectInput
                 id="ms-visibility-limits-max"
@@ -271,9 +296,9 @@ function VisibilityLimitsForm({
                     zoom: maxValue.zoom,
                     limitsType
                 }}
-                placeholderId="layerProperties.visibilityLimitsMaxValuePlaceholder"
-                noResultsTextId="layerProperties.visibilityLimitsMaxValueNoResultsText"
-                createTextId="layerProperties.visibilityLimitsCreateOption"
+                placeholderId="layerProperties.visibilityLimits.maxValuePlaceholder"
+                noResultsTextId="layerProperties.visibilityLimits.valueNoResultsText"
+                createTextId="layerProperties.visibilityLimits.createOption"
                 loading={loading}
                 isValidNewOption={(newValue) => newValue >= (minValue?.[limitsType] || 0)}
                 options={options.map((option) => {
@@ -306,10 +331,10 @@ function VisibilityLimitsForm({
                         const newOptions = updateOptions(options, newMaxValue);
                         setOptions(newOptions);
                     }
-                    clearAlters();
+                    clearMessages();
                 }}
             />
-            <label htmlFor="ms-visibility-limits-min"><Message msgId="layerProperties.visibilityLimitsMinValue"/></label>
+            <label htmlFor="ms-visibility-limits-min"><Message msgId="layerProperties.visibilityLimits.minValue"/></label>
             <SelectInput
                 id="ms-visibility-limits-min"
                 value={minValue?.[limitsType] && {
@@ -318,9 +343,9 @@ function VisibilityLimitsForm({
                     zoom: minValue.zoom,
                     limitsType
                 }}
-                placeholderId="layerProperties.visibilityLimitsMinValuePlaceholder"
-                noResultsTextId="layerProperties.visibilityLimitsMinValueNoResultsText"
-                createTextId="layerProperties.visibilityLimitsCreateOption"
+                placeholderId="layerProperties.visibilityLimits.minValuePlaceholder"
+                noResultsTextId="layerProperties.visibilityLimits.valueNoResultsText"
+                createTextId="layerProperties.visibilityLimits.createOption"
                 loading={loading}
                 isValidNewOption={(newValue) => newValue <= (maxValue?.[limitsType] || Infinity)}
                 options={options.map((option) => {
@@ -353,10 +378,10 @@ function VisibilityLimitsForm({
                         const newOptions = updateOptions(options, newMinValue);
                         setOptions(newOptions);
                     }
-                    clearAlters();
+                    clearMessages();
                 }}
             />
-            <label htmlFor="ms-visibility-limits-type"><Message msgId="layerProperties.visibilityLimitsType"/></label>
+            <label htmlFor="ms-visibility-limits-type"><Message msgId="layerProperties.visibilityLimits.type"/></label>
             <ReactSelect
                 inputProps={{ id: 'ms-visibility-limits-type' }}
                 value={limitsType}
@@ -368,7 +393,7 @@ function VisibilityLimitsForm({
                 disabled={disableResolutionLimits || loading}
                 onChange={({ value }) => {
                     setLimitsType(value);
-                    clearAlters();
+                    clearMessages();
                 }}
             />
             {message && <Alert bsStyle="success">
@@ -396,8 +421,8 @@ VisibilityLimitsForm.defaultProps = {
     layer: {},
     onChange: () => {},
     limitsTypesOptions: [
-        { value: 'scale', labelId: 'layerProperties.visibilityLimitsScale' },
-        { value: 'resolution', labelId: 'layerProperties.visibilityLimitsResolution' }
+        { value: 'scale', labelId: 'layerProperties.visibilityLimits.scale' },
+        { value: 'resolution', labelId: 'layerProperties.visibilityLimits.resolution' }
     ],
     dpi: DEFAULT_SCREEN_DPI
 };

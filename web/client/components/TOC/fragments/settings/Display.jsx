@@ -159,7 +159,7 @@ export default class extends React.Component {
                     <Col xs={12}>
                         <FormGroup>
                             <VisibilityLimitsForm
-                                title={<ControlLabel><Message msgId="layerProperties.visibilityLimitsTitle"/></ControlLabel>}
+                                title={<ControlLabel><Message msgId="layerProperties.visibilityLimits.title"/></ControlLabel>}
                                 layer={this.props.element}
                                 onChange={this.props.onChange}
                                 projection={this.props.projection}

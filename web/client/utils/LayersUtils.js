@@ -672,6 +672,21 @@ export const formatCapabitiliesOptions = function(capabilities) {
 };
 export const getLayerTitle = ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.default || title || name;
 
+/**
+ * Check if a resolution is inside of the min and max resolution limits of a layer
+ * @param {object} layer layer object
+ * @param {number} resolution resolutions of the current view
+ */
+export const isInsideResolutionsLimits = (layer, resolution) => {
+    if (layer.disableResolutionLimits) {
+        return true;
+    }
+    const minResolution = layer.minResolution || -Infinity;
+    const maxResolution = layer.maxResolution || Infinity;
+    return resolution !== undefined
+        ? resolution < maxResolution && resolution >= minResolution
+        : true;
+};
 
 LayersUtils = {
     getGroupByName,
@@ -682,5 +697,6 @@ LayersUtils = {
     deepChange,
     reorder: reorderFunc,
     getRegGeoserverRule,
-    findGeoServerName
+    findGeoServerName,
+    isInsideResolutionsLimits
 };
