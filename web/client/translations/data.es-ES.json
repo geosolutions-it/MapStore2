@@ -2041,7 +2041,7 @@
             "savedStyleTitle": "Estilo guardado",
             "savedStyleMessage": "El estilo se ha guardado con éxito.",
             "missingAvailableStyles": "Estilos que faltan",
-            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>",
+            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li><li>no fue posible analizar los cababilites y recuperar los estilos</li> </ul>",
             "createTmpErrorTitle": "Nuevo estilo temporal",
             "createTmpStyleErrorMessage": "No se pudo crear el estilo temporal. Esto podría deberse a un formato de estilo no compatible en el servicio de estilo",
             "updateTmpErrorTitle": "Actualización de estilo temporal",

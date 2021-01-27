@@ -132,7 +132,7 @@ const StyleEditorPlugin = compose(
                 isEditing: status === 'edit',
                 loading,
                 layer,
-                error: !!(error && error.availableStyles),
+                error: !!(error?.availableStyles || error?.global),
                 userRole,
                 canEdit,
                 styleService

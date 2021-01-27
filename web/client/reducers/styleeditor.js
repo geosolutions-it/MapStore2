@@ -105,7 +105,7 @@ function styleeditor(state = {}, action) {
         return {
             ...state,
             loading: false,
-            canEdit: !(action.error && (action.error.status === 401 || action.error.status === 403)),
+            canEdit: !(action.error && (action.error.status === 401 || action.error.status === 403 || action.error.message.indexOf("could not be unmarshalled") !== -1)),
             error: {
                 ...state.error,
                 [action.status || 'global']: {

@@ -2044,7 +2044,7 @@
             "savedStyleTitle": "Style saved",
             "savedStyleMessage": "Style has been successfully saved",
             "missingAvailableStyles": "Missing styles",
-            "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>",
+            "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li><li>it was not possible parse the cababilites and retrieve the styles</li></ul>",
             "createTmpErrorTitle": "New Temporary Style",
             "createTmpStyleErrorMessage": "Temporary style could not be created. This could due an unsupported style format on the style service",
             "updateTmpErrorTitle": "Temporary Style Update",
