@@ -37,13 +37,13 @@ The **Embed** section provides to the user the needed snippets, **embedded code*
 
 <img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-In addition, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides two options for customized the *embedded code*:
+In addition, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides two options for customized a bit the *embedded code*:
 
-* For maps, the user can add [TOC](toc.md) to the embedded map by enabling the **Shown TOC**
+* For maps, the user can choose to show the [TOC](toc.md) in the embedded map by enabling the **Shown TOC** option
 
 <img src="../img/share/embed_maps.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* For dashboards, the user can view the [connections](connecting-widgets.md) between the widgets on the embedded dashboard by enabling the **Show connections**
+* For dashboards, the user can show the [connections](connecting-widgets.md) between widgets on the embedded dashboard by enabling the **Show connections**
 
 <img src="../img/share/embed-dash.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
