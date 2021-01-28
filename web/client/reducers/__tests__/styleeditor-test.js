@@ -119,6 +119,19 @@ describe('Test styleeditor reducer', () => {
             }
         });
     });
+    it('test errorStyle unmarshalling parser error ', () => {
+        const state = styleeditor({ }, errorStyle('edit', { message: "could not be unmarshalled" }));
+        expect(state).toEqual({
+            loading: false,
+            canEdit: false,
+            error: {
+                edit: {
+                    status: 404,
+                    message: 'could not be unmarshalled'
+                }
+            }
+        });
+    });
 
     it('test errorStyle 401', () => {
         const state = styleeditor({ }, errorStyle('', { status: 401, statusText: 'Error no auth' }));
