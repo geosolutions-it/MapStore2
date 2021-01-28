@@ -353,9 +353,8 @@ describe('Test mapinfo selectors', () => {
     it('test hoverEnabledSelector', () => {
         // when no mapInfo object is not present in state
         expect(hoverEnabledSelector({})).toBe(true);
-        // when no trigger in the configuration
-        expect(hoverEnabledSelector({mapInfo: { configuration: {} }})).toBe(true);
         // when mapInfo is present
-        expect(hoverEnabledSelector({mapInfo: { configuration: { hoverEnabled: false } }})).toBe(false);
+        expect(hoverEnabledSelector({maptype: {mapType: "openlayers"} })).toBe(true);
+        expect(hoverEnabledSelector({maptype: {mapType: "cesium"} })).toBe(false);
     });
 });

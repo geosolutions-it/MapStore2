@@ -92,7 +92,6 @@ function receiveResponse(state, action, type) {
 }
 const initState = {
     enabled: true,
-    hoverEnabled: true,
     configuration: {}
 };
 
@@ -429,18 +428,11 @@ function mapInfo(state = initState, action) {
                 ...state,
                 configuration: {
                     ...state.configuration,
-                    trigger: "click",
-                    hoverEnabled: false
+                    trigger: "click"
                 }
             };
         }
-        return {
-            ...state,
-            configuration: {
-                ...state.configuration,
-                hoverEnabled: true
-            }
-        };
+        return state;
     }
     default:
         return state;
