@@ -831,16 +831,14 @@ describe('Test the mapInfo reducer', () => {
     });
     it('test the result of changeMapType action - MAP_TYPE_CHANGED when passing to cesium', () => {
         const action = changeMapType('cesium');
-        const initialState = {configuration: {hoverEnabled: true}};
+        const initialState = {configuration: {}};
         const state = mapInfo(initialState, action);
-        expect(state.configuration.hoverEnabled).toBe(false);
         expect(state.configuration.trigger).toBe("click");
     });
     it('test the result of changeMapType action - MAP_TYPE_CHANGED when passing to 2d maptype', () => {
         const action = changeMapType('openlayers');
-        const initialState = {configuration: {hoverEnabled: false, trigger: "click"}};
+        const initialState = {configuration: {trigger: "click"}};
         const state = mapInfo(initialState, action);
-        expect(state.configuration.hoverEnabled).toBe(true);
         expect(state.configuration.trigger).toBe("click");
     });
 });
