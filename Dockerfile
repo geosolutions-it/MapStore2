@@ -1,18 +1,10 @@
-ARG OVR=""
-FROM alpine AS base
+FROM alpine AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geo-solutions.it>"
-LABEL maintainer="Asdrubal Gonzalez<asdubal.gonzalez@geo-solutions.it>"
-LABEL description="MapStore Docker image"
-LABEL "com.url"="https://dev.mapstore.geo-solutions.it"
-
-#ARG OVR=""
 ARG MAPSTORE_WEBAPP_SRC="./.placeholder"
 ADD "${MAPSTORE_WEBAPP_SRC}" "/mapstore/"
 
 COPY ./docker/* /mapstore/docker/
 WORKDIR /mapstore
-
-#RUN wget https://github.com/geosolutions-it/MapStore2/releases/latest/download/mapstore.war
 
 FROM tomcat:9-jdk11-openjdk
 
@@ -25,23 +17,22 @@ ENV JAVA_OPTS="${JAVA_OPTS}  -Xms${INITIAL_MEMORY} -Xmx${MAXIMUM_MEMORY} -XX:Max
 ENV GEOSTORE_OVR_OPT="-Dgeostore-ovr=${CATALINA_BASE}/conf/${OVR} \
                       -Duser.timezone=UTC"
 ARG TOMCAT_EXTRAS=false
-#ARG OVR=""
+ARG OVR=""
 
 # Optionally remove Tomcat manager, docs, and examples
 RUN if [ "$TOMCAT_EXTRAS" = false ]; then \
       find "${MAPSTORE_WEBAPP_DST}" -delete; \
     fi
 
-COPY --from=base "/mapstore/mapstore.war" "${MAPSTORE_WEBAPP_DST}/mapstore.war"
-COPY --from=base "/mapstore/docker" "${CATALINA_BASE}/docker"
+COPY --from=mother "/mapstore/mapstore.war" "${MAPSTORE_WEBAPP_DST}/mapstore.war"
+COPY --from=mother "/mapstore/docker" "${CATALINA_BASE}/docker/"
 
 WORKDIR ${CATALINA_BASE}
-
+#RUN chmod +x ./docker/wait-for-postgres.sh
+#COPY ./docker/wait-for-postgres.sh ${CATALINA_BASE}/
 # adding the env
-RUN if [ "${OVR}" == "geostore-datasource-ovr-postgres.properties" ]; then \
-        cp ${CATALINA_BASE}/docker/geostore-datasource-ovr-postgres.properties ${CATALINA_BASE}/conf/geostore-datasource-ovr-postgres.properties; \
-    else \
-        cp ${CATALINA_BASE}/docker/geostore-datasource-ovr.properties ${CATALINA_BASE}/conf/geostore-datasource-ovr.properties; \
+RUN if [ "${OVR}" = "geostore-datasource-ovr.properties" ]; then \
+        cp ${CATALINA_BASE}/docker/geostore-datasource-ovr.properties ${CATALINA_BASE}/conf; \
     fi
 
 RUN apt-get update \

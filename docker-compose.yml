@@ -1,0 +1,37 @@
+version: "3.8"
+networks:
+  intergration-test:
+    driver: bridge
+
+services:
+  db:
+    image: postgis/postgis
+    container_name: postgres
+    restart: on-failure
+    healthcheck:
+      test: /usr/bin/pg_isready
+      interval: 5s
+      timeout: 10s
+      retries: 120
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - "5432:5432"
+    networks:
+      - intergration-test
+
+  mapstore:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        OVR: "geostore-datasource-ovr.properties"
+        MAPSTORE_WEBAPP_SRC: "https://github.com/geosolutions-it/MapStore2/releases/latest/download/mapstore.war"
+    container_name: mapstore
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+    networks:
+      - intergration-test
