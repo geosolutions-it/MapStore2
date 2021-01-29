@@ -19,6 +19,193 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2021.01.00 to 2021.01.01
+
+### Update an existing project to include embedded Dashboards and GeoStories
+
+Embedded Dashboards and GeoStories need a new set of javascript entries, html templates and configuration files to make them completely available in an existing project.
+
+The steps described above assume this structure of the MapStore2 project for the files that need update:
+
+```
+MapStore2Project/
+|-- ...
+|-- js/
+|    |-- ...
+|    |-- dashboardEmbedded.jsx (new)
+|    |-- geostoryEmbedded.jsx (new)
+|-- MapStore2/
+|-- web/
+|    |-- ...
+|    |-- pom.xml
+|-- ...
+|-- dashboard-embedded-template.html (new)
+|-- dashboard-embedded.html (new)
+|-- ...
+|-- geostory-embedded-template.html (new)
+|-- geostory-embedded.html (new)
+|-- ...
+|-- prod-webpack.config.js
+|-- ...
+|-- webpack.config.js
+```
+
+1) create the entries files for the embedded application named `dashboardEmbedded.jsx` and `geostoryEmbedded.jsx` in the js/ folder with the following content (see links):
+    - [dashboardEmbedded.jsx](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/js/dashboardEmbedded.jsx)
+    - [geostoryEmbedded.jsx](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/js/geostoryEmbedded.jsx)
+
+2) add the html files and templates in the root directory of the project with these names and content (see links):
+    - [dashboard-embedded-template.html](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/dashboard-embedded-template.html)
+    - [dashboard-embedded.html](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/dashboard-embedded.html)
+    - [geostory-embedded-template.html](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/geostory-embedded-template.html)
+    - [geostory-embedded.html](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/geostory-embedded.html)
+
+3) update webpack configuration for development and production with the new entries and the related configuration:
+
+    - webpack.config.js
+    ```js
+    module.exports = require('./MapStore2/build/buildConfig')(
+        {
+            // other entries...,
+            // add new embedded entries to entry object
+            "geostory-embedded": path.join(__dirname, "js", "geostoryEmbedded"),
+            "dashboard-embedded": path.join(__dirname, "js", "dashboardEmbedded")
+        },
+        // ...
+    );
+    ```
+    - prod-webpack.config.js
+
+    ```js
+
+    module.exports = require('./MapStore2/build/buildConfig')(
+        {
+            // other entries...,
+            // add new embedded entries to entry object
+            "geostory-embedded": path.join(__dirname, "js", "geostoryEmbedded"),
+            "dashboard-embedded": path.join(__dirname, "js", "dashboardEmbedded")
+        },
+        // ...
+        [
+            // new HtmlWebpackPlugin({ ... }),
+            // add plugin to copy all the embedded html and inject the correct bundle
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'geostory-embedded-template.html'),
+                chunks: ['geostory-embedded'],
+                inject: "body",
+                hash: true,
+                filename: 'geostory-embedded.html'
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'dashboard-embedded-template.html'),
+                chunks: ['dashboard-embedded'],
+                inject: 'body',
+                hash: true,
+                filename: 'dashboard-embedded.html'
+            })
+        ],
+        // ...
+    );
+    ```
+
+4) Add configuration to localConfig.json in the plugins section related to Share functionalities (Only with custom localConfig.json in the project):
+    - Dashboard share configuration
+    ```js
+    "dashboard": [
+        // ...
+        {
+            "name": "Share",
+            "cfg": {
+                "showAPI": false,
+                "advancedSettings": false,
+                "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+                "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
+                "embedOptions": {
+                    "showTOCToggle": false,
+                    "showConnectionsParamToggle": true
+                }
+            }
+        },
+        // ...
+    ]
+    ```
+
+    - Dashboard share configuration
+    ```js
+    "geostory": [
+        // ...
+        {
+            "name": "Share",
+            "cfg": {
+                "embedPanel": true,
+                "showAPI": false,
+                "advancedSettings": {
+                    "hideInTab": "embed",
+                    "homeButton": true,
+                    "sectionId": true
+                },
+                "shareUrlRegex": "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+                "shareUrlReplaceString": "$1geostory-embedded.html#/$3",
+                "embedOptions": {
+                    "showTOCToggle": false
+                }
+            }
+        },
+        // ...
+    ]
+    ```
+
+5) update the web/pom.xml to copy all the related resources in the final *.war file with these new executions
+```xml
+<!-- __PROJECTNAME__ should be equal to the one in use in the project, see other executions how they define the outputDirectory path  -->
+<execution>
+    <id>only dashboard-embedded.html</id>
+    <phase>process-classes</phase>
+    <goals>
+        <goal>copy-resources</goal>
+    </goals>
+    <configuration>
+        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+        <encoding>UTF-8</encoding>
+        <resources>
+            <resource>
+                <directory>${basedir}/../dist</directory>
+                <includes>
+                    <include>dashboard-embedded.html</include>
+                </includes>
+                <excludes>
+                    <exclude>MapStore2/*</exclude>
+                    <exclude>MapStore2/**/*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </configuration>
+</execution>
+<execution>
+    <id>only geostory-embedded.html</id>
+    <phase>process-classes</phase>
+    <goals>
+        <goal>copy-resources</goal>
+    </goals>
+    <configuration>
+        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+        <encoding>UTF-8</encoding>
+        <resources>
+            <resource>
+                <directory>${basedir}/../dist</directory>
+                <includes>
+                    <include>geostory-embedded.html</include>
+                </includes>
+                <excludes>
+                    <exclude>MapStore2/*</exclude>
+                    <exclude>MapStore2/**/*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </configuration>
+</execution>
+```
+
 ## Migration from 2020.02.00 to 2021.01.00
 
 ### Update to webpack 5 - Module federation
