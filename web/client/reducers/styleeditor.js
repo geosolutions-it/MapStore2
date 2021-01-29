@@ -68,7 +68,8 @@ function styleeditor(state = {}, action) {
     case RESET_STYLE_EDITOR: {
         return {
             service: state.service && {...state.service} || {},
-            canEdit: state.canEdit
+            canEdit: state.canEdit,
+            loading: state.loading
         };
     }
     case ADD_STYLE: {
@@ -77,8 +78,7 @@ function styleeditor(state = {}, action) {
     case LOADING_STYLE: {
         return {
             ...state,
-            loading: action.status ? action.status : true,
-            error: {}
+            loading: action.status ? action.status : true
         };
     }
     case LOADED_STYLE: {

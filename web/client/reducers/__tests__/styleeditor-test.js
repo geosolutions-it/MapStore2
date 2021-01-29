@@ -120,12 +120,12 @@ describe('Test styleeditor reducer', () => {
         });
     });
     it('test errorStyle unmarshalling parser error ', () => {
-        const state = styleeditor({ }, errorStyle('edit', { message: "could not be unmarshalled" }));
+        const state = styleeditor({ }, errorStyle('parsingCapabilties', { message: "could not be unmarshalled" }));
         expect(state).toEqual({
             loading: false,
             canEdit: false,
             error: {
-                edit: {
+                parsingCapabilities: {
                     status: 404,
                     message: 'could not be unmarshalled'
                 }
