@@ -267,9 +267,12 @@ export const toggleStyleEditorEpic = (action$, store) =>
                                 .switchMap(availableStyles => setAdditionalLayers(availableStyles));
                         })
                         .startWith(...initialAction)
-                        .catch((err) => Rx.Observable.of(errorStyle('global', err), loadedStyle()));
+                        .catch((err) => {
+                            const errorType = err.message.indexOf("could not be unmarshalled") !== -1 ? "parsingCapabilities" : "global";
+                            return Rx.Observable.of(errorStyle(errorType, err), loadedStyle());
+                        });
                 })
-                .startWith(loadingStyle('global'));
+                .startWith(loadingStyle('global'), resetStyleEditor());
         });
 /**
  * Gets every `UPDATE_STATUS` event.
