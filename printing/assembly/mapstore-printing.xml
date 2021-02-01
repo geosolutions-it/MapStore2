@@ -19,7 +19,6 @@
                 <include>**/bcmail-*.jar</include>
                 <include>**/bcprov-*.jar</include>
                 <include>**/commons-lang3-*.jar</include>
-                <include>**/commons-pool-*.jar</include>
                 <include>**/ejml-*.jar</include>
                 <include>**/fontbox-*.jar</include>
                 <include>**/fop-*.jar</include>
