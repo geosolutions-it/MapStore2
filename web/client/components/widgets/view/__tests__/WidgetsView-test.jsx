@@ -115,49 +115,6 @@ describe('WidgetsView component', () => {
         const el = container.querySelector('.react-grid-item');
         expect(el).toExist();
     });
-    it('tests correct width of widgets', () => {
-        ReactDOM.render(<WidgetsView
-            useDefaultWidthProvider
-            isResizable
-            verticalCompact={false}
-            isDraggable
-            rowHeight={186}
-            layouts={{ md: [{
-                i: dummyWidget.id,
-                h: 1,
-                isBounded: undefined,
-                isDraggable: true,
-                isResizable: true,
-                maxH: undefined,
-                maxW: undefined,
-                minH: undefined,
-                minW: undefined,
-                moved: false,
-                resizeHandles: undefined,
-                "static": false,
-                w: 1,
-                x: 0,
-                y: 0
-            }]}}
-            width={undefined}
-            breakpoints={{md: 480, xxs: 0}}
-            cols={{md: 6, xxs: 1}}
-            style={{
-                bottom: 65,
-                height: 784,
-                left: "500px",
-                marginTop: 52,
-                position: "absolute",
-                width: "calc(100% - 570px)",
-                zIndex: 50
-            }}
-            widgets={[dummyWidget]}
-        />, document.getElementById("container"));
-
-        const container = document.getElementById('container');
-        const el = container.querySelector('.mapstore-widget-card');
-        expect(el.clientWidth).toBe(211); // should be 213 in real browser
-    });
     it('statics widgets', () => {
         ReactDOM.render(<WidgetsView layouts={{ md: [{ i: dummyWidget.id, w: 1, h: 1, x: 1, y: 1 }] }} widgets={[{...dummyWidget, dataGrid: {"static": true, w: 1, h: 1, x: 1, y: 1 }}]} />, document.getElementById("container"));
         const container = document.getElementById('container');
