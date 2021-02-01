@@ -15,20 +15,21 @@ import emptyState from '../misc/enhancers/emptyState';
 import withSelection from '../widgets/view/enhancers/withSelection';
 import WidgetsView from '../widgets/view/WidgetsView';
 
-const WIDGET_MOBILE_RIGHT_SPACE = 34;
+const WIDGET_MOBILE_RIGHT_SPACE = 18;
 
 export default compose(
     pure,
     defaultProps({
         breakpoints: { md: 480, xxs: 0 },
-        cols: { md: 6, xxs: 1 }
+        cols: { md: 6, xxs: 1 },
+        minLayoutWidth: 480
     }),
     widthProvider({ overrideWidthProvider: true }),
-    withProps(({width}) => ({
-        width: width < 480 ? width - WIDGET_MOBILE_RIGHT_SPACE : width,
+    withProps(({width, minLayoutWidth }) => ({
+        width: width <= minLayoutWidth ? width - WIDGET_MOBILE_RIGHT_SPACE : width,
         toolsOptions: { showMaximize: true }
     })),
-    withProps(({width, height, maximized} = {}) => {
+    withProps(({width, height, maximized, minLayoutWidth, cols} = {}) => {
         const maximizedStyle = maximized?.widget ? {
             width: '100%',
             height: '100%',
@@ -48,8 +49,8 @@ export default compose(
 
         return ({
             className: "on-map",
-            breakpoints: { md: 480, xxs: 0 },
-            cols: { md: 6, xxs: 1 },
+            breakpoints: { md: minLayoutWidth, xxs: 0 },
+            cols: cols || { md: 6, xxs: 1 },
             style: {
                 position: 'absolute',
                 zIndex: 50,
