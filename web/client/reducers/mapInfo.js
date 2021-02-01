@@ -37,6 +37,7 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 import { RESET_CONTROLS } from '../actions/controls';
 import assign from 'object-assign';
 import { findIndex, isUndefined } from 'lodash';
+import { MAP_TYPE_CHANGED } from './../actions/maptype';
 
 /**
  * Handles responses based on the type ["data"|"exceptions","error","vector"] of the responses received
@@ -420,6 +421,18 @@ function mapInfo(state = initState, action) {
                 trigger: action.trigger
             }
         };
+    }
+    case MAP_TYPE_CHANGED: {
+        if (action.mapType === "cesium") {
+            return {
+                ...state,
+                configuration: {
+                    ...state.configuration,
+                    trigger: "click"
+                }
+            };
+        }
+        return state;
     }
     default:
         return state;
