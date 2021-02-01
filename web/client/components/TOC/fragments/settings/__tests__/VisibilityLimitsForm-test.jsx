@@ -45,7 +45,7 @@ describe('VisibilityLimitsForm', () => {
         expect([...labels].map(label => label.innerHTML)).toEqual([
             '1 : 3779528',
             '1 : 37795',
-            'layerProperties.visibilityLimitsScale'
+            'layerProperties.visibilityLimits.scale'
         ]);
     });
     it('should render maxResolution and minResolution labels as resolution', () => {
@@ -66,7 +66,7 @@ describe('VisibilityLimitsForm', () => {
         expect([...labels].map(label => label.innerHTML)).toEqual([
             '1000',
             '10',
-            'layerProperties.visibilityLimitsResolution'
+            'layerProperties.visibilityLimits.resolution'
         ]);
     });
     it('should disable the select input if disableResolutionLimits is true', () => {
