@@ -115,7 +115,7 @@
                 "maxValuePlaceholder": "Seleccionar valor máximo",
                 "valueNoResultsText": "Ninguna opción coincide con el valor de entrada",
                 "createOption": "Agregar nuevo valor {label}",
-                "vinValue": "Valor mínimo (incluido)",
+                "minValue": "Valor mínimo (incluido)",
                 "minValuePlaceholder": "Seleccionar valor mínimo",
                 "type": "Tipo de límites",
                 "scale": "Escala",
