@@ -1,6 +1,6 @@
-# General Migration Guidelines
+# Migration Guidelines
 
-Updating MapStore could mean:
+## General update checklist
 
 - updating an existing installation
 - updating a MapStore project created for a previous version
@@ -16,6 +16,7 @@ This is a list of things to check if you want to update from a previous version 
 - update your `package.json` to latest libs versions
 - take a look at your custom files to see if there are some changes (e.g. `localConfig.js`, `proxy.properties`)
 - Some changes that may need to be ported could be present also in `pom.xml` files and in `configs` directory.
+- check for changes also in `web/src/main/webapp/WEB-INF/web.xml`.
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
@@ -344,6 +345,20 @@ INSERT into geostore.gs_category (id ,name) values ( nextval('geostore.hibernate
 INSERT into geostore.gs_category (id ,name) values ( nextval('geostore.hibernate_sequence'),  'USERSESSION') ON CONFLICT DO NOTHING;
 
 ```
+
+### Backend update
+For more details see [this](https://github.com/geosolutions-it/MapStore2/commit/4aa7b917abcb09571af5b9999a38e96f52eac4f3#diff-ac81cff563b78256ef26eca8a5103392592c7138987392a6fb3d79167d11bdcfR66) commit
+
+new files have been added:
+
+-  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml` 
+-  `web/src/main/resources/mapstore.properties` 
+
+some files has been changed:
+
+- `web/src/main/webapp/WEB-INF/web.xml`
+- `pom.xml`
+- `web/pom.xml`
 
 
 ## Migration from 2019.02.01 to 2020.01.00
