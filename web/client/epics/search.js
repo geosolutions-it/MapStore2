@@ -150,7 +150,8 @@ export const searchItemSelected = (action$, store) =>
                                 forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
                                 filterNameList = [typeName];
                                 itemId = item.id;
-                                overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: "application/json" } };
+                                const infoFormat = getDefaultInfoFormatValueFromLayer(layerObj, {...identifyOptionsSelector(store.getState())});
+                                overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: infoFormat } };
                             }
                             return [
                                 ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
