@@ -43,6 +43,8 @@ import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
 import {getFeatureSimple} from '../api/WFS';
+import { getDefaultInfoFormatValueFromLayer } from '../utils/MapInfoUtils';
+import { identifyOptionsSelector } from '../selectors/mapInfo';
 
 
 /**
@@ -148,7 +150,8 @@ export const searchItemSelected = (action$, store) =>
                                 forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
                                 filterNameList = [typeName];
                                 itemId = item.id;
-                                overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: "application/json" } };
+                                const infoFormat = getDefaultInfoFormatValueFromLayer(layerObj, {...identifyOptionsSelector(store.getState())});
+                                overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: infoFormat } };
                             }
                             return [
                                 ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
@@ -198,12 +201,12 @@ export const textSearchShowGFIEpic = (action$, store) =>
             const bbox = item.bbox || item.properties.bbox || toBbox(item);
             const coord = pointOnSurface(item).geometry.coordinates;
             const latlng = { lng: coord[0], lat: coord[1] };
-
+            const infoFormat = getDefaultInfoFormatValueFromLayer(layerObj, {...identifyOptionsSelector(store.getState())});
             return !!coord &&
                 showGFIForService(item?.__SERVICE__) && layerIsVisibleForGFI(layerObj, item?.__SERVICE__) ?
                 Rx.Observable.of(
                     ...(item?.__SERVICE__?.forceSearchLayerVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
-                    featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: "application/json" } }, item.id),
+                    featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: infoFormat } }, item.id),
                     showMapinfoMarker(),
                     zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item?.__SERVICE__?.options?.maxZoomLevel || 21),
                     addMarker(item),
