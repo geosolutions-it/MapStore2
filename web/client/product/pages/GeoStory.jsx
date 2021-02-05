@@ -36,6 +36,7 @@ class GeoStoryPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
         match: PropTypes.object,
+        name: PropTypes.string,
         loadResource: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object,
@@ -58,7 +59,7 @@ class GeoStoryPage extends React.Component {
         updateUrlOnScroll: () => {}
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const id = get(this.props, "match.params.gid");
         const previousId = this.props.previousId && this.props.previousId + '';
         this.props.reset();
@@ -83,7 +84,7 @@ class GeoStoryPage extends React.Component {
     }
     render() {
         return (<Page
-            id="geostory"
+            id={this.props.name}
             component={BorderLayout}
             includeCommon={false}
             plugins={this.props.plugins}

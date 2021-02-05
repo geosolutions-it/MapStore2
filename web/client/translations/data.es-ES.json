@@ -1265,7 +1265,8 @@
             "coordinate": "Coordinar",
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
-            "showSectionId": "Incluir posición de desplazamiento"
+            "showSectionId": "Incluir posición de desplazamiento",
+            "showConnections": "Mostrar conexiones"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",
@@ -1918,6 +1919,21 @@
             },
             "emptyTitle": "El panel de control está vacío"
         },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Cargando panel de control",
+            "errors":{
+                "loading": {
+                    "title": "Error al cargar el panel de control",
+                    "dashboardNotAccessible": "No tiene permiso para acceder a este panel",
+                    "pleaseLogin": "Este panel no es público",
+                    "dashboardDoesNotExist": "El panel al que intenta acceder no existe",
+                    "unknownError": "Hubo un error al cargar el panel",
+                    "notFound": "Panel de control no encontrado",
+                    "notAccessible": "Panel de control no accesible"
+                }
+            },
+            "emptyTitle": "El panel de control está vacío"
+        },
         "context": {
             "loadingSpinner": "Cargando Contexto",
             "errors": {
@@ -2024,8 +2040,10 @@
             "deletedStyleErrorMessage": "No se pudo eliminar el estilo actual",
             "savedStyleTitle": "Estilo guardado",
             "savedStyleMessage": "El estilo se ha guardado con éxito.",
-            "missingAvailableStyles": "Estilos que faltan",
-            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>",
+            "errorTitle": "Error de StyleEditor",
+            "parsingCapabilitiesError": "<h4>Posibles Causas:</h4> no fue posible analizar los cababilites y recuperar los estilos",
+            "globalError": "<h4>Posibles Causas:</h4> no fue posible conectarse al servicio",
+            "missingAvailableStylesMessage": "<ul> <h4> Posibles Causas: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>",
             "createTmpErrorTitle": "Nuevo estilo temporal",
             "createTmpStyleErrorMessage": "No se pudo crear el estilo temporal. Esto podría deberse a un formato de estilo no compatible en el servicio de estilo",
             "updateTmpErrorTitle": "Actualización de estilo temporal",
@@ -2162,7 +2180,10 @@
             "customInterval": "Custom Interval",
             "styleEmpty": "Este estilo no tiene reglas",
             "incompleteClassification": "La clasificación es incompleta porque las entradas no están disponibles. Asegúrese de que todas las propiedades se proporcionan correctamente",
-            "emptyImageIconSymbolizer": "Falta la URL de la imagen en el estilo del icono",
+            "imageSrcEmpty": "Falta la URL de la imagen en el estilo del icono",
+            "imageSrcLoadError": "No se pudo cargar la fuente de la imagen proporcionada. Pruebe con una URL diferente o asegúrese de que MapStore pueda acceder a la fuente",
+            "imageSrcInvalidBase64": "Esta no es una imagen base64 válida. Algunos procesadores de estilo no son compatibles con este tipo de fuente; en su lugar, puede utilizar una fuente de URL externa",
+            "imageSrcNotSupportedBase64Image": "Algunos procesadores de estilo no admiten imágenes en base64 incluso si la fuente actual es válida",
             "warningTextOrderTitle": "Advertencia",
             "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
         },
@@ -2440,6 +2461,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geografía no encontrada",
                     "title": "Error",
                     "unknownError": "Error desconocido",
                     "pleaseLogin": "Por favor Iniciar sesión",
@@ -2475,6 +2497,20 @@
                 "shadowLabel": "Sombra",
                 "useAlternativeTextColor": "Utilice el color de texto alternativo",
                 "alternativeTextColorPopover": "<p>Advertencia: el color del texto seleccionado puede no ser legible en este contexto.</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Cargando historia",
+            "errors": {
+                "loading": {
+                  "notFound": "Geografía no encontrada",
+                  "title": "Error",
+                  "unknownError": "Error desconocido",
+                  "notAccessible": "Esta historia no es accesible",
+                  "pleaseLogin": "El recurso no es público",
+                  "geostoryNotAccessible": "No tienes permiso para acceder a esta historia",
+                  "geostoryDoesNotExist": "Esta historia no existe"
+                }
             }
         },
         "saveDialog": {
@@ -2755,6 +2791,10 @@
           "WidgetsTray": {
             "description": "Una bandeja para colapsar, expandir widgets en el mapa.",
             "title": "Bandeja de widgets"
+          },
+          "Globe": {
+            "description": "otón de la barra lateral para activar / desactivar el modo 3D",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Botón de barra lateral para acercar a la extensión del mapa",

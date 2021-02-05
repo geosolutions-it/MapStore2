@@ -16,7 +16,7 @@ const maximizableWidget = compose(
                 glyph: maximized.widget ? 'resize-small' : 'resize-full',
                 target: 'icons',
                 tooltipId: `widgets.widget.menu.${maximized.widget ? 'minimize' : 'maximize'}`,
-                tooltipPosition: maximized.widget ? 'right' : 'top',
+                tooltipPosition: 'right',
                 visible: !dataGrid.static,
                 onClick: () => toggleMaximize()
             }

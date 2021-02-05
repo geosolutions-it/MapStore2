@@ -25,6 +25,7 @@ import { userRoleSelector } from '../selectors/security';
 import EmptyGeostoriesView from './geostories/EmptyGeostoriesView';
 import GeostoryGrid from './geostories/GeostoriesGrid';
 import PaginationToolbar from './geostories/PaginationToolbar';
+import {GEOSTORY_DEFAULT_SHARE_OPTIONS} from "../utils/ShareUtils";
 
 const geostoriesCountSelector = createSelector(
     totalCountSelector,
@@ -38,6 +39,7 @@ const geostoriesCountSelector = createSelector(
  * @class
  * @memberof plugins
  * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
+ * @prop {boolean} cfg.shareOptions configuration applied to share panel
  */
 class Geostories extends React.Component {
     static propTypes = {
@@ -49,7 +51,8 @@ class Geostories extends React.Component {
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
-        fluid: PropTypes.bool
+        fluid: PropTypes.bool,
+        shareOptions: PropTypes.object
     };
 
     static contextTypes = {
@@ -70,7 +73,8 @@ class Geostories extends React.Component {
             md: 4,
             className: 'ms-map-card-col'
         },
-        maps: []
+        maps: [],
+        shareOptions: GEOSTORY_DEFAULT_SHARE_OPTIONS
     };
 
     componentDidMount() {
@@ -85,6 +89,7 @@ class Geostories extends React.Component {
             colProps={this.props.colProps}
             viewerUrl={(geostory) => {this.context.router.history.push(`geostory/${geostory.id}`); }}
             getShareUrl={(geostory) => `geostory/${geostory.id}`}
+            shareOptions={this.props.shareOptions}
             bottom={<PaginationToolbar />}
         />);
     }
