@@ -37,7 +37,16 @@
           "nillable":true,
           "type":"xsd:string",
           "localType":"string"
+        },
+        {
+          "name":"id",
+          "maxOccurs":1,
+          "minOccurs":0,
+          "nillable":true,
+          "type":"xsd:int",
+          "localType":"int"
         }
+
       ]
     }
   ]

@@ -35,7 +35,7 @@ describe('Test for FeatureGrid component', () => {
     });
     it('render sample features', () => {
         ReactDOM.render(<FeatureGrid describeFeatureType={describePois} virtualScroll={false} features={museam.features}/>, document.getElementById("container"));
-        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(3);
+        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(4);
         expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
     });
     it('render sample features with a tool', () => {
@@ -51,14 +51,14 @@ describe('Test for FeatureGrid component', () => {
         };
         spyOn(tool.events, "onClick");
         ReactDOM.render(<FeatureGrid virtualScroll={false} describeFeatureType={describePois} features={museam.features} tools={[tool]}/>, document.getElementById("container"));
-        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(4);
+        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(5);
         expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
         document.getElementsByClassName('test-grid-tool')[0].click();
         expect(tool.events.onClick).toHaveBeenCalled();
     });
     it('hide columns features', () => {
         ReactDOM.render(<FeatureGrid virtualScroll={false} describeFeatureType={describePois} features={museam.features} columnSettings={{NAME: {hide: true}}}/>, document.getElementById("container"));
-        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(2);
+        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(3);
     });
     it('sort event', () => {
         const events = {
@@ -124,6 +124,16 @@ describe('Test for FeatureGrid component', () => {
         domNode = document.getElementsByClassName('react-grid-checkbox')[1];
         TestUtils.Simulate.click(domNode);
         expect(events.onRowsDeselected).toHaveBeenCalled();
+    });
+    it('Test same field name, id,  in features and in properties', () => {
+        ReactDOM.render(<FeatureGrid virtualScroll={false}
+            describeFeatureType={describePois}
+            features={museam.features}/>, document.getElementById("container"));
+        let domNode = Array.prototype.filter.call(document.getElementsByClassName("react-grid-Cell"), (element) =>{
+            return element;
+        })[3];
+        expect(domNode).toExist();
+        expect(domNode.getAttribute('value')).toBe('' + (museam.features[0].properties.id));
     });
     it('temporary changes on field edit', () => {
         const events = {

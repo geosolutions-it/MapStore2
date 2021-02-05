@@ -16,7 +16,8 @@
       "properties":{
         "NAME":"museam",
         "THUMBNAIL":"pics/22037827-Ti.jpg",
-        "MAINPAGE":"pics/22037827-L.jpg"
+        "MAINPAGE":"pics/22037827-L.jpg",
+        "id": 1
       }
     }
   ],
