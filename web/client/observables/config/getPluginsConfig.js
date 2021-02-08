@@ -8,7 +8,7 @@ import {mergeConfigsPatch} from "../../utils/PatchUtils";
  * @param {string} pluginsConfigURL the URL of the configuration.
  */
 export default function(pluginsConfigURL) {
-    const configUrl = pluginsConfigURL || ConfigUtils.getConfigProp('contextPluginsConfiguration') || 'pluginsConfig.json';
+    const configUrl = pluginsConfigURL || ConfigUtils.getConfigProp('contextPluginsConfiguration') || 'configs/pluginsConfig.json';
     const configFiles = castArray(configUrl);
     return axios.all(configFiles.map(config =>
         axios.get(config)
