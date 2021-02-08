@@ -35,7 +35,7 @@ let defaultConfig = {
     extensionsRegistry: "extensions.json",
     extensionsFolder: "",
     configurationFolder: "configs/",
-    contextPluginsConfiguration: ['configs/pluginsConfig.json', 'configs/pluginsConfig.patch.json'],
+    contextPluginsConfiguration: "configs/pluginsConfig.json",
     projectionDefs: [],
     themePrefix: "ms2",
     bingApiKey: null,
