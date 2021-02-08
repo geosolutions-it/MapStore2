@@ -294,7 +294,12 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", {
+            "name": "Annotations",
+            "cfg": {
+              "geodesic": true
+            }
+          },
             {
                 "name": "Identify",
                 "cfg": {

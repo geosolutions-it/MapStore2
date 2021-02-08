@@ -83,6 +83,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {string} symbolsPath path to the svg folder
  * @prop {object[]} symbolList list of symbols
  * @prop {string} defaultShape default Shape
+ * @prop {boolean} geodesic draw geodesic annotation (Currently applicable only for Circle annotation)
  *
  * the annotation's attributes.
  */
@@ -129,7 +130,8 @@ class Annotations extends React.Component {
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
         defaultShape: PropTypes.string,
-        symbolsPath: PropTypes.string
+        symbolsPath: PropTypes.string,
+        geodesic: PropTypes.bool
     };
 
     static contextTypes = {
@@ -229,10 +231,10 @@ class Annotations extends React.Component {
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
         const Editor = this.props.editor;
         if (this.props.mode === 'detail') {
-            return <Editor feature={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width} {...annotation.properties}/>;
+            return <Editor geodesic={this.props.geodesic} feature={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width} {...annotation.properties}/>;
         }
         // mode = editing
-        return this.props.editing && <Editor feature={annotation} id={this.props.editing.properties && this.props.editing.properties.id || uuidv1()} width={this.props.width} config={this.props.config} {...this.props.editing.properties} lineDashOptions={this.props.lineDashOptions}
+        return this.props.editing && <Editor geodesic={this.props.geodesic} feature={annotation} id={this.props.editing.properties && this.props.editing.properties.id || uuidv1()} width={this.props.width} config={this.props.config} {...this.props.editing.properties} lineDashOptions={this.props.lineDashOptions}
             symbolsPath={this.props.symbolsPath}
             onUpdateSymbols={this.props.onUpdateSymbols}
             onSetErrorSymbol={this.props.onSetErrorSymbol}

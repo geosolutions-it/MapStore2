@@ -31,7 +31,7 @@ const uuidv1 = require('uuid/v1');
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head, findIndex, castArray, isArray, find} = require('lodash');
+const {head, findIndex, castArray, isArray, find, get} = require('lodash');
 const assign = require('object-assign');
 const {annotationsLayerSelector, multiGeometrySelector} = require('../selectors/annotations');
 const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES} = require('../utils/AnnotationsUtils');
@@ -67,6 +67,16 @@ const validateFeatureCollection = (feature) => {
     return set("features", features, feature);
 };
 
+/**
+ * Get geodesic property from the annotation config
+ * @param state
+ * @param drawMethod
+ * @return {boolean}
+ */
+const getGeodesicProperty = (state, drawMethod = "Circle") => {
+    return drawMethod === "Circle" && get(state.annotations, "config.geodesic", false);
+};
+
 const getSelectDrawStatus = (state) => {
     let feature = state.annotations.editing;
     const multiGeom = multiGeometrySelector(state);
@@ -77,7 +87,8 @@ const getSelectDrawStatus = (state) => {
         selectEnabled: true,
         drawEnabled: false,
         translateEnabled: false,
-        transformToFeatureCollection: true
+        transformToFeatureCollection: true,
+        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
     };
 
     feature = validateFeatureCollection(feature);
@@ -93,7 +104,8 @@ const getReadOnlyDrawStatus = (state) => {
         selectEnabled: false,
         translateEnabled: false,
         drawEnabled: false,
-        transformToFeatureCollection: true
+        transformToFeatureCollection: true,
+        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
     };
     feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, "annotations", [feature], drawOptions, feature.style);
@@ -111,7 +123,8 @@ const getEditingGeomDrawStatus = (state) => {
         translateEnabled: false,
         addClickCallback: true,
         useSelectedStyle: true,
-        transformToFeatureCollection: true
+        transformToFeatureCollection: true,
+        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
     };
     feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, "annotations", [feature], drawOptions, feature.style);
@@ -197,7 +210,8 @@ module.exports = (viewer) => ({
                 editEnabled: false,
                 selectEnabled: true,
                 drawEnabled: false,
-                transformToFeatureCollection: true
+                transformToFeatureCollection: true,
+                geodesic: getGeodesicProperty(state, type)
             };
             // parsing styles searching for missing symbols, therefore updating it with a missing symbol
             return Rx.Observable.from([
@@ -337,7 +351,8 @@ module.exports = (viewer) => ({
                 editFilter: (f) => f.getProperties().canEdit,
                 defaultTextAnnotation,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state, type)
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false})));
         }),
@@ -550,7 +565,8 @@ module.exports = (viewer) => ({
                 useSelectedStyle: true,
                 drawEnabled: false,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state, method)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -646,7 +662,8 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -674,7 +691,8 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state, method)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
@@ -696,7 +714,8 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         })
