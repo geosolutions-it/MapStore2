@@ -125,7 +125,7 @@ describe('Test for FeatureGrid component', () => {
         TestUtils.Simulate.click(domNode);
         expect(events.onRowsDeselected).toHaveBeenCalled();
     });
-    it('Test the field values are rendered right way', () => {
+    it('Test the field values are rendered right way in grid cells', () => {
         ReactDOM.render(<FeatureGrid virtualScroll={false}
             describeFeatureType={describePois}
             features={museam.features}/>, document.getElementById("container"));
