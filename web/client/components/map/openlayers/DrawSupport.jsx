@@ -914,7 +914,7 @@ export default class DrawSupport extends React.Component {
         }
         if (newProps.options.editEnabled) {
 
-            !newProps.options.geodesic && newProps.drawMethod !== "Circle" && this.addModifyInteraction(newProps);
+            !newProps.options.geodesic && this.addModifyInteraction(newProps);
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             if (newProps.options.translateEnabled !== false) {
                 this.addTranslateInteraction();
