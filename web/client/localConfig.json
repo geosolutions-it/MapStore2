@@ -342,7 +342,17 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "FeatureEditor",
+            },
+            "Home",
+            {
+              "name": "FeatureEditor",
+              "cfg": {
+                "editingAllowedRoles": [
+                  "ADMIN",
+                  "USER"
+                ]
+              }
+            },
             "LayerDownload",
             {
               "name": "QueryPanel",
