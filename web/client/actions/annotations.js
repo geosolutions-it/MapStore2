@@ -298,9 +298,10 @@ function cancelCloseAnnotations() {
         type: CANCEL_CLOSE_ANNOTATIONS
     };
 }
-function startDrawing() {
+function startDrawing(options = {}) {
     return {
-        type: START_DRAWING
+        type: START_DRAWING,
+        options
     };
 }
 function toggleUnsavedChangesModal() {

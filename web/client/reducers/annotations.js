@@ -21,12 +21,12 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT,
-    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS
+    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS, START_DRAWING
 } = require('../actions/annotations');
 
 const {validateCoordsArray, getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents, updateAllStyles, getBaseCoord} = require('../utils/AnnotationsUtils');
 const {set} = require('../utils/ImmutableUtils');
-const {head, findIndex, isNil, slice, castArray} = require('lodash');
+const {head, findIndex, isNil, slice, castArray, get} = require('lodash');
 
 const uuid = require('uuid');
 
@@ -624,6 +624,8 @@ function annotations(state = { validationErrors: {} }, action) {
         });
     case ERROR_SYMBOLS:
         return {...state, symbolErrors: action.symbolErrors};
+    case START_DRAWING:
+        return {...state, config: {...state.config, geodesic: get(action.options, 'geodesic', false)}};
     default:
         return state;
 

@@ -189,7 +189,8 @@ class AnnotationsEditor extends React.Component {
         symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
-        defaultShape: PropTypes.string
+        defaultShape: PropTypes.string,
+        geodesic: PropTypes.bool
     };
 
     static defaultProps = {
@@ -312,7 +313,7 @@ class AnnotationsEditor extends React.Component {
                             onAddText: this.props.onAddText,
                             onSetStyle: this.props.onSetStyle,
                             style: this.props.selected && this.props.selected.style || this.props.editing.style,
-                            onStartDrawing: this.props.onStartDrawing,
+                            onStartDrawing: ()=> this.props.onStartDrawing({geodesic: this.props.geodesic}),
                             disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
                             drawing: this.props.drawing,
                             titles: {
