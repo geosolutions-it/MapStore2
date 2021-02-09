@@ -16,8 +16,8 @@ ENV MAXIMUM_MEMORY="512m"
 ENV JAVA_OPTS="${JAVA_OPTS}  -Xms${INITIAL_MEMORY} -Xmx${MAXIMUM_MEMORY} -XX:MaxPermSize=128m"
 ENV GEOSTORE_OVR_OPT="-Dgeostore-ovr=${CATALINA_BASE}/conf/${OVR} \
                       -Duser.timezone=UTC"
-ENV PG_CLIENT_VERSION="11"
 ARG OVR=""
+ARG PG_CLIENT_VERSION=""
 
 COPY --from=mother "/mapstore/mapstore.war" "${MAPSTORE_WEBAPP_DST}/mapstore.war"
 COPY --from=mother "/mapstore/docker" "${CATALINA_BASE}/docker/"
@@ -30,7 +30,7 @@ RUN if [ "${OVR}" = "geostore-datasource-ovr.properties" ]; then \
     fi
 
 RUN apt-get update \
-    && apt-get install --yes postgresql-client-${PG_CLIENT_VESION}
+    && apt-get install --yes postgresql-client-${PG_CLIENT_VERSION}
 
 RUN apt-get clean \
     && apt-get autoclean \
