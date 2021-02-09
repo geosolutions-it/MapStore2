@@ -216,12 +216,6 @@ export default {
                     };
 
                     UNSAFE_componentWillMount() {
-                        if (this.props.usePreview && !window.PDFJS) {
-                            const s = document.createElement("script");
-                            s.type = "text/javascript";
-                            s.src = "https://unpkg.com/pdfjs-dist@1.4.79/build/pdf.combined.js";
-                            document.head.appendChild(s);
-                        }
                         this.configurePrintMap();
                     }
 
