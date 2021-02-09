@@ -64,7 +64,7 @@ class Locate {
             this.locate.drawMarker(this.locate._map);
         }
 
-        this.locate.setLocateOptions(options.locateOptions);
+        this.locate.setLocateOptions(mergeOptions(options).locateOptions);
 
         this.status = status;
     }
