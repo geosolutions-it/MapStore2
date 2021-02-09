@@ -370,7 +370,7 @@ class MapPlugin extends React.Component {
         // Tools passed by other plugins
         const toolsFromItems = this.props.items
             .filter(({Tool}) => !!Tool)
-            .map(({Tool, name, cfg}) => <Tool key={name} mapType={this.props.mapType} cfg={cfg} />);
+            .map(({Tool, name, cfg}) => <Tool {...cfg} key={name} mapType={this.props.mapType} />);
 
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);

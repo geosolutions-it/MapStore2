@@ -20,6 +20,9 @@ L.Control.MSLocate = L.Control.Locate.extend({
         this._resetVariables();
         this._map.on('unload', this._unload, this);
     },
+    setLocateOptions: function(options) {
+        this.options.locateOptions = {...options};
+    },
     _setClasses: function(state) {
         this._map.fire('locatestatus', {state: state});
         return state;

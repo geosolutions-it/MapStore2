@@ -296,9 +296,6 @@
                 "leaflet": {
                   "attribution": {
                     "container": "#footer-attribution-container"
-                  },
-                  "locate": {
-                    "maxZoom": 5
                   }
                 }
               },
@@ -340,13 +337,6 @@
             },
             {
                 "name": "Locate",
-                "cfg": {
-                  "maxZoom": 5
-                },
-                "toolCfg": {
-                  "maxZoom": 5
-                },
-
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true

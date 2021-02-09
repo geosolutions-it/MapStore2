@@ -1,22 +1,7 @@
 import {useEffect, useRef} from 'react';
-import useMapTool from "../../../map/hooks/use-map-tool";
-import { set } from '../../../utils/ImmutableUtils';
+import useMapTool from "../../../map/hooks/useMapTool";
 
-const defaultOpt = {
-    follow: true, // follow with zoom and pan the user's location
-    remainActive: true,
-    metric: true,
-    stopFollowingOnDrag: true,
-    keepCurrentZoomLevel: false,
-    locateOptions: {
-        maximumAge: 2000,
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maxZoom: 18
-    }
-};
-
-const LocateTool = ({map, mapType, status, messages, cfg, changeLocateState, onLocateError}) => {
+const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState, onLocateError}) => {
     const locateInstance = useRef();
     const [loaded, Impl, error] = useMapTool(mapType, 'locate');
     useEffect(() => {
@@ -35,9 +20,17 @@ const LocateTool = ({map, mapType, status, messages, cfg, changeLocateState, onL
         changeLocateState("DISABLED");
     };
 
+    function getOptions() {
+        return {
+            locateOptions: {
+                ...(maxZoom !== undefined && { maxZoom })
+            }
+        };
+    }
+
     useEffect(() => {
         if (loaded) {
-            const options = cfg.maxZoom ? set("locateOptions.maxZoom", cfg.maxZoom, defaultOpt) : defaultOpt;
+            const options = getOptions();
             locateInstance.current = new Impl();
             locateInstance.current.start({
                 map, options, messages, status, onStateChange, onLocationError
@@ -48,8 +41,9 @@ const LocateTool = ({map, mapType, status, messages, cfg, changeLocateState, onL
         };
     }, [loaded]);
     useEffect(() => {
-        locateInstance.current?.update({status, messages});
-    }, [status, messages, loaded]);
+        const options = getOptions();
+        locateInstance.current?.update({ status, messages, options });
+    }, [status, messages, loaded, maxZoom]);
 
     return null;
 };

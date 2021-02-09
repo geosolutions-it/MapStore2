@@ -8,10 +8,33 @@
 
 import LLocate from '../../utils/leaflet/LLocate';
 
+const defaultOpt = { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
+    follow: true,  // follow with zoom and pan the user's location
+    remainActive: true,
+    stopFollowingOnDrag: true,
+    locateOptions: {
+        maximumAge: 2000,
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maxZoom: 18,
+        watch: true  // if you overwrite this, visualization cannot be updated
+    }
+};
+
+function mergeOptions(options) {
+    return {
+        ...defaultOpt,
+        ...options,
+        locateOptions: {
+            ...defaultOpt.locateOptions,
+            ...options.locateOptions
+        }
+    };
+}
 class Locate {
     start({ map, options, status, onStateChange, onLocationError }) {
         if (map ) {
-            this.locate = new LLocate(options);
+            this.locate = new LLocate(mergeOptions(options));
             this.locate.setMap(map);
             map.on('locatestatus', (state) => this.locateControlState(state, { onStateChange }));
             this.locate.options.onLocationError = onLocationError;
@@ -22,7 +45,7 @@ class Locate {
         }
         this.status = status;
     }
-    update({ status, messages }) {
+    update({ status, messages, options }) {
         this.fol = false;
 
         if ( status === "ENABLED" && !this.locate._active) {
@@ -40,6 +63,8 @@ class Locate {
         if (status !== "DISABLED" && this.locate.drawMarker) {
             this.locate.drawMarker(this.locate._map);
         }
+
+        this.locate.setLocateOptions(options.locateOptions);
 
         this.status = status;
     }
