@@ -1,4 +1,4 @@
-FROM alpine AS mother
+FROM tomcat:9-jdk11-openjdk AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geo-solutions.it>"
 ARG MAPSTORE_WEBAPP_SRC="./.placeholder"
 ADD "${MAPSTORE_WEBAPP_SRC}" "/mapstore/"
@@ -16,28 +16,23 @@ ENV MAXIMUM_MEMORY="512m"
 ENV JAVA_OPTS="${JAVA_OPTS}  -Xms${INITIAL_MEMORY} -Xmx${MAXIMUM_MEMORY} -XX:MaxPermSize=128m"
 ENV GEOSTORE_OVR_OPT="-Dgeostore-ovr=${CATALINA_BASE}/conf/${OVR} \
                       -Duser.timezone=UTC"
-ARG TOMCAT_EXTRAS=false
+ENV PG_CLIENT_VERSION="11"
 ARG OVR=""
-
-# Optionally remove Tomcat manager, docs, and examples
-RUN if [ "$TOMCAT_EXTRAS" = false ]; then \
-      find "${MAPSTORE_WEBAPP_DST}" -delete; \
-    fi
 
 COPY --from=mother "/mapstore/mapstore.war" "${MAPSTORE_WEBAPP_DST}/mapstore.war"
 COPY --from=mother "/mapstore/docker" "${CATALINA_BASE}/docker/"
 
 WORKDIR ${CATALINA_BASE}
-#RUN chmod +x ./docker/wait-for-postgres.sh
-#COPY ./docker/wait-for-postgres.sh ${CATALINA_BASE}/
+
 # adding the env
 RUN if [ "${OVR}" = "geostore-datasource-ovr.properties" ]; then \
         cp ${CATALINA_BASE}/docker/geostore-datasource-ovr.properties ${CATALINA_BASE}/conf; \
     fi
 
 RUN apt-get update \
-    && apt-get install --yes postgresql-client-11 \
-    && apt-get clean \
+    && apt-get install --yes postgresql-client-${PG_CLIENT_VESION}
+
+RUN apt-get clean \
     && apt-get autoclean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* \
