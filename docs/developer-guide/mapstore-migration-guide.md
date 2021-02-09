@@ -20,6 +20,45 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2021.01.01 to 2021.01.02
+
+### Locate plugin configuration
+
+Configuration for Locate plugin has changed and it is not needed anymore inside the Map plugin
+
+- old localConfig.json configuration needed 'locate' listed as tool inside the Map plugin and as a separated Locate plugin
+```js
+// ...
+{
+    "name": "Map",
+    "cfg": {
+        "tools": ["locate"],
+        // ...
+    }
+},
+{
+    "name": "Locate",
+    // ...
+}
+// ...
+```
+
+- new localConfig.json configuration removes 'locate' from tools array and it keeps only the plugin configuration
+```js
+// ...
+{
+    "name": "Map",
+    "cfg": {
+        // ...
+    }
+},
+{
+    "name": "Locate",
+    // ...
+}
+// ...
+```
+
 ## Migration from 2021.01.00 to 2021.01.01
 
 ### Update an existing project to include embedded Dashboards and GeoStories
