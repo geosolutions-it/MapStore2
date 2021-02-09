@@ -1265,7 +1265,8 @@
             "coordinate": "Coordinate",
             "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
             "zoomToolTip": "Min: 1 e Max: 35",
-            "showSectionId": "Includi posizione di scorrimento"
+            "showSectionId": "Includi posizione di scorrimento",
+            "showConnections": "Mostra connessioni"
         },
         "snapshot": {
             "title": "Istantanea",
@@ -1918,6 +1919,21 @@
             },
             "emptyTitle": "La dashboard è vuota"
         },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Caricamento Dashboard",
+            "errors":{
+                "loading": {
+                    "title": "Errore di caricamento della dashboard",
+                    "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard",
+                    "pleaseLogin": "Questa risorsa non è pubblica",
+                    "dashboardDoesNotExist": "La dashboard richiesta non esiste",
+                    "unknownError": "C'è stato un errore durante il caricamento della dashboard",
+                    "notFound": "Dashboard non trovata",
+                    "notAccessible": "Dashboard non accessibile"
+                }
+            },
+            "emptyTitle": "La dashboard è vuota"
+        },
         "context": {
             "loadingSpinner": "Caricamento Contesto",
             "errors": {
@@ -2024,8 +2040,10 @@
             "deletedStyleErrorMessage": "Impossibile cancellare lo stile",
             "savedStyleTitle": "Stile salvato",
             "savedStyleMessage": "Lo stile è stato salvato",
-            "missingAvailableStyles": "Stili mancanti",
-            "missingAvailableStylesMessage": "<ul> <h4> Possibili cause: </h4> <li> Il layer selezionato è un layer group </li> <li> Il layer non è configurato correttamente lato server </li> </ul>",
+            "errorTitle": "Errore dell'editor di stili",
+            "parsingCapabilitiesError": "<h4>Analisi Servizio:</h4> Non è statto possibile effettuare l'analisi del servizio",
+            "globalError": "<h4>Possibili cause:</h4> Non è stato possibile connettersi al servizio",
+            "missingAvailableStylesMessage": "<ul> <h4> Possibili cause: </h4> <li> Il layer selezionato è un layer group </li> <li> Il layer non è configurato correttamente lato server </li></ul>",
             "createTmpErrorTitle": "Nuovo stile temporaneo",
             "createTmpStyleErrorMessage": "Non è stato possibile creare uno stile temporaneo. Questo potrebbe essere dovuto al formato di stile non supportato dal servizio",
             "updateTmpErrorTitle": "Aggiornamento di stile temporaneo",
@@ -2443,6 +2461,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory non trovata",
                     "title": "Errore",
                     "unknownError": "Error sconosciuto",
                     "pleaseLogin": "Per favore effettua il login",
@@ -2478,6 +2497,20 @@
                 "shadowLabel": "Ombra",
                 "useAlternativeTextColor": "Usa colore testo alternativo",
                 "alternativeTextColorPopover": "<p>Attenzione: il colore del testo selezionato potrebbe non essere leggibile su questo sfondo.</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Caricamento della storia",
+            "errors": {
+                "loading": {
+                  "notFound": "Geostory non trovata",
+                  "title": "Errore",
+                  "unknownError": "Errore sconosciuto",
+                  "notAccessible": "Questa storia non è accessibile",
+                  "pleaseLogin": "La risorsa non è pubblica",
+                  "geostoryNotAccessible": "Non hai l'autorizzazione per accedere a questa storia",
+                  "geostoryDoesNotExist": "Questa storia non esiste"
+                }
             }
         },
          "saveDialog": {
@@ -2758,6 +2791,10 @@
           "WidgetsTray": {
             "description": "Un vassoio per comprimere ed espandere i widget sulla mappa.",
             "title": "Vassoio widget"
+          },
+          "Globe": {
+            "description": "Pulsante della barra laterale per attivare/disattivare la modalità 3D",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Pulsante della barra laterale per ingrandire l'estensione della mappa della mappa",

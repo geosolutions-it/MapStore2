@@ -95,7 +95,7 @@
     "vusion-webfonts-generator": "0.4.1",
     "webpack": "5.9.0",
     "webpack-bundle-size-analyzer": "2.0.2",
-    "webpack-cli": "4.3.1",
+    "webpack-cli": "4.5.0",
     "webpack-dev-server": "3.11.0"
   },
   "dependencies": {
@@ -210,7 +210,7 @@
     "react-draggable": "2.2.6",
     "react-dropzone": "3.13.1",
     "react-error-boundary": "1.2.5",
-    "react-grid-layout": "0.16.6",
+    "react-grid-layout": "1.2.0",
     "react-image-lightbox": "4.2.2",
     "react-input-autosize": "1.1.4",
     "react-intersection-observer": "8.24.1",
@@ -219,7 +219,7 @@
     "react-nouislider": "2.0.1",
     "react-numeric-input": "2.2.3",
     "react-overlays": "1.2.0",
-    "react-pdf": "4.0.5",
+    "react-pdf": "5.1.0",
     "react-player": "1.15.3",
     "react-plotly.js": "2.5.0",
     "react-quill": "1.1.0",

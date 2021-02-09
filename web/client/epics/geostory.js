@@ -90,7 +90,19 @@ import {
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes, Modes, parseHashUrlScrollUpdate } from '../utils/GeoStoryUtils';
+import {
+    scrollToContent,
+    ContentTypes,
+    isMediaSection,
+    Controls,
+    getEffectivePath,
+    getFlatPath,
+    isWebPageSection,
+    MediaTypes,
+    Modes,
+    parseHashUrlScrollUpdate,
+    getGeostoryMode
+} from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -336,22 +348,23 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 loadingGeostory(true, "loading"),
                 loadingGeostory(false, "loading"),
                 e => {
-                    let message = "geostory.errors.loading.unknownError";
+                    const mode = getGeostoryMode();
+                    let message = mode + ".errors.loading.unknownError";
                     if (e.status === 403 ) {
-                        message = "geostory.errors.loading.pleaseLogin";
+                        message = mode + ".errors.loading.pleaseLogin";
                         if (isLoggedIn(getState()) || isSharedStory(getState())) {
                             // TODO only in view mode
-                            message = "geostory.errors.loading.geostoryNotAccessible";
+                            message = mode + ".errors.loading.geostoryNotAccessible";
                         }
                     } else if (e.status === 404) {
-                        message = "geostory.errors.loading.geostoryDoesNotExist";
+                        message = mode + ".errors.loading.geostoryDoesNotExist";
                     } else if (isNil(e.status)) {
                         // manage generic errors like json parse errors (syntax errors)
                         message = e.message;
                     }
                     return Observable.of(
                         error({
-                            title: "geostory.errors.loading.title",
+                            title: mode + ".errors.loading.title",
                             message
                         }),
                         setCurrentStory({}),

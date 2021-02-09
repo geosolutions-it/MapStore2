@@ -1,6 +1,5 @@
 module.exports = {
-    LLayer: require('./Layer.jsx').default,
-    Locate: require('./Locate.jsx').default,
+    LLayer: require('./Layer.jsx'),
     LMap: require('./Map.jsx'),
     MeasurementSupport: require('./MeasurementSupport'),
     Overview: require('./Overview'),

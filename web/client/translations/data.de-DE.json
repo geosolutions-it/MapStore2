@@ -1266,7 +1266,8 @@
             "coordinate": "Koordinate",
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu ändern / festzulegen",
             "zoomToolTip": "Min: 1 und Max: 35",
-            "showSectionId": "Bildlaufposition einschließen"
+            "showSectionId": "Bildlaufposition einschließen",
+            "showConnections": "Verbindungen anzeigen"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1918,6 +1919,21 @@
             },
             "emptyTitle": "Das Dashboard ist leer"
         },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Dashboard wird geladen",
+            "errors":{
+                "loading": {
+                    "title": "Fehler beim Laden des Dashboards",
+                    "dashboardNotAccessible": "Sie sind nicht berechtigt, auf dieses Dashboard zuzugreifen",
+                    "pleaseLogin": "Dieses Dashboard ist nicht öffentlich",
+                    "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht",
+                    "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten",
+                    "notFound": "Dashboard nicht gefunden",
+                    "notAccessible": "Dashboard nicht zugänglich"
+                }
+            },
+            "emptyTitle": "Das Dashboard ist leer"
+        },
         "context": {
             "loadingSpinner": "Loading Context",
             "errors": {
@@ -2024,8 +2040,10 @@
             "deletedStyleErrorMessage": "Der aktuelle Stil konnte nicht gelöscht werden",
             "savedStyleTitle": "Stil gespeichert",
             "savedStyleMessage": "Der Style wurde erfolgreich gespeichert",
-            "missingAvailableStyles": "Fehlende Stile",
-            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li> </ul>",
+            "errorTitle": "StyleEditor-Fehler",
+            "parsingCapabilitiesError": "<h4>Mögliche Ursachen:</h4>Es war nicht möglich, die Cababilites zu analysieren und die Stile abzurufen",
+            "globalError": "<h4>Mögliche Ursachen:</h4> Es war nicht möglich, eine Verbindung zum Dienst herzustellen",
+            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li></ul>",
             "createTmpErrorTitle": "Neuer temporärer Stil",
             "createTmpStyleErrorMessage": "Temporärer Stil konnte nicht erstellt werden. Dies könnte aufgrund eines nicht unterstützten Formatformats des Style-Service erfolgen",
             "updateTmpErrorTitle": "Temporäre Stilaktualisierung",
@@ -2443,6 +2461,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory nicht gefunden",
                     "title": "Error",
                     "unknownError": "Unbekannter Fehler",
                     "pleaseLogin": "Bitte loggen Sie sich ein",
@@ -2478,6 +2497,20 @@
                 "shadowLabel": "Schatten",
                 "useAlternativeTextColor": "Verwenden Sie alternative Textfarbe",
                 "alternativeTextColorPopover": "<p>Achtung: die ausgewählte Textfarbe konnte auf diesem Hintergrund nicht lesbar sein.</p> <p>Eine alternative Textfarbe ist {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Story wird geladen",
+            "errors": {
+                "loading": {
+                  "notFound": "Geostory nicht gefunden",
+                  "title": "Error",
+                  "unknownError": "Unbekannter Fehler",
+                  "notAccessible": "Diese Geschichte ist nicht zugänglich",
+                  "pleaseLogin": "Ressource ist nicht öffentlich",
+                  "geostoryNotAccessible": "Sie haben keine Berechtigung, auf diese Geschichte zuzugreifen",
+                  "geostoryDoesNotExist": "Diese Geschichte existiert nicht"
+                }
             }
         },
         "saveDialog": {
@@ -2758,6 +2791,10 @@
           "WidgetsTray": {
             "description": "Eine Taskleiste zum Ausblenden und Erweitern von Widgets auf der Karte.",
             "title": "Widgets-Fach"
+          },
+          "Globe": {
+            "description": "Sidebar-Taste zum Ein- und Ausschalten des 3D-Modus",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Sidebar-Schaltfläche, um den Kartenausschnitt der Karte zu vergrößern",

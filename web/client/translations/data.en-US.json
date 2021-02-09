@@ -1265,7 +1265,8 @@
             "wrongBboxParamTitle": "Invalid bounding box param",
             "wrongBboxParamMessage": "Bounding box params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Link to MapStore home",
-            "showSectionId": "Include scroll position"
+            "showSectionId": "Include scroll position",
+            "showConnections": "Show connections"
         },
         "snapshot": {
             "title": "Snapshot Preview",
@@ -1918,6 +1919,21 @@
             },
             "emptyTitle": "The dashboard is empty"
         },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Loading Dashboard",
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard",
+                    "pleaseLogin": "This dashboard is not public",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                }
+            },
+            "emptyTitle": "The dashboard is empty"
+        },
         "context": {
             "loadingSpinner": "Loading Context",
             "errors":{
@@ -2027,7 +2043,9 @@
             "deletedStyleErrorMessage": "Could not delete current style",
             "savedStyleTitle": "Style saved",
             "savedStyleMessage": "Style has been successfully saved",
-            "missingAvailableStyles": "Missing styles",
+            "errorTitle": "StyleEditor error",
+            "parsingCapabilitiesError": "<h4>Possible causes:</h4> it was not possible parse the capabilities and retrieve the styles",
+            "globalError": "<h4>Possible causes:</h4> it was not possible to connect to the service",
             "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>",
             "createTmpErrorTitle": "New Temporary Style",
             "createTmpStyleErrorMessage": "Temporary style could not be created. This could due an unsupported style format on the style service",
@@ -2454,6 +2472,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory not found",
                     "title": "Error",
                     "unknownError": "Unknown error",
                     "pleaseLogin": "Please login",
@@ -2489,6 +2508,20 @@
                 "shadowLabel": "Shadow",
                 "useAlternativeTextColor": "Use alternative text color",
                 "alternativeTextColorPopover": "<p>Warning: the selected text color could be not readable on this background.</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Loading Story",
+            "errors": {
+                "loading": {
+                    "notFound": "Geostory not found",
+                    "title": "Error",
+                    "unknownError": "Unknown error",
+                    "notAccessible": "This story is not accessible",
+                    "pleaseLogin": "Resource is not public",
+                    "geostoryNotAccessible": "You don't have permission to access this story",
+                    "geostoryDoesNotExist": "This story does not exist"
+                }
             }
         },
         "saveDialog": {
@@ -2769,6 +2802,10 @@
           "WidgetsTray": {
             "description": "A tray to collapse and expand widgets on map. ",
             "title": "Widgets Tray"
+          },
+          "Globe": {
+            "description": "Sidebar button to toggle 3D mode on/off",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Sidebar button to zoom to the map extent of the map",
