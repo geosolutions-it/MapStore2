@@ -425,6 +425,8 @@ class MapPlugin extends React.Component {
     };
     updatePlugins = (props) => {
         props.onLoadingMapPlugins(true);
+        // reset the map plugins to avoid previous map library in children
+        this.setState({plugins: undefined });
         pluginsCreator(props.mapType, props.actions).then((plugins) => {
             this.setState({plugins});
             props.onLoadingMapPlugins(false, props.mapType);
