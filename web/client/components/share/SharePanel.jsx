@@ -27,7 +27,7 @@ import {
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange } from 'lodash';
-import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM } from '../../utils/ShareUtils';
+import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
@@ -52,7 +52,7 @@ import OverlayTrigger from '../misc/OverlayTrigger';
  * @prop {string} [shareConfigUrl] the url of the config to use for shareAPI
  * @prop {function} [onClose] function to call on close window event.
  * @prop {getCount} [getCount] function used to get the count for social links.
- * @prop {object} [advancedSettings] object with properties/settings for bbox, coordinates, zoom and marker fields
+ * @prop {object} [advancedSettings] object with properties/settings for bbox, coordinates, zoom, marker, hideInTab
  */
 class SharePanel extends React.Component {
     static propTypes = {
@@ -78,14 +78,16 @@ class SharePanel extends React.Component {
             bbox: PropTypes.bool,
             homeButton: PropTypes.bool,
             centerAndZoom: PropTypes.bool,
-            defaultEnabled: PropTypes.bool
+            defaultEnabled: PropTypes.bool,
+            hideInTab: PropTypes.string
         }),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
         selectedTab: PropTypes.string,
         formatCoords: PropTypes.string,
         point: PropTypes.object,
-        isScrollPosition: PropTypes.bool
+        isScrollPosition: PropTypes.bool,
+        hideMarker: PropTypes.func
     };
 
     static defaultProps = {
@@ -102,7 +104,8 @@ class SharePanel extends React.Component {
         settings: {},
         onUpdateSettings: () => {},
         formatCoords: "decimal",
-        isScrollPosition: false
+        isScrollPosition: false,
+        hideMarker: () => {}
     };
 
     state = {
@@ -112,17 +115,11 @@ class SharePanel extends React.Component {
     };
 
     UNSAFE_componentWillMount() {
-        const tabs = {
-            link: 1,
-            social: 2,
-            embed: 3
-        };
         const bbox = join(this.props.bbox, ',');
         const coordinate = this.getCoordinates(this.props);
         this.setState({
-            ...this.state,
             bbox,
-            eventKey: tabs[this.props.selectedTab] || 1,
+            eventKey: SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
             coordinate
         });
@@ -251,7 +248,10 @@ class SharePanel extends React.Component {
                 </span>
                 <div role="body" className="share-panels">
                     {tabs}
-                    {this.props.advancedSettings && this.renderAdvancedSettings()}
+                    {this.props.advancedSettings
+                        && currentTab !== SHARE_TABS[this.props?.advancedSettings?.hideInTab]
+                        && this.renderAdvancedSettings()
+                    }
                 </div>
             </Dialog>);
 

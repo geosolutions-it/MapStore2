@@ -214,7 +214,8 @@ describe("test the AnnotationsEditor Panel", () => {
         const feature = {
             id: "1",
             title: 'mytitle',
-            description: '<span><i>desc</i></span>'
+            description: '<span><i>desc</i></span>',
+            visibility: false
         };
 
         const testHandlers = {
@@ -240,6 +241,10 @@ describe("test the AnnotationsEditor Panel", () => {
 
         expect(spySave.calls.length).toEqual(0);
         expect(spyCancel.calls.length).toEqual(1);
+        const properties = spyCancel.calls[0].arguments[0];
+        expect(Object.keys(properties).length > 0).toBe(true);
+        expect(spyCancel.calls[0].arguments[0].id).toBe('1');
+        expect(spyCancel.calls[0].arguments[0].visibility).toBe(false);
     });
 
     it('test click cancel trigger UnsavedChangesModal', () => {
@@ -457,8 +462,11 @@ describe("test the AnnotationsEditor Panel", () => {
         expect(spyOnSetAnnotationMeasurement.calls[0].arguments).toBeTruthy();
         expect(spyOnSetAnnotationMeasurement.calls[0].arguments.length).toBe(2);
         const features = spyOnSetAnnotationMeasurement.calls[0].arguments[0];
+        const properties = spyOnSetAnnotationMeasurement.calls[0].arguments[1];
         expect(features.length).toBe(1);
         expect(features[0].geometry.type).toBe('LineString');
+        expect(properties).toBeTruthy();
+        expect(Object.keys(properties).length > 0).toBe(true);
     });
 
     it('test Measurement geometry', () => {

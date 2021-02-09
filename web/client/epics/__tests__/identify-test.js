@@ -71,6 +71,7 @@ import {
 import { setControlProperties } from '../../actions/controls';
 import { BROWSE_DATA } from '../../actions/layers';
 import { configureMap } from '../../actions/config';
+import { changeMapType } from './../../actions/maptype';
 
 const TEST_MAP_STATE = {
     present: {
@@ -1094,6 +1095,19 @@ describe('identify Epics', () => {
                 done();
             };
             testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {});
+        });
+        it('should unregister identifyFloatingTool event if mapType is changed to cesium', (done) => {
+            const epicResponse = actions => {
+                expect(actions[0].type).toBe(UNREGISTER_EVENT_LISTENER);
+                done();
+            };
+            testEpic(setMapTriggerEpic, 1, changeMapType("cesium"), epicResponse, {
+                mapInfo: {
+                    configuration: {
+                        trigger: "click"
+                    }
+                }
+            });
         });
     });
 });

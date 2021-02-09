@@ -476,7 +476,7 @@ describe("test the MeasureComponent", () => {
         expect(spyOnAddAnnotation.calls[0].arguments[1]).toEqual(measurement.textLabels);
         expect(spyOnAddAnnotation.calls[0].arguments[2]).toEqual(uom);
         expect(spyOnAddAnnotation.calls[0].arguments[3]).toBe(false);
-        expect(spyOnAddAnnotation.calls[0].arguments[4]).toBe(1);
+        expect(spyOnAddAnnotation.calls[0].arguments[4].id).toBe(1);
     });
 
     it("test Measurement default", () =>{

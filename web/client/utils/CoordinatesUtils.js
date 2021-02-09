@@ -25,6 +25,7 @@ import {
     head,
     last
 } from 'lodash';
+import turfCircle from '@turf/circle';
 
 import lineIntersect from '@turf/line-intersect';
 import polygonToLinestring from '@turf/polygon-to-linestring';
@@ -1013,6 +1014,23 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
 };
 
 
+/**
+ * helper use to create a geojson Feature with a Polygon geometry
+ * starting from circle data
+ * @see https://turfjs.org/docs/#circle
+ * @param {number[]} center in the form of [x, y]
+ * @param {number} radius
+ * @param {string} [units="degrees"] the unit measure
+ * @param {number} [steps=100] number of vertices of the polygon
+ */
+export const getPolygonFromCircle = (center, radius, units = "degrees", steps = 100) => {
+    if (!center || !radius) {
+        return null;
+    }
+    return turfCircle(center, radius, {steps, units});
+};
+
+
 CoordinatesUtils = {
     setCrsLabels,
     getUnits,
@@ -1065,7 +1083,8 @@ CoordinatesUtils = {
     extractCrsFromURN,
     crsCodeTable,
     makeNumericEPSG,
-    makeBboxFromOWS
+    makeBboxFromOWS,
+    getPolygonFromCircle
 
 };
 export default CoordinatesUtils;

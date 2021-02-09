@@ -376,13 +376,13 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
             }),
             new Style({
                 stroke: new Stroke( tempStyle.stroke ? tempStyle.stroke : {
-                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", isNil(tempStyle.opacity) ? 1 : tempStyle.opacity),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: tempStyle.weight || 1
                 }),
                 image: isDrawing ? image : null,
                 fill: new Fill(tempStyle.fill ? tempStyle.fill : {
-                    color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 1)
+                    color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", isNil(tempStyle.fillOpacity) ? 1 : tempStyle.fillOpacity)
                 })
             })
         ];
@@ -454,7 +454,7 @@ export function getStyle(options, isDrawing = false, textValues = []) {
             })
         };
 
-        if (geomType === "Point") {
+        if (geomType === "Point" || geomType === "MultiPoint") {
             style = {
                 image: new Circle(assign({}, style, {radius: options.style.radius || 5}))
             };

@@ -102,13 +102,37 @@ With groups there's the possibility to:
 
 ## Toolbar options
 
-Once a layer is selected the following toolbar appears: 
+Once a group is selected the following toolbar appears: 
 
-<img src="../img/toc/layer-toolbar.jpg" class="ms-docimage"/>
+<img src="../img/toc/group-toolbar.jpg" class="ms-docimage"/>
 
 Through this toolbar it is possible to:
 
-* **Zoom to selected layer extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>
+* **Add layer to selected group** <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/>: it is possible to add one or more layers to the group
+
+* **Add sub group to the selected group** <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/>: it is possible to add one or more sub-groups to the selected group
+
+* **Zoom to selected layers extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to all layers belonging to the group
+
+* Open the **Selected group settings** <img src="../img/button/properties.jpg" class="ms-docbutton"/> where it is possible to change the group's title, the title translations and see the group name (its ID). It is also possible to add/customize the description of the group and configure the tooltips placement in the UI (more information can be found in [Layer Settings](layer-settings.md) section)
+
+<img src="../img/toc/group-settings.jpg" class="ms-docimage" style="max-width:400px;"/>
+
+* **Remove selected group** <img src="../img/button/delete.jpg" class="ms-docbutton"/> and its content
+
+Once the changes have been made, it's possible to save them through the **Save** button <img src="../img/button/save-icon.jpg" class="ms-docbutton"/>.
+
+!!! note
+    The information thus modified will be kept only within the current user session. In order to make these kinds of changes persistent across different user session, the map needs to be saved.
+
+
+Selecting a layer, the toolbar is the following one:
+
+<img src="../img/toc/layer-toolbar.jpg" class="ms-docimage"/>
+
+In this case the user is allowed to:
+
+* **Zoom to selected layer extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
 
 * Access the selected [Layer Settings](layer-settings.md) <img src="../img/button/properties.jpg" class="ms-docbutton"/>
 
@@ -120,26 +144,16 @@ Through this toolbar it is possible to:
 
 * [Create Widgets](widgets.md) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
 
-Selecting a group the toolbar is the following:
+* [Export](export-data.md) the data of the selected layer <img src="../img/button/export_data.jpg" class="ms-docbutton"/>
 
-<img src="../img/toc/group-toolbar.jpg" class="ms-docimage"/>
+* Open the **Compare tool** where it is possible to *Swipe* or *Spy* the selected layer <img src="../img/button/compare_tool_button.jpg" class="ms-docbutton"/>. 
 
-In this case the user is allowed to:
+From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> of the **Compare tool** it is possible to click on <img src="../img/button/swipe_button.jpg" class="ms-docbutton" style="max-height:25px;"/> button so that the Swipe tool is enabled on the map for the selected layer: to activate the Swipe it is also possible to simply click on the **Compare tool** button.
 
-* **Add layer to selected group** <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/>
+<img src="../img/toc/swipe_on_map.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-* **Add sub group to the selected group** <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/>
+From the Compare tool dropdown <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/>, it is also possible to click on <img src="../img/button/configure_button.jpg" class="ms-docbutton" style="max-height:25px;"/>. Doing this a configuration modal opens for the selected Compare tool (*Swipe* or *Spy glass*) so that, in case of Swipe, the user can change the orientation of the swipe from *Vertical* to *Horizontal*.
 
-* **Zoom to selected layers extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> (in order to zoom the map to all layers belonging to the group)
+The user can also activate the <img src="../img/button/spy_button.jpg" class="ms-docbutton" style="max-height:25px;"/> from the same dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> in order to switch the Compare tool in **Spy glass** mode. If the *Spy glass* is active, clicking on the <img src="../img/button/configure_button.jpg" class="ms-docbutton" style="max-height:25px;"/> option, the configuration modal opens so that it is possible to change the size of the spy glass (the `radius`).
 
-* Access the **Selected group settings** <img src="../img/button/properties.jpg" class="ms-docbutton"/> where it is possible to set the group title and the translations, take a look at the group ID name, add a description and customize the Tooltips visualization (more information can be found in [Layer Settings](layer-settings.md) section)
-
-<img src="../img/toc/group-settings.jpg" class="ms-docimage" style="max-width:400px;"/>
-
-* **Remove selected group** <img src="../img/button/delete.jpg" class="ms-docbutton"/> and its content
-
-Once the changes have been made, it's possible to save them through the **Save** button <img src="../img/button/save-icon.jpg" class="ms-docbutton"/>.
-
-!!! note
-    Information such modified will be persisted only within the current user session. In order to make thiese kind of changes persistent also for other user session, the whole map context needs to be saved.
-
+<img src="../img/toc/spy_on_map.jpg" class="ms-docimage" style="max-width:600px;"/>

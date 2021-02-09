@@ -34,8 +34,10 @@ export default ({
     onDelete = () => {},
     headerStyle,
     env
-} = {}) =>
-    (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
+} = {}) => {
+    const { size: {height: mapHeight, width: mapWidth}, mapInfoControl } = map;
+    const enablePopupTools = mapHeight > 400 && mapWidth > 400 && mapInfoControl;
+    return (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={topRightItems}
         isDraggable={dataGrid.isDraggable}
@@ -47,9 +49,12 @@ export default ({
                 </div>
             }>
             <MapView
+                tools={enablePopupTools ? ['popup'] : []}
                 updateProperty={updateProperty}
                 id={id}
-                map={omit(map, 'mapStateSource')}
+                map={{
+                    ...omit(map, 'mapStateSource')
+                }}
                 mapStateSource={mapStateSource}
                 hookRegister={hookRegister}
                 layers={map && map.layers}
@@ -59,3 +64,4 @@ export default ({
         </BorderLayout>
 
     </WidgetContainer>);
+};

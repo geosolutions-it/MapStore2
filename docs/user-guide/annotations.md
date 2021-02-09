@@ -101,7 +101,7 @@ See the example below to better understand these options.
 ***Text***
 
 *Text* annotations are a bit different from the geometric ones. They display a formatted text on a given point of the map.
-The style editor lets you customize the text `Font` (`Family`, `Size`, `Style`, `Weight`) and the `Alignment` (`left`, `center` or `right`).
+The style editor allows you to customize the text `Font` (`Family`, `Size`, `Style`, `Weight`), the `Alignment` (`left`, `center` or `right`) and `Rotation`.
 You can also choose the text `Fill color` and its `Opacity`, the `Stroke` type, its `Color`, `Opacity` and `Width`. Take a look at the following example.
 
 <img src="../img/annotations/text_annotation_editor.jpg" class="ms-docimage" style="max-width:500px;"/>

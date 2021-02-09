@@ -132,7 +132,7 @@ const StyleEditorPlugin = compose(
                 isEditing: status === 'edit',
                 loading,
                 layer,
-                error: !!(error && error.availableStyles),
+                error,
                 userRole,
                 canEdit,
                 styleService
@@ -159,11 +159,15 @@ const StyleEditorPlugin = compose(
         }
     ),
     emptyState(
-        ({ error }) => error,
-        {
+        ({ error }) => !!(error?.availableStyles || error?.global || error?.parsingCapabilities),
+        ({ error }) => ({
             glyph: 'exclamation-mark',
-            title: <HTML msgId="styleeditor.missingAvailableStyles"/>,
-            description: <HTML msgId="styleeditor.missingAvailableStylesMessage"/>,
+            title: <HTML msgId="styleeditor.errorTitle"/>,
+            description: <HTML msgId={
+                error?.availableStyles && "styleeditor.missingAvailableStylesMessage" ||
+                error?.parsingCapabilities && "styleeditor.parsingCapabilitiesError" ||
+                error?.global && "styleeditor.globalError"
+            }/>,
             style: {
                 display: 'flex',
                 width: '100%',
@@ -174,7 +178,7 @@ const StyleEditorPlugin = compose(
                 margin: 'auto',
                 width: 300
             }
-        }
+        })
     ),
     loadingState(
         ({loading}) => loading === 'global',

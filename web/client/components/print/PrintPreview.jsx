@@ -54,6 +54,7 @@ class PrintPreview extends React.Component {
 
     render() {
         if (window.PDFJS) {
+            window.PDFJS.workerSrc = 'https://unpkg.com/pdfjs-dist@1.4.79/build/pdf.worker.js';
             return (
                 <div>
                     <div style={this.props.style}>

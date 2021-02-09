@@ -80,7 +80,7 @@ describe('ConfigurePluginsStep component', () => {
         };
         ReactDOM.render(<ConfigurePluginsStep uploadEnabled onAddUpload={onAddUpload}/>, document.getElementById("container"));
         const dropZone = document.body.querySelector(".dropzone");
-        axios.get("base/web/client/test-resources/plugin.zip", { responseType: "blob" }).then(({ data }) => {
+        axios.get("base/web/client/test-resources/extension.zip", { responseType: "blob" }).then(({ data }) => {
             TestUtils.Simulate.drop(dropZone, {
                 dataTransfer: {
                     files: [data]
@@ -218,5 +218,25 @@ describe('ConfigurePluginsStep component', () => {
         const tooltip = document.getElementById('TestPlugin');
         expect(tooltip).toExist();
         expect(tooltip.getAttribute('role')).toBe('tooltip');
+    });
+    it('ConfigurePluginsStep extensions with extension specific documentation url', () => {
+        const docUrl = 'https://domain.com/documentation';
+        const plugins = [{
+            title: "Extension",
+            isExtension: true,
+            enabled: true,
+            name: "Plugin_1",
+            description: "Test plugin",
+            docUrl
+        }, {
+            title: "Internal",
+            isExtension: false
+        }];
+        ReactDOM.render(<ConfigurePluginsStep allPlugins={plugins}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const docLink = container.querySelectorAll('a');
+        expect(container.querySelectorAll(".glyphicon-question-sign").length).toBe(1);
+        expect(docLink.length).toBe(1);
+        expect(docLink[0].href).toBe(docUrl);
     });
 });

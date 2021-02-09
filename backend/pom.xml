@@ -4,7 +4,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-backend</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <name>MapStore 2 - Backend</name>
   <url>http://www.geo-solutions.it</url>
 
@@ -19,6 +19,13 @@
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>2.1</version>
+    </dependency>
+
+    <!-- Mime-Util -->
+    <dependency>
+        <groupId>eu.medsea.mimeutil</groupId>
+        <artifactId>mime-util</artifactId>
+        <version>2.1.3</version>
     </dependency>
 
     <!-- Spring -->
@@ -47,6 +54,12 @@
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-ldap</artifactId>
         <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
+        <scope>test</scope>
     </dependency>
 
     <!-- JUnit -->
@@ -97,7 +110,23 @@
                 </configuration>
             </plugin>
     </plugins>
-  </build>
+    <extensions>
+        <!--.............................................-->
+        <!--       GeoSolutions (using wagon ftp)       -->
+        <!--.............................................-->
+        <extension>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-ftp</artifactId>
+            <version>1.0-beta-2</version>
+        </extension>
+    </extensions>
+    </build>
+    <distributionManagement>
+    <repository>
+        <id>geosolutions</id>
+        <url>ftp://maven.geo-solutions.it/</url>
+    </repository>
+    </distributionManagement>
   <profiles>
   </profiles>
     <repositories>

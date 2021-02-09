@@ -6,9 +6,9 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to c
 !!! Note
     Some widgets (in maps or in dashboards) need some WPS back-end support to work:
 
-    - `chart` and `counter` widgets need the WPS Process `gs:Aggregate` to work.
-    - The map widgets (dashboards) needs the process `gs:Bounds` to  zoom to
-    filtered data, if connected to a table.
+    * The `map widgets` (dashboards) needs the WPS process `gs:Bounds` to zoom to filtered data, if connected to a table.
+    
+    * For aggregate operations, `chart` and `counter` widgets need the WPS process `gs:Aggregate` available in GeoServer to work.
 
 ## Add a Widget
 
@@ -47,36 +47,58 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 * Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed
 
-Just below the chart's preview, the following operations can be performed:
+Just below the chart's preview, the following configurations are available:
 
 * Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
 
 * Define the **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between layer fields
 
-* Define the **Operation** with which the attributes will be related
+* Define the aggregate **Operation** to perform for the selected attribute choosing between `No Operation`, `COUNT`, `SUM`, `AVG`, `STDDEV`, `MIN` and `MAX`
 
-* Choose the **Color** of the chart (or the **Color Ramp** for *Pie Charts*)
+!!! Note
+    The *No operation* option is used when the aggregation method is not needed for the chart. If *No Operation* is selected, no aggregation will be carried out for the chart and the WFS service will be used to generate the chart without using the WPS process `gs:Aggregate` in GeoServer.
 
-* Choose to keep the legend hidden, or to **Display Legend**
+* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*)
 
-In addition, only for *Bar Charts* and *Line Charts*, it is possible to access the *Advanced Options* section, where the user can:
+* Enable the chart's legend by activating **Display Legend**
 
-* Keep the grid visible or **Hide Grid**
+In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
 
-* Keep Y axis visible or **Hide Y axis**
+<img src="../img/widgets/advanced_options.jpg" class="ms-docimage"/>
 
-* Define the **X Axis Labels rotation angle**
+Through this section, the user is allowed to:
+
+* Show/Hide the chart's grid in backgroung with the **Hide Grid** control
+
+* Customize **Y axis** tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). The user can also choose to completely hide labels through the *Hide labels* control or customize them by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`). It is also possible to configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more) 
+
+<img src="../img/widgets/yaxis_options.jpg" class="ms-docimage"/>
+
+!!! Note
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation. 
+
+* Customize **X axis**  tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). As per **Y axis**, the user can completely hide labels through the *Hide labels* control or tune the rendering of tick labels with options like *Never skip labels* (it forces all ticks available in the chart to be rendered instead of simplifying the provided set based on chart size) and *Label rotation* to better adapt X axis tick labels on the charts depending on the needs. 
+
+<img src="../img/widgets/xaxis_options.jpg" class="ms-docimage"/>
+
+!!! Warning 
+    The tick labels available for the X axis by enabling the option **Never skip label** cannot be more than 200 in order to provide a clear chart and for performance reasons.
 
 * Set the **Legend Label** name
 
-!!! warning
+<img src="../img/widgets/legend_name.jpg" class="ms-docimage"/>
+
+!!! Note
+        The tooltips of the X and Y axis labels are available by hovering the mouse over the charts. This way the labels are available even if the **Hide labels** option for the X and Y axis is enabled.  <img src="../img/widgets/label_tooltips.gif" class="ms-docimage"/>
+
+!!! Warning
     In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
 
-Once the settings are done, the next step displays, for example, similar to the following:
+Once the settings are done, the next step of the chart widget creation/configuration is displayed as follows:
 
 <img src="../img/widgets/widget-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-In this panel, through the toolbar, it is possible to:
+The user can:
 
 * Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
@@ -90,12 +112,32 @@ Just below the chart's preview, the user is allowed to set:
 
 * The widget **Description**
 
-!!! note
-    None of these options are mandatory, you can add the widget to the map without filling in these fields.
+!!! Note
+    None of these fields are mandatory, it is possible to save/add the widget to the map without filling them.
 
 An example of chart widget could be:
 
 <img src="../img/widgets/chart-ex.jpg" class="ms-docimage"/>
+
+The **Chart toolbar**, displayed in the right corner of the chart allows the user to:
+
+<img src="../img/widgets/bar_charts.jpg" class="ms-docimage"/>
+
+* **Download** the chart as a `png` through the <img src="../img/button/download_png.jpg" class="ms-docbutton"/> button.
+
+* **Zoom** the chart through the <img src="../img/button/zoom_chart.jpg" class="ms-docbutton"/> button.
+
+* **Pan** the chart through the <img src="../img/button/pan_chart.jpg" class="ms-docbutton"/> button.
+
+* **Zoom in** the chart through the <img src="../img/button/zoom_in_chart.jpg" class="ms-docbutton"/> button.
+
+* **Zoom out** the chart through the <img src="../img/button/zoom_out_chart.jpg" class="ms-docbutton"/> button.
+
+* **Autoscale** to autoscale the axes to fit the plotted data automatically through the <img src="../img/button/autoscale_chart.jpg" class="ms-docbutton"/> button.
+
+* **Reset axes** to return the chart to its initial state through the <img src="../img/button/reset_axes_chart.jpg" class="ms-docbutton"/> button.
+
+* **Toggle Spike Lines** to show dashed lines for X and Y values by hovering the mouse over the chart. This is useful to better see domain values on both axis in case of complex charts. It is possible to activate that option through the <img src="../img/button/toggle_lines_chart.jpg" class="ms-docbutton"/> button.
 
 ### Text
 
@@ -172,37 +214,37 @@ An example of counter widget could be:
 
 ## Manage existing widgets
 
-Once widgets have been created, they will be placed on the bottom right of the map with three buttons available on their top (**Pin**, **Collapse** and **Menu**) and the *Widgets Tray* appears:
+Once widgets have been created, they will be placed on the bottom right of the map viewer and the *Widgets Tray* appears:
 
-<img src="../img/widgets/widgets-tray.jpg" class="ms-docimage"/>
+<img src="../img/widgets/widgets-tray.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-The user is now allowed to menage widgets performing the following operations:
+Through the buttons available on each widget the user can  perform the following operations:
 
-* Move and resize them
+<img src="../img/widgets/widget-button.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* Fix and expand/collapse them
-
-* Access their menu
-
-### Move and resize a widget
-
-In order to move a widget you can simply drag and drop it inside the viewport, and in order to resize it you can click in the lower right corner and drag it to the desired size:
+* Drag and drop the widget to move it within the map area of the viewer and **resize** it through the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
 <img src="../img/widgets/ded-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-### Fix and expand/collapse a widget
+* **Pin** the position and the dimension of the widget through the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
 
-The position and the dimension of a widget can be fixed with a click on the **Pin** button <img src="../img/button/pin.jpg" class="ms-docbutton"/>. <br>
-The *Widgets Tray*, otherwise, allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at the same time <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/>. A single widget can be also collapsed through the **Collapse** button <img src="../img/button/collapse2.jpg" class="ms-docbutton"/>.
+* **Collapse** the widget through the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
+
+<img src="../img/widgets/collapse-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
 !!!note
+    The *Widgets Tray* allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at once by using the <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/> button.
+
+!!!warning
     When both **[Timeline](timeline.md)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
 
-### Access widgets info
+* Make the widget **Full screen** through the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
-As soon as a description is provided for a widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget's *Title* and *Description*:
+<img src="../img/widgets/maximize-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-<img src="../img/widgets/wid-description.jpg" class="ms-docimage"/>
+* Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
+
+<img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 ### Access widgets menu
 

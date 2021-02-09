@@ -50,14 +50,6 @@ describe('checkZipBundle', () => {
             });
         });
     });
-    it('throws an error if uploaded zip contains more than one js file', (done) => {
-        axios.get("base/web/client/test-resources/extensions/myplugin_too_many_bundles.zip", { responseType: "blob" }).then(({data}) => {
-            checkZipBundle(data).catch(e => {
-                expect(e).toBe(ERROR.TOO_MANY_BUNDLES);
-                done();
-            });
-        });
-    });
     it('throws an error if uploaded zip an already installed plugin', (done) => {
         axios.get("base/web/client/test-resources/extensions/myplugin.zip", { responseType: "blob" }).then(({data}) => {
             checkZipBundle(data, ["My"]).catch(e => {

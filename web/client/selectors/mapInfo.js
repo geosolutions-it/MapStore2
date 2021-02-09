@@ -193,9 +193,5 @@ export const clickedPointWithFeaturesSelector = createSelector(
 
 export const currentEditFeatureQuerySelector = state => state.mapInfo?.currentEditFeatureQuery;
 
-export const mapTriggerSelector = state => {
-    if (state.mapInfo?.configuration?.trigger === undefined) {
-        return 'click';
-    }
-    return state.mapInfo.configuration.trigger;
-};
+export const mapTriggerSelector = state => get(state, "mapInfo.configuration.trigger", "click");
+export const hoverEnabledSelector = state => isCesium(state) ? false : true;

@@ -1266,7 +1266,8 @@
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
             "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
-            "showSectionId": "Inclure la position de défilement"
+            "showSectionId": "Inclure la position de défilement",
+            "showConnections": "Afficher les connexions"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -1729,6 +1730,8 @@
                     "textPlaceholder": "Entrez le texte...",
                     "useThisMap": "Utiliser cette carte",
                     "configureMapOptions": "Configurer les options de la carte",
+                    "enableIdentifyTool": "Activer l'outil d'identification",
+                    "disableIdentifyTool": "Désactiver l'outil d'identification",
                     "preview": "Aperçu",
                     "addLayer": "Ajouter une couche à la carte",
                     "useTheSelectedLayer": "Utiliser la couche sélectionnée",
@@ -1917,6 +1920,21 @@
             },
             "emptyTitle": "Le tableau de bord est vide"
         },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Chargement du tableau de bord",
+            "errors":{
+                "loading": {
+                    "title": "Erreur lors du chargement du tableau de bord",
+                    "dashboardNotAccessible": "Vous n'êtes pas autorisé à accéder à ce tableau de bord",
+                    "pleaseLogin": "Ce tableau de bord n'est pas public",
+                    "dashboardDoesNotExist": "Le tableau de bord auquel vous tentez d'accéder n'existe pas",
+                    "unknownError": "Une erreur est survenue lors du chargement du tableau de bord",
+                    "notFound": "Tableau de bord introuvable",
+                    "notAccessible": "Tableau de bord inaccessible"
+                }
+            },
+            "emptyTitle": "Le tableau de bord est vide"
+        },
         "context": {
             "loadingSpinner": "Chargement du contexte",
             "errors": {
@@ -2023,8 +2041,10 @@
             "deletedStyleErrorMessage": "Impossible de supprimer le style actuel",
             "savedStyleTitle": "Style sauvegardé",
             "savedStyleMessage": "Le style a été enregistré avec succès",
-            "missingAvailableStyles": "Styles manquants",
-            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li> </ul>",
+            "errorTitle": "Erreur StyleEditor",
+            "parsingCapabilitiesError": "<h4>Causes possibles:</h4> il n'a pas été possible d'analyser les cababilites et de récupérer les styles",
+            "globalError": "<h4>causes possibles:</h4> il n'a pas été possible de se connecter au service",
+            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li><li></li> </ul>",
             "createTmpErrorTitle": "Nouveau style temporaire",
             "createTmpStyleErrorMessage": "Le style temporaire n'a pas pu être créé. Cela pourrait être dû à un format de style non pris en charge sur le service de styles.",
             "updateTmpErrorTitle": "Mise à jour de style temporaire",
@@ -2161,7 +2181,10 @@
             "customInterval": "Custom Interval",
             "styleEmpty": "Ce style n'a pas de règles",
             "incompleteClassification": "La classification est incomplète car les entrées ne sont pas disponibles. Assurez-vous que toutes les propriétés sont correctement fournies",
-            "emptyImageIconSymbolizer": "URL d'image manquante dans le style d'icône",
+            "imageSrcEmpty": "URL d'image manquante dans le style d'icône",
+            "imageSrcLoadError": "La source d'image fournie n'a pas pu être chargée. Essayez avec une URL différente ou assurez-vous que la source est accessible par MapStore",
+            "imageSrcInvalidBase64": "Ceci n'est pas une image base64 valide. Certains rendus de style ne prennent pas en charge ce type de source, vous pouvez utiliser une source d'url externe à la place",
+            "imageSrcNotSupportedBase64Image": "Certains rendus de style ne prennent pas en charge les images base64 même si la source actuelle est valide",
             "warningTextOrderTitle": "Avertissement",
             "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
         },
@@ -2439,6 +2462,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory introuvable",
                     "title": "Erreur",
                     "unknownError": "Erreur inconnue",
                     "pleaseLogin": "Veuillez vous connecter",
@@ -2474,6 +2498,20 @@
                 "shadowLabel": "Ombre",
                 "useAlternativeTextColor": "Utiliser la couleur de texte alternatif",
                 "alternativeTextColorPopover": "<p>Attention: la couleur du texte sélectionné pourrait être illisible sur ce fond.</p><p>Une couleur de texte alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Chargement de l'histoire",
+            "errors": {
+                "loading": {
+                  "notFound": "Geostory introuvable",
+                  "title": "Erreur",
+                  "unknownError": "Erreur inconnue",
+                  "notAccessible": "Cette histoire n'est pas accessible",
+                  "pleaseLogin": "La ressource n'est pas publique",
+                  "geostoryNotAccessible": "Vous n'êtes pas autorisé à accéder à cette histoire",
+                  "geostoryDoesNotExist": "Cette histoire n'existe pas"
+                }
             }
         },
         "saveDialog": {
@@ -2754,6 +2792,10 @@
           "WidgetsTray": {
             "description": "Une barre d'outils pour réduire et développer les widgets sur la carte.",
             "title": "Barre de widgets"
+          },
+          "Globe": {
+            "description": "Bouton de la barre latérale pour activer / désactiver le mode 3D",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Bouton de la barre latérale pour zoomer sur l'étendue de la carte",

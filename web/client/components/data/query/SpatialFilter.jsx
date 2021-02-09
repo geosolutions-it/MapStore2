@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { find } from 'lodash';
+import { find, isNil } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Col, Glyphicon, Panel, Row } from 'react-bootstrap';
@@ -29,6 +29,7 @@ class SpatialFilter extends React.Component {
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
         spatialPanelExpanded: PropTypes.bool,
+        showDetailsButton: PropTypes.bool,
         showDetailsPanel: PropTypes.bool,
         withContainer: PropTypes.bool,
         actions: PropTypes.object,
@@ -44,6 +45,7 @@ class SpatialFilter extends React.Component {
         useMapProjection: true,
         spatialField: {},
         spatialPanelExpanded: true,
+        showDetailsButton: true,
         showDetailsPanel: false,
         withContainer: true,
         spatialMethodOptions: [],
@@ -236,7 +238,7 @@ class SpatialFilter extends React.Component {
     };
     renderButtons = () => {
         const buttons = [];
-        const showDetails = this.props.spatialField.geometry
+        const showDetails = this.props.showDetailsButton && this.props.spatialField.geometry
             && (this.props.spatialField.method
                 && this.props.spatialField.method === "BBOX"
                 || this.props.spatialField.method === "Circle");
@@ -272,7 +274,7 @@ class SpatialFilter extends React.Component {
         const detailsPanel = this.props.showDetailsPanel ?
             (<GeometryDetails
                 useMapProjection={this.props.useMapProjection}
-                enableGeodesic={selectedMethod && selectedMethod.geodesic}
+                enableGeodesic={!isNil(selectedMethod.geodesic) ? selectedMethod.geodesic : true}
                 geometry={this.props.spatialField.geometry}
                 type={this.props.spatialField.method}
                 onShowPanel={this.props.actions.onShowSpatialSelectionDetails}
@@ -345,7 +347,7 @@ class SpatialFilter extends React.Component {
                 break;
             }
             default: {
-                this.changeDrawingStatus('start', method, "queryform", [], {geodesic: selectedMethod && selectedMethod.geodesic, stopAfterDrawing: true});
+                this.changeDrawingStatus('start', method, "queryform", [], {geodesic: !isNil(selectedMethod.geodesic) ? selectedMethod.geodesic : true, stopAfterDrawing: true});
             }
             }
         } else {

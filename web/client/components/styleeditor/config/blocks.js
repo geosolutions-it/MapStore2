@@ -65,8 +65,7 @@ const getBlocks = (/* config = {} */) => {
             params: {
                 image: property.image({
                     label: 'styleeditor.image',
-                    key: 'image',
-                    isValid: ({ value }) => !!value
+                    key: 'image'
                 }),
                 opacity: property.opacity({
                     label: 'styleeditor.opacity'

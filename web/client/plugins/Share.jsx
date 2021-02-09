@@ -46,12 +46,15 @@ import { updateUrlOnScrollSelector } from '../selectors/geostory';
  * @prop {boolean} [cfg.advancedSettings.bbox] if true, the share url is generated with the bbox param
  * @prop {boolean} [cfg.advancedSettings.centerAndZoom] if true, the share url is generated with the center and zoom params
  * @prop {string} [cfg.advancedSettings.defaultEnabled] the value can either be "bbox", "centerAndZoom", "markerAndZoom". Based on the value, the checkboxes corresponding to the param will be enabled by default
+ * @prop {string} [cfg.advancedSettings.hideInTab] based on the value (i.e value can be "link" or "social" or "embed"), the advancedSettings is hidden in the tab value specified
  * For example this will display marker, coordinates and zoom fields with the marker enabled by default generating share url with respective params
  * ```
  * "cfg": {
- *  "bbox": true,
- *  "centerAndZoom": true,
- *  "defaultEnabled": "markerAndZoom"
+ *    "advancedSettings" : {
+ *       "bbox": true,
+ *       "centerAndZoom": true,
+ *       "defaultEnabled": "markerAndZoom"
+ *    }
  *  }
  * ```
  */

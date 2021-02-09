@@ -132,6 +132,7 @@ import GeometryEditor from './GeometryEditor';
  * @prop {function} onFilterMarker triggered when marker/glyph name is specified for filtering
  * @prop {object[]} annotations list of annotations
  * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features
+ * @prop {boolean} geodesic enable to draw a geodesic geometry (supported only for Circle)
  * @prop {function} onHideMeasureWarning triggered when warning is ignored with "Don't show again" flag
  * @prop {boolean} showAgain flag for checkbox on the measure annotation popup warning
  * @prop {boolean} showPopupWarning flag to show warning modal on navigating to measurement panel from annotation
@@ -236,6 +237,7 @@ class AnnotationsEditor extends React.Component {
         onFilterMarker: PropTypes.func,
         annotations: PropTypes.array,
         measurementAnnotationEdit: PropTypes.bool,
+        geodesic: PropTypes.bool,
         onHideMeasureWarning: PropTypes.func,
         showAgain: PropTypes.bool,
         showPopupWarning: PropTypes.bool,
@@ -260,6 +262,7 @@ class AnnotationsEditor extends React.Component {
         stylerType: "marker",
         annotations: [],
         measurementAnnotationEdit: false,
+        geodesic: true,
         onInitPlugin: () => {}
     };
     /**
@@ -317,7 +320,7 @@ class AnnotationsEditor extends React.Component {
                                 tooltipId: "annotations.back",
                                 visible: this.props.showBack,
                                 onClick: () => {
-                                    this.props.onCancelEdit();
+                                    this.props.onCancelEdit(this.props?.feature?.properties);
                                     this.props.onCancel(); this.props.onCleanHighlight();
                                 }
                             }, {
@@ -373,7 +376,7 @@ class AnnotationsEditor extends React.Component {
                                         this.props.onToggleUnsavedChangesModal();
                                     } else {
                                         this.props.onResetCoordEditor();
-                                        this.props.onCancelEdit();
+                                        this.props.onCancelEdit(this.props.editing?.properties);
                                         // Reset geometry editor tab
                                         this.setState({...this.state, tabValue: 'coordinates'});
                                     }
@@ -493,6 +496,7 @@ class AnnotationsEditor extends React.Component {
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}
                     setPopupWarning={this.setPopupWarning}
                     showPopupWarning={this.props.showPopupWarning}
+                    geodesic={this.props.geodesic}
                     defaultPointType={this.getConfig().defaultPointType}
                     defaultStyles={this.props.defaultStyles}
                 />
@@ -512,7 +516,7 @@ class AnnotationsEditor extends React.Component {
                 show
                 modal
                 onClose={this.props.onCancelClose}
-                onConfirm={this.props.onConfirmClose}
+                onConfirm={()=> this.props.onConfirmClose(this.props.editing?.properties)}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
@@ -526,7 +530,7 @@ class AnnotationsEditor extends React.Component {
                 onClose={this.props.onToggleUnsavedChangesModal}
                 onConfirm={() => {
                     this.props.selected && this.props.onResetCoordEditor();
-                    this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal();
+                    this.props.onCancelEdit(this.props.editing?.properties); this.props.onToggleUnsavedChangesModal();
                 }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
@@ -851,7 +855,7 @@ class AnnotationsEditor extends React.Component {
 
     setAnnotationMeasurement = () => {
         // Excluding geometry types not supported by measurement
-        this.props.onSetAnnotationMeasurement(this.props.editing.features.filter(f=> f.geometry.type !== 'Point' && !f.properties.isCircle), this.props.editing?.properties.id);
+        this.props.onSetAnnotationMeasurement(this.props.editing.features.filter(f=> f.geometry.type !== 'Point' && !f.properties.isCircle), this.props.editing?.properties);
         this.hideWarning();
     }
 

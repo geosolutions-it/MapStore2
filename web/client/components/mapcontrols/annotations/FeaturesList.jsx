@@ -34,6 +34,7 @@ const FeaturesList = (props) => {
         onSetAnnotationMeasurement,
         showPopupWarning,
         setPopupWarning,
+        geodesic,
         defaultStyles,
         defaultPointType
     } = props;
@@ -45,7 +46,7 @@ const FeaturesList = (props) => {
         onAddGeometry(type);
         type === "Text" && onAddText();
         onSetStyle(style);
-        onStartDrawing();
+        onStartDrawing({geodesic});
         setTabValue('coordinates');
     };
     return (

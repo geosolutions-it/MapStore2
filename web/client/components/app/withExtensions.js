@@ -53,6 +53,14 @@ function withExtensions(AppComponent) {
             return false;
         }
 
+        /**
+         * Updates the internal list of dynamically loaded extensions.
+         * Also takes care of properly enabling the related assets (e.g. new translations paths)         * @param {*} plugins
+         *
+         * @param {object} plugins extensions definition object
+         * @param {array} translations list of extensions related translations paths
+         * @param {*} store application redux store, used to dispatch reloading localized messages if needed
+         */
         onPluginsLoaded = (plugins, translations, store) => {
             this.setState({
                 pluginsRegistry: plugins
@@ -74,7 +82,7 @@ function withExtensions(AppComponent) {
                         );
                     }
                     if (action.type === PLUGIN_UNINSTALLED) {
-                        this.removeExtension(action.plugin);
+                        this.removeExtension(action.plugin, action.cfg?.translations);
                     }
                 });
             }
@@ -106,10 +114,23 @@ function withExtensions(AppComponent) {
                 />);
         }
 
-        removeExtension = (plugin) => {
+        /**
+         * Removes the given extension from configuration, taking
+         * care of the related assets too.
+         *
+         * @param {string} name of the plugin to be removed
+         * @param {*} translations translations path used by the extension, if any
+         */
+        removeExtension = (plugin, translations) => {
             this.setState({
-                removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"]
+                removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"] // TODO: check
             });
+            if (translations) {
+                // remove extension's translation paths from the actual list
+                const translationsPath = ConfigUtils.getConfigProp("translationsPath");
+                ConfigUtils.setConfigProp("translationsPath",
+                    castArray(translationsPath).filter(p => p !== this.getAssetPath(translations)));
+            }
         };
 
         filterRemoved = (registry, removed) => {
@@ -130,20 +151,19 @@ function withExtensions(AppComponent) {
                     const plugins = response.data;
                     Promise.all(Object.keys(plugins).map((pluginName) => {
                         const bundlePath = this.getAssetPath(plugins[pluginName].bundle);
-                        return PluginsUtils.loadPlugin(bundlePath).then((loaded) => {
-                            return loaded.plugin.loadPlugin().then((impl) => {
-                                augmentStore({ reducers: impl.reducers || {}, epics: impl.epics || {} });
-                                const pluginDef = {
-                                    [pluginName]: {
-                                        [pluginName]: {
-                                            loadPlugin: (resolve) => {
-                                                resolve(impl);
-                                            }
+                        return PluginsUtils.loadPlugin(bundlePath, pluginName).then((loaded) => {
+                            const impl = loaded.plugin?.default ?? loaded.plugin;
+                            augmentStore({ reducers: impl?.reducers ?? {}, epics: impl?.epics ?? {} });
+                            const pluginDef = {
+                                [pluginName + "Plugin"]: {
+                                    [pluginName + "Plugin"]: {
+                                        loadPlugin: (resolve) => {
+                                            resolve(impl);
                                         }
                                     }
-                                };
-                                return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
-                            });
+                                }
+                            };
+                            return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
                         }).catch(e => {
                             // log the errors before re-throwing
                             console.error(`Error loading MapStore extension "${pluginName}":`, e); // eslint-disable-line

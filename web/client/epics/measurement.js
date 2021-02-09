@@ -11,7 +11,7 @@ import uuidv1 from 'uuid/v1';
 
 import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../utils/MeasurementUtils';
 import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, SET_ANNOTATION_MEASUREMENT, setMeasurementConfig, changeMeasurement} from '../actions/measurement';
-import {addLayer, changeLayerProperties} from '../actions/layers';
+import {addLayer} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
 import {toggleControl, setControlProperty, SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from '../actions/controls';
 import {closeFeatureGrid} from '../actions/featuregrid';
@@ -25,10 +25,12 @@ export const addAnnotationFromMeasureEpic = (action$) =>
         .switchMap((a) => {
             // transform measure feature into geometry collection
             // add feature property to manage text annotation with value and uom
-            const {features, textLabels, uom, save, id = uuidv1()} = a;
+            const {features, textLabels, uom, save, properties} = a;
+            const {id = uuidv1(), visibility = true} = properties || {};
             const newFeature = {
                 ...convertMeasuresToGeoJSON(features, textLabels, uom, id, 'Annotations created from measurements', STYLE_TEXT),
-                newFeature: save
+                newFeature: save,
+                visibility
             };
 
             return Rx.Observable.of(
@@ -66,7 +68,7 @@ export const closeMeasureEpics = (action$, store) =>
     action$.ofType(TOGGLE_CONTROL)
         .filter(action => action.control === "measure" && !measureSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(cleanHighlight(), changeLayerProperties('annotations', {visibility: true}));
+            return Rx.Observable.of(cleanHighlight());
         });
 
 export const setMeasureStateFromAnnotationEpic = (action$, store) =>

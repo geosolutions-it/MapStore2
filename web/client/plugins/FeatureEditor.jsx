@@ -81,6 +81,7 @@ const Dock = connect(createSelector(
   * @prop {boolean} cfg.showFilteredObject default false. Displays spatial filter selection area when true
   * @prop {boolean} cfg.showTimeSync default false. Shows the button to enable time sync
   * @prop {boolean} cfg.timeSync default false. If true, the timeSync is active by default.
+  * @prop {number} cfg.maxZoom the maximum zoom level for the "zoom to feature" functionality
   * @classdesc
   * FeatureEditor Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
@@ -115,6 +116,7 @@ const Dock = connect(createSelector(
   * {
   *   "name": "FeatureEditor",
   *   "cfg": {
+  *     "maxZoom": 21,
   *     "customEditorsOptions": {
   *       "rules": [{
   *         "regex": {
@@ -150,6 +152,7 @@ const FeatureDock = (props = {
     dialogs: EMPTY_OBJ,
     select: EMPTY_ARR
 }) => {
+    const { maxZoom } = props.pluginCfg;
     const dockProps = {
         dimMode: "none",
         defaultSize: 0.35,
@@ -207,6 +210,7 @@ const FeatureDock = (props = {
                         vsOverScan={props.vsOverScan}
                         scrollDebounce={props.scrollDebounce}
                         size={props.size}
+                        actionOpts={{maxZoom}}
                     />
                 </BorderLayout> }
 

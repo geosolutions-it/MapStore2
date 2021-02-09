@@ -58,7 +58,8 @@
         "TOCItemsSettings",
         "FeatureEditor",
         "FilterLayer",
-        "AddGroup"
+        "AddGroup",
+        "Swipe"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
@@ -371,6 +372,12 @@
       }
     },
     {
+      "name": "Swipe"
+    },
+    {
+      "name": "SearchByBookmark"
+    },
+    {
       "name": "Search",
       "glyph": "search",
       "title": "plugins.Search.title",
@@ -379,6 +386,7 @@
         "OmniBar",
         "SearchServicesConfig"
       ],
+      "children": ["SearchByBookmark"],
       "defaultConfig": {
         "withToggle": [
           "max-width: 768px",
@@ -404,6 +412,15 @@
       "title": "plugins.ScaleBox.title",
       "description": "plugins.ScaleBox.description",
       "dependencies": ["MapFooter"]
+    },
+    {
+      "name": "GlobeViewSwitcher",
+      "glyph": "globe",
+      "title": "plugins.Globe.title",
+      "description": "plugins.Globe.description",
+      "dependencies": [
+        "Toolbar"
+      ]
     },
     {
       "name": "ZoomAll",

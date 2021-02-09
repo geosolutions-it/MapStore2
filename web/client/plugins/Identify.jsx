@@ -60,7 +60,8 @@ import {
     requestsSelector,
     responsesSelector,
     showEmptyMessageGFISelector,
-    validResponsesSelector
+    validResponsesSelector,
+    hoverEnabledSelector
 } from '../selectors/mapInfo';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { isCesium, mapTypeSelector } from '../selectors/maptype';
@@ -262,7 +263,8 @@ const FeatureInfoFormatSelector = connect((state) => ({
 })(FeatureInfoFormatSelectorComp);
 
 const FeatureInfoTriggerSelector = connect((state) => ({
-    trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'
+    trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click',
+    hoverEnabled: hoverEnabledSelector(state)
 }), {
     onSetMapTrigger: setMapTrigger
 })(FeatureInfoTriggerSelectorComp);
