@@ -162,7 +162,6 @@ import pluginsCreator from "./map/index";
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
- * @prop {number} toolsOptions.locate.maxZoom The maximum zoom for automatic view setting to the user location
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
@@ -221,7 +220,7 @@ class MapPlugin extends React.Component {
         zoomControl: false,
         mapLoadingMessage: "map.loading",
         loadingSpinner: true,
-        tools: ["measurement", "locate", "scalebar", "draw", "highlight", "popup", "box"],
+        tools: ["measurement", "scalebar", "draw", "highlight", "popup", "box"],
         options: {},
         mapOptions: {},
         fonts: ['FontAwesome'],
@@ -371,7 +370,7 @@ class MapPlugin extends React.Component {
         // Tools passed by other plugins
         const toolsFromItems = this.props.items
             .filter(({Tool}) => !!Tool)
-            .map(({Tool, name}) => <Tool key={name} />);
+            .map(({Tool, name, cfg}) => <Tool {...cfg} key={name} mapType={this.props.mapType} />);
 
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);
@@ -426,6 +425,8 @@ class MapPlugin extends React.Component {
     };
     updatePlugins = (props) => {
         props.onLoadingMapPlugins(true);
+        // reset the map plugins to avoid previous map library in children
+        this.setState({plugins: undefined });
         pluginsCreator(props.mapType, props.actions).then((plugins) => {
             this.setState({plugins});
             props.onLoadingMapPlugins(false, props.mapType);
