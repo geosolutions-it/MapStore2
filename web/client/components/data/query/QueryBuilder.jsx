@@ -83,7 +83,7 @@ class QueryBuilder extends React.Component {
         featureTypeConfigUrl: null,
         useMapProjection: true,
         groupLevels: 1,
-        bsStyle: "",
+        bsStyle: "default",
         removeGroupButtonIcon: "trash",
         groupFields: [],
         filterFields: [],

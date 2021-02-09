@@ -59,7 +59,7 @@ class GroupField extends React.Component {
         attributes: [],
         removeButtonIcon: "trash",
         removeGroupButtonIcon: "trash",
-        bsStyle: "",
+        bsStyle: "default",
         addButtonIcon: "glyphicon glyphicon-plus",
         attributePanelExpanded: true,
         logicComboOptions: [
