@@ -61,6 +61,9 @@ class QueryBuilder extends React.Component {
         crossLayerFilterOptions: PropTypes.object,
         crossLayerFilterActions: PropTypes.object,
         hits: PropTypes.bool,
+        clearFilterOptions: PropTypes.object,
+        buttonStyle: PropTypes.string,
+        removeGroupButtonIcon: PropTypes.string,
         maxHeight: PropTypes.number,
         allowEmptyFilter: PropTypes.bool,
         autocompleteEnabled: PropTypes.bool,
@@ -80,6 +83,8 @@ class QueryBuilder extends React.Component {
         featureTypeConfigUrl: null,
         useMapProjection: true,
         groupLevels: 1,
+        buttonStyle: "default",
+        removeGroupButtonIcon: "trash",
         groupFields: [],
         filterFields: [],
         attributes: [],
@@ -181,6 +186,8 @@ class QueryBuilder extends React.Component {
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
                 <GroupField
+                    buttonStyle={this.props.buttonStyle}
+                    removeGroupButtonIcon={this.props.removeGroupButtonIcon}
                     autocompleteEnabled={this.props.autocompleteEnabled}
                     maxFeaturesWPS={this.props.maxFeaturesWPS}
                     attributes={this.props.attributes}
@@ -194,6 +201,7 @@ class QueryBuilder extends React.Component {
                 {this.props.toolsOptions.hideSpatialFilter ? null : <SpatialFilter
                     useMapProjection={this.props.useMapProjection}
                     spatialField={this.props.spatialField}
+                    clearFilterOptions={this.props.clearFilterOptions}
                     spatialOperations={this.props.spatialOperations}
                     spatialMethodOptions={this.props.spatialMethodOptions}
                     showDetailsButton={this.props.showDetailsButton}
