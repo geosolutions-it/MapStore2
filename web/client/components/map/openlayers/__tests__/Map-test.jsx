@@ -519,7 +519,7 @@ describe('OpenlayersMap', () => {
         olMap.on('moveend', () => {
             // The first call is triggered as soon as the map component is mounted, the second one is as a result of setZoom
             expect(spy.calls.length).toEqual(2);
-            expect(spy.calls[1].arguments.length).toEqual(6);
+            expect(spy.calls[1].arguments.length).toEqual(8);
             expect(normalizeFloat(spy.calls[1].arguments[0].y, 1)).toBe(43.9);
             expect(normalizeFloat(spy.calls[1].arguments[0].x, 1)).toBe(10.3);
             expect(spy.calls[1].arguments[1]).toBe(12);
@@ -551,7 +551,7 @@ describe('OpenlayersMap', () => {
         olMap.on('moveend', () => {
             // The first call is triggered as soon as the map component is mounted, the second one is as a result of setCenter
             expect(spy.calls.length).toEqual(2);
-            expect(spy.calls[1].arguments.length).toEqual(6);
+            expect(spy.calls[1].arguments.length).toEqual(8);
             expect(normalizeFloat(spy.calls[1].arguments[0].y, 1)).toBe(44);
             expect(normalizeFloat(spy.calls[1].arguments[0].x, 1)).toBe(10);
             expect(spy.calls[1].arguments[1]).toBe(11);

@@ -25,7 +25,7 @@ var mapConfig = require('../../reducers/map').default;
 var browser = require('../../reducers/browser').default;
 
 var LMap = require('../../components/map/leaflet/Map');
-var LLayer = require('../../components/map/leaflet/Layer');
+var LLayer = require('../../components/map/leaflet/Layer').default;
 
 var {changeMapView, changeZoomLevel} = require('../../actions/map');
 
