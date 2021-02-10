@@ -65,12 +65,13 @@ class Locate {
         }
 
         this.locate.setLocateOptions(mergeOptions(options).locateOptions);
-
+        this.locate.onChangePosition();
         this.status = status;
     }
     clear() {}
 
     locateControlState(state, { onStateChange }) {
+
         if (state.state === 'requesting' && this.status !== "LOCATING" ) {
             onStateChange("LOCATING");
         } else if (state.state === 'following' && !this.fol ) {

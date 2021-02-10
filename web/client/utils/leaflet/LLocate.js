@@ -1,6 +1,7 @@
 import L from 'leaflet';
 import 'leaflet.locatecontrol';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
+import { func } from 'prop-types';
 
 L.Control.MSLocate = L.Control.Locate.extend({
     setMap: function(map) {
@@ -9,7 +10,8 @@ L.Control.MSLocate = L.Control.Locate.extend({
         this._layer.addTo(map);
         this._event = undefined;
         this._prevBounds = null;
-
+        console.log('options');
+        console.log(this.options);
         // extend the follow marker style and circle from the normal style
         let tmp = {};
         L.extend(tmp, this.options.markerStyle, this.options.followMarkerStyle);
@@ -22,6 +24,10 @@ L.Control.MSLocate = L.Control.Locate.extend({
     },
     setLocateOptions: function(options) {
         this.options.locateOptions = {...options};
+    },
+    onChangePosition: function() {
+        console.log('onChangePosition');
+        console.log(this.options.locateOptions);
     },
     _setClasses: function(state) {
         this._map.fire('locatestatus', {state: state});
