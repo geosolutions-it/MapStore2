@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Layers = require( '../../../../utils/leaflet/Layers');
-const L = require( 'leaflet');
+import Layers from  '../../../../utils/leaflet/Layers';
+import L from  'leaflet';
 
 Layers.registerType('tms', (options) => {
     return L.tileLayer(`${options.tileMapUrl}/{z}/{x}/{y}.${options.extension}`, {

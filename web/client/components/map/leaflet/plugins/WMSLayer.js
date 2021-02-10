@@ -5,21 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../../../components/I18N/Message').default;
-const Layers = require('../../../../utils/leaflet/Layers');
-const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
-const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
-const L = require('leaflet');
-const objectAssign = require('object-assign');
-const {isArray, isNil} = require('lodash');
-const {addAuthenticationToSLD, addAuthenticationParameter} = require('../../../../utils/SecurityUtils');
-const { loadTile, getElevation } = require('../../../../utils/ElevationUtils');
-const { creditsToAttribution } = require('../../../../utils/LayersUtils');
+import React from 'react';
+import Message from '../../../../components/I18N/Message';
+import Layers from '../../../../utils/leaflet/Layers';
+import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
+import WMSUtils from '../../../../utils/leaflet/WMSUtils';
+import L from 'leaflet';
+import objectAssign from 'object-assign';
+import {isArray, isNil} from 'lodash';
+import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import { loadTile, getElevation } from '../../../../utils/ElevationUtils';
+import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
-const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
+import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
-require('leaflet.nontiledlayer');
+import 'leaflet.nontiledlayer';
 
 L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
     initialize: function(url, options) { // (String, Object)

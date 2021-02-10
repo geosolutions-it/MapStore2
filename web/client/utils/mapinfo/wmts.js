@@ -17,13 +17,15 @@ const {
 const {getLayerUrl} = require('../LayersUtils');
 const {optionsToVendorParams} = require('../VendorParamsUtils');
 
-const {isObject} = require('lodash');
+const {isObject, isNil} = require('lodash');
 
 const assign = require('object-assign');
 
 module.exports = {
     buildRequest: (layer, props) => {
-        const resolution = getCurrentResolution(Math.round(props.map.zoom), 0, 21, 96);
+        const resolution = isNil(props.map.resolution)
+            ? getCurrentResolution(Math.round(props.map.zoom), 0, 21, 96)
+            : props.map.resolution;
         const resolutions = layer.resolutions || getResolutions();
         const tileSize = layer.tileSize || 256; // tilegrid.getTileSize(props.map.zoom);
         const tileOrigin = [
