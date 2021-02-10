@@ -28,7 +28,8 @@ import { mapSelector, scalesSelector } from '../selectors/map';
 import { mapTypeSelector } from '../selectors/maptype';
 import { reprojectBbox } from '../utils/CoordinatesUtils';
 import { getMessageById } from '../utils/LocaleUtils';
-import { defaultGetZoomForExtent, getResolutions, mapUpdated } from '../utils/MapUtils';
+import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
+import { isInsideResolutionsLimits } from '../utils/LayersUtils';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -224,7 +225,7 @@ export default {
                         const mapHasChanged = this.props.open && this.props.syncMapPreview && mapUpdated(this.props.map, nextProps.map);
                         const specHasChanged = nextProps.printSpec.defaultBackground !== this.props.printSpec.defaultBackground;
                         if (hasBeenOpened || mapHasChanged || specHasChanged) {
-                            this.configurePrintMap(nextProps.map, nextProps.printSpec);
+                            this.configurePrintMap(nextProps);
                         }
                     }
 
@@ -236,9 +237,10 @@ export default {
                         };
                     };
 
-                    getLayout = () => {
-                        const layoutName = this.props.getLayoutName(this.props.printSpec);
-                        return head(this.props.capabilities.layouts.filter((l) => l.name === layoutName));
+                    getLayout = (props) => {
+                        const { getLayoutName: getLayoutNameProp, printSpec, capabilities } = props || this.props;
+                        const layoutName = getLayoutNameProp(printSpec);
+                        return head(capabilities.layouts.filter((l) => l.name === layoutName));
                     };
 
                     renderLayoutsAlternatives = () => {
@@ -353,23 +355,38 @@ export default {
                         return this.props.ignoreLayers.indexOf(layer.type) === -1;
                     };
 
-                    isBackgroundIgnored = () => {
-                        return this.props.layers.filter((layer) => layer.visibility && !this.isAllowed(layer)).length > 0;
+                    isBackgroundIgnored = (layers) => {
+                        return (layers || this.props.layers).filter((layer) => layer.visibility && !this.isAllowed(layer)).length > 0;
                     };
 
-                    filterLayers = (printSpec) => {
-                        const filtered = this.props.layers.filter((layer) => layer.visibility && this.isAllowed(layer));
-                        if (this.isBackgroundIgnored() && this.props.defaultBackground && printSpec.defaultBackground) {
-                            const defaultBackground = this.props.layers.filter((layer) => layer.type === this.props.defaultBackground)[0];
+                    filterLayers = (props, resolution) => {
+                        const {
+                            printSpec,
+                            layers,
+                            defaultBackground: defaultBackgroundProp
+                        } = props || this.props;
+                        const filtered = layers.filter((layer) => layer.visibility && isInsideResolutionsLimits(layer, resolution) && this.isAllowed(layer));
+                        if (this.isBackgroundIgnored(layers) && defaultBackgroundProp && printSpec.defaultBackground) {
+                            const defaultBackground = layers.filter((layer) => layer.type === defaultBackgroundProp)[0];
                             return [assign({}, defaultBackground, {visibility: true}), ...filtered];
                         }
                         return filtered;
                     };
 
-                    configurePrintMap = (map, printSpec) => {
-                        const newMap = map || this.props.map;
-                        const newPrintSpec = printSpec || this.props.printSpec;
-                        if (newMap && newMap.bbox && this.props.capabilities) {
+                    configurePrintMap = (props) => {
+                        const {
+                            map: newMap,
+                            capabilities,
+                            minZoom,
+                            configurePrintMap: configurePrintMapProp,
+                            useFixedScales,
+                            getZoomForExtent,
+                            maxZoom,
+                            currentLocale,
+                            scales: scalesProp
+                        } = props || this.props;
+                        if (newMap && newMap.bbox && capabilities) {
+                            const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, newMap.projection);
                             const bbox = reprojectBbox([
                                 newMap.bbox.bounds.minx,
                                 newMap.bbox.bounds.miny,
@@ -377,16 +394,19 @@ export default {
                                 newMap.bbox.bounds.maxy
                             ], newMap.bbox.crs, newMap.projection);
                             const mapSize = this.getMapSize();
-                            if (this.props.useFixedScales) {
-                                const mapZoom = this.props.getZoomForExtent(bbox, mapSize, this.props.minZoom, this.props.maxZoom);
-                                const scales = getPrintScales(this.props.capabilities);
+                            if (useFixedScales) {
+                                const mapZoom = getZoomForExtent(bbox, mapSize, minZoom, maxZoom);
+                                const scales = getPrintScales(capabilities);
                                 const scaleZoom = getNearestZoom(newMap.zoom, scales);
-
-                                this.props.configurePrintMap(newMap.center, mapZoom, scaleZoom, scales[scaleZoom],
-                                    this.filterLayers(newPrintSpec), newMap.projection, this.props.currentLocale);
+                                const scale = scales[scaleZoom];
+                                const previewResolution = scale / dpu;
+                                configurePrintMapProp(newMap.center, mapZoom, scaleZoom, scale,
+                                    this.filterLayers(props, previewResolution), newMap.projection, currentLocale);
                             } else {
-                                this.props.configurePrintMap(newMap.center, newMap.zoom, newMap.zoom, this.props.scales[newMap.zoom],
-                                    this.filterLayers(newPrintSpec), newMap.projection, this.props.currentLocale);
+                                const scale = scalesProp[newMap.zoom];
+                                const previewResolution = scale / dpu;
+                                configurePrintMapProp(newMap.center, newMap.zoom, newMap.zoom, scale,
+                                    this.filterLayers(props, previewResolution), newMap.projection, currentLocale);
                             }
                         }
                     };

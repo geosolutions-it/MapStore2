@@ -56,7 +56,7 @@ export function zoomToPoint(pos, zoom, crs) {
     };
 }
 
-export function changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions) {
+export function changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, resolution) {
     return {
         type: CHANGE_MAP_VIEW,
         center,
@@ -65,7 +65,8 @@ export function changeMapView(center, zoom, bbox, size, mapStateSource, projecti
         size,
         mapStateSource,
         projection,
-        viewerOptions
+        viewerOptions,
+        resolution
     };
 }
 
