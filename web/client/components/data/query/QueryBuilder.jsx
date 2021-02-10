@@ -62,7 +62,7 @@ class QueryBuilder extends React.Component {
         crossLayerFilterActions: PropTypes.object,
         hits: PropTypes.bool,
         clearFilterOptions: PropTypes.object,
-        bsStyle: PropTypes.string,
+        buttonStyle: PropTypes.string,
         removeGroupButtonIcon: PropTypes.string,
         maxHeight: PropTypes.number,
         allowEmptyFilter: PropTypes.bool,
@@ -83,7 +83,7 @@ class QueryBuilder extends React.Component {
         featureTypeConfigUrl: null,
         useMapProjection: true,
         groupLevels: 1,
-        bsStyle: "default",
+        buttonStyle: "default",
         removeGroupButtonIcon: "trash",
         groupFields: [],
         filterFields: [],
@@ -186,7 +186,7 @@ class QueryBuilder extends React.Component {
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
                 <GroupField
-                    bsStyle={this.props.bsStyle}
+                    buttonStyle={this.props.buttonStyle}
                     removeGroupButtonIcon={this.props.removeGroupButtonIcon}
                     autocompleteEnabled={this.props.autocompleteEnabled}
                     maxFeaturesWPS={this.props.maxFeaturesWPS}

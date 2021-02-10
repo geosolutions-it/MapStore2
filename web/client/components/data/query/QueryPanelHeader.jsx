@@ -7,12 +7,12 @@ import Button from '../../misc/Button';
 
 const AlertIcon = popoverTooltip((props) => (<div className="square-button pull-right no-border" style={{display: 'flex'}} {...props}><Glyphicon glyph="exclamation-mark" className="text-danger"/></div>));
 
-export default ({loadingError, onToggleQuery = () => {}, bsStyle = "default"} = {}) => (<div className="mapstore-block-width">
+export default ({loadingError, onToggleQuery = () => {}, buttonStyle = "default"} = {}) => (<div className="mapstore-block-width">
     <Button
         id="toc-query-close-button"
         key="menu-button"
         className="square-button no-border"
-        bsStyle={bsStyle}
+        bsStyle={buttonStyle}
         onClick={() => onToggleQuery()}>
         <Glyphicon glyph="arrow-left"/>
     </Button>

@@ -49,7 +49,7 @@ class SpatialFilter extends React.Component {
         showDetailsButton: true,
         clearFilterOptions: {
             className: "square-button-sm no-border",
-            bsStyle: "default"
+            buttonStyle: "default"
         },
         showDetailsPanel: false,
         withContainer: true,
@@ -259,7 +259,7 @@ class SpatialFilter extends React.Component {
             buttons.push({
                 glyph: 'clear-filter',
                 tooltipId: "queryform.spatialfilter.remove",
-                bsStyle: this.props.clearFilterOptions.bsStyle,
+                bsStyle: this.props.clearFilterOptions.buttonStyle,
                 className: this.props.clearFilterOptions.className,
                 onClick: () => this.resetSpatialFilter()
             });
