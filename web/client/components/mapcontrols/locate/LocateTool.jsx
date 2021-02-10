@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
 import useMapTool from "../../../map/hooks/useMapTool";
 
-const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState, onLocateError}) => {
+const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState, onLocateError, rateControl}) => {
     const locateInstance = useRef();
     const [loaded, Impl, error] = useMapTool(mapType, 'locate');
     useEffect(() => {
@@ -23,7 +23,9 @@ const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState,
     function getOptions() {
         return {
             locateOptions: {
-                ...(maxZoom !== undefined && { maxZoom })
+                ...(maxZoom !== undefined && { maxZoom }),
+                ...(rateControl !== undefined && { rateControl })
+
             }
         };
     }
@@ -49,4 +51,3 @@ const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState,
 };
 
 export default LocateTool;
-
