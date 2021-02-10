@@ -25,7 +25,6 @@ import {
 
 import { measurementSelector } from '../../selectors/measurement';
 import { changeSelectionState } from '../../actions/selection';
-import { changeLocateState, onLocateError } from '../../actions/locate';
 import { boxSelectionStatus } from '../../selectors/box';
 
 import {
@@ -91,14 +90,6 @@ const pluginsCreator = (mapType, actions) => {
             changeMeasurement
         })(components.MeasurementSupport || Empty);
 
-        const Locate = connect((state) => ({
-            status: state.locate && state.locate.state,
-            messages: state.locale && state.locale.messages ? state.locale.messages.locate : undefined
-        }), {
-            changeLocateState,
-            onLocateError
-        })(components.Locate || Empty);
-
         const DrawSupport = connect((state) =>
             state.draw || {}, {
             onChangeDrawingStatus: changeDrawingStatus,
@@ -147,7 +138,6 @@ const pluginsCreator = (mapType, actions) => {
             Feature: components.Feature || Empty,
             tools: {
                 measurement: MeasurementSupport,
-                locate: Locate,
                 overview: components.Overview || Empty,
                 scalebar: components.ScaleBar || Empty,
                 draw: DrawSupport,

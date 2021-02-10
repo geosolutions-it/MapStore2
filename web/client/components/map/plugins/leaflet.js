@@ -10,9 +10,8 @@ export default () => {
     require('../leaflet/plugins/index');
     return {
         Map: require('../leaflet/Map'),
-        Layer: require('../leaflet/Layer'),
+        Layer: require('../leaflet/Layer').default,
         Feature: require('../leaflet/Feature'),
-        Locate: require('../leaflet/Locate').default,
         MeasurementSupport: require('../leaflet/MeasurementSupport'),
         Overview: require('../leaflet/Overview'),
         ScaleBar: require('../leaflet/ScaleBar'),

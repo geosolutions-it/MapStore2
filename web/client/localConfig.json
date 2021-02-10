@@ -182,8 +182,7 @@
                           "altShiftDragRotate": false
                         }
                       }
-                    },
-                    "tools": ["locate"]
+                    }
                 }
             }, "Version", "DrawerMenu",
             {
@@ -480,7 +479,6 @@
         "embedded": ["Details", {
                 "name": "Map",
                 "cfg": {
-                    "tools": ["locate"],
                     "mapOptions": {
                     "openlayers": {
                       "interactions": {

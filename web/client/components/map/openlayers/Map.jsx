@@ -455,7 +455,8 @@ class OpenlayersMap extends React.Component {
                 onLayerError: this.props.onLayerError,
                 onLayerLoad: this.props.onLayerLoad,
                 projection: this.props.projection,
-                onCreationError: this.props.onCreationError
+                onCreationError: this.props.onCreationError,
+                resolutions: this.getResolutions()
             }) : null;
         }) : null;
 
@@ -516,16 +517,28 @@ class OpenlayersMap extends React.Component {
                 width: this.map.getSize()[0],
                 height: this.map.getSize()[1]
             };
-            this.props.onMapViewChanges({ x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326' }, view.getZoom(), {
-                bounds: {
-                    minx: bbox[0],
-                    miny: bbox[1],
-                    maxx: bbox[2],
-                    maxy: bbox[3]
+            this.props.onMapViewChanges(
+                {
+                    x: c[0] || 0.0, y: c[1] || 0.0,
+                    crs: 'EPSG:4326'
                 },
-                crs,
-                rotation: view.getRotation()
-            }, size, this.props.id, this.props.projection);
+                view.getZoom(),
+                {
+                    bounds: {
+                        minx: bbox[0],
+                        miny: bbox[1],
+                        maxx: bbox[2],
+                        maxy: bbox[3]
+                    },
+                    crs,
+                    rotation: view.getRotation()
+                },
+                size,
+                this.props.id,
+                this.props.projection,
+                undefined, // viewerOptions,
+                view.getResolution() // resolution
+            );
         }
     };
 
