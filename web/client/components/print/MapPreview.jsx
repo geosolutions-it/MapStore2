@@ -59,7 +59,7 @@ class MapPreview extends React.Component {
     };
 
     UNSAFE_componentWillMount() {
-        const mapComponents = require('../map/' + this.props.mapType + '/index');
+        const mapComponents = require('../map/' + this.props.mapType + '/index').default;
         PMap = mapComponents.LMap;
         Layer = mapComponents.LLayer;
         Feature = mapComponents.Feature;
