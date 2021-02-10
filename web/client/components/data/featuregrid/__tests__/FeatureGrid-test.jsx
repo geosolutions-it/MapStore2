@@ -125,6 +125,19 @@ describe('Test for FeatureGrid component', () => {
         TestUtils.Simulate.click(domNode);
         expect(events.onRowsDeselected).toHaveBeenCalled();
     });
+    it('Test the field values are rendered right way in grid cells', () => {
+        ReactDOM.render(<FeatureGrid virtualScroll={false}
+            describeFeatureType={describePois}
+            features={museam.features}/>, document.getElementById("container"));
+        let domNode = Array.prototype.filter.call(document.getElementsByClassName("react-grid-Cell"), (element) =>{
+            return element;
+        });
+        expect(domNode).toExist();
+        expect(domNode[0].getAttribute('value')).toBe('' + (museam.features[0].properties.NAME));
+        expect(domNode[1].getAttribute('value')).toBe('' + (museam.features[0].properties.THUMBNAIL));
+        expect(domNode[2].getAttribute('value')).toBe('' + (museam.features[0].properties.MAINPAGE));
+    });
+
     it('temporary changes on field edit', () => {
         const events = {
             onTemporaryChanges: () => {}
