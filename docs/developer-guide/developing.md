@@ -54,6 +54,7 @@ To use a local back-end you have to:
 
 ```javascript
 devServer: {
+        // ...
         proxy: {
             '/rest/': {
                 target: "http://localhost:8080/mapstore" // port 8080, mapstore path
