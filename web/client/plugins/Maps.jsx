@@ -14,11 +14,11 @@ import { compose } from 'recompose';
 import ConfigUtils from '../utils/ConfigUtils';
 import Message from "../components/I18N/Message";
 
-import maptypeEpics from '../epics/maptype';
 import mapsEpics from '../epics/maps';
 import {userRoleSelector} from '../selectors/security';
 import {versionSelector} from '../selectors/version';
 import { totalCountSelector } from '../selectors/maps';
+import { mapTypeSelector } from '../selectors/maptype';
 import { isFeaturedMapsEnabled } from '../selectors/featuredmaps';
 import emptyState from '../components/misc/enhancers/emptyState';
 import {createSelector} from 'reselect';
