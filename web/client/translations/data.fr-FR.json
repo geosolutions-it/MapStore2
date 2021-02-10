@@ -985,6 +985,7 @@
             "attributefilter": {
                 "add_condition": " Ajouter une condition",
                 "delete": " Effacer",
+                "deleteGroup": " Effacer le groupe",
                 "add_group": " Ajouter un groupe",
                 "group_label_a": "Correspondance",
                 "group_label_b": "des conditions suivantes:",
