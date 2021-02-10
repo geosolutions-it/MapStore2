@@ -16,7 +16,6 @@ import Message from "../components/I18N/Message";
 
 import maptypeEpics from '../epics/maptype';
 import mapsEpics from '../epics/maps';
-import {mapTypeSelector} from '../selectors/maptype';
 import {userRoleSelector} from '../selectors/security';
 import {versionSelector} from '../selectors/version';
 import { totalCountSelector } from '../selectors/maps';
@@ -184,7 +183,6 @@ export default {
         }
     }),
     epics: {
-        ...maptypeEpics,
         ...mapsEpics
     },
     reducers: {
