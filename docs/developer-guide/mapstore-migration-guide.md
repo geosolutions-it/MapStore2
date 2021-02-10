@@ -21,6 +21,43 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2021.01.00 to 2021.01.01
 
+### Locate plugin configuration
+
+Configuration for Locate plugin has changed and it is not needed anymore inside the Map plugin
+
+- old localConfig.json configuration needed 'locate' listed as tool inside the Map plugin and as a separated Locate plugin
+```js
+// ...
+{
+    "name": "Map",
+    "cfg": {
+        "tools": ["locate"],
+        // ...
+    }
+},
+{
+    "name": "Locate",
+    // ...
+}
+// ...
+```
+
+- new localConfig.json configuration removes 'locate' from tools array and it keeps only the plugin configuration
+```js
+// ...
+{
+    "name": "Map",
+    "cfg": {
+        // ...
+    }
+},
+{
+    "name": "Locate",
+    // ...
+}
+// ...
+```
+
 ### Update an existing project to include embedded Dashboards and GeoStories
 
 Embedded Dashboards and GeoStories need a new set of javascript entries, html templates and configuration files to make them completely available in an existing project.
