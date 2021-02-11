@@ -337,7 +337,7 @@
             {
                 "name": "Locate",
                 "cfg":{
-                  "rateControl": 2000
+                  "rateControl": 5000
                 },
                 "override": {
                     "Toolbar": {
