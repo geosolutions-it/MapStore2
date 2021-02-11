@@ -8,7 +8,6 @@
 import { connect } from 'react-redux';
 
 import assign from 'object-assign';
-import globeswitcher from '../reducers/globeswitcher';
 import epics from '../epics/globeswitcher';
 import { toggle3d } from '../actions/globeswitcher';
 import { mapTypeSelector, isCesium } from '../selectors/maptype';
@@ -46,8 +45,5 @@ export default {
             priority: 1
         }
     }),
-    reducers: {
-        globeswitcher
-    },
     epics
 };
