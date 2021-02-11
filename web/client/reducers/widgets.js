@@ -100,15 +100,7 @@ function widgetsReducer(state = emptyState, action) {
         let tempState = arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...action.widget,
-            dataGrid: action.id && {
-                y: 0,
-                x: 0,
-                w: 1,
-                h: 1,
-                isDraggable: true,
-                isResizable: true,
-                "static": false
-            }
+            dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
         }, {
             id: action.widget.id || action.id
         }, state);
