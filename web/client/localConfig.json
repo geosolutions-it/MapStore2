@@ -337,7 +337,8 @@
             {
                 "name": "Locate",
                 "cfg":{
-                  "rateControl": 5000
+                  "rateControl": 1000,
+                  "maxZoom": 7
                 },
                 "override": {
                     "Toolbar": {
