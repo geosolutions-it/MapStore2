@@ -12,13 +12,13 @@ import { clamp, isNil, isNumber } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Checkbox, Col, ControlLabel, FormGroup, Grid, Row } from 'react-bootstrap';
-import { DropdownList } from 'react-widgets';
 
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 import Message from '../../../I18N/Message';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import Legend from '../legend/Legend';
-
+import VisibilityLimitsForm from './VisibilityLimitsForm';
+import Select from 'react-select';
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -28,7 +28,10 @@ export default class extends React.Component {
         onChange: PropTypes.func,
         containerWidth: PropTypes.number,
         currentLocaleLanguage: PropTypes.string,
-        isLocalizedLayerStylesEnabled: PropTypes.bool
+        isLocalizedLayerStylesEnabled: PropTypes.bool,
+        projection: PropTypes.string,
+        resolutions: PropTypes.array,
+        zoom: PropTypes.number
     };
 
     static defaultProps = {
@@ -105,17 +108,19 @@ export default class extends React.Component {
         return (
             <Grid
                 fluid
-                className={"fluid-container " + (!this.props.containerWidth && "adjust-display")}>
+                className={"fluid-container ms-display-form " + (!this.props.containerWidth && "adjust-display")}>
                 {this.props.element.type === "wms" &&
                 <Row>
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel><Message msgId="layerProperties.format" /></ControlLabel>
-                            <DropdownList
+                            <Select
                                 key="format-dropdown"
-                                data={this.props.formats || ["image/png", "image/png8", "image/jpeg", "image/vnd.jpeg-png", "image/gif"]}
+                                clearable={false}
+                                options={(this.props.formats || ["image/png", "image/png8", "image/jpeg", "image/vnd.jpeg-png", "image/gif"])
+                                    .map((value) => ({ value, label: value }))}
                                 value={this.props.element && this.props.element.format || "image/png"}
-                                onChange={(value) => {
+                                onChange={({ value }) => {
                                     this.props.onChange("format", value);
                                 }}/>
                         </FormGroup>
@@ -123,11 +128,12 @@ export default class extends React.Component {
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel><Message msgId="WMS Layer tile size" /></ControlLabel>
-                            <DropdownList
+                            <Select
                                 key="wsm-layersize-dropdown"
-                                data={[256, 512]}
+                                clearable={false}
+                                options={[{ value: 256, label: 256 }, { value: 512, label: 512 }]}
                                 value={this.props.element && this.props.element.tileSize || 256}
-                                onChange={(value) => {
+                                onChange={({ value }) => {
                                     this.props.onChange("tileSize", value);
                                 }}/>
                         </FormGroup>
@@ -145,6 +151,21 @@ export default class extends React.Component {
                                 name={"opacity"}
                                 value={this.state.opacity}
                                 onChange={(val)=> this.onChange("opacity", val)}/>
+                        </FormGroup>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <VisibilityLimitsForm
+                                title={<ControlLabel><Message msgId="layerProperties.visibilityLimits.title"/></ControlLabel>}
+                                layer={this.props.element}
+                                onChange={this.props.onChange}
+                                projection={this.props.projection}
+                                resolutions={this.props.resolutions}
+                                zoom={this.props.zoom}
+                            />
                         </FormGroup>
                     </Col>
                 </Row>
