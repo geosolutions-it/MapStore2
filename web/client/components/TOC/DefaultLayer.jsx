@@ -19,10 +19,11 @@ import WMSLegend from './fragments/WMSLegend';
 import LayersTool from './fragments/LayersTool';
 import OpacitySlider from './fragments/OpacitySlider';
 import ToggleFilter from './fragments/ToggleFilter';
-import withTooltip from '../data/featuregrid/enhancers/withTooltip';
+import tooltip from '../misc/enhancers/tooltip';
 import localizedProps from '../misc/enhancers/localizedProps';
+import { isInsideResolutionsLimits } from '../../utils/LayersUtils';
 
-const GlyphIndicator = localizedProps('tooltip')(withTooltip(Glyphicon));
+const GlyphIndicator = localizedProps('tooltip')(tooltip(Glyphicon));
 
 /**
  * Default layer node for TOC
@@ -59,7 +60,8 @@ class DefaultLayer extends React.Component {
         isDraggable: PropTypes.bool,
         isDragging: PropTypes.bool,
         isOver: PropTypes.bool,
-        language: PropTypes.string
+        language: PropTypes.string,
+        resolution: PropTypes.number
     };
 
     static defaultProps = {
@@ -91,6 +93,13 @@ class DefaultLayer extends React.Component {
     getTitle = (layer) => {
         const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
         return translation || layer.name;
+    };
+
+    getVisibilityMessage = () => {
+        const maxResolution = this.props.node.maxResolution || Infinity;
+        return this.props.resolution >=  maxResolution
+            ? 'toc.notVisibleZoomIn'
+            : 'toc.notVisibleZoomOut';
     };
 
     renderOpacitySlider = (hideOpacityTooltip) => {
@@ -171,8 +180,8 @@ class DefaultLayer extends React.Component {
                     onClick={this.props.onSelect}
                     onContextMenu={this.props.onContextMenu}
                 />
-
                 {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
+                {!isInsideResolutionsLimits(this.props.node, this.props.resolution) && <GlyphIndicator glyph="info-sign" tooltipId={this.getVisibilityMessage()} style={{ 'float': 'right' }}/>}
                 {this.props.indicators ? this.renderIndicators() : null}
             </div>
         );
@@ -187,8 +196,7 @@ class DefaultLayer extends React.Component {
 
     render() {
         let {children, propertiesChangeHandler, onToggle, connectDragSource, connectDropTarget, ...other } = this.props;
-
-        const hide = !this.props.node.visibility || this.props.node.invalid ? ' visibility' : '';
+        const hide = !this.props.node.visibility || this.props.node.invalid || !isInsideResolutionsLimits(this.props.node, this.props.resolution) ? ' visibility' : '';
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
         const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
@@ -211,6 +219,7 @@ class DefaultLayer extends React.Component {
         const title = translation || layer.name;
         return title.toLowerCase().indexOf(this.props.filterText.toLowerCase()) !== -1;
     };
+
 }
 
 export default draggableComponent('LayerOrGroup', DefaultLayer);
