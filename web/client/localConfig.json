@@ -336,7 +336,9 @@
             },
             {
                 "name": "Locate",
-                "cfg":{ "rateControl": 2000 },
+                "cfg":{
+                  "rateControl": 2000
+                },
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
