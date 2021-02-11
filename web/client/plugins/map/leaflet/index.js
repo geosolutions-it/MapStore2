@@ -8,7 +8,7 @@
 
 export default {
     LMap: require('../../../components/map/leaflet/Map'),
-    Layer: require('../../../components/map/leaflet/Layer'),
+    Layer: require('../../../components/map/leaflet/Layer').default,
     Feature: require('../../../components/map/leaflet/Feature'),
     MeasurementSupport: require('../../../components/map/leaflet/MeasurementSupport'),
     Overview: require('../../../components/map/leaflet/Overview'),

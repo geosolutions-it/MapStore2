@@ -7,6 +7,7 @@
  */
 
 export const MAP_TYPE_CHANGED = 'MAP_TYPE_CHANGED';
+export const UPDATE_LAST_2D_MAPTYPE = "MAP_TYPE:UPDATE_LAST_2D_MAPTYPE";
 
 /**
  * changes the map type
@@ -17,6 +18,24 @@ export const MAP_TYPE_CHANGED = 'MAP_TYPE_CHANGED';
 export function changeMapType(mapType) {
     return {
         type: MAP_TYPE_CHANGED,
+        mapType
+    };
+}
+/**
+ * Saves the last 2d map
+ * @memberof actions.globeswitcher
+ * @param  {string} mapType last maptype
+ * @return {object}         action
+ * ```
+ * {
+ *   type: MAPTYPE_2D_SELECTED,
+ *   mapType
+ * }
+ * ```
+ */
+export function updateLast2dMapType(mapType) {
+    return {
+        type: UPDATE_LAST_2D_MAPTYPE,
         mapType
     };
 }

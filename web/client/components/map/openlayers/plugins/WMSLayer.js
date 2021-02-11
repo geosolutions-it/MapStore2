@@ -187,6 +187,8 @@ const createLayer = (options, map) => {
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
+            minResolution: options.minResolution,
+            maxResolution: options.maxResolution,
             source: new ImageWMS({
                 url: urls[0],
                 crossOrigin: options.crossOrigin,
@@ -217,7 +219,9 @@ const createLayer = (options, map) => {
         msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility !== false,
-        zIndex: options.zIndex
+        zIndex: options.zIndex,
+        minResolution: options.minResolution,
+        maxResolution: options.maxResolution
     };
     let layer;
     if (vectorFormat) {
@@ -334,6 +338,13 @@ Layers.registerType('wms', {
             }, false);
 
             needsRefresh = needsRefresh || changed;
+        }
+
+        if (oldOptions.minResolution !== newOptions.minResolution) {
+            layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+        }
+        if (oldOptions.maxResolution !== newOptions.maxResolution) {
+            layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
 
         if (needsRefresh) {

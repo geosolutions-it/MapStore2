@@ -21,7 +21,8 @@ import {
     isEqual,
     isEmpty,
     findIndex,
-    cloneDeep
+    cloneDeep,
+    minBy
 } from 'lodash';
 
 import uuidv1 from 'uuid/v1';
@@ -203,6 +204,15 @@ export function getResolutions() {
 export function getScales(projection, dpi) {
     const dpu = dpi2dpu(dpi, projection);
     return getResolutions().map((resolution) => resolution * dpu);
+}
+
+export function getZoomFromResolution(targetResolution, resolutions = getResolutions()) {
+    // compute the absolute difference for all resolutions
+    // and store the idx as zoom
+    const diffs = resolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - targetResolution), zoom }));
+    // the minimum difference represents the nearest zoom to the target resolution
+    const { zoom } = minBy(diffs, 'diff');
+    return zoom;
 }
 
 export function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {

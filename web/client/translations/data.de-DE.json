@@ -986,6 +986,7 @@
             "attributefilter":{
                 "add_condition": "Bedingung hinzufügen",
                 "delete": " Löschen",
+                "deleteGroup": " Gruppe löschen",
                 "add_group": "Gruppe hinzufügen",
                 "group_label_a": "Übereinstimmung",
                 "group_label_b": "der folgenden Bedingungen:",

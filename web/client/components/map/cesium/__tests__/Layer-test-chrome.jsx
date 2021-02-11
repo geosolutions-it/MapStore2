@@ -951,4 +951,116 @@ describe('Cesium layer', () => {
         expect(layer).toExist();
         expect(layer.layer._format).toBe(JPEG);
     });
+
+    it('should remove layer if zoom resolution is less than minResolution', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        // create layers
+        let layer = ReactDOM.render(
+            <CesiumLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    minResolution
+                }}
+                position={0}
+                map={map}
+                zoom={0}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.imageryLayers.length).toBe(1);
+
+        layer = ReactDOM.render(
+            <CesiumLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    minResolution
+                }}
+                position={0}
+                map={map}
+                zoom={11}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        // layer removed
+        expect(map.imageryLayers.length).toBe(0);
+
+    });
+
+    it('should remove layer if zoom resolution is greater than maxResolution', () => {
+        const maxResolution = 1222; // ~ zoom 7 Web Mercator
+        // create layers
+        let layer = ReactDOM.render(
+            <CesiumLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    maxResolution
+                }}
+                position={0}
+                map={map}
+                zoom={11}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.imageryLayers.length).toBe(1);
+
+        layer = ReactDOM.render(
+            <CesiumLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    maxResolution
+                }}
+                position={0}
+                map={map}
+                zoom={0}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        // layer removed
+        expect(map.imageryLayers.length).toBe(0);
+
+    });
+
+    it('should disable range limits with disableResolutionLimits options set to true', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const maxResolution = 39135; // ~ zoom 2 Web Mercator
+        // create layers
+        let layer = ReactDOM.render(
+            <CesiumLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    minResolution,
+                    maxResolution
+                }}
+                position={0}
+                map={map}
+                zoom={0}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        // layer removed because is outside of limits
+        expect(map.imageryLayers.length).toBe(0);
+
+        layer = ReactDOM.render(
+            <CesiumLayer
+                type="osm"
+                options={{
+                    visibility: true,
+                    minResolution,
+                    maxResolution,
+                    disableResolutionLimits: true
+                }}
+                position={0}
+                map={map}
+                zoom={0}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.imageryLayers.length).toBe(1);
+
+    });
 });

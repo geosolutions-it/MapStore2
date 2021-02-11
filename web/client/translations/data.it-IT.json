@@ -985,6 +985,7 @@
             "attributefilter":{
                 "add_condition": " Aggiungi Condizione",
                 "delete": " Elimina",
+                "deleteGroup": " Elimina Gruppo",
                 "add_group": " Aggiungi Gruppo",
                 "group_label_a": "Soddisfa",
                 "group_label_b": "seguenti condizioni:",

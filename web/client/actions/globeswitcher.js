@@ -28,24 +28,6 @@ export function toggle3d(enable, originalMapType) {
         originalMapType
     };
 }
-/**
- * Saves the last 2d map
- * @memberof actions.globeswitcher
- * @param  {string} mapType last maptype
- * @return {object}         action
- * ```
- * {
- *   type: MAPTYPE_2D_SELECTED,
- *   mapType
- * }
- * ```
- */
-export function updateLast2dMapType(mapType) {
-    return {
-        type: UPDATE_LAST_2D_MAPTYPE,
-        mapType
-    };
-}
 
 /**
  * Actions for Globe Switcher Plugin.

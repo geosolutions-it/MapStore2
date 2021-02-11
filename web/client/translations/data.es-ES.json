@@ -985,6 +985,7 @@
             "attributefilter":{
                 "add_condition": " Añadir una condición",
                 "delete": " Borrar",
+                "deleteGroup": " Eliminar grupo",
                 "add_group": " Añadir un grupo",
                 "group_label_a": "Coincidencia con",
                 "group_label_b": "de las siguientes condiciones:",
