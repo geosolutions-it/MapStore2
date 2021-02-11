@@ -336,10 +336,6 @@
             },
             {
                 "name": "Locate",
-                "cfg":{
-                  "rateControl": 1000,
-                  "maxZoom": 7
-                },
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
