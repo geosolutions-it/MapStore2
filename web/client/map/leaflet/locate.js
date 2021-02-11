@@ -39,8 +39,6 @@ class Locate {
             map.on('locatestatus', (state) => this.locateControlState(state, { onStateChange }));
             this.locate.options.onLocationError = onLocationError;
             this.locate.options.onLocationOutsideMapBounds = onLocationError;
-            map.on('locationfound', () => this.locate.onChangePosition(map));
-
         }
         if (status.enabled) {
             this.locate.start();
@@ -67,8 +65,6 @@ class Locate {
         }
 
         this.locate.setLocateOptions(mergeOptions(options).locateOptions);
-        //this.locate.onChangePosition();
-        // locationfound
 
         this.status = status;
     }
