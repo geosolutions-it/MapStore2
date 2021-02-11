@@ -71,7 +71,6 @@ class Locate {
     clear() {}
 
     locateControlState(state, { onStateChange }) {
-
         if (state.state === 'requesting' && this.status !== "LOCATING" ) {
             onStateChange("LOCATING");
         } else if (state.state === 'following' && !this.fol ) {
