@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet.locatecontrol';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
-import debounce from 'lodash/debounce';
+import throttle from 'lodash/debounce';
 
 L.Control.MSLocate = L.Control.Locate.extend({
     setMap: function(map) {
@@ -37,7 +37,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
     },
     onLocationChange: function() {
         return (this.options.locateOptions.rateControl) ?
-            debounce(this._onLocationFound, this.options.locateOptions.rateControl)
+            throttle(this._onLocationFound, this.options.locateOptions.rateControl)
             : this._onLocationFound;
     },
     _setClasses: function(state) {

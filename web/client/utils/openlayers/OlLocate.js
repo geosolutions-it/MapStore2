@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -20,7 +21,7 @@ import {Point, Circle} from 'ol/geom';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import {Style, Fill, Stroke} from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
-import debounce from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 
 
 const popUp = olPopUp();
@@ -63,7 +64,7 @@ const OlLocate = function(map, optOptions) {
     this.updateHandler = this._updatePosFt.bind(this);
 
     this.geolocate.on('change:position', (this.options.locateOptions.rateControl)
-        ? debounce( this.updateHandler, this.options.locateOptions.rateControl )
+        ? throttle( this.updateHandler, this.options.locateOptions.rateControl )
         : this.updateHandler);
 
     this.popup = popUp;
