@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet.locatecontrol';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
-import throttle from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 
 L.Control.MSLocate = L.Control.Locate.extend({
     setMap: function(map) {
