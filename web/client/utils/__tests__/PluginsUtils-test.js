@@ -420,4 +420,23 @@ describe('PluginsUtils', () => {
             done();
         });
     });
+    it('should load lazy plugins with stateSelector', () => {
+
+        const pluginDef = {
+            name: 'StateSelectorLazy',
+            stateSelector: 'selector'
+        };
+        const pluginWithSelectorState = (stateSelector) => function Plugin() { return <div className={stateSelector}></div>; };
+        const plugins = {
+            StateSelectorLazyPlugin: {
+                loadPlugin: (resolve) => resolve(pluginWithSelectorState)
+            }
+        };
+        const loadedPlugins = {
+            StateSelectorLazy: pluginWithSelectorState
+        };
+        const { impl: LoadedPlugin } = PluginsUtils.getPluginDescriptor({}, plugins, [], pluginDef, loadedPlugins);
+        ReactDOM.render(<LoadedPlugin/>, document.getElementById('container'));
+        expect(document.querySelector('.selector')).toBeTruthy();
+    });
 });
