@@ -137,7 +137,7 @@ function measurement(state = defaultState, action) {
             ...state,
             features,
             geomTypeSelected,
-            currentFeature: features.length - 1, // current feature is the last feature added
+            // currentFeature: features.length - 1, // current feature is the last feature added
             updatedByUI: false,
             isDrawing: false,
             ...(isEmpty(features) && {exportToAnnotation: false})
@@ -273,7 +273,8 @@ function measurement(state = defaultState, action) {
                     },
                     geometry: {
                         type: state.bearingMeasureEnabled ? "LineString" : state.geomType,
-                        coordinates: state.areaMeasureEnabled ? [[...coordinates, coordinates[0]]] : coordinates
+                        coordinates: state.areaMeasureEnabled ? [[...coordinates, coordinates[0]]] : coordinates,
+                        textLabels: currentFeatureObj.geometry.textLabels || []
                     }
                 },
                 ...features.slice(state.currentFeature + 1, features.length)

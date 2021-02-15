@@ -80,7 +80,8 @@ class CoordinatesEditor extends React.Component {
         isMouseEnterEnabled: PropTypes.bool,
         isMouseLeaveEnabled: PropTypes.bool,
         showLengthAndBearingLabel: PropTypes.bool,
-        renderer: PropTypes.string
+        renderer: PropTypes.string,
+        isFeatureInvalid: PropTypes.bool
     };
 
     static contextTypes = {
@@ -116,7 +117,8 @@ class CoordinatesEditor extends React.Component {
         isMouseEnterEnabled: false,
         isMouseLeaveEnabled: false,
         properties: {},
-        type: "Point"
+        type: "Point",
+        isFeatureInvalid: false
     };
 
     getValidationStateRadius = (radius) => {
@@ -206,6 +208,7 @@ class CoordinatesEditor extends React.Component {
             {
                 glyph: 'plus',
                 tooltipId: 'annotations.editor.add',
+                disabled: this.props.isFeatureInvalid,
                 visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : true,
                 onClick: () => {
                     let tempComps = [...this.props.components];
@@ -220,6 +223,7 @@ class CoordinatesEditor extends React.Component {
                     <div>
                         {this.props.showFeatureSelector ? <Select
                             value={this.props.currentFeature}
+                            disabled={this.props.isFeatureInvalid}
                             options={[
                                 ...this.props.features.map((f, i) => {
                                     const values = get(f, 'properties.values', []);
@@ -271,9 +275,10 @@ class CoordinatesEditor extends React.Component {
                             aeronauticalOptions={this.props.aeronauticalOptions}
                             sortId={idx}
                             key={idx + " key"}
+                            disabled={this.props.isFeatureInvalid && validateCoords(component)}
                             renderer={this.props.renderer}
                             isDraggable={this.props.isDraggable}
-                            isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
+                            isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]() && !this.props.isFeatureInvalid}
                             showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
                             formatVisible={false}
                             removeVisible={componentsValidation[type].remove}
