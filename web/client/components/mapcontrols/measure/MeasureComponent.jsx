@@ -309,7 +309,7 @@ class MeasureComponent extends React.Component {
                                             bsStyle: this.props.lineMeasureEnabled ? 'success' : 'primary',
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
                                             onClick: () => this.onGeomClick('LineString'),
-                                            disabled: isFeatureInvalid
+                                            disabled: !this.props.lineMeasureEnabled && isFeatureInvalid
                                         },
                                         {
                                             active: !!this.props.areaMeasureEnabled,
@@ -317,7 +317,7 @@ class MeasureComponent extends React.Component {
                                             glyph: this.props.areaGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea"),
                                             onClick: () => this.onGeomClick('Polygon'),
-                                            disabled: isFeatureInvalid
+                                            disabled: !this.props.areaMeasureEnabled && isFeatureInvalid
                                         },
                                         {
                                             visible: !this.props.disableBearing,
@@ -326,7 +326,7 @@ class MeasureComponent extends React.Component {
                                             glyph: this.props.bearingGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, this.isTrueBearing() ? "measureComponent.MeasureTrueBearing" : "measureComponent.MeasureBearing"),
                                             onClick: () => this.onGeomClick('Bearing'),
-                                            disabled: isFeatureInvalid
+                                            disabled: !this.props.bearingMeasureEnabled && isFeatureInvalid
                                         }
                                     ]
                                 }/>
@@ -423,7 +423,7 @@ class MeasureComponent extends React.Component {
                                 type={this.props.geomType}
                                 showLengthAndBearingLabel={this.props.showLengthAndBearingLabel}
                                 components={!this.props.useSingleFeature && geomType.indexOf('polygon') !== -1 ? dropRight(coords) : coords}
-                                isFeatureInvalid={isFeatureInvalid}
+                                properties={feature?.properties || {}}
                             />
                         </Row> :
                         <Row>
