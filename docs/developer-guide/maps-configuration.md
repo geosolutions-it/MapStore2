@@ -139,6 +139,9 @@ Every layer has it's own properties. Anyway there are some options valid for eve
 - `visibility`: `{boolean}`: indicates if the layer is visible or not
 - `queriable`: `{boolean}`: Indicates if the layer is queriable (e.g. getFeatureInfo). If not present the default is true for every layer that have some implementation available (WMS, WMTS). Usually used to set it explicitly to false, where the query service is not available.
 - `hideLoading`: {boolean}. If true, loading events will be ignored ( useful to hide loading with some layers that have problems or trigger errors loading some tiles or if they do not have any kind of loading.).
+- `minResolution`: `{number}`: layer is visible if zoom resolution is greater or equal than this value (inclusive)
+- `maxResolution`: `{number}`: layer is visible if zoom resolution is less than this value (exclusive)
+- `disableResolutionLimits`: `{boolean}`: this property disables the effect of minResolution and maxResolution if set to true
 
 i.e.
 

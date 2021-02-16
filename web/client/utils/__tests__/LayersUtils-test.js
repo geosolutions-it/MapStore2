@@ -1149,4 +1149,28 @@ describe('LayersUtils', () => {
         expect(groupTitle).toEqual('titleLayer001');
 
     });
+
+    it('test isInsideResolutionsLimits', () => {
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100
+        })).toBe(true);
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100
+        }, 500)).toBe(true);
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100,
+            disableResolutionLimits: true
+        }, 2000)).toBe(true);
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100
+        }, 99)).toBe(false);
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100
+        }, 1000)).toBe(false);
+    });
 });

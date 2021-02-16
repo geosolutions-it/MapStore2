@@ -139,7 +139,8 @@ const createLayer = options => {
         msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,
         zIndex: options.zIndex,
-        maxResolution,
+        minResolution: options.minResolution,
+        maxResolution: options.maxResolution < maxResolution ? options.maxResolution : maxResolution,
         visible: options.visibility !== false,
         source: isVector
             ? new VectorTile({
@@ -163,6 +164,12 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     || oldOptions.format !== newOptions.format
     || oldOptions.style !== newOptions.style) {
         return createLayer(newOptions);
+    }
+    if (oldOptions.minResolution !== newOptions.minResolution) {
+        layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+    }
+    if (oldOptions.maxResolution !== newOptions.maxResolution) {
+        layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
     }
     return null;
 };
