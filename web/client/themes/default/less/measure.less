@@ -24,11 +24,11 @@
         margin-bottom: 8px;
         justify-content: space-between;
         padding: 12px 0 12px 18px;
-        .Select-input > input {
-            width: 100%!important;
+        .Select-input {
+            width: 200px !important;
         }
         .Select-menu-outer{
-            z-index: 3;
+            z-index: 10;
         }
     }
     .coordinates-row-container {
@@ -41,21 +41,39 @@
             vertical-align: middle;
         }
     }
+    .coordinateRow.aeronautical {
+        .coordinate {
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+    }
+    .coordinateRow.decimal {
+        .coordinate {
+            flex-wrap: nowrap;
+        }
+    }
     .coordinateRow {
         .coordinate {
             display: flex;
             flex: 1 1 0%;
             justify-content: space-between;
-            flex-wrap: wrap;
+            .input-group-container{
+                width: 100%;
+            }
             .input-group {
                 flex: 1 1 0%;
                 padding: 4px 0px;
                 margin-right: 8px;
                 .form-group {
                     .react-numeric-input{
+                        b {
+                            z-index: 2;
+                        }
+                        width: 100%;
                         font-size: @font-size-small;
                         #intl-numeric{
                           float: unset;
+                          width: 100%;
                         }
                     }
                     .degrees, .minutes {
