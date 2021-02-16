@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/leaflet/Layers');
-const L = require('leaflet');
-require('leaflet.gridlayer.googlemutant');
+import Layers from '../../../../utils/leaflet/Layers';
+import L from 'leaflet';
+import 'leaflet.gridlayer.googlemutant';
 
 Layers.registerType('google', (options) => {
     return L.gridLayer.googleMutant({

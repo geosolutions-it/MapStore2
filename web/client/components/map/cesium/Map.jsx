@@ -17,7 +17,8 @@ import {
     ZOOM_TO_EXTENT_HOOK,
     registerHook,
     GET_PIXEL_FROM_COORDINATES_HOOK,
-    GET_COORDINATES_FROM_PIXEL_HOOK
+    GET_COORDINATES_FROM_PIXEL_HOOK,
+    getResolutions
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import assign from 'object-assign';
@@ -231,7 +232,12 @@ class CesiumMap extends React.Component {
         const map = this.map;
         const mapProj = this.props.projection;
         const children = map ? React.Children.map(this.props.children, child => {
-            return child ? React.cloneElement(child, {map: map, projection: mapProj, onCreationError: this.props.onCreationError}) : null;
+            return child ? React.cloneElement(child, {
+                map: map,
+                projection: mapProj,
+                onCreationError: this.props.onCreationError,
+                zoom: this.props.zoom
+            }) : null;
         }) : null;
         return (
             <div id={this.props.id}>
@@ -377,26 +383,35 @@ class CesiumMap extends React.Component {
             height: Math.round(this.props.standardWidth * (zoom + 1)),
             width: Math.round(this.props.standardHeight * (zoom + 1))
         };
-        this.props.onMapViewChanges({
-            x: center.longitude,
-            y: center.latitude,
-            crs: "EPSG:4326"
-        }, zoom, {
-            bounds: {
-                minx: -180.0,
-                miny: -90.0,
-                maxx: 180.0,
-                maxy: 90.0
+        this.props.onMapViewChanges(
+            {
+                x: center.longitude,
+                y: center.latitude,
+                crs: "EPSG:4326"
             },
-            crs: 'EPSG:4326',
-            rotation: 0
-        }, size, this.props.id, this.props.projection, {
-            orientation: {
-                heading: this.map.camera.heading,
-                pitch: this.map.camera.pitch,
-                roll: this.map.camera.roll
-            }
-        });
+            zoom,
+            {
+                bounds: {
+                    minx: -180.0,
+                    miny: -90.0,
+                    maxx: 180.0,
+                    maxy: 90.0
+                },
+                crs: 'EPSG:4326',
+                rotation: 0
+            },
+            size,
+            this.props.id,
+            this.props.projection,
+            {
+                orientation: {
+                    heading: this.map.camera.heading,
+                    pitch: this.map.camera.pitch,
+                    roll: this.map.camera.roll
+                }
+            },
+            getResolutions()[zoom]
+        );
     };
 }
 

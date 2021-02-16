@@ -219,6 +219,15 @@ export function getZoomFromResolution(targetResolution, resolutions = getResolut
     return zoom;
 }
 
+export function getZoomFromResolution(targetResolution, resolutions = getResolutions()) {
+    // compute the absolute difference for all resolutions
+    // and store the idx as zoom
+    const diffs = resolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - targetResolution), zoom }));
+    // the minimum difference represents the nearest zoom to the target resolution
+    const { zoom } = minBy(diffs, 'diff');
+    return zoom;
+}
+
 export function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
     const wExtent = extent[2] - extent[0];
     const hExtent = extent[3] - extent[1];

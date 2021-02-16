@@ -515,6 +515,9 @@ export const saveLayer = (layer) => {
         dimensions: layer.dimensions || [],
         maxZoom: layer.maxZoom,
         maxNativeZoom: layer.maxNativeZoom,
+        maxResolution: layer.maxResolution,
+        minResolution: layer.minResolution,
+        disableResolutionLimits: layer.disableResolutionLimits,
         hideLoading: layer.hideLoading || false,
         handleClickOnLayer: layer.handleClickOnLayer || false,
         queryable: layer.queryable,
@@ -697,5 +700,6 @@ LayersUtils = {
     deepChange,
     reorder: reorderFunc,
     getRegGeoserverRule,
-    findGeoServerName
+    findGeoServerName,
+    isInsideResolutionsLimits
 };
