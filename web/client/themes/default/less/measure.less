@@ -28,7 +28,7 @@
             width: 200px !important;
         }
         .Select-menu-outer{
-            z-index: 3;
+            z-index: 10;
         }
     }
     .coordinates-row-container {
@@ -66,6 +66,9 @@
                 margin-right: 8px;
                 .form-group {
                     .react-numeric-input{
+                        b {
+                            z-index: 2;
+                        }
                         width: 100%;
                         font-size: @font-size-small;
                         #intl-numeric{
