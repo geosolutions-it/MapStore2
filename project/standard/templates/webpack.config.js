@@ -7,7 +7,7 @@ const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plu
 module.exports = require('./MapStore2/build/buildConfig')(
     {
         '__PROJECTNAME__': path.join(__dirname, "js", "app"),
-        '__PROJECTNAME__-embedded': path.join(__dirname, "MapStore2", "web", "client", "product", "embedded"),
+        '__PROJECTNAME__-embedded': path.join(__dirname, "js", "embedded"),
         '__PROJECTNAME__-api': path.join(__dirname, "MapStore2", "web", "client", "product", "api"),
         'geostory-embedded': path.join(__dirname, "js", "geostoryEmbedded"),
         "dashboard-embedded": path.join(__dirname, "js", "dashboardEmbedded")
