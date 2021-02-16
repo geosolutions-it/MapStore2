@@ -326,7 +326,7 @@ describe('Openlayers MeasurementSupport', () => {
         expect(resultFeature.length).toBe(0);
     });
     it('test add coordinates manually when no existing coordinates', () => {
-        const features = [{"type": "Feature", "properties": {"disabled": true}, "geometry": {"type": "LineString", "coordinates": [["", ""]]}}];
+        const features = [{"type": "Feature", "properties": {"disabled": true}, "geometry": {"type": "LineString", "coordinates": [["", ""]], "textLabels": []}}];
         const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
         let cmp = renderMeasurement();
         cmp = renderMeasurement({
@@ -363,6 +363,50 @@ describe('Openlayers MeasurementSupport', () => {
         expect(resultFeature[0].properties.disabled).toBe(true);
         expect(resultFeature[0].geometry).toBeTruthy();
         expect(resultFeature[0].geometry).toEqual(features[0].geometry);
+        // Add empty label when empty coordinate (edit)
+        expect(resultFeature[0].geometry.textLabels).toEqual([{text: "0"}]);
+    });
+    it('test remove last coordinates when updating polygon', () => {
+        const features = [{"type": "Feature", "properties": {"disabled": false}, "geometry": {"type": "Polygon",
+            "coordinates": [[[1, 2], [2, 3], [3, 4], [1, 2], [1, 2]]], "textLabels": [{text: "1m"}, {text: "2m"}, {text: "3m"}, {text: "4m"}]}}];
+        const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
+        let cmp = renderMeasurement();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLabel: true,
+                showLengthAndBearingLabel: true,
+                features: []
+            },
+            uom
+        });
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "Polygon",
+                lineMeasureEnabled: true,
+                updatedByUI: true,
+                showLabel: true,
+                showLengthAndBearingLabel: true,
+                features
+            },
+            uom
+        });
+
+        expect(cmp.outputValues).toExist();
+        expect(cmp.outputValues.length).toBe(2);
+        expect(cmp.textLabels).toExist();
+        expect(cmp.textLabels.length).toBe(4);
+
+        expect(spyOnChangeGeometry).toHaveBeenCalled();
+        const resultFeature = spyOnChangeGeometry.calls[0].arguments[0];
+        expect(resultFeature.length).toBe(1);
+        expect(resultFeature[0].properties.disabled).toBe(false);
+        expect(resultFeature[0].geometry).toBeTruthy();
+        expect(resultFeature[0].geometry.type).toBe('Polygon');
+        expect(resultFeature[0].geometry.coordinates[0].length).toBe(4);
+        expect(resultFeature[0].geometry.textLabels.length).toBe(4);
     });
     it('test drawing (LineString)', () => {
         const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");

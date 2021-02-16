@@ -828,7 +828,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(invalidLineString).toBeTruthy();
     });
     it('CoordinatesEditor as Polygon, 5 rows, warning on invalid rows', () => {
-        const components = [{
+        let components = [{
             lat: 5,
             lon: ""
         }, {
@@ -846,15 +846,16 @@ describe("test the CoordinatesEditor Panel", () => {
             lon: ""
         }];
 
-        const editor = ReactDOM.render(
+        let editor = ReactDOM.render(
             <CoordinatesEditor
                 {...testHandlers}
                 isMouseEnterEnabled
                 isMouseLeaveEnabled
                 type="Polygon"
                 format="decimal"
-                properties={{isValidFeature: true}}
+                properties={{isValidFeature: true, disabled: true}}
                 components={components}
+                showFeatureSelector
             />, document.getElementById("container")
         );
         expect(editor).toExist();
@@ -865,5 +866,28 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(buttons.length).toBe(18);
         const invalidPolygon = buttons[0].getElementsByClassName('glyphicon-exclamation-mark');
         expect(invalidPolygon).toBeTruthy();
+        const addButton = buttons[2];
+        expect(addButton.className).toContain('disabled');
+        const selectFeature = TestUtils.scryRenderedDOMComponentsWithClass(editor, "Select");
+        expect(selectFeature[0].className).toContain('is-disabled');
+        components[0] = {lat: 1, lon: 5};
+        editor = ReactDOM.render(
+            <CoordinatesEditor
+                {...testHandlers}
+                isMouseEnterEnabled
+                isMouseLeaveEnabled
+                type="Polygon"
+                format="decimal"
+                properties={{isValidFeature: true, disabled: true}}
+                components={components}
+                showFeatureSelector
+            />, document.getElementById("container")
+        );
+        // Coordinate rows
+        const formControl = TestUtils.scryRenderedDOMComponentsWithClass(editor, "form-control");
+        expect(formControl.length).toBe(10);
+        formControl.forEach((fc, i)=>
+            (i <= 7) ? expect(fc.disabled).toBe(true) : expect(fc.disabled).toBe(false));
+
     });
 });
