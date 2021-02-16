@@ -283,6 +283,7 @@ export default class MeasurementSupport extends React.Component {
 
         this.source.addFeatures(geometries.filter(g => !!g).map(geometry => new Feature({geometry})));
         let tempTextLabels = [...this.textLabels];
+        // Add segment length labels to the feature
         newFeatures.map((newFeature, index) => {
             const isBearing = !!newFeature.properties?.values?.find(val=>val.type === 'bearing');
             const isPolygon = newFeature.geometry.type === "Polygon";
@@ -295,7 +296,7 @@ export default class MeasurementSupport extends React.Component {
             } else {
                 newFeature.geometry.textLabels =  tempTextLabels.splice(0, currentCoordinateLength - sliceVal) || [];
             }
-            if (isEqual(coordinates[coordinates.length - 1], coordinates[coordinates.length - 2]) && !hasInvalidCoords && isPolygon) {
+            if (isPolygon && !hasInvalidCoords && coordinates.length && isEqual(coordinates[currentCoordinateLength], coordinates[currentCoordinateLength - 1])) {
                 newFeature.geometry.coordinates[0].pop(); // Pop last coordinate of a Polygon to prevent extra rows in Measure panel
             }
             return newFeature;
