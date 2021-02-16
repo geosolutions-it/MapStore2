@@ -32,6 +32,7 @@ import LocateTool from "../components/mapcontrols/locate/LocateTool";
   * @prop {string} cfg.text The button text, if any
   * @prop {number} cfg.maxZoom The maximum zoom for automatic view setting to the user location
   * @prop {string} cfg.className the class name for the button
+  * @prop {string} cfg.rateControl The rate control for the geolocation update frequency, value in milliseconds
   *
   */
 
