@@ -11,6 +11,7 @@ import ToggleFilter from '../ToggleFilter';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import * as TestUtils from 'react-dom/test-utils';
+import { layerFilter, emptyLayerFilter }  from '../../../../test-resources/widgets/ToogleFilterLayer';
 
 describe('Test Toggle filter', () => {
     beforeEach((done) => {
@@ -24,65 +25,26 @@ describe('Test Toggle filter', () => {
         setTimeout(done);
     });
 
-    let node = {
-        "layerFilter": {
-            "searchUrl": null,
-            "featureTypeConfigUrl": null,
-            "showGeneratedFilter": false,
-            "attributePanelExpanded": true,
-            "spatialPanelExpanded": true,
-            "crossLayerExpanded": true,
-            "showDetailsPanel": false,
-            "groupLevels": 5,
-            "useMapProjection": false,
-            "toolbarEnabled": true,
-            "groupFields": [
-                {
-                    "id": 1,
-                    "logic": "OR",
-                    "index": 0
-                }
-            ],
-            "maxFeaturesWPS": 5,
-            "filterFields": [
-                {
-                    "rowId": 1613414722261,
-                    "groupId": 1,
-                    "attribute": "STATE_NAME",
-                    "operator": "=",
-                    "value": "Arizona",
-                    "type": "string",
-                    "fieldOptions": {
-                        "valuesCount": 0,
-                        "currentPage": 1
-                    },
-                    "exception": null,
-                    "loading": false,
-                    "openAutocompleteMenu": false,
-                    "options": {
-                        "STATE_NAME": []
-                    }
-                }
-            ],
-            "spatialField": {
-                "method": null,
-                "operation": "INTERSECTS",
-                "geometry": null,
-                "attribute": "the_geom"
-            },
-            "simpleFilterFields": [],
-            "crossLayerFilter": null,
-            "autocompleteEnabled": true
-        }
-    };
-
     it('render component', () => {
+
         const tf = ReactDOM.render(
-            <ToggleFilter node={node} propertiesChangeHandler={() => {}} />,
+            <ToggleFilter node={layerFilter} propertiesChangeHandler={() => {}} />,
             document.getElementById("container"));
         expect(tf).toExist();
         const tfNode = ReactDOM.findDOMNode(tf);
         expect(tfNode.className.indexOf('toc-filter-icon') >= 0).toBe(true);
+    });
+
+    it('test cannot render component', () => {
+        const propertiesChangeHandler = {
+            callBack: () => {}
+        };
+        const tf = ReactDOM.render(<ToggleFilter  node={emptyLayerFilter} propertiesChangeHandler={propertiesChangeHandler.callBack} />,
+            document.getElementById("container"));
+
+        expect(tf).toExist();
+        const tfNode = ReactDOM.findDOMNode(tf);
+        expect(tfNode).toNotExist();
     });
 
     it('test click handler', () => {
@@ -91,7 +53,7 @@ describe('Test Toggle filter', () => {
         };
         const propertiesChangeHandlerSpy = expect.spyOn(propertiesChangeHandler, 'callBack');
         const tf = ReactDOM.render(
-            <ToggleFilter node={node}
+            <ToggleFilter node={layerFilter}
                 propertiesChangeHandler={propertiesChangeHandler.callBack} />,
             document.getElementById("container"));
         expect(tf).toExist();
