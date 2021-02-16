@@ -19,7 +19,7 @@ import {
     transformLineToArcs,
     midpoint
 } from '../../../utils/CoordinatesUtils';
-import {convertUom, getFormattedBearingValue} from '../../../utils/MeasureUtils';
+import {convertUom, getFormattedBearingValue, validateCoord} from '../../../utils/MeasureUtils';
 import {set} from '../../../utils/ImmutableUtils';
 import {startEndPolylineStyle} from './VectorStyle';
 import {getMessageById} from '../../../utils/LocaleUtils';
@@ -160,9 +160,6 @@ export default class MeasurementSupport extends React.Component {
         return null;
     }
 
-    validateCoords = (coords) => {
-        return coords.filter((c) => !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
-    }
     updateFeatures = (props) => {
         const oldFeatures = this.source.getFeatures();
 
@@ -171,9 +168,10 @@ export default class MeasurementSupport extends React.Component {
         this.source.clear();
         this.textLabels = [];
         this.segmentLengths = [];
-
+        let indexOfFeatureInEdit = null;
         const results = props.measurement.features.map((feature, index) => {
             if (get(feature, 'properties.disabled')) {
+                indexOfFeatureInEdit = index;
                 return [feature, oldFeatures && oldFeatures[index] && oldFeatures[index].getGeometry()];
             }
 
@@ -284,14 +282,23 @@ export default class MeasurementSupport extends React.Component {
         const geometries = results.map(result => result[1]);
 
         this.source.addFeatures(geometries.filter(g => !!g).map(geometry => new Feature({geometry})));
-        const tempTextLabels = [...this.textLabels];
-        newFeatures.map((newFeature) => {
+        let tempTextLabels = [...this.textLabels];
+        // Add segment length labels to the feature
+        newFeatures.map((newFeature, index) => {
             const isBearing = !!newFeature.properties?.values?.find(val=>val.type === 'bearing');
             const isPolygon = newFeature.geometry.type === "Polygon";
             const sliceVal = (isPolygon || isBearing) ? 0 : 1;
             const coordinates = isPolygon ? newFeature.geometry.coordinates[0] : newFeature.geometry.coordinates;
-            const tempCoordinateLengthCurr = isPolygon ? coordinates.length - 1 : isBearing ? 0 : coordinates.length;
-            newFeature.geometry.textLabels =  tempTextLabels.splice(0, tempCoordinateLengthCurr - sliceVal) || [];
+            const hasInvalidCoords = coordinates.some(c=> !validateCoord(c));
+            const currentCoordinateLength = isPolygon ? coordinates.length - 1 : isBearing ? 0 : coordinates.length;
+            if (indexOfFeatureInEdit !== null && indexOfFeatureInEdit === index && hasInvalidCoords) {
+                newFeature.geometry.textLabels = newFeature.geometry.textLabels.concat([{text: "0"}]); // Add empty label when coordinate row is empty
+            } else {
+                newFeature.geometry.textLabels =  tempTextLabels.splice(0, currentCoordinateLength - sliceVal) || [];
+            }
+            if (isPolygon && !hasInvalidCoords && coordinates.length && isEqual(coordinates[currentCoordinateLength], coordinates[currentCoordinateLength - 1])) {
+                newFeature.geometry.coordinates[0].pop(); // Pop last coordinate of a Polygon to prevent extra rows in Measure panel
+            }
             return newFeature;
         });
 

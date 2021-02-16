@@ -90,17 +90,22 @@ describe('Test the measurement reducer', () => {
     });
     it('CHANGE_COORDINATES', () => {
         const coordinates = [{lon: 3, lat: 1}, {lon: 5, lat: 5}];
-        let state = measurement({
-            feature: {
-                geometry: {
-                    type: "LineString",
-                    coordinates: [[1, 3], [5, 4]]
-                }
+        const feature = {
+            geometry: {
+                type: "LineString",
+                coordinates: [[1, 3], [5, 4]],
+                textLabels: [{text: "1m"}]
             }
+        };
+        let state = measurement({
+            feature,
+            features: [feature],
+            currentFeature: 0
         }, changeCoordinates(coordinates));
         expect(state.feature.geometry.coordinates).toEqual([[3, 1], [5, 5]]);
         expect(state.feature.properties.disabled).toEqual(false);
         expect(state.updatedByUI).toBe(true);
+        expect(state.features[0].geometry.textLabels).toEqual([{text: "1m"}]);
     });
     it('SET_CONTROL_PROPERTY closing measure tool', () => {
         let state = measurement({
@@ -177,15 +182,32 @@ describe('Test the measurement reducer', () => {
         expect(state.currentFeature).toBe(2);
     });
     it('CHANGED_GEOMETRY', () => {
+        const feature = {type: "Feature", geometry: {type: "LineString"}};
         let state = measurement({
-            geomType: "LineString",
+            geomType: "Bearing",
             lineMeasureEnabled: true,
             areaMeasureEnabled: false,
             bearingMeasureEnabled: false,
             len: 0,
             area: 700,
-            features: []
-        }, changeGeometry([{type: "Feature", geometry: {type: "LineString"}}]));
-        expect(state.currentFeature).toBe(0); // current feature index in the features array
+            features: [],
+            updatedByUI: true,
+            isDrawing: true
+        }, changeGeometry([feature]));
+        expect(state.features).toEqual([feature]);
+        expect(state.updatedByUI).toBe(false);
+        expect(state.isDrawing).toBe(false);
+        expect(state.geomTypeSelected).toEqual(["LineString"]);
+    });
+    it('CHANGED_GEOMETRY', () => {
+        let state = measurement({
+            features: [],
+            updatedByUI: true,
+            isDrawing: true
+        }, changeGeometry([]));
+        expect(state.features).toEqual([]);
+        expect(state.updatedByUI).toBe(false);
+        expect(state.isDrawing).toBe(false);
+        expect(state.exportToAnnotation).toBe(false);
     });
 });
