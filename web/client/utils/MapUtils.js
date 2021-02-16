@@ -205,7 +205,11 @@ export function getScales(projection, dpi) {
     const dpu = dpi2dpu(dpi, projection);
     return getResolutions().map((resolution) => resolution * dpu);
 }
-
+/**
+ * Convert a resolution to the nearest zoom
+ * @param {number} targetResolution resolution to be converted in zoom
+ * @param {array} resolutions list of all available resolutions
+ */
 export function getZoomFromResolution(targetResolution, resolutions = getResolutions()) {
     // compute the absolute difference for all resolutions
     // and store the idx as zoom
