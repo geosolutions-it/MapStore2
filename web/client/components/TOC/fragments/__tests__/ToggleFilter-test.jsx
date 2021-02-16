@@ -11,7 +11,7 @@ import ToggleFilter from '../ToggleFilter';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import * as TestUtils from 'react-dom/test-utils';
-import { layerFilter, emptyLayerFilter }  from '../../../../test-resources/widgets/ToogleFilterLayer';
+import { layerFilter, emptyLayerFilter }  from '../../../../test-resources/widgets/dependenciesToFiltersData';
 
 describe('Test Toggle filter', () => {
     beforeEach((done) => {
