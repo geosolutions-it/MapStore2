@@ -57,7 +57,7 @@ const defaultState = {
 function measurement(state = defaultState, action) {
     switch (action.type) {
     case CHANGE_MEASUREMENT_TOOL: {
-        const currentFeatureIndex = action.geomType !== null && findIndex(state.features, (f)=> ((f.properties.values[0] || {}).type === 'bearing' ? 'Bearing' : f.geometry.type) === action.geomType);
+        const currentFeatureIndex = action.geomType !== null && findIndex(state.features, (f)=> ((f.properties?.values?.[0] || {}).type === 'bearing' ? 'Bearing' : f.geometry.type) === action.geomType);
         return assign({}, state, {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
@@ -134,9 +134,11 @@ function measurement(state = defaultState, action) {
     case CHANGED_GEOMETRY: {
         let {features} = action;
         const geomTypeSelected = getGeomTypeSelected(features);
+        const currentFeature = state.features.length === features.length ? state.currentFeature : features.length - 1;
         return {
             ...state,
             features,
+            currentFeature,
             geomTypeSelected,
             updatedByUI: false,
             isDrawing: false,
