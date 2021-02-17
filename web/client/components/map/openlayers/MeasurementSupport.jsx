@@ -160,6 +160,21 @@ export default class MeasurementSupport extends React.Component {
         return null;
     }
 
+    /**
+     * Update the draw interaction when feature in edit
+     */
+    updateInteraction = (props) => {
+        const disableInteraction = props.measurement.features.some(ft=> get(ft, 'properties.disabled'));
+        if (disableInteraction) {
+            // Disable interaction (To allow add coordinate points by click on map)
+            this.removeDrawInteraction();
+        } else if (this.drawInteraction === null) {
+            // Re-enable interaction when feature is valid
+            this.restoreDrawState();
+            this.addDrawInteraction(props);
+        }
+    }
+
     updateFeatures = (props) => {
         const oldFeatures = this.source.getFeatures();
 
@@ -169,6 +184,7 @@ export default class MeasurementSupport extends React.Component {
         this.textLabels = [];
         this.segmentLengths = [];
         let indexOfFeatureInEdit = null;
+        this.updateInteraction(props);
         const results = props.measurement.features.map((feature, index) => {
             if (get(feature, 'properties.disabled')) {
                 indexOfFeatureInEdit = index;
