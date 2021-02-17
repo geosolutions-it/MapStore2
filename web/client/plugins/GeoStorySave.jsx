@@ -124,7 +124,7 @@ export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {
                 isLoggedIn,
                 resourceSelector,
                 (loggedIn ) => ({
-                    style: loggedIn ? {} : { display: "none" } // the resource is new (no resource) or if present, is editable
+                    style: loggedIn ? {} : { display: "none" } // the  resource is new (no resource) or if present, is editable
                 })
             ),
             position: 2,
