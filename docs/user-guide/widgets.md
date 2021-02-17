@@ -245,7 +245,6 @@ Through the buttons available on each widget the user can  perform the followin
 * Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
 
 <img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
-
 ### Access widgets menu
 
 Once a widget is added to the map, it is possible to access its **Menu** through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button. For *Text*, *Table* and *Counter* widgets, the following menu appears:

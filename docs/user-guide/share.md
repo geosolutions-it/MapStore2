@@ -1,7 +1,7 @@
 # Sharing Resources
 *******************
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/)  provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
 
 * Directly from the MapStore [Homepage](home-page.md) by clicking on the Share button <img src="../img/button/share.jpg" class="ms-docbutton"/> present in the toolbar of each resource card
 
