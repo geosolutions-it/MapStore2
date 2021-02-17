@@ -206,7 +206,7 @@ class CoordinatesEditor extends React.Component {
             {
                 glyph: 'plus',
                 tooltipId: 'annotations.editor.add',
-                disabled: this.props.properties.disabled,
+                disabled: type !== 'Bearing' ? this.props.properties.disabled : false,
                 visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : true,
                 onClick: () => {
                     let tempComps = [...this.props.components];

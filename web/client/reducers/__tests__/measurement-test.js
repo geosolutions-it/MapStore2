@@ -192,22 +192,27 @@ describe('Test the measurement reducer', () => {
             area: 700,
             features: [],
             updatedByUI: true,
-            isDrawing: true
-        }, changeGeometry([feature]));
-        expect(state.features).toEqual([feature]);
+            isDrawing: true,
+            currentFeature: 0
+        }, changeGeometry([feature, feature]));
+        expect(state.features).toEqual([feature, feature]);
         expect(state.updatedByUI).toBe(false);
         expect(state.isDrawing).toBe(false);
         expect(state.geomTypeSelected).toEqual(["LineString"]);
+        expect(state.currentFeature).toBe(1);
     });
     it('CHANGED_GEOMETRY', () => {
         let state = measurement({
             features: [],
             updatedByUI: true,
-            isDrawing: true
+            isDrawing: true,
+            currentFeature: 0
         }, changeGeometry([]));
         expect(state.features).toEqual([]);
         expect(state.updatedByUI).toBe(false);
         expect(state.isDrawing).toBe(false);
+        expect(state.isDrawing).toBe(false);
         expect(state.exportToAnnotation).toBe(false);
+        expect(state.currentFeature).toBe(0);
     });
 });
