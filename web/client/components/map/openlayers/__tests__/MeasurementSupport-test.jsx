@@ -857,4 +857,71 @@ describe('Openlayers MeasurementSupport', () => {
         expect(spyOnchangeGeometry.calls[0].arguments[0]).toEqual([]);
         expect(spyOnsetTextLabels.calls[0].arguments[0]).toEqual([]);
     });
+    it('test removeInteraction in edit when feature has invalid coordinates', () => {
+        let cmp = renderMeasurement();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLabel: true
+            },
+            uom
+        });
+
+        const feature = new Feature({
+            geometry: new LineString([[10.0, 15.0], [10.0, 15.0]]),
+            name: 'My line 1'
+        });
+        const savedInteractionsCount = map.getInteractions().getLength();
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature
+        });
+        cmp.sketchFeature.getGeometry().setCoordinates([[10.0, 15.0], [10.0, 10.0]]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([11.0, 25.0]);
+
+        const features = [{
+            type: "Feature",
+            geometry: {type: "LineString", coordinates: [[1, 2], [2, 3], ["", ""]], textLabels: [{text: "1m"}]},
+            properties: {values: [{value: 1154.583, formattedValue: "10 m", position: [1, 2], type: "length"}], disabled: true}
+        }];
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: true,
+                features
+            },
+            uom
+        });
+        // Remove drawInteraction when feature has disabled property
+        expect(cmp.drawInteraction).toBe(null);
+        expect(cmp.sketchFeature).toBe(null);
+        expect(map.getInteractions().getLength()).toBe(savedInteractionsCount - 1);
+        expect(cmp.measureTooltips.length).toBe(0);
+        expect(cmp.measureTooltipElements.length).toBe(0);
+        expect(cmp.outputValues.length).toBe(0);
+        expect(cmp.segmentOverlays.length).toBe(0);
+        expect(cmp.segmentOverlayElements.length).toBe(0);
+        expect(map.getOverlays().getLength()).toBe(0);
+        expect(cmp.textLabels).toEqual([]);
+        expect(cmp.segmentLengths).toEqual([]);
+        expect(map.getLayers().getLength()).toBe(1);
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: true,
+                features: [{
+                    type: "Feature",
+                    geometry: {type: "LineString", coordinates: [[1, 2], [2, 3], [3, 4]], textLabels: [{text: "1m"}, {text: "2m"}]},
+                    properties: {values: [{value: 1154.583, formattedValue: "10 m", position: [1, 2], type: "length"}], disabled: false}
+                }]
+            },
+            uom
+        });
+        // Restore drawInteraction when feature is valid
+        expect(cmp.drawInteraction).toBeTruthy();
+    });
 });
