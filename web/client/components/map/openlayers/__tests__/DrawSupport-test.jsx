@@ -1843,6 +1843,44 @@ describe('Test DrawSupport', () => {
             drawMethod: "Circle"
         });
         expect(support).toExist();
+        expect(support.drawSource.getFeatures()[0].getGeometry().getType()).toBe("Circle");
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+    it('test click callbacks in edit mode with Circle feature with geodesic', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                valueText: "a text",
+                canEdit: true,
+                radius: 1111,
+                isCircle: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: "Circle",
+            options: {
+                drawEnabled: false,
+                editEnabled: true,
+                addClickCallback: true,
+                geodesic: true
+            }
+        });
+        expect(support.drawSource.getFeatures()[0].getGeometry().getType()).toBe("Polygon");
+        expect(support).toExist();
         expect(spyOnDrawingFeatures).toHaveBeenCalled();
         done();
     });
@@ -1887,6 +1925,54 @@ describe('Test DrawSupport', () => {
         expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
 
         done();
+    });
+    it('test drawend callbacks with Circle with geodesic, transformed into feature collection', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            addInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+        const simplifiedCircle = new Feature({
+            geometry: new Polygon([[
+                [1260844.6064174946, 5858067.29727681],
+                [1260960.7874218025, 5857951.114737838],
+                [1260844.6064174946, 5857834.9352681665],
+                [1260728.4254131867, 5857951.114737838],
+                [1260844.6064174946, 5858067.29727681]
+            ]])
+        });
+        const features = JSON.parse(`[{"type":"FeatureCollection","id":"1","geometry":null,"features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[]]},"properties":{"id":"1","isValidFeature":false,"canEdit":true,"isCircle":true,"isDrawing":true}}],"newFeature":true,"properties":{"id":"1"},"tempFeatures":[]}]`);
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const support = ReactDOM.render(
+            <DrawSupport features={features} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={features} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Circle" options={{
+                stopAfterDrawing: true,
+                geodesic: true,
+                drawEnabled: true,
+                transformToFeatureCollection: true
+            }}
+            onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: simplifiedCircle
+        });
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: simplifiedCircle
+        });
+        expect(spyEnd).toHaveBeenCalled();
+        const [feature] = spyEnd.calls[0].arguments[0].features;
+        expect(feature.properties.radius).toBe(79.91);
     });
 
     it('test drawend callbacks with Text, transformed int feature collection', (done) => {
@@ -2240,6 +2326,22 @@ describe('Test DrawSupport', () => {
         expect(spyOnGeometryChanged).toHaveBeenCalled();
         expect(spyOnDrawingFeatures).toNotHaveBeenCalled();
 
+        done();
+    });
+    it('test modifyInteraction of Circle with geodesic', (done) => {
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: true,
+                editEnabled: true,
+                geodesic: true
+            }
+        });
+        expect(support).toExist();
+        expect(support.modifyInteraction).toBeFalsy();
         done();
     });
     it('test drawPropertiesForGeometryType for BBOX', (done) => {
