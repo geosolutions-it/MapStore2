@@ -1276,4 +1276,38 @@ describe('annotations Epics', () => {
         const action = geometryHighlight("1");
         store.dispatch(action);
     });
+    it('edit circle annotation with geodesic property ', (done) => {
+        store = mockStore({...defaultState, annotations: {...defaultState.annotations, config: {...defaultState.annotations.config, geodesic: true}}} );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[0].type).toBe(DRAWING_FEATURE);
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].options).toContain({
+                    geodesic: true,
+                    editEnabled: true,
+                    transformToFeatureCollection: true,
+                    addClickCallback: true
+                });
+                done();
+            }
+        });
+        const circleGeom = {
+            type: "Polygon",
+            coordinates: [[1, 2], [2, 3]]
+        };
+        const feature = {
+            type: "Feature",
+            geometry: circleGeom,
+            properties: {
+                canEdit: true,
+                id: "12345",
+                isCircle: true
+            }
+        };
+        const action = drawingFeatures([feature]);
+        store.dispatch(action);
+
+    });
 });
