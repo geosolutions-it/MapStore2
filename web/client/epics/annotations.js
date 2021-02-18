@@ -7,7 +7,7 @@
  */
 
 import Rx from 'rxjs';
-import { head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined } from 'lodash';
+import { head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined, get } from 'lodash';
 import assign from 'object-assign';
 import axios from 'axios';
 import uuidv1 from 'uuid/v1';
@@ -113,6 +113,16 @@ const validateFeatureCollection = (feature) => {
     return set("features", features, feature);
 };
 
+/**
+ * Get geodesic property from the annotation config
+ * @param state
+ * @param drawMethod
+ * @return {boolean}
+ */
+const getGeodesicProperty = (state, drawMethod = "Circle") => {
+    return drawMethod === "Circle" && get(state.annotations, "config.geodesic", false);
+};
+
 const getSelectDrawStatus = (state) => {
     let feature = state.annotations.editing;
     const multiGeom = multiGeometrySelector(state);
@@ -123,7 +133,8 @@ const getSelectDrawStatus = (state) => {
         selectEnabled: true,
         drawEnabled: false,
         translateEnabled: false,
-        transformToFeatureCollection: true
+        transformToFeatureCollection: true,
+        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
     };
 
     feature = validateFeatureCollection(feature);
@@ -139,7 +150,8 @@ const getReadOnlyDrawStatus = (state) => {
         selectEnabled: false,
         translateEnabled: false,
         drawEnabled: false,
-        transformToFeatureCollection: true
+        transformToFeatureCollection: true,
+        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
     };
     feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, ANNOTATIONS, [feature], drawOptions, feature.style);
@@ -157,7 +169,8 @@ const getEditingGeomDrawStatus = (state) => {
         translateEnabled: false,
         addClickCallback: true,
         useSelectedStyle: true,
-        transformToFeatureCollection: true
+        transformToFeatureCollection: true,
+        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
     };
     feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, ANNOTATIONS, [feature], drawOptions, feature.style);
@@ -248,7 +261,8 @@ export default (viewer) => ({
                 editEnabled: false,
                 selectEnabled: true,
                 drawEnabled: false,
-                transformToFeatureCollection: true
+                transformToFeatureCollection: true,
+                geodesic: getGeodesicProperty(state, type)
             };
             const isMeasureType = feature.properties?.type === MEASURE_TYPE || false;
             let actions = [
@@ -310,7 +324,8 @@ export default (viewer) => ({
                     editFilter: (f) => f.getProperties().canEdit,
                     useSelectedStyle: true,
                     transformToFeatureCollection: true,
-                    addClickCallback: true
+                    addClickCallback: true,
+                    geodesic: getGeodesicProperty(state, type)
                 };
 
                 return Rx.Observable.from([
@@ -381,16 +396,14 @@ export default (viewer) => ({
         }),
     startDrawingMultiGeomEpic: (action$, store) => action$.ofType(START_DRAWING)
         .filter(() => store.getState().annotations.editing.features && !!store.getState().annotations.editing.features.length || store.getState().annotations.featureType === "Circle")
-        .switchMap( ({options: {geodesic}} = {options: {} }) => {
+        .switchMap( () => {
             const state = store.getState();
             const feature = state.annotations.editing;
             const type = state.annotations.featureType;
             const defaultTextAnnotation = state.annotations.defaultTextAnnotation;
-            const multiGeom = multiGeometrySelector;
-            const geodesicEnabled = type === "Circle" && geodesic;
             const drawOptions = {
                 featureProjection: "EPSG:4326",
-                stopAfterDrawing: !multiGeom,
+                stopAfterDrawing: !multiGeometrySelector,
                 editEnabled: type !== "Circle",
                 translateEnabled: false,
                 drawEnabled: type === "Circle",
@@ -399,7 +412,7 @@ export default (viewer) => ({
                 defaultTextAnnotation,
                 transformToFeatureCollection: true,
                 addClickCallback: true,
-                geodesic: geodesicEnabled
+                geodesic: getGeodesicProperty(state, type)
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, ANNOTATIONS, [feature], drawOptions, assign({}, feature.style, {highlight: false})));
         }),
@@ -629,7 +642,8 @@ export default (viewer) => ({
                 useSelectedStyle: true,
                 drawEnabled: false,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state, method)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -725,7 +739,8 @@ export default (viewer) => ({
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -752,7 +767,8 @@ export default (viewer) => ({
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state, method)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
@@ -785,7 +801,8 @@ export default (viewer) => ({
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
-                addClickCallback: true
+                addClickCallback: true,
+                geodesic: getGeodesicProperty(state)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
