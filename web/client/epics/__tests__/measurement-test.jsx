@@ -209,7 +209,7 @@ describe('measurement epics', () => {
             }, state);
     });
     it('test setMeasureStateFromAnnotationEpic', (done) => {
-        const NUMBER_OF_ACTIONS = 3;
+        const NUMBER_OF_ACTIONS = 4;
         const state = {
             controls: {
                 measure: {
@@ -232,6 +232,8 @@ describe('measurement epics', () => {
                 expect(actions[2].control).toBe("annotations");
                 expect(actions[2].property).toBe("enabled");
                 expect(actions[2].value).toBe(false);
+                expect(actions[3].type).toBe("ANNOTATIONS:VISIBILITY");
+                expect(actions[3].visibility).toBe(false);
                 done();
             }, state);
     });
