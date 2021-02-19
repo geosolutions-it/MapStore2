@@ -88,7 +88,7 @@ export const GeoStorySave = createPlugin('GeoStorySave', {
                 isLoggedIn,
                 resourceSelector,
                 (loggedIn, {canEdit, id} = {}) => ({
-                    style: loggedIn && (!id || id && canEdit) ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
+                    style: loggedIn && (id && canEdit) ? {} : { display: "none" } // save is present only if the resource already exists and you can save
                 })
             ),
             position: 1,
@@ -123,8 +123,8 @@ export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {
             selector: createSelector(
                 isLoggedIn,
                 resourceSelector,
-                (loggedIn, {id} = {}) => ({
-                    style: loggedIn && id ? {} : { display: "none" }// save as is present only if the resource already exists and you can save
+                (loggedIn ) => ({
+                    style: loggedIn ? {} : { display: "none" } // the  resource is new (no resource) or if present, is editable
                 })
             ),
             position: 2,
