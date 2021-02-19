@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/leaflet/Layers');
-var L = require('leaflet');
+import Layers from '../../../../utils/leaflet/Layers';
+import L from 'leaflet';
 
 Layers.registerType('osm', (options) => {
     return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

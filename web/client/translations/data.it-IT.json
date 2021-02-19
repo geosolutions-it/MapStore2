@@ -104,6 +104,25 @@
             "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
             "templateFormatInfoAlertExample": "id della feature è ${ properties }",
             "templatePreview": "Anteprima template",
+            "visibilityLimits": {
+                "title": "Limiti di visibilità",
+                "serverValuesUpdateUndefined": "Il server non ha fornito limiti di visibilità di scala per questo livello",
+                "serverValuesUpdate": "Il server ha fornito limiti di visibilità di scala minimi e massimi per questo livello",
+                "serverValuesUpdateMinScale": "Il server ha fornito solo il limite minimo di visibilità di scala per questo livello",
+                "serverValuesUpdateMaxScale": "Il server ha fornito solo il limite massimo di visibilità di scala per questo livello",
+                "rangeError": "Il valore minimo è maggiore del valore massimo. Fornisci un intervallo in cui il valore massimo è maggiore del valore minimo",
+                "serverValuesError": "Non è possibile richiedere limiti di visibilità di scala minimi e massimi al server. Probabilmente a causa di un errore nella connessione di rete o di un endpoint di capacità mancante",
+                "updateWMSCapabilities": "Richiedi limiti di visibilità di scala minimi e massimi al server",
+                "maxValue": "Valore massimo (escluso)",
+                "maxValuePlaceholder": "Seleziona il valore massimo",
+                "valueNoResultsText": "Nessuna opzione corrisponde al valore inserito",
+                "createOption": "Aggiungi un nuovo valore {label}",
+                "minValue": "Valore minimo (incluso)",
+                "minValuePlaceholder": "Seleziona il valore minimo",
+                "type": "Tipo di limite",
+                "scale": "Scala",
+                "resolution": "Risoluzione"
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Titolo",
@@ -534,6 +553,8 @@
             "radius": "Raggio",
             "filterIconEnabled": "Disattiva il filtro",
             "filterIconDisabled": "Attiva il filtro",
+            "notVisibleZoomIn": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom in per mostrare il layer",
+            "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -985,6 +1006,7 @@
             "attributefilter":{
                 "add_condition": " Aggiungi Condizione",
                 "delete": " Elimina",
+                "deleteGroup": " Elimina Gruppo",
                 "add_group": " Aggiungi Gruppo",
                 "group_label_a": "Soddisfa",
                 "group_label_b": "seguenti condizioni:",

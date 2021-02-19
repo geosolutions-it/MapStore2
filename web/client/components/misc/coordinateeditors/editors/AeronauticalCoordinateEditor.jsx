@@ -34,7 +34,8 @@ class AeronauticalCoordinateEditor extends React.Component {
         aeronauticalOptions: PropTypes.object,
         coordinate: PropTypes.string,
         onChange: PropTypes.func,
-        onKeyDown: PropTypes.func
+        onKeyDown: PropTypes.func,
+        disabled: PropTypes.bool
     };
     static defaultProps = {
         coordinate: "lat",
@@ -46,7 +47,8 @@ class AeronauticalCoordinateEditor extends React.Component {
                 step: 0.0001
             }
         },
-        onKeyDown: () => {}
+        onKeyDown: () => {},
+        disabled: false
     }
 
     onChange = (part, newValue) => {
@@ -133,6 +135,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     <IntlNumberFormControl
                         key={this.props.coordinate + "degree"}
                         value={this.props.degrees}
+                        disabled={this.props.disabled}
                         placeholder="d"
                         onChange={val => this.onChange("degrees", parseInt(val, 10))}
                         step={1}
@@ -150,6 +153,7 @@ class AeronauticalCoordinateEditor extends React.Component {
 
                 <div className={"minutes"} style={{width: 40, display: 'flex' }}>
                     <IntlNumberFormControl
+                        disabled={this.props.disabled}
                         key={this.props.coordinate + "minutes"}
                         placeholder={"m"}
                         size={3}
@@ -170,6 +174,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                 </div>
                 <div className="seconds" style={{display: 'flex'}}>
                     <IntlNumberFormControl
+                        disabled={this.props.disabled}
                         key={this.props.coordinate + "seconds"}
                         value={this.props.seconds}
                         placeholder="s"
@@ -189,6 +194,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                 <div className={"direction-select"}>
 
                     <FormControl
+                        disabled={this.props.disabled}
                         componentClass="select" placeholder="select"
                         value={this.props.direction}
                         onChange={e => this.onChange("direction", e.target.value)}

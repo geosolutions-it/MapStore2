@@ -14,6 +14,7 @@ import { Glyphicon } from 'react-bootstrap';
 import { getMapZoom } from '../../utils/PrintUtils';
 import ScaleBox from '../mapcontrols/scale/ScaleBox';
 import Button from '../misc/Button';
+import isNil from 'lodash/isNil';
 
 let PMap;
 let Layer;
@@ -58,7 +59,7 @@ class MapPreview extends React.Component {
     };
 
     UNSAFE_componentWillMount() {
-        const mapComponents = require('../map/' + this.props.mapType + '/index');
+        const mapComponents = require('../map/' + this.props.mapType + '/index').default;
         PMap = mapComponents.LMap;
         Layer = mapComponents.LLayer;
         Feature = mapComponents.Feature;
@@ -83,6 +84,8 @@ class MapPreview extends React.Component {
         const ratio = this.getRatio();
         const dpi = Math.round(96.0 / ratio);
         return assign({}, layer, {
+            ...(!isNil(layer?.minResolution) && { minResolution: layer.minResolution * ratio }),
+            ...(!isNil(layer?.maxResolution) && { maxResolution: layer.maxResolution * ratio }),
             params: assign({}, layer.params, {
                 "format_options": "dpi:" + dpi,
                 "MAP.RESOLUTION": dpi

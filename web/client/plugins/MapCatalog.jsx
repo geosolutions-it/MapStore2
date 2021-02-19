@@ -18,11 +18,11 @@ import {
     saveMap,
     deleteMap
 } from '../actions/mapcatalog';
-import { mapTypeSelector } from '../selectors/maptype';
 import { userSelector } from '../selectors/security';
 import {
     triggerReloadValueSelector,
-    filterReloadDelaySelector
+    filterReloadDelaySelector,
+    mapTypeSelector
 } from '../selectors/mapcatalog';
 
 import MapCatalogPanel from '../components/mapcatalog/MapCatalogPanel';
@@ -40,6 +40,7 @@ import * as epics from '../epics/mapcatalog';
  * @name MapCatalog
  */
 const MapCatalogComponent = ({
+    allow3d,
     active,
     mapType,
     user,

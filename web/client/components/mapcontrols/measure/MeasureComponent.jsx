@@ -184,7 +184,7 @@ class MeasureComponent extends React.Component {
         };
     };
 
-    renderMeasurements = () => {
+    renderMeasurements = (disabled = false) => {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
             <Grid fluid style={{maxHeight: 400}}>
@@ -200,6 +200,7 @@ class MeasureComponent extends React.Component {
                         </Col>}
                         <Col xs={6}>
                             <DropdownList
+                                disabled={disabled}
                                 value={this.props.uom.length.label}
                                 onChange={(value) => {
                                     this.props.onChangeUom("length", value, this.props.uom);
@@ -223,6 +224,7 @@ class MeasureComponent extends React.Component {
                         </Col>}
                         <Col xs={6}>
                             <DropdownList
+                                disabled={disabled}
                                 value={this.props.uom.area.label}
                                 onChange={(value) => {
                                     this.props.onChangeUom("area", value, this.props.uom);
@@ -245,9 +247,9 @@ class MeasureComponent extends React.Component {
         );
     };
 
-    renderPanel = () => {
+    renderPanel = (disabled) => {
         if (this.props.showResults) {
-            return this.renderMeasurements();
+            return this.renderMeasurements(disabled);
         }
         return null;
     };
@@ -275,7 +277,8 @@ class MeasureComponent extends React.Component {
         let coords;
         const features = get(this.props.measurement, 'features', []);
         const feature = features[this.props.measurement.currentFeature || 0];
-
+        const isFeatureInvalid = feature?.properties?.disabled || false;
+        const toolbarDisabled = (this.props.measurement.features || []).length === 0 || isFeatureInvalid;
         if (this.props.useSingleFeature) {
             geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();
             coords = (get(this.props.measurement, geomType.indexOf('polygon') !== -1 ? 'feature.geometry.coordinates[0]' : 'feature.geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
@@ -305,14 +308,16 @@ class MeasureComponent extends React.Component {
                                             active: !!this.props.lineMeasureEnabled,
                                             bsStyle: this.props.lineMeasureEnabled ? 'success' : 'primary',
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
-                                            onClick: () => this.onGeomClick('LineString')
+                                            onClick: () => this.onGeomClick('LineString'),
+                                            disabled: !this.props.lineMeasureEnabled && isFeatureInvalid
                                         },
                                         {
                                             active: !!this.props.areaMeasureEnabled,
                                             bsStyle: this.props.areaMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.areaGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea"),
-                                            onClick: () => this.onGeomClick('Polygon')
+                                            onClick: () => this.onGeomClick('Polygon'),
+                                            disabled: !this.props.areaMeasureEnabled && isFeatureInvalid
                                         },
                                         {
                                             visible: !this.props.disableBearing,
@@ -320,7 +325,8 @@ class MeasureComponent extends React.Component {
                                             bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.bearingGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, this.isTrueBearing() ? "measureComponent.MeasureTrueBearing" : "measureComponent.MeasureBearing"),
-                                            onClick: () => this.onGeomClick('Bearing')
+                                            onClick: () => this.onGeomClick('Bearing'),
+                                            disabled: !this.props.bearingMeasureEnabled && isFeatureInvalid
                                         }
                                     ]
                                 }/>
@@ -348,7 +354,7 @@ class MeasureComponent extends React.Component {
                                     [
                                         {
                                             glyph: 'ext-json',
-                                            disabled: (this.props.measurement.features || []).length === 0,
+                                            disabled: toolbarDisabled,
                                             visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showExportToGeoJSON,
                                             tooltip: <Message msgId="measureComponent.exportToGeoJSON"/>,
                                             onClick: () => {
@@ -364,7 +370,7 @@ class MeasureComponent extends React.Component {
                                         {
                                             glyph: '1-layer',
                                             visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsLayer,
-                                            disabled: (this.props.measurement.features || []).length === 0 || exportToAnnotation,
+                                            disabled: toolbarDisabled || exportToAnnotation,
                                             tooltip: <Message msgId="measureComponent.addAsLayer"/>,
                                             onClick: () => this.props.onAddAsLayer(
                                                 this.props.measurement.features,
@@ -387,13 +393,13 @@ class MeasureComponent extends React.Component {
                                                     }
                                                 );
                                             },
-                                            disabled: (this.props.measurement.features || []).length === 0,
+                                            disabled: toolbarDisabled,
                                             visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsAnnotation
                                         }
                                     ]
                                 }/>
                         </ButtonToolbar>
-                        {this.renderPanel()}
+                        {this.renderPanel(isFeatureInvalid)}
                     </div>
                 }>
                 {this.props.showCoordinateEditor && (<Grid fluid style={{maxHeight: 400, borderTop: '1px solid #ddd'}}>
@@ -416,7 +422,9 @@ class MeasureComponent extends React.Component {
                                 isDraggable
                                 type={this.props.geomType}
                                 showLengthAndBearingLabel={this.props.showLengthAndBearingLabel}
-                                components={!this.props.useSingleFeature && geomType.indexOf('polygon') !== -1 ? dropRight(coords) : coords}/>
+                                components={!this.props.useSingleFeature && geomType.indexOf('polygon') !== -1 ? dropRight(coords) : coords}
+                                properties={feature?.properties || {}}
+                            />
                         </Row> :
                         <Row>
                             <Col xs={12} className="text-center" style={{padding: 15}}>

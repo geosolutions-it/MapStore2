@@ -37,7 +37,9 @@ Layers.registerType('google', {
                     draggable: false,
                     disableDoubleClickZoom: true,
                     scrollwheel: false,
-                    streetViewControl: false
+                    streetViewControl: false,
+                    minZoom: options.minZoom,
+                    maxZoom: options.maxZoom
                 });
             }
             gmaps[mapId].setMapTypeId(layersMap[options.name]);
@@ -199,6 +201,12 @@ Layers.registerType('google', {
             const center = transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
             gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
             gmaps[mapId].setZoom(view.getZoom());
+        }
+        if (!oldOptions.minZoom && newOptions.minZoom) {
+            gmaps[mapId].setOptions({ minZoom: newOptions.minZoom });
+        }
+        if (!oldOptions.maxZoom && newOptions.maxZoom) {
+            gmaps[mapId].setOptions({ maxZoom: newOptions.maxZoom });
         }
     },
     remove(options, map, mapId) {

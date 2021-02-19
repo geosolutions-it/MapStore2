@@ -104,6 +104,25 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview",
+            "visibilityLimits": {
+                "title": "Visibility limits",
+                "serverValuesUpdateUndefined": "The server did not provided scale visibility limits for this layer",
+                "serverValuesUpdate": "The server provided minimum and maximum scale visibility limits for this layer",
+                "serverValuesUpdateMinScale": "The server provided only minimum scale visibility limit for this layer",
+                "serverValuesUpdateMaxScale": "The server provided only maximum scale visibility limit for this layer",
+                "rangeError": "The minimum value is greater than the maximum value. Please provide a range where the maximum value is greater than the minimum value",
+                "serverValuesError": "It is not possible to request minimum and maximum scale visibility limits to the server. Probably due to error in the network connection or missing capability endpoint",
+                "updateWMSCapabilities": "Request minimum and maximum scale visibility limits to the server",
+                "maxValue": "Max value (excluded)",
+                "maxValuePlaceholder": "Select max value",
+                "valueNoResultsText": "No options match the input value",
+                "createOption": "Add new value {label}",
+                "minValue": "Min value (included)",
+                "minValuePlaceholder": "Select min value",
+                "type": "Limits type",
+                "scale": "Scale",
+                "resolution": "Resolution"
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
@@ -534,6 +553,8 @@
             "radius": "Radius",
             "filterIconEnabled": "Disable layer filter",
             "filterIconDisabled": "Enable layer filter",
+            "notVisibleZoomIn": "The layer is not visible because it is outside the resolution limits. Zoom in to show the layer",
+            "notVisibleZoomOut": "The layer is not visible because it is outside the resolution limits. Zoom out to show the layer",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -985,6 +1006,7 @@
             "attributefilter":{
                 "add_condition": " Add Condition",
                 "delete": " Delete",
+                "deleteGroup": "Delete Group",
                 "add_group": " Add Group",
                 "group_label_a": "Match",
                 "group_label_b": "of the following conditions:",

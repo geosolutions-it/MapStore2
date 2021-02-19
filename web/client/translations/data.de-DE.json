@@ -104,6 +104,25 @@
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
             "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
             "templatePreview": "Vorschau template",
+            "visibilityLimits": {
+                "title": "Sichtbarkeitsgrenzen",
+                "serverValuesUpdateUndefined": "Der Server hat keine Skalierungssichtbarkeitsbeschränkungen für diese Ebene angegeben",
+                "serverValuesUpdate": "Der Server hat für diese Ebene minimale und maximale Sichtbarkeitsgrenzen für die Skalierung angegeben",
+                "serverValuesUpdateMinScale": "Der Server hat für diese Ebene nur eine minimale Sichtbarkeitsgrenze für die Skalierung angegeben",
+                "serverValuesUpdateMaxScale": "Der Server hat nur die maximale Sichtbarkeitsgrenze für diese Ebene angegeben",
+                "rangeError": "Der Minimalwert ist größer als der Maximalwert. Bitte geben Sie einen Bereich an, in dem der Maximalwert größer als der Minimalwert ist",
+                "serverValuesError": "Es ist nicht möglich, minimale und maximale Sichtbarkeitsbeschränkungen für den Server anzufordern. Wahrscheinlich aufgrund eines Fehlers in der Netzwerkverbindung oder eines fehlenden Funktionsendpunkts",
+                "updateWMSCapabilities": "Minimale und maximale Sichtbarkeitsbeschränkungen für den Server anfordern",
+                "maxValue": "Maximaler Wert (ausgeschlossen)",
+                "maxValuePlaceholder": "Maximalwert auswählen",
+                "valueNoResultsText": "Keine Optionen stimmen mit dem Eingabewert überein",
+                "createOption": "Neuen Wert hinzufügen {label}",
+                "minValue": "Mindestwert (enthalten)",
+                "minValuePlaceholder": "Mindestwert auswählen",
+                "type": "Limits Typ",
+                "scale": "Maßstab",
+                "resolution": "Auflösung"
+            },
             "tooltip": {
                 "label": "QuickInfo",
                 "title": "Titel",
@@ -535,6 +554,8 @@
             "radius": "Radius",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
+            "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
+            "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -986,6 +1007,7 @@
             "attributefilter":{
                 "add_condition": "Bedingung hinzufügen",
                 "delete": " Löschen",
+                "deleteGroup": " Gruppe löschen",
                 "add_group": "Gruppe hinzufügen",
                 "group_label_a": "Übereinstimmung",
                 "group_label_b": "der folgenden Bedingungen:",

@@ -4,8 +4,12 @@ import emptyState from '../../misc/enhancers/emptyState';
 
 export default emptyState(
     ({text} = {}) => !text,
-    ({iconFit} = {}) => ({
-        iconFit,
-        tooltip: <Message msgId="widgets.errors.notext" />
+    () => ({
+        iconFit: false,
+        glyph: false,
+        style: {
+            margin: "auto"
+        },
+        title: <Message msgId="widgets.errors.notext" />
     })
 );

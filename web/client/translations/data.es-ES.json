@@ -102,6 +102,25 @@
             "hideFormatDescription": "Deshabilite la información de la entidad para esta capa",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
+            "visibilityLimits": {
+                "title": "Límites de visibilidad",
+                "serverValuesUpdateUndefined": "El servidor no proporcionó límites de visibilidad de escala para esta capa",
+                "serverValuesUpdate": "El servidor proporcionó límites de visibilidad de escala mínima y máxima para esta capa",
+                "serverValuesUpdateMinScale": "El servidor proporcionó solo el límite mínimo de visibilidad de escala para esta capa",
+                "serverValuesUpdateMaxScale": "El servidor proporcionó solo el límite máximo de visibilidad de escala para esta capa",
+                "rangeError": "El valor mínimo es mayor que el valor máximo. Proporcione un rango donde el valor máximo sea mayor que el valor mínimo",
+                "serverValuesError": "No es posible solicitar límites de visibilidad de escala mínimos y máximos al servidor. Probablemente debido a un error en la conexión de red o al punto final de capacidad faltante",
+                "updateWMSCapabilities": "Solicitar límites de visibilidad de escala mínimos y máximos al servidor",
+                "maxValue": "Valor máximo (excluido)",
+                "maxValuePlaceholder": "Seleccionar valor máximo",
+                "valueNoResultsText": "Ninguna opción coincide con el valor de entrada",
+                "createOption": "Agregar nuevo valor {label}",
+                "minValue": "Valor mínimo (incluido)",
+                "minValuePlaceholder": "Seleccionar valor mínimo",
+                "type": "Tipo de límites",
+                "scale": "Escala",
+                "resolution": "Resolución"
+            },
             "tooltip": {
                 "label": "Información sobre herramientas",
                 "title": "Título",
@@ -534,6 +553,8 @@
             "radius": "Radio",
             "filterIconEnabled": "Deshabilitar filtro de capa",
             "filterIconDisabled": "Habilitar filtro de capa",
+            "notVisibleZoomIn": "La capa no es visible porque está fuera de los límites de resolución. Acercar para mostrar la capa",
+            "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -985,6 +1006,7 @@
             "attributefilter":{
                 "add_condition": " Añadir una condición",
                 "delete": " Borrar",
+                "deleteGroup": " Eliminar grupo",
                 "add_group": " Añadir un grupo",
                 "group_label_a": "Coincidencia con",
                 "group_label_b": "de las siguientes condiciones:",

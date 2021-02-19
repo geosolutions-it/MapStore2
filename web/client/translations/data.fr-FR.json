@@ -104,6 +104,25 @@
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
             "templatePreview": "Aperçu du modèle",
+            "visibilityLimits": {
+                "title": "Limites de visibilité",
+                "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",
+                "serverValuesUpdate": "Le serveur a fourni des limites de visibilité d'échelle minimale et maximale pour cette couche",
+                "serverValuesUpdateMinScale": "Le serveur a fourni uniquement une limite de visibilité d'échelle minimale pour cette couche",
+                "serverValuesUpdateMaxScale": "Le serveur n'a fourni que la limite de visibilité d'échelle maximale pour cette couche",
+                "rangeError": "La valeur minimale est supérieure à la valeur maximale. Veuillez fournir une plage où la valeur maximale est supérieure à la valeur minimale",
+                "serverValuesError": "Il n'est pas possible de demander des limites de visibilité d'échelle minimale et maximale au serveur. Probablement en raison d'une erreur de connexion réseau ou d'un point de terminaison de capacité manquant",
+                "updateWMSCapabilities": "Demander des limites de visibilité d'échelle minimale et maximale au serveur",
+                "maxValue": "Valeur max (exclue)",
+                "maxValuePlaceholder": "Sélectionnez la valeur maximale",
+                "valueNoResultsText": "Aucune option ne correspond à la valeur d'entrée",
+                "createOption": "Ajouter une nouvelle valeur {label}",
+                "minValue": "Valeur min (inclus)",
+                "minValuePlaceholder": "Sélectionnez la valeur minimale",
+                "type": "Type de limites",
+                "scale": "Échelle",
+                "resolution": "Résolution"
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -534,6 +553,8 @@
             "radius": "Rayon",
             "filterIconEnabled": "Désactiver le filtre de couche",
             "filterIconDisabled": "Activer le filtre de couche",
+            "notVisibleZoomIn": "Le calque n'est pas visible car il est en dehors des limites de résolution. Zoomez pour afficher le calque",
+            "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -985,6 +1006,7 @@
             "attributefilter": {
                 "add_condition": " Ajouter une condition",
                 "delete": " Effacer",
+                "deleteGroup": " Effacer le groupe",
                 "add_group": " Ajouter un groupe",
                 "group_label_a": "Correspondance",
                 "group_label_b": "des conditions suivantes:",

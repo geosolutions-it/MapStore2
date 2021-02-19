@@ -78,18 +78,21 @@ compose(
                 breakpoints: { xxs: 0 },
                 cols: { xxs: 1 }
             } : {};
-
+            const viewWidth = width && width > 800 ? width - (500 + RIGHT_MARGIN) : width - RIGHT_MARGIN;
+            const widthOptions = width ? {width: viewWidth - 1} : {};
             return ({
                 rowHeight,
                 className: "on-map",
                 breakpoints: { md: 480, xxs: 0 },
                 cols: { md: 6, xxs: 1 },
+                ...widthOptions,
+                useDefaultWidthProvider: false,
                 style: {
                     left: (width && width > 800) ? "500px" : "0",
                     marginTop: 52,
                     bottom: 65,
                     height: Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10),
-                    width: width && width > 800 ? `calc(100% - ${500 + RIGHT_MARGIN}px)` : `calc(100% - ${RIGHT_MARGIN}px)`,
+                    width: viewWidth + 'px',
                     position: 'absolute',
                     zIndex: 50,
                     ...maximizedStyle

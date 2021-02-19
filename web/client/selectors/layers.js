@@ -8,13 +8,15 @@
 
 import { createSelector } from 'reselect';
 
+import { getCurrentResolution } from '../utils/MapUtils';
 import {getMarkerLayer, defaultQueryableFilter} from '../utils/MapInfoUtils';
-import { denormalizeGroups } from '../utils/LayersUtils';
+import { denormalizeGroups, isInsideResolutionsLimits } from '../utils/LayersUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
-import { get, head, isEmpty, find, isObject, isArray, castArray } from 'lodash';
+import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'lodash';
 import { flattenGroups } from '../utils/TOCUtils';
+import { mapSelector } from './map';
 
 export const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 export const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -127,12 +129,21 @@ export const elementSelector = (state) => {
     return settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
     settings.nodeType === 'groups' && isArray(groups) && head(flattenGroups(groups, 0, true).filter(group => group.id === settings.node)) || {};
 };
+
+const isLayerQueryable = (state, layer) => {
+    const map = mapSelector(state) || {};
+    const currentResolution = isNil(map.resolution)
+        ? getCurrentResolution(Math.round(map.zoom), 0, 21, 96)
+        : map.resolution;
+    return isInsideResolutionsLimits(layer, currentResolution)
+        && defaultQueryableFilter(layer);
+};
 /**
 * Select queriable layers
 * @param {object} state the state
 * @return {array} the queriable layers
 */
-export const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
+export const queryableLayersSelector = state => layersSelector(state).filter((layer) => isLayerQueryable(state, layer));
 /**
  * Return loading error state for selected layer
  * @param {object} state the state
@@ -144,4 +155,4 @@ export const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(stat
  * @param {object} state the state
  * @return {array} the queriable selected layers
  */
-export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(defaultQueryableFilter);
+export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter((layer) => isLayerQueryable(state, layer));

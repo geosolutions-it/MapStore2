@@ -109,8 +109,9 @@ const featuresToGrid = compose(
                 .filter(props.focusOnEdit ? createNewAndEditingFilter(props.changes && Object.keys(props.changes).length > 0, props.newFeatures, props.changes) : () => true)
                 .map(orig => applyAllChanges(orig, props.changes)).map(result =>
                     ({...result,
+                        ["_!_id_!_"]: result.id,
                         get: key => {
-                            return (key === "id" || key === "geometry" || key === "_new") ? result[key] : result.properties && result.properties[key];
+                            return (key === "geometry" || key === "_new") ? result[key] : result.properties && result.properties[key];
                         }
                     }))
         })
@@ -192,7 +193,7 @@ const featuresToGrid = compose(
                     showCheckbox: props.mode === "EDIT",
                     selectBy: {
                         keys: {
-                            rowKey: 'id',
+                            rowKey: '_!_id_!_',
                             values: props.select.map(f => f.id)
                         }
                     },
