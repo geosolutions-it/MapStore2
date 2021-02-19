@@ -41,7 +41,7 @@ const polygonElement = (coordinates, srsName, version) => {
             return coordinate[0] + (gml2 ? "," : " ") + coordinate[1];
         });
         const exterior = (gml2 ? "outerBoundaryIs" : "exterior");
-        const interior = (gml2 ? "innerBoundaryIs" : "exterior");
+        const interior = (gml2 ? "innerBoundaryIs" : "interior");
         gmlPolygon +=
             (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
                     '<gml:LinearRing>' +
