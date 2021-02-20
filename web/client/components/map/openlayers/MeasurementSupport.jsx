@@ -222,6 +222,9 @@ export default class MeasurementSupport extends React.Component {
         if (type === "Polygon" && coordinatesLength <= 4) {
             geometryObj = this.convertPolyToLineFeature(coordinates);
         }
+        if (!hasInvalidCoords && isEqual(coordinates[coordinatesLength - 1], coordinates[coordinatesLength - 2])) {
+            features[currentFeature]?.geometry?.coordinates?.[0]?.pop(); // Pop last duplicate coordinate of a Polygon to prevent extra rows in Measure panel
+        }
         let currentOlFt;
         if (geometryObj) {
             this.source.clear();
@@ -383,9 +386,6 @@ export default class MeasurementSupport extends React.Component {
                 newFeature.geometry.textLabels = newFeature.geometry.textLabels.concat([{text: "0"}]); // Add empty label when coordinate row is empty
             } else {
                 newFeature.geometry.textLabels =  tempTextLabels.splice(0, currentCoordinateLength - sliceVal) || [];
-            }
-            if (isPolygon && !hasInvalidCoords && coordinates.length && isEqual(coordinates[currentCoordinateLength], coordinates[currentCoordinateLength - 1])) {
-                newFeature.geometry.coordinates[0].pop(); // Pop last duplicate coordinate of a Polygon to prevent extra rows in Measure panel
             }
             return newFeature;
         });

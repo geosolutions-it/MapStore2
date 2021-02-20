@@ -389,7 +389,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: true,
                 showLabel: true,
                 showLengthAndBearingLabel: true,
-                features
+                features,
+                currentFeature: 0
             },
             uom
         });
@@ -397,7 +398,7 @@ describe('Openlayers MeasurementSupport', () => {
         expect(cmp.outputValues).toExist();
         expect(cmp.outputValues.length).toBe(2);
         expect(cmp.textLabels).toExist();
-        expect(cmp.textLabels.length).toBe(4);
+        expect(cmp.textLabels.length).toBe(3);
 
         expect(spyOnChangeGeometry).toHaveBeenCalled();
         const resultFeature = spyOnChangeGeometry.calls[0].arguments[0];
@@ -406,7 +407,7 @@ describe('Openlayers MeasurementSupport', () => {
         expect(resultFeature[0].geometry).toBeTruthy();
         expect(resultFeature[0].geometry.type).toBe('Polygon');
         expect(resultFeature[0].geometry.coordinates[0].length).toBe(4);
-        expect(resultFeature[0].geometry.textLabels.length).toBe(4);
+        expect(resultFeature[0].geometry.textLabels.length).toBe(3);
     });
     it('test drawing (LineString)', () => {
         const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
