@@ -348,7 +348,7 @@ export default (viewer) => ({
                     features: f.properties.id === action.id ? featureCollection : f.features,
                     style: f.properties.id === action.id ? action.style : f.style
                 })).concat(action.newFeature ? [createNewFeature(action)] : []),
-                visibility: !!annotationsLayer.features?.filter(f => f.properties.visibility)?.length
+                visibility: !isUndefined(action?.properties?.visibility) ? action.properties.visibility : false
             })] : [
                 addLayer({
                     type: 'vector',
