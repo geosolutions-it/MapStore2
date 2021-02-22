@@ -15,9 +15,7 @@ import mapResolutionsFromScales from '../mapResolutionsFromScales';
 class MockApp extends React.Component {
     render() {
         return (
-            <p className="MockApp">
-          Hello from your Mock App
-            </p>
+            <p className="MockApp">I'm a mock</p>
         );
     }
 }
