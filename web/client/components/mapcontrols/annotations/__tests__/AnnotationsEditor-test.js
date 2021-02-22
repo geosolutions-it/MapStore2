@@ -162,7 +162,8 @@ describe("test the AnnotationsEditor Panel", () => {
             selected={null}
             editing={{
                 properties: feature,
-                features: [{}]
+                features: [{}],
+                visibility: true
             }}
             onSave={testHandlers.onSaveHandler}
             onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
@@ -173,6 +174,8 @@ describe("test the AnnotationsEditor Panel", () => {
         expect(saveButton).toExist();
         TestUtils.Simulate.click(saveButton);
         expect(spySave.calls.length).toEqual(1);
+        expect(spySave.calls[0].arguments[0]).toEqual(1);
+        expect(spySave.calls[0].arguments[5]).toEqual({...feature, visibility: true});
         expect(spyCancel.calls.length).toEqual(0);
     });
 
