@@ -370,7 +370,9 @@ class CoordinatesEditor extends React.Component {
     addCoordPolygon = (components) => {
         if (this.props.type === "Polygon") {
             const validComponents = components.filter(validateCoords);
-            return components.concat([validComponents.length ? validComponents[0] : {lat: "", lon: ""}]);
+            const coordinates = this.props.features[this.props.currentFeature]?.geometry?.coordinates?.[0] || [];
+            const invalidCoordinateIndex = coordinates !== undefined ? coordinates.findIndex(c=> !validateCoords({lon: c[0], lat: c[1]})) : -1;
+            return components.concat([validComponents.length && invalidCoordinateIndex !== 0 ? validComponents[0] : {lat: "", lon: ""}]);
         }
         return components;
     }
