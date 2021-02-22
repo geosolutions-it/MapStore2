@@ -9,10 +9,15 @@
 
 import React from 'react';
 
-const mapResolutionsFromScales = ({ component: Component, ...rest }) => {
+const mapResolutionsFromScales = ({ component: Component, ...props }) => {
+
+    console.log('mapResolutionsFromScales');
+    console.log(Component);
+    console.log('props');
+    console.log(props);
 
     return () => {
-        return <Component {...rest} />;
+        return <Component {...props} />;
     };
 
 
