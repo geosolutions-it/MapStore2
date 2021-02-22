@@ -765,6 +765,8 @@ describe('annotations Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case UPDATE_NODE:
+                    expect(action.options.features).toBeTruthy();
+                    expect(action.options.visibility).toBe(false);
                     break;
                 case CHANGE_DRAWING_STATUS:
                     expect(action.owner).toBe('annotations');

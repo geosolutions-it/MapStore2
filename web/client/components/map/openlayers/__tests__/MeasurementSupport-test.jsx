@@ -12,7 +12,7 @@ import expect from 'expect';
 
 import MeasurementSupport from '../MeasurementSupport';
 
-import { LineString } from 'ol/geom';
+import { LineString, Polygon } from 'ol/geom';
 import { Map, View, Feature } from 'ol';
 
 describe('Openlayers MeasurementSupport', () => {
@@ -389,7 +389,8 @@ describe('Openlayers MeasurementSupport', () => {
                 updatedByUI: true,
                 showLabel: true,
                 showLengthAndBearingLabel: true,
-                features
+                features,
+                currentFeature: 0
             },
             uom
         });
@@ -397,7 +398,7 @@ describe('Openlayers MeasurementSupport', () => {
         expect(cmp.outputValues).toExist();
         expect(cmp.outputValues.length).toBe(2);
         expect(cmp.textLabels).toExist();
-        expect(cmp.textLabels.length).toBe(4);
+        expect(cmp.textLabels.length).toBe(3);
 
         expect(spyOnChangeGeometry).toHaveBeenCalled();
         const resultFeature = spyOnChangeGeometry.calls[0].arguments[0];
@@ -406,7 +407,7 @@ describe('Openlayers MeasurementSupport', () => {
         expect(resultFeature[0].geometry).toBeTruthy();
         expect(resultFeature[0].geometry.type).toBe('Polygon');
         expect(resultFeature[0].geometry.coordinates[0].length).toBe(4);
-        expect(resultFeature[0].geometry.textLabels.length).toBe(4);
+        expect(resultFeature[0].geometry.textLabels.length).toBe(3);
     });
     it('test drawing (LineString)', () => {
         const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
@@ -923,5 +924,75 @@ describe('Openlayers MeasurementSupport', () => {
         });
         // Restore drawInteraction when feature is valid
         expect(cmp.drawInteraction).toBeTruthy();
+    });
+
+    it('test modify features when geometry in edit is not fully formed', () => {
+        const spyOnchangeGeometry = expect.spyOn(testHandlers, 'changeGeometry');
+        let cmp = renderMeasurement();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLabel: true
+            },
+            uom
+        });
+
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: new Feature({
+                geometry: new Polygon([[10.0, 15.0], [10.0, 15.0]])
+            })
+        });
+
+        // LineString
+        let ftLineString = {
+            type: "Feature",
+            geometry: {type: "LineString", coordinates: [[1, 2]], textLabels: []}
+        };
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: true,
+                features: [ftLineString],
+                currentFeature: 0
+            },
+            uom
+        });
+        expect(cmp.source.getFeatures().length).toBe(1);
+        let feature = cmp.source.getFeatures()[0];
+        expect(feature.getGeometry().getType()).toBe('LineString');
+        expect(spyOnchangeGeometry).toHaveBeenCalled();
+        let updatedFeatures = spyOnchangeGeometry.calls[0].arguments[0];
+        expect(updatedFeatures[0].geometry.coordinates).toEqual([[1, 2], ["", ""]]);
+        expect(updatedFeatures[0].geometry.textLabels).toEqual([{text: "0"}]);
+        expect(updatedFeatures[0].properties.disabled).toBe(true);
+
+        // Polygon
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "Polygon",
+                areaMeasureEnabled: true,
+                currentFeature: 1,
+                updatedByUI: true,
+                features: [{...ftLineString, geometry: {...ftLineString.geometry, coordinates: [[1, 2], [2, 3]]}}, {
+                    type: "Feature",
+                    geometry: {type: "Polygon", coordinates: [[[1, 2], ["", ""], [1, 2]]], textLabels: [{text: "0"}, {text: "0"}]},
+                    properties: {disabled: true}
+                }]
+            },
+            uom
+        });
+
+        // Generate Linestring geometry for unformed Polygon
+        expect(cmp.source.getFeatures().length).toBe(2);
+        feature = cmp.source.getFeatures()[1];
+        expect(feature.getGeometry().getType()).toBe('LineString');
+        updatedFeatures = spyOnchangeGeometry.calls[1].arguments[0];
+        expect(updatedFeatures[1].geometry.coordinates).toEqual([[[1, 2], ["", ""], [1, 2]]]);
+        expect(updatedFeatures[1].geometry.textLabels.length).toBe(3);
+        expect(updatedFeatures[1].properties.disabled).toBe(true);
     });
 });

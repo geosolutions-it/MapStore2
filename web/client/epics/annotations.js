@@ -362,7 +362,8 @@ export default (viewer) => ({
                     properties: f.properties.id === action.id ? assign({}, f.properties, action.properties, action.fields) : f.properties,
                     features: f.properties.id === action.id ? featureCollection : f.features,
                     style: f.properties.id === action.id ? action.style : f.style
-                })).concat(action.newFeature ? [createNewFeature(action)] : [])
+                })).concat(action.newFeature ? [createNewFeature(action)] : []),
+                visibility: !isUndefined(action?.properties?.visibility) ? action.properties.visibility : false
             })] : [
                 addLayer({
                     type: 'vector',
