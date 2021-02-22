@@ -22,6 +22,37 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2021.01.00 to 2021.01.01
 
+### Update embedded entry to load the correct configuration
+
+Existing MapStore project could have an issue with the loading of map embedded page due to the impossibility to change some configuration such as localConfig.json or translations path in the javascript entry.
+This issue can be solved following these steps:
+1 - add a custom entry named `embedded.jsx` in the `js/` directory of the project with the content:
+```js
+import {
+    setConfigProp,
+    setLocalConfigurationFile
+} from '@mapstore/utils/ConfigUtils';
+
+// Add custom (overriding) translations
+// example for additional translations in the project folder
+// setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './translations']);
+setConfigProp('translationsPath', './MapStore2/web/client/translations');
+// __PROJECTNAME__ is the name of the project used in the creation process 
+setConfigProp('themePrefix', '__PROJECTNAME__');
+
+// Use a custom plugins configuration file
+// example if localConfig.json is located in the root of the project
+// setLocalConfigurationFile('localConfig.json');
+setLocalConfigurationFile('MapStore2/web/client/localConfig.json');
+
+// async load of the standard embedded bundle
+import('@mapstore/product/embedded');
+```
+2 - update the path of the embedded entry inside the `webpack.config.js` and `prod-webpack.config.js` files with:
+```js
+// __PROJECTNAME__ is the name of the project used in the creation process 
+'__PROJECTNAME__-embedded': path.join(__dirname, "js", "embedded"),
+```
 ### Locate plugin configuration
 
 Configuration for Locate plugin has changed and it is not needed anymore inside the Map plugin
