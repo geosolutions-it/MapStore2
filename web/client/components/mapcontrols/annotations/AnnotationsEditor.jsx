@@ -8,7 +8,7 @@
 
 import 'react-quill/dist/quill.snow.css';
 
-import { head, isEmpty, isFunction } from 'lodash';
+import { head, isEmpty, isFunction, isUndefined } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -831,7 +831,13 @@ class AnnotationsEditor extends React.Component {
             if (Object.keys(errors).length === 0) {
                 this.props.onError({});
                 this.props.onSave(this.props.id, assign({}, this.props.editedFields),
-                    this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
+                    this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, {
+                        ...this.props.editing.properties,
+                        visibility: !isUndefined(this.props.editing.properties.visibility)
+                            ? this.props.editing.properties.visibility
+                            : this.props.editing.visibility
+                    }
+                );
             } else {
                 this.props.onError(errors);
             }

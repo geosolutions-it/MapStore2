@@ -20,7 +20,7 @@ import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {showCoordinateEditorSelector, measureSelector} from '../selectors/controls';
 import {geomTypeSelector} from '../selectors/measurement';
 import { CLICK_ON_MAP } from '../actions/map';
-import {newAnnotation, setEditingFeature, cleanHighlight} from '../actions/annotations';
+import {newAnnotation, setEditingFeature, cleanHighlight, toggleVisibilityAnnotation} from '../actions/annotations';
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -75,11 +75,12 @@ export const closeMeasureEpics = (action$, store) =>
 
 export const setMeasureStateFromAnnotationEpic = (action$, store) =>
     action$.ofType(SET_ANNOTATION_MEASUREMENT)
-        .switchMap(({features}) => {
+        .switchMap(({features, properties}) => {
             const isGeomSelected = geomTypeSelector(store.getState()) === getGeomTypeSelected(features)?.[0];
             return Rx.Observable.of( !isGeomSelected && changeMeasurement({geomType: getGeomTypeSelected(features)?.[0]}),
                 setControlProperty("measure", "enabled", true),
-                setControlProperty("annotations", "enabled", false));
+                setControlProperty("annotations", "enabled", false),
+                toggleVisibilityAnnotation(properties.id, false));
         });
 
 export const addCoordinatesEpic = (action$, {getState = () => {}}) =>

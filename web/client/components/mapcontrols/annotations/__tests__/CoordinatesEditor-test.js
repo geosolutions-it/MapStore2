@@ -159,7 +159,7 @@ describe("test the CoordinatesEditor Panel", () => {
             {type: 'Feature',
                 geometry: {
                     type: 'Polygon',
-                    coordinates: [[10, 10], [6, 6], [6, 6]],
+                    coordinates: [[[10, 10], [6, 6], [6, 6]]],
                     textLabels: [
                         {text: '2 m | 060°', position: [10, 10]},
                         {text: '3 m | 078°', position: [6, 6]},
