@@ -46,9 +46,6 @@ class IntlNumberFormControl extends React.Component {
                 {...formProps}
                 {...value !== undefined ? {value: this.format(value) } : {defaultValue: this.format(defaultValue)}}
                 format={this.format}
-                onKeyUp={ev=>{
-                    ev.target.setSelectionRange(-1, -1);
-                }}
                 onChange={(val) => {
                     val === null ? this.props.onChange("") : this.props.onChange(val.toString());
                 }}

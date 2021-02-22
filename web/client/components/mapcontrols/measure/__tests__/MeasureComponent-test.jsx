@@ -521,4 +521,50 @@ describe("test the MeasureComponent", () => {
         TestUtils.Simulate.click(buttons[0]);
         expect(buttons[0].className).toContain('active');
     });
+    it("test Measurement with invalid features", () =>{
+        let measurement = {
+            lineMeasureEnabled: true,
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[1, 2], [2, 5], ["", ""]]
+                },
+                properties: {
+                    disabled: true
+                }
+            }],
+            textLabels: [{position: [1, 2], text: "1,714 m"},
+                {position: [1, 1], text: "1,723 m"}],
+            id: 1,
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent
+                measurement={measurement}
+                format="decimal"
+                isDraggable
+                useSingleFeature
+                lineMeasureEnabled
+                showAddAsAnnotation
+            />, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+        const toolbar = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-toolbar");
+        const toolBarGroup = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-group");
+        expect(toolbar).toExist();
+        expect(toolBarGroup.length).toBe(3);
+        const geomTypeButtons = toolBarGroup[0].querySelectorAll('button');
+        expect(geomTypeButtons.length).toBe(3);
+        geomTypeButtons.forEach((btn, i)=> {
+            if (i === 0) return expect(btn.className).toContain('active');
+            return expect(btn.className).toContain('disabled');
+        });
+
+        const exportTools = toolBarGroup[2].querySelectorAll('button');
+        expect(exportTools.length).toBe(3);
+        exportTools.forEach((btn)=> expect(btn.className).toContain('disabled'));
+    });
 });

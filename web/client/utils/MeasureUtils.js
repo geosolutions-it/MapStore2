@@ -188,3 +188,4 @@ export const isValidGeometry = ({coordinates, type} = {}) => {
     validatedCoords = type === "Polygon" ? head(validatedCoords) : validatedCoords;
     return validatedCoords.length > 0;
 };
+
