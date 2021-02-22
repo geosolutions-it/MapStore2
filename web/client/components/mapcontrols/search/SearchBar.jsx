@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {FormGroup, Glyphicon, MenuItem} from 'react-bootstrap';
-import {isEmpty, some, isUndefined} from 'lodash';
+import {isEmpty, isUndefined} from 'lodash';
 
 import Message from '../../I18N/Message';
 import SearchBarMenu from './SearchBarMenu';
@@ -37,7 +37,6 @@ export default ({
     coordinate = {},
     selectedItems = [],
     defaultZoomLevel = 12,
-    enabledSearchServicesConfig = false,
     enabledSearchBookmarkConfig = false,
     error,
     format = 'decimal',
@@ -102,12 +101,12 @@ export default ({
     let searchByBookmarkConfig;
     if (showBookMarkSearchOption && !isEmpty(items)) {
         const {allowUser, bookmarkSearchConfig: config} = props.bookmarkConfig || {};
-        const [item] = items;
-        if (some(items, "menuItem")) {
+        const item = items.find(({ name }) => name === 'SearchByBookmark') || {};
+        if (item.menuItem) {
             const BookmarkMenuItem = item.menuItem;
             searchMenuOptions.push(<BookmarkMenuItem/>);
         }
-        if (some(items, "bookmarkConfig")) {
+        if (item.bookmarkConfig) {
             searchByBookmarkConfig = {
                 ...item.bookmarkConfig(onToggleControl, enabledSearchBookmarkConfig, activeTool),
                 ...(!allowUser && {visible: false})
@@ -120,29 +119,14 @@ export default ({
     }
 
     const getConfigButtons = () => {
-        if (activeTool === "addressSearch") {
-            return {
-                onClick: () => {
-                    if (!enabledSearchServicesConfig) {
-                        onToggleControl("searchservicesconfig");
-                    }
-                },
-                glyph: "cog",
-                className: "square-button-md no-border ",
-                tooltip: <Message msgId="search.searchservicesbutton"/>,
-                tooltipPosition: "bottom",
-                bsStyle: "default",
-                pullRight: true,
-                visible: showOptions && activeTool === "addressSearch"
-            };
-        } else if (showOptions) {
+        if (showOptions) {
             if (activeTool === "coordinatesSearch") {
                 return CoordinateOptions.coordinateFormatChange(format, onChangeFormat, showOptions, activeTool);
             } else if (activeTool === "bookmarkSearch") {
                 return searchByBookmarkConfig;
             }
         }
-        return {};
+        return null;
     };
 
     return (<SearchBarBase>
@@ -173,7 +157,14 @@ export default ({
                 }
                 <SearchBarToolbar
                     splitTools={false}
-                    toolbarButtons={[{...getConfigButtons()},
+                    toolbarButtons={[
+                        ...(getConfigButtons() ? [{...getConfigButtons()}] : []),
+                        ...items
+                            .filter(({ target }) => target === 'button')
+                            .map(({ component: Element }) => ({
+                                visible: !!showOptions,
+                                Element
+                            })),
                         {
                             glyph: removeIcon,
                             className: "square-button-md no-border",
