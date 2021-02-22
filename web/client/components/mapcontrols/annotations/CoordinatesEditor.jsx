@@ -206,6 +206,7 @@ class CoordinatesEditor extends React.Component {
             {
                 glyph: 'plus',
                 tooltipId: 'annotations.editor.add',
+                disabled: type !== 'Bearing' ? this.props.properties.disabled : false,
                 visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : true,
                 onClick: () => {
                     let tempComps = [...this.props.components];
@@ -220,6 +221,7 @@ class CoordinatesEditor extends React.Component {
                     <div>
                         {this.props.showFeatureSelector ? <Select
                             value={this.props.currentFeature}
+                            disabled={this.props.properties.disabled}
                             options={[
                                 ...this.props.features.map((f, i) => {
                                     const values = get(f, 'properties.values', []);
@@ -271,9 +273,10 @@ class CoordinatesEditor extends React.Component {
                             aeronauticalOptions={this.props.aeronauticalOptions}
                             sortId={idx}
                             key={idx + " key"}
+                            disabled={this.props.properties.disabled && validateCoords(component)}
                             renderer={this.props.renderer}
                             isDraggable={this.props.isDraggable}
-                            isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
+                            isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]() && !this.props.properties.disabled}
                             showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
                             formatVisible={false}
                             removeVisible={componentsValidation[type].remove}
@@ -367,7 +370,9 @@ class CoordinatesEditor extends React.Component {
     addCoordPolygon = (components) => {
         if (this.props.type === "Polygon") {
             const validComponents = components.filter(validateCoords);
-            return components.concat([validComponents.length ? validComponents[0] : {lat: "", lon: ""}]);
+            const coordinates = this.props.features[this.props.currentFeature]?.geometry?.coordinates?.[0] || [];
+            const invalidCoordinateIndex = coordinates !== undefined ? coordinates.findIndex(c=> !validateCoords({lon: c[0], lat: c[1]})) : -1;
+            return components.concat([validComponents.length && invalidCoordinateIndex !== 0 ? validComponents[0] : {lat: "", lon: ""}]);
         }
         return components;
     }
