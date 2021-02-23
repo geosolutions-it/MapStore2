@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import mapResolutionsFromScales from '../mapResolutionsFromScales';
 
+
 class MockApp extends React.Component {
     render() {
         return (
@@ -20,7 +21,7 @@ class MockApp extends React.Component {
     }
 }
 
-let MockComp = mapResolutionsFromScales({component: MockApp});
+let MockComp = mapResolutionsFromScales(MockApp);
 
 describe('Test get resolutions from scales', () => {
     beforeEach((done) => {
