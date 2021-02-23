@@ -22,6 +22,7 @@ import {
     changeMapInfoFormat,
     changePage,
     clearWarning,
+    setShowInMapPopup,
     closeIdentify,
     editLayerFeatures,
     hideMapinfoMarker,
@@ -84,7 +85,7 @@ const selector = createStructuredSelector({
     reverseGeocodeData: (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     warning: (state) => state.mapInfo && state.mapInfo.warning,
     currentLocale: currentLocaleSelector,
-    dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
+    dockStyle: state => mapLayoutValuesSelector(state, { height: true }),
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp('defaultCoordinateFormat'),
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
@@ -99,7 +100,7 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, isLoadedResponseSelector, (state) =>state.browser && state.browser.mobile, (index, loaded, isMobile) => ({ index, loaded, isMobile })),
+        createSelector(indexSelector, isLoadedResponseSelector, (state) => state.browser && state.browser.mobile, (index, loaded, isMobile) => ({ index, loaded, isMobile })),
         {
             setIndex: changePage
         }
@@ -109,7 +110,7 @@ const DefaultViewer = compose(
     identifyIndex,
     defaultViewerDefaultProps,
     defaultViewerHandlers,
-    loadingState(({loaded}) => isUndefined(loaded))
+    loadingState(({ loaded }) => isUndefined(loaded))
 )(DefaultViewerComp);
 
 
@@ -123,12 +124,12 @@ const identifyDefaultProps = defaultProps({
     responses: [],
     viewerOptions: {},
     viewer: DefaultViewer,
-    purgeResults: () => {},
-    hideMarker: () => {},
-    clearWarning: () => {},
-    changeMousePointer: () => {},
-    showRevGeocode: () => {},
-    hideRevGeocode: () => {},
+    purgeResults: () => { },
+    hideMarker: () => { },
+    clearWarning: () => { },
+    changeMousePointer: () => { },
+    showRevGeocode: () => { },
+    hideRevGeocode: () => { },
     containerProps: {
         continuous: false
     },
@@ -212,7 +213,6 @@ const identifyDefaultProps = defaultProps({
  * }
  *
  */
-
 const IdentifyPlugin = compose(
     connect(selector, {
         purgeResults: purgeMapInfoResults,
@@ -252,6 +252,9 @@ const IdentifyPlugin = compose(
     identifyDefaultProps,
     identifyIndex,
     defaultViewerHandlers,
+    connect(() => { }, {
+        setShowInMapPopup
+    }),
     identifyLifecycle
 )(IdentifyContainer);
 
@@ -275,8 +278,8 @@ export default {
             name: 'info',
             position: 6,
             tooltip: "info.tooltip",
-            icon: <Glyphicon glyph="map-marker"/>,
-            help: <Message msgId="helptexts.infoButton"/>,
+            icon: <Glyphicon glyph="map-marker" />,
+            help: <Message msgId="helptexts.infoButton" />,
             action: toggleMapInfoState,
             selector: (state) => ({
                 bsStyle: state.mapInfo && state.mapInfo.enabled ? "success" : "primary",
@@ -287,11 +290,11 @@ export default {
             tool: [<FeatureInfoFormatSelector
                 key="featureinfoformat"
                 label={<Message msgId="infoFormatLbl" />
-                }/>, <FeatureInfoTriggerSelector
+                } />, <FeatureInfoTriggerSelector
                 key="featureinfotrigger" />],
             position: 3
         }
     }),
-    reducers: {mapInfo},
+    reducers: { mapInfo },
     epics
 };

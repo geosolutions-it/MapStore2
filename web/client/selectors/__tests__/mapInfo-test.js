@@ -16,6 +16,7 @@ import {
     generalInfoFormatSelector,
     stopGetFeatureInfoSelector,
     isMapInfoOpen,
+    isMapPopup,
     mapInfoConfigurationSelector,
     showEmptyMessageGFISelector,
     clickPointSelector,
@@ -356,5 +357,8 @@ describe('Test mapinfo selectors', () => {
         // when mapInfo is present
         expect(hoverEnabledSelector({maptype: {mapType: "openlayers"} })).toBe(true);
         expect(hoverEnabledSelector({maptype: {mapType: "cesium"} })).toBe(false);
+    });
+    it('isMapPopup', () => {
+        expect(isMapPopup({ mapInfo: {showInMapPopup: true} })).toBeTruthy();
     });
 });
