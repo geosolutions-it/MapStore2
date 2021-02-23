@@ -8,19 +8,31 @@
  */
 
 import React from 'react';
+import { getResolutionsForScales, DEFAULT_SCREEN_DPI} from '../../../utils/MapUtils';
 
-const mapResolutionsFromScales = ({ component: Component, ...props }) => {
+const mapResolutionsFromScales = (Component) => {
 
-    console.log('mapResolutionsFromScales');
-    console.log(Component);
-    console.log('props');
-    console.log(props);
+    return (props) => {
+        const projection = "EPSG:3857";
+        const dpi = DEFAULT_SCREEN_DPI;
+        const scales = props?.map?.mapOptions?.view?.scales;
+        const resolutions = (scales) ? (getResolutionsForScales(scales, projection, dpi)) : null;
+        const initMap = (resolutions) ? {
+            ...props,
+            map: {
+                ...props.map,
+                mapOptions: {
+                    ...props.mapOptions,
+                    view: {
+                        ...props.mapOptions.view,
+                        resolutions: resolutions
+                    }
+                }
+            }
+        } : props;
 
-    return () => {
-        return <Component {...props} />;
+        return <Component {...initMap}  />;
     };
-
-
 };
 
 export default mapResolutionsFromScales;
