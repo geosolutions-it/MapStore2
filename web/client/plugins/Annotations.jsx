@@ -261,6 +261,8 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   * @prop {string} defaultShapeFillColor default symbol fill color
   * @prop {string} defaultShapeSize default symbol shape size in px
   * @prop {string} symbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root) symbols.json can be structured like [this](https://github.com/geosolutions-it/MapStore2/blob/90fb33465fd3ff56c4bbaafb5ab0ed492826622c/web/client/product/assets/symbols/symbols.json)
+  * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features. Enabling this will allow user to edit measurements saved as annotation
+  * @prop {boolean} geodesic draw geodesic annotation. By default geodesic is true (Currently applicable only for Circle annotation)
   * @class Annotations
   * @memberof plugins
   * @static
@@ -273,6 +275,16 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   *   {"name": "filename", "label": "label"},
   *   {"name": "square", "label": "Square"}
   * ]
+  *
+  * Typical configuration of the plugin
+  *
+  * {
+  *   "name": "Annotations",
+  *    "cfg": {
+  *        measurementAnnotationEdit: false,
+  *        geodesic: true
+  *    }
+  * }
   */
 
 const annotationsSelector = createSelector([
