@@ -17,7 +17,8 @@ import {
     changeFormat,
     changePage,
     toggleHighlightFeature,
-    setMapTrigger
+    setMapTrigger,
+    setShowInMapPopup
 } from '../../actions/mapInfo';
 import {changeMapType} from '../../actions/maptype';
 
@@ -840,5 +841,11 @@ describe('Test the mapInfo reducer', () => {
         const initialState = {configuration: {trigger: "click"}};
         const state = mapInfo(initialState, action);
         expect(state.configuration.trigger).toBe("click");
+    });
+
+    it('setShowInMapPopup', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, setShowInMapPopup(true));
+        expect(state.showInMapPopup).toBeTruthy();
     });
 });
