@@ -13,8 +13,6 @@ import { getResolutionsForScales, DEFAULT_SCREEN_DPI} from '../../../utils/MapUt
 const mapResolutionsFromScales = (Component) => {
 
     return (props) => {
-        console.log('props');
-        console.log(props);
         const projection = "EPSG:3857";
         const dpi = DEFAULT_SCREEN_DPI;
         const scales = props?.map?.mapOptions?.view?.scales;
