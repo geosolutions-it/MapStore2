@@ -386,18 +386,18 @@
                             border-color: fade(@ms2-color-primary, 50%);
                         }
                         &.vis-range {
-                            border-color: transparent;
-                            background-color: fade(@ms2-color-primary, 50%);
-                            .vis-item-content {
-                                padding: 0 5px;
-                                margin: 5px 0;
-                                background-color: fade(@ms2-color-primary, 50%);
-                                border-color: darken(@ms2-color-primary, 10%);
-                            }
-
-                            background-color: transparent;
-                            border-color: transparent;
                             &.histogram-item {
+                                border-color: transparent;
+                                background-color: fade(@ms2-color-primary, 50%);
+                                .vis-item-content {
+                                    padding: 0 5px;
+                                    margin: 5px 0;
+                                    background-color: fade(@ms2-color-primary, 50%);
+                                    border-color: darken(@ms2-color-primary, 10%);
+                                }
+
+                                background-color: transparent;
+                                border-color: transparent;
                                 &.vis-item {
                                     top: 0 !important; // override inline offset due to auto-set
                                 }
