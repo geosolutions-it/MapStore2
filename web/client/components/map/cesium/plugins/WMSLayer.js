@@ -127,6 +127,7 @@ function wmsToCesiumOptionsBIL(options) {
     }
     return assign({
         url,
+        littleEndian: options.littleendian || false,
         layerName: options.name
     });
 }
