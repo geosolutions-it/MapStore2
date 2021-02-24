@@ -13,11 +13,13 @@ import { getResolutionsForScales, DEFAULT_SCREEN_DPI} from '../../../utils/MapUt
 const mapResolutionsFromScales = (Component) => {
 
     return (props) => {
+        console.log('props');
+        console.log(props);
         const projection = "EPSG:3857";
         const dpi = DEFAULT_SCREEN_DPI;
         const scales = props?.map?.mapOptions?.view?.scales;
         const resolutions = (scales) ? (getResolutionsForScales(scales, projection, dpi)) : null;
-        const initMap = (resolutions) ? {
+        const mapProps = (resolutions) ? {
             ...props,
             map: {
                 ...props.map,
@@ -31,7 +33,7 @@ const mapResolutionsFromScales = (Component) => {
             }
         } : props;
 
-        return <Component {...initMap}  />;
+        return <Component {...mapProps}  />;
     };
 };
 

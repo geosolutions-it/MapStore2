@@ -10,16 +10,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import mapResolutionsFromScales from '../mapResolutionsFromScales';
-
-
-class MockApp extends React.Component {
-    render() {
-        return (
-            <p className="MockApp">I'm a mock</p>
-        );
-    }
-}
+import mapResolutionsFromScales from '../overrideMapProps';
+import mockData from '../../../../test-resources/testConfig.json';
+import MockApp from '../../../../test-resources/testMockComp';
 
 let MockComp = mapResolutionsFromScales(MockApp);
 
@@ -34,11 +27,21 @@ describe('Test get resolutions from scales', () => {
         setTimeout(done);
     });
 
-    it('componets is rendered', () => {
+    it('Test componet is rendered', () => {
         ReactDOM.render(<MockComp />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.MockApp');
         expect(el).toExist();
+    });
+
+    it('Test component props', () => {
+        ReactDOM.render(<MockComp {...mockData.map} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.MockApp');
+        expect(el).toExist();
+        const text = document.getElementsByClassName('MockApp')[0].childNodes[0].innerHTML;
+        expect(text).toBe('' + mockData.map.zoom);
+
     });
 
 });
