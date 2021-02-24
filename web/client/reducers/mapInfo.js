@@ -30,7 +30,8 @@ import {
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
-    SET_MAP_TRIGGER
+    SET_MAP_TRIGGER,
+    SET_SHOW_IN_MAP_POPUP
 } from '../actions/mapInfo';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -110,6 +111,7 @@ const initState = {
  * }
  * ```
  * @prop {object} configuration contains the configuration for getFeatureInfo tool.
+ * @prop {boolean} showInMapPopup if true, the results are always shown in a popup (if configuration.hover = true, they are by default)
  * @prop {array} requests the requests performed. Here a sample:
  * ```javascript
  * {
@@ -420,6 +422,12 @@ function mapInfo(state = initState, action) {
                 ...state.configuration,
                 trigger: action.trigger
             }
+        };
+    }
+    case SET_SHOW_IN_MAP_POPUP: {
+        return {
+            ...state,
+            showInMapPopup: action.value // this is global, actually not saved in map configuration (configuration part)
         };
     }
     case MAP_TYPE_CHANGED: {
