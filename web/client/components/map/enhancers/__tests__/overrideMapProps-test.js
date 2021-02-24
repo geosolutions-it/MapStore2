@@ -10,11 +10,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import mapResolutionsFromScales from '../overrideMapProps';
+import overrideMapProps from '../overrideMapProps';
 import mockData from '../../../../test-resources/testConfig.json';
 import MockApp from '../../../../test-resources/testMockComp';
 
-let MockComp = mapResolutionsFromScales(MockApp);
+let MockComp = overrideMapProps(MockApp);
 
 describe('Test get resolutions from scales', () => {
     beforeEach((done) => {

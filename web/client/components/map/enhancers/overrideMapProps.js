@@ -8,9 +8,10 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { getResolutionsForScales, DEFAULT_SCREEN_DPI} from '../../../utils/MapUtils';
 
-const mapResolutionsFromScales = (Component) => {
+const overrideMapProps = (Component) => {
 
     return (props) => {
         const projection = "EPSG:3857";
@@ -31,8 +32,11 @@ const mapResolutionsFromScales = (Component) => {
             }
         } : props;
 
-        return <Component {...mapProps}  />;
+        return <Component {...mapProps} />;
     };
 };
 
-export default mapResolutionsFromScales;
+overrideMapProps.propTypes = {
+    Component: PropTypes.element
+};
+export default overrideMapProps;
