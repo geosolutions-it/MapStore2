@@ -73,7 +73,8 @@ import {
     initPlugin,
     hideMeasureWarning,
     toggleShowAgain,
-    unSelectFeature
+    unSelectFeature,
+    startDrawing
 } from '../../actions/annotations';
 
 import { PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
@@ -1710,5 +1711,13 @@ describe('Test the annotations reducer', () => {
         const features = state.editing.features;
         expect(features[0].properties.canEdit).toBe(false);
         expect(features[1].properties.canEdit).toBe(false);
+    });
+    it('START_DRAWING', () => {
+        let annotationsState = annotations({
+            editing: null,
+            selected: null
+        }, startDrawing({geodesic: true}));
+        expect(annotationsState.config).toBeTruthy();
+        expect(annotationsState.config.geodesic).toBe(true);
     });
 });

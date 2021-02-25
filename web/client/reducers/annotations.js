@@ -60,7 +60,8 @@ import {
     HIDE_MEASURE_WARNING,
     TOGGLE_SHOW_AGAIN,
     INIT_PLUGIN,
-    UNSELECT_FEATURE
+    UNSELECT_FEATURE,
+    START_DRAWING
 } from '../actions/annotations';
 
 import {
@@ -733,6 +734,8 @@ function annotations(state = {validationErrors: {}}, action) {
     case HIDE_MEASURE_WARNING: {
         return {...state, showPopupWarning: false};
     }
+    case START_DRAWING:
+        return {...state, config: {...state.config, geodesic: get(action.options, 'geodesic', false)}};
     default:
         return state;
 
