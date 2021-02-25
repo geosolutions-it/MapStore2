@@ -100,7 +100,7 @@ export const getCapabilitiesURL = (record = {}) => {
  */
 
 export const getDefaultStyleIdentifier = layer =>{
-    if (layer.Style) {
+    if (layer?.Style) {
         return head(
             castArray(layer.Style)
                 // default is identified by XML attribute isDefault
