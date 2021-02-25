@@ -61,6 +61,8 @@ In particular, the user is allowed to:
 
 * Set the opacity value of the layer (in %)
 
+* Enable/disable the **Visibility limits** to display the layer only within certain scale limits. The user is allowed to request the `MinScaleDenominator` and  `MaxScaleDenominator` value present on the *WMS GetCapabilities* of the layer though the <img src="../img/button/sync_to_server.jpg" class="ms-docbutton"/> button or set the *Max value* and the *Min value* and select the *Limits type* choosing between `Scale` or `Resolution`.
+
 * Enable/disable the transparency for that layer
 
 * Enable/disable the use of the layer cached tiles  (if checked, the *Tiled=true* URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms))
