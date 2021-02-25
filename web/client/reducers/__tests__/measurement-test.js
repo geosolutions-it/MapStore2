@@ -216,7 +216,7 @@ describe('Test the measurement reducer', () => {
         expect(state.exportToAnnotation).toBe(false);
         expect(state.currentFeature).toBe(0);
     });
-    it('CHANGED_GEOMETRY', () => {
+    it('CHANGED_GEOMETRY - do not fail if features array is missing in the initial state', () => {
         let state = measurement({
             updatedByUI: true,
             isDrawing: true
