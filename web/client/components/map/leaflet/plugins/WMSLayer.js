@@ -110,9 +110,10 @@ L.tileLayer.multipleUrlWMS = function(urls, options) {
 
 
 L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
-    initialize: function(urls, options, nodata) {
+    initialize: function(urls, options, nodata, littleendian) {
         this._tiles = {};
         this._nodata = nodata;
+        this._littleendian = littleendian;
         L.TileLayer.MultipleUrlWMS.prototype.initialize.apply(this, arguments);
     },
     _addTile: function(coords) {
@@ -124,7 +125,8 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
         try {
             const tilePoint = this._getTileFromCoords(latLng);
             const elevation = getElevation(this._tileCoordsToKey(tilePoint),
-                this._getTileRelativePixel(tilePoint, containerPoint), this.getTileSize().x, this._nodata);
+                this._getTileRelativePixel(tilePoint, containerPoint), this.getTileSize().x,
+                this._nodata, this._littleendian);
             if (elevation.available) {
                 return elevation.value;
             }
@@ -146,8 +148,8 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
     _abortLoading: function() {}
 });
 
-L.tileLayer.elevationWMS = function(urls, options, nodata) {
-    return new L.TileLayer.ElevationWMS(urls, options, nodata);
+L.tileLayer.elevationWMS = function(urls, options, nodata, littleendian) {
+    return new L.TileLayer.ElevationWMS(urls, options, nodata, littleendian);
 };
 
 const removeNulls = (obj = {}) => {
@@ -192,7 +194,7 @@ Layers.registerType('wms', {
         const queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
         urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.useForElevation) {
-            return L.tileLayer.elevationWMS(urls, queryParameters, options.nodata || -9999);
+            return L.tileLayer.elevationWMS(urls, queryParameters, options.nodata || -9999, options.littleendian || false);
         }
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
