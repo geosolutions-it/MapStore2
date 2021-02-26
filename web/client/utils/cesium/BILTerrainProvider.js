@@ -75,8 +75,9 @@ module.exports = function(Cesium) {
 		* highest: defines the highest altitude (without offset) of the data. 
 		* lowest: defines the lowest altitude (without offset) of the data. 
 		* offset: defines the offset of the data in order adjust the limitations
+		* littleEndian: defines whether buffer is in little or big endian
 		*/
-		postProcessArray : function(bufferIn, size,highest,lowest,offset) {
+		postProcessArray : function(bufferIn, size,highest,lowest,offset,littleEndian) {
 			var resultat;
 			var viewerIn = new DataView(bufferIn);
 			var littleEndianBuffer = new ArrayBuffer(size.height * size.width * 2);
@@ -85,7 +86,7 @@ module.exports = function(Cesium) {
 				// time to switch bytes!!
 				var temp, goodCell = 0, somme = 0;
 				for (var i = 0; i < littleEndianBuffer.byteLength; i += 2) {
-					temp = viewerIn.getInt16(i, false)-offset;
+					temp = viewerIn.getInt16(i, littleEndian)-offset;
 					if (temp > lowest && temp < highest) {
 						viewerOut.setInt16(i, temp, true);
 						somme += temp;
@@ -220,6 +221,7 @@ module.exports = function(Cesium) {
 		resultat.heightMapHeight = Cesium.defaultValue(description.heightMapHeight,resultat.heightMapWidth);
 		var requestedSize={width:65,height:65};
 		var CRS = undefined;
+		resultat.littleEndian = description.littleEndian;
 		resultat.formatImage = description.formatImage;
 		resultat.formatArray = description.formatArray;
 		resultat.tilingScheme = undefined;
@@ -865,12 +867,12 @@ module.exports = function(Cesium) {
 	* childrenMask: Number defining the childrenMask
 	*
 	*/
-	GeoserverTerrainProvider.arrayToHeightmapTerrainData=function(arrayBuffer,limitations,size,formatArray,hasWaterMask,childrenMask){
+	GeoserverTerrainProvider.arrayToHeightmapTerrainData=function(arrayBuffer,limitations,size,formatArray,hasWaterMask,littleEndian,childrenMask){
 		if(typeof(size)=="number"){
 			size={width:size,height:size};
 		}
 		var heightBuffer = formatArray.postProcessArray(arrayBuffer,size,limitations.highest,limitations.lowest,
-			limitations.offset);
+			limitations.offset, littleEndian);
 		if (!Cesium.defined(heightBuffer)) {
 			throw new Cesium.DeveloperError("no good size");
 		}
@@ -1000,7 +1002,7 @@ module.exports = function(Cesium) {
 								retour = Cesium.when(promise,
 													function(arrayBuffer) {
 														return GeoserverTerrainProvider.arrayToHeightmapTerrainData(arrayBuffer,limitations,
-															{width:resultat.heightMapWidth,height:resultat.heightMapHeight},resultat.formatArray,resultat.waterMask,hasChildren);
+															{width:resultat.heightMapWidth,height:resultat.heightMapHeight},resultat.formatArray,resultat.waterMask,resultat.littleEndian,hasChildren);
 													}
 												).otherwise(
 													function() {
