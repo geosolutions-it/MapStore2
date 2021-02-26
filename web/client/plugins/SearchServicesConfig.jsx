@@ -252,7 +252,7 @@ function SearchServiceButton({
     return null;
 }
 
-const ConnectedSearchServiceButton = connect(
+const ConnectedSearchServicesConfigButton = connect(
     createSelector([
         state => state.search || null,
         state => state?.controls?.searchservicesconfig?.enabled || false
@@ -269,8 +269,9 @@ export default createPlugin('SearchServicesConfig', {
     component: SearchServicesPlugin,
     containers: {
         Search: {
+            name: 'SearchServicesConfigButton',
             target: 'button',
-            component: ConnectedSearchServiceButton
+            component: ConnectedSearchServicesConfigButton
         }
     },
     reducers: {
