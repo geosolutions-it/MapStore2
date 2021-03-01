@@ -98,13 +98,18 @@ export const getCapabilitiesURL = (record = {}) => {
  * @param {object} layer the layer object of the WMTSCapabilities
  * @return {string} the identifier of the default style
  */
-export const getDefaultStyleIdentifier = layer => head(
-    castArray(layer.Style)
-        // default is identified by XML attribute isDefault
-        .filter(({ $ = {} }) => $.isDefault === "true")
-        // the identifier content value is needed
-        .map(l => l["ows:Identifier"])
-);
+
+export const getDefaultStyleIdentifier = layer =>{
+    if (layer?.Style) {
+        return head(
+            castArray(layer.Style)
+                // default is identified by XML attribute isDefault
+                .filter(({ $ = {} }) => $.isDefault === "true")
+                // the identifier content value is needed
+                .map(l => l["ows:Identifier"]));
+    }
+    return null;
+};
 /**
  * gets the first format available in the list
  */
