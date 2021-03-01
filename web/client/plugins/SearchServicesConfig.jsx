@@ -9,12 +9,14 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import { Glyphicon } from 'react-bootstrap';
 import ConfirmButton from '../components/buttons/ConfirmButton';
 import Dialog from '../components//misc/Dialog';
 import Portal from '../components/misc/Portal';
 import Message from './locale/Message';
-import { isEqual } from 'lodash';
+import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import { toggleControl } from '../actions/controls';
 import { setSearchConfigProp, updateService, restServiceConfig } from '../actions/searchconfig';
 import ServiceList from '../components/mapcontrols/searchservicesconfig/ServicesList.jsx';
@@ -22,7 +24,12 @@ import WFSServiceProps from '../components/mapcontrols/searchservicesconfig/WFSS
 import ResultsProps from '../components/mapcontrols/searchservicesconfig/ResultsProps.jsx';
 import WFSOptionalProps from '../components/mapcontrols/searchservicesconfig/WFSOptionalProps.jsx';
 import PropTypes from 'prop-types';
-import Button from '../components/misc/Button';
+import ButtonMisc from '../components/misc/Button';
+import tooltip from '../components/misc/enhancers/tooltip';
+import { createPlugin } from '../utils/PluginsUtils';
+import searchconfigReducer from '../reducers/searchconfig';
+
+const Button = tooltip(ButtonMisc);
 
 /**
  * Text Search Services Editor Plugin. Allow to add and edit additional
@@ -219,9 +226,55 @@ const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
     restServiceConfig,
     updateService})(SearchServicesConfigPanel);
 
-export default {
-    SearchServicesConfigPlugin: SearchServicesPlugin,
-    reducers: {
-        searchconfig: require('../reducers/searchconfig').default
+function SearchServiceButton({
+    activeTool,
+    enabled,
+    onToggleControl
+}) {
+
+    if (activeTool === 'addressSearch') {
+        return (<Button
+            bsStyle="default"
+            pullRight
+            className="square-button-md no-border"
+            tooltipId="search.searchservicesbutton"
+            tooltipPosition="bottom"
+            onClick={() => {
+                if (!enabled) {
+                    onToggleControl('searchservicesconfig');
+                }
+            }}
+        >
+            <Glyphicon glyph="cog"/>
+        </Button>);
     }
-};
+
+    return null;
+}
+
+const ConnectedSearchServicesConfigButton = connect(
+    createSelector([
+        state => state.search || null,
+        state => state?.controls?.searchservicesconfig?.enabled || false
+    ], (searchState, enabled) => ({
+        activeTool: get(searchState, 'activeSearchTool', 'addressSearch'),
+        enabled
+    })),
+    {
+        onToggleControl: toggleControl
+    }
+)(SearchServiceButton);
+
+export default createPlugin('SearchServicesConfig', {
+    component: SearchServicesPlugin,
+    containers: {
+        Search: {
+            name: 'SearchServicesConfigButton',
+            target: 'button',
+            component: ConnectedSearchServicesConfigButton
+        }
+    },
+    reducers: {
+        searchconfig: searchconfigReducer
+    }
+});
