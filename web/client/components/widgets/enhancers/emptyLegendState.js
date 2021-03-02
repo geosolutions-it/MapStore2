@@ -9,11 +9,13 @@ import React from 'react';
 
 import emptyState from '../../misc/enhancers/emptyState';
 import Message from '../../I18N/Message';
+import { EmptyChartState as EmptyLegend } from './emptyChartState';
 
 export default (asTooltip = true) => emptyState(
     ({ layers = [] }) => layers.length === 0,
     {
         [asTooltip ? "tooltip" : "title"]: <Message msgId="widgets.errors.noLegend" />,
         description: !asTooltip && <Message msgId="widgets.errors.noLegendDescription" />
-    }
+    },
+    EmptyLegend
 );
