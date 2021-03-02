@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
+import {Glyphicon} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Message from '../../I18N/Message';
 const nodataStyle = {
@@ -15,6 +15,15 @@ const nodataStyle = {
     textAlign: "center",
     verticalAlign: "center"
 };
+
+const emptyRowsStyle = {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+};
 class EmptyRowsView extends React.PureComponent {
     static propTypes = {
         loading: PropTypes.bool
@@ -22,7 +31,9 @@ class EmptyRowsView extends React.PureComponent {
     render() {
         return this.props.loading
             ? (<div style={nodataStyle}><Message msgId="loading" /></div>) :
-            <div style={nodataStyle}><Message msgId="featuregrid.noFeaturesAvailable" /></div>;
+            <div style={emptyRowsStyle}>
+                <Glyphicon glyph="list-alt"/>&nbsp;<Message msgId="featuregrid.noFeaturesAvailable" />
+            </div>;
     }
 }
 

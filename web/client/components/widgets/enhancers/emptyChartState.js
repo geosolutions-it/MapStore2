@@ -1,4 +1,5 @@
 import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
 import Message from '../../I18N/Message';
 import emptyState from '../../misc/enhancers/emptyState';
 
@@ -14,7 +15,7 @@ export function EmptyChartState({props = {}}) {
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>
-            <Message msgId={props.tooltip?.props?.msgId || "widgets.errors.nodatainviewport"} />
+            <Glyphicon glyph="stats"/>&nbsp; <Message msgId={props.tooltip?.props?.msgId || "widgets.errors.nodatainviewport"} />
         </div>
     );
 }
