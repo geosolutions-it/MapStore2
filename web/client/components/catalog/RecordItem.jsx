@@ -172,8 +172,7 @@ class RecordItem extends React.Component {
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => {
-                        const layer = this.makeLayer(type, {...wms, SRS: wms.SRS.map((s) => s.toUpperCase())
-                        } || wmts, record.format && [record.format] || record.formats);
+                        const layer = this.makeLayer(type, wms || wmts, record.format && [record.format] || record.formats);
                         if (layer) {
                             this.addLayer(layer, {record});
                         }
