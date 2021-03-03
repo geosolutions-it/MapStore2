@@ -9,7 +9,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getResolutionsForScales, DEFAULT_SCREEN_DPI} from '../../../utils/MapUtils';
+import { getResolutionsForScales } from '../../../utils/MapUtils';
 
 const withScalesDenominators = (Component) => {
 
