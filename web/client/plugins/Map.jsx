@@ -27,7 +27,7 @@ import mapTypeReducer from "../reducers/maptype";
 import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
-import overrideMapProps from "../components/map/enhancers/overrideMapProps";
+import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -439,7 +439,7 @@ export default createPlugin('Map', {
     component: connect(selector, {
         onFontError: errorLoadingFont,
         onResolutionsChange: setMapResolutions
-    })(overrideMapProps(MapPlugin)),
+    })(withScalesDenominators(MapPlugin)),
     reducers: {
         map: mapReducer,
         layers: layersReducer,
