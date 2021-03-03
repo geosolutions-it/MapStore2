@@ -12,7 +12,28 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import overrideMapProps from '../overrideMapProps';
 import mockData from '../../../../test-resources/testConfig.json';
-import MockApp from '../../../../test-resources/testMockComp';
+import PropTypes from 'prop-types';
+
+class MockApp extends React.Component {
+
+    static propTypes = {
+        zoom: PropTypes.number
+    };
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div className="MockApp">
+                <p>{this.props.zoom}</p>
+            </div>
+        );
+    }
+}
+
+export default MockApp;
 
 let MockComp = overrideMapProps(MockApp);
 
