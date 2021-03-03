@@ -52,7 +52,8 @@ export const PasswordReset = connect((state) => ({
     user: state.security && state.security.user,
     show: state.controls.ResetPassword && state.controls.ResetPassword.enabled,
     changed: state.security && state.security.passwordChanged && true || false,
-    error: state.security && state.security.passwordError
+    error: state.security && state.security.passwordError,
+    loading: state.security && state.security.changePasswordLoading || false
 }), {
     onPasswordChange: (user, pass) => { return changePassword(user, pass); },
     onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)

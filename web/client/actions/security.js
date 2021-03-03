@@ -114,8 +114,15 @@ export function changePasswordFail(e) {
     };
 }
 
+export function changePasswordStart() {
+    return {
+        type: CHANGE_PASSWORD
+    };
+}
+
 export function changePassword(user, newPassword) {
     return (dispatch) => {
+        dispatch(changePasswordStart());
         AuthenticationAPI.changePassword(user, newPassword).then(() => {
             dispatch(changePasswordSuccess(user, newPassword));
         }).catch((e) => {
