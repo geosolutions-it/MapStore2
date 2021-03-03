@@ -15,6 +15,7 @@ import Select from 'react-select';
 import GeometricOperationSelector from './GeometricOperationSelector';
 import GroupField from './GroupField';
 import { isSameUrl } from '../../../utils/URLUtils';
+import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 
 
 const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => isSameUrl(origSearchUrl, url) || isSameUrl(origSearchUrl, (search && search.url));
@@ -47,6 +48,16 @@ export default ({
         index: 0
     }]} = queryCollection;
 
+    const UnMatchingLayerOptions = layers
+        .filter( l => !isSameOGCServiceRoot(searchUrl, l));
+
+    const renderUnMatchingLayersInfo = () => {
+        if (UnMatchingLayerOptions.length) {
+            return (<ToolbarButton className="square-button-md no-border unmatching-sources-info-icon"
+                glyph="info-sign" tooltipId="queryform.crossLayerFilter.errors.layersExcluded"/>);
+        }
+        return null;
+    };
     return (<SwitchPanel
         loading={loadingCapabilities}
         expanded={crossLayerExpanded && !loadingCapabilities && !errorObj}
@@ -63,7 +74,9 @@ export default ({
         title={<Message msgId="queryform.crossLayerFilter.title" />} >
         <Row className="inline-form filter-field-fixed-row">
             <Col xs={6}>
-                <div><Message msgId="queryform.crossLayerFilter.targetLayer"/></div>
+                <div>
+                    { renderUnMatchingLayersInfo() }
+                    <Message msgId="queryform.crossLayerFilter.targetLayer"/></div>
             </Col>
             <Col xs={6}>
                 <Select

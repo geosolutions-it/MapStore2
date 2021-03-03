@@ -1076,7 +1076,8 @@
                 "operation": "Geometrische Operation",
                 "placeholder": "Wählen Sie eine Ebene aus",
                 "errors": {
-                    "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar"
+                    "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar",
+                    "layersExcluded": "Für diesen Ebenenfilter können nur Ebenen ausgewählt werden, die von derselben Quelle stammen"
                 }
             },
             "changedFilter": "Filter geändert",

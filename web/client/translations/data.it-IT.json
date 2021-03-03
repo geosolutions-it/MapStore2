@@ -1075,7 +1075,8 @@
                 "operation": "Operazione",
                 "placeholder": "Seleziona il livello",
                 "errors": {
-                    "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
+                    "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",
+                    "layersExcluded": "Solo i layer provenienti dalla stessa sorgente possono essere selezionati come layer di destinazione per questo filtro layer"
                 }
             },
             "changedFilter": "Filtero modificato",
