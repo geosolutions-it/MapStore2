@@ -10,7 +10,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import overrideMapProps from '../withScalesDenominators';
+import withScalesDenominators from '../withScalesDenominators';
 import mockData from '../../../../test-resources/testConfig.json';
 import PropTypes from 'prop-types';
 
@@ -35,7 +35,7 @@ class MockApp extends React.Component {
 
 export default MockApp;
 
-let MockComp = overrideMapProps(MockApp);
+let MockComp = withScalesDenominators(MockApp);
 
 describe('Test get resolutions from scales', () => {
     beforeEach((done) => {
