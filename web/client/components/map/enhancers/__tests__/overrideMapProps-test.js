@@ -10,7 +10,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import overrideMapProps from '../overrideMapProps';
+import overrideMapProps from '../withScalesDenominators';
 import mockData from '../../../../test-resources/testConfig.json';
 import PropTypes from 'prop-types';
 
