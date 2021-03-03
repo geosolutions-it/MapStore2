@@ -62,7 +62,6 @@ class PasswordReset extends React.Component {
     };
 
     renderWarning = () => {
-        // TODO show error for server error
         if (!this.state.password) {
             return null;
         }

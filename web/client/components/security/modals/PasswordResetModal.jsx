@@ -99,7 +99,7 @@ class PasswordResetModal extends React.Component {
     };
 
     getBody = () => {
-        return (<PasswordReset role="body" ref="passwordResetForm"
+        return (<PasswordReset error={this.props.error} role="body" ref="passwordResetForm"
             changed={this.props.changed}
             onChange={(password, valid) => {
                 this.setState({passwordValid: valid, password});
