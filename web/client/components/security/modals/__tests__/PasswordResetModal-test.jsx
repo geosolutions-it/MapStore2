@@ -66,8 +66,8 @@ describe("Test password reset modal", () => {
         ReactDOM.render(<PRModal loading={false} options={{animation: false}} show user={{name: "test"}} onPasswordChange={callbacks.onPasswordChange}/>, document.getElementById("container"));
         let button = document.getElementsByTagName("button")[1];
         ReactTestUtils.Simulate.click(button);
-        let spinner = document.getElementsByTagName("Spinner")
-        expect(spinner).toExist()
+        let spinner = document.getElementsByTagName("Spinner");
+        expect(spinner).toExist();
     });
 
 });

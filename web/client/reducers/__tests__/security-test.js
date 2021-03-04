@@ -142,7 +142,7 @@ describe('Test the security reducer', () => {
     });
 
     it('change password start set changePasswordLoading', () => {
-        let state = security({user: testUser.User}, {type:CHANGE_PASSWORD});
+        let state = security({user: testUser.User}, {type: CHANGE_PASSWORD});
         expect(state).toExist();
         expect(state.changePasswordLoading).toBeTruthy();
         expect(state.passwordError).toBe(null);
