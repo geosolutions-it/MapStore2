@@ -14,7 +14,7 @@ import head from 'lodash/head';
 import last from 'lodash/last';
 import find from 'lodash/find';
 import isObject from 'lodash/isObject';
-
+import {getCenter} from 'ol/extent';
 import {colorToRgbaStr} from '../../../utils/ColorUtils';
 import {reproject, transformLineToArcs} from '../../../utils/CoordinatesUtils';
 import Icons from '../../../utils/openlayers/Icons';
@@ -204,8 +204,9 @@ export const addDefaultStartEndPoints = (styles = [], startPointOptions = {radiu
 
 export const centerPoint = (feature) => {
     const geometry = feature.getGeometry();
+    const { isGeodesic = false } = feature.getProperties();
     const extent = geometry.getExtent();
-    let center = geometry.getCenter && geometry.getCenter() || [extent[2] - extent[0], extent[3] - extent[1]];
+    let center = isGeodesic ? getCenter(extent) : (geometry.getCenter && geometry.getCenter() || [extent[2] - extent[0], extent[3] - extent[1]]);
     return new Point(center);
 };
 export const lineToArc = (feature) => {

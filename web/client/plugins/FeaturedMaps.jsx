@@ -16,7 +16,6 @@ import {NavItem, Glyphicon} from 'react-bootstrap';
 import { setFeaturedMapsEnabled} from '../actions/maps';
 
 import Message from "../components/I18N/Message";
-import maptypeEpics from '../epics/maptype';
 import mapsEpics from '../epics/maps';
 import {userRoleSelector} from '../selectors/security';
 import {versionSelector} from '../selectors/version';
@@ -31,6 +30,7 @@ import {scrollIntoViewId} from '../utils/DOMUtil';
 
 import featuredmaps from '../reducers/featuredmaps';
 import maptype from '../reducers/maptype';
+import {DASHBOARD_DEFAULT_SHARE_OPTIONS, GEOSTORY_DEFAULT_SHARE_OPTIONS} from '../utils/ShareUtils';
 
 const ToolTipedNavItem = tooltip(NavItem);
 
@@ -48,32 +48,35 @@ class FeaturedMaps extends React.Component {
         previousItems: PropTypes.array,
         enableFeaturedMaps: PropTypes.func,
         version: PropTypes.string,
-        showAPIShare: PropTypes.bool
+        showAPIShare: PropTypes.bool,
+        shareOptions: PropTypes.object
     };
 
     static contextTypes = {
         router: PropTypes.object
     };
 
-
     UNSAFE_componentWillMount() {
         this.props.enableFeaturedMaps(true);
     }
 
     getShareOptions = (res) => {
-        if (res.category && res.category.name === 'GEOSTORY') {
-            return {
-                embedPanel: false,
-                advancedSettings: {
-                    homeButton: true
-                }
+        const categoryName = res.category?.name;
+        const shareOptions = this.props.shareOptions && categoryName
+            && this.props.shareOptions[categoryName.toLowerCase()];
+
+        if (categoryName === 'GEOSTORY') {
+            return shareOptions || GEOSTORY_DEFAULT_SHARE_OPTIONS;
+        }
+
+        if (categoryName === 'MAP') {
+            return shareOptions || {
+                embedPanel: true
             };
         }
 
-        if (res.category && res.category.name === 'MAP') {
-            return {
-                embedPanel: true
-            };
+        if (categoryName === 'DASHBOARD') {
+            return shareOptions || DASHBOARD_DEFAULT_SHARE_OPTIONS;
         }
 
         return {
@@ -159,12 +162,24 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
     })));
 
 /**
- * FeaturedMaps plugin. Shows featured maps in a grid.
+ * FeaturedMaps plugin. Shows featured resources in a grid.
  * Typically used in the {@link #pages.Maps|home page}.
  * @name FeaturedMaps
  * @prop {string} cfg.pageSize change the page size (only desktop)
+ * @prop {boolean} cfg.shareOptions configuration applied to share panel grouped by category name
  * @memberof plugins
  * @class
+ * @example
+ * {
+ *   "name": "FeaturedMaps",
+ *   "cfg": {
+ *     "shareOptions": {
+ *       "dashboard": {
+ *         "embedPanel": false
+ *       }
+ *     }
+ *   }
+ * }
  */
 
 const FeaturedMapsPlugin = compose(
@@ -228,7 +243,6 @@ export default {
         }
     }),
     epics: {
-        ...maptypeEpics,
         ...mapsEpics
     },
     reducers: {

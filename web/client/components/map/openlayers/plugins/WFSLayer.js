@@ -85,7 +85,9 @@ Layers.registerType('wfs', {
             visible: options.visibility !== false,
             zIndex: options.zIndex,
             style,
-            opacity: options.opacity
+            opacity: options.opacity,
+            minResolution: options.minResolution,
+            maxResolution: options.maxResolution
         });
         updateStyle(layer, options);
         return layer;
@@ -106,6 +108,12 @@ Layers.registerType('wfs', {
         }
         if (options.style !== oldOptions.style || options.styleName !== oldOptions.styleName) {
             updateStyle(layer, options);
+        }
+        if (oldOptions.minResolution !== options.minResolution) {
+            layer.setMinResolution(options.minResolution === undefined ? 0 : options.minResolution);
+        }
+        if (oldOptions.maxResolution !== options.maxResolution) {
+            layer.setMaxResolution(options.maxResolution === undefined ? Infinity : options.maxResolution);
         }
     },
     render: () => {

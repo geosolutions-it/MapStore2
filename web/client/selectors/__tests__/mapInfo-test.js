@@ -16,6 +16,7 @@ import {
     generalInfoFormatSelector,
     stopGetFeatureInfoSelector,
     isMapInfoOpen,
+    isMapPopup,
     mapInfoConfigurationSelector,
     showEmptyMessageGFISelector,
     clickPointSelector,
@@ -24,7 +25,8 @@ import {
     itemIdSelector,
     filterNameListSelector,
     overrideParamsSelector,
-    mapTriggerSelector
+    mapTriggerSelector,
+    hoverEnabledSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -348,5 +350,15 @@ describe('Test mapinfo selectors', () => {
         expect(mapTriggerSelector({mapInfo: { configuration: {} }})).toBe('click');
         // when mapInfo is present
         expect(mapTriggerSelector({mapInfo: { configuration: { trigger: 'hover' } }})).toBe('hover');
+    });
+    it('test hoverEnabledSelector', () => {
+        // when no mapInfo object is not present in state
+        expect(hoverEnabledSelector({})).toBe(true);
+        // when mapInfo is present
+        expect(hoverEnabledSelector({maptype: {mapType: "openlayers"} })).toBe(true);
+        expect(hoverEnabledSelector({maptype: {mapType: "cesium"} })).toBe(false);
+    });
+    it('isMapPopup', () => {
+        expect(isMapPopup({ mapInfo: {showInMapPopup: true} })).toBeTruthy();
     });
 });

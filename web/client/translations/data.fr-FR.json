@@ -104,6 +104,25 @@
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
             "templatePreview": "Aperçu du modèle",
+            "visibilityLimits": {
+                "title": "Limites de visibilité",
+                "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",
+                "serverValuesUpdate": "Le serveur a fourni des limites de visibilité d'échelle minimale et maximale pour cette couche",
+                "serverValuesUpdateMinScale": "Le serveur a fourni uniquement une limite de visibilité d'échelle minimale pour cette couche",
+                "serverValuesUpdateMaxScale": "Le serveur n'a fourni que la limite de visibilité d'échelle maximale pour cette couche",
+                "rangeError": "La valeur minimale est supérieure à la valeur maximale. Veuillez fournir une plage où la valeur maximale est supérieure à la valeur minimale",
+                "serverValuesError": "Il n'est pas possible de demander des limites de visibilité d'échelle minimale et maximale au serveur. Probablement en raison d'une erreur de connexion réseau ou d'un point de terminaison de capacité manquant",
+                "updateWMSCapabilities": "Demander des limites de visibilité d'échelle minimale et maximale au serveur",
+                "maxValue": "Valeur max (exclue)",
+                "maxValuePlaceholder": "Sélectionnez la valeur maximale",
+                "valueNoResultsText": "Aucune option ne correspond à la valeur d'entrée",
+                "createOption": "Ajouter une nouvelle valeur {label}",
+                "minValue": "Valeur min (inclus)",
+                "minValuePlaceholder": "Sélectionnez la valeur minimale",
+                "type": "Type de limites",
+                "scale": "Échelle",
+                "resolution": "Résolution"
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -256,7 +275,7 @@
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "ml": {
                 "title": "Restez au courant des derniers développements via les mailing lists",
                 "subscribe_users": "Souscrire à la liste de diffusion utilisateurs",
@@ -534,6 +553,8 @@
             "radius": "Rayon",
             "filterIconEnabled": "Désactiver le filtre de couche",
             "filterIconDisabled": "Activer le filtre de couche",
+            "notVisibleZoomIn": "Le calque n'est pas visible car il est en dehors des limites de résolution. Zoomez pour afficher le calque",
+            "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -985,6 +1006,7 @@
             "attributefilter": {
                 "add_condition": " Ajouter une condition",
                 "delete": " Effacer",
+                "deleteGroup": " Effacer le groupe",
                 "add_group": " Ajouter un groupe",
                 "group_label_a": "Correspondance",
                 "group_label_b": "des conditions suivantes:",
@@ -1266,7 +1288,8 @@
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
             "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
-            "showSectionId": "Inclure la position de défilement"
+            "showSectionId": "Inclure la position de défilement",
+            "showConnections": "Afficher les connexions"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -1919,6 +1942,21 @@
             },
             "emptyTitle": "Le tableau de bord est vide"
         },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Chargement du tableau de bord",
+            "errors":{
+                "loading": {
+                    "title": "Erreur lors du chargement du tableau de bord",
+                    "dashboardNotAccessible": "Vous n'êtes pas autorisé à accéder à ce tableau de bord",
+                    "pleaseLogin": "Ce tableau de bord n'est pas public",
+                    "dashboardDoesNotExist": "Le tableau de bord auquel vous tentez d'accéder n'existe pas",
+                    "unknownError": "Une erreur est survenue lors du chargement du tableau de bord",
+                    "notFound": "Tableau de bord introuvable",
+                    "notAccessible": "Tableau de bord inaccessible"
+                }
+            },
+            "emptyTitle": "Le tableau de bord est vide"
+        },
         "context": {
             "loadingSpinner": "Chargement du contexte",
             "errors": {
@@ -2025,8 +2063,10 @@
             "deletedStyleErrorMessage": "Impossible de supprimer le style actuel",
             "savedStyleTitle": "Style sauvegardé",
             "savedStyleMessage": "Le style a été enregistré avec succès",
-            "missingAvailableStyles": "Styles manquants",
-            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li> </ul>",
+            "errorTitle": "Erreur StyleEditor",
+            "parsingCapabilitiesError": "<h4>Causes possibles:</h4> il n'a pas été possible d'analyser les cababilites et de récupérer les styles",
+            "globalError": "<h4>causes possibles:</h4> il n'a pas été possible de se connecter au service",
+            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li><li></li> </ul>",
             "createTmpErrorTitle": "Nouveau style temporaire",
             "createTmpStyleErrorMessage": "Le style temporaire n'a pas pu être créé. Cela pourrait être dû à un format de style non pris en charge sur le service de styles.",
             "updateTmpErrorTitle": "Mise à jour de style temporaire",
@@ -2444,6 +2484,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory introuvable",
                     "title": "Erreur",
                     "unknownError": "Erreur inconnue",
                     "pleaseLogin": "Veuillez vous connecter",
@@ -2479,6 +2520,20 @@
                 "shadowLabel": "Ombre",
                 "useAlternativeTextColor": "Utiliser la couleur de texte alternatif",
                 "alternativeTextColorPopover": "<p>Attention: la couleur du texte sélectionné pourrait être illisible sur ce fond.</p><p>Une couleur de texte alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Chargement de l'histoire",
+            "errors": {
+                "loading": {
+                  "notFound": "Geostory introuvable",
+                  "title": "Erreur",
+                  "unknownError": "Erreur inconnue",
+                  "notAccessible": "Cette histoire n'est pas accessible",
+                  "pleaseLogin": "La ressource n'est pas publique",
+                  "geostoryNotAccessible": "Vous n'êtes pas autorisé à accéder à cette histoire",
+                  "geostoryDoesNotExist": "Cette histoire n'existe pas"
+                }
             }
         },
         "saveDialog": {
@@ -2759,6 +2814,10 @@
           "WidgetsTray": {
             "description": "Une barre d'outils pour réduire et développer les widgets sur la carte.",
             "title": "Barre de widgets"
+          },
+          "Globe": {
+            "description": "Bouton de la barre latérale pour activer / désactiver le mode 3D",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Bouton de la barre latérale pour zoomer sur l'étendue de la carte",

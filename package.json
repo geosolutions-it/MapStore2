@@ -1,6 +1,6 @@
 {
   "name": "mapstore2",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "MapStore 2",
   "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",
@@ -24,6 +24,7 @@
   ],
   "devDependencies": {
     "@babel/core": "7.8.7",
+    "@babel/runtime": "7.11.2",
     "@babel/plugin-proposal-class-properties": "7.8.3",
     "@babel/plugin-syntax-dynamic-import": "7.8.3",
     "@babel/preset-env": "7.8.7",
@@ -95,7 +96,7 @@
     "vusion-webfonts-generator": "0.4.1",
     "webpack": "5.9.0",
     "webpack-bundle-size-analyzer": "2.0.2",
-    "webpack-cli": "4.3.1",
+    "webpack-cli": "4.5.0",
     "webpack-dev-server": "3.11.0"
   },
   "dependencies": {
@@ -210,7 +211,7 @@
     "react-draggable": "2.2.6",
     "react-dropzone": "3.13.1",
     "react-error-boundary": "1.2.5",
-    "react-grid-layout": "0.16.6",
+    "react-grid-layout": "1.2.0",
     "react-image-lightbox": "4.2.2",
     "react-input-autosize": "1.1.4",
     "react-intersection-observer": "8.24.1",
@@ -219,7 +220,7 @@
     "react-nouislider": "2.0.1",
     "react-numeric-input": "2.2.3",
     "react-overlays": "1.2.0",
-    "react-pdf": "4.0.5",
+    "react-pdf": "5.1.0",
     "react-player": "1.15.3",
     "react-plotly.js": "2.5.0",
     "react-quill": "1.1.0",
@@ -279,7 +280,7 @@
     "i18n": "node  utility/translations/findMissingTranslations.js",
     "postinstall": "node utility/build/postInstall.js",
     "clean": "rimraf ./web/client/dist",
-    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=3096 ./node_modules/webpack/bin/webpack.js --progress --color --config build/prod-webpack.config.js",
+    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=3072 ./node_modules/webpack/bin/webpack.js --progress --color --config build/prod-webpack.config.js",
     "analyze": "npm run clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
     "start": "webpack serve --progress --color --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
     "startprod": "webpack serve --progress --color --port 8081 --hot --inline --content-base web/client  --config build/prod-webpack.config.js",

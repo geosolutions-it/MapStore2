@@ -102,6 +102,25 @@
             "hideFormatDescription": "Deshabilite la información de la entidad para esta capa",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
+            "visibilityLimits": {
+                "title": "Límites de visibilidad",
+                "serverValuesUpdateUndefined": "El servidor no proporcionó límites de visibilidad de escala para esta capa",
+                "serverValuesUpdate": "El servidor proporcionó límites de visibilidad de escala mínima y máxima para esta capa",
+                "serverValuesUpdateMinScale": "El servidor proporcionó solo el límite mínimo de visibilidad de escala para esta capa",
+                "serverValuesUpdateMaxScale": "El servidor proporcionó solo el límite máximo de visibilidad de escala para esta capa",
+                "rangeError": "El valor mínimo es mayor que el valor máximo. Proporcione un rango donde el valor máximo sea mayor que el valor mínimo",
+                "serverValuesError": "No es posible solicitar límites de visibilidad de escala mínimos y máximos al servidor. Probablemente debido a un error en la conexión de red o al punto final de capacidad faltante",
+                "updateWMSCapabilities": "Solicitar límites de visibilidad de escala mínimos y máximos al servidor",
+                "maxValue": "Valor máximo (excluido)",
+                "maxValuePlaceholder": "Seleccionar valor máximo",
+                "valueNoResultsText": "Ninguna opción coincide con el valor de entrada",
+                "createOption": "Agregar nuevo valor {label}",
+                "minValue": "Valor mínimo (incluido)",
+                "minValuePlaceholder": "Seleccionar valor mínimo",
+                "type": "Tipo de límites",
+                "scale": "Escala",
+                "resolution": "Resolución"
+            },
             "tooltip": {
                 "label": "Información sobre herramientas",
                 "title": "Título",
@@ -256,7 +275,7 @@
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
             "scrollTop": "Volver al principio de la página",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "ml": {
                 "title": "Esté informado a la última sobre los cambios en el desrrollo via listas de correo",
                 "subscribe_users": "Suscribirse a las listas de correo de usuarios",
@@ -534,6 +553,8 @@
             "radius": "Radio",
             "filterIconEnabled": "Deshabilitar filtro de capa",
             "filterIconDisabled": "Habilitar filtro de capa",
+            "notVisibleZoomIn": "La capa no es visible porque está fuera de los límites de resolución. Acercar para mostrar la capa",
+            "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -985,6 +1006,7 @@
             "attributefilter":{
                 "add_condition": " Añadir una condición",
                 "delete": " Borrar",
+                "deleteGroup": " Eliminar grupo",
                 "add_group": " Añadir un grupo",
                 "group_label_a": "Coincidencia con",
                 "group_label_b": "de las siguientes condiciones:",
@@ -1265,7 +1287,8 @@
             "coordinate": "Coordinar",
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
-            "showSectionId": "Incluir posición de desplazamiento"
+            "showSectionId": "Incluir posición de desplazamiento",
+            "showConnections": "Mostrar conexiones"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",
@@ -1918,6 +1941,21 @@
             },
             "emptyTitle": "El panel de control está vacío"
         },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Cargando panel de control",
+            "errors":{
+                "loading": {
+                    "title": "Error al cargar el panel de control",
+                    "dashboardNotAccessible": "No tiene permiso para acceder a este panel",
+                    "pleaseLogin": "Este panel no es público",
+                    "dashboardDoesNotExist": "El panel al que intenta acceder no existe",
+                    "unknownError": "Hubo un error al cargar el panel",
+                    "notFound": "Panel de control no encontrado",
+                    "notAccessible": "Panel de control no accesible"
+                }
+            },
+            "emptyTitle": "El panel de control está vacío"
+        },
         "context": {
             "loadingSpinner": "Cargando Contexto",
             "errors": {
@@ -2024,8 +2062,10 @@
             "deletedStyleErrorMessage": "No se pudo eliminar el estilo actual",
             "savedStyleTitle": "Estilo guardado",
             "savedStyleMessage": "El estilo se ha guardado con éxito.",
-            "missingAvailableStyles": "Estilos que faltan",
-            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>",
+            "errorTitle": "Error de StyleEditor",
+            "parsingCapabilitiesError": "<h4>Posibles Causas:</h4> no fue posible analizar los cababilites y recuperar los estilos",
+            "globalError": "<h4>Posibles Causas:</h4> no fue posible conectarse al servicio",
+            "missingAvailableStylesMessage": "<ul> <h4> Posibles Causas: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>",
             "createTmpErrorTitle": "Nuevo estilo temporal",
             "createTmpStyleErrorMessage": "No se pudo crear el estilo temporal. Esto podría deberse a un formato de estilo no compatible en el servicio de estilo",
             "updateTmpErrorTitle": "Actualización de estilo temporal",
@@ -2443,6 +2483,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geografía no encontrada",
                     "title": "Error",
                     "unknownError": "Error desconocido",
                     "pleaseLogin": "Por favor Iniciar sesión",
@@ -2478,6 +2519,20 @@
                 "shadowLabel": "Sombra",
                 "useAlternativeTextColor": "Utilice el color de texto alternativo",
                 "alternativeTextColorPopover": "<p>Advertencia: el color del texto seleccionado puede no ser legible en este contexto.</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Cargando historia",
+            "errors": {
+                "loading": {
+                  "notFound": "Geografía no encontrada",
+                  "title": "Error",
+                  "unknownError": "Error desconocido",
+                  "notAccessible": "Esta historia no es accesible",
+                  "pleaseLogin": "El recurso no es público",
+                  "geostoryNotAccessible": "No tienes permiso para acceder a esta historia",
+                  "geostoryDoesNotExist": "Esta historia no existe"
+                }
             }
         },
         "saveDialog": {
@@ -2758,6 +2813,10 @@
           "WidgetsTray": {
             "description": "Una bandeja para colapsar, expandir widgets en el mapa.",
             "title": "Bandeja de widgets"
+          },
+          "Globe": {
+            "description": "otón de la barra lateral para activar / desactivar el modo 3D",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Botón de barra lateral para acercar a la extensión del mapa",

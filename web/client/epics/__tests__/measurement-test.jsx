@@ -8,8 +8,9 @@
 
 import expect from 'expect';
 import { addTimeoutEpic, testEpic } from './epicTestUtils';
-import { addAnnotationFromMeasureEpic, addAsLayerEpic, openMeasureEpic, setMeasureStateFromAnnotationEpic, closeMeasureEpics } from '../measurement';
+import { addAnnotationFromMeasureEpic, addAsLayerEpic, openMeasureEpic, setMeasureStateFromAnnotationEpic, closeMeasureEpics, addCoordinatesEpic } from '../measurement';
 import {addAnnotation, addAsLayer, setAnnotationMeasurement} from '../../actions/measurement';
+import { clickOnMap } from '../../actions/map';
 import {setControlProperty, toggleControl} from '../../actions/controls';
 
 describe('measurement epics', () => {
@@ -208,7 +209,7 @@ describe('measurement epics', () => {
             }, state);
     });
     it('test setMeasureStateFromAnnotationEpic', (done) => {
-        const NUMBER_OF_ACTIONS = 3;
+        const NUMBER_OF_ACTIONS = 4;
         const state = {
             controls: {
                 measure: {
@@ -231,6 +232,8 @@ describe('measurement epics', () => {
                 expect(actions[2].control).toBe("annotations");
                 expect(actions[2].property).toBe("enabled");
                 expect(actions[2].value).toBe(false);
+                expect(actions[3].type).toBe("ANNOTATIONS:VISIBILITY");
+                expect(actions[3].visibility).toBe(false);
                 done();
             }, state);
     });
@@ -252,6 +255,37 @@ describe('measurement epics', () => {
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 expect(actions[0].type).toBe("ANNOTATIONS:CLEAN_HIGHLIGHT");
+                done();
+            }, state);
+    });
+    it('test addCoordinatesEpic', (done) => {
+        const NUMBER_OF_ACTIONS = 1;
+        const state = {
+            controls: {
+                measure: {
+                    showCoordinateEditor: true,
+                    enabled: true
+                }
+            },
+            measurement: {
+                currentFeature: 0,
+                features: [{
+                    type: "Feature",
+                    geometry: {type: "LineString", coordinates: [[1, 2], [2, 3], ["", ""]], textLabels: [{text: "1m"}, {text: "0"}]},
+                    properties: {values: [{value: 1154.583, formattedValue: "10 m", position: [1, 2], type: "length"}]}
+                }],
+                geomType: "LineString"
+            }
+        };
+
+        testEpic(
+            addTimeoutEpic(addCoordinatesEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                clickOnMap({latlng: {lng: 3, lat: 4}})
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                expect(actions[0].type).toBe("MEASUREMENT:CHANGE_COORDINATES");
+                expect(actions[0].coordinates).toEqual([{"lon": 1, "lat": 2}, {"lon": 2, "lat": 3}, {"lon": 3, "lat": 4}]);
                 done();
             }, state);
     });

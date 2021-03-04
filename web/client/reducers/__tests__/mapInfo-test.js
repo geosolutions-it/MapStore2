@@ -17,8 +17,10 @@ import {
     changeFormat,
     changePage,
     toggleHighlightFeature,
-    setMapTrigger
+    setMapTrigger,
+    setShowInMapPopup
 } from '../../actions/mapInfo';
+import {changeMapType} from '../../actions/maptype';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
 import assign from 'object-assign';
@@ -112,7 +114,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].response).toBe("data");
         expect(state.responses[1].queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
-        expect(state.index).toBe(1);
+        expect(state.index).toBe(0);
     });
 
     it('creates a feature info data from vector info request', () => {
@@ -144,7 +146,7 @@ describe('Test the mapInfo reducer', () => {
         let state = mapInfo({requests: [{}], configuration: {}}, testAction);
         expect(state.responses).toExist();
         expect(state.loaded).toBe(true);
-        expect(state.index).toBe(1);
+        expect(state.index).toBe(0);
         expect(state.responses.length).toBe(2);
         expect(state.responses[1].response).toExist();
         expect(state.responses[1].response.features.length).toBe(1);
@@ -827,5 +829,23 @@ describe('Test the mapInfo reducer', () => {
         const action = setMapTrigger('hover');
         const state = mapInfo(undefined, action);
         expect(state.configuration.trigger).toBe('hover');
+    });
+    it('test the result of changeMapType action - MAP_TYPE_CHANGED when passing to cesium', () => {
+        const action = changeMapType('cesium');
+        const initialState = {configuration: {}};
+        const state = mapInfo(initialState, action);
+        expect(state.configuration.trigger).toBe("click");
+    });
+    it('test the result of changeMapType action - MAP_TYPE_CHANGED when passing to 2d maptype', () => {
+        const action = changeMapType('openlayers');
+        const initialState = {configuration: {trigger: "click"}};
+        const state = mapInfo(initialState, action);
+        expect(state.configuration.trigger).toBe("click");
+    });
+
+    it('setShowInMapPopup', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, setShowInMapPopup(true));
+        expect(state.showInMapPopup).toBeTruthy();
     });
 });

@@ -1,6 +1,6 @@
-# General Migration Guidelines
+# Migration Guidelines
 
-Updating MapStore could mean:
+## General update checklist
 
 - updating an existing installation
 - updating a MapStore project created for a previous version
@@ -16,8 +16,264 @@ This is a list of things to check if you want to update from a previous version 
 - update your `package.json` to latest libs versions
 - take a look at your custom files to see if there are some changes (e.g. `localConfig.js`, `proxy.properties`)
 - Some changes that may need to be ported could be present also in `pom.xml` files and in `configs` directory.
+- check for changes also in `web/src/main/webapp/WEB-INF/web.xml`.
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
+
+## Migration from 2021.01.00 to 2021.01.01
+
+### Update embedded entry to load the correct configuration
+
+Existing MapStore project could have an issue with the loading of map embedded page due to the impossibility to change some configuration such as localConfig.json or translations path in the javascript entry.
+This issue can be solved following these steps:
+1 - add a custom entry named `embedded.jsx` in the `js/` directory of the project with the content:
+```js
+import {
+    setConfigProp,
+    setLocalConfigurationFile
+} from '@mapstore/utils/ConfigUtils';
+
+// Add custom (overriding) translations
+// example for additional translations in the project folder
+// setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './translations']);
+setConfigProp('translationsPath', './MapStore2/web/client/translations');
+// __PROJECTNAME__ is the name of the project used in the creation process 
+setConfigProp('themePrefix', '__PROJECTNAME__');
+
+// Use a custom plugins configuration file
+// example if localConfig.json is located in the root of the project
+// setLocalConfigurationFile('localConfig.json');
+setLocalConfigurationFile('MapStore2/web/client/localConfig.json');
+
+// async load of the standard embedded bundle
+import('@mapstore/product/embedded');
+```
+2 - update the path of the embedded entry inside the `webpack.config.js` and `prod-webpack.config.js` files with:
+```js
+// __PROJECTNAME__ is the name of the project used in the creation process 
+'__PROJECTNAME__-embedded': path.join(__dirname, "js", "embedded"),
+```
+### Locate plugin configuration
+
+Configuration for Locate plugin has changed and it is not needed anymore inside the Map plugin
+
+- old localConfig.json configuration needed 'locate' listed as tool inside the Map plugin and as a separated Locate plugin
+```js
+// ...
+{
+    "name": "Map",
+    "cfg": {
+        "tools": ["locate"],
+        // ...
+    }
+},
+{
+    "name": "Locate",
+    // ...
+}
+// ...
+```
+
+- new localConfig.json configuration removes 'locate' from tools array and it keeps only the plugin configuration
+```js
+// ...
+{
+    "name": "Map",
+    "cfg": {
+        // ...
+    }
+},
+{
+    "name": "Locate",
+    // ...
+}
+// ...
+```
+
+### Update an existing project to include embedded Dashboards and GeoStories
+
+Embedded Dashboards and GeoStories need a new set of javascript entries, html templates and configuration files to make them completely available in an existing project.
+
+The steps described above assume this structure of the MapStore2 project for the files that need update:
+
+```
+MapStore2Project/
+|-- ...
+|-- js/
+|    |-- ...
+|    |-- dashboardEmbedded.jsx (new)
+|    |-- geostoryEmbedded.jsx (new)
+|-- MapStore2/
+|-- web/
+|    |-- ...
+|    |-- pom.xml
+|-- ...
+|-- dashboard-embedded-template.html (new)
+|-- dashboard-embedded.html (new)
+|-- ...
+|-- geostory-embedded-template.html (new)
+|-- geostory-embedded.html (new)
+|-- ...
+|-- prod-webpack.config.js
+|-- ...
+|-- webpack.config.js
+```
+
+1) create the entries files for the embedded application named `dashboardEmbedded.jsx` and `geostoryEmbedded.jsx` in the js/ folder with the following content (see links):
+    - [dashboardEmbedded.jsx](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/js/dashboardEmbedded.jsx)
+    - [geostoryEmbedded.jsx](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/js/geostoryEmbedded.jsx)
+
+2) add the html files and templates in the root directory of the project with these names and content (see links):
+    - [dashboard-embedded-template.html](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/dashboard-embedded-template.html)
+    - [dashboard-embedded.html](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/dashboard-embedded.html)
+    - [geostory-embedded-template.html](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/geostory-embedded-template.html)
+    - [geostory-embedded.html](https://github.com/geosolutions-it/MapStore2/blob/2021.01.xx/project/standard/templates/geostory-embedded.html)
+
+3) update webpack configuration for development and production with the new entries and the related configuration:
+
+    - webpack.config.js
+    ```js
+    module.exports = require('./MapStore2/build/buildConfig')(
+        {
+            // other entries...,
+            // add new embedded entries to entry object
+            "geostory-embedded": path.join(__dirname, "js", "geostoryEmbedded"),
+            "dashboard-embedded": path.join(__dirname, "js", "dashboardEmbedded")
+        },
+        // ...
+    );
+    ```
+    - prod-webpack.config.js
+
+    ```js
+
+    module.exports = require('./MapStore2/build/buildConfig')(
+        {
+            // other entries...,
+            // add new embedded entries to entry object
+            "geostory-embedded": path.join(__dirname, "js", "geostoryEmbedded"),
+            "dashboard-embedded": path.join(__dirname, "js", "dashboardEmbedded")
+        },
+        // ...
+        [
+            // new HtmlWebpackPlugin({ ... }),
+            // add plugin to copy all the embedded html and inject the correct bundle
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'geostory-embedded-template.html'),
+                chunks: ['geostory-embedded'],
+                inject: "body",
+                hash: true,
+                filename: 'geostory-embedded.html'
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'dashboard-embedded-template.html'),
+                chunks: ['dashboard-embedded'],
+                inject: 'body',
+                hash: true,
+                filename: 'dashboard-embedded.html'
+            })
+        ],
+        // ...
+    );
+    ```
+
+4) Add configuration to localConfig.json in the plugins section related to Share functionalities (Only with custom localConfig.json in the project):
+    - Dashboard share configuration
+    ```js
+    "dashboard": [
+        // ...
+        {
+            "name": "Share",
+            "cfg": {
+                "showAPI": false,
+                "advancedSettings": false,
+                "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+                "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
+                "embedOptions": {
+                    "showTOCToggle": false,
+                    "showConnectionsParamToggle": true
+                }
+            }
+        },
+        // ...
+    ]
+    ```
+
+    - Dashboard share configuration
+    ```js
+    "geostory": [
+        // ...
+        {
+            "name": "Share",
+            "cfg": {
+                "embedPanel": true,
+                "showAPI": false,
+                "advancedSettings": {
+                    "hideInTab": "embed",
+                    "homeButton": true,
+                    "sectionId": true
+                },
+                "shareUrlRegex": "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+                "shareUrlReplaceString": "$1geostory-embedded.html#/$3",
+                "embedOptions": {
+                    "showTOCToggle": false
+                }
+            }
+        },
+        // ...
+    ]
+    ```
+
+5) update the web/pom.xml to copy all the related resources in the final *.war file with these new executions
+```xml
+<!-- __PROJECTNAME__ should be equal to the one in use in the project, see other executions how they define the outputDirectory path  -->
+<execution>
+    <id>only dashboard-embedded.html</id>
+    <phase>process-classes</phase>
+    <goals>
+        <goal>copy-resources</goal>
+    </goals>
+    <configuration>
+        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+        <encoding>UTF-8</encoding>
+        <resources>
+            <resource>
+                <directory>${basedir}/../dist</directory>
+                <includes>
+                    <include>dashboard-embedded.html</include>
+                </includes>
+                <excludes>
+                    <exclude>MapStore2/*</exclude>
+                    <exclude>MapStore2/**/*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </configuration>
+</execution>
+<execution>
+    <id>only geostory-embedded.html</id>
+    <phase>process-classes</phase>
+    <goals>
+        <goal>copy-resources</goal>
+    </goals>
+    <configuration>
+        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+        <encoding>UTF-8</encoding>
+        <resources>
+            <resource>
+                <directory>${basedir}/../dist</directory>
+                <includes>
+                    <include>geostory-embedded.html</include>
+                </includes>
+                <excludes>
+                    <exclude>MapStore2/*</exclude>
+                    <exclude>MapStore2/**/*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </configuration>
+</execution>
+```
 
 ## Migration from 2020.02.00 to 2021.01.00
 
@@ -157,6 +413,20 @@ INSERT into geostore.gs_category (id ,name) values ( nextval('geostore.hibernate
 INSERT into geostore.gs_category (id ,name) values ( nextval('geostore.hibernate_sequence'),  'USERSESSION') ON CONFLICT DO NOTHING;
 
 ```
+
+### Backend update
+For more details see [this](https://github.com/geosolutions-it/MapStore2/commit/4aa7b917abcb09571af5b9999a38e96f52eac4f3#diff-ac81cff563b78256ef26eca8a5103392592c7138987392a6fb3d79167d11bdcfR66) commit
+
+new files have been added:
+
+-  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml` 
+-  `web/src/main/resources/mapstore.properties` 
+
+some files has been changed:
+
+- `web/src/main/webapp/WEB-INF/web.xml`
+- `pom.xml`
+- `web/pom.xml`
 
 
 ## Migration from 2019.02.01 to 2020.01.00

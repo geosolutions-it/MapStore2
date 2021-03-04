@@ -15,7 +15,7 @@ const {
     needProxy
 } = require('../../../../utils/ProxyUtils');
 const assign = require('object-assign');
-const {isArray} = require('lodash');
+const {isArray, isEqual} = require('lodash');
 const WMSUtils = require('../../../../utils/cesium/WMSUtils');
 const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
 const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
@@ -127,6 +127,7 @@ function wmsToCesiumOptionsBIL(options) {
     }
     return assign({
         url,
+        littleEndian: options.littleendian || false,
         layerName: options.name
     });
 }
@@ -160,9 +161,12 @@ const updateLayer = (layer, newOptions, oldOptions) => {
         .filter((key) => {
             const oldOption = oldOptions[key] === undefined ? oldParams && oldParams[key] : oldOptions[key];
             const newOption = newOptions[key] === undefined ? newParams && newParams[key] : newOptions[key];
-            return oldOption !== newOption;
+            return !isEqual(oldOption, newOption);
         });
-    if (newParameters.length > 0 || newOptions.securityToken !== oldOptions.securityToken || newOptions.tileSize !== oldOptions.tileSize) {
+    if (newParameters.length > 0 ||
+        newOptions.securityToken !== oldOptions.securityToken ||
+        !isEqual(newOptions.layerFilter, oldOptions.layerFilter) ||
+        newOptions.tileSize !== oldOptions.tileSize) {
         return createLayer(newOptions);
     }
     return null;

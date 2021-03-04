@@ -40,7 +40,8 @@ class CoordinatesRow extends React.Component {
         removeVisible: PropTypes.bool,
         formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool,
-        renderer: PropTypes.string
+        renderer: PropTypes.string,
+        disabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -48,7 +49,8 @@ class CoordinatesRow extends React.Component {
         formatVisible: false,
         onMouseEnter: () => {},
         onMouseLeave: () => {},
-        showToolButtons: true
+        showToolButtons: true,
+        disabled: false
     };
 
     constructor(props) {
@@ -88,7 +90,7 @@ class CoordinatesRow extends React.Component {
         const toolButtons = [
             {
                 visible: this.props.removeVisible,
-                disabled: !this.props.removeEnabled,
+                disabled: !this.props.removeEnabled || this.props.disabled,
                 glyph: 'trash',
                 onClick: () => {
                     this.props.onRemove(idx);
@@ -112,12 +114,13 @@ class CoordinatesRow extends React.Component {
                         text: <Message msgId="search.aeronautical"/>
                     }
                 ],
+                disabled: this.props.disabled,
                 visible: this.props.formatVisible,
                 Element: DropdownToolbarOptions
             },
             {
                 glyph: "ok",
-                disabled: this.state.disabledApplyChange,
+                disabled: this.state.disabledApplyChange || this.props.disabled,
                 tooltipId: 'identifyCoordinateApplyChanges',
                 onClick: this.onSubmit,
                 visible: this.props.renderer !== "annotations"
@@ -149,55 +152,61 @@ class CoordinatesRow extends React.Component {
                 <div style={{cursor: this.props.isDraggableEnabled ? 'grab' : "not-allowed"}}>
                     {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </div>
-                <div className="coordinate lat">
-                    <InputGroup>
-                        <InputGroup.Addon><Message msgId="latitude"/></InputGroup.Addon>
-                        <CoordinateEntry
-                            format={this.props.format}
-                            aeronauticalOptions={this.props.aeronauticalOptions}
-                            coordinate="lat"
-                            idx={idx}
-                            value={this.state.lat}
-                            onChange={(dd) => this.onChangeLatLon("lat", dd)}
-                            constraints={{
-                                decimal: {
-                                    lat: {
-                                        min: -90,
-                                        max: 90
-                                    },
-                                    lon: {
-                                        min: -180,
-                                        max: 180
+                <div className="coordinate">
+                    <div className="input-group-container">
+                        <InputGroup>
+                            <InputGroup.Addon><Message msgId="latitude"/></InputGroup.Addon>
+                            <CoordinateEntry
+                                disabled={this.props.disabled}
+                                format={this.props.format}
+                                aeronauticalOptions={this.props.aeronauticalOptions}
+                                coordinate="lat"
+                                idx={idx}
+                                value={this.state.lat}
+                                onChange={(dd) => this.onChangeLatLon("lat", dd)}
+                                constraints={{
+                                    decimal: {
+                                        lat: {
+                                            min: -90,
+                                            max: 90
+                                        },
+                                        lon: {
+                                            min: -180,
+                                            max: 180
+                                        }
                                     }
-                                }
-                            }}
-                            onKeyDown={this.onSubmit}
-                        />
-                    </InputGroup>
-                    <InputGroup>
-                        <InputGroup.Addon><Message msgId="longitude"/></InputGroup.Addon>
-                        <CoordinateEntry
-                            format={this.props.format}
-                            aeronauticalOptions={this.props.aeronauticalOptions}
-                            coordinate="lon"
-                            idx={idx}
-                            value={this.state.lon}
-                            onChange={(dd) => this.onChangeLatLon("lon", dd)}
-                            constraints={{
-                                decimal: {
-                                    lat: {
-                                        min: -90,
-                                        max: 90
-                                    },
-                                    lon: {
-                                        min: -180,
-                                        max: 180
+                                }}
+                                onKeyDown={this.onSubmit}
+                            />
+                        </InputGroup>
+                    </div>
+                    <div className="input-group-container">
+                        <InputGroup>
+                            <InputGroup.Addon><Message msgId="longitude"/></InputGroup.Addon>
+                            <CoordinateEntry
+                                disabled={this.props.disabled}
+                                format={this.props.format}
+                                aeronauticalOptions={this.props.aeronauticalOptions}
+                                coordinate="lon"
+                                idx={idx}
+                                value={this.state.lon}
+                                onChange={(dd) => this.onChangeLatLon("lon", dd)}
+                                constraints={{
+                                    decimal: {
+                                        lat: {
+                                            min: -90,
+                                            max: 90
+                                        },
+                                        lon: {
+                                            min: -180,
+                                            max: 180
+                                        }
                                     }
-                                }
-                            }}
-                            onKeyDown={this.onSubmit}
-                        />
-                    </InputGroup>
+                                }}
+                                onKeyDown={this.onSubmit}
+                            />
+                        </InputGroup>
+                    </div>
                 </div>
                 {this.props.showToolButtons && <div key="tools">
                     <Toolbar

@@ -252,18 +252,39 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   * Annotations are geometries (currently only markers are supported) with a set of properties. By default a title and
   * a description are managed, but you can configure a different set of fields, and other stuff in localConfig.json.
   * Look at {@link #components.mapControls.annotations.AnnotationsConfig} for more documentation on configuration options
-  * @prop {object[]} lineDashOptions [{value: [line1 gap1 line2 gap2 line3...]}, {...}] defines how dahsed lines are displayed.
+  * @prop {object[]} lineDashOptions [{value: [line1 gap1 line2 gap2 line3...]}, {...}] defines how dashed lines are displayed.
   * Use values without unit identifier.
   * If an odd number of values is inserted then they are added again to reach an even number of values
   * for more information see [this page](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
-  * @prop {string} symbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root)
   * @prop {string} defaultShape the default symbol used when switching for the symbol styler
   * @prop {string} defaultShapeStrokeColor default symbol stroke color
   * @prop {string} defaultShapeFillColor default symbol fill color
   * @prop {string} defaultShapeSize default symbol shape size in px
+  * @prop {string} symbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root) symbols.json can be structured like [this](https://github.com/geosolutions-it/MapStore2/blob/90fb33465fd3ff56c4bbaafb5ab0ed492826622c/web/client/product/assets/symbols/symbols.json)
+  * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features. Enabling this will allow user to edit measurements saved as annotation
+  * @prop {boolean} geodesic draw geodesic annotation. By default geodesic is true (Currently applicable only for Circle annotation)
   * @class Annotations
   * @memberof plugins
   * @static
+  * @example
+  * symbols.json present in symbolsPath folder is mandatory and it contains the list of symbols to be used in the Annotations Plugin
+  * - width and height of SVGs should be 64px
+  * - the name is related to the filename of the s symbol
+  * - the label is used in the symbol dropdown menu
+  * [
+  *   {"name": "filename", "label": "label"},
+  *   {"name": "square", "label": "Square"}
+  * ]
+  *
+  * Typical configuration of the plugin
+  *
+  * {
+  *   "name": "Annotations",
+  *    "cfg": {
+  *        measurementAnnotationEdit: false,
+  *        geodesic: true
+  *    }
+  * }
   */
 
 const annotationsSelector = createSelector([

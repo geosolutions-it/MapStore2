@@ -14,7 +14,6 @@ import { isPluginInContext } from './context';
 import { currentLocaleSelector } from './locale';
 import {getValidator} from '../utils/MapInfoUtils';
 import { isCesium } from './maptype';
-import { pluginsSelectorCreator } from './localConfig';
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -22,12 +21,10 @@ import { pluginsSelectorCreator } from './localConfig';
  * @static
  */
 
-export const isMapPopup =  createSelector(
-    (state) => pluginsSelectorCreator("desktop")(state) || {},
+export const isMapPopup = createSelector(
     isCesium,
-    (plugins, cesium) => {
-        return !cesium && !!((Object.values(plugins).filter(({name}) => name === "Identify").pop() || {}).cfg || {}).showInMapPopup;
-    }
+    state => !!state?.mapInfo?.showInMapPopup,
+    (cesium, showInMapPopup) => !cesium && showInMapPopup
 );
 /**
   * Get mapinfo requests from state
@@ -193,9 +190,5 @@ export const clickedPointWithFeaturesSelector = createSelector(
 
 export const currentEditFeatureQuerySelector = state => state.mapInfo?.currentEditFeatureQuery;
 
-export const mapTriggerSelector = state => {
-    if (state.mapInfo?.configuration?.trigger === undefined) {
-        return 'click';
-    }
-    return state.mapInfo.configuration.trigger;
-};
+export const mapTriggerSelector = state => get(state, "mapInfo.configuration.trigger", "click");
+export const hoverEnabledSelector = state => isCesium(state) ? false : true;

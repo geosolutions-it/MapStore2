@@ -77,7 +77,7 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
     const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Capability;
     const service = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Service;
     const onlineResource = getOnlineResource(root);
-    const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS) || [];
+    const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS)?.map((crs) => crs.toUpperCase()) || [];
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
     const rootFormats = root.Request && root.Request.GetMap && root.Request.GetMap.Format || [];
     const layersObj = flatLayers(root);

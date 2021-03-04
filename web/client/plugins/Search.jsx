@@ -53,12 +53,10 @@ import ToggleButton from './searchbar/ToggleButton';
 
 const searchSelector = createSelector([
     state => state.search || null,
-    state => state.controls && state.controls.searchservicesconfig || null,
     state => state.controls && state.controls.searchBookmarkConfig || null,
     state=> state.mapConfigRawData || {},
     state => state?.searchbookmarkconfig || ''
-], (searchState, searchservicesconfigControl, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
-    enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
+], (searchState, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
     enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
     error: searchState && searchState.error,
     coordinate: searchState && searchState.coordinate || {},

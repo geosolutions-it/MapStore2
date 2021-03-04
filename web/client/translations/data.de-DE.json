@@ -104,6 +104,25 @@
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
             "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
             "templatePreview": "Vorschau template",
+            "visibilityLimits": {
+                "title": "Sichtbarkeitsgrenzen",
+                "serverValuesUpdateUndefined": "Der Server hat keine Skalierungssichtbarkeitsbeschränkungen für diese Ebene angegeben",
+                "serverValuesUpdate": "Der Server hat für diese Ebene minimale und maximale Sichtbarkeitsgrenzen für die Skalierung angegeben",
+                "serverValuesUpdateMinScale": "Der Server hat für diese Ebene nur eine minimale Sichtbarkeitsgrenze für die Skalierung angegeben",
+                "serverValuesUpdateMaxScale": "Der Server hat nur die maximale Sichtbarkeitsgrenze für diese Ebene angegeben",
+                "rangeError": "Der Minimalwert ist größer als der Maximalwert. Bitte geben Sie einen Bereich an, in dem der Maximalwert größer als der Minimalwert ist",
+                "serverValuesError": "Es ist nicht möglich, minimale und maximale Sichtbarkeitsbeschränkungen für den Server anzufordern. Wahrscheinlich aufgrund eines Fehlers in der Netzwerkverbindung oder eines fehlenden Funktionsendpunkts",
+                "updateWMSCapabilities": "Minimale und maximale Sichtbarkeitsbeschränkungen für den Server anfordern",
+                "maxValue": "Maximaler Wert (ausgeschlossen)",
+                "maxValuePlaceholder": "Maximalwert auswählen",
+                "valueNoResultsText": "Keine Optionen stimmen mit dem Eingabewert überein",
+                "createOption": "Neuen Wert hinzufügen {label}",
+                "minValue": "Mindestwert (enthalten)",
+                "minValuePlaceholder": "Mindestwert auswählen",
+                "type": "Limits Typ",
+                "scale": "Maßstab",
+                "resolution": "Auflösung"
+            },
             "tooltip": {
                 "label": "QuickInfo",
                 "title": "Titel",
@@ -256,7 +275,7 @@
             "Examples": "Beispiele",
             "LinkedinGroup": "Mapstore Linkedin Gruppe",
             "scrollTop": "An den Anfang der Seite scrollen",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "ml": {
                 "title": "Bleibe in Verbindung und auf dem Laufenden mit der Mailing Liste",
                 "subscribe_users": "Abonniere die Benutzer Mailing Liste",
@@ -535,6 +554,8 @@
             "radius": "Radius",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
+            "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
+            "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -986,6 +1007,7 @@
             "attributefilter":{
                 "add_condition": "Bedingung hinzufügen",
                 "delete": " Löschen",
+                "deleteGroup": " Gruppe löschen",
                 "add_group": "Gruppe hinzufügen",
                 "group_label_a": "Übereinstimmung",
                 "group_label_b": "der folgenden Bedingungen:",
@@ -1266,7 +1288,8 @@
             "coordinate": "Koordinate",
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu ändern / festzulegen",
             "zoomToolTip": "Min: 1 und Max: 35",
-            "showSectionId": "Bildlaufposition einschließen"
+            "showSectionId": "Bildlaufposition einschließen",
+            "showConnections": "Verbindungen anzeigen"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1918,6 +1941,21 @@
             },
             "emptyTitle": "Das Dashboard ist leer"
         },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Dashboard wird geladen",
+            "errors":{
+                "loading": {
+                    "title": "Fehler beim Laden des Dashboards",
+                    "dashboardNotAccessible": "Sie sind nicht berechtigt, auf dieses Dashboard zuzugreifen",
+                    "pleaseLogin": "Dieses Dashboard ist nicht öffentlich",
+                    "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht",
+                    "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten",
+                    "notFound": "Dashboard nicht gefunden",
+                    "notAccessible": "Dashboard nicht zugänglich"
+                }
+            },
+            "emptyTitle": "Das Dashboard ist leer"
+        },
         "context": {
             "loadingSpinner": "Loading Context",
             "errors": {
@@ -2024,8 +2062,10 @@
             "deletedStyleErrorMessage": "Der aktuelle Stil konnte nicht gelöscht werden",
             "savedStyleTitle": "Stil gespeichert",
             "savedStyleMessage": "Der Style wurde erfolgreich gespeichert",
-            "missingAvailableStyles": "Fehlende Stile",
-            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li> </ul>",
+            "errorTitle": "StyleEditor-Fehler",
+            "parsingCapabilitiesError": "<h4>Mögliche Ursachen:</h4>Es war nicht möglich, die Cababilites zu analysieren und die Stile abzurufen",
+            "globalError": "<h4>Mögliche Ursachen:</h4> Es war nicht möglich, eine Verbindung zum Dienst herzustellen",
+            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li></ul>",
             "createTmpErrorTitle": "Neuer temporärer Stil",
             "createTmpStyleErrorMessage": "Temporärer Stil konnte nicht erstellt werden. Dies könnte aufgrund eines nicht unterstützten Formatformats des Style-Service erfolgen",
             "updateTmpErrorTitle": "Temporäre Stilaktualisierung",
@@ -2443,6 +2483,7 @@
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory nicht gefunden",
                     "title": "Error",
                     "unknownError": "Unbekannter Fehler",
                     "pleaseLogin": "Bitte loggen Sie sich ein",
@@ -2478,6 +2519,20 @@
                 "shadowLabel": "Schatten",
                 "useAlternativeTextColor": "Verwenden Sie alternative Textfarbe",
                 "alternativeTextColorPopover": "<p>Achtung: die ausgewählte Textfarbe konnte auf diesem Hintergrund nicht lesbar sein.</p> <p>Eine alternative Textfarbe ist {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Story wird geladen",
+            "errors": {
+                "loading": {
+                  "notFound": "Geostory nicht gefunden",
+                  "title": "Error",
+                  "unknownError": "Unbekannter Fehler",
+                  "notAccessible": "Diese Geschichte ist nicht zugänglich",
+                  "pleaseLogin": "Ressource ist nicht öffentlich",
+                  "geostoryNotAccessible": "Sie haben keine Berechtigung, auf diese Geschichte zuzugreifen",
+                  "geostoryDoesNotExist": "Diese Geschichte existiert nicht"
+                }
             }
         },
         "saveDialog": {
@@ -2758,6 +2813,10 @@
           "WidgetsTray": {
             "description": "Eine Taskleiste zum Ausblenden und Erweitern von Widgets auf der Karte.",
             "title": "Widgets-Fach"
+          },
+          "Globe": {
+            "description": "Sidebar-Taste zum Ein- und Ausschalten des 3D-Modus",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Sidebar-Schaltfläche, um den Kartenausschnitt der Karte zu vergrößern",

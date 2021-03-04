@@ -211,10 +211,16 @@ const showIn = (state, requires, cfg = {}, name, id, isDefault) => {
     );
 };
 
-const includeLoaded = (name, loadedPlugins, plugin) => {
+export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype?.isReactComponent || impl.isMapStorePlugin;
+
+const getPluginImplementation = (impl, stateSelector) => {
+    return isMapStorePlugin(impl) ? impl : impl(stateSelector);
+};
+
+const includeLoaded = (name, loadedPlugins, plugin, stateSelector) => {
     if (loadedPlugins[name]) {
         const loaded = loadedPlugins[name];
-        const impl = loaded.component || loaded;
+        const impl = getPluginImplementation(loaded.component || loaded, stateSelector);
         return assign(impl, plugin, {loadPlugin: undefined}, {...loaded.containers});
     }
     return plugin;
@@ -335,12 +341,6 @@ const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
 };
 
-export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype?.isReactComponent || impl.isMapStorePlugin;
-
-const getPluginImplementation = (impl, stateSelector) => {
-    return isMapStorePlugin(impl) ? impl : impl(stateSelector);
-};
-
 /**
  * Imports a plugin from the compiled source code.
  *
@@ -434,7 +434,7 @@ export const getPluginDescriptor = (state, plugins, pluginsConfig, pluginDef, lo
     return {
         id: id || name,
         name,
-        impl: includeLoaded(name, loadedPlugins, getPluginImplementation(impl, stateSelector)),
+        impl: includeLoaded(name, loadedPlugins, getPluginImplementation(impl, stateSelector), stateSelector),
         cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
         items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
     };

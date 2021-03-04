@@ -1339,15 +1339,17 @@ describe('Test styleeditor epics, with mock axios', () => {
                 }
             }
         };
-        const NUMBER_OF_ACTIONS = 2;
+        const NUMBER_OF_ACTIONS = 3;
 
         const results = (actions) => {
             try {
                 const [
                     loadingStyleAction,
+                    resetStyle,
                     initStyleServiceAction
                 ] = actions;
 
+                expect(resetStyle.type).toBe(RESET_STYLE_EDITOR);
                 expect(loadingStyleAction.type).toBe(LOADING_STYLE);
                 expect(initStyleServiceAction.type).toBe(INIT_STYLE_SERVICE);
                 expect(initStyleServiceAction.service).toEqual({

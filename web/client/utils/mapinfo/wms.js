@@ -9,7 +9,7 @@
 const {getCurrentResolution} = require('../MapUtils');
 const {reproject, getProjectedBBox, normalizeSRS} = require('../CoordinatesUtils');
 const {getLayerUrl} = require('../LayersUtils');
-const {isObject} = require('lodash');
+const {isObject, isNil} = require('lodash');
 const { optionsToVendorParams } = require('../VendorParamsUtils');
 const { generateEnvString } = require('../LayerLocalizationUtils');
 
@@ -34,7 +34,9 @@ module.exports = {
         const widthBBox = sizeBBox && sizeBBox.width || 101;
         const size = [heightBBox, widthBBox];
         const rotation = 0;
-        const resolution = getCurrentResolution(Math.ceil(map.zoom), 0, 21, 96);
+        const resolution = isNil(map.resolution)
+            ? getCurrentResolution(Math.ceil(map.zoom), 0, 21, 96)
+            : map.resolution;
         let wrongLng = point.latlng.lng;
         // longitude restricted to the [-180°,+180°] range
         let lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);

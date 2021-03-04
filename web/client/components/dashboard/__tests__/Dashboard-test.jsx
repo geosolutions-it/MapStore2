@@ -28,19 +28,6 @@ const testWidget = {
     }
 };
 
-/* eslint-disable react/prop-types */
-class TestDashboardContainer extends React.Component {
-    render() {
-        const {style, ...props} = this.props;
-        return (
-            <div style={style}>
-                <Dashboard {...props}/>
-            </div>
-        );
-    }
-}
-/* eslint-enable react/prop-types */
-
 describe('WidgetsView component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -64,17 +51,17 @@ describe('WidgetsView component', () => {
         expect(el).toExist();
     });
     it('DashBoard with width=460', () => {
-        const WIDGET_MOBILE_RIGHT_SPACE = 34;
+        const WIDGET_MOBILE_RIGHT_SPACE = 18;
         const width = 460;
-        const cmp = ReactDOM.render(<TestDashboardContainer style={{width, height: 480}} widgets={[testWidget]}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        let cmp = ReactDOM.render(<Dashboard width={width} widgets={[testWidget]}/>, document.getElementById("container"));
+        expect(cmp).toBeTruthy();
         const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
         expect(innerLayout).toExist();
         expect(innerLayout.props.width).toEqual(width - WIDGET_MOBILE_RIGHT_SPACE);
     });
     it('DashBoard with width=640', () => {
         const width = 640;
-        const cmp = ReactDOM.render(<TestDashboardContainer style={{width, height: 480}} widgets={[testWidget]}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Dashboard width={width} widgets={[testWidget]}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
         expect(innerLayout).toExist();

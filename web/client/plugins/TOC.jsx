@@ -55,7 +55,7 @@ import { generalInfoFormatSelector } from '../selectors/mapInfo';
 import { userSelector } from '../selectors/security';
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
 import { getNode, toggleByType } from '../utils/LayersUtils';
-import { getScales } from '../utils/MapUtils';
+import { getScales, getResolutions } from '../utils/MapUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import Message from '../components/I18N/Message';
 import assign from 'object-assign';
@@ -258,7 +258,8 @@ class LayerTree extends React.Component {
         onLayerInfo: PropTypes.func,
         onSetSwipeActive: PropTypes.func,
         updatableLayersCount: PropTypes.number,
-        onSetSwipeMode: PropTypes.func
+        onSetSwipeMode: PropTypes.func,
+        resolutions: PropTypes.func
     };
 
     static contextTypes = {
@@ -366,6 +367,8 @@ class LayerTree extends React.Component {
     }
     getDefaultLayer = () => {
         const LayerNode = this.props.layerNodeComponent || DefaultLayer;
+        const resolutions = this.props.resolutions || getResolutions();
+        const resolution = resolutions[this.props.currentZoomLvl];
         return (
             <LayerNode
                 {...this.props.layerOptions}
@@ -386,6 +389,7 @@ class LayerTree extends React.Component {
                 onUpdateNode={this.props.updateNode}
                 hideOpacityTooltip={this.props.hideOpacityTooltip}
                 language={this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : null}
+                resolution={resolution}
             />
         );
     }
