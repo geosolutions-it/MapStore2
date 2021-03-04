@@ -266,6 +266,7 @@ in `localConfig.json`
             "format": "application/bil16",
             ...
             "name": "elevation",
+            "littleendian": false,
             "visibility": true,
             "useForElevation": true
         }]

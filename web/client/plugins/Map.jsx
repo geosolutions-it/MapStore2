@@ -176,6 +176,7 @@ import pluginsCreator from "./map/index";
  *         "format": "application/bil16",
  *         "useForElevation": true,
  *         "nodata": -9999,
+ *         "littleendian": false,
  *         "hidden": true
  *      }]
  *   }
