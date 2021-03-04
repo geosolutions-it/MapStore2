@@ -19,15 +19,14 @@ const withScalesDenominators = (Component) => {
         const dpi = props?.map?.mapOptions?.view?.DPI || null;
         const scales = props?.map?.mapOptions?.view?.scales;
         const resolutions = (scales) ? useMemo(() => getResolutionsForScales(scales, projection, dpi), [scales, projection, dpi]) : null;
-
         const mapProps = (resolutions) ? {
             ...props,
             map: {
                 ...props.map,
                 mapOptions: {
-                    ...props.mapOptions,
+                    ...props.map.mapOptions,
                     view: {
-                        ...props.mapOptions.view,
+                        ...props.map.mapOptions.view,
                         resolutions: resolutions
                     }
                 }
