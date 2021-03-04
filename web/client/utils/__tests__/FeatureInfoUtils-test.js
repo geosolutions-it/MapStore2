@@ -67,6 +67,12 @@ describe('FeatureInfoUtils', () => {
 
     });
 
+    it('HTML valid html contained in xml',  () => {
+        const htmlInXML =  '<?xml version="1.0" encoding="ISO-8859-1"?>' + rowHTML;
+        const validResults = Validator.HTML.getValidResponses([{response: htmlInXML}]);
+        expect(validResults.length).toBe(1);
+    });
+
     // **********************************
     // TEXT
     // **********************************
