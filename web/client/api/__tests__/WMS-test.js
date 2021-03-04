@@ -176,9 +176,9 @@ describe('Test correctness of the WMS APIs', () => {
     });
 
     it('GetRecords transform SRS List to uppercase', (done) => {
-        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.1.xml', 0, 2, '').then((result) => {
+        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.0-lowercase-espg.xml', 0, 2, '').then((result) => {
             try {
-                expect(result.records[0].SRS).toNotEqual(['EPSG:3857', 'EPSG:4326', 'CRS:84']);
+                expect(result.records[0].SRS).toEqual(['EPSG:3857', 'EPSG:4326', 'CRS:84']);
                 done();
             } catch (ex) {
                 done(ex);
