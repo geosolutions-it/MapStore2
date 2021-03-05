@@ -132,9 +132,9 @@ function measurement(state = defaultState, action) {
         });
     }
     case CHANGED_GEOMETRY: {
-        let {features} = action;
+        let {features = []} = action;
         const geomTypeSelected = getGeomTypeSelected(features);
-        const currentFeature = state.features.length === features.length ? state.currentFeature : features.length - 1;
+        const currentFeature = state.features?.length === features.length ? state.currentFeature : features.length ? features.length - 1 : 0;
         return {
             ...state,
             features,
@@ -231,7 +231,8 @@ function measurement(state = defaultState, action) {
             feature: { properties: {
                 disabled: true
             }},
-            geomType: ""
+            geomType: "",
+            features: []
         };
     }
     case CHANGE_FORMAT: {
