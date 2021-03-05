@@ -102,7 +102,7 @@
   "dependencies": {
     "@boundlessgeo/jsonix": "2.4.3",
     "@carnesen/redux-add-action-listener-enhancer": "0.0.1",
-    "@geosolutions/proj4": "2.4.7",
+    "@geosolutions/proj4": "2.4.9",
     "@geosolutions/react-joyride": "1.10.2",
     "@geosolutions/wkt-parser": "1.2.2",
     "@mapbox/geojsonhint": "2.0.1",
