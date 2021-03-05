@@ -116,17 +116,16 @@ function wmsToCesiumOptions(options) {
 }
 
 function wmsToCesiumOptionsBIL(options) {
+
+    let url = options.url;
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
-    let url = options.url;
     if (proxyUrl) {
-        proxy = needProxy(options.url) && proxyUrl;
-        if (proxy) {
-            url = proxy + encodeURIComponent(url);
-        }
+        proxy = options.noCors || needProxy(url);
     }
     return assign({
         url,
+        proxy: proxy ? new WMSProxy(proxyUrl) : new NoProxy(),
         littleEndian: options.littleendian || false,
         layerName: options.name
     });
