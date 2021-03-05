@@ -21,11 +21,13 @@ const packageJson =  require('../package.json');
 
 const requireVersionLibs = () => {
     return [
+        "lodash",
         "url",
         "rxjs",
         "react",
         "react-dom",
-        "react-redux"
+        "react-redux",
+        "recompose"
     ].reduce((sharedConfigs, lib) => {
         return {
             ...sharedConfigs,
@@ -41,15 +43,7 @@ const requireVersionLibs = () => {
 
 // the shared libraries, to use both in all federated modules (extensions/main product)
 const shared = {
-    "recompose": {
-        eager: true,
-        singleton: true
-    },
     "redux-observable": {
-        eager: true,
-        singleton: true
-    },
-    "lodash": {
         eager: true,
         singleton: true
     },
