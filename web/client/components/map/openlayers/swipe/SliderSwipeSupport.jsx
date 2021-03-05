@@ -36,7 +36,13 @@ const VSlider = ({ type, map, widthRef }) => {
     }, [ type ]);
 
     useEffect(() => {
-        widthRef.current = map.getProperties().size[0] / 2;
+        const callback = (event) => {
+            let ctx = event.context;
+            widthRef.current = ctx.canvas.width / 2;
+            map.un('precompose', callback);
+        };
+        map.on('precompose', callback);
+        return () => map.un('precompose', callback);
     }, [ type ]);
 
     return (
@@ -95,7 +101,13 @@ const HSlider = ({ type, map, heightRef }) => {
     }, [ type ]);
 
     useEffect(() => {
-        heightRef.current = map.getProperties().size[1] / 2;
+        const callback = event => {
+            let ctx = event.context;
+            heightRef.current = ctx.canvas.height / 2;
+            map.un('precompose', callback);
+        };
+        map.on('precompose', callback);
+        return () => map.un('precompose', callback);
     }, [ type ]);
 
     return (<Draggable
