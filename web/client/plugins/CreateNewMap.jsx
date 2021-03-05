@@ -84,6 +84,7 @@ class CreateNewMap extends React.Component {
                         <ButtonToolbar>
                             {this.props.hasContexts &&
                                 <SplitButton
+                                    id="split-button"
                                     tooltipId="newMap"
                                     className="square-button"
                                     bsStyle="primary"

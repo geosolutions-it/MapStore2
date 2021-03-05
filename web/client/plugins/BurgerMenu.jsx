@@ -17,7 +17,7 @@ const Container = connect(() => ({
     pullRight: true,
     bsStyle: "primary",
     title: <Glyphicon glyph="menu-hamburger"/>
-}))(DropdownButton);
+}), {})(DropdownButton);
 const InnerContainer = ({children, ...props}) => (
     <div {...props}>
         {children}
