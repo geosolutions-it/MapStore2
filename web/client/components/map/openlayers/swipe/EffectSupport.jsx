@@ -26,7 +26,7 @@ const circleCut = (layer, circleCutPrecomposeCallback, postcomposeCallback) => {
 const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleCutProp }) => {
     const verticalCutPrecomposeCallback = useCallback((event) => {
         let ctx = event.context;
-        const width = getWidth();
+        const width = getWidth() * map.pixelRatio_;
         ctx.save();
         ctx.beginPath();
         ctx.rect(width, 0, ctx.canvas.width - width, ctx.canvas.height);

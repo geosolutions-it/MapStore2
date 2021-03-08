@@ -36,13 +36,7 @@ const VSlider = ({ type, map, widthRef }) => {
     }, [ type ]);
 
     useEffect(() => {
-        const callback = (event) => {
-            let ctx = event.context;
-            widthRef.current = ctx.canvas.width / 2;
-            map.un('precompose', callback);
-        };
-        map.on('precompose', callback);
-        return () => map.un('precompose', callback);
+        widthRef.current = map.getProperties().size[0] / 2;
     }, [ type ]);
 
     return (
@@ -84,11 +78,11 @@ const HSlider = ({ type, map, heightRef }) => {
 
     const onWindowResize = () => {
         setPos({x: 0, y: 0});
-        heightRef.current = map.getProperties().size[1] / 2;
+        heightRef.current = map.getProperties().size[1];
     };
 
     const onDragHorizontalHandler = (e, ui) => {
-        heightRef.current += ui.deltaY;
+        heightRef.current += ui.deltaY * map.pixelRatio_;
         setPos({x: ui.x, y: ui.y});
         map.render();
     };
@@ -101,13 +95,7 @@ const HSlider = ({ type, map, heightRef }) => {
     }, [ type ]);
 
     useEffect(() => {
-        const callback = event => {
-            let ctx = event.context;
-            heightRef.current = ctx.canvas.height / 2;
-            map.un('precompose', callback);
-        };
-        map.on('precompose', callback);
-        return () => map.un('precompose', callback);
+        heightRef.current = map.getProperties().size[1];
     }, [ type ]);
 
     return (<Draggable
@@ -118,7 +106,7 @@ const HSlider = ({ type, map, heightRef }) => {
         onStop={() => setShowArrows(true)}>
         <div className="mapstore-swipe-slider" style={{
             height: "8px",
-            top: `${map.getProperties().size[1] / 2}px`,
+            top: `${map.getProperties().size[1] / map.pixelRatio_}px`,
             left: "0px",
             width: '100%',
             cursor: "row-resize"
