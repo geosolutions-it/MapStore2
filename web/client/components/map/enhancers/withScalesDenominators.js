@@ -11,6 +11,17 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { getResolutionsForScales } from '../../../utils/MapUtils';
 
+/**
+ * Get the Scales, by configuration and use it to compute the map resolutions
+ * @name withScalesDenominators
+ * @memberof components.map.enhancers
+ * @param {Component} Component map component, this component is used to render the map, in the application contents: Maps, Dashboard, Geostory
+ * @returns the map component with the resolutions calculated by fixed scales
+ * @example
+ * withScalesDenominators(MapPlugin);
+ */
+
+
 const withScalesDenominators = (Component) => {
 
     return (props) => {
