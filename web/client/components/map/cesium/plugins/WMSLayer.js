@@ -8,7 +8,8 @@
 
 const Layers = require('../../../../utils/cesium/Layers');
 const Cesium = require('../../../../libs/cesium');
-const BILTerrainProvider = require('../../../../utils/cesium/BILTerrainProvider')(Cesium);
+const createBILTerrainProvider = require('../../../../utils/cesium/BILTerrainProvider').default;
+const BILTerrainProvider = createBILTerrainProvider(Cesium);
 const ConfigUtils = require('../../../../utils/ConfigUtils').default;
 const {
     getProxyUrl,

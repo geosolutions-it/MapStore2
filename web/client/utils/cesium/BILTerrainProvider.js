@@ -1,5 +1,5 @@
 /* eslint-disable */
-module.exports = function(Cesium) {
+const createBilTerrainProvider = function(Cesium) {
 	var OGCHelper = {};
 	 var intersectionRectangle=function(rectangle0,rectangle1){
 		var west = Math.max(rectangle0.west, rectangle1.west);
@@ -1105,3 +1105,4 @@ module.exports = function(Cesium) {
 	return GeoserverTerrainProvider;
 };
 /* eslint-enable */
+export default createBilTerrainProvider;
