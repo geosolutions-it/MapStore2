@@ -78,11 +78,11 @@ const HSlider = ({ type, map, heightRef }) => {
 
     const onWindowResize = () => {
         setPos({x: 0, y: 0});
-        heightRef.current = map.getProperties().size[1];
+        heightRef.current = map.getProperties().size[1] / 2;
     };
 
     const onDragHorizontalHandler = (e, ui) => {
-        heightRef.current += ui.deltaY * map.pixelRatio_;
+        heightRef.current += ui.deltaY;
         setPos({x: ui.x, y: ui.y});
         map.render();
     };
@@ -95,7 +95,7 @@ const HSlider = ({ type, map, heightRef }) => {
     }, [ type ]);
 
     useEffect(() => {
-        heightRef.current = map.getProperties().size[1];
+        heightRef.current = map.getProperties().size[1] / 2;
     }, [ type ]);
 
     return (<Draggable
@@ -106,7 +106,7 @@ const HSlider = ({ type, map, heightRef }) => {
         onStop={() => setShowArrows(true)}>
         <div className="mapstore-swipe-slider" style={{
             height: "8px",
-            top: `${map.getProperties().size[1] / map.pixelRatio_}px`,
+            top: `${map.getProperties().size[1] / 2}px`,
             left: "0px",
             width: '100%',
             cursor: "row-resize"

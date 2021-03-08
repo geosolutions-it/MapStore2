@@ -41,7 +41,7 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
 
     const horizontalCutPrecomposeCallback = useCallback((event) => {
         let ctx = event.context;
-        const height = getHeight();
+        const height = getHeight() * map.pixelRatio_;
         ctx.save();
         ctx.beginPath();
         ctx.rect(0, height, ctx.canvas.width, ctx.canvas.height - height);
