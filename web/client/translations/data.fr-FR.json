@@ -150,7 +150,11 @@
                 "title": "Format",
                 "refresh": "Récupérer le format pris en charge",
                 "loading": "Chargement...",
-                "noOption": "Pas d'option"
+                "noOption": "Pas d'option",
+                "error": {
+                    "title": "Erreur",
+                    "message": "Échec de la récupération du format"
+                }
             }
         },
         "longitude": "Lon",

@@ -78,6 +78,11 @@ export default class extends React.Component {
         );
     }
 
+    /**
+     * Fetch the supported formats from the layer props if present
+     * else use the default info format
+     * @return {object} info formats
+     */
     supportedInfoFormats = () => {
         const availableInfoFormats =  this.props.element?.infoFormats || [];
         const infoFormats = Object.assign({},

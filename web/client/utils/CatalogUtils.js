@@ -694,10 +694,20 @@ export const DEFAULT_FORMAT_WMS = [{
     value: 'image/gif'
 }];
 
+/**
+ * Get unique array of supported info formats
+ * @return {array} info formats
+ */
 export const getUniqueInfoFormats = () => {
     return uniq(Object.values(getAvailableInfoFormat()));
 };
 
+/**
+ * Fetch the supported formats of the WMS service
+ * @param url
+ * @param includeGFIFormats
+ * @return {object|string} formats
+ */
 export const getSupportedFormat = (url, includeGFIFormats = false) => {
     return WMS.getCapabilities(url).then((caps) => {
         let getMapFormats = get(caps, 'capability.request.getMap.format', []);
@@ -722,5 +732,7 @@ export const getSupportedFormat = (url, includeGFIFormats = false) => {
             }
         }
         return includeGFIFormats ? {imageFormats, infoFormats} : imageFormats;
-    }).catch(()=> includeGFIFormats ? {imageFormats: DEFAULT_FORMAT_WMS, infoFormats: getUniqueInfoFormats()} : DEFAULT_FORMAT_WMS);
+    }).catch(()=>
+        // Fallback to default formats on exception
+        includeGFIFormats ? {imageFormats: DEFAULT_FORMAT_WMS, infoFormats: getUniqueInfoFormats()} : DEFAULT_FORMAT_WMS);
 };

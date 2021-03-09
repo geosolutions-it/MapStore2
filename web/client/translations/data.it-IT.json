@@ -150,7 +150,11 @@
                 "title": "Formato",
                 "refresh": "Recupera il formato supportato",
                 "loading": "Caricamento in corso...",
-                "noOption": "Nessuna opzione"
+                "noOption": "Nessuna opzione",
+                "error": {
+                    "title": "Errore",
+                    "message": "Impossibile recuperare il formato"
+                }
             }
         },
         "longitude": "Lon",

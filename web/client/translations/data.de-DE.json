@@ -150,7 +150,11 @@
                 "title": "Format",
                 "refresh": "Unterstütztes Format abrufen",
                 "loading": "Wird geladen...",
-                "noOption": "Keine Option"
+                "noOption": "Keine Option",
+                "error": {
+                    "title": "Error",
+                    "message": "Format konnte nicht abgerufen werden"
+                }
             }
         },
         "longitude": "Lon",

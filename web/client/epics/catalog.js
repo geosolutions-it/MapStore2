@@ -395,6 +395,14 @@ export default (API) => ({
                     [changeSelectedService(head(keys(services))), allowBackgroundsDeletion(true)] : [])));
             }),
 
+    /**
+     * Fetch all supported formats of a WMS service configured (infoFormats and imageFormats)
+     * Dispatches an action that sets the supported formats of the service.
+     * @param {Observable} action$ the actions triggered
+     * @param {object} getState store object
+     * @memberof epics.catalog
+     * @return {external:Observable}
+     */
     getSupportedFormatsEpic: (action$, {getState = ()=> {}} = {}) =>
         action$.ofType(FORMAT_OPTIONS_FETCH)
             .filter((action)=> getFormatUrlUsedSelector(getState()) !== action?.url)
@@ -407,7 +415,7 @@ export default (API) => ({
                             formatsLoading(false),
                             () => {
                                 return Rx.Observable.of(
-                                    error({ title: "Error", message: "Failed to fetch format" }),
+                                    error({ title: "layerProperties.format.error.title", message: 'layerProperties.format.error.message' }),
                                     formatsLoading(false),
                                 );
                             }

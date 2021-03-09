@@ -150,7 +150,11 @@
                 "title": "Format",
                 "refresh": "Fetch supported format",
                 "loading": "Loading...",
-                "noOption": "No option"
+                "noOption": "No option",
+                "error": {
+                    "title": "Error",
+                    "message": "Failed to fetch format"
+                }
             }
         },
         "longitude": "Lon",
