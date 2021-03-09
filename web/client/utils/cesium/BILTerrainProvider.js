@@ -954,7 +954,7 @@ const createBilTerrainProvider = function(Cesium) {
 							var limitations={highest:resultat.highest,lowest:resultat.lowest,offset:resultat.offset};
                             var proxy = resultat.proxy || { getURL: v => v } ;
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
-                            var promise = Cesium.throttleRequestByServer(proxy.getURL(urlArray),Cesium.loadImage);
+                            var promise = Cesium.throttleRequestByServer(proxy.getURL(url),Cesium.loadImage);
 							if (Cesium.defined(promise)) {
 								retour = Cesium.when(promise,function(image){
 											return GeoserverTerrainProvider.imageToHeightmapTerrainData(image,limitations,
