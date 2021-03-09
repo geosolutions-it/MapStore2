@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import { Plot } from './PlotlyChart';
+import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 
@@ -195,12 +194,16 @@ export default function WidgetChart({
     ...props
 }) {
     const { data, layout, config } = toPlotly(props);
+    const Plot = React.lazy(() => import('./PlotlyChart'));
+
     return (
-        <Plot
-            onInitialized={onInitialized}
-            data={data}
-            layout={layout}
-            config={config}
-        />
+        <Suspense fallback={<div>Loading library...</div>}>
+            <Plot
+                onInitialized={onInitialized}
+                data={data}
+                layout={layout}
+                config={config}
+            />
+        </Suspense>
     );
 }
