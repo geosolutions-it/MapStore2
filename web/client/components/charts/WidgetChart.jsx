@@ -9,7 +9,9 @@
 import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
+import LoadingView from '../misc/LoadingView';
 
+const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
     base: 190,
@@ -194,10 +196,8 @@ export default function WidgetChart({
     ...props
 }) {
     const { data, layout, config } = toPlotly(props);
-    const Plot = React.lazy(() => import('./PlotlyChart'));
-
     return (
-        <Suspense fallback={<div>Loading library...</div>}>
+        <Suspense fallback={<LoadingView />}>
             <Plot
                 onInitialized={onInitialized}
                 data={data}
