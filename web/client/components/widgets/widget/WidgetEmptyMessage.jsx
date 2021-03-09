@@ -11,7 +11,6 @@ function WidgetEmptyMessage({ glyph = 'info-sign', messageId}) {
 }
 
 WidgetEmptyMessage.propTypes = {
-    messageId: PropTypes.string,
-    containerStyle: PropTypes.object
+    messageId: PropTypes.string
 };
 export default WidgetEmptyMessage;
