@@ -21,7 +21,8 @@ const {
     getMetadataRecordById,
     autoSearchEpic,
     openCatalogEpic,
-    recordSearchEpic
+    recordSearchEpic,
+    getSupportedFormatsEpic
 } = catalog(API);
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
 import {CLOSE_FEATURE_GRID} from '../../actions/featuregrid';
@@ -36,7 +37,10 @@ import {
     textSearch, TEXT_SEARCH,
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
-    SET_LOADING
+    SET_LOADING,
+    formatOptionsFetch,
+    FORMAT_OPTIONS_LOADING,
+    SET_FORMAT_OPTIONS
 } from '../../actions/catalog';
 
 
@@ -311,6 +315,31 @@ describe('catalog Epics', () => {
                 },
                 pageSize: 2
             }
+        });
+    });
+    it('getSupportedFormatsEpic wms', (done) => {
+        const NUM_ACTIONS = 3;
+        const url = "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml";
+        testEpic(addTimeoutEpic(getSupportedFormatsEpic, 0), NUM_ACTIONS, formatOptionsFetch(url), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case SET_FORMAT_OPTIONS:
+                    expect(action.formats).toBeTruthy();
+                    expect(action.formats.imageFormats).toEqual([{"label": "image/png", "value": "image/png"}, {"label": "image/gif", "value": "image/gif"}, {"label": "image/jpeg", "value": "image/jpeg"}, {"label": "image/png8", "value": "image/png8"}, {"label": "image/vnd.jpeg-png", "value": "image/vnd.jpeg-png"}]);
+                    expect(action.formats.infoFormats).toEqual(["text/plain", "text/html", "application/json"]);
+                    break;
+                case FORMAT_OPTIONS_LOADING:
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, {
+            catalog: {}
         });
     });
 });

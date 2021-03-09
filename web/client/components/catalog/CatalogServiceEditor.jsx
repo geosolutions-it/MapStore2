@@ -46,10 +46,12 @@ export default ({
     onAddService = () => {},
     onDeleteService = () => {},
     onChangeCatalogMode = () => {},
+    onFormatOptionsFetch = () => {},
     selectedService,
     isLocalizedLayerStylesEnabled,
     tileSizeOptions = [256],
-    layerOptions
+    layerOptions,
+    formatsLoading
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout
@@ -84,6 +86,8 @@ export default ({
                 tileSizeOptions={tileSizeOptions}
                 currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}
                 selectedService={selectedService}
+                onFormatOptionsFetch={onFormatOptionsFetch}
+                formatsLoading={formatsLoading}
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>

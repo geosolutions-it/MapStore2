@@ -69,7 +69,13 @@ import {
     CHANGE_METADATA_TEMPLATE,
     changeMetadataTemplate,
     SET_LOADING,
-    recordsNotFound
+    recordsNotFound,
+    FORMAT_OPTIONS_FETCH,
+    formatOptionsFetch,
+    FORMAT_OPTIONS_LOADING,
+    formatsLoading,
+    SET_FORMAT_OPTIONS,
+    setSupportedFormats
 } from '../catalog';
 
 import { CHANGE_LAYER_PROPERTIES, ADD_LAYER } from '../layers';
@@ -375,5 +381,22 @@ describe('Test correctness of the catalog actions', () => {
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.message).toBe("catalog.notification.errorSearchingRecords");
         expect(action.values).toEqual({ records: "topp:states , topp:states-tasmania" });
+    });
+    it('test formatOptionsFetch', () => {
+        const action = formatOptionsFetch(url);
+        expect(action.type).toBe(FORMAT_OPTIONS_FETCH);
+        expect(action.url).toBe(url);
+    });
+    it('test formatsLoading', () => {
+        const action = formatsLoading(false);
+        expect(action.type).toBe(FORMAT_OPTIONS_LOADING);
+        expect(action.loading).toBe(false);
+    });
+    it('test setSupportedFormats', () => {
+        const formats = {imageFormats: ["image/png"], infoFormats: ["text/plain"]};
+        const action = setSupportedFormats(formats, url);
+        expect(action.type).toBe(SET_FORMAT_OPTIONS);
+        expect(action.formats).toEqual(formats);
+        expect(action.url).toEqual(url);
     });
 });

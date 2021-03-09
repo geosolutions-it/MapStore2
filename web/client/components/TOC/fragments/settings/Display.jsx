@@ -11,14 +11,16 @@ import 'react-widgets/lib/less/react-widgets.less';
 import { clamp, isNil, isNumber } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Checkbox, Col, ControlLabel, FormGroup, Grid, Row } from 'react-bootstrap';
-
+import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB} from 'react-bootstrap';
+import tooltip from '../../../misc/enhancers/buttonTooltip';
+const Button = tooltip(ButtonRB);
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 import Message from '../../../I18N/Message';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import Legend from '../legend/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
 import Select from 'react-select';
+import { DEFAULT_FORMAT_WMS, getSupportedFormat } from '../../../../utils/CatalogUtils';
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -98,6 +100,14 @@ export default class extends React.Component {
         });
     };
 
+    onFormatOptionsFetch = (url) => {
+        this.setState({formatLoading: true});
+        getSupportedFormat(url).then((imageFormats)=>{
+            this.props.onChange("imageFormats", imageFormats);
+            this.setState({formatLoading: false});
+        });
+    }
+
     getValidationState = (name) =>{
         if (this.state.legendOptions && this.state.legendOptions[name]) {
             return parseInt(this.state.legendOptions[name], 10) < 12 && "error";
@@ -113,16 +123,35 @@ export default class extends React.Component {
                 <Row>
                     <Col xs={12}>
                         <FormGroup>
-                            <ControlLabel><Message msgId="layerProperties.format" /></ControlLabel>
-                            <Select
-                                key="format-dropdown"
-                                clearable={false}
-                                options={(this.props.formats || ["image/png", "image/png8", "image/jpeg", "image/vnd.jpeg-png", "image/gif"])
-                                    .map((value) => ({ value, label: value }))}
-                                value={this.props.element && this.props.element.format || "image/png"}
-                                onChange={({ value }) => {
-                                    this.props.onChange("format", value);
-                                }}/>
+                            <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
+                            <div className={'ms-format-container'}>
+                                <Select
+                                    className={'format-select'}
+                                    key="format-dropdown"
+                                    clearable={false}
+                                    noResultsText={<Message
+                                        msgId={this.state.formatLoading
+                                            ? "layerProperties.format.loading" : "layerProperties.format.noOption"}
+                                    />}
+                                    isLoading={!!this.state.formatLoading}
+                                    options={this.state.formatLoading
+                                        ? []
+                                        : (this.props.formats?.map((value) => ({ value, label: value }))
+                                    || this.props.element?.imageFormats
+                                    || DEFAULT_FORMAT_WMS)
+                                    }
+                                    value={this.props.element && this.props.element.format || "image/png"}
+                                    onChange={({ value }) => {
+                                        this.props.onChange("format", value);
+                                    }}/>
+                                <Button
+                                    tooltipId="layerProperties.format.refresh"
+                                    className="square-button-md no-border format-refresh"
+                                    onClick={() => {this.onFormatOptionsFetch(this.props.element?.url);}}
+                                    key="format-refresh">
+                                    <Glyphicon glyph="refresh" />
+                                </Button>
+                            </div>
                         </FormGroup>
                     </Col>
                     <Col xs={12}>

@@ -10,18 +10,22 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
-
+import GET_CAP_RESPONSE from 'raw-loader!../../../../../test-resources/wms/GetCapabilities-1.1.1.xml';
 import Display from '../Display';
-
+import MockAdapter from "axios-mock-adapter";
+import axios from "../../../../../libs/ajax";
+let mockAxios;
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        mockAxios = new MockAdapter(axios);
         setTimeout(done);
     });
 
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        mockAxios.restore();
         setTimeout(done);
     });
 
@@ -75,6 +79,39 @@ describe('test Layer Properties Display module component', () => {
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
         expect(spy.calls.length).toBe(1);
+    });
+    it('tests Display component for wms with format fetch', (done) => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'some url'
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        mockAxios.onGet().reply(() => {
+            return [200, GET_CAP_RESPONSE];
+        });
+        const handlers = {
+            onChange: (prop, value) =>{
+                try {
+                    expect(prop).toBe("imageFormats");
+                    expect(value).toBeTruthy();
+                    expect(value[0]).toEqual({"label": "image/png", "value": "image/png"});
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }
+        };
+
+        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const formatRefresh = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "format-refresh" );
+        ReactTestUtils.Simulate.click(formatRefresh[0]);
     });
 
     it('tests Display component for wms with localized layer styles enabled', () => {

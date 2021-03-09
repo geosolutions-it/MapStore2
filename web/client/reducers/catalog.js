@@ -28,7 +28,9 @@ import {
     SET_LOADING,
     TOGGLE_THUMBNAIL,
     TOGGLE_TEMPLATE,
-    TOGGLE_ADVANCED_SETTINGS
+    TOGGLE_ADVANCED_SETTINGS,
+    FORMAT_OPTIONS_LOADING,
+    SET_FORMAT_OPTIONS
 } from '../actions/catalog';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -204,6 +206,12 @@ function catalog(state = {
     }
     case TOGGLE_ADVANCED_SETTINGS: {
         return set("newService.showAdvancedSettings", !state.newService.showAdvancedSettings, state);
+    }
+    case FORMAT_OPTIONS_LOADING: {
+        return set("formatsLoading", action.loading, state);
+    }
+    case SET_FORMAT_OPTIONS: {
+        return set("newService.supportedFormats", action.formats, set("newService.formatUrlUsed", action.url, state));
     }
     default:
         return state;
