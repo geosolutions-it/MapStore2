@@ -30,7 +30,7 @@ const withScalesDenominators = (Component) => {
         // if null the getResolutionsForScales will use DEFAULT_SCREEN_DPI automatically
         const dpi = props?.map?.mapOptions?.view?.DPI || null;
         const scales = props?.map?.mapOptions?.view?.scales;
-        const resolutions = (scales) ? useMemo(() => getResolutionsForScales(scales, projection, dpi), [scales, projection, dpi]) : null;
+        const resolutions = useMemo(() => (scales) ? getResolutionsForScales(scales, projection, dpi) : null, [scales, projection, dpi]);
         const mapProps = (resolutions) ? {
             ...props,
             map: {
