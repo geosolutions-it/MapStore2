@@ -13,6 +13,7 @@ import { getResolutionsForScales } from '../../../utils/MapUtils';
 
 /**
  * Get the Scales, by configuration and use it to compute the map resolutions
+ * if scales and resolutions props are declared the scales prop has priority
  * @name withScalesDenominators
  * @memberof components.map.enhancers
  * @param {Component} Component this component is used to render the map, in the application contents: Maps, Dashboard, Geostory
