@@ -47,7 +47,8 @@ const createBilTerrainProvider = function(Cesium) {
 	 * static array where image formats available for OGCHelper are
 	 * defined
 	 */
-	OGCHelper.FormatImage = [ {
+	OGCHelper.FormatImage = []; // edit: disabled to avoid unnecessary requests. MapStore only supports WMS "image/bil"
+    /* [ {
 		format : "image/png",
 		extension: "png"
 	}, {
@@ -63,6 +64,7 @@ const createBilTerrainProvider = function(Cesium) {
 		format : "image/png; mode=8bit",
 		extension: "png"
 	} ];
+    */
 
 	/**
 	 * static array where data array availables for OGCHelper are defined
