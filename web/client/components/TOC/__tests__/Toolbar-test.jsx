@@ -530,7 +530,8 @@ describe('TOC Toolbar', () => {
                         minx: -10,
                         miny: -9
                     }, crs: 'EPSG:3003'
-                }
+                },
+                search: "fakeURL"
             }];
             const activateTool = {
                 activateWidgetTool: true,
@@ -567,12 +568,33 @@ describe('TOC Toolbar', () => {
                         minx: -10,
                         miny: -9
                     }, crs: 'EPSG:3003'
-                }
+                },
+                search: "vector"
             }];
             ReactDOM.render(<Toolbar activateTool={{ activateWidgetTool: true }} selectedLayers={selectedLayers} />, document.getElementById("container"));
             const widgetButton = document.querySelector(WIDGET_TOOL_SELECTOR);
             expect(widgetButton).toNotExist();
 
+        });
+
+        it('deactivate layers without search property(Raster Layers)', () => {
+            const selectedLayers = [{
+                id: 'l002',
+                title: 'layer002',
+                type: 'wms',
+                name: 'layer001name',
+                bbox: {
+                    bounds: {
+                        maxx: 10,
+                        maxy: 9,
+                        minx: -10,
+                        miny: -9
+                    }, crs: 'EPSG:3003'
+                }
+            }];
+            ReactDOM.render(<Toolbar activateTool={{ activateWidgetTool: true }} selectedLayers={selectedLayers} />, document.getElementById("container"));
+            const widgetButton = document.querySelector(WIDGET_TOOL_SELECTOR);
+            expect(widgetButton).toNotExist();
         });
     });
 
