@@ -1413,6 +1413,7 @@
             "showPreview": "Mostra la preview",
             "advancedSettings": "Impostazioni avanzate",
             "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "L'URL non corrisponde al protocollo HTTP di MapStore {protocol}",
             "notification": {
                 "errorTitle": "Errore",
                 "errorSearchingRecords": "Alcuni record non sono stati trovati: {records} . Controlla la lista dei parametri nella barra degli indirizzi",

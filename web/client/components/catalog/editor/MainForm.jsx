@@ -13,10 +13,10 @@ import HTML from '../../I18N/HTML';
 import {getConfigProp} from '../../../utils/ConfigUtils';
 
 import InfoPopover from '../../widgets/widget/InfoPopover';
-import { FormControl as FC, Form, Col, FormGroup, ControlLabel } from "react-bootstrap";
+import { FormControl as FC, Form, Col, FormGroup, ControlLabel, Alert } from "react-bootstrap";
 
 import localizedProps from '../../misc/enhancers/localizedProps';
-import {defaultPlaceholder} from "./MainFormUtils";
+import {defaultPlaceholder, checkIfUrlMatchesProtocol} from "./MainFormUtils";
 
 const FormControl = localizedProps('placeholder')(FC);
 
@@ -122,7 +122,9 @@ export default ({
     onChangeTitle,
     onChangeUrl,
     onChangeServiceProperty,
-    onChangeType
+    onChangeType,
+    invalidProtocol = false,
+    setInvalidProtocol = () => {}
 }) => {
     const URLEditor = service.type === "tms" ? TmsURLEditor : DefaultURLEditor;
     return (
@@ -149,6 +151,14 @@ export default ({
                         onChange={(e) => onChangeTitle(e.target.value)} />
                 </Col>
             </FormGroup>
-            <URLEditor key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={onChangeUrl} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
+            <URLEditor key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={(url) => {
+                onChangeUrl(url);
+                url && setInvalidProtocol(!checkIfUrlMatchesProtocol(url));
+            }} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
+
+            {invalidProtocol ? <Alert bsStyle="danger">
+                <Message msgId="catalog.invalidUrlHttpProtocol" msgParams={{protocol: window.location.href.split("://")[0].toUpperCase()}}/>
+            </Alert> : null}
+
         </Form>);
 };

@@ -144,6 +144,7 @@
             "noRecordsMatched": "Không có bản ghi phù hợp",
             "noResultsText": "Không có kết quả",
             "notAvailable": "Không có sẵn",
+            "invalidUrlHttpProtocol": "URL không khớp với giao thức HTTP của MapStore {protocol}",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",

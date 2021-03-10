@@ -1195,6 +1195,7 @@
       "showPreview": "Näytä esikatselu",
       "advancedSettings": "Lisäasetukset",
       "templateMetadataAvailable": "Metatiedot saatavissa Dublin Core -muodossa: abstrakti, borderingBox, kontribuuttorit, luojat, kuvaus, formaatti, tunniste, viitteet, oikeudet, lähde, aihe, aika, otsikko, tyyppi, uri",
+      "invalidUrlHttpProtocol": "URL-osoite ei vastaa MapStore HTTP -protokollaa {protocol}",
       "notification": {
         "errorTitle": "Virhe",
         "errorSearchingRecords": "Joitain tallenteita ei löytynyt: {records} Tarkista kysely.",

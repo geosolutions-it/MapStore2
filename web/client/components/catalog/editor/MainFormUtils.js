@@ -13,3 +13,11 @@ export const defaultPlaceholder = (service) => {
     }
     return true;
 };
+
+export const checkIfUrlMatchesProtocol = (url = '') => {
+    const mapstoreUrl = window.location.href;
+    if (mapstoreUrl.indexOf('https://') !== -1) {
+        return url.indexOf('https://') !== -1;
+    }
+    return url.indexOf('http://') !== -1;
+};

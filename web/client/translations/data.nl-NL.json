@@ -1413,6 +1413,7 @@
             "showPreview": "Voorbeeld weergeven",
             "advancedSettings": "Geavanceerde instellingen",
             "templateMetadataAvailable": "Metadata beschikbaar in Dublin Core-formaat: abstract, boundingBox, bijdrager, maker, beschrijving, formaat, identifier, referenties, rechten, bron, onderwerp, tijdelijk, titel, type, uri",
+            "invalidUrlHttpProtocol": "De URL komt niet overeen met het MapStore HTTP-protocol {protocol}",
             "notification": {
                 "errorTitle": "Fout",
                 "errorSearchingRecords": "Sommige records zijn niet gevonden: {records} Controleer de query-URL en de bijbehorende parameters.",

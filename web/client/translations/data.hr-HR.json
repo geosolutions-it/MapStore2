@@ -1153,6 +1153,7 @@
             "showPreview": "Prikaži pretpregled",
             "advancedSettings": "Napredne mogućnosti",
             "templateMetadataAvailable": "Metapodaci distupni iz Dublin Core formata: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "URL se ne podudara s protokolom MapStore HTTP {protocol}",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",

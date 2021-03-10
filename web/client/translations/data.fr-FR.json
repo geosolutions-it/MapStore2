@@ -1414,6 +1414,7 @@
             "showPreview": "Afficher l'aperçu",
             "advancedSettings": "Réglages avancés",
             "templateMetadataAvailable": "Métadonnées disponibles pour le format Dublin Core : abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "L'URL ne correspond pas au protocole HTTP MapStore {protocol}",
             "notification": {
                 "errorTitle": "Erreur",
                 "errorSearchingRecords": "Certains enregistrements n'ont pas été trouvés: {records} . Veuillez vérifier l'URL de la requête et ses paramètres.",
