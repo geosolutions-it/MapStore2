@@ -35,7 +35,7 @@ export default props => {
     const {
         enabled,
         requests = [],
-        onClose,
+        onClose = () => {},
         responses = [],
         index,
         viewerOptions = {},
@@ -68,7 +68,8 @@ export default props => {
         onChangeFormat,
         formatCoord,
         loaded,
-        validator = () => null
+        validator = () => null,
+        toggleHighlightFeature = () => {}
     } = props;
     const latlng = point && point.latlng || null;
     const targetResponse = validResponses[index]; // the index is calculated on the valid responses hence using all responses leads to wrong results
@@ -112,7 +113,10 @@ export default props => {
                 fluid={fluid}
                 position={position}
                 draggable={draggable}
-                onClose={onClose}
+                onClose={() => {
+                    onClose();
+                    toggleHighlightFeature(false);
+                }}
                 dock={dock}
                 style={dockStyle}
                 showFullscreen={showFullscreen}
