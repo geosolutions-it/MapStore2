@@ -101,9 +101,14 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
                 }, {
                     loader: 'postcss-loader',
                     options: {
-                        plugins: [
-                            require('postcss-prefix-selector')({ prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : []) })
-                        ]
+                        postcssOptions: {
+                            plugins: {
+                                "postcss-prefix-selector": {
+                                    prefix: cssPrefix || '.ms2',
+                                    exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
+                                }
+                            }
+                        }
                     }
                 }]
             },
@@ -122,14 +127,21 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
                 test: /themes[\\\/]?.+\.less$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    'css-loader', {
+                    'css-loader',
+                    {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: [
-                                require('postcss-prefix-selector')({ prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : []) })
-                            ]
+                            postcssOptions: {
+                                plugins: {
+                                    "postcss-prefix-selector": {
+                                        prefix: cssPrefix || '.ms2',
+                                        exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
+                                    }
+                                }
+                            }
                         }
-                    }, 'less-loader'
+                    },
+                    'less-loader'
                 ]
             },
             {
