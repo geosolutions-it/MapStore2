@@ -20,6 +20,7 @@ import { resourcesSelector } from '../../selectors/geostory';
 import { SectionTypes } from '../../utils/GeoStoryUtils';
 import withMediaVisibilityContainer from '../../components/geostory/common/enhancers/withMediaVisibilityContainer';
 import autoMapType from '../../components/map/enhancers/autoMapType';
+import withScalesDenominators from "../../components/map/enhancers/withScalesDenominators";
 
 const image = branch(
     ({resourceId}) => resourceId,
@@ -46,6 +47,7 @@ const map = compose(
         connectMap,
     ),
     autoMapType,
+    withScalesDenominators,
     withLocalMapState,
     withMapEditingAndLocalMapState
 )(withMediaVisibilityContainer(Map));
