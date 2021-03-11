@@ -33,10 +33,7 @@ const castArray = require('lodash').castArray;
  */
 module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
     target: "web",
-    entry: assign(!prod ? {
-        'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
-        'webpack': 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
-    } : {}, bundles, themeEntries),
+    entry: assign({}, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
         minimize: !!prod
@@ -221,5 +218,5 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
         }
     },
 
-    devtool: !prod ? 'eval' : undefined
+    devtool: !prod ? 'eval-cheap-source-map' : undefined
 });
