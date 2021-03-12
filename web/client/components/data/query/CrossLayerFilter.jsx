@@ -102,7 +102,7 @@ export default ({
             ? (<Row className="filter-field-fixed-row">
                 <Col xs={12}>
                     <GroupField
-                        autocompleteEnabled={false /* TODO make it work with stream enhancer */}
+                        autocompleteEnabled
                         withContainer={false}
                         attributes={attributes}
                         groupLevels={-1}

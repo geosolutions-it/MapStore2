@@ -16,7 +16,8 @@ import {
     updateFilterFieldOptions,
     loadingFilterFieldOptions,
     setAutocompleteMode,
-    toggleMenu
+    toggleMenu,
+    UPDATE_CROSS_LAYER_FILTER_FIELD
 } from '../actions/queryform';
 import { FEATURE_TYPE_SELECTED } from '../actions/wfsquery';
 import { error } from '../actions/notifications';
@@ -58,7 +59,7 @@ export const isAutoCompleteEnabled = (action$, store) =>
             }).catch(() => { return Rx.Observable.of(setAutocompleteMode(false)); });
         });
 export const fetchAutocompleteOptionsEpic = (action$, store) =>
-    action$.ofType(UPDATE_FILTER_FIELD)
+    action$.ofType(UPDATE_FILTER_FIELD, UPDATE_CROSS_LAYER_FILTER_FIELD)
         .debounce((action) => {
             return Rx.Observable.timer(action.fieldOptions.delayDebounce || 0);
         })
@@ -66,8 +67,12 @@ export const fetchAutocompleteOptionsEpic = (action$, store) =>
         .switchMap((action) => {
             const state = store.getState();
             const maxFeaturesWPS = maxFeaturesWPSSelector(state);
-            const filterField = state.queryform && state.queryform.filterFields && state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
-
+            let filterField = {};
+            if (action.type === UPDATE_CROSS_LAYER_FILTER_FIELD) {
+                filterField = state.queryform.crossLayerFilter;
+            } else {
+                filterField = state.queryform && state.queryform.filterFields && state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
+            }
             if (action.fieldOptions.selected === "selected") {
                 return Rx.Observable.from([
                     updateFilterFieldOptions(filterField, [], 0)
@@ -78,7 +83,7 @@ export const fetchAutocompleteOptionsEpic = (action$, store) =>
                 layerName: typeNameSelector(state),
                 layerFilter: appliedFilterSelector(state) || storedFilterSelector(state),
                 maxFeatures: maxFeaturesWPS,
-                startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
+                startIndex: action.fieldOptions.currentPage ? (action.fieldOptions.currentPage - 1) : 1 * maxFeaturesWPS,
                 value: action.fieldValue
             });
             const parsedUrl = getParsedUrl(state.query.url, {"outputFormat": "json"}, authkeyParamNameSelector(store.getState()));
@@ -119,3 +124,5 @@ export default {
     isAutoCompleteEnabled,
     fetchAutocompleteOptionsEpic
 };
+
+// returns a promise of data, params
