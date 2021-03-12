@@ -125,6 +125,7 @@
     "@geosolutions/wkt-parser": "1.2.2",
     "@mapbox/geojsonhint": "2.0.1",
     "@mapbox/togeojson": "0.16.0",
+    "@mapstore/patcher": "https://github.com/geosolutions-it/Patcher/tarball/master",
     "@terrestris/base-util": "0.1.4",
     "@terrestris/ol-util": "3.0.0",
     "@turf/bbox": "4.1.0",

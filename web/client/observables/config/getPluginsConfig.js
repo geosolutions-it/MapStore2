@@ -1,7 +1,7 @@
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import castArray from "lodash/castArray";
-import {mergeConfigsPatch} from "../../utils/PatchUtils";
+import {mergeConfigsPatch} from "@mapstore/patcher";
 
 /**
  * Returns a Promise that profides the configuration for plugins

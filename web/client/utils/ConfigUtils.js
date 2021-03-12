@@ -13,7 +13,7 @@ import { castArray, isArray, isObject, endsWith, isNil } from 'lodash';
 import assign from 'object-assign';
 import { Promise } from 'es6-promise';
 import isMobile from 'ismobilejs';
-import {mergeConfigsPatch} from "./PatchUtils";
+import {mergeConfigsPatch} from "@mapstore/patcher";
 
 const epsg4326 = Proj4js ? new Proj4js.Proj('EPSG:4326') : null;
 const centerPropType = PropTypes.shape({
