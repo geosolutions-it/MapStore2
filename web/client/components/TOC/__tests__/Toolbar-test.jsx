@@ -531,7 +531,10 @@ describe('TOC Toolbar', () => {
                         miny: -9
                     }, crs: 'EPSG:3003'
                 },
-                search: "fakeURL"
+                search: {
+                    type: "wfs",
+                    url: "/geoserver/wfs"
+                }
             }];
             const activateTool = {
                 activateWidgetTool: true,
@@ -569,7 +572,10 @@ describe('TOC Toolbar', () => {
                         miny: -9
                     }, crs: 'EPSG:3003'
                 },
-                search: "vector"
+                search: {
+                    type: "wfs",
+                    url: "/geoserver/wfs"
+                }
             }];
             ReactDOM.render(<Toolbar activateTool={{ activateWidgetTool: true }} selectedLayers={selectedLayers} />, document.getElementById("container"));
             const widgetButton = document.querySelector(WIDGET_TOOL_SELECTOR);
