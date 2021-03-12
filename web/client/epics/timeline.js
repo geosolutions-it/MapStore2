@@ -233,7 +233,7 @@ export const syncTimelineGuideLayer = (action$, { getState = () => { } } = {}) =
             const state = getState();
             const firstTimeLayer = get(timelineLayersSelector(state), "[0].id");
             if (isAutoSelectEnabled(state) && firstTimeLayer) {
-                return Rx.Observable.of(selectLayer(firstTimeLayer)) // Select a first guide layer from the list and snap time
+                return Rx.Observable.of(selectLayer(firstTimeLayer)) // Select the first guide layer from the list and snap time
                     .concat(
                         Rx.Observable.of(1)
                             .switchMap( () =>
@@ -326,7 +326,6 @@ export const updateRangeDataOnRangeChange = (action$, { getState = () => { } } =
 
 export default {
     setTimelineCurrentTime,
-    // setupTimelineExistingSettings,
     settingInitialOffsetValue,
     updateRangeDataOnRangeChange,
     syncTimelineGuideLayer
