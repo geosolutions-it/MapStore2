@@ -56,6 +56,13 @@ Sometimes you might be interested to show in the timeline histogram only the tim
 !!! Note
     Map Sync feature need at least GeoServer 2.15.2
 
+## Show hidden layers
+
+When then timeline configuration`showHiddenLayer`is set to *false* *(false by default)*, the layers in timeline gets in sync with time layer's visibility (TOC) i.e when a time layer is hidden or removed, the timeline will not show the respective guide layer. Furthermore, the timeline automatically selects the next available guide layer
+if the **Snap to guide layer** option is enabled in the Timeline settings. If set to *true*, the hidden layer will be shown in the timeline.
+
+<img src="../img/timeline/show-hidden-layer.gif" class="ms-docimage"  style="max-width:700px;" />
+
 ## Animations
 
 The user can start a time animation by using the timeline tool through the following buttons (by default the animation of layers in map is based on time values related the **guide layer**, see the [Animation Settings](#animation-settings) section > **Timeline Settings** > **Snap to guide layer** option):

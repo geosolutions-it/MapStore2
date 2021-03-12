@@ -9,7 +9,7 @@
 import { head, isString } from 'lodash';
 import moment from 'moment';
 import assign from 'object-assign';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
@@ -26,7 +26,7 @@ import { createSelector } from 'reselect';
 
 import { setCurrentOffset } from '../actions/dimension';
 import { selectPlaybackRange } from '../actions/playback';
-import { enableOffset, onRangeChanged, selectTime, setMapSync } from '../actions/timeline';
+import { enableOffset, onRangeChanged, selectTime, setMapSync, initTimeline } from '../actions/timeline';
 import Message from '../components/I18N/Message';
 import tooltip from '../components/misc/enhancers/tooltip';
 import withResizeSpy from '../components/misc/enhancers/withResizeSpy';
@@ -85,7 +85,8 @@ const TimelinePlugin = compose(
             onOffsetEnabled: enableOffset,
             setOffset: setCurrentOffset,
             setPlaybackRange: selectPlaybackRange,
-            moveRangeTo: onRangeChanged
+            moveRangeTo: onRangeChanged,
+            onInit: initTimeline
         }),
     branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {collapsed: true}),
@@ -110,6 +111,7 @@ const TimelinePlugin = compose(
             withResizeSpy({ querySelector: ".ms2", closest: true, debounceTime: 100 })
         ),
         defaultProps({
+            showHiddenLayers: false,
             style: {
                 marginBottom: 35,
                 marginLeft: 100,
@@ -162,8 +164,13 @@ const TimelinePlugin = compose(
         status,
         viewRange,
         moveRangeTo,
-        compactToolbar
+        compactToolbar,
+        showHiddenLayers,
+        onInit = () => {}
     }) => {
+        useEffect(()=>{
+            onInit(showHiddenLayers);
+        }, [onInit]);
 
         const { hideLayersName, collapsed } = options;
 
