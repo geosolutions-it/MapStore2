@@ -41,7 +41,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client</directory>
+                                <directory>${basedir}/../web/client</directory>
                                  <filtering>true</filtering>
                                 <includes>
                                     <include>**/version.txt</include>
@@ -61,7 +61,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>index.html</include>
                                 </includes>
@@ -80,7 +80,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>embedded.html</include>
                                 </includes>
@@ -99,7 +99,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>dashboard-embedded.html</include>
                                 </includes>
@@ -118,7 +118,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>geostory-embedded.html</include>
                                 </includes>
@@ -137,7 +137,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>api.html</include>
                                 </includes>
@@ -156,7 +156,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client</directory>
+                                <directory>${basedir}/../web/client</directory>
                                 <includes>
                                     <include>**/*.html</include>
                                     <include>**/*.json</include>
@@ -185,7 +185,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                             </resource>
                         </resources>
                     </configuration>
@@ -201,7 +201,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/examples</directory>
+                                <directory>${basedir}/../web/client/examples</directory>
                                 <includes>
                                     <include>data/*</include>
                                 </includes>
@@ -220,7 +220,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/examples</directory>
+                                <directory>${basedir}/../web/client/examples</directory>
                                 <includes>
                                     <include>**/*.js</include>
                                 </includes>
@@ -239,7 +239,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client</directory>
+                                <directory>${basedir}/../web/client</directory>
                                 <includes>
                                     <include>translations/*</include>
                                 </includes>
@@ -258,7 +258,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/docs</directory>
+                                <directory>${basedir}/../web/docs</directory>
                             </resource>
                         </resources>
                     </configuration>
@@ -274,7 +274,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/web/client/libs/cesium-navigation</directory>
+                                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
                             </resource>
                         </resources>
                     </configuration>
