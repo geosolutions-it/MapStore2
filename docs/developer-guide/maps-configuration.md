@@ -63,6 +63,7 @@ The following options define the map options (projection, position, layers):
 - `center: [object]` center of the map with starting point in the bottom-left corner
 - `zoom: {number}` level of zoom
 - `resolutions: {number[]}` resolutions for each level of zoom
+- `scales: {number[]}` scales used to compute the map resolutions
 - `maxExtent: {number[]}` max bbox of the map expressed [minx, miny, maxx, maxy]
 - `layers: {object[]}` list of layers to be loaded on the map
 - `groups {object[]}`: contains information about the layer groups
@@ -78,6 +79,7 @@ i.e.
     "zoom": 15,
     "mapOptions": {
       "view": {
+        "scales": [175000, 125000, 100000, 75000, 50000, 25000, 10000, 5000, 2500],
         "resolutions": [
           84666.66666666688,
           42333.33333333344,
@@ -110,6 +112,13 @@ i.e.
     "layers": [{...},{...}]
 }
 ```
+
+!!! note
+    The option to configure a list of scale denominators allow to have them in human friendly format, and calculate the map resolutions from scales.
+
+!!! warning
+    If the scales and resolutions property are declared, in the same json object, the scales have priority.
+    In the array, the values have be in descending order.
 
 !!! warning
     Actually the custom resolution values are valid for one single CRS. It's therefore suggested to avoid to add this parameter when multiple CRSs in the same map configuration are needed.
