@@ -10,6 +10,7 @@ import ReactPlayer from 'react-player';
 import Loader from '../../misc/Loader';
 import { withResizeDetector } from 'react-resize-detector';
 import { Glyphicon } from 'react-bootstrap';
+import Message from '../../I18N/Message';
 import { Modes } from '../../../utils/GeoStoryUtils';
 
 /**
@@ -131,7 +132,7 @@ const Video = withResizeDetector(({
                     onError={e => setError(e)}
                     onPause={() => onPlay(false)}
                     onPlay={() => onPlay(true)}
-                />}
+                /> }
                 {(!started || started && (loading || error)) && <div
                     className="ms-video-cover"
                     style={{
@@ -155,8 +156,15 @@ const Video = withResizeDetector(({
                         setLoading(true);
                         onPlay(true);
                     }}>
-                    {loading && <Loader size={70}/>}
-                    {error && 'Error'}
+                    {(loading && !error) && <Loader size={70}/>}
+                    {error && <div className="text-center" ><Glyphicon
+                        glyph="alert"
+                        style={{
+                            fontSize: size[1] / 4 > 100 ? 100 : size[1] / 4,
+                            mixBlendMode: 'difference',
+                            color: '#ffffff'
+                        }}
+                    /><h3><Message msgId="geostory.errors.loading.video"/></h3> </div>}
                     {!(loading || error) && !playing &&
                         <Glyphicon
                             glyph="play"
@@ -226,11 +234,22 @@ const VideoMedia = ({
     const isVisible = containerInView && inView;
 
     const [playing, setPlaying] = useState(false);
+    const [mute, setMute] = useState(muted);
 
     const handleOnPlay = (newPlaying) => {
         setPlaying(newPlaying);
         onPlay(newPlaying);
+
     };
+    // if autoplay is true and mute false, the mute status
+    // is forced to true, to handle the error exception in internal videos,
+    // in line with the Autoplay Policy
+
+    useEffect(() => {
+        if (autoplay && !mute) {
+            setMute(true);
+        }
+    }, [ autoplay, mute ]);
 
     // reset player after switching from view to edit mode
     useEffect(() => {
@@ -269,7 +288,7 @@ const VideoMedia = ({
                 onPlay={handleOnPlay}
                 fit={fit}
                 loop={loop}
-                muted={muted}
+                muted={mute}
             />
             {credits && <div className="ms-media-credits">
                 <small>
