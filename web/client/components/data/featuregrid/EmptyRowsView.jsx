@@ -8,7 +8,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Message from '../../I18N/Message';
-import WidgetEmptyMessage from '../../widgets/widget/WidgetEmptyMessage';
 
 const nodataStyle = {
     width: "100%",
@@ -23,7 +22,7 @@ class EmptyRowsView extends React.PureComponent {
     }
     render() {
         return this.props.loading
-            ? (<div style={nodataStyle}><Message msgId="loading" /></div>) : (<WidgetEmptyMessage messageId="featuregrid.noFeaturesAvailable" glyph="features-grid"/>);
+            ? (<div style={nodataStyle}><Message msgId="loading" /></div>) : (this.props.children ? this.props.children : <div style={nodataStyle}><Message msgId="featuregrid.noFeaturesAvailable" /></div>);
     }
 }
 
