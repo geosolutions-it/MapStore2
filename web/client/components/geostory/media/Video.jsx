@@ -242,7 +242,7 @@ const VideoMedia = ({
 
     };
     // if autoplay is true and mute false, the mute status
-    // is forced to true, to handle the error exception in internal videos,
+    // is forced to true, to handle the error exception in mp4 videos,
     // in line with the Autoplay Policy
 
     useEffect(() => {
