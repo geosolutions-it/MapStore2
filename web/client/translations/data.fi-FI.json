@@ -900,7 +900,8 @@
         "operation": "Toiminto",
         "placeholder": "Valitse taso",
         "errors": {
-          "noCrossLayerAvailable": "Ristiinsuodatus ei ole käytettävissä valitulle tasolle"
+          "noCrossLayerAvailable": "Ristiinsuodatus ei ole käytettävissä valitulle tasolle",
+          "layersExcluded": "Vain kerrokset, jotka tulevat samasta lähteestä, voidaan valita tämän kerroksen suodattimen kohdekerrokseksi"
         }
       },
       "changedFilter": "Suodatin vaihdettu",
