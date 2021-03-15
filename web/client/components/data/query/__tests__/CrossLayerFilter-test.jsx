@@ -131,7 +131,7 @@ describe('CrossLayerFilter component', () => {
                 name: "Within"
             }]}
         />, document.getElementById("container"));
-        const infoIcon = container.querySelector('.unmatching-sources-info-icon');
+        const infoIcon = container.querySelector('.mapstore-info-popover');
         expect(infoIcon).toExist();
     });
 
@@ -150,7 +150,7 @@ describe('CrossLayerFilter component', () => {
                 name: "Within"
             }]}
         />, document.getElementById("container"));
-        const infoIcon = container.querySelector('.unmatching-sources-info-icon');
+        const infoIcon = container.querySelector('.mapstore-info-popover');
         expect(infoIcon).toNotExist();
     });
 

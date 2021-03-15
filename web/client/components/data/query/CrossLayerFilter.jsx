@@ -15,8 +15,7 @@ import Select from 'react-select';
 import GeometricOperationSelector from './GeometricOperationSelector';
 import GroupField from './GroupField';
 import { isSameUrl } from '../../../utils/URLUtils';
-import ToolbarButton from '../../misc/toolbar/ToolbarButton';
-
+import InfoPopover from '../../widgets/widget/InfoPopover';
 
 const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => isSameUrl(origSearchUrl, url) || isSameUrl(origSearchUrl, (search && search.url));
 // bbox make not sense with cross layer filter
@@ -52,9 +51,8 @@ export default ({
         .filter( l => !isSameOGCServiceRoot(searchUrl, l));
 
     const renderUnMatchingLayersInfo = () => {
-        if (UnMatchingLayerOptions.length) {
-            return (<ToolbarButton className="square-button-md no-border unmatching-sources-info-icon"
-                glyph="info-sign" tooltipId="queryform.crossLayerFilter.errors.layersExcluded"/>);
+        if (layers.length && UnMatchingLayerOptions.length) {
+            return (<InfoPopover bsStyle="link" text={<Message msgId="queryform.crossLayerFilter.errors.layersExcluded" />}/>);
         }
         return null;
     };
@@ -75,8 +73,10 @@ export default ({
         <Row className="inline-form filter-field-fixed-row">
             <Col xs={6}>
                 <div>
+                    <Message msgId="queryform.crossLayerFilter.targetLayer"/>&nbsp;
                     { renderUnMatchingLayersInfo() }
-                    <Message msgId="queryform.crossLayerFilter.targetLayer"/></div>
+                </div>
+
             </Col>
             <Col xs={6}>
                 <Select
