@@ -128,4 +128,3 @@ export default {
     fetchAutocompleteOptionsEpic
 };
 
-// returns a promise of data, params
