@@ -243,7 +243,7 @@ const VideoMedia = ({
     };
     // if autoplay is true and mute false, the mute status
     // is forced to true, to handle the error exception in mp4 videos,
-    // in line with the Autoplay Policy
+    // in line with the Autoplay Policy, so the video can start
 
     useEffect(() => {
         if (autoplay && !mute) {
