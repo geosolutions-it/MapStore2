@@ -47,11 +47,11 @@ export default ({
         index: 0
     }]} = queryCollection;
 
-    const UnMatchingLayerOptions = layers
+    const unMatchingLayerOptions = layers
         .filter( l => !isSameOGCServiceRoot(searchUrl, l));
 
     const renderUnMatchingLayersInfo = () => {
-        if (layers.length && UnMatchingLayerOptions.length) {
+        if (layers.length && unMatchingLayerOptions.length) {
             return (<InfoPopover bsStyle="link" text={<Message msgId="queryform.crossLayerFilter.errors.layersExcluded" />}/>);
         }
         return null;
