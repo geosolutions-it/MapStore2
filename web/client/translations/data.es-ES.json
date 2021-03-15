@@ -1075,7 +1075,8 @@
                 "operation": "Operación",
                 "placeholder": "Selecciona una capa",
                 "errors": {
-                    "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
+                    "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada",
+                    "layersExcluded": "Solo las capas que provienen de la misma fuente se pueden seleccionar como capa de destino para este filtro de capa"
                 }
             },
             "changedFilter": "Filtro cambiado",

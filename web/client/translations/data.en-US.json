@@ -1075,7 +1075,8 @@
                 "operation": "Operation",
                 "placeholder": "Select layer",
                 "errors": {
-                    "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer"
+                    "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer",
+                    "layersExcluded": "Only layers coming from the same source can be selected as target layer for this layer filter"
                 }
             },
             "changedFilter": "Filter Changed",

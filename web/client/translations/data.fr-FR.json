@@ -1075,7 +1075,8 @@
                 "operation": "Opération",
                 "placeholder": "Sélectionner une couche",
                 "errors": {
-                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné"
+                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné",
+                    "layersExcluded": "Seuls les calques provenant de la même source peuvent être sélectionnés comme calque cible pour ce filtre de calque"
                 }
             },
             "changedFilter": "Filtre modifié",
