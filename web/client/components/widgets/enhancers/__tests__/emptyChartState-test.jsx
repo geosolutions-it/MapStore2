@@ -32,4 +32,10 @@ describe('widgets emptyChartState enhancer', () => {
         ReactDOM.render(<Dummy data={["a"]}/>, document.getElementById("container"));
         expect(document.getElementById("dummy")).toExist();
     });
+
+    it("should render empty chart state", () => {
+        const Dummy = emptyChartState(() => <div id="dummy"></div>);
+        ReactDOM.render(<Dummy data={[]}/>, document.getElementById("container"));
+        expect(document.querySelector(".ms-widget-empty-message")).toExist();
+    });
 });
