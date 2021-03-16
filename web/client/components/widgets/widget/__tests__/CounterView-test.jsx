@@ -25,13 +25,13 @@ describe('CounterView component', () => {
     it('CounterView rendering with defaults', () => {
         ReactDOM.render(<CounterView />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.empty-state-image');
+        const el = container.querySelector('.ms-widget-empty-message');
         expect(el).toExist();
     });
     it('CounterView rendering with data', () => {
         ReactDOM.render(<CounterView data={[{ dataKey: 1 }]} series={[{dataKey: "dataKey"}]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.empty-state-image');
+        const el = container.querySelector('.ms-widget-empty-message');
         expect(el).toNotExist();
         expect(container.querySelector('span')).toExist();
     });

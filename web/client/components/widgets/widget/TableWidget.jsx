@@ -16,6 +16,7 @@ import loadingState from '../../misc/enhancers/loadingState';
 import LoadingSpinner from '../../misc/LoadingSpinner';
 import errorChartState from '../enhancers/errorChartState';
 import WidgetContainer from './WidgetContainer';
+import WidgetEmptyMessage from './WidgetEmptyMessage';
 
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(FeatureGridComp));
 
@@ -67,7 +68,9 @@ export default getWidgetFilterRenderers(({
                 </div>) : null}
         >
             <FeatureGrid
-                emptyRowsView={() => <EmptyRowsView loading={loading} />}
+                emptyRowsView={() => (<EmptyRowsView loading={loading}>
+                    <WidgetEmptyMessage messageId="featuregrid.noFeaturesAvailable" glyph="features-grid"/>
+                </EmptyRowsView>)}
                 gridEvents={gridEvents}
                 sortable
                 defaultSize={false}
