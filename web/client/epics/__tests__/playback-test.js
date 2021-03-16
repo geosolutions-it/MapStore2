@@ -40,7 +40,8 @@ const ANIMATION_MOCK_STATE = {
                             url: 'MOCK_DOMAIN_VALUES'
                         }
                     }
-                ]
+                ],
+                visibility: true
             }
         ]
     },
