@@ -5,8 +5,7 @@ export default emptyState(
     ({text} = {}) => !text,
     () => ({
         glyph: 'sheet',
-        messageId: 'widgets.errors.notext',
-        className: 'ms-widget-empty-text-message'
+        messageId: 'widgets.errors.notext'
     }),
     WidgetEmptyMessage
 );
