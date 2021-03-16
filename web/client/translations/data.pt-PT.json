@@ -864,7 +864,8 @@
                 "clear": "Clear filter",
                 "operation": "Operation",
                 "errors": {
-                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
+                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer",
+                    "layersExcluded": "Apenas as camadas provenientes da mesma origem podem ser selecionadas como camada de destino para este filtro de camada"
                 }
             }
         },
