@@ -5,8 +5,8 @@ The Timeline is a [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) tool
 It makes possible to observe the layers' evolution over time, to inspect the layer configuration at a specific time instant (or in a time range) and to view different layer configurations time by time dynamically through animations.<br>
 
 !!! Warning
-    Timeline actually works only with [WMTS-Multidim extension](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) (WMS time in capabilities is not fully supported) and at least **GeoServer 2.14.5**. Anyway to support all the functionality you need **GeoServer 2.15.2**.
-    From now on, the layers that the Timeline can manage will be addressed as *time layers*.
+    Timeline actually works only with WMS layers from GeoServer with [WMTS-Multidim extension](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) installed, minimum **GeoServer 2.14.5**, suggested **GeoServer 2.15.2** to have support for all the features of the timeline tool.
+    From now on, the layers that the Timeline can manage will be addressed as *time layers*. WMS time values in WMS Capabilities is not supported yet.
 
 
 When a layer with a time dimension is added to the map, the Timeline panel becomes automatically visible and it allows the user to browse the layer over time.
