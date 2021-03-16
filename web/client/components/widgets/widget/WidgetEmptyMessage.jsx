@@ -5,7 +5,7 @@ import Message from '../../I18N/Message';
 
 
 function WidgetEmptyMessage({ glyph = 'info-sign', messageId}) {
-    return (<div className="ms-widget-empty-message mapstore-widget-card ms2-border-layout-body">
+    return (<div className="ms-widget-empty-message">
         <Glyphicon glyph={glyph}/>&nbsp; <Message msgId={messageId} />
     </div>);
 }
