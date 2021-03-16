@@ -226,7 +226,9 @@ export const syncTimelineGuideLayer = (action$, { getState = () => { } } = {}) =
     action$.ofType(AUTOSELECT)// Initializes timeline
         .merge(
             action$.ofType(REMOVE_NODE, CHANGE_LAYER_PROPERTIES) // Or when the guide layer is removed or hidden
-                .withLatestFrom(action$.ofType(SELECT_LAYER), (_, {layerId: _layer})  => _layer)
+                .withLatestFrom(action$.ofType(SELECT_LAYER), (_, {layerId: _layer})  =>
+                    _layer && !timelineLayersSelector(getState()).some(l=>l.id === _layer) // Retain selection when guide layer present
+                )
                 .filter(layer => !!layer) // Emit only if a guide layer was selected before remove node or change layer's visibility
         )
         .switchMap(() => {
@@ -237,7 +239,7 @@ export const syncTimelineGuideLayer = (action$, { getState = () => { } } = {}) =
                     .concat(
                         Rx.Observable.of(1)
                             .switchMap( () =>
-                                snapTime(state, firstTimeLayer, currentTimeSelector(state) || new Date().toISOString())
+                                snapTime(getState(), firstTimeLayer, currentTimeSelector(getState()) || new Date().toISOString()) // Get latest state to snap time
                                     .filter( v => v)
                                     .map(time => setCurrentTime(time))
                             )

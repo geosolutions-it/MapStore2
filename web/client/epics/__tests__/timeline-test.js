@@ -200,20 +200,26 @@ describe('timeline Epics', () => {
             }});
         });
         it('syncTimelineGuideLayer on changeLayerProperties', done => {
-            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER1'), changeLayerProperties('TEST_LAYER', {visibility: false},) ], (actions) => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), changeLayerProperties('TEST_LAYER', {visibility: false},) ], (actions) => {
                 doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
                 done();
             }, STATE_TIMELINE);
         });
         it('syncTimelineGuideLayer on removeNode', done => {
-            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER1'), removeNode('TEST_LAYER', 'layers') ], (actions) => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER', 'layers') ], (actions) => {
                 doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
                 done();
             }, STATE_TIMELINE);
         });
         it('syncTimelineGuideLayer on showHiddenLayers', done => {
-            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER1'), removeNode('TEST_LAYER1', 'layers') ], (actions) => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER1', 'layers') ], (actions) => {
                 doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER');
+                done();
+            }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
+        });
+        it('syncTimelineGuideLayer retain selection', done => {
+            testEpic(addTimeoutEpic(syncTimelineGuideLayer, 500), 1, [selectLayer('TEST_LAYER1'), removeNode('TEST_LAYER1', 'layers') ], ([action]) => {
+                expect(action.type).toBe(TEST_TIMEOUT); // Don't update selection when selected layer in timeline present
                 done();
             }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
         });

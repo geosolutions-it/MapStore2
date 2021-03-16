@@ -58,6 +58,19 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
   * @class  Timeline
   * @memberof plugins
   * @static
+  * @prop cfg.showHiddenLayers {boolean} false by default, when *false* the layers in timeline gets in sync with time layer's visibility (TOC)
+  * i.e when a time layer is hidden or removed, the timeline will not show the respective guide layer.
+  * Furthermore, the timeline automatically selects the next available guide layer, if the **Snap to guide layer** option is enabled in the Timeline settings.
+  * If set to *true*, the hidden layer will be shown in the timeline.
+  *
+  * @example
+  * {
+  *   "name": "TimeLine",
+  *   "cfg": {
+  *       "showHiddenLayers": false
+  *    }
+  * }
+  *
   */
 const TimelinePlugin = compose(
     connect(
