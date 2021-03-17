@@ -235,18 +235,25 @@ export const syncTimelineGuideLayer = (action$, { getState = () => { } } = {}) =
             const state = getState();
             const firstTimeLayer = get(timelineLayersSelector(state), "[0].id");
             if (isAutoSelectEnabled(state) && firstTimeLayer) {
-                return Rx.Observable.of(selectLayer(firstTimeLayer)) // Select the first guide layer from the list and snap time
-                    .concat(
-                        Rx.Observable.of(1)
-                            .switchMap( () =>
-                                snapTime(getState(), firstTimeLayer, currentTimeSelector(getState()) || new Date().toISOString()) // Get latest state to snap time
-                                    .filter( v => v)
-                                    .map(time => setCurrentTime(time))
-                            )
-                    );
+                return Rx.Observable.of(selectLayer(firstTimeLayer)); // Select the first guide layer from the list and snap time
             }
             return Rx.Observable.empty();
         });
+
+/**
+ * Snap time of the selected layer
+ * @memberof epics.timeline
+ * @param {observable} action$ manages `SELECT_LAYER`
+ * @param {function} getState to fetch the store object
+ * @return {observable}
+ */
+export const snapTimeGuideLayer = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(SELECT_LAYER)
+        .filter((action)=> action?.layerId && isAutoSelectEnabled(getState()))
+        .switchMap(({layerId}) => snapTime(getState(), layerId, currentTimeSelector(getState()) || new Date().toISOString())
+            .filter(v => v)
+            .map(time => setCurrentTime(time))
+        );
 
 /**
  * When offset is initiated this epic sets both initial current time and offset if any does not exist
@@ -330,5 +337,6 @@ export default {
     setTimelineCurrentTime,
     settingInitialOffsetValue,
     updateRangeDataOnRangeChange,
-    syncTimelineGuideLayer
+    syncTimelineGuideLayer,
+    snapTimeGuideLayer
 };
