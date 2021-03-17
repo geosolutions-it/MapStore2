@@ -90,10 +90,15 @@ const fixCoordinates = (coords, type) => {
 function annotations(state = {validationErrors: {}}, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
-        return {
-            ...state,
-            showPopupWarning: localStorage && localStorage.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true
-        };
+        try {
+            return {
+                ...state,
+                showPopupWarning: localStorage && localStorage.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true
+            };
+        } catch (e) {
+            console.error(e);
+            return state;
+        }
     }
     case CHANGED_SELECTED: {
         let newState = set(`unsavedGeometry`, true, state);

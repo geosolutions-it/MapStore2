@@ -867,7 +867,11 @@ class AnnotationsEditor extends React.Component {
 
     hideWarning = () => {
         if (this.props.showAgain) {
-            localStorage.setItem("showPopupWarning", false);
+            try {
+                localStorage.setItem("showPopupWarning", false);
+            } catch (e) {
+                console.error(e);
+            }
             this.props.onHideMeasureWarning();
         }
         this.setPopupWarning(false);

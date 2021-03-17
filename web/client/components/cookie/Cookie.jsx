@@ -128,7 +128,11 @@ class Cookie extends React.Component {
         this.props.onMoreDetails(!this.props.seeMore);
     }
     accept = () => {
-        localStorage.setItem("cookies-policy-approved", true);
+        try {
+            localStorage.setItem("cookies-policy-approved", true);
+        } catch (e) {
+            console.error(e);
+        }
         this.props.onSetCookieVisibility(false);
     }
 }

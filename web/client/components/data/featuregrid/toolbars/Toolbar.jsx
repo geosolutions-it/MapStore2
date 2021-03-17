@@ -196,7 +196,11 @@ export default ({
                         <Message msgId="featuregrid.toolbar.synchPopoverTitle"/>
                         <button onClick={() => {
                             if (syncPopover.showAgain) {
-                                localStorage.setItem("showPopoverSync", false);
+                                try {
+                                    localStorage.setItem("showPopoverSync", false);
+                                } catch (e) {
+                                    console.error(e);
+                                }
                             }
                             events.hideSyncPopover();
                         }} className="close">

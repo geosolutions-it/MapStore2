@@ -50,7 +50,12 @@ function mergeDefaultConfig(pluginName, cfg) {
 
 function loadConfigFromStorage(name = 'mapstore.embedded') {
     if (name) {
-        const loaded = localStorage.getItem(name);
+        let loaded = false;
+        try {
+            loaded = localStorage.getItem(name);
+        } catch (e) {
+            console.error(e);
+        }
         if (loaded) {
             return JSON.parse(loaded);
         }

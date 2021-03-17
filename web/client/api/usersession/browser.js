@@ -15,13 +15,22 @@ export const getSessionName = (name) => "mapstore.usersession." +
  */
 export default {
     getSession: name => Observable.defer(() => {
-        const serialized = localStorage.getItem(getSessionName(name));
+        let serialized = {};
+        try {
+            serialized = localStorage.getItem(getSessionName(name));
+        } catch (e) {
+            console.error(e);
+        }
         const session = serialized && JSON.parse(serialized);
         const id = session && name;
         return Promise.resolve([id, session]);
     }),
     writeSession: (id, name, user, session) => Observable.defer(() => {
-        localStorage.setItem(getSessionName(id || name), JSON.stringify(session));
+        try {
+            localStorage.setItem(getSessionName(id || name), JSON.stringify(session));
+        } catch (e) {
+            console.error(e);
+        }
         return Promise.resolve(id || name);
     }),
     removeSession: id => Observable.defer(() => {

@@ -103,7 +103,12 @@ export const switchGeostoryTutorialEpic = (action$, store) =>
             const presetList = state.tutorial && state.tutorial.presetList || {};
             const geostoryMode = `_${mode}`;
             const steps = !isEmpty(presetList) ? presetList[id + geostoryMode + '_tutorial'] : null;
-            const isGeostoryTutorialDisabled = localStorage.getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
+            let isGeostoryTutorialDisabled = false;
+            try {
+                isGeostoryTutorialDisabled = localStorage.getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
+            } catch (e) {
+                console.error(e);
+            }
             // if no steps are found then do nothing
             return steps ? Rx.Observable.from(
                 [

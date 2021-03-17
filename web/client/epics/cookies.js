@@ -24,7 +24,14 @@ import axios from '../libs/ajax';
 export const cookiePolicyChecker = (action$) =>
     action$.ofType(LOCATION_CHANGE )
         .take(1)
-        .filter( () => !localStorage.getItem("cookies-policy-approved"))
+        .filter( () => {
+            try {
+                return !localStorage.getItem("cookies-policy-approved");
+            } catch (e) {
+                console.error(e);
+                return false;
+            }
+        })
         .switchMap(() =>
             Rx.Observable.of(setCookieVisibility(true))
         );
