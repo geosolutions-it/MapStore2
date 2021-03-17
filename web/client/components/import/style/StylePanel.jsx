@@ -67,11 +67,13 @@ class StylePanel extends React.Component {
         useDefaultStyle: false,
         zoomOnShapefiles: true,
         overrideAnnotation: false,
-        initialLayers: []
+        initialLayers: [],
+        disableStyleCustomization: false
     };
 
     componentDidMount() {
         this.setState({initialLayers: [...this.props.layers]});
+        this.checkAndDisableStyleCustomization();
     }
 
     getGeometryType = (geometry) => {
@@ -138,6 +140,17 @@ class StylePanel extends React.Component {
         </Row>);
     };
 
+    renderDisableStyleCustomization = () => {
+        if (this.state.disableStyleCustomization) {
+            return (
+                <div className="alert alert-info mb-2 style-customisation-disabled-container">
+                    <Message msgId="shapefile.styleCustomizationDisabled"/>
+                </div>
+            );
+        }
+        return null;
+    }
+
     render() {
         return (
             <Grid role="body" style={{width: "400px"}} fluid>
@@ -151,13 +164,14 @@ class StylePanel extends React.Component {
                 <Row key="styler" style={{marginBottom: 10}}>
                     {this.state.useDefaultStyle ? null : this.props.stylers[this.getGeomType(this.props.selected)]}
                 </Row>
+                {this.renderDisableStyleCustomization()}
                 <Row key="options">
                     {isAnnotation(this.props.selected) ?
                         this.annotationOptions()
                         :
                         <>
                             <Col xs={2}>
-                                <input aria-label="..." type="checkbox" defaultChecked={this.state.useDefaultStyle} onChange={(e) => { this.setState({ useDefaultStyle: e.target.checked }); }} />
+                                <input aria-label="..." type="checkbox" disabled={this.state.disableStyleCustomization} checked={this.state.useDefaultStyle} defaultChecked={this.state.useDefaultStyle} onChange={(e) => { this.setState({ useDefaultStyle: e.target.checked }); }} />
                             </Col>
                             <Col style={{ paddingLeft: 0, paddingTop: 1 }} xs={10}>
                                 <label><Message msgId="shapefile.defaultStyle" /></label>
@@ -239,6 +253,30 @@ class StylePanel extends React.Component {
             </Col>
         </>
     );
+
+    checkAndDisableStyleCustomization = () => {
+        if (this.props.layers[0]) {
+            const [layer] = this.props.layers;
+            if (layer.features.length) {
+                for (let i = 0; i < layer.features.length; i++) {
+                    const feature = layer.features[i];
+                    if (feature.style) {
+                        if (Array.isArray(feature.style)) {
+                            if (feature.style.length) {
+                                this.setState({disableStyleCustomization: true, useDefaultStyle: true});
+                                break;
+                            }
+                        } else {
+                            if (Object.keys(feature.style).length) {
+                                this.setState({disableStyleCustomization: true, useDefaultStyle: true});
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 

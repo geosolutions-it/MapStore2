@@ -1323,7 +1323,8 @@
             "next": "Next",
             "skip": "Skip",
             "finish": "Finish",
-            "layerOf": "Layer {count} of {total}:"
+            "layerOf": "Layer {count} of {total}:",
+            "styleCustomizationDisabled": "This layer has a style defined at an style inline and its not possible to customize it."
         },
         "mapImport": {
             "title": "Import",

@@ -1323,7 +1323,8 @@
             "next": "Avanti",
             "skip": "Salta",
             "finish": "Fine",
-            "layerOf": "Strato {count} dei {total}:"
+            "layerOf": "Strato {count} dei {total}:",
+            "styleCustomizationDisabled":"Questo livello ha uno stile definito in uno stile in linea e non è possibile personalizzarlo."
         },
         "mapImport": {
             "title": "Importa",
