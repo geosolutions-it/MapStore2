@@ -440,7 +440,7 @@ describe('PluginsUtils', () => {
         expect(document.querySelector('.selector')).toBeTruthy();
     });
 
-    it.only('should not throw an error if the loaded plugin is an object with component key', () => {
+    it('should not throw an error if the loaded plugin is an object with component key', () => {
 
         function MockStyleEditor() {
             return <div></div>;
