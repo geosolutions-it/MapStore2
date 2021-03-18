@@ -150,7 +150,6 @@ class StylePanel extends React.Component {
         if (this.state.disableStyleCustomization) {
             return (
                 <div className="alert alert-info mb-2 style-customisation-disabled-container">
-                    {/* TODO update translation message */}
                     <Message msgId="shapefile.styleCustomizationDisabled"/>
                 </div>
             );

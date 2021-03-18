@@ -1325,7 +1325,7 @@
             "skip": "Passer",
             "finish": "Terminer",
             "layerOf": "Couche {count} sur {total} :",
-            "styleCustomizationDisabled":"Ce calque a un style défini à un style en ligne et il n'est pas possible de le personnaliser."
+            "styleCustomizationDisabled":"Ce calque a déjà un style défini et il n'est pas possible de le personnaliser."
         },
         "mapImport": {
             "title": "Importer",

@@ -1324,7 +1324,7 @@
             "skip": "Saltar",
             "finish": "Terminar",
             "layerOf": "Capa {count} de {total}:",
-            "styleCustomizationDisabled":"Esta capa tiene un estilo definido en un estilo en línea y no es posible personalizarlo."
+            "styleCustomizationDisabled":"Esta capa ya tiene un estilo definido y no es posible personalizarlo."
         },
         "mapImport": {
             "title": "Importar",

@@ -1324,7 +1324,7 @@
             "skip": "Skip",
             "finish": "Finish",
             "layerOf": "Layer {count} of {total}:",
-            "styleCustomizationDisabled": "This layer has a style defined at an style inline and its not possible to customize it."
+            "styleCustomizationDisabled": "This layer has already a style defined and is not possible to customize it."
         },
         "mapImport": {
             "title": "Import",
