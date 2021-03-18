@@ -1107,7 +1107,6 @@
             "showPreview": "Show preview",
             "advancedSettings": "Advanced Settings",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
-            "invalidUrlHttpProtocol": "The URL doesn't match the MapStore HTTP protocol {protocol}",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",

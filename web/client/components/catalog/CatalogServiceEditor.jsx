@@ -52,14 +52,11 @@ export default ({
     layerOptions
 }) => {
     const [valid, setValid] = useState(true);
-    const [invalidProtocol, setInvalidProtocol] = useState(false);
     return (<BorderLayout
         bodyClassName="ms2-border-layout-body catalog"
         header={
             <MainForm
                 setValid={setValid}
-                invalidProtocol={invalidProtocol}
-                setInvalidProtocol={setInvalidProtocol}
                 service={service}
                 serviceTypes={serviceTypes}
                 onChangeTitle={onChangeTitle}
@@ -90,7 +87,7 @@ export default ({
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>
-                    <Button style={buttonStyle} disabled={saving || !valid || invalidProtocol} onClick={() => onAddService()} key="catalog_add_service_button">
+                    <Button style={buttonStyle} disabled={saving || !valid} onClick={() => onAddService()} key="catalog_add_service_button">
                         {saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : null}
                         <Message msgId="save" />
                     </Button>

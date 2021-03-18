@@ -1,3 +1,5 @@
+import url from 'url';
+
 export const defaultPlaceholder = (service) => {
     let urlPlaceholder = {
         wfs: "e.g. https://mydomain.com/geoserver/wfs",
@@ -14,10 +16,11 @@ export const defaultPlaceholder = (service) => {
     return true;
 };
 
-export const checkIfUrlMatchesProtocol = (url = '') => {
-    const mapstoreUrl = window.location.href;
-    if (mapstoreUrl.indexOf('https://') !== -1) {
-        return url.indexOf('https://') !== -1;
+export const isHttps = (catalogUrl = '') => {
+    const { protocol: mapStoreProtocol } = url.parse(window.location.href);
+    const { protocol: catalogProtocol } = url.parse(catalogUrl);
+    if (mapStoreProtocol === 'https:') {
+        return mapStoreProtocol === catalogProtocol;
     }
-    return url.indexOf('http://') !== -1;
+    return true;
 };
