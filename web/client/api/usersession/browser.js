@@ -15,15 +15,15 @@ export const getSessionName = (name) => "mapstore.usersession." +
  */
 export default {
     getSession: name => Observable.defer(() => {
-        let serialized = {};
         try {
-            serialized = localStorage.getItem(getSessionName(name));
+            const serialized = localStorage.getItem(getSessionName(name));
+            const session = serialized && JSON.parse(serialized);
+            const id = session && name;
+            return Promise.resolve([id, session]);
         } catch (e) {
             console.error(e);
+            return Promise.resolve([0, null]);
         }
-        const session = serialized && JSON.parse(serialized);
-        const id = session && name;
-        return Promise.resolve([id, session]);
     }),
     writeSession: (id, name, user, session) => Observable.defer(() => {
         try {
