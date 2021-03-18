@@ -159,7 +159,7 @@ describe('StylePanel component', () => {
         const cmp = ReactDOM.render(<StylePanel
             errors={[W1]}
             layers={layers}
-            selected={L1}
+            selected={layers[0]}
             stylers={{ "Point": <div></div> }}
         />, document.getElementById("container"));
         expect(cmp).toExist();

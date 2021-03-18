@@ -76,6 +76,11 @@ class StylePanel extends React.Component {
         this.setState({currentActiveLayer: this.props.selected});
         this.checkAndDisableStyleCustomization();
     }
+    componentDidUpdate(prevProps) {
+        if (prevProps.selected.name !== this.props.selected.name) {
+            this.checkAndDisableStyleCustomization();
+        }
+    }
 
     getGeometryType = (geometry) => {
         if (geometry && geometry.type === 'GeometryCollection') {
