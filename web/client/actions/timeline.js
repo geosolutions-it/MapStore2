@@ -74,6 +74,8 @@ export const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
 export const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
 export const setMapSync = mapSync => ({type: SET_MAP_SYNC, mapSync});
 
+export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
+export const initTimeline = (showHiddenLayers) => ({type: INIT_TIMELINE, showHiddenLayers});
 /**
  * Actions for timeline
  * @module actions.timeline

@@ -15,12 +15,14 @@ import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import {
     setTimelineCurrentTime,
     updateRangeDataOnRangeChange,
-    settingInitialOffsetValue
+    settingInitialOffsetValue,
+    syncTimelineGuideLayer
 } from '../timeline';
 
 import { changeMapView } from '../../actions/map';
 import { set, compose } from '../../utils/ImmutableUtils';
-import { selectTime, LOADING, RANGE_DATA_LOADED, RANGE_CHANGED, enableOffset } from '../../actions/timeline';
+import { selectTime, LOADING, RANGE_DATA_LOADED, RANGE_CHANGED, enableOffset, SELECT_LAYER, autoselect, selectLayer } from '../../actions/timeline';
+import { changeLayerProperties, removeNode } from '../../actions/layers';
 import { SET_CURRENT_TIME, SET_OFFSET_TIME, updateLayerDimensionData } from '../../actions/dimension';
 
 
@@ -147,6 +149,79 @@ describe('timeline Epics', () => {
             expect(type).toBe(SET_OFFSET_TIME);
             expect(time).toNotExist();
             done();
+        });
+    });
+    describe('syncTimelineGuideLayer', () => {
+        const doAssertion = (NUM_ACTIONS, actions, layerId) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(action=>{
+                switch (action.type) {
+                case SELECT_LAYER:
+                    expect(action.layerId).toBe(layerId);
+                    break;
+                case SET_CURRENT_TIME:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+        };
+        const NUM_ACTIONS = 2;
+        const STATE_TIMELINE = {
+            timeline: { settings: {autoSelect: true}},
+            layers: { flat: [
+                {
+                    id: 'TEST_LAYER',
+                    name: 'TEST_LAYER',
+                    type: 'wms',
+                    url: 'some url',
+                    dimensions: [{ source: { type: 'multidim-extension', url: 'some url'}, name: 'time'}],
+                    params: { time: '2000-06-08T00:00:00.000Z' },
+                    visibility: false
+                },
+                {
+                    id: 'TEST_LAYER1',
+                    name: 'TEST_LAYER1',
+                    type: 'wms',
+                    url: 'some url',
+                    dimensions: [{ source: { type: 'multidim-extension', url: 'some url'}, name: 'time'}],
+                    params: { time: '2000-06-08T00:00:00.000Z' },
+                    visibility: true
+                }
+            ]}
+        };
+        it('syncTimelineGuideLayer on timeline initializes', done => {
+
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [autoselect()], (actions) => {
+                doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER');
+                done();
+            }, {...STATE_TIMELINE, layers: { ...STATE_TIMELINE.layers,
+                flat: [{...STATE_TIMELINE.layers.flat[0], visibility: true}]
+            }});
+        });
+        it('syncTimelineGuideLayer on changeLayerProperties', done => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), changeLayerProperties('TEST_LAYER', {visibility: false},) ], (actions) => {
+                doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
+                done();
+            }, STATE_TIMELINE);
+        });
+        it('syncTimelineGuideLayer on removeNode', done => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER', 'layers') ], (actions) => {
+                doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
+                done();
+            }, STATE_TIMELINE);
+        });
+        it('syncTimelineGuideLayer on showHiddenLayers', done => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER1', 'layers') ], (actions) => {
+                doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER');
+                done();
+            }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
+        });
+        it('syncTimelineGuideLayer retain selection', done => {
+            testEpic(addTimeoutEpic(syncTimelineGuideLayer, 500), 1, [selectLayer('TEST_LAYER1'), removeNode('TEST_LAYER1', 'layers') ], ([action]) => {
+                expect(action.type).toBe(TEST_TIMEOUT); // Don't update selection when selected layer in timeline present
+                done();
+            }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
         });
     });
     describe('updateRangeDataOnRangeChange', () => {

@@ -22,7 +22,9 @@ import {
     SET_COLLAPSED,
     setCollapsed,
     SET_MAP_SYNC,
-    setMapSync
+    setMapSync,
+    INIT_TIMELINE,
+    initTimeline
 } from '../timeline';
 
 describe('timeline actions', () => {
@@ -63,5 +65,11 @@ describe('timeline actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SET_MAP_SYNC);
         expect(retval.mapSync).toBe(true);
+    });
+    it('initTimeline', () => {
+        const retval = initTimeline(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(INIT_TIMELINE);
+        expect(retval.showHiddenLayers).toBe(true);
     });
 });

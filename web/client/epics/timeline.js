@@ -14,11 +14,12 @@ import {
     timeDataLoading,
     rangeDataLoaded,
     onRangeChanged,
-    selectLayer
+    selectLayer,
+    SELECT_LAYER
 } from '../actions/timeline';
 
 import { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } from '../actions/dimension';
-import { REMOVE_NODE } from '../actions/layers';
+import { REMOVE_NODE, CHANGE_LAYER_PROPERTIES } from '../actions/layers';
 import { error } from '../actions/notifications';
 import { getLayerFromId } from '../selectors/layers';
 
@@ -215,22 +216,38 @@ export const setTimelineCurrentTime = (action$, {getState = () => {}} = {}) =>
             return Rx.Observable.of(setCurrentTime(time));
         });
 /**
- * Initializes the time line
+ * Initialize the time line and syncs the timeline guide layers on certain layer events
+ * @memberof epics.timeline
+ * @param {observable} action$ manages `AUTOSELECT` `REMOVE_NODE` `CHANGE_LAYER_PROPERTIES` `SELECT_LAYER`
+ * @param {function} getState to fetch the store object
+ * @return {observable}
  */
-export const setupTimelineExistingSettings = (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, AUTOSELECT)
-    .exhaustMap(() =>
-        isAutoSelectEnabled(getState())
-        && get(timelineLayersSelector(getState()), "[0].id")
-        && !selectedLayerSelector(getState())
-            ? Rx.Observable.of(selectLayer(get(timelineLayersSelector(getState()), "[0].id")))
-                .concat(
-                    Rx.Observable.of(1).switchMap( () =>
-                        snapTime(getState(), get(timelineLayersSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
-                            .filter( v => v)
-                            .map(time => setCurrentTime(time)))
+export const syncTimelineGuideLayer = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(AUTOSELECT)// Initializes timeline
+        .merge(
+            action$.ofType(REMOVE_NODE, CHANGE_LAYER_PROPERTIES) // Or when the guide layer is removed or hidden
+                .withLatestFrom(action$.ofType(SELECT_LAYER), (_, {layerId: _layer})  =>
+                    _layer && !timelineLayersSelector(getState()).some(l=>l.id === _layer) // Retain selection when guide layer present
                 )
-            : Rx.Observable.empty()
-    );
+                .filter(layer => !!layer) // Emit only if a guide layer was selected before remove node or change layer's visibility
+        )
+        .switchMap(() => {
+            const state = getState();
+            const firstTimeLayer = get(timelineLayersSelector(state), "[0].id");
+            if (isAutoSelectEnabled(state) && firstTimeLayer) {
+                return Rx.Observable.of(selectLayer(firstTimeLayer)) // Select the first guide layer from the list and snap time
+                    .concat(
+                        Rx.Observable.of(1)
+                            .switchMap( () =>
+                                snapTime(getState(), firstTimeLayer, currentTimeSelector(getState()) || new Date().toISOString()) // Get latest state to snap time
+                                    .filter( v => v)
+                                    .map(time => setCurrentTime(time))
+                            )
+                    );
+            }
+            return Rx.Observable.empty();
+        });
+
 /**
  * When offset is initiated this epic sets both initial current time and offset if any does not exist
  * The policy is:
@@ -311,7 +328,7 @@ export const updateRangeDataOnRangeChange = (action$, { getState = () => { } } =
 
 export default {
     setTimelineCurrentTime,
-    setupTimelineExistingSettings,
     settingInitialOffsetValue,
-    updateRangeDataOnRangeChange
+    updateRangeDataOnRangeChange,
+    syncTimelineGuideLayer
 };
