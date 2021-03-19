@@ -6,11 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isNil, isObject } from 'lodash';
+import { isNil, isObject, isEmpty } from 'lodash';
 import React from 'react';
 import { compose, mapPropsStream } from 'recompose';
 import Rx from 'rxjs';
-
+import {connect} from 'react-redux';
+import {changeSelectedService} from '../../actions/catalog';
+import {selectedServiceSelector} from '../../selectors/catalog';
 import CSW from '../../api/CSW';
 import mapBackground from '../../api/mapBackground';
 import WMS from '../../api/WMS';
@@ -89,6 +91,9 @@ const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-la
  * @prop {function} [setSearchText] handler to get search text changes (if not defined, the component will control the text by it's own)
  */
 export default compose(
+    connect((state) => ({
+        selectedService: selectedServiceSelector(state)
+    }), {onChangeSelectedService: changeSelectedService}),
     withControllableState('searchText', "setSearchText", ""),
     withVirtualScroll({loadPage, scrollSpyOptions}),
     mapPropsStream( props$ =>
@@ -101,10 +106,16 @@ export default compose(
                 .ignoreElements() // don't want to emit props
         )))
 
-)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector = true, error}) => {
+)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector = true, error, onChangeSelectedService,
+    selectedService}) => {
     return (<BorderLayout
         className="compat-catalog"
-        header={<CatalogForm services={services ? services : [catalog]} catalog={catalog} selected={selected} showCatalogSelector={showCatalogSelector} title={title} searchText={searchText} onSearchTextChange={setSearchText}/>}
+        header={<CatalogForm onChangeSelectedService={onChangeSelectedService}
+            services={services ? services : [catalog]} catalog={catalog}
+            selectedService={isEmpty(selectedService) ? catalog : selectedService} showCatalogSelector={showCatalogSelector}
+            title={title}
+            searchText={searchText}
+            onSearchTextChange={setSearchText}/>}
         footer={<div className="catalog-footer">
             {loading ? <LoadingSpinner /> : null}
             {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}

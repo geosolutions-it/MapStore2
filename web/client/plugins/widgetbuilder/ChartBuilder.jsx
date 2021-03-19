@@ -12,7 +12,6 @@ import {connect} from 'react-redux';
 import { compose, renameProps, branch, renderComponent} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
-
 import {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} from '../../actions/widgets';
 
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
