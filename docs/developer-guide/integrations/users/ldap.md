@@ -46,6 +46,7 @@ Configuring MapStore to use the LDAP storage requires:
 ```
 
 ### Configuration properties
+
 Configurable properties in the ldap.properties file include the following:
 
 ```properties 
