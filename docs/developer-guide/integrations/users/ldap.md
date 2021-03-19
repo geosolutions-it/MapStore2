@@ -20,7 +20,7 @@ The LDAP storage can be configured in two different ways:
 
 ### Synchronized mode
 
-In synchronized mode, user data is read from LDAP  during login and a synchronized copy is created/updated on the internal database.
+In _synchronized mode_, user data (users, groups, roles) is read from LDAP on every login and copied on the internal database.
 
 Any other operation, for example getting user permissions on maps, always uses the internal database.
 
