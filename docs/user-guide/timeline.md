@@ -7,7 +7,7 @@ It makes possible to observe the layers' evolution over time, to inspect the lay
 !!! Warning
     The Timeline tool currently works only with WMS layers from GeoServer where the [WMTS-Multidim extension](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) is installed (WMS time values in WMS Capabilities is not supported yet). To use the MapStore Timeline at least **GeoServer 2.14.5** is required, but the recommended version is **GeoServer 2.15.2** to have a complete support for all of the features the Timeline tool can provide (e.g. the filter by viewport).
     From now on, the layers that the Timeline can manage will be addressed as *time layers*.
-    From now on, the layers that the Timeline can manage will be addressed as *time layers*. WMS time values in WMS Capabilities is not supported yet.
+    From now on, the layers that the Timeline can manage will be addressed as *time layers*.
 
 
 When a layer with a time dimension is added to the map, the Timeline panel becomes automatically visible and it allows the user to browse the layer over time.
