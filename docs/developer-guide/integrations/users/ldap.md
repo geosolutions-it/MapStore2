@@ -1,6 +1,6 @@
 # LDAP integration with MapStore
 
-The purpose of this guide is to explain how to configure MapStore to use an LDAP repository to store user's credentials and groups assignment instead of the standard users database.
+The purpose of this guide is to explain how to configure MapStore to use an LDAP repository for authentication and accounting (users, roles and user-groups) instead of the standard database.
 
 ## Overview
 
