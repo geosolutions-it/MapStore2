@@ -13,6 +13,7 @@ import { SETUP_TUTORIAL, updateTutorial, initTutorial } from '../../actions/tuto
 import { geostoryLoaded, setEditing } from '../../actions/geostory';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { onLocationChanged } from 'connected-react-router';
+import { setApi, getApi } from '../../api/userPersistedStorage';
 
 describe('tutorial Epics', () => {
     const GEOSTORY_EDIT_STEPS = [{
@@ -433,6 +434,36 @@ describe('tutorial Epics', () => {
                     }
                 });
                 done();
+            }, {
+                tutorial: {
+                    presetList: {
+                        'geostory_edit_tutorial': GEOSTORY_EDIT_STEPS,
+                        'geostory_view_tutorial': GEOSTORY_VIEW_STEPS
+                    }
+                }
+            });
+        });
+        it('tests the correct tutorial setup when passing from edit to view, intercepting throw', (done) => {
+            const IS_GOING_TO_EDIT_MODE = true;
+            setApi("memoryStorage");
+            getApi("memoryStorage").setThrowable(true);
+            testEpic(switchGeostoryTutorialEpic, NUM_ACTIONS, [
+                setEditing(IS_GOING_TO_EDIT_MODE)
+            ], (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case SETUP_TUTORIAL:
+                        expect(action.steps).toEqual(GEOSTORY_EDIT_STEPS);
+                        expect(action.stop).toEqual(false);
+                        expect(action.id).toBe(GEOSTORY_TUTORIAL_ID);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+                setApi("localStorage");
             }, {
                 tutorial: {
                     presetList: {

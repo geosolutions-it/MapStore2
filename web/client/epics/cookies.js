@@ -12,6 +12,7 @@ import Rx from 'rxjs';
 import { SET_MORE_DETAILS_VISIBILITY, setCookieVisibility, setDetailsCookieHtml } from '../actions/cookie';
 import { CHANGE_LOCALE } from '../actions/locale';
 import axios from '../libs/ajax';
+import { getApi } from '../api/userPersistedStorage';
 
 /**
  * Show the cookie policy notification
@@ -26,7 +27,7 @@ export const cookiePolicyChecker = (action$) =>
         .take(1)
         .filter( () => {
             try {
-                return !localStorage.getItem("cookies-policy-approved");
+                return !getApi().getItem("cookies-policy-approved");
             } catch (e) {
                 console.error(e);
                 return false;
