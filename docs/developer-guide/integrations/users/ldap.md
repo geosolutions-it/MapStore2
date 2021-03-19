@@ -92,13 +92,13 @@ The default configuration enables the synchronized mode. To switch to direct con
 
 ```xml 
 <!-- enable direct connection mode -->
-<bean id="ldapUserDAO" ...>
-...
-</bean>
-
-<alias name="ldapUserGroupDAO" alias="userGroupDAO"/>
-<alias name="externalSecurityDAO" alias="SecurityDAO"/>
-<alias name="ldapUserDAO" alias="userDAO"/>
+<bean id="ldapUserDAO" [...]>
+        [...]
+    </bean>
+    <bean id="ldapUserGroupDAO" [...]>
+        [...]
+    </bean>
+    <!-- -->
 ```
 
 ## Testing LDAP support
