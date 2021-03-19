@@ -24,6 +24,7 @@ import { standardEpics, standardReducers, standardRootReducerFunc } from '../sto
 import ConfigUtils from '../utils/ConfigUtils';
 import { ensureIntl } from '../utils/LocaleUtils';
 import { renderFromLess } from '../utils/ThemeUtils';
+import { getApi } from '../api/userPersistedStorage';
 
 const defaultPlugins = {
     "mobile": localConfig.plugins.embedded,
@@ -52,12 +53,13 @@ function loadConfigFromStorage(name = 'mapstore.embedded') {
     if (name) {
         let loaded = false;
         try {
-            loaded = localStorage.getItem(name);
+            loaded = getApi().getItem(name);
+            if (loaded) {
+                return JSON.parse(loaded);
+            }
         } catch (e) {
             console.error(e);
-        }
-        if (loaded) {
-            return JSON.parse(loaded);
+            return null;
         }
     }
     return null;

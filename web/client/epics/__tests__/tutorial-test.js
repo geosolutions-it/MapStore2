@@ -382,7 +382,7 @@ describe('tutorial Epics', () => {
 
     describe("tests for switchGeostoryTutorialEpic", () => {
         beforeEach(() => {
-            localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
+            getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
         });
         const GEOSTORY_TUTORIAL_ID = "geostory";
         const ID_STORY = "1";
@@ -446,7 +446,7 @@ describe('tutorial Epics', () => {
         it('tests the correct tutorial setup when passing from edit to view, intercepting throw', (done) => {
             const IS_GOING_TO_EDIT_MODE = true;
             setApi("memoryStorage");
-            getApi("memoryStorage").setThrowable(true);
+            getApi("memoryStorage").setAccessDenied(true);
             testEpic(switchGeostoryTutorialEpic, NUM_ACTIONS, [
                 setEditing(IS_GOING_TO_EDIT_MODE)
             ], (actions) => {
@@ -463,6 +463,7 @@ describe('tutorial Epics', () => {
                     }
                 });
                 done();
+                getApi("memoryStorage").setAccessDenied(false);
                 setApi("localStorage");
             }, {
                 tutorial: {
@@ -503,7 +504,7 @@ describe('tutorial Epics', () => {
         });
         it('does not setup tutorial if it has been disabled (switchGeostoryTutorialEpic)', (done) => {
             const IS_GOING_TO_EDIT_MODE = false;
-            localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "true");
+            getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "true");
 
             testEpic(addTimeoutEpic(switchGeostoryTutorialEpic, 50), NUM_ACTIONS, [
                 geostoryLoaded(ID_STORY),
@@ -518,7 +519,7 @@ describe('tutorial Epics', () => {
                         expect(true).toBe(false);
                     }
                 });
-                localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
+                getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
                 done();
             }, {
                 tutorial: {

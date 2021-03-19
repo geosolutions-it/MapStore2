@@ -8,7 +8,8 @@
 
 
 import get from 'lodash/get';
-import { set, unset} from '../../utils/ImmutableUtils';
+import set from 'lodash/set';
+import unset from 'lodash/unset';
 
 let UserPersistedSession = {
     api: localStorage
@@ -17,27 +18,27 @@ let MemoryStorage = {};
 const ApiProviders = {
     localStorage: window.localStorage,
     memoryStorage: {
-        throwable: false,
+        accessDenied: false,
         getItem: (path) => {
-            if (ApiProviders.memoryStorage.throwable) {
-                throw Error("Cannot Access localStorage");
+            if (ApiProviders.memoryStorage.accessDenied) {
+                throw Error("Cannot Access memoryStorage");
             }
             return get(MemoryStorage, path);
         },
-        setItem: (path) => {
-            if (ApiProviders.memoryStorage.throwable) {
-                throw Error("Cannot Access localStorage");
+        setItem: (path, value) => {
+            if (ApiProviders.memoryStorage.accessDenied) {
+                throw Error("Cannot Access memoryStorage");
             }
-            return set(MemoryStorage, path);
+            set(MemoryStorage, path, value);
         },
         removeItem: (path) => {
-            if (ApiProviders.memoryStorage.throwable) {
-                throw Error("Cannot Access localStorage");
+            if (ApiProviders.memoryStorage.accessDenied) {
+                throw Error("Cannot Access memoryStorage");
             }
             return unset(MemoryStorage, path);
         },
-        setThrowable: (status) => {
-            ApiProviders.memoryStorage.throwable = status;
+        setAccessDenied: (status = false) => {
+            ApiProviders.memoryStorage.accessDenied = status;
         }
     }
 };

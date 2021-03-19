@@ -43,6 +43,7 @@ import Manager from '../../style/vector/Manager';
 import defaultConfig from './AnnotationsConfig';
 import FeaturesList from './FeaturesList';
 import GeometryEditor from './GeometryEditor';
+import { getApi } from '../../../api/userPersistedStorage';
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -868,7 +869,7 @@ class AnnotationsEditor extends React.Component {
     hideWarning = () => {
         if (this.props.showAgain) {
             try {
-                localStorage.setItem("showPopupWarning", false);
+                getApi().setItem("showPopupWarning", false);
             } catch (e) {
                 console.error(e);
             }

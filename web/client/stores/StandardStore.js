@@ -15,6 +15,7 @@ import { persistMiddleware, persistEpic } from '../utils/StateUtils';
 import localConfig from '../reducers/localConfig';
 import locale from '../reducers/locale';
 import browser from '../reducers/browser';
+import { getApi } from '../api/userPersistedStorage';
 
 const standardEpics = {};
 
@@ -63,7 +64,7 @@ const appStore = (
     if (storeOpts && storeOpts.persist) {
         storeOpts.persist.whitelist.forEach((fragment) => {
             try {
-                const fragmentState = localStorage.getItem('mapstore2.persist.' + fragment);
+                const fragmentState = getApi().getItem('mapstore2.persist.' + fragment);
                 if (fragmentState) {
                     defaultState[fragment] = JSON.parse(fragmentState);
                 }
@@ -92,7 +93,7 @@ const appStore = (
                 if (fragmentState && persisted[fragment] !== fragmentState) {
                     persisted[fragment] = fragmentState;
                     try {
-                        localStorage.setItem('mapstore2.persist.' + fragment, JSON.stringify(fragmentState));
+                        getApi.setItem('mapstore2.persist.' + fragment, JSON.stringify(fragmentState));
                     } catch (e) {
                         console.error(e);
                     }

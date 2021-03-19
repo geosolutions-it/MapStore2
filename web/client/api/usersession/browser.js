@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 import {Observable} from "rxjs";
+import { getApi } from '../userPersistedStorage';
 
 export const getSessionName = (name) => "mapstore.usersession." +
     (window.location.host + window.location.pathname).replace(/[^\w]/g, "_") + "." + name;
@@ -16,7 +17,7 @@ export const getSessionName = (name) => "mapstore.usersession." +
 export default {
     getSession: name => Observable.defer(() => {
         try {
-            const serialized = localStorage.getItem(getSessionName(name));
+            const serialized = getApi().getItem(getSessionName(name));
             const session = serialized && JSON.parse(serialized);
             const id = session && name;
             return Promise.resolve([id, session]);
@@ -27,14 +28,14 @@ export default {
     }),
     writeSession: (id, name, user, session) => Observable.defer(() => {
         try {
-            localStorage.setItem(getSessionName(id || name), JSON.stringify(session));
+            getApi().setItem(getSessionName(id || name), JSON.stringify(session));
         } catch (e) {
             console.error(e);
         }
         return Promise.resolve(id || name);
     }),
     removeSession: id => Observable.defer(() => {
-        localStorage.removeItem(getSessionName(id));
+        getApi().removeItem(getSessionName(id));
         return Promise.resolve(id);
     })
 };
