@@ -106,7 +106,7 @@ If you don't have an LDAP repository at hand, a very light solution for testing 
 
 You can easily customize the sample data tree, editing the java code.
 
-The sample MapStore LDAP configuration in the default ldap.properties file works seamlessly with acme-ldap.
+The sample MapStore LDAP configuration in the default `ldap.properties` file works seamlessly with acme-ldap.
 
 ## Advanced Configuration
 
