@@ -1414,6 +1414,7 @@
             "showPreview": "Mostra la preview",
             "advancedSettings": "Impostazioni avanzate",
             "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Questo catalogo non può essere aggiunto a quelli disponibili perché utilizza un protocollo http. Fornisci un URL di catalogo che utilizzi il protocollo https",
             "notification": {
                 "errorTitle": "Errore",
                 "errorSearchingRecords": "Alcuni record non sono stati trovati: {records} . Controlla la lista dei parametri nella barra degli indirizzi",
