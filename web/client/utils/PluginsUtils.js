@@ -446,7 +446,7 @@ export const getConfiguredPlugin = (pluginDef, loadedPlugins = {}, loaderCompone
             !pluginDef.plugin.loadPlugin && pluginDef.plugin;
         const id = isObject(pluginDef) ? pluginDef.id : null;
         const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
-        const Plugin = getPluginImplementation(impl, stateSelector);
+        const Plugin = getPluginImplementation(impl?.component || impl, stateSelector);
         const result = (props) => {
             return Plugin ? (<Plugin key={pluginDef.id}
                 {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg} items={pluginDef.items || []} />) : loaderComponent;

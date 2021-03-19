@@ -439,4 +439,33 @@ describe('PluginsUtils', () => {
         ReactDOM.render(<LoadedPlugin/>, document.getElementById('container'));
         expect(document.querySelector('.selector')).toBeTruthy();
     });
+
+    it('should not throw an error if the loaded plugin is an object with component key', () => {
+
+        function MockStyleEditor() {
+            return <div></div>;
+        }
+        const pluginDef = {
+            ToolbarComponent: () => null,
+            cfg: {},
+            items: [],
+            name: 'StyleEditor',
+            plugin: MockStyleEditor,
+            priority: 1,
+            target: 'style'
+        };
+
+        const loadedPlugins = {
+            StyleEditor: {
+                component: MockStyleEditor,
+                containers: {},
+                epics: {},
+                name: 'StyleEditor',
+                reducers: {}
+            }
+        };
+        const result = PluginsUtils.getConfiguredPlugin(pluginDef, loadedPlugins);
+        expect(result.loaded).toBe(true);
+
+    });
 });
