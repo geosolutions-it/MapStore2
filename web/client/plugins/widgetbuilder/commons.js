@@ -8,6 +8,7 @@
 
 import { isNil } from 'lodash';
 import { createSelector } from 'reselect';
+import { defaultCatalogServiceSelector } from '../../selectors/catalog';
 
 import { showConnectionsSelector, isDashboardEditing } from '../../selectors/dashboard';
 import { currentLocaleLanguageSelector } from '../../selectors/locale';
@@ -42,12 +43,14 @@ export const wizardSelector = createSelector(
     getEditorSettings,
     getFloatingWidgets,
     isDashboardEditing,
-    (layer, editorData, settings, widgets, dashBoardEditing) => ({
+    defaultCatalogServiceSelector,
+    (layer, editorData, settings, widgets, dashBoardEditing, services = {}) => ({
         layer: (editorData && editorData.layer) || layer,
         editorData,
         settings,
         widgets,
-        dashBoardEditing
+        dashBoardEditing,
+        catalogServices: Object.values(services).map((service) =>({...service, value: service, label: service.title}))
     })
 );
 export const dashboardSelector = createSelector(

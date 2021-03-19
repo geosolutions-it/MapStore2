@@ -13,6 +13,7 @@ import { projectionSelector } from './map';
 import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from "../utils/CatalogUtils";
 
 export const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
+export const defaultCatalogServiceSelector = (state) => get(state, "catalog.default.services");
 export const servicesSelector = (state) => get(state, "catalog.services");
 export const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, servicesSelector, (staticServices, services) => ({
     ...services,
