@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import {get, find} from 'lodash';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
@@ -13,10 +13,10 @@ import HTML from '../../I18N/HTML';
 import {getConfigProp} from '../../../utils/ConfigUtils';
 
 import InfoPopover from '../../widgets/widget/InfoPopover';
-import { FormControl as FC, Form, Col, FormGroup, ControlLabel } from "react-bootstrap";
+import { FormControl as FC, Form, Col, FormGroup, ControlLabel, Alert } from "react-bootstrap";
 
 import localizedProps from '../../misc/enhancers/localizedProps';
-import {defaultPlaceholder} from "./MainFormUtils";
+import {defaultPlaceholder, isHttps} from "./MainFormUtils";
 
 const FormControl = localizedProps('placeholder')(FC);
 
@@ -122,8 +122,18 @@ export default ({
     onChangeTitle,
     onChangeUrl,
     onChangeServiceProperty,
-    onChangeType
+    onChangeType,
+    setValid = () => {}
 }) => {
+    const [invalidProtocol, setInvalidProtocol] = useState(false);
+    function handleProtocolValidity(url) {
+        onChangeUrl(url);
+        if (url) {
+            const isInvalidProtocol = !isHttps(url);
+            setInvalidProtocol(isInvalidProtocol);
+            setValid(!isInvalidProtocol);
+        }
+    }
     const URLEditor = service.type === "tms" ? TmsURLEditor : DefaultURLEditor;
     return (
         <Form horizontal >
@@ -149,6 +159,11 @@ export default ({
                         onChange={(e) => onChangeTitle(e.target.value)} />
                 </Col>
             </FormGroup>
-            <URLEditor key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={onChangeUrl} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
+            <URLEditor key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={handleProtocolValidity} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
+
+            {invalidProtocol ? <Alert bsStyle="danger">
+                <Message msgId="catalog.invalidUrlHttpProtocol" />
+            </Alert> : null}
+
         </Form>);
 };
