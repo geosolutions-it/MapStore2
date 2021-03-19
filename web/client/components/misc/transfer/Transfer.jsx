@@ -110,7 +110,7 @@ const renderColumn = (
 *  - *emptyStateSearchProps*: empty state props when filter text is present
 *  - *onFilter*: callback that is called when filter text changes
  * @prop {object} rightColumn object that describes a transfer column on the right. For object props see *leftColumn*
- * @prop {boolean} [localizeItems=false] if true, it localizes items "title" and "description" fields, and recursively for children. So title and description must be a msgId
+ * @prop {boolean} [localizeItems=false] if true, it localizes items "title" and "description" fields, recursively i
  * @prop {boolean} [allowCtrlMultiSelect=false] when true, allows multiple items selected when ctrl key is pressed
  * @prop {array} selectedItems array of selected items
  * @prop {string} selectedSide column that is currently selected. Can be 'left' or 'right'
@@ -123,7 +123,7 @@ const renderColumn = (
  * @returns {object} react element
  */
 const Transfer = ({
-    localizeItems=false,
+    localizeItems = false,
     leftColumn = {},
     rightColumn = {},
     allowCtrlMultiSelect = false,
