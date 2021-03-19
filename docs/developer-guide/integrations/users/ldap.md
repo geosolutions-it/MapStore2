@@ -6,7 +6,7 @@ The purpose of this guide is to explain how to configure MapStore to use an LDAP
 
 By default the MapStore backend users service (also known as [GeoStore](https://github.com/geosolutions-it/geostore)), uses a relational database to store and fetch users details, implement authentication and assign resource access rights to users and groups (for maps, dashboards, etc.).
 
-It is also possible to use a different storage for the same purpose, in particular an LDAP repository is one of the supported options.
+If you already have your users on an LDAP repository you can anyway configure MapStore to connect to your service and use it to authenticate users and associate user groups and roles, instead of using the default database. In this case the relational database will store only resources and accessory data (permissions, attributes ...) referring the users of your service.
 
 Notice that the LDAP storage is read-only. This means that the MapStore User/Groups management UI cannot be used to manage users and groups.
 This makes sense because an LDAP repository is considered an external source and should be managed externally.
