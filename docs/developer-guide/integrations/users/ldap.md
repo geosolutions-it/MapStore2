@@ -88,7 +88,7 @@ ldap.convertToUpperCase=true
 
 ### Enabling direct connection mode
 
-The default configuration enables the synchronized mode, to switch to direct connection mode, manually edit the final geostore-spring-security.xml to uncomment the related section at the end of the file:
+The default configuration enables the synchronized mode. To switch to direct connection mode you have to manually edit the final `geostore-spring-security.xml` to uncomment the related section at the end of the file:
 
 ```xml 
 <!-- enable direct connection mode -->
