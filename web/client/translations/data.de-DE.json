@@ -1414,6 +1414,7 @@
             "showPreview": "Vorschau zeigen",
             "advancedSettings": "Erweiterte Einstellungen",
             "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Dieser Katalog kann nicht zu den verfügbaren hinzugefügt werden, da er ein http-Protokoll verwendet. Bitte geben Sie eine Katalog-URL an, die das https-Protokoll verwendet.",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Einige Datensätze wurden nicht gefunden: {records} . Bitte überprüfen Sie die URL des Abfrageparameters",

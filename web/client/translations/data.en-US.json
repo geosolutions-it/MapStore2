@@ -1414,6 +1414,7 @@
             "showPreview": "Show preview",
             "advancedSettings": "Advanced settings",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Thìs catalog cannot be added to the available ones because it uses an http protocol. Please provide a catalog url that uses https protocol",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",
