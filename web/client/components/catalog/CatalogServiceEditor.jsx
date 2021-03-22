@@ -50,8 +50,8 @@ export default ({
     selectedService,
     isLocalizedLayerStylesEnabled,
     tileSizeOptions = [256],
-    layerOptions,
-    formatsLoading
+    formatsLoading,
+    layerOptions = {}
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout

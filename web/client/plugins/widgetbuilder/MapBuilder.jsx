@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import { branch, compose, renderComponent, withHandlers, withProps, withState } from 'recompose';
 
 import { onEditorChange } from '../../actions/widgets';
+import {changeSelectedService} from '../../actions/catalog';
+
 import BorderLayout from '../../components/layout/BorderLayout';
 import handleNodeSelection from '../../components/widgets/builder/wizard/map/enhancers/handleNodeSelection';
 import ToolbarComp from '../../components/widgets/builder/wizard/map/Toolbar';
@@ -32,7 +34,8 @@ const Toolbar = mapToolbar(ToolbarComp);
  */
 const chooseMapEnhancer = compose(
     connect(wizardSelector, {
-        onResetChange: onEditorChange
+        onResetChange: onEditorChange,
+        onChangeSelectedService: changeSelectedService
     }),
     // map selector
     branch(
@@ -91,7 +94,7 @@ export default mapBuilder(({
     toggleLayerSelector = () => {},
     editorData = {},
     editNode, setEditNode, closeNodeEditor, isLocalizedLayerStylesEnabled, env, selectedGroups = [], exitButton, selectedLayers = [], selectedNodes, onNodeSelect = () => {},
-    availableDependencies = [], toggleConnection = () => {}
+    availableDependencies = [], toggleConnection = () => {}, ...props
 } = {}) =>
     (<BorderLayout
         className = "map-selector"
@@ -114,5 +117,5 @@ export default mapBuilder(({
             onNodeSelect={onNodeSelect}
             isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
             env={env}
-            selectedNodes={selectedNodes}/> : null}
+            selectedNodes={selectedNodes} {...props} /> : null}
     </BorderLayout>));

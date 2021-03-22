@@ -17,6 +17,7 @@ import BorderLayout from '../../components/layout/BorderLayout';
 
 import BuilderHeader from './BuilderHeader';
 import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
+import {changeSelectedService} from '../../actions/catalog';
 
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import chartLayerSelector from './enhancers/chartLayerSelector';
@@ -76,7 +77,9 @@ const Toolbar = compose(
  * prompts a catalog view to allow layer selection
  */
 const chooseLayerEnhancer = compose(
-    connect(wizardSelector),
+    connect(wizardSelector, {
+        onChangeSelectedService: changeSelectedService
+    }),
     viewportBuilderConnectMask,
     branch(
         ({ layer } = {}) => !layer,

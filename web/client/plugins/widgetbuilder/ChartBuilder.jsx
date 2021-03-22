@@ -13,7 +13,7 @@ import { compose, renameProps, branch, renderComponent} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
 import {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} from '../../actions/widgets';
-
+import {changeSelectedService, changeCatalogMode} from '../../actions/catalog';
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import chartLayerSelector from './enhancers/chartLayerSelector';
 import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
@@ -25,6 +25,8 @@ import ChartWizard from '../../components/widgets/builder/wizard/ChartWizard';
 import LayerSelector from './LayerSelector';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/chart/Toolbar';
+import CatalogServiceEditor from '../../components/catalog/CatalogServiceEditor';
+import catalogServiceEditorEnhancer from './enhancers/connection/catalogEditorConnect';
 
 const Builder = connect(
     wizardSelector,
@@ -64,8 +66,15 @@ const ChartToolbar = compose(
  * prompts a catalog view to allow layer selection
  */
 const chooseLayerEnhancer = compose(
-    connect(wizardSelector),
+    connect(wizardSelector, {
+        onChangeSelectedService: changeSelectedService,
+        onChangeCatalogMode: changeCatalogMode
+    }),
     viewportBuilderConnectMask,
+    branch(
+        ({mode} = {}) => mode === 'edit',
+        renderComponent(catalogServiceEditorEnhancer(CatalogServiceEditor))
+    ),
     branch(
         ({layer} = {}) => !layer,
         renderComponent(chartLayerSelector(LayerSelector))

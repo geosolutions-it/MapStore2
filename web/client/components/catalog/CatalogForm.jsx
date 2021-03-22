@@ -13,13 +13,14 @@ import CatalogServiceSelector from './CatalogServiceSelector';
 import localizeProps from '../misc/enhancers/localizedProps';
 const SearchInput = localizeProps("placeholder")(FormControl);
 
-export default ({ onSearchTextChange = () => { }, onChangeSelectedService = () => {}, searchText, title = <Message msgId={"catalog.title"} />, services, isValidServiceSelected, showCatalogSelector, selectedService
-}) =>
+export default ({ onSearchTextChange = () => { }, onChangeSelectedService = () => {}, searchText, title = <Message msgId={"catalog.title"} />, services, isValidServiceSelected, showCatalogSelector,
+    selectedService,
+    onChangeCatalogMode}) =>
     ( <Grid className="catalog-form" fluid><Row><Col xs={12}>
         <h4 className="text-center">{title}</h4>
         {showCatalogSelector
             ? (<FormGroup>
-                <CatalogServiceSelector services={services} onChangeSelectedService={onChangeSelectedService}
+                <CatalogServiceSelector onChangeCatalogMode={onChangeCatalogMode} services={services} onChangeSelectedService={onChangeSelectedService}
                     selectedService={{...selectedService, label: selectedService.title, value: selectedService}}
                     isValidServiceSelected={isValidServiceSelected}/>
             </FormGroup>) : null}

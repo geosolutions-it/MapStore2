@@ -28,7 +28,7 @@ const Catalog = compose(
 /**
  * Builder page that allows layer's selection
  */
-export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer, catalog, catalogServices} = {}) =>
+export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer, catalog, catalogServices, onChangeSelectedService, selectedService} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -54,5 +54,5 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
                 text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
         </BuilderHeader>}
     >
-        <Catalog services={catalogServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
+        <Catalog selectedService={selectedService} onChangeSelectedService={onChangeSelectedService} services={catalogServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
     </BorderLayout>);

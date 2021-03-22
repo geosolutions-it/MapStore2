@@ -14,6 +14,7 @@ import { compose, renameProps, branch, renderComponent } from 'recompose';
 import BorderLayout from '../../components/layout/BorderLayout';
 
 import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
+import {changeSelectedService} from '../../actions/catalog';
 
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import counterLayerSelector from './enhancers/counterLayerSelector';
@@ -67,7 +68,9 @@ const Toolbar = compose(
  * prompts a catalog view to allow layer selection
  */
 const chooseLayerEnhancer = compose(
-    connect(wizardSelector),
+    connect(wizardSelector,  {
+        onChangeSelectedService: changeSelectedService
+    }),
     viewportBuilderConnectMask,
     branch(
         ({ layer } = {}) => !layer,

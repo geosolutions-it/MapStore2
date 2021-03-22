@@ -15,8 +15,8 @@ export default ({
     isValidServiceSelected,
     services,
     selectedService,
-    onChangeCatalogMode = () => {},
-    onChangeSelectedService = () => {}
+    onChangeSelectedService = () => {},
+    onChangeCatalogMode = () => {}
 }) => (<InputGroup>
     <Select
         clearValueText={"catalog.clearValueText"}
