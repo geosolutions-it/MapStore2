@@ -8,7 +8,7 @@ theme:
     tabs: true
   logo: 'img/mapstore2-logo.png'
   company_url: 'http://www.geo-solutions.it'
-  company_contacts: 'GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272'
+  company_contacts: 'GeoSolutions | info@geosolutionsgroup.com | US +1 (301) 337-7055 - Italy: +39 0584 962313'
   palette:
     primary: 'teal'
     accent: 'teal'
@@ -34,6 +34,7 @@ extra_css:
 repo_name: 'geosolutions-it/MapStore2'
 repo_url: 'https://github.com/geosolutions-it/MapStore2/'
 repo_issues: 'https://github.com/geosolutions-it/MapStore2/issues'
+repo_issues_doc: 'https://github.com/geosolutions-it/MapStore2/issues/new/choose'
 edit_uri: ''
 docs_dir: 'docs'
 markdown_extensions:
