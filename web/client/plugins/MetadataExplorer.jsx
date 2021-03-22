@@ -82,7 +82,7 @@ import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import {DEFAULT_FORMAT_WMS, getCatalogRecords} from '../utils/CatalogUtils';
 
-const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
+export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
 const metadataExplorerSelector = createStructuredSelector({
     searchOptions: searchOptionsSelector,

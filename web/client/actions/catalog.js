@@ -177,9 +177,10 @@ export function changeUrl(url) {
         url
     };
 }
-export function addService() {
+export function addService(service) {
     return {
-        type: ADD_SERVICE
+        type: ADD_SERVICE,
+        service
     };
 }
 export function addCatalogService(service) {

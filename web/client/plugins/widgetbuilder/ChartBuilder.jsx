@@ -25,7 +25,7 @@ import ChartWizard from '../../components/widgets/builder/wizard/ChartWizard';
 import LayerSelector from './LayerSelector';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/chart/Toolbar';
-import CatalogServiceEditor from '../../components/catalog/CatalogServiceEditor';
+import CatalogServiceEditor from './CatalogServiceEditor';
 import catalogServiceEditorEnhancer from './enhancers/connection/catalogEditorConnect';
 
 const Builder = connect(
@@ -73,7 +73,10 @@ const chooseLayerEnhancer = compose(
     viewportBuilderConnectMask,
     branch(
         ({mode} = {}) => mode === 'edit',
-        renderComponent(catalogServiceEditorEnhancer(CatalogServiceEditor))
+        renderComponent((props) => {
+            const CMP = catalogServiceEditorEnhancer(CatalogServiceEditor);
+            return <CMP {...props}/>;
+        })
     ),
     branch(
         ({layer} = {}) => !layer,

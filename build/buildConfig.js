@@ -272,7 +272,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         publicPath: "/" + publicPath,
         proxy: proxy || {
             '/rest': {
-                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                target: "http://localhost:8080/mapstore",
                 secure: false,
                 headers: {
                     host: "dev.mapstore.geo-solutions.it"
@@ -293,7 +293,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                 }
             },
             '/proxy': {
-                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                target: "http://localhost:8080/mapstore",
                 secure: false,
                 headers: {
                     host: "dev.mapstore.geo-solutions.it"
