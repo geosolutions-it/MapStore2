@@ -335,6 +335,7 @@ const configurePluginsStep = ({
     return (
         <div className="configure-plugins-step">
             <Transfer
+                localizeItems
                 leftColumn={{
                     items: availableItems,
                     title: 'contextCreator.configurePlugins.availablePlugins',
