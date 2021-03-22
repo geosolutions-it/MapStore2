@@ -12,9 +12,15 @@ import { setApi, getApi } from '..';
 
 describe('UserPersistedSession', () => {
     describe('MemoryStorage', () => {
-
-        setApi("memoryStorage");
-        let memoryApi = getApi();
+        let memoryApi;
+        beforeEach(() => {
+            setApi("memoryStorage");
+            memoryApi = getApi();
+        });
+        afterEach(() => {
+            setApi("localStorage");
+            memoryApi.setAccessDenied(false);
+        });
         it('tests setItem & getItem', () => {
             memoryApi.setItem("key", "value");
             memoryApi.setItem("key2", "value2");
@@ -34,11 +40,9 @@ describe('UserPersistedSession', () => {
                 expect(e).toBeTruthy();
                 const err = new Error("Cannot Access memoryStorage");
                 expect(e).toEqual(err);
-                memoryApi.setAccessDenied(false);
                 done();
             }
         });
-        setApi("localStorage");
     });
 
 });

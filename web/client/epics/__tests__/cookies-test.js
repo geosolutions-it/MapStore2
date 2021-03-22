@@ -27,13 +27,13 @@ describe('Cookies epics', () => {
     });
     it('test cookiePolicyChecker and trigger error for accessing localStorage', done => {
         setApi("memoryStorage");
-        getApi("memoryStorage").setAccessDenied(true);
+        getApi().setAccessDenied(true);
         const NUM_ACTIONS = 1;
         testEpic(addTimeoutEpic(cookiePolicyChecker, 40), NUM_ACTIONS, {type: LOCATION_CHANGE}, (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             const [action] = actions;
             expect(action.type).toBe(TEST_TIMEOUT);
-            getApi("memoryStorage").setAccessDenied(false);
+            getApi().setAccessDenied(false);
             setApi("localStorage");
             done();
         }, {});

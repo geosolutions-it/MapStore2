@@ -446,7 +446,7 @@ describe('tutorial Epics', () => {
         it('tests the correct tutorial setup when passing from edit to view, intercepting throw', (done) => {
             const IS_GOING_TO_EDIT_MODE = true;
             setApi("memoryStorage");
-            getApi("memoryStorage").setAccessDenied(true);
+            getApi().setAccessDenied(true);
             testEpic(switchGeostoryTutorialEpic, NUM_ACTIONS, [
                 setEditing(IS_GOING_TO_EDIT_MODE)
             ], (actions) => {
@@ -463,7 +463,7 @@ describe('tutorial Epics', () => {
                     }
                 });
                 done();
-                getApi("memoryStorage").setAccessDenied(false);
+                getApi().setAccessDenied(false);
                 setApi("localStorage");
             }, {
                 tutorial: {
