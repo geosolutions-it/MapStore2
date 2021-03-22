@@ -29,6 +29,7 @@ const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.re
     || path.match(/\/(\w+)\//) && path.replace(/\/(\w+)\//, "$1");
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { isEmpty, isArray, isObject } from 'lodash';
+import { getApi } from '../api/userPersistedStorage';
 
 /**
  * Closes the tutorial if 3D button has been toggled
@@ -103,7 +104,12 @@ export const switchGeostoryTutorialEpic = (action$, store) =>
             const presetList = state.tutorial && state.tutorial.presetList || {};
             const geostoryMode = `_${mode}`;
             const steps = !isEmpty(presetList) ? presetList[id + geostoryMode + '_tutorial'] : null;
-            const isGeostoryTutorialDisabled = localStorage.getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
+            let isGeostoryTutorialDisabled = false;
+            try {
+                isGeostoryTutorialDisabled = getApi().getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
+            } catch (e) {
+                console.error(e);
+            }
             // if no steps are found then do nothing
             return steps ? Rx.Observable.from(
                 [
