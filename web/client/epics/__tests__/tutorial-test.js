@@ -13,6 +13,7 @@ import { SETUP_TUTORIAL, updateTutorial, initTutorial } from '../../actions/tuto
 import { geostoryLoaded, setEditing } from '../../actions/geostory';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { onLocationChanged } from 'connected-react-router';
+import { setApi, getApi } from '../../api/userPersistedStorage';
 
 describe('tutorial Epics', () => {
     const GEOSTORY_EDIT_STEPS = [{
@@ -381,7 +382,7 @@ describe('tutorial Epics', () => {
 
     describe("tests for switchGeostoryTutorialEpic", () => {
         beforeEach(() => {
-            localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
+            getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
         });
         const GEOSTORY_TUTORIAL_ID = "geostory";
         const ID_STORY = "1";
@@ -442,6 +443,37 @@ describe('tutorial Epics', () => {
                 }
             });
         });
+        it('tests the correct tutorial setup when passing from edit to view, intercepting throw', (done) => {
+            const IS_GOING_TO_EDIT_MODE = true;
+            setApi("memoryStorage");
+            getApi().setAccessDenied(true);
+            testEpic(switchGeostoryTutorialEpic, NUM_ACTIONS, [
+                setEditing(IS_GOING_TO_EDIT_MODE)
+            ], (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case SETUP_TUTORIAL:
+                        expect(action.steps).toEqual(GEOSTORY_EDIT_STEPS);
+                        expect(action.stop).toEqual(false);
+                        expect(action.id).toBe(GEOSTORY_TUTORIAL_ID);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+                getApi().setAccessDenied(false);
+                setApi("localStorage");
+            }, {
+                tutorial: {
+                    presetList: {
+                        'geostory_edit_tutorial': GEOSTORY_EDIT_STEPS,
+                        'geostory_view_tutorial': GEOSTORY_VIEW_STEPS
+                    }
+                }
+            });
+        });
         it('tests when steps are not correctly configured, back off to default (switchGeostoryTutorialEpic)', (done) => {
             const IS_GOING_TO_EDIT_MODE = false;
 
@@ -472,7 +504,7 @@ describe('tutorial Epics', () => {
         });
         it('does not setup tutorial if it has been disabled (switchGeostoryTutorialEpic)', (done) => {
             const IS_GOING_TO_EDIT_MODE = false;
-            localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "true");
+            getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "true");
 
             testEpic(addTimeoutEpic(switchGeostoryTutorialEpic, 50), NUM_ACTIONS, [
                 geostoryLoaded(ID_STORY),
@@ -487,7 +519,7 @@ describe('tutorial Epics', () => {
                         expect(true).toBe(false);
                     }
                 });
-                localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
+                getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
                 done();
             }, {
                 tutorial: {
