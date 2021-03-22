@@ -11,7 +11,6 @@ import ReactDOM from 'react-dom';
 
 import MapTemplates from '../MapTemplates';
 import { getPluginForTest } from './pluginsTestUtils';
-
 describe('MapTemplates Plugins', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -27,15 +26,16 @@ describe('MapTemplates Plugins', () => {
             controls: {
                 mapTemplates: {
                     enabled: true
+                },
+                maptemplates: {
+                    mapTemplatesLoaded: false
                 }
             }
         });
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
-        expect(document.getElementsByClassName('ms-side-panel')[0]).toExist();
-        expect(document.getElementsByClassName('map-templates-loader')[0]).toExist();
-        expect(document.getElementsByClassName('map-templates-panel')[0]).toNotExist();
+        expect(document.getElementsByClassName('map-templates-panel')[0]).toExist();
     });
-    it('shows MapTemplates loaded', () => {
+    it('shows MapTemplates loaded, empty', () => {
         const { Plugin } = getPluginForTest(MapTemplates, {
             controls: {
                 mapTemplates: {
@@ -46,37 +46,16 @@ describe('MapTemplates Plugins', () => {
                 mapTemplatesLoaded: true
             }
         });
-        ReactDOM.render(<Plugin/>, document.getElementById("container"));
+        ReactDOM.render(<Plugin templates={[{id: 1}]}/>, document.getElementById("container"));
+        const sideCards = document.getElementsByClassName('mapstore-side-card');
+        expect(sideCards.length).toBe(0);
         expect(document.getElementsByClassName('ms-side-panel')[0]).toExist();
         expect(document.getElementsByClassName('map-templates-loader')[0]).toNotExist();
         expect(document.getElementsByClassName('map-templates-panel')[0]).toExist();
     });
-    it('MapTemplatesPanel with template with format', () => {
+    it('MapTemplatesPanel with favourite template', () => {
         const template = {
             id: 1,
-            format: 'wmc'
-        };
-        const { Plugin } = getPluginForTest(MapTemplates, {
-            controls: {
-                mapTemplates: {
-                    enabled: true
-                }
-            },
-            maptemplates: {
-                mapTemplatesLoaded: true,
-                templates: [template]
-            }
-        });
-        ReactDOM.render(<Plugin/>, document.getElementById("container"));
-        const sideCards = document.getElementsByClassName('mapstore-side-card');
-        expect(sideCards.length).toBe(1);
-        const formatIcon = document.getElementsByClassName('glyphicon-ext-wmc')[0];
-        expect(formatIcon).toExist();
-    });
-    it('MapTemplatesPanel with favourite template with format', () => {
-        const template = {
-            id: 1,
-            format: 'wmc',
             favourite: true,
             name: 'Map Template',
             description: 'This is a map template.'
@@ -92,13 +71,10 @@ describe('MapTemplates Plugins', () => {
                 templates: [template]
             }
         });
-        ReactDOM.render(<Plugin/>, document.getElementById("container"));
+
+        ReactDOM.render(<Plugin allowedTemplates={[template]}/>, document.getElementById("container"));
         const sideCards = document.getElementsByClassName('mapstore-side-card');
         expect(sideCards.length).toBe(2);
-        const formatIcons = document.getElementsByClassName('glyphicon-ext-wmc');
-        expect(formatIcons.length).toBe(2);
-        const favouriteIcon = document.getElementsByClassName('glyphicon-star');
-        expect(favouriteIcon).toExist();
         const favouriteIconEmpty = document.getElementsByClassName('glyphicon-star-empty');
         expect(favouriteIconEmpty).toExist();
         const favouriteCard = document.querySelector('.mapstore-side-card.ms-sm');
