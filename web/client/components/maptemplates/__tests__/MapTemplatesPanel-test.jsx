@@ -27,4 +27,16 @@ describe('MapTemplatesPanel component', () => {
         const container = document.getElementById('container');
         expect(container.getElementsByClassName('map-templates-panel')[0]).toExist();
     });
+    it('MapTemplatesPanel with template with format', () => {
+        const template = {
+            id: 1,
+            format: 'wmc'
+        };
+
+        ReactDOM.render(<MapTemplatesPanel templates={[template]}/>, document.getElementById("container"));
+        const sideCards = document.getElementsByClassName('mapstore-side-card');
+        expect(sideCards.length).toBe(1);
+        const formatIcon = document.getElementsByClassName('glyphicon-ext-wmc')[0];
+        expect(formatIcon).toExist();
+    });
 });
