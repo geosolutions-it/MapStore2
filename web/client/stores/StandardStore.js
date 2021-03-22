@@ -93,7 +93,7 @@ const appStore = (
                 if (fragmentState && persisted[fragment] !== fragmentState) {
                     persisted[fragment] = fragmentState;
                     try {
-                        getApi.setItem('mapstore2.persist.' + fragment, JSON.stringify(fragmentState));
+                        getApi().setItem('mapstore2.persist.' + fragment, JSON.stringify(fragmentState));
                     } catch (e) {
                         console.error(e);
                     }
