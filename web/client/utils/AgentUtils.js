@@ -314,7 +314,7 @@ export const onfontready = (fontNameNew, onReady, options = {}, rootNew, tryFini
             //   a font load after returning control to the browser
             // By assigning the result of setTimeout (a timeout ID) to the
             //   fontName, the DOM reference to the second iframe is broken,
-            //   further reducing the posibility of memory leaks
+            //   further reducing the possibility of memory leaks
             fontName = setTimeout(tryFinish);
         }
 
