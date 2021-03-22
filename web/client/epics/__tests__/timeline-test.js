@@ -16,7 +16,8 @@ import {
     setTimelineCurrentTime,
     updateRangeDataOnRangeChange,
     settingInitialOffsetValue,
-    syncTimelineGuideLayer
+    syncTimelineGuideLayer,
+    snapTimeGuideLayer
 } from '../timeline';
 
 import { changeMapView } from '../../actions/map';
@@ -151,7 +152,7 @@ describe('timeline Epics', () => {
             done();
         });
     });
-    describe('syncTimelineGuideLayer', () => {
+    describe('Timeline GuideLayer', () => {
         const doAssertion = (NUM_ACTIONS, actions, layerId) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map(action=>{
@@ -159,14 +160,12 @@ describe('timeline Epics', () => {
                 case SELECT_LAYER:
                     expect(action.layerId).toBe(layerId);
                     break;
-                case SET_CURRENT_TIME:
-                    break;
                 default:
                     expect(true).toBe(false);
                 }
             });
         };
-        const NUM_ACTIONS = 2;
+        const NUM_ACTIONS = 1;
         const STATE_TIMELINE = {
             timeline: { settings: {autoSelect: true}},
             layers: { flat: [
@@ -218,10 +217,22 @@ describe('timeline Epics', () => {
             }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
         });
         it('syncTimelineGuideLayer retain selection', done => {
-            testEpic(addTimeoutEpic(syncTimelineGuideLayer, 500), 1, [selectLayer('TEST_LAYER1'), removeNode('TEST_LAYER1', 'layers') ], ([action]) => {
+            testEpic(addTimeoutEpic(syncTimelineGuideLayer, 500), NUM_ACTIONS, [selectLayer('TEST_LAYER1'), removeNode('TEST_LAYER1', 'layers') ], ([action]) => {
                 expect(action.type).toBe(TEST_TIMEOUT); // Don't update selection when selected layer in timeline present
                 done();
             }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
+        });
+        it('snapTimeGuideLayer', done => {
+            testEpic(snapTimeGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER')], ([action]) => {
+                expect(action.type).toBe(SET_CURRENT_TIME);
+                done();
+            }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
+        });
+        it('snapTimeGuideLayer when autoselect disabled', done => {
+            testEpic(addTimeoutEpic(snapTimeGuideLayer, 500), NUM_ACTIONS, [selectLayer('TEST_LAYER')], ([action]) => {
+                expect(action.type).toBe(TEST_TIMEOUT); // Don't trigger a snap time when snap to guide layer settings is turned off
+                done();
+            }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: false}}});
         });
     });
     describe('updateRangeDataOnRangeChange', () => {
