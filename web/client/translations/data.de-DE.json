@@ -1324,7 +1324,8 @@
             "next": "Nächster",
             "skip": "springen",
             "finish": "Fertig",
-            "layerOf": "Ebene {count} von {total}:"
+            "layerOf": "Ebene {count} von {total}:",
+            "styleCustomizationDisabled":"Diese Ebene hat bereits einen Stil definiert und kann nicht angepasst werden."
         },
         "mapImport": {
                 "title": "Importieren",

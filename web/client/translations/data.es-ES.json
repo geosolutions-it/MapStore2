@@ -1323,7 +1323,8 @@
             "next": "Siguiente",
             "skip": "Saltar",
             "finish": "Terminar",
-            "layerOf": "Capa {count} de {total}:"
+            "layerOf": "Capa {count} de {total}:",
+            "styleCustomizationDisabled":"Esta capa ya tiene un estilo definido y no es posible personalizarlo."
         },
         "mapImport": {
             "title": "Importar",
