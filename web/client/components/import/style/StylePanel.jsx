@@ -73,7 +73,6 @@ class StylePanel extends React.Component {
 
     componentDidMount() {
         this.setState({initialLayers: [...this.props.layers]});
-        this.setState({currentActiveLayer: this.props.selected});
     }
 
     getGeometryType = (geometry) => {
