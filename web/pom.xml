@@ -572,7 +572,9 @@
     <profile>
         <id>db-security</id>
         <activation>
-            <activeByDefault>true</activeByDefault>
+            <property>
+                <name>!disable.db.security</name>
+            </property>
         </activation>
         <build>
             <plugins>
