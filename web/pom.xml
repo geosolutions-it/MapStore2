@@ -28,7 +28,7 @@
     <dependency>
       <groupId>it.geosolutions.geostore</groupId>
       <artifactId>geostore-webapp</artifactId>
-      <version>1.6-SNAPSHOT</version>
+      <version>1.7-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
@@ -367,6 +367,7 @@
                     <overlay>
                         <groupId>it.geosolutions.geostore</groupId>
                         <artifactId>geostore-webapp</artifactId>
+                        <excludes>WEB-INF/classes/geostore-spring-security.xml</excludes>
                     </overlay>
                     <overlay>
                         <groupId>proxy</groupId>
@@ -567,6 +568,64 @@
                 </plugin>
             </plugins>
         </build>
+    </profile>
+    <profile>
+        <id>db-security</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>com.coderplus.maven.plugins</groupId>
+                    <artifactId>copy-rename-maven-plugin</artifactId>
+                    <version>1.0</version>
+                    <executions>
+                        <execution>
+                            <id>copy-spring-security-db</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                            <goal>copy</goal>
+                            </goals>
+                            <configuration>
+                            <overWrite>true</overWrite>
+                            <sourceFile>src/config/db/geostore-spring-security-db.xml</sourceFile>
+                            <destinationFile>target/mapstore/WEB-INF/classes/geostore-spring-security.xml</destinationFile>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+       </build>
+    </profile>
+    <profile>
+        <id>ldap</id>
+        <activation>
+            <activeByDefault>false</activeByDefault>
+        </activation>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>com.coderplus.maven.plugins</groupId>
+                    <artifactId>copy-rename-maven-plugin</artifactId>
+                    <version>1.0</version>
+                    <executions>
+                        <execution>
+                            <id>copy-spring-security-ldap</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                            <goal>copy</goal>
+                            </goals>
+                            <configuration>
+                            <overWrite>true</overWrite>
+                            <sourceFile>src/config/ldap/geostore-spring-security-ldap.xml</sourceFile>
+                            <destinationFile>target/mapstore/WEB-INF/classes/geostore-spring-security.xml</destinationFile>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+       </build>
     </profile>
   </profiles>
     <repositories>
