@@ -1324,7 +1324,8 @@
             "next": "Suivant",
             "skip": "Passer",
             "finish": "Terminer",
-            "layerOf": "Couche {count} sur {total} :"
+            "layerOf": "Couche {count} sur {total} :",
+            "styleCustomizationDisabled":"Ce calque a déjà un style défini et il n'est pas possible de le personnaliser."
         },
         "mapImport": {
             "title": "Importer",
