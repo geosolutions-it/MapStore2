@@ -16,7 +16,8 @@ import {
     DASHBOARD_LOADED,
     DASHBOARD_SAVED,
     DASHBOARD_RESET,
-    SAVE_ERROR
+    SAVE_ERROR,
+    DASHBOARD_SET_SELECTED_SERVICE, DASHBOARD_UPDATE_SERVICES
 } from '../actions/dashboard';
 
 import { INSERT, UPDATE, DELETE } from '../actions/widgets';
@@ -53,6 +54,14 @@ function dashboard(state = {
     }
     case DASHBOARD_SAVED: {
         return set('saveErrors', undefined, state);
+    }
+
+    case DASHBOARD_SET_SELECTED_SERVICE: {
+        return set('selectedService', action.service, state);
+    }
+
+    case DASHBOARD_UPDATE_SERVICES: {
+        return set('services', action.services, state);
     }
     case DASHBOARD_LOADING: {
         // anyway sets loading to true

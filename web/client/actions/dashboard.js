@@ -20,7 +20,8 @@ export const DASHBOARD_RESET = "DASHBOARD:DASHBOARD_RESET";
 export const DASHBOARD_LOADED = "DASHBOARD:DASHBOARD_LOADED";
 export const DASHBOARD_LOADING = "DASHBOARD:DASHBOARD_LOADING";
 export const DASHBOARD_LOAD_ERROR = "DASHBOARD:DASHBOARD_LOAD_ERROR";
-
+export const DASHBOARD_UPDATE_SERVICES = "DASHBOARD:UPDATE_SERVICES";
+export const DASHBOARD_SET_SELECTED_SERVICE = "DASHBOARD:SET_SELECTED_SERVICE";
 
 export const setEditing = (editing) => ({type: SET_EDITING, editing });
 
@@ -45,3 +46,7 @@ export const dashboardLoading = (value, name = "loading") => ({
     value
 });
 export const dashboardLoadError = error => ({type: DASHBOARD_LOAD_ERROR, error});
+
+export const dashboardUpdateServices = services => ({ type: DASHBOARD_UPDATE_SERVICES, services});
+
+export const dashboardSetSelectedService = service => ({ type: DASHBOARD_SET_SELECTED_SERVICE, service });

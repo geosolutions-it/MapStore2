@@ -680,6 +680,32 @@
               "title": "GeoSolutions GeoServer CSW",
               "autoload": true
             },
+            "selectedService": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
+                "type": "csw",
+                "title": "GeoSolutions GeoServer CSW",
+                "autoload": true
+              },
+            "services": {
+              "gs_stable_csw": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
+                "type": "csw",
+                "title": "GeoSolutions GeoServer CSW",
+                "autoload": true
+              },
+              "gs_stable_wms": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                "type": "wms",
+                "title": "GeoSolutions GeoServer WMS",
+                "autoload": false
+              },
+              "gs_stable_wmts": {
+                "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+                "type": "wmts",
+                "title": "GeoSolutions GeoServer WMTS",
+                "autoload": false
+              }
+            },
             "containerPosition": "columns"
           }
         }, {

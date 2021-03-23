@@ -23,3 +23,5 @@ export const buttonCanEdit = createSelector(pathnameSelector, dashboardResource,
     (path, resource, isMobile) => isMobile ? !isMobile : (resource && resource.canEdit || isNaN(path.substr(-4))));
 export const originalDataSelector = state => state?.dashboard?.originalData;
 
+export const dashboardServicesSelector =  state => state?.dashboard.services;
+export const selectedDashboardServiceSelector = state => state?.dashboard.selectedService;

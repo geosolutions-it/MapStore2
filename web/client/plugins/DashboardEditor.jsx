@@ -130,7 +130,7 @@ class DashboardEditorComponent extends React.Component {
     }
     render() {
         return this.props.editing
-            ? <div className="dashboard-editor de-builder"><Builder enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
+            ? <div className="dashboard-editor de-builder"><Builder defaultSelectedService={this.props.pluginCfg.selectedService} defaultServices={this.props.pluginCfg.services} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
             : (<div className="ms-vertical-toolbar dashboard-editor de-toolbar" id={this.props.id}>
                 <EditorToolbar transitionProps={false} btnGroupProps={{ vertical: true }} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary' }} />
                 {this.props.loading ? <LoadingSpinner style={{ position: 'fixed', bottom: 0}} /> : null}

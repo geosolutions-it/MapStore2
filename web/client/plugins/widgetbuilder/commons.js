@@ -8,9 +8,9 @@
 
 import { isNil } from 'lodash';
 import { createSelector } from 'reselect';
-import { selectedServiceSelector, modeSelector, defaultCatalogServiceSelector } from '../../selectors/catalog';
+import { modeSelector } from '../../selectors/catalog';
 
-import { showConnectionsSelector, isDashboardEditing } from '../../selectors/dashboard';
+import { showConnectionsSelector, isDashboardEditing, dashboardServicesSelector, selectedDashboardServiceSelector  } from '../../selectors/dashboard';
 import { currentLocaleLanguageSelector } from '../../selectors/locale';
 import {
     isLocalizedLayerStylesEnabledDashboardsSelector,
@@ -43,18 +43,18 @@ export const wizardSelector = createSelector(
     getEditorSettings,
     getFloatingWidgets,
     isDashboardEditing,
-    defaultCatalogServiceSelector,
-    selectedServiceSelector,
     modeSelector,
-    (layer, editorData, settings, widgets, dashBoardEditing, services = {}, selectedService, mode) => ({
+    dashboardServicesSelector,
+    selectedDashboardServiceSelector,
+    (layer, editorData, settings, widgets, dashBoardEditing, mode, dashboardServices, dashboardSelectedService) => ({
         layer: (editorData && editorData.layer) || layer,
         editorData,
         settings,
         widgets,
         dashBoardEditing,
-        catalogServices: Object.values(services).map((service) =>({...service, value: service, label: service.title})),
-        selectedService,
-        mode
+        mode,
+        dashboardServices,
+        dashboardSelectedService
     })
 );
 export const dashboardSelector = createSelector(
