@@ -13,8 +13,7 @@ import { compose, renameProps, branch, renderComponent} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
 import {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} from '../../actions/widgets';
-import { changeCatalogMode } from '../../actions/catalog';
-import { dashboardSetSelectedService } from '../../actions/dashboard';
+import { dashboardSetSelectedService, setDashboardCatalogMode } from '../../actions/dashboard';
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import chartLayerSelector from './enhancers/chartLayerSelector';
 import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
@@ -69,7 +68,7 @@ const ChartToolbar = compose(
 const chooseLayerEnhancer = compose(
     connect(wizardSelector, {
         onChangeSelectedService: dashboardSetSelectedService,
-        onChangeCatalogMode: changeCatalogMode
+        onChangeCatalogMode: setDashboardCatalogMode
     }),
     viewportBuilderConnectMask,
     branch(

@@ -106,7 +106,6 @@ export default compose(
         }
         props.loadFirst({text: "", catalog: service});
     }),
-
 )(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector = true, error,
     onChangeSelectedService = () => {},
     selectedService, onChangeCatalogMode = () => {}}) => {

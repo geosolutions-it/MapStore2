@@ -22,6 +22,8 @@ export const DASHBOARD_LOADING = "DASHBOARD:DASHBOARD_LOADING";
 export const DASHBOARD_LOAD_ERROR = "DASHBOARD:DASHBOARD_LOAD_ERROR";
 export const DASHBOARD_UPDATE_SERVICES = "DASHBOARD:UPDATE_SERVICES";
 export const DASHBOARD_SET_SELECTED_SERVICE = "DASHBOARD:SET_SELECTED_SERVICE";
+export const DASHBOARD_ADD_NEW_SERVICE = "DASHBOARD:ADD_NEW_SERVICE";
+export const DASHBOARD_CATALOG_MODE = "DASHBOARD:CATALOG_MODE";
 
 export const setEditing = (editing) => ({type: SET_EDITING, editing });
 
@@ -50,3 +52,7 @@ export const dashboardLoadError = error => ({type: DASHBOARD_LOAD_ERROR, error})
 export const dashboardUpdateServices = services => ({ type: DASHBOARD_UPDATE_SERVICES, services});
 
 export const dashboardSetSelectedService = service => ({ type: DASHBOARD_SET_SELECTED_SERVICE, service });
+
+export const addNewDashboardService = (service, services) => ({ type: DASHBOARD_ADD_NEW_SERVICE, service, services});
+
+export const setDashboardCatalogMode = (mode, isNew) => ({ type: DASHBOARD_CATALOG_MODE, mode, isNew});

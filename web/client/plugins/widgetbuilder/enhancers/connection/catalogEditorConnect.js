@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { compose, defaultProps } from 'recompose';
 import { deleteService, changeCatalogMode } from '../../../../actions/catalog';
+import {addNewDashboardService, setDashboardCatalogMode} from '../../../../actions/dashboard';
 import { error } from '../../../../actions/notifications';
 
 import { savingSelector, newServiceSelector } from '../../../../selectors/catalog';
@@ -15,6 +16,7 @@ export default compose(
     }), {
         error: error,
         onDeleteService: deleteService,
-        onChangeCatalogMode: changeCatalogMode
+        onChangeCatalogMode: setDashboardCatalogMode,
+        onAddService: addNewDashboardService
     })
 );

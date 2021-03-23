@@ -39,7 +39,7 @@ import { isNil } from 'lodash';
 import assign from 'object-assign';
 import uuid from 'uuid';
 
-const emptyService = {
+export const emptyService = {
     url: "",
     type: "wms",
     title: "",
