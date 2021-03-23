@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {get} = require('lodash');
+const get = require('lodash/get');
 const {insert, feature, attribute} = require('./insert');
 const {transaction} = require('./transaction');
 const {deleteFeaturesByFilter, deleteFeature} = require('./delete');
