@@ -47,6 +47,7 @@ export default enhanceTOC(({
         layerElement={<DefaultLayer
             selectedNodes={selectedNodes}
             onSelect={onSelect}
+            titleTooltip
             propertiesChangeHandler={(layer, changes) => Object.keys(changes).map(k => changeLayerProperty(layer, k, changes[k]))}
             onUpdateNode={(layer, _, changes) => Object.keys(changes).map(k => changeLayerProperty(layer, k, changes[k]))}
             onToggle={(id, expanded) => changeLayerProperty(id, "expanded", !expanded)} />} />
