@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {find} = require('lodash');
+const find = require('lodash/find');
 const assign = require('object-assign');
 let Editors = assign({}, require('../../components/data/featuregrid/editors/customEditors'));
 

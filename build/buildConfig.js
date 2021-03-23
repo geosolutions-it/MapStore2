@@ -7,7 +7,7 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const castArray = require('lodash').castArray;
+const castArray = require('lodash/castArray');
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
