@@ -1075,7 +1075,8 @@
                 "operation": "Operation",
                 "placeholder": "Select layer",
                 "errors": {
-                    "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer"
+                    "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer",
+                    "layersExcluded": "Only layers coming from the same source can be selected as target layer for this layer filter"
                 }
             },
             "changedFilter": "Filter Changed",
@@ -1322,7 +1323,8 @@
             "next": "Next",
             "skip": "Skip",
             "finish": "Finish",
-            "layerOf": "Layer {count} of {total}:"
+            "layerOf": "Layer {count} of {total}:",
+            "styleCustomizationDisabled": "This layer has already a style defined and is not possible to customize it."
         },
         "mapImport": {
             "title": "Import",
@@ -1413,6 +1415,7 @@
             "showPreview": "Show preview",
             "advancedSettings": "Advanced settings",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Thìs catalog cannot be added to the available ones because it uses an http protocol. Please provide a catalog url that uses https protocol",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",

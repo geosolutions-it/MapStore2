@@ -1075,7 +1075,8 @@
                 "operation": "Opération",
                 "placeholder": "Sélectionner une couche",
                 "errors": {
-                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné"
+                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné",
+                    "layersExcluded": "Seuls les calques provenant de la même source peuvent être sélectionnés comme calque cible pour ce filtre de calque"
                 }
             },
             "changedFilter": "Filtre modifié",
@@ -1323,7 +1324,8 @@
             "next": "Suivant",
             "skip": "Passer",
             "finish": "Terminer",
-            "layerOf": "Couche {count} sur {total} :"
+            "layerOf": "Couche {count} sur {total} :",
+            "styleCustomizationDisabled":"Ce calque a déjà un style défini et il n'est pas possible de le personnaliser."
         },
         "mapImport": {
             "title": "Importer",
@@ -1414,6 +1416,7 @@
             "showPreview": "Afficher l'aperçu",
             "advancedSettings": "Réglages avancés",
             "templateMetadataAvailable": "Métadonnées disponibles pour le format Dublin Core : abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Ce catalogue ne peut pas être ajouté à ceux disponibles car il utilise un protocole http. Veuillez fournir une URL de catalogue qui utilise le protocole https.",
             "notification": {
                 "errorTitle": "Erreur",
                 "errorSearchingRecords": "Certains enregistrements n'ont pas été trouvés: {records} . Veuillez vérifier l'URL de la requête et ses paramètres.",

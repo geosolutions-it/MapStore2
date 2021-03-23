@@ -41,8 +41,14 @@ export const timeDataSelector = state => layersSelector(state).reduce((timeDataM
  * Returns a list of layers with time data
  * @param {object} state application state
  */
-export const layersWithTimeDataSelector = state => layersSelector(state).filter(l => getLayerStaticDimension(l, "time"));
-
+export const layersWithTimeDataSelector = state => layersSelector(state).filter(l => {
+    const showHiddenLayers = get(state, 'timeline.settings.showHiddenLayers');
+    const layerStaticDimension = getLayerStaticDimension(l, "time");
+    if (!showHiddenLayers) {
+        return l.visibility && layerStaticDimension;
+    }
+    return layerStaticDimension;
+});
 export const currentTimeSelector = state => {
     const currentTime = get(state, 'dimension.currentTime');
     return currentTime && currentTime.split('/')[0];

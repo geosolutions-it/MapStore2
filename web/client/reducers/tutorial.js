@@ -33,6 +33,7 @@ const initialState = {
     id: '',
     presetList: {}
 };
+import { getApi } from '../api/userPersistedStorage';
 
 function tutorial(state = initialState, action) {
     switch (action.type) {
@@ -58,8 +59,12 @@ function tutorial(state = initialState, action) {
         setup.defaultStep = action.defaultStep ? action.defaultStep : assign({}, state.defaultStep);
         setup.disabled = false;
         setup.presetGroup = action.presetGroup;
-
-        const isActuallyDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled') === 'true';
+        let isActuallyDisabled = false;
+        try {
+            isActuallyDisabled = getApi().getItem('mapstore.plugin.tutorial.' + action.id + '.disabled') === 'true';
+        } catch (e) {
+            console.error(e);
+        }
 
         setup.steps = setup.steps.filter((step) => {
             return step?.selector?.substring(0, 1) === '#' || step?.selector?.substring(0, 1) === '.';
@@ -139,7 +144,11 @@ function tutorial(state = initialState, action) {
         const presetGroup = state.presetGroup || [state.id];
 
         presetGroup.forEach(curId => {
-            localStorage.setItem('mapstore.plugin.tutorial.' + curId + '.disabled', disabled);
+            try {
+                getApi().setItem('mapstore.plugin.tutorial.' + curId + '.disabled', disabled);
+            } catch (e) {
+                console.error(e);
+            }
         });
 
         return assign({}, state, {

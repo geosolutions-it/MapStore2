@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import { Plot } from './PlotlyChart';
+import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
+import LoadingView from '../misc/LoadingView';
 
+const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
     base: 190,
@@ -196,11 +197,13 @@ export default function WidgetChart({
 }) {
     const { data, layout, config } = toPlotly(props);
     return (
-        <Plot
-            onInitialized={onInitialized}
-            data={data}
-            layout={layout}
-            config={config}
-        />
+        <Suspense fallback={<LoadingView />}>
+            <Plot
+                onInitialized={onInitialized}
+                data={data}
+                layout={layout}
+                config={config}
+            />
+        </Suspense>
     );
 }

@@ -252,8 +252,38 @@ describe("test IdentifyContainer", () => {
             showCoordinateEditor={false}
         />, document.getElementById("container"));
         let glyphIcons = document.querySelectorAll('.glyphicon');
-        expect(glyphIcons.length).toBe(4);
+        expect(glyphIcons.length).toBe(5);
         expect(glyphIcons.forEach(glyph => glyph.className) !== 'zoom-to').toBeTruthy();
+    });
+
+    it('test call toggleHighlightFeature on Close', () => {
+        const requests = [{reqId: 1}, {reqId: 2}];
+        const callbacks = {
+            toggleHighlightFeature: () => {}
+        };
+        const toggleHighlightFeatureSpy = expect.spyOn(callbacks, 'toggleHighlightFeature');
+        const responses = [{layerMetadata: {title: "Layer 1"}}, {layerMetadata: {title: "Layer 2"}}];
+        const CMP = (<IdentifyContainer
+            enabled
+            index={0}
+            requests={requests}
+            responses={responses}
+            getFeatureButtons={getFeatureButtons}
+            point={{latlng: {lat: 1, lng: 1}}}
+            showCoordinateEditor={false}
+            toggleHighlightFeature={callbacks.toggleHighlightFeature}
+        />);
+        ReactDOM.render(CMP, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const closeIcon = container.querySelectorAll('.ms-close');
+        TestUtils.Simulate.click(closeIcon[0]);
+        TestUtils.act(() => {
+            ReactDOM.render(CMP, document.getElementById("container"));
+        });
+        expect(toggleHighlightFeatureSpy).toHaveBeenCalled();
+        // Test since when the highlight feature is disabled the zoom Icon is not shown
+        const zoomIcon = document.querySelector('.glyphicon-zoom-to');
+        expect(zoomIcon).toNotExist();
     });
 
 });

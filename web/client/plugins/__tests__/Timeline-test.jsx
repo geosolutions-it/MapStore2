@@ -41,7 +41,8 @@ const SAMPLE_STATE = {
             ],
             params: {
                 time: '2000-06-08T00:00:00.000Z'
-            }
+            },
+            visibility: true
         }]
     }
 };
@@ -66,8 +67,14 @@ describe('Timeline Plugin', () => {
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.timeline-plugin')).toBeFalsy();
         });
-        it('render with minimal state', () => {
+        it('render with minimal state with default config', () => {
             const { Plugin} = getPluginForTest(TimelinePlugin, SAMPLE_STATE);
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.querySelector('.timeline-plugin')).toBeTruthy();
+        });
+        it('render with minimal state with config', () => {
+            const _state = {...SAMPLE_STATE, timeline: {...SAMPLE_STATE.timeline, setting: {showHiddenLayers: true}}};
+            const { Plugin} = getPluginForTest(TimelinePlugin, _state);
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.timeline-plugin')).toBeTruthy();
         });

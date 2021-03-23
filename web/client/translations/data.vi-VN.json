@@ -1028,7 +1028,8 @@
             "crossLayerFilter": {
                 "clear": "Xóa bộ lọc",
                 "errors": {
-                    "noCrossLayerAvailable": "Lọc lớp chéo không khả dụng cho lớp đã chọn"
+                    "noCrossLayerAvailable": "Lọc lớp chéo không khả dụng cho lớp đã chọn",
+                    "layersExcluded": "Chỉ các lớp đến từ cùng một nguồn mới có thể được chọn làm lớp đích cho bộ lọc lớp này"
                 },
                 "operation": "Hoạt động",
                 "placeholder": "Chọn lớp",
