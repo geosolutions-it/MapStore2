@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { compose, defaultProps } from 'recompose';
-import { deleteService } from '../../../../actions/catalog';
-import {updateDashboardService, setDashboardCatalogMode} from '../../../../actions/dashboard';
+import {updateDashboardService, setDashboardCatalogMode, dashboardDeleteService} from '../../../../actions/dashboard';
 import { error } from '../../../../actions/notifications';
 
 import { savingSelector, newServiceSelector } from '../../../../selectors/catalog';
@@ -15,7 +14,7 @@ export default compose(
         service: newServiceSelector(state)
     }), {
         error: error,
-        onDeleteService: deleteService,
+        onDeleteService: dashboardDeleteService,
         onChangeCatalogMode: setDashboardCatalogMode,
         onAddService: updateDashboardService
     })

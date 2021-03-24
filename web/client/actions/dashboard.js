@@ -24,6 +24,7 @@ export const DASHBOARD_UPDATE_SERVICES = "DASHBOARD:UPDATE_SERVICES";
 export const DASHBOARD_SET_SELECTED_SERVICE = "DASHBOARD:SET_SELECTED_SERVICE";
 export const DASHBOARD_ADD_NEW_SERVICE = "DASHBOARD:ADD_NEW_SERVICE";
 export const DASHBOARD_CATALOG_MODE = "DASHBOARD:CATALOG_MODE";
+export const DASHBOARD_DELETE_SERVICE = "DASHBOARD:DELETE_SERVICE";
 
 export const setEditing = (editing) => ({type: SET_EDITING, editing });
 
@@ -56,3 +57,5 @@ export const dashboardSetSelectedService = service => ({ type: DASHBOARD_SET_SEL
 export const updateDashboardService = (service, services, isNew) => ({ type: DASHBOARD_ADD_NEW_SERVICE, service, services, isNew});
 
 export const setDashboardCatalogMode = (mode, isNew) => ({ type: DASHBOARD_CATALOG_MODE, mode, isNew});
+
+export const dashboardDeleteService = (service, services) => ({ type: DASHBOARD_DELETE_SERVICE, service, services});

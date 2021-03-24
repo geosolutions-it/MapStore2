@@ -51,7 +51,8 @@ export default ({
     isLocalizedLayerStylesEnabled,
     tileSizeOptions = [256],
     formatsLoading,
-    layerOptions = {}
+    layerOptions = {},
+    services
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout
@@ -96,7 +97,7 @@ export default ({
                         <Message msgId="save" />
                     </Button>
                     {service && !service.isNew
-                        ? <Button style={buttonStyle} onClick={() => onDeleteService()} key="catalog_delete_service_button">
+                        ? <Button style={buttonStyle} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
                             <Message msgId="catalog.delete" />
                         </Button>
                         : null

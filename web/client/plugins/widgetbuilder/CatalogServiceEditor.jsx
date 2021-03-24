@@ -24,6 +24,7 @@ export default ({service: defaultService, catalogServices,
 
     const serviceTypes = [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" },
         { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}];
+    const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
 
     const addNewService = () => {
         // TODO handle notifications in epic for success and error
@@ -35,7 +36,6 @@ export default ({service: defaultService, catalogServices,
         const newService = {
             ...service, title
         };
-        const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
         const newServices = {
             ...existingServices
         };
@@ -53,6 +53,7 @@ export default ({service: defaultService, catalogServices,
         onToggleThumbnail={() => setService({...service, hideThumbnail: !service.hideThumbnail})}
         serviceTypes={serviceTypes}
         onChangeMetadataTemplate={(metadataTemplate) => setService({...service, metadataTemplate})}
+        services={existingServices}
         {...props}
     />);
 };

@@ -21,7 +21,8 @@ import {
     DASHBOARD_SET_SELECTED_SERVICE,
     DASHBOARD_UPDATE_SERVICES,
     DASHBOARD_ADD_NEW_SERVICE,
-    DASHBOARD_CATALOG_MODE
+    DASHBOARD_CATALOG_MODE,
+    DASHBOARD_DELETE_SERVICE
 } from '../actions/dashboard';
 
 import { INSERT, UPDATE, DELETE } from '../actions/widgets';
@@ -106,6 +107,21 @@ function dashboard(state = {
             services,
             selectedService,
             mode: "view"
+        };
+    }
+
+    case DASHBOARD_DELETE_SERVICE: {
+        const services = action.services;
+        const deletedService = action.service || state.selectedService;
+        if (services[deletedService.title] || services[deletedService.old?.title]) {
+            delete services[deletedService.title] || services[deletedService.old?.title];
+        }
+        const selectedService = services[Object.keys(services)[0]];
+        return {
+            ...state,
+            services,
+            mode: "view",
+            selectedService
         };
     }
     case DASHBOARD_LOADING: {
