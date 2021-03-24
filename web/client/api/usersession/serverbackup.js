@@ -40,7 +40,7 @@ export default {
     }),
     writeSession: (id, name, user, session) => Observable.forkJoin(
         browser.writeSession(id?.local, name, user, session),
-        doEvery(userSessionBackupFrequencySelector(), () => server.writeSession(id?.remote, name, user, session), id?.remote),
+        doEvery(userSessionBackupFrequencySelector(), () => server.writeSession(id?.remote, name, user, session), id?.remote)
     ).switchMap(([localId, remoteId]) => Observable.of({
         local: localId,
         remote: remoteId

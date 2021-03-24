@@ -89,7 +89,7 @@ export const TableWidget = compose(
     dependenciesToOptions,
     dependenciesToFilter,
     wfsTable,
-    tableWidget,
+    tableWidget
 )(BaseTableWidget);
 
 /**

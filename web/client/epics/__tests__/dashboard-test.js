@@ -186,7 +186,7 @@ describe('openDashboardWidgetEditor epic', () => {
                 default:
                     done(new Error("Action not recognized"));
                 }
-            }, );
+            } );
             done();
         }, BASE_STATE);
     });
@@ -202,7 +202,7 @@ describe('openDashboardWidgetEditor epic', () => {
                 default:
                     done(new Error("Action not recognized"));
                 }
-            }, );
+            } );
             done();
         }, DISABLE_STATE);
     });
