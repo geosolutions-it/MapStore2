@@ -40,7 +40,7 @@ export default ({service: defaultService, catalogServices,
         };
         onAddService(newService, newServices, isNew);
     };
-    return (<div style={{padding: '2rem'}}>
+    return (<div style={{padding: '1rem'}}>
         <CatalogServiceEditorComponent
             onChangeUrl={(url) => setService({...service, url})}
             onChangeType={(type) => setService({...service, type})}
