@@ -40,19 +40,21 @@ export default ({service: defaultService, catalogServices,
         };
         onAddService(newService, newServices, isNew);
     };
-    return (<CatalogServiceEditorComponent
-        onChangeUrl={(url) => setService({...service, url})}
-        onChangeType={(type) => setService({...service, type})}
-        onChangeTitle={(title) => setService({...service, title})}
-        service={service}
-        onToggleAdvancedSettings={() => setService({...service, showAdvancedSettings: !service.showAdvancedSettings})}
-        onAddService={addNewService}
-        onChangeServiceProperty={(property) => setService({...service, [property]: !service[property]})}
-        onToggleTemplate={() => setService({...service, showTemplate: !service.showTemplate})}
-        onToggleThumbnail={() => setService({...service, hideThumbnail: !service.hideThumbnail})}
-        serviceTypes={serviceTypes}
-        onChangeMetadataTemplate={(metadataTemplate) => setService({...service, metadataTemplate})}
-        services={existingServices}
-        {...props}
-    />);
+    return (<div style={{padding: '2rem'}}>
+        <CatalogServiceEditorComponent
+            onChangeUrl={(url) => setService({...service, url})}
+            onChangeType={(type) => setService({...service, type})}
+            onChangeTitle={(title) => setService({...service, title})}
+            service={service}
+            onToggleAdvancedSettings={() => setService({...service, showAdvancedSettings: !service.showAdvancedSettings})}
+            onAddService={addNewService}
+            onChangeServiceProperty={(property) => setService({...service, [property]: service[property]})}
+            onToggleTemplate={() => setService({...service, showTemplate: !service.showTemplate})}
+            onToggleThumbnail={() => setService({...service, hideThumbnail: !service.hideThumbnail})}
+            serviceTypes={serviceTypes}
+            onChangeMetadataTemplate={(metadataTemplate) => setService({...service, metadataTemplate})}
+            services={existingServices}
+            {...props}
+        />
+    </div>);
 };
