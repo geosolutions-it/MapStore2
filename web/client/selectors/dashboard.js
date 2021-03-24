@@ -27,3 +27,4 @@ export const dashboardServicesSelector =  state => state && state.dashboard && s
 export const selectedDashboardServiceSelector = state => state && state.dashboard && state.dashboard.selectedService;
 export const dashboardCatalogModeSelector = state => state && state.dashboard && state.dashboard.mode || "view";
 export const dashboardIsNewServiceSelector = state => state.dashboard?.isNew || false;
+export const dashboardSaveServiceSelector =  state => state.dashboard?.saveServiceLoading || false;

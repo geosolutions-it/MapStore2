@@ -22,7 +22,8 @@ import {
     DASHBOARD_UPDATE_SERVICES,
     DASHBOARD_ADD_NEW_SERVICE,
     DASHBOARD_CATALOG_MODE,
-    DASHBOARD_DELETE_SERVICE
+    DASHBOARD_DELETE_SERVICE,
+    DASHBOARD_SAVE_SERVICE_LOADING
 } from '../actions/dashboard';
 
 import { INSERT, UPDATE, DELETE } from '../actions/widgets';
@@ -31,7 +32,8 @@ import { castArray } from 'lodash';
 
 function dashboard(state = {
     showConnections: true,
-    services: null
+    services: null,
+    saveServiceLoading: false
 }, action) {
     switch (action.type) {
     case SET_EDITOR_AVAILABLE: {
@@ -80,7 +82,15 @@ function dashboard(state = {
         return  {
             ...state,
             mode: action.mode,
-            isNew: action.isNew
+            isNew: action.isNew,
+            saveServiceLoading: false
+        };
+    }
+
+    case DASHBOARD_SAVE_SERVICE_LOADING: {
+        return {
+            ...state,
+            saveServiceLoading: action.loading
         };
     }
 

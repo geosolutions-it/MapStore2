@@ -27,7 +27,6 @@ export default ({service: defaultService, catalogServices,
     const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
 
     const addNewService = () => {
-        // TODO handle notifications in epic for success and error
         if (!service.title || !service.url) {
             error({ title: 'catalog.notification.errorTitle', message: 'catalog.notification.warningAddCatalogService'});
             return;
