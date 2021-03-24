@@ -40,12 +40,13 @@ export default ({service: defaultService, catalogServices,
         };
         onAddService(newService, newServices, isNew);
     };
-    return (<div style={{padding: '1rem'}}>
+    return (<div style={{padding: '1rem', height: '100vh'}}>
         <CatalogServiceEditorComponent
             onChangeUrl={(url) => setService({...service, url})}
             onChangeType={(type) => setService({...service, type})}
             onChangeTitle={(title) => setService({...service, title})}
             service={service}
+            onChangeServiceFormat={(format) => setService({...service, format})}
             onToggleAdvancedSettings={() => setService({...service, showAdvancedSettings: !service.showAdvancedSettings})}
             onAddService={addNewService}
             onChangeServiceProperty={(property) => setService({...service, [property]: service[property]})}

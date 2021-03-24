@@ -7,7 +7,6 @@
  */
 import React from 'react';
 import { FormGroup, Col, ControlLabel } from "react-bootstrap";
-import CommonAdvancedSettings from './CommonAdvancedSettings';
 import RS from 'react-select';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 const Select = localizedProps('noResultsText')(RS);
@@ -22,7 +21,22 @@ const getTileSizeSelectOptions = (opts) => {
 
 export default ({
     service,
-    formatOptions,
+    formatOptions =  [{
+        label: 'image/png',
+        value: 'image/png'
+    }, {
+        label: 'image/png8',
+        value: 'image/png8'
+    }, {
+        label: 'image/jpeg',
+        value: 'image/jpeg'
+    }, {
+        label: 'image/vnd.jpeg-png',
+        value: 'image/vnd.jpeg-png'
+    }, {
+        label: 'image/gif',
+        value: 'image/gif'
+    }],
     onChangeServiceFormat = () => { },
     onChangeServiceProperty = () => {},
     tileSizeOptions,
@@ -32,7 +46,7 @@ export default ({
     ...props
 }) => {
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
-    return (<CommonAdvancedSettings onChangeServiceProperty={onChangeServiceProperty} service={service} {...props}>
+    return (<div>
         <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
             <Col xs={6}>
                 <ControlLabel>Format</ControlLabel>
@@ -60,5 +74,5 @@ export default ({
                     onChange={event => onChangeServiceProperty("layerOptions", { tileSize: event && event.value })} />
             </Col >
         </FormGroup>
-    </CommonAdvancedSettings>);
+    </div>);
 };
