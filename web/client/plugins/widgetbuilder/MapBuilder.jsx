@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { branch, compose, renderComponent, withHandlers, withProps, withState } from 'recompose';
 
 import { onEditorChange } from '../../actions/widgets';
-import {changeSelectedService} from '../../actions/catalog';
+import { dashboardSetSelectedService, setDashboardCatalogMode } from '../../actions/dashboard';
 
 import BorderLayout from '../../components/layout/BorderLayout';
 import handleNodeSelection from '../../components/widgets/builder/wizard/map/enhancers/handleNodeSelection';
@@ -25,6 +25,8 @@ import manageLayers from './enhancers/manageLayers';
 import mapToolbar from './enhancers/mapToolbar';
 import MapLayerSelectorComp from './MapLayerSelector';
 import MapSelector from './MapSelector';
+import CatalogServiceEditor from './CatalogServiceEditor';
+import catalogServiceEditorEnhancer from './enhancers/connection/catalogEditorConnect';
 
 const Toolbar = mapToolbar(ToolbarComp);
 
@@ -35,8 +37,13 @@ const Toolbar = mapToolbar(ToolbarComp);
 const chooseMapEnhancer = compose(
     connect(wizardSelector, {
         onResetChange: onEditorChange,
-        onChangeSelectedService: changeSelectedService
+        onChangeSelectedService: dashboardSetSelectedService,
+        onChangeCatalogMode: setDashboardCatalogMode
     }),
+    branch(
+        ({mode} = {}) => mode === 'edit',
+        renderComponent(catalogServiceEditorEnhancer(CatalogServiceEditor))
+    ),
     // map selector
     branch(
         ({ editorData = {} } = {}) => !editorData.map,
