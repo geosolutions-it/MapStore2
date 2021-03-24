@@ -84,8 +84,23 @@ function dashboard(state = {
     }
 
     case DASHBOARD_ADD_NEW_SERVICE: {
-        const { services, service } = action;
-        const selectedService = service;
+        let { services, service, isNew } = action;
+        let selectedService = isNew ? service : state.selectedService;
+
+        // this check is when a service is being updated
+        if (!isNew && service.old) {
+            if (services[service.old.title]) {
+                delete services[service.old.title];
+            }
+            services[service.title] = service;
+            selectedService = service;
+        } else {
+            services = {
+                ...services,
+                [service.title]: service
+            };
+            selectedService = service;
+        }
         return  {
             ...state,
             services,

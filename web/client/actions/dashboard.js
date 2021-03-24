@@ -53,6 +53,6 @@ export const dashboardUpdateServices = services => ({ type: DASHBOARD_UPDATE_SER
 
 export const dashboardSetSelectedService = service => ({ type: DASHBOARD_SET_SELECTED_SERVICE, service });
 
-export const addNewDashboardService = (service, services) => ({ type: DASHBOARD_ADD_NEW_SERVICE, service, services});
+export const updateDashboardService = (service, services, isNew) => ({ type: DASHBOARD_ADD_NEW_SERVICE, service, services, isNew});
 
 export const setDashboardCatalogMode = (mode, isNew) => ({ type: DASHBOARD_CATALOG_MODE, mode, isNew});

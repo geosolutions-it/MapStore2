@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
+import {isEmpty} from 'lodash';
 import { InputGroup, Glyphicon } from 'react-bootstrap';
 import localizedProps from '../misc/enhancers/localizedProps';
 const Select = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(require('react-select').default);
 
 export default ({
-    isValidServiceSelected,
     services,
     selectedService,
     onChangeSelectedService = () => {},
@@ -26,7 +25,7 @@ export default ({
         value={selectedService}
         onChange={(val) => onChangeSelectedService(val && val.value ? val.value : "")}
         placeholder={"catalog.servicePlaceholder"} />
-    {isValidServiceSelected ? (<InputGroup.Addon className="btn"
+    {!isEmpty(selectedService) ? (<InputGroup.Addon className="btn"
         onClick={() => onChangeCatalogMode("edit", false)}>
         <Glyphicon glyph="pencil"/>
     </InputGroup.Addon>) : null}

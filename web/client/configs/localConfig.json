@@ -687,19 +687,19 @@
                 "autoload": true
               },
             "services": {
-              "gs_stable_csw": {
+              "GeoSolutions GeoServer CSW": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
                 "type": "csw",
                 "title": "GeoSolutions GeoServer CSW",
                 "autoload": true
               },
-              "gs_stable_wms": {
+              "GeoSolutions GeoServer WMS": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
                 "type": "wms",
                 "title": "GeoSolutions GeoServer WMS",
                 "autoload": false
               },
-              "gs_stable_wmts": {
+              "GeoSolutions GeoServer WMTS": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
                 "type": "wmts",
                 "title": "GeoSolutions GeoServer WMTS",

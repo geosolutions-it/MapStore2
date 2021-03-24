@@ -16,8 +16,11 @@ const emptyService = {
     metadataTemplate: "<p>${description}</p>"
 };
 export default ({service: defaultService, catalogServices,
-    error = () => {}, onAddService = () => {}, isNew, dashboardServices, defaultServices, ...props}) => {
-    const [service, setService] = useState(isNew ? emptyService : {});
+    error = () => {}, onAddService = () => {}, isNew, dashboardServices, defaultServices, defaultSelectedService,
+    dashboardSelectedService, ...props}) => {
+    const [service, setService] = useState(isNew ? emptyService :
+        isEmpty(dashboardSelectedService) ? {...defaultSelectedService, old: defaultSelectedService} :
+            {...dashboardSelectedService, old: dashboardSelectedService} );
 
     const serviceTypes = [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" },
         { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}];
@@ -28,15 +31,15 @@ export default ({service: defaultService, catalogServices,
             error({ title: 'catalog.notification.errorTitle', message: 'catalog.notification.warningAddCatalogService'});
             return;
         }
-        const title =  service.title + uuid();
+        const title = (!isNew && service.old?.title === service.title) ?  service.title :  service.title + uuid();
         const newService = {
             ...service, title
         };
         const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
         const newServices = {
-            ...existingServices, [newService.title]: {...newService, title}
+            ...existingServices
         };
-        onAddService(newService, newServices);
+        onAddService(newService, newServices, isNew);
     };
     return (<CatalogServiceEditorComponent
         onChangeUrl={(url) => setService({...service, url})}
