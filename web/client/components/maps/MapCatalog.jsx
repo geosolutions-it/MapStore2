@@ -44,10 +44,10 @@ export default ({
     return (<BorderLayout
         className="map-catalog"
         header={header || <MapCatalogForm title={title} searchText={searchText} onSearchTextChange={setSearchText} />}
-        footer={<div className="catalog-footer">
-            <span>{loading && items.length > 0 ? <LoadingSpinner /> : null}</span>
+        footer={<div style={{padding: '5px'}} className="catalog-footer">
+            <span style={{'float': 'right'}}>{loading && items.length > 0 ? <LoadingSpinner /> : <span style={{opacity: 0, display: 'inline-block'}} className="mapstore-inline-loader" />}</span>
             {!isNil(total) ?
-                <span className="res-info"><Message msgId="catalog.pageInfoInfinite"
+                <span style={{position: 'relative', top: '5px', left: '5px', bottom: '5px'}} className="res-info"><Message msgId="catalog.pageInfoInfinite"
                     msgParams={{ loaded: items.length - skip, total }} /></span> : null}
         </div>}>
         <SideGrid
