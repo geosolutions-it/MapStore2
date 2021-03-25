@@ -102,8 +102,7 @@ export const withEmptyMapVirtualScrollProperties = ({ loadPage: lp, scrollSpyOpt
  * To remove the the empty map you should use simply withVirtualScroll instead of `withEmptyVirtualScrollProperties` transformation and withProps enhancer
  */
 export const withEmptyMapVirtualScroll = compose(
-    withVirtualScrollEnhancer(withEmptyMapVirtualScrollProperties({ loadPage: loadPage, scrollSpyOptions: {...scrollSpyOptions,
-        querySelector: ".ms2-border-layout-body .ms2-border-layout-content"}, hasMore: ({ total, items = [] } = {}) => total > items.length })),
+    withVirtualScrollEnhancer(withEmptyMapVirtualScrollProperties({ loadPage: loadPage, scrollSpyOptions, hasMore: ({ total, items = [] } = {}) => total > items.length })),
     withProps(({ items }) => ({ skip: items && items[0] && items[0].id === "EMPTY_MAP" ? 1 : 0}))
 );
 
