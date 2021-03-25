@@ -98,6 +98,7 @@ function dashboard(state = {
         let { services, service, isNew } = action;
         let selectedService = isNew ? service : state.selectedService;
 
+        service.isNew = false;
         // this check is when a service is being updated
         if (!isNew && service.old && services[service.old.title]) {
             delete services[service.old.title];
