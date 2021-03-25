@@ -99,19 +99,12 @@ function dashboard(state = {
         let selectedService = isNew ? service : state.selectedService;
 
         // this check is when a service is being updated
-        if (!isNew && service.old) {
-            if (services[service.old.title]) {
-                delete services[service.old.title];
-            }
-            services[service.title] = service;
-            selectedService = service;
-        } else {
-            services = {
-                ...services,
-                [service.title]: service
-            };
-            selectedService = service;
+        if (!isNew && service.old && services[service.old.title]) {
+            delete services[service.old.title];
+
         }
+        services[service.title] = service;
+        selectedService = service;
         return  {
             ...state,
             services,
