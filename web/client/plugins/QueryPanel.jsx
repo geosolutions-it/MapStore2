@@ -173,7 +173,8 @@ const SmartQueryForm = connect((state) => {
             updateCrossLayerFilterField,
             removeCrossLayerFilterField,
             resetCrossLayerFilter
-        }, dispatch)
+        }, dispatch),
+        controlActions: bindActionCreators({onToggleQuery: toggleControl.bind(null, 'queryPanel', null)}, dispatch)
     };
 })(QueryBuilder);
 

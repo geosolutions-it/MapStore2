@@ -9,6 +9,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 
 import QueryBuilder from '../QueryBuilder';
 
@@ -197,6 +198,41 @@ describe('QueryBuilder', () => {
         document.getElementById("container"));
 
         expect(querybuilder).toExist();
+    });
+
+    it('shows the QueryPanelHeader component in error state', () => {
+
+        const querybuilder = ReactDOM.render(<QueryBuilder
+            featureTypeError={"true"}
+            featureTypeErrorText={"bla bla"}
+            featureTypeConfigUrl={"randomurl"} />,
+        document.getElementById("container"));
+
+        expect(querybuilder).toExist();
+        const closeButton = document.getElementById("toc-query-close-button");
+        expect(closeButton).toExist();
+    });
+
+    it('calls onToggleQuery in error state on click closeButton', () => {
+        const controlActions = {onToggleQuery: () => {}};
+        const spy =  expect.spyOn(controlActions, 'onToggleQuery');
+        let querybuilder;
+        TestUtils.act(() => {
+            querybuilder =  ReactDOM.render(<QueryBuilder
+                controlActions={controlActions}
+                featureTypeError={"true"}
+                featureTypeErrorText={"bla bla"}
+                featureTypeConfigUrl={"randomurl"} />,
+            document.getElementById("container"));
+
+        });
+
+        expect(querybuilder).toExist();
+        const closeButton = document.getElementById("toc-query-close-button");
+        TestUtils.act(() => {
+            TestUtils.Simulate.click(closeButton);
+        });
+        expect(spy).toHaveBeenCalled();
     });
 
     it('creates the QueryBuilder component with empty filter support', () => {
