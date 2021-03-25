@@ -30,6 +30,7 @@ import { getMessageById } from '../../utils/LocaleUtils';
 import Message from '../I18N/Message';
 import RecordGrid from './RecordGrid';
 import Loader from '../misc/Loader';
+import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from "../../utils/CatalogUtils";
 
 class Catalog extends React.Component {
     static propTypes = {
@@ -78,7 +79,9 @@ class Catalog extends React.Component {
         layers: PropTypes.array,
         clearModal: PropTypes.func,
         formatOptions: PropTypes.array,
-        layerBaseConfig: PropTypes.object
+        infoFormatOptions: PropTypes.array,
+        layerBaseConfig: PropTypes.object,
+        service: PropTypes.object
     };
 
     static contextTypes = {
@@ -112,24 +115,10 @@ class Catalog extends React.Component {
         services: {},
         wrapOptions: false,
         zoomToLayer: true,
-        formatOptions: [{
-            label: 'image/png',
-            value: 'image/png'
-        }, {
-            label: 'image/png8',
-            value: 'image/png8'
-        }, {
-            label: 'image/jpeg',
-            value: 'image/jpeg'
-        }, {
-            label: 'image/vnd.jpeg-png',
-            value: 'image/vnd.jpeg-png'
-        }, {
-            label: 'image/gif',
-            value: 'image/gif'
-        }],
+        formatOptions: DEFAULT_FORMAT_WMS,
         layerBaseConfig: {},
-        crs: "EPSG:3857"
+        crs: "EPSG:3857",
+        service: {}
     };
 
     state = {
@@ -279,7 +268,8 @@ class Catalog extends React.Component {
                 hideExpand={this.props.hideExpand}
                 onAddBackground={this.props.onAddBackground}
                 defaultFormat={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].format}
-                formatOptions={this.props.formatOptions}
+                formatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.formatOptions : DEFAULT_FORMAT_WMS}
+                infoFormatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.infoFormatOptions : getUniqueInfoFormats()}
                 layerBaseConfig={this.props.layerBaseConfig}
                 onAdd={() => {
                     this.search({ services: this.props.services, selectedService: this.props.selectedService });

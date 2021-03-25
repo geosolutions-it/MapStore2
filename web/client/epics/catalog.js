@@ -19,6 +19,7 @@ import {
     GET_METADATA_RECORD_BY_ID,
     TEXT_SEARCH,
     CATALOG_CLOSE,
+    FORMAT_OPTIONS_FETCH,
     addCatalogService,
     setLoading,
     deleteCatalogService,
@@ -29,7 +30,9 @@ import {
     changeCatalogMode,
     resetCatalog,
     textSearch,
-    changeSelectedService
+    changeSelectedService,
+    formatsLoading,
+    setSupportedFormats
 } from '../actions/catalog';
 import { showLayerMetadata, addLayer } from '../actions/layers';
 import { error, success } from '../actions/notifications';
@@ -46,7 +49,8 @@ import {
     servicesSelector,
     selectedCatalogSelector,
     searchOptionsSelector,
-    catalogSearchInfoSelector
+    catalogSearchInfoSelector,
+    getFormatUrlUsedSelector
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
@@ -58,11 +62,12 @@ import {
     extractEsriReferences,
     extractOGCServicesReferences,
     getCatalogRecords,
-    recordToLayer
+    recordToLayer,
+    getSupportedFormat
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import {getCapabilitiesUrl} from '../utils/LayersUtils';
-
+import { wrapStartStop } from '../observables/epics';
 
 /**
     * Epics for CATALOG
@@ -388,5 +393,33 @@ export default (API) => ({
                     resetCatalog()
                 ].concat(metadataSource === 'backgroundSelector' ?
                     [changeSelectedService(head(keys(services))), allowBackgroundsDeletion(true)] : [])));
+            }),
+
+    /**
+     * Fetch all supported formats of a WMS service configured (infoFormats and imageFormats)
+     * Dispatches an action that sets the supported formats of the service.
+     * @param {Observable} action$ the actions triggered
+     * @param {object} getState store object
+     * @memberof epics.catalog
+     * @return {external:Observable}
+     */
+    getSupportedFormatsEpic: (action$, {getState = ()=> {}} = {}) =>
+        action$.ofType(FORMAT_OPTIONS_FETCH)
+            .filter((action)=> getFormatUrlUsedSelector(getState()) !== action?.url)
+            .switchMap(({url = ''} = {})=> {
+                return Rx.Observable.defer(() => getSupportedFormat(url, true))
+                    .switchMap((supportedFormats) => Rx.Observable.of(setSupportedFormats(supportedFormats, url)))
+                    .let(
+                        wrapStartStop(
+                            formatsLoading(true),
+                            formatsLoading(false),
+                            () => {
+                                return Rx.Observable.of(
+                                    error({ title: "layerProperties.format.error.title", message: 'layerProperties.format.error.message' }),
+                                    formatsLoading(false),
+                                );
+                            }
+                        )
+                    );
             })
 });

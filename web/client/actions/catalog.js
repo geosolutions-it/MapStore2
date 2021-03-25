@@ -58,6 +58,9 @@ export const SET_LOADING = 'CATALOG:SET_LOADING';
 export const TOGGLE_TEMPLATE = 'CATALOG:TOGGLE_TEMPLATE';
 export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
+export const FORMAT_OPTIONS_FETCH = 'CATALOG:FORMAT_OPTIONS_FETCH';
+export const FORMAT_OPTIONS_LOADING = 'CATALOG:FORMAT_OPTIONS_LOADING';
+export const SET_FORMAT_OPTIONS = 'CATALOG:SET_FORMAT_OPTIONS';
 
 /**
  * Adds a list of layers from the given catalogs to the map
@@ -308,6 +311,9 @@ export const changeMetadataTemplate = (metadataTemplate) => ({type: CHANGE_METAD
 export const toggleAdvancedSettings = () => ({type: TOGGLE_ADVANCED_SETTINGS});
 export const toggleTemplate = () => ({type: TOGGLE_TEMPLATE});
 export const toggleThumbnail = () => ({type: TOGGLE_THUMBNAIL});
+export const formatOptionsFetch = (url) => ({type: FORMAT_OPTIONS_FETCH, url});
+export const formatsLoading = (loading) => ({type: FORMAT_OPTIONS_LOADING, loading});
+export const setSupportedFormats = (formats, url) => ({type: SET_FORMAT_OPTIONS, formats, url});
 
 import {error} from './notifications';
 

@@ -28,10 +28,15 @@ import {
     selectedServiceSelector,
     servicesSelector,
     serviceListOpenSelector,
-    tileSizeOptionsSelector
+    tileSizeOptionsSelector,
+    formatsLoadingSelector,
+    getSupportedFormatsSelector,
+    getSupportedGFIFormatsSelector,
+    getFormatUrlUsedSelector
 } from '../catalog';
 
 import { set } from '../../utils/ImmutableUtils';
+import {DEFAULT_FORMAT_WMS, getUniqueInfoFormats} from "../../utils/CatalogUtils";
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {
@@ -244,5 +249,59 @@ describe('Test catalog selectors', () => {
         expect(tileSizes.length).toBe(2);
         expect(tileSizes[0]).toBe(256);
         expect(tileSizes[1]).toBe(512);
+    });
+    it('test formatsLoadingSelector with default value', () => {
+        const formatLoading = formatsLoadingSelector(state);
+        expect(formatLoading).toBe(false);
+    });
+    it('test formatsLoadingSelector', () => {
+        const formatLoading = formatsLoadingSelector({catalog: {formatsLoading: true}});
+        expect(formatLoading).toBe(true);
+    });
+    it('test getSupportedFormatsSelector with default value', () => {
+        const defaultImageFormats = getSupportedFormatsSelector(state);
+        expect(defaultImageFormats).toEqual(DEFAULT_FORMAT_WMS);
+    });
+    it('test getSupportedFormatsSelector ', () => {
+        const defaultImageFormats = getSupportedFormatsSelector({
+            catalog: {
+                newService: {
+                    supportedFormats: {
+                        imageFormats: ["image/png"]
+                    }
+                }
+            }
+        });
+        expect(defaultImageFormats).toEqual(["image/png"]);
+    });
+    it('test getSupportedGFIFormatsSelector with default value', () => {
+        const defaultInfoFormats = getSupportedGFIFormatsSelector(state);
+        expect(defaultInfoFormats).toEqual(getUniqueInfoFormats());
+    });
+    it('test getSupportedGFIFormatsSelector ', () => {
+        const defaultInfoFormats = getSupportedGFIFormatsSelector({
+            catalog: {
+                newService: {
+                    supportedFormats: {
+                        infoFormats: ["text/html"]
+                    }
+                }
+            }
+        });
+        expect(defaultInfoFormats).toEqual(["text/html"]);
+    });
+    it('test getFormatUrlUsedSelector with default value', () => {
+        const urlUsed = getFormatUrlUsedSelector(state);
+        expect(urlUsed).toBe('');
+    });
+    it('test getFormatUrlUsedSelector ', () => {
+        const urlUsed = getFormatUrlUsedSelector({
+            catalog: {
+                newService: {
+                    formatUrlUsed: url
+                }
+            }
+        });
+        expect(urlUsed).toBe(url);
     });
 });
