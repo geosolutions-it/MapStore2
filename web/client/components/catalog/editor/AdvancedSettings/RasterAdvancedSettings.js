@@ -11,6 +11,7 @@ import RS from 'react-select';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 const Select = localizedProps('noResultsText')(RS);
 
+import CommonAdvancedSettings from './CommonAdvancedSettings';
 /**
  * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
  * @param {number[]} opts an array of tile sizes
@@ -39,19 +40,20 @@ export default ({
     }],
     onChangeServiceFormat = () => { },
     onChangeServiceProperty = () => {},
-    tileSizeOptions,
     currentWMSCatalogLayerSize,
     selectedService,
     onFormatOptionsFetch = () => {},
+    advancedRasterSettingsStyles = {},
+    tileSizeOptions,
     ...props
 }) => {
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
-    return (<div>
-        <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
+    return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
+        <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6}>
                 <ControlLabel>Format</ControlLabel>
             </Col >
-            <Col xs={6}>
+            <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
                     isLoading={props.formatsLoading}
                     onOpen={() => onFormatOptionsFetch(service.url)}
@@ -63,16 +65,16 @@ export default ({
                     onChange={event => onChangeServiceFormat(event && event.value)} />
             </Col >
         </FormGroup>
-        <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
-            <Col xs={6}>
+        <FormGroup style={advancedRasterSettingsStyles}>
+            <Col xs={6} >
                 <ControlLabel>WMS Layer tile size</ControlLabel>
             </Col >
-            <Col xs={6}>
+            <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
                     value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
                     options={tileSelectOptions}
                     onChange={event => onChangeServiceProperty("layerOptions", { tileSize: event && event.value })} />
             </Col >
         </FormGroup>
-    </div>);
+    </CommonAdvancedSettings>);
 };

@@ -130,7 +130,13 @@ const Catalog = compose(
             marginBottom: "10px",
             marginRight: "5px"
         },
-        formatOptions: DEFAULT_FORMAT_WMS
+        formatOptions: DEFAULT_FORMAT_WMS,
+        advancedRasterStyles: {
+            display: 'flex',
+            alignItems: 'center',
+            paddingTop: 15,
+            borderTop: '1px solid #ddd'
+        }
     }),
     branch(
         ({mode}) => mode === "edit",

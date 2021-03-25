@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
+
 import uuid from 'uuid';
 import CatalogServiceEditorComponent from '../../components/catalog/CatalogServiceEditor';
 import { DEFAULT_ALLOWED_PROVIDERS } from '../MetadataExplorer';
@@ -40,7 +41,8 @@ export default ({service: defaultService, catalogServices,
         };
         onAddService(newService, newServices, isNew);
     };
-    return (<div style={{padding: '1rem', height: '100vh'}}>
+
+    return (<div style={{padding: '1rem', height: '100%'}}>
         <CatalogServiceEditorComponent
             onChangeUrl={(url) => setService({...service, url})}
             onChangeType={(type) => setService({...service, type})}
@@ -49,7 +51,7 @@ export default ({service: defaultService, catalogServices,
             onChangeServiceFormat={(format) => setService({...service, format})}
             onToggleAdvancedSettings={() => setService({...service, showAdvancedSettings: !service.showAdvancedSettings})}
             onAddService={addNewService}
-            onChangeServiceProperty={(property) => setService({...service, [property]: service[property]})}
+            onChangeServiceProperty={(property, value) => setService({...service, [property]: value})}
             onToggleTemplate={() => setService({...service, showTemplate: !service.showTemplate})}
             onToggleThumbnail={() => setService({...service, hideThumbnail: !service.hideThumbnail})}
             serviceTypes={serviceTypes}
