@@ -32,14 +32,11 @@ export default ({service: defaultService, catalogServices,
             error({ title: 'catalog.notification.errorTitle', message: 'catalog.notification.warningAddCatalogService'});
             return;
         }
-        const title = (!isNew && service.old?.title === service.title) ?  service.title :  service.title + uuid();
+        const title = (!isNew && service.old?.title === service.title) ?  service.title : existingServices[service.title] ?  service.title + uuid() : service.title;
         const newService = {
             ...service, title
         };
-        const newServices = {
-            ...existingServices
-        };
-        onAddService(newService, newServices, isNew);
+        onAddService(newService, existingServices, isNew);
     };
 
     return (<div style={{padding: '1rem', height: '100%'}}>
