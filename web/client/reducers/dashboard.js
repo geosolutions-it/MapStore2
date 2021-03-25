@@ -104,6 +104,7 @@ function dashboard(state = {
             delete services[service.old.title];
 
         }
+        delete service.old;
         services[service.title] = service;
         selectedService = service;
         return  {

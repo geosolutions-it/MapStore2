@@ -16,6 +16,7 @@ const emptyService = {
     hideThumbnail: false,
     metadataTemplate: "<p>${description}</p>"
 };
+
 export default ({service: defaultService, catalogServices,
     error = () => {}, onAddService = () => {}, isNew, dashboardServices, defaultServices, defaultSelectedService,
     dashboardSelectedService, ...props}) => {
@@ -23,8 +24,7 @@ export default ({service: defaultService, catalogServices,
         isEmpty(dashboardSelectedService) ? {...defaultSelectedService, old: defaultSelectedService} :
             {...dashboardSelectedService, old: dashboardSelectedService} );
 
-    const serviceTypes = [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" },
-        { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}];
+
     const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
 
     const addNewService = () => {
@@ -51,7 +51,8 @@ export default ({service: defaultService, catalogServices,
             onChangeServiceProperty={(property, value) => setService({...service, [property]: value})}
             onToggleTemplate={() => setService({...service, showTemplate: !service.showTemplate})}
             onToggleThumbnail={() => setService({...service, hideThumbnail: !service.hideThumbnail})}
-            serviceTypes={serviceTypes}
+            serviceTypes={[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" },
+                { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}]}
             onChangeMetadataTemplate={(metadataTemplate) => setService({...service, metadataTemplate})}
             services={existingServices}
             {...props}
