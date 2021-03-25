@@ -6,7 +6,9 @@ import {dashboardSaveServiceSelector} from '../../../../selectors/dashboard';
 import { isLocalizedLayerStylesEnabledSelector } from '../../../../selectors/localizedLayerStyles';
 
 export default compose(
-    defaultProps({id: 'dashboard-catalog-selector', buttonStyle: [] }),
+    defaultProps({id: 'dashboard-catalog-selector', buttonStyle: {
+        marginBottom: "10px",
+        marginRight: "5px"}}),
     connect((state) => ({
         saving: dashboardSaveServiceSelector(state),
         isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector(state)

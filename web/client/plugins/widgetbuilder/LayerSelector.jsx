@@ -46,6 +46,6 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
     >
         <Catalog
             onChangeCatalogMode={onChangeCatalogMode}
-            selectedService={dashboardSelectedService || defaultSelectedService}
+            selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
             onChangeSelectedService={onChangeSelectedService} services={ dashboardServices || defaultServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
     </BorderLayout>);
