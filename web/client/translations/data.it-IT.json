@@ -71,7 +71,6 @@
             "styleCustom": "Usa stile con nome \"{value}\"",
             "styleListLoadError": "Si è verificato un errore durante il caricamento della lista degli stili",
             "stylesRefreshList": "Aggiorna lista degli stili",
-            "format": "Formato",
             "delete": "Elimina",
             "deleteLayer":"Elimina Livello",
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
@@ -146,6 +145,16 @@
             "enableLocalizedLayerStyles": {
                 "label": "Abilita stile localizzato",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
+            },
+            "format": {
+                "title": "Formato",
+                "refresh": "Recupera il formato supportato",
+                "loading": "Caricamento in corso...",
+                "noOption": "Nessuna opzione",
+                "error": {
+                    "title": "Errore",
+                    "message": "Impossibile recuperare il formato"
+                }
             }
         },
         "longitude": "Lon",
@@ -1429,6 +1438,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Abilita stili di livello localizzati",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
+            },
+            "format": {
+                "noOption": "Nessuna opzione",
+                "loading": "Caricamento in corso..."
             }
         },
         "uploader": {

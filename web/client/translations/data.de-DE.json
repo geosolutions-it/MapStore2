@@ -71,7 +71,6 @@
             "styleCustom": "Stil \"{value}\" nutzen",
             "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",
             "stylesRefreshList": "Aktualisiere die Liste von Stilen",
-            "format": "Format",
             "delete": "Löschen",
             "deleteLayer":"Ebene löschen",
             "deleteLayerMessage": "Möchten Sie diese Ebene wirklich löschen?",
@@ -146,6 +145,16 @@
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
+            },
+            "format": {
+                "title": "Format",
+                "refresh": "Unterstütztes Format abrufen",
+                "loading": "Wird geladen...",
+                "noOption": "Keine Option",
+                "error": {
+                    "title": "Error",
+                    "message": "Format konnte nicht abgerufen werden"
+                }
             }
         },
         "longitude": "Lon",
@@ -1429,6 +1438,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
+            },
+            "format": {
+                "noOption": "Keine Option",
+                "loading": "Wird geladen..."
             }
         },
         "uploader": {

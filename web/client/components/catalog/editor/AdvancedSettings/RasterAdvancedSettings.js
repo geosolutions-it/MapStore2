@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Select from "react-select";
 import { FormGroup, Col, ControlLabel } from "react-bootstrap";
 import CommonAdvancedSettings from './CommonAdvancedSettings';
+import RS from 'react-select';
+import localizedProps from '../../../misc/enhancers/localizedProps';
+const Select = localizedProps('noResultsText')(RS);
 
 /**
  * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
@@ -26,6 +28,7 @@ export default ({
     tileSizeOptions,
     currentWMSCatalogLayerSize,
     selectedService,
+    onFormatOptionsFetch = () => {},
     ...props
 }) => {
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
@@ -36,9 +39,13 @@ export default ({
             </Col >
             <Col xs={6}>
                 <Select
+                    isLoading={props.formatsLoading}
+                    onOpen={() => onFormatOptionsFetch(service.url)}
                     value={service && service.format}
                     clearable
-                    options={formatOptions}
+                    noResultsText={props.formatsLoading
+                        ? "catalog.format.loading" : "catalog.format.noOption"}
+                    options={props.formatsLoading ? [] : formatOptions}
                     onChange={event => onChangeServiceFormat(event && event.value)} />
             </Col >
         </FormGroup>
