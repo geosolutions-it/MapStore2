@@ -89,11 +89,11 @@ describe('Test the dashboard reducer', () => {
     });
 
     it('dashboard dashboardSetSelectedService', () => {
-        const selectedService = {name: "ws", url: "url"};
-        const action = dashboardSetSelectedService(selectedService);
+        const selectedService = {name: "ws", url: "url", title: 'test'};
+        const action = dashboardSetSelectedService(selectedService, {});
         const state = dashboard(undefined, action);
         expect(state).toExist();
-        expect(state.selectedService).toBe(selectedService);
+        expect(state.selectedService).toBe('test');
     });
 
     it('dashboard dashboardUpdateServices', () => {
@@ -129,13 +129,13 @@ describe('Test the dashboard reducer', () => {
         expect(state).toExist();
         expect(state.mode).toBe('view');
         expect(state.services).toBe(services);
-        expect(state.selectedService).toBe(services.test);
+        expect(state.selectedService).toBe(services.test.title);
 
 
     });
 
 
-    it('dashboard updateDashboardService isNew', () => {
+    it('dashboard updateDashboardService', () => {
         const services = {test: {title: 'test'}};
         const service = {title: 'deleted'};
         const action = updateDashboardService(service, services, true);
@@ -143,7 +143,7 @@ describe('Test the dashboard reducer', () => {
         expect(state).toExist();
         expect(state.mode).toBe('view');
         expect(state.services.deleted).toBe(service);
-        expect(state.selectedService).toBe(service);
+        expect(state.selectedService).toBe('deleted');
 
     });
 

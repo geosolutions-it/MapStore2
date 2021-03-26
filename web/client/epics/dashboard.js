@@ -20,10 +20,7 @@ import {
     dashboardSaveError,
     SAVE_DASHBOARD,
     LOAD_DASHBOARD,
-    dashboardLoadError,
-    updateDashboardService,
-    DASHBOARD_UPDATE_CATALOG_SERVICE,
-    setDashboardServiceSaveLoading
+    dashboardLoadError
 } from '../actions/dashboard';
 
 import { setControlProperty, TOGGLE_CONTROL } from '../actions/controls';
@@ -183,19 +180,6 @@ export const saveDashboard = action$ => action$
             )
     );
 
-export const saveDashboardCatalog = (action$,) => action$
-    .ofType(DASHBOARD_UPDATE_CATALOG_SERVICE)
-    .switchMap((action) =>  Rx.Observable.of(
-        updateDashboardService(action.service, action.services, action.isNew),
-        show({
-            title: "notification.success",
-            message: "catalog.notification.addCatalogService",
-            autoDismiss: 6,
-            position: "tc"
-        }),
-        setDashboardServiceSaveLoading(false)
-    )).startWith(setDashboardServiceSaveLoading(true));
-
 export default {
     openDashboardWidgetEditor,
     closeDashboardWidgetEditorOnFinish,
@@ -205,6 +189,5 @@ export default {
     filterAnonymousUsersForDashboard,
     loadDashboardStream,
     reloadDashboardOnLoginLogout,
-    saveDashboard,
-    saveDashboardCatalog
+    saveDashboard
 };

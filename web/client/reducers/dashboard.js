@@ -71,7 +71,11 @@ function dashboard(state = {
     }
 
     case DASHBOARD_SET_SELECTED_SERVICE: {
-        return set('selectedService', action.service, state);
+        return  {
+            ...state,
+            services: state.services || action.services,
+            selectedService: action.service?.title || ""
+        };
     }
 
     case DASHBOARD_UPDATE_SERVICES: {
@@ -106,7 +110,7 @@ function dashboard(state = {
         }
         delete service.old;
         services[service.title] = service;
-        selectedService = service;
+        selectedService = service.title;
         return  {
             ...state,
             services,
@@ -121,7 +125,7 @@ function dashboard(state = {
         if (services[deletedService.title] || services[deletedService.old?.title]) {
             delete services[deletedService.title] || services[deletedService.old?.title];
         }
-        const selectedService = services[Object.keys(services)[0]];
+        const selectedService = Object.keys(services)[0];
         return {
             ...state,
             services,

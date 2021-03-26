@@ -685,12 +685,7 @@
               "title": "GeoSolutions GeoServer CSW",
               "autoload": true
             },
-            "selectedService": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
-                "type": "csw",
-                "title": "GeoSolutions GeoServer CSW",
-                "autoload": true
-              },
+            "selectedService": "GeoSolutions GeoServer CSW",
             "services": {
               "GeoSolutions GeoServer CSW": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/csw",

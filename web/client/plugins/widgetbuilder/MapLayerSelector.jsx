@@ -58,8 +58,8 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
     >
         <Catalog
             onChangeCatalogMode={onChangeCatalogMode}
-            selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
-            onChangeSelectedService={onChangeSelectedService} services={ dashboardServices || defaultServices}
+            selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultServices[defaultSelectedService] : dashboardServices[dashboardSelectedService]}
+            onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices}
             catalog={catalog}
             selected={selected}
             onRecordSelected={r => setSelected(r)} />
