@@ -89,6 +89,8 @@ const EditorToolbar = compose(
  * @name DashboardEditor
  * @class
  * @memberof plugins
+* @prop {object} cfg.services Object with default catalog services to be loaded for the widget builder for Charts,Tables,Map
+ * @prop {object} cfg.selectedService default service from the list of cfg.services to be loaded
  */
 class DashboardEditorComponent extends React.Component {
     static propTypes = {
@@ -105,7 +107,9 @@ class DashboardEditorComponent extends React.Component {
         setEditing: PropTypes.func,
         dimMode: PropTypes.string,
         src: PropTypes.string,
-        style: PropTypes.object
+        style: PropTypes.object,
+        pluginCfg: PropTypes.object,
+        catalog: PropTypes.object
     };
     static defaultProps = {
         id: "dashboard-editor",
@@ -129,8 +133,11 @@ class DashboardEditorComponent extends React.Component {
         this.props.onUnmount();
     }
     render() {
+        const defaultSelectedService = this.props.pluginCfg.selectedService || this.props.catalog?.title || "";
+        const defaultServices = this.props.pluginCfg.services ? this.props.pluginCfg.services : this.props.catalog ? {[this.props.catalog?.title]: this.props.catalog} : {};
+
         return this.props.editing
-            ? <div className="dashboard-editor de-builder"><Builder defaultSelectedService={this.props.pluginCfg.selectedService} defaultServices={this.props.pluginCfg.services} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
+            ? <div className="dashboard-editor de-builder"><Builder defaultSelectedService={defaultSelectedService} defaultServices={defaultServices} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
             : (<div className="ms-vertical-toolbar dashboard-editor de-toolbar" id={this.props.id}>
                 <EditorToolbar transitionProps={false} btnGroupProps={{ vertical: true }} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary' }} />
                 {this.props.loading ? <LoadingSpinner style={{ position: 'fixed', bottom: 0}} /> : null}

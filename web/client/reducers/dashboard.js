@@ -125,7 +125,7 @@ function dashboard(state = {
         if (services[deletedService.title] || services[deletedService.old?.title]) {
             delete services[deletedService.title] || services[deletedService.old?.title];
         }
-        const selectedService = Object.keys(services)[0];
+        const selectedService = Object.keys(services)[0] || "";
         return {
             ...state,
             services,

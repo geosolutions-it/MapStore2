@@ -96,23 +96,25 @@ export default compose(
                 .debounceTime(500)
                 .startWith({searchText: "", catalog})
                 .distinctUntilKeyChanged('searchText')
-                .do(({searchText, catalog: nextCatalog, selectedService} = {}) => loadFirst({text: searchText, catalog: selectedService || nextCatalog}))
+                .do(({searchText, catalog: nextCatalog} = {}) => !isEmpty(nextCatalog) && loadFirst({text: searchText, catalog: nextCatalog}))
                 .ignoreElements() // don't want to emit props
         ))),
     withPropsOnChange(['selectedService'], props => {
         let service = props.catalog;
         if (props.selectedService) {
-            service = props.selectedService;
+            service = props.services[props.selectedService];
         }
-        props.loadFirst({text: "", catalog: service});
-    }),
+        if (!isEmpty(service)) {
+            props.loadFirst({text: props.searchText || "", catalog: service});
+        }
+    })
 )(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector = true, error,
     onChangeSelectedService = () => {},
     selectedService, onChangeCatalogMode = () => {}}) => {
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm onChangeCatalogMode={onChangeCatalogMode} onChangeSelectedService={onChangeSelectedService}
-            services={!isEmpty(services) ? Object.values(services).map(service =>({...service, label: service.title, value: service})) : [catalog]} catalog={catalog}
+            services={Object.values(services).map(service =>({...service, label: service.title, value: service}))} catalog={catalog}
             selectedService={selectedService} showCatalogSelector={showCatalogSelector}
             title={title}
             searchText={searchText}
