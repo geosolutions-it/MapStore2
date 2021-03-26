@@ -1,0 +1,3331 @@
+{
+    "locale": "sk-SK",
+    "messages": {
+        "Language": "Jazyk",
+        "msgId0": "{name} took {numPhotos, plural, =0 {no photos} =1 {one photo} other {# photos}} on {takenDate, date, long}.",
+        "htmlTest": "{name} {surname}",
+        "about_title": "O MapStore",
+        "aboutLbl": "O MapStore",
+        "about_p0-0": "MapStore je framework, ktorý slúži ako priestor na vytváranie webových mapových aplikácií za použitia štandardných mapových knižníc ako napríklad ",
+        "about_p0-1": "a",
+        "about_p1": "MapStore má k dispozícii niekoľko ukážok programmov:",
+        "about_ul0_li0": "MapViewer je nástroj na zobrazovanie vopred definovaných máp (tieto mapy môžu byť uložené aj v databáze vďaka GeoStore)",
+        "about_ul0_li1": "MapPublisher bol vytvorený pre tvorenie, ukladanie a zdieľanie jednoduchým a intuitívnym spôsobom. Slúži primárne pre tvorbu jednoduchých máp, no dokáže vytvoriť mapu aj s použitím známych zdrojov ako Google Maps a OpenStreetMap, alebo z dát, ktoré sú poskytované organizáciami vo formáte OGC,WMS, WFS, WMTS, TMS a ďalšie. Pre viac informácií navštív",
+        "about_h20": "Licencia",
+        "about_p3": "MapStore je Free a Open Source softvér, ktorého základ tvorí OpenLayers, Leaflet a ReactJS. Spadá pod licenciu Simplified BSD License.",
+        "about_p5-0": "Pre viac informácií navštív",
+        "about_a0": "túto",
+        "about_p5-1": "stránku.",
+        "about_h21": "Credits",
+        "about_p6": "MapStore je tvorený:",
+        "enable": "Povoliť",
+        "layers": "Vrstvy",
+        "warning": "Upozornenie",
+        "errorTitleDefault": "Chyba",
+        "errorDefault": "Nastala neočakávaná chyba.",
+        "pageInfoShowMore": "Results {count} of {total}",
+        "showMore": "Ukáž viac...",
+        "collapse": "Zabaľ",
+        "expand": "Rozbaľ",
+        "Links": "Linky",
+        "Forbidden": "Zakázané",
+        "layerNameChangeError": {
+            "title": "Chyba pri zmene názvu vrstvy",
+            "message": "Vrstvu so zmeneným menom sa nepodarilo načítať"
+        },
+        "version": {
+            "label": "Verzia"
+        },
+        "errorPage": {
+            "title":"Ups, niečo sa pokazilo.",
+            "subtitle":"Prosím, klikni na inkonku nižšie pre opätovné načítanie MapStore",
+            "description":"Pre nahlásenie tejto nám napíš na našu mailovú adresu alebo mailing list.",
+            "descriptionAdmin":"Prosím, kontaktuj správcu"
+        },
+        "autorefresh": {
+            "of": "of",
+            "updating": "Aktualizovanie...",
+            "layers": "vrstiev"
+        },
+        "localeErrors": {
+            "404": "Súbor s prekladom sa nenašiel"
+        },
+        "details": {
+            "title": "O tejto mape"
+        },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
+        "remove": "Vymazať",
+        "removeThumbnail": "Odstrániť náhľad",
+        "layerProperties": {
+            "windowTitle": "Nastavenia vrstvy",
+            "title": "Nadpis",
+            "name": "Názov",
+            "group": "Skupina",
+            "general": "Všeobecné",
+            "description": "Popis",
+            "display": "Zobrazenie",
+            "style": "Stýl",
+            "transparent": "Priehľadný",
+            "singleTile": "Single Tile",
+            "cached": "Použiť možnosti medzipamäte",
+            "styleCustom": "Použiť štýl s názvom \"{value}\"",
+            "styleListLoadError": "Nastala chyba pri načítaní zoznamu štýlov",
+            "stylesRefreshList": "Obnoviť zoznam štýlov",
+            "delete": "Odstrániť",
+            "deleteLayer":"Odstrániť vrstvu",
+            "deleteLayerMessage": "Určite chceš odstrániť túto vrstvu",
+            "deleteLayerGroup":"Odstrániť skupinu",
+            "deleteLayerGroupMessage": "Určite chceš odstrániť túto skupinu a vrstvy, ktoré pod ňu spadajú?",
+            "confirmDelete": "Si si istý?",
+            "featureTypeError": "Nepodarilo sa načítať vlastnosti vrstvy",
+            "featureTypeErrorInvalidJSON": "Nie je možné načítať atribúty vrstvy. Odpoveď je neplatná.",
+            "elevation": "Výškopis",
+            "titleTranslations": "Preklady názvov",
+            "groupProperties": "Nastavenia skupiny",
+            "featureInfo": "Podrobnosti prvku",
+            "featureInfoFormatLbl": "Identify response format",
+            "legenderror": "Legenda nie je dostupná",
+            "editCustomFormat": "Zmeniť vlastný formát",
+            "exampleOfResponse": "Príklad",
+            "changedSettings": "Nastavenia boli zmenené",
+            "changedSettingsAlert": "Zatváraš nastavenia bez uložených zmien",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Shows feature info results as plain text",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Shows feature info results as html",
+            "propertiesFormatTitle": "PODROBNOSTI",
+            "propertiesFormatDescription": "Shows feature info results as properties list",
+            "templateFormatTitle": "ŠABLÓNA",
+            "templateFormatDescription": "Customize feature info results format",
+            "hideFormatTitle": "VYPNÚŤ IDENTIFIKÁCIU",
+            "hideFormatDescription": "Zakázať informácie o funkcii pre túto vrstvu",
+            "templateFormatInfoAlert1": "Kliknutím na tlačidlo Upraviť pridáš novú šablónu.",
+            "templateFormatInfoAlert2": "Použi ${ attribute } pre zoskupenie vlastností, ktoré potrebuješ na zobrazenie",
+            "templateFormatInfoAlertExample": "ID tejto funkcie je ${ properties }",
+            "templatePreview": "Náhľad šablóny",
+            "visibilityLimits": {
+                "title": "Limity viditeľnosti",
+                "serverValuesUpdateUndefined": "Server pre túto vrstvu neposkytol obmedzenia mierky viditeľnosti",
+                "serverValuesUpdate": "Server pre túto vrstvu poskytol minimálne a maximálne limity viditeľnosti",
+                "serverValuesUpdateMinScale": "Server pre túto vrstvu poskytol iba minimálny limit viditeľnosti v mierke",
+                "serverValuesUpdateMaxScale": "Server pre túto vrstvu poskytol iba limit maximálnej viditeľnosti v mierke",
+                "rangeError": "Minimálna hodnota je väčšia ako maximálna hodnota. Zadaj rozsah, kde je maximálna hodnota vyššia ako minimálna hodnota",
+                "serverValuesError": "It is not possible to request minimum and maximum scale visibility limits to the server. Probably due to error in the network connection or missing capability endpoint",
+                "updateWMSCapabilities": "Request minimum and maximum scale visibility limits to the server",
+                "maxValue": "Maximálna hodnota (excluded)",
+                "maxValuePlaceholder": "Vybrať maximálnu hodnotu",
+                "valueNoResultsText": "No options match the input value",
+                "createOption": "Pridať novú hodnotu {label}",
+                "minValue": "Minimálna hodnota (included)",
+                "minValuePlaceholder": "Vybrať minimálnu hotnodu",
+                "type": "Typ limitov",
+                "scale": "Mierka",
+                "resolution": "Rozlíšenie"
+            },
+            "tooltip": {
+                "label": "Popis",
+                "title": "Názov",
+                "description": "Popis",
+                "both": "Nadpis a popis",
+                "none": "Bez popisu",
+                "labelPlacement": "Umiestnenie",
+                "right": "Vpravo",
+                "left": "Vľavo",
+                "bottom": "Dole",
+                "top": "Hore",
+                "editLayerName": "Upraviť názov vrstvy",
+                "confirmLayerName": "Potvrdenie zmeny v názve vrstvy"
+            },
+            "legendOptions": {
+              "title": "Legenda",
+              "legendWidth": "Šírka",
+              "legendHeight": "Výška",
+              "legendPreview": "Náhľad"
+            },
+            "enableLocalizedLayerStyles": {
+                "label": "Povoliť lokalizovaný štýl",
+                "tooltip": "Poznámka: Tento parameter vyžaduje špecifickú konfiguráciu na platforme GeoServer"
+            },
+            "format": {
+                "title": "Formát",
+                "refresh": "Načítať podporovaný formát",
+                "loading": "Načítanie...",
+                "noOption": "No option",
+                "error": {
+                    "title": "Chyba",
+                    "message": "Nepodarilo sa načítať formát"
+                }
+            }
+        },
+        "longitude": "Lon",
+        "latitude": "Lat",
+        "notification": {
+            "update": "Aktualizovať",
+            "warning": "Upozornenie",
+            "success": "Úspech",
+            "backgroundLayerNotSupported": "The previously selected background is not supported for this type of map. The first one available is then used.",
+            "noBackgroundLayerSupported": "K tomuto typu mapy nie sú k dispozícii žiadne podporované pozadia.",
+            "updateOldMap": "Toto je stará mapa, takže nie je možné povoliť všetky funkcie. Kliknutím na tlačidlo upgradu aktualizuješ mapu alebo jednoducho odmietneš toto upozornenie, ak ju nechceš inovovať.",
+            "warningSaveUpdatedMap": "Niektoré z vrstiev sa neaktualizovali správne.",
+            "saveUpdatedMap": "Všetky vrstvy sa úspešne aktualizovali.",
+            "incompatibleBackgroundAndProjection":"Vybraná projekcia nie je kompatibilná s týmto pozadím. Zmeň pozadie na niektoré z kompatibilných, alebo ho nechaj prázdne, potom vyber túto projekciu.",
+            "incompatibleDataAndProjection":"Táto vrstva nie je kompatibilná so zvolenou mapovou projekciou. Niektoré dáta sa môžu zobraziť v častiach alebo vôbec."
+        },
+        "dock": {
+            "row": "Riadok {rowsSelected} je vybraný",
+            "rows": "Riadky {rowsSelected} sú vybrané"
+        },
+        "globeswitcher": {
+            "tooltipDeactivate": "Opustiť 3D mód",
+            "tooltipActivate": "Vstúpiť do 3D módu"
+        },
+        "cookie":{
+            "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
+            "moreDetailsButton": "Viac informácií",
+            "leave": "Odísť",
+            "accept": "Potvrdiť"
+        },
+        "background": "Pozadie",
+        "language": "Jazyk",
+        "mousePositionCoordinates": "Súradnice kurzoru",
+        "mouseCoordinates": "Súradnice:",
+        "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "N/A",
+        "elevationLoading": "Načítanie...",
+        "elevationLoadingError": "Chyba",
+        "elevationNotAvailable": "N/A",
+        "mapScale": "Mierka:",
+        "showMousePositionCoordinates": "Schovať/Ukázať súradnice",
+        "showCrsSelector": "Vybrať projekciu",
+        "crsSelectorFilterPlaceholder": "Filtrovať projekcie",
+        "crsSelectorSelectedCRS": "Vybrané:",
+        "menu": "Menu",
+        "options": "Možnosti",
+        "settings": "Nastavenia",
+        "help": "Pomoc",
+        "docs": "Dokumentácia",
+        "gohome": "Vrátiť sa na domovskú stránku",
+        "back": "Back to the Importer",
+        "printbutton": "Vytlačiť",
+        "annotationsbutton": "Anotácie",
+        "noresultfound": "Nenašiel sa žiadny výsledok",
+        "save": "Uložiť",
+		"saveAs": "Uložiť ako...",
+        "opacity": "Nepriehľadnosť",
+        "elevation": "Výškopis",
+        "close": "Zatvoriť",
+        "cancel": "Zrušiť",
+        "no": "Nie",
+        "yes": "Áno",
+        "confirm": "Potvrdiť",
+        "confirmTitle": "Potvrdzuješ?",
+        "pageInfo": "{total, plural, =0 {No items} =1 {{total} item of {total}} other {Items {start}-{end} of {total}}}",
+        "loading": "Načítanie...",
+        "group": "Skupina",
+        "groups": "Skupiny",
+        "permission": "Povolenie",
+        "permissions": "Povolenia",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Red} =1 {Red} other {Reds}}",
+                "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Blues}}",
+                "green": "{number, plural, =0 {Green} =1 {Green} other {Greens}}",
+                "gray": "{number, plural, =0 {Gray} =1 {Gray} other {Grays}}",
+                "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
+                "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
+                "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
+                "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}",
+                "orrd":"OrRd",
+                "pubu":"PuBu",
+                "bupu":"BuPu",
+                "oranges":"Oranges",
+                "bugn":"BuGn",
+                "ylorbr":"YlOrBr",
+                "ylgn":"YlGn",
+                "reds":"Reds",
+                "rdpu":"RdPu",
+                "greens":"Greens",
+                "ylgnbu":"YlGnBu",
+                "purples":"Purples",
+                "gnbu":"GnBu",
+                "greys":"Greys",
+                "ylorrd":"YlOrRd",
+                "purd":"PuRd",
+                "blues":"Blues",
+                "pubugn":"PuBuGn",
+                "viridis":"Viridis",
+                "spectral":"Spectral",
+                "rdylgn":"RdYlGn",
+                "rdbu":"RdBu",
+                "piyg":"PiYg",
+                "prgn":"PrGn",
+                "rdylbu":"RdYlBu",
+                "brbg":"BrBg",
+                "rdgy":"RdGy",
+                "puor":"PuOr",
+                "set2":"Set 2",
+                "accent":"Accent",
+                "set1":"Set 1",
+                "set3":"Set 3",
+                "dark2":"Dark 2",
+                "paired":"Paired",
+                "pastel2":"Pastel 2",
+                "pastel1":"Pastel 1",
+                "custom": "Custom"
+            }
+        },
+        "home":{
+            "open": "Otvoriť",
+            "shortDescription": "Moderné webové mapovanie s využitím OpenLayers, Leaflet a ReactJS. <br/> <small>Pre viac informácií navštív <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
+            "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
+            "Applications": "Aplikácie",
+            "Examples": "Ukážky",
+            "LinkedinGroup": "Linkedin skupina MapStore",
+            "scrollTop": "Prejsť do hornej časti stránky",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
+            "ml": {
+                "title": "Dostávaj vždy aktuálne informácie cez mailing list",
+                "subscribe_users": "Odoberať Users Mailing List",
+                "subscribe_devel": "Odoberať Developers Mailing List",
+                "visit_group": "Navštív túto skupinu",
+                "subscribe": "Odoberať",
+                "email": "Email:"
+            },
+            "examples":{
+                "viewer":{
+                    "html":"<h3>Viewer</h3><p>Simple Viewer</p>"
+                },
+                "3dviewer":{
+                    "html":"<h3>3D Viewer</h3><p>Simple CesiumJS based 3D Viewer</p>"
+                },
+                "manager":{
+                    "html":"<h3>Manager</h3><p>Browse MapStore maps</p>"
+                },
+                "mouseposition":{
+                    "html":"<h3>Mouse Position Control</h3><p>Custom examples</p>"
+                },
+                "scalebar":{
+                    "html":"<h3>Scale Control</h3><p>Custom examples</p>"
+                },
+                "layertree":{
+                    "html":"<h3>Advanced LayerTree</h3><p>Custom examples</p>"
+                },
+                "queryform":{
+                    "html":"<h3>Query Builder</h3><p>Custom examples</p>"
+                },
+                "featuregrid":{
+                    "html":"<h3>Feature Editor</h3><p>Custom examples</p>"
+                },
+                "print":{
+                    "html":"<h3>Printing</h3><p>Custom examples</p>"
+                },
+                "plugins":{
+                    "html":"<h3>Plugins</h3><p>Build your own application</p>"
+                },
+                "api":{
+                    "html":"<h3>API</h3><p>Use APIs to include a MapStore map in your application</p>"
+                },
+                "rasterstyler":{
+                    "html":"<h3>Raster Styler</h3><p>Style your raster layer</p>"
+                }
+            }
+        },
+        "cookiesPolicyNotification": {
+            "title": "Táto stránka používa cookies",
+            "message": "Používaním tejto stránky súhlásiš s našim využitím cookies.",
+            "confirm": "Súhlasím"
+        },
+        "manager": {
+            "openInANewTab":"Otvoriť mapu",
+            "deleteMap":"Odstrániť mapu",
+            "deleteMapMessage": "Určite chceš ostrániť túto mapu?",
+            "editMapMetadata":"Upraviť vlastnosti mapy",
+            "mapTypes_combo": "Vybrať mapový prehliadač: ",
+            "theme_combo": "Vybrať tému:",
+            "maps_title": "Mapy",
+            "locales_combo": "Jazyk:",
+            "featuredMaps": "V popredí"
+        },
+        "newMap": "Nová mapa",
+        "newMapEmpty": "Prázdna mapa",
+        "newMapContext": "Existujúci kontext",
+		"maps": {
+            "title": "Mapy",
+            "addToFeaturedMaps": "Pridať do zoznamu máp v popredí",
+            "removeFromFeaturedMaps": "Odstrániť zo zoznamu máp v popredí",
+            "feedback": {
+                "noDetailsAvailable": "Detaily mapy nie sú dostupné",
+                "successSavedMap": "Mapa bola úspešne vytvorená",
+                "errorDeletingMap": "Nastala chyba pri odstraňovaní tejto mapy",
+                "errorDeletingThumbnailOfMap": "Nastala chyba pri ostraňovaní miniatúry tejto mapy",
+                "errorDeletingDetailsOfMap": "Nastala chyba pri odstraňovaní podrobností tejto mapy",
+                "allResDeleted": "Všetky zdroje spojené s touto mapou boli úspešne odstránené",
+                "errorFetchingDetailsOfMap": "Nastala chyba pri načítaní detailov tejto mapy",
+                "details": {
+                    "deletedSuccesfully": "Podrobnosti boli úspešne odstránené",
+                    "savedSuccesfully": "Podrobnosti boli úspešne uložené",
+                    "updatedSuccesfully": "Podrobnosti boli úspešne aktualizované"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "Miniatúra bola úspešne odstránená",
+                    "savedSuccesfully": "Miniatúra bola úspešne uložená",
+                    "updatedSuccesfully": "Miniatúra bola úspešne aktualizovaná"
+                },
+                "errorWhenSaving": "Počas procesu ukladania sa vyskytla chyba",
+                "errorWhenUpdating": "Počas aktualizácie sa vyskytla chyba",
+                "errorWhenDeleting": "Počas procesu odstaňovania sa vyskytla chyba",
+                "errorSizeExceeded": "Prosím, zníž veľkosť alebo kvalitu obrázkov",
+                "errorLoadingContexts": "An error occurred during contexts loading"
+            },
+			"search": "Vyhľadávanie..."
+		},
+        "resources": {
+            "successSaved": "Zdroj sa úspešne uložil",
+            "savingError": "Pri ukladaní zdroja nastala chyba",
+            "deleteConfirmTitle": "Si si istý?",
+            "deleteConfirmMessage": "Si si istý, že chceš odstrániť tento zdroj?",
+            "deleteConfirmButtonText": "Odstrániť",
+            "deleteCancelButtonText": "Zatvoriť",
+            "resource": {
+                "deleteResource": "Odstrániť",
+                "editResource": "Upraviť vlastnosti",
+                "editResourceData": "Edit resource data",
+                "addToFeatured": "Pridať do popredia",
+                "removeFromFeatured": "Odstrániť z popredia",
+                "showDetails": "Ukázať detaily"
+            },
+            "contents": {
+                "title": "Obsah"
+            },
+            "dashboards": {
+                "newDashboard": "Nový panel",
+                "title": "Panely ({count})",
+                "titleNoCount": "Panely",
+                "create": "Vytvoriť panel",
+                "noDashboardAvailable": "Žiaden panel k dispozícii",
+                "createANewOne": "Vytvoriť nový",
+                "deleteError": "Pri odstraňovaní panela sa vyskytla chyba.",
+                "errorLoadingDashboards": "Pri načítaní panelov sa vyskytla chyba."
+            },
+            "maps": {
+                "title": "Mapy ({count})",
+                "noMapAvailable": "Žiadna mapa k dispozícii",
+                "createNewOne": "Vytvoriť nový panel",
+                "unsavedMapConfirmTitle": "Neuložené zmeny",
+                "unsavedMapConfirmMessage": "Irčite chceš odísť bez uloženia zmien?",
+                "unsavedMapConfirmButtonText": "Odísť",
+                "unsavedMapCancelButtonText": "Zavrieť"
+            },
+            "geostories": {
+                "newGeostory": "Nová GeoStory",
+                "title": "GeoStories ({count})",
+                "titleNoCount": "GeoStories",
+                  "create": "Vytvoriť GeoStory",
+                "noGeostoryAvailable": "Nie je k dispozícii žiadna GeoStory",
+                "createANewOne": "Vytvoriť novú GeoStory",
+                "deleteError": "Nastala chyba pri odstraňovaní GeoStory",
+                "errorLoadingGeostories": "Nastala chyba pri načítaní GeoStory"
+            }
+        },
+        "map": {
+            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems.",
+            "loading": "Načítanie...",
+            "loadingSpinner": "Načítavam mapu",
+            "loadingerror": "Nastala chyba pri načítaní mapy",
+            "name": "Názov",
+            "description": "Popis",
+            "namePlaceholder": "Názov mapy",
+            "descriptionPlaceholder": "Popis mapy",
+            "saveTitle": "Uložiť mapu",
+            "saveText": "Uložiť súčasnú mapu?",
+            "thumbnail": "Miniatúra",
+            "message": "Presuň alebo klikni pre importovanie obrázku",
+            "suggestion": "(odporúčané rozmery: 300 px X 180 px, maximálna veľkosť 500 kb)",
+            "errorFormat": "Podporované formáty: png/jpg",
+            "errorSize": "Maximálna povolená veľkosť: 500 kb",
+            "errorCustomSize": "Maximálna povolená veľkosť: {maxFileSize}",
+            "error": "Tento obrázok je neplatný",
+            "savedMapTitle": "Uložená mapa",
+            "savedMapMessage": "Mapa sa uložila správne.",
+            "thumbnailError": {
+                "error403": "Nemáš oprávnenia k vykonaniu zmien v miniatúre",
+                "error404": "Nastala chyba pri vytváraní miniatúry",
+                "error409": "Miniatúra s týmto menom už existuje",
+                "errorDefault": "Chyba siete"
+            },
+            "mapError": {
+                "errorTitle": "Túto mapu nie je možné uložiť",
+                "error403": "Nemáš právnenia k vykonaniu zmien v mape",
+                "error404": "Vyskytla sa serverová chyba pri vytváraní mapy",
+                "error409": "Zdroj s týmto menom už existuje",
+                "error500": "Interná chyba servera. Skontroluj, či súbor s nastavením pre mapu nepresahuje stanovený limit",
+                "errorDefault": "Chyba siete"
+            },
+            "permissions": {
+                "noRules": "Žiadne pravidlá",
+                "addRule": "Pridať pravidlo...",
+                "selectGroup": "Zvoliť skupinu...",
+                "canView": "Môže prezerať",
+                "canWrite": "Môže upravovať",
+                "noResult": "Nenašiel sa žiadny výsledok",
+                "title": "Povolenia skupín"
+            },
+            "details": {
+                "back": "Späť",
+                "save": "Uložiť",
+                "show": "Ukázať panel s detailami",
+                "add": "Pridať nové detaily",
+                "edit": "Upraviť detaily",
+                "rowTitle": "Panel detailov",
+                "title": "Panel detailov - {name}",
+                "undo": "Vrátiť vymazané položky",
+                "showPreview": "Ukázať ukážku",
+                "hidePreview": "Skryť ukážku",
+                "delete": "Odstrániť panel detailov",
+                "titleUnsavedChanges": "Určite chceš zatvoriť nastavenia bez uloženia zmien?",
+                "sureToClose": "Určite chceš zatvoriť nastavenia bez uloženia zmien?",
+                "fieldsChanged": "Niektoré atribúty boli zmenené",
+                "showAtStartup": "Ukázať pri spustení",
+                "showAsModal": "Show as modal"
+            },
+            "errors": {
+                "loading": {
+                    "title": "Nastala chyba pri načítaní mapy",
+                    "notFound": "Mapu sa nepodarilo nájsť",
+                    "notAccessible": "Mapa nie je dostupná",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access the map</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul> <p>",
+                    "projectionError": "Mapová projekcia {projection} nie je nakonfigurovaná",
+                    "title" : "Mapu nie je možné zobraziť"
+                }
+            }
+        },
+        "floatinglegend": {
+            "showTOC": "Ukázať vrstvy",
+            "showLegend": "Ukázať legendu",
+            "hideLegend": "Schovať legendu"
+        },
+        "addgroup": {
+            "addbtn": "Pridať",
+            "groupName": "Meno skupiny"
+        },
+        "toc": {
+            "toggleLayerVisibility": "Prepnúť viditeľnosť vrstvy",
+            "toggleGroupVisibility": "Prepnúť viditeľnosť skupiny",
+            "displayLegendAndTools": "Zobraziť legendu a nástroje",
+            "zoomToLayerExtent": "Priblížiť na rozsah vrstvy",
+            "addLayer": "Pridať vrstvu",
+            "addLayerToGroup": "Pridať vrstvu do vybranej skupiny",
+            "addGroup": "Pridať skupinu vrstiev",
+            "addSubGroup": "Pridať podskupinu do vybranej skupiny",
+            "toolZoomToLayerTooltip": "Priblížiť na rozsah vybranej vrstvy",
+            "toolZoomToLayersTooltip": "Priblížiť na rozsah vybranej skupiny",
+            "toolLayerSettingsTooltip": "Nastavenia vybranej vrstvy",
+            "toolGroupSettingsTooltip": "Nastavenia vybranej skupiny",
+            "toolTrashLayerTooltip": "Odstrániť vybranú vrstvu",
+            "toolTrashLayersTooltip": "Odstrániť vybrané vrstvy",
+            "toolTrashGroupTooltip": "Odstrániť vybranú skupinu",
+            "toolFeaturesGridTooltip": "Otvoriť atribútovú tabuľku",
+            "layerFilterTooltip": "Filtrovať vrstvu",
+            "toolDownloadTooltip": "Exportovať dáta vrstvy",
+            "noFilteredResults": "Nenašiel sa žiadny výsledok",
+            "filterPlaceholder": "Filtrovať vrstvy",
+            "clearFilter": "Vyčistiť filter",
+            "toolReloadLayerTooltip": "Vynútiť opätovné načítanie vybranej vrstvy",
+            "toolReloadLayersTooltip": "Vynútiť opätovné načítanie vybraných vrstiev",
+            "statusIconOpen": "Zavrieť skupinu",
+            "statusIconClose": "Otvoriť skupinu",
+            "grabLayerIcon": "Grab and sort layer",
+            "grabGroupIcon": "Grab and sort group",
+            "toggleLayerVisibilityWarning": "Prepnúť viditeľnosť vrstvy. Upozornenie: vrstva sa nenačítala správne",
+            "createWidget": "Vytvoriť widget pre vybranú vrstvu",
+            "editLayerProperties": "Upraviť podrobnosti vrstvy",
+            "browseData": "Otvoriť atribútovú tabuľku",
+            "removeLayer": "Odstrániť vrstvu",
+            "loadingerror": "Vrstva sa nenačítala správne alebo nie je k dispozícii.",
+            "measure": "Odmerať",
+            "layers": "Vrstvy",
+            "drawerButton": "Vrstvy",
+            "refreshTitle": "Aktualizovať vrstvy",
+            "refreshConfirm": "Aktualizovať",
+            "refreshMessage": "Znovu načítať konfiguráciu vrstiev WMS zo servera/serverov",
+            "refreshError": "Nastala chyba pri aktualizovaní vrstiev:",
+            "epsgNotSupported": "Vybrané CRS {epsg} nepodporuje priblíženie na vrstvu ",
+            "compareTool": "Nástroj na porovnanie",
+            "configureTool": "Konfigurovať",
+            "spyconfiguration": "Spyglass configuration",
+            "swipeconfiguration": "Swipe configuration",
+            "swipe": "Swipe",
+            "spyGlass": "Spy glass",
+            "direction": "Swipe direction",
+            "radius": "Polomer",
+            "filterIconEnabled": "Vypnúť filter vrstvy",
+            "filterIconDisabled": "Povoliť filter vrstvy",
+            "notVisibleZoomIn": "Vrstva nie je viditeľná, pretože je mimo limitov rozlíšenia. Priblížením zobrazíš vrstvu",
+            "notVisibleZoomOut": "Vrstva nie je viditeľná, pretože je mimo limitov rozlíšenia. Oddialením zobrazíš vrstvu",
+            "refreshOptions": {
+                "bbox": "Aktualizovať BBOX",
+                "search": "Aktualizovať možnosti vyhľadávania",
+                "title": "Aktualizovať nadpis",
+                "dimensions": "Aktualizovať rozmery"
+            },
+            "layerInfoTooltip": "Aktualizovať nadpis a popis vrstvy",
+            "layerMetadata": {
+                "identifier": "Identifikátor",
+                "title": "Nadpis",
+                "abstract": "Abstrakt",
+                "purpose": "Účel",
+                "source": "Zdroj",
+                "createdDate": "Dátum vytvorenia",
+                "lastRevisionDate": "Dátum poslednej úpravy",
+                "pointsOfContact": "Kontaktné miesta",
+                "individualName": "Individual name",
+                "organisationName": "Názov organizácie",
+                "contactInfo": "Kontakty",
+                "phone": "Telefónne číslo",
+                "deliveryPoints": "Delivery points",
+                "city": "Mesto",
+                "postalCode": "PSČ",
+                "country": "Krajina",
+                "URL": "URL",
+                "metadataUrl": "Metadata URL",
+                "role": "Rola",
+                "hoursOfService": "Hours of service",
+                "electronicMailAddress": "Emailová adresa",
+                "subject": "Subject",
+                "type": "Type",
+                "creator": "Tvorca",
+                "defaultPropName": "Property=\"{propName}\"",
+                "toolLayerMetadataTooltip": "Ukáž metadata vybranej vrstva",
+                "layerMetadataPanelTitle": "Metadata vrstva",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Nastala chyba pri vyhľadávaní metadát"
+                },
+                "itemTitles": {
+                    "pointsOfContact": "Kontakt",
+                    "default": "Item"
+                },
+                "emptyMetadata": "Nie sú k dispozícii žiadne metadáta"
+            },
+            "thematic": {
+                "classification_field": "Klasifikačné pole:",
+                "classification_method": "Klasifikačná metóda:",
+                "classification_aggregate": "Agregovaná funkcia:",
+                "classification_colors": "Farebná škála:",
+                "classification_intervals": "Intervaly:",
+                "preview": "Ukážka",
+                "remove_thematic": "Späť k jednoduchému štýlu",
+                "values": {
+                    "equalInterval": "Rovnaké intervaly",
+                    "quantile": "Kvantil",
+                    "jenks": "Natural breaks",
+                    "sum": "Súčet",
+                    "avg": "Priemer",
+                    "count": "Počet",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Konfigurácia",
+                "apply": "Použiť konfiguráciu",
+                "restore": "Obnoviť prispôsobenie",
+                "go_to_cfg": "Konfigurujem...",
+                "go_to_thema": "Použiť túto konfiguráciu",
+                "cfgError": "Chyba v konfigurácii JSON",
+                "classify": "Klasifikovať",
+                "remove": "Odstrániť klasifikáciu",
+                "data_panel": "Dáta",
+                "classification_stroke": "Stroke",
+                "classification_error": "Chyba pri načítaní klasifikačnej služby: {message}",
+                "fields_error": "Chyba pri načítaní zoznamu polí: {message}",
+                "interval_limit": "Intervaly by mali byť číslom medzi {min} a {max}",
+                "invalid_object": "Neplatná odpoveď služby",
+                "invalid_geometry": "Typ geometrie nie je platný, nejde o bod, čiaru alebo mnohouholník",
+                "invalid_classes": "Maximálny počet musí byť v každej kategórii väčší ako mininimálny počet"
+            },
+            "error": {
+                "defaultGroupOnTop": "Skupina {groupTitle}je nastavená ako predvolená cieľová skupina, preto musí ostať umiestnená na začiatku"
+            }
+        },
+        "print":{
+            "paneltitle": "Print",
+            "layout": "Rozloženie",
+            "sheetsize": "Sheet size:",
+            "legendoptions": "Možnosti nastavenia legendy",
+            "submit": "Print",
+            "title": "Názov",
+            "titleplaceholder": "Zadaj názov...",
+            "description": "Popis",
+            "descriptionplaceholder": "Zadaj popis...",
+            "resolution": "Rozlíšenie:",
+            "defaultBackground": "Použiť podklad OSM ako pozadie",
+            "printtooltip": "Print",
+            "alternatives": {
+                "legend": "Zahrnúť legendu",
+                "2pages": "Legenda na samostatnej stránke",
+                "landscape": "Vodorovne",
+                "portrait": "Zvislo"
+            },
+            "legend": {
+                "font": "Konfigurácia štítkov:",
+                "forceLabels": "Force Labels:",
+                "antiAliasing": "Vyhladzovanie písma:",
+                "iconsSize": "Veľkosť ikon:",
+                "dpi": "Dpi:"
+            },
+            "layoutWarning": "Nepovolené rozloženie"
+        },
+        "backgroundSwither":{
+            "tooltip": "Vybrať pozadie"
+        },
+        "info":{
+            "tooltip": "Query objects on map"
+        },
+        "expandtoolbar": {
+            "tooltip": "Rozbaliť / zabaliť"
+        },
+        "getFeatureInfoTitle": "Informácie o funkcii",
+        "identifyTitle": "Informácie o funkcii",
+        "identifyNoQueryableLayers": "No active queryable layer",
+        "identifyRevGeocodeHeader": "Súradnice",
+        "identifyZoomToFeature": "Priblížiť ku funkcii",
+        "identifyStopHighlightingFeatures": "Nezvýrazňovať funkcie",
+        "identifyHighlightFeatures": "Zvýrazniť funkcie",
+        "identifyShowCoordinateEditor": "Zobraziť editor súradníc",
+        "identifyHideCoordinateEditor": "Skryť editor súradníc",
+        "identifyCoordinateApplyChanges": "Aplikovať zmeny",
+        "identifyChangeCoordinateFormat": "Zmeniť formát súradníc",
+        "identifyRevGeocodeModalTitle": "Addresa",
+        "identifyRevGeocodeSubmitText": "Viac informácií",
+        "identifyRevGeocodeCloseText": "Zatvoriť",
+        "identifyRevGeocodeError": "Nie je možné geokódovať",
+        "identifyEdit": "Upraviť",
+        "identifyLayerSelectNoResult": "Nenašli sa žiadne vrstvy",
+        "getFeatureInfoError": {
+            "title": "Ups, niečo sa pokazilo.",
+            "text": "Počas tohto požiadavku sa vyskytla chyba: <b>GetFeatureInfo</b>"
+        },
+        "noFeatureInfo": "O tomto bode nie sú k dispozícii žiadne informácie",
+        "noInfoForLayers": "Pre nasledujúce vrstvy nie sú k dispozícii žiadne funkcie: ",
+        "history":{
+            "barLabel": "História mapy",
+            "undoBtnTooltip": "Choď späť",
+            "redoBtnTooltip": "Choď dopredu"
+        },
+        "infoFormatLbl": "Formát informačného listu",
+        "infoTriggerLabel": "Trigger event for the display of the information sheet",
+        "click": "On click on the feature",
+        "hover": "Hover the feature",
+        "measureSupport": {
+            "continueLine": "Klikni pre pokračovanie v kreslení čiary",
+            "continuePolygon": "Klikni pre pokračovanie v kreslení polygonu",
+            "startDrawing": "Kliknutím začni kresliť"
+        },
+        "measureComponent": {
+            "Measure": "Zmerať",
+            "MeasureLength": "Zmerať vzdialenosť",
+            "MeasureArea": "Zmerať plochu",
+            "MeasureBearing": "Measure bearing",
+            "MeasureTrueBearing": "Measure true bearing",
+            "tooltip": "Measure length, area and bearing",
+            "title": "Zmerať",
+            "lengthButtonText": "Línia",
+            "areaButtonText": "Plocha",
+            "resetButtonText": "Resetovať",
+            "lengthLabel": "Dĺžka",
+            "areaLabel": "Plocha",
+            "bearingLabel": "Bearing",
+            "trueBearingLabel": "True bearing",
+            "formula": "Vzorec pre výpočet vzdialenosti",
+            "showLabel": "Show measurement label",
+            "saveMeasure": "Save measurements to annotation",
+            "addAsAnnotation": "Pridať ako anotáciu",
+            "newMeasure": "Nová anotácia",
+            "selectTool": "Vyberte nástroj na meranie",
+            "exportToGeoJSON": "Exportovať ako GeoJSON",
+            "resetTooltip": "Obnoviť merania",
+            "addAsLayer": "Pridať ako vrstvu"
+        },
+        "search":{
+            "layerMustBeVisible": "Cieľová vrstva je neaktívna",
+            "decimal": "Desatinné miesto",
+            "aeronautical": "Aeronautical",
+            "changeSearchInputField": "Zmeniť vyhľadávací nástroj",
+            "addressSearch": "Vyhľadať podľa názvu miesta",
+            "coordinatesSearch": "Vyhľadať podľa súradníc",
+            "searchservicesbutton": "Konfigurovať vyhľadávacie služby",
+            "configpaneltitle": "Vytvoriť/upraviť vyhľadávaciu službu",
+            "serviceslistlabel": "Dostupné služby",
+            "overriedservice": "Prepísať predvolené služby",
+            "addbtn": "Pridať",
+            "nextbtn": "Ďalšie",
+            "prevbtn": "Naspäť",
+            "savebtn": "Uložiť/Aktualizovať",
+            "cancelbtn": "Zrušiť",
+            "confirmremove": "Odstrániť?",
+            "cancelconfirm": "Si si istý?",
+            "searchByBookmark": "Vyhľadať podľa záložky",
+            "bookmarksettings": "Nastavenia záložky",
+            "zoomToBookmark": "Priblížiť ku zvolenej záložke",
+            "bookmarkFilter": "Filtrovať záložky",
+            "editBookmark": "Upraviť záložku",
+            "deleteBookmark": "Odstrániť záložku",
+            "b_listpaneltitle": "Zobraziť záložky",
+            "b_newpaneltitle": "Pridať novú záložku",
+            "latitude": "Lat",
+            "longitude": "Lon",
+            "b_title": "Nadpis",
+            "b_layer_tooltip": "Prepnúť opätovné načítanie viditeľnosti vrstvy",
+            "b_bbox": "Bounding Box",
+            "b_bbox_tooltip": "Použiť aktuálne zobrazenie ako bounding box",
+            "b_bbox_south": "Juh",
+            "b_bbox_south_placeholder": "Enter South",
+            "b_bbox_west": "Západ",
+            "b_bbox_west_placeholder": "Enter West",
+            "b_bbox_east": "Východ",
+            "b_bbox_east_placeholder": "Enter East",
+            "b_bbox_north": "Sever",
+            "b_bbox_north_placeholder": "Enter North",
+            "bookmarkslistempty": "Nie je definovaná žiadna záložka",
+            "b_placeholder": "Vyber záložku...",
+            "b_clearvalue": "Clear bookmark",
+            "b_noresult": "Nenašli sa žiadne záložky",
+            "s_name": "Meno",
+            "s_title": "Nadpis",
+            "s_description": "Popis",
+            "s_priority": "Dôležitosť",
+            "s_url": "Service url",
+            "s_layer": "Vrstva",
+            "s_attributes": "Atribúty",
+            "s_sort": "Triediť podľa",
+            "s_max_features": "Maximálny počet funkcií",
+            "s_max_zoom": "Úroveň maximálneho priblíženia",
+            "s_wfs_props_label" : "Vlastnosti služby WFS",
+            "s_wfs_opt_props_label" : "Voliteľné vlastnosti",
+            "s_result_props_label": "Vlastnosti výsledného zobrazenia",
+            "s_priority_info": "Used to sort search results, lower values first. Nominatim results have priority = 5",
+            "serviceslistempty": "Nie sú definované žiadne vlastné služby",
+            "service_missing": "{serviceType} služba nie je konfigurovaná",
+            "generic_error": "Počas vyhľadávania sa vyskytla chyba. Podrobnosti: {message}",
+            "showGFI": "Ukázať GFI",
+            "errors": {
+                "nonQueriableLayers": "The layer provided in the URL is not queriable or not visible in map.",
+                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct."
+            },
+            "s_launch_info_panel": {
+                "label": "Spustiť informačný panel",
+                "no_info": "Žiadne informácie",
+                "all_layers": "Všetky vrstvy",
+                "single_layer": "Single Layer",
+                "no_info_description": "Panel identifikácie sa pri vyhľadávaní nezobrazí",
+                "all_layers_description": "Panel identifikácie sa zobrazí s informáciami pre všetky viditeľné vrstvy v mape",
+                "single_layer_description": "Panel identifikácie sa zobrazí s údajmi, ktoré sú už k dispozícii pri WFS vyhľadávaní",
+                "openFeatureInfoButtonCheckbox": "Použi toto tlačidlo pre získanie informácií o funkcii",
+                "forceSearchLayerVisibility": "Force search layer visibility"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtre rozšíreného vyhľadávania",
+                "context": {
+                    "title": "Kontext"
+                },
+                "showTooltip": "Zobraziť rozšírené filtre",
+                "showTooltipActive": "Zobraziť rozšírené filtre (active)",
+                "hideTooltip": "Schovať rozšírené filtre",
+                "hideTooltipActive": "Schovať rozšírené filtre (active)"
+            }
+        },
+        "draw": {
+            "fill": "Výplň",
+            "text": "Text",
+            "fontTitle": "Štýl písma",
+            "color": "Farba",
+            "lineDash": "LineDash",
+            "stroke": "Stroke",
+            "opacity": "Nepriehľadnosť",
+            "width": "Šírka",
+            "textRotation": "Rotácia",
+            "font": {
+                "textColor": "Farba",
+                "family": "Family",
+                "size": "Veľkosť",
+                "style": "Štýl",
+                "weight": "Weight",
+                "textAlign": "Zarovnať"
+            },
+            "marker": {
+                "layout": "Rozloženie",
+                "shape": "Tvar",
+                "size": "Veľkosť",
+                "type": "Typ",
+                "icon": "Ikona"
+            }
+        },
+        "drawLocal": {
+            "draw": {
+                "toolbar": {
+                    "actions": {
+                        "title": "Zrušiť kreslenie",
+                        "text": "Zrušiť"
+                    },
+                    "undo": {
+                        "title": "Odstrániť posledný nakreslený bod",
+                        "text": "Odstrániť posledný bod"
+                    },
+                    "buttons": {
+                        "polyline": "Nakresliť lomenú čiaru",
+                        "polygon": "Nakresliť polygon",
+                        "rectangle": "Nakresliť obdĺžnik",
+                        "circle": "Nakresliť kruh",
+                        "marker": "Nakresliť značku"
+                    }
+                },
+                "handlers": {
+                    "circle": {
+                        "tooltip": {
+                            "start": "Klikni a potiahni pre nakreslenie kruhu."
+                        }
+                    },
+                    "marker": {
+                        "tooltip": {
+                            "start": "Klikni na mapu pre umiestnenie značky."
+                        }
+                    },
+                    "polygon": {
+                        "tooltip": {
+                            "start": "Kliknutím začni kresliť tvar.",
+                            "cont": "Kliknutím pokračuj v kreslení tvaru.",
+                            "end": "Kliknutím na prvý bod ukonči kreslenie tohto tvaru."
+                        }
+                    },
+                    "polyline": {
+                        "error": "Chyba: hrany tvaru sa nesmú krížiť!",
+                        "tooltip": {
+                            "start": "Kliknutím začni kresliť líniu.",
+                            "cont": "Kliknutím pokračuj v kreslení línie.",
+                            "end": "Kliknutím na prvý bod ukonči kreslenie tejto línie."
+                        }
+                    },
+                    "rectangle": {
+                        "tooltip": {
+                            "start": "Klikni a potiahni pre nakreslenie obdĺžnika."
+                        }
+                    },
+                    "simpleshape": {
+                        "tooltip": {
+                            "end": "Pusti tlačidlo myši pre dokončenie kreslenia."
+                        }
+                    }
+                }
+            },
+            "edit": {
+                "toolbar": {
+                    "actions": {
+                        "save": {
+                            "title": "Uložiť zmeny.",
+                            "text": "Uložiť"
+                        },
+                        "cancel": {
+                            "title": "Zrušiť úpravy a zahodiť všetky zmeny.",
+                            "text": "Zrušiť"
+                        }
+                    },
+                    "buttons": {
+                        "edit": "Upraviť vrstvy.",
+                        "editDisabled": "Žiadne vrstvy na úpravu.",
+                        "remove": "Odstrániť vrstvy.",
+                        "removeDisabled": "Žiadne vrstvy na odstránenie."
+                    }
+                },
+                "handlers": {
+                    "edit": {
+                        "tooltip": {
+                            "text": "Drag handles or marker to edit feature.",
+                            "subtext": "Kliknutím na Zrušiť vrátiš zmeny späť."
+                        }
+                    },
+                    "remove": {
+                        "tooltip": {
+                            "text": "Kliknutím na funkciu ju odstrániš"
+                        }
+                    }
+                }
+            }
+        },
+        "locate": {
+            "tooltip": "Ukáž moju pozíciu",
+            "tooltipDeactivate": "Prestať zobrazovať moju pozíciu",
+            "metersUnit": "metre",
+            "feetUnit": "stopy",
+            "popup": "Nachádzaš sa vo vzdialenosti {distance} {unit} od tohto bodu",
+            "outsideMapBoundsMsg": "Vyzerá to, že sa nachádzaš za hranicami tejto mapy"
+        },
+        "zoombuttons": {
+            "zoomInTooltip": "Zväčšiť priblíženie",
+            "zoomOutTooltip": "Zmenšiť priblíženie",
+            "zoomAllTooltip": "Zoom to max extent"
+        },
+        "fullscreen": {
+            "tooltipActivate": "Prepnúť na celú obrazovku",
+            "tooltipDeactivate": "Ukončiť režim celej obrazovky",
+            "viewLargerMap": "Zobraziť väčšiu mapu"
+        },
+        "helptexts": {
+            "scaleBox": "Toto je pomocný text pre ScaleBox",
+            "zoomToMaxExtentButton": "Toto je pomocný text pre ZoomToMaxExtentButton",
+            "zoomIn": "Toto je pomocný text pre ZoomIn",
+            "zoomOut": "Toto je pomocný text pre ZoomOut",
+            "searchBar": "Napíš adresu miesta, ktoré chceš nájsť. Napríklad:  '1st avenue, new york'. Môžeš použiť aj súradnice v tomto formáte: 43.87,10.20",
+            "metadataexplorer": "Toto je pomocný text pre MetadataExplorer",
+            "settingsPanel": "Toto je pomocný text pre SettingsPanel",
+            "gohome": "Toto je pomocný text pre Home",
+            "measureComponent": "Toto je pomocný text pre MeasureComponent",
+            "layerSwitcher": "Toto je pomocný text pre LayerSwitcher",
+            "infoButton": "Toto je pomocný text pre InfoButton",
+            "locateBtn": "Toto je pomocný text pre LocateBtn",
+            "snapshot": "Toto je pomocný text pre Snapshot",
+            "print": "Toto je pomocný text pre Print",
+            "shapefile": "Toto je pomocný text pre Shapefile",
+            "rasterstyler": "Definuj minimálnu/maximálnu hodnotu, počet kategórií a farebnú škálu pre vygenerovanie novej klasifikácie pre vybranú rastrovú vrstvu",
+            "expandToolbar": "Toto je pomocný text pre Rozbaľ / Zabaľ",
+            "historyundo": "Týmto tlačidlom sa dostaneš na predošlé priblíženie a umiestnenie mapy",
+            "historyredo": "Týmto tlačidlom sa dostanete na ďalšie priblíženie a umiestnenie mapy",
+            "vectorstyler": "Pridať pravidlo a vygenerovať novú štylizovanú vektorovú vrstvu",
+            "styler": "Pridať pravidlo a vygenerovať novú vrstvu"
+        },
+        "queryform": {
+            "title": "Pokročilé vyhľadávanie",
+            "query": "Hľadať",
+            "apply": "Aplikovať",
+            "reset": "Resetovať",
+            "save": "Uložiť",
+            "discard": "Vrátiť späť",
+            "query_request_exception": "Chyba požiadavku",
+            "config": {
+                "load_config_exception": "Chyba pri načítaní konfigurácie"
+            },
+            "comboField": {
+                "default_placeholder": "Vybrať...",
+                "drop_down": "Otvoriť rozbaľovacie menu"
+            },
+            "form": {
+                "header": "Nájsť v datasete",
+                "dataset_header": "Dataset"
+            },
+            "emptyfilter": "Nie je nastavený žiaden filter. Ak server nepodporuje stránkovanie, časový limit uplynie a hľadanie sa vypne.",
+            "attributefilter":{
+                "add_condition": " Pridať podmienku",
+                "delete": " Odstrániť",
+                "deleteGroup": "Odstrániť skupinu",
+                "add_group": " Pridať skupinu",
+                "group_label_a": "Zhoda",
+                "group_label_b": "of the following conditions:",
+                "combo_placeholder": "Attribút",
+                "text_placeholder": "Zadaj text, ktorý chceš vyhľadať",
+                "attribute_filter_header": "Attribute filter",
+                "tooltipTextField": "use <b>*</b> for any number of any char</br>use <b>.</b> for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
+                "groupField": {
+                    "any": "akýkoľvek",
+                    "all": "všetko",
+                    "none": "žiadny"
+                },
+                "numberfield": {
+                    "isRequired": "Hodnota poľa je povinná",
+                    "wrong_range": "Dolná hranica musí byť nižšia ako horná hranica"
+                },
+                "datefield": {
+                    "wrong_date_range": "Dátum začatia musí byť skôr ako dátum ukončenia"
+                },
+                "autocomplete": {
+                    "emptyList": "Žiadne výsledky",
+                    "emptyFilter": "Filter nevrátil žiadne výsledky",
+                    "open": "Otvoriť combobox"
+                }
+            },
+            "spatialfilter": {
+                "filterType": "Typ filtra",
+                "geometric_operation": "Geometrická operácia",
+                "combo_placeholder": "Vybrať...",
+                "spatial_filter_header": "Oblasť záujmu",
+                "remove": "Odstrániť",
+                "draw_start_label": "Nakresli oblasť záujmu na mapu",
+                "dwithin_label": "metre",
+                "details": {
+                    "detail_button_label": "Detaily",
+                    "details_header": "Výber detailov",
+                    "details_bbox_label": "Uprav súradnice pre zmenu oblasti",
+                    "details_circle_label": "Úpravou číselných polí uprav polomer a stred kruhu",
+                    "reset_bbox": "Resetovať",
+                    "save_bbox": "Uložiť úpravy BBOX",
+                    "save_radius": "Uložiť zmeny polomeru/stredu",
+                    "radius": "Polomer({unit})"
+                },
+                "methods": {
+                    "zone": "Zóna",
+                    "viewport": "Výrez",
+                    "regions": "Regióny",
+                    "box": "Obdĺžnik",
+                    "buffer": "Buffer",
+                    "circle": "Kruh",
+                    "poly": "Polygon",
+                    "cql":   "CQL"
+                },
+                "operations": {
+                    "intersects": "Priesečníky",
+                    "bbox": "BoundingBox",
+                    "contains": "Sa nachádza v",
+                    "dwithin": "vzdialenosti od",
+                    "within": "Contains"
+                }
+            },
+            "crossLayerFilter": {
+                "title": "Filter vrstiev",
+                "targetLayer": "Cieľová vrstva",
+                "clear": "Obnoviť filter",
+                "operation": "Operácia",
+                "placeholder": "Vybrať vrstvu",
+                "errors": {
+                    "noCrossLayerAvailable": "Filtrovanie medzi vrstvami nie je dostupné pre vybranú vrstvu",
+                    "layersExcluded": "Iba vrstvy, ktoré sú z rovnakého zdroja, môžu byť vybrané ako cieľové pre tento typ filtra"
+                }
+            },
+            "changedFilter": "Filter bol zmenený",
+            "changedFilterAlert": "Boli vykonané zmeny, ktoré neboli uložené. Chceš ich uložiť?",
+            "resetFilter": "Odstrániť filter",
+            "confirmReset": "Potvrdiť",
+            "loadingError": "Aktuálny filter spôsobil problém s vykreslením vrstvy na mape. Prosím, skontroluj serverovú konfiguráciu vrstvy na alebo oprav filter.",
+            "changedFilterWithErrorAlert": "Filter spôsobuje problém s vykresľovaní vrstvy, chceš ho aj napriek tomu uložiť?"
+        },
+        "annotations": {
+            "errorLoadingSymbols": "Pri načítavaní zoznamu symbolov sa vyskytol problém. Prosím, kontaktuj správu pre skontrolovanie možností konfigurácie.",
+            "edit": "Upraviť",
+            "remove": "Odstrániť",
+            "save": "Uložiť anotáciu",
+            "saveGeometry": "Uložiť geometriu",
+            "cancel": "Zrušiť",
+            "back": "Späť k anotácii",
+            "applyStyle": "Použiť štýl",
+            "addGeometry": "Pridať novú geometriu",
+            "styleGeometry": "Zmeniť štýl",
+            "deleteGeometry": "Remove all annotation geometries",
+            "geometries": "Geometrie",
+            "removeannotation": "Chceš odstrániť anotáciu s názvom: {title}?",
+            "removegeometry": "Chceš odstrániť funkciu anotácií?",
+            "confirm": "Potvrdiť",
+            "mandatory": "Povinné pole",
+            "emptygeometry": "Pridaj aspoň jednu platnú geometriu",
+            "empty": "Zatiaľ nemáš žiadne anotácie. Kliknutím na [+] pridáš anotácie",
+            "add": "Nové",
+            "filter": "Filtrovať anotácie...",
+            "undo": "Naozaj chceš opustiť režim úprav anotácií?",
+            "titleUndoGeom": "Geometria bola zmenená",
+            "undoGeom": "Určite chceš odísť bez uloženia zmien? (Neuložené zmeny budú zrušené)",
+            "confirmGeom": "Potvrdiť",
+            "cancelModalGeom": "Zrušiť",
+            "deleteFeature": "Odstrániť tento prvok",
+            "undoDeleteFeature": "Určite chceš odstrániť tento prvok?",
+            "enableEdit": "Povoliť úpravy",
+            "editMeasurement": "Upraviť rozmery",
+            "title": "Anotácie",
+            "zoomTo": "Priblížiť na anotáciu",
+            "zoomToGeometry": "Priblížiť ku geometrii",
+            "removeGeometry": "Odstrániť",
+            "hide": "Schovať anotáciu",
+            "show": "Ukázať anotáciu",
+            "tabCoordinates": "Súradnice",
+            "warning": "Upozornenie!",
+            "measureWarningText": "Navigating to edit measurement panel will remove any styling applied",
+            "notShowAgain": "Túto správu už nezobrazovať",
+            "tabStyle": "Štýl",
+            "insertText": "Prosím, vlož textovú anotáciu.",
+            "downloadtooltip": "Stiahnuť anotácie",
+            "downloadcurrenttooltip": "Stiahnuť aktuálnu anotáciu",
+            "downloadError": "Chyba exportu",
+            "loadtooltip": "Importovať anotácie",
+            "loadtitle": "Importovať anotácie",
+            "selectfiletext": "Sem presuň súbor alebo kliknutím vyber súbor s anotáciami, ktorý chceš importovať. (podporovaný formát: JSON)",
+            "loadoverride": "Nahradiť anotácie",
+            "loaderror": "Vyber jeden alebo viac súborov s anotáciami (podporované súbory: JSON)",
+            "defaulttitle": "Upraviť predvolený nadpis",
+            "field": {
+                "title": "Nadpis",
+                "description": "Popis"
+            },
+            "titles": {
+                "marker": " Značka",
+                "line": " Línia",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Kruh"
+            },
+            "editor": {
+                "decimal": "Decimal",
+                "aeronautical": "Aeronautical",
+                "title": {
+                    "Polygon": "Editor polygonu",
+                    "LineString": "LineString editor",
+                    "Bearing": "Bearing editor",
+                    "Circle": "Editor kruhu",
+                    "Point": "Editor značky",
+                    "MultiPoint": "Multipoint editor",
+                    "Text": "Editor textu"
+                },
+                "center": "Stred",
+                "add": "Pridať nové súradnice",
+                "addByClick": "Pridaj nové súradnice kliknutím na tlačítko 'plus' alebo kliknutím na mapu",
+                "valid": "Geometria je platná",
+                "radius": "Polomer",
+                "text": "Text",
+                "lat": "Zemepisná šírka",
+                "lon": "Zemepisná dĺžka",
+                "notValidMarker": "Zadaj platné súradnice (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Všetky súradnice musia byť platné (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Vlož textovú hodnotu a platné súradnice (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Vlož hodnotu polomeru a platné súradnice (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Nový"
+            }
+        },
+        "user":{
+            "login": "Prihlásiť",
+            "logout": "Odhlásiť",
+            "info": " Detaily účtu",
+            "details": " Detaily používateľa",
+            "noAttributesMessage": "S týmto účtom nie sú spojené žiadne informácie",
+            "changePwd": "Zmeniť heslo",
+            "newPwd": "Nové heslo",
+            "retypePwd": "Heslo znovu",
+            "passwordMinlenght": "Tvoje heslo musí mať aspoň {data} znakov",
+            "passwordCheckFail": "Heslá sa nezhodujú!",
+            "passwordInvalid": "Nesprávne heslo",
+            "username": "Používateľské meno",
+            "password": "Heslo",
+            "passwordMessage": "Heslo musí mať aspoň 6 znakov. Platné symboly pre heslo sú čísla, veľké a malé písmená a špeciálne symboly: ! @ # $ % & * _.",
+            "passwordInvalidChar": "Heslo musí obsahovať tieto symboly: {data}",
+            "passwordChanged": "Heslo bolo zmenené",
+            "passwordError": "Nastala chyba pri zmene hesla",
+            "signIn":"Prihlásiť sa",
+            "loginFail":"Prihlásenie zlyhalo",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Prosím, vlož používateľské meno a heslo",
+                "usernamePwdIncorrect":"Používateľské meno alebo heslo sú nesprávne"
+            },
+            "detailsName": "Meno",
+            "detailsRole": "Rola",
+            "detailsGroups": "Skupiny",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Spoločnosť",
+            "detailsNotes": "Poznámky"
+        },
+        "users": {
+            "title": "Spravovať účty",
+            "users": "Používatelia",
+            "manageUsers": "Spravovať používateľov",
+            "searchUsers": "Vyhľadať používateľov...",
+            "newUser": "Nový používateľ",
+            "editUser": "Upraviť používateľa",
+            "deleteUser": "Odstrániť používateľa",
+            "statusTitle": "status",
+            "enabled": "Enabled",
+            "groupTitle": "Skupiny:",
+            "roleTitle": "Role",
+            "saveUser": "Uložiť",
+            "savingUser": "Ukladám...",
+            "userSaved": "Uložené!",
+            "createUser": "Vytvoriť",
+            "creatingUser": "Vytváram...",
+            "userCreated": "Vytvorené!",
+            "deleting": "Odstraňuje sa...",
+            "delete": "Odstrániť",
+            "confirmDeleteUser": "Si si istý, že chceš odstrániť tohto používateľa?",
+            "errorDelete": "Pri odstraňovaní tohto používateľa sa vyskytla chyba:",
+            "errorSaving": "Pri ukladaní používateľa sa vyskytla chyba:",
+            "selectedGroups": "VYBRANÉ SKUPINY",
+            "requiredFiedsMessage": "Polia označené hviezdičkou (*) sú povinné"
+        },
+        "usergroups": {
+          "searchGroups": "Hladať skupiny...",
+          "groups": "Skupiny",
+          "nameLimit": "Názov je obmedzený na 255 znakov.",
+          "descLimit": "Popis je obmedzený na 255 znakov.",
+          "editGroup": "Upraviť skupinu",
+          "deleteGroup": "Odstrániť skupinu",
+          "removeUser": "Odstrániť používateľa",
+          "newGroup": "Nová skupina",
+          "manageGroups": "Spravovať skupiny",
+          "description": "Popis:",
+          "noDescriptionAvailable": "(Bez popisu)",
+          "groupName": "Názov skupiny",
+          "groupDescription": "Popis",
+          "saveGroup": "Uložiť",
+          "createGroup": "Vytvoriť",
+          "creatingGroup": "Vytváram...",
+          "groupMembers": "Členovia:",
+          "addMember": "Pridať člena:",
+          "selectMemberPlaceholder": "Vybrať člena...",
+          "noUsers": "V tejt skupine nie sú žiadni používatelia",
+          "errorSaving": "Pri ukladaní tejto skupiny sa vyskytla chyba",
+          "errorDelete": "Pri odstraňovaní tejto skupiny sa vyskytla chyba",
+          "confirmDeleteGroup": "Si si istý, že chceš odstrániť túto skupinu?"
+        },
+        "share":{
+            "title": "Zdieľať",
+            "titlePanel": "Zdieľať túto mapu",
+            "socialIntro": "Na tvojej obľúbenej sociálnej sieti",
+            "directLinkTitle": "Cez priamy odkaz",
+            "embeddedLinkTitle": "Prostredníctvom vloženého kódu",
+            "social": "Social",
+            "direct": "Link",
+            "code": "Embed",
+            "forceDrawer": "Zobraz TOC",
+            "apiLinkTitle": "Using APIs",
+            "QRCodeLinkTitle": "QR kód",
+            "msgCopiedUrl": "Skopírované",
+            "msgToCopyUrl": "Klikni pre kopírovanie",
+            "sharedTitle": "Pozrite sa na moju novú mapu:",
+            "addCenterAndZoomParam": "Pridať stred a priblíženie do odkazu na zdieľanie",
+            "addMarkerAndZoomParam": "Pridať značku miesta a priblíženie do odkazu na zdieľanie",
+            "zoom": "Priblížiť",
+            "marker": "Pridať značku do načítanej mapy",
+            "coordinate": "Súradnice",
+            "coordTooltip": "Klikni na mapu pre získanie súradníc",
+            "zoomToolTip": "Minimálna hodnota: 1 and Maximálna hodnota: 35",
+            "wrongCenterAndZoomParamTitle": "Neplatný parameter pre stred a priblíženie",
+            "wrongCenterAndZoomParamMessage": "Parametre pre stred a priblíženie musí byť vo formáte center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Neplatný parameter pre značku a priblíženie",
+            "wrongMarkerAndZoomParamMessage": "Parametre pre značku a priblíženie musí byť vo formáte marker=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "advancedOptions": "Pokročilé nastavenia",
+            "addBboxParam": "Pridať parameter bounding box do odkazu na zdieľanie",
+            "wrongBboxParamTitle": "Neplatný parameter pre bounding box",
+            "wrongBboxParamMessage": "Parametre pre bounding box musia byť v súradnicovom systéme EPSG:4326 a vo formáte bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Odkaz na domovskú stránku MapStore",
+            "showSectionId": "Include scroll position",
+            "showConnections": "Zobraziť pripojenia"
+        },
+        "snapshot": {
+            "title": "Ukážka snímky",
+            "save": "Uložiť",
+            "tooltip": "Uložiť snímku mapy.",
+            "googleBingError": "Vrstvy zo zdrojov Google a Bing nie je možné použiť pre snímky z dôvodu autorských práv.",
+            "downloadingSnapshots": "čaká sa na vygenerovanie snímok",
+            "date": "Dátum",
+            "layers": "Vrstvy",
+            "size": "Veľkosť",
+            "notsupported": "Snímka nie je podporovaná",
+            "taintedMessage": "Funkcia ukladania snímky je obmedzená z dôvodu niektorých bezpečnostných pravidiel prehliadača. Pre lepšie výsledky kliknite pravým tlačidlom myši na náhľad a vyberte možnosť „Uložiť obrázok ako“...' (túto možnosť podporuje prehliadač Firefox a Chrome)."
+        },
+        "shapefile": {
+            "title": "Pridať lokálne vektorové súbory",
+            "tooltip": "Pridať lokálne vektorové súbory do mapy",
+            "placeholder": "Sem presuň súbory alebo kliknutím vyber vektorové súbory na import. (podporované formáty: shapefiles (ako archív zip), KML/KMZ, GPX)",
+            "defaultStyle": "Predvolený štýl",
+            "zoom": "Priblížiť na vektorové súbory",
+            "error": {
+                "select": "Vyber jeden alebo viacero súborov. (podporované formáty: shapefiles (ako archív zip), KML/KMZ, GPX)",
+                "shapeFileParsingError": "Nepodarilo sa načítať vektorový súbor. Súbor môže byť poškodený alebo chybný.",
+                "genericLoadError": "Nie je možné načítať vektorový súbor v mape",
+                "missingPrj": "Chýbajú informácie o projekcii (.prj), súradnicový systém má byť EPSG:4326"
+            },
+            "merge": "Zlúčiť s existujúcou vrstvou anotácií",
+            "replace": "Nahradit existujúcu vrstvu anotácií",
+            "add": "Pridať",
+            "cancel": "Zrušiť",
+            "success": " úspešne importované",
+            "next": "Ďalšie",
+            "skip": "Preskočiť",
+            "finish": "Koniec",
+            "layerOf": "{count} vrstva z {total}:",
+            "styleCustomizationDisabled": "Táto vrstva má už definovaný štýl a nie je možné ho prispôsobiť."
+        },
+        "mapImport": {
+            "title": "Importovať",
+            "dropZone": {
+                "heading": "<p><h4>Drop your map context or vector files here</h4><small>or</small></p>",
+                "selectFiles": "Vybrať súbory...",
+                "infoSupported": "<p><small>Podporované mapové kontextové súbory: Starší formát služby MapStore, WMC<br />Podporované súbory vektorovej vrstvy: shapefile (.shp), musia byť zabalené vo formáte .zip, ďalej KML/KMZ, GeoJSON, anotácie alebo GPX</small></p>",
+                "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of map context files</i></small></p>"
+            },
+            "errors": {
+                "fileNotSupported": "Súbor nie je podporovaný",
+                "unknownError": "došlo k neznámej chybe pri importovaní",
+                "projectionNotSupported": "Projekcie súborov, ktoré sa pokúšaš importovať, nie sú podporované"
+            }
+        },
+        "mapExport": {
+            "title": "Exportovať mapu",
+            "exportPanel": {
+                "title": "<p><h4>Vybrať formát</h4></p>",
+                "exportButtonLabel": "Exportovať"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>Formát konfigurácie MapStore mapy</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>Kontextový formát webovej mapy OGC</small></p>",
+                    "note": "<p><small><i><strong>note</strong>: Formát WMC podporuje <strong>iba vrstvy VMS</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "Exportovanie mapy sa nepodarilo",
+            "wmcNoLayersError": "Na export do WMC bola potrebná najmenej jedna vrstva WMS, nenašla sa ani jedna"
+        },
+        "catalog": {
+            "start": "Dátum začiatku ",
+            "end": "Dátum skončenia ",
+            "notAvailable": "Nie je k dispozícii",
+            "title": "Katalóg",
+            "autoload": "Vyhľadať vo vybraných službách",
+            "clearValueText": "Obnoviť výber",
+            "noResultsText": "Bez výsledku",
+            "tooltip": "Prejsť katalóg",
+            "addToMap": "Pridať do mapy",
+            "getWMSLink": "Získať WMS link",
+            "error": "Pri načítaní záznamov z katalógu sa vyskytla chyba",
+            "pageInfo": "Výsledky {start}-{end} z {total}",
+            "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {No results} =1 {{total} of {total} matched} other {Loaded {loaded} of {total} matched}}",
+            "noRecordsMatched": "Žiadny záznam sa nezhoduje",
+            "wmsGetCapLink": "WMS",
+            "wfsGetCapLink": "WFS",
+            "share": "Share",
+            "copyToClipboard": "Skopírovať do schránky",
+            "copied": "Skopírované!",
+            "textSearchPlaceholder": "Zadaj text pre vyhľadávanie...",
+            "search": "Vyhľadať",
+            "delete": "Odstrániť",
+            "reset": "Obnoviť",
+            "options": "Možnosti",
+            "srs_not_allowed": "Súradnicový systém nie je podporovaný touto službou ",
+            "add": "Pridať",
+            "service": "Služba",
+            "servicePlaceholder": "Zadaj názov služby",
+            "url": "URL",
+            "urlPlaceholder": "Zadaj adresu URL",
+            "type": "Type",
+            "serviceTitle": "Nadpis",
+            "serviceTitlePlaceholder": "Zadaj nadpis",
+            "tms": {
+              "provider": "Poskytovateľ",
+              "urlTemplate": "URL šablóna",
+              "urlTemplateHint": "<p>Template URL for your custom TMS service, with the possibility to insert variables (expressed using curly braces, e.g. <code>{var_name}</code>) that will be replaced by the application.<br/>. The <code>{x}</code>, <code>{y}</code> and <code>{z}</code> variables are reserved for tile grid coordinate values. You can also use variable <code>{s}</code> for subdomains. Any other variable specified in the URL must be specified also in options inside \"Custom TMS Configuration\" (Advanced Settings)</p>",
+              "customTMSConfiguration": "Vlastná konfigurácia TMS",
+              "customTMSConfigurationHint": "<p>Options can contain:<br/><ul><li><code>\"subdomains\": ['a', 'b']</code>: used for multiple domains, replacingthe <code>{s}</code> in URL template</li><li><code>\"maxNativeZoom\": 20</code>: max zoom from the server</li></ul></p>",
+              "forceDefaultTileGrid": "Force default tile grid",
+              "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resolutions."
+            },
+            "tileprovider": {
+              "tooltip": "x,y,z are tile position, s is the sub-domain (default)"
+            },
+            "missingReference": "Chýbajúce OGC referenčné metadáta",
+            "showDescription": "Zobraziť celý popis",
+            "hideDescription": "Skryť celý popis",
+            "templateFormatDescriptionExample": "Popis vrstvy je",
+            "showTemplate": "Zobraziť šablónu metadát",
+            "showPreview": "Zobraziť náhľad",
+            "advancedSettings": "Pokročilé nastavenia",
+            "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Tento katalóg nie je možné pridať k dostupným, pretože používa protokol HTTP. Zadajte katalógovú adresu URL, ktorá používa protokol https",
+            "notification": {
+                "errorTitle": "Chyba",
+                "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",
+                "warningAddCatalogService": "Vlož platnú adresu URL a názov",
+                "addCatalogService": "Služba bola úspešne pridaná",
+                "duplicatedServiceTitle": "Služba s týmto názvom už existuje. Prosím, zmeň názov",
+                "serviceDeletedCorrectly": "Služba bola úspešne odstránená",
+                "errorServiceUrl": "Služba nie je dostupná. Prosím, skontroluj uvedenú adresu URL"
+            },
+            "backgroundAlreadyAdded": "Pridané do výberu pozadia",
+            "enableLocalizedLayerStyles": {
+                "label": "Povoliť lokalizované štýly",
+                "tooltip": "Poznámka: Tento parameter vyžaduje špecifickú konfiguráciu na platforme GeoServer"
+            },
+            "format": {
+                "noOption": "Žiadna možnosť",
+                "loading": "Načítanie..."
+            }
+        },
+        "uploader": {
+            "filename": "Názov súboru",
+            "type": "Typ",
+            "lastModified": "Naposledy zmenené",
+            "filesize": "Veľkosť",
+            "beforeUpload": "Vykonávanie operácie pred načítaním... ",
+            "uploadingFiles": "Načítavajú sa súbory...",
+            "dropfile": "sem vlož súbory na nahranie",
+            "dropfileImport": "sem presuň súbory pre pridanie do procesu"
+        },
+        "importer": {
+            "title": "Importovať dáta",
+            "imports": "Importovať reláciu",
+            "importN": "Relácia {id}",
+            "creatingImportProcess": " Vytvára sa relácia importu... ",
+            "dropfile": "Sem presuň súbory a vytvor novú reláciu importu",
+            "dropfileImport": "sem presuň súbory pre pridanie do tejto relácie",
+            "process": "Relácia",
+            "number": "#",
+            "workspace": {
+                "create": "Vytvoriť",
+                "createWS": "create a new workspace: ",
+                "target": "target workspace: ",
+                "failure": "Error creating workspace: {statusWS}",
+                "success": "Workspace {statusWS} successfully created",
+                "select": "Select Target Workspace",
+                "new": "New workspace name..."
+            },
+            "import": {
+                "actions": "Akcie",
+                "tasks": "Balíčky",
+                "runImport": "Run",
+                "deleteImport": "Odstrániť reláciu",
+                "deleteTask": "Odstrániť",
+                "status": "Status",
+                "archive": "Archivovať",
+                "deleting": "Odstraňovanie...",
+                "analyzing": "Analyzovanie balíčku...",
+                "applyingPreset": "Aplikovanie predvolieb..."
+            },
+            "task": {
+                "panelTitle": "Importovať balíček {id}",
+                "general": "Všeobecné informácie",
+                "status": "Status",
+                "updateMode": "Režim aktualizácie",
+                "originalData": "Pôvodný súbor",
+                "file": "Názov súboru",
+                "format": "Formát",
+                "targetStore": "Target Store",
+                "storeType": "Store Type",
+                "storeName": "Store Name",
+                "layer": "Vrstva",
+                "transforms": "Transformations Chain",
+                "update": "Aktualizovať",
+                "run": "Importovať tento balíček",
+                "edit": "Upraviť predvolený štýl",
+                "delete": "Odstrániť tento balíček"
+            },
+            "transform": {
+                "panelTitle": "Transformácia {id}",
+                "type": "Typ transformácie",
+                "actions": "Akcie",
+                "options": "Možnosti transformácie",
+                "overviewlevels": "Prehľad úrovní",
+                "delete": "Odstrániť túto transformáciu"
+            }
+        },
+        "rasterstyler": {
+            "tooltip": "Vytvoriť a upraviť štýl rastrovej vrstvy",
+            "paneltitle": "Raster Styler",
+            "layerlabel": "Vrstva",
+            "typelabel": "Typ štýlu",
+            "opacitylabel": "Nepriehľadnosť",
+            "redtitle": "Červená",
+            "greentitle": "Zelená",
+            "bluetitle": "Modrá",
+            "graytitle": "Sivá",
+            "pseudobandtitle": "Band Selection",
+            "eqinttitle": "Equal Interval Classification",
+            "pseudotitle": "PseudoColor Settings",
+            "applybtn": "Použiť štýl"
+        },
+        "bandselector": {
+            "band": "Band",
+            "enhancement": "Enhancement",
+            "algorithmTitle": "Optional Algorithm",
+            "value": "Hodnota",
+            "min": "Min",
+            "max": "Max",
+            "enha": {
+                "none": "Žiaden",
+                "Normalize": "Normalize",
+                "Histogram": "Histogram",
+                "GammaValue": "Gamma Correction"
+            },
+            "algorithm": {
+                "none": "Žiaden",
+                "StretchToMinimumMaximum": "Stretch",
+                "ClipToMinimumMaximum": "Clip",
+                "ClipToZero": "Clip To Zero"
+            }
+        },
+        "equalinterval": {
+            "min": "Min",
+            "max": "Max",
+            "classes": "Kategórie",
+            "ramp": "Farebná škála",
+            "classify": "Klasifikovať",
+            "maxerror": "Maximálna hodnota musí byť vyššia ako minimálna hodnota",
+            "minerror": "Minimálna hodnota musí byť menšia ako maximálna hodnota"
+        },
+        "colormapgrid": {
+            "color": "Farba",
+            "quantity": "Kvantita",
+            "label": "Štítok",
+            "minmaxerror": "The value must be between the values ​​of the previous and next cell"
+        },
+        "pseudocolorsettings": {
+            "type": "Type",
+            "extended": "Extended",
+            "colormap": "Color Map",
+            "add": "Add Entry",
+            "remove": "Remove Entry"
+        },
+        "rasterstyletype": {
+            "rgb": "Red Green Blue",
+            "gray": "Odtiene sivej",
+            "pseudo": "PseudoColor",
+            "multi": "Multi Band",
+            "single": "Single Band"
+        },
+        "featuregrid": {
+            "columns": "Stĺpce",
+            "header": "Hľadať v zozname výsledkov",
+            "tools": "Tool Panel",
+            "export": "Exportovať",
+            "selectall": "Vybrať všetko",
+            "deselectall": "Clear Selection",
+            "backtosearch": "Späť na vyhľadávanie",
+            "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item} other {{total} Items}}",
+            "selectedInfo": "( {selected} Selected )",
+            "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
+            "pagination": {
+                "page": "Strana",
+                "of":   "of",
+                "to":   "to",
+                "more": "more"
+            },
+            "noFeaturesAvailable": "Nie sú k dispozícii žiadne funkcie",
+            "errorSaving": "Pri ukladaní sa vyskytla chyba",
+            "errorProjFetch": "Error retrieving the proj4 string definition from spatialreference.org. Synch tool cannot apply the spatial filter.",
+            "notSupportedGeometryTitle": "Tento typ geometrie nie je podporovaný ",
+            "notSupportedGeometry": "Aktuálny typ geometrie vrstvy nie je úpravami podporovaný, atribúty však môžeš stále upravovať",
+            "yesButton": "Áno",
+            "noButton": "Nie",
+            "deleteButton": "Odstrániť",
+            "clear": "Si si istý, že chceš zrušiť všetký vykonané zmeny?",
+            "featureClose": "Are you sure to close the feature grid?",
+            "delete": "Potvrdzuješ odstránenie {count} prvkov?",
+            "missingGeometry": "Chýbajúca geometria",
+            "filter": {
+                "placeholders": {
+                    "default": "Vyhľadať...",
+                    "string": "Zadaj text na filtrovanie...",
+                    "date": "Zadaj dátum na filtrovanie...",
+                    "number": "Zadaj číslo alebo výraz..."
+                },
+                "tooltips": {
+                    "editMode": "Rýchle vyhľadávanie nie je k dispozícii v režime úprav",
+                    "default": "Vyhľadať...",
+                    "string": "Zadaj text na filtrovanie...",
+                    "number": "Zadaj číslo alebo výraz. Napríklad: 10, > 2, < 10",
+                    "date": "Zadaj dátum alebo výraz. Použi tento dátumový formát {format}.",
+                    "geometry": {
+                        "disabled": "Začni filtrovať kliknutím na mapu/ Alt + kliknutím a potiahnutím začni kresliť zónu filtrovania.  Pre pridanie ďalších prvkov do filtru stlač a podrž ctrl pri výbere.",
+                        "enabled": "Klikni na mapu pre výber prvku / Alt + kliknutím a potiahnutím začni kresliť zónu filtrovania. Pre vybranie viacerých prvkov, podrž ctrl a klikni na ne.",
+                        "applied": "Obnoviť výber"
+                    }
+                }
+            },
+            "toolbar": {
+                "synchPopoverTitle": "Synchronizovať mapu s filtrom ",
+                "synchPopoverText": "Použi tento nástroj pre synchronizáciu mapy s vybraným filtrom",
+                "notShowAgain": " Túto správu už nezobrazovať",
+                "editMode": "Režim úprav",
+                "advancedFilter": "Pokročilé nastavenia",
+                "quitEditMode": "Odísť z režimu uúprav",
+                "addNewFeatures": "Pridať nový prvok",
+                "editFeature": "Upraviť prvok",
+                "drawGeom": "Nakresliť prvok",
+                "stopDrawGeom": "Zrušiť vytváranie geometrie",
+                "addGeom": "Pridaj tvar do existujúcej geometrie",
+                "deleteSelectedFeatures": "Odstrániť vybrané prvky",
+                "saveChanges": "Uložiť zmeny",
+                "saving": "Ukladám...",
+                "cancelChanges": "Zrušiť zmeny",
+                "deleteGeometry": "Odstrániť geometriu",
+                "downloadGridData": "Download grid data",
+                "hideShowColumns": "Skryť / zobraziť stĺpce",
+                "zoomAll": "Zoom to page extent",
+                "syncOnMap": "Synchronizovať mapu s filtrom",
+                "enableTimeSync": "Synchronizovať s vybraným časom alebo časovým intervalom",
+                "disableTimeSync": "Nesynchronizovať s vybraným časom alebo intervalom",
+                "createNewChart": "Vytvoriť graf pre vybranú vrstvu"
+            }
+        },
+        "layerdownload": {
+            "title": "Exportovať dáta",
+            "format": "Formát súboru",
+            "srs":  "Spatial Reference System",
+            "export": "Exportovať",
+            "downloadonlycurrentpage": "Stiahnuť iba aktuálnu stránku",
+            "cropDataSet": "Crop dataset to current viewport",
+            "downloadFilteredDataSet": "Stiahnuť vyfiltrovaný dataset",
+            "advancedOptions": "Pokročilé nastavenia",
+            "compression": "Kompresia",
+            "tileWidth": "Šírka dlaždice",
+            "tileHeight": "Výška dlaždice",
+            "quality": "Kvalita",
+            "error": {
+                "title": "Nastala chyba pri exportovaní",
+                "invalidOutputFormat": "Vybratý formát exportu nie je k dispozícii",
+                "downloadEstimatorTitle": "DownloadEstimator error",
+                "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+            },
+            "exportResultsMessages": {
+                "newExport": "Súbor bude k dispozícii po dokončení exportovania",
+                "exportFailure": "Exportovanie vrstvy \"{layerTitle}\"sa nepodarilo! Pre viac informácií otvor dialógové okno s výsledkami exportu.",
+                "exportSuccess": "Exportovanie vrstvy \"{layerTitle}\" prebehlo úspešne.",
+                "invalidHref": "Odpoveď zo servera neobsahovala platnú adresu URL pre exportované súbory!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Proces sťahovania zlyhal! Server vrátil nasledujúcu správu o výnimke: \"{exceptionReport}\"",
+                "badResponse": "Proces sťahovania zlyhal! Server vrátil nesprávne údaje, kód chyby: \"{errorCode}\"",
+                "executeProcessXhrFailed": "ExecuteProcess požiadavok zlyhal! ",
+                "getExecutionStatusXhrFailed": "GetExecutionStatus požiadavok zlyhal! Server môže byť nesprávne nakonfigurovaný alebo sa stal nedostupným",
+                "unexpectedError": "Nastala neznáma chyba"
+            },
+            "noSupportedServiceFound": "Server pre túto vrstvu nepodporuje sťahovanie WFS ani WPS!"
+        },
+        "exportDataResults": {
+            "title": "Export data results",
+            "emptyStateMessage": "Zoznam na export je prázdny"
+        },
+        "widgets": {
+            "types": {
+                "map": {
+                    "title": "Mapa",
+                    "caption": "pridať mapu"
+                },
+                "legend": {
+                    "title": "Legenda",
+                    "caption": "pridať legendu"
+                },
+                "chart": {
+                    "title": "Graf",
+                    "caption": "pridať graf"
+                },
+                "text": {
+                    "title": "Text",
+                    "caption": "pridať textové pole"
+                },
+                "table": {
+                    "title": "Tabuľka",
+                    "caption": "pridať tabuľku"
+                },
+                "counter": {
+                    "title": "Počítadlo",
+                    "caption": "pridať počítadlo"
+                }
+            },
+            "selectWidgetType": "Vybrať typ widgetu",
+            "selectChartType": {
+                "title": "Vybrať typ grafu"
+            },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Žiadne vrstvy",
+                    "noLayerDescription": "V mape nie sú žiadne vrstvy. Ak chceš pridať vrstvu z katalógu, klikni na tlačidlo „+“ na paneli nástrojov v hornej časti"
+                },
+                "emptyMap": {
+                    "title": "Prázdna mapa",
+                    "description": "Začať s prázdnou mapou"
+                }
+            },
+            "title": "Nadpis",
+            "description": "Popis",
+            "errors": {
+                "notext": "Nie je k dispozícii žiadny text",
+                "nodata": "Pre vybratú vrstvu / filter nie sú k dispozícii žiadne dáta",
+                "noLegend": "Legenda nemá žiadne položky k zobrazeniu",
+                "noLegendDescription": "Pripojená mapa nemá žiadne vrstvy, ktoré by sa mohli zobraziť v legende",
+                "nodatainviewport": "V aktuálnom výreze nie sú žiadne dáta",
+                "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
+                "genericError": "Počas zhromažďovania dát sa vyskytla chyba",
+                "genericErrorWithMessage": "Počas zhromažďovania dát sa vyskytla chyba: \"{message}\""
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Späť na výber typu grafu",
+                    "backToWidgetTypeSelection": "Späť na výber typu widgetu",
+                    "backToFeatureGrid": "Back to the feature grid",
+                    "backToLayerSelection": "Späť na výber vrstvy",
+                    "backToMapSelection": "Späť na výber mapy",
+                    "backToPreview": "Späť na prehľad",
+                    "backToChartOptions": "Späť na možnosti grafu",
+                    "selectALayer": "Vybrať vrstvu",
+                    "selectAMap": "Vybrať mapu",
+                    "configureChartOptions": "Konfigurácia nastavení grafu",
+                    "configureWidgetOptions": "Konfigurácia nastavení widgetu",
+                    "backToTableOptions": "Späť k nastaveniam tabuľky",
+                    "configureTableOptions": "Konfigurovať nastavenia tabuľky",
+                    "resetColumnsSizes": "Obnoviť všetky zmeny veľkostí stĺpcov",
+                    "updateWidget": "Aktualizácia widgetu",
+                    "addTheWidget": "Pridať widget",
+                    "titlePlaceholder": "Vložiť nadpis...",
+                    "textPlaceholder": "Vložiť text...",
+                    "useThisMap": "Použiť túto mapu",
+                    "configureMapOptions": "Konfigurovať nastavenia mapy",
+                    "enableIdentifyTool": "Zapnúť nástroj na identifikáciu",
+                    "disableIdentifyTool": "Vypnúť nástroj na identifikáciu",
+                    "preview": "Ukážka",
+                    "addLayer": "Pridať vrstvu do mapy",
+                    "useTheSelectedLayer": "Použiť vybranú vrstvu",
+                    "connectToAMap": "Pripojiť k ďalšiemu widgetu",
+                    "connectToTheMap": "Pripojiť k inému widgetu",
+                    "selectMapToConnect": "Vybrať widget pre pripojenie",
+                    "clearConnection": "Obnoviť pripojenie"
+                },
+                "errors": {
+                    "noAttributesTitle": "Žiadne atribúty na zobrazenie",
+                    "noAttributesDescription": "Vybratá vrstva nemá žiadne atribúty na zobrazenie. Vyber inú vrstvu alebo typ widgetu",
+                    "noWidgetsAvailableTitle": "Pre vybranú vrstvu nie je možné vytvoriť widget",
+                    "noWidgetsAvailableDescription": "<p><strong>Vyber prosím inú vrstvu alebo iný typ widgetu</strong></p><p>Server neposkytuje potrebné služby pre vybratú vrstvu a typ widgetu</p><p>Možné príčiny: <ul><li>Vybraná vrstva je vrstva rastra</li><li>Služba WFS nie je k dispozícii</li><li>WPS proces <code>gs:aggregate</code>nie je k dispozícii</li></ul></p>",
+                    "checkAtLeastOneAttribute": "Musíš vybrať aspoň jeden stĺpec",
+                    "noMapAvailableForLegend": "Žiadna mapa k dispozícii",
+                    "noMapAvailableForLegendDescription": "Na vytvorenie mapovej legendy potrebuješ minimálne jeden widget"
+                },
+                "setupFilter": "Nakonfigurujte filter pre dáta widgetu"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Ukáž dáta grafu",
+                    "edit": "Upraviť",
+                    "delete": "Odstrániť",
+                    "collapse": "Zabaliť",
+                    "confirmDelete": "Si si istý?",
+                    "downloadData": "Stiahnuť dáta",
+                    "exportImage": "Exportovať obrázok",
+                    "maximize": "Maximalizovať",
+                    "minimize": "Minimalizovať",
+                    "pin": "Pripnúť",
+                    "unpin": "Odopnúť",
+                    "hide": "Schovať",
+                    "hideDescription": "Skryť tento widget pred ostatnými používateľmi",
+                    "unhide": "Zrušiť schovanie",
+                    "unhideDescription": "Zrušiť schovanie widgetu pred ostatnými používateľmi"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Stĺpcový graf",
+                    "description": "Vytvor stĺpcový graf, ktorý chceš pridať do mapy",
+                    "caption": "stĺpcový"
+                },
+                "pie": {
+                    "title": "Koláčový graf",
+                    "description": "Vytvor koláčový graf, ktorý chceš pridať do mapy",
+                    "caption": "koláčový"
+                },
+                "line": {
+                    "title": "Líniový graf",
+                    "description": "Vytvor líniový graf, ktorý chceš pridať do mapy",
+                    "caption": "líniový"
+                },
+                "gauge": {
+                    "title": "Prechodový graf",
+                    "description": "Vytvor prechodový graf, ktorý chceš pridať do mapy",
+                    "caption": "prechodový"
+                }
+            },
+            "chartOptionsTitle": "Konfigurovať dáta",
+            "widgetOptionsTitle": "Konfigurovať informácie widgetu",
+            "placeHolder":{
+                "default":"Vybrať atribút"
+            },
+            "operations": {
+              "COUNT": "POČET",
+              "SUM":"SÚČET",
+              "AVG":"PRIEMER",
+              "STDDEV":"STDDEV",
+              "MIN":"MIN",
+              "MAX":"MAX",
+              "NONE": "Žiadna operácia"
+            },
+            "groupByAttributes": {
+                "line": "Atribút X",
+                "pie": "Zoskupiť podľa",
+                "bar": "Atribút X",
+                "gauge": "Zoskupiť podľa",
+                "counter": "Zoskupiť podľa",
+                "default": "Zoskupiť podľa"
+            },
+            "aggregationAttribute": {
+                "line": "Atribút Y",
+                "pie": "Použiť",
+                "bar": "Atribút Y",
+                "gauge": "Použiť",
+                "counter": "Použiť",
+                "default": "Použiť"
+            },
+            "aggregateFunction": {
+                "line": "Operácia",
+                "pie": "Operácia",
+                "bar": "Operácia",
+                "gauge": "Operácia",
+                "counter": "Operácia",
+                "default": "Operácia"
+            },
+            "colorRamp": {
+                "line": "Farba",
+                "pie": "Farebná škála",
+                "bar": "Farba",
+                "gauge": "Farba",
+                "counter": "Farba",
+                "default": "Farba"
+            },
+            "uom": {
+                "line": "Merná jednotka",
+                "pie": "Merná jednotka",
+                "bar": "Merná jednotka",
+                "gauge": "Merná jednotka",
+                "counter": "Merná jednotka",
+                "default": "Merná jednotka"
+            },
+            "mapSync": "Live Filter by viewport",
+            "displayLegend": {
+                "line": "Zobraziť legendu",
+                "pie": "Zobraziť legendu",
+                "bar": "Zobraziť legendu",
+                "gauge": "Zobraziť štítky"
+            },
+            "advanced": {
+              "displayCartesian": "Skryť mriežku",
+              "xAxis": "Os X",
+              "xAxisAngle": "Rocátia štítku",
+              "hideLabels": "Schovať štítky",
+              "format": "Formát",
+              "prefix": "Predpona",
+              "suffix": "Prípona",
+              "examples": "Príklady",
+              "formatExamples": "<div><ul><li><code>.0%</code>: rounded percentage, '12%'</li><li><code>.2s</code>:SI-prefix with two significant digits, '42M'</li><li><code>,.2r</code>: grouped thousands with two significant digits '4,200'</li></ul><em>More information about formatting syntax <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">here</a>.</em></div>",
+              "formula": "Formula",
+              "formulaExamples": "<div>Transform the value using a formula. Use the variable <code>value</code> in the expression:<h5>Examples</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em>More information about the syntax <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">here</a>.</em></div>",
+              "xAxisType": "Type",
+              "forceTicks": "Never skip labels",
+              "maxXAxisLabels": "The labels can not anyway be more than {max}",
+              "yAxis":  "Os Y",
+              "yAxisType": "Typ",
+              "yAxisLabel": "Štítok legendy",
+              "title": "Pokročilé nastavenia",
+              "legend": "Legenda",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Lineárna",
+                "category": "Kategória",
+                "log": "Log",
+                "date": "Dátum"
+              }
+            },
+            "tray": {
+                "title": "Widgety",
+                "expandTray": "Expand widgets tray",
+                "collapseTray": "Collapse widgets tray",
+                "expandAll": "Expand all widgets",
+                "collapseAll": "Collapse all widgets",
+                "notifications" : {
+                    "collapsed": {
+                        "message": "Timeline and widgets can not stay at the same time. Use on the widget's tray to switch between timeline and widgets",
+                        "timelineTitle": "Timeline has been collapsed",
+                        "widgetsTitle": "Widgets has been collapsed"
+                    }
+                }
+            }
+        },
+        "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
+                    "pleaseLogin": "This dashboard is not public. Please try to login",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                },
+                "resourceAlreadyExists": "A resource with this name already exists",
+                "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
+                "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+            },
+            "editor": {
+                "save": "Save the dashboard",
+                "addACardToTheDashboard": "Add a widget to the dashboard",
+                "showConnections": "Show connections",
+                "hideConnections": "HideConnections"
+            },
+            "emptyTitle": "The dashboard is empty"
+        },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Loading Dashboard",
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard",
+                    "pleaseLogin": "This dashboard is not public",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                }
+            },
+            "emptyTitle": "The dashboard is empty"
+        },
+        "context": {
+            "loadingSpinner": "Načítavanie kontextu",
+            "errors":{
+                "loading": {
+                    "title": "Chyba pri načítavaní kontextu",
+                    "notAccessible": "Nemáš povolenie na prístup k určitému zdroju. Požiadaj správcu o prístup.",
+                    "pleaseLogin": "Niektoré zdroje nemusia byť verejné. Skús sa prihlásiť.",
+                    "unknownError": "Pri načítaní mapy alebo kontextu sa vyskytla chyba. Kontaktuj správcu.",
+                    "notFound": "Zdroj sa nenašiel",
+	                "notAccessible": "Zdroj nie je dostupný"
+                },
+                "context": {
+                    "notAccessible": "Nemáš povolenie na prístup do tohto kontextu. Kontaktuj vlastníka zdroja.",
+                    "pleaseLogin": "Tento kontext nie je verejný. Skús sa prihlásiť.",
+                    "unknownError": "Pri načítaní kontextu sa vyskytla chyba. Kontaktuj správcu.",
+                    "notFound": "Kontext, ku ktorému sa pokúšaš dostať, neexistuje.",
+	                "notAccessible": "Nemáš povolenie na prístup do tohto kontextu. Požiadaj správcu o prístup"
+                },
+                "template": {
+                    "title": "Chyba pri načítavaní šablóny",
+                    "notAccessible": "Nemáš povolenie na prístup k tejto šablóne. Požiadaj správcu o prístup",
+                    "pleaseLogin": "Táto šablóna nie je verejná. Skús sa prihlásiť.",
+                    "unknownError": "Pri načítaní šablóny sa vyskytla chyba. Kontaktuj správcu.",
+                    "notFound": "Šablóna, ku ktorej sa pokúšaš získať prístup, neexistuje."
+                },
+                "map": {
+                    "notAccessible": "Nemáš povolenie na prístup k tejto mape.",
+                    "pleaseLogin": "Zvolená mapa nie je verejná. Skús sa prihlásiť.",
+                    "unknownError": "Pri načítaní mapy sa vyskytla chyba. Kontaktujte správcu.",
+                    "notFound": "Mapa, ku ktorej sa pokúšaš dostať, neexistuje.",
+	                "notAccessible": "Nemáš povolenie na prístup k tejto mapu. Požiadaj správcu o prístup"
+                },
+                "plugins": {
+                  "upload": "Chyba počas nahrávania pluginu",
+                  "uninstall": "Chyba počas odinštalovania pluginu"
+                },
+                "resourceAlreadyExists": "Zdroj s týmto názvom už existuje"
+            }
+        },
+        "wizard": {
+            "next": "Ďalšie",
+            "prev": "Predošlé",
+            "finish": "Koniec"
+        },
+        "vectorstyler": {
+            "tooltip": "Vytvoriť a upraviť štýl vektorovej vrstvy",
+            "paneltitle": "Vektorový styler",
+            "layerlabel": "Vrstva",
+            "rulelabel": "Pravidlá",
+            "namelabel": "Názov pravidla",
+            "symboltitle": "Symbol",
+            "labeltitle": "Štítok",
+            "conditiontitle": "Podmienky",
+            "applybtn": "Aplikovať štýl",
+            "addrulebtn": "Pridať pravidlo",
+            "removerulebtn": "Odstrániť pravidlo"
+        },
+        "scaledenominator": {
+            "minlabel": "Min Scale Denominator",
+            "maxlabel": "Max Scale Denominator",
+            "maxerror": "Maximálna hodnota musí byť vyššia ako minimálna hodnota",
+            "minerror": "Minimálna hodnota musí byť menšia ako maximálna hodnota",
+            "none": "Žiaden"
+        },
+        "markNameSelector": {
+            "circle": "Kruh",
+            "square": "Štvorec",
+            "triangle": "Trojuholník",
+            "star": "Hviezdička",
+            "cross": "Krížik",
+            "x": "X"
+        },
+        "styler": {
+            "tooltip": "Vytvorte a upravte štýl vrstvy",
+            "paneltitle": "Styler",
+            "layerlabel": "Vrstva"
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtrujte štýly podľa názvu, nadpisu alebo abstraktu",
+            "templateFilterPlaceholder": "Filtrujte šablóny štýlov podľa názvu",
+            "createStyleFromTemplate": "Vyberte šablónu pre vytvorenie nového štýlu",
+            "titleRequired": "<div>Názov je povinný!</div><div>Názov a abstrakt musí byť alfanumerický</div>",
+            "titleSettings": "Názov",
+            "titleSettingsplaceholder": "Vlož názov (alphanumeric)",
+            "abstractSettings": "Abstrakt",
+            "abstractSettingsplaceholder": "Vlož abstrakt (alphanumeric)",
+            "createStyleModalTitle": "Vytvoriť nový štýl",
+            "filterMatchNotFound": "Zadanému textovému filtru nezodpovedajú žiadne štýly",
+            "backToList": "Späť na zoznam štýlov",
+            "createNewStyle": "Vytvoriť nový štýl",
+            "editSelectedStyle": "Upraviť vybraný štýl",
+            "saveCurrentStyle": "Uložiť aktuálny štýl",
+            "addSelectedTemplate": "Pridať vybranú šablónu do zoznamu štýlov",
+            "deleteSelectedStyle": "Odstrániť vybraný štýl",
+            "closeWithoutSaveAlertTitle": "Štýl bol zmenený",
+            "closeWithoutSaveAlert": "Opúšťate editor štýlu bez uloženia zmien",
+            "deleteStyleAlertTitle": "Odstrániť štýl",
+            "deleteStyleAlert": "Vybratý štýl bude natrvalo odstránený",
+            "delete": "Odstrániť",
+            "defaultStyle": "Predvolený štýl",
+            "availableStyle": "Dostupný štýl",
+            "styleNotFound": "Štýl sa nenašiel",
+            "noPermission": "Používateľ nemôže upravovať štýly",
+            "deletedStyleSuccessTitle": "Odstrániť štýl",
+            "deletedStyleSuccessMessage": "Štýl bol úspešne odstránený",
+            "deletedStyleErrorTitle": "Chyba odstraňovania štýlu",
+            "deletedStyleErrorMessage": "Aktuálny štýl sa nepodarilo odstrániť",
+            "savedStyleTitle": "Štýl bol uložený",
+            "savedStyleMessage": "Štýl bol úspešne uložený",
+            "errorTitle": "StyleEditor error",
+            "parsingCapabilitiesError": "<h4>Possible causes:</h4> it was not possible parse the capabilities and retrieve the styles",
+            "globalError": "<h4>Možné príčiny:</h4> nebolo možné sa pripojiť k službe",
+            "missingAvailableStylesMessage": "<ul><h4>Možné príčiny:</h4> <li>Vybraná vrstva je skupina vrstiev</li><li>Vrstva nie je správne nakonfigurovaná na strane servera</li></ul>",
+            "createTmpErrorTitle": "Nový dočasný štýl",
+            "createTmpStyleErrorMessage": "Nový dočasný štýl nebolo možné vytvoriť. Mohol to spôsobiť nepodporovaný formát štýlu v style service",
+            "updateTmpErrorTitle": "Aktualizácia dočasného štýlu",
+            "updateTmpStyleErrorMessage": "Dočasný štýl nebolo možné aktualizovať. Mohol to spôsobiť nepodporovaný formát štýlu alebo problém s pripojením.",
+            "createStyleErrorTitle": "Nový štýl",
+            "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
+            "updateStyleErrorTitle": "Upraviť štýl",
+            "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "validationErrorTitle": "Chyba overenia",
+            "genericValidationError": "Štýl je neplatný a nebolo možné ho použiť.",
+            "setDefaultStyle": "Nastaviť vybratý štýl ako predvolený pre aktuálnu vrstvu",
+            "setDefaultStyleSuccessTitle": "Úspech pri nastavenom predvolenom štýle",
+            "setDefaultStyleSuccessMessage": "Predvolený štýl bol úspešne použitý",
+            "setDefaultStyleErrorTitle": "Chyba nastaveného predvoleného štýlu",
+            "setDefaultStyleErrorMessage": "Nie je možné použiť vybraný štýl ako predvolený",
+
+            "enterLegendLabelPlaceholder": "Zadať štítok legendy",
+            "addMarkSymbolizer": "Add mark symbolizer",
+            "addMarkRule": "Pridať pravidlo pre označenie",
+            "shape": "Tvar",
+            "fill": "Farba výplne",
+            "strokeColor": "Stroke color",
+            "strokeWidth": "Stroke width",
+            "radius": "Polomer",
+            "rotation": "Rotácia",
+            "addIconSymbolizer": "Add icon symbolizer",
+            "addIconRule": "Pridať pravidlo pre ikony",
+            "image": "Obrázok",
+            "opacity": "Nepriehľadnosť",
+            "size": "Veľkosť",
+            "addLineSymbolizer": "Add line symbolizer",
+            "addLineRule": "Pridať pravidlo pre líniu",
+            "lineStyle": "Štýl línie",
+            "lineCap": "Line cap",
+            "lineJoin": "Line join",
+            "addFillSymbolizer": "Add fill symbolizer",
+            "addFillRule": "Pridať pravidlo pre výplň",
+            "outlineColor": "Farba obrysu",
+            "outlineWidth": "Šírka obrysu",
+            "addTextSymbolizer": "Add text symbolizer",
+            "addTextRule": "Pridať pravidlo pre text",
+            "label": "Štítok",
+            "fontFamily": "Typ písma",
+            "fontColor": "Farba písma",
+            "fontSize": "Veľkosť písma",
+            "fontStyle": "Stýl písma",
+            "fontWeight": "Font weight",
+            "haloColor": "Halo color",
+            "haloWidth": "Halo width",
+            "offsetX": "Offset x",
+            "offsetY": "Offset y",
+            "addRasterSymbolizer": "Add raster symbolizer",
+            "addRasterRule": "Pridať pravidlo pre raster",
+            "colorRamp": "Farebná škála",
+            "reverse": "Opačné poradie",
+            "attribute": "Attribút",
+            "method": "Metóda",
+            "intervals": "Intervaly",
+            "continuous": "Kontinuálne farby",
+
+            "lineCapButt": "Butt",
+            "lineCapRound": "Round",
+            "lineCapSquare": "Square",
+
+            "lineJoinBevel": "Bevel",
+            "lineJoinRound": "Round",
+            "lineJoinMiter": "Miter",
+            "fontStyleNormal": "Normal",
+            "fontStyleItalic": "Kurzíva",
+            "fontWeightNormal": "Normálne",
+            "fontWeightBold": "Tučné",
+            "boolTrue": "True",
+            "boolFalse": "False",
+
+            "circle": " Kruh",
+            "square": "Štvorec",
+            "triangle": "Trojuholník",
+            "star": "Hviezdička",
+            "cross": "Krížik",
+            "x": "X",
+            "verticalLine": "Zvislá čiara",
+            "horizontalLine": "Horizontálna čiara",
+            "slash": "Lomítko",
+            "backslash": "Spätné lomítko",
+            "dot": "Bodka",
+            "plus": "Plus",
+            "times": "Krát",
+            "openArrow": "Open arrow",
+            "closedArrow": "Closed arrow",
+            "band": "Band",
+            "none": "None",
+            "normalize": "Normalize",
+            "histogram": "Histogram",
+            "contrastEnhancement": "Contrast enhancement",
+            "placeholderInput": "Vložiť hodnotu",
+            "placeholderEnterImageUrl": "Vložiť ulr obrázka",
+            "selectPlaceholder": "Vybrať hodnotu",
+            "noResultsSelectInput": "Žiadne výsledky",
+            "channelAuto": "Auto",
+            "openFilterBuilder": "Otvoriť nástroj na tvorbu filtra",
+            "removeRule": "Odstrániť pravidlo",
+
+            "openScaleDenominator": "Open scale denominator filter",
+            "selectScale": "Vybrať mierku",
+            "noResultScales": "Filtru nezodpovedá žiadna mierka",
+            "maxScaleDenominator": "Maximálna mierka",
+            "minScaleDenominator": "Minimálna mierka",
+
+            "simpleStyle": "Jednoduchý štýl",
+            "classificationStyle": "Štýl klasifikácie",
+            "patternMarkStyle": "Pattern mark style",
+            "patternIconStyle": "Pattern icon style",
+            "singleBand": "Single band",
+            "rgbaBands": "RGB bands",
+            "pseudoColor": "Pseudo color",
+
+            "undoStyle": "Vrátiť štýl",
+            "redoStyle": "Obnoviť štýl",
+
+            "equalInterval": "Equal interval",
+            "quantile": "Kvantil",
+            "jenks": "Natural breaks (Jenks)",
+            "standardDeviation": "Standard deviation",
+            "switchToTextareaEditor": "Prepnúť na textový editor",
+            "switchToVisualEditor": "Prepnúť na vizuálny editor",
+            "alertForceTranslate": "Prepnutím do vizuálneho editora stratíte všetky zmeny pridané v textovom režime. Naozaj chcete prepnúť do režimu editora vizuálneho štýlu?",
+            "stayInTextareaEditor": "Nie, pokračovať v textovom editore",
+            "useLatestValidStyle": "Áno, prepnúť na vizuálny editor",
+            "validationError": "Chyba overenia",
+            "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
+
+            "emptyRuleEditorTitle": "Pridať nové pravidlá",
+            "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
+            "classificationError": "Služba nie je k dispozícií. V súčasnosti nie je možné vytvoriť klasifikáciu",
+            "classificationRasterError": "Služba nie je k dispozícií. V súčasnosti nie je možné vytvoriť rastrovú klasifikáciu",
+            "redChannel": "Red channel",
+            "greenChannel": "Green channel",
+            "blueChannel": "Blue channel",
+            "grayChannel": "Channel",
+            "ruleClassification": "Klasifikácia",
+            "ruleRaster": "Raster",
+            "customInterval": "Vlastný interval",
+            "styleEmpty": "Tento štýl nemá žiadne pravidlá",
+            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
+            "imageSrcEmpty": "Chýba webová adresa zdroja obrázka v štýle ikon",
+            "imageSrcLoadError": "Poskytnutý zdroj obrázka sa nepodarilo načítať. Skús použiť inú webovú adresu alebo skontroluj, či je zdroj dostupný pre MapStore",
+            "imageSrcInvalidBase64": "Toto nie je platný obrázok base64. Niektoré vykresľovače štýlov nepodporujú tento typ zdroja, môžeš namiesto toho použiť externý zdroj adries URL",
+            "imageSrcNotSupportedBase64Image": "Niektoré vykresľovače štýlov nepodporujú obrázky base64, aj keď je aktuálny zdroj platný",
+            "warningTextOrderTitle": "Upozornenie",
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "Nastavenia",
+                "title": "Nastavenia prehrávania",
+                "frameDuration": "Trvanie snímky",
+                "range": {
+                    "title": "Rozsah animácie",
+                    "zoomTooltip": "Priblížiť na aktuálny rozsah animácie",
+                    "animationStart": "Štart animácie",
+                    "animationEnd": "Koniec animácie",
+                    "zoomToCurrentPlayackRange": "Priblíženie na aktuálny rozsah prehrávania",
+                    "setToCurrentViewRange": "Nastaviť na aktuálny rozsah zobrazenia",
+                    "fitToSelectedLayerRange": "Prispôsobiť rozsahu vybranej vrstvy"
+                },
+                "step": {
+                    "tooltip": "Krok animácie je možné prispôsobiť ak je vypnutá  možnosť „Prichytiť na vodiacu vrstvu“",
+                    "label": "Krok animácie",
+                    "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
+                    "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
+                    "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
+                    "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+                    "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+                },
+                "mode": {
+                    "title": "Mód",
+                    "following": "Postupovať podľa animácie",
+                    "followingDescription": "Keď je animácia aktívna, nasleduj kurzor"
+                }
+            },
+            "backwardStep": "Krok dozadu",
+            "forwardStep" : "Krok dopredu",
+            "play": "Prehrať",
+            "pause": "Pozastaviť",
+            "paused": "Prehrávanie (pozastavené)",
+            "stop": "Zastaviť"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Nastavenie časovej osi",
+                "snapToGuideLayer": "Prichytenie na vodiacu vrstvu",
+                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+            },
+            "hide": "Schovať časovú os",
+            "show": "Ukázať časovú os",
+            "mapSyncOn": "Zobraziť vždy, bez filtrovania podľa výrezu",
+            "mapSyncOff": "Zobraziť iba časy dostupné v aktuálnom výreze",
+            "currentTime": "Prejsť na aktuálny čas",
+            "rangeStart":"Prejsť na aktuálny časový rozsah",
+            "rangeEnd" : "Prejsť na aktuálny časový rozsah",
+            "hideLayerName" : "Schovať názvy vrstiev",
+            "showLayerName" : "Ukázať názvy vrstiev",
+            "enableRange": "Povoliť časový rozsah",
+            "disableRange": "Zakázať časový rozsah",
+            "enablePlayBack": "Povoliť nastavenie prehrávania",
+            "disablePlayBack": "Zakázať nastavenie prehrávania",
+            "expand" : "Rozbaliť posúvač času",
+            "collapse" : "Zabaliť posúvač času",
+            "collapsed": {
+                "title": "Časová os bola schovaná",
+                "tooltip": "Klikni sem pre ukázanie časovej osi"
+            },
+            "errors": {
+                "multidim_error_title": "Backendová služba nereaguje",
+                "multidim_error_message": "Požadované služby multidimenzionálnej podpory nereagujú. Skús to znova neskôr alebo kontaktuj správcu."
+            }
+        },
+        "rulesmanager": {
+            "apply": "Aplikovať",
+            "remove": "Odstrániť geometriu",
+            "resetconstraints": "Obnoviť obmedzenia",
+            "constraintsmsg": "Changing grant, workspace or layer, the details will be deleted. Are you sure you want to do that?",
+            "defstyle": "Predvolený štýl",
+            "avstyle": "Dostupné štýly",
+            "clearbtn": "Zmazať všetko",
+            "selectbtn": "Vybrať všetko",
+            "placeholders": {
+                "role": "Zadaj text pre vyhľadanie rolí",
+                "user": "Zadaj text pre vyhľadanie používateľov",
+                "service": "Zadaj text pre vyhľadanie služieb",
+                "request": "Zadaj text pre vyhľadanie požiadavkov",
+                "workspace": "Type to search Workspaces",
+                "layer": "Zadaj text pre vyhľadanie vrstiev",
+                "access": "Type to search Access",
+                "ip": "###.###.###.###/##",
+                "priority": "Vybrať prioritu",
+                "filter": "Filtrovať štýly..."
+            },
+            "menutitle": "Spravovať pravidlá prístupu",
+            "tooltip": {
+                "addT": "Pridať pravidlo",
+                "editT": "Upraviť vybrané pravidlo",
+                "addBeT": "Pridať pravidlo pred to, ktoré je vybrané",
+                "addAfT": "Pridať pravidlo za to, ktoré je vybrané",
+                "deleteT": "Odstrániť vybrané pravidlá",
+                "cacheT": "Vymazať vyrovnávaciu pamäť",
+                "save": "Uložiť aktuálne pravidlo",
+                "close": "Ukončiť vytváranie pravidla"
+            },
+            "navItems": {
+                "main": "Všeobecné pravidlo",
+                "style": "Štýl",
+                "filter": "Filtre",
+                "attribute": "Pravidlo atribútov"
+            },
+            "rule": "Pravidlo",
+            "cachetitle": "Vymazať vyrovnávaciu pamäť",
+            "cachemsg": "Naozaj chcete vymazať vyrovnávaciu pamäť pravidiel?",
+            "deltitle": "Odstrániť pravidlo",
+            "delmsg": "Naozaj chcete odstrániť toto pravidlo?",
+            "invalidForm": "The form is invalid check fields values",
+            "ip": "IP",
+            "title": "Pravidlá prístupu",
+            "role": "Rola",
+            "user": "Používateľ",
+            "priority": "Dôležitosť",
+            "service": "Služba",
+            "request": "Požiadavok",
+            "workspace": "Workspace",
+            "layer": "Vrstva",
+            "filters": "Filtre",
+            "rules": "Pravidlá",
+            "access": "Prístup",
+            "newModal": "Nové pravidlo",
+            "editModal": "Upraviť pravidlo",
+            "newButton": "Vytvoriť",
+            "editButton": "Uložiť",
+            "close": "Zatvoriť",
+            "previous": "predchádzajúci",
+            "next": "nasledujúci",
+            "cacheCleaned": "Vyrovnávacia pamäť bola úspešne vyčistená",
+            "errorTitle": "Geofence",
+            "errorCQL": "Geometria nie je platná!",
+            "errorCleaningCache": "Chyba pri čistení vyrovnávacej pamäte pravidiel.",
+            "errorLoadingRoles": "Chyba pri načítaní rolí.",
+            "errorLoadingUsers": "Chyba pri načítaní používateľov.",
+            "errorLoadingWorkspaces": "Error loading workspaces.",
+            "errorLoadingLayers": "Chyba pri načítaní vrstiev.",
+            "errorLoadingRules": "Chyba pri načítaní pravidiel.",
+            "errorMovingRules": "Pri presúvaní pravidiel sa vyskytla chyba.",
+            "errorDeletingRules": "Pri odstraňovaní pravidiel sa vyskytla chyba.",
+            "errorAddingRule": "Pri pridávaní pravidla sa vyskytla chyba.",
+            "errorUpdatingRule": "Pri ukladaní pravidla sa vyskytla chyba.",
+            "errorDuplicateRule": "Duplikované pravidlo.",
+            "errorLoading": "Chyba načítania",
+            "deleteModal": "Odstrániť pravidlá",
+            "selectedRulesDelete": "Odstrániť vybrané pravidlá ?",
+            "deleteButton": "Odstrániť",
+            "cancelButton": "Zrušiť",
+            "cqlRead": "CQL Filter Read Rules",
+            "cqlWrite": "CQL Filter Write Rules",
+            "missingconfig": "Správcovi pravidiel chýba konfigurácia. Prístup zamietnutý!",
+            "selectworkspace": "You need to select the workspace to enable advanced options"
+        },
+        "geostory": {
+            "storyResources": "Zdroje Story",
+            "geostoreMap": "Mapy MapStore",
+            "loadingSpinner": "Načítavanie Story",
+            "addTitleSection": "Pridať sekciu s názvom",
+            "addBannerSection": "Pridať sekciu s bannerom",
+            "addParagraphSection": "Pridať sekciu paragrafu",
+            "addImmersiveSection": "Add Immersive Section",
+            "addMediaSection": "Pridať sekciu médií",
+            "addWebPageSection": "Pridať sekciu webovej stránky",
+            "addImmersiveContent": "Add Immersive Content",
+            "addTextContent": "Pridať textový obsah",
+            "addMediaContent": "Pridať mediálny obsah",
+            "addWebPageContent": "Pridať obsah webovej stránky",
+            "zoomToContent": "Priblížiť k obsahu",
+            "emptyTitle": "Táto story je prázdna",
+            "emptyDescription": "Začnite vytvárať úžasnú GeoStory pridaním nového obsahu",
+            "closeFullscreenMap": "Zavrieť zobrazenie mapy na celú obrazovku",
+            "showFullscreenMap": "Zobraziť mapu na celú obrazovku",
+            "contentToolbar": {
+                "contentSize": "Zmeniť veľkosť",
+                "contentHeightAuto": "Nastaviť, aby sa táto sekcia prispôsobila výške obsahu",
+                "contentHeightView": "Nastaviť, aby sa táto sekcia prispôsobila obsahu vertikálne",
+                "smallSizeLabel": "Malá",
+                "mediumSizeLabel": "Stredná",
+                "largeSizeLabel": "Veľká",
+                "fullSizeLabel": "Plný rozmer",
+                "contentAlign": "Zarovnať obsah",
+                "leftAlignLabel": "Vľavo",
+                "centerAlignLabel": "v strede",
+                "rightAlignLabel": "vpravo",
+                "contentTheme": "Zmeniť tému poľa",
+                "brightThemeLabel": "Svetlý",
+                "brightTextThemeLabel": "Svetlý text",
+                "darkThemeLabel": "Tmavý",
+                "darkTextThemeLabel": "Tmavý text",
+                "defaultThemeLabel": "Predvolený",
+                "customizeThemeLabel": "Prispôsobiť",
+                "customizeThemeRemoveLabel": "Odstrániť prispôsobenie",
+                "cover": "Make the background cover the whole container space",
+                "fit": "Make the whole background visible inside the container",
+                "editMedia": "Zmeniť zdroj médií",
+                "remove": "Odstrániť",
+                "removeConfirmTitle": "Si si istý?",
+                "removeConfirmContent": "Chceš tento obsah odstrániť z príbehu?",
+                "editMap": "Upraviť konfiguráciu mapy",
+                "resetMap": "Obnoviť pôvodnú konfiguráciu mapy",
+                "resetMapConfirm": "Obnoviť konfiguráciu mapy",
+                "resetConfirmContent": "Obnoviť pôvodnú konfiguráciu mapy?",
+                "saveChanges": "Uložiť zmeny",
+                "closeMapEditing": "Zatvoriť",
+                "confirmCloseMapEditing": "Zavrieť úpravy mapy",
+                "pendingChangesDiscardConfirm": "Zahodiť aktuálne zmeny v mape?",
+                "editURL": "Upraviť adresu URL webovej stránky",
+                "advancedMapEditor": "Otvoriť editor máp pre pokročilé zmeny",
+                "enableAudio": "Povoliť zvuk",
+                "disableAudio": "Stlmiť zvuk",
+                "enableAutoplay": "Povoliť automatické prehrávanie",
+                "disableAutoplay": "Vypnúť automatické prehrávanie",
+                "enableLoop": "Povoliť opakovanie",
+                "disableLoop": "Vypnúť opakovanie",
+                "hideCaption": "Skryť popis",
+                "showCaption": "Use description as caption"
+            },
+            "navigation": {
+                "edit": "Upraviť Story"
+            },
+            "builder": {
+                "defaults": {
+                    "htmlTitlePlaceholder": "Vlož názov",
+                    "htmlPlaceholder": "Sem vlož text...",
+                    "titleTitle": "Sekcia názvu",
+                    "titleBanner": "Sekcia banneru",
+                    "titleParagraph": "Sekcia paragrafu",
+                    "titleImmersive": "Immersive Section",
+                    "titleImmersiveContent": "Immersive Content",
+                    "titleMedia": "Sekcia médií",
+                    "titleImage": "Obrázok",
+                    "titleText": "Text",
+                    "titleWebPage": "Webová stránka",
+                    "titleWebPageSection": "Sekcia webovej stránky",
+                    "titleUnknown": "UNKNOWN"
+                },
+                "delete": "Odstrániť vybratú sekciu",
+                "preview": "Zobraziť ukážku",
+                "edit": "Upraviť Story",
+                "noContents": "Nie je k dispozícii žiadny obsah",
+                "collapseAll": "Zbaliť všetko",
+                "expandAll": "Rozbaliť všetko",
+                "fullscreen": "Zobraziť ukážku v režime celej obrazovky",
+                "settings": {
+                    "tooltip": "Nastavenia",
+                    "back": "Back to builder",
+                    "backConfirmTitle": "Nastavenia boli uložené",
+                    "backConfirmBody": "Naozaj chceš zatvoriť nastavenia bez uloženia vykonaných zmien?",
+                    "backConfirmNo": "Nie",
+                    "backConfirmYes": "Áno",
+                    "save": "Uložiť nastavenia",
+                    "storyTheme" : "Téma Story",
+                    "storyHeader" : "Story Header",
+                    "title" : "Nadpis",
+                    "titlePlaceholder" : "Zadaj nadpis",
+                    "logo" : "Logo",
+                    "logoPlaceholder": "Sem vlož svoj obrázok loga alebo kliknutím vyber súbor s obrázkom (podporované formáty sú png a jpeg)",
+                    "autoplay" : "Automatické prehrávanie",
+                    "enableAutoplay" : "Povoliť automatické prehrávanie",
+                    "autoplayInterval" : "Interval automatického prehrávania (seconds)",
+                    "autoplayIntervalPlaceholder" : "Povoliť interval automatického prehrávania",
+                    "navbar" : "Navigačná lišta",
+                    "showNavbar" : "Ukázať navigačnú lištu",
+                    "theme": "Predvolená téma",
+                    "fontFamily": "Font Family",
+                    "webFontLoadError": "Nepodarilo sa načítať niektoré písma z miestnej konfigurácie",
+                    "fontSize": "Veľkosť písma",
+                    "overlay": "Prekrytie",
+                    "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
+                }
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "GeoStory sa nenašla",
+                    "title": "Chyba",
+                    "unknownError": "Neznáma chyba",
+                    "pleaseLogin": "Prosím, prihlás sa",
+                    "notAccessible": "Tento príbeh nie je dostupný",
+                    "geostoryNotAccessible": "Nemáš povolenie na prístup k tomuto príbehu. Kontaktuj vlastníka zdroja.",
+                    "geostoryDoesNotExist": "Táto story neexistuje"
+                }
+            },
+            "mapEditor": {
+                "configureMapOptions": "Konfigurovať mapu",
+                "settings": "Nastavenia",
+                "settingsSubTitle": "Spravuj interakcie používateľov",
+                "toc": "Vrstvy",
+                "pan": "Pan interaction",
+                "zoom": "Zoom In/Out interactions",
+                "topLeft": "Hore vľavo",
+                "topRight": "Hore vpravo",
+                "bottomLeft": "Dole vľavo",
+                "bottomRight": "Dole vpravo",
+                "identify": "Identifikovať"
+            },
+            "webPageCreator": {
+                "title": "Webová stránka",
+                "saveButton": "Uložiť",
+                "error": "Zadajte platnú adresu URL webovej stránky",
+                "url": {
+                    "label": "URL"
+                }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Pozadie",
+                "textColorLabel": "Text",
+                "shadowLabel": "Tieň",
+                "useAlternativeTextColor": "Použiť alternatívnu farbu textu",
+                "alternativeTextColorPopover": "<p>Upozornenie: vybraná farba textu nemusí byť na tomto pozadí čitateľná.</p><p>Alternatívna farba textu je {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Načítavam Story",
+            "errors": {
+                "loading": {
+                    "notFound": "Geostory sa nenašla",
+                    "title": "Chyba",
+                    "unknownError": "Neznáma chyba",
+                    "notAccessible": "Táto story nie je dostupná",
+                    "pleaseLogin": "Zdroj nie je verejný",
+                    "geostoryNotAccessible": "Nemáš povolenie na prístup k tomuto príbehu",
+                    "geostoryDoesNotExist": "Táto story neexistuje"
+                }
+            }
+        },
+        "saveDialog": {
+            "title": "Upraviť vlastnosti",
+            "name": "Názov",
+            "description": "Popis",
+            "createdAt": "Vytvorené",
+            "modifiedAt": "Upravené",
+            "namePlaceholder": "Vlož názov...",
+            "descriptionPlaceholder": "Vlož popis...",
+            "confirmCloseText": "Niektoré zmeny nie sú uložené, určite chceš odísť bez ich uloženia?",
+            "close": "Zatvoriť",
+            "cancel": "Zrušiť",
+            "saveSuccessTitle": "Úspech",
+            "saveSuccessMessage": "Úspešne uložené"
+        },
+        "mapEditor": {
+            "modalTitle": "Mapový editor",
+            "confirmExitTitle": "Zatvoriť editor",
+            "confirmExitContent": "Zahodiť neuložené zmeny?"
+        },
+        "mediaEditor": {
+            "modalTitle": "Média",
+            "images": "Obrázky",
+            "videos": "Videá",
+            "maps": "Mapy",
+            "preview": "Ukážka",
+            "apply": "Aplikovať",
+            "confirmExitTitle": "Zatvoriť editor médií",
+            "confirmExitContent": "Zahodiť neuložené zmeny?",
+            "mediaPicker": {
+                "services": "Služby: ",
+                "clean": "Clean results",
+                "noResults": "Žiadne výsledky",
+                "selectService": "Vybrať službu",
+                "add": "Pridať",
+                "back": "Naspäť",
+                "save": "Uložiť",
+                "edit": "Upraviť",
+                "sourcePlaceholder": "Zadaj zdroj",
+                "source": "Zdroj",
+                "titlePlaceholder": "Zadaj nadpis",
+                "title": "Nadpis",
+                "altTextPlaceholder": "Zadaj alternatívny text",
+                "altText": "Alternatívny text",
+                "descriptionPlaceholder": "Zadaj popis",
+                "description": "Popis",
+                "creditsPlaceholder": "Enter credits",
+                "credits": "Credits",
+                "mapFilter": "Filtrovať mapy",
+                "videoFilter": "Filtrovať videá",
+                "imageFilter": "Filtrovať obrázky",
+                "import": "Importovať zdroj do miestneho obchodu",
+                "trash": "Odstrániť zdroj",
+                "videoUrl": "URL videa",
+                "videoUrlPlaceholder": "Zadaj URL adresu videa",
+                "thumbnail": "Pridať miniatúru (maximálna veľkosť 500kb)",
+                "createVideoThumbnail": "Vytvoriť miniatúru zo zdroja videa",
+                "thumbnailCreateError": "Nie je možné vytvoriť miniatúru z aktuálneho zdroja videa. Kliknutím alebo presunutím obrázka do vstupu pre miniatúry ho nahraj manuálne."
+            },
+            "mediaform": {
+                "confirmExitTitle": "Close Media Form",
+                "confirmExitContent": "Zahodiť neuložené zmeny?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "Veľkosti obrázkov by mali tvoriť štvorec o veľkosti 98px x 98px, s maximálnou veľkosťou 100kb",
+                "confirmMapSaveTitle": "Aktualizácia mapy",
+                "confirmMapSaveContent": "Updating this map will reset all dependent maps in the story previously customized through the inline editor, confirm?"
+            },
+            "mediaList" : {
+                "removeResourceTitle": "Si si istý?",
+                "confirmRemoveResource": "Chceš odstrániť tento zdroj médií z príbehu?",
+                "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?",
+                "resultsCount": "{count} of {total} {total, plural, one {Result} other {Results}}"
+            },
+            "imageList": {
+                "emptyList": "Kliknutím na tlačidlo plus pridáš nový obrázok. Prečítaj si používateľskú príručku na <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>here</a>"
+            },
+            "mapList": {
+                "emptyList": "Kliknutím na tlačidlo plus vytvoríš novú mapu alebo vyberieš inú mapovú službu. Prečítaj si používateľskú príručku na <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/>here</a>"
+            },
+            "videoList": {
+                "emptyList": "Kliknutím na tlačidlo plus pridáš nové video. Prečítaj si používateľskú príručku na <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/>here</a>"
+            }
+        },
+        "backgroundDialog": {
+            "addTitle": "Pridať nové pozadie",
+            "editTitle": "Upraviť aktuálne pozadie",
+            "title": "Nadpis",
+            "titlePlaceholder": "Zadať zobrazované meno",
+            "add": "Pridať",
+            "thumbnailMessage": "Veľkosti obrázkov by mali tvoriť štvorec o veľkosti 98px x 98px alebo 128px x 128px, s maximálnou veľkosťou 500kb",
+            "additionalParameters": "Ďalšie parametre",
+            "addAdditionalParameterTooltip": "Pridať parameter",
+            "removeAdditionalParameterTooltip": "Odstrániť parameter",
+            "parameter": "Parameter",
+            "value": "Hodnota",
+            "string": "String",
+            "number": "Číslo",
+            "boolean": "Boolean"
+        },
+        "defaultMapBackgroundsServiceTitle": "Predvolené pozadia",
+        "backgroundSelector": {
+            "addTooltip": "Pridať nové pozadie",
+            "confirmDelete": "Určite chceš odstrániť pozadie \"{title}\"?"
+        },
+        "stepper": {
+            "back": "Späť",
+            "next": "Ďalej"
+        },
+        "newMapDialog": {
+            "title": "Vybrať kontext",
+            "noContexts": "Žiadne kontexty sa nenašli",
+            "filterPlaceholder": "Hľadať kontext..."
+        },
+        "plugins": {
+          "About": {
+            "description": "Tool that shows the About window",
+            "title": "About"
+          },
+          "AddGroup": {
+            "description": "Umožňuje používateľom vytvárať nové skupiny vrstiev v TOC",
+            "title": "Pridať skupinu vrstiev"
+          },
+          "Annotations": {
+            "description": "Nástroj na kreslenie anotácií do mapu",
+            "title": "Anotácie"
+          },
+          "AutoMapUpdate": {
+            "description": "Umožňuje používateľovi aktualizovať mapu (stará verzia mapstore)",
+            "title": "Automatická aktualizácia mapy"
+          },
+          "BackgroundSelector": {
+            "description": "Umožňuje výber pozadia mapy",
+            "title": "Výber pozadia"
+          },
+          "BurgerMenu": {
+            "description": "Ponuka v pravom hornom rohu mapy, ktorá obsahuje ďalšie pluginy",
+            "title": "Burger Menu"
+          },
+          "CRSSelector": {
+            "description": "Umožňuje prepnúť projekciu mapy",
+            "title": "Výber CRS"
+          },
+          "Details": {
+            "description": "Umožnite zobraziť podrobnú kartu pre mapu, ak je k dispozícii",
+            "title": "Detaily mapy"
+          },
+          "Expander": {
+            "description": "Utility for Sidebar (navigation) that allows to hide some buttons",
+            "title": "Expander"
+          },
+          "FeatureEditor": {
+            "description": "Otvoriť atribútovú tabuľku",
+            "title": "Atribútová tabuľka"
+          },
+          "FilterLayer": {
+            "description": "Umožňuje pridať k vrstve filter",
+            "title": "Filtrovať vrstvu"
+          },
+          "HelpLink": {
+            "description": "Tlačidlo pre prístup k dokumentácii MapStore",
+            "title": "Prístup k dokumentácii"
+          },
+          "Home": {
+            "description": "Odkaz na domovskú stránku",
+            "title": "Domov"
+          },
+          "Identify": {
+            "description": "Query the objects on map",
+            "title": "Identikovať"
+          },
+          "Locate": {
+            "description": "Nájdite a sledujte polohu používateľa na mape",
+            "title": "Nástroj na zisťovanie polohy"
+          },
+          "Login": {
+            "description": "Nástroj na prihlásenie",
+            "title": "Prihlásenie"
+          },
+          "MapCatalog": {
+            "description": "Umožňuje prehliadanie, úpravy, mazanie a načítanie máp, ktoré sú k dispozícii na serveri",
+            "title": "Mapový katalóg"
+          },
+          "MapExport": {
+            "description": "Umožňuje exportovať mapu do súboru",
+            "title": "Export mapy"
+          },
+          "MapImport": {
+            "description": "Umožňuje import údajov (SHP, KML/KMZ, GeoJSON, GPX) alebo opätovné načítanie exportovaných máp.",
+            "title": "Import"
+          },
+          "MapLoading": {
+            "description": "A spinner in the sidebar that indicates if the map is loading",
+            "title": "Map Loading Indicator"
+          },
+          "Measure": {
+            "description": "Umožňuje merať vzdialenosti a oblasti na mape",
+            "title": "Merať"
+          },
+          "MetadataExplorer": {
+            "description": "Prechádzaj služby (WMS/WMTS/CSW) a pridaj ich vrstvy do mapy",
+            "title": "Katalóg"
+          },
+          "MousePosition": {
+            "description": "Zobrazuje súradnice, na ktoré ukazuje kurzor myši",
+            "title": "Pozícia myši"
+          },
+          "Print": {
+            "description": "Allows to print the current map with legend",
+            "title": "Print Tool"
+          },
+          "Save": {
+            "description": "Umožňuje uložiť zmeny na mape na serveri",
+            "title": "Uložiť zmeny v mape na server"
+          },
+          "SaveAs": {
+            "description": "Umožňuje vytvárať alebo klonovať mapy na serveri",
+            "title": "Uložiť ako"
+          },
+          "ScaleBox": {
+            "description": "Indikátor a selektor aktuálnej mierky mapy",
+            "title": "Selektor mierky"
+          },
+          "Search": {
+            "description": "Nástroj na textové vyhľadávanie (GeoCoder)",
+            "title": "Vyhľadávacia lišta"
+          },
+          "Settings": {
+            "description": "Umožňujú upraviť niektoré nastavenia mapy (jazyk, predvolený formát informácií...)",
+            "title": "Nastavenia"
+          },
+          "Share": {
+            "description": "Umožňuje zdieľať mapu rôznymi spôsobmi (link, QR-Code, embed, sociálne siete...)",
+            "title": "Nástroj na zdieľanie"
+          },
+          "StyleEditor": {
+            "description": "Editor štýlov vrstiev",
+            "title": "Editor štýlov"
+          },
+          "TOC": {
+            "description": "Poskytuje zoznam vrstiev s možnosťou ich triedenia",
+            "title": "Zoznam vrstiev"
+          },
+          "TOCItemsSettings": {
+            "description": "Povoliť úpravy v nastaveniach vrstvy",
+            "title": "Nastavenia vrstvy"
+          },
+          "Timeline": {
+            "description": "Allows time travel for data with time dimension",
+            "title": "Časová os"
+          },
+          "Tutorial": {
+            "description": "Pridáva návod na vysvetlenie rôznych funkcií",
+            "title": "Návod"
+          },
+          "UserExtensions": {
+            "description": "Umožňuje používateľovi povoliť / zakázať používateľské rozšírenia",
+            "title": "Používateľské rozšírenia"
+          },
+          "UserSession": {
+            "title": "Relácia používateľa",
+            "description": "Enables an automatically saved user session for every context"
+          },
+          "Version": {
+            "description": "Zobrazuje verziu MapStore v nástroji na nastavenie mapy",
+            "descriptionGeorchestra": "Zobrazuje verziu GeOrchestra v nástroji na nastavenie mapy",
+            "title": "Verzia"
+          },
+          "LayerDownload": {
+            "description": "Umožňuje sťahovať údaje z atribútovej tabuľky",
+            "title": "Stiahnuť dáta"
+          },
+          "Widgets": {
+            "description": "Umožňuje pridávať a zobrazovať widgety na mape",
+            "title": "Widgety"
+          },
+          "WidgetsTray": {
+            "description": "A tray to collapse and expand widgets on map. ",
+            "title": "Widgets Tray"
+          },
+          "Globe": {
+            "description": "Tlačidlo bočného panela na zapnutie / vypnutie 3D režimu",
+            "title": "3D"
+          },
+          "ZoomAll": {
+            "description": "Sidebar button to zoom to the map extent of the map",
+            "title": "Zoom To Max Extent"
+          },
+          "ZoomIn": {
+            "description": "Tlačidlo, ktoré zvyšuje úroveň priblíženia mapy",
+            "title": "Priblížiť"
+          },
+          "ZoomOut": {
+            "description": "Tlačidlo, ktoré znižuje úroveň priblíženia mapy",
+            "title": "Oddialiť"
+          }
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Všeobecné nastavenia",
+                "title": "Create new app context",
+                "name": "Názov",
+                "namePlaceholder": "Enter app context name...",
+                "windowTitle": "Názov okna",
+                "windowTitlePlaceholder": "Zadaj názov okna..."
+            },
+            "configurePlugins": {
+                "label": "Konfigurovať pluginy",
+                "pluginsFilterPlaceholder": "Fitrovať pluginy podľa mena...",
+                "availablePlugins": "Dostupné pluginy",
+                "enabledPlugins": "Povolené pluginy",
+                "availablePluginsEmpty": "Všetky dostupné pluginy sú povolené",
+                "enabledPluginsEmpty": "Pridajte doplnky do konfigurácie zo zoznamu dostupných doplnkov",
+                "searchResultsEmpty": "Nenašli sa žiadne doplnky, ktoré spĺňajú kritéria vyhľadávania",
+                "cfgParsingError": {
+                    "title": "Chyba konfigurácie",
+                    "body": "Configuration JSON parsing failed.\nThe following error occurred:\n\"{error}\""
+                },
+                "uploadLabel": "Drag an extension bundle or click to browse and upload it",
+                "uploadTitle": "Nainštalovať MapStore plugin",
+                "uploadParseError": "index.json file index.json has a wrong format",
+                "uploadMissingIndexError": "súbor index.json chýba v balíčku .zip",
+                "uploadMissingPluginError": "Žiadne pluginy nie sú definované v index.json",
+                "uploadMissingBundleError": "V nahranom súbore sa nenachádza žiaden javascript balíček",
+                "uploadTooManyBundlesError": "V zipe sa nachádza priveľa javascript balíčkov",
+                "uploadWrongFileFormatError": "Zlý formát súboru. Očakávaný formát: .zip",
+                "uploadAlreadyInstalledError": "Rozšírenie je už nainštalované. Rozšírenie sa najprv odstráni a potom preinštaluje.",
+                "confirmRemovePlugin": "Určite chceš rozšírenie odstrániť?",
+                "cancelUpload": "Zatvoriť",
+                "install": "Nainštalovať",
+                "uploadError": "Chyba pri inštalácii: ",
+                "uploadOk": "Rozšírenie bolo nainštalované správne",
+                "tooltips": {
+                    "enableUserPlugin": "Enable selection of current plugin for user",
+                    "disableUserPlugin": "Disable selection of current plugin for user",
+                    "activatePlugin": "Povoliť načítanie pluginu pri spustení programu",
+                    "deactivatePlugin": "Vypnúť načítanie pluginu pri spustení programu",
+                    "editConfiguration": "Upraviť konfiguráciu pluginu",
+                    "pluginDocumentation": "Otvoriť dokumentáciu ku konfigurácii pluginu",
+                    "uploadPlugin": "Pridať rozšírenie do MapStore",
+                    "removePlugin": "Odstráňte toto rozšírenie zo služby MapStore",
+                    "mapTemplatesConfig": "Konfigurovať šablóny"
+                },
+                "tutorialPlugins": {
+                    "availableTitle": "Povolený plugin",
+                    "availableDescription": "Tento plugin je zakázaný",
+                    "enabledTitle": "Povolený plugin",
+                    "enabledDescription": "Tento plugin je povolený"
+                },
+                "saveCfgErrorNotification":  {
+                    "title": "Chyba syntaxe v konfigurácii pluginu",
+                    "message": "Plugin \"{pluginName}\" obsahuje chybu v konfigurácii. Pred pokračovaním ju oprav."
+                }
+            },
+            "configureTemplates": {
+                "title": "Konfigurácia šablón",
+                "availableTemplates": "Dostupné šablóny",
+                "enabledTemplates": "Povolené šablóny",
+                "templatesFilterPlaceholder": "Filtrovať šablóny podľa mena...",
+                "availableTemplatesEmpty": "Všetky dostupné šablóny sú povolené",
+                "enabledTemplatesEmpty": "Pridajte šablóny do konfigurácie zo zoznamu dostupných šablón",
+                "searchResultsEmpty": "Nenašli sa žiadne šablóny, ktoré vyhovujú kritériám vyhľadávania",
+                "fileDrop": {
+                    "label": "Šablóna",
+                    "clear": "Drop or click to select a map template file (exported JSON MapStore maps or WMC files are supported)"
+                },
+                "uploadDialog": {
+                    "title": "Nahrať mapovú šablónu",
+                    "save": "Nahrať",
+                    "jsonParsingError": "JSON parsing failed: \"{error}\"",
+                    "fileReadError": "Vyskytla sa neočakávaná chyba pri čítaní súboru"
+                },
+                "tooltips": {
+                    "uploadTool": "Nahrať novú šablónu",
+                    "editTemplate": "Upraviť vlastnosti šablóny",
+                    "deleteTemplate": "Odstrániť šablónu"
+                },
+                "deleteError": "Šablónu sa nepodarilo odstrániť, vyskytla sa chyba",
+                "deleteConfirm": "Určite chceš odstrániť šablónu \"{templateName}\"?"
+            },
+            "configureMap": {
+                "label": "Konfigurovať mapu",
+                "reload": "Znovu načítať mapu",
+                "confirm": "Týmto zahodíš všetky súčasné zmeny na mape. Chceš pokračovať?"
+            },
+            "saveErrorNotification": {
+                "titleContext": "Uloženie kontextu zlyhalo",
+                "titleTemplate": "Uloženie šablóny zlyhalo",
+                "conflict": "Zdroj s týmto názvom už existuje",
+                "defaultMessage": "Neznáma chyba",
+                "categoryError": "Vytváranie chýbajúcej kategórie \"{categoryName}\" zlyhalo"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Prístup k údajom šablóny bol zamietnutý, používateľovi chýbajú potrebné povolenia!",
+                "defaultMessage": "Vyskytla sa neznáma chyba"
+            },
+            "contextNameErrorNotification": {
+                "title": "Zlý názov kontextu",
+                "unknownError": "Vyskytla sa neočakávaná chyba"
+            },
+            "undo": "Naozaj chceš opustiť režim úprav kontextu?",
+            "showTutorial": "Ukázať návod"
+        },
+        "contextManager": {
+            "title": "Spravovať kontexty",
+            "gridTitle": "Kontexty",
+            "searchPlaceholder": "hľadať...",
+            "newContext": "Nový kontext",
+            "editContextTooltip": "Upraviť kontext"
+        },
+        "userExtensions": {
+          "title": "Používateľské rozšírenia",
+          "emptyTitle": "Žiaden výsledok",
+          "emptyDescription": "Zadaný filter sa nezhoduje s názvom alebo popisom žiadneho z rozšírení",
+          "filterPlaceholder": "Filtrovať...",
+          "addExtension": "Pridať rozšírenie",
+          "removeExtension": "Odstrániť rozšírenie"
+        },
+        "mapTemplates": {
+            "title": "Mapové šablóny",
+            "favouritesTitle": "Obľúbené",
+            "allTitle": "Všetky",
+            "filterPlaceholder": "Filtrovať mapové šablóny...",
+            "transfer": "Nahradiť mapu touto šablónou",
+            "merge": "Pridať túto šablónu do mapy",
+            "favouriteAdd": "Pridať do obľúbených",
+            "favouriteRemove": "Odstrániť z obľúbených",
+            "emptyTitle": "Žiaden výsledok",
+            "emptyDescription": "Zadaný filter sa nezhoduje s názvom alebo popisom žiadnej zo šablón",
+            "noTemplatesTitle": "Nenašli sa žiadne šablóny",
+            "noTemplatesDescription": "Current context contains no templates",
+            "confirmReplaceTitle": "Nahradiť obsah mapy",
+            "confirmReplaceMessage": "Kliknutím na tlačidlo vymeniť nahradíte všetky vrstvy a konfiguráciu mapy vybranou šablónou",
+            "confirmReplaceConfirmButton": "Nahradiť"
+        },
+        "mapCatalog": {
+            "title": "Mapový katalóg",
+            "filterPlaceholder": "Hľadať mapy...",
+            "deleteConfirmContent": "Naozaj chceš odstrániť túto \"{mapName}\" mapu?",
+            "tooltips": {
+                "edit": "Upraviť vlastnosti",
+                "delete": "Odstrániť zdroj",
+                "share": "Zdieľať"
+            },
+            "deletedMap": {
+                "title": "Odstránenie mapy",
+                "message": "Mapu sa podarilo úspešne odstrániť"
+            },
+            "updatedMap": {
+                "title": "Uloženie mapy",
+                "message": "Mapu sa podarilo úspešne uložiť"
+            },
+            "deleteError": "Pri odstraňovaní mapy sa vyskytla neočakávaná chyba",
+            "updateError": "Pri ukladaní mapy sa vyskytla neočakávaná chyba"
+        },
+        "layerInfo": {
+            "title": "Aktualizuj názvy a popisy vrstiev",
+            "noLayers": "Nenašli sa žiadne vrstvy",
+            "syncButton": "Synchronizovať názvy a popisy",
+            "selectAll": "Vybrať všekty",
+            "deselectAll": "Zrušiť výber všetkých",
+            "updatingLayers": "Aktualizácia vrstiev {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Názov a popis boli pre túto vrstvu úspešne aktualizované",
+                "syncError": "Nie je možné aktualizovať názov a popis tejto vrstvy. Skontroluj v nastaveniach, či sú všetky možnosti vrstvy zvolené a nastavené správne."
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Chyba ukladania na server",
+                "message": "Pri ukladaní aktualizovaných vrstiev na server sa vyskytla neočakávaná chyba"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Všeobecná chyba",
+                "message": "Počas synchronizácie vrstiev sa vyskytla neočakávaná chyba.Je možné, že je to kvôli bugu v Mapstore."
+            },
+            "layerType": "type: {type}"
+        },
+        "tutorial": {
+            "title": "Návod",
+            "back": "Späť",
+            "next": "Ďalej",
+            "close": "Zastvoriť",
+            "skip": "Preskočiť",
+            "last": "Koniec",
+            "start": "Začiatok",
+            "checkbox": "túto správu už nezobrazovať",
+            "error": "Chyba: cieľ nebol nájdený",
+            "intro": {
+                "title": "Vitaj v MapStore",
+                "text": "framework na vytváranie webových mapovacích aplikácií pomocou štandardných mapovacích knižníc, ako sú OpenLayers a Leaflet."
+            },
+            "drawerMenu": {
+                "title": "Hlavné menu",
+                "text": "Môžeš tu nájsť informácie a nástroje na úpravu vrstvy"
+            },
+            "searchBar": {
+                "title": "Vyhľadávacia lišta",
+                "text": "Napíš adresu miesta, ktoré chceš nájsť. napr. „1. avenue, new york“. Môžeš použiť aj súradnice vo formáte: 43.87,10.20"
+            },
+            "home": {
+                "title": "Domov",
+                "text": "Kliknutím prejdeš na domovskú stránku"
+            },
+            "searchButton": {
+                "title": "Vyhľadať",
+                "text": "Kliknutím otvoríš vyhľadávací panel. Potom zadaj adresu miesta, ktoré chceš vyhľadať. napr. „1. avenue, new york“. Môžeš použiť aj vyhľadávanie s použítím súradníc vo formáte: 43.87,10.20"
+            },
+            "burgerMenu": {
+                "title": "Ponuka možností",
+                "text": "Nájdeš tu možnosti, nastavenia a pomocníka"
+            },
+            "zoomInButton": {
+                "title": "Priblížiť",
+                "text": "Kliknutím mapu zväčšíš"
+            },
+            "zoomOutButton": {
+                "title": "Oddialiť",
+                "text": "Kliknutím mapu zmenšíš"
+            },
+            "fullscreen": {
+                "title": "Režim celej obrazovky",
+                "text": "Kliknutím zapneš režim celej obrazovky"
+            },
+            "identifyButton": {
+                "title": "Info",
+                "text": "Stlačením tohto tlačidla aktivuješ nástroj a kliknutím na mapu získaš informácie z vrstiev"
+            },
+            "mapType": {
+                "title": "Knižnica",
+                "text": "Na vykreslenie svojich máp môžete zvoliť Leaflet alebo OpenLayers"
+            },
+            "mapsGrid": {
+                "title": "Mapy",
+                "text": "Tu nájdeš niekoľko ukážok MapStore. Kliknutím na obrázok si vyskúšaj demo."
+            },
+            "examples": {
+                "title": "Vlastná aplikácia",
+                "text": "Na vytváranie vlastných aplikácií môžeš používať komponenty a doplnky MapStore"
+            },
+            "introCesium": {
+                "title": "inštrukcie k 3D mapám ",
+                "text": "Návod spustíš kliknutím na tlačidlo"
+            },
+            "cesium": {
+                "title": "Interakcie s mapou",
+                "pan": "Pan view",
+                "zoom": "Zoom view",
+                "tilt": "Tilt view",
+                "rotate": "Rotate view",
+                "oneDrag": "One finger drag",
+                "twoPinch": "Two finger pinch",
+                "twoDragSame": "Two finger drag, same direction",
+                "twoDragOpposite": "Two finger drag, opposite direction",
+                "leftClick": "Left click + drag",
+                "rightClick": "Right click + drag, or Mouse wheel scroll",
+                "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+
+            },
+            "cesiumCompass": {
+                "title": "Kompas",
+                "text": "Môžeš použiť kompas na obiehanie okolo sveta. Ťahaním otočíš mapu"
+            },
+            "cesiumNavigation": {
+                "title": "Navigácia",
+                "text": "Tu nájdete tlačidlá priblíženia a oddialenia"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Overview of dashboard functionalities"
+            },
+            "dashboardNav": {
+                "title": "Navigačný panel",
+                "text": "Tu nájdeš výber jazyka, prihlásenie, odkaz na domovskú stránku a ponuku možností"
+            },
+            "dashboardContainer": {
+                "title": "Informačný panel",
+                "text": "<p>A Dashboard in MapStore provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Pridať widget",
+                "text": "Ak chceš na informačný panel pridať widget,klikni na tlačidlo +"
+            },
+            "dashboardBuilder": {
+                "title": "Vytvoriť nový widget",
+                "text": "Zvoľ si typ widgetu a potom ho pridaj do informačného panelu zvolením niektorej z položiek v zozname"
+            },
+            "dashboardAddChart": {
+                "title": "Grafový widget",
+                "text": "<p>Je to widget, ktorý zobrazuje a agreguje údaje do koláčových, líniových alebo stĺpcových grafov.</p><p>Postup:</p><p><ul><li>Vyber vektorovú vrstvu</li><li>Vyber typ grafu</li><li>Konfigurovať dáta grafu</li><li>Uložiť a pridať na informačný panel</li></ul></p>"
+            },
+            "dashboardAddText": {
+                "title": "Textový widget",
+                "text": "<p>Pridaj vlastný text na informačný panel.</p><p>Postup:</p><p><ul><li>Upraviť text v editore</li><li>Uložiť a pridať na informačný panel</li></ul></p>"
+            },
+            "dashboardAddTable": {
+                "title": "Tabuľkový widget",
+                "text": "<p>Pridaj tabuľku atribútov na informačný panel, ktorý obsahuje údaje z vybranej vektorovej vrstvy. Taktiež môžeš filtrovať údaje a prispôsobiť tým svoju tabuľku.</p><p>Postup:</p><p><ul><li>Vyber vektorovú vrstvu</li><li>Konfiguruj dáta tabuľky</li><li>Uložiť a pridať na informačný panel</li></ul></p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Widget počítadlo",
+                "text": "<p>Pridaj na informačný panel nové počítadlo. Počítadlo zobrazí agregáciu číselných hodnôt údajov z vybranej vektorovej vrstvy.</p><p>Postup:</p><p><ul><li>Vyber vektorovú vrstvu</li><li>Konfiguruj dáta počítadla</li><li>Uložiť a pridať na informačný panel</li></ul></p>"
+            },
+            "dashboardAddMap": {
+                "title": "Mapový widget",
+                "text": "<p>Pridaj na informačný panel novú interaktívnu mapu. Môžeš pridať viac ako jednu mapu s možnosťou pripojiť k nej ďalšie miniaplikácie. Po uložení prvej mapy sa do zoznamu pridá widget legendy. Widget legendy zobrazí legendu súvisiacu s pripojenou mapou.</p><p>Postup:</p><p><ul><li>Vyber mapu</li><li>Vylepši mapu pridaním ďalších vrstiev</li><li>Uložiť a pridať na informačný panel</li></ul></p>"
+            },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Návod k vytváraniu kontextu",
+                        "text": "Toto je nádov, ktorý ťa krok po kroku prevedie postupom vytvárania a úpravy kontextu v MapStore"
+                    },
+                    "stepsOverview": {
+                        "title": "Postup vytvárania kontextu",
+                        "text": "<p>Každý kontext sa tvorí týmito troma krokmi:</p><p><ul><li>Všeobecné nastavenia</li><li>Konfigurácia mapy</li><li>Konfigurácia pluginov</li></ul></p>"
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navigácia: Ďalej",
+                            "text": "<p>Stlačením tohto tlačidla prejdeš na ďalší krok. Ak je tlačidlo zakázané, znamená to, že dáta, ktoré ste nakonfigurovali sa kontrolujú, alebo sú neplatné.</p>"
+                        },
+                        "back": {
+                            "title": "Navigácia: Späť",
+                            "text": "<p>Stlačením tohto tlačidla prejdeš na predchádzajúci krok.</p>"
+                        },
+                        "close": {
+                            "title": "Navigácia: Zatvoriť",
+                            "text": "<p>Stlačením tohto tlačidla opustíš proces vytvárania kontextu bez uloženia. Tento krok je možné vykonať kedykoľvek v procese tvorby.</p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "Všeobecné nastavenia",
+                        "text": "<p>Prvý krok vytvárania vyžaduje zadanie názvu kontextu, ktorý definuje aj jeho jedinečnú adresu URL, a nadpis, ktorý sa použije ako nadpis okna prehliadača, keď je kontext otvorený a aktívny. Poznámka: Názov kontextu môže obsahovať iba latinské písmená, číslice 0-9 a znak podčiarknutia. Nadpis okna nemôže byť prázdny.</p>"
+                    },
+                    "showTutorial": {
+                        "title": "Ukázať návod",
+                        "text": "<p>Ak si chceš prejsť tutoriál pre ďalší krok, môžeš to urobiť kedykoľvek stlačením tohto tlačidla.</p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Konfigurácia mapy",
+                        "text": "<p>V tomto kroku môžete pomocou nástrojov MapStore na prezeranie máp nakonfigurovať predvolenú mapu, ktorá sa otvorí po prístupe do kontextu.</p>"
+                    },
+                    "reloadMap": {
+                        "title": "Tlačidlo opätovného načítania mapy",
+                        "text": "<p>Ak chceš zahodiť všetky doterajšie zmeny na mape a začať odznova, môžeš to urobiť stlačením tohto tlačidla.</p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Konfigurácia pluginov",
+                        "text": "<p>Tento krok umožňuje konfigurovať doplnky, ktoré budú prítomné v kontexte.</p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Dostupné pluginy",
+                        "text": "<p>Tento zoznam obsahuje pluginy MapStore, ktoré je možné pridať do kontextu. Ak chceš vybrať plugin, jednoducho klikni na jeho kartu. Ak tiež podržíš klávesu CTRL, môžeš vybrať viac pluginov.</p>"
+                    },
+                    "pluginManipulation": {
+                        "title": "Moving Plugins",
+                        "text": "<p>Once selected, available plugins can be moved into the right column, making them enabled in the context. Some plugins require other plugins to function, in that case they will be enabled automatically alongside plugins you explicitly enabled.</p><p>Plugins can also be moved from \"enabled\" column to \"available\" column to remove plugins from the context. If you remove a plugin, all the plugins it requires to function will be disabled as well, unless there are currently enabled plugins that also require such a plugin.</p>"
+                    },
+                    "enabledPlugins": {
+                        "title": "Povolené pluginy",
+                        "text": "<p>Tento zoznam obsahuje pluginy MapStore, ktoré sú v danom kontexte. Každý plugin je možné ďalej konfigurovať pomocou nástrojov.</p>"
+                    },
+                    "userPlugin": {
+                        "title": "Nástroje pluginu: User Plugins",
+                        "text": "<p>By pressing this button, you can allow a plugin to be enabled/disabled by users, making it a user plugin. Such plugins will be shown within User Extensions plugin. This plugin is automatically added to the context if there is at least one enabled user plugin.</p>"
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Plugin Tools: User Plugins",
+                        "text": "<p>If a plugin is a user plugin, then this checkbox controls whether a user plugin should be enabled automatically on context load.</p>"
+                    },
+                    "cfgTool": {
+                        "title": "Nástroje pluginu: Konfigurácia",
+                        "text": "<p>Stlačením tohto tlačidla sa zobrazí editor, v ktorom môžete upraviť predvolenú konfiguráciu pluginu.</p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Nástroje pluginu: Editor konfigurácie",
+                        "text": "<p>The editor supports syntax highlight. All your changes will be saved continuously as you edit. If the configuration contains a syntax error, you will be informed appropriately. The error must be fixed before proceeding.</p>"
+                    },
+                    "documentationTool": {
+                        "title": "Nástroje pluginu: Dokumentácia",
+                        "text": "<p>Stlačením tohto tlačidla sa dostaneš na stránku dokumentácie pluginu, kde môžeš vyhľadať informácie o tom, čo plugin robí a aké konfiguračné parametre podporuje.</p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Nástroje pluginu: Mapové šablóny",
+                        "text": "<p>Mapové šablóny umožňujú konfigurovať šablóny máp, ktoré budú prístupné v kontexte.</p>"
+                    },
+                    "extensions": {
+                        "title": "Rozšárenia",
+                        "text": "<p>MapStore podporuje nahrávanie vlastných balíkov rozšírení za pomoci tohto tlačidla.</p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Rozšírenia",
+                        "text": "<p>Rozšírenia, ktoré sú už nainštalované, je možné kedykoľvek vymazať stlačením tohto tlačidla.</p>"
+                    }
+                }
+            },
+            "geostoryIntro": {
+              "title": "Návod k Story",
+              "text": "<p>Prehľad funkcionalít Story</p><p> Preskúmaj súvisiacu používateľskú príručku <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'>tu</a>"
+            },
+            "geostoryViewHeader": {
+              "title": "Hlavička",
+              "text": "Tu nájdeš výber jazyka, prihlásenie, odkaz na domovskú stránku a ponuku možností"
+            },
+            "geostoryViewNavItems": {
+              "title": "Navigable items",
+              "text": "Here you can find items present in the story that you can use to navigate/jump to. It shows also the current position in the story"
+            },
+            "geostoryViewNavTitle": {
+              "title": "Názov Story",
+              "text": "Tu môžeš vidieť názov Story"
+            },
+            "geostoryViewNavLogo": {
+              "title": "Logo Story",
+              "text": "Tu môžeš vidieť logo Story"
+            },
+            "geostoryViewContent": {
+              "title": "Obsah Story",
+              "text": "Toto bude obsah Story"
+            },
+            "geostoryViewEditButton": {
+              "title": "Upraviť Story",
+              "text": "Kliknutím na toto tlačidlo môžeš upraviť obsah a nastavenia Story"
+            },
+            "geostoryEditSidebar": {
+              "title": "Bočný panel",
+              "text": "<p>Na bočnom paneli môžeš vidieť prehľad príbehu, kde je každá položka označená inou ikonou alebo ukážkou v prípade obrázkov alebo máp</p><p>Môžeš:</p><ul><li>Zmeniť názov pre každú sekciu alebo názov obsahu</li><li>Usporiadať potiahnutím sekcie a ich obsahy</li><li>Priblížiť konkrétny obsah pomocou tlačidla presýpacích hodín</li></ul>"
+            },
+            "geostoryEditSidebarToolbar": {
+              "title": "Nástroje",
+              "text": "<p>Zľava doprava:</p><ul><li>Odstrániť vybranú sekciu</li><li>Prejsť do režimu zobrazenia</li><li>Upraviť nastavenia</li><li>Zabaliť/rozbaliť všetko</li></ul>"
+            },
+            "geostoryEditSidebarSettings": {
+              "title": "Nastavenia Story",
+              "text": "<p>Tu môžeš:</p><ul><li>Ukázať/schovať/upraviť názov Story</li><li>Upraviť tému Story</li><li>Ukázať/schovať/upraviť logo Story</li><li>Upraviť navigačný panel v režime zobrazenia</li></ul><p> Ďalšie informácie nájdeš v súvisiacej používateľskej príručke<a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'>tu</a>"
+            },
+            "geostoryEditContainer": {
+              "title": "Obsah Story",
+              "text": "<p>Tu môžeš vidieť obsah Story, upravovať ho pridaním alebo odstránením častí, odsekov atď.</p><p>Každý panel s nástrojmi umožňuje manipulovať s obsahom príbehu, napríklad:</p><img src='data:image/png;base64,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'/><ul><li>change media source</li><li>make the section to adapt to content height or to fit the view vertically</li><li>make the background to cover or not the container space</li><li>change size</li><li>align the container (available if size is not full)</li><li>change theme</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>this icon will allow you to edit the related map</p><img src=''/><b>Tip: </b>Each tool has a tooltip, hover on it with the mouse to see more"
+            },
+            "geostoryEditAddbar": {
+              "title": "Pridať nový obsah",
+              "text": "<p>Tu môžeš pridať rôzne druhy sekcií:</p><p><img src='data:image/png;base64,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'/></p><ul><li>Title section</li><li>Paragraph section</li><li>Immersive Section</li><li>Media Section</li><li>Web Page Section</li></ul>"
+            },
+            "geostoryEditMediaEditor": {
+              "title": "Editor médií",
+              "text": "<p>Pomocou editora médií môžeš do príbehu zahrnúť rôzne druhy mediálneho obsahu, ako napríklad: <ul> <li>obrázky</li><li>videá</li><li>mapy</li></ul></p><p> Ďalšie informácie nájdeš v súvisiacej používateľskej príručke <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'>tu</a>"
+            }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Uloženie relácie používateľa zlyhalo",
+            "categoryError": "Vytváranie chýbajúcej kategórie \"{categoryName}\" zlyhalo",
+            "defaultMessage": "Neznáma chyba"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Odstránenie relácie používateľa zlyhalo",
+            "defaultMessage": "Neznáma chyba"
+          },
+          "successRemoved": "Relácia používateľa bola odstránená",
+          "remove": "Obnoviť reláciu používateľa",
+          "confirmRemove": "Naozaj chceš obnoviť predvolenú konfiguráciu?"
+        }
+    }
+}
