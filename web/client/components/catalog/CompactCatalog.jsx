@@ -105,9 +105,9 @@ export default compose(
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={title} searchText={searchText} onSearchTextChange={setSearchText}/>}
-        footer={<div style={{padding: '5px'}} className="catalog-footer">
-            <span style={{'float': 'right'}}>{loading ? <LoadingSpinner /> : <span style={{opacity: 0, display: 'inline-block'}} className="mapstore-inline-loader" />}</span>
-            {!isNil(total) ? <span style={{position: 'relative', top: '5px', left: '5px'}} className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
+        footer={<div className="catalog-footer">
+            <span className="loader-span">{loading ? <LoadingSpinner /> : <span className="mapstore-inline-loader hidden-loader" />}</span>
+            {!isNil(total) ? <span style={{}} className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
         </div>}>
         <SideGrid
             items={items.map(i =>
