@@ -173,7 +173,7 @@ const isAllowedUser = (
 const BookmarkMenuItem = connect(createSelector([
     state => state?.search?.activeSearchTool || null,
     state => state?.searchbookmarkconfig || {}
-], (searchTool, config, ) => ({
+], (searchTool, config ) => ({
     active: searchTool === "bookmarkSearch",
     show: config?.allowUser || !!get(config, "bookmarkSearchConfig.bookmarks", []).length
 })), {

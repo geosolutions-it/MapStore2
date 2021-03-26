@@ -26,7 +26,7 @@ describe('useFiles enhancer', () => {
     it('useFiles rendering with map', (done) => {
 
         const actions = {
-            loadMap: (conf, mapId, zoomToExtent, ) => {
+            loadMap: (conf, mapId, zoomToExtent ) => {
                 expect(conf).toExist();
                 expect(conf.map).toExist();
                 expect(conf.map.bbox).toExist();

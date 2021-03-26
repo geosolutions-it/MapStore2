@@ -113,7 +113,7 @@ const handleExecuteResponseXMLObject = (xmlObj, outputsExtractor) => {
         throw new WPSExecuteError('NoExecutionId');
     }
 
-    const executionIdCut = statusLocation.slice(executionIdLocation + 12, );
+    const executionIdCut = statusLocation.slice(executionIdLocation + 12 );
     const ampersandLocation = executionIdCut.indexOf('&');
     const executionId = ampersandLocation === -1 ? executionIdCut : executionIdCut.slice(0, ampersandLocation);
 

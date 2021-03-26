@@ -6,22 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {getCurrentResolution, getResolutions} = require('../MapUtils');
-const {reproject, normalizeSRS} = require('../CoordinatesUtils');
-const {
+import {getCurrentResolution, getResolutions} from '../MapUtils';
+import {reproject, normalizeSRS} from '../CoordinatesUtils';
+import {
     getTileMatrixSet,
     limitMatrix,
     getMatrixIds,
     getDefaultMatrixId
-} = require('../WMTSUtils');
-const {getLayerUrl} = require('../LayersUtils');
-const {optionsToVendorParams} = require('../VendorParamsUtils');
+} from '../WMTSUtils';
+import {getLayerUrl} from '../LayersUtils';
+import {optionsToVendorParams} from '../VendorParamsUtils';
 
-const {isObject, isNil} = require('lodash');
+import {isObject, isNil} from 'lodash';
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
-module.exports = {
+export default {
     buildRequest: (layer, props) => {
         const resolution = isNil(props.map.resolution)
             ? getCurrentResolution(Math.round(props.map.zoom), 0, 21, 96)

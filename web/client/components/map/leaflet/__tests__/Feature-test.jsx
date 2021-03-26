@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Feature = require('../Feature');
-const expect = require('expect');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Feature from '../Feature';
+import expect from 'expect';
 
 const container = {
     addLayer: () => {},

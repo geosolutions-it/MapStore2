@@ -5,10 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const L = require('leaflet');
-const {getScales} = require('../MapUtils');
-const {parseString} = require('../CoordinatesUtils');
-const {head, isNumber} = require('lodash');
+import L from 'leaflet';
+import {getScales} from '../MapUtils';
+import {parseString} from '../CoordinatesUtils';
+import {head, isNumber} from 'lodash';
 
 const isInRange = function(col, row, ranges) {
     if (col < ranges.cols.min || col > ranges.cols.max) {
@@ -167,4 +167,4 @@ var WMTS = L.TileLayer.extend({
         return !this.ignoreErrors;
     }
 });
-module.exports = WMTS;
+export default WMTS;
