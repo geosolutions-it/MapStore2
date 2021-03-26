@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import _ from 'lodash';
+import {isArray, castArray, get} from 'lodash';
 import assign from 'object-assign';
 import xml2js from 'xml2js';
 
@@ -20,7 +20,7 @@ const capabilitiesCache = {};
 
 
 export const parseUrl = (urls) => {
-    const url = (_.isArray(urls) && urls || urls.split(','))[0];
+    const url = (isArray(urls) && urls || urls.split(','))[0];
     const parsed = urlUtil.parse(url, true);
     return urlUtil.format(assign({}, parsed, {search: null}, {
         query: assign({
@@ -52,21 +52,21 @@ export const parseUrl = (urls) => {
 export const extractCredits = attribution => {
     const title = attribution && attribution.Title;
     const logo = attribution.LogoURL && {
-        ...(_.get(attribution, 'LogoURL.$') || {}),
-        format: _.get(attribution, 'LogoURL.Format') // e.g. image/png
+        ...(get(attribution, 'LogoURL.$') || {}),
+        format: get(attribution, 'LogoURL.Format') // e.g. image/png
     };
-    const link = _.get(attribution, 'OnlineResource.$["xlink:href"]');
+    const link = get(attribution, 'OnlineResource.$["xlink:href"]');
     return {
         title,
         logo,
-        imageUrl: _.get(attribution, 'LogoURL.OnlineResource.$["xlink:href"]'),
+        imageUrl: get(attribution, 'LogoURL.OnlineResource.$["xlink:href"]'),
         link
     };
 };
 
 
 export const flatLayers = (root) => {
-    return root.Layer ? (_.isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
+    return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
         return previous.concat(flatLayers(current)).concat(current.Layer && current.Name ? [current] : []);
     }, []) : root.Name && [root] || [];
 };
@@ -81,7 +81,7 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
     const rootFormats = root.Request && root.Request.GetMap && root.Request.GetMap.Format || [];
     const layersObj = flatLayers(root);
-    const layers = _.isArray(layersObj) ? layersObj : [layersObj];
+    const layers = isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
         .filter((layer) => !text || layer.Name.toLowerCase().indexOf(text.toLowerCase()) !== -1 || layer.Title && layer.Title.toLowerCase().indexOf(text.toLowerCase()) !== -1 || layer.Abstract && layer.Abstract.toLowerCase().indexOf(text.toLowerCase()) !== -1);
     return {
@@ -99,14 +99,14 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
 };
 
 export const getDimensions = (layer) => {
-    return _.castArray(layer.Dimension || layer.dimension || []).map((dim, index) => {
-        const extent = (layer.Extent && _.castArray(layer.Extent)[index] || layer.extent && _.castArray(layer.extent)[index]);
+    return castArray(layer.Dimension || layer.dimension || []).map((dim, index) => {
+        const extent = (layer.Extent && castArray(layer.Extent)[index] || layer.extent && castArray(layer.extent)[index]);
         return {
             name: dim.$.name,
             units: dim.$.units,
             unitSymbol: dim.$.unitSymbol,
             "default": dim.$.default || (extent && extent.$.default),
-            values: dim._ && dim._.split(',') || extent && extent._ && extent._.split(',')
+            values: dim._ && dim.split(',') || extent && extent._ && extent.split(',')
         };
     });
 };
@@ -208,13 +208,13 @@ export const textSearch = (url, startPosition, maxRecords, text) => {
     return getRecords(url, startPosition, maxRecords, text);
 };
 export const parseLayerCapabilities = (capabilities, layer, lyrs) => {
-    const layers = _.castArray(lyrs || _.get(capabilities, "capability.layer.layer"));
+    const layers = castArray(lyrs || get(capabilities, "capability.layer.layer"));
     return layers.reduce((previous, capability) => {
         if (previous) {
             return previous;
         }
         if (!capability.name && capability.layer) {
-            return parseLayerCapabilities(capabilities, layer, _.castArray(capability.layer));
+            return parseLayerCapabilities(capabilities, layer, castArray(capability.layer));
         } else if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2) {
             return layer.name === capability.name && capability;
         } else if (capability.name && capability.name.split(":").length === 2) {

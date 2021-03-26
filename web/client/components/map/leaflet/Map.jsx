@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const L = require('leaflet');
-const PropTypes = require('prop-types');
-const React = require('react');
-const ConfigUtils = require('../../../utils/ConfigUtils').default;
-const {reprojectBbox, reproject} = require('../../../utils/CoordinatesUtils');
-const assign = require('object-assign');
-const {
+import L from 'leaflet';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ConfigUtils from '../../../utils/ConfigUtils';
+import {reprojectBbox, reproject} from '../../../utils/CoordinatesUtils';
+import assign from 'object-assign';
+import {
     getGoogleMercatorResolutions,
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -20,12 +20,12 @@ const {
     GET_COORDINATES_FROM_PIXEL_HOOK,
     ZOOM_TO_EXTENT_HOOK,
     registerHook
-} = require('../../../utils/MapUtils');
-const Rx = require('rxjs');
+} from '../../../utils/MapUtils';
+import Rx from 'rxjs';
 
-const {throttle} = require('lodash');
+import {throttle} from 'lodash';
 
-require('./SingleClick');
+import './SingleClick';
 
 class LeafletMap extends React.Component {
     static propTypes = {
@@ -542,4 +542,4 @@ class LeafletMap extends React.Component {
     };
 }
 
-module.exports = LeafletMap;
+export default LeafletMap;

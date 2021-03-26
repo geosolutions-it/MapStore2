@@ -20,7 +20,7 @@ import mapToNodes from './enhancers/mapToNodes';
 const enhanceTOC = compose(
     mapToNodes,
     handleNodeFiltering,
-    handleNodePropertyChanges,
+    handleNodePropertyChanges
 );
 
 export default enhanceTOC(({

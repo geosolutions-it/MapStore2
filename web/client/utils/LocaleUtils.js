@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const url = require('url');
-const {isObject} = require('lodash');
+const isObject = require('lodash/isObject');
 const {addLocaleData} = require('react-intl');
 
 const en = require('react-intl/locale-data/en');

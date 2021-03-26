@@ -69,7 +69,7 @@ const testNodes = [{
 
 const EnhancedComponent = compose(
     dndTree,
-    shouldUpdate((props, nextProps) => !isEqual(props.nodes, nextProps.nodes)),
+    shouldUpdate((props, nextProps) => !isEqual(props.nodes, nextProps.nodes))
 )(({nodes, setDndState, testDndState, testFunc}) => {
     if (testDndState) {
         setDndState(testDndState);

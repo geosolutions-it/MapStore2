@@ -10,7 +10,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import assign from 'object-assign';
-import _ from 'lodash';
+import {find, findIndex, head} from 'lodash';
 import Select from 'react-select';
 import Spinner from 'react-spinkit';
 import { Table, Glyphicon } from 'react-bootstrap';
@@ -73,8 +73,8 @@ class PermissionEditor extends React.Component {
     };
 
     onNewGroupChoose = (selected) => {
-        // TODO: use _.find(this.props.availableGroups,['id', _.toInteger(id)]) when lodash will be updated to version 4
-        this.props.onNewGroupChoose(_.find(this.props.availableGroups, (o)=> o.id === selected.value));
+        // TODO: use find(this.props.availableGroups,['id', toInteger(id)]) when lodash will be updated to version 4
+        this.props.onNewGroupChoose(find(this.props.availableGroups, (o)=> o.id === selected.value));
     };
 
     onAddPermission = () => {
@@ -236,7 +236,7 @@ class PermissionEditor extends React.Component {
                                     ref="newChoice"
                                     clearable={false}
                                     options={this.getAvailablePermissions()}
-                                    value={this.props.newPermission || _.head(this.props.availablePermissions)}
+                                    value={this.props.newPermission || head(this.props.availablePermissions)}
                                     onChange={(sel) => {this.props.onNewPermissionChoose(sel && sel.value); }}/>
                             </td>
                             <td style={{width: "50px"}}>
@@ -259,7 +259,7 @@ class PermissionEditor extends React.Component {
     }
     isPermissionPresent = (group) => {
         return this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule &&
-            _.findIndex(this.props.map.permissions.SecurityRuleList.SecurityRule, (o) => o.group && o.group.groupName === group) >= 0;
+            findIndex(this.props.map.permissions.SecurityRuleList.SecurityRule, (o) => o.group && o.group.groupName === group) >= 0;
     };
 }
 

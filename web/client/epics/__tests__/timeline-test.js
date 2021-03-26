@@ -199,7 +199,7 @@ describe('timeline Epics', () => {
             }});
         });
         it('syncTimelineGuideLayer on changeLayerProperties', done => {
-            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), changeLayerProperties('TEST_LAYER', {visibility: false},) ], (actions) => {
+            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), changeLayerProperties('TEST_LAYER', {visibility: false}) ], (actions) => {
                 doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
                 done();
             }, STATE_TIMELINE);

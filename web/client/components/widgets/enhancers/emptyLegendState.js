@@ -15,5 +15,5 @@ export default (asTooltip = true) => emptyState(
     {
         [asTooltip ? "tooltip" : "title"]: <Message msgId="widgets.errors.noLegend" />,
         description: !asTooltip && <Message msgId="widgets.errors.noLegendDescription" />
-    },
+    }
 );

@@ -23,7 +23,7 @@ const Catalog = compose(
     branch(
         ({catalog} = {}) => !catalog,
         connect(createSelector(selectedCatalogSelector, catalog => ({catalog})))
-    ),
+    )
 )(CatalogComp);
 
 /**

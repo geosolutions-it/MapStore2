@@ -23,7 +23,7 @@ const Toolbar = compose(
         insertWidget,
         onResetChange: onEditorChange
     },
-    wizardStateToProps,
+    wizardStateToProps
     ),
     withProps(({ onResetChange = () => { } }) => ({
         exitButton: {
@@ -32,7 +32,7 @@ const Toolbar = compose(
             onClick: () => onResetChange('widgetType', undefined)
         }
     })),
-    withExitButton(),
+    withExitButton()
 )(ToolbarComp);
 
 const Builder = connect(

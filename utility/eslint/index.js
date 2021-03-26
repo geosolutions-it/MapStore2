@@ -229,7 +229,20 @@ module.exports = {
                 "/^get.+$/",
                 "/^render.+$/",
                 "render"
-            ]
+            ],
+            // CUSTOM
+            // prevent to `import _ from 'lodash';`. Allows `import {get} from 'lodash';` or `import get from 'lodash/get';`
+            // for bundle size
+            "no-restricted-imports": [2,
+                {
+                    "name": "lodash",
+                    "importNames": ["default"],
+                    "message": "Please use the default import from 'lodash/functionName' instead."
+                }
+            ],
+            // prevent to `const _ = require('lodash')`. Allows `const get = require('lodash/get');`
+            // for bundle size
+            "no-restricted-modules": [2, { "paths": ["lodash", "!lodash/*"] }]
         }]
     }
 };

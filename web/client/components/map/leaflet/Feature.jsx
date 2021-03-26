@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
-const React = require('react');
-const {isEqual, isArray, castArray} = require('lodash');
-const assign = require('object-assign');
-const axios = require('axios');
+import PropTypes from 'prop-types';
+import React from 'react';
+import {isEqual, isArray, castArray} from 'lodash';
+import assign from 'object-assign';
+import axios from 'axios';
 
-const {geometryToLayer} = require('../../../utils/leaflet/Vector');
-const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
+import {geometryToLayer} from '../../../utils/leaflet/Vector';
+import {createStylesAsync} from '../../../utils/VectorStyleUtils';
 
 class Feature extends React.Component {
     static propTypes = {
@@ -147,4 +147,4 @@ class Feature extends React.Component {
     }
 }
 
-module.exports = Feature;
+export default Feature;
