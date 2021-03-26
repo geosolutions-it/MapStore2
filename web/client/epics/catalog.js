@@ -416,7 +416,7 @@ export default (API) => ({
                             () => {
                                 return Rx.Observable.of(
                                     error({ title: "layerProperties.format.error.title", message: 'layerProperties.format.error.message' }),
-                                    formatsLoading(false),
+                                    formatsLoading(false)
                                 );
                             }
                         )
