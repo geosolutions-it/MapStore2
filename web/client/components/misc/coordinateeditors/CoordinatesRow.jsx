@@ -236,8 +236,6 @@ class CoordinatesRow extends React.Component {
                     </div>
                 </div>
                 {renderToolBarButtons()}
-                {/* {this.props.showToolButtons && !this.props.hideOnMobile &&
-                } */}
             </div>
         );
     }
