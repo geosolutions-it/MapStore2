@@ -1,3 +1,6 @@
+/*
+ * Forked from https://github.com/vlad-ignatov/react-numeric-input
+ */
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
 
