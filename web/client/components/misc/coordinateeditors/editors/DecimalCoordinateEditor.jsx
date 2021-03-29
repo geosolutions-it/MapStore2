@@ -64,9 +64,10 @@ class DecimalCoordinateEditor extends React.Component {
                         // when inserting 4eee5 as number here it comes "" that makes the re-render fail
                         if (val === "") {
                             onChange("");
-                        }
-                        if (this[validateNameFunc](val) === null) {
+                        } else if (this[validateNameFunc](val) === null) {
                             onChange(val);
+                        } else {
+                            onChange(value);
                         }
                     }}
                     onKeyDown={this.verifyOnKeyDownEvent}
@@ -110,10 +111,8 @@ class DecimalCoordinateEditor extends React.Component {
         const lat = parseFloat(latitude);
         if (isNaN(lat) || lat < min || lat > max ) {
             return "error";
-            // return true;
         }
         return null; // "success"
-        // return false; // "success"
     }
 }
 
