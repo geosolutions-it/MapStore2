@@ -7,9 +7,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const {findIndex} = require('lodash');
+import React from 'react';
+import PropTypes from 'prop-types';
+import {findIndex} from 'lodash/findIndex';
 
 class HighlightFeatureSupport extends React.Component {
     static propTypes = {
@@ -146,4 +146,4 @@ class HighlightFeatureSupport extends React.Component {
     };
 }
 
-module.exports = HighlightFeatureSupport;
+export default HighlightFeatureSupport;

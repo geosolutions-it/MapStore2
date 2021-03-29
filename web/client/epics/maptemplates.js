@@ -72,23 +72,23 @@ export const setAllowedTemplatesEpic = (action$, store) => action$
             }), {});
         };
 
-        return templates.length > 0 ? Observable.defer(
-            () => Api.searchListByAttributes(makeFilter(), {params: { includeAttributes: true }}, '/resources/search/list')
-        ).switchMap(
-            (data) => {
-                const resourceObj = get(data, 'ResourceList.Resource', []);
-                const resources = isArray(resourceObj) ? resourceObj : [resourceObj];
-                const newTemplates = resources.map(resource => ({
-                    ...pick(resource, 'id', 'name', 'description'),
-                    ...extractAttributes(resource),
-                    dataLoaded: false,
-                    loading: false
-                }));
-                return Observable.of(setTemplates(newTemplates), setMapTemplatesLoaded(true));
-            }
-        ).catch(
-            err => Observable.of(setMapTemplatesLoaded(true, err))
-        ) : Observable.empty();
+        return templates.length > 0
+            ? Observable
+                .defer(() => Api.searchListByAttributes(makeFilter(), {params: { includeAttributes: true }}, '/resources/search/list'))
+                .switchMap(
+                    (data) => {
+                        const resourceObj = get(data, 'ResourceList.Resource', []);
+                        const resources = isArray(resourceObj) ? resourceObj : [resourceObj];
+                        const newTemplates = resources.map(resource => ({
+                            ...pick(resource, 'id', 'name', 'description'),
+                            ...extractAttributes(resource),
+                            dataLoaded: false,
+                            loading: false
+                        }));
+                        return Observable.of(setTemplates(newTemplates), setMapTemplatesLoaded(true));
+                    })
+                .catch( err => Observable.of(setMapTemplatesLoaded(true, err)))
+            : Observable.of(setTemplates([]), setMapTemplatesLoaded(true));
     });
 
 export const mergeTemplateEpic = (action$, store) => action$

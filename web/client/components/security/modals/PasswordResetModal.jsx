@@ -36,7 +36,8 @@ class PasswordResetModal extends React.Component {
         buttonSize: PropTypes.string,
         includeCloseButton: PropTypes.bool,
         changed: PropTypes.bool,
-        error: PropTypes.object
+        error: PropTypes.object,
+        loading: PropTypes.bool
     };
 
     static defaultProps = {
@@ -50,7 +51,8 @@ class PasswordResetModal extends React.Component {
         closeGlyph: "",
         style: {},
         buttonSize: "small",
-        includeCloseButton: true
+        includeCloseButton: true,
+        loading: false
     };
 
     state = {
@@ -83,7 +85,7 @@ class PasswordResetModal extends React.Component {
                 key="passwordChangeButton"
                 bsStyle="primary"
                 bsSize={this.props.buttonSize}
-                disabled={!this.state.passwordValid}
+                disabled={!this.state.passwordValid || this.props.loading}
                 onClick={() => {
                     this.setState({loading: true});
                     this.onPasswordChange();
@@ -97,7 +99,7 @@ class PasswordResetModal extends React.Component {
     };
 
     getBody = () => {
-        return (<PasswordReset role="body" ref="passwordResetForm"
+        return (<PasswordReset error={this.props.error} role="body" ref="passwordResetForm"
             changed={this.props.changed}
             onChange={(password, valid) => {
                 this.setState({passwordValid: valid, password});
@@ -105,7 +107,7 @@ class PasswordResetModal extends React.Component {
     };
 
     renderLoading = () => {
-        return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
+        return this.props.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
     };
 
     render() {

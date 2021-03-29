@@ -28,4 +28,17 @@
         <!-- The default password encoder -->
         <property name="passwordEncoder" ref="${passwordEncoderUsed}"></property>
     </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="0"/>
+        <property name="locations">
+            <list>
+                <value>classpath:geostore.properties</value>
+                <value>classpath*:geostore.properties</value>
+                <value>classpath:mapstore.properties</value>
+                <value>classpath:ldap.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="false"/>
+	</bean>
 </beans>

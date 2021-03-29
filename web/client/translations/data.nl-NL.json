@@ -1075,7 +1075,8 @@
                 "operation": "Operatie",
                 "placeholder": "Selecteer laag",
                 "errors": {
-                    "noCrossLayerAvailable": "Tussen lagen filteren is niet beschikbaar voor de geselecteerde laag"
+                    "noCrossLayerAvailable": "Tussen lagen filteren is niet beschikbaar voor de geselecteerde laag",
+                    "layersExcluded": "Alleen lagen die uit dezelfde bron komen, kunnen als doellaag voor dit laagfilter worden geselecteerd"
                 }
             },
             "changedFilter": "Filter gewijzigd",

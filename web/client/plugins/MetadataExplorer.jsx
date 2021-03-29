@@ -35,6 +35,7 @@ import {
     changeUrl,
     deleteService,
     focusServicesList,
+    formatOptionsFetch,
     textSearch,
     toggleAdvancedSettings,
     toggleTemplate,
@@ -69,14 +70,17 @@ import {
     serviceListOpenSelector,
     servicesSelector,
     servicesSelectorWithBackgrounds,
-    tileSizeOptionsSelector
+    tileSizeOptionsSelector,
+    formatsLoadingSelector,
+    getSupportedFormatsSelector,
+    getSupportedGFIFormatsSelector
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
-import { getCatalogRecords } from '../utils/CatalogUtils';
+import {DEFAULT_FORMAT_WMS, getCatalogRecords} from '../utils/CatalogUtils';
 
 const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -110,7 +114,10 @@ const metadataExplorerSelector = createStructuredSelector({
     pageSize: pageSizeSelector,
     loading: loadingSelector,
     crs: projectionSelector,
-    isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector
+    isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector,
+    formatsLoading: formatsLoadingSelector,
+    formatOptions: getSupportedFormatsSelector,
+    infoFormatOptions: getSupportedGFIFormatsSelector
 });
 
 
@@ -123,22 +130,7 @@ const Catalog = compose(
             marginBottom: "10px",
             marginRight: "5px"
         },
-        formatOptions: [{
-            label: 'image/png',
-            value: 'image/png'
-        }, {
-            label: 'image/png8',
-            value: 'image/png8'
-        }, {
-            label: 'image/jpeg',
-            value: 'image/jpeg'
-        }, {
-            label: 'image/vnd.jpeg-png',
-            value: 'image/vnd.jpeg-png'
-        }, {
-            label: 'image/gif',
-            value: 'image/gif'
-        }]
+        formatOptions: DEFAULT_FORMAT_WMS
     }),
     branch(
         ({mode}) => mode === "edit",
@@ -267,6 +259,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onFocusServicesList: focusServicesList,
     onPropertiesChange: changeLayerProperties,
     onAddBackground: backgroundAdded,
+    onFormatOptionsFetch: formatOptionsFetch,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')

@@ -842,7 +842,8 @@
                 "clear": "Clear filter",
                 "operation": "Operation",
                 "errors": {
-                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
+                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer",
+                    "layersExcluded": "只能选择来自同一来源的图层作为此图层过滤器的目标图层"
                 }
             }
         },
@@ -1115,6 +1116,7 @@
                 "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
                 "serviceDeletedCorrectly": "The service was deleted correctly",
                 "errorServiceUrl": "Service not available. Please, check the provided url"
+
             }
         },
         "uploader": {

@@ -173,10 +173,14 @@ const Api = {
     },
     changePassword: function(user, newPassword, options) {
         return axios.put(
-            "users/user/" + user.id, "<User><newPassword>" + newPassword + "</newPassword></User>",
+            "users/user/" + user.id, {
+                User: {
+                    newPassword
+                }
+            },
             this.addBaseUrl(merge({
                 headers: {
-                    'Content-Type': "application/xml"
+                    'Content-Type': "application/json"
                 }
             }, options)));
     },

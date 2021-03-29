@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import _ from 'lodash';
+import { head, last } from 'lodash';
 import assign from 'object-assign';
 
 import axios from '../libs/ajax';
@@ -120,7 +120,7 @@ var Api = {
                                             let crs;
                                             let el;
                                             if (Array.isArray(rawRec.boundingBox)) {
-                                                el = _.head(rawRec.boundingBox);
+                                                el = head(rawRec.boundingBox);
                                             } else {
                                                 el = rawRec.boundingBox;
                                             }
@@ -138,7 +138,7 @@ var Api = {
                                                 let lc = el.value.lowerCorner;
                                                 let uc = el.value.upperCorner;
 
-                                                const extractedCrs = epsg || (extractCrsFromURN(urn) || _.last(crsValue.split(':')));
+                                                const extractedCrs = epsg || (extractCrsFromURN(urn) || last(crsValue.split(':')));
 
                                                 if (!extractedCrs) {
                                                     crs = 'EPSG:4326';

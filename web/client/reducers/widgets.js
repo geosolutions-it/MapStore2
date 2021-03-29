@@ -117,7 +117,7 @@ function widgetsReducer(state = emptyState, action) {
             set(
                 action.key,
                 action.mode === "merge" ? assign({}, oldWidget[action.key], action.value) : action.value,
-                oldWidget,
+                oldWidget
             ), {
                 id: action.id
             }, state);

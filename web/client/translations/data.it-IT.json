@@ -71,7 +71,6 @@
             "styleCustom": "Usa stile con nome \"{value}\"",
             "styleListLoadError": "Si è verificato un errore durante il caricamento della lista degli stili",
             "stylesRefreshList": "Aggiorna lista degli stili",
-            "format": "Formato",
             "delete": "Elimina",
             "deleteLayer":"Elimina Livello",
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
@@ -146,6 +145,16 @@
             "enableLocalizedLayerStyles": {
                 "label": "Abilita stile localizzato",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
+            },
+            "format": {
+                "title": "Formato",
+                "refresh": "Recupera il formato supportato",
+                "loading": "Caricamento in corso...",
+                "noOption": "Nessuna opzione",
+                "error": {
+                    "title": "Errore",
+                    "message": "Impossibile recuperare il formato"
+                }
             }
         },
         "longitude": "Lon",
@@ -1075,7 +1084,8 @@
                 "operation": "Operazione",
                 "placeholder": "Seleziona il livello",
                 "errors": {
-                    "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
+                    "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",
+                    "layersExcluded": "Solo i layer provenienti dalla stessa sorgente possono essere selezionati come layer di destinazione per questo filtro layer"
                 }
             },
             "changedFilter": "Filtero modificato",
@@ -1322,7 +1332,8 @@
             "next": "Avanti",
             "skip": "Salta",
             "finish": "Fine",
-            "layerOf": "Strato {count} dei {total}:"
+            "layerOf": "Strato {count} dei {total}:",
+            "styleCustomizationDisabled":"Questo livello ha già uno stile definito e non è possibile personalizzarlo."
         },
         "mapImport": {
             "title": "Importa",
@@ -1413,6 +1424,7 @@
             "showPreview": "Mostra la preview",
             "advancedSettings": "Impostazioni avanzate",
             "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Questo catalogo non può essere aggiunto a quelli disponibili perché utilizza un protocollo http. Fornisci un URL di catalogo che utilizzi il protocollo https",
             "notification": {
                 "errorTitle": "Errore",
                 "errorSearchingRecords": "Alcuni record non sono stati trovati: {records} . Controlla la lista dei parametri nella barra degli indirizzi",
@@ -1426,6 +1438,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Abilita stili di livello localizzati",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
+            },
+            "format": {
+                "noOption": "Nessuna opzione",
+                "loading": "Caricamento in corso..."
             }
         },
         "uploader": {

@@ -66,7 +66,8 @@ class RecordItem extends React.Component {
         service: PropTypes.service,
         showTemplate: PropTypes.bool,
         defaultFormat: PropTypes.string,
-        formatOptions: PropTypes.array
+        formatOptions: PropTypes.array,
+        infoFormatOptions: PropTypes.array
     };
 
     static defaultProps = {
@@ -363,7 +364,11 @@ class RecordItem extends React.Component {
                                 : null,
                         format: this.getLayerFormat(
                             formats.filter(f => f.indexOf("image/") === 0)
-                        )
+                        ),
+                        formats: {
+                            imageFormats: this.props.formatOptions,
+                            infoFormats: this.props.infoFormatOptions
+                        }
                     }
                     : {
                         format: this.getLayerFormat(

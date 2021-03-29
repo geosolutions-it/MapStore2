@@ -7,7 +7,7 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const castArray = require('lodash').castArray;
+const castArray = require('lodash/castArray');
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
@@ -33,10 +33,7 @@ const castArray = require('lodash').castArray;
  */
 module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
     target: "web",
-    entry: assign(!prod ? {
-        'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
-        'webpack': 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
-    } : {}, bundles, themeEntries),
+    entry: assign({}, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
         minimize: !!prod
