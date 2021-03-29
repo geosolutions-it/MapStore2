@@ -49,7 +49,7 @@ const Video = withResizeDetector(({
     const [started, setStarted] = useState(playing);
     const [error, setError] = useState();
     const [loading, setLoading] = useState(play);
-    // we have only message error, does'nt have the code
+    // we have only message error, doesn't have the code
     const AUTOPLAY_ERROR = `NotAllowedError: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD`;
     const isCover = fit === 'cover';
     const [autoPlayError, setAutoPlayError] = useState(false);
