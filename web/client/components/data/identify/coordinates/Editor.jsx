@@ -35,6 +35,7 @@ const Editor = (props) => (
         formatVisible
         showLabels
         removeVisible={false}
+        hideOnMobile
     />);
 
 export default Editor;

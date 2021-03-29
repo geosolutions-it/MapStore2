@@ -8,8 +8,9 @@
 
 import React from 'react';
 
-import { Row } from 'react-bootstrap';
+import { Row, Glyphicon } from 'react-bootstrap';
 import { get } from 'lodash';
+import MediaQuery from 'react-responsive';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import Message from '../../I18N/Message';
 import DockablePanel from '../../misc/panels/DockablePanel';
@@ -19,7 +20,7 @@ import Portal from '../../misc/Portal';
 import Coordinate from './coordinates/Coordinate';
 import { responseValidForEdit } from '../../../utils/IdentifyUtils';
 import LayerSelector from './LayerSelector';
-
+import DropdownToolbarOptions from '../../misc/toolbar/DropdownToolbarOptions';
 /**
  * Component for rendering Identify Container inside a Dockable container
  * @memberof components.data.identify
@@ -75,6 +76,7 @@ export default props => {
     const targetResponse = validResponses[index]; // the index is calculated on the valid responses hence using all responses leads to wrong results
     const {layer} = targetResponse || {};
 
+    // TODO disable apply Changes only if lat and long not change
     let lngCorrected = null;
     if (latlng) {
         /* lngCorrected is the converted longitude in order to have the value between
@@ -103,6 +105,37 @@ export default props => {
     const emptyResponses = requests.length === validator(format)?.getNoValidResponses(responses)?.length || 0;
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
+
+    const cordinateToolBarButtons = [
+        {
+            buttonConfig: {
+                title: <Glyphicon glyph="cog"/>,
+                className: "square-button-md no-border",
+                pullRight: true,
+                tooltipId: "identifyChangeCoordinateFormat"
+            },
+            menuOptions: [
+                {
+                    active: formatCoord === "decimal",
+                    onClick: () => { onChangeFormat("decimal"); },
+                    text: <Message msgId="search.decimal"/>
+                }, {
+                    active: formatCoord === "aeronautical",
+                    onClick: () => { onChangeFormat("aeronautical"); },
+                    text: <Message msgId="search.aeronautical"/>
+                }
+            ],
+            Element: DropdownToolbarOptions
+        },
+        {
+            glyph: "ok",
+            disabled: !((latlng && latlng.lat) && lngCorrected),
+            tooltipId: 'identifyCoordinateApplyChanges',
+            onClick: () => onSubmitClickPoint({
+                lat: latlng && latlng.lat,
+                lon: lngCorrected
+            })
+        }];
     return (
         <div id="identify-container" className={enabled && requests.length !== 0 ? "identify-active" : ""}>
             <DockablePanel
@@ -159,14 +192,26 @@ export default props => {
                             />
                         </div>
                         <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>
-                        <Toolbar
-                            btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                            buttons={toolButtons}
-                            transitionProps={null
-                            /* transitions was causing a bad rendering of toolbar present in the identify panel
+                        <div className="identity-tool-bars">
+                            {showCoordinateEditor && <MediaQuery maxDeviceWidth={767}>
+                                <Toolbar
+                                    btnDefaultProps={{className: 'square-button-md no-border'}}
+                                    btnGroupProps={{className: 'identity-cordinate-tool-bar'}}
+                                    buttons={cordinateToolBarButtons}
+                                    transitionProps={null}/>
+                            </MediaQuery>}
+
+                            <Toolbar
+                                btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                buttons={toolButtons}
+                                btnGroupProps={{className: showCoordinateEditor ? 'cordinate-tool-bar' : ''}}
+                                transitionProps={null
+                                    /* transitions was causing a bad rendering of toolbar present in the identify panel
                                  * for this reason they ahve been disabled
                                 */
-                            }/>
+                                }/>
+
+                        </div>
                     </Row>
                 ].filter(headRow => headRow)}>
                 <Viewer

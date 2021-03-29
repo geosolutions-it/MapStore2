@@ -10,6 +10,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Glyphicon, InputGroup } from 'react-bootstrap';
+import MediaQuery from 'react-responsive';
 import Toolbar from '../toolbar/Toolbar';
 import draggableComponent from '../enhancers/draggableComponent';
 import CoordinateEntry from './CoordinateEntry';
@@ -41,7 +42,8 @@ class CoordinatesRow extends React.Component {
         formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool,
         renderer: PropTypes.string,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        hideOnMobile: PropTypes.bool
     };
 
     static defaultProps = {
@@ -50,7 +52,8 @@ class CoordinatesRow extends React.Component {
         onMouseEnter: () => {},
         onMouseLeave: () => {},
         showToolButtons: true,
-        disabled: false
+        disabled: false,
+        hideOnMobile: false
     };
 
     constructor(props) {
@@ -139,6 +142,30 @@ class CoordinatesRow extends React.Component {
                 />
             </div>);
 
+
+        const renderToolBarButtons = () => {
+            if (!this.props.showToolButtons) {
+                return null;
+            }
+
+            if (this.props.hideOnMobile) {
+                return (<MediaQuery minDeviceWidth={1224} >
+                    <div key="tools">
+                        <Toolbar
+                            btnGroupProps={{className: 'tools'}}
+                            btnDefaultProps={{className: 'square-button-md no-border'}}
+                            buttons={toolButtons}/>
+                    </div>
+                </MediaQuery>);
+            }
+
+            return (<div key="tools">
+                <Toolbar
+                    btnGroupProps={{className: 'tools'}}
+                    btnDefaultProps={{className: 'square-button-md no-border'}}
+                    buttons={toolButtons}/>
+            </div>);
+        };
         return (
             <div className={`coordinateRow ${this.props.format || ""} ${this.props.customClassName || ""}`} onMouseEnter={() => {
                 if (this.props.onMouseEnter && this.props.component.lat && this.props.component.lon) {
@@ -208,13 +235,9 @@ class CoordinatesRow extends React.Component {
                         </InputGroup>
                     </div>
                 </div>
-                {this.props.showToolButtons && <div key="tools">
-                    <Toolbar
-                        btnGroupProps={{className: 'tools'}}
-                        btnDefaultProps={{className: 'square-button-md no-border'}}
-                        buttons={toolButtons}/>
-                </div>
-                }
+                {renderToolBarButtons()}
+                {/* {this.props.showToolButtons && !this.props.hideOnMobile &&
+                } */}
             </div>
         );
     }

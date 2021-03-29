@@ -236,7 +236,7 @@ describe("test IdentifyContainer", () => {
         const toolbar = coordinatesRow[0].children[2];
         expect(coordinateIcon.getAttribute('class')).toContain('glyphicon-point');
         expect(coordinateViewer.children[0].getAttribute('class')).toContain('coordinates-text');
-        expect(toolbar.getAttribute('class')).toContain('btn-group');
+        expect(toolbar.getAttribute('class')).toContain('identity-tool-bars');
     });
 
     it('test rendering of default feature toolbar buttons', () => {
