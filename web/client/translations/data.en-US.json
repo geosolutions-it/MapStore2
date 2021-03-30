@@ -2516,7 +2516,9 @@
                     "pleaseLogin": "Please login",
                     "notAccessible": "This story is not accessible",
                     "geostoryNotAccessible": "You don't have permission to access this story. Please contact the resource owner",
-                    "geostoryDoesNotExist": "This story does not exist"
+                    "geostoryDoesNotExist": "This story does not exist",
+                    "video": "Sorry! An error has occurred, please try again later."
+
                 }
             },
             "mapEditor": {

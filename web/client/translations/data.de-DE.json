@@ -2505,7 +2505,8 @@
                     "pleaseLogin": "Bitte loggen Sie sich ein",
                     "notAccessible": "Diese Geschichte ist nicht zugänglich",
                     "geostoryNotAccessible": "Sie haben keine Berechtigung, auf diese Geschichte zuzugreifen. Bitte wenden Sie sich an den Eigentümer der Ressource",
-                    "geostoryDoesNotExist": "Diese Geschichte existiert nicht"
+                    "geostoryDoesNotExist": "Diese Geschichte existiert nicht",
+                    "video": "Es tut uns leid! Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
                 }
             },
             "mapEditor": {

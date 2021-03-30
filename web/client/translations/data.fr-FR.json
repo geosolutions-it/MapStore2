@@ -2506,7 +2506,9 @@
                     "pleaseLogin": "Veuillez vous connecter",
                     "notAccessible": "Cette story n'est pas accessible",
                     "geostoryNotAccessible": "Vous n'avez pas la permission d'accéder à cette story. Veuillez contacter le propriétaire de la ressource",
-                    "geostoryDoesNotExist": "Cette story n'existe pas"
+                    "geostoryDoesNotExist": "Cette story n'existe pas",
+                    "video": "Pardon! Un erreur est survenue, veuillez réessayer plus tard."
+
                 }
             },
             "mapEditor": {
