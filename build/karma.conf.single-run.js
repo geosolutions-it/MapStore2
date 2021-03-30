@@ -15,6 +15,5 @@ module.exports = function karmaConfig(config) {
         testFile: 'build/tests-travis.webpack.js',
         singleRun: true
     });
-    testConfig.logLevel = config.LOG_ERROR; // in single run typically warn errors (e.g. of 404 not found) should not be reported. Some errors of this kind are desired to test not found.
     config.set(testConfig);
 };
