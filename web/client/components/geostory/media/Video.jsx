@@ -11,6 +11,7 @@ import Loader from '../../misc/Loader';
 import { withResizeDetector } from 'react-resize-detector';
 import { Glyphicon } from 'react-bootstrap';
 import { Modes } from '../../../utils/GeoStoryUtils';
+import Message from '../../I18N/Message';
 
 /**
  * Video component
@@ -48,8 +49,10 @@ const Video = withResizeDetector(({
     const [started, setStarted] = useState(playing);
     const [error, setError] = useState();
     const [loading, setLoading] = useState(play);
-
+    // we have only message error, doesn't have the code
+    const AUTOPLAY_ERROR = `NotAllowedError: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD`;
     const isCover = fit === 'cover';
+    const [autoPlayError, setAutoPlayError] = useState(false);
 
     useEffect(() => {
         if (!started && playing) {
@@ -82,6 +85,43 @@ const Video = withResizeDetector(({
 
     const showControls = isCover ? false : controls;
     const forceLoop = isCover ? true : loop;
+
+    const handlePlay = () => {
+        onPlay(true);
+        // in autoPlay Error case, reset the error status to force the video play
+        if (autoPlayError) {
+            setError(false);
+            setAutoPlayError(false);
+        }
+
+    };
+
+    const handlePause = () => {
+        onPlay(false);
+    };
+
+    const handleError = (e) => {
+        setError(e);
+        // cast the error message, we don't have the error code available
+        let errorMsg = '' + e;
+        if ( errorMsg === AUTOPLAY_ERROR) {
+            onPlay(false);
+            setAutoPlayError(true);
+            setLoading(false);
+        }
+    };
+
+    const handleOnclick = () => {
+        if (autoPlayError) {
+            setAutoPlayError(false);
+            setError(false);
+        } else {
+            setLoading(true);
+        }
+        setStarted(true);
+        onPlay(true);
+
+    };
 
     return (
         <div
@@ -128,9 +168,9 @@ const Video = withResizeDetector(({
                         }
                     }}
                     onReady={() => setLoading(false)}
-                    onError={e => setError(e)}
-                    onPause={() => onPlay(false)}
-                    onPlay={() => onPlay(true)}
+                    onError={handleError}
+                    onPause={handlePause}
+                    onPlay={handlePlay}
                 />}
                 {(!started || started && (loading || error)) && <div
                     className="ms-video-cover"
@@ -150,14 +190,18 @@ const Video = withResizeDetector(({
                             backgroundRepeat: 'no-repeat'
                         })
                     }}
-                    onClick={() => {
-                        setStarted(true);
-                        setLoading(true);
-                        onPlay(true);
-                    }}>
+                    onClick={handleOnclick}>
                     {loading && <Loader size={70}/>}
-                    {error && 'Error'}
-                    {!(loading || error) && !playing &&
+                    {(error && !autoPlayError) && <div className="text-center" ><Glyphicon
+                        glyph="alert"
+                        style={{
+                            fontSize: size[1] / 4 > 100 ? 100 : size[1] / 4,
+                            mixBlendMode: 'difference',
+                            color: '#ffffff'
+                        }}
+                    /><h3><Message msgId="geostory.errors.loading.video"/></h3> </div>
+                    }
+                    {((!(loading || error) && !playing) || (error && autoPlayError)) &&
                         <Glyphicon
                             glyph="play"
                             style={{
@@ -168,7 +212,7 @@ const Video = withResizeDetector(({
                         />}
                 </div>}
             </>}
-            {!showControls && <div
+            {(!showControls && !autoPlayError ) && <div
                 className="ms-video-mask-cover"
                 style={{
                     position: 'absolute',
