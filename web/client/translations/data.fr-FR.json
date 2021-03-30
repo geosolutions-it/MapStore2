@@ -819,7 +819,7 @@
                 "single_layer": "Une seule couche",
                 "no_info_description": "Le panneau d'identification n'apparaîtra pas lors de la recherche",
                 "all_layers_description": "Le panneau d'identification affichera des informations sur toutes les couches visibles sur la carte",
-                "single_layer_description": "Le panneau d'identification apparaîtra avec les données déjà disponibles via la recherche WFS",
+                "single_layer_description": "Le panneau identifier s'affichera et affichera les informations uniquement pour cette couche",
                 "openFeatureInfoButtonCheckbox": "Utilisez le bouton pour ouvrir les informations sur les fonctionnalités",
                 "forceSearchLayerVisibility": "Forcer la visibilité de la couche de recherche"
             },

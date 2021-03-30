@@ -819,7 +819,7 @@
                 "single_layer": "Una sola capa",
                 "no_info_description": "El panel de identificación no aparecerá en la búsqueda",
                 "all_layers_description": "El panel Identificar aparecerá mostrando información de todas las capas visibles en el mapa",
-                "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS",
+                "single_layer_description": "El panel de identificación aparecerá mostrando información solo para esta capa",
                 "openFeatureInfoButtonCheckbox": "Use el botón para abrir la información de la función",
                 "forceSearchLayerVisibility": "Forzar la visibilidad de la capa de búsqueda"
             },

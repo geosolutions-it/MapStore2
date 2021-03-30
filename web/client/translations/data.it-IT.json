@@ -819,7 +819,7 @@
                 "single_layer": "Singolo livello",
                 "no_info_description": "Il pannello Informazioni Sulle Feature non comparirà",
                 "all_layers_description": "Il pannello Informazioni Sulle Feature mostrerà informazioni di tutti i layer presenti in mappa",
-                "single_layer_description": "Il pannello Informazioni Sulle Feature mostrerà i dati disponibili relativi all'elemento selezionato",
+                "single_layer_description": "Il pannello Informazioni Sulle Feature mostrerà le informazioni solo per questo livello",
                 "openFeatureInfoButtonCheckbox": "Utilizzare il pulsante per aprire le informazioni sulla funzione",
                 "forceSearchLayerVisibility": "Forza la visibilità del livello di ricerca"
             },
