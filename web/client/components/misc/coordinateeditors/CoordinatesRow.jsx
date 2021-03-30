@@ -149,7 +149,7 @@ class CoordinatesRow extends React.Component {
             }
 
             if (this.props.hideOnMobile) {
-                return (<MediaQuery minDeviceWidth={1224} >
+                return (<MediaQuery minDeviceWidth={768} >
                     <div key="tools">
                         <Toolbar
                             btnGroupProps={{className: 'tools'}}
