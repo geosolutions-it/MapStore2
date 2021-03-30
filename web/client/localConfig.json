@@ -425,7 +425,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                  "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": true
                 }
             }, {
                 "name": "Toolbar",
@@ -499,7 +499,9 @@
                     "scalebar": {
                       "container" : "#footer-scalebar-container"
                     }
-                  }
+                  },
+                  "scrollWheelZoom": false,
+                  "zoomControl": true
                 }
             }, {
               "name": "DrawerMenu",
@@ -543,6 +545,14 @@
                     }
                 }
             }, {
+              "name": "FullScreen",
+              "override": {
+                "Toolbar": {
+                    "alwaysVisible": true
+                }
+            }
+            },
+            {
                 "name": "TOC",
                 "cfg": {
                     "activateMapTitle": false,
@@ -560,7 +570,7 @@
                 "name": "Search",
                 "cfg": {
                   "showOptions": false,
-                  "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": true
                 }
             }, {
                 "name": "Toolbar",

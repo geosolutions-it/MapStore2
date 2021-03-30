@@ -56,7 +56,7 @@ class ShareEmbed extends React.Component {
     };
 
     render() {
-        const codeEmbedded = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + this.generateUrl(this.props.shareUrl) + "\"></iframe>";
+        const codeEmbedded = "<iframe allowfullscreen style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + this.generateUrl(this.props.shareUrl) + "\"></iframe>";
         return (
             <div className="input-link">
                 <div className="input-link-head">
