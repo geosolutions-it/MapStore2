@@ -43,7 +43,7 @@ class CoordinatesRow extends React.Component {
         removeEnabled: PropTypes.bool,
         renderer: PropTypes.string,
         disabled: PropTypes.bool,
-        hideOnMobile: PropTypes.bool
+        mediaQueryToolsOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -52,8 +52,7 @@ class CoordinatesRow extends React.Component {
         onMouseEnter: () => {},
         onMouseLeave: () => {},
         showToolButtons: true,
-        disabled: false,
-        hideOnMobile: false
+        disabled: false
     };
 
     constructor(props) {
@@ -148,8 +147,8 @@ class CoordinatesRow extends React.Component {
                 return null;
             }
 
-            if (this.props.hideOnMobile) {
-                return (<MediaQuery minDeviceWidth={768} >
+            if (this.props.mediaQueryToolsOptions) {
+                return (<MediaQuery {...this.props.mediaQueryToolsOptions} >
                     <div key="tools">
                         <Toolbar
                             btnGroupProps={{className: 'tools'}}

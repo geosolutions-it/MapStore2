@@ -35,7 +35,7 @@ const Editor = (props) => (
         formatVisible
         showLabels
         removeVisible={false}
-        hideOnMobile
+        mediaQueryToolsOptions={{minDeviceWidth: 768}}
     />);
 
 export default Editor;
