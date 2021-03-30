@@ -2505,7 +2505,8 @@
                     "pleaseLogin": "Por favor Iniciar sesión",
                     "notAccessible": "Esta historia no es accesible.",
                     "geostoryNotAccessible": "No tienes permiso para acceder a esta historia. Por favor, póngase en contacto con el propietario del recurso",
-                    "geostoryDoesNotExist": "Esta historia no existe"
+                    "geostoryDoesNotExist": "Esta historia no existe",
+                    "video": "¡Perdón! Se ha producido un error, inténtelo de nuevo más tarde."
                 }
             },
             "mapEditor": {
