@@ -820,7 +820,7 @@
                 "single_layer": "Einzelne Ebene",
                 "no_info_description": "Das Identifizierungsfeld wird bei der Suche nicht angezeigt",
                 "all_layers_description": "Das Fenster Identifizieren zeigt Informationen zu allen in der Karte sichtbaren Layern an",
-                "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind",
+                "single_layer_description": "Im Bereich Identifizieren werden nur Informationen für diese Ebene angezeigt",
                 "openFeatureInfoButtonCheckbox": "Verwenden Sie die Schaltfläche, um Funktionsinformationen zu öffnen",
                 "forceSearchLayerVisibility": "Sichtbarkeit der Suchebene erzwingen"
             },

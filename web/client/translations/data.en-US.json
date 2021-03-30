@@ -819,7 +819,7 @@
                 "single_layer": "Single Layer",
                 "no_info_description": "Identify panel will not show up on search",
                 "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
-                "single_layer_description": "Identify panel will show up with the data already available through the WFS search",
+                "single_layer_description": "Identify panel will show up displaying information only for this layer",
                 "openFeatureInfoButtonCheckbox": "Use button to open feature info",
                 "forceSearchLayerVisibility": "Force search layer visibility"
             },

@@ -43,7 +43,10 @@ import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
 import {getFeatureSimple} from '../api/WFS';
+import { getDefaultInfoFormatValueFromLayer } from '../utils/MapInfoUtils';
+import { identifyOptionsSelector } from '../selectors/mapInfo';
 
+const getInfoFormat = (layerObj, state) => getDefaultInfoFormatValueFromLayer(layerObj, {...identifyOptionsSelector(state)});
 
 /**
  * Gets every `TEXT_SEARCH_STARTED` event.
@@ -136,19 +139,21 @@ export const searchItemSelected = (action$, store) =>
                         const latlng = { lng: coord[0], lat: coord[1] };
                         const typeName = item.__SERVICE__.options.typeName;
                         if (coord) {
-                            const layerObj = typeName && getLayerFromName(store.getState(), typeName);
+                            const state = store.getState();
+                            const layerObj = typeName && getLayerFromName(state, typeName);
                             let itemId = null;
                             let filterNameList = [];
                             let overrideParams = {};
                             let forceVisibility = false;
                             if (item.__SERVICE__.launchInfoPanel === "single_layer") {
                                 /* take info from the item selected and restrict feature info to this layer
-                                 * and force info_format to application/json for allowing
-                                 * filtering results later on (identify epic) */
+                                 * and filtering with `featureid` which might be ignored by other servers,
+                                 * but can be used by GeoServer to select the specific feature instead to showing all the results
+                                 * when info_format is other than application/json */
                                 forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
                                 filterNameList = [typeName];
                                 itemId = item.id;
-                                overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: "application/json" } };
+                                overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: getInfoFormat(layerObj, state), featureid: itemId } };
                             }
                             return [
                                 ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
@@ -198,12 +203,12 @@ export const textSearchShowGFIEpic = (action$, store) =>
             const bbox = item.bbox || item.properties.bbox || toBbox(item);
             const coord = pointOnSurface(item).geometry.coordinates;
             const latlng = { lng: coord[0], lat: coord[1] };
-
+            const itemId = item.id;
             return !!coord &&
                 showGFIForService(item?.__SERVICE__) && layerIsVisibleForGFI(layerObj, item?.__SERVICE__) ?
                 Rx.Observable.of(
                     ...(item?.__SERVICE__?.forceSearchLayerVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
-                    featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: "application/json" } }, item.id),
+                    featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: getInfoFormat(layerObj, state), featureid: itemId } }, itemId),
                     showMapinfoMarker(),
                     zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item?.__SERVICE__?.options?.maxZoomLevel || 21),
                     addMarker(item)
