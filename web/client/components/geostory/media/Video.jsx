@@ -50,7 +50,9 @@ const Video = withResizeDetector(({
     const [error, setError] = useState();
     const [loading, setLoading] = useState(play);
     // we have only message error, doesn't have the code
-    const AUTOPLAY_ERROR = `NotAllowedError: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD`;
+    const AUTOPLAY_ERROR = `NotAllowedError`;
+
+
     const isCover = fit === 'cover';
     const [autoPlayError, setAutoPlayError] = useState(false);
 
@@ -104,7 +106,8 @@ const Video = withResizeDetector(({
         setError(e);
         // cast the error message, we don't have the error code available
         let errorMsg = '' + e;
-        if ( errorMsg === AUTOPLAY_ERROR) {
+        // check we are in NotAllowedError case
+        if (errorMsg.includes(AUTOPLAY_ERROR)) {
             onPlay(false);
             setAutoPlayError(true);
             setLoading(false);
