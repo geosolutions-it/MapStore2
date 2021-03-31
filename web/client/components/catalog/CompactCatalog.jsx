@@ -107,7 +107,7 @@ export default compose(
         header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={title} searchText={searchText} onSearchTextChange={setSearchText}/>}
         footer={<div className="catalog-footer">
             {loading ? <LoadingSpinner /> : null}
-            {!isNil(total) ? <span style={{}} className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
+            {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
         </div>}>
         <SideGrid
             items={items.map(i =>
