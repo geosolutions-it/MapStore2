@@ -14,9 +14,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Message from '../../components/I18N/Message';
-import { Checkbox } from 'react-bootstrap';
+import { Checkbox, Row, Col, FormControl } from 'react-bootstrap';
 import ShareCopyToClipboard from './ShareCopyToClipboard';
 import url from 'url';
+import Select from 'react-select';
 
 class ShareEmbed extends React.Component {
     static propTypes = {
@@ -33,7 +34,14 @@ class ShareEmbed extends React.Component {
     state = {
         copied: false,
         forceDrawer: false,
-        connections: false
+        connections: false,
+        sizeOptions: {
+            Small: { width: 400, height: 300 },
+            Medium: { width: 600, height: 450},
+            Large: { width: 800, height: 600},
+            Custom: {width: 0, height: 0}
+        },
+        selectedOption: 'Small'
     };
 
     renderTools = () => {
@@ -57,6 +65,7 @@ class ShareEmbed extends React.Component {
 
     render() {
         const codeEmbedded = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + this.generateUrl(this.props.shareUrl) + "\"></iframe>";
+        const {sizeOptions, selectedOption} = this.state;
         return (
             <div className="input-link">
                 <div className="input-link-head">
@@ -72,6 +81,31 @@ class ShareEmbed extends React.Component {
                 <div className="input-link-tools">
                     {this.renderTools()}
                 </div>
+                <Row>
+                    <Col md={4}>
+                        <Select
+                            value={{value: sizeOptions[selectedOption], label: selectedOption}}
+                            options={Object.keys(sizeOptions).map((key) => ({value: key, label: key}))}
+                            onChange={(option) => this.setState({selectedOption: option?.value || ""})}
+                        />
+                    </Col>
+
+                    {selectedOption === "Custom" &&  (<>
+                        <Col md={4}>
+                            <FormControl onChange={(width) => this.setState({sizeOptions: {
+                                ...sizeOptions,
+                                Custom: {...this.state.sizeOptions.Custom, width}
+                            }})} placeholder="width"/>
+                        </Col>
+
+                        <Col md={4}>
+                            <FormControl onChange={(height) => this.setState({sizeOptions: {
+                                ...sizeOptions,
+                                Custom: {...this.state.sizeOptions.Custom, height}
+                            }})} placeholder="height"/>
+                        </Col>
+                    </>)}
+                </Row>
                 <pre>
                     <code>
                         {codeEmbedded}
