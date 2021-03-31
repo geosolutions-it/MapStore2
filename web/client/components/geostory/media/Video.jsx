@@ -106,7 +106,7 @@ const Video = withResizeDetector(({
         setError(e);
         // cast the error message, we don't have the error code available
         let errorMsg = '' + e;
-        //check we are in NotAllowedError case
+        // check we are in NotAllowedError case
         if (errorMsg.includes(AUTOPLAY_ERROR)) {
             onPlay(false);
             setAutoPlayError(true);
