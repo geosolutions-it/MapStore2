@@ -1299,7 +1299,11 @@
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
             "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
             "showSectionId": "Inclure la position de défilement",
-            "showConnections": "Afficher les connexions"
+            "showConnections": "Afficher les connexions",
+            "sizeOptions": {
+                "width": "largeur",
+                "height": "la taille"
+            }
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",

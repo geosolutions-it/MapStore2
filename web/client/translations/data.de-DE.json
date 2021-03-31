@@ -1299,7 +1299,11 @@
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu ändern / festzulegen",
             "zoomToolTip": "Min: 1 und Max: 35",
             "showSectionId": "Bildlaufposition einschließen",
-            "showConnections": "Verbindungen anzeigen"
+            "showConnections": "Verbindungen anzeigen",
+            "sizeOptions": {
+                "width": "Breite",
+                "height": "Höhe"
+            }
         },
         "snapshot": {
             "title": "Snapshot Vorschau",

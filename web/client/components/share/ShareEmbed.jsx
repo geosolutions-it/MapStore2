@@ -18,12 +18,14 @@ import { Checkbox, Row, Col, FormControl } from 'react-bootstrap';
 import ShareCopyToClipboard from './ShareCopyToClipboard';
 import url from 'url';
 import Select from 'react-select';
-
+import isEqual from 'lodash/isEqual';
 class ShareEmbed extends React.Component {
     static propTypes = {
         shareUrl: PropTypes.string,
         showTOCToggle: PropTypes.bool,
-        showConnectionsParamToggle: PropTypes.bool
+        showConnectionsParamToggle: PropTypes.bool,
+        sizeOptions: PropTypes.object,
+        selectedOption: PropTypes.string
     };
 
     static defaultProps = {
@@ -43,6 +45,12 @@ class ShareEmbed extends React.Component {
         },
         selectedOption: 'Small'
     };
+
+    componentDidMount() {
+        if (this.props.sizeOptions && !isEqual(this.state.sizeOptions)) {
+            this.setState({sizeOptions: this.props.sizeOptions, selectedOption: this.props.selectedOption || 'Small'});
+        }
+    }
 
     renderTools = () => {
         return (<>
@@ -64,8 +72,10 @@ class ShareEmbed extends React.Component {
     };
 
     render() {
-        const codeEmbedded = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + this.generateUrl(this.props.shareUrl) + "\"></iframe>";
         const {sizeOptions, selectedOption} = this.state;
+        const height = selectedOption === "Custom" ? sizeOptions.Custom.height : sizeOptions[selectedOption]?.height;
+        const width = selectedOption === "Custom" ? sizeOptions.Custom.width : sizeOptions[selectedOption]?.width;
+        const codeEmbedded = `<iframe style=\"border: none;\" height=\"${height || 0}\" width=\"${width || 0}\" src=\"${this.generateUrl(this.props.shareUrl)}\"></iframe>`;
         return (
             <div className="input-link">
                 <div className="input-link-head">
@@ -81,7 +91,7 @@ class ShareEmbed extends React.Component {
                 <div className="input-link-tools">
                     {this.renderTools()}
                 </div>
-                <Row>
+                <Row className="size-options-row">
                     <Col md={4}>
                         <Select
                             value={{value: sizeOptions[selectedOption], label: selectedOption}}
@@ -92,16 +102,17 @@ class ShareEmbed extends React.Component {
 
                     {selectedOption === "Custom" &&  (<>
                         <Col md={4}>
-                            <FormControl onChange={(width) => this.setState({sizeOptions: {
+                            {'Localize Props FormControl'}
+                            <FormControl type="number" onChange={(event) => this.setState({sizeOptions: {
                                 ...sizeOptions,
-                                Custom: {...this.state.sizeOptions.Custom, width}
+                                Custom: {...this.state.sizeOptions.Custom, width: event.target.value}
                             }})} placeholder="width"/>
                         </Col>
 
                         <Col md={4}>
-                            <FormControl onChange={(height) => this.setState({sizeOptions: {
+                            <FormControl type="number" onChange={(event) => this.setState({sizeOptions: {
                                 ...sizeOptions,
-                                Custom: {...this.state.sizeOptions.Custom, height}
+                                Custom: {...this.state.sizeOptions.Custom, height: event.target.value}
                             }})} placeholder="height"/>
                         </Col>
                     </>)}
