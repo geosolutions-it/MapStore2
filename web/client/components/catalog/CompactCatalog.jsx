@@ -106,7 +106,7 @@ export default compose(
         className="compat-catalog"
         header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={title} searchText={searchText} onSearchTextChange={setSearchText}/>}
         footer={<div className="catalog-footer">
-            <span className="loader-span">{loading ? <LoadingSpinner /> : <span className="mapstore-inline-loader hidden-loader" />}</span>
+            {loading ? <LoadingSpinner /> : null}
             {!isNil(total) ? <span style={{}} className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
         </div>}>
         <SideGrid

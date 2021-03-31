@@ -45,7 +45,7 @@ export default ({
         className="map-catalog"
         header={header || <MapCatalogForm title={title} searchText={searchText} onSearchTextChange={setSearchText} />}
         footer={<div className="catalog-footer">
-            <span className="loader-span">{loading && items.length > 0 ? <LoadingSpinner /> : <span className="mapstore-inline-loader hidden-loader" />}</span>
+            {loading && items.length > 0 ? <LoadingSpinner /> : null}
             {!isNil(total) ?
                 <span className="res-info"><Message msgId="catalog.pageInfoInfinite"
                     msgParams={{ loaded: items.length - skip, total }} /></span> : null}
