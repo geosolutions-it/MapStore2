@@ -8,8 +8,9 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
+import includes from 'lodash/includes';
 import './css/formControlIntl.css';
-import NumericInput from 'react-numeric-input';
+import NumericInput from '../../libs/numeric-input/NumericInput';
 /**
  * Localized Numeric Input. It provides an numeric input value that uses
  * separators (eg. ",",".") as they are used in the current selected language from context.
@@ -49,6 +50,11 @@ class IntlNumberFormControl extends React.Component {
                 onChange={(val) => {
                     val === null ? this.props.onChange("") : this.props.onChange(val.toString());
                 }}
+                onKeyUp={ev=>
+                    !includes([37, 39], ev.keyCode)   // Allow navigation with left and right arrow key
+                    && String(value).length !== ev.target.value.length
+                    && ev.target.setSelectionRange(-1, -1)
+                }
                 onBlur={e=>{
                     if (onBlur) {
                         e.target.value = this.parse(e.target.value);

@@ -162,7 +162,7 @@ export const saveDashboard = action$ => action$
                 resource.id ? triggerSave(false) : triggerSaveAs(false),
                 !resource.id
                     ? push(`/dashboard/${rid}`)
-                    : loadDashboard(rid),
+                    : loadDashboard(rid)
             ).merge(
                 Rx.Observable.of(show({
                     id: "DASHBOARD_SAVE_SUCCESS",

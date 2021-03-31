@@ -8,7 +8,7 @@
 
 import timeline from '../timeline';
 
-import { rangeDataLoaded, selectLayer, timeDataLoading, setCollapsed, setMapSync } from '../../actions/timeline';
+import { rangeDataLoaded, selectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
 import { isCollapsed, isMapSync } from '../../selectors/timeline';
 import expect from 'expect';
 
@@ -123,5 +123,9 @@ describe('Test the timeline reducer', () => {
     it('setMapSync', () => {
         expect(isMapSync({timeline: timeline({}, setMapSync(true))})).toBe(true);
         expect(isMapSync({ timeline: timeline({}, setMapSync(false)) })).toBe(false);
+    });
+    it('initTimeline', () => {
+        const state = timeline({}, initTimeline(true));
+        expect(state.settings.showHiddenLayers).toBe(true);
     });
 });

@@ -12,6 +12,8 @@ import { Glyphicon, Col } from 'react-bootstrap';
 import Button from '../misc/Button';
 import Message from '../../components/I18N/Message';
 import MoreDetails from './MoreDetails';
+import { getApi } from '../../api/userPersistedStorage';
+
 /**
   * Component used to show a panel with the information about cookies
   * @class Cookies
@@ -128,7 +130,11 @@ class Cookie extends React.Component {
         this.props.onMoreDetails(!this.props.seeMore);
     }
     accept = () => {
-        localStorage.setItem("cookies-policy-approved", true);
+        try {
+            getApi().setItem("cookies-policy-approved", true);
+        } catch (e) {
+            console.error(e);
+        }
         this.props.onSetCookieVisibility(false);
     }
 }

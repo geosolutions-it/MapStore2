@@ -53,6 +53,7 @@ import {
 import { FEATURE_TYPE_LOADED, QUERY_CREATE } from '../actions/wfsquery';
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
 import uuid from 'uuid';
+import { getApi } from '../api/userPersistedStorage';
 
 const emptyResultsState = {
     advancedFilters: {},
@@ -66,7 +67,7 @@ const emptyResultsState = {
     canEdit: false,
     focusOnEdit: false,
     showAgain: false,
-    showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
+    showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : true,
     mode: MODES.VIEW,
     changes: [],
     pagination: {
@@ -151,7 +152,7 @@ function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
         return assign({}, state, {
-            showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
+            showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : true,
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
             virtualScroll: !!action.options.virtualScroll,
             maxStoredPages: action.options.maxStoredPages || 5
@@ -231,7 +232,7 @@ function featuregrid(state = emptyResultsState, action) {
         });
     case TOGGLE_MODE: {
         return assign({}, state, {
-            showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : action.mode !== MODES.EDIT,
+            showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : action.mode !== MODES.EDIT,
             tools: action.mode === MODES.EDIT ? {} : state.tools,
             mode: action.mode,
             multiselect: action.mode === MODES.EDIT,

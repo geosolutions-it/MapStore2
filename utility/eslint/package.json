@@ -1,6 +1,6 @@
 {
   "name": "@mapstore/eslint-config-mapstore",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": false,
   "description": "ESLint Configuration for MapStore project",
   "author": "GeoSolutions S.a.s.",

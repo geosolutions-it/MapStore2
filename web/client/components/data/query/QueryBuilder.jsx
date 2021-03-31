@@ -18,6 +18,7 @@ import crossLayerFilterEnhancer from './enhancers/crossLayerFilter';
 import GroupField from './GroupField';
 import QueryToolbar from './QueryToolbar';
 import SpatialFilter from './SpatialFilter';
+import QueryPanelHeader from './QueryPanelHeader';
 
 const CrossLayerFilter = crossLayerFilterEnhancer(CrossLayerFilterComp);
 
@@ -75,7 +76,8 @@ class QueryBuilder extends React.Component {
         appliedFilter: PropTypes.object,
         storedFilter: PropTypes.object,
         advancedToolbar: PropTypes.bool,
-        loadingError: PropTypes.bool
+        loadingError: PropTypes.bool,
+        controlActions: PropTypes.object
     };
 
     static defaultProps = {
@@ -145,12 +147,18 @@ class QueryBuilder extends React.Component {
             onSaveFilter: () => {},
             onRestoreFilter: () => {}
         },
-        toolsOptions: {}
+        toolsOptions: {},
+        controlActions: {
+            onToggleQuery: () => {}
+        }
     };
 
     render() {
         if (this.props.featureTypeError !== "") {
-            return <div style={{margin: "0 auto", "text-align": "center"}}>{this.props.featureTypeErrorText}</div>;
+            return (<div>
+                <QueryPanelHeader onToggleQuery={this.props.controlActions.onToggleQuery}/>
+                <div style={{margin: "0 auto", "text-align": "center"}}>{this.props.featureTypeErrorText}</div>
+            </div>);
         }
 
         const header = (<div className="m-header">{this.props.header}

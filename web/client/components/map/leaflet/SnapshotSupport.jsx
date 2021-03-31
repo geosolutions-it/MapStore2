@@ -7,6 +7,6 @@
  */
 
 export default {
-    GrabMap: require('./snapshot/GrabMap.jsx'),
-    Preview: require('./snapshot/Preview.jsx')
+    GrabMap: require('./snapshot/GrabMap.jsx').default,
+    Preview: require('./snapshot/Preview.jsx').default
 };

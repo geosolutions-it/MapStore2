@@ -52,7 +52,7 @@ const chooseMapEnhancer = compose(
                         toggleLayerSelector(false);
                     }
                 }),
-                layerSelector,
+                layerSelector
             )(MapLayerSelectorComp)
         )
     ),
@@ -72,7 +72,7 @@ const Builder = connect(
     {
         onChange: onEditorChange
     },
-    wizardStateToProps,
+    wizardStateToProps
 )(MapWizardComp);
 
 const mapBuilder = compose(

@@ -1,4 +1,4 @@
-const {includes, isNil} = require('lodash');
+import {includes, isNil} from 'lodash';
 const logical = ["and", "or", "not"];
 const operators = {
     '=': "equalTo",
@@ -34,4 +34,4 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], value, property
     return filterBuilder.property(property)[operators[type]](isNil(value) ? lowerBoundary : value, upperBoundary);
 };
 
-module.exports = fromObject;
+export default fromObject;

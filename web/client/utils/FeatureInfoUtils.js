@@ -32,7 +32,7 @@ const regexpBody = /^[\s\S]*<body[^>]*>([\s\S]*)<\/body>[\s\S]*$/i;
 const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
 
 export function parseHTMLResponse(res) {
-    if ( typeof res.response === "string" && res.response.indexOf("<?xml") !== 0 ) {
+    if ( typeof res.response === "string") {
         let match = res.response.match(regexpBody);
         if ( res.layerMetadata && res.layerMetadata.regex ) {
             return match && match[1] && match[1].match(res.layerMetadata.regex);

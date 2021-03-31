@@ -173,7 +173,7 @@ const updateWebPageSection = path => action$ =>
     action$.ofType(SET_WEBPAGE_URL)
         .switchMap(({ src }) => {
             return Observable.of(
-                update(`${path}`, { src, editURL: false }, 'merge'),
+                update(`${path}`, { src, editURL: false }, 'merge')
             );
         });
 
@@ -219,7 +219,7 @@ export const saveGeoStoryResource = action$ => action$
                 setControl(Controls.SHOW_SAVE, false),
                 !resource.id
                     ? push(`/geostory/${rid}`)
-                    : loadGeostory(rid),
+                    : loadGeostory(rid)
             ).merge(
                 Observable.of(show({
                     id: "STORY_SAVE_SUCCESS",

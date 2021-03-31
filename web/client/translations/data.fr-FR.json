@@ -71,7 +71,6 @@
             "styleCustom": "Utiliser un style nommé \"{value} \"",
             "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste des styles",
             "stylesRefreshList": "Actualiser la liste des styles",
-            "format": "Format",
             "delete": "Supprimer",
             "deleteLayer": "Supprimer la couche",
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche ?",
@@ -146,6 +145,16 @@
             "enableLocalizedLayerStyles": {
                 "label": "Activer le style localisé",
                 "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
+            },
+            "format": {
+                "title": "Format",
+                "refresh": "Récupérer le format pris en charge",
+                "loading": "Chargement...",
+                "noOption": "Pas d'option",
+                "error": {
+                    "title": "Erreur",
+                    "message": "Échec de la récupération du format"
+                }
             }
         },
         "longitude": "Lon",
@@ -810,7 +819,7 @@
                 "single_layer": "Une seule couche",
                 "no_info_description": "Le panneau d'identification n'apparaîtra pas lors de la recherche",
                 "all_layers_description": "Le panneau d'identification affichera des informations sur toutes les couches visibles sur la carte",
-                "single_layer_description": "Le panneau d'identification apparaîtra avec les données déjà disponibles via la recherche WFS",
+                "single_layer_description": "Le panneau identifier s'affichera et affichera les informations uniquement pour cette couche",
                 "openFeatureInfoButtonCheckbox": "Utilisez le bouton pour ouvrir les informations sur les fonctionnalités",
                 "forceSearchLayerVisibility": "Forcer la visibilité de la couche de recherche"
             },
@@ -1075,7 +1084,8 @@
                 "operation": "Opération",
                 "placeholder": "Sélectionner une couche",
                 "errors": {
-                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné"
+                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné",
+                    "layersExcluded": "Seuls les calques provenant de la même source peuvent être sélectionnés comme calque cible pour ce filtre de calque"
                 }
             },
             "changedFilter": "Filtre modifié",
@@ -1323,7 +1333,8 @@
             "next": "Suivant",
             "skip": "Passer",
             "finish": "Terminer",
-            "layerOf": "Couche {count} sur {total} :"
+            "layerOf": "Couche {count} sur {total} :",
+            "styleCustomizationDisabled":"Ce calque a déjà un style défini et il n'est pas possible de le personnaliser."
         },
         "mapImport": {
             "title": "Importer",
@@ -1414,6 +1425,7 @@
             "showPreview": "Afficher l'aperçu",
             "advancedSettings": "Réglages avancés",
             "templateMetadataAvailable": "Métadonnées disponibles pour le format Dublin Core : abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Ce catalogue ne peut pas être ajouté à ceux disponibles car il utilise un protocole http. Veuillez fournir une URL de catalogue qui utilise le protocole https.",
             "notification": {
                 "errorTitle": "Erreur",
                 "errorSearchingRecords": "Certains enregistrements n'ont pas été trouvés: {records} . Veuillez vérifier l'URL de la requête et ses paramètres.",
@@ -1427,6 +1439,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Activer les styles localisés",
                 "tooltip": "Remarque : ce paramètre nécessite des configurations spécifiques sur GeoServer"
+            },
+            "format": {
+                "noOption": "Pas d'option",
+                "loading": "Chargement..."
             }
         },
         "uploader": {

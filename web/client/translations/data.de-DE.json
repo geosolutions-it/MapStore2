@@ -71,7 +71,6 @@
             "styleCustom": "Stil \"{value}\" nutzen",
             "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",
             "stylesRefreshList": "Aktualisiere die Liste von Stilen",
-            "format": "Format",
             "delete": "Löschen",
             "deleteLayer":"Ebene löschen",
             "deleteLayerMessage": "Möchten Sie diese Ebene wirklich löschen?",
@@ -146,6 +145,16 @@
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
+            },
+            "format": {
+                "title": "Format",
+                "refresh": "Unterstütztes Format abrufen",
+                "loading": "Wird geladen...",
+                "noOption": "Keine Option",
+                "error": {
+                    "title": "Error",
+                    "message": "Format konnte nicht abgerufen werden"
+                }
             }
         },
         "longitude": "Lon",
@@ -811,7 +820,7 @@
                 "single_layer": "Einzelne Ebene",
                 "no_info_description": "Das Identifizierungsfeld wird bei der Suche nicht angezeigt",
                 "all_layers_description": "Das Fenster Identifizieren zeigt Informationen zu allen in der Karte sichtbaren Layern an",
-                "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind",
+                "single_layer_description": "Im Bereich Identifizieren werden nur Informationen für diese Ebene angezeigt",
                 "openFeatureInfoButtonCheckbox": "Verwenden Sie die Schaltfläche, um Funktionsinformationen zu öffnen",
                 "forceSearchLayerVisibility": "Sichtbarkeit der Suchebene erzwingen"
             },
@@ -1076,7 +1085,8 @@
                 "operation": "Geometrische Operation",
                 "placeholder": "Wählen Sie eine Ebene aus",
                 "errors": {
-                    "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar"
+                    "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar",
+                    "layersExcluded": "Für diesen Ebenenfilter können nur Ebenen ausgewählt werden, die von derselben Quelle stammen"
                 }
             },
             "changedFilter": "Filter geändert",
@@ -1323,7 +1333,8 @@
             "next": "Nächster",
             "skip": "springen",
             "finish": "Fertig",
-            "layerOf": "Ebene {count} von {total}:"
+            "layerOf": "Ebene {count} von {total}:",
+            "styleCustomizationDisabled":"Diese Ebene hat bereits einen Stil definiert und kann nicht angepasst werden."
         },
         "mapImport": {
                 "title": "Importieren",
@@ -1413,6 +1424,7 @@
             "showPreview": "Vorschau zeigen",
             "advancedSettings": "Erweiterte Einstellungen",
             "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Dieser Katalog kann nicht zu den verfügbaren hinzugefügt werden, da er ein http-Protokoll verwendet. Bitte geben Sie eine Katalog-URL an, die das https-Protokoll verwendet.",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Einige Datensätze wurden nicht gefunden: {records} . Bitte überprüfen Sie die URL des Abfrageparameters",
@@ -1426,6 +1438,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
+            },
+            "format": {
+                "noOption": "Keine Option",
+                "loading": "Wird geladen..."
             }
         },
         "uploader": {

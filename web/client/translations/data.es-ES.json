@@ -71,7 +71,6 @@
             "styleCustom": "Use un estilo llamado \"{value} \"",
             "styleListLoadError": "Se ha producido un error al cargar la lista de estilos",
             "stylesRefreshList": "Actualizar la lista de estilos",
-            "format": "Formato",
             "delete": "Borrar",
             "deleteLayer":"Borrar el mapa",
             "deleteLayerMessage": "¿Está totalmente seguro de querer borrar este mapa?",
@@ -146,6 +145,16 @@
             "enableLocalizedLayerStyles": {
                 "label": "Habilitar estilo localizado",
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            },
+            "format": {
+                "title": "Formato",
+                "refresh": "Obtener formato compatible",
+                "loading": "Cargando...",
+                "noOption": "Sin opcion",
+                "error": {
+                    "title": "Error",
+                    "message": "No se pudo recuperar el formato"
+                }
             }
         },
         "longitude": "Lon",
@@ -810,7 +819,7 @@
                 "single_layer": "Una sola capa",
                 "no_info_description": "El panel de identificación no aparecerá en la búsqueda",
                 "all_layers_description": "El panel Identificar aparecerá mostrando información de todas las capas visibles en el mapa",
-                "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS",
+                "single_layer_description": "El panel de identificación aparecerá mostrando información solo para esta capa",
                 "openFeatureInfoButtonCheckbox": "Use el botón para abrir la información de la función",
                 "forceSearchLayerVisibility": "Forzar la visibilidad de la capa de búsqueda"
             },
@@ -1075,7 +1084,8 @@
                 "operation": "Operación",
                 "placeholder": "Selecciona una capa",
                 "errors": {
-                    "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
+                    "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada",
+                    "layersExcluded": "Solo las capas que provienen de la misma fuente se pueden seleccionar como capa de destino para este filtro de capa"
                 }
             },
             "changedFilter": "Filtro cambiado",
@@ -1322,7 +1332,8 @@
             "next": "Siguiente",
             "skip": "Saltar",
             "finish": "Terminar",
-            "layerOf": "Capa {count} de {total}:"
+            "layerOf": "Capa {count} de {total}:",
+            "styleCustomizationDisabled":"Esta capa ya tiene un estilo definido y no es posible personalizarlo."
         },
         "mapImport": {
             "title": "Importar",
@@ -1413,6 +1424,7 @@
             "showPreview": "Mostrar vista previa",
             "advancedSettings": "Ajustes avanzados",
             "templateMetadataAvailable": "Metadatos disponibles en formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Este catálogo no se puede agregar a los disponibles porque usa un protocolo http. Proporcione una URL del catálogo que utilice el protocolo https",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "No se han encontrado algunos registros: {records} . Por favor revise la consulta param url",
@@ -1426,6 +1438,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Habilitar estilos localizados",
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            },
+            "format": {
+                "noOption": "Sin opcion",
+                "loading": "Cargando..."
             }
         },
         "uploader": {

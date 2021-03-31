@@ -8,7 +8,7 @@
 import expect from 'expect';
 
 import { cswToCatalogSelector } from '../cswtocatalog';
-import _ from 'lodash';
+import { isEqual } from 'lodash';
 /** Geonetwork Style **/
 const sampleCSWRecord = {
     boundingBox: {
@@ -101,7 +101,7 @@ describe('Test csw to catalog selector', () => {
         const records = cswToCatalogSelector(testState.catalog);
         expect(records).toExist();
         expect(records[0]).toExist();
-        expect(_.isEqual(records[0], sampleRecord)).toBe(true);
+        expect(isEqual(records[0], sampleRecord)).toBe(true);
     });
     it('test correct conversion for geoserver style', () => {
         const testState = {
@@ -120,6 +120,6 @@ describe('Test csw to catalog selector', () => {
         const records = cswToCatalogSelector(testState.catalog);
         expect(records).toExist();
         expect(records[0]).toExist();
-        expect(_.isEqual(records[0], sampleRecord)).toBe(true);
+        expect(isEqual(records[0], sampleRecord)).toBe(true);
     });
 });

@@ -79,6 +79,7 @@ describe('Test the measurement reducer', () => {
         expect(state.areaMeasureEnabled).toBe(false);
         expect(state.bearingMeasureEnabled).toBe(false);
         expect(state.geomType).toEqual("");
+        expect(state.features).toEqual([]);
     });
     it('INIT', () => {
         let state = measurement( {feature: {}}, init({showAddAsAnnotation: true}));
@@ -213,6 +214,17 @@ describe('Test the measurement reducer', () => {
         expect(state.isDrawing).toBe(false);
         expect(state.isDrawing).toBe(false);
         expect(state.exportToAnnotation).toBe(false);
+        expect(state.currentFeature).toBe(0);
+    });
+    it('CHANGED_GEOMETRY - do not fail if features array is missing in the initial state', () => {
+        let state = measurement({
+            updatedByUI: true,
+            isDrawing: true
+        }, changeGeometry([]));
+        expect(state.features).toEqual([]);
+        expect(state.updatedByUI).toBe(false);
+        expect(state.isDrawing).toBe(false);
+        expect(state.isDrawing).toBe(false);
         expect(state.currentFeature).toBe(0);
     });
 });

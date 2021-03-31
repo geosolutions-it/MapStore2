@@ -34,6 +34,35 @@ const domainsTestResponse = `<?xml version="1.0" encoding="UTF-8"?><Domains xmln
 
 describe('dimension epics', () => {
     let mockAxios;
+    const STATE = {
+        layers: {
+            flat: [{
+                id: 'timelineLayer2',
+                name: 'timelineLayer2',
+                type: 'wms',
+                dimensions: [{
+                    name: 'time',
+                    source: {
+                        type: 'multidim-extension',
+                        url: 'sample/url'
+                    }
+                }],
+                visibility: true
+            }, {
+                id: 'timelineLayer',
+                name: 'timelineLayer',
+                type: 'wms',
+                dimensions: [{
+                    name: 'time',
+                    source: {
+                        type: 'multidim-extension',
+                        url: 'sample/url'
+                    }
+                }],
+                visibility: true
+            }]
+        }
+    };
     beforeEach(() => {
         mockAxios = new MockAdapter(axios);
     });
@@ -74,33 +103,7 @@ describe('dimension epics', () => {
             expect(actions[4].data).toExist();
             expect(actions[4].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
             expect(actions[4].data.name).toBe('time');
-        }, {
-            layers: {
-                flat: [{
-                    id: 'timelineLayer2',
-                    name: 'timelineLayer2',
-                    type: 'wms',
-                    dimensions: [{
-                        name: 'time',
-                        source: {
-                            type: 'multidim-extension',
-                            url: 'sample/url'
-                        }
-                    }]
-                }, {
-                    id: 'timelineLayer',
-                    name: 'timelineLayer',
-                    type: 'wms',
-                    dimensions: [{
-                        name: 'time',
-                        source: {
-                            type: 'multidim-extension',
-                            url: 'sample/url'
-                        }
-                    }]
-                }]
-            }
-        }, done);
+        }, STATE, done);
     });
     it('updateLayerDimensionDataOnMapLoad no timeline and dimension data', (done) => {
         const testConfig = {
@@ -125,33 +128,7 @@ describe('dimension epics', () => {
             expect(actions[2].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
             expect(actions[2].data.name).toBe('time');
             expect(actions[3].type).toBe(AUTOSELECT);
-        }, {
-            layers: {
-                flat: [{
-                    id: 'timelineLayer2',
-                    name: 'timelineLayer2',
-                    type: 'wms',
-                    dimensions: [{
-                        name: 'time',
-                        source: {
-                            type: 'multidim-extension',
-                            url: 'sample/url'
-                        }
-                    }]
-                }, {
-                    id: 'timelineLayer',
-                    name: 'timelineLayer',
-                    type: 'wms',
-                    dimensions: [{
-                        name: 'time',
-                        source: {
-                            type: 'multidim-extension',
-                            url: 'sample/url'
-                        }
-                    }]
-                }]
-            }
-        }, done);
+        }, STATE, done);
     });
     it('updateLayerDimensionDataOnMapLoad no timeline data', (done) => {
         const testConfig = {
@@ -182,32 +159,6 @@ describe('dimension epics', () => {
             expect(actions[3].data).toExist();
             expect(actions[3].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
             expect(actions[3].data.name).toBe('time');
-        }, {
-            layers: {
-                flat: [{
-                    id: 'timelineLayer2',
-                    name: 'timelineLayer2',
-                    type: 'wms',
-                    dimensions: [{
-                        name: 'time',
-                        source: {
-                            type: 'multidim-extension',
-                            url: 'sample/url'
-                        }
-                    }]
-                }, {
-                    id: 'timelineLayer',
-                    name: 'timelineLayer',
-                    type: 'wms',
-                    dimensions: [{
-                        name: 'time',
-                        source: {
-                            type: 'multidim-extension',
-                            url: 'sample/url'
-                        }
-                    }]
-                }]
-            }
-        }, done);
+        }, STATE, done);
     });
 });
