@@ -89,6 +89,7 @@ const EditorToolbar = compose(
  * @name DashboardEditor
  * @class
  * @memberof plugins
+* @prop {object} cfg.catalog **Deprecated** in favor of `cfg.services`. Can contain a catalog configuration
 * @prop {object} cfg.services Object with the catalogs available to select layers for maps, charts and tables. The format is the same of the `Catalog` plugin.
  * @prop {string} cfg.selectedService the key of service selected by default from the list of `cfg.services`
  */
