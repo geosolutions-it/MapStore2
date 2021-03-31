@@ -1,6 +1,9 @@
 const path = require("path");
 
 module.exports = function karmaConfig(config) {
+
+    // set BABEL_ENV to load proper preset config (e.g. istanbul plugin)
+    process.env.BABEL_ENV = 'test';
     const testConfig = require('./testConfig')({
         files: [
             'build/tests-travis.webpack.js',
@@ -12,16 +15,5 @@ module.exports = function karmaConfig(config) {
         testFile: 'build/tests-travis.webpack.js',
         singleRun: true
     });
-    testConfig.webpack.module.rules = [{
-        test: /\.jsx?$/,
-        exclude: /(__tests__|node_modules|legacy|libs\\Cesium|libs\\html2canvas)\\|(__tests__|node_modules|legacy|libs\/Cesium|libs\/html2canvas)\/|webpack\.js|utils\/(openlayers|leaflet)/,
-        enforce: "post",
-        use: [
-            {
-                loader: 'istanbul-instrumenter-loader',
-                options: { esModules: true }
-            }
-        ]
-    }, ...testConfig.webpack.module.rules];
     config.set(testConfig);
 };

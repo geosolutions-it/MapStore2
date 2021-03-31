@@ -31,7 +31,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     ],
 
     preprocessors: {
-        [testFile]: [ 'webpack', 'coverage' ]
+        [testFile]: [ 'webpack' ]
     },
 
     reporters: [ 'mocha', 'coverage' ],

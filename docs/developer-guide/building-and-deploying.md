@@ -58,7 +58,7 @@ The generated folders can be removed with:
 
 `npm run cleandoc`
 
-## Undestanding frontend building tools
+## Understanding frontend building tools
 
 Frontend building is delegated to [NPM](https://www.npmjs.com/) and so leverages the NodeJS ecosystem.
 
