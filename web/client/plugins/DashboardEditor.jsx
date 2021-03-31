@@ -90,7 +90,7 @@ const EditorToolbar = compose(
  * @class
  * @memberof plugins
 * @prop {object} cfg.services Object with default catalog services to be loaded for the widget builder for Charts,Tables,Map
- * @prop {object} cfg.selectedService default service from the list of cfg.services to be loaded
+ * @prop {string} cfg.selectedService the key of service selected by default from the list of `cfg.services`
  */
 class DashboardEditorComponent extends React.Component {
     static propTypes = {
