@@ -24,9 +24,9 @@ export default compose(
         props$.distinctUntilKeyChanged('selected').filter(({ selected } = {}) => selected)
             .switchMap(
                 ({ selected, layerValidationStream = s => s, setLayer = () => { } } = {}) =>
-                    Rx.Observable.of(recordToLayer(selected))
+                    Rx.Observable.of(["wms", "wmts", "csw"].includes(selected.type) ? recordToLayer(selected) : selected)
                         .let(layerValidationStream)
-                        .switchMap(() => addSearch(recordToLayer(selected)))
+                        .switchMap(() => addSearch(["wms", "wmts", "csw"].includes(selected.type) ? recordToLayer(selected) : selected))
                         .do(l => setLayer(l))
                         .mapTo({ canProceed: true })
                         .catch((error) => Rx.Observable.of({ error, canProceed: false }))
