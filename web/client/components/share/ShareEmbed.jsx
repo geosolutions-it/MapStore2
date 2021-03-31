@@ -13,12 +13,15 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import Select from 'react-select';
+import isEqual from 'lodash/isEqual';
 import Message from '../../components/I18N/Message';
 import { Checkbox, Row, Col, FormControl } from 'react-bootstrap';
 import ShareCopyToClipboard from './ShareCopyToClipboard';
 import url from 'url';
-import Select from 'react-select';
-import isEqual from 'lodash/isEqual';
+import localizeProps from '../misc/enhancers/localizedProps';
+
+const Input = localizeProps('placeholder')(FormControl);
 class ShareEmbed extends React.Component {
     static propTypes = {
         shareUrl: PropTypes.string,
@@ -102,18 +105,17 @@ class ShareEmbed extends React.Component {
 
                     {selectedOption === "Custom" &&  (<>
                         <Col md={4}>
-                            {'Localize Props FormControl'}
-                            <FormControl type="number" onChange={(event) => this.setState({sizeOptions: {
+                            <Input type="number" onChange={(event) => this.setState({sizeOptions: {
                                 ...sizeOptions,
                                 Custom: {...this.state.sizeOptions.Custom, width: event.target.value}
-                            }})} placeholder="width"/>
+                            }})} placeholder="share.sizeOptions.width"/>
                         </Col>
 
                         <Col md={4}>
-                            <FormControl type="number" onChange={(event) => this.setState({sizeOptions: {
+                            <Input type="number" onChange={(event) => this.setState({sizeOptions: {
                                 ...sizeOptions,
                                 Custom: {...this.state.sizeOptions.Custom, height: event.target.value}
-                            }})} placeholder="height"/>
+                            }})} placeholder="share.sizeOptions.height"/>
                         </Col>
                     </>)}
                 </Row>
