@@ -14,6 +14,11 @@ module.exports = function(api) {
                     "preventFullImport": true
                 }
             }]
-        ]
+        ],
+        "env": {
+            "test": {
+                "plugins": ["istanbul"]
+            }
+        }
     };
 };
