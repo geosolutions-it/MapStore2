@@ -10,7 +10,6 @@ const emptyService = {
     type: "wms",
     title: "",
     isNew: true,
-    autoload: false,
     showAdvancedSettings: false,
     showTemplate: false,
     hideThumbnail: false,
@@ -28,7 +27,7 @@ export default ({service: defaultService, catalogServices,
     const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
 
     const addNewService = () => {
-        if (!service.title || !service.url) {
+        if (!service.type !== 'tms' && !(!service.title || !service.url)) {
             error({ title: 'catalog.notification.errorTitle', message: 'catalog.notification.warningAddCatalogService'});
             return;
         }
@@ -37,6 +36,17 @@ export default ({service: defaultService, catalogServices,
             ...service, title
         };
         onAddService(newService, existingServices, isNew);
+    };
+
+    const handleChangeServiceFormat = (property, value) => {
+        const currentData = service;
+
+        if (property === 'provider') {
+            currentData.provider = value;
+        } else {
+            currentData[property] = value;
+        }
+        setService(currentData);
     };
 
     return (<div style={{padding: '1rem', height: '100%'}}>
@@ -48,7 +58,7 @@ export default ({service: defaultService, catalogServices,
             onChangeServiceFormat={(format) => setService({...service, format})}
             onToggleAdvancedSettings={() => setService({...service, showAdvancedSettings: !service.showAdvancedSettings})}
             onAddService={addNewService}
-            onChangeServiceProperty={(property, value) => setService({...service, [property]: value})}
+            onChangeServiceProperty={handleChangeServiceFormat}
             onToggleTemplate={() => setService({...service, showTemplate: !service.showTemplate})}
             onToggleThumbnail={() => setService({...service, hideThumbnail: !service.hideThumbnail})}
             serviceTypes={[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" },

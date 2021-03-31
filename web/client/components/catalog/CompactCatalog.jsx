@@ -14,6 +14,8 @@ import CSW from '../../api/CSW';
 import mapBackground from '../../api/mapBackground';
 import WMS from '../../api/WMS';
 import WMTS from '../../api/WMTS';
+import * as WFS from '../../api/WFS3';
+import * as TMS from '../../api/catalog/TMS';
 import { getCatalogRecords } from '../../utils/CatalogUtils';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
@@ -30,6 +32,8 @@ const API = {
     "csw": CSW,
     "wms": WMS,
     "wmts": WMTS,
+    "tms": TMS,
+    "wfs": WFS,
     "backgrounds": mapBackground
 };
 
@@ -68,7 +72,7 @@ const PAGE_SIZE = 10;
  * retrieves data from a catalog service and converts to props
  */
 const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
-    .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text))
+    .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text, catalog.type === 'tms' ? {options: {service: catalog}} : {}))
     .map((result) => ({ result, records: getCatalogRecords(catalog.type, result || [], { url: catalog && catalog.url, service: catalog })}))
     .map(resToProps);
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE};

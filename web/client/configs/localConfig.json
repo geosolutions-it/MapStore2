@@ -679,31 +679,22 @@
           {
           "name": "DashboardEditor",
           "cfg": {
-            "catalog": {
-              "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
-              "type": "csw",
-              "title": "GeoSolutions GeoServer CSW",
-              "autoload": true
-            },
             "selectedService": "GeoSolutions GeoServer CSW",
             "services": {
               "GeoSolutions GeoServer CSW": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
                 "type": "csw",
-                "title": "GeoSolutions GeoServer CSW",
-                "autoload": true
+                "title": "GeoSolutions GeoServer CSW"
               },
               "GeoSolutions GeoServer WMS": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
                 "type": "wms",
-                "title": "GeoSolutions GeoServer WMS",
-                "autoload": false
+                "title": "GeoSolutions GeoServer WMS"
               },
               "GeoSolutions GeoServer WMTS": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
                 "type": "wmts",
-                "title": "GeoSolutions GeoServer WMTS",
-                "autoload": false
+                "title": "GeoSolutions GeoServer WMTS"
               }
             },
             "containerPosition": "columns"

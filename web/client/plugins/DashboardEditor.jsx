@@ -134,8 +134,8 @@ class DashboardEditorComponent extends React.Component {
         this.props.onUnmount();
     }
     render() {
-        const defaultSelectedService = this.props.pluginCfg.selectedService || this.props.catalog?.title || "";
-        const defaultServices = this.props.pluginCfg.services ? this.props.pluginCfg.services : this.props.catalog ? {[this.props.catalog?.title]: this.props.catalog} : {};
+        const defaultSelectedService = this.props.pluginCfg.selectedService || "";
+        const defaultServices = this.props.pluginCfg.services || {};
 
         return this.props.editing
             ? <div className="dashboard-editor de-builder"><Builder defaultSelectedService={defaultSelectedService} defaultServices={defaultServices} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
