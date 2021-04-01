@@ -12,7 +12,7 @@ import { addSearch } from '../../../observables/wms';
 import { recordToLayer } from '../../../utils/CatalogUtils';
 
 // layers like tms or tileprovider don't need the recordToLayer convertion
-const toLayer = r => ["tileprovider"].includes(r.type) ? r : recordToLayer(r);
+const toLayer = r => ["tileprovider", "wfs"].includes(r.type) ? r : recordToLayer(r);
 /**
  * enhancer for CompactCatalog (or a container) to validate a selected record,
  * convert it to layer and return as prop. Intercepts also validation errors, setting

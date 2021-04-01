@@ -10,12 +10,7 @@ import { isNil, isObject, isEmpty } from 'lodash';
 import React from 'react';
 import { compose, mapPropsStream, withPropsOnChange } from 'recompose';
 import Rx from 'rxjs';
-import CSW from '../../api/CSW';
-import mapBackground from '../../api/mapBackground';
-import WMS from '../../api/WMS';
-import WMTS from '../../api/WMTS';
-import * as WFS from '../../api/WFS3';
-import * as TMS from '../../api/catalog/TMS';
+import API from '../../api/catalog';
 import { getCatalogRecords } from '../../utils/CatalogUtils';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
@@ -27,15 +22,6 @@ import withControllableState from '../misc/enhancers/withControllableState';
 import Icon from '../misc/FitIcon';
 import LoadingSpinner from '../misc/LoadingSpinner';
 import CatalogForm from './CatalogForm';
-
-const API = {
-    "csw": CSW,
-    "wms": WMS,
-    "wmts": WMTS,
-    "tms": TMS,
-    "wfs": WFS,
-    "backgrounds": mapBackground
-};
 
 const defaultPreview = <Icon glyph="geoserver" padding={20}/>;
 const SideGrid = compose(

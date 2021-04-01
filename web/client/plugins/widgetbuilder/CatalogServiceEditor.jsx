@@ -27,7 +27,7 @@ export default ({service: defaultService, catalogServices,
     const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
 
     const addNewService = () => {
-        if (!service.type !== 'tms' && (!service.title || !service.url)) {
+        if (service.type !== 'tms' && (!service.title || !service.url)) {
             error({ title: 'catalog.notification.errorTitle', message: 'catalog.notification.warningAddCatalogService'});
             return;
         }
