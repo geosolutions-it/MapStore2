@@ -54,16 +54,24 @@ const SideGrid = compose(
         })
 
 )(SideGridComp);
+
+/*
+ * assigns an identifier to a record
+ */
+const getIdentifier = (r) => r.identifier ? r.identifier :  r.provider ? r.provider : (r.title || r.url);
+
 /*
  * converts record item into a item for SideGrid
  */
 const resToProps = ({records, result = {}}) => ({
     items: (records || []).map((record = {}) => ({
         title: record.title && isObject(record.title) && record.title.default || record.title,
-        caption: record.identifier,
+        caption: getIdentifier(record),
         description: record.description,
         preview: record.thumbnail ? <img src="thumbnail" /> : defaultPreview,
-        record
+        record: {
+            ...record, identifier: getIdentifier(record)
+        }
     })),
     total: result && result.numberOfRecordsMatched
 });
@@ -95,12 +103,12 @@ export default compose(
     withControllableState('searchText', "setSearchText", ""),
     withVirtualScroll({loadPage, scrollSpyOptions}),
     mapPropsStream( props$ =>
-        props$.merge(props$.take(1).switchMap(({catalog, loadFirst = () => {} }) =>
+        props$.merge(props$.take(1).switchMap(({loadFirst = () => {}, services, selectedService }) =>
             props$
                 .debounceTime(500)
-                .startWith({searchText: "", catalog})
+                .startWith({searchText: ""})
                 .distinctUntilKeyChanged('searchText')
-                .do(({searchText, catalog: nextCatalog} = {}) => !isEmpty(nextCatalog) && loadFirst({text: searchText, catalog: nextCatalog}))
+                .do(({searchText} = {}) => !isEmpty(services[selectedService]) && loadFirst({text: searchText, catalog: services[selectedService] }))
                 .ignoreElements() // don't want to emit props
         ))),
     withPropsOnChange(['selectedService'], props => {
@@ -118,7 +126,7 @@ export default compose(
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm onChangeCatalogMode={onChangeCatalogMode} onChangeSelectedService={onChangeSelectedService}
-            services={Object.values(services).map(service =>({...service, label: service.title, value: service}))} catalog={catalog}
+            services={Object.values(services).map(service =>({...service, label: service.title, value: service}))}
             selectedService={selectedService} showCatalogSelector={showCatalogSelector}
             title={title}
             searchText={searchText}

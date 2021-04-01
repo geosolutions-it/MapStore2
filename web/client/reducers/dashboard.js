@@ -61,7 +61,12 @@ function dashboard(state = {
         };
     }
     case DASHBOARD_RESET: {
-        return set('originalData', undefined, set("resource", undefined, state));
+        return {
+            ...state,
+            originalData: undefined,
+            resource: undefined,
+            mode: "view"
+        };
     }
     case SAVE_ERROR: {
         return set('saveErrors', castArray(action.error), state);
