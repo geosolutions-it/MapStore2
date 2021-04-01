@@ -103,12 +103,12 @@ export default compose(
     withControllableState('searchText', "setSearchText", ""),
     withVirtualScroll({loadPage, scrollSpyOptions}),
     mapPropsStream( props$ =>
-        props$.merge(props$.take(1).switchMap(({loadFirst = () => {}, services, selectedService }) =>
+        props$.merge(props$.take(1).switchMap(({loadFirst = () => {}, services }) =>
             props$
                 .debounceTime(500)
                 .startWith({searchText: ""})
                 .distinctUntilKeyChanged('searchText')
-                .do(({searchText} = {}) => !isEmpty(services[selectedService]) && loadFirst({text: searchText, catalog: services[selectedService] }))
+                .do(({searchText, selectedService: nextSelectedService} = {}) => !isEmpty(services[nextSelectedService]) && loadFirst({text: searchText, catalog: services[nextSelectedService] }))
                 .ignoreElements() // don't want to emit props
         ))),
     withPropsOnChange(['selectedService'], props => {
