@@ -14,7 +14,6 @@ import { compose, renameProps, branch, renderComponent } from 'recompose';
 import BorderLayout from '../../components/layout/BorderLayout';
 
 import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
-import { dashboardSetSelectedService, setDashboardCatalogMode } from '../../actions/dashboard';
 
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import counterLayerSelector from './enhancers/counterLayerSelector';
@@ -27,8 +26,7 @@ import CounterWizard from '../../components/widgets/builder/wizard/CounterWizard
 import BuilderHeader from './BuilderHeader';
 import BaseToolbar from '../../components/widgets/builder/wizard/counter/Toolbar';
 import LayerSelector from './LayerSelector';
-import CatalogServiceEditor from './CatalogServiceEditor';
-import catalogServiceEditorEnhancer from './enhancers/connection/catalogEditorConnect';
+import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
 
 import {wizardStateToProps, wizardSelector} from './commons';
 
@@ -70,15 +68,9 @@ const Toolbar = compose(
  * prompts a catalog view to allow layer selection
  */
 const chooseLayerEnhancer = compose(
-    connect(wizardSelector,  {
-        onChangeSelectedService: dashboardSetSelectedService,
-        onChangeCatalogMode: setDashboardCatalogMode
-    }),
+    connect(wizardSelector),
     viewportBuilderConnectMask,
-    branch(
-        ({mode} = {}) => mode === 'edit',
-        renderComponent(catalogServiceEditorEnhancer(CatalogServiceEditor))
-    ),
+    catalogEditorEnhancer,
     branch(
         ({ layer } = {}) => !layer,
         renderComponent(counterLayerSelector(LayerSelector))
