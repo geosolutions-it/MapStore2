@@ -1,0 +1,16 @@
+[
+    {
+      "op": "add",
+      "jsonpath": "$.plugins.desktop..[?(@.name == 'FeatureEditor')]",
+      "value": {
+        "name": "NewPlugin",
+        "cfg": {
+          "someParam": true
+        }
+      }
+    },
+    {
+      "op": "remove",
+      "jsonpath": "$.plugins.desktop..[?(@.name == 'FeatureEditor')]"
+    }
+]

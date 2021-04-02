@@ -1,0 +1,35 @@
+[
+  {
+    "op": "replace",
+    "jsonpath": "$.plugins..[?(@.name == 'Search')].cfg",
+    "value": {
+      "searchOptions": {
+        "services": [
+          {
+            "type": "nominatim",
+            "options": {
+              "countrycodes": "at,de"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "op": "replace",
+    "jsonpath": "$.plugins..[?(@.name == 'Search')].cfg",
+    "value": {
+      "searchOptions": {
+        "services": [
+          {
+            "type": "nominatim",
+            "options": {
+              "countrycodes": "at,de",
+              "replacedEverywhereSecondRule": true
+            }
+          }
+        ]
+      }
+    }
+   }
+  ]

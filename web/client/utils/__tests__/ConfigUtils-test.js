@@ -307,6 +307,15 @@ describe('ConfigUtils', () => {
         });
     });
 
+    it("loadConfiguration supports patch files", done => {
+        ConfigUtils.setLocalConfigurationFile(["base/web/client/test-resources/localConfig.json", "base/web/client/test-resources/localConfig.patch.json"]);
+        ConfigUtils.loadConfiguration().then((retval) => {
+            expect(retval.initialState.defaultState).toExist();
+            expect(retval.initialState.defaultState.mobile).toBeFalsy();
+            done();
+        });
+    });
+
     it("getDefaults returns a copied config", done => {
         var retval = ConfigUtils.getDefaults();
         expect(retval).toExist();
