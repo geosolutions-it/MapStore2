@@ -26,6 +26,7 @@ import controls from '../reducers/controls';
 import {featureInfoClick, changeFormat, hideMapinfoMarker} from '../actions/mapInfo';
 import { clickPointSelector} from '../selectors/mapInfo';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
+import { getSelectedLayer } from '../selectors/layers';
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedIn)
@@ -67,8 +68,9 @@ const Share = connect(createSelector([
     state => get(state, 'controls.share.settings', {}),
     (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     clickPointSelector,
-    updateUrlOnScrollSelector
-], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({
+    updateUrlOnScrollSelector,
+    getSelectedLayer
+], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition, selectedLayer) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: getApiUrl(location.href),
@@ -88,7 +90,8 @@ const Share = connect(createSelector([
     },
     formatCoords: formatCoords,
     point,
-    isScrollPosition
+    isScrollPosition,
+    selectedLayer
 })), {
     onClose: toggleControl.bind(null, 'share', null),
     hideMarker: hideMapinfoMarker,

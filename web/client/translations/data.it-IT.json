@@ -1298,7 +1298,8 @@
             "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
             "zoomToolTip": "Min: 1 e Max: 35",
             "showSectionId": "Includi posizione di scorrimento",
-            "showConnections": "Mostra connessioni"
+            "showConnections": "Mostra connessioni",
+            "noActiveQueryableLayer": "Disattivato perché la visibilità del livello selezionato è disattivata"
         },
         "snapshot": {
             "title": "Istantanea",

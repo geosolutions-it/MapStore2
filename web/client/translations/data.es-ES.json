@@ -1298,7 +1298,8 @@
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
             "showSectionId": "Incluir posición de desplazamiento",
-            "showConnections": "Mostrar conexiones"
+            "showConnections": "Mostrar conexiones",
+            "noActiveQueryableLayer": "Desactivado porque la visibilidad de la capa seleccionada está desactivada"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",

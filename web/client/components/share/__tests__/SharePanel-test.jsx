@@ -123,6 +123,24 @@ describe("The SharePanel component", () => {
         expect(spyOnUpdateSettings.calls[1].arguments[0]).toEqual({markerEnabled: false, centerAndZoomEnabled: false, bboxEnabled: false});
         expect(spyOnHideMarker).toHaveBeenCalled();
     });
+
+    it('test disable Add marker options in the panel is selectedLayer visibility is off', () => {
+        const actions = {
+            onUpdateSettings: () => {},
+            hideMarker: () => {}
+        };
+        let panel = ReactDOM.render(<SharePanel selectedLayer={{name: 'ny_roads', visibility: false}} hideMarker={actions.hideMarker} onUpdateSettings={actions.onUpdateSettings} settings={{markerEnabled: false, centerAndZoomEnabled: true}} advancedSettings={{centerAndZoom: true, defaultEnabled: "centerAndZoom"}} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        expect(panel).toBeTruthy();
+        const cmpDom = ReactDOM.findDOMNode(panel);
+        expect(cmpDom).toBeTruthy();
+        const checkBoxes = document.querySelectorAll("input[type=checkbox]");
+        const checkBoxCenterAndZoom = checkBoxes[1];
+        const checkBoxAddMarker = checkBoxes[2];
+        expect(checkBoxCenterAndZoom).toBeTruthy();
+        expect(checkBoxCenterAndZoom.checked).toBe(true);
+        expect(checkBoxAddMarker).toBeTruthy();
+        expect(checkBoxAddMarker.disabled).toBe(true);
+    });
     it('test panel with enable default ', () => {
         const actions = {
             onUpdateSettings: () => {},

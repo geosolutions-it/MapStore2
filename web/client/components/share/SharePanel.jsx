@@ -87,7 +87,8 @@ class SharePanel extends React.Component {
         formatCoords: PropTypes.string,
         point: PropTypes.object,
         isScrollPosition: PropTypes.bool,
-        hideMarker: PropTypes.func
+        hideMarker: PropTypes.func,
+        selectedLayer: PropTypes.object
     };
 
     static defaultProps = {
@@ -105,7 +106,8 @@ class SharePanel extends React.Component {
         onUpdateSettings: () => {},
         formatCoords: "decimal",
         isScrollPosition: false,
-        hideMarker: () => {}
+        hideMarker: () => {},
+        selectedLayer: {}
     };
 
     state = {
@@ -277,6 +279,16 @@ class SharePanel extends React.Component {
         return markerSetting;
     }
 
+    renderActiveLayerNotVisible = () => {
+        if (this.props.selectedLayer.visibility !== undefined && !this.props.selectedLayer.visibility) {
+            return (<OverlayTrigger  placement="top"
+                overlay={<Tooltip id="no-active-queryable-layer"><Message msgId="share.noActiveQueryableLayer"/></Tooltip>}>
+                <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+            </OverlayTrigger>);
+        }
+        return null;
+    }
+
     renderAdvancedSettings = () => {
         return (
             <SwitchPanel
@@ -366,6 +378,7 @@ class SharePanel extends React.Component {
                             }}/>
                     </FormGroup>
                     <Checkbox
+                        disabled={this.props.selectedLayer.visibility !== undefined ? !this.props.selectedLayer.visibility : false}
                         checked={this.props.settings && this.props.settings.markerEnabled}
                         onChange={() => {
                             this.props.onUpdateSettings({
@@ -374,7 +387,7 @@ class SharePanel extends React.Component {
                             });
                         }
                         }>
-                        <Message msgId="share.marker" />
+                        <Message msgId="share.marker" /> { this.renderActiveLayerNotVisible()}
                     </Checkbox>
                 </div>
                 }
