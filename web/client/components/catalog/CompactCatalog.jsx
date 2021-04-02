@@ -44,7 +44,7 @@ const SideGrid = compose(
 /*
  * assigns an identifier to a record
  */
-const getIdentifier = (r) => r.identifier ? r.identifier :  r.provider ? r.provider : (r.title || r.url);
+const getIdentifier = (r) => r.identifier ? r.identifier :  r.provider ? r.provider + (r.variant ?? "") : (r.title || r.url);
 
 /*
  * converts record item into a item for SideGrid
