@@ -1239,8 +1239,8 @@ describe('LayersUtils', () => {
         };
         it('localized titles for default group', () => {
             const {map, layers} = splitMapAndLayers(localizedGroupMap);
-            expect(map).toExist();
-            expect(layers).toExist();
+            expect(map).toBeTruthy();
+            expect(layers).toBeTruthy();
             expect(layers.groups[0].title).toEqual(localizedGroupMap.groups[0].title);
         });
     });
