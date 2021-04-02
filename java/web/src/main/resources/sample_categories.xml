@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CategoryList>
+    <Category>
+        <name>MAP</name>
+    </Category>
+    <Category>
+        <name>THUMBNAIL</name>
+    </Category>
+    <Category>
+        <name>DETAILS</name>
+    </Category>
+    <Category>
+        <name>DASHBOARD</name>
+    </Category>
+    <Category>
+        <name>GEOSTORY</name>
+    </Category>
+    <Category>
+        <name>CONTEXT</name>
+    </Category>
+    <Category>
+        <name>TEMPLATE</name>
+    </Category>
+    <Category>
+        <name>USERSESSION</name>
+    </Category>
+</CategoryList>
