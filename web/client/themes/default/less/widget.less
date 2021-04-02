@@ -216,7 +216,17 @@
         .ms2-border-layout-body {
             position: relative;
             .compat-catalog, .map-catalog {
+                // TODO: put in common to every map-catalog and compact-catalog (e.g. map catalog in file editor and for the map catalog plugin)
                 .catalog-footer {
+                    .mapstore-inline-loader {
+                        float: right;
+                    }
+                    .res-info {
+                        position: relative;
+                        top: 5px;
+                        left: 5px;
+                    }
+                    height: 30px;
                     z-index: 100;
                     .shadow-soft-up;
                 }
@@ -318,7 +328,7 @@
 
 .ms-widget-empty-message {
     position: absolute;
-    top: 0; 
+    top: 0;
     background-color: @ms2-color-background;
     width: 100%;
     height: 100%;
