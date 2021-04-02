@@ -28,7 +28,7 @@ export default ({
     <div>
         <FormGroup controlId="autoload" key="autoload">
             <Col xs={12}>
-                {service.autoload && <Checkbox value="autoload" onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
+                {service.autoload !== undefined && <Checkbox value="autoload" onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
                     checked={!isNil(service.autoload) ? service.autoload : false}>
                     <Message msgId="catalog.autoload" />
                 </Checkbox>}

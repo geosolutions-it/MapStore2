@@ -109,8 +109,8 @@ export default compose(
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm onChangeCatalogMode={onChangeCatalogMode} onChangeSelectedService={onChangeSelectedService}
-            services={Object.values(services).map(service =>({...service, label: service.title, value: service}))}
-            selectedService={selectedService} showCatalogSelector={showCatalogSelector}
+            services={Object.keys(services).map(key =>({ label: services[key]?.title, value: {...services[key], key}}))}
+            selectedService={services[selectedService]} showCatalogSelector={showCatalogSelector}
             title={title}
             searchText={searchText}
             onSearchTextChange={setSearchText}/>}

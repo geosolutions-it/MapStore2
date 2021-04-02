@@ -20,9 +20,9 @@ export default ({service: defaultService, catalogServices,
     error = () => {}, onAddService = () => {}, isNew, dashboardServices, defaultServices, defaultSelectedService,
     dashboardSelectedService, ...props}) => {
     const [service, setService] = useState(isNew ? emptyService :
-        isEmpty(dashboardSelectedService) ? {...defaultServices[defaultSelectedService], old: defaultServices[defaultSelectedService]} :
-            {...dashboardServices[dashboardSelectedService], old: dashboardServices[dashboardSelectedService]} );
-
+        isEmpty(dashboardSelectedService) ? {...defaultServices[defaultSelectedService],
+            old: defaultServices[defaultSelectedService], key: defaultSelectedService} :
+            {...dashboardServices[dashboardSelectedService], old: dashboardServices[dashboardSelectedService], key: dashboardSelectedService} );
 
     const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
 
@@ -31,20 +31,19 @@ export default ({service: defaultService, catalogServices,
             error({ title: 'catalog.notification.errorTitle', message: 'catalog.notification.warningAddCatalogService'});
             return;
         }
-        const title = (!isNew && service.old?.title === service.title) ?  service.title : existingServices[service.title] ?  service.title + uuid() : service.title;
+        const key = !isNew ? service.key : service.title + uuid();
         const newService = {
-            ...service, title
+            ...service, key
         };
         onAddService(newService, existingServices, isNew);
     };
 
     const handleChangeServiceFormat = (property, value) => {
-        const currentData = service;
-
-        if (property === 'provider') {
-            currentData.provider = value;
+        let currentData = service;
+        if (currentData[property]) {
+            currentData[property] = typeof value === 'boolean' ? !(currentData[property]) : value;
         } else {
-            currentData[property] = value;
+            currentData = {...currentData, [property]: value};
         }
         setService(currentData);
     };

@@ -21,7 +21,7 @@ export default ({ onSearchTextChange = () => { }, onChangeSelectedService = () =
         {showCatalogSelector
             ? (<FormGroup>
                 <CatalogServiceSelector onChangeCatalogMode={onChangeCatalogMode} services={services} onChangeSelectedService={onChangeSelectedService}
-                    selectedService={{label: selectedService, value: selectedService}}
+                    selectedService={{label: selectedService?.title ?? "", value: selectedService ?? {}}}
                     isValidServiceSelected={selectedService} />
             </FormGroup>) : null}
         <FormGroup controlId="catalog-form">

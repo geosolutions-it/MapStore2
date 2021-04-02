@@ -9,8 +9,7 @@
 import { isNil } from 'lodash';
 import { createSelector } from 'reselect';
 
-import { showConnectionsSelector, isDashboardEditing, dashboardServicesSelector,
-    selectedDashboardServiceSelector, dashboardCatalogModeSelector, dashboardIsNewServiceSelector } from '../../selectors/dashboard';
+import { showConnectionsSelector, isDashboardEditing } from '../../selectors/dashboard';
 import { currentLocaleLanguageSelector } from '../../selectors/locale';
 import {
     isLocalizedLayerStylesEnabledDashboardsSelector,
@@ -43,20 +42,12 @@ export const wizardSelector = createSelector(
     getEditorSettings,
     getFloatingWidgets,
     isDashboardEditing,
-    dashboardCatalogModeSelector,
-    dashboardServicesSelector,
-    selectedDashboardServiceSelector,
-    dashboardIsNewServiceSelector,
-    (layer, editorData, settings, widgets, dashBoardEditing, mode, dashboardServices, dashboardSelectedService, isNew) => ({
+    (layer, editorData, settings, widgets, dashBoardEditing) => ({
         layer: (editorData && editorData.layer) || layer,
         editorData,
         settings,
         widgets,
-        dashBoardEditing,
-        mode,
-        dashboardServices,
-        dashboardSelectedService,
-        isNew
+        dashBoardEditing
     })
 );
 export const dashboardSelector = createSelector(

@@ -79,7 +79,7 @@ function dashboard(state = {
         return  {
             ...state,
             services: state.services || action.services,
-            selectedService: action.service?.title || ""
+            selectedService: action.service?.key || ""
         };
     }
 
@@ -104,18 +104,11 @@ function dashboard(state = {
     }
 
     case DASHBOARD_ADD_NEW_SERVICE: {
-        let { services, service, isNew } = action;
-        let selectedService = isNew ? service : state.selectedService;
-
+        let { services, service } = action;
         service.isNew = false;
-        // this check is when a service is being updated
-        if (!isNew && service.old && services[service.old.title]) {
-            delete services[service.old.title];
-
-        }
         delete service.old;
-        services[service.title] = service;
-        selectedService = service.title;
+        services[service.key] = service;
+        const selectedService = service.key;
         return  {
             ...state,
             services,
@@ -126,9 +119,9 @@ function dashboard(state = {
 
     case DASHBOARD_DELETE_SERVICE: {
         const services = action.services;
-        const deletedService = action.service || state.selectedService;
-        if (services[deletedService.title] || services[deletedService.old?.title]) {
-            delete services[deletedService.title] || services[deletedService.old?.title];
+        const deletedService = action.service;
+        if (services[deletedService.key] || services[deletedService.old?.key]) {
+            delete services[deletedService.key] || services[deletedService.old?.key];
         }
         const selectedService = Object.keys(services)[0] || "";
         return {
