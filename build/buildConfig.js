@@ -27,6 +27,7 @@ const castArray = require('lodash/castArray');
  * @param {string} publicPath web public path for loading bundles (e.g. dist/)
  * @param {string} cssPrefix prefix to be appended on every generated css rule (e.g. ms2)
  * @param {array} prodPlugins plugins to be used only in production mode
+ * @param {array} devPlugins plugins to be used only in development mode
  * @param {object} alias aliases to be used by webpack to resolve paths (alias -> real path)
  * @param {object} proxy webpack-devserver custom proxy configuration object
  * @returns a webpack configuration object
@@ -48,6 +49,30 @@ const castArray = require('lodash/castArray');
  *  publicPath: "dist/"
  * });
  */
+
+/**
+ * this function adds support for object argument in buildConfig
+ * but it keeps compatibility with the previous arguments structure
+ */
+function mapArgumentsToObject(args, func) {
+    if (args.length === 1) {
+        return func(args[0]);
+    }
+    const [
+        bundles,
+        themeEntries,
+        paths,
+        plugins = [],
+        prod,
+        publicPath,
+        cssPrefix,
+        prodPlugins,
+        alias = {},
+        proxy,
+        devPlugins = []
+    ] = args;
+    return func({ bundles, themeEntries, paths, plugins, prod, publicPath, cssPrefix, prodPlugins, alias, proxy, devPlugins});
+}
 module.exports = (...args) => mapArgumentsToObject(args, ({
     bundles,
     themeEntries,
