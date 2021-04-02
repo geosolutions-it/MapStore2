@@ -1730,18 +1730,18 @@ describe('Openlayers layer', () => {
 
         expect(layer).toExist();
         const source = layer.layer.getSource();
-        const spy = expect.spyOn(source, "refresh");
+        const spy = expect.spyOn(source.tileCache, "pruneExceptNewestZ");
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getSource()).toExist();
-        expect(layer.layer.getSource().getParams()).toExist();
-        expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
+        expect(source).toExist();
+        expect(source.getParams()).toExist();
+        expect(source.getParams().cql_filter).toBe("INCLUDE");
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
-        expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
+        expect(source.getParams().cql_filter).toBe("EXCLUDE");
 
         // this prevents old cache to be rendered while loading
         expect(spy).toHaveBeenCalled();
@@ -1764,10 +1764,9 @@ describe('Openlayers layer', () => {
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={options} map={map} />, document.getElementById("container"));
-
         expect(layer).toExist();
-        const source = layer.layer.getSource();
-        const spyRefresh = expect.spyOn(source, "refresh");
+        let source = layer.layer.getSource();
+        const spy = expect.spyOn(source.tileCache, "pruneExceptNewestZ");
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -1779,8 +1778,8 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
 
-        expect(spyRefresh).toHaveBeenCalled();
-        expect(layer.layer.getSource().getParams().time).toBe("2019-01-01T00:00:00Z");
+        expect(spy).toHaveBeenCalled();
+        expect(source.getParams().time).toBe("2019-01-01T00:00:00Z");
     });
     it('wms empty params not removed on update', () => {
         var options = {

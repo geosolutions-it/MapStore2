@@ -347,19 +347,16 @@ Layers.registerType('wms', {
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
-
         if (needsRefresh) {
             // forces tile cache drop
             // this prevents old cached tiles at lower zoom levels to be
-            // rendered during new params load, but causes a blink glitch.
-            // TODO: find out a way to refresh only once to clear lower zoom level cache.
-            if (wmsSource.refresh) {
-                wmsSource.refresh();
-            }
+            // rendered during new params load
+            wmsSource?.tileCache?.pruneExceptNewestZ?.();
             if (vectorSource) {
                 vectorSource.clear();
                 vectorSource.refresh();
             }
+
             if (changed) {
                 const params = assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 
