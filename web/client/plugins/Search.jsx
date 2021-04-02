@@ -278,7 +278,7 @@ const SearchPlugin = connect((state) => ({
             placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
         />);
         if (this.props.withToggle === true) {
-            return [<ToggleButton alwaysVisible/>].concat(this.props.enabled ? [search] : null);
+            return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
         }
         if (isArray(this.props.withToggle)) {
             return (

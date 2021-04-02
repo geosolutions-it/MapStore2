@@ -492,16 +492,16 @@
                     "leaflet": {
                       "attribution": {
                         "container": "#footer-attribution-container"
-                      }
+                      },
+                      "scrollWheelZoom": false,
+                      "zoomControl": true
                     }
                   },
                   "toolsOptions": {
                     "scalebar": {
                       "container" : "#footer-scalebar-container"
                     }
-                  },
-                  "scrollWheelZoom": false,
-                  "zoomControl": true
+                  }
                 }
             }, {
               "name": "DrawerMenu",
@@ -545,12 +545,7 @@
                     }
                 }
             }, {
-              "name": "FullScreen",
-              "override": {
-                "Toolbar": {
-                    "alwaysVisible": true
-                }
-            }
+              "name": "FullScreen"
             },
             {
                 "name": "TOC",

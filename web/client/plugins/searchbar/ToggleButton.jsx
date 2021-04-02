@@ -19,18 +19,16 @@ import Button from '../../components/misc/Button';
 class ToggleButton extends React.Component {
     static propTypes = {
         pressed: PropTypes.bool,
-        onToggle: PropTypes.func,
-        alwaysVisible: PropTypes.bool
+        onToggle: PropTypes.func
     };
 
     static defaultProps = {
         pressed: false,
-        onToggle: () => {},
-        alwaysVisible: false
+        onToggle: () => {}
     };
 
     render() {
-        return <Button onClick={() => this.props.onToggle(this.props.pressed) } bsStyle={this.props.pressed ? "default" : "primary"} className={`square-button ${!this.props.alwaysVisible ? 'search-toggle' : ''}`}><Glyphicon glyph="search" /></Button>;
+        return <Button onClick={() => this.props.onToggle(this.props.pressed) } bsStyle={this.props.pressed ? "default" : "primary"} className={'square-button'}><Glyphicon glyph="search" /></Button>;
     }
 }
 
