@@ -31,7 +31,7 @@ const castArray = require('lodash/castArray');
  * @param {object} proxy webpack-devserver custom proxy configuration object
  * @returns a webpack configuration object
  */
-module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
+module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, cssPrefix, prodPlugins = [], alias = {}, proxy, devPlugins = [] ) => ({
     target: "web",
     entry: assign({}, bundles, themeEntries),
     mode: prod ? "production" : "development",
@@ -72,7 +72,7 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin()]
         .concat(castArray(plugins))
-        .concat(prod && prodPlugins || []),
+        .concat(prod ? prodPlugins : devPlugins),
     resolve: {
         fallback: {
             timers: false,
