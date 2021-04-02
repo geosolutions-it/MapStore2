@@ -53,10 +53,10 @@ const initialReorderLayers = (groups, allLayers) => {
 const reorderLayers = (groups, allLayers) => {
     return initialReorderLayers(groups, allLayers);
 };
-const createGroup = (groupId, groupName, layers, addLayers) => {
+const createGroup = (groupId, groupTitle, groupName, layers, addLayers) => {
     return assign({}, {
         id: groupId,
-        title: (groupName || "").replace(/\${dot}/g, "."),
+        title: groupTitle ?? (groupName || "").replace(/\${dot}/g, "."),
         name: groupName,
         nodes: addLayers ? getLayersId(groupId, layers) : [],
         expanded: true
@@ -343,7 +343,7 @@ export const getLayersByGroup = (configLayers, configGroups) => {
             const addLayers = idx === array.length - 1;
             if (!group) {
                 const groupTitle = getNestedGroupTitle(groupId, configGroups);
-                group = createGroup(groupId, groupTitle || groupName, mapLayers, addLayers);
+                group = createGroup(groupId, groupTitle || groupName, groupName, mapLayers, addLayers);
                 subGroups.push(group);
             } else if (addLayers) {
                 group.nodes = group.nodes.concat(getLayersId(groupId, mapLayers));
