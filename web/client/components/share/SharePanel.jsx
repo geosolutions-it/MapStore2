@@ -87,7 +87,8 @@ class SharePanel extends React.Component {
         formatCoords: PropTypes.string,
         point: PropTypes.object,
         isScrollPosition: PropTypes.bool,
-        hideMarker: PropTypes.func
+        hideMarker: PropTypes.func,
+        addMarker: PropTypes.func
     };
 
     static defaultProps = {
@@ -105,7 +106,8 @@ class SharePanel extends React.Component {
         onUpdateSettings: () => {},
         formatCoords: "decimal",
         isScrollPosition: false,
-        hideMarker: () => {}
+        hideMarker: () => {},
+        addMarker: () => {}
     };
 
     state = {
@@ -136,11 +138,11 @@ class SharePanel extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const {settings = {}, isVisible,  onSubmitClickPoint: showMarker, hideMarker} = this.props || {};
+        const {settings = {}, isVisible, hideMarker, addMarker} = this.props || {};
         if (!isEqual(settings.markerEnabled, prevProps.settings.markerEnabled) && isVisible) {
             const [lng, lat] = this.state.coordinate;
             let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, this.props.point));
-            settings.markerEnabled ? showMarker(newPoint) : hideMarker();
+            settings.markerEnabled ? addMarker(newPoint) : hideMarker();
         }
     }
 
@@ -344,7 +346,7 @@ class SharePanel extends React.Component {
                                 const lat = !isNil(val.lat) && !isNaN(val.lat) ? parseFloat(val.lat) : 0;
                                 const lng = !isNil(val.lon) && !isNaN(val.lon) ? parseFloat(val.lon) : 0;
                                 let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, this.props.point));
-                                this.props.onSubmitClickPoint(newPoint);
+                                this.props.addMarker(newPoint);
                             }}
                             onChangeFormat={this.props.onChangeFormat}
                         />
