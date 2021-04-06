@@ -412,7 +412,7 @@
             "maps": {
                 "title": "Maps ({count})",
                 "noMapAvailable": "No map available",
-                "createNewOne": "Create a new dashboard",
+                "createNewOne": "Create a new one",
                 "unsavedMapConfirmTitle": "Unsaved changes",
                 "unsavedMapConfirmMessage": "Are you sure you want to leave unsaved changes?",
                 "unsavedMapConfirmButtonText": "Leave",
@@ -422,9 +422,9 @@
                 "newGeostory": "New GeoStory",
                 "title": "GeoStories ({count})",
                 "titleNoCount": "GeoStories",
-                  "create": "Create GeoStory",
+                "create": "Create GeoStory",
                 "noGeostoryAvailable": "No GeoStory available",
-                "createANewOne": "Create a new GeoStory",
+                "createANewOne": "Create a new one",
                 "deleteError": "There was an error deleting the GeoStory",
                 "errorLoadingGeostories": "There was an error loading GeoStories"
             }
