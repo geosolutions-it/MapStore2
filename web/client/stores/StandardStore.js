@@ -16,7 +16,9 @@ import localConfig from '../reducers/localConfig';
 import locale from '../reducers/locale';
 import browser from '../reducers/browser';
 import { getApi } from '../api/userPersistedStorage';
-
+import url from "url";
+import { findMapType } from './../utils/MapTypeUtils';
+import { set } from './../utils/ImmutableUtils';
 const standardEpics = {};
 
 const appStore = (
@@ -45,7 +47,13 @@ const appStore = (
     });
     const rootEpic = persistEpic(combineEpics(plugins, { ...standardEpics, ...appEpics }));
     const optsState = storeOpts.initialState || { defaultState: {}, mobile: {} };
-    const defaultState = { ...initialState.defaultState, ...optsState.defaultState };
+    let defaultState = { ...initialState.defaultState, ...optsState.defaultState };
+    const urlData = url.parse(window.location.href, true);
+    const mapType = findMapType(urlData.href);
+    if (mapType) {
+        defaultState = set("maptype.mapType", mapType, defaultState);
+    }
+
     const mobileOverride = { ...initialState.mobile, ...optsState.mobile };
     const epicMiddleware = persistMiddleware(createEpicMiddleware(rootEpic));
     const rootReducer = (state, action) => {
