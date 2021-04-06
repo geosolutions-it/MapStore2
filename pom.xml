@@ -16,5 +16,20 @@
     <module>java</module>
     <module>product</module>
   </modules>
+  <profiles>
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>java</module>
+        <module>product</module>
+        <module>release</module>
+      </modules>
+    </profile>
+  </profiles>
 
 </project>
