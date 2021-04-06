@@ -11,8 +11,12 @@ import { compose, withState, mapPropsStream } from 'recompose';
 import { addSearch } from '../../../observables/wms';
 import { recordToLayer } from '../../../utils/CatalogUtils';
 
-// layers like tms or tileprovider don't need the recordToLayer convertion
-const toLayer = r => ["tileprovider", "wfs"].includes(r.type) ? r : recordToLayer(r);
+// layers like tms or wmts don't need the recordToLayer convertion
+const toLayer = (r, service) => ["tms", "wmts"].includes(service.type) ? r : recordToLayer(r);
+
+// checks for tms wmts inorder to addSearch() to skip addSearch
+const addSearchObservable = (selected, service) => ["tms", "wmts"].includes(service.type) ? Rx.Observable.of(selected) : addSearch(recordToLayer(selected));
+
 /**
  * enhancer for CompactCatalog (or a container) to validate a selected record,
  * convert it to layer and return as prop. Intercepts also validation errors, setting
@@ -25,10 +29,10 @@ export default compose(
     mapPropsStream(props$ =>
         props$.distinctUntilKeyChanged('selected').filter(({ selected } = {}) => selected)
             .switchMap(
-                ({ selected, layerValidationStream = s => s, setLayer = () => { } } = {}) =>
-                    Rx.Observable.of(toLayer(selected))
+                ({ selected, layerValidationStream = s => s, setLayer = () => { }, dashboardSelectedService, dashboardServices } = {}) =>
+                    Rx.Observable.of(toLayer(selected, dashboardServices[dashboardSelectedService]))
                         .let(layerValidationStream)
-                        .switchMap(() => selected.provider ? Rx.Observable.of(selected) : addSearch(toLayer(selected)))
+                        .switchMap(() => addSearchObservable(selected, dashboardServices[dashboardSelectedService]))
                         .do(l => setLayer(l))
                         .mapTo({ canProceed: true })
                         .catch((error) => Rx.Observable.of({ error, canProceed: false }))
