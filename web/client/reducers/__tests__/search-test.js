@@ -127,6 +127,15 @@ describe('Test the search reducer', () => {
         expect(state.searchText).toBe("text2");
         expect(state.selectedItems.length).toBe(1);
     });
+    it('checks for valid state in TEXT_SEARCH_CANCEL_ITEM', () => {
+        let itemToCacel = {text: "text2"};
+        let state = search(null, {
+            type: TEXT_SEARCH_CANCEL_ITEM,
+            item: itemToCacel
+
+        });
+        expect(state).toBe(null);
+    });
     it('update results style', () => {
         const style = {color: '#ff0000'};
         const state = search({}, {
