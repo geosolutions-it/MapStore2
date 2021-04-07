@@ -118,10 +118,10 @@ function search(state = null, action) {
             selectedItems: (state.selectedItems || []).concat(action.items)
         });
     case TEXT_SEARCH_CANCEL_ITEM:
-        return assign({}, {
+        return state ? assign({}, {
             selectedItems: state.selectedItems && state.selectedItems.filter(item => item !== action.item),
             searchText: state.searchText === "" && action.item && action.item.text ? action.item.text.substring(0, action.item.text.length) : state.searchText
-        });
+        }) : state;
     case UPDATE_RESULTS_STYLE:
         return assign({}, state, {style: action.style});
     case CHANGE_SEARCH_TOOL:
