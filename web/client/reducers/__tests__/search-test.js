@@ -115,17 +115,26 @@ describe('Test the search reducer', () => {
         expect(state.selectedServices.length).toBe(1);
     });
     it('nested search cancel item', () => {
-        let itemToCacel = {text: "text2"};
+        let itemToCancel = {text: "text2"};
         let state = search({
             searchText: "",
-            selectedItems: [{text: "text1"}, itemToCacel]
+            selectedItems: [{text: "text1"}, itemToCancel]
         }, {
             type: TEXT_SEARCH_CANCEL_ITEM,
-            item: itemToCacel
+            item: itemToCancel
 
         });
         expect(state.searchText).toBe("text2");
         expect(state.selectedItems.length).toBe(1);
+    });
+    it('checks for valid state in TEXT_SEARCH_CANCEL_ITEM', () => {
+        let itemToCancel = {text: "text2"};
+        let state = search(null, {
+            type: TEXT_SEARCH_CANCEL_ITEM,
+            item: itemToCancel
+
+        });
+        expect(state).toBe(null);
     });
     it('update results style', () => {
         const style = {color: '#ff0000'};
