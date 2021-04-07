@@ -39,7 +39,6 @@ import { RESET_CONTROLS } from '../actions/controls';
 import assign from 'object-assign';
 import { findIndex, isUndefined } from 'lodash';
 import { MAP_TYPE_CHANGED } from './../actions/maptype';
-
 /**
  * Handles responses based on the type ["data"|"exceptions","error","vector"] of the responses received
  * @param {object} state current state of the reducer
@@ -49,7 +48,6 @@ import { MAP_TYPE_CHANGED } from './../actions/maptype';
 function receiveResponse(state, action, type) {
     const isVector = type === "vector";
     const requestIndex = !isVector ? findIndex((state.requests || []), (req) => req.reqId === action.reqId) : action.reqId;
-
     if (requestIndex !== -1) {
         // Filter un-queryable layer
         if (["exceptions", "error"].includes(type)) {
@@ -61,9 +59,8 @@ function receiveResponse(state, action, type) {
         }
 
         // Handle data and vector responses
-        const {configuration: config, requests} = state;
+        const {requests} = state;
         let responses = state.responses || [];
-        const isHover = (config?.trigger === "hover"); // Display info trigger
 
         if (!isVector) {
             const updateResponse = {
@@ -72,21 +69,14 @@ function receiveResponse(state, action, type) {
                 layerMetadata: action.layerMetadata,
                 layer: action.layer
             };
-            if (isHover) {
-                // Add response upon it is received
-                responses = [...responses, updateResponse];
-            } else {
-                // Add response in same order it was requested
-                responses[requestIndex] = updateResponse;
-            }
+            responses = [...responses, updateResponse];
         }
-
         let indexObj = {loaded: true, index: 0};
         // Set responses and index as first response is received
         return assign({}, state, {
             ...(isVector && {requests}),
             ...(!isUndefined(indexObj) && indexObj),
-            responses: [...responses]}
+            responses: [...responses.filter((res) => res)]}
         );
     }
     return state;
