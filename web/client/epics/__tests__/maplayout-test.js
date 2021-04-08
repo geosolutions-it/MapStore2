@@ -25,8 +25,8 @@ describe('map layout epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
-                        bottom: 30,
+                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 0, transform: 'none', height: 'calc(100% - 0px)', boundingMapRect: {
+                        bottom: 0,
                         left: 600,
                         right: 658
                     }});
@@ -74,7 +74,7 @@ describe('map layout epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layout).toEqual({ height: 'calc(100% - 30px)', boundingMapRect: {
+                    expect(action.layout).toEqual({ height: 'calc(100% - 0px)', boundingMapRect: {
                         bottom: undefined
                     }} );
                 });
@@ -127,10 +127,10 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 512, right: 0, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        left: 512, right: 0, bottom: 0, transform: 'none', height: 'calc(100% - 0px)', boundingMapRect: {
                             left: 512,
                             right: 0,
-                            bottom: 30
+                            bottom: 0
                         }
                     });
                 });
@@ -150,8 +150,8 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 0, right, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
-                            bottom: 30,
+                        left: 0, right, bottom: 0, transform: 'none', height: 'calc(100% - 0px)', boundingMapRect: {
+                            bottom: 0,
                             left: 0,
                             right
                         }
