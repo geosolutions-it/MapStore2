@@ -28,7 +28,7 @@ class ToggleButton extends React.Component {
     };
 
     render() {
-        return <Button onClick={() => this.props.onToggle(this.props.pressed) } bsStyle={this.props.pressed ? "default" : "primary"} className="square-button search-toggle"><Glyphicon glyph="search" /></Button>;
+        return <Button onClick={() => this.props.onToggle(this.props.pressed) } bsStyle={this.props.pressed ? "default" : "primary"} className={'square-button'}><Glyphicon glyph="search" /></Button>;
     }
 }
 

@@ -3,6 +3,7 @@ const path = require("path");
 const themeEntries = require('./themes.js').themeEntries;
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 const moduleFederationPlugin = require('./moduleFederation.js').plugin;
+
 module.exports = require('./buildConfig')(
     {
         [process.env.bundle || "mapstore2"]: path.join(__dirname, "..", "web", "client", "product", process.env.entrypoint || process.env.bundle || "app")
