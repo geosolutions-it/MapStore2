@@ -97,6 +97,7 @@ class ShareEmbed extends React.Component {
                 <Row className="size-options-row">
                     <Col md={4}>
                         <Select
+                            clearable={false}
                             value={{value: sizeOptions[selectedOption], label: selectedOption}}
                             options={Object.keys(sizeOptions).map((key) => ({value: key, label: key}))}
                             onChange={(option) => this.setState({selectedOption: option?.value || ""})}
