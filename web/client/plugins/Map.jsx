@@ -426,12 +426,17 @@ class MapPlugin extends React.Component {
         return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
     };
     updatePlugins = (props) => {
+        this.currentMapType = props.mapType;
         props.onLoadingMapPlugins(true);
         // reset the map plugins to avoid previous map library in children
         this.setState({plugins: undefined });
         pluginsCreator(props.mapType, props.actions).then((plugins) => {
-            this.setState({plugins});
-            props.onLoadingMapPlugins(false, props.mapType);
+            // #6652 fix mismatch on multiple concurrent plugins loading
+            // to make the last mapType match the list of plugins
+            if (plugins.mapType === this.currentMapType) {
+                this.setState({plugins});
+                props.onLoadingMapPlugins(false, props.mapType);
+            }
         });
     };
 }

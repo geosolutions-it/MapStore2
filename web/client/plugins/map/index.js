@@ -145,7 +145,8 @@ const pluginsCreator = (mapType, actions) => {
                 selection: SelectionSupport,
                 popup: PopupSupport,
                 box: BoxSelectionSupport
-            }
+            },
+            mapType
         };
     });
 
