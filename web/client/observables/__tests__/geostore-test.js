@@ -211,5 +211,33 @@ describe('geostore observables for resources management', () => {
                 e => done(e)
             );
         });
+        it('updateResource linked resource is updated', done => {
+            const testResource = {
+                id: 10,
+                data: {},
+                category: "TEST",
+                metadata: {
+                    name: "RES2"
+                },
+                linkedResources: {
+                    details: { category: "DETAILS", data: "<p>Test</p>"}
+                }
+            };
+
+            const DummyAPI = {
+                getResourceAttributes: () => Promise.resolve([{
+                    name: 'details',
+                    type: 'STRING',
+                    value: 'rest/geostore/data/134'
+                }]),
+                putResourceMetadataAndAttributes: () => Promise.resolve(10),
+                putResource: () => Promise.resolve(10),
+                updateResourceAttribute: () => Promise.resolve(11)
+            };
+            updateResource(testResource, DummyAPI).subscribe(
+                () => done(),
+                e => done(e)
+            );
+        });
     });
 });
