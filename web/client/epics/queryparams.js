@@ -149,7 +149,7 @@ export const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
         switchMap(({point}) =>{
             const allowClick = get(getState(), 'controls.share.settings.centerAndZoomEnabled');
             return allowClick
-                ? Rx.Observable.of(resetSearch(), addMarker(point?.latlng || {}))
+                ? Rx.Observable.of(resetSearch(), addMarker({latlng: point?.latlng || {}}))
                 : Rx.Observable.empty();
         });
 
