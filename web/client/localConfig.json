@@ -492,7 +492,9 @@
                     "leaflet": {
                       "attribution": {
                         "container": "#footer-attribution-container"
-                      }
+                      },
+                      "scrollWheelZoom": false,
+                      "zoomControl": true
                     }
                   },
                   "toolsOptions": {
@@ -543,6 +545,9 @@
                     }
                 }
             }, {
+              "name": "FullScreen"
+            },
+            {
                 "name": "TOC",
                 "cfg": {
                     "activateMapTitle": false,
@@ -560,7 +565,7 @@
                 "name": "Search",
                 "cfg": {
                   "showOptions": false,
-                  "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": true
                 }
             }, {
                 "name": "Toolbar",
