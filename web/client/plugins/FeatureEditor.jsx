@@ -278,7 +278,12 @@ const EditorPlugin = compose(
     lifecycle({
         componentDidMount() {
             // only the passed properties will be picked
-            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync']));
+            this.props.onMount(pick(this.props, [
+                'showFilteredObject',
+                'showTimeSync',
+                'timeSync',
+                'customEditorsOptions'
+            ]));
         }
     })
 )(FeatureDock);
