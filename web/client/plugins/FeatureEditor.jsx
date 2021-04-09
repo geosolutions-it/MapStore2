@@ -13,7 +13,7 @@ import { get, pick } from 'lodash';
 import {compose, lifecycle} from 'recompose';
 import ReactDock from 'react-dock';
 
-import { createPlugin } from '../utils/PluginsUtils';
+import { createPlugin, connect as connectPlugin } from '../utils/PluginsUtils';
 
 import * as epics from '../epics/featuregrid';
 import featuregrid from '../reducers/featuregrid';
@@ -152,7 +152,7 @@ const FeatureDock = (props = {
     dialogs: EMPTY_OBJ,
     select: EMPTY_ARR
 }) => {
-    const { maxZoom } = props.pluginCfg;
+    const maxZoom  = props?.pluginCfg?.maxZoom;
     const dockProps = {
         dimMode: "none",
         defaultSize: 0.35,
@@ -261,7 +261,7 @@ const selector = createSelector(
     })
 );
 const EditorPlugin = compose(
-    connect(selector,
+    connectPlugin(selector,
         (dispatch) => ({
             onMount: bindActionCreators(setUp, dispatch),
             gridEvents: bindActionCreators(gridEvents, dispatch),
@@ -281,8 +281,7 @@ const EditorPlugin = compose(
             this.props.onMount(pick(this.props, [
                 'showFilteredObject',
                 'showTimeSync',
-                'timeSync',
-                'customEditorsOptions'
+                'timeSync'
             ]));
         }
     })
