@@ -276,11 +276,11 @@ function featuregrid(state = emptyResultsState, action) {
     case CREATE_NEW_FEATURE: {
         let id = uuid.v1();
         return assign({}, state, {
-            newFeatures: action.features.map(f => ({...f, _new: true, id: id, type: "Feature",
-                geometry: null
+            newFeatures: action.features.map(f => ({...f, _new: true, id: f.id ? f.id : id, type: "Feature",
+                geometry: f.geometry ? f.geometry : null
             })),
-            select: action.features.map(f => ({...f, _new: true, id: id, type: "Feature",
-                geometry: null
+            select: action.features.map(f => ({...f, _new: true, id: f.id ? f.id : id, type: "Feature",
+                geometry: f.geometry ? f.geometry : null
             }))
         });
     }
