@@ -126,13 +126,16 @@ export function panTo(center) {
  * @param {number[]} extent in the form of [minx, miny, maxx, maxy]
  * @param {string} crs related the extent
  * @param {number} maxZoom the max zoom limit
-*/
-export function zoomToExtent(extent, crs, maxZoom) {
+ * @param {object} options additional options `{nearest: true}`is the only supported
+ * (See {@link https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit| Openlayers View, fit method} )
+ */
+export function zoomToExtent(extent, crs, maxZoom, options) {
     return {
         type: ZOOM_TO_EXTENT,
         extent,
         crs,
-        maxZoom
+        maxZoom,
+        options
     };
 }
 

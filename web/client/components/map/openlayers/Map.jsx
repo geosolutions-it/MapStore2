@@ -625,7 +625,7 @@ class OpenlayersMap extends React.Component {
         this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration} = {}) => {
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {}) => {
             let bounds = reprojectBbox(extent, crs, this.props.projection);
             // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
@@ -642,7 +642,8 @@ class OpenlayersMap extends React.Component {
                 size: this.map.getSize(),
                 padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
                 maxZoom,
-                duration
+                duration,
+                nearest
             });
         });
     };
