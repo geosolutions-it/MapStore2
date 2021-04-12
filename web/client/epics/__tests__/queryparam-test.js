@@ -69,6 +69,7 @@ describe('queryparam epics', () => {
                     expect(Math.floor(actions[0].extent[2])).toBe(10);
                     expect(Math.floor(actions[0].extent[3])).toBe(46);
                     expect(actions[0].crs).toBe('EPSG:4326');
+                    expect(actions[0].options.nearest).toBe(true);
                 } catch (e) {
                     done(e);
                 }

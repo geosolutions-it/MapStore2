@@ -134,13 +134,15 @@ describe('Test correctness of the map actions', () => {
     });
 
     it('zoom to extent', () => {
-        const retval = zoomToExtent([-30, -30, 30, 30], 'EPSG:4326', 18);
+        const options = {nearest: true};
+        const retval = zoomToExtent([-30, -30, 30, 30], 'EPSG:4326', 18, options);
 
         expect(retval).toExist();
         expect(retval.type).toBe(ZOOM_TO_EXTENT);
         expect(retval.extent).toExist();
         expect(retval.crs).toBe('EPSG:4326');
         expect(retval.maxZoom).toBe(18);
+        expect(retval.options).toEqual(options);
     });
 
     it('changes map crs', () => {
