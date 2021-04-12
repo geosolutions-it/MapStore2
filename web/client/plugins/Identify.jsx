@@ -252,7 +252,7 @@ const IdentifyPlugin = compose(
     identifyDefaultProps,
     identifyIndex,
     defaultViewerHandlers,
-    connect(() => { }, {
+    connect(() => ({}), {
         setShowInMapPopup
     }),
     identifyLifecycle
