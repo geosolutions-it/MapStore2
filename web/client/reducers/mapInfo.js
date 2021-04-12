@@ -81,7 +81,11 @@ function receiveResponse(state, action, type) {
             }
         }
 
-        let indexObj = {loaded: true, index: 0};
+        let indexObj = {index: 0};
+        // As long as we have a response stop the loaded
+        if (responses.filter((r) => r).length) {
+            indexObj = {...indexObj, loaded: true};
+        }
         // Set responses and index as first response is received
         return assign({}, state, {
             ...(isVector && {requests}),
