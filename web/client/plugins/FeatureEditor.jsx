@@ -13,7 +13,7 @@ import { get, pick } from 'lodash';
 import {compose, lifecycle} from 'recompose';
 import ReactDock from 'react-dock';
 
-import { createPlugin, connect as connectPlugin } from '../utils/PluginsUtils';
+import { createPlugin } from '../utils/PluginsUtils';
 
 import * as epics from '../epics/featuregrid';
 import featuregrid from '../reducers/featuregrid';
