@@ -261,9 +261,18 @@ const selector = createSelector(
     })
 );
 const EditorPlugin = compose(
-    connectPlugin(selector,
+    connect(() => ({}),
         (dispatch) => ({
-            onMount: bindActionCreators(setUp, dispatch),
+            onMount: bindActionCreators(setUp, dispatch)
+        })),
+    lifecycle({
+        componentDidMount() {
+            // only the passed properties will be picked
+            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
+        }
+    }),
+    connect(selector,
+        (dispatch) => ({
             gridEvents: bindActionCreators(gridEvents, dispatch),
             pageEvents: bindActionCreators(pageEvents, dispatch),
             initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
@@ -274,17 +283,7 @@ const EditorPlugin = compose(
             })),
             onSizeChange: (...params) => dispatch(sizeChange(...params))
         })
-    ),
-    lifecycle({
-        componentDidMount() {
-            // only the passed properties will be picked
-            this.props.onMount(pick(this.props, [
-                'showFilteredObject',
-                'showTimeSync',
-                'timeSync'
-            ]));
-        }
-    })
+    )
 )(FeatureDock);
 
 export default createPlugin('FeatureEditor', {
