@@ -66,7 +66,7 @@ function mapArgumentsToObject(args, func) {
         prod,
         publicPath,
         cssPrefix,
-        prodPlugins,
+        prodPlugins = [],
         alias = {},
         proxy,
         devPlugins = []

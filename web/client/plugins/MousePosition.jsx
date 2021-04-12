@@ -82,7 +82,7 @@ class MousePosition extends React.Component {
     };
 
     getTemplate = (template) => {
-        return require('../components/mapcontrols/mouseposition/' + template).default;
+        return require('../components/mapcontrols/mouseposition/' + template + ".jsx").default;
     };
     render() {
         const { degreesTemplate, projectedTemplate, ...other} = this.props;
