@@ -134,6 +134,7 @@ export default props => {
                                 emptyResponses={emptyResponses}
                                 validator={validator}
                                 format={format}
+                                requests={requests}
                             />
                             <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}

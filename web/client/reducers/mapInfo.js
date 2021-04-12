@@ -59,9 +59,9 @@ function receiveResponse(state, action, type) {
         }
 
         // Handle data and vector responses
-        const {requests} = state;
+        const {configuration: config, requests} = state;
         let responses = state.responses || [];
-
+        const isHover = (config?.trigger === "hover"); // Display info trigger
         if (!isVector) {
             const updateResponse = {
                 response: action[type],
@@ -69,14 +69,20 @@ function receiveResponse(state, action, type) {
                 layerMetadata: action.layerMetadata,
                 layer: action.layer
             };
-            responses = [...responses, updateResponse];
+            if (isHover) {
+                // Add response upon it is received
+                responses = [...responses, updateResponse];
+            } else {
+                // Add response in same order it was requested
+                responses[requestIndex] = updateResponse;
+            }
         }
         let indexObj = {loaded: true, index: 0};
         // Set responses and index as first response is received
         return assign({}, state, {
             ...(isVector && {requests}),
             ...(!isUndefined(indexObj) && indexObj),
-            responses: [...responses.filter((res) => res)]}
+            responses: [...responses]}
         );
     }
     return state;
