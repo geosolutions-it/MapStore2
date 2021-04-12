@@ -37,7 +37,7 @@ const paramActions = {
             .filter(val => !isNaN(val));
         if (extent && extent.length === 4 && isValidExtent(extent)) {
             return [
-                zoomToExtent(extent, 'EPSG:4326')
+                zoomToExtent(extent, 'EPSG:4326', undefined,  {nearest: true})
             ];
         }
         return [
