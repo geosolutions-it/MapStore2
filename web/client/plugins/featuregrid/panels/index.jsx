@@ -135,7 +135,7 @@ const ClearDialog = connect(
         onClose: () => toggleTool("clearConfirm", false),
         onConfirm: () => clearChangeConfirmed()
     })(ConfirmClearComp);
-const FeatureCloseDialog = connect(() => {}
+const FeatureCloseDialog = connect(() => ({})
     , {
         onClose: () => closeFeatureGridConfirmed(),
         onConfirm: () => closeFeatureGrid()
