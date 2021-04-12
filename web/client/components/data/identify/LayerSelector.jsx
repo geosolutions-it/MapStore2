@@ -34,10 +34,8 @@ const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, e
     }, [index]);
 
     useEffect(()=>{
-        if (loaded) {
-            if (responses && responses.length === 1) {
-                setTitle(responses[0]?.layerMetadata?.title || "");
-            }
+        if (loaded && responses && responses.length === 1) {
+            setTitle(responses[0]?.layerMetadata?.title || "");
         }
     }, [responses, loaded]);
 
