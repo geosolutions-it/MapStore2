@@ -30,14 +30,8 @@ const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, e
     }, [responses]);
 
     useEffect(()=>{
-        setTitle(responses[index]?.layerMetadata?.title || "");
-    }, [index]);
-
-    useEffect(()=>{
-        if (loaded && responses && responses.length === 1) {
-            setTitle(responses[0]?.layerMetadata?.title || "");
-        }
-    }, [responses, loaded]);
+        loaded && setTitle(responses[index]?.layerMetadata?.title || "");
+    }, [responses, index, loaded]);
 
     const onChange = (event) => {
         const idx = event?.idx || 0;
