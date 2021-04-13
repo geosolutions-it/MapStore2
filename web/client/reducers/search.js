@@ -104,7 +104,8 @@ function search(state = null, action) {
     case TEXT_SEARCH_RESULTS_PURGE:
         return assign({}, state, { results: null, error: null});
     case TEXT_SEARCH_ADD_MARKER:
-        return assign({}, state, { markerPosition: action.markerPosition, markerLabel: action.markerLabel });
+        const latlng = action.markerPosition.latlng ? {latlng: action.markerPosition.latlng, lat: action.markerPosition.latlng.lat,  lng: action.markerPosition.latlng.lng} : action.markerPosition;
+        return assign({}, state, { markerPosition: latlng, markerLabel: action.markerLabel });
     case TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE:
         return assign({}, state, {highlightedFeature: action.highlightedFeature});
     case TEXT_SEARCH_RESET:
