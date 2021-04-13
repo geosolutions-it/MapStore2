@@ -155,9 +155,11 @@ function annotations(state = {validationErrors: {}}, action) {
             if (validateCoordsArray(selected.properties.center)) {
                 center = selected.properties.center;
                 // turf/circle by default use km unit hence we divide by 1000 the radius(in meters)
+                // this try catch prevents the app from crashing when there is no radius maybe we can use a default value for radius incase action.radius === undefined
+                const circleRadius = action.radius ?? 0.0001;
                 c = circle(
                     center,
-                    action.crs === "EPSG:4326" ? action.radius : action.radius / 1000,
+                    action.crs === "EPSG:4326" ? circleRadius : circleRadius / 1000,
                     { steps: 100, units: action.crs === "EPSG:4326" ? "degrees" : "kilometers" }
                 ).geometry;
             } else {
