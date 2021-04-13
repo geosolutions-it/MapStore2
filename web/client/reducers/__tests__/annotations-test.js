@@ -1514,6 +1514,49 @@ describe('Test the annotations reducer', () => {
         expect(round(firstPoint[0], 10)).toBe(1);
         expect(round(firstPoint[1], 10)).toBe(-27.8323353334);
     });
+
+    it('changeSelected, Selected Properties for Circle Feature with Radius and Radius Undefined', () => {
+        const selected = {
+            properties: {
+                canEdit: true,
+                center: [-6.576492309570317, 41.6007838467891],
+                id: "259d79d0-053e-11ea-b0b3-379d853a3ff4",
+                isCircle: true,
+                isValidFeature: true
+            },
+            geometry: {
+                type: "Circle",
+                coordinates: [-6.576492309570317, 41.6007838467891]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [selected],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const coordinates = [[1, 1]];
+        // with defined radius
+        const state = annotations({
+            editing: featureColl,
+            selected,
+            featureType: "Text",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, 3567, null, "EPSG:3857"));
+
+        // with undefined radius
+        const state2 = annotations({
+            editing: featureColl,
+            selected: {...selected, properties: {...selected.properties}},
+            featureType: "Text",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, undefined, null, "EPSG:4326"));
+
+        expect(state.selected.properties).toNotEqual(state2.selected.properties);
+    });
     it('UPDATE_SYMBOLS', () => {
         let annotationsState = annotations({}, updateSymbols());
         expect(annotationsState.symbolList.length).toBe(0);
