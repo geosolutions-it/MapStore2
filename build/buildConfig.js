@@ -81,7 +81,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     prod,
     publicPath,
     cssPrefix,
-    prodPlugins,
+    prodPlugins = [],
     devPlugins = [],
     alias = {},
     proxy,
