@@ -100,7 +100,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         path: paths.dist,
         publicPath,
         filename: "[name].js",
-        chunkFilename: prod ? "[name].[hash].chunk.js" : "[name].js"
+        chunkFilename: prod ? (paths.chunks || "") + "[name].[hash].chunk.js" : (paths.chunks || "") + "[name].js"
     },
     plugins: [
         new CopyWebpackPlugin([
