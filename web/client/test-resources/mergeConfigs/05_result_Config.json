@@ -64,30 +64,30 @@
                 "isNew": true,
                 "autoload": false
             },
-            "selectedService": "AustroControl Free WMS Service",
+            "selectedService": "Free WMS Service",
             "services": {
-              "AustroControl Inspire WMS Service": {
-                "url": "https://sdigeo-free.austrocontrol.at/geoserver/inspire/wms",
+              "Inspire WMS Service": {
+                "url": "https://inspire/geoserver/inspire/wms",
                 "type": "wms",
-                "title": "AustroControl Inspire WMS Service",
+                "title": "Inspire WMS Service",
                 "autoload": true
               },
-              "AustroControl Free WMS Service": {
-                "url": "https://sdigeo-free.austrocontrol.at/geoserver/free/wms",
+              "Free WMS Service": {
+                "url": "https://free/geoserver/free/wms",
                 "type": "wms",
-                "title": "AustroControl Free WMS Service",
+                "title": "Free WMS Service",
                 "autoload": true
               },
-              "AustroControl Inspire CSW Service": {
-                "url": "https://sdimd-free.austrocontrol.at/geonetwork/srv/eng/csw-inspire",
+              "Inspire CSW Service": {
+                "url": "https://inspire/geonetwork/srv/eng/csw-inspire",
                 "type": "csw",
-                "title": "AustroControl Inspire CSW Service",
+                "title": "Inspire CSW Service",
                 "autoload": true
               },
-              "AustroControl Free CSW Service": {
-                "url": "https://sdimd-free.austrocontrol.at/geonetwork/srv/eng/csw-free",
+              "Free CSW Service": {
+                "url": "https://free/geonetwork/srv/eng/csw-free",
                 "type": "csw",
-                "title": "AustroControl Free CSW Service",
+                "title": "Free CSW Service",
                 "autoload": true
               },
               "Demo CSW Service": {
@@ -762,9 +762,9 @@
           "name": "DashboardEditor",
           "cfg": {
             "catalog": {
-              "url": "https://sdigeo-free.austrocontrol.at/geoserver/free/wms",
+              "url": "https://inspire/geoserver/free/wms",
               "type": "wms",
-              "title": "AustroControl Inspire WMS Service",
+              "title": "Inspire WMS Service",
               "autoload": true
             },
             "containerPosition": "columns"

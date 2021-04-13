@@ -139,9 +139,9 @@
     "jsonpath": "$.plugins.desktop..[?(@.name == 'DashboardEditor')].cfg",
     "value": {
       "catalog": {
-        "url": "https://sdigeo-free.austrocontrol.at/geoserver/free/wms",
+        "url": "https://inspire/geoserver/free/wms",
         "type": "wms",
-        "title": "AustroControl Inspire WMS Service",
+        "title": "Inspire WMS Service",
         "autoload": true
       },
       "containerPosition": "columns"
