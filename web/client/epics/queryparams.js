@@ -19,7 +19,7 @@ import { warning } from '../actions/notifications';
 
 import { isValidExtent } from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
-import {featureInfoClick, hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from "../actions/mapInfo";
+import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from "../actions/mapInfo";
 import {getBbox} from "../utils/MapUtils";
 import {mapSelector} from '../selectors/map';
 
@@ -146,10 +146,10 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
  */
 export const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(CLICK_ON_MAP).
-        switchMap(({point, layer}) =>{
+        switchMap(({point}) =>{
             const allowClick = get(getState(), 'controls.share.settings.centerAndZoomEnabled');
             return allowClick
-                ? Rx.Observable.of(resetSearch(), featureInfoClick(point, layer))
+                ? Rx.Observable.of(resetSearch(), addMarker({latlng: point?.latlng || {}}))
                 : Rx.Observable.empty();
         });
 
