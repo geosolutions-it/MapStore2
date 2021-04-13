@@ -100,9 +100,8 @@ describe('queryparam epics', () => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
                     expect(actions[0].type).toBe("TEXT_SEARCH_RESET");
-                    expect(actions[1].type).toBe("FEATURE_INFO_CLICK");
-                    expect(actions[1].point).toEqual({"latlng": {"lat": 39.01, "lng": -89.97}});
-                    expect(actions[1].layer).toBe("layer01");
+                    expect(actions[1].type).toBe("TEXT_SEARCH_ADD_MARKER");
+                    expect(actions[1].markerPosition).toEqual(point);
                 } catch (e) {
                     done(e);
                 }
