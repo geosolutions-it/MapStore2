@@ -114,7 +114,45 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].response).toBe("data");
         expect(state.responses[1].queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
+        expect(state.index).toBe(0);
+    });
+
+    it('creates a feature info data and sets right index for valid responses', () => {
+        let testAction = {
+            type: 'LOAD_FEATURE_INFO',
+            data: {features: [{}]},
+            requestParams: "params",
+            layerMetadata: {title: "ny_roads"},
+            reqId: 2
+        };
+
+        const state = mapInfo({
+            requests: [{reqId: 1, request: {info_format: "application/json"}}, {reqId: 2, request: {info_format: "application/json"}}],
+            configuration: {trigger: "click"},
+            responses: [{layerMetadata: {title: "poi"}, response: {features: [{}]}}, {layerMetadata: {title: "ny_roads"}, features: [{}]}],
+            firstLayerId: testAction.layerMetadata.title
+        }, testAction);
         expect(state.index).toBe(1);
+        expect(state.responses.length).toBe(2);
+        expect(state.responses[state.index].layerMetadata.title).toBe('ny_roads');
+    });
+
+    it('creates a feature info data and sets index to 0 if trigger is Hover', () => {
+        let testAction = {
+            type: 'LOAD_FEATURE_INFO',
+            data: {features: [{}]},
+            requestParams: "params",
+            layerMetadata: {title: "ny_roads"},
+            reqId: 2
+        };
+
+        const state = mapInfo({
+            requests: [{reqId: 1, request: {info_format: "application/json"}}, {reqId: 2, request: {info_format: "application/json"}}],
+            configuration: {trigger: "hover"},
+            responses: [{layerMetadata: {title: "poi"}, response: {features: [{}]}}, {layerMetadata: {title: "ny_roads"}, features: [{}]}],
+            firstLayerId: testAction.layerMetadata.title
+        }, testAction);
+        expect(state.index).toBe(0);
     });
 
     it('creates a feature info data from vector info request', () => {
@@ -146,7 +184,7 @@ describe('Test the mapInfo reducer', () => {
         let state = mapInfo({requests: [{}], configuration: {}}, testAction);
         expect(state.responses).toExist();
         expect(state.loaded).toBe(true);
-        expect(state.index).toBe(1);
+        expect(state.index).toBe(0);
         expect(state.responses.length).toBe(2);
         expect(state.responses[1].response).toExist();
         expect(state.responses[1].response.features.length).toBe(1);

@@ -104,6 +104,7 @@ function receiveResponse(state, action, type) {
                     const correctIndex = findIndex(filteredResponses, (filteredResp) => {
                         return filteredResp?.layerMetadata?.title === firstLayerId;
                     });
+                    console.log({format, filteredResponses, correctIndex, responses}, "==================>");
                     indexObj = {...indexObj, index: correctIndex !== -1 ? correctIndex : indexObj.index};
                 }
             }
