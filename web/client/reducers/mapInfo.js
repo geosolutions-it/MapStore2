@@ -82,28 +82,29 @@ function receiveResponse(state, action, type) {
                 responses[requestIndex] = updateResponse;
             }
         }
-
-        let indexObj = {loaded: true, index: 0};
         let firstLayerId = state.firstLayerId;
-        const recievedResponses = responses.filter((res) => res);
-        if (recievedResponses.length && !firstLayerId) {
-            const format = state.requests[requestIndex]?.request?.info_format;
-            const layer = responses[requestIndex];
-            const validator = getValidator(format);
-            const valid = validator?.getValidResponses(recievedResponses);
-            if (valid.length) {
-                firstLayerId = layer?.layerMetadata?.title || "";
+        let indexObj = {loaded: true, index: 0};
+        if (!isHover) {
+            const recievedResponses = responses.filter((res) => res);
+            if (recievedResponses.length && !firstLayerId) {
+                const format = state.requests[requestIndex]?.request?.info_format;
+                const layer = responses[requestIndex];
+                const validator = getValidator(format);
+                const valid = validator?.getValidResponses(recievedResponses);
+                if (valid.length) {
+                    firstLayerId = layer?.layerMetadata?.title || "";
+                }
             }
-        }
-        if (responses.length === requests.length) {
-            const format = state.requests[requestIndex]?.request?.info_format;
-            if (format) {
-                const validatorFormat = getValidator(format);
-                const filteredResponses = validatorFormat.getValidResponses(responses);
-                const correctIndex = findIndex(filteredResponses, (filteredResp) => {
-                    return filteredResp?.layerMetadata?.title === firstLayerId;
-                });
-                indexObj = {...indexObj, index: correctIndex !== -1 ? correctIndex : indexObj.index};
+            if (responses.length === requests.length) {
+                const format = state.requests[requestIndex]?.request?.info_format;
+                if (format) {
+                    const validatorFormat = getValidator(format);
+                    const filteredResponses = validatorFormat.getValidResponses(responses);
+                    const correctIndex = findIndex(filteredResponses, (filteredResp) => {
+                        return filteredResp?.layerMetadata?.title === firstLayerId;
+                    });
+                    indexObj = {...indexObj, index: correctIndex !== -1 ? correctIndex : indexObj.index};
+                }
             }
         }
 
