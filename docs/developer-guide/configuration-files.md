@@ -11,7 +11,7 @@ This separation allows to:
 ## Back-end Configuration Files
 
 They are `.properties` files or `.xml` files, and they allow to configure the various parts of the back-end.
-They are located in `web/src/main/resources` and they will be copied in  `MapStore.war` under the directory `/WEB-INF/classes`.
+They are located in `java/web/src/main/resources` and they will be copied in  `MapStore.war` under the directory `/WEB-INF/classes`.
 
 * `proxy.properties`: configuration for the internal proxy (for cross-origin requests). More information [here](https://github.com/geosolutions-it/http-proxy/wiki/Configuring-Http-Proxy>).
 * `geostore-datasource-ovr.properties`: provides settings for the database.
@@ -19,10 +19,20 @@ They are located in `web/src/main/resources` and they will be copied in  `MapSto
 * `sample-categories.xml`: initial set of categories for back-end resources (MAP, DASHBOARD, GEOSTORY...)
 * `mapstore.properties`: allow specific overrides to front-end files, See [externalization system](../externalized-configuration) for more details
 
-Except `mapstore.properties`, all these files are simply overrides of original configuration files coming from the included sub-applications part of the back-end. In `WEB-INF/classes` you will find also some other useful files coming from the original application:
+Except for `mapstore.properties` and `ldap.properties`, all these files are simply overrides of original configuration files coming from the included sub-applications part of the back-end. In `WEB-INF/classes` you will find also some other useful files coming from the original application:
 
-* `spring-security.xml`: Provide the security settings and configurations. It can be configured to set-up [LDAP integration](integrations/users/ldap.md). (usually in a custom application).
+### Back-end security configuration files
+Backend security can be configured to use different strategies of authentication.
+Profiles are available to switch to a different strategy. The standard strategy uses the standard GeoStore database and services.
+The related configuration is stored in `WEB-INF/classes/geostore-spring-security.xml`.
 
+Depending on the chosen profile a different file is deployed from the `product/config` folder. In particular:
+ * **default**: db\geostore-spring-security-db.xml (geostore database)
+ * **ldap**: ldap\geostore-spring-security-ldap.xml (LDAP source)
+
+Specific configuration files are available to configure connection details for the chosen profile.
+
+For example, if using LDAP, look at [LDAP integration](integrations/users/ldap.md).
 
 ## Front-end Configurations Files
 

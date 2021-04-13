@@ -18,16 +18,12 @@ This is the overall framework folder structure:
     +-- docma-config.json
     +-- testConfig.json
     +-- ...
-+-- web      (MapStore maven module)
++-- java        (java backend modules)
     +-- pom.xml
-    +-- src        (maven java webapp src folder)
-    |   +-- main
-    |   |   +-- java
-    |   |   +-- resources
-    |   |   +-- webapp
-    |   +-- test
-    |        +-- java
-    |        +-- resources
+    +-- services
+    +-- web
+    +-- printing
++-- web         (frontend module)
     +-- client
     |   +-- index.html (demo application home page)
         +-- plugins (ReactJS smart components with required reducers)
