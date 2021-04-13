@@ -8,7 +8,35 @@
 import expect from 'expect';
 import { isNearlyEqual } from '../MapUtils';
 
-import CoordinatesUtils from '../CoordinatesUtils';
+import {
+    reproject,
+    getProjectedBBox,
+    reprojectBbox,
+    getAvailableCRS,
+    calculateAzimuth,
+    normalizeSRS,
+    getCompatibleSRS,
+    reprojectGeoJson,
+    getGeoJSONExtent,
+    coordsOLtoLeaflet,
+    getViewportGeometry,
+    parseString,
+    getWMSBoundingBox,
+    fetchProjRemotely,
+    determineCrs,
+    calculateDistance,
+    FORMULAS,
+    transformLineToArcs,
+    transformArcsToLine,
+    getNormalizedLatLon,
+    isInsideVisibleArea,
+    centerToVisibleArea,
+    roundCoord,
+    makeBboxFromOWS,
+    extractCrsFromURN,
+    makeNumericEPSG,
+    getPolygonFromCircle
+} from '../CoordinatesUtils';
 import Proj4js from 'proj4';
 
 describe('CoordinatesUtils', () => {
@@ -19,20 +47,20 @@ describe('CoordinatesUtils', () => {
     });
     it('convert lat lon to mercator without specifying source and dest', () => {
         const point = [45, 13];
-        const transformed = CoordinatesUtils.reproject(point, "", "");
+        const transformed = reproject(point, "", "");
         expect(transformed).toNotExist();
         expect(transformed).toEqual(null);
-        const transformed2 = CoordinatesUtils.reproject(point, null, null);
+        const transformed2 = reproject(point, null, null);
         expect(transformed2).toNotExist();
         expect(transformed2).toEqual(null);
-        const transformed3 = CoordinatesUtils.reproject(point, undefined, undefined);
+        const transformed3 = reproject(point, undefined, undefined);
         expect(transformed3).toNotExist();
         expect(transformed3).toEqual(null);
     });
     it('convert lat lon to mercator', () => {
         var point = [45, 13];
 
-        var transformed = CoordinatesUtils.reproject(point, 'EPSG:4326', 'EPSG:900913');
+        var transformed = reproject(point, 'EPSG:4326', 'EPSG:900913');
 
         expect(transformed).toExist();
         expect(transformed.x).toExist();
@@ -48,7 +76,7 @@ describe('CoordinatesUtils', () => {
         let resolution = 1;
         let rotation = 0;
         let size = [10, 10];
-        let bbox = CoordinatesUtils.getProjectedBBox(center, resolution, rotation, size);
+        let bbox = getProjectedBBox(center, resolution, rotation, size);
         expect(bbox).toExist();
         expect(bbox.maxx).toBeGreaterThan(bbox.minx);
         expect(bbox.maxy).toBeGreaterThan(bbox.miny);
@@ -56,7 +84,7 @@ describe('CoordinatesUtils', () => {
 
     it('convert lat lon bbox to marcator bbox', () => {
         var bbox = [44, 12, 45, 13];
-        var projbbox = CoordinatesUtils.reprojectBbox(bbox, 'EPSG:4326', 'EPSG:900913');
+        var projbbox = reprojectBbox(bbox, 'EPSG:4326', 'EPSG:900913');
 
         expect(projbbox).toExist();
         expect(projbbox.length).toBe(4);
@@ -66,7 +94,7 @@ describe('CoordinatesUtils', () => {
     });
     it('test getAvailableCRS', () => {
         const defs = Object.keys(Proj4js.defs);
-        const toCheck = Object.keys(CoordinatesUtils.getAvailableCRS());
+        const toCheck = Object.keys(getAvailableCRS());
 
         toCheck.forEach(item => {
             expect(defs.indexOf(item) !== -1);
@@ -76,26 +104,26 @@ describe('CoordinatesUtils', () => {
         var point1 = [0, 0];
         var point2 = [1, 1];
         var proj = 'EPSG:900913';
-        var azimuth = CoordinatesUtils.calculateAzimuth(point1, point2, proj);
+        var azimuth = calculateAzimuth(point1, point2, proj);
 
         expect(azimuth.toFixed(2)).toBe('45.00');
     });
     it('test normalizeSRS', () => {
-        expect(CoordinatesUtils.normalizeSRS('EPSG:900913')).toBe('EPSG:3857');
+        expect(normalizeSRS('EPSG:900913')).toBe('EPSG:3857');
     });
 
     it('test normalizeSRS with allowedSRS', () => {
-        expect(CoordinatesUtils.normalizeSRS('EPSG:900913', {'EPSG:900913': true})).toBe('EPSG:900913');
+        expect(normalizeSRS('EPSG:900913', {'EPSG:900913': true})).toBe('EPSG:900913');
     });
 
     it('test getCompatibleSRS', () => {
-        expect(CoordinatesUtils.getCompatibleSRS('EPSG:900913', {'EPSG:900913': true})).toBe('EPSG:900913');
-        expect(CoordinatesUtils.getCompatibleSRS('EPSG:900913', {'EPSG:900913': true, 'EPSG:3857': true})).toBe('EPSG:900913');
-        expect(CoordinatesUtils.getCompatibleSRS('EPSG:900913', {'EPSG:3857': true})).toBe('EPSG:3857');
+        expect(getCompatibleSRS('EPSG:900913', {'EPSG:900913': true})).toBe('EPSG:900913');
+        expect(getCompatibleSRS('EPSG:900913', {'EPSG:900913': true, 'EPSG:3857': true})).toBe('EPSG:900913');
+        expect(getCompatibleSRS('EPSG:900913', {'EPSG:3857': true})).toBe('EPSG:3857');
 
-        expect(CoordinatesUtils.getCompatibleSRS('EPSG:3857', {'EPSG:900913': true})).toBe('EPSG:900913');
-        expect(CoordinatesUtils.getCompatibleSRS('EPSG:3857', {'EPSG:900913': true, 'EPSG:3857': true})).toBe('EPSG:3857');
-        expect(CoordinatesUtils.getCompatibleSRS('EPSG:3857', {'EPSG:3857': true})).toBe('EPSG:3857');
+        expect(getCompatibleSRS('EPSG:3857', {'EPSG:900913': true})).toBe('EPSG:900913');
+        expect(getCompatibleSRS('EPSG:3857', {'EPSG:900913': true, 'EPSG:3857': true})).toBe('EPSG:3857');
+        expect(getCompatibleSRS('EPSG:3857', {'EPSG:3857': true})).toBe('EPSG:3857');
     });
     it('test reprojectGeoJson', () => {
         const testPoint = {
@@ -117,7 +145,7 @@ describe('CoordinatesUtils', () => {
                 }
             ]
         };
-        const reprojectedTestPoint = CoordinatesUtils.reprojectGeoJson(testPoint, "EPSG:4326", "EPSG:900913");
+        const reprojectedTestPoint = reprojectGeoJson(testPoint, "EPSG:4326", "EPSG:900913");
         expect(reprojectedTestPoint).toExist();
         expect(reprojectedTestPoint.features).toExist();
         expect(reprojectedTestPoint.features[0]).toExist();
@@ -139,10 +167,10 @@ describe('CoordinatesUtils', () => {
                 "name": "Dinagat Islands"
             }
         };
-        expect(CoordinatesUtils.getGeoJSONExtent(geojsonPoint)[0] <= 125.6).toBe(true);
-        expect(CoordinatesUtils.getGeoJSONExtent(geojsonPoint)[1] <= 10.1).toBe(true);
-        expect(CoordinatesUtils.getGeoJSONExtent(geojsonPoint)[2] >= 125.6).toBe(true);
-        expect(CoordinatesUtils.getGeoJSONExtent(geojsonPoint)[3] >= 10.1).toBe(true);
+        expect(getGeoJSONExtent(geojsonPoint)[0] <= 125.6).toBe(true);
+        expect(getGeoJSONExtent(geojsonPoint)[1] <= 10.1).toBe(true);
+        expect(getGeoJSONExtent(geojsonPoint)[2] >= 125.6).toBe(true);
+        expect(getGeoJSONExtent(geojsonPoint)[3] >= 10.1).toBe(true);
         let featureCollection = { "type": "FeatureCollection",
             "features": [
                 { "type": "Feature",
@@ -183,11 +211,11 @@ describe('CoordinatesUtils', () => {
                 }
             ]
         };
-        expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[0]).toBe(100.0);
-        expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[1]).toBe(0.0);
-        expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[2]).toBe(105.0);
-        expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[3]).toBe(1.0);
-        expect(CoordinatesUtils.getGeoJSONExtent({ "type": "Feature",
+        expect(getGeoJSONExtent(featureCollection)[0]).toBe(100.0);
+        expect(getGeoJSONExtent(featureCollection)[1]).toBe(0.0);
+        expect(getGeoJSONExtent(featureCollection)[2]).toBe(105.0);
+        expect(getGeoJSONExtent(featureCollection)[3]).toBe(1.0);
+        expect(getGeoJSONExtent({ "type": "Feature",
             "geometry": {
                 "type": "Polygon",
                 "coordinates": [
@@ -209,7 +237,7 @@ describe('CoordinatesUtils', () => {
                 "coordinates": [125.6, 10.1]
             }
         };
-        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)).toBe(geojsonPoint.geometry.coordinates.reverse());
+        expect(coordsOLtoLeaflet(geojsonPoint.geometry)).toBe(geojsonPoint.geometry.coordinates.reverse());
     });
     it('test coordsOLtoLeaflet on LineString', () => {
         let geojsonPoint = {
@@ -227,8 +255,8 @@ describe('CoordinatesUtils', () => {
             }
         };
 
-        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0]).toBe(reversedPoint.geometry.coordinates[0]);
-        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[1]).toBe(reversedPoint.geometry.coordinates[1]);
+        expect(coordsOLtoLeaflet(geojsonPoint.geometry)[0]).toBe(reversedPoint.geometry.coordinates[0]);
+        expect(coordsOLtoLeaflet(geojsonPoint.geometry)[1]).toBe(reversedPoint.geometry.coordinates[1]);
     });
     it('test coordsOLtoLeaflet on Polygon', () => {
         let geojsonPoint = {
@@ -246,14 +274,14 @@ describe('CoordinatesUtils', () => {
             }
         };
 
-        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0][0]).toBe(reversedPoint.geometry.coordinates[0]);
-        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0][1]).toBe(reversedPoint.geometry.coordinates[1]);
-        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0][2]).toBe(reversedPoint.geometry.coordinates[2]);
-        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0][3]).toBe(reversedPoint.geometry.coordinates[3]);
+        expect(coordsOLtoLeaflet(geojsonPoint.geometry)[0][0]).toBe(reversedPoint.geometry.coordinates[0]);
+        expect(coordsOLtoLeaflet(geojsonPoint.geometry)[0][1]).toBe(reversedPoint.geometry.coordinates[1]);
+        expect(coordsOLtoLeaflet(geojsonPoint.geometry)[0][2]).toBe(reversedPoint.geometry.coordinates[2]);
+        expect(coordsOLtoLeaflet(geojsonPoint.geometry)[0][3]).toBe(reversedPoint.geometry.coordinates[3]);
     });
 
     it('test getViewportGeometry not listed projection', () => {
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: -160,
             miny: -50,
             maxx: 130,
@@ -269,7 +297,7 @@ describe('CoordinatesUtils', () => {
     });
 
     it('test getViewportGeometry projection EPSG:4326', () => {
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: -160,
             miny: -50,
             maxx: 130,
@@ -285,7 +313,7 @@ describe('CoordinatesUtils', () => {
     });
 
     it('test getViewportGeometry projection EPSG:4326 world view', () => {
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: -190,
             miny: -50,
             maxx: 230,
@@ -301,7 +329,7 @@ describe('CoordinatesUtils', () => {
     });
 
     it('test getViewportGeometry projection EPSG:4326 on IDL center position > -180', () => {
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: -190,
             miny: -50,
             maxx: -160,
@@ -325,7 +353,7 @@ describe('CoordinatesUtils', () => {
 
 
     it('test getViewportGeometry projection EPSG:4326 on IDL center position < 180', () => {
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: -230,
             miny: -50,
             maxx: -160,
@@ -348,7 +376,7 @@ describe('CoordinatesUtils', () => {
     });
 
     it('test getViewportGeometry projection EPSG:4326 on IDL center x values < -180', () => {
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: -1640,
             miny: -50,
             maxx: -1950,
@@ -371,7 +399,7 @@ describe('CoordinatesUtils', () => {
     });
 
     it('test getViewportGeometry projection EPSG:4326 on IDL x values > 180', () => {
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: 880,
             miny: -50,
             maxx: 930,
@@ -394,7 +422,7 @@ describe('CoordinatesUtils', () => {
 
     it('test getViewportGeometry projection EPSG:900913', () => {
 
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: -8932736.873518841,
             miny: 1995923.6825825204,
             maxx: -2162250.6561310687,
@@ -412,7 +440,7 @@ describe('CoordinatesUtils', () => {
     it('test getViewportGeometry projection EPSG:900913 world view', () => {
 
         // EPSG:900913 -20037508.342789244 - 20037508.342789244 | EPSG:4326 -180 | 180
-        expect(CoordinatesUtils.getViewportGeometry({
+        expect(getViewportGeometry({
             minx: -77527937.55286229,
             miny: -32150025.592971414,
             maxx: 30799841.925342064,
@@ -428,20 +456,20 @@ describe('CoordinatesUtils', () => {
     });
 
     it('test parseString number', () => {
-        expect(CoordinatesUtils.parseString("10000 500000")).toEqual({x: 10000, y: 500000});
+        expect(parseString("10000 500000")).toEqual({x: 10000, y: 500000});
     });
 
     it('test parseString char', () => {
-        expect(CoordinatesUtils.parseString("AAA00 500000")).toBe(null);
+        expect(parseString("AAA00 500000")).toBe(null);
     });
 
     it('test getWMSBoundingBox no data', () => {
-        expect(CoordinatesUtils.getWMSBoundingBox([])).toBe(null);
-        expect(CoordinatesUtils.getWMSBoundingBox()).toBe(null);
+        expect(getWMSBoundingBox([])).toBe(null);
+        expect(getWMSBoundingBox()).toBe(null);
     });
 
     it('test getWMSBoundingBox', () => {
-        expect(CoordinatesUtils.getWMSBoundingBox([
+        expect(getWMSBoundingBox([
             {
                 $: {
                     SRS: 'EPSG:3857',
@@ -468,48 +496,48 @@ describe('CoordinatesUtils', () => {
         });
     });
     it('test fetchProjRemotely with fake url', () => {
-        expect(typeof CoordinatesUtils.fetchProjRemotely("EPSG:3044", "base/web/client/test-resources/wms/projDef_3044.txt")).toBe("object");
-        expect(CoordinatesUtils.fetchProjRemotely("EPSG:3044", "base/web/client/test-resources/wms/projDef_3044.txt") instanceof Promise).toBeTruthy();
+        expect(typeof fetchProjRemotely("EPSG:3044", "base/web/client/test-resources/wms/projDef_3044.txt")).toBe("object");
+        expect(fetchProjRemotely("EPSG:3044", "base/web/client/test-resources/wms/projDef_3044.txt") instanceof Promise).toBeTruthy();
     });
     it('test determineCrs', () => {
-        expect(CoordinatesUtils.determineCrs("EPSG:4326")).toNotBe(null);
-        expect(CoordinatesUtils.determineCrs("EPSG:3004")).toBe(null);
-        expect(CoordinatesUtils.determineCrs({crs: "EPSG:3004"}).crs).toBe("EPSG:3004");
+        expect(determineCrs("EPSG:4326")).toNotBe(null);
+        expect(determineCrs("EPSG:3004")).toBe(null);
+        expect(determineCrs({crs: "EPSG:3004"}).crs).toBe("EPSG:3004");
     });
     it('test calculateDistance', () => {
-        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toNotBe(null);
-        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toBe(157225.432);
-        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "vincenty")).toBe(156876.149);
+        expect(calculateDistance([[1, 1], [2, 2]], "haversine")).toNotBe(null);
+        expect(calculateDistance([[1, 1], [2, 2]], "haversine")).toBe(157225.432);
+        expect(calculateDistance([[1, 1], [2, 2]], "vincenty")).toBe(156876.149);
     });
     it('test calculate Geodesic Distance', () => {
-        expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]] )).toNotBe(null);
-        expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]])).toBe(157225.432);
+        expect(FORMULAS.haversine([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(FORMULAS.haversine([[1, 1], [2, 2]])).toBe(157225.432);
     });
     it('test calculate vincenty Distance', () => {
-        expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toNotBe(null);
-        expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toBe(156876.149);
+        expect(FORMULAS.vincenty([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(FORMULAS.vincenty([[1, 1], [2, 2]] )).toBe(156876.149);
     });
     it('test transformLineToArcs', () => {
-        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).toNotBe(null);
-        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ).length).toBe(100);
+        expect(transformLineToArcs([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(transformLineToArcs([[1, 1], [2, 2]] ).length).toBe(100);
     });
     it('test transformLineToArcs with 2 equal points', () => {
-        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] )).toNotBe(null);
-        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] ).length).toBe(0);
+        expect(transformLineToArcs([[1, 1], [1, 1]] )).toNotBe(null);
+        expect(transformLineToArcs([[1, 1], [1, 1]] ).length).toBe(0);
     });
     it('test transformArcsToLine', () => {
-        expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ))).toNotBe(null);
-        expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).length).toBe(2);
+        expect(transformArcsToLine(transformLineToArcs([[1, 1], [2, 2]] ))).toNotBe(null);
+        expect(transformArcsToLine(transformLineToArcs([[1, 1], [2, 2]] )).length).toBe(2);
     });
     it('test getNormalizedLatLon', () => {
 
-        let normalizedCoords = CoordinatesUtils.getNormalizedLatLon({lat: 45, lng: 9});
+        let normalizedCoords = getNormalizedLatLon({lat: 45, lng: 9});
         expect(normalizedCoords).toEqual({lat: 45, lng: 9});
 
-        normalizedCoords = CoordinatesUtils.getNormalizedLatLon({lat: 45, lng: 369});
+        normalizedCoords = getNormalizedLatLon({lat: 45, lng: 369});
         expect({lng: Math.round(normalizedCoords.lng), lat: Math.round(normalizedCoords.lat)}).toEqual({lat: 45, lng: 9});
 
-        normalizedCoords = CoordinatesUtils.getNormalizedLatLon({lat: 45, lng: -351});
+        normalizedCoords = getNormalizedLatLon({lat: 45, lng: -351});
         expect({lng: Math.round(normalizedCoords.lng), lat: Math.round(normalizedCoords.lat)}).toEqual({lat: 45, lng: 9});
 
     });
@@ -542,7 +570,7 @@ describe('CoordinatesUtils', () => {
 
         const resolution = 9783;
 
-        const insideVisibleArea = CoordinatesUtils.isInsideVisibleArea(coords, map, layout, resolution);
+        const insideVisibleArea = isInsideVisibleArea(coords, map, layout, resolution);
 
         expect(insideVisibleArea).toBe(true);
 
@@ -577,7 +605,7 @@ describe('CoordinatesUtils', () => {
 
         const resolution = 9783;
 
-        const insideVisibleArea = CoordinatesUtils.isInsideVisibleArea(coords, map, layout, resolution);
+        const insideVisibleArea = isInsideVisibleArea(coords, map, layout, resolution);
 
         expect(insideVisibleArea).toBe(false);
 
@@ -612,7 +640,7 @@ describe('CoordinatesUtils', () => {
 
         const resolution = 9783;
 
-        const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
+        const newCenter = centerToVisibleArea(coords, map, layout, resolution);
         expect(newCenter.zoom).toBe(4);
         expect({x: parseFloat(newCenter.pos.x.toFixed(2)), y: parseFloat(newCenter.pos.y.toFixed(2))}).toEqual({x: -101.81, y: 27.68});
         expect(newCenter.crs).toBe('EPSG:4326');
@@ -647,7 +675,7 @@ describe('CoordinatesUtils', () => {
 
         const resolution = 19568;
 
-        const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
+        const newCenter = centerToVisibleArea(coords, map, layout, resolution);
         expect(newCenter.zoom).toBe(3);
         expect({x: parseFloat(newCenter.pos.x.toFixed(2)), y: parseFloat(newCenter.pos.y.toFixed(2))}).toEqual({x: 193.36, y: 74.78});
         expect(newCenter.crs).toBe('EPSG:4326');
@@ -682,7 +710,7 @@ describe('CoordinatesUtils', () => {
 
         const resolution = 19568;
 
-        const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
+        const newCenter = centerToVisibleArea(coords, map, layout, resolution);
         expect(newCenter.zoom).toBe(3);
         expect({x: parseFloat(newCenter.pos.x.toFixed(2)), y: parseFloat(newCenter.pos.y.toFixed(2))}).toEqual({x: 142.74, y: 76.84});
         expect(newCenter.crs).toBe('EPSG:4326');
@@ -694,7 +722,7 @@ describe('CoordinatesUtils', () => {
         const maximumFractionDigits = 0;
 
         const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
-        const res = CoordinatesUtils.roundCoord(roundingOptions);
+        const res = roundCoord(roundingOptions);
         expect(res).toBe(28);
     });
     it("test rounding of a number 28.55", () => {
@@ -702,7 +730,7 @@ describe('CoordinatesUtils', () => {
         const roundingBehaviour = "floor";
         const maximumFractionDigits = 0;
         const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
-        const res = CoordinatesUtils.roundCoord(roundingOptions);
+        const res = roundCoord(roundingOptions);
         expect(res).toBe(28);
     });
     it("test rounding of a number 28.55 with fractional digits", () => {
@@ -710,72 +738,72 @@ describe('CoordinatesUtils', () => {
         const roundingBehaviour = "floor";
         const maximumFractionDigits = 2;
         const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
-        const res = CoordinatesUtils.roundCoord(roundingOptions);
+        const res = roundCoord(roundingOptions);
         expect(res).toBe(28.55);
     });
     it("transformArcsToLine every 2 points", () => {
-        const res = CoordinatesUtils.transformArcsToLine([[1, 1], [2, 2], [3, 3], [4, 4]], 2);
+        const res = transformArcsToLine([[1, 1], [2, 2], [3, 3], [4, 4]], 2);
         expect(res).toEqual([[1, 1], [3, 3], [4, 4]]);
     });
     it('makeBboxFromOWS valid lc and uc', () => {
         const lc = [2, 2];
         const uc = [4, 4];
-        expect(CoordinatesUtils.makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
+        expect(makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
     });
     it('makeBboxFromOWS lower corner is upper corner and vice versa', () => {
         const lc = [4, 4];
         const uc = [2, 2];
-        expect(CoordinatesUtils.makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
+        expect(makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
     });
     it('makeBboxFromOWS lower right and upper left', () => {
         const lc = [4, 2];
         const uc = [2, 4];
-        expect(CoordinatesUtils.makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
+        expect(makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
     });
     it('extractCrsFromURN #1', () => {
         const urn = 'urn:ogc:def:crs:EPSG:6.6:4326';
-        expect(CoordinatesUtils.extractCrsFromURN(urn)).toBe('EPSG:4326');
+        expect(extractCrsFromURN(urn)).toBe('EPSG:4326');
     });
     it('extractCrsFromURN #2', () => {
         const urn = 'urn:ogc:def:crs:EPSG::3857';
-        expect(CoordinatesUtils.extractCrsFromURN(urn)).toBe('EPSG:3857');
+        expect(extractCrsFromURN(urn)).toBe('EPSG:3857');
     });
     it('extractCrsFromURN #3', () => {
         const urn = 'urn:ogc:def:crs:::RGF Lambert93';
-        expect(CoordinatesUtils.extractCrsFromURN(urn)).toBe('RGF Lambert93');
+        expect(extractCrsFromURN(urn)).toBe('RGF Lambert93');
     });
     it('extractCrsFromURN invalid URN', () => {
         const urn = 'urn:lex:eu:council:directive:2010-03-09';
-        expect(CoordinatesUtils.extractCrsFromURN(urn)).toBe(null);
+        expect(extractCrsFromURN(urn)).toBe(null);
     });
     it('makeNumericEPSG with valid EPSG', () => {
         const epsg = 'EPSG:3857';
-        expect(CoordinatesUtils.makeNumericEPSG(epsg)).toBe('EPSG:3857');
+        expect(makeNumericEPSG(epsg)).toBe('EPSG:3857');
     });
     it('makeNumericEPSG with WGS84', () => {
         const epsg = 'EPSG:WGS84';
-        expect(CoordinatesUtils.makeNumericEPSG(epsg)).toBe('EPSG:4326');
+        expect(makeNumericEPSG(epsg)).toBe('EPSG:4326');
     });
     it('makeNumericEPSG with OGC:CRS84', () => {
         const epsg = 'EPSG:OGC:CRS84';
-        expect(CoordinatesUtils.makeNumericEPSG(epsg)).toBe('EPSG:4326');
+        expect(makeNumericEPSG(epsg)).toBe('EPSG:4326');
     });
     it('makeNumericEPSG with invalid EPSG', () => {
         const epsg = 'EPSG:84';
-        expect(CoordinatesUtils.makeNumericEPSG(epsg)).toBe(null);
+        expect(makeNumericEPSG(epsg)).toBe(null);
     });
     it('creates a polygon with getPolygonFromCircle defaults', () => {
-        let polygon = CoordinatesUtils.getPolygonFromCircle();
+        let polygon = getPolygonFromCircle();
         expect(polygon).toBe(null);
-        polygon = CoordinatesUtils.getPolygonFromCircle([40, 15]);
+        polygon = getPolygonFromCircle([40, 15]);
         expect(polygon).toBe(null);
-        polygon = CoordinatesUtils.getPolygonFromCircle(null, 6.13);
+        polygon = getPolygonFromCircle(null, 6.13);
         expect(polygon).toBe(null);
-        polygon = CoordinatesUtils.getPolygonFromCircle([40, 15], 6.13);
+        polygon = getPolygonFromCircle([40, 15], 6.13);
         expect(polygon).toBeTruthy();
     });
     it('creates a polygon with getPolygonFromCircle, radius in degress', () => {
-        let polygon = CoordinatesUtils.getPolygonFromCircle([40, 15], 6.13, "degrees", 50);
+        let polygon = getPolygonFromCircle([40, 15], 6.13, "degrees", 50);
         expect(polygon.geometry.coordinates[0].length).toBe(50 + 1);
         expect(polygon.geometry.coordinates[0][0][0]).toBe(40);
         expect(isNearlyEqual(polygon.geometry.coordinates[0][0][1], 21.137162260837176)).toBe(true);
@@ -785,7 +813,7 @@ describe('CoordinatesUtils', () => {
         expect(isNearlyEqual(polygon.geometry.coordinates[0][20][1], 10.00834658343667)).toBe(true);
     });
     it('creates a polygon with getPolygonFromCircle, radius in meters', () => {
-        let polygon = CoordinatesUtils.getPolygonFromCircle([40, 15], 6000, "meters", 50);
+        let polygon = getPolygonFromCircle([40, 15], 6000, "meters", 50);
         expect(polygon.geometry.coordinates[0].length).toBe(50 + 1);
         expect(polygon.geometry.coordinates[0][0][0]).toBe(40);
         expect(isNearlyEqual(polygon.geometry.coordinates[0][0][1], 15.053959221823476)).toBe(true);
