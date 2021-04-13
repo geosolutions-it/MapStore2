@@ -85,6 +85,7 @@ function receiveResponse(state, action, type) {
         let firstLayerId = state.firstLayerId;
         let indexObj = {loaded: true, index: 0};
         if (!isHover) {
+            // pull out the recievedResponses
             const recievedResponses = responses.filter((res) => res);
             if (recievedResponses.length && !firstLayerId) {
                 const format = state.requests[requestIndex]?.request?.info_format;
