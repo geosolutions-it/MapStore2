@@ -61,12 +61,9 @@
       "defaultState": {
         "annotations": {
           "config": {
-            "geometryEditorOptions": { "measureOptions": {"displayUom": "nm"}},
             "multiGeometry": true,
-            "validationErrors": {},
-            "defaultPointType": "symbol"
+            "validationErrors": {}
           },
-          "format": "aeronautical",
           "defaultTextAnnotation": "New"
         },
         "maptype": {
