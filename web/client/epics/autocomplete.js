@@ -16,7 +16,9 @@ import {
     updateFilterFieldOptions,
     loadingFilterFieldOptions,
     setAutocompleteMode,
-    toggleMenu
+    toggleMenu,
+    UPDATE_CROSS_LAYER_FILTER_FIELD,
+    updateCrossLayerFilterFieldOptions
 } from '../actions/queryform';
 import { FEATURE_TYPE_SELECTED } from '../actions/wfsquery';
 import { error } from '../actions/notifications';
@@ -58,7 +60,7 @@ export const isAutoCompleteEnabled = (action$, store) =>
             }).catch(() => { return Rx.Observable.of(setAutocompleteMode(false)); });
         });
 export const fetchAutocompleteOptionsEpic = (action$, store) =>
-    action$.ofType(UPDATE_FILTER_FIELD)
+    action$.ofType(UPDATE_FILTER_FIELD, UPDATE_CROSS_LAYER_FILTER_FIELD)
         .debounce((action) => {
             return Rx.Observable.timer(action.fieldOptions.delayDebounce || 0);
         })
@@ -66,19 +68,23 @@ export const fetchAutocompleteOptionsEpic = (action$, store) =>
         .switchMap((action) => {
             const state = store.getState();
             const maxFeaturesWPS = maxFeaturesWPSSelector(state);
-            const filterField = state.queryform && state.queryform.filterFields && state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
-
+            let filterField = {};
+            if (action.type === UPDATE_CROSS_LAYER_FILTER_FIELD) {
+                filterField = state.queryform.crossLayerFilter?.collectGeometries?.queryCollection?.filterFields?.filter((f) => f.rowId === action.rowId)[0] || {};
+            } else {
+                filterField = state.queryform && state.queryform.filterFields && state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
+            }
             if (action.fieldOptions.selected === "selected") {
                 return Rx.Observable.from([
-                    updateFilterFieldOptions(filterField, [], 0)
+                    action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? updateCrossLayerFilterFieldOptions(filterField, [], 0) : updateFilterFieldOptions(filterField, [], 0)
                 ]);
             }
             const data = getWpsPayload({
                 attribute: filterField.attribute,
-                layerName: typeNameSelector(state),
+                layerName: action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? state.queryform.crossLayerFilter?.collectGeometries?.queryCollection.typeName : typeNameSelector(state),
                 layerFilter: appliedFilterSelector(state) || storedFilterSelector(state),
                 maxFeatures: maxFeaturesWPS,
-                startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
+                startIndex: action.fieldOptions.currentPage ? (action.fieldOptions.currentPage - 1) : 1 * maxFeaturesWPS,
                 value: action.fieldValue
             });
             const parsedUrl = getParsedUrl(state.query.url, {"outputFormat": "json"}, authkeyParamNameSelector(store.getState()));
@@ -93,13 +99,15 @@ export const fetchAutocompleteOptionsEpic = (action$, store) =>
             ).switchMap((res) => {
                 let newOptions = isArray(res.values) ? res.values : [res.values];
                 let valuesCount = res.size;
-                return Rx.Observable.from([updateFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true)] );
+                return Rx.Observable.from(action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? [updateCrossLayerFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true)] :
+                    [updateFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true)] );
             })
                 .startWith(loadingFilterFieldOptions(true, filterField))
                 .catch( () => {
                 // console.log("error: " + e + " data:" + e.data);
                     return Rx.Observable.from([
-                        updateFilterFieldOptions(filterField, [], 0),
+                        action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? updateCrossLayerFilterFieldOptions(filterField, [], 0) :
+                            updateFilterFieldOptions(filterField, [], 0),
                         error({
                             title: "warning",
                             message: "warning", // TODO add tranlations
@@ -119,3 +127,4 @@ export default {
     isAutoCompleteEnabled,
     fetchAutocompleteOptionsEpic
 };
+
