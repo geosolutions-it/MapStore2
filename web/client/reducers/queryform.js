@@ -46,7 +46,8 @@ import {
     RESET_CROSS_LAYER_FILTER,
     SET_AUTOCOMPLETE_MODE,
     TOGGLE_AUTOCOMPLETE_MENU,
-    LOAD_FILTER
+    LOAD_FILTER,
+    UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS
 } from '../actions/queryform';
 
 import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../actions/draw';
@@ -258,6 +259,28 @@ function queryform(state = initialState, action) {
                 attribute: state.crossLayerFilter && state.crossLayerFilter.attribute
             }
         });
+    }
+    case UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS: {
+        return set(
+            `crossLayerFilter.collectGeometries.queryCollection.filterFields`,
+            (get(state, 'crossLayerFilter.collectGeometries.queryCollection.filterFields') || [])
+                .map((field) => {
+                    if (field.rowId === action.filterField.rowId) {
+                        return {
+                            ...field,
+                            options: {
+                                ...field.options,
+                                [field.attribute]: action.options
+                            },
+                            fieldOptions: {
+                                ...field.fieldOptions,
+                                valuesCount: action.valuesCount
+                            }
+                        };
+                    }
+                    return field;
+                })
+            , state);
     }
     case SELECT_SPATIAL_METHOD: {
         return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.method, geometry: null})});

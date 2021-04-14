@@ -43,6 +43,7 @@ import {
     TOGGLE_AUTOCOMPLETE_MENU,
     SET_AUTOCOMPLETE_MODE,
     CHANGE_SPATIAL_FILTER_VALUE,
+    UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS,
     setAutocompleteMode,
     toggleMenu,
     changeDwithinValue,
@@ -77,7 +78,8 @@ import {
     addSimpleFilterField,
     removeSimpleFilterField,
     removeAllSimpleFilterFields,
-    changeSpatialFilterValue
+    changeSpatialFilterValue,
+    updateCrossLayerFilterFieldOptions
 } from '../queryform';
 
 describe('Test correctness of the queryform actions', () => {
@@ -170,6 +172,22 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval.rowId).toBe(100);
         expect(retval.fieldName).toBe("fieldName");
         expect(retval.fieldValue).toBe("fieldValue");
+    });
+
+    it('updateCrossLayerFilterFieldOptions', () => {
+        let rowId = 100;
+        let fieldName = "fieldName";
+        let fieldValue = "fieldValue";
+        let fieldAttribute = 'NAME';
+
+        let retval = updateCrossLayerFilterFieldOptions({
+            rowId, fieldName, fieldValue, attribute: fieldAttribute, fieldOptions: {}
+        }, ['a', 'b, c'], 3);
+        expect(retval).toExist();
+        expect(retval.filterField.fieldValue).toBe(fieldValue);
+        expect(retval.type).toBe(UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS);
+        expect(retval.valuesCount).toEqual(3);
+        expect(retval.options).toEqual(['a', 'b, c']);
     });
 
     it('updateExceptionField', () => {
