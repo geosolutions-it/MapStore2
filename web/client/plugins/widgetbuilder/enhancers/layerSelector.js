@@ -29,10 +29,10 @@ export default compose(
     mapPropsStream(props$ =>
         props$.distinctUntilKeyChanged('selected').filter(({ selected } = {}) => selected)
             .switchMap(
-                ({ selected, layerValidationStream = s => s, setLayer = () => { }, dashboardSelectedService, dashboardServices } = {}) =>
-                    Rx.Observable.of(toLayer(selected, dashboardServices[dashboardSelectedService]))
+                ({ selected, layerValidationStream = s => s, setLayer = () => { }, dashboardSelectedService, dashboardServices, defaultSelectedService, defaultServices } = {}) =>
+                    Rx.Observable.of(toLayer(selected, dashboardServices ? dashboardServices[dashboardSelectedService] : defaultServices[defaultSelectedService]))
                         .let(layerValidationStream)
-                        .switchMap(() => addSearchObservable(selected, dashboardServices[dashboardSelectedService]))
+                        .switchMap(() => addSearchObservable(selected, dashboardServices ? dashboardServices[dashboardSelectedService] : defaultServices[defaultSelectedService]))
                         .do(l => setLayer(l))
                         .mapTo({ canProceed: true })
                         .catch((error) => Rx.Observable.of({ error, canProceed: false }))
