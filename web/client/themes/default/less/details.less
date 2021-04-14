@@ -23,6 +23,21 @@
 
 }
 
+// Workaround: This emulates the br tags inside p or h tags in the editor, when pressing enter,
+// that are not included in the output of draftToHtml(DraftJS converter)
+// see https://github.com/geosolutions-it/MapStore2/issues/6728
+.ms-details-preview {
+    p{
+        margin: 1em;
+    }
+    p, h1, h2, h3, h4, h5, h6, blockquote{
+        &:empty::after {
+            content: "\a";
+            white-space: pre;
+        }
+    }
+}
+
 /////////////////////
 // LIBRARIES FIX
 /////////////////////
