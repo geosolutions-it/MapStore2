@@ -541,8 +541,8 @@ export const getGeoJSONExtent = function(geoJSON) {
     let newExtent = [Infinity, Infinity, -Infinity, -Infinity];
     const reduceCollectionExtent = (extent, collectionElement) => {
         let ext = CoordinatesUtils.getGeoJSONExtent(collectionElement);
-        if (this.isValidExtent(ext)) {
-            return this.extendExtent(ext, extent);
+        if (CoordinatesUtils.isValidExtent(ext)) {
+            return CoordinatesUtils.extendExtent(ext, extent);
         }
         return ext;
     };
