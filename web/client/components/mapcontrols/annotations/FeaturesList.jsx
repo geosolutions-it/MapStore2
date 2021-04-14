@@ -117,7 +117,7 @@ const FeaturesList = (props) => {
                             onClick: () => {
                                 const style = [
                                     {...DEFAULT_ANNOTATIONS_STYLES.Circle, highlight: true, type: "Circle", title: "Circle Style", id: uuidv1()},
-                                    {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint", id: uuidv1()}
+                                    {...DEFAULT_ANNOTATIONS_STYLES.Point, ...defaultStyles.POINT?.[defaultPointType], highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint", id: uuidv1()}
                                 ];
                                 onClickGeometry("Circle", style);
                             },
