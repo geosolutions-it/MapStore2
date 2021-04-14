@@ -164,13 +164,14 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         ReactTestUtils.Simulate.blur(elements[0]);
         ReactTestUtils.Simulate.change(elements[1], { target: { value: testValue } });
         ReactTestUtils.Simulate.blur(elements[1]);
-        ReactTestUtils.Simulate.change(elements[2], { target: { value: testValue } });
+        ReactTestUtils.Simulate.change(elements[2], { target: { value: 59.99999 } });
         ReactTestUtils.Simulate.blur(elements[2]);
 
         // Result
         expect(+degrees.value).toBeLessThan(195);
         expect(+minutes.value).toBeLessThan(testValue);
         expect(+seconds.value).toBeLessThan(testValue);
+        expect(+seconds.value).toNotEqual(0);
         expect(spyOnChange).toHaveBeenCalled();
         expect(parseFloat(spyOnChange.calls[0].arguments[0])).toBe(179);
     });
