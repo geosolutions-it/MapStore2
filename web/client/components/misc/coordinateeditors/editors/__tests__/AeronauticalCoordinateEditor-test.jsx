@@ -103,4 +103,76 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
             }
         });
     });
+    it('Test AeronauticalCoordinateEditor LAT fields onChange not exceed max field values', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyOnChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<AeronauticalCoordinateEditor
+            coordinate="lat"
+            value={20}
+            onChange={actions.onChange}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let elements = container.querySelectorAll('input');
+        const degrees = elements[0];
+        const minutes = elements[1];
+        const seconds = elements[2];
+
+        expect(elements.length).toBe(3);
+        expect(degrees.value).toBe('20');
+        expect(minutes.value).toBe('0');
+        expect(seconds.value).toBe('0');
+
+        const testValue = 61;
+        // Simulate input
+        ReactTestUtils.Simulate.change(elements[0], { target: { value: "95" } });
+        ReactTestUtils.Simulate.blur(elements[0]);
+        ReactTestUtils.Simulate.change(elements[1], { target: { value: testValue } });
+        ReactTestUtils.Simulate.blur(elements[1]);
+        ReactTestUtils.Simulate.change(elements[2], { target: { value: testValue } });
+        ReactTestUtils.Simulate.blur(elements[2]);
+
+        // Result
+        expect(+degrees.value).toBeLessThan(95);
+        expect(+minutes.value).toBeLessThan(testValue);
+        expect(+seconds.value).toBeLessThan(testValue);
+        expect(spyOnChange).toHaveBeenCalled();
+        expect(parseFloat(spyOnChange.calls[0].arguments[0])).toBe(89);
+    });
+    it('Test AeronauticalCoordinateEditor LON fields onChange not exceed max field values', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyOnChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<AeronauticalCoordinateEditor
+            coordinate="lon"
+            value={160} onChange={actions.onChange} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let elements = container.querySelectorAll('input');
+        const degrees = elements[0];
+        const minutes = elements[1];
+        const seconds = elements[2];
+
+        expect(elements.length).toBe(3);
+        expect(degrees.value).toBe('160');
+        expect(minutes.value).toBe('0');
+        expect(seconds.value).toBe('0');
+
+        const testValue = 61;
+        // Simulate input
+        ReactTestUtils.Simulate.change(elements[0], { target: { value: "195" } });
+        ReactTestUtils.Simulate.blur(elements[0]);
+        ReactTestUtils.Simulate.change(elements[1], { target: { value: testValue } });
+        ReactTestUtils.Simulate.blur(elements[1]);
+        ReactTestUtils.Simulate.change(elements[2], { target: { value: 59.99999 } });
+        ReactTestUtils.Simulate.blur(elements[2]);
+
+        // Result
+        expect(+degrees.value).toBeLessThan(195);
+        expect(+minutes.value).toBeLessThan(testValue);
+        expect(+seconds.value).toBeLessThan(testValue);
+        expect(+seconds.value).toNotEqual(0);
+        expect(spyOnChange).toHaveBeenCalled();
+        expect(parseFloat(spyOnChange.calls[0].arguments[0])).toBe(179);
+    });
 });
