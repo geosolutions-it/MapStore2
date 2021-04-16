@@ -83,7 +83,8 @@ function receiveResponse(state, action, type) {
             }
         }
         let firstLayerId = state.firstLayerId;
-        let indexObj = {loaded: true, index: 0};
+        let indexObj;
+        const allResponsesLoaded = responses.filter(r => !isUndefined(r)).length === requests.length;
         if (!isHover) {
             // pull out the recievedResponses
             const recievedResponses = responses.filter((res) => res);
@@ -96,7 +97,7 @@ function receiveResponse(state, action, type) {
                     firstLayerId = layer?.layerMetadata?.title || "";
                 }
             }
-            if (responses.filter(r => r).length === requests.length) {
+            if (allResponsesLoaded) {
                 const format = state.requests[requestIndex]?.request?.info_format;
                 if (format) {
                     const validatorFormat = getValidator(format);
@@ -104,9 +105,11 @@ function receiveResponse(state, action, type) {
                     const correctIndex = findIndex(filteredResponses, (filteredResp) => {
                         return filteredResp?.layerMetadata?.title === firstLayerId;
                     });
-                    indexObj = {...indexObj, index: correctIndex !== -1 ? correctIndex : indexObj.index};
+                    indexObj = {loaded: true, index: correctIndex !== -1 ? correctIndex : 0};
                 }
             }
+        } else {
+            indexObj = {loaded: true, index: 0};
         }
 
         return assign({}, state, {
