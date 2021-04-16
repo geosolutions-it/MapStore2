@@ -97,7 +97,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].response).toBe("data");
         expect(state.responses[0].queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
-        expect(state.index).toBe(undefined); // this is because states.request.length !== state.responses.length
+        expect(state.index).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
@@ -105,7 +105,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].response).toBe("data");
         expect(state.responses[0].queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
-        expect(state.index).toBe(undefined); // this is because states.request.length !== state.responses.length
+        expect(state.index).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
@@ -114,7 +114,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].response).toBe("data");
         expect(state.responses[1].queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
-        expect(state.index).toBe(undefined); // this is because states.request.length !== state.responses.length
+        expect(state.index).toBe(0);
     });
 
     it('creates a feature info data and sets right index for valid responses', () => {
@@ -183,8 +183,8 @@ describe('Test the mapInfo reducer', () => {
 
         let state = mapInfo({requests: [{}], configuration: {}}, testAction);
         expect(state.responses).toExist();
-        expect(state.loaded).toBe(undefined);  // this is because states.request.length !== state.responses.length
-        expect(state.index).toBe(undefined);  // this is because states.request.length !== state.responses.length
+        expect(state.loaded).toBe(true);
+        expect(state.index).toBe(0);
         expect(state.responses.length).toBe(2);
         expect(state.responses[1].response).toExist();
         expect(state.responses[1].response.features.length).toBe(1);
