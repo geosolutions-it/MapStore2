@@ -83,7 +83,7 @@ function receiveResponse(state, action, type) {
             }
         }
         let firstLayerId = state.firstLayerId;
-        let indexObj;
+        let indexObj = {loaded: true, index: 0};
         const allResponsesLoaded = responses.filter(r => !isUndefined(r)).length === requests.length;
         if (!isHover) {
             // pull out the recievedResponses

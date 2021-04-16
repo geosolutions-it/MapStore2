@@ -141,7 +141,7 @@ class DefaultViewer extends React.Component {
 
     renderPages = () => {
         const {validResponses: responses} = this.getResponseProperties();
-        return this.props.responses.filter((r) => r).length === this.props.requests.length && responses.map((res, i) => {
+        return responses.map((res, i) => {
             const {response, layerMetadata} = res;
             const format = getFormatForResponse(res, this.props);
             const PageHeader = this.props.header;
