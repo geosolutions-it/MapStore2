@@ -36,12 +36,12 @@ For example, if using LDAP, look at [LDAP integration](integrations/users/ldap.m
 
 ## Front-end Configurations Files
 
-They are JSON files that will be loaded via HTTP from the client, keeping most of the framework working also in an html-only context (when used with different back-ends or no-backend). These JSON files are located in `web/client` directory and they will be copied in the root of the war file.
+They are JSON files that will be loaded via HTTP from the client, keeping most of the framework working also in an html-only context (when used with different back-ends or no-backend). These JSON files are located in `web/client/configs` directory and they will be copied in the `configs` of the war file.
 
 Several configuration files (at development and / or run time) are available to configure all the different aspects of an application.
 
 * `localConfig.json`: Dedicated to the application configuration. Defines all general settings of the front-end part, with all the plugins for all the pages. See [Application Configuration](../local-config) for more information.
-* `new.json` Can be customized to set-up the inital new map, setting the backgrounds, initial position .. See [Maps configuration](../maps-configuration) for more information.
+* `new.json` Can be customized to set-up the initial new map, setting the backgrounds, initial position .. See [Maps configuration](../maps-configuration) for more information.
 * `pluginsConfig.json`: Allows to configure the context editor plugins list. See [Context Editor Configuration](context-editor-config.md) for more information.
 
 ## Externalize Configurations

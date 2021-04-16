@@ -20,6 +20,23 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+
+## Migration from 2021.01.01 to 2021.02.00
+
+See [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pr for more details
+
+**Some key files have been moved to `configs` folder like:**
+- localConfig.json
+- new.json
+- pluginsConfig.json
+- config.json 
+- simple.json 
+
+checkout changes to various pom.xml 
+- **pom.xml**
+- **web/pom.xml**
+
+
 ## Migration from 2021.01.00 to 2021.01.01
 
 ### Update embedded entry to load the correct configuration

@@ -13,7 +13,7 @@ To create the final war, you have several options:
 
  `./build.sh [version_identifier] [profiles]`
 
- Where version_identifier is an optional dentifier of the generated war that will be shown in the settings panel of the application and profiles is an optional list of comma delimited building profiles (e.g. printing,ldap)
+ Where version_identifier is an optional identifier of the generated war that will be shown in the settings panel of the application and profiles is an optional list of comma delimited building profiles (e.g. printing,ldap)
 
 * fast build (will use the last compiled version of submodules and compiled frontend)
 

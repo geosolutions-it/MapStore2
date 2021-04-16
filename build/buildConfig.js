@@ -11,6 +11,7 @@ const castArray = require('lodash/castArray');
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
+ * A single object argument with the following params is suggested over the list of arguments
  *
  * @param {object} bundles object that defines the javascript (or jsx) entry points and related bundles
  * to be built (bundle name -> entry point path)
@@ -30,6 +31,9 @@ const castArray = require('lodash/castArray');
  * @param {array} devPlugins plugins to be used only in development mode
  * @param {object} alias aliases to be used by webpack to resolve paths (alias -> real path)
  * @param {object} proxy webpack-devserver custom proxy configuration object
+ * @param {object} devServer webpack devserver configuration object, available only with object syntax
+ * @param {object} resolveModules webpack resolve configuration object, available only with object syntax
+ * @param {object} projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
  * @returns a webpack configuration object
  * @example
  * // It's possible to use a single object argument to pass the parameters.
