@@ -1,5 +1,6 @@
 
 import { compose, mapPropsStream, withHandlers } from 'recompose';
+import turfBbox from '@turf/bbox';
 
 /**
  * Enhancer for processing map configuration and layers object
@@ -31,7 +32,12 @@ export default compose(
                         loadAnnotations(layers[0].features, false);
                         onClose(); // close if loaded a new annotation layer
                     } else {
-                        setLayers(layers, warnings); // TODO: warnings
+                        const currentMapBounds = currentMap.bbox.bounds;
+                        const [minX, minY, maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layers[0].features});
+                        console.log({currentMapBounds, minX, minY, maxX, maxY});
+                        // if within bounds setLayers else show error notification
+                        // warnings("Invalid selection");
+                        // setLayers(layers, warnings); // TODO: warnings
                     }
                 }
             }
