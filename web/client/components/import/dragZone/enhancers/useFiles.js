@@ -1,6 +1,26 @@
 
 import { compose, mapPropsStream, withHandlers } from 'recompose';
 import turfBbox from '@turf/bbox';
+import { getConfigProp } from '../../../../utils/ConfigUtils';
+
+
+const getProjections = () => {
+    const projections = (getConfigProp('projectionDefs') || []).concat([{code: "EPSG:3857", extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]},
+        {code: "EPSG:4326", extent: [-180, -90, 180, 90]}
+    ]);
+    return projections;
+};
+
+const getExtentForProjection = code => {
+    return getProjections().find(project => project.code === code) || {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]};
+};
+
+export const checkIfLayerFitsExtentForProjection = layer => {
+    const crs = layer.bbox?.crs || "EPSG:3857";
+    const { extent } = getExtentForProjection(crs);
+    const [, , maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
+    return ((extent[2] >= maxX) && (extent[3] >= maxY));
+};
 
 /**
  * Enhancer for processing map configuration and layers object
@@ -32,12 +52,12 @@ export default compose(
                         loadAnnotations(layers[0].features, false);
                         onClose(); // close if loaded a new annotation layer
                     } else {
-                        const currentMapBounds = currentMap.bbox.bounds;
-                        const [minX, minY, maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layers[0].features});
-                        console.log({currentMapBounds, minX, minY, maxX, maxY});
-                        // if within bounds setLayers else show error notification
-                        // warnings("Invalid selection");
-                        // setLayers(layers, warnings); // TODO: warnings
+                        let validLayers = [];
+                        layers.forEach((layer) => {
+                            const valid = checkIfLayerFitsExtentForProjection(layer);
+                            valid && validLayers.push(layer); // if invalid show an error to the user.
+                        });
+                        setLayers(validLayers, warnings); // TODO: warnings
                     }
                 }
             }
@@ -50,3 +70,4 @@ export default compose(
             .ignoreElements()
     ))
 );
+
