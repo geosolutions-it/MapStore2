@@ -96,7 +96,7 @@ function receiveResponse(state, action, type) {
                     firstLayerId = layer?.layerMetadata?.title || "";
                 }
             }
-            if (responses.length === requests.length) {
+            if (responses.filter(r => r).length === requests.length) {
                 const format = state.requests[requestIndex]?.request?.info_format;
                 if (format) {
                     const validatorFormat = getValidator(format);
