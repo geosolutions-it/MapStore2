@@ -140,7 +140,6 @@ function queryform(state = initialState, action) {
         })});
     }
     case TOGGLE_AUTOCOMPLETE_MENU: {
-        // handle action.layerFilterType === "filterField"
         if (action.layerFilterType === "filterField") {
             return assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.rowId) {
@@ -167,7 +166,6 @@ function queryform(state = initialState, action) {
         return assign({}, state, {autocompleteEnabled: action.status});
     }
     case LOADING_FILTER_FIELD_OPTIONS: {
-        // handle action.layerFilterType === "filterField"
         if (action.layerFilterType === "filterField") {
             return assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.filterField.rowId) {
