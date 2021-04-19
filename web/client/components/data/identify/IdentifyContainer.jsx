@@ -144,7 +144,7 @@ export default props => {
                     </Row>,
                     <Row className="coordinates-edit-row">
                         <span className="identify-icon glyphicon glyphicon-point"/>
-                        <div className={"coordinate-editor"}>
+                        <div style={showCoordinateEditor ? {zIndex: 1} : {}} className={"coordinate-editor"}>
                             <Coordinate
                                 key="coordinate-editor"
                                 formatCoord={formatCoord}
