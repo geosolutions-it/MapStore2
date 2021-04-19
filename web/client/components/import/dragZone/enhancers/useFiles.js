@@ -34,7 +34,7 @@ export default compose(
                     } else {
                         let validLayers = [];
                         layers.forEach((layer) => {
-                            const valid = checkIfLayerFitsExtentForProjection(layer);
+                            const valid = layer.type === "vector" ? checkIfLayerFitsExtentForProjection(layer) : true;
                             if (valid) {
                                 validLayers.push(layer);
                             } else {
