@@ -286,4 +286,19 @@ describe("test IdentifyContainer", () => {
         expect(zoomIcon).toNotExist();
     });
 
+    it('test z index to 1 for coordinate-editor if editor is active ', () => {
+        const requests = [{reqId: 1}, {reqId: 2}];
+        const responses = [{layerMetadata: {title: "Layer 1"}}, {layerMetadata: {title: "Layer 2"}}];
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            index={0}
+            requests={requests}
+            responses={responses}
+            getFeatureButtons={getFeatureButtons}
+            point={{latlng: {lat: 1, lng: 1}}}
+            showCoordinateEditor
+        />, document.getElementById("container"));
+        let coordinateEditorContainer = document.querySelectorAll('.coordinate-editor');
+        expect(coordinateEditorContainer[0].style['z-index']).toBe('1');
+    });
 });
