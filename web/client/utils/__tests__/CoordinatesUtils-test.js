@@ -37,7 +37,7 @@ import {
     makeNumericEPSG,
     getPolygonFromCircle,
     getProjections,
-    getExtentForProjection,
+    getExtentForProjection
 } from '../CoordinatesUtils';
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
 import Proj4js from 'proj4';
