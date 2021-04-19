@@ -22,6 +22,7 @@ import {
     onSuccess
 } from '../actions/mapimport';
 
+import { warning } from '../actions/notifications';
 import { zoomToExtent } from '../actions/map';
 import { addLayer } from '../actions/layers';
 import { loadAnnotations } from '../actions/annotations';
@@ -75,7 +76,8 @@ export default {
                 onZoomSelected: zoomToExtent,
                 updateBBox,
                 setLoading,
-                onClose: toggleControl.bind(null, 'mapimport', null)
+                onClose: toggleControl.bind(null, 'mapimport', null),
+                warning
             })(Import);
 
             resolve(ImportPlugin);

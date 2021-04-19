@@ -1347,7 +1347,8 @@
                 "errors": {
                     "fileNotSupported": "Datei wird nicht unterstützt",
                     "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten",
-                    "projectionNotSupported": "Die Projektion der Datei, die Sie importieren möchten, wird nicht unterstützt"
+                    "projectionNotSupported": "Die Projektion der Datei, die Sie importieren möchten, wird nicht unterstützt",
+                    "fileBeyondBoundaries": "Die Datei {filename} konnte nicht importiert werden, da sie nicht in die Kartengrenzen passt"
                 }
             },
         "mapExport": {

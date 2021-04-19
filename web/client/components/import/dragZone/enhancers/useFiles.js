@@ -4,6 +4,7 @@ import turfBbox from '@turf/bbox';
 import { getConfigProp } from '../../../../utils/ConfigUtils';
 
 
+// retrieves projectionDefs
 const getProjections = () => {
     const projections = (getConfigProp('projectionDefs') || []).concat([{code: "EPSG:3857", extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]},
         {code: "EPSG:4326", extent: [-180, -90, 180, 90]}
@@ -11,10 +12,12 @@ const getProjections = () => {
     return projections;
 };
 
+// finds a projection from projectionDefs
 const getExtentForProjection = code => {
     return getProjections().find(project => project.code === code) || {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]};
 };
 
+// checks if a layer fits within the max extent
 export const checkIfLayerFitsExtentForProjection = layer => {
     const crs = layer.bbox?.crs || "EPSG:3857";
     const { extent } = getExtentForProjection(crs);
@@ -30,7 +33,7 @@ export const checkIfLayerFitsExtentForProjection = layer => {
 export default compose(
     withHandlers({
         useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { },
-            annotationsLayer, loadAnnotations = () => {} }) =>
+            annotationsLayer, loadAnnotations = () => {}, warning = () => {}}) =>
             ({ layers = [], maps = [] }, warnings) => {
                 const map = maps[0]; // only 1 map is allowed
                 if (map) {
@@ -55,7 +58,17 @@ export default compose(
                         let validLayers = [];
                         layers.forEach((layer) => {
                             const valid = checkIfLayerFitsExtentForProjection(layer);
-                            valid && validLayers.push(layer); // if invalid show an error to the user.
+                            if (valid) {
+                                validLayers.push(layer);
+                            } else {
+                                warning({
+                                    title: "notification.warning",
+                                    message: "mapImport.errors.fileBeyondBoundaries",
+                                    autoDismiss: 6,
+                                    position: "tc",
+                                    values: {filename: layer.name ?? " "}
+                                });
+                            }
                         });
                         setLayers(validLayers, warnings); // TODO: warnings
                     }
