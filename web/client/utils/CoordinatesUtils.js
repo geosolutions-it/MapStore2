@@ -1055,7 +1055,7 @@ export const getExtentForProjection = (code = "EPSG:3857") => {
 
 /**
  * Return a boolean to show if a layer fits within a boundary/extent
- * @param layer {object} Layer to calculate to check for extent
+ * @param layer {object} to check if fits with in a projection boundary
  * @return {boolean} true or false
  */
 export const checkIfLayerFitsExtentForProjection = (layer = {}) => {
