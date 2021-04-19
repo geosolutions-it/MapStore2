@@ -1,29 +1,6 @@
 
 import { compose, mapPropsStream, withHandlers } from 'recompose';
-import turfBbox from '@turf/bbox';
-import { getConfigProp } from '../../../../utils/ConfigUtils';
-
-
-// retrieves projectionDefs
-const getProjections = () => {
-    const projections = (getConfigProp('projectionDefs') || []).concat([{code: "EPSG:3857", extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]},
-        {code: "EPSG:4326", extent: [-180, -90, 180, 90]}
-    ]);
-    return projections;
-};
-
-// finds a projection from projectionDefs
-const getExtentForProjection = code => {
-    return getProjections().find(project => project.code === code) || {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]};
-};
-
-// checks if a layer fits within the max extent
-export const checkIfLayerFitsExtentForProjection = layer => {
-    const crs = layer.bbox?.crs || "EPSG:3857";
-    const { extent } = getExtentForProjection(crs);
-    const [, , maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
-    return ((extent[2] >= maxX) && (extent[3] >= maxY));
-};
+import { checkIfLayerFitsExtentForProjection } from '../../../../utils/CoordinatesUtils';
 
 /**
  * Enhancer for processing map configuration and layers object

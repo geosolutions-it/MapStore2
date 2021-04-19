@@ -419,7 +419,7 @@
                   "EPSG:3857"
                 ],
                 "allowedRoles": [
-                  "ALL"
+                  "ADMIN"
                 ]
               }
             }, {
