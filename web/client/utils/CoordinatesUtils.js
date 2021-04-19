@@ -1061,8 +1061,8 @@ export const getExtentForProjection = (code = "EPSG:3857") => {
 export const checkIfLayerFitsExtentForProjection = (layer = {}) => {
     const crs = layer.bbox?.crs || "EPSG:3857";
     const { extent } = getExtentForProjection(crs);
-    const [, , maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
-    return ((extent[2] >= maxX) && (extent[3] >= maxY));
+    const [minx, minY, maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
+    return ((extent[2] >= maxX) && (extent[3] >= maxY) && (extent[1] >= minx) && (extent[2] > minY));
 };
 
 CoordinatesUtils = {
