@@ -24,6 +24,7 @@ import {
 } from '../../actions/search';
 
 import { resetControls } from '../../actions/controls';
+import { hideMapinfoMarker } from '../../actions/mapInfo';
 
 describe('Test the search reducer', () => {
     it('search results loading', () => {
@@ -174,5 +175,12 @@ describe('Test the search reducer', () => {
             color: "#ff0000"
         }}, resetControls());
         expect(state).toBe(null);
+    });
+
+    it('HIDE INFO MARKER', () => {
+        const state = search({markerPosition: {
+            latlng: {lat: 0, lng: 0}
+        }}, hideMapinfoMarker());
+        expect(JSON.stringify(state.markerPosition)).toBe(JSON.stringify({}));
     });
 });
