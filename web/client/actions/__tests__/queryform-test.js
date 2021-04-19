@@ -106,6 +106,33 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval.status).toBe(status);
     });
 
+    it('toggleMenu with layerFilterType undefined', () => {
+        let status = true;
+        let rowId = 100;
+
+        var retval = toggleMenu(rowId, status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(TOGGLE_AUTOCOMPLETE_MENU);
+        expect(retval.rowId).toBe(rowId);
+        expect(retval.status).toBe(status);
+        expect(retval.layerFilterType).toBe("filterField");
+    });
+
+
+    it('toggleMenu with layerFilterType', () => {
+        let status = true;
+        let rowId = 100;
+
+        var retval = toggleMenu(rowId, status, "crossLayer");
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(TOGGLE_AUTOCOMPLETE_MENU);
+        expect(retval.rowId).toBe(rowId);
+        expect(retval.status).toBe(status);
+        expect(retval.layerFilterType).toBe("crossLayer");
+    });
+
     it('set autocomplete', () => {
         let status = true;
         var retval = setAutocompleteMode(status);

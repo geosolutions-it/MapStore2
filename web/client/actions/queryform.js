@@ -79,11 +79,12 @@ export function removeFilterField(rowId) {
     };
 }
 
-export function toggleMenu(rowId, status) {
+export function toggleMenu(rowId, status, layerFilterType = "filterField") {
     return {
         type: TOGGLE_AUTOCOMPLETE_MENU,
         rowId,
-        status
+        status,
+        layerFilterType
     };
 }
 
@@ -401,11 +402,12 @@ export function resetCrossLayerFilter() {
     };
 }
 
-export function loadingFilterFieldOptions(status, filterField) {
+export function loadingFilterFieldOptions(status, filterField, layerFilterType = "filterField") {
     return {
         type: LOADING_FILTER_FIELD_OPTIONS,
         status,
-        filterField
+        filterField,
+        layerFilterType
     };
 }
 

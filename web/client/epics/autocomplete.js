@@ -99,10 +99,10 @@ export const fetchAutocompleteOptionsEpic = (action$, store) =>
             ).switchMap((res) => {
                 let newOptions = isArray(res.values) ? res.values : [res.values];
                 let valuesCount = res.size;
-                return Rx.Observable.from(action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? [updateCrossLayerFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true)] :
-                    [updateFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true)] );
+                return Rx.Observable.from(action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? [updateCrossLayerFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true, "crossLayer")] :
+                    [updateFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true, "filterField")] );
             })
-                .startWith(loadingFilterFieldOptions(true, filterField))
+                .startWith(loadingFilterFieldOptions(true, filterField, action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? "crossLayer" : "filterField"))
                 .catch( () => {
                 // console.log("error: " + e + " data:" + e.data);
                     return Rx.Observable.from([
@@ -116,10 +116,10 @@ export const fetchAutocompleteOptionsEpic = (action$, store) =>
                             },
                             autoDismiss: 3,
                             position: "tr"
-                        }), toggleMenu(action.rowId, true)
+                        }), toggleMenu(action.rowId, true, action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? "crossLayer" : "filterField")
                     ]);
                 })
-                .concat([loadingFilterFieldOptions(false, filterField)]);
+                .concat([loadingFilterFieldOptions(false, filterField, action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? "crossLayer" : "filterField")]);
         });
 
 
