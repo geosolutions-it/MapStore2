@@ -49,6 +49,11 @@ const FeaturesList = (props) => {
         onStartDrawing({geodesic});
         setTabValue('coordinates');
     };
+    const circleCenterStyles = defaultPointType === "symbol" ? defaultStyles.POINT?.[defaultPointType] : DEFAULT_ANNOTATIONS_STYLES.Point;
+
+    const linePointStyles = defaultPointType === "symbol" ?  [{...defaultStyles.POINT?.[defaultPointType], highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "StartPoint Style", geometry: "startPoint", filtering: false, id: uuidv1()},
+        {...defaultStyles.POINT?.[defaultPointType], highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "EndPoint Style", geometry: "endPoint", filtering: false, id: uuidv1()}] : getStartEndPointsForLinestring();
+
     return (
         <>
             <div className={'geometries-toolbar'}>
@@ -83,7 +88,7 @@ const FeaturesList = (props) => {
                             disabled: !isValidFeature,
                             onClick: () => {
                                 const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: true, id: uuidv1()}]
-                                    .concat(getStartEndPointsForLinestring());
+                                    .concat(linePointStyles);
                                 onClickGeometry("LineString", style);
                             },
                             tooltip: <Message msgId="annotations.titles.line" />
@@ -117,7 +122,7 @@ const FeaturesList = (props) => {
                             onClick: () => {
                                 const style = [
                                     {...DEFAULT_ANNOTATIONS_STYLES.Circle, highlight: true, type: "Circle", title: "Circle Style", id: uuidv1()},
-                                    {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint", id: uuidv1()}
+                                    { ...circleCenterStyles, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint", id: uuidv1()}
                                 ];
                                 onClickGeometry("Circle", style);
                             },
