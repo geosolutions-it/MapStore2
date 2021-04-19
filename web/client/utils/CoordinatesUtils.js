@@ -1053,13 +1053,12 @@ export const getExtentForProjection = (code = "EPSG:3857") => {
     return getProjections().find(project => project.code === code) || {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]};
 };
 
-// checks if a layer fits within the max extent
 /**
  * Return a boolean to show if a layer fits within a boundary/extent
  * @param layer {object} Layer to calculate to check for extent
  * @return {boolean} true or false
  */
-export const checkIfLayerFitsExtentForProjection = layer => {
+export const checkIfLayerFitsExtentForProjection = (layer = {}) => {
     const crs = layer.bbox?.crs || "EPSG:3857";
     const { extent } = getExtentForProjection(crs);
     const [, , maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
