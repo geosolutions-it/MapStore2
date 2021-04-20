@@ -114,9 +114,9 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
 }
 
 /**
- * Returns Decimal places
- * @param {number} value to check
- * @return {number} of decimal places
+ * Returns number of Decimal places
+ * @param {number} value to check 1.2
+ * @return {number} of decimal places 0
  */
 function countDecimals(value = 0) {
     if (Math.floor(value) === value) return 0;
