@@ -9,7 +9,7 @@ import expect from 'expect';
 
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
-const {extractTileMatrixSetFromLayers} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -1172,5 +1172,76 @@ describe('LayersUtils', () => {
             maxResolution: 1000,
             minResolution: 100
         }, 1000)).toBe(false);
+    });
+    describe('splitMapAndLayers', () => {
+        const localizedGroupMap = {
+            "map": {
+                "center": {
+                    "x": 17.360751857301523,
+                    "y": 40.51921950782912,
+                    "crs": "EPSG:4326"
+                },
+                "maxExtent": [
+                    -20037508.34,
+                    -20037508.34,
+                    20037508.34,
+                    20037508.34
+                ],
+                "projection": "EPSG:900913",
+                "units": "m",
+                "zoom": 6,
+                "mapOptions": {},
+                "backgrounds": [],
+                "bookmark_search_config": {},
+                "mapId": null,
+                "size": null,
+                "version": 2
+            },
+            "layers": [
+                {
+                    "id": "test:Linea_costa__5",
+                    "format": "image/png",
+                    "search": {
+                        "url": "https://test/geoserver/wfs",
+                        "type": "wfs"
+                    },
+                    "name": "test:Linea_costa",
+                    "opacity": 1,
+                    "description": "",
+                    "title": {
+                        "default": "Linea_costa",
+                        "it-IT": "test",
+                        "en-US": "test",
+                        "fr-FR": "test",
+                        "de-DE": "test",
+                        "es-ES": "test"
+                    },
+                    "type": "wms",
+                    "url": "https://test/geoserver/wms",
+
+
+                    "useForElevation": false,
+                    "hidden": false,
+                    "params": {}
+                }
+            ],
+            "groups": [
+                {
+                    "id": "Default",
+                    "title": {
+                        "default": "Default",
+                        "it-IT": "test ",
+                        "en-US": "test"
+                    },
+                    "expanded": true
+                }
+            ]
+        };
+        it('localized titles for default group', () => {
+            const {map, layers} = splitMapAndLayers(localizedGroupMap);
+            expect(map).toBeTruthy();
+            expect(layers).toBeTruthy();
+            expect(layers.groups[0].title).toEqual(localizedGroupMap.groups[0].title);
+        });
     });
 });
