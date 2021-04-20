@@ -9,6 +9,7 @@
 import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
+import isEmpty from 'lodash/isEmpty';
 import LoadingView from '../misc/LoadingView';
 
 const Plot = React.lazy(() => import('./PlotlyChart'));
@@ -78,6 +79,14 @@ function getMargins({ type, isModeBarVisible}) {
     }
 }
 
+// function determineFormat(props) {
+//     const prepData = getData(props);
+//     // if (!isEmpty(yAxisOpts.format)) return yAxisOpts;
+//     // const timesToCheck = data.length > 5 ? 5 : data.length;
+
+//     // // data.forEach(())
+// }
+
 function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS} ) {
     switch (type) {
     case 'pie':
@@ -112,6 +121,17 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
         };
     }
 }
+
+/**
+ * Returns Decimal places
+ * @param {number} value to check
+ * @return {number} of decimal places
+ */
+function countDecimals(value = 0) {
+    if (Math.floor(value) === value) return 0;
+    return value.toString().split(".")[1].length || 0;
+}
+
 /**
  * Adapter for the data format and options format of the MapStore charts
  * and the Library format.
@@ -129,6 +149,29 @@ export const toPlotly = (props) => {
     } = props;
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
+    const data = series.map(({ dataKey: yDataKey }) => {
+        return {
+            type,
+            name: yAxisLabel || yDataKey,
+            ...getData({ ...props, xDataKey, yDataKey})
+        };
+    });
+    const layoutOptions = getLayoutOptions({ ...props });
+
+    if (data[0] && data[0].name !== "variable" && data[0].type === "bar" && data[0].y && !layoutOptions.yaxis.tickformat) {
+        // limit the loop to try the first 5 items for performance reasons
+        // optionally check if only the first item
+        const [{y}] = data;
+        const numberOfTimes = y.length > 5 ? 4 : y.length;
+        for (let i = 0; i < numberOfTimes; i++) {
+            const num = y[i];
+            // stop if item is not a number
+            if (typeof num !== "number") { break; }
+            // stop if item is a whole number
+            if (num % 1 === 0) {break;}
+            layoutOptions.yaxis.tickformat = `.${countDecimals(num)}f`;
+        }
+    }
     return {
         layout: {
             showlegend: legend,
@@ -136,20 +179,14 @@ export const toPlotly = (props) => {
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
-            ...getLayoutOptions({ ...props }),
+            ...layoutOptions,
             margin: getMargins({ ...props, isModeBarVisible}),
             autosize: false,
             automargin: false,
             height,
             width
         },
-        data: series.map(({ dataKey: yDataKey }) => {
-            return {
-                type,
-                name: yAxisLabel || yDataKey,
-                ...getData({ ...props, xDataKey, yDataKey})
-            };
-        }),
+        data,
         config: {
             displayModeBar: isModeBarVisible, // minimal to display 8 tools.
             modeBarButtonsToRemove: [
