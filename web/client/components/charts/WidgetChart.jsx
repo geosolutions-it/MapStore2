@@ -9,7 +9,6 @@
 import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
-import isEmpty from 'lodash/isEmpty';
 import LoadingView from '../misc/LoadingView';
 
 const Plot = React.lazy(() => import('./PlotlyChart'));
@@ -78,14 +77,6 @@ function getMargins({ type, isModeBarVisible}) {
         };
     }
 }
-
-// function determineFormat(props) {
-//     const prepData = getData(props);
-//     // if (!isEmpty(yAxisOpts.format)) return yAxisOpts;
-//     // const timesToCheck = data.length > 5 ? 5 : data.length;
-
-//     // // data.forEach(())
-// }
 
 function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS} ) {
     switch (type) {
