@@ -223,6 +223,25 @@ describe('Widget Chart: data conversions ', () => {
                 expect(layout.yaxis.ticksuffix).toBe("W/h");
             });
         });
+        it('check yAxis tickformat calcuated', () => {
+            const DATASET_2 = {
+                data: [
+                    { name: 'Page A', value: 1.0332 },
+                    { name: 'Page B', value: 1.0332 },
+                    { name: 'Page C', value: 1.0332 },
+                    { name: 'Page D', value: 1.0332 }
+                ],
+                name: "bar",
+                type: "bar",
+                xAxis: { dataKey: "name" },
+                series: [{ dataKey: "value" }]
+            };
+            const { layout } = toPlotly({
+                type: 'pie',
+                ...DATASET_2
+            });
+            expect(layout.yaxis.tickformat).toBe('.4f');
+        });
         it('check formula', () => {
             testAllTypes({
                 ...DATASET_1,
