@@ -58,12 +58,10 @@ describe('useFiles enhancer', () => {
         expect(spySetLayers).toNotHaveBeenCalled();
     });
     it('useFiles rendering with layer', (done) => {
-
         const actions = {
             setLayers: (layers) => {
                 expect(layers).toExist();
-                expect(layers.length).toBe(1);
-                expect(layers[0].features).toExist();
+                expect(layers.length).toBe(0);
                 done();
             },
             onClose: () => {},
@@ -73,16 +71,17 @@ describe('useFiles enhancer', () => {
         const spyOnClose = expect.spyOn(actions, 'onClose');
         const spyLoadAnnotations = expect.spyOn(actions, 'loadAnnotations');
         const spyLoadMap = expect.spyOn(actions, 'loadMap');
-
         const sink = createSink( props => {
             expect(props).toExist();
             expect(props.layers).toExist();
             expect(props.useFiles).toExist();
             props.useFiles({layers: props.layers});
+
         });
         const EnhancedSink = useFiles(sink);
         ReactDOM.render(<EnhancedSink layers={[{type: 'vector', name: "FileName", hideLoading: true, features: []}]}
             setLayers={actions.setLayers} onClose={actions.onClose} />, document.getElementById("container"));
+
         expect(spyOnClose).toNotHaveBeenCalled();
         expect(spyLoadAnnotations).toNotHaveBeenCalled();
         expect(spyLoadMap).toNotHaveBeenCalled();
