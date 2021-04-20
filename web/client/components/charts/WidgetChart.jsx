@@ -153,8 +153,8 @@ export const toPlotly = (props) => {
         // limit the loop to try the first 5 items for performance reasons
         // optionally check if only the first item
         const [{y}] = data;
-        const numberOfTimes = y.length > 5 ? 4 : y.length;
-        for (let i = 0; i < numberOfTimes; i++) {
+        const numberOfTimesToLoop = y.length > 5 ? 4 : y.length;
+        for (let i = 0; i < numberOfTimesToLoop; i++) {
             const num = y[i];
             // stop if item is not a number
             if (typeof num !== "number") { break; }
