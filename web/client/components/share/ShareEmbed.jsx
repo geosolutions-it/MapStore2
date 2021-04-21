@@ -41,9 +41,9 @@ class ShareEmbed extends React.Component {
         forceDrawer: false,
         connections: false,
         sizeOptions: {
-            Small: { width: 400, height: 300 },
-            Medium: { width: 600, height: 450},
-            Large: { width: 800, height: 600},
+            Small: { width: 600, height: 500 },
+            Medium: { width: 800, height: 600},
+            Large: { width: 1000, height: 800},
             Custom: {width: 0, height: 0}
         },
         selectedOption: 'Small'
