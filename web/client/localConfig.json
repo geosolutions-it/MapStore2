@@ -665,7 +665,14 @@
             "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
             "embedOptions": {
               "showTOCToggle": false,
-              "showConnectionsParamToggle": true
+              "showConnectionsParamToggle": true,
+              "sizeOptions": {
+                "Small": { "width": 400, "height": 300 },
+                "Medium": { "width": 600, "height": 450},
+                "Large": { "width": 800, "height": 600},
+                "Custom": {"width": 0, "height": 0}
+            },
+            "selectedOption": "Small"
             }
           }
         },

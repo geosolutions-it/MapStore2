@@ -1298,7 +1298,11 @@
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
             "showSectionId": "Incluir posición de desplazamiento",
-            "showConnections": "Mostrar conexiones"
+            "showConnections": "Mostrar conexiones",
+            "sizeOptions": {
+                "width": "ancho",
+                "height": "altura"
+            }
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",
