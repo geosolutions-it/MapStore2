@@ -126,7 +126,7 @@ export const validResponsesSelector = createSelector(
     });
 
 export const currentResponseSelector = createSelector(
-    validResponsesSelector, indexSelector,
+    responsesSelector, indexSelector,
     (responses = [], index = 0) => responses[index]
 );
 export const currentFeatureSelector = state => {
