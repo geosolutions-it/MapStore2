@@ -1298,7 +1298,11 @@
             "wrongBboxParamMessage": "Bounding box params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Link to MapStore home",
             "showSectionId": "Include scroll position",
-            "showConnections": "Show connections"
+            "showConnections": "Show connections",
+            "sizeOptions": {
+                "width": "width",
+                "height": "height"
+            }
         },
         "snapshot": {
             "title": "Snapshot Preview",
