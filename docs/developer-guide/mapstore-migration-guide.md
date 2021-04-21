@@ -33,9 +33,15 @@ During this release MapStore changed a lot the project system. The first phase o
 - config.json 
 - simple.json 
 
-checkout changes to various pom.xml 
+Back-end has been reorganized 
+In particular: 
+- all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
+- `mapstore-backend` has been renamed into `mapstore-services`.
+
+Check the changes in pom.xml to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
+
 - **pom.xml**
-- **web/pom.xml**
+- **java/web/pom.xml**
 
 
 ## Migration from 2021.01.00 to 2021.01.01
