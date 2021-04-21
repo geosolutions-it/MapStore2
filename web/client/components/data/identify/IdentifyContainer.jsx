@@ -72,7 +72,9 @@ export default props => {
         toggleHighlightFeature = () => {}
     } = props;
     const latlng = point && point.latlng || null;
-    const targetResponse = validResponses[index]; // the index is calculated on the valid responses hence using all responses leads to wrong results
+
+    // Layer selector allows only selection of valid response's index, so target response will always be valid.
+    const targetResponse = responses[index];
     const {layer} = targetResponse || {};
 
     let lngCorrected = null;
@@ -126,7 +128,7 @@ export default props => {
                         <div className="layer-col">
                             <span className="identify-icon glyphicon glyphicon-1-layer"/>
                             <LayerSelector
-                                responses={validResponses}
+                                responses={responses}
                                 index={index}
                                 loaded={loaded}
                                 setIndex={setIndex}
