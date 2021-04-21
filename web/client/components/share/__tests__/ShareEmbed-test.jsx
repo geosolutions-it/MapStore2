@@ -33,7 +33,7 @@ describe("The ShareEmbed component", () => {
 
     it('should have the address url in the textarea field', () => {
         const url = location.href;
-        const iFrameStr = "<iframe style=\"border: none;\" height=\"300\" width=\"400\" src=\"" + url + "\"></iframe>";
+        const iFrameStr = "<iframe allowFullScreen style=\"border: none;\" height=\"300\" width=\"400\" src=\"" + url + "\"></iframe>";
         const cmpSharePanel = ReactDOM.render(<ShareEmbed shareUrl={url}/>, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
 
@@ -46,7 +46,7 @@ describe("The ShareEmbed component", () => {
         const host = "http://localhost:8081/";
         const hashPart = "#/abc/def/1";
         let expectedParam = "?forceDrawer=true";
-        const iFrameStr = "<iframe style=\"border: none;\" height=\"300\" width=\"400\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
+        const iFrameStr = "<iframe allowFullScreen style=\"border: none;\" height=\"300\" width=\"400\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
         const cmpSharePanel = ReactDOM.render(<ShareEmbed shareUrl={ host + hashPart }/>, document.getElementById("container"));
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "input");
         let checkbox = head(inputs.filter(i => i.type === "checkbox"));
@@ -69,7 +69,7 @@ describe("The ShareEmbed component", () => {
         const host = "http://localhost:8081/dashboard-embedded.html";
         const hashPart = "#/1";
         const expectedParam = "?connections=true";
-        const iFrameStr = "<iframe style=\"border: none;\" height=\"300\" width=\"400\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
+        const iFrameStr = "<iframe allowFullScreen style=\"border: none;\" height=\"300\" width=\"400\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
         const cmpSharePanel = ReactDOM.render(
             <ShareEmbed
                 shareUrl={ host + hashPart }
@@ -89,7 +89,7 @@ describe("The ShareEmbed component", () => {
         const host = "http://localhost:8081/dashboard-embedded.html";
         const hashPart = "#/1";
         const expectedParam = "?connections=true";
-        const iFrameStr = "<iframe style=\"border: none;\" height=\"700\" width=\"400\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
+        const iFrameStr = "<iframe allowFullScreen style=\"border: none;\" height=\"700\" width=\"400\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
         const cmpSharePanel = ReactDOM.render(
             <ShareEmbed
                 sizeOptions = {{Small: { width: 400, height: 700}}}

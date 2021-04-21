@@ -78,7 +78,7 @@ class ShareEmbed extends React.Component {
         const {sizeOptions, selectedOption} = this.state;
         const height = selectedOption === "Custom" ? sizeOptions.Custom.height : sizeOptions[selectedOption]?.height;
         const width = selectedOption === "Custom" ? sizeOptions.Custom.width : sizeOptions[selectedOption]?.width;
-        const codeEmbedded = `<iframe style=\"border: none;\" height=\"${height || 0}\" width=\"${width || 0}\" src=\"${this.generateUrl(this.props.shareUrl)}\"></iframe>`;
+        const codeEmbedded = `<iframe allowFullScreen style=\"border: none;\" height=\"${height || 0}\" width=\"${width || 0}\" src=\"${this.generateUrl(this.props.shareUrl)}\"></iframe>`;
         return (
             <div className="input-link">
                 <div className="input-link-head">
