@@ -45,7 +45,7 @@ The background editing toolbar, when no media are applied, allows to:
 
 * Add a media as a background of the section, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor](media-editor-window.md)
 
-Once a media (*image*, *video* or *map*) is added to the background, an editing toolbar appears in the upper left corner of the section allowing the user to customize the media.
+Once a media (*image*, *video* or *map*) is added to the background, an editing toolbar appears in the upper left corner of the section allowing the user to manage the background content.
 
 <img src="../img/immersive-section/immesrive_background_toolbar.jpg" class="ms-docimage" width="550px"/>
 
