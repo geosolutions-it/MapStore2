@@ -37,9 +37,30 @@ import {
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { RESET_CONTROLS } from '../actions/controls';
 import assign from 'object-assign';
-import { findIndex, isUndefined } from 'lodash';
+import { findIndex, isUndefined, isEmpty } from 'lodash';
 import { MAP_TYPE_CHANGED } from './../actions/maptype';
 
+import { getValidator } from '../utils/MapInfoUtils';
+
+/**
+ * Identifies when to update a index when the display information trigger is click (GFI panel)
+ * @param {object} state current state of the reducer
+ * @param {array} responses the responses received so far
+ * @param {number} requestIndex index position of the current request
+ * @param {boolean} isVector type of the response received is vector or not
+ */
+const isIndexValid = (state, responses, requestIndex, isVector) => {
+    const {configuration, requests, queryableLayers = [], index} = state;
+    const {infoFormat} = configuration || {};
+
+    // Index when first response received is valid
+    const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]]);
+    const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses);
+    return ((isUndefined(index) && !!validResponse.length)
+        || (!isVector && requests.length === inValidResponse.filter(res=>res).length)
+        || (isUndefined(index) && isVector && requests.filter(r=>isEmpty(r)).length === queryableLayers.length) // Check if all requested layers are vector
+    );
+};
 /**
  * Handles responses based on the type ["data"|"exceptions","error","vector"] of the responses received
  * @param {object} state current state of the reducer
@@ -81,7 +102,12 @@ function receiveResponse(state, action, type) {
             }
         }
 
-        let indexObj = {loaded: true, index: 0};
+        let indexObj;
+        if (isHover) {
+            indexObj = {loaded: true, index: 0};
+        } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
+            indexObj = {loaded: true, index: requestIndex};
+        }
         // Set responses and index as first response is received
         return assign({}, state, {
             ...(isVector && {requests}),
