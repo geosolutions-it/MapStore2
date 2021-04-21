@@ -11,7 +11,18 @@ const castArray = require('lodash/castArray');
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
- * A single object argument with the following params is suggested over the list of arguments
+ * This function takes one single object as first argument, containing all the configurations described below. For backward compatibility, if arguments list is longer then one, the function will get the arguments as the parameters described below in the following order (**the argument list usage has been deprecated and will be removed in the future**).
+ -  bundles,
+ - themeEntries,
+ - paths,
+ - plugins = [],
+ - prod,
+ - publicPath,
+ - cssPrefix,
+ - prodPlugins = [],
+ - alias = {},
+ - proxy,
+ - devPlugins = []
  *
  * @param {object} bundles object that defines the javascript (or jsx) entry points and related bundles
  * to be built (bundle name -> entry point path)
