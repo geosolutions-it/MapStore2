@@ -12,7 +12,7 @@ const castArray = require('lodash/castArray');
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
  * This function takes one single object as first argument, containing all the configurations described below. For backward compatibility, if arguments list is longer then one, the function will get the arguments as the parameters described below in the following order (**the argument list usage has been deprecated and will be removed in the future**).
- -  bundles,
+ - bundles,
  - themeEntries,
  - paths,
  - plugins = [],
@@ -24,27 +24,28 @@ const castArray = require('lodash/castArray');
  - proxy,
  - devPlugins = []
  *
- * @param {object} bundles object that defines the javascript (or jsx) entry points and related bundles
+ * @param {object} config the object containing the various parameters
+ * @param {object} config.bundles object that defines the javascript (or jsx) entry points and related bundles
  * to be built (bundle name -> entry point path)
- * @param {object} themeEntries object that defines the css (or less) entry points and related bundles
+ * @param {object} config.themeEntries object that defines the css (or less) entry points and related bundles
  * to be built (bundle name -> entry point path)
- * @param {object} paths object with paths used by the configuration builder:
+ * @param {object} config.paths object with paths used by the configuration builder:
  *  - dist: path to the output folder for the bundles
  *  - base: root folder of the project
  *  - framework: root folder of the MapStore2 framework
  *  - code: root folder(s) for javascript / jsx code, can be an array with several folders (e.g. framework code and
  *    project code)
- * @param {object} plugins plugin to be added
- * @param {boolean} prod flag for production / development mode (true = production)
- * @param {string} publicPath web public path for loading bundles (e.g. dist/)
- * @param {string} cssPrefix prefix to be appended on every generated css rule (e.g. ms2)
- * @param {array} prodPlugins plugins to be used only in production mode
- * @param {array} devPlugins plugins to be used only in development mode
- * @param {object} alias aliases to be used by webpack to resolve paths (alias -> real path)
- * @param {object} proxy webpack-devserver custom proxy configuration object
- * @param {object} devServer webpack devserver configuration object, available only with object syntax
- * @param {object} resolveModules webpack resolve configuration object, available only with object syntax
- * @param {object} projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
+ * @param {object} config.plugins plugin to be added
+ * @param {boolean} config.prod flag for production / development mode (true = production)
+ * @param {string} config.publicPath web public path for loading bundles (e.g. dist/)
+ * @param {string} config.cssPrefix prefix to be appended on every generated css rule (e.g. ms2)
+ * @param {array} config.prodPlugins plugins to be used only in production mode
+ * @param {array} config.devPlugins plugins to be used only in development mode
+ * @param {object} config.alias aliases to be used by webpack to resolve paths (alias -> real path)
+ * @param {object} config.proxy webpack-devserver custom proxy configuration object
+ * @param {object} config.devServer webpack devserver configuration object, available only with object syntax
+ * @param {object} config.resolveModules webpack resolve configuration object, available only with object syntax
+ * @param {object} config.projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
  * @returns a webpack configuration object
  * @example
  * // It's possible to use a single object argument to pass the parameters.
