@@ -23,7 +23,8 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2021.01.01 to 2021.02.00
 
-See [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pr for more details
+
+During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon. 
 
 **Some key files have been moved to `configs` folder like:**
 - localConfig.json
