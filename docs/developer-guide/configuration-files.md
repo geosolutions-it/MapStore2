@@ -26,9 +26,10 @@ Backend security can be configured to use different strategies of authentication
 Profiles are available to switch to a different strategy. The standard strategy uses the standard GeoStore database and services.
 The related configuration is stored in `WEB-INF/classes/geostore-spring-security.xml`.
 
-Depending on the chosen profile a different file is deployed from the `product/config` folder. In particular:
- * **default**: db\geostore-spring-security-db.xml (geostore database)
- * **ldap**: ldap\geostore-spring-security-ldap.xml (LDAP source)
+Depending on the chosen profile a different file will be copied from the `product/config` folder to  override `WEB-INF/classes/geostore-spring-security.xml` in the final package. In particular: 
+
+- **default**: `db\geostore-spring-security-db.xml` (geostore database) 
+- **ldap**: `ldap\geostore-spring-security-ldap.xml` (LDAP source)
 
 Specific configuration files are available to configure connection details for the chosen profile.
 
