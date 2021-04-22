@@ -20,6 +20,32 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+
+## Migration from 2021.01.01 to 2021.02.00
+
+
+During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon. 
+
+**The following key files have been moved to the new `configs` folder:**
+We suggest you to move them aswell from root to configs folder
+
+- localConfig.json
+- new.json
+- pluginsConfig.json
+- config.json 
+- simple.json 
+
+Back-end has been reorganized 
+In particular: 
+- all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
+- `mapstore-backend` has been renamed into `mapstore-services`.
+
+Check the changes in pom.xml to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
+
+- **pom.xml**
+- **java/web/pom.xml**
+
+
 ## Migration from 2021.01.00 to 2021.01.01
 
 ### Update embedded entry to load the correct configuration

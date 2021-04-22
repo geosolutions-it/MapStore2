@@ -28,8 +28,14 @@ ConfigUtils.setConfigProp('translationsPath', ['./MapStore2/web/client/translati
 
 ```javascript
 ConfigUtils.setLocalConfigurationFile('localConfig.json');
-
 ```
+
+or you can apply some patch files defining an array of configurations, where the first is the main json file, and the rest are the patch files which must end with "patch.json" in the filename
+```javascript
+ConfigUtils.setLocalConfigurationFile(['localConfig.json', 'production.patch.json']);
+```
+the patch will be applied using [this](https://github.com/geosolutions-it/Patcher) package
+
 
  * Configure your own pages:
 

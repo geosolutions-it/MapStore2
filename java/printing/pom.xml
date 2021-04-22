@@ -54,7 +54,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/../web/src/printing</directory>
+                                <directory>${basedir}/webapp</directory>
                             </resource>
                         </resources>
                     </configuration>

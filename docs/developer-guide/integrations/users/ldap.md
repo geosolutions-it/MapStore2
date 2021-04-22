@@ -38,7 +38,7 @@ Direct connection is still experimental and not tested in all the possible scena
 
 Configuring MapStore to use the LDAP storage requires:
 
- * filling out the LDAP configuration properties in the web/src/ldap/ldap.properties file to match your LDAP repository structure
+ * filling out the LDAP configuration properties in the java/web/src/main/resources/ldap.properties file to match your LDAP repository structure
  * invoking the build with the **ldap** profile 
 
 ```bash 
