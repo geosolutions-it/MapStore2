@@ -61,7 +61,7 @@ describe('useFiles enhancer', () => {
         const actions = {
             setLayers: (layers) => {
                 expect(layers).toExist();
-                expect(layers.length).toBe(0);
+                expect(layers.length).toBe(1);
                 done();
             },
             onClose: () => {},
@@ -79,7 +79,21 @@ describe('useFiles enhancer', () => {
 
         });
         const EnhancedSink = useFiles(sink);
-        ReactDOM.render(<EnhancedSink layers={[{type: 'vector', name: "FileName", hideLoading: true, features: []}]}
+        const layer = {
+            type: 'vector', name: "FileName", hideLoading: true,
+            bbox: {crs: "EPSG:4326"},
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-150, 90]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        ReactDOM.render(<EnhancedSink layers={[layer]}
             setLayers={actions.setLayers} onClose={actions.onClose} />, document.getElementById("container"));
 
         expect(spyOnClose).toNotHaveBeenCalled();

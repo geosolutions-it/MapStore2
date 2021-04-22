@@ -37,7 +37,8 @@ import {
     makeNumericEPSG,
     getPolygonFromCircle,
     getProjections,
-    getExtentForProjection
+    getExtentForProjection,
+    checkIfLayerFitsExtentForProjection
 } from '../CoordinatesUtils';
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
 import Proj4js from 'proj4';
@@ -846,5 +847,43 @@ describe('CoordinatesUtils', () => {
         const res = getExtentForProjection("EPSG:900913");
         expect(res.extent.length).toBe(4);
         expect(res.extent).toEqual([-20026376.39, -20048966.10, 20026376.39, 20048966.10]);
+    });
+
+    it('checkIfLayerFitsExtentForProjection out of bounds layer', () => {
+        const geoJson = {
+            bbox: {crs: "EPSG:4326"},
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-150, 94]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
+        expect(canFitWithBounds).toBe(false);
+    });
+
+    it('checkIfLayerFitsExtentForProjection within bounds layer', () => {
+        const geoJson = {
+            bbox: {crs: "EPSG:4326"},
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-150, 90]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
+        expect(canFitWithBounds).toBe(true);
     });
 });
