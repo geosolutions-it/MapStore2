@@ -158,8 +158,8 @@ When we say "running the back-end", in fact we say that we are running some sort
 
 MapStore is configured to use a tomcat maven plugin-in to build and run mapstore locally. To use it you have to:
 
-* make sure to run at least once `mvn install` in the root directory, to make `mapstore-backend` artifact available.
-* `cd web` directory
+* make sure to run at least once `mvn install` in the root directory, to make `mapstore-webapp` artifact available.
+* `cd product` directory
 * run `mvn tomcat7:run-war`
 
 Your local back-end will now start at [http://localhost:8080/mapstore/](http://localhost:8080/mapstore/).
@@ -171,7 +171,7 @@ If you prefer, or if you have some problems with `mvn tomcat7:run-war`, you can 
 To do so, you can :
 
 * download a tomcat standalone [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) and extract to a folder of your choice
-* To generate a war file that will be deployed on your tomcat server, go to the root of the Mapstore project that was git cloned and run `./build.sh`. This might take some time but at the end a war file named `mapstore.war` will be generated into the `web/target` folder.
+* To generate a war file that will be deployed on your tomcat server, go to the root of the Mapstore project that was git cloned and run `./build.sh`. This might take some time but at the end a war file named `mapstore.war` will be generated into the `product/target` folder.
 * Copy the `mapstore.war` and then head back to your tomcat folder. Look for a `webapps` folder and paste the `mapstore.war` file there.
 * To start tomcat server, go to the terminal, `cd` into the root of your tomcat extracted folder and run `./bin/startup.sh` ( unix systems) or `./bin/startup.bat` (Windows). The server will start on port `8080` and Mapstore will be running at `http://localhost:8080/mapstore`. For development purposes we're only interested in the backend that was started on the tomcat server along with Mapstore.
 

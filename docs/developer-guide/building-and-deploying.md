@@ -11,19 +11,17 @@ To create the final war, you have several options:
 
 * full build, including submodules and frontend (e.g. GeoStore)
 
- `./build.sh [version_identifier]`
+ `./build.sh [version_identifier] [profiles]`
 
- Where version_identifier is an optional identifier of the generated war that will be shown in the settings panel of the application.
+ Where `version_identifier` is an optional identifier of the generated war that will be shown in the settings panel of the application and profiles is an optional list of comma delimited building profiles (e.g. `printing`, `ldap`)
 
 * fast build (will use the last compiled version of submodules and compiled frontend)
 
-`mvn clean install -Dmapstore2.version=[version_identifier]`
+`mvn clean install -Dmapstore2.version=[version_identifier] [profiles]`
 
 * release build (produces also the binary)
 
 `mvn clean install -Dmapstore2.version=[version_identifier] -Prelease`
-
-Where `[version_identifier]` is the version you want to export (e.g. 2020.01.00). This version name will appear in "Settings --> version information" and used to create handle bundles version (i.e. caching).
 
 ## Building the documentation
 

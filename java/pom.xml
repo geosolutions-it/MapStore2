@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>it.geosolutions.mapstore</groupId>
+  <artifactId>mapstore-java</artifactId>
+  <packaging>pom</packaging>
+  <version>1.2-SNAPSHOT</version>
+  <name>MapStore 2</name>
+  <url>http://www.geo-solutions.it</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+
+  <dependencies>
+
+
+  </dependencies>
+
+  <build>
+    <extensions>
+        <!--.............................................-->
+        <!--       GeoSolutions (using wagon ftp)       -->
+        <!--.............................................-->
+        <extension>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-ftp</artifactId>
+            <version>1.0-beta-2</version>
+        </extension>
+    </extensions>
+  </build>
+  <distributionManagement>
+    <repository>
+        <id>geosolutions</id>
+        <url>ftp://maven.geo-solutions.it/</url>
+    </repository>
+  </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>services</module>
+        <module>web</module>
+      </modules>
+    </profile>
+    <profile>
+        <id>printingbundle</id>
+        <activation>
+        <property>
+          <name>printingbundle</name>
+        </property>
+      </activation>
+      <modules>
+        <module>printing</module>
+      </modules>
+    </profile>
+  </profiles>
+
+
+</project>

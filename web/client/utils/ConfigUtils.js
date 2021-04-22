@@ -9,10 +9,11 @@ import Proj4js from 'proj4';
 import PropTypes from 'prop-types';
 import url from 'url';
 import axios from 'axios';
-import { isArray, isObject, endsWith, isNil } from 'lodash';
+import { castArray, isArray, isObject, endsWith, isNil } from 'lodash';
 import assign from 'object-assign';
 import { Promise } from 'es6-promise';
 import isMobile from 'ismobilejs';
+import {mergeConfigsPatch} from "@mapstore/patcher";
 
 const epsg4326 = Proj4js ? new Proj4js.Proj('EPSG:4326') : null;
 const centerPropType = PropTypes.shape({
@@ -23,7 +24,7 @@ const centerPropType = PropTypes.shape({
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-let localConfigFile = 'localConfig.json';
+let localConfigFile = 'configs/localConfig.json';
 
 let defaultConfig = {
     // TODO: these should be changed tp relative paths, without /mapstore/ or / (to avoid the needing of overriding in default cases)
@@ -33,8 +34,8 @@ let defaultConfig = {
     translationsPath: "translations",
     extensionsRegistry: "extensions.json",
     extensionsFolder: "",
-    configurationFolder: "",
-    contextPluginsConfiguration: 'pluginsConfig.json',
+    configurationFolder: "configs/",
+    contextPluginsConfiguration: "configs/pluginsConfig.json",
     projectionDefs: [],
     themePrefix: "ms2",
     bingApiKey: null,
@@ -133,12 +134,19 @@ export const getDefaults = function() {
 export const setLocalConfigurationFile = function(file) {
     localConfigFile = file;
 };
+
 export const loadConfiguration = function() {
     if (localConfigFile) {
-        return axios.get(localConfigFile).then(response => {
-            if (typeof response.data === 'object') {
-                defaultConfig = assign({}, defaultConfig, response.data);
-            }
+        const configFiles = castArray(localConfigFile);
+        return axios.all(configFiles.map(config =>
+            axios.get(config)
+                .then(response => response.data)
+                .catch(() => null)
+        )).then(configs => {
+            const [main, ...patches] = configs;
+            if (!main) throw new Error("local configuration file is broken");
+            const merged = mergeConfigsPatch(main, patches.filter(c => c && typeof c === "object"));
+            defaultConfig = merged ? {...defaultConfig, ...merged} : defaultConfig;
             return {...defaultConfig};
         });
     }

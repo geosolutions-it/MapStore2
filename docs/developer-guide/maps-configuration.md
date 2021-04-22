@@ -31,7 +31,7 @@ This is used for the **new map**. If you're logged in and allowed to create maps
 http://localhost:8081/#viewer/openlayers/new
 ```
 
-This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects.
+This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client/configs` directory for standard MapStore or in `configs/` folder for a custom projects.
 You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).
 
 If you have enabled the datadir, then you can externalize the new.json or config.json files. (see [here](../externalized-configuration) for more details)

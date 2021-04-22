@@ -17,7 +17,7 @@ import localConfig from '../../reducers/localConfig';
 import {
     localConfigLoaded
 } from '../../actions/localConfig';
-import LOCAL_CONFIG from '../../localConfig';
+import LOCAL_CONFIG from '../../configs/localConfig';
 import {find, includes} from 'lodash';
 
 const stateMocker = createStateMocker({localConfig});

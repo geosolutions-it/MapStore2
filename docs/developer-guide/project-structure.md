@@ -6,11 +6,11 @@ This is the overall framework folder structure:
 +-- package.json
 +-- pom.xml
 +-- build.sh
-+-- .babelrc
 +-- .editorconfig
++-- Dockerfile
 +-- .travis.yml
 +-- ...
-+-- build       (build realted files)
++-- build       (build related files)
     +-- karma.conf.*.js
     +-- tests.webpack.js
     +-- webpack.config.js
@@ -18,16 +18,19 @@ This is the overall framework folder structure:
     +-- docma-config.json
     +-- testConfig.json
     +-- ...
-+-- web      (MapStore maven module)
++-- java        (java backend modules)
     +-- pom.xml
-    +-- src        (maven java webapp src folder)
-    |   +-- main
-    |   |   +-- java
-    |   |   +-- resources
-    |   |   +-- webapp
-    |   +-- test
-    |        +-- java
-    |        +-- resources
+    +-- services
+    +-- web
+    +-- printing
++-- translations (i18n localization files)
+    |  +-- data.en-US.json
++-- utility (general utility scripts and functions)
+    |  +-- eslint
+    |  +-- build
+    |  +-- projects
+    |  +-- translations
++-- web         (frontend module)
     +-- client
     |   +-- index.html (demo application home page)
         +-- plugins (ReactJS smart components with required reducers)
@@ -39,11 +42,10 @@ This is the overall framework folder structure:
         |   |       +-- <component>-test.jsx
         |   +-- ...
         +-- actions    (Redux actions)
+        +-- configs    (JSON config files like localConfig.json, pluginsConfig.json, new.json, newgeostory.json, etc)
         +-- epics      (redux-observable epics)
         +-- reducers   (Redux reducers)
         +-- stores     (Redux stores)
-        +-- translations (i18n localization files)
-        |  +-- data.en-US.json
         |  ...
         |  product (the MapStore main application)
         |   +...

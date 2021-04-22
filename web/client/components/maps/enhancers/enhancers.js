@@ -70,7 +70,7 @@ const emptyMap = fn => (opts, page) => {
                 description: <Message msgId="widgets.selectMap.emptyMap.description" />,
                 preview: defaultPreview,
                 map: {
-                    id: "new.json"
+                    id: "configs/new.json"
                 }
             }, ...items]
         }));

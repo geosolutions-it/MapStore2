@@ -1,6 +1,6 @@
 # Application configuration
 
-The application will load by default it will load the `localConfig.json`
+The application will load by default it will load the `localConfig.json` which is now stored in the configs\ folder
 
 You can load a custom configuration by passing the `localConfig` argument in query string:
 

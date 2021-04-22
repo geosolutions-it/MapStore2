@@ -2,64 +2,42 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.geosolutions.mapstore</groupId>
-  <artifactId>mapstore-backend</artifactId>
-  <packaging>jar</packaging>
+  <artifactId>mapstore-webapp</artifactId>
+  <packaging>war</packaging>
   <version>1.2-SNAPSHOT</version>
-  <name>MapStore 2 - Backend</name>
+  <name>MapStore 2 - WAR</name>
   <url>http://www.geo-solutions.it</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>3.0.5.RELEASE</spring.version>
+    <mapstore2.version>DEV</mapstore2.version>
+    <tomcat.version>7.0.86</tomcat.version>
   </properties>
 
   <dependencies>
-    <!-- base libraries -->
+    <!-- MapStore services -->
     <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>2.1</version>
+        <groupId>it.geosolutions.mapstore</groupId>
+        <artifactId>mapstore-services</artifactId>
+        <version>1.2-SNAPSHOT</version>
     </dependency>
 
-    <!-- Mime-Util -->
+    <!-- ================================================================ -->
+    <!-- GeoStore modules -->
+    <!-- ================================================================ -->
     <dependency>
-        <groupId>eu.medsea.mimeutil</groupId>
-        <artifactId>mime-util</artifactId>
-        <version>2.1.3</version>
-    </dependency>
-
-    <!-- Spring -->
-    <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${spring.version}</version>
+      <groupId>it.geosolutions.geostore</groupId>
+      <artifactId>geostore-webapp</artifactId>
+      <version>1.7-SNAPSHOT</version>
+      <type>war</type>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-core</artifactId>
-        <version>${spring.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-web</artifactId>
-        <version>${spring.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-config</artifactId>
-        <version>${spring.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-ldap</artifactId>
-        <version>${spring.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring.version}</version>
-        <scope>test</scope>
+      <groupId>proxy</groupId>
+      <artifactId>http_proxy</artifactId>
+      <version>1.2-SNAPSHOT</version>
+      <type>war</type>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- JUnit -->
@@ -82,33 +60,47 @@
           <artifactId>servlet-api</artifactId>
           <version>2.5</version>
     </dependency>
-    <!-- json-lib -->
+    <!-- gzip compression filter -->
     <dependency>
-        <groupId>net.sf.json-lib</groupId>
-        <artifactId>json-lib</artifactId>
-        <version>2.4</version>
-        <classifier>jdk15</classifier>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-web</artifactId>
+        <version>2.0.4</version>
     </dependency>
-    <!-- json-patch -->
+    <!-- misc -->
     <dependency>
-        <groupId>com.github.java-json-tools</groupId>
-        <artifactId>json-patch</artifactId>
-        <version>1.12</version>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>1.5.4</version>
     </dependency>
-
   </dependencies>
 
   <build>
+    <finalName>mapstore</finalName>
     <plugins>
         <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.1.1</version>
+            <configuration>
+                <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
+                WEB-INF/lib/commons-io-1.1.jar,
+                WEB-INF/lib/commons-logging-1.0.4.jar,
+                WEB-INF/lib/commons-pool-1.3.jar,
+                WEB-INF/lib/spring-*-3.1.0*.jar
+                </packagingExcludes>
+                <overlays>
+                    <overlay>
+                        <groupId>it.geosolutions.geostore</groupId>
+                        <artifactId>geostore-webapp</artifactId>
+                        <excludes>WEB-INF/classes/geostore-spring-security.xml</excludes>
+                    </overlay>
+                    <overlay>
+                        <groupId>proxy</groupId>
+                        <artifactId>http_proxy</artifactId>
+                    </overlay>
+                </overlays>
+            </configuration>
+        </plugin>
     </plugins>
     <extensions>
         <!--.............................................-->
@@ -120,15 +112,15 @@
             <version>1.0-beta-2</version>
         </extension>
     </extensions>
-    </build>
-    <distributionManagement>
+  </build>
+
+  <distributionManagement>
     <repository>
         <id>geosolutions</id>
         <url>ftp://maven.geo-solutions.it/</url>
     </repository>
-    </distributionManagement>
-  <profiles>
-  </profiles>
+  </distributionManagement>
+
     <repositories>
         <!-- GeoSolutions -->
         <repository>

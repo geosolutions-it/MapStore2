@@ -1,76 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.geosolutions.mapstore</groupId>
-  <artifactId>mapstore-web</artifactId>
+  <artifactId>mapstore-product</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>MapStore 2 - WAR</name>
-  <url>http://www.geo-solutions.it</url>
+  <version>1.2-SNAPSHOT</version>
+  <name>MapStore Product Web Application</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mapstore2.version>DEV</mapstore2.version>
     <tomcat.version>7.0.86</tomcat.version>
   </properties>
 
   <dependencies>
-    <!-- MapStore backend -->
+    <!-- MapStore java backend -->
     <dependency>
-        <groupId>it.geosolutions.mapstore</groupId>
-        <artifactId>mapstore-backend</artifactId>
-        <version>1.2-SNAPSHOT</version>
-    </dependency>
-
-    <!-- ================================================================ -->
-    <!-- GeoStore modules -->
-    <!-- ================================================================ -->
-    <dependency>
-      <groupId>it.geosolutions.geostore</groupId>
-      <artifactId>geostore-webapp</artifactId>
-      <version>1.7-SNAPSHOT</version>
-      <type>war</type>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>proxy</groupId>
-      <artifactId>http_proxy</artifactId>
+      <groupId>it.geosolutions.mapstore</groupId>
+      <artifactId>mapstore-webapp</artifactId>
       <version>1.2-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
-    </dependency>
-
-    <!-- JUnit -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-      <version>4.13.1</version>
-    </dependency>
-    <!--  mockito -->
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.9.5</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- servlet -->
-    <dependency>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-          <version>2.5</version>
-    </dependency>
-    <!-- gzip compression filter -->
-    <dependency>
-        <groupId>net.sf.ehcache</groupId>
-        <artifactId>ehcache-web</artifactId>
-        <version>2.0.4</version>
-    </dependency>
-    <!-- misc -->
-    <dependency>
-        <groupId>commons-pool</groupId>
-        <artifactId>commons-pool</artifactId>
-        <version>1.5.4</version>
     </dependency>
   </dependencies>
 
@@ -92,7 +41,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client</directory>
+                                <directory>${basedir}/../web/client</directory>
                                  <filtering>true</filtering>
                                 <includes>
                                     <include>**/version.txt</include>
@@ -112,7 +61,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>index.html</include>
                                 </includes>
@@ -131,7 +80,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>embedded.html</include>
                                 </includes>
@@ -150,7 +99,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>dashboard-embedded.html</include>
                                 </includes>
@@ -169,7 +118,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>geostory-embedded.html</include>
                                 </includes>
@@ -188,7 +137,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                                 <includes>
                                     <include>api.html</include>
                                 </includes>
@@ -207,7 +156,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client</directory>
+                                <directory>${basedir}/../web/client</directory>
                                 <includes>
                                     <include>**/*.html</include>
                                     <include>**/*.json</include>
@@ -236,7 +185,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/dist</directory>
+                                <directory>${basedir}/../web/client/dist</directory>
                             </resource>
                         </resources>
                     </configuration>
@@ -252,7 +201,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/examples</directory>
+                                <directory>${basedir}/../web/client/examples</directory>
                                 <includes>
                                     <include>data/*</include>
                                 </includes>
@@ -271,7 +220,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/examples</directory>
+                                <directory>${basedir}/../web/client/examples</directory>
                                 <includes>
                                     <include>**/*.js</include>
                                 </includes>
@@ -290,28 +239,9 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client</directory>
+                                <directory>${basedir}/../web/client</directory>
                                 <includes>
                                     <include>translations/*</include>
-                                </includes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>printing</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/printing</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/../resources/geoserver/print</directory>
-                                <includes>
-                                    <include>*</include>
                                 </includes>
                             </resource>
                         </resources>
@@ -328,7 +258,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/docs</directory>
+                                <directory>${basedir}/../web/docs</directory>
                             </resource>
                         </resources>
                     </configuration>
@@ -344,34 +274,38 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/libs/cesium-navigation</directory>
+                                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>printing templates</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/mapstore/printing</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>../java/printing/resources/geoserver/print</directory>
                             </resource>
                         </resources>
                     </configuration>
                 </execution>
             </executions>
         </plugin>
-
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
             <version>2.1.1</version>
             <configuration>
-                <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
-                WEB-INF/lib/commons-io-1.1.jar,
-                WEB-INF/lib/commons-logging-1.0.4.jar,
-		WEB-INF/lib/commons-pool-1.3.jar,
-		WEB-INF/lib/spring-*-3.1.0*.jar
-                </packagingExcludes>
                 <overlays>
                     <overlay>
-                        <groupId>it.geosolutions.geostore</groupId>
-                        <artifactId>geostore-webapp</artifactId>
-                        <excludes>WEB-INF/classes/geostore-spring-security.xml</excludes>
-                    </overlay>
-                    <overlay>
-                        <groupId>proxy</groupId>
-                        <artifactId>http_proxy</artifactId>
+                        <groupId>it.geosolutions.mapstore</groupId>
+                        <artifactId>mapstore-webapp</artifactId>
                     </overlay>
                 </overlays>
             </configuration>
@@ -500,7 +434,7 @@
                         </goals>
                         <configuration>
                         <overWrite>true</overWrite>
-                        <sourceFile>src/printing/applicationContext-print.xml</sourceFile>
+                        <sourceFile>../java/printing/webapp/applicationContext-print.xml</sourceFile>
                         <destinationFile>target/mapstore/WEB-INF/classes/applicationContext-print.xml</destinationFile>
                         </configuration>
                     </execution>
@@ -516,58 +450,6 @@
             <version>geosolutions-2.0-SNAPSHOT</version>
         </dependency>
        </dependencies>
-    </profile>
-    <profile>
-        <id>serveronly</id>
-        <properties>
-            <skipTests>true</skipTests>
-            <skipcesiumdownload>true</skipcesiumdownload>
-        </properties>
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>com.github.eirslett</groupId>
-                    <artifactId>frontend-maven-plugin</artifactId>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
-                    <executions></executions>
-                </plugin>
-            </plugins>
-        </build>
-    </profile>
-    <profile>
-        <id>api_mapquest</id>
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>com.google.code.maven-replacer-plugin</groupId>
-                    <artifactId>replacer</artifactId>
-                    <version>1.5.3</version>
-                    <executions>
-                        <execution>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>replace</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <file>target/mapstore/index.html</file>
-                        <replacements>
-                            <replacement>
-                                <token>__API_KEY_MAPQUEST__</token>
-                                <value>${__API_KEY_MAPQUEST__}</value>
-                            </replacement>
-                        </replacements>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </build>
     </profile>
     <profile>
         <id>db-security</id>
@@ -591,7 +473,7 @@
                             </goals>
                             <configuration>
                             <overWrite>true</overWrite>
-                            <sourceFile>src/config/db/geostore-spring-security-db.xml</sourceFile>
+                            <sourceFile>config/db/geostore-spring-security-db.xml</sourceFile>
                             <destinationFile>target/mapstore/WEB-INF/classes/geostore-spring-security.xml</destinationFile>
                             </configuration>
                         </execution>
@@ -620,7 +502,7 @@
                             </goals>
                             <configuration>
                             <overWrite>true</overWrite>
-                            <sourceFile>src/config/ldap/geostore-spring-security-ldap.xml</sourceFile>
+                            <sourceFile>config/ldap/geostore-spring-security-ldap.xml</sourceFile>
                             <destinationFile>target/mapstore/WEB-INF/classes/geostore-spring-security.xml</destinationFile>
                             </configuration>
                         </execution>
@@ -630,63 +512,4 @@
        </build>
     </profile>
   </profiles>
-    <repositories>
-        <!-- GeoSolutions -->
-        <repository>
-            <id>geosolutions</id>
-            <name>GeoSolutions Repository</name>
-            <url>https://maven.geo-solutions.it</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
-        <!-- Apache -->
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <!-- JBoss -->
-        <repository>
-            <id>jboss-repo</id>
-            <name>JBoss Maven2 Repository</name>
-            <url>http://repository.jboss.com/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <!-- Spring -->
-        <repository>
-            <id>spring-release</id>
-            <name>Spring Portfolio Release Repository</name>
-            <url>http://maven.springframework.org/release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-external</id>
-            <name>Spring Portfolio External Repository</name>
-            <url>http://maven.springframework.org/external</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>osgeo</id>
-            <name>Open Source Geospatial Foundation Repository</name>
-            <url>https://repo.osgeo.org/repository/release/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>

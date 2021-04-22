@@ -10,15 +10,15 @@
     <url>http://www.geo-solutions.it</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>7.0.86</tomcat.version>
+        <tomcat.version>7.0.75</tomcat.version>
         <release.number>${project.version}</release.number>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>it.geosolutions.mapstore</groupId>
-            <artifactId>mapstore-web</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>mapstore-product</artifactId>
+            <version>1.2-SNAPSHOT</version>
             <type>war</type>
             <scope>runtime</scope>
         </dependency>
@@ -35,7 +35,7 @@
                     <overlays>
                         <overlay>
                             <groupId>it.geosolutions.mapstore</groupId>
-                            <artifactId>mapstore-web</artifactId>
+                            <artifactId>mapstore-product</artifactId>
                         </overlay>
                     </overlays>
                     <webResources>
