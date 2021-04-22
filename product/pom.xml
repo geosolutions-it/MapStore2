@@ -448,6 +448,12 @@
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
             <version>geosolutions-2.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
        </dependencies>
     </profile>
