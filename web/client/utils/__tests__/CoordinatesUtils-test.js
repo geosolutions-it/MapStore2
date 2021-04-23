@@ -43,7 +43,7 @@ import {
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
 import Proj4js from 'proj4';
 
-describe('CoordinatesUtils', () => {
+describe.only('CoordinatesUtils', () => {
     afterEach((done) => {
         document.body.innerHTML = '';
 
@@ -849,7 +849,7 @@ describe('CoordinatesUtils', () => {
         expect(res.extent).toEqual([-20026376.39, -20048966.10, 20026376.39, 20048966.10]);
     });
 
-    it('checkIfLayerFitsExtentForProjection out of bounds layer', () => {
+    it('checkIfLayerFitsExtentForProjection out of bounds layer with crs EPSG:4326', () => {
         const geoJson = {
             bbox: {crs: "EPSG:4326"},
             "type": "FeatureCollection",
@@ -868,7 +868,7 @@ describe('CoordinatesUtils', () => {
         expect(canFitWithBounds).toBe(false);
     });
 
-    it('checkIfLayerFitsExtentForProjection within bounds layer', () => {
+    it('checkIfLayerFitsExtentForProjection within bounds layer with crs EPSG:4326', () => {
         const geoJson = {
             bbox: {crs: "EPSG:4326"},
             "type": "FeatureCollection",
@@ -877,6 +877,44 @@ describe('CoordinatesUtils', () => {
                 "geometry": {
                     "type": "Point",
                     "coordinates": [-150, 90]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
+        expect(canFitWithBounds).toBe(true);
+    });
+
+    it('checkIfLayerFitsExtentForProjection out of bounds layer crs projection EPSG:3857', () => {
+        const geoJson = {
+            bbox: {crs: "EPSG:3857"},
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-20026376, 23026376]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
+        expect(canFitWithBounds).toBe(false);
+    });
+
+    it('checkIfLayerFitsExtentForProjection within bounds layer crs projection EPSG:3857', () => {
+        const geoJson = {
+            bbox: {crs: "EPSG:3857"},
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-20026376, 13026376]
                 },
                 "properties": {
                     "prop0": "value0"
