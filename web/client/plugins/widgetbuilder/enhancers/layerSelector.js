@@ -17,7 +17,8 @@ const toLayer = (r, service) => ["tms", "wfs"].includes(service.type) // for tms
         r, service.type === "wmts" // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
             ? "wmts"
             : undefined
-    ); //
+    );
+
 // checks for tms wmts in order to addSearch() to skip addSearch
 const addSearchObservable = (selected, service) => ["tms", "wmts"].includes(service.type) ? Rx.Observable.of(toLayer(selected, service)) : addSearch(toLayer(selected, service));
 
