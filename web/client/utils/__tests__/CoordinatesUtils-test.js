@@ -43,7 +43,7 @@ import {
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
 import Proj4js from 'proj4';
 
-describe.only('CoordinatesUtils', () => {
+describe('CoordinatesUtils', () => {
     afterEach((done) => {
         document.body.innerHTML = '';
 
