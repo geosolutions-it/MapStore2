@@ -1350,7 +1350,8 @@
             "errors": {
                 "fileNotSupported": "File non supportato",
                 "unknownError": "si è verificato un errore sconosciuto durante l'importazione",
-                "projectionNotSupported": "La proiezione del file che stai tentando di importare non è supportata"
+                "projectionNotSupported": "La proiezione del file che stai tentando di importare non è supportata",
+                "fileBeyondBoundaries": "Il file {nomefile} non può essere importato perché non si adatta ai confini della mappa"
             }
         },
         "mapExport": {

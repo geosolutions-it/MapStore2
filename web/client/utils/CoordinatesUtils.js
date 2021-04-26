@@ -34,6 +34,9 @@ import toPoint from 'turf-point';
 import bboxPolygon from '@turf/bbox-polygon';
 import overlap from '@turf/boolean-overlap';
 import contains from '@turf/boolean-contains';
+import turfBbox from '@turf/bbox';
+import { getConfigProp } from './ConfigUtils';
+
 let CoordinatesUtils;
 
 export const FORMULAS = {
@@ -1030,6 +1033,37 @@ export const getPolygonFromCircle = (center, radius, units = "degrees", steps = 
     return turfCircle(center, radius, {steps, units});
 };
 
+/**
+ * Returns an array of projections
+ * @return {array} of projection Definitions [{code, extent}]
+ */
+export const getProjections = () => {
+    const projections = (getConfigProp('projectionDefs') || []).concat([{code: "EPSG:3857", extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]},
+        {code: "EPSG:4326", extent: [-180, -90, 180, 90]}
+    ]);
+    return projections;
+};
+
+/**
+ * Return a projection from a list of projections
+ * @param code {string} code for the projection EPSG:3857
+ * @return {object} {extent, code} fallsback to default {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]}
+ */
+export const getExtentForProjection = (code = "EPSG:3857") => {
+    return getProjections().find(project => project.code === code) || {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]};
+};
+
+/**
+ * Return a boolean to show if a layer fits within a boundary/extent
+ * @param layer {object} to check if fits with in a projection boundary
+ * @return {boolean} true or false
+ */
+export const checkIfLayerFitsExtentForProjection = (layer = {}) => {
+    const crs = layer.bbox?.crs || "EPSG:3857";
+    const [crsMinX, crsMinY, crsMaxX, crsMaxY] = getExtentForProjection(crs).extent;
+    const [minx, minY, maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
+    return ((minx >= crsMinX) && (minY >= crsMinY) && (maxX <= crsMaxX) && (maxY <= crsMaxY));
+};
 
 CoordinatesUtils = {
     setCrsLabels,
@@ -1084,7 +1118,8 @@ CoordinatesUtils = {
     crsCodeTable,
     makeNumericEPSG,
     makeBboxFromOWS,
-    getPolygonFromCircle
+    getPolygonFromCircle,
+    checkIfLayerFitsExtentForProjection
 
 };
 export default CoordinatesUtils;
