@@ -25,7 +25,8 @@ import {
     filterNameListSelector,
     overrideParamsSelector,
     mapTriggerSelector,
-    hoverEnabledSelector
+    hoverEnabledSelector,
+    currentFeatureSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -356,5 +357,18 @@ describe('Test mapinfo selectors', () => {
         // when mapInfo is present
         expect(hoverEnabledSelector({maptype: {mapType: "openlayers"} })).toBe(true);
         expect(hoverEnabledSelector({maptype: {mapType: "cesium"} })).toBe(false);
+    });
+    it('test currentFeatureSelector with default index', () => {
+        const state = { mapInfo: {...RESPONSE_STATE_WITH_FEATURES_METADATA.mapInfo, highlight: true}};
+        const [feature] = currentFeatureSelector(state);
+        expect(feature).toBeTruthy();
+        expect(feature.id).toBe('poi.4');
+    });
+    it('test currentFeatureSelector with derived index', () => {
+        const mapInfo = RESPONSE_STATE_WITH_FEATURES_METADATA.mapInfo;
+        const state = { mapInfo: {...mapInfo, responses: [{response: "no features were found"}, {...mapInfo.responses[0]}], highlight: true, index: 1}};
+        const [feature] = currentFeatureSelector(state);
+        expect(feature).toBeTruthy();
+        expect(feature.id).toBe('poi.4');
     });
 });

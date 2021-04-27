@@ -126,19 +126,19 @@ describe("The SharePanel component", () => {
     it('test panel with enable default ', () => {
         const actions = {
             onUpdateSettings: () => {},
-            onSubmitClickPoint: () => {}
+            addMarker: () => {}
         };
         const spyOnUpdateSettings = expect.spyOn(actions, "onUpdateSettings");
-        const spyOnSubmitClickPoint = expect.spyOn(actions, "onSubmitClickPoint");
+        const spyAddMarker = expect.spyOn(actions, "addMarker");
         let panel = ReactDOM.render(
             <SharePanel onUpdateSettings={actions.onUpdateSettings} settings={{markerEnabled: false}} shareUrl="www.geo-solutions.it" isVisible={false} />, document.getElementById("container"));
         expect(panel).toBeTruthy();
-        panel = ReactDOM.render(<SharePanel settings={{markerEnabled: true}} advancedSettings={{centerAndZoom: true, defaultEnabled: "markerAndZoom"}} onUpdateSettings={actions.onUpdateSettings} onSubmitClickPoint={actions.onSubmitClickPoint} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        panel = ReactDOM.render(<SharePanel settings={{markerEnabled: true}} advancedSettings={{centerAndZoom: true, defaultEnabled: "markerAndZoom"}} onUpdateSettings={actions.onUpdateSettings} addMarker={actions.addMarker} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
         expect(panel).toBeTruthy();
         const cmpDom = ReactDOM.findDOMNode(panel);
         expect(cmpDom).toBeTruthy();
         expect(spyOnUpdateSettings).toHaveBeenCalled();
         expect(spyOnUpdateSettings.calls[0].arguments[0]).toEqual({ markerEnabled: true, centerAndZoomEnabled: true, bboxEnabled: false });
-        expect(spyOnSubmitClickPoint).toHaveBeenCalled();
+        expect(spyAddMarker).toHaveBeenCalled();
     });
 });
