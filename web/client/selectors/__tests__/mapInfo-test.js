@@ -26,8 +26,7 @@ import {
     overrideParamsSelector,
     mapTriggerSelector,
     hoverEnabledSelector,
-    currentFeatureSelector,
-    isMapPopup
+    currentFeatureSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -359,10 +358,6 @@ describe('Test mapinfo selectors', () => {
         expect(hoverEnabledSelector({maptype: {mapType: "openlayers"} })).toBe(true);
         expect(hoverEnabledSelector({maptype: {mapType: "cesium"} })).toBe(false);
     });
-    it('isMapPopup', () => {
-        expect(isMapPopup({ mapInfo: {showInMapPopup: true} })).toBeTruthy();
-    });
-
     it('test currentFeatureSelector with default index', () => {
         const state = { mapInfo: {...RESPONSE_STATE_WITH_FEATURES_METADATA.mapInfo, highlight: true}};
         const [feature] = currentFeatureSelector(state);
