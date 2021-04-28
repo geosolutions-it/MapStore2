@@ -133,6 +133,14 @@ class RecordItem extends React.Component {
 
     };
 
+    getFormats = (type, record) => {
+        let formats;
+        if (type === 'wms') {
+            formats = this.props?.service?.format && [this.props.service.format];
+        }
+        return formats ? formats : record.format && [record.format] || record.formats;
+    }
+
     renderButtons = (record, disabled) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
@@ -173,7 +181,7 @@ class RecordItem extends React.Component {
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => {
-                        const layer = this.makeLayer(type, wms || wmts, record.format && [record.format] || record.formats);
+                        const layer = this.makeLayer(type, wms || wmts, this.getFormats(type, record));
                         if (layer) {
                             this.addLayer(layer, {record});
                         }
