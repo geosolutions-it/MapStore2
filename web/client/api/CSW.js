@@ -25,6 +25,52 @@ const parseUrl = (url) => {
     }));
 };
 
+const constructXMLBody = (startPosition, maxRecords, searchText) => {
+    if (!searchText) {
+        return `<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+        xmlns:ogc="http://www.opengis.net/ogc"
+        xmlns:gml="http://www.opengis.net/gml"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:dct="http://purl.org/dc/terms/"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gmi="http://www.isotc211.org/2005/gmi"
+        xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${startPosition}" maxRecords="${maxRecords}">
+        <csw:Query typeNames="csw:Record">
+            <csw:ElementSetName>full</csw:ElementSetName>
+        </csw:Query>
+    </csw:GetRecords>`;
+    }
+
+    return `<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dct="http://purl.org/dc/terms/"
+    xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:gco="http://www.isotc211.org/2005/gco"
+    xmlns:gmi="http://www.isotc211.org/2005/gmi"
+    xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${startPosition}" maxRecords="${maxRecords}">
+    <csw:Query typeNames="csw:Record">
+        <csw:ElementSetName>full</csw:ElementSetName>
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+            <ogc:Or>
+                <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                    <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+                    <ogc:Literal>%${searchText}%</ogc:Literal>
+                </ogc:PropertyIsLike>
+                <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>dc:type</ogc:PropertyName>
+                    <ogc:Literal>dataset</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+            </ogc:Or>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Query>
+</csw:GetRecords>`;
+};
+
 /**
  * API for local config
  */
@@ -86,11 +132,14 @@ var Api = {
     getRecords: function(url, startPosition, maxRecords, filter) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
-                const {CSW, marshaller, unmarshaller} = require('../utils/ogc/CSW');
+                const {CSW, marshaller, unmarshaller } = require('../utils/ogc/CSW');
                 let body = marshaller.marshalString({
                     name: "csw:GetRecords",
                     value: CSW.getRecords(startPosition, maxRecords, filter)
                 });
+                if (!filter || typeof filter === "string") {
+                    body = constructXMLBody(startPosition, maxRecords, filter);
+                }
                 resolve(axios.post(parseUrl(url), body, { headers: {
                     'Content-Type': 'application/xml'
                 }}).then(
@@ -216,15 +265,15 @@ var Api = {
     textSearch: function(url, startPosition, maxRecords, text) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
-                const {Filter} = require('../utils/ogc/Filter');
+                // const {Filter} = require('../utils/ogc/Filter');
                 // creates a request like this:
                 // <ogc:PropertyName>apiso:AnyText</ogc:PropertyName><ogc:Literal>%a%</ogc:Literal></ogc:PropertyIsLike>
-                let filter = null;
-                if (text) {
-                    let ops = Filter.propertyIsLike("csw:AnyText", "%" + text + "%");
-                    filter = Filter.filter(ops);
-                }
-                resolve(Api.getRecords(url, startPosition, maxRecords, filter));
+                // let filter = null;
+                // if (text) {
+                //     let ops = Filter.propertyIsLike("csw:AnyText", "%" + text + "%");
+                //     filter = Filter.filter(ops);
+                // }
+                resolve(Api.getRecords(url, startPosition, maxRecords, text));
             });
         });
     },
