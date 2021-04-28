@@ -38,6 +38,20 @@ const constructXMLBody = (startPosition, maxRecords, searchText) => {
         xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${startPosition}" maxRecords="${maxRecords}">
         <csw:Query typeNames="csw:Record">
             <csw:ElementSetName>full</csw:ElementSetName>
+            <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+            <ogc:Or>
+                <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                    <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+                    <ogc:Literal>%${""}%</ogc:Literal>
+                </ogc:PropertyIsLike>
+                <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>dc:type</ogc:PropertyName>
+                    <ogc:Literal>dataset</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+            </ogc:Or>
+            </ogc:Filter>
+        </csw:Constraint>
         </csw:Query>
     </csw:GetRecords>`;
     }
@@ -135,7 +149,7 @@ var Api = {
                 const {CSW, marshaller, unmarshaller } = require('../utils/ogc/CSW');
                 let body = marshaller.marshalString({
                     name: "csw:GetRecords",
-                    value: CSW.getRecords(startPosition, maxRecords, filter)
+                    value: CSW.getRecords(startPosition, maxRecords, typeof filter !== "string" && filter)
                 });
                 if (!filter || typeof filter === "string") {
                     body = constructXMLBody(startPosition, maxRecords, filter);
