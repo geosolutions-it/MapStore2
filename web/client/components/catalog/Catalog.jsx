@@ -161,15 +161,15 @@ class Catalog extends React.Component {
         }
     };
     getServices = () => {
-        const startKeys = has(this.props.services, 'default_map_backgrounds') ? ['default_map_backgrounds'] : [];
-        return startKeys.concat(Object.keys(omit(this.props.services, 'default_map_backgrounds'))).map(s => {
-            const label = getMessageById(this.context.messages, this.props.services[s].title);
-            return assign({}, this.props.services[s], {
-                label: isObject(label) ? this.props.services[s].title : label,
+        return Object.keys(this.props.services).map(s => {
+            const service = this.props.services[s];
+            return assign({}, {
+                label: service.titleMsgId ? getMessageById(this.context.messages, service.titleMsgId) : service.title,
                 value: s
             });
         });
     };
+
     renderResult = () => {
         if (this.props.result) {
             if (this.props.result.numberOfRecordsMatched === 0) {
@@ -332,7 +332,7 @@ class Catalog extends React.Component {
                                 value={this.props.selectedService}
                                 onChange={(val) => this.props.onChangeSelectedService(val && val.value ? val.value : "")}
                                 placeholder={getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
-                            {this.isValidServiceSelected() && this.props.selectedService !== 'default_map_backgrounds' ? (<InputGroup.Addon className="btn"
+                            {this.isValidServiceSelected() && !this.props.services[this.props.selectedService].readOnly ? (<InputGroup.Addon className="btn"
                                 onClick={() => this.props.onChangeCatalogMode("edit", false)}>
                                 <Glyphicon glyph="pencil" />
                             </InputGroup.Addon>) : null}

@@ -27,6 +27,7 @@ import {
     selectedServiceTypeSelector,
     selectedServiceSelector,
     servicesSelector,
+    servicesSelectorWithBackgrounds,
     serviceListOpenSelector,
     tileSizeOptionsSelector,
     formatsLoadingSelector,
@@ -46,6 +47,16 @@ const state = {
         }
     },
     catalog: {
+        "default": {
+            staticServices: {
+                default_map_backgrounds: {
+                    "type": "backgrounds",
+                    "title": "Default Background",
+                    "titleMsgId": "defaultMapBackgroundsServiceTitle",
+                    "autoload": true
+                }
+            }
+        },
         selectedService: 'Basic WMS Service',
         services: {
             'Basic CSW Service': {
@@ -122,6 +133,13 @@ describe('Test catalog selectors', () => {
         const retVal = servicesSelector(state);
         expect(retVal).toExist();
         expect(Object.keys(retVal).length).toBe(3);
+    });
+    it('test servicesSelectorWithBackgrounds', () => {
+        const retVal = servicesSelectorWithBackgrounds(state);
+        expect(retVal).toBeTruthy();
+        expect(Object.keys(retVal).length).toBe(4);
+        const bgService = retVal.default_map_backgrounds;
+        expect(bgService.readOnly).toBe(true);
     });
     it('test newServiceTypeSelector', () => {
         const retVal = newServiceTypeSelector(state);
