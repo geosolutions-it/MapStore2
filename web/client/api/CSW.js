@@ -39,7 +39,7 @@ const constructXMLBody = (startPosition, maxRecords, searchText = "") => {
         <csw:ElementSetName>full</csw:ElementSetName>
         <csw:Constraint version="1.1.0">
             <ogc:Filter>
-            <ogc:Or>
+            <ogc:And>
                 <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
                     <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
                     <ogc:Literal>%${searchText}%</ogc:Literal>
@@ -48,7 +48,7 @@ const constructXMLBody = (startPosition, maxRecords, searchText = "") => {
                     <ogc:PropertyName>dc:type</ogc:PropertyName>
                     <ogc:Literal>dataset</ogc:Literal>
                 </ogc:PropertyIsEqualTo>
-            </ogc:Or>
+            </ogc:And>
             </ogc:Filter>
         </csw:Constraint>
     </csw:Query>
