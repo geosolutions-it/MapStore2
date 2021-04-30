@@ -12,11 +12,25 @@ import set from 'lodash/set';
 import unset from 'lodash/unset';
 
 let UserPersistedSession = {
-    api: localStorage
 };
+let ls;
+/*
+ * This API provides a wrapper for local persistance. By default uses localStorage and implements the same API.
+ * Anyway, when localStorage is not accessible for security settings, it falls back to a dummy local memory.
+ * One example of 'localStorage not available' is when 3rd party cookies are disabled, the JS code is running in an iframe and you are in incognito mode.
+ */
+try {
+    // test localStorage access
+    ls = window.localStorage;
+    UserPersistedSession.api = "localStorage";
+} catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn("localStorage is not accessible, using local memory storage instead", e);
+    UserPersistedSession.api = "memoryStorage";
+}
 let MemoryStorage = {};
 const ApiProviders = {
-    localStorage: window.localStorage,
+    localStorage: ls,
     memoryStorage: {
         accessDenied: false,
         getItem: (path) => {
@@ -42,7 +56,7 @@ const ApiProviders = {
         }
     }
 };
-export const api = "localStorage";
+export const api = UserPersistedSession.api;
 /**
 * Add a new API implementation
 * @param {string} name the key of the added api implementation
@@ -55,7 +69,7 @@ export const addApi = (name, apiName) => {
 * Set the current API
 * @param {string} name the key of the api implementation to be used
 */
-export const setApi = (name = "localStorage") => {
+export const setApi = (name = api) => {
     UserPersistedSession.api = name;
 };
 /**
