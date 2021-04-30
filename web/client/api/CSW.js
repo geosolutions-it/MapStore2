@@ -25,7 +25,7 @@ const parseUrl = (url) => {
     }));
 };
 
-const constructXMLBody = (startPosition, maxRecords, searchText) => {
+export const constructXMLBody = (startPosition, maxRecords, searchText) => {
     if (!searchText) {
         return `<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
         xmlns:ogc="http://www.opengis.net/ogc"
@@ -271,17 +271,7 @@ var Api = {
     },
     textSearch: function(url, startPosition, maxRecords, text) {
         return new Promise((resolve) => {
-            require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
-                // const {Filter} = require('../utils/ogc/Filter');
-                // creates a request like this:
-                // <ogc:PropertyName>apiso:AnyText</ogc:PropertyName><ogc:Literal>%a%</ogc:Literal></ogc:PropertyIsLike>
-                // let filter = null;
-                // if (text) {
-                //     let ops = Filter.propertyIsLike("csw:AnyText", "%" + text + "%");
-                //     filter = Filter.filter(ops);
-                // }
-                resolve(Api.getRecords(url, startPosition, maxRecords, text));
-            });
+            resolve(Api.getRecords(url, startPosition, maxRecords, text));
         });
     },
     workspaceSearch: function(url, startPosition, maxRecords, text, workspace) {
