@@ -131,7 +131,6 @@ Inside defaultState you can set default catalog services adding the following ke
       "type": "wms",
       "title": "",
       "isNew": true,
-      "editable": true,
       "autoload": false
     },
     "selectedService": "Demo CSW Service",
