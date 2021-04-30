@@ -25,7 +25,30 @@ const parseUrl = (url) => {
     }));
 };
 
-const constructXMLBody = (startPosition, maxRecords, searchText = "") => {
+const constructXMLBody = (startPosition, maxRecords, searchText) => {
+    if (!searchText) {
+        return `<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+        xmlns:ogc="http://www.opengis.net/ogc"
+        xmlns:gml="http://www.opengis.net/gml"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:dct="http://purl.org/dc/terms/"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gmi="http://www.isotc211.org/2005/gmi"
+        xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${startPosition}" maxRecords="${maxRecords}">
+        <csw:Query typeNames="csw:Record">
+            <csw:ElementSetName>full</csw:ElementSetName>
+            <csw:Constraint version="1.1.0">
+                <ogc:Filter>
+                    <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>dc:type</ogc:PropertyName>
+                    <ogc:Literal>dataset</ogc:Literal>
+                    </ogc:PropertyIsEqualTo>
+                </ogc:Filter>
+            </csw:Constraint>
+        </csw:Query>
+    </csw:GetRecords>`;
+    }
     return `<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
     xmlns:ogc="http://www.opengis.net/ogc"
     xmlns:gml="http://www.opengis.net/gml"
