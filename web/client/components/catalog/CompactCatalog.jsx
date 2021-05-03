@@ -44,8 +44,16 @@ const SideGrid = compose(
 /*
  * assigns an identifier to a record
  */
-const getIdentifier = (r) => r.identifier ? r.identifier :  r.provider ? r.provider + (r.variant ?? "") : (r.title || r.url);
-
+/*
+ * assigns an identifier to a record. The ID is required for local selection.
+ * TODO: improve identifier generation.
+ */
+const getIdentifier = (r) =>
+    r.identifier ? r.identifier
+        :  r.provider
+            ? r.provider + (r.variant ?? "") // existing tileprovider
+            : (r.tileMapUrl // TMS 1.0.0
+        || r.url); //  default
 /*
  * converts record item into a item for SideGrid
  */

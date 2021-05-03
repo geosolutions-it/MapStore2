@@ -12,15 +12,15 @@ import { addSearch } from '../../../observables/wms';
 import { recordToLayer } from '../../../utils/CatalogUtils';
 
 // layers like tms or wmts don't need the recordToLayer conversion
-const toLayer = (r, service) => ["tms", "wfs"].includes(service.type) // for tms and wfs the layer is ready
+const toLayer = (r, service) => ["tms", "wfs"].includes(service?.type) // for tms and wfs the layer is ready
     ? r : recordToLayer(
-        r, service.type === "wmts" // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
+        r, service?.type === "wmts" // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
             ? "wmts"
             : undefined
     );
 
 // checks for tms wmts in order to addSearch() to skip addSearch
-const addSearchObservable = (selected, service) => ["tms", "wmts"].includes(service.type) ? Rx.Observable.of(toLayer(selected, service)) : addSearch(toLayer(selected, service));
+const addSearchObservable = (selected, service) => ["tms", "wmts"].includes(service?.type) ? Rx.Observable.of(toLayer(selected, service)) : addSearch(toLayer(selected, service));
 
 /**
  * enhancer for CompactCatalog (or a container) to validate a selected record,
