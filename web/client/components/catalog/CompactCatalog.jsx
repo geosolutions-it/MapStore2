@@ -10,6 +10,7 @@ import { isNil, isObject, isEmpty } from 'lodash';
 import React from 'react';
 import { compose, mapPropsStream, withPropsOnChange } from 'recompose';
 import Rx from 'rxjs';
+import uuid from 'uuid';
 import API from '../../api/catalog';
 import { getCatalogRecords } from '../../utils/CatalogUtils';
 import Message from '../I18N/Message';
@@ -53,7 +54,7 @@ const getIdentifier = (r) =>
         :  r.provider
             ? r.provider + (r.variant ?? "") // existing tileprovider
             : (r.tileMapUrl // TMS 1.0.0
-        || r.url); //  default
+        || r.url + uuid()); //  default
 /*
  * converts record item into a item for SideGrid
  */
