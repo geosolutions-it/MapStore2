@@ -40,6 +40,9 @@ export default ({service: defaultService, catalogServices,
 
     const handleChangeServiceFormat = (property, value) => {
         let currentData = service;
+        if (property === "provider") {
+            currentData.provider = value;
+        }
         if (currentData[property]) {
             currentData[property] = typeof value === 'boolean' ? !(currentData[property]) : value;
         } else {
