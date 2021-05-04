@@ -57,13 +57,11 @@ describe('useFiles enhancer', () => {
         expect(spyLoadAnnotations).toNotHaveBeenCalled();
         expect(spySetLayers).toNotHaveBeenCalled();
     });
-    it('useFiles rendering with layer', (done) => {
-
+    it('useFiles rendering with layer withIn Bounds', (done) => {
         const actions = {
             setLayers: (layers) => {
                 expect(layers).toExist();
                 expect(layers.length).toBe(1);
-                expect(layers[0].features).toExist();
                 done();
             },
             onClose: () => {},
@@ -73,19 +71,81 @@ describe('useFiles enhancer', () => {
         const spyOnClose = expect.spyOn(actions, 'onClose');
         const spyLoadAnnotations = expect.spyOn(actions, 'loadAnnotations');
         const spyLoadMap = expect.spyOn(actions, 'loadMap');
+        const sink = createSink( props => {
+            expect(props).toExist();
+            expect(props.layers).toExist();
+            expect(props.useFiles).toExist();
+            props.useFiles({layers: props.layers});
+
+        });
+        const EnhancedSink = useFiles(sink);
+        const layer = {
+            type: 'vector', name: "FileName", hideLoading: true,
+            bbox: {crs: "EPSG:4326"},
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-150, 90]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        ReactDOM.render(<EnhancedSink layers={[layer]}
+            setLayers={actions.setLayers} onClose={actions.onClose} />, document.getElementById("container"));
+
+        expect(spyOnClose).toNotHaveBeenCalled();
+        expect(spyLoadAnnotations).toNotHaveBeenCalled();
+        expect(spyLoadMap).toNotHaveBeenCalled();
+    });
+
+    it('useFiles rendering with layer outside Bounds should call warnig()', (done) => {
+        const handlers = {
+            warning: () => {},
+            onClose: () => {},
+            loadAnnotations: () => {},
+            loadMap: () => {}
+        };
+        const warningSpy = expect.spyOn(handlers, 'warning');
+
+        const actions = {
+            setLayers: (layers) => {
+                expect(layers).toExist();
+                // length is 0 since layer is invalid
+                expect(layers.length).toBe(0);
+                expect(warningSpy).toHaveBeenCalled();
+                done();
+            }
+        };
 
         const sink = createSink( props => {
             expect(props).toExist();
             expect(props.layers).toExist();
             expect(props.useFiles).toExist();
             props.useFiles({layers: props.layers});
+
         });
         const EnhancedSink = useFiles(sink);
-        ReactDOM.render(<EnhancedSink layers={[{type: 'vector', name: "FileName", hideLoading: true, features: []}]}
-            setLayers={actions.setLayers} onClose={actions.onClose} />, document.getElementById("container"));
-        expect(spyOnClose).toNotHaveBeenCalled();
-        expect(spyLoadAnnotations).toNotHaveBeenCalled();
-        expect(spyLoadMap).toNotHaveBeenCalled();
+
+        const layer = {
+            type: 'vector', name: "FileName", hideLoading: true,
+            bbox: {crs: "EPSG:4326"},
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-150, 95]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        ReactDOM.render(<EnhancedSink layers={[layer]}
+            setLayers={actions.setLayers} warning={handlers.warning} onClose={handlers.onClose} />, document.getElementById("container"));
+
     });
     it('useFiles rendering with new annotation layer', (done) => {
 

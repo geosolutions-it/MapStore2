@@ -102,7 +102,8 @@
             "staticServices": {
               "default_map_backgrounds": {
                 "type": "backgrounds",
-                "title": "defaultMapBackgroundsServiceTitle",
+                "title": "Default Backgrounds",
+                "titleMsgId": "defaultMapBackgroundsServiceTitle",
                 "autoload": true,
                 "backgrounds": [{
                     "type": "osm",
