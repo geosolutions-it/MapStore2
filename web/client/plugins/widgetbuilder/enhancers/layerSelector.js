@@ -8,6 +8,7 @@
 import Rx from 'rxjs';
 
 import { compose, withState, mapPropsStream } from 'recompose';
+import isUndefined from 'lodash/isUndefined';
 import { addSearch } from '../../../observables/wms';
 import { recordToLayer } from '../../../utils/CatalogUtils';
 
@@ -38,7 +39,7 @@ export default compose(
                     Rx.Observable.of(toLayer(selected, dashboardServices ? dashboardServices[dashboardSelectedService] : defaultServices[defaultSelectedService]))
                         .let(layerValidationStream)
                         .switchMap(() => addSearchObservable(selected, dashboardServices ? dashboardServices[dashboardSelectedService] : defaultServices[defaultSelectedService]))
-                        .do(l => setLayer(l))
+                        .do(l => setLayer({...l, visibility: !isUndefined(l.visibility) ? l.visibility : true}))
                         .mapTo({ canProceed: true })
                         .catch((error) => Rx.Observable.of({ error, canProceed: false }))
             ).startWith({})
