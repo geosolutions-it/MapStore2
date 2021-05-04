@@ -46,6 +46,7 @@ import FeatureInfoFormatSelectorComp from '../components/misc/FeatureInfoFormatS
 import FeatureInfoTriggerSelectorComp from '../components/misc/FeatureInfoTriggerSelector';
 import epics from '../epics/identify';
 import mapInfo from '../reducers/mapInfo';
+import mapPopups from '../reducers/mapPopups';
 import { isEditingAllowedSelector } from '../selectors/featuregrid';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
@@ -295,6 +296,6 @@ export default {
             position: 3
         }
     }),
-    reducers: { mapInfo },
+    reducers: { mapInfo, mapPopups },
     epics
 };

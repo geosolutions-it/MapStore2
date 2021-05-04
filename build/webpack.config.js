@@ -6,6 +6,7 @@ const moduleFederationPlugin = require('./moduleFederation.js').plugin;
 
 module.exports = require('./buildConfig')(
     {
+        "embedded": path.join(__dirname, "..", "web", "client", "product", "embedded"),
         [process.env.bundle || "mapstore2"]: path.join(__dirname, "..", "web", "client", "product", process.env.entrypoint || process.env.bundle || "app")
     },
     { ["themes/default"]: themeEntries["themes/" + (process.env.theme || "default")]},
