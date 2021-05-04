@@ -107,7 +107,7 @@ export const fields = {
             </PropertyField>
         );
     },
-    input: ({ label, value, config = {}, onChange = () => {} }) => {
+    input: ({ label, value, config = {}, onChange = () => {}, disabled }) => {
         return (
             <PropertyField
                 label={label}>
@@ -115,6 +115,7 @@ export const fields = {
                     <FormControl
                         type={config.type || 'text'}
                         value={value}
+                        disabled={disabled}
                         placeholder="styleeditor.placeholderInput"
                         onChange={event => onChange(event.target.value)}/>
                 </FormGroup>

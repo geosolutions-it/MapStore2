@@ -2148,6 +2148,7 @@
             "attribute": "Attribute",
             "method": "Method",
             "intervals": "Intervals",
+            "intervalsForUnique": "Intervals For Unique",
             "continuous": "Continuous colors",
 
             "lineCapButt": "Butt",
@@ -2210,6 +2211,7 @@
             "redoStyle": "Redo style",
 
             "equalInterval": "Equal interval",
+            "uniqueInterval": "Unique interval",
             "quantile": "Quantile",
             "jenks": "Natural breaks (Jenks)",
             "standardDeviation": "Standard deviation",
@@ -2225,6 +2227,7 @@
             "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
             "classificationError": "Service unavailable. Currently it is not possible to create a classification",
             "classificationRasterError": "Service unavailable. Currently it is not possible to create a raster classification",
+            "classificationUniqueIntervalError": "Style classes produced by the classification is greater than the intervals for unique specified",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",

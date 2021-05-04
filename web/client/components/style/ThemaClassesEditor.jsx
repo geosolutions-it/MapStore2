@@ -40,17 +40,23 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
-                <NumberPicker
+                { classItem.equal ? <NumberPicker
                     format="- ###.###"
-                    value={classItem.min}
-                    onChange={(value) => this.updateMin(index, value)}
-                />
-                <NumberPicker
-                    format="- ###.###"
-                    value={classItem.max}
-                    precision={3}
-                    onChange={(value) => this.updateMax(index, value)}
-                />
+                    value={classItem.equal}
+                    onChange={(value) => this.updateEqual(index, value)}
+                /> : <>
+                    <NumberPicker
+                        format="- ###.###"
+                        value={classItem.min}
+                        onChange={(value) => this.updateMin(index, value)}
+                    />
+                    <NumberPicker
+                        format="- ###.###"
+                        value={classItem.max}
+                        precision={3}
+                        onChange={(value) => this.updateMax(index, value)}
+                    /></>
+                }
             </FormGroup>
         ));
     };
@@ -72,17 +78,26 @@ class ThemaClassesEditor extends React.Component {
         }
     };
 
+    updateEqual = (classIndex, equal) => {
+        if (!isNaN(equal)) {
+            const newClassification = this.props.classification.map((classItem, index) => {
+                if (index === classIndex) {
+                    return assign({}, classItem, {
+                        equal
+                    });
+                }
+                return classItem;
+            });
+            this.props.onUpdateClasses(newClassification, 'interval');
+        }
+    };
+
     updateMin = (classIndex, min) => {
         if (!isNaN(min)) {
             const newClassification = this.props.classification.map((classItem, index) => {
                 if (index === classIndex) {
                     return assign({}, classItem, {
                         min
-                    });
-                }
-                if (index === (classIndex - 1)) {
-                    return assign({}, classItem, {
-                        max: min
                     });
                 }
                 return classItem;
@@ -109,6 +124,7 @@ class ThemaClassesEditor extends React.Component {
             this.props.onUpdateClasses(newClassification, 'interval');
         }
     };
+
 }
 
 export default ThemaClassesEditor;

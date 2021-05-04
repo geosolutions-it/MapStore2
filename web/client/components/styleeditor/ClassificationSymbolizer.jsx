@@ -35,6 +35,7 @@ function ClassificationSymbolizer({
         classification,
         attribute,
         intervals,
+        intervalsForUnique,
         reverse,
         continuous
     } = props;
@@ -46,6 +47,7 @@ function ClassificationSymbolizer({
     state.current = {
         ruleId,
         intervals,
+        intervalsForUnique,
         method,
         attribute,
         reverse,

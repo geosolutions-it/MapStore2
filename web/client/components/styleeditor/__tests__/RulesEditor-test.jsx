@@ -361,7 +361,8 @@ describe('RulesEditor', () => {
             'styleeditor.reverse',
             'styleeditor.attribute',
             'styleeditor.method',
-            'styleeditor.intervals'
+            'styleeditor.intervals',
+            'styleeditor.intervalsForUnique'
         ]);
 
         const optionsNodes = rulesNode[0].querySelectorAll('.ms-symbolizer-tools .dropdown-menu li a span');

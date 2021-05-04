@@ -204,7 +204,7 @@ const RulesEditor = forwardRef(({
                                         ruleId: uuidv1(),
                                         symbolizers: [
                                             {
-                                                ...symbolizerBlock[kind].deaultProperties,
+                                                ...symbolizerBlock[kind].defaultProperties,
                                                 symbolizerId: uuidv1()
                                             }
                                         ]
@@ -222,7 +222,7 @@ const RulesEditor = forwardRef(({
                                         onClick: () => handleAdd({
                                             name: '',
                                             ruleId: uuidv1(),
-                                            ...ruleBlock[kind].deaultProperties
+                                            ...ruleBlock[kind].defaultProperties
                                         })
                                     };
                                 })

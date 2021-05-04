@@ -273,12 +273,16 @@ const property = {
             };
         }
     }),
-    text: ({ label, key = 'label' }) => ({
+    input: ({ label, key = 'label', type, isDisabled}) => ({
         type: 'input',
         label,
+        isDisabled,
+        config: {
+            type
+        },
         getValue: (value = '') => {
             return {
-                [key]: value
+                [key]: type === 'number' ? parseInt(value, 10) : value
             };
         }
     }),

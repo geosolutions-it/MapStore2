@@ -32,7 +32,7 @@ describe('StyleEditor API', () => {
         });
         it('should send a classification request', (done) => {
 
-            mockAxios.onGet().reply(200, CLASSIFY_VECTOR_RESPONSE);
+            mockAxios.onGet().reply(200, CLASSIFY_VECTOR_RESPONSE.SAMPLE1);
 
             const values = {
                 attribute: 'ATTRIBUTE'
@@ -372,6 +372,135 @@ describe('StyleEditor API', () => {
                 done();
             });
         });
+        it('should send a classification request for unique Interval', (done) => {
+
+            mockAxios.onGet().reply(200, CLASSIFY_VECTOR_RESPONSE.SAMPLE2);
+
+            const values = {
+                attribute: 'ATTRIBUTE'
+            };
+            const properties = {
+                ruleId: 'rule0',
+                intervals: 5,
+                intervalsForUnique: 5,
+                method: 'uniqueInterval',
+                reverse: false,
+                ramp: 'spectral',
+                type: 'classificationVector'
+            };
+            const rules = [
+                {
+                    color: '#dddddd',
+                    fillOpacity: 1,
+                    kind: 'Classification',
+                    outlineColor: '#777777',
+                    outlineWidth: 1,
+                    symbolizerKind: 'Fill',
+                    ...properties
+                }
+            ];
+            const layer = {
+                url: '/geoserver/wms'
+            };
+            classificationVector({
+                values,
+                properties,
+                rules,
+                layer
+            }).then((newRules) => {
+                try {
+                    expect(newRules[0].classification).toEqual(
+                        [
+                            {
+                                title: 168839.0,
+                                color: '#9E0142',
+                                type: 'Polygon',
+                                equal: 168839
+                            },
+                            {
+                                title: 2211312.4,
+                                color: '#F98E52',
+                                type: 'Polygon',
+                                equal: 2211312.4
+                            },
+                            {
+                                title: 4253785.8,
+                                color: '#FFFFBF',
+                                type: 'Polygon',
+                                equal: 4253785.8
+                            },
+                            {
+                                title: 6296259.2,
+                                color: '#89D0A5',
+                                type: 'Polygon',
+                                equal: 6296259.2
+                            },
+                            {
+                                title: 8338732.6,
+                                color: '#5E4FA2',
+                                type: 'Polygon',
+                                equal: 8338732.6
+                            }
+                        ]
+                    );
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+        });
+        it('should update the rule and return errorId if service is not available for unique Interval', (done) => {
+            mockAxios.onGet().reply(config=> {
+                const params = new URLSearchParams(config.url);
+                if (!params.get('intervalsForUnique')) {
+                    return [200, CLASSIFY_VECTOR_RESPONSE.SAMPLE2];
+                }
+                return [400, {}];
+            });
+
+            const values = {
+                attribute: 'NEW_ATTRIBUTE'
+            };
+            const properties = {
+                ruleId: 'rule0',
+                intervals: 5,
+                intervalsForUnique: 4,
+                method: 'uniqueInterval',
+                reverse: false,
+                ramp: 'spectral',
+                attribute: 'ATTRIBUTE',
+                type: 'classificationVector',
+                classification: [1, 2, 3, 4, 5]
+            };
+            const rules = [
+                {
+                    color: '#dddddd',
+                    fillOpacity: 1,
+                    kind: 'Classification',
+                    outlineColor: '#777777',
+                    outlineWidth: 1,
+                    symbolizerKind: 'Fill',
+                    ...properties
+                }
+            ];
+            const layer = {
+                url: '/geoserver/wms'
+            };
+            classificationVector({
+                values,
+                properties,
+                rules,
+                layer
+            }).then((newRules) => {
+                try {
+                    expect(newRules[0].attribute).toBe('NEW_ATTRIBUTE');
+                    expect(newRules[0].errorId).toBe('styleeditor.classificationUniqueIntervalError');
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+        });
     });
     describe('classificationRaster', () => {
         beforeEach(done => {
@@ -580,7 +709,7 @@ describe('StyleEditor API', () => {
                 .then((updatedStyleService) => {
                     try {
                         expect(updatedStyleService.classificationMethods.vector)
-                            .toEqual([ 'quantile', 'jenks', 'equalInterval', 'standardDeviation' ]);
+                            .toEqual([ 'quantile', 'jenks', 'equalInterval', 'uniqueInterval', 'standardDeviation' ]);
                         expect(updatedStyleService.classificationMethods.raster)
                             .toEqual([ 'quantile', 'jenks', 'equalInterval' ]);
                     } catch (e) {
