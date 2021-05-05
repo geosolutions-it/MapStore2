@@ -7,17 +7,22 @@
  */
 
 import { createSelector, createStructuredSelector } from 'reselect';
-import { get, pick } from 'lodash';
+import { get } from 'lodash';
 
 import { projectionSelector } from './map';
 import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from "../utils/CatalogUtils";
 
 export const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
 export const servicesSelector = (state) => get(state, "catalog.services");
-export const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, servicesSelector, (staticServices, services) => ({
-    ...services,
-    ...(pick(staticServices, "default_map_backgrounds"))
-}));
+export const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, servicesSelector, (staticServices, services) => {
+    const backgroundService = staticServices.default_map_backgrounds;
+    if (backgroundService) {
+        // static services are readOnly by default
+        backgroundService.readOnly = true;
+        return {...services, default_map_backgrounds: backgroundService};
+    }
+    return services;
+});
 export const selectedStaticServiceTypeSelector =
     (state) => get(state, `catalog.default.staticServices["${get(state, 'catalog.selectedService')}"].type`, "csw");
 

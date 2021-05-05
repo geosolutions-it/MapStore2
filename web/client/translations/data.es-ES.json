@@ -1350,7 +1350,8 @@
             "errors": {
                 "fileNotSupported": "Archivo no compatible",
                 "unknownError": "hubo un error desconocido durante la importación",
-                "projectionNotSupported": "La proyección del archivo que está intentando importar no es compatible"
+                "projectionNotSupported": "La proyección del archivo que está intentando importar no es compatible",
+                "fileBeyondBoundaries": "El archivo {filename} no se pudo importar porque no encaja dentro de los límites del mapa"
             }
         },
         "mapExport": {

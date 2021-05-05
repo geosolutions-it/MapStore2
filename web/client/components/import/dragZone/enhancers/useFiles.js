@@ -1,5 +1,6 @@
 
 import { compose, mapPropsStream, withHandlers } from 'recompose';
+import { checkIfLayerFitsExtentForProjection } from '../../../../utils/CoordinatesUtils';
 
 /**
  * Enhancer for processing map configuration and layers object
@@ -9,7 +10,7 @@ import { compose, mapPropsStream, withHandlers } from 'recompose';
 export default compose(
     withHandlers({
         useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { },
-            annotationsLayer, loadAnnotations = () => {} }) =>
+            annotationsLayer, loadAnnotations = () => {}, warning = () => {}}) =>
             ({ layers = [], maps = [] }, warnings) => {
                 const map = maps[0]; // only 1 map is allowed
                 if (map) {
@@ -31,7 +32,22 @@ export default compose(
                         loadAnnotations(layers[0].features, false);
                         onClose(); // close if loaded a new annotation layer
                     } else {
-                        setLayers(layers, warnings); // TODO: warnings
+                        let validLayers = [];
+                        layers.forEach((layer) => {
+                            const valid = layer.type === "vector" ? checkIfLayerFitsExtentForProjection(layer) : true;
+                            if (valid) {
+                                validLayers.push(layer);
+                            } else {
+                                warning({
+                                    title: "notification.warning",
+                                    message: "mapImport.errors.fileBeyondBoundaries",
+                                    autoDismiss: 6,
+                                    position: "tc",
+                                    values: {filename: layer.name ?? " "}
+                                });
+                            }
+                        });
+                        setLayers(validLayers, warnings); // TODO: warnings
                     }
                 }
             }
@@ -44,3 +60,4 @@ export default compose(
             .ignoreElements()
     ))
 );
+
