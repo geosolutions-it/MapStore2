@@ -26,6 +26,7 @@ import CounterWizard from '../../components/widgets/builder/wizard/CounterWizard
 import BuilderHeader from './BuilderHeader';
 import BaseToolbar from '../../components/widgets/builder/wizard/counter/Toolbar';
 import LayerSelector from './LayerSelector';
+import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
 
 import {wizardStateToProps, wizardSelector} from './commons';
 
@@ -69,6 +70,7 @@ const Toolbar = compose(
 const chooseLayerEnhancer = compose(
     connect(wizardSelector),
     viewportBuilderConnectMask,
+    catalogEditorEnhancer,
     branch(
         ({ layer } = {}) => !layer,
         renderComponent(counterLayerSelector(LayerSelector))
