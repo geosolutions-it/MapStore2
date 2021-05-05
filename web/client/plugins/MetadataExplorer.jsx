@@ -82,7 +82,7 @@ import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import {DEFAULT_FORMAT_WMS, getCatalogRecords} from '../utils/CatalogUtils';
 
-const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
+export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
 const metadataExplorerSelector = createStructuredSelector({
     searchOptions: searchOptionsSelector,
@@ -130,7 +130,13 @@ const Catalog = compose(
             marginBottom: "10px",
             marginRight: "5px"
         },
-        formatOptions: DEFAULT_FORMAT_WMS
+        formatOptions: DEFAULT_FORMAT_WMS,
+        advancedRasterStyles: {
+            display: 'flex',
+            alignItems: 'center',
+            paddingTop: 15,
+            borderTop: '1px solid #ddd'
+        }
     }),
     branch(
         ({mode}) => mode === "edit",

@@ -180,7 +180,6 @@ export const saveDashboard = action$ => action$
             )
     );
 
-
 export default {
     openDashboardWidgetEditor,
     closeDashboardWidgetEditorOnFinish,

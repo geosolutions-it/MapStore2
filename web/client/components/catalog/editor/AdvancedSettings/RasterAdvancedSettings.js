@@ -7,11 +7,11 @@
  */
 import React from 'react';
 import { FormGroup, Col, ControlLabel } from "react-bootstrap";
-import CommonAdvancedSettings from './CommonAdvancedSettings';
 import RS from 'react-select';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 const Select = localizedProps('noResultsText')(RS);
 
+import CommonAdvancedSettings from './CommonAdvancedSettings';
 /**
  * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
  * @param {number[]} opts an array of tile sizes
@@ -22,22 +22,38 @@ const getTileSizeSelectOptions = (opts) => {
 
 export default ({
     service,
-    formatOptions,
+    formatOptions =  [{
+        label: 'image/png',
+        value: 'image/png'
+    }, {
+        label: 'image/png8',
+        value: 'image/png8'
+    }, {
+        label: 'image/jpeg',
+        value: 'image/jpeg'
+    }, {
+        label: 'image/vnd.jpeg-png',
+        value: 'image/vnd.jpeg-png'
+    }, {
+        label: 'image/gif',
+        value: 'image/gif'
+    }],
     onChangeServiceFormat = () => { },
     onChangeServiceProperty = () => {},
-    tileSizeOptions,
     currentWMSCatalogLayerSize,
     selectedService,
     onFormatOptionsFetch = () => {},
+    advancedRasterSettingsStyles = {},
+    tileSizeOptions,
     ...props
 }) => {
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
-    return (<CommonAdvancedSettings onChangeServiceProperty={onChangeServiceProperty} service={service} {...props}>
-        <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
+    return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
+        <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6}>
                 <ControlLabel>Format</ControlLabel>
             </Col >
-            <Col xs={6}>
+            <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
                     isLoading={props.formatsLoading}
                     onOpen={() => onFormatOptionsFetch(service.url)}
@@ -49,11 +65,11 @@ export default ({
                     onChange={event => onChangeServiceFormat(event && event.value)} />
             </Col >
         </FormGroup>
-        <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
-            <Col xs={6}>
+        <FormGroup style={advancedRasterSettingsStyles}>
+            <Col xs={6} >
                 <ControlLabel>WMS Layer tile size</ControlLabel>
             </Col >
-            <Col xs={6}>
+            <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
                     value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
                     options={tileSelectOptions}
