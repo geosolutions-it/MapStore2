@@ -24,7 +24,7 @@ export const defaultColorGenerator = (total, colorOptions) => {
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
 };
 
-function getData({ type, xDataKey, yDataKey, data, formula}) {
+function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     switch (type) {
@@ -51,6 +51,7 @@ function getData({ type, xDataKey, yDataKey, data, formula}) {
 
         }
         return {
+            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x,
             y
         };
