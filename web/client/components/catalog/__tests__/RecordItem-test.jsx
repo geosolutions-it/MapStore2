@@ -293,9 +293,11 @@ describe('This test for RecordItem', () => {
 
             }
         };
+        const service = { format: "image/jpeg", title: "GeoServer WMS", type: "wms", url: 'fakeURL'};
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
         const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
+            service={service}
             onLayerAdd={actions.onLayerAdd}
             catalogURL="fakeURL"
             catalogType="wms"
@@ -312,6 +314,8 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.calls[0].arguments[0].format).toBeTruthy();
+        expect(actionsSpy.calls[0].arguments[0].format).toBe(service.format);
         expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check wms default format', () => {
