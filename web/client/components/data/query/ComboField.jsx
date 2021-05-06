@@ -17,6 +17,7 @@ import Message from '../../../components/I18N/Message';
 
 class ComboField extends React.Component {
     static propTypes = {
+        dropUp: PropTypes.bool,
         busy: PropTypes.bool,
         style: PropTypes.object,
         valueField: PropTypes.string,
@@ -97,6 +98,7 @@ class ComboField extends React.Component {
 
         const list = this.props.valueField !== null && this.props.textField !== null ?
             (<ListComponent
+                dropUp={this.props.dropUp}
                 {...this.props.options}
                 busy={this.props.busy}
                 disabled={this.props.disabled}
@@ -118,6 +120,7 @@ class ComboField extends React.Component {
                 onSearch={this.props.onSearch}/>)
             :
             (<ListComponent
+                dropUp={this.props.dropUp}
                 {...this.props.options}
                 busy={this.props.busy}
                 disabled={this.props.disabled}
