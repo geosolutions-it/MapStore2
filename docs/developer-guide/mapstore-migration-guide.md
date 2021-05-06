@@ -52,10 +52,7 @@ Check the changes in pom.xml to update. (future evolution of the project will av
 {
     "name": "Identify",
     "cfg": {
-        "showFullscreen": true,
-        "position": "bottom",
-        "size": 0.5,
-        "fluid": true,
+        "showInMapPopup":true,
         "viewerOptions": {
             "container": "{context.ReactSwipe}"
         }
