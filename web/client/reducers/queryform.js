@@ -140,23 +140,52 @@ function queryform(state = initialState, action) {
         })});
     }
     case TOGGLE_AUTOCOMPLETE_MENU: {
-        return assign({}, state, {filterFields: state.filterFields.map((field) => {
-            if (field.rowId === action.rowId) {
-                return assign({}, field, {openAutocompleteMenu: action.status} );
-            }
-            return field;
-        })});
+        if (action.layerFilterType === "filterField") {
+            return assign({}, state, {filterFields: state.filterFields.map((field) => {
+                if (field.rowId === action.rowId) {
+                    return assign({}, field, {openAutocompleteMenu: action.status} );
+                }
+                return field;
+            })});
+        }
+        return set(
+            `crossLayerFilter.collectGeometries.queryCollection.filterFields`,
+            (get(state, 'crossLayerFilter.collectGeometries.queryCollection.filterFields') || [])
+                .map((field) => {
+                    if (field.rowId === action.rowId) {
+                        return {
+                            ...field,
+                            openAutocompleteMenu: action.status
+                        };
+                    }
+                    return field;
+                })
+            , state);
     }
     case SET_AUTOCOMPLETE_MODE: {
         return assign({}, state, {autocompleteEnabled: action.status});
     }
     case LOADING_FILTER_FIELD_OPTIONS: {
-        return assign({}, state, {filterFields: state.filterFields.map((field) => {
-            if (field.rowId === action.filterField.rowId) {
-                return assign({}, field, {loading: action.status});
-            }
-            return field;
-        })});
+        if (action.layerFilterType === "filterField") {
+            return assign({}, state, {filterFields: state.filterFields.map((field) => {
+                if (field.rowId === action.filterField.rowId) {
+                    return assign({}, field, {loading: action.status});
+                }
+                return field;
+            })});
+        }
+        return  set(`crossLayerFilter.collectGeometries.queryCollection.filterFields`,
+            (get(state, 'crossLayerFilter.collectGeometries.queryCollection.filterFields') || [])
+                .map((field) => {
+                    if (field.rowId === action.filterField.rowId) {
+                        return {
+                            ...field,
+                            loading: action.status
+                        };
+                    }
+                    return field;
+                })
+            , state);
     }
     case UPDATE_EXCEPTION_FIELD: {
         return assign({}, state, {filterFields: state.filterFields.map((field) => {

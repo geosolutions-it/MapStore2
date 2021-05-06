@@ -18,6 +18,7 @@ import HTML from '../../../components/I18N/HTML';
 
 class AutocompleteFieldHOC extends React.Component {
     static propTypes = {
+        dropUp: PropTypes.bool,
         disabled: PropTypes.bool,
         filterField: PropTypes.object,
         label: PropTypes.string,
@@ -97,6 +98,7 @@ class AutocompleteFieldHOC extends React.Component {
         let options = this.getOptions() ? this.getOptions().slice(0) : [];
 
         return (<PagedCombobox
+            dropUp={this.props.dropUp}
             busy={this.props.filterField.loading}
             data={this.props.filterField.loading ? [] : options}
             disabled={this.props.filterField.operator === "isNull"}

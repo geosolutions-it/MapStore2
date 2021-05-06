@@ -36,6 +36,7 @@ import HTML from '../../../components/I18N/HTML';
  */
 class AutocompleteField extends React.Component {
     static propTypes = {
+        dropUp: PropTypes.bool,
         disabled: PropTypes.bool,
         filterField: PropTypes.object,
         label: PropTypes.string,
@@ -109,6 +110,7 @@ class AutocompleteField extends React.Component {
         const tooltip = (<Tooltip id={"autocompleteField-tooltip" + (this.props.filterField && this.props.filterField.rowId)}>
             <HTML msgId="queryform.attributefilter.tooltipTextField"/></Tooltip>);
         const field = (<Combobox
+            dropUp={this.props.dropUp}
             busy={this.props.filterField.loading}
             data={this.props.filterField.loading ? [] : options}
             disabled={this.props.filterField.operator === "isNull"}
