@@ -21,8 +21,9 @@ This is a list of things to check if you want to update from a previous version 
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
 
-## Migration from 2021.01.01 to 2021.02.00
+## Migration from 2021.01.02 to 2021.02.00
 
+### Project system 
 
 During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon. 
 
@@ -45,6 +46,22 @@ Check the changes in pom.xml to update. (future evolution of the project will av
 - **pom.xml**
 - **java/web/pom.xml**
 
+### Configurations 
+ - Embedded now uses popup as default. Align localConfig.json `plugins --> embedded --> Identify` with the latest one: 
+```json
+{
+    "name": "Identify",
+    "cfg": {
+        "showFullscreen": true,
+        "position": "bottom",
+        "size": 0.5,
+        "fluid": true,
+        "viewerOptions": {
+            "container": "{context.ReactSwipe}"
+        }
+    }
+}
+```
 
 ## Migration from 2021.01.00 to 2021.01.01
 
