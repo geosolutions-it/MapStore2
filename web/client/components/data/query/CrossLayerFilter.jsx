@@ -116,6 +116,7 @@ export default ({
             ? (<Row className="filter-field-fixed-row">
                 <Col xs={12}>
                     <GroupField
+                        dropUp
                         autocompleteEnabled
                         withContainer={false}
                         attributes={attributes}

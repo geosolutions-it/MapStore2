@@ -25,6 +25,7 @@ import Button from '../../misc/Button';
 
 class GroupField extends React.Component {
     static propTypes = {
+        dropUp: PropTypes.bool,
         groupLevels: PropTypes.number,
         withContainer: PropTypes.bool,
         autocompleteEnabled: PropTypes.bool,
@@ -43,7 +44,8 @@ class GroupField extends React.Component {
         listOperators: PropTypes.array,
         stringOperators: PropTypes.array,
         booleanOperators: PropTypes.array,
-        defaultOperators: PropTypes.array
+        defaultOperators: PropTypes.array,
+        comboOptions: PropTypes.object
     };
 
     static contextTypes = {
@@ -143,6 +145,7 @@ class GroupField extends React.Component {
                 </Button></OverlayTrigger>);
         return (
             <FilterField
+                dropUp={this.props.dropUp}
                 key={filterField.rowId}
                 deleteButton={deleteButton}
                 attributes={this.props.attributes}
@@ -154,6 +157,7 @@ class GroupField extends React.Component {
                 onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
                 onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
                 <ComboField
+                    dropUp={this.props.dropUp}
                     attType="list"
                     valueField={'id'}
                     textField={'name'}
@@ -180,6 +184,7 @@ class GroupField extends React.Component {
                     // flag to swtich from AutocompleteField to TextField
                     this.props.autocompleteEnabled ?
                         (<AutocompleteField
+                            dropUp={this.props.dropUp}
                             filterField={filterField}
                             attType="string"/>) :
                         (<TextField
@@ -188,6 +193,7 @@ class GroupField extends React.Component {
                 }
 
                 <ComboField
+                    dropUp={this.props.dropUp}
                     fieldOptions={['true', 'false']}
                     attType="boolean"
                     comboFilter={"contains"}/>

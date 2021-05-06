@@ -14,6 +14,7 @@ import { getMessageById } from '../../../utils/LocaleUtils';
 
 class FilterField extends React.Component {
     static propTypes = {
+        dropUp: PropTypes.bool,
         attributes: PropTypes.array,
         filterField: PropTypes.object,
         operatorOptions: PropTypes.array,
@@ -42,6 +43,7 @@ class FilterField extends React.Component {
     renderOperatorField = () => {
         return (
             <ComboField
+                dropUp={this.props.dropUp}
                 fieldOptions= {this.props.operatorOptions}
                 fieldName="operator"
                 fieldRowId={this.props.filterField.rowId}
@@ -77,6 +79,7 @@ class FilterField extends React.Component {
             <div className="filter-field-row">
                 <div className="filter-field-attribute">
                     <ComboField
+                        dropUp={this.props.dropUp}
                         valueField={'id'}
                         textField={'name'}
                         fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
