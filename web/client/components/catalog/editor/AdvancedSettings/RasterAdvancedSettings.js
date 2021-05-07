@@ -8,6 +8,7 @@
 import React from 'react';
 import { FormGroup, Col, ControlLabel } from "react-bootstrap";
 import RS from 'react-select';
+import { DEFAULT_FORMAT_WMS } from '../../../../utils/CatalogUtils';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 const Select = localizedProps('noResultsText')(RS);
 
@@ -22,22 +23,7 @@ const getTileSizeSelectOptions = (opts) => {
 
 export default ({
     service,
-    formatOptions =  [{
-        label: 'image/png',
-        value: 'image/png'
-    }, {
-        label: 'image/png8',
-        value: 'image/png8'
-    }, {
-        label: 'image/jpeg',
-        value: 'image/jpeg'
-    }, {
-        label: 'image/vnd.jpeg-png',
-        value: 'image/vnd.jpeg-png'
-    }, {
-        label: 'image/gif',
-        value: 'image/gif'
-    }],
+    formatOptions =  DEFAULT_FORMAT_WMS,
     onChangeServiceFormat = () => { },
     onChangeServiceProperty = () => {},
     currentWMSCatalogLayerSize,

@@ -49,7 +49,7 @@ export default ({
     onFormatOptionsFetch = () => {},
     selectedService,
     isLocalizedLayerStylesEnabled,
-    tileSizeOptions = [256],
+    tileSizeOptions = [256, 512],
     formatsLoading,
     layerOptions = {},
     services

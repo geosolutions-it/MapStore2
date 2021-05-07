@@ -13,7 +13,8 @@ const emptyService = {
     showAdvancedSettings: false,
     showTemplate: false,
     hideThumbnail: false,
-    metadataTemplate: "<p>${description}</p>"
+    metadataTemplate: "<p>${description}</p>",
+    excludeShowTemplate: true
 };
 
 export default ({service: defaultService, catalogServices,
@@ -21,8 +22,9 @@ export default ({service: defaultService, catalogServices,
     dashboardSelectedService, ...props}) => {
     const [service, setService] = useState(isNew ? emptyService :
         isEmpty(dashboardSelectedService) ? {...defaultServices[defaultSelectedService],
-            old: defaultServices[defaultSelectedService], key: defaultSelectedService} :
-            {...dashboardServices[dashboardSelectedService], old: dashboardServices[dashboardSelectedService], key: dashboardSelectedService} );
+            old: defaultServices[defaultSelectedService], key: defaultSelectedService, excludeShowTemplate: true} :
+            {...dashboardServices[dashboardSelectedService], old: dashboardServices[dashboardSelectedService],
+                key: dashboardSelectedService, excludeShowTemplate: true} );
 
     const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
 

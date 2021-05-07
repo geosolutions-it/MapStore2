@@ -52,7 +52,7 @@ export default ({
                 </Checkbox>
             </Col>
         </FormGroup>)}
-        {(!isNil(service.type) ? service.type === "csw" : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
+        {(!isNil(service.type) ? (service.type === "csw" && !service.excludeShowTemplate) : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
             <Col xs={12}>
                 <Checkbox
                     onChange={() => onToggleTemplate()}
