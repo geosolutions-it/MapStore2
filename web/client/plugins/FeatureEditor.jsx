@@ -9,7 +9,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
-import { get, pick } from 'lodash';
+import { get, pick, isEqual } from 'lodash';
 import {compose, lifecycle} from 'recompose';
 import ReactDock from 'react-dock';
 
@@ -269,6 +269,16 @@ const EditorPlugin = compose(
         componentDidMount() {
             // only the passed properties will be picked
             this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
+        },
+        // TODO: fix this in contexts
+        // due to multiple renders of plugins in contexts (one with default props, then with context props)
+        // the options have to be updated when change.
+        componentDidUpdate(oldProps) {
+            const newOptions = pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
+            const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
+            if (!isEqual(newOptions, oldOptions) ) {
+                this.props.onMount(newOptions);
+            }
         }
     }),
     connect(selector,
