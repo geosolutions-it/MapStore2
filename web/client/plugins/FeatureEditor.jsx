@@ -9,7 +9,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
-import { get, pick } from 'lodash';
+import { get, pick, isEqual } from 'lodash';
 import {compose, lifecycle} from 'recompose';
 import ReactDock from 'react-dock';
 
@@ -276,7 +276,7 @@ const EditorPlugin = compose(
         componentDidUpdate(oldProps) {
             const newOptions = pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
             const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
-            if (JSON.stringify(newOptions) !== JSON.stringify(oldOptions) ) {
+            if (!isEqual(newOptions, oldOptions) ) {
                 this.props.onMount(newOptions);
             }
         }
