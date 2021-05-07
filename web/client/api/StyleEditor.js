@@ -6,10 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import isEqual from 'lodash/isEqual';
-import isArray from 'lodash/isArray';
-import get from 'lodash/get';
-import isNil from 'lodash/isNil';
+import { isEqual, isArray, get, isNil, castArray } from 'lodash';
 
 import axios from '../libs/ajax';
 import StylesAPI from './geoserver/Styles';
@@ -71,11 +68,20 @@ function filterMethods(sldServiceCapabilities) {
     };
 }
 
+/**
+ * Get a parsed object for classification of vector
+ * @method parseForUniqueInterval
+ * @param {object} params object generated from properties from current values
+ * @param {object} modifyObj object to be modified
+ * @param {string} type parsing to performed
+ * @returns {object|string} return parsed object or error string
+ */
 const parseForUniqueInterval = (params, modifyObj, type = 'parse') => {
     const isUniqueInterval = params?.method === 'uniqueInterval';
     if (type === 'parse') {
         if (isUniqueInterval) {
             if (isArray(modifyObj)) {
+                // Skip param intervalsForUnique initially, as it has to be obtained from the SLD service
                 return params?.intervalsForUnique === undefined ? modifyObj : modifyObj.concat('intervalsForUnique');
             }
             const {tempIntervals, ...restParams} = modifyObj;
@@ -218,7 +224,7 @@ export function classificationVector({
 
     // Update rules on error
     let errorId = 'styleeditor.classificationError';
-    const updateRulesDefault = (_errorId) => {
+    const updateDefaultRules = (_errorId) => {
         return updateRules(ruleId, rules, (rule) => ({
             ...rule,
             ...values,
@@ -239,12 +245,12 @@ export function classificationVector({
         };
         return Promise.resolve(
             isUniqueInterval
-                // Retrieve classifications for unique interval to generate colors
+                // Retrieve classifications for unique interval to set intervalsForUnique and generate colors
                 ? axios.get(SLDService.getStyleMetadataService(layer, paramSLDService))
                 : {data: params.intervals}
         ).then(({ data })=>{
             const _tempClasses = get(data, 'Rules.Rule');
-            const intervalsForUnique = _tempClasses && _tempClasses.length;
+            const intervalsForUnique = _tempClasses && castArray(_tempClasses).length;
             // Generate ramp based on the method's interval
             const rampParams = SLDService.getColor(undefined, params.ramp, intervalsForUnique || data, customRamp);
             paramSLDService = {
@@ -269,12 +275,12 @@ export function classificationVector({
                 })
                 .catch(() => {
                     if (isUniqueInterval) errorId = parseForUniqueInterval(params, null, 'error');
-                    return updateRulesDefault(errorId);
+                    return updateDefaultRules(errorId);
                 });
-        }).catch(()=> updateRulesDefault(errorId));
+        }).catch(()=> updateDefaultRules(errorId));
     }
 
-    return new Promise((resolve) => resolve(updateRulesDefault()));
+    return new Promise((resolve) => resolve(updateDefaultRules()));
 }
 /**
  * Update rules of a style for a raster layer using external SLD services
