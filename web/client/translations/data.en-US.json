@@ -3004,24 +3004,25 @@
             "confirmReplaceConfirmButton": "Replace"
         },
         "mapCatalog": {
-            "title": "Map Catalog",
-            "filterPlaceholder": "Search maps...",
-            "deleteConfirmContent": "Are you sure you want to delete \"{mapName}\" map?",
+            "title": "Applications Catalog",
+            "tooltip": "Load an application with specific functionnalities and map templates.",
+            "filterPlaceholder": "Search applications...",
+            "deleteConfirmContent": "Are you sure you want to delete \"{mapName}\" application?",
             "tooltips": {
                 "edit": "Edit properties",
                 "delete": "Delete resource",
                 "share": "Share"
             },
             "deletedMap": {
-                "title": "Deleted Map",
-                "message": "The map was successfully deleted"
+                "title": "Deleted application",
+                "message": "The application was successfully deleted"
             },
             "updatedMap": {
-                "title": "Saved Map",
-                "message": "The map was successfully saved"
+                "title": "Saved application",
+                "message": "The application was successfully saved"
             },
-            "deleteError": "Unexpected error occurred while deleting the map",
-            "updateError": "Unexpected error occurred while saving the map"
+            "deleteError": "Unexpected error occurred while deleting the application.",
+            "updateError": "Unexpected error occurred while saving the application."
         },
         "layerInfo": {
             "title": "Update layers titles and descriptions",
