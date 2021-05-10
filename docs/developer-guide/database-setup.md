@@ -6,7 +6,7 @@ MapStore can use 3 types of database:
 - [PostgreSQL](https://www.postgresql.org/)
 - [Oracle](https://www.oracle.com/database)
 
-MapStore uses an H2 in-memory DB as default DBMS for persist the data. This configuration is usefull for develop, test and evaluate the project but it is obviously NOT RECOMMENDED for production usage; moreover the H2 DB cannot be used for the [integration with GeoServer](../integrations/users/geoserver).
+MapStore uses an H2 in-memory DB as the default DBMS to persist the data. This configuration is useful for development and test purposes, or to evaluate the project but it is obviously NOT RECOMMENDED for production usage; moreover the H2 DB cannot be used for the [integration with GeoServer](../integrations/users/geoserver).
 
 In the following guide you will learn how to configure MapStore to use an external database.
 
@@ -121,6 +121,13 @@ geostoreVendorAdapter.generateDdl=true
 geostoreVendorAdapter.showSql=false
 ```
 
+### Migrate an existing H2 database to PostgreSQL
+If you used an H2 database during development, and you want to deploy the application in production, migrating the database to PostgreSQL is not that easy.
+
+For this reason we have created a specific tool for this task, called **H2ToPgSQLExport** that is part of the GeoStore CLI.
+
+More information on the migration tool is available in the [GeoStore CLI documentation page](https://github.com/geosolutions-it/geostore/tree/master/src/cli).
+
 ## Oracle
 
 ### Database Creation and Setup
@@ -151,3 +158,5 @@ geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=
 geostoreVendorAdapter.generateDdl=true
 geostoreVendorAdapter.showSql=false
 ```
+
+
