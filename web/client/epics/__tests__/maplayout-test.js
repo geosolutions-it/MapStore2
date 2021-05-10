@@ -14,6 +14,7 @@ import { closeIdentify, purgeMapInfoResults, noQueryableLayers } from '../../act
 import { updateMapLayoutEpic } from '../maplayout';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
+import { openFeatureGrid } from "../../actions/featuregrid";
 
 describe('map layout epics', () => {
     afterEach(() => {
@@ -25,8 +26,8 @@ describe('map layout epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
-                        bottom: 30,
+                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 0, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        bottom: 0,
                         left: 600,
                         right: 658
                     }});
@@ -52,8 +53,8 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 600, right: 330, bottom: 120, transform: 'none', height: 'calc(100% - 120px)', boundingMapRect: {
-                            bottom: 120,
+                        left: 600, right: 330, bottom: 0, transform: 'none', height: 'calc(100% - 120px)', boundingMapRect: {
+                            bottom: 0,
                             left: 600,
                             right: 330
                         }
@@ -127,10 +128,10 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 512, right: 0, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        left: 512, right: 0, bottom: 0, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
                             left: 512,
                             right: 0,
-                            bottom: 30
+                            bottom: 0
                         }
                     });
                 });
@@ -150,8 +151,8 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 0, right, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
-                            bottom: 30,
+                        left: 0, right, bottom: 0, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                            bottom: 0,
                             left: 0,
                             right
                         }
@@ -194,5 +195,25 @@ describe('map layout epics', () => {
             done();
         };
         testEpic(updateMapLayoutEpic, 1, noQueryableLayers(), epicResult, {});
+    });
+
+    it('tests when feature grid open', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(action.layout).toEqual({
+                        left: 0, right: 0, bottom: '100%', dockSize: 100, transform: "translate(0, -30px)", height: "calc(100% - 30px)",
+                        boundingMapRect: {bottom: "100%", dockSize: 100, left: 0, right: 0}
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        const state = {featuregrid: {open: true, dockSize: 1}};
+        testEpic(updateMapLayoutEpic, 1, openFeatureGrid(), epicResult, state);
     });
 });

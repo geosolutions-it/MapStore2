@@ -112,7 +112,8 @@ export const updateMapLayoutEpic = (action$, store) =>
             ].filter(panel => panel)) || {right: 0};
 
             const dockSize = getDockSize(state) * 100;
-            const bottom = isFeatureGridOpen(state) && {bottom: dockSize + '%', dockSize} || {bottom: mapLayout.bottom.sm};
+            const bottom = isFeatureGridOpen(state) && {bottom: dockSize + '%', dockSize}
+                || {bottom: 0}; // To avoid map from de-centering when performing scale zoom
 
             const transform = isFeatureGridOpen(state) && {transform: 'translate(0, -' + mapLayout.bottom.sm + 'px)'} || {transform: 'none'};
             const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
