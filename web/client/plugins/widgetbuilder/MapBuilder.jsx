@@ -29,7 +29,6 @@ import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
 
 const Toolbar = mapToolbar(ToolbarComp);
 
-
 /*
  * Prompts Map Selection or Layer selector (to add layers)
  */
@@ -37,7 +36,6 @@ const chooseMapEnhancer = compose(
     connect(wizardSelector, {
         onResetChange: onEditorChange
     }),
-    catalogEditorEnhancer,
     // map selector
     branch(
         ({ editorData = {} } = {}) => !editorData.map,
@@ -45,6 +43,7 @@ const chooseMapEnhancer = compose(
     ),
     // layer selector - to add layers to the map
     withState('layerSelectorOpen', 'toggleLayerSelector', false),
+    catalogEditorEnhancer,
     branch(
         ({ layerSelectorOpen = false } = {}) => layerSelectorOpen,
         renderComponent(
