@@ -1342,6 +1342,7 @@
         },
         "mapImport": {
             "title": "Importer",
+            "tooltip": "Importer un fichier de carte ou des données vectorielles.",
             "dropZone": {
                 "heading": "<p> <h4> Déposez votre contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez des fichiers...",
@@ -1356,7 +1357,8 @@
             }
         },
         "mapExport": {
-            "title": "Exporter la carte",
+            "title": "Exporter",
+            "tooltip": "Exporter votre carte.",
             "exportPanel": {
                 "title": "<p><h4>Sélectionnez votre format</h4></p>",
                 "exportButtonLabel": "Exporter"

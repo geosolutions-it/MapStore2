@@ -1341,6 +1341,7 @@
         },
         "mapImport": {
             "title": "Import",
+            "tooltip": "Import a map file or vector datas.",
             "dropZone": {
                 "heading": "<p><h4>Drop your map context or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select files...",
@@ -1355,7 +1356,8 @@
             }
         },
         "mapExport": {
-            "title": "Export map",
+            "title": "Export",
+            "tooltip": "Export your map.",
             "exportPanel": {
                 "title": "<p><h4>Select your format</h4></p>",
                 "exportButtonLabel": "Export"
