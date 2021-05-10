@@ -2899,7 +2899,7 @@
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",
                     "removePlugin": "Supprimer cette extension de MapStore",
-                    "mapTemplatesConfig": "Configurer le modèle de carte"
+                    "mapTemplatesConfig": "Configurer les cartes modèles"
                 },
                 "tutorialPlugins": {
                     "availableTitle": "Plugin disponible",
@@ -2913,30 +2913,30 @@
                 }
             },
             "configureTemplates": {
-                "title": "Configurer les modèles de carte",
-                "availableTemplates": "Modèles disponibles",
-                "enabledTemplates": "Modèles activés",
-                "templatesFilterPlaceholder": "Filtrer les modèles par nom...",
-                "availableTemplatesEmpty": "Tous les modèles disponibles sont activés",
-                "enabledTemplatesEmpty": "Ajouter des modèles à la configuration à partir de la liste des modèles disponibles",
-                "searchResultsEmpty": "Aucun modèle trouvé répondant aux critères de recherche",
+                "title": "Configurer les cartes modèles",
+                "availableTemplates": "Cartes modèles disponibles",
+                "enabledTemplates": "Cartes modèles activées",
+                "templatesFilterPlaceholder": "Filtrer les cartes modèles par nom...",
+                "availableTemplatesEmpty": "Tous les cartes modèles disponibles sont activés.",
+                "enabledTemplatesEmpty": "Ajouter des cartes modèles à la configuration à partir de la liste des cartes modèles disponibles.",
+                "searchResultsEmpty": "Aucune carte modèle ne répond aux critères de recherche.",
                 "fileDrop": {
-                    "label": "Modèle",
-                    "clear": "Déposez ou cliquez pour sélectionner un fichier de modèle de carte (les cartes JSON MapStore exportées ou les fichiers WMC sont pris en charge)"
+                    "label": "Carte modèle",
+                    "clear": "Déposez ou cliquez pour sélectionner un fichier de carte (les cartes JSON MapStore exportées ou les fichiers WMC sont pris en charge)"
                 },
                 "uploadDialog": {
-                    "title": "Télécharger un modèle de carte",
+                    "title": "Télécharger une carte modèle",
                     "save": "Télécharger",
                     "jsonParsingError": "Échec de l'analyse JSON: \"{error}\"",
                     "fileReadError": "Une erreur de lecture de fichier inattendue s'est produite"
                 },
                 "tooltips": {
-                    "uploadTool": "Télécharger un nouveau modèle",
-                    "editTemplate": "Modifier les propriétés du modèle",
-                    "deleteTemplate": "Supprimer le modèle"
+                    "uploadTool": "Télécharger une nouvelle carte modèle",
+                    "editTemplate": "Modifier les propriétés de la carte modèle",
+                    "deleteTemplate": "Supprimer la carte modèle"
                 },
-                "deleteError": "Impossible de supprimer le modèle, une erreur s'est produite",
-                "deleteConfirm": "Voulez-vous vraiment supprimer le modèle \"{templateName}\"?"
+                "deleteError": "Impossible de supprimer la carte modèle, une erreur s'est produite",
+                "deleteConfirm": "Voulez-vous vraiment supprimer cette carte modèle \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configurer la carte",
@@ -2977,20 +2977,20 @@
           "removeExtension": "Supprimer l'extension"
         },
         "mapTemplates": {
-            "title": "Modèles de carte",
+            "title": "Cartes modèles",
             "favouritesTitle": "Favoris",
             "allTitle": "Tout",
-            "filterPlaceholder": "Filtrer les modèles de carte...",
+            "filterPlaceholder": "Filtrer les cartes modèles...",
             "transfer": "Remplacer la carte par ce modèle",
             "merge": "Ajouter ce modèle à la carte",
             "favouriteAdd": "Ajouter aux favoris",
             "favouriteRemove": "Supprimer des favoris",
             "emptyTitle": "Pas de résultat",
-            "emptyDescription": "Le filtre entré ne correspond pas au nom ou à la description d'aucun des modèles",
-            "noTemplatesTitle": "Aucun modèle trouvé",
-            "noTemplatesDescription": "Le contexte actuel ne contient aucun modèle",
+            "emptyDescription": "Le filtre entré ne correspond au nom ou à la description d'aucune des cartes modèles",
+            "noTemplatesTitle": "Aucune carte modèle trouvée",
+            "noTemplatesDescription": "Le contexte actuel ne contient aucune carte modèle",
             "confirmReplaceTitle": "Remplacer le contenu de la carte",
-            "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par le modèle sélectionné en cliquant sur le bouton remplacer",
+            "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par la carte modèle sélectionnéz en cliquant sur le bouton 'Remplacer'.",
             "confirmReplaceConfirmButton": "Remplacer"
         },
         "mapCatalog": {
@@ -3244,8 +3244,8 @@
                         "text": "<p>En appuyant sur ce bouton, vous accédez à la page de documentation du plugin où vous pouvez rechercher des informations sur ce que fait le plugin et les paramètres de configuration qu'il prend en charge.</p>"
                     },
                     "mapTemplatesTool": {
-                        "title": "Outils de plug-in: modèles de carte",
-                        "text": "<p>Le plugin Map Templates dispose également d'un outil spécial qui vous permet de configurer des modèles de carte qui seront accessibles dans le contexte.</p>"
+                        "title": "Plugin Tools : Cartes modèles",
+                        "text": "<p>Le greffon 'Cartes modèles' dispose également d'un outil spécial qui vous permet de configurer des cartes modèles qui seront accessibles dans le contexte / l'application.</p>"
                     },
                     "extensions": {
                         "title": "Extensions",

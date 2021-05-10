@@ -2909,7 +2909,7 @@
                     "pluginDocumentation": "Open plugin configuration documentation",
                     "uploadPlugin": "Add an extension to MapStore",
                     "removePlugin": "Remove this extension from MapStore",
-                    "mapTemplatesConfig": "Configure templates"
+                    "mapTemplatesConfig": "Configure the maps templates"
                 },
                 "tutorialPlugins": {
                     "availableTitle": "Available Plugin",
@@ -2923,30 +2923,30 @@
                 }
             },
             "configureTemplates": {
-                "title": "Configure Templates",
-                "availableTemplates": "Available Templates",
-                "enabledTemplates": "Enabled Templates",
-                "templatesFilterPlaceholder": "Filter templates by name...",
-                "availableTemplatesEmpty": "All available templates are enabled",
-                "enabledTemplatesEmpty": "Add templates to configuration from list of available templates",
-                "searchResultsEmpty": "No templates found that satisfy the search criteria",
+                "title": "Configure maps templates",
+                "availableTemplates": "Available maps templates",
+                "enabledTemplates": "Enabled maps templates",
+                "templatesFilterPlaceholder": "Filter  maps templates by name...",
+                "availableTemplatesEmpty": "All available  maps templates are enabled",
+                "enabledTemplatesEmpty": "Add  maps templates to configuration from list of available templates",
+                "searchResultsEmpty": "No  maps templates found that satisfy the search criteria",
                 "fileDrop": {
-                    "label": "Template",
-                    "clear": "Drop or click to select a map template file (exported JSON MapStore maps or WMC files are supported)"
+                    "label": "Map template",
+                    "clear": "Drop or click to select a map file (exported JSON MapStore maps or WMC files are supported)"
                 },
                 "uploadDialog": {
-                    "title": "Upload Map Template",
+                    "title": "Upload map template",
                     "save": "Upload",
                     "jsonParsingError": "JSON parsing failed: \"{error}\"",
                     "fileReadError": "Unexpected file reading error occurred"
                 },
                 "tooltips": {
-                    "uploadTool": "Upload new template",
-                    "editTemplate": "Edit template properties",
-                    "deleteTemplate": "Delete template"
+                    "uploadTool": "Upload new map template",
+                    "editTemplate": "Edit map template properties",
+                    "deleteTemplate": "Delete map template"
                 },
-                "deleteError": "Couldn't delete the template, an error occurred",
-                "deleteConfirm": "Are you sure you want to delete template \"{templateName}\"?"
+                "deleteError": "Couldn't delete the map template, an error occurred",
+                "deleteConfirm": "Are you sure you want to delete this map template \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configure Map",
@@ -2987,20 +2987,20 @@
           "removeExtension": "Remove Extension"
         },
         "mapTemplates": {
-            "title": "Map Templates",
+            "title": "Map templates",
             "favouritesTitle": "Favourites",
             "allTitle": "All",
             "filterPlaceholder": "Filter map templates...",
-            "transfer": "Replace map with this template",
-            "merge": "Add this template to map",
+            "transfer": "Replace map with this map template",
+            "merge": "Add this map template to the map",
             "favouriteAdd": "Add to favourites",
             "favouriteRemove": "Remove from favourites",
             "emptyTitle": "No Result",
-            "emptyDescription": "Entered filter does not match name or description of any of templates",
-            "noTemplatesTitle": "No templates found",
-            "noTemplatesDescription": "Current context contains no templates",
+            "emptyDescription": "Entered filter does not match name or description of any of map template",
+            "noTemplatesTitle": "No map templates found",
+            "noTemplatesDescription": "Current context contains no map templates",
             "confirmReplaceTitle": "Replace map content",
-            "confirmReplaceMessage": "You will replace all layers and map configuration with the selected template by clicking on replace button",
+            "confirmReplaceMessage": "You will replace all layers and map configuration with the selected map template by clicking on the 'Replace' button.",
             "confirmReplaceConfirmButton": "Replace"
         },
         "mapCatalog": {
@@ -3256,7 +3256,7 @@
                     },
                     "mapTemplatesTool": {
                         "title": "Plugin Tools: Map Templates",
-                        "text": "<p>Map Templates plugin also has a special tool that allows you to configure map templates that will be accessible within the context.</p>"
+                        "text": "<p>'Map templates' plugin also has a special tool that allows you to configure map templates that will be accessible within the context / the application.</p>"
                     },
                     "extensions": {
                         "title": "Extensions",
