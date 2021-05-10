@@ -1359,7 +1359,7 @@
             "title": "Exporter la carte",
             "exportPanel": {
                 "title": "<p><h4>Sélectionnez votre format</h4></p>",
-                "exportButtonLabel": "Export"
+                "exportButtonLabel": "Exporter"
             },
             "formats": {
                 "mapstore2": {
@@ -1661,7 +1661,7 @@
             "title": "Exporter des données",
             "format": "Format de fichier",
             "srs": "Système de référence spatiale",
-            "export": "Export",
+            "export": "Exporter",
             "downloadonlycurrentpage": "Télécharger uniquement la page actuelle",
             "cropDataSet": "Recadrer le jeu de données dans la fenêtre courante",
             "downloadFilteredDataSet": "Télécharger l'ensemble de données filtré",
@@ -1677,7 +1677,7 @@
                 "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez."
             },
             "exportResultsMessages": {
-                "newExport": "Die Datei ist hier verfügbar, wenn der Export abgeschlossen ist",
+                "newExport": "Le fichier sera disponible ici lorsque l'export sera terminé.",
                 "exportFailure": "L'exportation pour le calque \"{layerTitle}\" a échoué! Ouvrez la boîte de dialogue des résultats d'exportation pour plus d'informations.",
                 "exportSuccess": "L'exportation pour le calque \"{layerTitle}\" s'est terminée avec succès.",
                 "invalidHref": "La réponse du serveur ne contenait pas d'adresse URL valide pour les fichiers exportés!"
