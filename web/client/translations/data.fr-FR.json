@@ -709,8 +709,8 @@
         "noInfoForLayers": "Il n'y a aucun objet pour les couches suivantes : ",
         "history": {
             "barLabel": "Historique de la carte",
-            "undoBtnTooltip": "Aller en arrière",
-            "redoBtnTooltip": "Aller en avant"
+            "undoBtnTooltip": "Zoom précédent",
+            "redoBtnTooltip": "Zoom suivant"
         },
         "infoFormatLbl": "Format de la fiche d'information",
         "infoTriggerLabel": "Événement déclencheur de l'affichage de la fiche d'information",

@@ -709,8 +709,8 @@
         "noInfoForLayers": "There are no features for the following layers: ",
         "history":{
             "barLabel": "Map history",
-            "undoBtnTooltip": "Go back",
-            "redoBtnTooltip": "Go forward"
+            "undoBtnTooltip": "Previous zoom",
+            "redoBtnTooltip": "Next zoom"
         },
         "infoFormatLbl": "Information sheet format",
         "infoTriggerLabel": "Trigger event for the display of the information sheet",
