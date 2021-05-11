@@ -85,7 +85,7 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 #### Advanced Settings
 
-* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
@@ -98,7 +98,7 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 In order to better understand this function, let's make an example supposing to edit the `GeoSolutions GeoServer CSW` service:
 
-* Change the *Format* of the image that will be rendered on the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`) for layers belonging to the selected source
+* Change the *Format* of the image that will be rendered on the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`,`vnd.jpeg-png8` or `gif`) for layers belonging to the selected source
 
 * *Show metadata template* can be enabled when the user wants to insert in the layer description a text with metadata information 
 

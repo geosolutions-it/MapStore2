@@ -55,7 +55,7 @@ Through the second section of the layer settings panel it is possible to change 
 
 In particular, the user is allowed to:
 
-* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif` 
+* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` and `gif` 
 
 * Set the size of layer tiles: choosing between `256` or `512`
 
