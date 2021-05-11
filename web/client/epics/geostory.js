@@ -17,6 +17,7 @@ import words from 'lodash/words';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
+
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -56,7 +57,9 @@ import {
     EDIT_RESOURCE,
     UPDATE_CURRENT_PAGE,
     UPDATE_SETTING,
-    SET_CURRENT_STORY
+    SET_CURRENT_STORY,
+    geostoryScrolling,
+    GEOSTORY_SCROLLING
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -503,6 +506,12 @@ export const handlePendingGeoStoryChanges = action$ =>
             )
     );
 
+const semaphore = (sem$, start = true, condition = (c) => c) => (stream$) =>
+    stream$
+        .withLatestFrom(sem$.startWith(start))
+        .filter(([, s]) => condition(s))
+        .map(([e]) => e);
+
 /**
  * Handle the url updates on currentPage change
  * @param {Observable} action$ stream of actions
@@ -510,6 +519,10 @@ export const handlePendingGeoStoryChanges = action$ =>
  */
 export const urlUpdateOnScroll = (action$, {getState}) =>
     action$.ofType(UPDATE_CURRENT_PAGE)
+        .let(semaphore(
+            action$.ofType(GEOSTORY_SCROLLING)
+                .map(a => !a.value)
+        ))
         .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
         .switchMap(({sectionId, columnId}) => {
             if (
@@ -531,16 +544,23 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
  */
 export const scrollOnLoad = (action$) =>
     action$.ofType(SET_CURRENT_STORY)
-        .switchMap(() => {
+        .switchMap(({delay = 500}) => {
             const storyIds = window?.location?.hash?.split('/');
-            if (window?.location?.hash?.includes('shared')) {
-                scrollToContent(storyIds[7] || storyIds[5], {block: "start", behavior: "auto"});
-            } else if (storyIds.length > 5) {
-                scrollToContent(storyIds[6], {block: "start", behavior: "auto"});
-            } else if (storyIds.length === 5) {
-                scrollToContent(storyIds[4], {block: 'start', behavior: "auto"});
-            }
-            return Observable.empty();
+            return Observable.of(storyIds)
+                .delay(delay)
+                .do(() => {
+                    if (window?.location?.hash?.includes('shared')) {
+                            scrollToContent(storyIds[7] || storyIds[5], {block: "start", behavior: "auto"});
+                        } else if (storyIds.length > 5) {
+                            scrollToContent(storyIds[6], {block: "start", behavior: "auto"});
+                        } else if (storyIds.length === 5) {
+                            scrollToContent(storyIds[4], {block: 'start', behavior: "auto"});
+                        }
+                    }
+                )
+                .ignoreElements()
+                .startWith(geostoryScrolling(true))
+                .concat(Observable.of(geostoryScrolling(false)).delay(delay));
     });
 
 /**

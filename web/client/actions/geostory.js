@@ -17,6 +17,7 @@ export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
 export const EDIT_WEBPAGE = "GEOSTORY:EDIT_WEBPAGE";
 export const ERRORS_LOGO = "GEOSTORY:ERRORS_LOGO";
 export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
+export const GEOSTORY_SCROLLING = "GEOSTORY:SCROLLING";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
 export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
 export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
@@ -241,3 +242,5 @@ export const setPendingChanges = value => ({type: SET_PENDING_CHANGES, value});
 export const updateUrlOnScroll = value => ({type: SET_UPDATE_URL_SCROLL, value});
 
 export const updateMediaEditorSettings = mediaEditorSettings => ({ type: UPDATE_MEDIA_EDITOR_SETTINGS, mediaEditorSettings });
+
+export const geostoryScrolling = (status) => ({ type: GEOSTORY_SCROLLING, status});
