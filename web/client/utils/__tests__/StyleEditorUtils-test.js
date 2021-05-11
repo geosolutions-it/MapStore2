@@ -757,19 +757,19 @@ describe('StyleEditorUtils test', () => {
                         title: 10164.3,
                         color: '#FFF7EC',
                         type: 'Polygon',
-                        equal: 10164.3
+                        unique: 10164.3
                     },
                     {
                         title: 20310.5,
                         color: '#FC8D59',
                         type: 'Polygon',
-                        equal: 20310.5
+                        unique: 20310.5
                     },
                     {
                         title: 30456.9,
                         color: '#7F0000',
                         type: 'Polygon',
-                        equal: 30456.9
+                        unique: 30456.9
                     }],
                     intervals: 3,
                     method: 'uniqueInterval',

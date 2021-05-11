@@ -314,17 +314,17 @@ export function parseJSONStyle(style) {
                     const lessThan = idx === rule.classification.length - 1 ? '<=' : '<';
                     const isMin = !isNil(entry.min);
                     const isMax = !isNil(entry.max);
-                    const isEqual = !isNil(entry.equal);
-                    const equalFilter = isEqual ? ['==', rule.attribute, entry.equal] : [];
+                    const isUnique = !isNil(entry.unique);
+                    const uniqueFilter = isUnique ? ['==', rule.attribute, entry.unique] : [];
                     const minFilter = isMin ? [['>=', rule.attribute, entry.min]] : [];
                     const maxFilter = isMax ? [[lessThan, rule.attribute, entry.max]] : [];
-                    const equalLabel = isEqual && entry.equal;
+                    const uniqueLabel = isUnique && entry.unique;
                     const minLabel = isMin && '>= ' + entry.min;
                     const maxLabel = isMax && lessThan + ' ' + entry.max;
-                    const name = equalLabel ? equalLabel
+                    const name = uniqueLabel ? uniqueLabel
                         : minLabel && maxLabel ? minLabel + ' and ' + maxLabel : minLabel || maxLabel;
-                    const filter = !isEmpty(equalFilter)
-                        ? equalFilter
+                    const filter = !isEmpty(uniqueFilter)
+                        ? uniqueFilter
                         : !isEmpty(minFilter[0]) || !isEmpty(maxFilter[0]) ? ['&&', ...minFilter, ...maxFilter] : undefined;
                     return {
                         name,

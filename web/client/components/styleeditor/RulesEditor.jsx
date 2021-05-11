@@ -324,7 +324,7 @@ const RulesEditor = forwardRef(({
                                     bands={bands}
                                     attributes={attributes && attributes.map((attribute) => ({
                                         ...attribute,
-                                        disabled: attribute.type !== 'number'
+                                        ...( rule.method !== "uniqueInterval" && { disabled: attribute.type !== 'number' })
                                     }))}
                                     onUpdate={onUpdate}
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}

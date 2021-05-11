@@ -9,6 +9,7 @@
 import property from './property';
 import omit from 'lodash/omit';
 import includes from 'lodash/includes';
+import isNil from "lodash/isNil";
 
 const getBlocks = (/* config = {} */) => {
     const symbolizerBlock = {
@@ -349,11 +350,14 @@ const getBlocks = (/* config = {} */) => {
                     // If the number of classes produced by the classification is greater then the number specified by this parameter,
                     // the service will return an error message.
                     // For more info on intervalsForUnique (https://docs.geoserver.org/stable/en/user/extensions/sldservice/index.html#more-on-unique-intervals-classification)
-                    intervalsForUnique: property.input({
+                    intervalsForUnique: property.intervalsForUnique({
                         label: 'styleeditor.intervalsForUnique',
                         key: 'intervalsForUnique',
                         type: 'number',
-                        isDisabled: (value, properties) => properties?.method !== 'uniqueInterval'
+                        max: 1024, // SLD service default max
+                        isDisabled: (value, properties) => properties?.method !== 'uniqueInterval',
+                        setValue: (value, properties) =>
+                            !isNil(properties.intervalsForUnique) ? properties.intervalsForUnique : 100 // TODO: Default value
                     })
                 },
                 (symbolizerKind) => {

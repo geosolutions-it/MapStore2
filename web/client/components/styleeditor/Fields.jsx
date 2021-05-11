@@ -12,6 +12,7 @@ import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
 import isNaN from 'lodash/isNaN';
+import isEqual from 'lodash/isEqual';
 import Toolbar from '../misc/toolbar/Toolbar';
 import ColorSelector from '../style/ColorSelector';
 import Slider from '../misc/Slider';
@@ -222,10 +223,9 @@ export const fields = {
         const options = getOptions(props);
 
         const [newOptions, setNewOptions] = useState(initOptions(options));
-
         useEffect(() => {
-            setNewOptions(initOptions(options));
-        }, [options?.length]);
+            !isEqual(options, newOptions) && setNewOptions(initOptions(options));
+        }, [options]);
 
         const SelectInput = creatable
             ? ReactSelectCreatable

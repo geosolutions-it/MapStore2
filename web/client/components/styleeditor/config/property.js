@@ -273,16 +273,22 @@ const property = {
             };
         }
     }),
-    input: ({ label, key = 'label', type, isDisabled}) => ({
+    intervalsForUnique: ({ label, key = 'label', setValue, type, isDisabled, max}) => ({
         type: 'input',
         label,
         isDisabled,
         config: {
             type
         },
+        setValue,
         getValue: (value = '') => {
+            let _val = value;
+            if (type === 'number') {
+                _val = parseInt(value, 10);
+                if (_val > max) _val = max;
+            }
             return {
-                [key]: type === 'number' ? parseInt(value, 10) : value
+                [key]: _val
             };
         }
     }),

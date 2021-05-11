@@ -317,7 +317,7 @@ const API = {
             color: getRuleColor(rule),
             type: getGeometryType(rule),
             ...(method === 'uniqueInterval'
-                ? { equal: getNumber([rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal])}
+                ? { unique: rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal }
                 : {
                     min: getNumber([
                         rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal,

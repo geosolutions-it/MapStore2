@@ -70,35 +70,35 @@ describe('StyleEditor API', () => {
                         [
                             {
                                 title: ' >= 168839.0 AND <2211312.4',
-                                color: '#9E0142',
+                                color: '#9e0142',
                                 type: 'Polygon',
                                 min: 168839,
                                 max: 2211312.4
                             },
                             {
                                 title: ' >= 2211312.4 AND <4253785.8',
-                                color: '#F98E52',
+                                color: '#f98e52',
                                 type: 'Polygon',
                                 min: 2211312.4,
                                 max: 4253785.8
                             },
                             {
                                 title: ' >= 4253785.8 AND <6296259.2',
-                                color: '#FFFFBF',
+                                color: '#ffffbf',
                                 type: 'Polygon',
                                 min: 4253785.8,
                                 max: 6296259.2
                             },
                             {
                                 title: ' >= 6296259.2 AND <8338732.6',
-                                color: '#89D0A5',
+                                color: '#89d0a5',
                                 type: 'Polygon',
                                 min: 6296259.2,
                                 max: 8338732.6
                             },
                             {
                                 title: ' >= 8338732.6 AND <=1.0381206E7',
-                                color: '#5E4FA2',
+                                color: '#5e4fa2',
                                 type: 'Polygon',
                                 min: 8338732.6,
                                 max: 10381206
@@ -413,33 +413,33 @@ describe('StyleEditor API', () => {
                         [
                             {
                                 title: 168839.0,
-                                color: '#9E0142',
+                                color: '#9e0142',
                                 type: 'Polygon',
-                                equal: 168839
+                                unique: 168839
                             },
                             {
                                 title: 2211312.4,
-                                color: '#F98E52',
+                                color: '#f98e52',
                                 type: 'Polygon',
-                                equal: 2211312.4
+                                unique: 2211312.4
                             },
                             {
                                 title: 4253785.8,
-                                color: '#FFFFBF',
+                                color: '#ffffbf',
                                 type: 'Polygon',
-                                equal: 4253785.8
+                                unique: 4253785.8
                             },
                             {
                                 title: 6296259.2,
-                                color: '#89D0A5',
+                                color: '#89d0a5',
                                 type: 'Polygon',
-                                equal: 6296259.2
+                                unique: 6296259.2
                             },
                             {
                                 title: 8338732.6,
-                                color: '#5E4FA2',
+                                color: '#5e4fa2',
                                 type: 'Polygon',
-                                equal: 8338732.6
+                                unique: 8338732.6
                             }
                         ]
                     );
@@ -450,14 +450,7 @@ describe('StyleEditor API', () => {
             });
         });
         it('should update the rule and return errorId if service is not available for unique Interval', (done) => {
-            mockAxios.onGet().reply(config=> {
-                const params = new URLSearchParams(config.url);
-                if (!params.get('intervalsForUnique')) {
-                    return [200, CLASSIFY_VECTOR_RESPONSE.SAMPLE2];
-                }
-                return [400, {}];
-            });
-
+            mockAxios.onGet().reply(400, {});
             const values = {
                 attribute: 'NEW_ATTRIBUTE'
             };

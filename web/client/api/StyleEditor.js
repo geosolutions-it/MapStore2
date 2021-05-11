@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEqual, isArray, get, isNil, castArray } from 'lodash';
+import { isEqual, get, isNil, castArray } from 'lodash';
 
 import axios from '../libs/ajax';
 import StylesAPI from './geoserver/Styles';
@@ -71,28 +71,37 @@ function filterMethods(sldServiceCapabilities) {
 /**
  * Get a parsed object for classification of vector
  * @method parseForUniqueInterval
- * @param {object} params object generated from properties from current values
- * @param {object} modifyObj object to be modified
- * @param {string} type parsing to performed
+ * @param {object} params object containing param values
+ * @param {string} type of parsing to performed
  * @returns {object|string} return parsed object or error string
  */
-const parseForUniqueInterval = (params, modifyObj, type = 'parse') => {
-    const isUniqueInterval = params?.method === 'uniqueInterval';
+const parseForUniqueInterval = (params, type = 'parse') => {
     if (type === 'parse') {
-        if (isUniqueInterval) {
-            if (isArray(modifyObj)) {
-                // Skip param intervalsForUnique initially, as it has to be obtained from the SLD service
-                return params?.intervalsForUnique === undefined ? modifyObj : modifyObj.concat('intervalsForUnique');
-            }
-            const {tempIntervals, ...restParams} = modifyObj;
-            return {...restParams, intervalsForUnique: isNil(params.intervalsForUnique) ? tempIntervals : params.intervalsForUnique };
-        }
-        return modifyObj;
-    } else if (type === 'update') {
-        return isUniqueInterval && !params?.intervalsForUnique ? {intervalsForUnique: modifyObj.length} : {};
+        return {...params, intervalsForUnique: !isNil(params.intervalsForUnique) ? params.intervalsForUnique : 100 };
     }
     return params?.classification?.length > params?.intervalsForUnique
         && 'styleeditor.classificationUniqueIntervalError';
+};
+
+/**
+ * Update the rules with color for classification of vector
+ * @method updateRulesWithColors
+ * @param {object} data
+ * @param {object} params
+ * @returns {object} return classification
+ */
+const updateRulesWithColors = (data, params) => {
+    const _rules = get(data, 'Rules.Rule');
+    const intervalsForUnique = _rules && castArray(_rules).length;
+    const { colors: colorsString } = SLDService.getColor(undefined, params.ramp, intervalsForUnique || params.intervals);
+    let colors = colorsString.split(',');
+    if (params.reverse) colors = colors.reverse();
+    return {
+        classification: SLDService.readClassification(data, params.method).map((rule, idx) => ({
+            ...rule,
+            color: colors[idx]
+        }))
+    };
 };
 
 const API = {
@@ -185,12 +194,13 @@ export function classificationVector({
         'method',
         'reverse',
         'attribute',
-        'ramp'
+        'ramp',
+        'intervalsForUnique'
     ];
-    const params = { ...properties, ...values };
+    let params = { ...properties, ...values };
+    params = parseForUniqueInterval(params);
     const { ruleId } = properties;
     const isUniqueInterval = params?.method === 'uniqueInterval';
-    paramsKeys = parseForUniqueInterval(params, paramsKeys);
     // if ramp changes and method is custom interval
     // we should update the color values without a new request
     if (values.ramp !== undefined
@@ -233,51 +243,26 @@ export function classificationVector({
     };
 
     if (needsRequest) {
-        const customRamp = params.ramp === 'custom' && params.classification.length > 0
-            && {
-                name: 'custom',
-                colors: params.classification.map((entry) => entry.color)
-            };
-        const method = params.method;
-        let paramSLDService = {
-            method,
-            attribute: params.attribute
+        const paramSLDService = {
+            intervals: params.intervals,
+            method: params.method,
+            attribute: params.attribute,
+            intervalsForUnique: params.intervalsForUnique
         };
-        return Promise.resolve(
-            isUniqueInterval
-                // Retrieve classifications for unique interval to set intervalsForUnique and generate colors
-                ? axios.get(SLDService.getStyleMetadataService(layer, paramSLDService))
-                : {data: params.intervals}
-        ).then(({ data })=>{
-            const _tempClasses = get(data, 'Rules.Rule');
-            const intervalsForUnique = _tempClasses && castArray(_tempClasses).length;
-            // Generate ramp based on the method's interval
-            const rampParams = SLDService.getColor(undefined, params.ramp, intervalsForUnique || data, customRamp);
-            paramSLDService = {
-                intervals: params.intervals,
-                method,
-                attribute: params.attribute,
-                reverse: params.reverse,
-                ...rampParams,
-                ...(_tempClasses && {tempIntervals: intervalsForUnique})
-            };
-            paramSLDService = parseForUniqueInterval(params, paramSLDService);
-            return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService))
-                .then(({ data: _data }) => {
-                    const classification = SLDService.readClassification(_data, method);
-                    return updateRules(ruleId, rules, (rule) => ({
-                        ...rule,
-                        ...values,
-                        ...parseForUniqueInterval(params, classification, 'update'),
-                        classification,
-                        errorId: undefined
-                    }));
-                })
-                .catch(() => {
-                    if (isUniqueInterval) errorId = parseForUniqueInterval(params, null, 'error');
-                    return updateDefaultRules(errorId);
-                });
-        }).catch(()=> updateDefaultRules(errorId));
+        return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService))
+            .then(({ data }) => {
+                return updateRules(ruleId, rules, (rule) => ({
+                    ...params,
+                    ...rule,
+                    ...values,
+                    ...updateRulesWithColors(data, params),
+                    errorId: undefined
+                }));
+            })
+            .catch(() => {
+                if (isUniqueInterval) errorId = parseForUniqueInterval(params, 'error');
+                return updateDefaultRules(errorId);
+            });
     }
 
     return new Promise((resolve) => resolve(updateDefaultRules()));
