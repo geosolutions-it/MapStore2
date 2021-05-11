@@ -63,10 +63,17 @@ import {
     hideCarouselItems,
     HIDE_CAROUSEL_ITEMS,
     syncCarouselMap,
-    SYNC_CAROUSEL_MAP
+    SYNC_CAROUSEL_MAP,
+    geostoryScrolling,
+    GEOSTORY_SCROLLING
 } from '../geostory';
 
 describe('test geostory action creators', () => {
+    it('geostoryScrolling', () => {
+        const status = true;
+        const action = geostoryScrolling(status);
+        expect(action).toEqual({type: GEOSTORY_SCROLLING, status});
+    });
     it('clearSaveError', () => {
         const action = clearSaveError();
         expect(action.type).toBe(CLEAR_SAVE_ERROR);
