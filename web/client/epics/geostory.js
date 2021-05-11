@@ -544,10 +544,10 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
  */
 export const scrollOnLoad = (action$) =>
     action$.ofType(SET_CURRENT_STORY)
-        .switchMap(() => {
+        .switchMap(({delay = 500}) => {
             const storyIds = window?.location?.hash?.split('/');
             return Observable.of(storyIds)
-                .delay(500)
+                .delay(delay)
                 .do(() => {
                     if (window?.location?.hash?.includes('shared')) {
                             scrollToContent(storyIds[7] || storyIds[5], {block: "start", behavior: "auto"});
@@ -560,7 +560,7 @@ export const scrollOnLoad = (action$) =>
                 )
                 .ignoreElements()
                 .startWith(geostoryScrolling(true))
-                .concat(Observable.of(geostoryScrolling(false)).delay(500));
+                .concat(Observable.of(geostoryScrolling(false)).delay(delay));
     });
 
 /**

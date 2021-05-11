@@ -1638,7 +1638,7 @@ describe('Geostory Epics', () => {
 
     it('urlUpdateOnScroll', (done) => {
         const NUM_ACTIONS = 1;
-        testEpic(addTimeoutEpic(urlUpdateOnScroll, 1000), NUM_ACTIONS, [updateCurrentPage({sectionId: "sectionId"})],
+        testEpic(addTimeoutEpic(urlUpdateOnScroll, 100), NUM_ACTIONS, [updateCurrentPage({sectionId: "sectionId"})],
             (actions) => {
                 expect(actions[0].type).toBe(TEST_TIMEOUT);
                 done();
