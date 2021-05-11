@@ -103,4 +103,49 @@ describe("The ShareEmbed component", () => {
         ReactTestUtils.Simulate.change(checkboxes[1]);
         expect(codeEmbed.innerText).toEqual(iFrameStr);
     });
+
+    it("should remove allowFullScreen for dashboard", () => {
+        Object.defineProperty(window.location.constructor.prototype, 'hash', {configurable: true, writable: true});
+        window.location.hash = "#/dashboard/5728";
+        const host = "http://localhost:8081/embedded.html";
+        const hashPart = "#";
+        const cmpSharePanel = ReactDOM.render(
+            <ShareEmbed
+                sizeOptions = {{Small: { width: 400, height: 700}}}
+                shareUrl={ host + hashPart }
+                showConnectionsParamToggle
+            />, document.getElementById("container"));
+        const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
+        expect(codeEmbed.innerText.includes("allowFullScreen")).toBe(false);
+    });
+
+    it("should remove allowFullScreen for geostory", () => {
+        Object.defineProperty(window.location.constructor.prototype, 'hash', {configurable: true, writable: true});
+        window.location.hash = "#/geostory/5728";
+        const host = "http://localhost:8081/embedded.html";
+        const hashPart = "#";
+        const cmpSharePanel = ReactDOM.render(
+            <ShareEmbed
+                sizeOptions = {{Small: { width: 400, height: 700}}}
+                shareUrl={ host + hashPart }
+                showConnectionsParamToggle
+            />, document.getElementById("container"));
+        const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
+        expect(codeEmbed.innerText.includes("allowFullScreen")).toBe(false);
+    });
+
+    it("should add allowFullScreen for maps", () => {
+        Object.defineProperty(window.location.constructor.prototype, 'hash', {configurable: true, writable: true});
+        window.location.hash = "#/viewer/openlayers/5728";
+        const host = "http://localhost:8081/embedded.html";
+        const hashPart = "#";
+        const cmpSharePanel = ReactDOM.render(
+            <ShareEmbed
+                sizeOptions = {{Small: { width: 400, height: 700}}}
+                shareUrl={ host + hashPart }
+                showConnectionsParamToggle
+            />, document.getElementById("container"));
+        const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
+        expect(codeEmbed.innerText.includes("allowFullScreen")).toBe(true);
+    });
 });
