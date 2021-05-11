@@ -62,7 +62,6 @@ import {
     setResource,
     SET_PENDING_CHANGES,
     LOAD_GEOSTORY,
-    geostoryScrolling,
     updateCurrentPage
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
