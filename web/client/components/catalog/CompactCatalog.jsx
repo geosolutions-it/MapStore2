@@ -63,7 +63,7 @@ const resToProps = ({records, result = {}, catalog = {}}) => ({
         title: record.title && isObject(record.title) && record.title.default || record.title,
         caption: getIdentifier(record),
         description: record.description,
-        preview: !catalog.hideThumbnail ? record.thumbnail ? <img src="thumbnail" /> : defaultPreview : null,
+        preview: !catalog.hideThumbnail ? record.thumbnail ? <img src={record.thumbnail} /> : defaultPreview : null,
         record: {
             ...record, identifier: getIdentifier(record)
         }
