@@ -65,7 +65,8 @@ function dashboard(state = {
             ...state,
             originalData: undefined,
             resource: undefined,
-            mode: "view"
+            mode: "view",
+            services: undefined
         };
     }
     case SAVE_ERROR: {
@@ -106,6 +107,7 @@ function dashboard(state = {
     case DASHBOARD_ADD_NEW_SERVICE: {
         let { services, service } = action;
         service.isNew = false;
+        service.showAdvancedSettings = false;
         delete service.old;
         services[service.key] = service;
         const selectedService = service.key;
