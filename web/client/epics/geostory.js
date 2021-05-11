@@ -17,7 +17,6 @@ import words from 'lodash/words';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
-import groupBy from "lodash/groupBy";
 
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
@@ -58,7 +57,9 @@ import {
     EDIT_RESOURCE,
     UPDATE_CURRENT_PAGE,
     UPDATE_SETTING,
-    SET_CURRENT_STORY
+    SET_CURRENT_STORY,
+    geostoryScrolling,
+    GEOSTORY_SCROLLING
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -519,7 +520,7 @@ const semaphore = (sem$, start = true, condition = (c) => c) => (stream$) =>
 export const urlUpdateOnScroll = (action$, {getState}) =>
     action$.ofType(UPDATE_CURRENT_PAGE)
         .let(semaphore(
-            action$.ofType("GEOSTORY:SCROLLING")
+            action$.ofType(GEOSTORY_SCROLLING)
                 .map(a => !a.value)
         ))
         .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
@@ -558,8 +559,8 @@ export const scrollOnLoad = (action$) =>
                     }
                 )
                 .ignoreElements()
-                .startWith({type: "GEOSTORY:SCROLLING", value: true})
-                .concat(Observable.of({type: "GEOSTORY:SCROLLING", value: false}).delay(500));
+                .startWith(geostoryScrolling(true))
+                .concat(Observable.of(geostoryScrolling(false)).delay(500));
     });
 
 /**

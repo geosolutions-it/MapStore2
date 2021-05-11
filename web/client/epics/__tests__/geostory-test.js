@@ -32,13 +32,17 @@ import {
     openWebPageComponentCreator,
     editWebPageComponent,
     handlePendingGeoStoryChanges,
-    loadStoryOnHistoryPop
+    loadStoryOnHistoryPop,
+    scrollOnLoad,
+    urlUpdateOnScroll
 } from '../geostory';
 import {
     ADD,
     LOADING_GEOSTORY,
     loadGeostory,
     SET_CURRENT_STORY,
+    setCurrentStory,
+    GEOSTORY_SCROLLING,
     LOAD_GEOSTORY_ERROR,
     add,
     UPDATE,
@@ -57,7 +61,9 @@ import {
     editWebPage,
     setResource,
     SET_PENDING_CHANGES,
-    LOAD_GEOSTORY
+    LOAD_GEOSTORY,
+    geostoryScrolling,
+    updateCurrentPage
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -1630,6 +1636,25 @@ describe('Geostory Epics', () => {
         });
     });
 
+    it('urlUpdateOnScroll', (done) => {
+        const NUM_ACTIONS = 1;
+        testEpic(addTimeoutEpic(urlUpdateOnScroll, 1000), NUM_ACTIONS, [updateCurrentPage({sectionId: "sectionId"})],
+            (actions) => {
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            }, {geostory: {mode: "view", updateUrlOnScroll: true, resource: {id: "1"}}});
+    });
+    it('scrollOnLoad', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(scrollOnLoad, NUM_ACTIONS, setCurrentStory({}),
+            (actions) => {
+                expect(actions[0].type).toBe(GEOSTORY_SCROLLING);
+                expect(actions[0].status).toBe(true);
+                expect(actions[1].type).toBe(GEOSTORY_SCROLLING);
+                expect(actions[1].status).toBe(false);
+                done();
+            });
+    });
     describe('loadStoryOnHistoryPop', () => {
         it('loadStoryOnHistoryPop without shared', (done) => {
             const NUM_ACTIONS = 1;
