@@ -58,12 +58,12 @@ const getIdentifier = (r) =>
 /*
  * converts record item into a item for SideGrid
  */
-const resToProps = ({records, result = {}}) => ({
+const resToProps = ({records, result = {}, catalog = {}}) => ({
     items: (records || []).map((record = {}) => ({
         title: record.title && isObject(record.title) && record.title.default || record.title,
         caption: getIdentifier(record),
         description: record.description,
-        preview: record.thumbnail ? <img src="thumbnail" /> : defaultPreview,
+        preview: !catalog.hideThumbnail ? record.thumbnail ? <img src={record.thumbnail} /> : defaultPreview : null,
         record: {
             ...record, identifier: getIdentifier(record)
         }
@@ -77,7 +77,7 @@ const PAGE_SIZE = 10;
 const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
     .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text, catalog.type === 'tms' ? {options: {service: catalog}} : {}))
     .map((result) => ({ result, records: getCatalogRecords(catalog.type, result || [], { url: catalog && catalog.url, service: catalog })}))
-    .map(resToProps);
+    .map(({records, result}) => resToProps({records, result, catalog}));
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE};
 /**
  * Compat catalog : Reusable catalog component, with infinite scroll.
