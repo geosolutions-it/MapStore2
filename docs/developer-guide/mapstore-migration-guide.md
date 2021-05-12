@@ -23,9 +23,9 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2021.01.02 to 2021.02.00
 
-### Project system 
+### Project system
 
-During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon. 
+During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon.
 
 **The following key files have been moved to the new `configs` folder:**
 We suggest you to move them aswell from root to configs folder
@@ -33,11 +33,11 @@ We suggest you to move them aswell from root to configs folder
 - localConfig.json
 - new.json
 - pluginsConfig.json
-- config.json 
-- simple.json 
+- config.json
+- simple.json
 
-Back-end has been reorganized 
-In particular: 
+Back-end has been reorganized
+In particular:
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
 
@@ -46,8 +46,8 @@ Check the changes in pom.xml to update. (future evolution of the project will av
 - **pom.xml**
 - **java/web/pom.xml**
 
-### Configurations 
- - Embedded now uses popup as default. Align localConfig.json `plugins --> embedded --> Identify` with the latest one: 
+### Configurations
+ - Embedded now uses popup as default. Align localConfig.json `plugins --> embedded --> Identify` with the latest one:
 ```json
 {
     "name": "Identify",
@@ -59,6 +59,12 @@ Check the changes in pom.xml to update. (future evolution of the project will av
     }
 }
 ```
+
+## Migration from 2021.01.01 to 2021.01.03
+
+Generally speaking this is not properly a breaking change, but more a fix to apply to your installations. Certificate for 'cesiumjs.org' has expired at 2021.05.05, so to continue using CesiumJS with MapStore
+you will have to replace all the URLs like `https://cesiumjs.org/releases/1.17` in `https://cesium.com/downloads/cesiumjs/releases/1.17`. This is the main fix of this minor release.
+See [this pull request on GitHub](https://github.com/geosolutions-it/MapStore2/pull/6856) as a sample to apply these changes to your project.
 
 ## Migration from 2021.01.00 to 2021.01.01
 
@@ -77,7 +83,7 @@ import {
 // example for additional translations in the project folder
 // setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './translations']);
 setConfigProp('translationsPath', './MapStore2/web/client/translations');
-// __PROJECTNAME__ is the name of the project used in the creation process 
+// __PROJECTNAME__ is the name of the project used in the creation process
 setConfigProp('themePrefix', '__PROJECTNAME__');
 
 // Use a custom plugins configuration file
@@ -90,7 +96,7 @@ import('@mapstore/product/embedded');
 ```
 2 - update the path of the embedded entry inside the `webpack.config.js` and `prod-webpack.config.js` files with:
 ```js
-// __PROJECTNAME__ is the name of the project used in the creation process 
+// __PROJECTNAME__ is the name of the project used in the creation process
 '__PROJECTNAME__-embedded': path.join(__dirname, "js", "embedded"),
 ```
 ### Locate plugin configuration
@@ -459,8 +465,8 @@ For more details see [this](https://github.com/geosolutions-it/MapStore2/commit/
 
 new files have been added:
 
--  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml` 
--  `web/src/main/resources/mapstore.properties` 
+-  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml`
+-  `web/src/main/resources/mapstore.properties`
 
 some files has been changed:
 
