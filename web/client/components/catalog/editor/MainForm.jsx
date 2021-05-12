@@ -16,7 +16,7 @@ import InfoPopover from '../../widgets/widget/InfoPopover';
 import { FormControl as FC, Form, Col, FormGroup, ControlLabel, Alert } from "react-bootstrap";
 
 import localizedProps from '../../misc/enhancers/localizedProps';
-import {defaultPlaceholder, isHttps} from "./MainFormUtils";
+import {defaultPlaceholder, isValidURL} from "./MainFormUtils";
 
 const FormControl = localizedProps('placeholder')(FC);
 
@@ -129,7 +129,7 @@ export default ({
     function handleProtocolValidity(url) {
         onChangeUrl(url);
         if (url) {
-            const isInvalidProtocol = !isHttps(url);
+            const isInvalidProtocol = !isValidURL(url);
             setInvalidProtocol(isInvalidProtocol);
             setValid(!isInvalidProtocol);
         }
