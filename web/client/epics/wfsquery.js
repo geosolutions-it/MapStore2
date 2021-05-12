@@ -48,10 +48,14 @@ import {
 } from '../selectors/queryform';
 
 import { changeDrawingStatus } from '../actions/draw';
-import { getLayerJSONFeature, getJSONFeatureWA } from '../observables/wfs';
+import { getLayerJSONFeature } from '../observables/wfs';
 import { describeFeatureTypeToAttributes } from '../utils/FeatureTypeUtils';
 import * as notifications from '../actions/notifications';
 import { find } from 'lodash';
+
+import {selectedLayerSelector} from '../selectors/featuregrid';
+import {layerLoad} from '../actions/layers';
+
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
 
 const extractInfo = (data) => {
@@ -174,19 +178,24 @@ export const wfsQueryEpic = (action$, store) =>
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             // getSelected Layer and merge layerFilter and cql_filter in params  with action filter
             const layer = getSelectedLayer(store.getState()) || {};
-            const selectedLayer = selectedLayerSelector(state);
+            const selectedLayer = selectedLayerSelector(store.getState());
 
             const {layerFilter, params} = layer;
             const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
 
-            const ogcFilter = mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, action.filterObj);
+            // use original filter if the selected layer is vector type
+            const ogcFilter = layer && layer.type === "vector" ?
+                action.filterObj
+                : mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, action.filterObj);
             const { url, options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
             const options = {
                 ...action.filterObj.pagination,
                 totalFeatures,
                 sortOptions,
-                ...queryOptions
+                ...queryOptions,
+                layer: selectedLayer
             };
+
             // TODO refactor, the layer that should be used should be the used when the feature grid is opened from the toc, see #6430
             return Rx.Observable.merge(
                 getLayerJSONFeature({...layer, name: action.filterObj.featureTypeName || layer.name, search: {...layer.search, url}}, ogcFilter, options)

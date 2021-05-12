@@ -14,7 +14,7 @@ import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 
 import axios from '../libs/ajax';
-import { getWFSFilterData } from '../utils/FilterUtils';
+import { createFeatureFilter, getWFSFilterData } from '../utils/FilterUtils';
 import { getCapabilitiesUrl } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
@@ -80,6 +80,7 @@ export const getPagination = (filterObj = {}, options = {}) =>
             startIndex: options.startIndex,
             maxFeatures: options.maxFeatures
         };
+
 const createFeatureCollection = (features) => (
     {
         crs: {type: "name", properties: {name: "urn:ogc:def:crs:EPSG::4326"}},
@@ -100,7 +101,19 @@ const getFeaturesFiltered = (features, filterObj) => {
         features.numberMatched = featuresFiltered.length;
         features.numberReturned = featuresFiltered.length;
         features.totalFeatures = featuresFiltered.length;
-        return features;
+    }
+    if (filterObj.sortOptions && filterObj.sortOptions.sortBy && filterObj.sortOptions.sortOrder &&
+        filterObj.sortOptions.sortOrder !== "NONE") {
+        features.features.sort((a, b) => {
+            const avalue = a.properties[filterObj.sortOptions.sortBy];
+            const bvalue = b.properties[filterObj.sortOptions.sortBy];
+            const diff = avalue.toLowerCase().localeCompare(bvalue.toLowerCase());
+            if (filterObj.sortOptions.sortOrder === "ASC") {
+                return diff;
+            }
+
+            return -1 * diff;
+        });
     }
     return features;
 
@@ -128,13 +141,14 @@ export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
     });
 
 
-    if (layer && layer.type === 'vector') {
+    if (options.layer && options.layer.type === 'vector') {
         return Rx.Observable.defer(() => new Promise((resolve) => {
-            let features = createFeatureCollection(layer.features);
+            let features = createFeatureCollection(options.layer.features);
             let featuresFiltered = getFeaturesFiltered(features, filterObj);
             resolve(featuresFiltered);
         }));
     }
+
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
             timeout: 60000,
