@@ -16,10 +16,16 @@ export const defaultPlaceholder = (service) => {
     return true;
 };
 
-export const isHttps = (catalogUrl = '') => {
-    const { protocol: mapStoreProtocol } = url.parse(window.location.href);
+/**
+ * Check if the URL typed is valid or not
+ * @param {string} catalogUrl The URL of the catalog
+ * @param {string} currentLocation The current location, by default `window.location.href`
+ * @returns {boolean} true if the URL is valid
+ */
+export const isValidURL = (catalogUrl = '', currentLocation) => {
+    const { protocol: mapStoreProtocol } = url.parse(currentLocation ?? window.location.href);
     const { protocol: catalogProtocol } = url.parse(catalogUrl);
-    if (mapStoreProtocol === 'https:') {
+    if (mapStoreProtocol === 'https:' && !!catalogProtocol) {
         return mapStoreProtocol === catalogProtocol;
     }
     return true;
