@@ -141,7 +141,8 @@ class ShareEmbed extends React.Component {
 
     };
     hideAllowFullScreen = () => {
-        return window.location.hash?.includes("geostory") || window.location.hash?.includes("dashboard");
+        return window.location.hash?.includes("geostory") || window.location.hash?.includes("dashboard") ||
+            this.props.shareUrl.includes("dashboard") || this.props.shareUrl.includes("geostory");
     }
 }
 
