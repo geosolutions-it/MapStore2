@@ -39,12 +39,18 @@ export const constructXMLBody = (startPosition, maxRecords, searchText) => {
         <csw:Query typeNames="csw:Record">
             <csw:ElementSetName>full</csw:ElementSetName>
             <csw:Constraint version="1.1.0">
-                <ogc:Filter>
-                    <ogc:PropertyIsEqualTo>
-                        <ogc:PropertyName>dc:type</ogc:PropertyName>
-                    <ogc:Literal>dataset</ogc:Literal>
-                    </ogc:PropertyIsEqualTo>
-                </ogc:Filter>
+        <ogc:Filter>
+            <ogc:Or>
+            <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>dc:type</ogc:PropertyName>
+                <ogc:Literal>dataset</ogc:Literal>
+            </ogc:PropertyIsEqualTo>
+            <ogc:PropertyIsEqualTo>
+                <ogc:PropertyName>dc:type</ogc:PropertyName>
+                <ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal>
+            </ogc:PropertyIsEqualTo>
+           </ogc:Or>
+        </ogc:Filter>
             </csw:Constraint>
         </csw:Query>
     </csw:GetRecords>`;
@@ -67,10 +73,16 @@ export const constructXMLBody = (startPosition, maxRecords, searchText) => {
                     <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
                     <ogc:Literal>%${searchText}%</ogc:Literal>
                 </ogc:PropertyIsLike>
+                <ogc:Or>
                 <ogc:PropertyIsEqualTo>
                     <ogc:PropertyName>dc:type</ogc:PropertyName>
                     <ogc:Literal>dataset</ogc:Literal>
                 </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>dc:type</ogc:PropertyName>
+                    <ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+               </ogc:Or>
             </ogc:And>
             </ogc:Filter>
         </csw:Constraint>
