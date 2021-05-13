@@ -69,7 +69,7 @@ describe("The ShareEmbed component", () => {
         const host = "http://localhost:8081/dashboard-embedded.html";
         const hashPart = "#/1";
         const expectedParam = "?connections=true";
-        const iFrameStr = "<iframe allowFullScreen style=\"border: none;\" height=\"500\" width=\"600\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
+        const iFrameStr = "<iframe style=\"border: none;\" height=\"500\" width=\"600\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
         const cmpSharePanel = ReactDOM.render(
             <ShareEmbed
                 shareUrl={ host + hashPart }
@@ -89,7 +89,7 @@ describe("The ShareEmbed component", () => {
         const host = "http://localhost:8081/dashboard-embedded.html";
         const hashPart = "#/1";
         const expectedParam = "?connections=true";
-        const iFrameStr = "<iframe allowFullScreen style=\"border: none;\" height=\"700\" width=\"400\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
+        const iFrameStr = "<iframe style=\"border: none;\" height=\"700\" width=\"400\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
         const cmpSharePanel = ReactDOM.render(
             <ShareEmbed
                 sizeOptions = {{Small: { width: 400, height: 700}}}
