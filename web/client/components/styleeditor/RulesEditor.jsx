@@ -252,6 +252,7 @@ const RulesEditor = forwardRef(({
                         hideScaleDenominator,
                         classificationType
                     } = ruleBlock[ruleKind] || {};
+                    const isCustomNumber =  attributes?.filter(({label}) => label === rule?.attribute)?.[0]?.type === 'number';
                     return (
                         <Rule
                             // force render if draggable is enabled
@@ -326,9 +327,13 @@ const RulesEditor = forwardRef(({
                                     methods={methods}
                                     getColors={getColors}
                                     bands={bands}
-                                    attributes={attributes && attributes.filter((attribute) =>
-                                        rule.method === "uniqueInterval" || attribute.type !== 'string'
-                                    )}
+                                    attributes={attributes && attributes.map((attribute) => ({
+                                        ...attribute,
+                                        ...( rule.method === "customInterval"
+                                            ? { disabled: isCustomNumber ? attribute.type !== 'number' : attribute.label !== rule.attribute }
+                                            : rule.method !== "uniqueInterval" && { disabled: attribute.type !== 'number' }
+                                        )
+                                    }))}
                                     onUpdate={onUpdate}
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     onReplace={handleReplaceRule}

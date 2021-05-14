@@ -357,7 +357,7 @@ const property = {
             };
         }
     }),
-    select: ({ label, key = '', getOptions = () => [], selectProps, isValid }) => ({
+    select: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled }) => ({
         type: 'select',
         label,
         config: {
@@ -369,7 +369,8 @@ const property = {
             return {
                 [key]: value
             };
-        }
+        },
+        isDisabled
     }),
     colorRamp: ({ label, key = '', getOptions = () => [] }) => ({
         type: 'colorRamp',

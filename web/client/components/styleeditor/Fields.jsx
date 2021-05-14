@@ -12,7 +12,7 @@ import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
 import isNaN from 'lodash/isNaN';
-import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import Toolbar from '../misc/toolbar/Toolbar';
 import ColorSelector from '../style/ColorSelector';
 import Slider from '../misc/Slider';
@@ -197,6 +197,7 @@ export const fields = {
             isValid
         },
         onChange,
+        disabled,
         ...props
     }) => {
         const {
@@ -205,17 +206,28 @@ export const fields = {
             multi
         } = selectProps;
 
-        const options = getOptions(props) || [];
-        const updateValue = (_option, _options) => {
-            const optionsValues = _options?.map(o => o.value);
-            const isMissing = !isEmpty(optionsValues) && optionsValues.indexOf(_option) === -1;
-            return isMissing && onChange(optionsValues?.[0]); // Default to first option when old selection is missing
-        };
-        const [newOptions, setNewOptions] = useState(options);
+        function updateOptions(options = [], newValue) {
+            const optionsValues = options.map(option => option.value);
+            const isMissing = newValue?.value && optionsValues.indexOf(newValue.value) === -1;
+            return isMissing
+                ? [ newValue, ...options]
+                : options;
+        }
+
+        function initOptions(options) {
+            if (!value) {
+                return options;
+            }
+            return [{ value, label: value }].reduce(updateOptions, options);
+        }
+
+        const options = getOptions(props);
+
+        const [newOptions, setNewOptions] = useState(initOptions(options));
         useEffect(() => {
-            setNewOptions(options);
-            updateValue(value, options);
-        }, [options?.length]);
+            !isEqual(options, newOptions) && setNewOptions(initOptions(options));
+        }, [options]);
+
         const SelectInput = creatable
             ? ReactSelectCreatable
             : ReactSelect;
@@ -225,6 +237,7 @@ export const fields = {
                 label={label}
                 invalid={!valid}>
                 <SelectInput
+                    disabled={disabled}
                     clearable={clearable}
                     placeholder="styleeditor.selectPlaceholder"
                     noResultsText="styleeditor.noResultsSelectInput"
@@ -242,6 +255,7 @@ export const fields = {
                                 ? option.map((entry) => entry.value)
                                 : undefined);
                         }
+                        setNewOptions(updateOptions(newOptions, option));
                         return onChange(option.value);
                     }}
                 />
@@ -509,7 +523,7 @@ function Fields({
                     key={key}
                     label={label || key}
                     config={config}
-                    disabled={isDisabled && isDisabled(properties[key], state.current.properties)}
+                    disabled={isDisabled && isDisabled(properties[key], state.current.properties, fieldsConfig)}
                     value={!isNil(value) ? value : properties[key]}
                     onChange={(values) => onChange(getValue && getValue(values, state.current.properties) || values)}/>;
             })}

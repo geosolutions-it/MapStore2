@@ -72,15 +72,18 @@ function filterMethods(sldServiceCapabilities) {
  * Get error object for classification of vector
  * @method getClassificationError
  * @param {object} params object containing param values
+ * @param {string} errorMsg custom error message (msgId)
  * @returns {object} return error object
  */
-const getClassificationError = (params) => {
+const getClassificationError = (params, errorMsg) => {
     const isUniqueInterval = params?.method === 'uniqueInterval';
     const intervalsForUnique = params?.intervalsForUnique;
     return {
-        errorId: isUniqueInterval
-            ? 'styleeditor.classificationUniqueIntervalError'
-            : 'styleeditor.classificationError',
+        errorId: errorMsg && errorMsg.includes('toc') // Accepts only custom messages
+            ? errorMsg
+            : isUniqueInterval
+                ? 'styleeditor.classificationUniqueIntervalError'
+                : 'styleeditor.classificationError',
         msgParams: isUniqueInterval ? { intervalsForUnique } : {}
     };
 };
@@ -241,7 +244,7 @@ export function classificationVector({
             msgParams
         }));
     };
-    console.log("needsRequest", JSON.stringify(needsRequest));
+
     if (needsRequest) {
         const paramSLDService = {
             intervals: params.intervals,
@@ -259,8 +262,8 @@ export function classificationVector({
                     errorId: undefined
                 }));
             })
-            .catch(() => {
-                return updateDefaultRules(getClassificationError(params));
+            .catch((e) => {
+                return updateDefaultRules(getClassificationError(params, e?.message));
             });
     }
 

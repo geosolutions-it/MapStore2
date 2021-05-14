@@ -322,6 +322,9 @@ const getBlocks = (/* config = {} */) => {
                     method: property.select({
                         key: 'method',
                         label: 'styleeditor.method',
+                        isDisabled: (value, properties, {attributes})=>
+                            attributes?.filter(({label}) => label === properties?.attribute)?.[0]?.type === 'string'
+                            && properties?.method !== 'customInterval',
                         getOptions: ({ methods, method }) => {
                             const options = methods?.map((value) => ({
                                 labelId: 'styleeditor.' + value,

@@ -641,6 +641,7 @@
                 "interval_limit": "Les intervalles doivent être compris entre {min} et {max}",
                 "invalid_object": "Réponse du service non valide",
                 "invalid_geometry": "Le type de géométrie n'est pas valide, pas un point, une ligne ou un polygone",
+                "invalid_attribute": "Type d'attribut non valide dans la sélection. Veuillez sélectionner un attribut valide dans la liste pour la méthode de classification",
                 "invalid_classes": "Max doit être supérieur à min dans chaque classe"
             },
             "error": {

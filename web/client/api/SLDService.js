@@ -166,6 +166,9 @@ const getRuleColor = (rule) => {
 };
 
 const validateClassification = (classificationObj) => {
+    if (classificationObj && classificationObj.Rule) {
+        throw new Error("toc.thematic.invalid_attribute");
+    }
     if (!classificationObj || !classificationObj.Rules || !classificationObj.Rules.Rule) {
         throw new Error("toc.thematic.invalid_object");
     }
