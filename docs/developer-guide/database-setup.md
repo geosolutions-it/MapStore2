@@ -121,6 +121,7 @@ geostoreVendorAdapter.generateDdl=true
 geostoreVendorAdapter.showSql=false
 ```
 
+
 ### Migrate an existing H2 database to PostgreSQL
 If you used an H2 database during development, and you want to deploy the application in production, migrating the database to PostgreSQL is not that easy.
 
@@ -158,5 +159,4 @@ geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=
 geostoreVendorAdapter.generateDdl=true
 geostoreVendorAdapter.showSql=false
 ```
-
 
