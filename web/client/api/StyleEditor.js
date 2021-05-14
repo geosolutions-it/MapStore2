@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEqual, get, isNil, castArray } from 'lodash';
+import { isEqual, get, castArray } from 'lodash';
 
 import axios from '../libs/ajax';
 import StylesAPI from './geoserver/Styles';
@@ -69,18 +69,20 @@ function filterMethods(sldServiceCapabilities) {
 }
 
 /**
- * Get a parsed object for classification of vector
- * @method parseForUniqueInterval
+ * Get error object for classification of vector
+ * @method getClassificationError
  * @param {object} params object containing param values
- * @param {string} type of parsing to performed
- * @returns {object|string} return parsed object or error string
+ * @returns {object} return error object
  */
-const parseForUniqueInterval = (params, type = 'parse') => {
-    if (type === 'parse') {
-        return {...params, intervalsForUnique: !isNil(params.intervalsForUnique) ? params.intervalsForUnique : 100 };
-    }
-    return params?.classification?.length > params?.intervalsForUnique
-        && 'styleeditor.classificationUniqueIntervalError';
+const getClassificationError = (params) => {
+    const isUniqueInterval = params?.method === 'uniqueInterval';
+    const intervalsForUnique = params?.intervalsForUnique;
+    return {
+        errorId: isUniqueInterval
+            ? 'styleeditor.classificationUniqueIntervalError'
+            : 'styleeditor.classificationError',
+        msgParams: isUniqueInterval ? { intervalsForUnique } : {}
+    };
 };
 
 /**
@@ -164,7 +166,7 @@ const API = {
  *  "availableUrls": [],
  *  "fonts": [ "Arial" ],
  *  "classificationMethods": {
- *   "vector": [ "equalInterval", "quantile", "jenks", "standardDeviation" ],
+ *   "vector": [ "equalInterval", "quantile", "jenks", "standardDeviation", "uniqueInterval" ],
  *   "raster": [ "equalInterval", "quantile", "jenks" ]
  *  }
  * }
@@ -198,9 +200,7 @@ export function classificationVector({
         'intervalsForUnique'
     ];
     let params = { ...properties, ...values };
-    params = parseForUniqueInterval(params);
     const { ruleId } = properties;
-    const isUniqueInterval = params?.method === 'uniqueInterval';
     // if ramp changes and method is custom interval
     // we should update the color values without a new request
     if (values.ramp !== undefined
@@ -233,15 +233,15 @@ export function classificationVector({
         && params?.method !== 'customInterval';
 
     // Update rules on error
-    let errorId = 'styleeditor.classificationError';
-    const updateDefaultRules = (_errorId) => {
+    const updateDefaultRules = ({errorId, msgParams} = {}) => {
         return updateRules(ruleId, rules, (rule) => ({
             ...rule,
             ...values,
-            errorId: _errorId
+            errorId,
+            msgParams
         }));
     };
-
+    console.log("needsRequest", JSON.stringify(needsRequest));
     if (needsRequest) {
         const paramSLDService = {
             intervals: params.intervals,
@@ -260,8 +260,7 @@ export function classificationVector({
                 }));
             })
             .catch(() => {
-                if (isUniqueInterval) errorId = parseForUniqueInterval(params, 'error');
-                return updateDefaultRules(errorId);
+                return updateDefaultRules(getClassificationError(params));
             });
     }
 

@@ -26,6 +26,7 @@ function ClassificationSymbolizer({
     ruleBlock = {},
     symbolizerBlock = {},
     bands,
+    config,
     ...props
 }) {
 
@@ -35,7 +36,7 @@ function ClassificationSymbolizer({
         classification,
         attribute,
         intervals,
-        intervalsForUnique,
+        intervalsForUnique = config?.intervalsForUnique || 100,
         reverse,
         continuous
     } = props;

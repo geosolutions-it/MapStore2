@@ -12,7 +12,7 @@ import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
 import isNaN from 'lodash/isNaN';
-import isEqual from 'lodash/isEqual';
+import isEmpty from 'lodash/isEmpty';
 import Toolbar from '../misc/toolbar/Toolbar';
 import ColorSelector from '../style/ColorSelector';
 import Slider from '../misc/Slider';
@@ -205,28 +205,17 @@ export const fields = {
             multi
         } = selectProps;
 
-        function updateOptions(options = [], newValue) {
-            const optionsValues = options.map(option => option.value);
-            const isMissing = newValue?.value && optionsValues.indexOf(newValue.value) === -1;
-            return isMissing
-                ? [ newValue, ...options]
-                : options;
-        }
-
-        function initOptions(options) {
-            if (!value) {
-                return options;
-            }
-            return [{ value, label: value }].reduce(updateOptions, options);
-        }
-
-        const options = getOptions(props);
-
-        const [newOptions, setNewOptions] = useState(initOptions(options));
+        const options = getOptions(props) || [];
+        const updateValue = (_option, _options) => {
+            const optionsValues = _options?.map(o => o.value);
+            const isMissing = !isEmpty(optionsValues) && optionsValues.indexOf(_option) === -1;
+            return isMissing && onChange(optionsValues?.[0]); // Default to first option when old selection is missing
+        };
+        const [newOptions, setNewOptions] = useState(options);
         useEffect(() => {
-            !isEqual(options, newOptions) && setNewOptions(initOptions(options));
-        }, [options]);
-
+            setNewOptions(options);
+            updateValue(value, options);
+        }, [options?.length]);
         const SelectInput = creatable
             ? ReactSelectCreatable
             : ReactSelect;
@@ -253,7 +242,6 @@ export const fields = {
                                 ? option.map((entry) => entry.value)
                                 : undefined);
                         }
-                        setNewOptions(updateOptions(newOptions, option));
                         return onChange(option.value);
                     }}
                 />

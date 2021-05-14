@@ -273,25 +273,6 @@ const property = {
             };
         }
     }),
-    intervalsForUnique: ({ label, key = 'label', setValue, type, isDisabled, max}) => ({
-        type: 'input',
-        label,
-        isDisabled,
-        config: {
-            type
-        },
-        setValue,
-        getValue: (value = '') => {
-            let _val = value;
-            if (type === 'number') {
-                _val = parseInt(value, 10);
-                if (_val > max) _val = max;
-            }
-            return {
-                [key]: _val
-            };
-        }
-    }),
     fontStyle: ({ label, key = 'fontStyle' }) => ({
         type: 'toolbar',
         label,

@@ -87,7 +87,8 @@ const RulesEditor = forwardRef(({
         zoom,
         fonts,
         methods,
-        getColors
+        getColors,
+        classification
     } = config;
 
     // needed for slider
@@ -239,7 +240,8 @@ const RulesEditor = forwardRef(({
                         scaleDenominator = {},
                         ruleId,
                         kind: ruleKind,
-                        errorId: ruleErrorId
+                        errorId: ruleErrorId,
+                        msgParams: ruleMsgParams
                     } = rule;
 
                     const {
@@ -258,6 +260,7 @@ const RulesEditor = forwardRef(({
                             id={ruleId}
                             index={index}
                             errorId={ruleErrorId}
+                            msgParams={ruleMsgParams}
                             onSort={handleSortRules}
                             title={
                                 hideInputLabel
@@ -318,14 +321,14 @@ const RulesEditor = forwardRef(({
                                     symbolizerBlock={symbolizerBlock}
                                     glyph={ruleGlyph}
                                     classificationType={classificationType}
+                                    config={classification || {}}
                                     params={ruleParams}
                                     methods={methods}
                                     getColors={getColors}
                                     bands={bands}
-                                    attributes={attributes && attributes.map((attribute) => ({
-                                        ...attribute,
-                                        ...( rule.method !== "uniqueInterval" && { disabled: attribute.type !== 'number' })
-                                    }))}
+                                    attributes={attributes && attributes.filter((attribute) =>
+                                        rule.method === "uniqueInterval" || attribute.type !== 'string'
+                                    )}
                                     onUpdate={onUpdate}
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     onReplace={handleReplaceRule}

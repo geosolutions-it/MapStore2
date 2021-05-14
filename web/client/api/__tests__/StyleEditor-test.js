@@ -22,6 +22,7 @@ import CLASSIFY_RASTER_RESPONSE from './classifyRaterResponse.json';
 
 describe('StyleEditor API', () => {
     describe('classificationVector', () => {
+        const DEFAULT_CONFIG = { intervalsForUnique: 10 };
         beforeEach(done => {
             mockAxios = new MockAdapter(axios);
             setTimeout(done);
@@ -43,7 +44,8 @@ describe('StyleEditor API', () => {
                 method: 'equalInterval',
                 reverse: false,
                 ramp: 'spectral',
-                type: 'classificationVector'
+                type: 'classificationVector',
+                ...DEFAULT_CONFIG
             };
             const rules = [
                 {
@@ -125,7 +127,8 @@ describe('StyleEditor API', () => {
                 reverse: false,
                 ramp: 'spectral',
                 attribute: 'ATTRIBUTE',
-                type: 'classificationVector'
+                type: 'classificationVector',
+                ...DEFAULT_CONFIG
             };
             const rules = [
                 {
@@ -382,11 +385,11 @@ describe('StyleEditor API', () => {
             const properties = {
                 ruleId: 'rule0',
                 intervals: 5,
-                intervalsForUnique: 5,
                 method: 'uniqueInterval',
                 reverse: false,
                 ramp: 'spectral',
-                type: 'classificationVector'
+                type: 'classificationVector',
+                ...DEFAULT_CONFIG
             };
             const rules = [
                 {
@@ -454,16 +457,17 @@ describe('StyleEditor API', () => {
             const values = {
                 attribute: 'NEW_ATTRIBUTE'
             };
+            const param = { intervalsForUnique: 4 };
             const properties = {
                 ruleId: 'rule0',
                 intervals: 5,
-                intervalsForUnique: 4,
                 method: 'uniqueInterval',
                 reverse: false,
                 ramp: 'spectral',
                 attribute: 'ATTRIBUTE',
                 type: 'classificationVector',
-                classification: [1, 2, 3, 4, 5]
+                classification: [1, 2, 3, 4, 5],
+                ...param
             };
             const rules = [
                 {
@@ -488,6 +492,7 @@ describe('StyleEditor API', () => {
                 try {
                     expect(newRules[0].attribute).toBe('NEW_ATTRIBUTE');
                     expect(newRules[0].errorId).toBe('styleeditor.classificationUniqueIntervalError');
+                    expect(newRules[0].msgParams).toEqual(param);
                 } catch (e) {
                     done(e);
                 }
