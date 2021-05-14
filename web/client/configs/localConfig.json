@@ -664,6 +664,7 @@
             "embedOptions": {
               "showTOCToggle": false,
               "showConnectionsParamToggle": true,
+              "allowFullScreen": false,
               "sizeOptions": {
                 "Small": { "width": 600, "height": 500 },
                 "Medium": { "width": 800, "height": 600},
@@ -797,7 +798,8 @@
               "embedPanel": true,
               "showAPI": false,
               "embedOptions": {
-                "showTOCToggle": false
+                "showTOCToggle": false,
+                "allowFullScreen":false
               },
               "shareUrlRegex": "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
               "shareUrlReplaceString": "$1geostory-embedded.html#/$3",
