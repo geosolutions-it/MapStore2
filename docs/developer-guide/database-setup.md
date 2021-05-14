@@ -123,6 +123,7 @@ geostoreVendorAdapter.showSql=false
 
 
 ### Migrate an existing H2 database to PostgreSQL
+
 If you used an H2 database during development, and you want to deploy the application in production, migrating the database to PostgreSQL is not that easy.
 
 For this reason we have created a specific tool for this task, called **H2ToPgSQLExport** that is part of the GeoStore CLI.
@@ -159,4 +160,3 @@ geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=
 geostoreVendorAdapter.generateDdl=true
 geostoreVendorAdapter.showSql=false
 ```
-
