@@ -2996,10 +2996,9 @@
             "confirmReplaceConfirmButton": "Remplacer"
         },
         "mapCatalog": {
-            "title": "Catalogue d'applications",
-            "tooltip": "Charger une application qui contient des fonctionnalités et des cartes modèles spécifiques.",
-            "filterPlaceholder": "Rechercher des applications...",
-            "deleteConfirmContent": "Voulez-vous vraiment supprimer l'application \"{mapName}\"?",
+            "title": "Catalogue de cartes",
+            "filterPlaceholder": "Rechercher des cartes...",
+            "deleteConfirmContent": "Voulez-vous vraiment supprimer la carte \"{mapName}\"?",
             "tooltips": {
                 "edit": "Modifier les propriétés",
                 "delete": "Supprimer la ressource",
@@ -3013,8 +3012,8 @@
                 "title": "Carte sauvegardée",
                 "message": "La carte a été enregistrée avec succès"
             },
-            "deleteError": "Une erreur inattendue s'est produite lors de la suppression de l'application.",
-            "updateError": "Une erreur inattendue s'est produite lors de l'enregistrement l'application."
+            "deleteError": "Une erreur inattendue s'est produite lors de la suppression de la carte",
+            "updateError": "Une erreur inattendue s'est produite lors de l'enregistrement de la carte"
         },
         "layerInfo": {
             "title": "Mettre à jour les titres et descriptions des calques",
