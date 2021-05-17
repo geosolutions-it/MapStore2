@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 
-import API from '../CSW';
+import API, { constructXMLBody } from '../CSW';
 
 describe('Test correctness of the CSW APIs', () => {
     it('getRecords ISO Metadata Profile', (done) => {
@@ -83,5 +83,25 @@ describe('Test correctness of the CSW APIs', () => {
                 done(ex);
             }
         });
+    });
+});
+
+describe("constructXMLBody", () => {
+    it("construct body without PropertyIsLike when there is no search text", () => {
+        const body = constructXMLBody(1, 5, null);
+        expect(body.indexOf("PropertyIsLike")).toBe(-1);
+    });
+
+    it("construct body with PropertyIsLike when there is search text", () => {
+        const body = constructXMLBody(1, 5, "text");
+        expect(body.indexOf("PropertyIsLike")).toNotBe(-1);
+    });
+
+    it("construct body with PropertyIsEqualTo always", () => {
+        const body = constructXMLBody(1, 5, "text");
+        expect(body.indexOf("PropertyIsEqualTo")).toNotBe(-1);
+
+        const body2 = constructXMLBody(1, 5, null);
+        expect(body2.indexOf("PropertyIsEqualTo")).toNotBe(-1);
     });
 });
