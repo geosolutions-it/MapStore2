@@ -125,12 +125,6 @@ var Api = {
                                                 el = rawRec.boundingBox;
                                             }
                                             if (el && el.value) {
-                                                // EPSG:4326 is defined as (lat,lon) but mapping frameworks usually expect (lon,lat) as it is
-                                                // more natural (because (lon,lat) is basically (x,y))
-                                                // so internally EPSG:4326 is assumed to be (lon,lat) but when we import from external services
-                                                // we assume that EPSG:4326 is (lat,lon) and CRS84 is (lon,lat) as by their definition
-                                                // after conversion to (lon,lat) we set crs to EPSG:4326
-
                                                 const crsValue = el.value?.crs ?? '';
                                                 const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];
                                                 const epsg = makeNumericEPSG(crsValue.match(/EPSG:[0-9]+/)?.[0]);
@@ -144,16 +138,11 @@ var Api = {
                                                     crs = 'EPSG:4326';
                                                 } else if (extractedCrs.slice(0, 5) === 'EPSG:') {
                                                     crs = makeNumericEPSG(extractedCrs);
-                                                    if (!crs) {
-                                                        throw new Error(`No suitable EPSG numeric conversion found for "${extractedCrs}"`);
-                                                    }
                                                 } else {
                                                     crs = makeNumericEPSG(`EPSG:${extractedCrs}`);
-                                                    if (!crs) {
-                                                        throw new Error(`No suitable EPSG numeric conversion found for "${extractedCrs}"`);
-                                                    }
                                                 }
 
+                                                // Usually switched, GeoServer sometimes doesn't. See https://docs.geoserver.org/latest/en/user/services/wfs/axis_order.html#axis-ordering
                                                 if (crs === 'EPSG:4326' && extractedCrs !== 'CRS84' && extractedCrs !== 'OGC:CRS84') {
                                                     lc = [lc[1], lc[0]];
                                                     uc = [uc[1], uc[0]];
@@ -162,7 +151,7 @@ var Api = {
                                             }
                                             obj.boundingBox = {
                                                 extent: bbox,
-                                                crs
+                                                crs: 'EPSG:4326'
                                             };
                                         }
                                         let dcElement = rawRec.dcElement;
