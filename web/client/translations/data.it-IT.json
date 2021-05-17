@@ -1341,6 +1341,7 @@
         },
         "mapImport": {
             "title": "Importa",
+            "tooltip": "Importa un file mappa o dati vettoriali",
             "dropZone": {
                 "heading": "<p> <h4> Rilascia qui i contesti di mappa o i file vettoriali </h4> <small> o </small> </p>",
                 "selectFiles": "Seleziona i file...",
@@ -1355,7 +1356,8 @@
             }
         },
         "mapExport": {
-            "title": "Esporta mappa",
+            "title": "Esporta",
+            "tooltip": "Esporta la tua mappa",
             "exportPanel": {
                 "title": "<p><h4>Seleziona il tuo formato</h4></p>",
                 "exportButtonLabel": "Esportare"

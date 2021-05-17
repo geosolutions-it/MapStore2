@@ -1341,6 +1341,7 @@
         },
         "mapImport": {
             "title": "Importar",
+            "tooltip": "Importar un archivo de mapa o datos vectoriales",
             "dropZone": {
                 "heading": "<p> <h4> Suelta contextos de mapas o archivos vectoriales aquí </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
@@ -1355,7 +1356,8 @@
             }
         },
         "mapExport": {
-            "title": "Exportar el mapa",
+            "title": "Exportar",
+            "tooltip": "Exporta tu mapa",
             "exportPanel": {
                 "title": "<p><h4>Seleccione su formato</h4></p>",
                 "exportButtonLabel": "Exportar"
