@@ -709,8 +709,8 @@
         "noInfoForLayers": "No hay características para las siguientes capas: ",
         "history":{
             "barLabel": "Histórico  del mapa",
-            "undoBtnTooltip": "Ir hacia atrás",
-            "redoBtnTooltip": "Ir hacia adelante"
+            "undoBtnTooltip": "Zoom anterior",
+            "redoBtnTooltip": "Siguiente zoom"
         },
         "infoFormatLbl": "Identificar el formato de respuesta",
         "infoTriggerLabel": "Evento desencadenante para identificar",

@@ -710,8 +710,8 @@
         "noInfoForLayers": "Für die folgenden Ebenen gibt es keine Objekte: ",
         "history":{
             "barLabel": "Kartenverlauf",
-            "undoBtnTooltip": "Gehe zurück",
-            "redoBtnTooltip": "Gehe vorwärts"
+            "undoBtnTooltip": "Vorheriger Zoom",
+            "redoBtnTooltip": "Nächster Zoom"
         },
         "infoFormatLbl": "Antwortformat festlegen",
         "infoTriggerLabel": "Auslöseereignis für Info-Box",

@@ -709,8 +709,8 @@
         "noInfoForLayers": "Non ci sono features per i seguenti layers: ",
         "history":{
             "barLabel": "Storia Mappa",
-            "undoBtnTooltip": "Torna indietro",
-            "redoBtnTooltip": "Vai avanti"
+            "undoBtnTooltip": "Zoom precedente",
+            "redoBtnTooltip": "Zoom successivo"
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
         "infoTriggerLabel": "Evento trigger interrogazioni su mappa",
