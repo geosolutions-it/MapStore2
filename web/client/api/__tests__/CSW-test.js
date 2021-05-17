@@ -39,7 +39,7 @@ describe('Test correctness of the CSW APIs', () => {
             try {
                 expect(result).toExist();
                 expect(result.records).toExist();
-                expect(result.records.length).toBe(2);
+                expect(result.records.length).toBe(4);
                 let rec0 = result.records[0];
                 expect(rec0.dc).toExist();
                 expect(rec0.dc.URI).toExist();
@@ -55,6 +55,14 @@ describe('Test correctness of the CSW APIs', () => {
                 expect(rec1.boundingBox).toExist();
                 expect(rec1.boundingBox.crs).toBe('EPSG:4326');
                 expect(rec1.boundingBox.extent).toEqual([12.002717999999996, 45.760718, 12.429282000000002, 46.187282]);
+                let rec2 = result.records[2];
+                expect(rec2.boundingBox).toExist();
+                expect(rec2.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec2.boundingBox.extent).toEqual([ -4.14168, 47.93257, -4.1149, 47.959353362144 ]);
+                let rec3 = result.records[3];
+                expect(rec3.boundingBox).toExist();
+                expect(rec3.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec3.boundingBox.extent).toEqual([ 12.56, 47.46, 13.27, 48.13 ]);
                 done();
             } catch (ex) {
                 done(ex);
