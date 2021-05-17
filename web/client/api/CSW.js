@@ -142,6 +142,7 @@ var Api = {
                                                     crs = makeNumericEPSG(`EPSG:${extractedCrs}`);
                                                 }
 
+                                                // Usually switched, GeoServer sometimes doesn't. See https://docs.geoserver.org/latest/en/user/services/wfs/axis_order.html#axis-ordering
                                                 if (crs === 'EPSG:4326' && extractedCrs !== 'CRS84' && extractedCrs !== 'OGC:CRS84') {
                                                     lc = [lc[1], lc[0]];
                                                     uc = [uc[1], uc[0]];
