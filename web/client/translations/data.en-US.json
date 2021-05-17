@@ -1341,7 +1341,7 @@
         },
         "mapImport": {
             "title": "Import",
-            "tooltip": "Import a map file or vector datas.",
+            "tooltip": "Import a map file or vector datas",
             "dropZone": {
                 "heading": "<p><h4>Drop your map context or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select files...",
@@ -1357,7 +1357,7 @@
         },
         "mapExport": {
             "title": "Export",
-            "tooltip": "Export your map.",
+            "tooltip": "Export your map",
             "exportPanel": {
                 "title": "<p><h4>Select your format</h4></p>",
                 "exportButtonLabel": "Export"
@@ -1381,13 +1381,13 @@
             "end": "End date ",
             "notAvailable": "Not Available",
             "title": "Add a data",
-            "tooltip": "Add datas from a metadata catalog or a geographic datas server.",
+            "tooltip": "Add datas from a metadata catalog or a geographic datas server",
             "autoload": "Search on service selection",
             "clearValueText": "Clear selection",
             "noResultsText": "No Result",
             "addToMap": "Add To Map",
             "getWMSLink": "Get WMS Link",
-            "error": "An error occurred while loading data.",
+            "error": "An error occurred while loading data",
             "pageInfo": "Results {start}-{end} of {total}",
             "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
             "pageInfoInfinite": "{total, plural, =undefined {} =0 {No results} =1 {{total} of {total} matched} other {Loaded {loaded} of {total} matched}}",
@@ -3002,7 +3002,7 @@
             "noTemplatesTitle": "No map templates found",
             "noTemplatesDescription": "Current context contains no map templates",
             "confirmReplaceTitle": "Replace map content",
-            "confirmReplaceMessage": "You will replace all layers and map configuration with the selected map template by clicking on the 'Replace' button.",
+            "confirmReplaceMessage": "You will replace all layers and map configuration with the selected map template by clicking on the 'Replace' button",
             "confirmReplaceConfirmButton": "Replace"
         },
         "mapCatalog": {
@@ -3257,7 +3257,7 @@
                     },
                     "mapTemplatesTool": {
                         "title": "Plugin Tools: Map Templates",
-                        "text": "<p>'Map templates' plugin also has a special tool that allows you to configure map templates that will be accessible within the context / the application.</p>"
+                        "text": "<p>'Map templates' plugin also has a special tool that allows you to configure map templates that will be accessible within the context.</p>"
                     },
                     "extensions": {
                         "title": "Extensions",
