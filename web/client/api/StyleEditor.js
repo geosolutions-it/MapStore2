@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import isEqual from 'lodash/isEqual';
+import { isEqual, get, castArray } from 'lodash';
 
 import axios from '../libs/ajax';
 import StylesAPI from './geoserver/Styles';
@@ -14,6 +14,7 @@ import SLDService from './SLDService';
 
 const SUPPORTED_CLASSIFICATION_METHODS = [
     'equalInterval',
+    'uniqueInterval',
     'quantile',
     'jenks',
     'standardDeviation'
@@ -63,9 +64,50 @@ function filterMethods(sldServiceCapabilities) {
     const rasterMethods = raster.classifications || [];
     return {
         vector: vectorMethods.filter(method => SUPPORTED_CLASSIFICATION_METHODS.indexOf(method) !== -1),
-        raster: rasterMethods.filter(method => SUPPORTED_CLASSIFICATION_METHODS.indexOf(method) !== -1)
+        raster: rasterMethods.filter(method => SUPPORTED_CLASSIFICATION_METHODS.indexOf(method) !== -1 && method !== 'uniqueInterval') // Unique interval will be supported in future issue
     };
 }
+
+/**
+ * Get error object for classification of vector
+ * @method getClassificationError
+ * @param {object} params object containing param values
+ * @param {string} errorMsg custom error message (msgId)
+ * @returns {object} return error object
+ */
+const getClassificationError = (params, errorMsg) => {
+    const isUniqueInterval = params?.method === 'uniqueInterval';
+    const intervalsForUnique = params?.intervalsForUnique;
+    return {
+        errorId: errorMsg && errorMsg.includes('toc') // Accepts only custom messages
+            ? errorMsg
+            : isUniqueInterval
+                ? 'styleeditor.classificationUniqueIntervalError'
+                : 'styleeditor.classificationError',
+        msgParams: isUniqueInterval ? { intervalsForUnique } : {}
+    };
+};
+
+/**
+ * Update the rules with color for classification of vector
+ * @method updateRulesWithColors
+ * @param {object} data
+ * @param {object} params
+ * @returns {object} return classification
+ */
+const updateRulesWithColors = (data, params) => {
+    const _rules = get(data, 'Rules.Rule');
+    const intervalsForUnique = _rules && castArray(_rules).length;
+    const { colors: colorsString } = SLDService.getColor(undefined, params.ramp, intervalsForUnique || params.intervals);
+    let colors = colorsString.split(',');
+    if (params.reverse) colors = colors.reverse();
+    return {
+        classification: SLDService.readClassification(data, params.method).map((rule, idx) => ({
+            ...rule,
+            color: colors[idx]
+        }))
+    };
+};
 
 const API = {
     geoserver: {
@@ -127,7 +169,7 @@ const API = {
  *  "availableUrls": [],
  *  "fonts": [ "Arial" ],
  *  "classificationMethods": {
- *   "vector": [ "equalInterval", "quantile", "jenks", "standardDeviation" ],
+ *   "vector": [ "equalInterval", "quantile", "jenks", "standardDeviation", "uniqueInterval" ],
  *   "raster": [ "equalInterval", "quantile", "jenks" ]
  *  }
  * }
@@ -152,17 +194,16 @@ export function classificationVector({
     layer
 }) {
 
-    const paramsKeys = [
+    let paramsKeys = [
         'intervals',
         'method',
         'reverse',
         'attribute',
-        'ramp'
+        'ramp',
+        'intervalsForUnique'
     ];
-
-    const params = { ...properties, ...values };
+    let params = { ...properties, ...values };
     const { ruleId } = properties;
-
     // if ramp changes and method is custom interval
     // we should update the color values without a new request
     if (values.ramp !== undefined
@@ -194,46 +235,38 @@ export function classificationVector({
         && values?.ramp !== 'custom'
         && params?.method !== 'customInterval';
 
+    // Update rules on error
+    const updateDefaultRules = ({errorId, msgParams} = {}) => {
+        return updateRules(ruleId, rules, (rule) => ({
+            ...rule,
+            ...values,
+            errorId,
+            msgParams
+        }));
+    };
+
     if (needsRequest) {
-        const customRamp = params.ramp === 'custom' && params.classification.length > 0
-            && {
-                name: 'custom',
-                colors: params.classification.map((entry) => entry.color)
-            };
-        const rampParams = SLDService.getColor(undefined, params.ramp, params.intervals, customRamp);
-        return axios.get(SLDService.getStyleMetadataService(layer, {
+        const paramSLDService = {
             intervals: params.intervals,
             method: params.method,
             attribute: params.attribute,
-            reverse: params.reverse,
-            ...rampParams
-        }))
+            intervalsForUnique: params.intervalsForUnique
+        };
+        return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService))
             .then(({ data }) => {
                 return updateRules(ruleId, rules, (rule) => ({
                     ...rule,
                     ...values,
-                    classification: SLDService.readClassification(data),
+                    ...updateRulesWithColors(data, params),
                     errorId: undefined
                 }));
             })
-            .catch(() => {
-                return updateRules(ruleId, rules, (rule) => ({
-                    ...rule,
-                    ...values,
-                    errorId: 'styleeditor.classificationError'
-                }));
+            .catch((e) => {
+                return updateDefaultRules(getClassificationError(params, e?.message));
             });
     }
 
-    return new Promise((resolve) =>
-        resolve(
-            updateRules(ruleId, rules, (rule) => ({
-                ...rule,
-                ...values,
-                errorId: undefined
-            }))
-        )
-    );
+    return new Promise((resolve) => resolve(updateDefaultRules()));
 }
 /**
  * Update rules of a style for a raster layer using external SLD services

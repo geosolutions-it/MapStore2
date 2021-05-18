@@ -108,4 +108,56 @@ describe("Test the ThemaClassesEditor component", () => {
         TestUtils.Simulate.click(document.querySelector('.ms-color-picker-cover'));
         expect(spyUpdate).toNotHaveBeenCalled();
     });
+    it('on update value classification with unique field of type number', () => {
+        const _classification = [{
+            color: '#FF0000',
+            unique: 10
+        }, {
+            color: '#00FF00',
+            unique: 20
+        }];
+        const actions = {
+            onUpdateClasses: () => { }
+        };
+
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={_classification}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const input = domNode.getElementsByTagName('input')[0];
+        TestUtils.Simulate.change(input, { target: { value: '7.0' } });
+        TestUtils.Simulate.blur(input);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [field] = spyUpdate.calls[0].arguments[0];
+        expect(field.unique).toEqual(7);
+    });
+    it('on update value classification with unique field of type string', () => {
+        const _classification = [{
+            color: '#FF0000',
+            unique: 'Test'
+        }, {
+            color: '#00FF00',
+            unique: 'Test1'
+        }];
+        const actions = {
+            onUpdateClasses: () => { }
+        };
+
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={_classification}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const input = domNode.getElementsByTagName('input')[0];
+        TestUtils.Simulate.change(input, { target: { value: 'Test4' } });
+        TestUtils.Simulate.blur(input);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [field] = spyUpdate.calls[0].arguments[0];
+        expect(field.unique).toEqual('Test4');
+    });
 });

@@ -12,6 +12,7 @@ import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
 import isNaN from 'lodash/isNaN';
+import isEqual from 'lodash/isEqual';
 import Toolbar from '../misc/toolbar/Toolbar';
 import ColorSelector from '../style/ColorSelector';
 import Slider from '../misc/Slider';
@@ -107,7 +108,7 @@ export const fields = {
             </PropertyField>
         );
     },
-    input: ({ label, value, config = {}, onChange = () => {} }) => {
+    input: ({ label, value, config = {}, onChange = () => {}, disabled }) => {
         return (
             <PropertyField
                 label={label}>
@@ -115,6 +116,7 @@ export const fields = {
                     <FormControl
                         type={config.type || 'text'}
                         value={value}
+                        disabled={disabled}
                         placeholder="styleeditor.placeholderInput"
                         onChange={event => onChange(event.target.value)}/>
                 </FormGroup>
@@ -195,6 +197,7 @@ export const fields = {
             isValid
         },
         onChange,
+        disabled,
         ...props
     }) => {
         const {
@@ -221,10 +224,9 @@ export const fields = {
         const options = getOptions(props);
 
         const [newOptions, setNewOptions] = useState(initOptions(options));
-
         useEffect(() => {
-            setNewOptions(initOptions(options));
-        }, [options?.length]);
+            !isEqual(options, newOptions) && setNewOptions(initOptions(options));
+        }, [options]);
 
         const SelectInput = creatable
             ? ReactSelectCreatable
@@ -235,6 +237,7 @@ export const fields = {
                 label={label}
                 invalid={!valid}>
                 <SelectInput
+                    disabled={disabled}
                     clearable={clearable}
                     placeholder="styleeditor.selectPlaceholder"
                     noResultsText="styleeditor.noResultsSelectInput"
@@ -520,7 +523,7 @@ function Fields({
                     key={key}
                     label={label || key}
                     config={config}
-                    disabled={isDisabled && isDisabled(properties[key], state.current.properties)}
+                    disabled={isDisabled && isDisabled(properties[key], state.current.properties, fieldsConfig)}
                     value={!isNil(value) ? value : properties[key]}
                     onChange={(values) => onChange(getValue && getValue(values, state.current.properties) || values)}/>;
             })}

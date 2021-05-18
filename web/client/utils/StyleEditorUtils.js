@@ -12,6 +12,7 @@ import isArray from 'lodash/isArray';
 import isString from 'lodash/isString';
 import flatten from 'lodash/flatten';
 import isNil from 'lodash/isNil';
+import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
@@ -310,23 +311,24 @@ export function parseJSONStyle(style) {
         rules: flatten(style.rules.map((rule) => {
             if (rule.kind === 'Classification') {
                 return (rule.classification || []).map((entry, idx) => {
-                    const lessThan = idx === rule.classification.length - 1
-                        ? '<='
-                        : '<';
-                    const minFilter = entry.min !== null ? [['>=', rule.attribute, entry.min]] : [];
-                    const maxFilter = entry.max !== null ? [[lessThan, rule.attribute, entry.max]] : [];
-                    const minLabel = entry.min !== null && '>= ' + entry.min;
-                    const maxLabel = entry.max !== null && lessThan + ' ' + entry.max;
+                    const lessThan = idx === rule.classification.length - 1 ? '<=' : '<';
+                    const isMin = !isNil(entry.min);
+                    const isMax = !isNil(entry.max);
+                    const isUnique = !isNil(entry.unique);
+                    const uniqueFilter = isUnique ? ['==', rule.attribute, entry.unique] : [];
+                    const minFilter = isMin ? [['>=', rule.attribute, entry.min]] : [];
+                    const maxFilter = isMax ? [[lessThan, rule.attribute, entry.max]] : [];
+                    const uniqueLabel = isUnique && entry.unique;
+                    const minLabel = isMin && '>= ' + entry.min;
+                    const maxLabel = isMax && lessThan + ' ' + entry.max;
+                    const name = uniqueLabel ? uniqueLabel
+                        : minLabel && maxLabel ? minLabel + ' and ' + maxLabel : minLabel || maxLabel;
+                    const filter = !isEmpty(uniqueFilter)
+                        ? uniqueFilter
+                        : !isEmpty(minFilter[0]) || !isEmpty(maxFilter[0]) ? ['&&', ...minFilter, ...maxFilter] : undefined;
                     return {
-                        name: minLabel && maxLabel
-                            ? minLabel + ' and ' + maxLabel
-                            : minLabel || maxLabel,
-                        filter: minFilter[0] || maxFilter[0]
-                            ? ['&&',
-                                ...minFilter,
-                                ...maxFilter
-                            ]
-                            : undefined,
+                        name,
+                        filter,
                         ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                         symbolizers: [
                             cleanJSONSymbolizer({
@@ -334,6 +336,7 @@ export function parseJSONStyle(style) {
                                     'ruleId',
                                     'classification',
                                     'intervals',
+                                    'intervalsForUnique',
                                     'method',
                                     'ramp',
                                     'reverse',

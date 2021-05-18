@@ -273,15 +273,6 @@ const property = {
             };
         }
     }),
-    text: ({ label, key = 'label' }) => ({
-        type: 'input',
-        label,
-        getValue: (value = '') => {
-            return {
-                [key]: value
-            };
-        }
-    }),
     fontStyle: ({ label, key = 'fontStyle' }) => ({
         type: 'toolbar',
         label,
@@ -366,7 +357,7 @@ const property = {
             };
         }
     }),
-    select: ({ label, key = '', getOptions = () => [], selectProps, isValid }) => ({
+    select: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled }) => ({
         type: 'select',
         label,
         config: {
@@ -378,7 +369,8 @@ const property = {
             return {
                 [key]: value
             };
-        }
+        },
+        isDisabled
     }),
     colorRamp: ({ label, key = '', getOptions = () => [] }) => ({
         type: 'colorRamp',

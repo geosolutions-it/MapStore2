@@ -30,6 +30,7 @@ function RuleCard({
     title,
     tools,
     errorId,
+    msgParams,
     draggable,
     connectDragSource,
     connectDropTarget,
@@ -62,7 +63,7 @@ function RuleCard({
                 </div>
             </div>
             {errorId && <Alert bsStyle="danger">
-                <Message msgId={errorId} />
+                <Message msgId={errorId} msgParams={msgParams} />
             </Alert>}
             <ul className="ms-style-rule-body">
                 {children}
