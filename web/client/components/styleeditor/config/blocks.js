@@ -8,6 +8,7 @@
 
 import property from './property';
 import omit from 'lodash/omit';
+import includes from 'lodash/includes';
 
 const getBlocks = (/* config = {} */) => {
     const symbolizerBlock = {
@@ -44,7 +45,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.rotation'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Mark',
                 wellKnownName: 'Circle',
                 color: '#dddddd',
@@ -78,7 +79,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.rotation'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Icon',
                 image: '',
                 opacity: 1,
@@ -128,7 +129,7 @@ const getBlocks = (/* config = {} */) => {
                     key: 'join'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Line',
                 color: '#777777',
                 width: 1,
@@ -174,7 +175,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.outlineWidth'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Fill',
                 color: '#dddddd',
                 fillOpacity: 1,
@@ -253,9 +254,8 @@ const getBlocks = (/* config = {} */) => {
                     axis: 'y'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Text',
-                label: 'Label',
                 color: '#333333',
                 size: 14,
                 fontStyle: 'normal',
@@ -277,7 +277,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.opacity'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Raster',
                 opacity: 1,
                 contrastEnhancement: {}
@@ -321,6 +321,9 @@ const getBlocks = (/* config = {} */) => {
                     method: property.select({
                         key: 'method',
                         label: 'styleeditor.method',
+                        isDisabled: (value, properties, {attributes})=>
+                            attributes?.filter(({label}) => label === properties?.attribute)?.[0]?.type === 'string'
+                            && properties?.method !== 'customInterval',
                         getOptions: ({ methods, method }) => {
                             const options = methods?.map((value) => ({
                                 labelId: 'styleeditor.' + value,
@@ -340,7 +343,9 @@ const getBlocks = (/* config = {} */) => {
                         }
                     }),
                     intervals: property.intervals({
-                        label: 'styleeditor.intervals'
+                        label: 'styleeditor.intervals',
+                        isDisabled: (value, properties) =>
+                            includes(['customInterval', 'uniqueInterval'], properties?.method)
                     })
                 },
                 (symbolizerKind) => {
@@ -383,7 +388,7 @@ const getBlocks = (/* config = {} */) => {
                     })
                 }
             ],
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Classification',
                 classification: [],
                 intervals: 5,
@@ -430,7 +435,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.intervals'
                 })
             }],
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Raster',
                 opacity: 1,
                 classification: [],

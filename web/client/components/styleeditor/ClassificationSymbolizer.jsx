@@ -26,6 +26,7 @@ function ClassificationSymbolizer({
     ruleBlock = {},
     symbolizerBlock = {},
     bands,
+    config,
     ...props
 }) {
 
@@ -35,6 +36,7 @@ function ClassificationSymbolizer({
         classification,
         attribute,
         intervals,
+        intervalsForUnique = config?.intervalsForUnique || 100,
         reverse,
         continuous
     } = props;
@@ -46,6 +48,7 @@ function ClassificationSymbolizer({
     state.current = {
         ruleId,
         intervals,
+        intervalsForUnique,
         method,
         attribute,
         reverse,

@@ -9,8 +9,10 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { FormGroup } from 'react-bootstrap';
+import { FormControl, FormGroup } from 'react-bootstrap';
 import ColorSelector from './ColorSelector';
+import isNumber from 'lodash/isNumber';
+import isNil from 'lodash/isNil';
 import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
 import { NumberPicker } from 'react-widgets';
@@ -40,17 +42,27 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
-                <NumberPicker
-                    format="- ###.###"
-                    value={classItem.min}
-                    onChange={(value) => this.updateMin(index, value)}
-                />
-                <NumberPicker
-                    format="- ###.###"
-                    value={classItem.max}
-                    precision={3}
-                    onChange={(value) => this.updateMax(index, value)}
-                />
+                { !isNil(classItem.unique)
+                    ? isNumber(classItem.unique)
+                        ? <NumberPicker
+                            format="- ###.###"
+                            value={classItem.unique}
+                            onChange={(value) => this.updateUnique(index, value, 'number')}
+                        />
+                        : <FormControl value={classItem.unique} type="text" onChange={ e => this.updateUnique(index, e.target.value)} />
+                    : <>
+                        <NumberPicker
+                            format="- ###.###"
+                            value={classItem.min}
+                            onChange={(value) => this.updateMin(index, value)}
+                        />
+                        <NumberPicker
+                            format="- ###.###"
+                            value={classItem.max}
+                            precision={3}
+                            onChange={(value) => this.updateMax(index, value)}
+                        /></>
+                }
             </FormGroup>
         ));
     };
@@ -72,17 +84,24 @@ class ThemaClassesEditor extends React.Component {
         }
     };
 
+    updateUnique = (classIndex, unique, type = 'text') => {
+        const newClassification = this.props.classification.map((classItem, index) => {
+            if (index === classIndex) {
+                return assign({}, classItem, {
+                    unique: isNil(unique) ? type === 'number' ? 0 : '' : unique
+                });
+            }
+            return classItem;
+        });
+        this.props.onUpdateClasses(newClassification, 'interval');
+    };
+
     updateMin = (classIndex, min) => {
         if (!isNaN(min)) {
             const newClassification = this.props.classification.map((classItem, index) => {
                 if (index === classIndex) {
                     return assign({}, classItem, {
                         min
-                    });
-                }
-                if (index === (classIndex - 1)) {
-                    return assign({}, classItem, {
-                        max: min
                     });
                 }
                 return classItem;
@@ -109,6 +128,7 @@ class ThemaClassesEditor extends React.Component {
             this.props.onUpdateClasses(newClassification, 'interval');
         }
     };
+
 }
 
 export default ThemaClassesEditor;
