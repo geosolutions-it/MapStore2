@@ -255,7 +255,6 @@ export function classificationVector({
         return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService))
             .then(({ data }) => {
                 return updateRules(ruleId, rules, (rule) => ({
-                    ...params,
                     ...rule,
                     ...values,
                     ...updateRulesWithColors(data, params),

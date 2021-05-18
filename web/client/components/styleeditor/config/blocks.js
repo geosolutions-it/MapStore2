@@ -256,7 +256,6 @@ const getBlocks = (/* config = {} */) => {
             },
             defaultProperties: {
                 kind: 'Text',
-                label: 'Label',
                 color: '#333333',
                 size: 14,
                 fontStyle: 'normal',
