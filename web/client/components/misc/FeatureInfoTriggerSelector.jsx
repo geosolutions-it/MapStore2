@@ -17,6 +17,7 @@ class FeatureInfoTriggerSelector extends React.Component {
     static propTypes = {
         trigger: PropTypes.string,
         onSetMapTrigger: PropTypes.func,
+        onPurgeMapInfoResults: PropTypes.func,
         hoverEnabled: PropTypes.bool
     }
     static defaultProps = {
@@ -25,6 +26,7 @@ class FeatureInfoTriggerSelector extends React.Component {
 
     onChange = (event) => {
         this.props.onSetMapTrigger(event.target.value);
+        this.props.onPurgeMapInfoResults(event.target.value);
     }
 
     render() {
