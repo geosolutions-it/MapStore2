@@ -642,6 +642,7 @@
                 "interval_limit": "Intervalle sollten eine Zahl zwischen {min} und {max} sein",
                 "invalid_object": "Ungültige Serviceantwort",
                 "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon",
+                "invalid_attribute": "Ungültiger Attributtyp bei Auswahl. Bitte wählen Sie ein gültiges Attribut aus der Liste für die Klassifizierungsmethode aus",
                 "invalid_classes": "Max muss in jeder Klasse größer als min sein"
             },
             "error": {
@@ -2195,6 +2196,7 @@
             "undoStyle": "Stil rückgängig machen",
             "redoStyle": "Redo style",
             "equalInterval": "Gleiches Intervall",
+            "uniqueInterval": "Einzigartiges Intervall",
             "quantile": "Quantil",
             "jenks": "Natürliche Pausen (Jenks)",
             "standardDeviation": "Varianz",
@@ -2209,6 +2211,7 @@
             "emptyRuleEditor": "Es gibt keine Regeln für diesen Stil. Fügen Sie eine neue Regel hinzu, indem Sie in der Symbolleiste auf den gewünschten Symbolisierungstyp klicken",
             "classificationError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Klassifizierung zu erstellen",
             "classificationRasterError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Rasterklassifizierung zu erstellen.",
+            "classificationUniqueIntervalError": "Maximale Intervallgrenzen überschritten! Sie versuchen, eine eindeutige Intervallklassifizierung mit einem Attribut zu generieren, das mehr als {intervalsForUnique} verschiedene Klassen enthält. Eine eindeutige Intervallklassifizierung sollte auf Attribute mit einem begrenzten Satz von Intervallen angewendet werden, um eine bessere Lesbarkeit des Stils zu ermöglichen. Sie können eine andere Methode für das ausgewählte Attribut ausprobieren",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",

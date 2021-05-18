@@ -641,6 +641,7 @@
                 "interval_limit": "Los intervalos deben ser un número entre {min} y {max}",
                 "invalid_object": "Respuesta de servicio no válida",
                 "invalid_geometry": "El tipo de geometría no es válido, no es un punto, línea o polígono",
+                "invalid_attribute": "Tipo de atributo no válido en la selección. Seleccione un atributo válido de la lista para el método de clasificación.",
                 "invalid_classes": "Max debe ser mayor que min en todas las clases"
             },
             "error": {
@@ -2195,6 +2196,7 @@
             "undoStyle": "Deshacer estilo",
             "redoStyle": "Estilo de rehacer",
             "equalInterval": "Intervalo igual",
+            "uniqueInterval": "Intervalo único",
             "quantile": "Cuantil",
             "jenks": "Descansos naturales (Jenks)",
             "standardDeviation": "Desviación estándar",
@@ -2209,6 +2211,7 @@
             "emptyRuleEditor": "No hay reglas para este estilo. Agregue una nueva regla haciendo clic en el tipo de simbolizador deseado en la barra de herramientas",
             "classificationError": "Servicio no disponible. Actualmente no es posible crear una clasificación",
             "classificationRasterError": "Servicio no disponible. Actualmente no es posible crear una clasificación ráster",
+            "classificationUniqueIntervalError": "¡Se excedieron los límites máximos de intervalos! Está intentando generar una clasificación de intervalo única con un atributo que contiene más de {intervalsForUnique} clases diferentes. La clasificación de intervalo único debe aplicarse a los atributos con un conjunto limitado de intervalos para permitir una mejor legibilidad del estilo. Puede probar un método diferente para el atributo seleccionado",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",

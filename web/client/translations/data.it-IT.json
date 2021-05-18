@@ -641,6 +641,7 @@
                 "interval_limit": "Inserisci un valore tra {min} e {max}",
                 "invalid_object": "Risposta del servizio non valida",
                 "invalid_geometry": "Il tipo di geometria non è valido, deve essere un punto, una linea o un poligono",
+                "invalid_attribute": "Tipo di attributo non valido nella selezione. Seleziona un attributo valido dall'elenco per il metodo di classificazione",
                 "invalid_classes": "Il valore massimo di ogni classe deve essere maggiore del relativo minimo"
             },
             "error": {
@@ -2195,6 +2196,7 @@
             "undoStyle": "Annulla stile",
             "redoStyle": "Ripeti stile",
             "equalInterval": "Intervallo uguale",
+            "uniqueInterval": "Intervallo unico",
             "quantile": "Quantile",
             "jenks": "Natural break (Jenks)",
             "standardDeviation": "Deviazione standard",
@@ -2209,6 +2211,7 @@
             "emptyRuleEditor": "Non ci sono regole per questo stile. Aggiungi una nuova regola facendo clic sul tipo di stile desiderato nella barra degli strumenti",
             "classificationError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione",
             "classificationRasterError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione raster",
+            "classificationUniqueIntervalError": "Superato il limite massimo di intervalli! Stai tentando di generare una classificazione ad intervallo univoco con un attributo che contiene più di {intervalsForUnique} classi diverse. La classificazione ad intervallo univoco dovrebbe essere applicata agli attributi con un insieme limitato di intervalli per consentire una migliore leggibilità dello stile. Puoi provare un metodo diverso per l'attributo selezionato",
             "redChannel": "Canale rosso",
             "greenChannel": "Canale verde",
             "blueChannel": "Canale blue",
