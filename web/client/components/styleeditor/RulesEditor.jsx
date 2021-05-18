@@ -87,7 +87,8 @@ const RulesEditor = forwardRef(({
         zoom,
         fonts,
         methods,
-        getColors
+        getColors,
+        classification
     } = config;
 
     // needed for slider
@@ -204,7 +205,7 @@ const RulesEditor = forwardRef(({
                                         ruleId: uuidv1(),
                                         symbolizers: [
                                             {
-                                                ...symbolizerBlock[kind].deaultProperties,
+                                                ...symbolizerBlock[kind].defaultProperties,
                                                 symbolizerId: uuidv1()
                                             }
                                         ]
@@ -222,7 +223,7 @@ const RulesEditor = forwardRef(({
                                         onClick: () => handleAdd({
                                             name: '',
                                             ruleId: uuidv1(),
-                                            ...ruleBlock[kind].deaultProperties
+                                            ...ruleBlock[kind].defaultProperties
                                         })
                                     };
                                 })
@@ -239,7 +240,8 @@ const RulesEditor = forwardRef(({
                         scaleDenominator = {},
                         ruleId,
                         kind: ruleKind,
-                        errorId: ruleErrorId
+                        errorId: ruleErrorId,
+                        msgParams: ruleMsgParams
                     } = rule;
 
                     const {
@@ -250,6 +252,7 @@ const RulesEditor = forwardRef(({
                         hideScaleDenominator,
                         classificationType
                     } = ruleBlock[ruleKind] || {};
+                    const isCustomNumber =  attributes?.filter(({label}) => label === rule?.attribute)?.[0]?.type === 'number';
                     return (
                         <Rule
                             // force render if draggable is enabled
@@ -258,6 +261,7 @@ const RulesEditor = forwardRef(({
                             id={ruleId}
                             index={index}
                             errorId={ruleErrorId}
+                            msgParams={ruleMsgParams}
                             onSort={handleSortRules}
                             title={
                                 hideInputLabel
@@ -318,13 +322,17 @@ const RulesEditor = forwardRef(({
                                     symbolizerBlock={symbolizerBlock}
                                     glyph={ruleGlyph}
                                     classificationType={classificationType}
+                                    config={classification || {}}
                                     params={ruleParams}
                                     methods={methods}
                                     getColors={getColors}
                                     bands={bands}
                                     attributes={attributes && attributes.map((attribute) => ({
                                         ...attribute,
-                                        disabled: attribute.type !== 'number'
+                                        ...( rule.method === "customInterval"
+                                            ? { disabled: isCustomNumber ? attribute.type !== 'number' : attribute.label !== rule.attribute }
+                                            : rule.method !== "uniqueInterval" && { disabled: attribute.type !== 'number' }
+                                        )
                                     }))}
                                     onUpdate={onUpdate}
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}

@@ -342,7 +342,8 @@ function VisualStyleEditor({
                 bands,
                 attributes,
                 methods,
-                getColors
+                getColors,
+                ...config
             }}
             // reverse rules order to show top rendered style
             // as first item of the list

@@ -641,6 +641,7 @@
                 "interval_limit": "Intervals should be a number between {min} and {max}",
                 "invalid_object": "Invalid service response",
                 "invalid_geometry": "Geometry type is not valid, not a point, line or polygon",
+                "invalid_attribute": "Invalid attribute type in selection. Please select a valid attribute from the list for the classification method",
                 "invalid_classes": "Max must be greater than min in every class"
             },
             "error": {
@@ -2205,6 +2206,7 @@
             "redoStyle": "Redo style",
 
             "equalInterval": "Equal interval",
+            "uniqueInterval": "Unique interval",
             "quantile": "Quantile",
             "jenks": "Natural breaks (Jenks)",
             "standardDeviation": "Standard deviation",
@@ -2220,6 +2222,7 @@
             "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
             "classificationError": "Service unavailable. Currently it is not possible to create a classification",
             "classificationRasterError": "Service unavailable. Currently it is not possible to create a raster classification",
+            "classificationUniqueIntervalError": "Maximum intervals limits exceeded! You are trying to generate an unique interval classification with an attribute that contains more than {intervalsForUnique} different classes. Unique Interval classification should be applied to attributes with a limited set of intervals to allow a better readability of the style. You could try different method for the selected attribute",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
