@@ -124,7 +124,7 @@ class AeronauticalCoordinateEditor extends React.Component {
         } else {
             const parsedVal = type === SECONDS ? parseFloat(val) : parseInt(val, 10);
             const maxValue = type === DEGREES ? this.props.maxDegrees : 60;
-            newValue = Math.round(parsedVal * 10) / 10 < maxValue ? parsedVal : maxValue - 1;
+            newValue = Math.round(parsedVal * 10) / 10 < maxValue ? parsedVal : this.props[type];
         }
         return newValue;
     }
@@ -228,6 +228,7 @@ class AeronauticalCoordinateEditor extends React.Component {
         if (event.keyCode === 69) {
             event.preventDefault();
         }
+        if (event?.target?.value === "0") event.target.setSelectionRange(-1, -1);
         if (event.keyCode === 13 ) {
             event.preventDefault();
             event.stopPropagation();
