@@ -710,8 +710,8 @@
         "noInfoForLayers": "No hay características para las siguientes capas: ",
         "history":{
             "barLabel": "Histórico  del mapa",
-            "undoBtnTooltip": "Ir hacia atrás",
-            "redoBtnTooltip": "Ir hacia adelante"
+            "undoBtnTooltip": "Zoom anterior",
+            "redoBtnTooltip": "Siguiente zoom"
         },
         "infoFormatLbl": "Identificar el formato de respuesta",
         "infoTriggerLabel": "Evento desencadenante para identificar",
@@ -1342,6 +1342,7 @@
         },
         "mapImport": {
             "title": "Importar",
+            "tooltip": "Importar un archivo de mapa o datos vectoriales",
             "dropZone": {
                 "heading": "<p> <h4> Suelta contextos de mapas o archivos vectoriales aquí </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
@@ -1356,7 +1357,8 @@
             }
         },
         "mapExport": {
-            "title": "Exportar el mapa",
+            "title": "Exportar",
+            "tooltip": "Exporta tu mapa",
             "exportPanel": {
                 "title": "<p><h4>Seleccione su formato</h4></p>",
                 "exportButtonLabel": "Exportar"
@@ -1379,14 +1381,14 @@
             "start": "Fecha de inicio ",
             "end": "Fecha de finalización ",
             "notAvailable": "No disponible",
-            "title": "Catálogo",
+            "title": "Agregar un dato",
+            "tooltip": "Add datas from a metadata catalog or a geographic datas server",
             "autoload": "Buscar en la selección de servicios",
             "clearValueText": "Borrar selección",
             "noResultsText": "No se encontraron resultados",
-            "tooltip": "Buscar en el catálogo",
             "addToMap": "Añadir al mapa",
             "getWMSLink": "Enlace WMS",
-            "error": "Ha ocurrido un error cargando los datos del catálogo",
+            "error": "Ha ocurrido un error al cargar los datos.",
             "pageInfo": "{start}-{end} resultados de {total}",
             "resultInfo": "{total, plural, =0 No hay artículos} =1 {{total} artículo de {total}} other {{start}-{end} de {total}}}",
             "pageInfoInfinite": "{total, plural, =undefined {} =0 {No hay resultados} =1 {{total} de {total} emparejados} other {Cargado {loaded} de {total} emparejados}}",
