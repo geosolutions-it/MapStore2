@@ -710,8 +710,8 @@
         "noInfoForLayers": "Il n'y a aucun objet pour les couches suivantes : ",
         "history": {
             "barLabel": "Historique de la carte",
-            "undoBtnTooltip": "Aller en arrière",
-            "redoBtnTooltip": "Aller en avant"
+            "undoBtnTooltip": "Zoom précédent",
+            "redoBtnTooltip": "Zoom suivant"
         },
         "infoFormatLbl": "Format de la fiche d'information",
         "infoTriggerLabel": "Événement déclencheur de l'affichage de la fiche d'information",
@@ -1343,6 +1343,7 @@
         },
         "mapImport": {
             "title": "Importer",
+            "tooltip": "Importer un fichier de carte ou des données vectorielles.",
             "dropZone": {
                 "heading": "<p> <h4> Déposez votre contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez des fichiers...",
@@ -1357,10 +1358,11 @@
             }
         },
         "mapExport": {
-            "title": "Exporter la carte",
+            "title": "Exporter",
+            "tooltip": "Exporter votre carte.",
             "exportPanel": {
                 "title": "<p><h4>Sélectionnez votre format</h4></p>",
-                "exportButtonLabel": "Export"
+                "exportButtonLabel": "Exporter"
             },
             "formats": {
                 "mapstore2": {
@@ -1380,14 +1382,14 @@
             "start": "Date de début ",
             "end": "Date de fin ",
             "notAvailable": "Indisponible",
-            "title": "Catalogue",
+            "title": "Ajouter des données",
+            "tooltip": "Ajouter des données depuis un catalogue de métadonnées ou un serveur de données géographiques.",
             "autoload": "Recherche sur la sélection du service",
             "clearValueText": "Effacer la sélection",
             "noResultsText": "Aucun résultat trouvé",
-            "tooltip": "Parcourir le catalogue",
             "addToMap": "Ajouter à la carte",
             "getWMSLink": "Lien WMS",
-            "error": "Une erreur s'est produite lors du chargement des données du catalogue",
+            "error": "Une erreur s'est produite lors du chargement des données.",
             "pageInfo": "{start}-{end} résultats parmi {total}",
             "resultInfo": "{total, plural, =0 {Pas d'objet} =1 {{total} sur {total}} other {{start}-{end} sur {total}}}",
             "pageInfoInfinite": "{total, plural, =undefined {} =0 {Aucun résultat} =1 {{total} sur {total} trouvés} other {chargé {loaded} sur {total} trouvés}}",
@@ -1462,34 +1464,34 @@
             "dropfileImport": "Déposez ici les fichiers à ajouter au traitement"
         },
         "importer": {
-            "title": "Import des données",
-            "imports": "Import des processus",
+            "title": "Importer des données",
+            "imports": "Processus d'import",
             "importN": "Processus {id}",
-            "creatingImportProcess": "Création de l'import ...",
-            "dropfile": "faire glisser les fichiers ici pour créer un nouveau processus d'import",
-            "dropfileImport": "faire glisser les fichiers ici pour les ajouter à ce processus",
+            "creatingImportProcess": "Création d'import...",
+            "dropfile": "faire glisser des fichiers ici pour créer un nouveau processus d'import",
+            "dropfileImport": "faites glisser les fichiers ici pour les ajouter à ce processus",
             "process": "Processus",
             "number": "#",
             "workspace": {
                 "create": "Créer",
-                "createWS": "Créez un nouvel espace de travail: ",
-                "target": "Espace de travail cible: ",
-                "failure": "Erreur de création d'espace de travail: {statusWS}",
+                "createWS": "Créez un nouvel espace de travail : ",
+                "target": "Espace de travail cible : ",
+                "failure": "Erreur de création d'espace de travail : {statusWS}",
                 "success": "Espace de travail {statusWS} créé avec succès",
                 "select": "Sélectionnez l'espace de travail cible",
                 "new": "Nouveau nom..."
             },
             "import": {
                 "actions": "Actions",
-                "tasks": "Paquetages",
-                "runImport": "Lancement",
-                "deleteImport": "Supprimer le processus d'import",
+                "tasks": "Paquet",
+                "runImport": "Début",
+                "deleteImport": "Supprimer le processus",
                 "deleteTask": "Supprimer",
                 "status": "Statut",
-                "archive": "Archivage",
-                "deleting": "Suppression en cours ...",
-                "analyzing": "Analyse du paquetage...",
-                "applyingPreset": "Pré-réglages en cours ..."
+                "archive": "Archives",
+                "deleting": "Nettoyage en cours...",
+                "analyzing": "Analyse du paquet...",
+                "applyingPreset": "Pré-réglages d'application..."
             },
             "task": {
                 "panelTitle": "Import du paquetage {id}",
@@ -1662,7 +1664,7 @@
             "title": "Exporter des données",
             "format": "Format de fichier",
             "srs": "Système de référence spatiale",
-            "export": "Export",
+            "export": "Exporter",
             "downloadonlycurrentpage": "Télécharger uniquement la page actuelle",
             "cropDataSet": "Recadrer le jeu de données dans la fenêtre courante",
             "downloadFilteredDataSet": "Télécharger l'ensemble de données filtré",
@@ -1678,7 +1680,7 @@
                 "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez."
             },
             "exportResultsMessages": {
-                "newExport": "Die Datei ist hier verfügbar, wenn der Export abgeschlossen ist",
+                "newExport": "Le fichier sera disponible ici lorsque l'export sera terminé.",
                 "exportFailure": "L'exportation pour le calque \"{layerTitle}\" a échoué! Ouvrez la boîte de dialogue des résultats d'exportation pour plus d'informations.",
                 "exportSuccess": "L'exportation pour le calque \"{layerTitle}\" s'est terminée avec succès.",
                 "invalidHref": "La réponse du serveur ne contenait pas d'adresse URL valide pour les fichiers exportés!"
@@ -2902,7 +2904,7 @@
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",
                     "removePlugin": "Supprimer cette extension de MapStore",
-                    "mapTemplatesConfig": "Configurer le modèle de carte"
+                    "mapTemplatesConfig": "Configurer les cartes modèles"
                 },
                 "tutorialPlugins": {
                     "availableTitle": "Plugin disponible",
@@ -2916,30 +2918,30 @@
                 }
             },
             "configureTemplates": {
-                "title": "Configurer les modèles de carte",
-                "availableTemplates": "Modèles disponibles",
-                "enabledTemplates": "Modèles activés",
-                "templatesFilterPlaceholder": "Filtrer les modèles par nom...",
-                "availableTemplatesEmpty": "Tous les modèles disponibles sont activés",
-                "enabledTemplatesEmpty": "Ajouter des modèles à la configuration à partir de la liste des modèles disponibles",
-                "searchResultsEmpty": "Aucun modèle trouvé répondant aux critères de recherche",
+                "title": "Configurer les cartes modèles",
+                "availableTemplates": "Cartes modèles disponibles",
+                "enabledTemplates": "Cartes modèles activées",
+                "templatesFilterPlaceholder": "Filtrer les cartes modèles par nom...",
+                "availableTemplatesEmpty": "Tous les cartes modèles disponibles sont activés.",
+                "enabledTemplatesEmpty": "Ajouter des cartes modèles à la configuration à partir de la liste des cartes modèles disponibles.",
+                "searchResultsEmpty": "Aucune carte modèle ne répond aux critères de recherche.",
                 "fileDrop": {
-                    "label": "Modèle",
-                    "clear": "Déposez ou cliquez pour sélectionner un fichier de modèle de carte (les cartes JSON MapStore exportées ou les fichiers WMC sont pris en charge)"
+                    "label": "Carte modèle",
+                    "clear": "Déposez ou cliquez pour sélectionner un fichier de carte (les cartes JSON MapStore exportées ou les fichiers WMC sont pris en charge)"
                 },
                 "uploadDialog": {
-                    "title": "Télécharger un modèle de carte",
+                    "title": "Télécharger une carte modèle",
                     "save": "Télécharger",
                     "jsonParsingError": "Échec de l'analyse JSON: \"{error}\"",
                     "fileReadError": "Une erreur de lecture de fichier inattendue s'est produite"
                 },
                 "tooltips": {
-                    "uploadTool": "Télécharger un nouveau modèle",
-                    "editTemplate": "Modifier les propriétés du modèle",
-                    "deleteTemplate": "Supprimer le modèle"
+                    "uploadTool": "Télécharger une nouvelle carte modèle",
+                    "editTemplate": "Modifier les propriétés de la carte modèle",
+                    "deleteTemplate": "Supprimer la carte modèle"
                 },
-                "deleteError": "Impossible de supprimer le modèle, une erreur s'est produite",
-                "deleteConfirm": "Voulez-vous vraiment supprimer le modèle \"{templateName}\"?"
+                "deleteError": "Impossible de supprimer la carte modèle, une erreur s'est produite",
+                "deleteConfirm": "Voulez-vous vraiment supprimer cette carte modèle \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configurer la carte",
@@ -2980,20 +2982,20 @@
           "removeExtension": "Supprimer l'extension"
         },
         "mapTemplates": {
-            "title": "Modèles de carte",
+            "title": "Cartes modèles",
             "favouritesTitle": "Favoris",
             "allTitle": "Tout",
-            "filterPlaceholder": "Filtrer les modèles de carte...",
+            "filterPlaceholder": "Filtrer les cartes modèles...",
             "transfer": "Remplacer la carte par ce modèle",
             "merge": "Ajouter ce modèle à la carte",
             "favouriteAdd": "Ajouter aux favoris",
             "favouriteRemove": "Supprimer des favoris",
             "emptyTitle": "Pas de résultat",
-            "emptyDescription": "Le filtre entré ne correspond pas au nom ou à la description d'aucun des modèles",
-            "noTemplatesTitle": "Aucun modèle trouvé",
-            "noTemplatesDescription": "Le contexte actuel ne contient aucun modèle",
+            "emptyDescription": "Le filtre entré ne correspond au nom ou à la description d'aucune des cartes modèles",
+            "noTemplatesTitle": "Aucune carte modèle trouvée",
+            "noTemplatesDescription": "Le contexte actuel ne contient aucune carte modèle",
             "confirmReplaceTitle": "Remplacer le contenu de la carte",
-            "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par le modèle sélectionné en cliquant sur le bouton remplacer",
+            "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par la carte modèle sélectionnéz en cliquant sur le bouton 'Remplacer'.",
             "confirmReplaceConfirmButton": "Remplacer"
         },
         "mapCatalog": {
@@ -3246,8 +3248,8 @@
                         "text": "<p>En appuyant sur ce bouton, vous accédez à la page de documentation du plugin où vous pouvez rechercher des informations sur ce que fait le plugin et les paramètres de configuration qu'il prend en charge.</p>"
                     },
                     "mapTemplatesTool": {
-                        "title": "Outils de plug-in: modèles de carte",
-                        "text": "<p>Le plugin Map Templates dispose également d'un outil spécial qui vous permet de configurer des modèles de carte qui seront accessibles dans le contexte.</p>"
+                        "title": "Plugin Tools : Cartes modèles",
+                        "text": "<p>Le greffon 'Cartes modèles' dispose également d'un outil spécial qui vous permet de configurer des cartes modèles qui seront accessibles dans le contexte / l'application.</p>"
                     },
                     "extensions": {
                         "title": "Extensions",

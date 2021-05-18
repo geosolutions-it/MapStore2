@@ -711,8 +711,8 @@
         "noInfoForLayers": "Für die folgenden Ebenen gibt es keine Objekte: ",
         "history":{
             "barLabel": "Kartenverlauf",
-            "undoBtnTooltip": "Gehe zurück",
-            "redoBtnTooltip": "Gehe vorwärts"
+            "undoBtnTooltip": "Vorheriger Zoom",
+            "redoBtnTooltip": "Nächster Zoom"
         },
         "infoFormatLbl": "Antwortformat festlegen",
         "infoTriggerLabel": "Auslöseereignis für Info-Box",
@@ -1343,6 +1343,7 @@
         },
         "mapImport": {
                 "title": "Importieren",
+                "tooltip": "Importieren Sie eine Kartendatei oder Vektordaten",
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkonfigurations- oder Vektordateien ab </h4> <small> oder nutzen Sie </small> </p>",
                     "selectFiles": "Dateien auswählen...",
@@ -1358,6 +1359,7 @@
             },
         "mapExport": {
             "title": "Karte exportieren",
+            "tooltip": "Exportieren Sie Ihre Karte",
             "exportPanel": {
                 "title": "<p><h4>Wählen Sie ein Format</h4></p>",
                 "exportButtonLabel": "Export"
@@ -1380,14 +1382,14 @@
             "start": "Startdatum ",
             "end": "Enddatum ",
             "notAvailable": "Nicht verfügbar",
-            "title": "Katalog",
+            "title": "Fügen Sie Daten hinzu",
+            "tooltip": "Fügen Sie Daten aus einem Metadatenkatalog oder einem geografischen Datenserver hinzu",
             "autoload": "Suche in Serviceauswahl",
             "clearValueText": "Auswahl aufheben",
             "noResultsText": "keine Ergebnisse gefunden",
-            "tooltip": "Katalog durchsuchen",
             "addToMap": "Zur Karte hinzufügen",
             "getWMSLink": "WMS Link erhalten",
-            "error": "Es gab einen Fehler beim Laden von Einträgen aus dem Katalog",
+            "error": "Beim Laden der Daten ist ein Fehler aufgetreten",
             "pageInfo": "Resultat {start}-{end} von {total}",
             "resultInfo": "{total, plural, =0 {Keine Gegenstände} =1 {{total} von {total} stimmt überein} other {{start}-{end} von {total}}}",
             "pageInfoInfinite": "{total, plural, =undefined {} =0 {Keine Ergebnisse} =1 {{total} von {total} stimmt überein} other {Geladen {loaded} von {total} übereinstimmend}",
