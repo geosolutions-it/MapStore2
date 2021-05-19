@@ -95,6 +95,7 @@ const MapExportPlugin = {
                 name: 'export',
                 position: 4,
                 text: <Message msgId="mapExport.title" />,
+                tooltip: "mapExport.tooltip",
                 icon: <Glyphicon glyph="download" />,
                 action: enabledFormats.length > 1 ?
                     () => toggleControl('export') :
