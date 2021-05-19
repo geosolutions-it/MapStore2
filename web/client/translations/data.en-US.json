@@ -1342,7 +1342,7 @@
         },
         "mapImport": {
             "title": "Import",
-            "tooltip": "Import a map file or vector datas",
+            "tooltip": "Import a map file or vector data",
             "dropZone": {
                 "heading": "<p><h4>Drop your map context or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select files...",
@@ -1382,7 +1382,7 @@
             "end": "End date ",
             "notAvailable": "Not Available",
             "title": "Add a data",
-            "tooltip": "Add datas from a metadata catalog or a geographic datas server",
+            "tooltip": "Add data from a metadata catalog or a geographic data server",
             "autoload": "Search on service selection",
             "clearValueText": "Clear selection",
             "noResultsText": "No Result",
