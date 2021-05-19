@@ -14,7 +14,7 @@
  */
 
 import expect from 'expect';
-
+import xml2js from 'xml2js';
 import {
     generateTemporaryStyleId,
     STYLE_ID_SEPARATOR,
@@ -27,7 +27,8 @@ import {
     stringifyNameParts,
     parseJSONStyle,
     formatJSONStyle,
-    validateImageSrc
+    validateImageSrc,
+    updateExternalGraphicNode
 } from '../StyleEditorUtils';
 
 describe('StyleEditorUtils test', () => {
@@ -854,5 +855,134 @@ describe('StyleEditorUtils test', () => {
                 expect(response.src).toBe(validBase64Src);
                 done();
             });
+    });
+    describe('test updateExternalGraphicNode', ()=>{
+        it('should return an valid parsed SLD with format specified', () => {
+            const format = 'image/png';
+            const style = {
+                name: "Base SLD1",
+                rules: [
+                    {
+                        name: "",
+                        ruleId: "1",
+                        symbolizers: [
+                            {
+                                kind: "Icon",
+                                format,
+                                image: "https://test.com/linktoImage",
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0,
+                                symbolizerId: "2"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const parsedSLD = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><StyledLayerDescriptor version=\"1.0.0\" xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" xmlns=\"http://www.opengis.net/sld\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>icon dev</Name><UserStyle><Name>icon dev</Name><Title>icon dev</Title><FeatureTypeStyle><Rule><Name/><PointSymbolizer><Graphic><ExternalGraphic><OnlineResource xlink:type=\"simple\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"https://www.pngix.com/pngfile/middle/92-926820_test-logo-png-transparent-png.png\"/></ExternalGraphic><Opacity>1</Opacity><Size>32</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>";
+            const {parsedCode, errorObj} = updateExternalGraphicNode({format: 'sld', style}, parsedSLD);
+            expect(errorObj).toBe(false);
+            expect(parsedCode).toBeTruthy();
+            expect(parsedCode).toContain(format);
+
+        });
+        it('should skip parsing when style format is css', () => {
+            const format = 'image/png';
+            const style = {
+                name: "Base SLD1",
+                rules: [
+                    {
+                        name: "",
+                        ruleId: "1",
+                        symbolizers: [
+                            {
+                                kind: "Icon",
+                                format,
+                                image: "https://test.com/linktoImage",
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0,
+                                symbolizerId: "2"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const parsedSLD = "@mode 'Flat';\n" +
+                "@styleTitle 'Base CSS1';\n" +
+                "\n" +
+                "* {\n" +
+                "  mark: url('https://master.demo.geonode.org/documents/1623/link');\n" +
+                "  mark-opacity: 1;\n" +
+                "  mark-size: 32;\n" +
+                "  mark-rotation: 0;\n" +
+                "}";
+            const {parsedCode, errorObj} = updateExternalGraphicNode({format: 'css', style}, parsedSLD);
+            expect(errorObj).toBe(false);
+            expect(parsedCode).toBeTruthy();
+            expect(parsedCode).toEqual(parsedSLD);
+
+        });
+        it('should skip parsing when parsed SLD has format in external graphic of Icon symbolizer', () => {
+            const style = {
+                name: "Base SLD1",
+                rules: [
+                    {
+                        name: "",
+                        ruleId: "1",
+                        symbolizers: [
+                            {
+                                kind: "Icon",
+                                image: "https://test.com/linktoImage.png",
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0,
+                                symbolizerId: "2"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const oldSLD = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><StyledLayerDescriptor version="1.0.0" xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><NamedLayer><Name>icon dev</Name><UserStyle><Name>icon dev</Name><Title>icon dev</Title><FeatureTypeStyle><Rule><Name/><PointSymbolizer><Graphic><ExternalGraphic><OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://www.pngix.com/pngfile/middle/92-926820_test-logo-png-transparent-png.png"/><Format>image/png</Format></ExternalGraphic><Opacity>1</Opacity><Size>32</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>`;
+            let oldSLDJSON;
+            xml2js.parseString(oldSLD, { explicitArray: false }, (_, res)=>{
+                oldSLDJSON = res;
+            });
+            const {parsedCode, errorObj} = updateExternalGraphicNode({format: 'sld', style}, oldSLD);
+            expect(errorObj).toBeFalsy();
+            expect(parsedCode).toBeTruthy();
+            let parsedCodeJSON;
+            xml2js.parseString(parsedCode, { explicitArray: false }, (_, res)=>{
+                parsedCodeJSON = res;
+            });
+            expect(parsedCodeJSON).toEqual(oldSLDJSON);
+        });
+        it('should return error when image and user specified format is not present', () => {
+            const style = {
+                name: "Base SLD1",
+                rules: [
+                    {
+                        name: "",
+                        ruleId: "1",
+                        symbolizers: [
+                            {
+                                kind: "Icon",
+                                image: "https://test.com/linktoImage",
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0,
+                                symbolizerId: "2"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const parsedSLD = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><StyledLayerDescriptor version=\"1.0.0\" xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" xmlns=\"http://www.opengis.net/sld\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>icon dev</Name><UserStyle><Name>icon dev</Name><Title>icon dev</Title><FeatureTypeStyle><Rule><Name/><PointSymbolizer><Graphic><ExternalGraphic><OnlineResource xlink:type=\"simple\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"https://www.pngix.com/pngfile/middle/92-926820_test-logo-png-transparent-png.png\"/></ExternalGraphic><Opacity>1</Opacity><Size>32</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>";
+            const {parsedCode, errorObj} = updateExternalGraphicNode({format: 'sld', style}, parsedSLD);
+            expect(errorObj).toBeTruthy();
+            expect(errorObj.messageId).toEqual('styleeditor.imageFormatEmpty');
+            expect(errorObj.status).toEqual(400);
+            expect(parsedCode).toBeFalsy();
+        });
     });
 });
