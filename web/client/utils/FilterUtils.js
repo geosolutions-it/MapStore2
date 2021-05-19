@@ -1049,6 +1049,54 @@ export const normalizeFilterCQL = (filter, nativeCrs) => {
 };
 
 /**
+ * Filter features (in geoJSON format) with the filterObject
+ * @returns {function} the function for filtering the features
+ */
+export const createFeatureFilter = (filterObj) => feature => {
+
+    if (!filterObj) {
+        return true;
+    }
+    const { filterFields = [] } = filterObj;
+    for (let i = 0; i < filterFields.length; i++) {
+        if (feature.properties[filterFields[i].attribute] === undefined) {
+            return false;
+        }
+        if (filterFields[i].type === "string" &&
+            !feature.properties[filterFields[i].attribute].toLowerCase().includes(filterFields[i].value.toLowerCase())) {
+            return false;
+        }
+        if (filterFields[i].type === "boolean" &&
+            !feature.properties[filterFields[i].attribute].toLowerCase().includes(filterFields[i].value.toLowerCase())) {
+            return false;
+        }
+        /* TODO: support spatial, number, boolean, filter.
+            TODO: Also nested filters should be supported (AND, OR ...)*/
+        if (filterFields[i].type === "number") {
+            const numberFilter = parseFloat(filterFields[i].attribute);
+            const numberFeature = parseFloat(feature.properties[filterFields[i].attribute]);
+            if (numberFilter !== numberFeature) {
+                return false;
+            }
+        }
+
+        if (filterFields[i].type === "date") {
+
+            let dateFeature = new Date(feature.properties[filterFields[i].attribute]);
+            let dateFilter = new Date(filterFields[i].value.startDate);
+            console.log(dateFeature, dateFilter);
+
+            if (dateFeature.getFullYear() !== dateFilter.getFullYear() ||
+                dateFeature.getMonth() !== dateFilter.getMonth() ||
+                dateFeature.getDay() !== dateFilter.getDay()) {
+                return false;
+            }
+        }
+    }
+    return true;
+};
+
+/**
  * Merges cql filter strings, with mapstore filter objects to make a single OGC filter string
  * @param {string} opts.ogcVersion ogc version string of final ogc filter
  * @param {string} opts.nsPlaceholder xlmns placeholder to use
@@ -1106,5 +1154,6 @@ FilterUtils = {
     toOGCFilter,
     reprojectFilterInNativeCrs,
     processOGCSpatialFilter,
+    createFeatureFilter,
     mergeFiltersToOGC
 };
