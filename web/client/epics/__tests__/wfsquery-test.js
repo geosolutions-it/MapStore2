@@ -15,8 +15,9 @@ import { head } from 'lodash';
 import { UPDATE_GEOMETRY } from '../../actions/queryform';
 import { changeMapView } from '../../actions/map';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
-import { QUERY_RESULT, FEATURE_LOADING, query, updateQuery } from '../../actions/wfsquery';
+import { QUERY_RESULT, FEATURE_LOADING, query, updateQuery, featureTypeSelected } from '../../actions/wfsquery';
 import { viewportSelectedEpic, wfsQueryEpic } from '../wfsquery';
+import { LAYER_LOAD } from '../../actions/layers';
 
 
 describe('wfsquery Epics', () => {
@@ -294,6 +295,76 @@ describe('wfsquery Epics', () => {
                 selected: ['layerId'],
                 flat: [{id: 'layerId'}]
             }
+        });
+    });
+
+    describe('featureTypeSelectedEpic', ()=>  {
+        const expectedResult = require('../../test-resources/vector/feature-collection-vector.json');
+        const flatLayers = [{
+            id: 'layer1',
+            name: 'layer1 name',
+            title: 'layer1 title',
+            description: 'layer1 description',
+            type: 'vector',
+            features: expectedResult
+        }];
+        it('vector layer', (done) => {
+            mockAxios.onPost().reply(() => {return [200, expectedResult];});
+            testEpic(addTimeoutEpic(wfsQueryEpic, 500), 4, [
+                query("base/web/client/test-resources/vector/feature-collection-vector.json", {pagination: {} }),
+                featureTypeSelected('/dummy', 'layer1')
+            ], actions => {
+                expect(actions.length).toBe(4);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case QUERY_RESULT:
+                        expect(action.result.features).toEqual(expectedResult);
+                        expect(action.result.totalFeatures).toEqual(expectedResult.length);
+                        expect(action.result.numberMatched).toEqual(expectedResult.length);
+                        expect(action.result.numberReturned).toEqual(expectedResult.length);
+                        break;
+                    case FEATURE_LOADING:
+                        break;
+                    case LAYER_LOAD:
+                        break;
+                    default:
+                        expect(false).toBe(true);
+                    }
+                });
+                done();
+            },
+            {
+                query: {
+                    data: {},
+                    featureTypes: [],
+                    typeName: 'layer1',
+                    url: '/dummy'
+                },
+                featuregrid: {
+                    timeSync: true,
+                    pagination: {
+                        size: 10
+                    },
+                    open: true,
+                    selectedLayer: "layer1",
+                    changes: [],
+                    mode: 'VIEW'
+                },
+                layers: {
+                    flat: flatLayers,
+                    layerMetadata: {
+                        expanded: false,
+                        maskLoading: false
+                    },
+                    selected: ['layer1'],
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    }
+                }
+            });
         });
     });
 });
