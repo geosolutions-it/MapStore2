@@ -293,6 +293,7 @@ export default {
             name: 'metadataexplorer',
             position: 5,
             text: <Message msgId="catalog.title"/>,
+            tooltip: "catalog.tooltip",
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
             doNotHide: true
