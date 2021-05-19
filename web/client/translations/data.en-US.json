@@ -1382,7 +1382,7 @@
             "end": "End date ",
             "notAvailable": "Not Available",
             "title": "Add a data",
-            "tooltip": "Add datas from a metadata catalog or a geographic datas server",
+            "tooltip": "Add data from a metadata catalog or a geographic data server",
             "autoload": "Search on service selection",
             "clearValueText": "Clear selection",
             "noResultsText": "No Result",
