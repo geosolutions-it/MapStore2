@@ -2998,6 +2998,7 @@
         },
         "mapCatalog": {
             "title": "Kartenkatalog",
+            "tooltip": "Karten durchsuchen und laden",
             "filterPlaceholder": "Karten suchen...",
             "deleteConfirmContent": "Möchten Sie die Karte \"{mapName}\" wirklich löschen?",
             "tooltips": {

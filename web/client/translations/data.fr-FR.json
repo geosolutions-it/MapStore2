@@ -3000,6 +3000,7 @@
         },
         "mapCatalog": {
             "title": "Catalogue de cartes",
+            "tooltip": "Parcourir et charger des cartes",
             "filterPlaceholder": "Rechercher des cartes...",
             "deleteConfirmContent": "Voulez-vous vraiment supprimer la carte \"{mapName}\"?",
             "tooltips": {

@@ -3010,6 +3010,7 @@
         },
         "mapCatalog": {
             "title": "Map Catalog",
+            "tooltip": "Browse and load maps",
             "filterPlaceholder": "Search maps...",
             "deleteConfirmContent": "Are you sure you want to delete \"{mapName}\" map?",
             "tooltips": {
