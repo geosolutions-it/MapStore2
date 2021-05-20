@@ -2973,6 +2973,7 @@
         },
         "mapCatalog": {
             "title": "Catalogo mappe",
+            "tooltip": "Sfoglia e carica mappe",
             "filterPlaceholder": "Cerca mappe...",
             "deleteConfirmContent": "Sei sicuro di voler eliminare la mappa \"{mapName}\"?",
             "tooltips": {
