@@ -710,8 +710,8 @@
         "noInfoForLayers": "Il n'y a aucun objet pour les couches suivantes : ",
         "history": {
             "barLabel": "Historique de la carte",
-            "undoBtnTooltip": "Zoom précédent",
-            "redoBtnTooltip": "Zoom suivant"
+            "undoBtnTooltip": "Aller en arrière",
+            "redoBtnTooltip": "Aller en avant"
         },
         "infoFormatLbl": "Format de la fiche d'information",
         "infoTriggerLabel": "Événement déclencheur de l'affichage de la fiche d'information",
@@ -1359,7 +1359,7 @@
         },
         "mapExport": {
             "title": "Exporter",
-            "tooltip": "Exporter votre carte.",
+            "tooltip": "Exporter la carte actuelle",
             "exportPanel": {
                 "title": "<p><h4>Sélectionnez votre format</h4></p>",
                 "exportButtonLabel": "Exporter"
@@ -1382,8 +1382,8 @@
             "start": "Date de début ",
             "end": "Date de fin ",
             "notAvailable": "Indisponible",
-            "title": "Ajouter des données",
-            "tooltip": "Ajouter des données depuis un catalogue de métadonnées ou un serveur de données géographiques.",
+            "title": "Catalogue",
+            "tooltip": "Ajouter des couches à la carte",
             "autoload": "Recherche sur la sélection du service",
             "clearValueText": "Effacer la sélection",
             "noResultsText": "Aucun résultat trouvé",

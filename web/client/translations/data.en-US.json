@@ -710,8 +710,8 @@
         "noInfoForLayers": "There are no features for the following layers: ",
         "history":{
             "barLabel": "Map history",
-            "undoBtnTooltip": "Previous zoom",
-            "redoBtnTooltip": "Next zoom"
+            "undoBtnTooltip": "Go back",
+            "redoBtnTooltip": "Go forward"
         },
         "infoFormatLbl": "Information sheet format",
         "infoTriggerLabel": "Trigger event for the display of the information sheet",
@@ -1358,7 +1358,7 @@
         },
         "mapExport": {
             "title": "Export",
-            "tooltip": "Export your map",
+            "tooltip": "Export the current map",
             "exportPanel": {
                 "title": "<p><h4>Select your format</h4></p>",
                 "exportButtonLabel": "Export"
@@ -1381,8 +1381,8 @@
             "start": "Start date ",
             "end": "End date ",
             "notAvailable": "Not Available",
-            "title": "Add a data",
-            "tooltip": "Add data from a metadata catalog or a geographic data server",
+            "title": "Catalog",
+            "tooltip": "Add layers to the map",
             "autoload": "Search on service selection",
             "clearValueText": "Clear selection",
             "noResultsText": "No Result",
@@ -2914,7 +2914,7 @@
                     "pluginDocumentation": "Open plugin configuration documentation",
                     "uploadPlugin": "Add an extension to MapStore",
                     "removePlugin": "Remove this extension from MapStore",
-                    "mapTemplatesConfig": "Configure the maps templates"
+                    "mapTemplatesConfig": "Configure the map templates"
                 },
                 "tutorialPlugins": {
                     "availableTitle": "Available Plugin",
@@ -2928,13 +2928,13 @@
                 }
             },
             "configureTemplates": {
-                "title": "Configure maps templates",
-                "availableTemplates": "Available maps templates",
-                "enabledTemplates": "Enabled maps templates",
-                "templatesFilterPlaceholder": "Filter  maps templates by name...",
-                "availableTemplatesEmpty": "All available  maps templates are enabled",
-                "enabledTemplatesEmpty": "Add  maps templates to configuration from list of available templates",
-                "searchResultsEmpty": "No  maps templates found that satisfy the search criteria",
+                "title": "Configure map templates",
+                "availableTemplates": "Available map templates",
+                "enabledTemplates": "Enabled map templates",
+                "templatesFilterPlaceholder": "Filter  map templates by name...",
+                "availableTemplatesEmpty": "All available  map templates are enabled",
+                "enabledTemplatesEmpty": "Add  map templates to configuration from list of available templates",
+                "searchResultsEmpty": "No  map templates found that satisfy the search criteria",
                 "fileDrop": {
                     "label": "Map template",
                     "clear": "Drop or click to select a map file (exported JSON MapStore maps or WMC files are supported)"
@@ -2995,15 +2995,15 @@
             "title": "Map templates",
             "favouritesTitle": "Favourites",
             "allTitle": "All",
-            "filterPlaceholder": "Filter map templates...",
+            "filterPlaceholder": "Filter map template...",
             "transfer": "Replace map with this map template",
             "merge": "Add this map template to the map",
             "favouriteAdd": "Add to favourites",
             "favouriteRemove": "Remove from favourites",
             "emptyTitle": "No Result",
             "emptyDescription": "Entered filter does not match name or description of any of map template",
-            "noTemplatesTitle": "No map templates found",
-            "noTemplatesDescription": "Current context contains no map templates",
+            "noTemplatesTitle": "No map template found",
+            "noTemplatesDescription": "Current context contains no map template",
             "confirmReplaceTitle": "Replace map content",
             "confirmReplaceMessage": "You will replace all layers and map configuration with the selected map template by clicking on the 'Replace' button",
             "confirmReplaceConfirmButton": "Replace"
@@ -3261,7 +3261,7 @@
                     },
                     "mapTemplatesTool": {
                         "title": "Plugin Tools: Map Templates",
-                        "text": "<p>'Map templates' plugin also has a special tool that allows you to configure map templates that will be accessible within the context.</p>"
+                        "text": "<p>'Map templates' plugin also has a special tool that allows you to configure map template that will be accessible within the context.</p>"
                     },
                     "extensions": {
                         "title": "Extensions",
