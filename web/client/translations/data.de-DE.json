@@ -1359,7 +1359,7 @@
             },
         "mapExport": {
             "title": "Karte exportieren",
-            "tooltip": "Exportieren Sie Ihre Karte",
+            "tooltip": "Exportieren Sie die aktuelle Karte",
             "exportPanel": {
                 "title": "<p><h4>Wählen Sie ein Format</h4></p>",
                 "exportButtonLabel": "Export"

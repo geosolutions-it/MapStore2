@@ -1358,7 +1358,7 @@
         },
         "mapExport": {
             "title": "Exportar",
-            "tooltip": "Exporta tu mapa",
+            "tooltip": "Exportar el mapa actual",
             "exportPanel": {
                 "title": "<p><h4>Seleccione su formato</h4></p>",
                 "exportButtonLabel": "Exportar"
