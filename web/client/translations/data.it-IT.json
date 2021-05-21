@@ -710,8 +710,8 @@
         "noInfoForLayers": "Non ci sono features per i seguenti layers: ",
         "history":{
             "barLabel": "Storia Mappa",
-            "undoBtnTooltip": "Zoom precedente",
-            "redoBtnTooltip": "Zoom successivo"
+            "undoBtnTooltip": "Torna indietro",
+            "redoBtnTooltip": "Vai avanti"
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
         "infoTriggerLabel": "Evento trigger interrogazioni su mappa",
@@ -1358,7 +1358,7 @@
         },
         "mapExport": {
             "title": "Esporta",
-            "tooltip": "Esporta la tua mappa",
+            "tooltip": "Esporta la mappa corrente",
             "exportPanel": {
                 "title": "<p><h4>Seleziona il tuo formato</h4></p>",
                 "exportButtonLabel": "Esportare"
@@ -1381,8 +1381,8 @@
             "start": "Data d'inizio ",
             "end": "Data di fine ",
             "notAvailable": "Non disponibile",
-            "title": "Aggiungi un dato",
-            "tooltip": "Aggiungi dati da un catalogo di metadati o da un server di dati geografici",
+            "title": "Catalogo",
+            "tooltip": "Aggiungi livelli alla mappa",
             "autoload": "Ricerca alla selezione del servizio",
             "clearValueText": "Cancella selezione",
             "noResultsText": "Nessun risultato trovato",
@@ -2981,10 +2981,10 @@
           "removeExtension": "Rimuovi Estensione"
         },
         "mapTemplates": {
-            "title": "Modelli di mappe",
+            "title": "Modelli di mappa",
             "favouritesTitle": "Preferiti",
             "allTitle": "Tutti",
-            "filterPlaceholder": "Filtra i modelli di mappe...",
+            "filterPlaceholder": "Filtra i modelli di mappa...",
             "transfer": "Sostituisci mappa con questo modello",
             "merge": "Aggiungi questo modello alla mappa",
             "favouriteAdd": "Aggiungi ai preferiti",

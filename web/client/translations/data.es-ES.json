@@ -710,8 +710,8 @@
         "noInfoForLayers": "No hay características para las siguientes capas: ",
         "history":{
             "barLabel": "Histórico  del mapa",
-            "undoBtnTooltip": "Zoom anterior",
-            "redoBtnTooltip": "Siguiente zoom"
+            "undoBtnTooltip": "Ir hacia atrás",
+            "redoBtnTooltip": "Ir hacia adelante"
         },
         "infoFormatLbl": "Identificar el formato de respuesta",
         "infoTriggerLabel": "Evento desencadenante para identificar",
@@ -1358,7 +1358,7 @@
         },
         "mapExport": {
             "title": "Exportar",
-            "tooltip": "Exporta tu mapa",
+            "tooltip": "Exportar el mapa actual",
             "exportPanel": {
                 "title": "<p><h4>Seleccione su formato</h4></p>",
                 "exportButtonLabel": "Exportar"
@@ -1381,8 +1381,8 @@
             "start": "Fecha de inicio ",
             "end": "Fecha de finalización ",
             "notAvailable": "No disponible",
-            "title": "Agregar un dato",
-            "tooltip": "Add datas from a metadata catalog or a geographic datas server",
+            "title": "Catálogo",
+            "tooltip": "agregar capas al mapa",
             "autoload": "Buscar en la selección de servicios",
             "clearValueText": "Borrar selección",
             "noResultsText": "No se encontraron resultados",
