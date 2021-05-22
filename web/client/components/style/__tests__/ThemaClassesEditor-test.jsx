@@ -21,6 +21,13 @@ const classification = [{
     min: 10.0,
     max: 25.0
 }];
+const uniqueClassification = [{
+    color: '#FF0000',
+    unique: 10
+}, {
+    color: '#00FF00',
+    unique: 20
+}];
 
 describe("Test the ThemaClassesEditor component", () => {
     beforeEach((done) => {
@@ -109,13 +116,6 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(spyUpdate).toNotHaveBeenCalled();
     });
     it('on update value classification with unique field of type number', () => {
-        const _classification = [{
-            color: '#FF0000',
-            unique: 10
-        }, {
-            color: '#00FF00',
-            unique: 20
-        }];
         const actions = {
             onUpdateClasses: () => { }
         };
@@ -123,7 +123,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
 
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={_classification}
+            <ThemaClassesEditor classification={[...uniqueClassification]}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -157,7 +157,121 @@ describe("Test the ThemaClassesEditor component", () => {
         TestUtils.Simulate.change(input, { target: { value: 'Test4' } });
         TestUtils.Simulate.blur(input);
         expect(spyUpdate).toHaveBeenCalled();
+        console.log("spyUpdate", JSON.stringify(spyUpdate.calls[0]));
         const [field] = spyUpdate.calls[0].arguments[0];
         expect(field.unique).toEqual('Test4');
     });
+    it('on update value by adding new rule entry before in non-unique classification', () => {
+        const actions = { onUpdateClasses: () => { } };
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={[...classification]}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const buttons = domNode.getElementsByClassName('add-rule');
+        expect(buttons.length).toBe(2);
+        const [addNewEntryBefore] = domNode.querySelectorAll('.dropdown-menu > li > a');
+        TestUtils.Simulate.click(addNewEntryBefore);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [arg1, arg2] = spyUpdate.calls[0].arguments;
+        expect(arg2).toBe('interval');
+        expect(arg1).toBeTruthy();
+        expect(arg1.length).toBe(3);
+        expect(arg1[0]).toEqual({"color": "#ffffff", "min": 0, "max": 1, "title": " >= 0 AND <1"});
+    });
+    it('on update value by deleting a rule entry in non-unique classification', () => {
+        const actions = { onUpdateClasses: () => { } };
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={[...classification]}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const buttons = domNode.getElementsByClassName('add-rule');
+        expect(buttons.length).toBe(2);
+        const menuItem = domNode.querySelectorAll('.dropdown-menu > li > a');
+        TestUtils.Simulate.click(menuItem[2]); // Delete
+        expect(spyUpdate).toHaveBeenCalled();
+        const [arg1, arg2] = spyUpdate.calls[0].arguments;
+        expect(arg2).toBe('interval');
+        expect(arg1).toBeTruthy();
+        expect(arg1.length).toBe(1);
+        expect(arg1[0]).toEqual(classification[1]);
+    });
+    it('on update value by adding new rule entry after in non-unique classification', () => {
+        const actions = { onUpdateClasses: () => { } };
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={[...classification]}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const [, addNewEntryAfter] = domNode.querySelectorAll('.dropdown-menu > li > a');
+        TestUtils.Simulate.click(addNewEntryAfter);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [arg1, arg2] = spyUpdate.calls[0].arguments;
+        expect(arg2).toBe('interval');
+        expect(arg1).toBeTruthy();
+        expect(arg1.length).toBe(3);
+        expect(arg1[1]).toEqual({"color": "#ffffff", "min": 10, "max": 10, "title": " >= 10 AND <10"});
+    });
+    it('on update value by adding new rule entry before in Unique classification', () => {
+        const actions = { onUpdateClasses: () => { } };
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={[...uniqueClassification]}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const buttons = domNode.getElementsByClassName('add-rule');
+        expect(buttons.length).toBe(2);
+        const menuItem = domNode.querySelectorAll('.dropdown-menu > li > a');
+        TestUtils.Simulate.click(menuItem[0]);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [arg1, arg2] = spyUpdate.calls[0].arguments;
+        expect(arg2).toBe('interval');
+        expect(arg1).toBeTruthy();
+        expect(arg1.length).toBe(3);
+        expect(arg1[0]).toEqual({"color": "#ffffff", "unique": 0, "title": 0});
+    });
+    it('on update value by adding new rule entry after in Unique classification', () => {
+        const actions = { onUpdateClasses: () => { } };
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={[...uniqueClassification]}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const buttons = domNode.getElementsByClassName('add-rule');
+        expect(buttons.length).toBe(2);
+        const menuItem = domNode.querySelectorAll('.dropdown-menu > li > a');
+        TestUtils.Simulate.click(menuItem[1]);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [arg1, arg2] = spyUpdate.calls[0].arguments;
+        expect(arg2).toBe('interval');
+        expect(arg1).toBeTruthy();
+        expect(arg1.length).toBe(3);
+        expect(arg1[1]).toEqual({"color": "#ffffff", "unique": 0, "title": 0});
+    });
+    it('on update value by deleting a rule entry in Unique classification', () => {
+        const actions = { onUpdateClasses: () => { } };
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={[...uniqueClassification]}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const buttons = domNode.getElementsByClassName('add-rule');
+        expect(buttons.length).toBe(2);
+        const menuItem = domNode.querySelectorAll('.dropdown-menu > li > a');
+        TestUtils.Simulate.click(menuItem[2]);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [arg1, arg2] = spyUpdate.calls[0].arguments;
+        expect(arg2).toBe('interval');
+        expect(arg1).toBeTruthy();
+        expect(arg1.length).toBe(1);
+        expect(arg1[0]).toBe(uniqueClassification[1]);
+    });
+
 });

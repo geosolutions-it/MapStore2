@@ -2167,6 +2167,10 @@
             "boolTrue": "True",
             "boolFalse": "False",
 
+            "addRuleBefore": "Add new entry before",
+            "addRuleAfter": "Add new entry after",
+            "remove": "Remove",
+
             "circle": " Circle",
             "square": "Square",
             "triangle": "Triangle",
