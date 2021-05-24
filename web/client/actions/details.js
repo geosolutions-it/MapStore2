@@ -39,9 +39,9 @@ export const detailsLoaded = (mapId, detailsUri, detailsSettings) => ({
  * @memberof actions.details
  * @return {action}        type `OPEN_DETAILS_PANEL`
 */
-export const openDetailsPanel = () => ({
-    type: OPEN_DETAILS_PANEL
-});
+export const openDetailsPanel = () => {
+    return {type: OPEN_DETAILS_PANEL};
+};
 
 /**
  * closeDetailsPanel
