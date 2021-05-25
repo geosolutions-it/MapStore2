@@ -21,7 +21,8 @@ import getBlocks from './config/blocks';
 
 import {
     parseJSONStyle,
-    formatJSONStyle
+    formatJSONStyle,
+    updateExternalGraphicNode
 } from '../../utils/StyleEditorUtils';
 
 import undoable from 'redux-undo';
@@ -244,7 +245,11 @@ function VisualStyleEditor({
             if (parser) {
                 return parser.writeStyle(parseJSONStyle(options.style))
                     .then((newCode) => {
-                        onChange(newCode, options.style);
+                        // This is a workaround for geostyler-sld-parser not able to identify and parse
+                        // the format of ExternalGraphic (IconSymbolizer) when image url doesn't mentions the format/extension explicitly.
+                        // An issue has been opened in library for native support of a similar feature. (Ref: https://github.com/geostyler/geostyler/issues/1453)
+                        const { parsedCode, errorObj } = updateExternalGraphicNode(options, newCode);
+                        errorObj ?  onError(errorObj) : onChange(parsedCode, options.style);
                     })
                     .catch((err) => {
                         onError({
@@ -343,6 +348,7 @@ function VisualStyleEditor({
                 attributes,
                 methods,
                 getColors,
+                format,
                 ...config
             }}
             // reverse rules order to show top rendered style

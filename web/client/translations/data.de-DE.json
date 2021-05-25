@@ -2118,6 +2118,7 @@
             "addIconSymbolizer": "Symbol-Symbolisierer hinzufügen",
             "addIconRule": "Symbolregel hinzufügen",
             "image": "Bild",
+            "format": "Format",
             "opacity": "Deckkraft",
             "size": "Größe",
             "addLineSymbolizer": "Liniensymbolisierer hinzufügen",
@@ -2232,6 +2233,7 @@
             "imageSrcLoadError": "Die angegebene Bildquelle konnte nicht geladen werden. Versuchen Sie es mit einer anderen URL oder stellen Sie sicher, dass die Quelle über MapStore erreichbar ist.",
             "imageSrcInvalidBase64": "Dies ist kein gültiges base64-Image. Einige Style-Renderer unterstützen diesen Quelltyp nicht. Sie können stattdessen eine externe URL-Quelle verwenden.",
             "imageSrcNotSupportedBase64Image": "Einige Style-Renderer unterstützen Base64-Images nicht, selbst wenn die aktuelle Quelle gültig ist",
+            "imageFormatEmpty": "Das Bildformat kann nicht identifiziert werden. Bitte wählen Sie das Bildformat aus den verfügbaren in der Dropdown-Liste 'Format' aus",
             "warningTextOrderTitle": "Warnung",
             "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
         },

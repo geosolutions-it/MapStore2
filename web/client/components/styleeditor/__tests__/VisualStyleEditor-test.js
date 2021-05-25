@@ -237,4 +237,41 @@ describe('VisualStyleEditor', () => {
             />, document.getElementById('container'));
         });
     });
+    it('should throw an error when icon symbolizer has image with no format', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="sld"
+                code={"<?xml"}
+                defaultStyleJSON={{
+                    name: "Base SLD1",
+                    rules: [
+                        {
+                            name: "",
+                            ruleId: "1",
+                            symbolizers: [
+                                {
+                                    kind: "Icon",
+                                    image: "https://test.com/linktoImage",
+                                    opacity: 1,
+                                    size: 32,
+                                    rotate: 0,
+                                    symbolizerId: "2"
+                                }
+                            ]
+                        }
+                    ]
+                }}
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'styleeditor.imageFormatEmpty', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
+    });
 });

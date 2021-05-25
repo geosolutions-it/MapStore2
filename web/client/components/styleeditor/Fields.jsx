@@ -38,7 +38,8 @@ export const fields = {
         config = {},
         value,
         onChange = () => {},
-        disableAlpha
+        disableAlpha,
+        format
     }) => {
 
         // needed for slider
@@ -66,6 +67,7 @@ export const fields = {
                             disableAlpha: blockConfig.disableAlpha
                         }}
                         onChange={(values) => onChange({ ...state.current.value, ...values })}
+                        format={format}
                     />
                     <PropertyField divider/>
                 </>
@@ -179,7 +181,7 @@ export const fields = {
                     }}
                     onLoad={(err, src) => {
                         setError(err);
-                        if (err.type === 'error') {
+                        if (err) {
                             // send the error to VisualStyleEditor component
                             onChange({ src, errorId: err.messageId });
                         }
@@ -198,8 +200,10 @@ export const fields = {
         },
         onChange,
         disabled,
+        visible = true,
         ...props
     }) => {
+        if (!visible) return null;
         const {
             creatable,
             clearable = false,
@@ -225,8 +229,12 @@ export const fields = {
 
         const [newOptions, setNewOptions] = useState(initOptions(options));
         useEffect(() => {
-            !isEqual(options, newOptions) && setNewOptions(initOptions(options));
+            !multi && !isEqual(options, newOptions) && setNewOptions(initOptions(options));
         }, [options]);
+
+        useEffect(() => {
+            multi && setNewOptions(initOptions(options));
+        }, [options?.length]);
 
         const SelectInput = creatable
             ? ReactSelectCreatable
@@ -494,13 +502,15 @@ export const fields = {
  * @prop {string} params[keyParam].label label of the field
  * @prop {string} params[keyParam].key property key
  * @prop {object} config external configuration needed in field (eg: bands, attributes, ...)
+ * @prop {object} format parser type 'css' or 'sld'
  * @prop {function} onChange return the changed value
  */
 function Fields({
     properties,
     params,
     config: fieldsConfig,
-    onChange
+    onChange,
+    format
 }) {
 
     // needed for slider
@@ -514,7 +524,7 @@ function Fields({
     return <>
         {Object.keys(params)
             .map((keyParam) => {
-                const { type, setValue, getValue, isDisabled, config, label, key: keyProperty } = params[keyParam] || {};
+                const { type, setValue, getValue, isDisabled, config, label, key: keyProperty, isVisible } = params[keyParam] || {};
                 const key = keyProperty || keyParam;
                 const FieldComponent = fields[type];
                 const value = setValue && setValue(properties[key], state.current.properties);
@@ -523,6 +533,8 @@ function Fields({
                     key={key}
                     label={label || key}
                     config={config}
+                    format={format}
+                    visible={isVisible && isVisible(properties[key], state.current.properties, format)}
                     disabled={isDisabled && isDisabled(properties[key], state.current.properties, fieldsConfig)}
                     value={!isNil(value) ? value : properties[key]}
                     onChange={(values) => onChange(getValue && getValue(values, state.current.properties) || values)}/>;
