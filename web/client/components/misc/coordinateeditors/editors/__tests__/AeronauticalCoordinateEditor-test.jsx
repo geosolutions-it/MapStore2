@@ -137,7 +137,7 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(+minutes.value).toBeLessThan(testValue);
         expect(+seconds.value).toBeLessThan(testValue);
         expect(spyOnChange).toHaveBeenCalled();
-        expect(parseFloat(spyOnChange.calls[0].arguments[0])).toBe(89);
+        expect(parseFloat(spyOnChange.calls[0].arguments[0])).toBe(20);
     });
     it('Test AeronauticalCoordinateEditor LON fields onChange not exceed max field values', () => {
         const actions = {
@@ -173,6 +173,6 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(+seconds.value).toBeLessThan(testValue);
         expect(+seconds.value).toNotEqual(0);
         expect(spyOnChange).toHaveBeenCalled();
-        expect(parseFloat(spyOnChange.calls[0].arguments[0])).toBe(179);
+        expect(parseFloat(spyOnChange.calls[0].arguments[0])).toBe(160);
     });
 });
