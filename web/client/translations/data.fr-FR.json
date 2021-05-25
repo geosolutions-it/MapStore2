@@ -2119,6 +2119,7 @@
             "addIconSymbolizer": "Ajouter un symboliseur d'icône",
             "addIconRule": "Ajouter une règle d'icône",
             "image": "Image",
+            "format": "Format",
             "opacity": "Opacity",
             "size": "Taille",
             "addLineSymbolizer": "Ajouter un symboliseur de ligne",
@@ -2233,6 +2234,7 @@
             "imageSrcLoadError": "La source d'image fournie n'a pas pu être chargée. Essayez avec une URL différente ou assurez-vous que la source est accessible par MapStore",
             "imageSrcInvalidBase64": "Ceci n'est pas une image base64 valide. Certains rendus de style ne prennent pas en charge ce type de source, vous pouvez utiliser une source d'url externe à la place",
             "imageSrcNotSupportedBase64Image": "Certains rendus de style ne prennent pas en charge les images base64 même si la source actuelle est valide",
+            "imageFormatEmpty": "Le format d'image ne peut pas être identifié. Veuillez sélectionner le format d'image parmi ceux disponibles dans la liste déroulante 'Format'",
             "warningTextOrderTitle": "Avertissement",
             "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
         },

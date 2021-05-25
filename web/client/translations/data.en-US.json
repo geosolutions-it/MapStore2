@@ -2121,6 +2121,7 @@
             "addIconSymbolizer": "Add icon symbolizer",
             "addIconRule": "Add icon rule",
             "image": "Image",
+            "format": "Format",
             "opacity": "Opacity",
             "size": "Size",
             "addLineSymbolizer": "Add line symbolizer",
@@ -2243,6 +2244,7 @@
             "imageSrcLoadError": "The provided image source could not be loaded. Try with a different url or ensure the source is reachable by MapStore",
             "imageSrcInvalidBase64": "This is not a valid base64 image. Some style renderer does not support this type of source, you could use an external url source instead",
             "imageSrcNotSupportedBase64Image": "Some style renderer does not support base64 images even if the current source is valid",
+            "imageFormatEmpty": "The image format cannot be identified. Please select the image format from the available ones in the 'Format' dropdown",
             "warningTextOrderTitle": "Warning",
             "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
         },

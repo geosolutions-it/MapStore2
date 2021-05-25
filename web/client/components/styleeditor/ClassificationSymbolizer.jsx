@@ -38,7 +38,8 @@ function ClassificationSymbolizer({
         intervals,
         intervalsForUnique = config?.intervalsForUnique || 100,
         reverse,
-        continuous
+        continuous,
+        format
     } = props;
 
     // needed for slider
@@ -94,6 +95,7 @@ function ClassificationSymbolizer({
             />}>
             <Fields
                 properties={props}
+                format={format}
                 config={{
                     attributes,
                     methods,
