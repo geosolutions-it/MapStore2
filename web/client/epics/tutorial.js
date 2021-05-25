@@ -161,14 +161,14 @@ export const getActionsFromStepEpic = (action$) =>
  * @type {Object}
  */
 
- export const openDetailsPanelEpic = (action$, store) =>
+export const openDetailsPanelEpic = (action$, store) =>
     action$.ofType(CLOSE_TUTORIAL)
         .filter(() => mapSelector(store.getState())?.info?.detailsSettings?.showAtStartup )
         .switchMap( () => {
             return Rx.Observable.of(openDetailsPanel());
         });
 
-    
+
 export default {
     closeTutorialEpic,
     switchTutorialEpic,

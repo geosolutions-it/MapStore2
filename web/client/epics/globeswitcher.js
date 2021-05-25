@@ -6,38 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Rx from 'rxjs';
-
 import { TOGGLE_3D } from '../actions/globeswitcher';
-import { CLOSE_TUTORIAL, closeTutorial } from '../actions/tutorial';
 import { changeMapType } from '../actions/maptype';
 import { last2dMapTypeSelector } from './../selectors/maptype';
-import { OPEN_DETAILS_PANEL, CLOSE_DETAILS_PANEL, closeDetailsPanel, openDetailsPanel } from '../actions/details';
-
+import { closeDetailsPanel } from '../actions/details';
 /**
  * Gets every `TOGGLE_3D` event.
  * @memberof epics.globeswitcher
  * @param {external:Observable} action$ manages `TOGGLE_3D`.
  * @return {external:Observable} emitting connected-react-router push action and {@link #actions.globeswitcher.updateLast2dMapType} actions
  */
- 
- 
-
-
  export const updateRouteOn3dSwitch = (action$, store) =>
-    
+
     action$.ofType(TOGGLE_3D)
         .switchMap((action) => {
-
             const last2dMapType = last2dMapTypeSelector(store.getState());
-            
             // two actions are called after toggling to 3D
             return Rx.Observable.from([ 
                 changeMapType(action.originalMapType !== "cesium" ? "cesium" : last2dMapType),
                 closeDetailsPanel()
             ]);
-        
         });
-    
 /**
  * Epics for 3d switcher functionality
  * @name epics.globeswitcher
