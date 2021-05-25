@@ -36,5 +36,39 @@
       <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="workspace:layer_name2" description="desc2">http://ows.domain.it:80/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
       <dc:URI protocol="image/png" name="thumbnail">resources.get?id=187049&amp;fname=d698f693-6e7e-47a9-a138-918068d0b082_s.png&amp;access=public</dc:URI>
     </csw:Record>
+    <csw:Record xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/">
+      <dc:identifier>urn:isogeo:metadata:uuid:01ca64b3-6d69-43b7-b953-7743e11daafe</dc:identifier>
+      <dc:title>Title3</dc:title>
+      <dc:type>dataset</dc:type>
+      <dc:subject>infoMapAccessService</dc:subject>
+      <dc:format />
+      <dct:abstract />
+      <dc:language />
+      <dc:source />
+      <dc:format />
+      <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::RGF93 / Lambert-93 (EPSG:2154)">
+        <ows:LowerCorner>-4.1149 47.93257</ows:LowerCorner>
+        <ows:UpperCorner>-4.14168 47.959353362144</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="workspace:layer_name3" description="desc2">http://ows.domain.it:80/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png">http://geowww.agrocampus-ouest.fr/img/metadata/KBZ.png</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:geonet="http://www.fao.org/geonetwork">
+      <dc:identifier>9df78858-ade9-4591-badf-63934f1afffc</dc:identifier>
+      <dc:date>2020-10-06T11:52:43.9635506</dc:date>
+      <dc:title>Title 4</dc:title>
+      <dc:type>dataset</dc:type>
+      <dc:subject>Air Transport Network</dc:subject>
+      <dc:format>PDF</dc:format>
+      <dc:format>PNG</dc:format>
+      <dc:format>JPEG</dc:format>
+      <dc:language>eng</dc:language>
+      <ows:BoundingBox crs="urn:ogc:def:crs:INSPIRE RS registry::http://www.opengis.net/def/crs/EPSG/0/3857">
+          <ows:LowerCorner>13.27 47.46</ows:LowerCorner>
+          <ows:UpperCorner>12.56 48.13</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="workspace:layer_name4" description="desc2">http://ows.domain.it:80/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png">https://test-geoserver.at/img/metadata/KBZ.png</dc:URI>
+    </csw:Record>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
