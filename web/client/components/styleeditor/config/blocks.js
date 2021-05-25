@@ -9,6 +9,8 @@
 import property from './property';
 import omit from 'lodash/omit';
 import includes from 'lodash/includes';
+import isObject from 'lodash/isObject';
+import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const getBlocks = (/* config = {} */) => {
     const symbolizerBlock = {
@@ -67,6 +69,16 @@ const getBlocks = (/* config = {} */) => {
                 image: property.image({
                     label: 'styleeditor.image',
                     key: 'image'
+                }),
+                format: property.select({
+                    label: 'styleeditor.format',
+                    key: 'format',
+                    isVisible: (value, { image } = {}, format) => {
+                        return format !== 'css'
+                        && !isObject(image)
+                        && !['png', 'jpg', 'svg', 'gif', 'jpeg'].includes(image.split('.').pop());
+                    },
+                    getOptions: () => SUPPORTED_MIME_TYPES
                 }),
                 opacity: property.opacity({
                     label: 'styleeditor.opacity'
