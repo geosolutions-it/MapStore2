@@ -102,6 +102,9 @@ class LeafletMap extends React.Component {
         }
     }
     componentDidMount() {
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         const {limits = {}} = this.props;
         const maxBounds = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
         let mapOptions = assign({}, this.props.interactive ? {} : {
@@ -247,10 +250,6 @@ class LeafletMap extends React.Component {
         });
 
         this.drawControl = null;
-
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {

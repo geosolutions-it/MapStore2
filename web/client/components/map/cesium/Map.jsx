@@ -82,7 +82,10 @@ class CesiumMap extends React.Component {
     }
 
     componentDidMount() {
-        var map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
+        let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
             baseLayerPicker: false,
             animation: false,
             fullscreenButton: false,
@@ -119,9 +122,6 @@ class CesiumMap extends React.Component {
             if (this.cesiumNavigation) {
                 this.cesiumNavigation.navigationInitialization(this.props.id, map);
             }
-        }
-        if (this.props.registerHooks) {
-            this.registerHooks();
         }
     }
 

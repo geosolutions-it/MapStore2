@@ -94,6 +94,9 @@ class OpenlayersMap extends React.Component {
     };
 
     componentDidMount() {
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         this.props.projectionDefs.forEach(p => {
             const projDef = proj4.defs(p.code);
             projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || projDef.axis || 'enu', projDef.units || 'm');
@@ -241,9 +244,6 @@ class OpenlayersMap extends React.Component {
         this.forceUpdate();
 
         this.props.onResolutionsChange(this.getResolutions());
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
