@@ -499,6 +499,104 @@ describe('StyleEditor API', () => {
                 done();
             });
         });
+        it('should send a classification request and generate color when params contains custom ramp', (done) => {
+
+            mockAxios.onGet().reply(200, CLASSIFY_VECTOR_RESPONSE.SAMPLE1);
+
+            const values = {
+                attribute: 'ATTRIBUTE'
+            };
+            const properties = {
+                ruleId: 'rule0',
+                intervals: 5,
+                method: 'equalInterval',
+                reverse: false,
+                ramp: 'custom',
+                type: 'classificationVector',
+                classification: [
+                    {
+                        title: ' >= 168839.0 AND <2211312.4',
+                        color: '#9E0142',
+                        type: 'Polygon',
+                        min: 168839,
+                        max: 2211312.4
+                    },
+                    {
+                        title: ' >= 2211312.4 AND <4253785.8',
+                        color: '#F98E52',
+                        type: 'Polygon',
+                        min: 2211312.4,
+                        max: 4253785.8
+                    }
+                ],
+                ...DEFAULT_CONFIG
+            };
+            const rules = [
+                {
+                    color: '#dddddd',
+                    fillOpacity: 1,
+                    kind: 'Classification',
+                    outlineColor: '#777777',
+                    outlineWidth: 1,
+                    symbolizerKind: 'Fill',
+                    ...properties
+                }
+            ];
+            const layer = {
+                url: '/geoserver/wms'
+            };
+            classificationVector({
+                values,
+                properties,
+                rules,
+                layer
+            }).then((newRules) => {
+                try {
+                    expect(newRules[0].classification).toEqual(
+                        [
+                            {
+                                title: ' >= 168839.0 AND <2211312.4',
+                                color: '#9e0142',
+                                type: 'Polygon',
+                                min: 168839,
+                                max: 2211312.4
+                            },
+                            {
+                                title: ' >= 2211312.4 AND <4253785.8',
+                                color: '#b52446',
+                                type: 'Polygon',
+                                min: 2211312.4,
+                                max: 4253785.8
+                            },
+                            {
+                                title: ' >= 4253785.8 AND <6296259.2',
+                                color: '#cc484a',
+                                type: 'Polygon',
+                                min: 4253785.8,
+                                max: 6296259.2
+                            },
+                            {
+                                title: ' >= 6296259.2 AND <8338732.6',
+                                color: '#e26b4e',
+                                type: 'Polygon',
+                                min: 6296259.2,
+                                max: 8338732.6
+                            },
+                            {
+                                title: ' >= 8338732.6 AND <=1.0381206E7',
+                                color: '#f98e52',
+                                type: 'Polygon',
+                                min: 8338732.6,
+                                max: 10381206
+                            }
+                        ]
+                    );
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+        });
     });
     describe('classificationRaster', () => {
         beforeEach(done => {

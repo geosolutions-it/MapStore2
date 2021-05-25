@@ -7,7 +7,7 @@
  */
 
 import React, { useRef, useState, useEffect } from 'react';
-import { FormGroup, FormControl as FormControlRB  } from 'react-bootstrap';
+import { FormGroup, FormControl as FormControlRB, Glyphicon } from 'react-bootstrap';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
@@ -253,7 +253,9 @@ export const fields = {
                     options={newOptions.map((option) => ({
                         ...option,
                         label: option.labelId
-                            ? <Message msgId={option.labelId}/>
+                            ? <><Message msgId={option.labelId}/>
+                                {option.glyphId && <Glyphicon style={{ marginLeft: 10 }} glyph={option.glyphId}/>}
+                            </>
                             : option.label
                     }))}
                     value={value}

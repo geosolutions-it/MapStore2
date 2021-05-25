@@ -9,7 +9,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { FormControl, FormGroup } from 'react-bootstrap';
+import {DropdownButton, FormControl, FormGroup, Glyphicon, MenuItem} from 'react-bootstrap';
 import ColorSelector from './ColorSelector';
 import isNumber from 'lodash/isNumber';
 import isNil from 'lodash/isNil';
@@ -17,6 +17,7 @@ import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
 import { NumberPicker } from 'react-widgets';
 import assign from 'object-assign';
+import Message from "../../components/I18N/Message";
 
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
@@ -63,6 +64,29 @@ class ThemaClassesEditor extends React.Component {
                             onChange={(value) => this.updateMax(index, value)}
                         /></>
                 }
+                <DropdownButton
+                    style={{flex: 0}}
+                    className="square-button-md no-border add-rule"
+                    noCaret
+                    pullRight
+                    title={<Glyphicon glyph="option-vertical"/>}>
+                    {[
+                        {labelId: 'styleeditor.addRuleBefore', glyph: 'add-row-before', value: "before"},
+                        {labelId: 'styleeditor.addRuleAfter', glyph: 'add-row-after', value: "after"},
+                        {labelId: 'styleeditor.remove', glyph: 'trash', value: "remove"}
+                    ]
+                        .map((option) => {
+                            return  (
+                                <MenuItem
+                                    key={option.value}
+                                    onClick={() => this.updateClassification(index, option.value)}>
+                                    <><Glyphicon glyph={option.glyph}/>
+                                        <Message msgId={option.labelId} />
+                                    </>
+                                </MenuItem>
+                            );
+                        })}
+                </DropdownButton>
             </FormGroup>
         ));
     };
@@ -129,6 +153,42 @@ class ThemaClassesEditor extends React.Component {
         }
     };
 
+    updateClassification = (classIndex, type) => {
+        let updateIndex;
+        let updateMinMax;
+        let deleteCount = 0;
+        let newClassification = [...this.props.classification];
+        const currentRule = newClassification[classIndex];
+
+        if (type === 'before') {
+            const isFirstIndex = classIndex === 0;
+            updateIndex = isFirstIndex ? 0 : classIndex;
+            updateMinMax = { min: isFirstIndex ? isNil(currentRule.min) ? currentRule.min : 0 : currentRule.min,
+                max: currentRule.min };
+        } else if (type === 'after') {
+            updateIndex = classIndex === newClassification.length - 1 ? newClassification.length : classIndex + 1;
+            updateMinMax = { min: currentRule.max, max: currentRule.max };
+        } else {
+            updateIndex = classIndex;
+            deleteCount = 1;
+        }
+        let args = [updateIndex, deleteCount];
+        if (type !== 'remove') {
+            const color = '#ffffff';
+            let classifyObj;
+            if (!isNil(currentRule.unique)) {
+                const uniqueValue = isNumber(currentRule.unique) ? 0 : '';
+                classifyObj = { ...currentRule, color, title: uniqueValue, unique: uniqueValue };
+            } else {
+                classifyObj = { ...currentRule, ...updateMinMax, color,
+                    title: ` >= ${updateMinMax.min} AND <${updateMinMax.max}`
+                };
+            }
+            args = args.concat(classifyObj);
+        }
+        newClassification.splice(...args);
+        this.props.onUpdateClasses(newClassification, 'interval');
+    }
 }
 
 export default ThemaClassesEditor;
