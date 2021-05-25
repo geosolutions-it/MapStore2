@@ -39,7 +39,7 @@ The **Embed** section provides to the user the needed snippets, **embedded code*
 
 In addition, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides options to customize a bit the *embedded code*:
 
-* The user can configure **height** and **width** of the embedded resource by choosing `Small` (*600x500*), `Medium` (*800x600*), `Large` (*1000x800*) and `Custom`
+* The user can configure **height** and **width** of the embedded resource by choosing `Small` (*600x500*), `Medium` (*800x600*), `Large` (*1000x800*) and `Custom` (it is possible to choose the desired size).
 
 <img src="../img/share/embed_maps_size.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
