@@ -21,7 +21,7 @@ export const updateRouteOn3dSwitch = (action$, store) =>
     action$.ofType(TOGGLE_3D)
         .switchMap((action) => {
             const last2dMapType = last2dMapTypeSelector(store.getState());
-            // two actions are called after toggling to 3D
+
             return Rx.Observable.from([
                 changeMapType(action.originalMapType !== "cesium" ? "cesium" : last2dMapType),
                 closeDetailsPanel()
