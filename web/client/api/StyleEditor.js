@@ -98,8 +98,10 @@ const getClassificationError = (params, errorMsg) => {
 const updateRulesWithColors = (data, params) => {
     const _rules = get(data, 'Rules.Rule');
     const intervalsForUnique = _rules && castArray(_rules).length;
-    const { colors: colorsString } = SLDService.getColor(undefined, params.ramp, intervalsForUnique || params.intervals);
-    let colors = colorsString.split(',');
+    const customRamp = params.ramp === 'custom' && params.classification.length > 0
+        && { name: 'custom', colors: params.classification.map((entry) => entry.color) };
+    const { colors: colorsString = [] } = SLDService.getColor(undefined, params.ramp, intervalsForUnique || params.intervals, customRamp);
+    let colors = colorsString?.split(',');
     if (params.reverse) colors = colors.reverse();
     return {
         classification: SLDService.readClassification(data, params.method).map((rule, idx) => ({
