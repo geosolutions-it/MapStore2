@@ -157,7 +157,7 @@ class ThemaClassesEditor extends React.Component {
         let updateIndex;
         let updateMinMax;
         let deleteCount = 0;
-        let newClassification = this.props.classification;
+        let newClassification = [...this.props.classification];
         const currentRule = newClassification[classIndex];
 
         if (type === 'before') {
@@ -175,11 +175,15 @@ class ThemaClassesEditor extends React.Component {
         let args = [updateIndex, deleteCount];
         if (type !== 'remove') {
             const color = '#ffffff';
-            const classifyObj = !isNil(currentRule.unique)
-                ? { ...currentRule, color, title: isNumber(currentRule.unique) ? 0 : '', unique: 0 }
-                : { ...currentRule, ...updateMinMax, color,
+            let classifyObj;
+            if (!isNil(currentRule.unique)) {
+                const uniqueValue = isNumber(currentRule.unique) ? 0 : '';
+                classifyObj = { ...currentRule, color, title: uniqueValue, unique: uniqueValue };
+            } else {
+                classifyObj = { ...currentRule, ...updateMinMax, color,
                     title: ` >= ${updateMinMax.min} AND <${updateMinMax.max}`
                 };
+            }
             args = args.concat(classifyObj);
         }
         newClassification.splice(...args);

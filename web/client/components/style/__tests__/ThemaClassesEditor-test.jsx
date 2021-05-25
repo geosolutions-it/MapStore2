@@ -21,13 +21,22 @@ const classification = [{
     min: 10.0,
     max: 25.0
 }];
-const uniqueClassification = [{
-    color: '#FF0000',
-    unique: 10
-}, {
-    color: '#00FF00',
-    unique: 20
-}];
+const uniqueClassification = {
+    number: [{
+        color: '#FF0000',
+        unique: 10
+    }, {
+        color: '#00FF00',
+        unique: 20
+    }],
+    string: [{
+        color: '#FF0000',
+        unique: 'Test'
+    }, {
+        color: '#00FF00',
+        unique: 'Test1'
+    }]
+};
 
 describe("Test the ThemaClassesEditor component", () => {
     beforeEach((done) => {
@@ -123,7 +132,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
 
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={[...uniqueClassification]}
+            <ThemaClassesEditor classification={uniqueClassification.number}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -135,13 +144,6 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(field.unique).toEqual(7);
     });
     it('on update value classification with unique field of type string', () => {
-        const _classification = [{
-            color: '#FF0000',
-            unique: 'Test'
-        }, {
-            color: '#00FF00',
-            unique: 'Test1'
-        }];
         const actions = {
             onUpdateClasses: () => { }
         };
@@ -149,7 +151,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
 
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={_classification}
+            <ThemaClassesEditor classification={uniqueClassification.string}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -157,7 +159,6 @@ describe("Test the ThemaClassesEditor component", () => {
         TestUtils.Simulate.change(input, { target: { value: 'Test4' } });
         TestUtils.Simulate.blur(input);
         expect(spyUpdate).toHaveBeenCalled();
-        console.log("spyUpdate", JSON.stringify(spyUpdate.calls[0]));
         const [field] = spyUpdate.calls[0].arguments[0];
         expect(field.unique).toEqual('Test4');
     });
@@ -165,7 +166,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const actions = { onUpdateClasses: () => { } };
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={[...classification]}
+            <ThemaClassesEditor classification={classification}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -184,7 +185,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const actions = { onUpdateClasses: () => { } };
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={[...classification]}
+            <ThemaClassesEditor classification={classification}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -203,7 +204,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const actions = { onUpdateClasses: () => { } };
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={[...classification]}
+            <ThemaClassesEditor classification={classification}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -220,7 +221,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const actions = { onUpdateClasses: () => { } };
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={[...uniqueClassification]}
+            <ThemaClassesEditor classification={uniqueClassification.number}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -239,7 +240,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const actions = { onUpdateClasses: () => { } };
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={[...uniqueClassification]}
+            <ThemaClassesEditor classification={uniqueClassification.number}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -258,7 +259,7 @@ describe("Test the ThemaClassesEditor component", () => {
         const actions = { onUpdateClasses: () => { } };
         const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
         const cmp = ReactDOM.render(
-            <ThemaClassesEditor classification={[...uniqueClassification]}
+            <ThemaClassesEditor classification={uniqueClassification.number}
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
@@ -271,7 +272,25 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(arg2).toBe('interval');
         expect(arg1).toBeTruthy();
         expect(arg1.length).toBe(1);
-        expect(arg1[0]).toBe(uniqueClassification[1]);
+        expect(arg1[0]).toBe(uniqueClassification.number[1]);
     });
-
+    it('on update value by modifying rule of Unique classification of type string', () => {
+        const actions = { onUpdateClasses: () => { } };
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={uniqueClassification.string}
+                onUpdateClasses={actions.onUpdateClasses}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const buttons = domNode.getElementsByClassName('add-rule');
+        expect(buttons.length).toBe(2);
+        const [addNewEntryBefore] = domNode.querySelectorAll('.dropdown-menu > li > a');
+        TestUtils.Simulate.click(addNewEntryBefore);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [arg1, arg2] = spyUpdate.calls[0].arguments;
+        expect(arg2).toBe('interval');
+        expect(arg1).toBeTruthy();
+        expect(arg1.length).toBe(3);
+        expect(arg1[0]).toEqual({"color": "#ffffff", "unique": '', "title": ''});
+    });
 });
