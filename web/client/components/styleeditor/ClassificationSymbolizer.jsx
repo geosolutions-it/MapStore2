@@ -101,7 +101,8 @@ function ClassificationSymbolizer({
                     methods,
                     getColors: handleColors,
                     bands,
-                    method
+                    method,
+                    methodEdit: props?.methodEdit
                 }}
                 params={mergedParams}
                 onChange={(values) => onUpdate({
