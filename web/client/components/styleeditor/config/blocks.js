@@ -336,16 +336,17 @@ const getBlocks = (/* config = {} */) => {
                         isDisabled: (value, properties, {attributes})=>
                             attributes?.filter(({label}) => label === properties?.attribute)?.[0]?.type === 'string'
                             && properties?.method !== 'customInterval',
-                        getOptions: ({ methods, method }) => {
+                        getOptions: ({ methods, method, methodEdit }) => {
                             const options = methods?.map((value) => ({
                                 labelId: 'styleeditor.' + value,
                                 value
                             })) || [];
                             return [
-                                ...(method === 'customInterval'
+                                ...(method === "customInterval"
                                     ? [
                                         {
-                                            labelId: 'styleeditor.' + method,
+                                            labelId: "styleeditor." + methodEdit,
+                                            glyphId: 'edit',
                                             value: method
                                         }
                                     ]
