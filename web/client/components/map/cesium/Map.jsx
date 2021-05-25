@@ -82,9 +82,6 @@ class CesiumMap extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
         let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
             baseLayerPicker: false,
             animation: false,
@@ -98,6 +95,9 @@ class CesiumMap extends React.Component {
             navigationHelpButton: false,
             navigationInstructionsInitiallyVisible: false
         }, this.getMapOptions(this.props.mapOptions)));
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         map.scene.globe.baseColor = Cesium.Color.WHITE;
         map.imageryLayers.removeAll();
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);

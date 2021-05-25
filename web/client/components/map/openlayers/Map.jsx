@@ -94,9 +94,6 @@ class OpenlayersMap extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
         this.props.projectionDefs.forEach(p => {
             const projDef = proj4.defs(p.code);
             projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || projDef.axis || 'enu', projDef.units || 'm');
@@ -157,6 +154,9 @@ class OpenlayersMap extends React.Component {
         });
 
         this.map = map;
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         this.map.disabledListeners = {};
         this.map.disableEventListener = (event) => {
             this.map.disabledListeners[event] = true;
@@ -237,7 +237,6 @@ class OpenlayersMap extends React.Component {
         const mouseMove = throttle(this.mouseMoveEvent, 100);
         // TODO support disableEventListener
         map.on('pointermove', mouseMove);
-
         this.updateMapInfoState();
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
