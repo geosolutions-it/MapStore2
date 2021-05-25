@@ -16,13 +16,13 @@ import { closeDetailsPanel } from '../actions/details';
  * @param {external:Observable} action$ manages `TOGGLE_3D`.
  * @return {external:Observable} emitting connected-react-router push action and {@link #actions.globeswitcher.updateLast2dMapType} actions
  */
- export const updateRouteOn3dSwitch = (action$, store) =>
+export const updateRouteOn3dSwitch = (action$, store) =>
 
     action$.ofType(TOGGLE_3D)
         .switchMap((action) => {
             const last2dMapType = last2dMapTypeSelector(store.getState());
             // two actions are called after toggling to 3D
-            return Rx.Observable.from([ 
+            return Rx.Observable.from([
                 changeMapType(action.originalMapType !== "cesium" ? "cesium" : last2dMapType),
                 closeDetailsPanel()
             ]);
