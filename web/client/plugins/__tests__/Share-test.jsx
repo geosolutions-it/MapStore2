@@ -458,16 +458,10 @@ describe('Share Plugin', () => {
                     }
                 }
             },
-            mapInfo: {
-                clickPoint: {
-                    latlng: {lat: 40, lng: -80}
-                }
-            },
             search: {
-                markerPosition: {latlng: {lat: 41, lng: -81}}
+                markerPosition: {latlng: {lat: 40, lng: -80}}
             }
         };
-        const {search: _skip, ...state} = storeState;
         const props = {
             advancedSettings: {
                 centerAndZoom: true,
@@ -477,7 +471,7 @@ describe('Share Plugin', () => {
         const {Plugin} = getPluginForTest({...SharePlugin, reducers: {
             mapInfo,
             search
-        }}, state);
+        }}, storeState);
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
 
         expect(document.getElementById('share-panel-dialog')).toExist();
@@ -487,20 +481,6 @@ describe('Share Plugin', () => {
         let zoom = inputLink[3];
         expect(toNumber(lat.value)).toBe(40);
         expect(toNumber(lon.value)).toBe(-80);
-        expect(toNumber(zoom.value)).toBe(5);
-
-        const {Plugin: _Plugin} = getPluginForTest({...SharePlugin, reducers: {
-            mapInfo,
-            search
-        }}, storeState);
-        ReactDOM.render(<_Plugin {...props}/>, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toExist();
-        inputLink = document.querySelectorAll('input.form-control');
-        lat = inputLink[1];
-        lon = inputLink[2];
-        zoom = inputLink[3];
-        expect(toNumber(lat.value)).toBe(41);
-        expect(toNumber(lon.value)).toBe(-81);
         expect(toNumber(zoom.value)).toBe(5);
     });
 });
