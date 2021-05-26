@@ -17,14 +17,22 @@ class FeatureInfoTriggerSelector extends React.Component {
     static propTypes = {
         trigger: PropTypes.string,
         onSetMapTrigger: PropTypes.func,
+        onPurgeMapInfoResults: PropTypes.func,
         hoverEnabled: PropTypes.bool
     }
     static defaultProps = {
-        hoverEnabled: true
+        hoverEnabled: true,
+        onSetMapTrigger: () => {},
+        onPurgeMapInfoResults: () => {}
     }
 
+    /* #6870 in the following, we clear results because when passing from hover to click
+        the identify panel gets opened
+        (because it has some responses in the current state) while it should not
+    */
     onChange = (event) => {
         this.props.onSetMapTrigger(event.target.value);
+        this.props.onPurgeMapInfoResults();
     }
 
     render() {
