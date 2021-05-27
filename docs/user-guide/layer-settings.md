@@ -55,8 +55,11 @@ Through the second section of the layer settings panel it is possible to change 
 
 In particular, the user is allowed to:
 
-* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif` 
+* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` and `gif` 
 
+!!! note
+    The list of available format is the same of the related [catalog source](catalog.md#catalog-types). Therefore, for WMS services, the updated list of formats supported by the WMS server is used.
+    
 * Set the size of layer tiles: choosing between `256` or `512`
 
 * Set the opacity value of the layer (in %)
