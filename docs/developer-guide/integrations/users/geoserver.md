@@ -19,20 +19,20 @@ This solution partially degradates the functionalities of user management UI of 
 ## Requirements
 
 1. GeoServer must have the [Authkey Plugin Community Module](https://build.geoserver.org/geoserver/master/community-latest/) installed
-1. MapStore2 Database must be reachable by GeoServer (H2 will not work, use PostgreSQL or Oracle)
-1. MapStore2 must be reachable by GeoServer
+2. MapStore2 Database must be reachable by GeoServer (H2 will not work, use PostgreSQL or Oracle)
+3. MapStore2 must be reachable by GeoServer via HTTP
 
 This example will focus on **PostgreSQL** database type
 I am assuming this is a new installation, so no existing user or map will be preserved
 
 ## Database preparation
 
-1. Follow Geostore wiki to setup a postgresql database (ignore the geostore_test part)
-   https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support
-1. Start Tomcat once to make it extract the war file
-1. Stop Tomcat
-1. Copy the WEB-INF/classes/db-conf/postgres.properties file over the WEB-INF/classes/geostore-database-ovr.properties
-1. Start Tomcat
+1. Follow [Geostore wiki](https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support) to setup a postgresql database (ignore the geostore_test part)
+2. Start your Tomcat at least once, so `mapstore.war`will be extracted in the `webapps` directory of tomcat instance.
+3. Stop Tomcat.
+4. Copy from the extacted folder (`<TOMCAT_DIR>/webapps/mapstore`) the file located at `WEB-INF/classes/db-conf/postgres.properties` to replace the file `WEB-INF/classes/geostore-database-ovr.properties`. 
+5. Edit the new `WEB-INF/classes/geostore-database-ovr.properties` file with your DB URL and credentials.
+6. Start Tomcat
 
 ### Default user password couples are
 
@@ -43,8 +43,9 @@ I am assuming this is a new installation, so no existing user or map will be pre
 
 Follow this https://github.com/geosolutions-it/geostore/tree/master/geoserver
 
-Create the empty GeoStore database using scripts as described in GeoStore WIKI
-(geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support).
+Create the empty GeoStore database using scripts as described in [GeoStore WIKI](https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support).
+
+The following procedure will make GeoServer accessible to users stored in the MapStore database. In case of the users on MapStore and GeoServer have the same name, the users of MapStore will have precedence. At the end of the procedure, if you access with the user `admin`, you will have to use the password of the `admin` user of MapStore (`admin` by default).
 
 ### User Groups and Roles
 
@@ -93,6 +94,7 @@ Steps below referenve usergroup and role service configuration files, as needed 
     * save
 
 ### Use the Auth key Module with GeoStore/GeoServer
+
 These last steps are required to allow users logged in MapStore to be authenticated correctly by GeoServer.
 
 #### Configure GeoServer
