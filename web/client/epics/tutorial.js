@@ -11,12 +11,13 @@ import Rx from 'rxjs';
 import {
     START_TUTORIAL,
     UPDATE_TUTORIAL,
+    CLOSE_TUTORIAL,
     INIT_TUTORIAL,
     CHANGE_PRESET,
     closeTutorial,
     setupTutorial
 } from '../actions/tutorial';
-
+import { openDetailsPanel } from '../actions/details';
 import { CHANGE_MAP_VIEW } from '../actions/map';
 import { MAPS_LIST_LOADED } from '../actions/maps';
 import { TOGGLE_3D } from '../actions/globeswitcher';
@@ -30,6 +31,7 @@ const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.re
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi } from '../api/userPersistedStorage';
+import { mapSelector } from './../selectors/map';
 
 /**
  * Closes the tutorial if 3D button has been toggled
@@ -159,10 +161,19 @@ export const getActionsFromStepEpic = (action$) =>
  * @type {Object}
  */
 
+export const openDetailsPanelEpic = (action$, store) =>
+    action$.ofType(CLOSE_TUTORIAL)
+        .filter(() => mapSelector(store.getState())?.info?.detailsSettings?.showAtStartup )
+        .switchMap( () => {
+            return Rx.Observable.of(openDetailsPanel());
+        });
+
+
 export default {
     closeTutorialEpic,
     switchTutorialEpic,
     getActionsFromStepEpic,
     changePresetEpic,
-    switchGeostoryTutorialEpic
+    switchGeostoryTutorialEpic,
+    openDetailsPanelEpic
 };

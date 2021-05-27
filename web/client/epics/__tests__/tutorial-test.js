@@ -8,12 +8,13 @@
 
 import expect from 'expect';
 
-import { getActionsFromStepEpic, switchTutorialEpic, switchGeostoryTutorialEpic } from '../tutorial';
-import { SETUP_TUTORIAL, updateTutorial, initTutorial } from '../../actions/tutorial';
+import { getActionsFromStepEpic, switchTutorialEpic, switchGeostoryTutorialEpic, openDetailsPanelEpic } from '../tutorial';
+import { SETUP_TUTORIAL, updateTutorial, initTutorial, closeTutorial } from '../../actions/tutorial';
 import { geostoryLoaded, setEditing } from '../../actions/geostory';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { onLocationChanged } from 'connected-react-router';
 import { setApi, getApi } from '../../api/userPersistedStorage';
+import { OPEN_DETAILS_PANEL } from './../../actions/details';
 
 describe('tutorial Epics', () => {
     const GEOSTORY_EDIT_STEPS = [{
@@ -528,6 +529,48 @@ describe('tutorial Epics', () => {
                             translationHTML: "default",
                             selector: "#intro-tutorial"
                         }]
+                    }
+                }
+            });
+        });
+    });
+    describe('openDetailsPanelEpic tests', () => {
+        it('should open the details panel if it has showAtStartup set to true', (done) => {
+            const NUM_ACTIONS = 1;
+
+            testEpic(openDetailsPanelEpic, NUM_ACTIONS, closeTutorial(), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [action] = actions;
+                expect(action.type).toBe(OPEN_DETAILS_PANEL);
+                done();
+            }, {
+                map: {
+                    present: {
+                        info: {
+                            detailsSettings: {
+                                showAtStartup: true
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        it('should open the details panel if it has showAtStartup set to false', (done) => {
+            const NUM_ACTIONS = 1;
+
+            testEpic(addTimeoutEpic(openDetailsPanelEpic, 100), NUM_ACTIONS, closeTutorial(), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [action] = actions;
+                expect(action.type).toBe(TEST_TIMEOUT);
+                done();
+            }, {
+                map: {
+                    present: {
+                        info: {
+                            detailsSettings: {
+                                showAtStartup: false
+                            }
+                        }
                     }
                 }
             });
