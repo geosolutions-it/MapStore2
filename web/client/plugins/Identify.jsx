@@ -63,7 +63,8 @@ import {
     responsesSelector,
     showEmptyMessageGFISelector,
     validResponsesSelector,
-    hoverEnabledSelector
+    hoverEnabledSelector,
+    mapInfoEnabledSelector
 } from '../selectors/mapInfo';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { isCesium, mapTypeSelector } from '../selectors/maptype';
@@ -74,7 +75,7 @@ import getToolButtons from './identify/toolButtons';
 import Message from './locale/Message';
 
 const selector = createStructuredSelector({
-    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
+    enabled: (state) => mapInfoEnabledSelector(state) || state.controls && state.controls.info && state.controls.info.enabled || false,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: requestsSelector,

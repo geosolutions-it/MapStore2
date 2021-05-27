@@ -25,6 +25,7 @@ export const CHANGE_SEARCH_TOOL = 'CHANGE_SEARCH_TOOL';
 export const ZOOM_ADD_POINT = 'SEARCH:ZOOM_ADD_POINT';
 export const CHANGE_FORMAT = 'SEARCH:CHANGE_FORMAT';
 export const CHANGE_COORD = 'SEARCH:CHANGE_COORD';
+export const HIDE_MARKER = 'SEARCH:HIDE_MARKER';
 
 /**
  * change the format for coordinate editor tool
@@ -163,6 +164,15 @@ export function addMarker(itemPosition, itemText) {
     };
 }
 
+/**
+ * Hide a marker
+ * @memberof actions.search
+ */
+export function hideMarker() {
+    return {
+        type: HIDE_MARKER
+    };
+}
 /**
  * perform a text search
  * @memberof actions.search
