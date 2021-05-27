@@ -229,11 +229,11 @@ export const fields = {
 
         const [newOptions, setNewOptions] = useState(initOptions(options));
         useEffect(() => {
-            !multi && !isEqual(options, newOptions) && setNewOptions(initOptions(options));
+            !multi && !creatable && !isEqual(options, newOptions) && setNewOptions(initOptions(options));
         }, [options]);
 
         useEffect(() => {
-            multi && setNewOptions(initOptions(options));
+            setNewOptions(initOptions(options));
         }, [options?.length]);
 
         const SelectInput = creatable
