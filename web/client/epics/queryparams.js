@@ -13,16 +13,17 @@ import url from 'url';
 
 import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView } from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
-import {SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker} from '../actions/search';
+import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker } from '../actions/search';
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
 import { warning } from '../actions/notifications';
 
 import {getLonLatFromPoint, isValidExtent} from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
 import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from "../actions/mapInfo";
-import {getBbox} from "../utils/MapUtils";
-import {mapSelector} from '../selectors/map';
-import {clickPointSelector, isMapInfoOpen} from '../selectors/mapInfo';
+import { getBbox } from "../utils/MapUtils";
+import { mapSelector } from '../selectors/map';
+import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
+import { shareSelector } from "../selectors/controls";
 
 /*
 it maps params key to function.
@@ -166,8 +167,8 @@ export const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
         .filter(({control}) => control === "share")
         .switchMap(() => {
             const state = getState();
-            const shareEnabled = get(state, 'controls.share.enabled');
-            const mapInfoEnabled = get(state, 'mapInfo.enabled');
+            const shareEnabled = shareSelector(state);
+            const mapInfoEnabled = mapInfoEnabledSelector(state);
             const shareParams = {bboxEnabled: false, centerAndZoomEnabled: false};
             if (!isUndefined(shareEnabled) && shareEnabled) {
                 let $observable = Rx.Observable.empty();

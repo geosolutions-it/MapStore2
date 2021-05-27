@@ -26,6 +26,7 @@ import controls from '../reducers/controls';
 import { changeFormat } from '../actions/mapInfo';
 import { addMarker, hideMarker } from '../actions/search';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
+import { shareSelector } from "../selectors/controls";
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedIn)
@@ -60,7 +61,7 @@ import { updateUrlOnScrollSelector } from '../selectors/geostory';
  */
 
 const Share = connect(createSelector([
-    state => state.controls && state.controls.share && state.controls.share.enabled,
+    shareSelector,
     versionSelector,
     mapSelector,
     currentContextSelector,
