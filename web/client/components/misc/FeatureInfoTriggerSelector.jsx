@@ -18,12 +18,14 @@ class FeatureInfoTriggerSelector extends React.Component {
         trigger: PropTypes.string,
         onSetMapTrigger: PropTypes.func,
         onPurgeMapInfoResults: PropTypes.func,
+        onHideMapinfoMarker: PropTypes.func,
         hoverEnabled: PropTypes.bool
     }
     static defaultProps = {
         hoverEnabled: true,
         onSetMapTrigger: () => {},
-        onPurgeMapInfoResults: () => {}
+        onPurgeMapInfoResults: () => {},
+        onHideMapinfoMarker: () => {}
     }
 
     /* #6870 in the following, we clear results because when passing from hover to click
@@ -33,6 +35,7 @@ class FeatureInfoTriggerSelector extends React.Component {
     onChange = (event) => {
         this.props.onSetMapTrigger(event.target.value);
         this.props.onPurgeMapInfoResults();
+        this.props.onHideMapinfoMarker();
     }
 
     render() {
