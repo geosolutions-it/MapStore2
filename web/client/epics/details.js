@@ -64,7 +64,7 @@ export const storeDetailsInfoEpic = (action$, store) =>
     action$.ofType(MAP_INFO_LOADED)
         .switchMap(() => {
             const mapId = mapIdSelector(store.getState());
-            const isTutorialRunning = store.getState().tutorial.run;
+            const isTutorialRunning = store.getState()?.tutorial?.run;
             return !mapId ?
                 Rx.Observable.empty() :
                 Rx.Observable.fromPromise(
