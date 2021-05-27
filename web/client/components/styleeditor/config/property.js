@@ -357,7 +357,7 @@ const property = {
             };
         }
     }),
-    select: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled }) => ({
+    select: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled, isVisible }) => ({
         type: 'select',
         label,
         config: {
@@ -370,7 +370,8 @@ const property = {
                 [key]: value
             };
         },
-        isDisabled
+        isDisabled,
+        isVisible
     }),
     colorRamp: ({ label, key = '', getOptions = () => [] }) => ({
         type: 'colorRamp',
@@ -392,11 +393,15 @@ const property = {
                 classification,
                 type
             } = value;
-            const isCustomInteval = type === 'interval' || properties.method === 'customInterval';
+            const isMethodCustomInterval = properties.method === 'customInterval';
+            const isCustomInterval = type === 'interval' || isMethodCustomInterval;
             const isCustomColor = type === 'color' || properties.ramp === 'custom';
             return {
                 [key]: classification,
-                ...(isCustomInteval && { method: 'customInterval' }),
+                ...(isCustomInterval && {
+                    method: 'customInterval',
+                    methodEdit: isMethodCustomInterval ? properties.methodEdit : properties.method
+                }),
                 ...(isCustomColor && { ramp: 'custom' })
             };
         }

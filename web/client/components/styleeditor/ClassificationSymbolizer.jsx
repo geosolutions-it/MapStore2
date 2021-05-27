@@ -38,7 +38,8 @@ function ClassificationSymbolizer({
         intervals,
         intervalsForUnique = config?.intervalsForUnique || 100,
         reverse,
-        continuous
+        continuous,
+        format
     } = props;
 
     // needed for slider
@@ -94,12 +95,14 @@ function ClassificationSymbolizer({
             />}>
             <Fields
                 properties={props}
+                format={format}
                 config={{
                     attributes,
                     methods,
                     getColors: handleColors,
                     bands,
-                    method
+                    method,
+                    methodEdit: props?.methodEdit
                 }}
                 params={mergedParams}
                 onChange={(values) => onUpdate({

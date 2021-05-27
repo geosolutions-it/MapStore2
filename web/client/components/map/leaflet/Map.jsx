@@ -125,7 +125,9 @@ class LeafletMap extends React.Component {
             Math.round(this.props.zoom));
 
         this.map = map;
-
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         // store zoomControl in the class to target the right control while add/remove
         if (this.props.zoomControl) {
             this.mapZoomControl = L.control.zoom();
@@ -247,10 +249,6 @@ class LeafletMap extends React.Component {
         });
 
         this.drawControl = null;
-
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {

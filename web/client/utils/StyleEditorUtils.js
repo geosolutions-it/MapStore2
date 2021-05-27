@@ -6,22 +6,28 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import head from 'lodash/head';
-import get from 'lodash/get';
-import isArray from 'lodash/isArray';
-import isString from 'lodash/isString';
-import flatten from 'lodash/flatten';
-import isNil from 'lodash/isNil';
-import isEmpty from 'lodash/isEmpty';
-import omit from 'lodash/omit';
-import omitBy from 'lodash/omitBy';
-import isUndefined from 'lodash/isUndefined';
+import {
+    head,
+    get,
+    isArray,
+    isString,
+    flatten,
+    isNil,
+    isEmpty,
+    omit,
+    omitBy,
+    isUndefined,
+    set,
+    castArray
+} from "lodash";
 import uuidv1 from 'uuid/v1';
 
 
 import url from 'url';
 
 import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
+import xml2js from 'xml2js';
+const xmlBuilder = new xml2js.Builder();
 
 export const STYLE_ID_SEPARATOR = '___';
 export const STYLE_OWNER_NAME = 'styleeditor';
@@ -457,9 +463,83 @@ export function validateImageSrc(src) {
     });
 }
 
+export const SUPPORTED_MIME_TYPES = [{
+    label: 'image/png',
+    value: 'image/png'
+}, {
+    label: 'image/jpeg',
+    value: 'image/jpeg'
+}, {
+    label: 'image/gif',
+    value: 'image/gif'
+}, {
+    label: 'image/svg+xml',
+    value: 'image/svg+xml'
+}];
+
+// Get format and graphic path for custom parsing of external graphic
+const getParseContent = (rulesArray, index) => {
+    const { kind, ...symbolizerObj } = rulesArray[index]?.symbolizers?.[0] || {};
+    switch (kind) {
+    case 'Icon':
+        return {
+            baseGraphicPath: 'PointSymbolizer',
+            imgFormat: symbolizerObj?.format
+        };
+    case 'Line':
+        return {
+            baseGraphicPath: 'LineSymbolizer.Stroke.GraphicStroke',
+            imgFormat: symbolizerObj?.graphicStroke?.format
+        };
+    case 'Fill':
+        return {
+            baseGraphicPath: 'PolygonSymbolizer.Fill.GraphicFill',
+            imgFormat: symbolizerObj?.graphicFill?.format
+        };
+    default: return {};
+    }
+};
+/**
+ * Update the external graphic node when Icon symbolizer has image prop with no format specified
+ * @param  {object} options visual styler props
+ * @param  {string} parsedSLD parsed SLD string
+ * @return  {object} returns the updated SLD string with error if any
+ */
+export const updateExternalGraphicNode = (options, parsedSLD) => {
+    let parsedCode = parsedSLD;
+    if (options.format === 'sld') {
+        xml2js.parseString(parsedSLD, { explicitArray: false }, (_, result) => {
+            const rulePath = 'StyledLayerDescriptor.NamedLayer.UserStyle.FeatureTypeStyle.Rule';
+            let rules = castArray(get(result, rulePath, []));
+            rules = flatten(rules.map((rule, i)=> {
+                const { baseGraphicPath, imgFormat } = getParseContent(options.style?.rules || [], i);
+                const externalGraphicPath = `${baseGraphicPath}.Graphic.ExternalGraphic`;
+                const isExternalGraphic = get(rule, externalGraphicPath);
+                const formatPath = `${externalGraphicPath}.Format`;
+                const isFormat = get(rule, formatPath);
+                if (isExternalGraphic && !isFormat && isEmpty(imgFormat)) return null;
+                return isExternalGraphic
+                    ? isFormat
+                        ? rule
+                        : set(rule, formatPath,  imgFormat)
+                    : rule;
+            }));
+            const formatInvalid = rules.some(rule=> rule === null);
+            if (formatInvalid) {
+                parsedCode = '';
+            } else {
+                parsedCode = xmlBuilder.buildObject(set(result, rulePath, rules));
+            }
+        });
+    }
+    const errorObj = isEmpty(parsedCode) ? { messageId: 'styleeditor.imageFormatEmpty', status: 400 } : false;
+    return { parsedCode, errorObj };
+};
+
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
+    SUPPORTED_MIME_TYPES,
     generateTemporaryStyleId,
     generateStyleId,
     extractFeatureProperties,
@@ -471,5 +551,6 @@ export default {
     stringifyNameParts,
     parseJSONStyle,
     formatJSONStyle,
-    validateImageSrc
+    validateImageSrc,
+    updateExternalGraphicNode
 };

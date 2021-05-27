@@ -88,7 +88,8 @@ const RulesEditor = forwardRef(({
         fonts,
         methods,
         getColors,
-        classification
+        classification,
+        format
     } = config;
 
     // needed for slider
@@ -337,6 +338,7 @@ const RulesEditor = forwardRef(({
                                     onUpdate={onUpdate}
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     onReplace={handleReplaceRule}
+                                    format={format}
                                 />
                                 : symbolizers.map(({ kind = '', symbolizerId, ...properties }) => {
                                     const { params, glyph } = symbolizerBlock[kind] || {};
@@ -360,6 +362,7 @@ const RulesEditor = forwardRef(({
                                             }>
                                             <Fields
                                                 properties={properties}
+                                                format={format}
                                                 params={params}
                                                 config={{
                                                     bands,
