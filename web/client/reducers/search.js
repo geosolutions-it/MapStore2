@@ -20,11 +20,11 @@ import {
     UPDATE_RESULTS_STYLE,
     CHANGE_SEARCH_TOOL,
     CHANGE_FORMAT,
-    CHANGE_COORD
+    CHANGE_COORD,
+    HIDE_MARKER
 } from '../actions/search';
 
 import { RESET_CONTROLS } from '../actions/controls';
-import { HIDE_MAPINFO_MARKER } from '../actions/mapInfo';
 import assign from 'object-assign';
 /**
  * Manages the state of the map search with it's results
@@ -132,7 +132,7 @@ function search(state = null, action) {
         return {...state, format: action.format};
     case CHANGE_COORD:
         return {...state, coordinate: {...state.coordinate, [action.coord]: action.val}};
-    case HIDE_MAPINFO_MARKER:
+    case HIDE_MARKER:
         return assign({}, state, {markerPosition: state?.markerPosition?.latlng ? {} : state?.markerPosition});
     default:
         return state;
