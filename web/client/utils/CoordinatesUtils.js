@@ -1030,6 +1030,25 @@ export const getPolygonFromCircle = (center, radius, units = "degrees", steps = 
     return turfCircle(center, radius, {steps, units});
 };
 
+/**
+ * Generates longitude and latitude value from the point
+ * @param {object} point with latlng data
+ * @return {array} corrected longitude and latitude
+ */
+export const getLonLatFromPoint = (point) =>{
+    const latlng = point && point.latlng || null;
+    let lngCorrected = null;
+    /* lngCorrected is the converted longitude in order to have the value between
+         * the range (-180 / +180).
+         * Precision has to be >= than the coordinate editor precision
+         * especially in the case of aeronautical degree editor which is 12
+    */
+    if (latlng) {
+        lngCorrected = latlng && Math.round(latlng.lng * 100000000000000000) / 100000000000000000;
+        lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
+    }
+    return  [lngCorrected, latlng && latlng.lat];
+};
 
 CoordinatesUtils = {
     setCrsLabels,
@@ -1084,7 +1103,7 @@ CoordinatesUtils = {
     crsCodeTable,
     makeNumericEPSG,
     makeBboxFromOWS,
-    getPolygonFromCircle
-
+    getPolygonFromCircle,
+    getLonLatFromPoint
 };
 export default CoordinatesUtils;
