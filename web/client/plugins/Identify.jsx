@@ -270,7 +270,8 @@ const FeatureInfoTriggerSelector = connect((state) => ({
     hoverEnabled: hoverEnabledSelector(state)
 }), {
     onSetMapTrigger: setMapTrigger,
-    onPurgeMapInfoResults: purgeMapInfoResults
+    onPurgeMapInfoResults: purgeMapInfoResults,
+    onHideMapinfoMarker: hideMapinfoMarker
 })(FeatureInfoTriggerSelectorComp);
 
 export default {
