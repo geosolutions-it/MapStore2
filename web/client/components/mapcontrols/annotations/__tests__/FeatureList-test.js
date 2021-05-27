@@ -295,4 +295,15 @@ describe("test FeatureList component", () => {
         TestUtils.Simulate.mouseLeave(featureCard[0]);
         expect(spyOnGeometryHighlight).toNotHaveBeenCalled();
     });
+
+    it('test render defaults with defaultPointType as symbol', () => {
+        ReactDOM.render(<FeaturesList defaultPointType={'symbol'}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+        const labels = container.querySelectorAll(".control-label");
+        expect(labels[0].innerText).toBe('annotations.geometries');
+        const buttons = container.querySelectorAll("button");
+        expect(buttons.length).toBe(5);
+        expect(container.innerText).toContain('annotations.addGeometry');
+    });
 });
