@@ -67,7 +67,8 @@ export const drawSupportActiveSelector = (state) => {
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
 export const annotationsEditingSelector = (state) => get(state, "annotations.editing");
-export const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
+export const mapInfoEnabledSelector = (state) => get(state, "mapInfo.enabled", false);
+export const mapInfoDisabledSelector = (state) => !mapInfoEnabledSelector(state);
 
 /**
  * selects stopGetFeatureInfo from state

@@ -13,15 +13,17 @@ import url from 'url';
 
 import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView } from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
-import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch } from '../actions/search';
+import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker } from '../actions/search';
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
 import { warning } from '../actions/notifications';
 
-import { isValidExtent } from '../utils/CoordinatesUtils';
+import {getLonLatFromPoint, isValidExtent} from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
 import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from "../actions/mapInfo";
-import {getBbox} from "../utils/MapUtils";
-import {mapSelector} from '../selectors/map';
+import { getBbox } from "../utils/MapUtils";
+import { mapSelector } from '../selectors/map';
+import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
+import { shareSelector } from "../selectors/controls";
 
 /*
 it maps params key to function.
@@ -164,16 +166,30 @@ export const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(TOGGLE_CONTROL)
         .filter(({control}) => control === "share")
         .switchMap(() => {
-            const shareEnabled = get(getState(), 'controls.share.enabled');
-            const mapInfoEnabled = get(getState(), 'mapInfo.enabled');
+            const state = getState();
+            const shareEnabled = shareSelector(state);
+            const mapInfoEnabled = mapInfoEnabledSelector(state);
             const shareParams = {bboxEnabled: false, centerAndZoomEnabled: false};
             if (!isUndefined(shareEnabled) && shareEnabled) {
-                return mapInfoEnabled ? Rx.Observable.of(toggleMapInfoState()) : Rx.Observable.empty();
+                let $observable = Rx.Observable.empty();
+                if (mapInfoEnabled) {
+                    let actions = [toggleMapInfoState()];
+                    if (isMapInfoOpen(state)) {
+                        const clickedPoint = clickPointSelector(state);
+                        const [lng, lat] = getLonLatFromPoint(clickedPoint);
+                        const newPoint = {latlng: {lat, lng}};
+                        actions = actions.concat(addMarker(newPoint)); // Retain marker position set by GFI for Share position marker
+                    }
+                    $observable = Rx.Observable.from(actions);
+                }
+                return $observable;
             }
             return Rx.Observable.of(hideMapinfoMarker(),
                 purgeMapInfoResults(),
                 toggleMapInfoState(),
-                setControlProperty("share", "settings", shareParams));
+                setControlProperty("share", "settings", shareParams),
+                hideMarker()
+            );
         });
 
 export default {
