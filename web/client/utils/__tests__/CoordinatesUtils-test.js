@@ -38,7 +38,8 @@ import {
     getPolygonFromCircle,
     getProjections,
     getExtentForProjection,
-    checkIfLayerFitsExtentForProjection
+    checkIfLayerFitsExtentForProjection,
+    getLonLatFromPoint
 } from '../CoordinatesUtils';
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
 import Proj4js from 'proj4';
@@ -923,5 +924,18 @@ describe('CoordinatesUtils', () => {
         };
         const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
         expect(canFitWithBounds).toBe(true);
+    });
+    it('test getLonLatFromPoint', ()=> {
+        const [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: -80}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(-80);
+    });
+    it('test getLonLatFromPoint with lng > +-180', ()=> {
+        let [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: -280}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(80);
+        [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: 280}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(-80);
     });
 });
