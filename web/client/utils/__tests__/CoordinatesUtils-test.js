@@ -35,7 +35,8 @@ import {
     makeBboxFromOWS,
     extractCrsFromURN,
     makeNumericEPSG,
-    getPolygonFromCircle
+    getPolygonFromCircle,
+    getLonLatFromPoint
 } from '../CoordinatesUtils';
 import Proj4js from 'proj4';
 
@@ -821,5 +822,18 @@ describe('CoordinatesUtils', () => {
         expect(isNearlyEqual(polygon.geometry.coordinates[0][50][1], 15.053959221823476)).toBe(true);
         expect(isNearlyEqual(polygon.geometry.coordinates[0][20][0], 39.96717142640955)).toBe(true);
         expect(isNearlyEqual(polygon.geometry.coordinates[0][20][1], 14.956343723081114)).toBe(true);
+    });
+    it('test getLonLatFromPoint', ()=> {
+        const [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: -80}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(-80);
+    });
+    it('test getLonLatFromPoint with lng > +-180', ()=> {
+        let [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: -280}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(80);
+        [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: 280}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(-80);
     });
 });

@@ -20,11 +20,11 @@ import {
     resetSearch,
     changeFormat,
     changeCoord,
-    changeActiveSearchTool
+    changeActiveSearchTool,
+    hideMarker
 } from '../../actions/search';
 
 import { resetControls } from '../../actions/controls';
-import { hideMapinfoMarker } from '../../actions/mapInfo';
 
 describe('Test the search reducer', () => {
     it('search results loading', () => {
@@ -186,10 +186,10 @@ describe('Test the search reducer', () => {
         expect(state).toBe(null);
     });
 
-    it('HIDE INFO MARKER', () => {
+    it('HIDE MARKER', () => {
         const state = search({markerPosition: {
             latlng: {lat: 0, lng: 0}
-        }}, hideMapinfoMarker());
+        }}, hideMarker());
         expect(JSON.stringify(state.markerPosition)).toBe(JSON.stringify({}));
     });
 });
