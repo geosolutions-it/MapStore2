@@ -269,7 +269,9 @@ const FeatureInfoTriggerSelector = connect((state) => ({
     trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click',
     hoverEnabled: hoverEnabledSelector(state)
 }), {
-    onSetMapTrigger: setMapTrigger
+    onSetMapTrigger: setMapTrigger,
+    onPurgeMapInfoResults: purgeMapInfoResults,
+    onHideMapinfoMarker: hideMapinfoMarker
 })(FeatureInfoTriggerSelectorComp);
 
 export default {
