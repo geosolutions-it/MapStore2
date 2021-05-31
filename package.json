@@ -197,7 +197,7 @@
     "leaflet.gridlayer.googlemutant": "0.6.4",
     "leaflet.locatecontrol": "0.62.0",
     "leaflet.nontiledlayer": "1.0.7",
-    "lodash": "4.17.19",
+    "lodash": "4.17.21",
     "lrucache": "1.0.3",
     "moment": "2.21.0",
     "node-geo-distance": "1.2.0",
