@@ -64,6 +64,7 @@ export const storeDetailsInfoEpic = (action$, store) =>
     action$.ofType(MAP_INFO_LOADED)
         .switchMap(() => {
             const mapId = mapIdSelector(store.getState());
+            const isTutorialRunning = store.getState()?.tutorial?.run;
             return !mapId ?
                 Rx.Observable.empty() :
                 Rx.Observable.fromPromise(
@@ -86,7 +87,7 @@ export const storeDetailsInfoEpic = (action$, store) =>
 
                         return Rx.Observable.of(
                             detailsLoaded(mapId, details.value, detailsSettings),
-                            ...(detailsSettings.showAtStartup ? [openDetailsPanel()] : [])
+                            ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
                         );
                     });
         });
