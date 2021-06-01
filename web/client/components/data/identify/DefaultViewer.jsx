@@ -14,7 +14,7 @@ import HTML from '../../../components/I18N/HTML';
 import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
 import ViewerPage from './viewers/ViewerPage';
-import { isEmpty, reverse } from 'lodash';
+import { isEmpty, reverse, isString } from 'lodash';
 import { getFormatForResponse } from '../../../utils/IdentifyUtils';
 
 class DefaultViewer extends React.Component {
@@ -154,7 +154,7 @@ class DefaultViewer extends React.Component {
                 key={i}
                 collapsible={this.props.collapsible}
                 header={PageHeader ? <span><PageHeader
-                    size={responses.length}
+                    size={responses.filter(resp => !isString(resp.response)).length}
                     {...this.props.headerOptions}
                     {...layerMetadata}
                     index={this.props.index}
