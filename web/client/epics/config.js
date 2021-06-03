@@ -108,6 +108,12 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
         .catch((e) => Observable.of(configureError(e, mapId)));
 };
 
+/**
+ * Intercepts the LOAD_MAP_CONFIG action and loads the Map configuration for the given configName and mapId.
+ * This epic loads also the user session, if enabled. The session load is skipped if `overrideConfig` is passed (e.g. for context loading it is delegated to it)
+ * Hint: Use `overrideConfig={}` in the action to skip the session loading at all.
+ * @memberof epics.config
+ */
 export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap(({configName, mapId, config, mapInfo, overrideConfig}) => {
