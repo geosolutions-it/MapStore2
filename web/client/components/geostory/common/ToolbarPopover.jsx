@@ -35,7 +35,7 @@ class ToolbarPopover extends React.Component {
     getContainerNode = () => {
         // The overlay contain should always have a target root container to ensure all mapstore2 styles can be applied.
         // The parentNode is the default and fallback is got from the themePrefix
-        return this.parentNode || document.querySelector('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div") || document.body
+        return this.parentNode || document.querySelector('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div") || document.body;
     }
 
     render() {
