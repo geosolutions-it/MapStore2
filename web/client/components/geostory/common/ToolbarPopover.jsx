@@ -10,6 +10,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Popover, OverlayTrigger } from 'react-bootstrap';
+import ConfigUtils from '../../../utils/ConfigUtils';
 
 /**
  * Toolbar for AddBar.
@@ -31,6 +32,12 @@ class ToolbarPopover extends React.Component {
         id: ''
     };
 
+    getContainerNode = () => {
+        // The overlay contain should always have a target root container to ensure all mapstore2 styles can be applied.
+        // The parentNode is the default and fallback is got from the themePrefix
+        return this.parentNode || document.querySelector('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div") || document.body;
+    }
+
     render() {
         return (
             <div
@@ -39,7 +46,7 @@ class ToolbarPopover extends React.Component {
                 <OverlayTrigger
                     ref={trigger => { this.trigger = trigger; }}
                     trigger={['click']}
-                    container={this.parentNode}
+                    container={this.getContainerNode()}
                     placement={this.props.placement}
                     rootClose
                     overlay={
