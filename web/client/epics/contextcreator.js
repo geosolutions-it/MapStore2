@@ -492,7 +492,7 @@ export const mapViewerLoadEpic = (action$, store) => action$
             Rx.Observable.merge(
                 Rx.Observable.of(
                     initMap(true),
-                    loadMapConfig(configUrl, null, cloneDeep(mapConfig)),
+                    loadMapConfig(configUrl, null, cloneDeep(mapConfig), undefined, {}),
                     mapViewerLoaded(true)
                 )
             );
