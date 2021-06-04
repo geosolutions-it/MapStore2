@@ -55,6 +55,7 @@ export const loadNewMapEpic = (action$) =>
  * @param {Object} overrideConfig override object of the given or loaded config, allows to apply a
  * partial override of the main configuration (e.g. for sessions management)
  * @returns {Observable} map configuration flow
+ * @ignore
  */
 const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, overrideConfig = {}) => {
     // delay here is to postpone map load to ensure that
