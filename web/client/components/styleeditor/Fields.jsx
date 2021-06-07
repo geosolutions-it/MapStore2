@@ -12,7 +12,7 @@ import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
 import isNaN from 'lodash/isNaN';
-import isEqual from 'lodash/isEqual';
+import castArray from 'lodash/castArray';
 import Toolbar from '../misc/toolbar/Toolbar';
 import ColorSelector from '../style/ColorSelector';
 import Slider from '../misc/Slider';
@@ -222,19 +222,23 @@ export const fields = {
             if (!value) {
                 return options;
             }
-            return [{ value, label: value }].reduce(updateOptions, options);
+            // we get an array when using some properties
+            // eg. font-family
+            const values = castArray(value);
+            return values
+                .map(entry => ({ value: entry, label: entry }))
+                .reduce(updateOptions, options);
         }
 
         const options = getOptions(props);
 
         const [newOptions, setNewOptions] = useState(initOptions(options));
         useEffect(() => {
-            !multi && !isEqual(options, newOptions) && setNewOptions(initOptions(options));
-        }, [options]);
-
-        useEffect(() => {
-            multi && setNewOptions(initOptions(options));
-        }, [options?.length]);
+            setNewOptions(initOptions(options));
+            // we should compare the previous and new options inside the dependencies
+            // we could try the stringify for now because we have a usually small and constant array
+            // this is to avoid infinite loop inside the style editor
+        }, [JSON.stringify(options)]);
 
         const SelectInput = creatable
             ? ReactSelectCreatable
