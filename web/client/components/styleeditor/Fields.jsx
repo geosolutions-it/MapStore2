@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef, useState, useEffect } from 'react';
-import { FormGroup, FormControl as FormControlRB, Glyphicon } from 'react-bootstrap';
+import React, { useRef, useState } from 'react';
+import { FormGroup, FormControl as FormControlRB } from 'react-bootstrap';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
 import isNaN from 'lodash/isNaN';
-import isEqual from 'lodash/isEqual';
 import Toolbar from '../misc/toolbar/Toolbar';
 import ColorSelector from '../style/ColorSelector';
 import Slider from '../misc/Slider';
@@ -20,17 +19,14 @@ import ColorRamp from './ColorRamp';
 import DashArray from '../style/vector/DashArray';
 import ThemaClassesEditor from '../style/ThemaClassesEditor';
 import Message from '../I18N/Message';
-import Select from 'react-select';
 import localizedProps from '../misc/enhancers/localizedProps';
 import PropertyField from './PropertyField';
 import MarkSelector from './MarkSelector';
 import Band from './Band';
 import IconInput from './IconInput';
+import SelectInput from './SelectInput';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
-const ReactSelect = localizedProps(['placeholder', 'noResultsText'])(Select);
-
-const ReactSelectCreatable = localizedProps(['placeholder', 'noResultsText'])(Select.Creatable);
 
 export const fields = {
     color: ({
@@ -190,84 +186,23 @@ export const fields = {
             </PropertyField>
         );
     },
-    select: ({
-        label,
-        value,
-        config: {
-            getOptions = () => [],
-            selectProps = {},
-            isValid
-        },
-        onChange,
-        disabled,
-        visible = true,
-        ...props
-    }) => {
-        if (!visible) return null;
+    select: (props) => {
         const {
-            creatable,
-            clearable = false,
-            multi
-        } = selectProps;
-
-        function updateOptions(options = [], newValue) {
-            const optionsValues = options.map(option => option.value);
-            const isMissing = newValue?.value && optionsValues.indexOf(newValue.value) === -1;
-            return isMissing
-                ? [ newValue, ...options]
-                : options;
-        }
-
-        function initOptions(options) {
-            if (!value) {
-                return options;
-            }
-            return [{ value, label: value }].reduce(updateOptions, options);
-        }
-
-        const options = getOptions(props);
-
-        const [newOptions, setNewOptions] = useState(initOptions(options));
-        useEffect(() => {
-            !multi && !isEqual(options, newOptions) && setNewOptions(initOptions(options));
-        }, [options]);
-
-        useEffect(() => {
-            multi && setNewOptions(initOptions(options));
-        }, [options?.length]);
-
-        const SelectInput = creatable
-            ? ReactSelectCreatable
-            : ReactSelect;
+            label,
+            value,
+            config: {
+                isValid
+            },
+            visible = true
+        } = props;
+        if (!visible) return null;
         const valid = !isValid || isValid({ value });
         return (
             <PropertyField
                 label={label}
                 invalid={!valid}>
                 <SelectInput
-                    disabled={disabled}
-                    clearable={clearable}
-                    placeholder="styleeditor.selectPlaceholder"
-                    noResultsText="styleeditor.noResultsSelectInput"
-                    {...selectProps}
-                    options={newOptions.map((option) => ({
-                        ...option,
-                        label: option.labelId
-                            ? <><Message msgId={option.labelId}/>
-                                {option.glyphId && <Glyphicon style={{ marginLeft: 10 }} glyph={option.glyphId}/>}
-                            </>
-                            : option.label
-                    }))}
-                    value={value}
-                    onChange={option => {
-                        if (multi) {
-                            return onChange(option.length > 0
-                                ? option.map((entry) => entry.value)
-                                : undefined);
-                        }
-                        setNewOptions(updateOptions(newOptions, option));
-                        return onChange(option.value);
-                    }}
+                    {...props}
                 />
             </PropertyField>
         );
