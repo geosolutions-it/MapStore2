@@ -386,7 +386,7 @@ export const mouseMoveMapEventEpic = (action$, {getState}) =>
         .switchMap(({position, layer}) => {
             const isAnnotationsEnabled = createControlEnabledSelector('annotations')(getState());
             const isMeasureEnabled = measureSelector(getState());
-            const isMouseOut = getState().mousePosition.mouseOut;
+            const isMouseOut = getState()?.mousePosition?.mouseOut;
             const isMouseMoveIdentifyDisabled = !isMouseMoveIdentifyActiveSelector(getState());
             if (isMouseMoveIdentifyDisabled || isAnnotationsEnabled || isMeasureEnabled || isMouseOut) {
                 return Rx.Observable.empty();
