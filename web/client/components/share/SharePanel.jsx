@@ -28,6 +28,7 @@ import {
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
+import { getLonLatFromPoint } from '../../utils/CoordinatesUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
@@ -172,26 +173,6 @@ class SharePanel extends React.Component {
         });
     }
 
-    /**
-     * Generates longitude and latitude value from the point prop
-     * @param {object} point with latlng data
-     * @return {array} corrected longitude and latitude
-     */
-    getLonLat = (point) =>{
-        const latlng = point && point.latlng || null;
-        let lngCorrected = null;
-        /* lngCorrected is the converted longitude in order to have the value between
-             * the range (-180 / +180).
-             * Precision has to be >= than the coordinate editor precision
-             * especially in the case of aeronautical degree editor which is 12
-        */
-        if (latlng) {
-            lngCorrected = latlng && Math.round(latlng.lng * 100000000000000000) / 100000000000000000;
-            lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
-        }
-        return  [lngCorrected, latlng && latlng.lat];
-    }
-
     getShareUrl = () => {
         const { settings, advancedSettings } = this.props;
         const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
@@ -261,7 +242,7 @@ class SharePanel extends React.Component {
     }
 
     getCoordinates = (props) => {
-        const lonLat = this.getLonLat(props.point);
+        const lonLat = getLonLatFromPoint(props.point);
         const {x, y} = props.center || {x: "", y: ""};
         const isValidLatLng = lonLat.filter(coord=> coord !== null);
         return isValidLatLng.length > 0 ? lonLat : [x, y];

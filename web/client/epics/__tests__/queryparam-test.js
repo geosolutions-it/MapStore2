@@ -128,6 +128,27 @@ describe('queryparam epics', () => {
                 done();
             }, state);
     });
+    it('test disableGFIForShareEpic, on share panel open with mapInfo enabled and mapInfo open', (done)=>{
+
+        const NUMBER_OF_ACTIONS = 2;
+        const state = {controls: {share: {enabled: true}}, mapInfo: {enabled: true, clickPoint: {latlng: {lat: 40, lng: -80}}, requests: ["test"]}};
+
+        testEpic(
+            addTimeoutEpic(disableGFIForShareEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                toggleControl('share', null)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe("TOGGLE_MAPINFO_STATE");
+                    expect(actions[1].type).toBe("TEXT_SEARCH_ADD_MARKER");
+                    expect(actions[1].markerPosition).toEqual({"latlng": {"lat": 40, "lng": -80}});
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
     it('test disableGFIForShareEpic, on share panel close', (done)=>{
         const state = {controls: {share: { enabled: false }}};
         const NUMBER_OF_ACTIONS = 4;
