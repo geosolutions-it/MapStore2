@@ -99,6 +99,7 @@
             "templateFormatDescription": "Personnaliser le format des résultats d'interrogation des attributs",
             "hideFormatTitle": "DÉSACTIVER L'IDENTIFICATION",
             "hideFormatDescription": "Désactiver les informations sur les caractéristiques de cette couche",
+            "styleWarning": "L'éditeur de style de calque pour le type de géométrie '{geometryType}' n'est pas pris en charge.",
             "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",

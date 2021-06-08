@@ -99,6 +99,7 @@
             "templateFormatDescription": "Personalizar el formato de resultados de información de la capa",
             "hideFormatTitle": "DESACTIVAR IDENTIFICAR",
             "hideFormatDescription": "Deshabilite la información de la entidad para esta capa",
+            "styleWarning": "El editor de estilo de capa para el tipo de geometría '{geometryType}' no es compatible.",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "visibilityLimits": {
