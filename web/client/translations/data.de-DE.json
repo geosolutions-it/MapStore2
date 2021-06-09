@@ -99,6 +99,7 @@
             "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
             "hideFormatTitle": "IDENTIFIZIERUNG DEAKTIVIEREN",
             "hideFormatDescription": "Deaktivieren Sie die Funktionsinformationen für diese Ebene",
+            "styleWarning": "Ebenenstil-Editor für Geometrietyp '{geometryType}' wird nicht unterstützt.",
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
             "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
