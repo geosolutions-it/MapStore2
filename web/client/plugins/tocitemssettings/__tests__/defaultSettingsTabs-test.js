@@ -276,8 +276,8 @@ describe('TOCItemsSettings - SimpleVectorStyleEditor rendered items', () => {
             element: {
                 features: [
                     {geometry: {
-                            type: "Geometry"
-                        }}
+                        type: "Geometry"
+                    }}
                 ]
             }
         };
@@ -298,8 +298,8 @@ describe('TOCItemsSettings - SimpleVectorStyleEditor rendered items', () => {
             element: {
                 features: [
                     {geometry: {
-                            type: "MultiPolygon"
-                        }}
+                        type: "MultiPolygon"
+                    }}
                 ]
             }
         };
