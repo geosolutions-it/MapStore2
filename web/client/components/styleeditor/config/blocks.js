@@ -443,10 +443,7 @@ const getBlocks = (/* config = {} */) => {
                     }),
                     colorMapType: property.colorMapType({
                         key: 'colorMapType',
-                        label: 'styleeditor.colorMapType.label',
-                        isDisabled: (value, properties) =>
-                            properties?.ramp === 'custom'
-                            || properties?.method === 'customInterval'
+                        label: 'styleeditor.colorMapType.label'
                     }),
                     method: property.select({
                         key: 'method',
