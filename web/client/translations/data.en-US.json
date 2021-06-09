@@ -99,6 +99,7 @@
             "templateFormatDescription": "Customize feature info results format",
             "hideFormatTitle": "DISABLE IDENTIFY",
             "hideFormatDescription": "Disable the feature info for this layer",
+            "styleWarning": "Layer style editor for geometry type '{geometryType}' is not supported.",
             "templateFormatInfoAlert1": "Click on edit button to add a new template.",
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",

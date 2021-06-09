@@ -99,6 +99,7 @@
             "templateFormatDescription": "Personalizza il formato di risposta",
             "hideFormatTitle": "DISABILITA IDENTIFICA",
             "hideFormatDescription": "Disabilita le informazioni sulla funzionalità per questo livello",
+            "styleWarning": "L'editore dello stile di livello per il tipo di geometria '{geometryType}' non è supportato.",
             "templateFormatInfoAlert1": "Click sul bottone di modifica per aggiungere un nuovo template.",
             "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
             "templateFormatInfoAlertExample": "id della feature è ${ properties }",
