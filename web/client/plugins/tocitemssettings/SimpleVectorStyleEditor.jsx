@@ -157,7 +157,7 @@ const SimpleVectorStyleEditor = compose(
         </React.Fragment>);
     } else {
         // Fail gracefully if the geometry type is not supported for styling
-        editorComponent = (<div style={{padding: 20}}>
+        editorComponent = (<div style={{padding: 20, color: "red"}}>
             <Message msgId={'layerProperties.styleWarning'} msgParams={{geometryType}} />
         </div>);
     }
