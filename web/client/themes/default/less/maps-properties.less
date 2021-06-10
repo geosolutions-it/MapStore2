@@ -17,13 +17,13 @@
         display: flex;
         padding: 0 15px;
         .ms-col-grab {
-            width: @icon-size / 2;
+            width: (@icon-size / 2);
             padding: 0;
             overflow: hidden;
             display: flex;
             span {
-                width: @icon-size / 4;
-                height: @icon-size / 2;
+                width: (@icon-size / 4);
+                height: (@icon-size / 2);
                 margin: auto;
             }
         }
@@ -60,7 +60,7 @@
         }
     }
     .col-xs-12 {
-        margin-top: ( @square-btn-size - 34px) / 2;
+        margin-top: (( @square-btn-size - 34px) / 2);
         .form-group {
 
             height: @square-btn-size;
@@ -71,29 +71,34 @@
             label {
 
                 .col-xs-6;
+                padding: 0;
                 float: left;
                 font-weight: normal;
                 line-height: 34px;
                 margin: 0;
-                margin-top:( @square-btn-size - 34px) / 2;
+                margin-top:(( @square-btn-size - 34px) / 2);
             }
             input {
-                margin-top:( @square-btn-size - 34px) / 2;
+                margin-top:(( @square-btn-size - 34px) / 2);
                 float: left;
                 .col-xs-6;
+                padding: 4px 8px;
             }
         }
     }
     .dropzone-thumbnail-container, .dropzone-filedrop-container {
         label {
             .col-xs-6;
+            padding: 0;
             float: left;
+            
             font-weight: normal;
         }
         .dropzone {
             overflow: hidden;
             float: left;
             .col-xs-6;
+            padding: 0;
             transition: 0.3s;
             &:hover {
                 transform: scale(1.05);
@@ -227,7 +232,7 @@
             }
             button {
                 float: right;
-                margin-top: (@square-btn-size - @square-btn-medium-size) / 2;
+                margin-top: ((@square-btn-size - @square-btn-medium-size) / 2);
             }
             .ms-permission-title {
                 width: ~"calc(50% - 20px)";
@@ -251,13 +256,13 @@
         margin: 0;
 
         .m-label {
-            margin-top:( @square-btn-size - @square-btn-medium-size) / 2;
+            margin-top:(( @square-btn-size - @square-btn-medium-size) / 2);
             height: @square-btn-medium-size;
             line-height: @square-btn-medium-size;
         }
 
         .btn-group {
-            margin-top:( @square-btn-size - @square-btn-medium-size) / 2;
+            margin-top:(( @square-btn-size - @square-btn-medium-size) / 2);
         }
 
         .ms-details-sheet {
