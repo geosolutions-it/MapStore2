@@ -1,0 +1,10 @@
+// Overrides for react-widget styles
+@import 'react-widgets/lib/less/react-widgets.less';
+// override the computation of the buttons using parenthesis
+// to get the correct value
+.rw-numberpicker {
+    .rw-btn {
+        height: (@input-height / 2);
+        line-height: (@input-height / 2);
+    }
+}

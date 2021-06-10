@@ -250,7 +250,7 @@
 }
 
 .ms-sections-container-small-screen {
-    @ms-story-padding-small-screen: @square-btn-medium-size / 2 + 8px;
+    @ms-story-padding-small-screen: (@square-btn-medium-size / 2 + 8px);
     .ms-section .ms-section-background .ms-section-background-container .ms-media {
         /* alignment of content */
         .ms-story-align-center();
@@ -296,25 +296,25 @@
         &.ms-content-text {
             .ms-content-body {
                 /* font size for all the main classes in text content */
-                p { font-size: @ms-story-font-size-base * 0.75; }
-                h1 { font-size: @ms-story-font-size-h1 * 0.75; }
-                h2 { font-size: @ms-story-font-size-h2 * 0.75; }
-                h3 { font-size: @ms-story-font-size-h3 * 0.75; }
-                h4 { font-size: @ms-story-font-size-h4 * 0.75; }
-                h5 { font-size: @ms-story-font-size-h5 * 0.75; }
-                h6 { font-size: @ms-story-font-size-h6 * 0.75; }
+                p { font-size: (@ms-story-font-size-base * 0.75); }
+                h1 { font-size: (@ms-story-font-size-h1 * 0.75); }
+                h2 { font-size: (@ms-story-font-size-h2 * 0.75); }
+                h3 { font-size: (@ms-story-font-size-h3 * 0.75); }
+                h4 { font-size: (@ms-story-font-size-h4 * 0.75); }
+                h5 { font-size: (@ms-story-font-size-h5 * 0.75); }
+                h6 { font-size: (@ms-story-font-size-h6 * 0.75); }
             }
         }
     }
     .ms-section.ms-expandable-background {
         &.ms-section-title .ms-content-text,
         &.ms-section-immersive .ms-content-column {
-            padding-right: @square-btn-medium-size + 8px;
+            padding-right: (@square-btn-medium-size + 8px);
         }
     }
 }
 .ms-sections-container-medium-screen {
-    @ms-story-padding-medium-screen: @square-btn-medium-size * 1.5;
+    @ms-story-padding-medium-screen: (@square-btn-medium-size * 1.5);
     .ms-section .ms-section-background .ms-section-background-container {
         /* size of content */
         &.ms-size-full .ms-media { width: @ms-story-size-full; }
@@ -336,13 +336,13 @@
     .ms-content {
         &.ms-content-text {
             .ms-content-body {
-                p { font-size: @ms-story-font-size-base * 0.80; }
-                h1 { font-size: @ms-story-font-size-h1 * 0.80; }
-                h2 { font-size: @ms-story-font-size-h2 * 0.80; }
-                h3 { font-size: @ms-story-font-size-h3 * 0.80; }
-                h4 { font-size: @ms-story-font-size-h4 * 0.80; }
-                h5 { font-size: @ms-story-font-size-h5 * 0.80; }
-                h6 { font-size: @ms-story-font-size-h6 * 0.80; }
+                p { font-size: (@ms-story-font-size-base * 0.80); }
+                h1 { font-size: (@ms-story-font-size-h1 * 0.80); }
+                h2 { font-size: (@ms-story-font-size-h2 * 0.80); }
+                h3 { font-size: (@ms-story-font-size-h3 * 0.80); }
+                h4 { font-size: (@ms-story-font-size-h4 * 0.80); }
+                h5 { font-size: (@ms-story-font-size-h5 * 0.80); }
+                h6 { font-size: (@ms-story-font-size-h6 * 0.80); }
             }
         }
         /* size of content */
@@ -482,7 +482,7 @@
                 .ms-content-toolbar {
                     display: flex;
                     padding: 0 16px;
-                    padding-top: @square-btn-medium-size / 2;
+                    padding-top: (@square-btn-medium-size / 2);
                     .btn-group {
                         margin-right: 0;
                         margin-left: auto;
@@ -498,7 +498,7 @@
             border-top: 1px solid @ms-story-bg-grey;
             border-right: 1px solid @ms-story-bg-grey;
             border-left: 1px solid @ms-story-bg-grey;
-            width: @square-btn-medium-size + 2;
+            width: (@square-btn-medium-size + 2);
             border-top-left-radius: 50%;
             margin-left: 50%;
             transform: translateX(-50%);
@@ -550,8 +550,8 @@
                 /* render the toolbar has a floating container at top left corner of title container */
                 .ms-content-toolbar {
                     position: absolute;
-                    margin-left: -@square-btn-medium-size / 2;
-                    margin-top: -@square-btn-medium-size * 0.6;
+                    margin-left: (-@square-btn-medium-size / 2);
+                    margin-top: (-@square-btn-medium-size * 0.6);
                     padding: 0;
                     z-index: 2;
                     .shadow-soft();
@@ -563,8 +563,8 @@
                 where the alignment effect is not visible without this improvement
                 */
                 &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
-                &.ms-align-left .ms-content-body { margin-left: @square-btn-medium-size + 8px; margin-right: auto; }
-                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: @square-btn-medium-size + 8px; }
+                &.ms-align-left .ms-content-body { margin-left: (@square-btn-medium-size + 8px); margin-right: auto; }
+                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: (@square-btn-medium-size + 8px); }
                 /* text on full size should fill all the width of container */
                 &.ms-size-full {
                     width: 100%;
@@ -697,7 +697,7 @@
                 min-width: 500px;
                     display: flex; // align vertically the content
                     pointer-events: none; // pass pointer events to background (this div takes full width and height)
-                    padding: 64px @square-btn-medium-size + 6px;
+                    padding: 64px (@square-btn-medium-size + 6px);
                     padding-top: 164px;
                 &>.ms-content-body {
                     // override background of paragraph (or title) content.
@@ -707,8 +707,8 @@
                     &>.ms-content-toolbar {
                         position: absolute;
                         z-index: 2;
-                        margin-left: -@square-btn-medium-size / 2;
-                        margin-top: -@square-btn-medium-size * 0.6;
+                        margin-left: (-@square-btn-medium-size / 2);
+                        margin-top: (-@square-btn-medium-size * 0.6);
                         padding: 0;
                         .shadow-soft();
                     }
