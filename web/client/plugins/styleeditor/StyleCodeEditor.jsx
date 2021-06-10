@@ -198,11 +198,11 @@ function StyleEditor({
                     <Toolbar
                         buttons={[
                             {
-                                className: 'square-button-md no-border',
-                                glyph: 'code',
-                                active: editorType === 'textarea',
+                                className: 'square-button-xs no-border',
+                                bsSize: 'xs',
                                 disabled: loading,
-                                tooltipId: editorType === 'visual'
+                                active: editorType === 'textarea',
+                                textId: editorType === 'visual'
                                     ? 'styleeditor.switchToTextareaEditor'
                                     : 'styleeditor.switchToVisualEditor',
                                 onClick: () => {
