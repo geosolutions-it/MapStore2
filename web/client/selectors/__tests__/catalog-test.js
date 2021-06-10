@@ -141,6 +141,10 @@ describe('Test catalog selectors', () => {
         const bgService = retVal.default_map_backgrounds;
         expect(bgService.readOnly).toBe(true);
     });
+    it('test servicesSelectorWithBackgrounds with empty state', () => {
+        const retVal = servicesSelectorWithBackgrounds({});
+        expect(retVal).toBeFalsy();
+    });
     it('test newServiceTypeSelector', () => {
         const retVal = newServiceTypeSelector(state);
         expect(retVal).toExist();
