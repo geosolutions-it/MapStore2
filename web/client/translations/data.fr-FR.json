@@ -514,7 +514,7 @@
         "toc": {
             "toggleLayerVisibility": "Changer la visibilité de la couche",
             "toggleGroupVisibility": "Changer la visibilité du groupe",
-            "displayLegendAndTools": "Afficher la légende et les outils",
+            "displayLegendAndTools": "Afficher la légende",
             "zoomToLayerExtent": "Zoomer sur l'étendue de la couche",
             "addLayer": "Ajouter une couche",
             "addLayerToGroup": "Ajouter une couche au groupe sélectionné",

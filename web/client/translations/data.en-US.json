@@ -514,7 +514,7 @@
         "toc": {
             "toggleLayerVisibility": "Toggle layer visibility",
             "toggleGroupVisibility": "Toggle group visibility",
-            "displayLegendAndTools": "Display legend and tools",
+            "displayLegendAndTools": "Display legend",
             "zoomToLayerExtent": "Zoom to layer extent",
             "addLayer": "Add layer",
             "addLayerToGroup": "Add layer to selected group",

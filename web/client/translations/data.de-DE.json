@@ -514,7 +514,7 @@
         "toc": {
             "toggleLayerVisibility": "Ebenensichtbarkeit umschalten",
             "toggleGroupVisibility": "Gruppensichtbarkeit umschalten",
-            "displayLegendAndTools": "Legende und Werkzeuge einblenden",
+            "displayLegendAndTools": "Legende einblenden",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "addLayer": "Ebene hinzufügen",
             "addLayerToGroup": "Ebene zur ausgewählten Gruppe hinzufügen",
