@@ -753,7 +753,7 @@
             "decimal": "Decimal",
             "aeronautical": "Aeronáutica",
             "changeSearchInputField": "Cambiar la herramienta de búsqueda",
-            "addressSearch": "Buscar por nombre de ubicación",
+            "addressSearch": "Ubicar en …",
             "coordinatesSearch": "buscar por coordenadas",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un servicio de búsqueda",
