@@ -198,7 +198,7 @@ function StyleEditor({
                     <Toolbar
                         buttons={[
                             {
-                                className: 'square-button-xs no-border',
+                                className: 'no-border',
                                 bsSize: 'xs',
                                 disabled: loading,
                                 active: editorType === 'textarea',
