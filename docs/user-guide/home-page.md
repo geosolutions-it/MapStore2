@@ -13,7 +13,7 @@ In order to get started, let's take a look at the portal interface and get an id
 
 Accessing [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) as anonymous user, the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) shows up as in the figure below:
 
-<img src="../img/home-page/homepage-anonym.jpg" class="ms-docimage"/>
+<img src="../img/home-page/homepage.jpg" class="ms-docimage"/>
 
 The anonymous user is allowed to:
 
