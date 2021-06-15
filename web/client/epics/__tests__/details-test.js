@@ -98,7 +98,7 @@ describe('details epics tests', () => {
         ConfigUtils.getDefaults = oldGetDefaults;
     });
 
-    it.('test closeDetailsPanel', (done) => {
+    it('test closeDetailsPanel', (done) => {
 
         store.dispatch(closeDetailsPanel());
 
