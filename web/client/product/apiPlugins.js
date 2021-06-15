@@ -23,7 +23,8 @@ export default {
         TOCPlugin: require('../plugins/TOC').default,
         ToolbarPlugin: require('../plugins/Toolbar').default,
         ZoomAllPlugin: require('../plugins/ZoomAll').default,
-        FullScreenPlugin: require('../plugins/FullScreen').default
+        FullScreenPlugin: require('../plugins/FullScreen').default,
+        MousePosition: require('../plugins/MousePosition').default
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,
