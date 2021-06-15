@@ -138,7 +138,7 @@ const editors = {
     textarea: ConnectedTextareaEditor
 };
 
-function StyleEditor({
+export function StyleEditor({
     code,
     error,
     canEdit,
