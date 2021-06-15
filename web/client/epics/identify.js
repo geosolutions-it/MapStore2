@@ -48,7 +48,7 @@ import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojec
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
-
+import { mouseOutSelector } from '../selectors/mousePosition';
 import {getBbox, getCurrentResolution, parseLayoutValue, getHook, GET_COORDINATES_FROM_PIXEL_HOOK, GET_PIXEL_FROM_COORDINATES_HOOK} from '../utils/MapUtils';
 import {buildIdentifyRequest, filterRequestParams} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
@@ -386,7 +386,7 @@ export const mouseMoveMapEventEpic = (action$, {getState}) =>
         .switchMap(({position, layer}) => {
             const isAnnotationsEnabled = createControlEnabledSelector('annotations')(getState());
             const isMeasureEnabled = measureSelector(getState());
-            const isMouseOut = getState().mousePosition.mouseOut;
+            const isMouseOut = mouseOutSelector(getState());
             const isMouseMoveIdentifyDisabled = !isMouseMoveIdentifyActiveSelector(getState());
             if (isMouseMoveIdentifyDisabled || isAnnotationsEnabled || isMeasureEnabled || isMouseOut) {
                 return Rx.Observable.empty();
