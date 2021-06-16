@@ -19,7 +19,7 @@ import {
 } from '../actions/details';
 import { MAP_INFO_LOADED } from '../actions/config';
 import { closeFeatureGrid } from '../actions/featuregrid';
-import { toggleControl } from '../actions/controls';
+import { toggleControl, setControlProperty } from '../actions/controls';
 
 import {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
@@ -56,7 +56,7 @@ export const fetchDataForDetailsPanel = (action$, store) =>
 export const closeDetailsPanelEpic = (action$) =>
     action$.ofType(CLOSE_DETAILS_PANEL)
         .switchMap(() => Rx.Observable.from( [
-            toggleControl("details", "enabled")
+            setControlProperty("details", "enabled", false)
         ])
         );
 
