@@ -82,6 +82,7 @@ const Dock = connect(createSelector(
   * @prop {boolean} cfg.showFilteredObject default false. Displays spatial filter selection area when true
   * @prop {boolean} cfg.showTimeSync default false. Shows the button to enable time sync
   * @prop {boolean} cfg.timeSync default false. If true, the timeSync is active by default.
+  * @prop {boolean} cfg.isSyncActive default false. If true, the wms sync tool will be active by default.
   * @prop {number} cfg.maxZoom the maximum zoom level for the "zoom to feature" functionality
   * @classdesc
   * FeatureEditor Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
