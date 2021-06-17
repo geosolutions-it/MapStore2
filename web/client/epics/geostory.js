@@ -521,7 +521,8 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
     action$.ofType(UPDATE_CURRENT_PAGE)
         .let(semaphore(
             action$.ofType(GEOSTORY_SCROLLING)
-                .map(a => !a.value)
+                .map(a => !a.status)
+                .startWith(true)
         ))
         .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
         .switchMap(({sectionId, columnId}) => {
@@ -544,10 +545,9 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
  */
 export const scrollOnLoad = (action$) =>
     action$.ofType(SET_CURRENT_STORY)
-        .switchMap(({delay = 500}) => {
+        .switchMap(({delay = 2000}) => {
             const storyIds = window?.location?.hash?.split('/');
             return Observable.of(storyIds)
-                .delay(delay)
                 .do(() => {
                     if (window?.location?.hash?.includes('shared')) {
                             scrollToContent(storyIds[7] || storyIds[5], {block: "start", behavior: "auto"});
