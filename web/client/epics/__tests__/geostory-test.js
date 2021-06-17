@@ -33,8 +33,7 @@ import {
     editWebPageComponent,
     handlePendingGeoStoryChanges,
     loadStoryOnHistoryPop,
-    scrollOnLoad,
-    urlUpdateOnScroll
+    scrollOnLoad
 } from '../geostory';
 import {
     ADD,
@@ -61,8 +60,7 @@ import {
     editWebPage,
     setResource,
     SET_PENDING_CHANGES,
-    LOAD_GEOSTORY,
-    updateCurrentPage
+    LOAD_GEOSTORY
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -1634,18 +1632,9 @@ describe('Geostory Epics', () => {
             });
         });
     });
-
-    it('urlUpdateOnScroll', (done) => {
-        const NUM_ACTIONS = 1;
-        testEpic(addTimeoutEpic(urlUpdateOnScroll, 100), NUM_ACTIONS, [updateCurrentPage({sectionId: "sectionId"})],
-            (actions) => {
-                expect(actions[0].type).toBe(TEST_TIMEOUT);
-                done();
-            }, {geostory: {mode: "view", updateUrlOnScroll: true, resource: {id: "1"}}});
-    });
     it('scrollOnLoad', (done) => {
         const NUM_ACTIONS = 2;
-        testEpic(scrollOnLoad, NUM_ACTIONS, setCurrentStory({}),
+        testEpic(scrollOnLoad, NUM_ACTIONS, {...setCurrentStory({}), delay: 0}, // replace default delay for testing
             (actions) => {
                 expect(actions[0].type).toBe(GEOSTORY_SCROLLING);
                 expect(actions[0].status).toBe(true);
