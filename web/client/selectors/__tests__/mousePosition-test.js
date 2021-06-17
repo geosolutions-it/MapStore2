@@ -31,5 +31,4 @@ describe('mousePosition selectors', () => {
             })
         ).toEqual(false);
     });
-
 });

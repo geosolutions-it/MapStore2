@@ -88,7 +88,9 @@ import {
     hideSyncPopover,
     HIDE_SYNC_POPOVER,
     toggleShowAgain,
-    TOGGLE_SHOW_AGAIN_FLAG
+    TOGGLE_SHOW_AGAIN_FLAG,
+    setSyncTool,
+    SET_SYNC_TOOL
 } from '../featuregrid';
 
 const idFeature = "2135";
@@ -356,5 +358,9 @@ describe('Test correctness of featurgrid actions', () => {
         expect(setTimeSync(true)).toEqual({ type: SET_TIME_SYNC, value: true });
         expect(setTimeSync(false)).toEqual({ type: SET_TIME_SYNC, value: false });
 
+    });
+    it('setSyncTool', () => {
+        expect(setSyncTool(true)).toEqual({ type: SET_SYNC_TOOL, syncWmsFilter: true });
+        expect(setSyncTool(false)).toEqual({ type: SET_SYNC_TOOL, syncWmsFilter: false });
     });
 });
