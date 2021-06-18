@@ -505,7 +505,10 @@
             border-top-right-radius: 50%;
             .btn {
                 /* override default style of bootstrap */
-                .square-button-md();
+                height: @square-btn-medium-size;
+                width: @square-btn-medium-size;
+                padding: 0;
+                outline: 0;
                 .no-border();
                 background: transparent;
                 cursor: pointer;
@@ -1272,7 +1275,10 @@
 }
 
 .ms-expand-media-button {
-    .square-button-md();
+    height: @square-btn-medium-size;
+    width: @square-btn-medium-size;
+    padding: 0;
+    outline: 0;
     .shadow-soft();
     .no-border();
     position: absolute;

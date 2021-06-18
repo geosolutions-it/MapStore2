@@ -1,6 +1,5 @@
 /* search */
 #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
-    background-color: @ms2-color-background;
     border-radius: 0;
     position: relative;
     width: 100%;
@@ -31,16 +30,11 @@ div.MapSearchBar .form-control:focus {
     }
 }
 
-.MapSearchBar .input-group-addon{
-    background-color: #f2f2f2 !important;
-}
-
 #mapstore-navbar .navbar-dx .search-result-list {
 	top: @square-btn-size + @padding-left-square;
 }
 
 .navbar-dx .MapSearchBar .input-group{
-    background-color: #ffffff;
     border-radius: 0;
     width: 100%;
     height: 100%;
@@ -138,13 +132,7 @@ div.MapSearchBar .form-control:focus {
 	margin-bottom: 0;
 }
 
-#mapstore-navbar .search-result-list {
-	background-color: @ms2-color-background;
-}
-
-
 .MapSearchBar .input-group {
-    background-color: @ms2-color-background;
     .searchInput {
         border: none;
         outline: none !important;
@@ -219,24 +207,16 @@ div.MapSearchBar .form-control:focus {
           &,
           &:hover,
           &:focus {
-            color: @dropdown-link-active-color;
             text-decoration: none;
             outline: 0;
-            background-color: @dropdown-link-active-bg;
           }
         }
         .btn-group-menu-options, .btn-group-menu-options-format {
-            //position: absolute;
-            //top: 13px;
-            //right: 5px;
-            //display: block;
             [disabled]{
-                background-color: @ms2-color-background;
                 opacity: 0.75;
             }
             &.btn-group {
                 .btn-danger {
-                    background-color: @ms2-color-background;
                     color: @ms2-color-danger;
                 }
             }
@@ -256,7 +236,6 @@ div.MapSearchBar .form-control:focus {
     position: absolute;
     width: 100%;
     border-radius: 4px;
-    background-color: @ms2-color-background;
     padding: 8px;
 
     .advanced-search-title-area {
@@ -270,11 +249,6 @@ div.MapSearchBar .form-control:focus {
     .advanced-search-context {
         h5 {
             font-weight: bold;
-        }
-        .Select {
-            .Select-option.is-selected {
-                background-color: @ms2-color-background
-            }
         }
     }
 }

@@ -17,7 +17,6 @@
     }
     /* selection */
     &.selection-active {
-        background-color: #555;
         .disabled {
             opacity: 0.2;
             pointer-events: none;
@@ -36,7 +35,6 @@
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .mapstore-widget-card {
-        background: @ms2-color-background;
         margin: 20px 0;
         overflow: visible;
         position: absolute;
@@ -57,7 +55,6 @@
             font-size: 22px;
             font-weight: bold;
             border-bottom: 1px solid @ms2-color-shade-lighter;
-            color: @ms2-color-primary;
             .widget-title {
                 text-overflow: ellipsis;
                 width: calc(100% - 30px);
@@ -68,7 +65,6 @@
                 position: absolute;
                 left: 22px;
                 font-size: 14px;
-                color: @ms2-color-primary;
             }
             .widget-icons {
                 text-align: left;
@@ -88,13 +84,11 @@
                         padding-right:4px;
                         // rotate pin icon
                         .glyphicon.active::before {
-                            color: @ms2-color-primary;
                             transform: rotate(45deg);
                             display: inline-block;
                         }
                         .glyphicon:not(.active)  {
                             opacity: .5;
-                            color: grey;
                         }
                     }
                 }
@@ -116,7 +110,6 @@
         .mapstore-widget-options {
             position: absolute;
             font-size: 18px;
-            color: @ms2-color-primary;
             right: 7px;
             top: 10px;
         }
@@ -163,7 +156,6 @@
     font-size: 18px;
     width: 100%;
     padding: 5px 5%;
-    color: #078aa3;
     margin-top: 5px;
 }
 
@@ -177,10 +169,6 @@
     position: absolute;
     left: 20px;
     text-indent: -9999em;
-    border-top: 1.6px solid rgba(7, 138, 163, 0.2);
-    border-right: 1.6px solid rgba(7, 138, 163, 0.2);
-    border-bottom: 1.6px solid rgba(7, 138, 163, 0.2);
-    border-left: 1.6px solid #078aa3;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
@@ -269,7 +257,6 @@
 
 .widgets-tray {
     .shadow-soft;
-    background-color: @ms2-color-background;
     padding: 4px;
     z-index: 1000;
     .widgets-bar {
@@ -293,7 +280,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: @ms2-color-background;
     .shadow-soft;
     .Select-menu-outer {
         // fix select options z-index that
@@ -306,9 +292,6 @@
     .ms2-border-layout-content{
         position: relative;
         overflow: auto;
-    }
-    .ms2-border-layout-body {
-        background-color: @ms2-color-background;
     }
     .ms2-border-layout-body {
         padding: 0;
@@ -329,7 +312,6 @@
 .ms-widget-empty-message {
     position: absolute;
     top: 0;
-    background-color: @ms2-color-background;
     width: 100%;
     height: 100%;
     display: flex;

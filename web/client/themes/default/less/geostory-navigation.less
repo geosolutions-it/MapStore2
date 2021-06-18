@@ -32,7 +32,6 @@
 }
 
 .ms-geostory-navigation {
-    background-color: @ms-story-bg;
     .btn-default {
         .ms-geostory-navigation-btn(inherit; inherit; transparent);
     }
@@ -46,11 +45,9 @@
         flex-direction: column;
         background-color: inherit;
         .progress-bar {
-            background-color: @ms-story-bg-grey;
             height: 4px;
             width: 100%;
             .progress-percent {
-                background-color: @ms2-color-primary;
                 height: 4px;
                 transition: width 0.3s;
             }
@@ -121,10 +118,6 @@
         background-color: inherit;
         .ms-menu-item {
             margin: 0 6px;
-            .active {
-                background-color: @ms2-color-primary;
-                color: @ms2-color-background;
-            }
         }
     }
 }

@@ -23,14 +23,6 @@
     left: 0;
 }
 
-.mapstore-annotations-info-viewer .ql-snow .ql-stroke {
-    stroke: @ms2-color-text;
-}
-
-.mapstore-annotations-info-viewer .ql-snow .ql-picker {
-    color: @ms2-color-text;
-}
-
 .mapstore-annotations-info-viewer-marker {
     float: left;
     margin-top: 10px;
@@ -76,7 +68,6 @@
         }
     }
 }
-
 
 .mapstore-annotations-info-viewer-styler .Select {
     clear: both;
@@ -154,7 +145,6 @@
 }
 
 .mapstore-annotations-panel-card-thumbnail {
-    display: inline-block;
     float: left;
     width: 40px;
     height: 100%;
@@ -214,12 +204,6 @@
     height: 100%;
 }
 
-/*
-.mapstore-annotations-panel-card-title, .mapstore-annotations-info-viewer-title label  {
-    font-size: 20px;
-    font-weight: bold;
-}*/
-
 .mapstore-annotations-panel-card-thumbnail:before {
     color: white;
     font-size: 16px;
@@ -260,9 +244,6 @@
     margin-bottom: 10px;
 }
 
-.ql-disabled {
-    background-color: #ddd;
-}
 .mapstore-annotations-info-viewer {
     font-size: 13px;
     .measure-feature-select {
@@ -297,7 +278,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #ffffff;
             position: sticky;
             top: 0;
             z-index: 10;
@@ -331,7 +311,7 @@
                 justify-content: center;
 
                 .glyphicon {
-                    font-size: @square-btn-medium-size * 2 / 3;
+                    font-size: (@square-btn-medium-size * 2 / 3);
                 }
             }
 
@@ -495,7 +475,6 @@
     box-shadow: none;
 }
 
-
 // ANNOTATIONS ADDITION -- JAN 2018
 .ms-annotations-panel {
     .form-group {
@@ -565,7 +544,7 @@
             height: 100%;
             flex-direction: column;
             h4 {
-                border-bottom: 1px solid @ms2-color-shade-lighter;
+                border-bottom: 1px solid #dddddd;
             }
             .ql-editor {
                 padding-top: 0;
@@ -631,29 +610,14 @@
 }
 
 .mapstore-annotations-info-viewer .container-fluid .container-fluid .row {
-
     .row:hover{
         cursor: pointer;
-
-        input, select, .col-xs-5 span {
-            color: @ms2-color-primary;
-        }
-
     }
 }
 
 .ms-dragg.ms-below .coordinateRow, .ms-dragg.ms-above .coordinateRow {
-
-    &{
-        background-color: @ms2-color-background
-    }
     &:hover{
         cursor: pointer;
-
-        input, select, .col-xs-5 span {
-            color: @ms2-color-primary;
-        }
-
     }
 }
 
@@ -664,25 +628,20 @@
             box-shadow: none;
         }
     }
-    .mapstore-annotations-info-viewer.hover-background:hover {
-        background: @ms2-color-shade-super-lighter;
-    }
     .mapstore-annotations-info-viewer+.mapstore-annotations-info-viewer {
         .mapstore-annotations-info-viewer-buttons {
-            border-top: 1px solid @ms2-color-shade-lighter;
+            border-top: 1px solid #dddddd;
             padding-top: 5px;
             margin-top: 5px;
         }
     }
 }
 
-
 .coordinateRow {
     display: flex;
     align-items: center;
     box-sizing: border-box;
     border: 0;
-    //margin: 8px 15px !important;
     font-family: @font-family-monospace;
     .col-xs-5, .col-xs-1 {
         padding: 0;

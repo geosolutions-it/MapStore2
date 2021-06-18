@@ -26,7 +26,6 @@
 
     .toc-inline-loader {
         margin: @padding-left-square-md;
-        .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-primary);
     }
     .mapstore-toc-head-title-container {
         overflow: hidden;
@@ -302,7 +301,7 @@
             .toc-grab:hover,
             .visibility-check:hover,
             .toc-group-title:hover,
-            .toc-status-icon:hover, {
+            .toc-status-icon:hover {
                 font-weight: bold;
                 .text-border(fade(@ms2-color-text, 20%));
             }
@@ -340,7 +339,6 @@
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
 
         .noUi-target {
-            background-color: @ms2-color-primary;
             &.noUi-horizontal {
                 margin: 0;
             }
@@ -370,7 +368,6 @@
             .toc-inline-loader {
                 float: right;
                 margin: 0 10px;
-                .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-primary);
             }
         }
 
@@ -423,7 +420,7 @@
                 .toc-grab:hover,
                 .visibility-check:hover,
                 .toc-title:hover,
-                .toc-legend:hover, {
+                .toc-legend:hover {
                     font-weight: bold;
                     .text-border(fade(@ms2-color-text, 20%));
                 }
@@ -432,9 +429,6 @@
                     color: @ms2-color-text-primary;
                 }
 
-                .toc-inline-loader {
-                    .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-text-primary);
-                }
             }
         }
 
@@ -470,10 +464,6 @@
                     -webkit-box-sizing: border-box;
                     border: 1px solid @ms2-color-danger;
                     background-color: darken(@ms2-color-background, 2%);
-
-                    .toc-inline-loader {
-                        .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-danger);
-                    }
                 }
 
             }
@@ -628,7 +618,6 @@
 
     }
     .noUi-target {
-        background-color: @ms2-color-primary;
         &.noUi-horizontal {
             margin: 0;
         }

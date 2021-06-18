@@ -35,9 +35,9 @@
     .ms-time-color-active(
         @color: @ms2-color-text,
         @b-top: @ms2-color-text,
-        @b-right: 'transparent',
+        @b-right: transparent,
         @b-bottom: @ms2-color-text,
-        @b-left: 'transparent',
+        @b-left: transparent,
         @a-color: 'unset'
     ) {
         background-color: @color;
@@ -128,10 +128,10 @@
                 /* mixin hightlight handler, change background and stop icon colors */
                 .ms-time-color-active(
                     @ms2-color-danger,
-                    'transparent',
-                    'transparent',
-                    'transparent',
-                    'transparent',
+                    transparent,
+                    transparent,
+                    transparent,
+                    transparent,
                     @ms2-color-danger
                 );
                 z-index: 67;
@@ -160,10 +160,10 @@
                 /* mixin hightlight handler, change background and play icon colors */
                 .ms-time-color-active(
                     @ms2-color-success,
-                    'transparent',
-                    'transparent',
-                    'transparent',
-                    'transparent',
+                    transparent,
+                    transparent,
+                    transparent,
+                    transparent,
                     @ms2-color-success
                 );
                 z-index: 67;
@@ -206,7 +206,7 @@
                 .ms-time-color-active(
                     lighten(@ms2-color-text, 20%),
                     lighten(@ms2-color-text, 20%),
-                    'transparent',
+                    transparent,
                     lighten(@ms2-color-text, 20%)
                 );
             }
@@ -218,7 +218,7 @@
                 .ms-time-color-active(
                     lighten(@ms2-color-text, 20%),
                     lighten(@ms2-color-text, 20%),
-                    'transparent',
+                    transparent,
                     lighten(@ms2-color-text, 20%)
                 );
                 z-index: 67;
@@ -250,9 +250,9 @@
                     /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active(
                         lighten(@ms2-color-text, 20%),
-                        'transparent',
-                        'transparent',
-                        'transparent',
+                        transparent,
+                        transparent,
+                        transparent,
                         lighten(@ms2-color-text, 20%)
                     );
                     z-index: 67;
@@ -279,10 +279,10 @@
                     /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active(
                         lighten(@ms2-color-text, 20%),
-                        'transparent',
+                        transparent,
                         lighten(@ms2-color-text, 20%),
-                        'transparent',
-                        'transparent'
+                        transparent,
+                        transparent
                     );
                     z-index: 67;
                 }
@@ -388,7 +388,6 @@
                         &.vis-range {
                             &.histogram-item {
                                 border-color: transparent;
-                                background-color: fade(@ms2-color-primary, 50%);
                                 .vis-item-content {
                                     padding: 0 5px;
                                     margin: 5px 0;
@@ -451,16 +450,6 @@
                         &.selected {
                             background-color: @ms2-color-primary;
                             color: @ms2-color-text-primary;
-
-                            .vis-inner {
-                                .timeline-layer-label-container {
-                                    .timeline-layer-icon {
-                                        .timeline-spinner {
-                                            .mapstore-circle-loader(1px, 12px, @ms2-color-text-primary);
-                                        }
-                                    }
-                                }
-                            }
                         }
                         .vis-inner {
                             .timeline-layer-label-container {
@@ -470,9 +459,6 @@
                                     border-right: 1px solid @ms2-color-shade-lighter;
                                     float: left;
                                     padding: 1px;
-                                    .timeline-spinner {
-                                        .mapstore-circle-loader(1px, 12px, @ms2-color-primary);
-                                    }
                                 }
                                 .timeline-layer-title {
                                     margin-left: 6px;
