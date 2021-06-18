@@ -8,7 +8,7 @@
 
 import timeline from '../timeline';
 
-import { rangeDataLoaded, selectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
+import { rangeDataLoaded, selectLayer, initializeSelectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
 import { isCollapsed, isMapSync } from '../../selectors/timeline';
 import expect from 'expect';
 
@@ -34,6 +34,17 @@ describe('Test the timeline reducer', () => {
             }
         };
         const state = timeline(initialState, selectLayer('layer1'));
+        expect(state).toExist();
+        expect(state.selectedLayer).toBe('layer1');
+    });
+    it('initialize select a layer', () => {
+        const initialState = {
+            rangeData: {
+                layer1: { range: 'old range', histogram: 'old histogram'},
+                layer2: { }
+            }
+        };
+        const state = timeline(initialState, initializeSelectLayer('layer1'));
         expect(state).toExist();
         expect(state.selectedLayer).toBe('layer1');
     });
