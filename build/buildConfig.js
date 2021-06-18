@@ -187,31 +187,31 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
         publicPath: "/" + publicPath,
         proxy: proxy || {
             '/rest': {
-                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                target: "https://qa-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev.mapstore.geo-solutions.it"
+                    host: "qa-mapstore.geosolutionsgroup.com"
                 }
             },
             '/pdf': {
-                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                target: "https://qa-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev.mapstore.geo-solutions.it"
+                    host: "qa-mapstore.geosolutionsgroup.com"
                 }
             },
             '/mapstore/pdf': {
-                target: "https://dev.mapstore.geo-solutions.it",
+                target: "https://qa-mapstore.geosolutionsgroup.com",
                 secure: false,
                 headers: {
-                    host: "dev.mapstore.geo-solutions.it"
+                    host: "qa-mapstore.geosolutionsgroup.com"
                 }
             },
             '/proxy': {
-                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                target: "https://qa-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev.mapstore.geo-solutions.it"
+                    host: "qa-mapstore.geosolutionsgroup.com"
                 }
             },
             '/docs': {
