@@ -1,3 +1,15 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// bootstrap component theme mixins with css variables used by write .write-ms-theme function
+
+// @button-vars: ruleset of button variables, see @ms-theme-vars[@button-default] in variables.less file as example
+// return classes for a button variant using css variables
 .button-variant-with-css-variables(@button-vars) {
     .color-var(@button-vars[button-color]);
     .background-color-var(@button-vars[button-bg]);
@@ -60,6 +72,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all base classes override for bootstrap with css variables
 .bootstrap-base-with-css-variables(@theme-vars) {
     a {
         .color-var(@theme-vars[link-color]);
@@ -98,6 +112,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all the button variant of bootstrap classes with css variables
 .buttons-with-css-variables(@theme-vars) {
     .btn {
 
@@ -153,6 +169,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap inputs with css variables
 .inputs-with-css-variables(@theme-vars) {
     .form-control {
         .color-var(@theme-vars[body-color]);
@@ -198,6 +216,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap pagination with css variables
 .pagination-with-css-variables(@theme-vars) {
     .pagination {
         >li {
@@ -249,6 +269,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap dropdown with css variables
 .dropdown-with-css-variables(@theme-vars) {
     .dropdown-menu {
         .color-var(@theme-vars[body-color]);
@@ -303,6 +325,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap nav with css variables
 .nav-with-css-variables(@theme-vars) {
     .nav {
         >li {
@@ -413,6 +437,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap panel with css variables
 .panel-with-css-variables(@theme-vars) {
     .panel-variant-with-css() {
         .border-color-var(@theme-vars[body-border-color]);
@@ -448,6 +474,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap modal with css variables
 .modal-with-css-variables(@theme-vars) {
     .modal-header {
         .color-var(@theme-vars[primary-color]);
@@ -463,6 +491,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap popover with css variables
 .popover-with-css-variables(@theme-vars) {
     .popover {
         .background-color-var(@theme-vars[body-bg]);
@@ -495,6 +525,8 @@
     }
 }
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap list group with css variables
 .list-group-with-css-variables(@theme-vars) {
     .list-group-item {
         .background-color-var(@theme-vars[body-bg]);

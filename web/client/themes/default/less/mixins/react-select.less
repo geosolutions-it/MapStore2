@@ -1,4 +1,13 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return the classes needed for react-select library with css variables
 .react-select-theme-with-css-variables(@theme-vars) {
     .Select.is-disabled>.Select-control {
         .background-color-var(@theme-vars[disabled-bg]);

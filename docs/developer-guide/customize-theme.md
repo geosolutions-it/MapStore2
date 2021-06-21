@@ -154,7 +154,7 @@ module.exports = require('./MapStore2/buildConfig')(
 
 ```less
 /* change primary color to blue */
-@ms2-color-primary: #0000ff;
+@ms-primary: #0000ff;
 ```
 
 - update `my-custom-module.less` to override existing rules or add new rules
