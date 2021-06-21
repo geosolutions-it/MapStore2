@@ -101,4 +101,11 @@ export const isMouseMoveActiveSelector = (state) => !!mouseMoveListenerSelector(
 
 export const isMouseMoveCoordinatesActiveSelector = (state) => mouseMoveListenerSelector(state).includes('mouseposition');
 
-export const isMouseMoveIdentifyActiveSelector = (state) =>  mouseMoveListenerSelector(state).includes('identifyFloatingTool');
+export const isMouseMoveIdentifyActiveSelector = (state) => {
+    return mouseMoveListenerSelector(state).includes('identifyFloatingTool');
+};
+
+export const identifyFloatingToolSelector = (state) => {
+    return mouseMoveListenerSelector(state).includes('identifyFloatingTool') || state.mode === "embedded";
+};
+
