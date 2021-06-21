@@ -23,7 +23,7 @@
     }
     .ms-header {
         z-index: 10;
-        background-color: @ms2-color-background;
+        background-color: @ms-body-bg;
         .shadow-soft;
         .btn {
             .no-border;
@@ -70,8 +70,8 @@
             }
             &:first-child {
                 display: flex;
-                color: @ms2-color-text;
-                background-color: @ms2-color-background;
+                color: @ms-body-color;
+                background-color: @ms-body-bg;
                 & > * {
                     padding: 0;
                     width: auto;
@@ -80,7 +80,7 @@
                     flex: 1;
                     text-align: center;
                     align-self: center;
-                    color: @ms2-color-text;
+                    color: @ms-body-color;
                 }
             }
         }
@@ -97,10 +97,10 @@
         &.ms-primary {
             .row {
                 &:first-child {
-                    color: @ms2-color-text-primary;
-                    background-color: @ms2-color-primary;
+                    color: @ms-primary-color;
+                    background-color: @ms-primary;
                     .col-xs-8 {
-                        color: @ms2-color-text-primary;
+                        color: @ms-primary-color;
                     }
                 }
             }

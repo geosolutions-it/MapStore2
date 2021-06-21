@@ -178,7 +178,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                             plugins: {
                                 "postcss-prefix-selector": {
                                     prefix: cssPrefix || '.ms2',
-                                    exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
+                                    exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
                                 }
                             }
                         }
@@ -208,7 +208,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                                 plugins: {
                                     "postcss-prefix-selector": {
                                         prefix: cssPrefix || '.ms2',
-                                        exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
+                                        exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
                                     }
                                 }
                             }

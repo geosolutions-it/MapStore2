@@ -4,6 +4,7 @@
     [data-ms2-container] {
         .color-var(@theme-vars[body-color]);
         .background-color-var(@theme-vars[body-bg]);
+        .font-family-var(@theme-vars[font-family-base]);
     }
 
     // bootstrap theme overrides
@@ -102,6 +103,11 @@
             @{css-var-key}: @css-var-value;
         })
         each(@theme-vars[@button-success], {
+            @css-var-key: extract(@value, 1);
+            @css-var-value: extract(@value, 2);
+            @{css-var-key}: @css-var-value;
+        })
+        each(@theme-vars[@button-tray], {
             @css-var-key: extract(@value, 1);
             @css-var-value: extract(@value, 2);
             @{css-var-key}: @css-var-value;

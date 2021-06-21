@@ -1,12 +1,12 @@
 .rw-widget {
-    color: @ms2-color-primary  !important;
-    background-color: @ms2-color-background  !important;
-    border: 1px solid @ms2-color-shade-lighter  !important;
+    color: @ms-primary  !important;
+    background-color: @ms-body-bg  !important;
+    border: 1px solid @ms-body-border-color  !important;
 }
 
 .rw-list-option:hover {
-    color: @ms2-color-background  !important;
-    background-color: @ms2-color-primary  !important;
+    color: @ms-body-bg  !important;
+    background-color: @ms-primary  !important;
 }
 
 .rw-list-option:focus {
@@ -14,36 +14,36 @@
 }
 
 .rw-state-focus {
-    color: @ms2-color-primary  !important;
+    color: @ms-primary  !important;
     background-color: transparent !important;
-    border: 1px solid @ms2-color-primary  !important;
+    border: 1px solid @ms-primary  !important;
     outline: none;
 }
 
 .rw-i {
-    color: @ms2-color-primary  !important;
+    color: @ms-primary  !important;
 }
 
 
 .rw-placeholder {
-    color: @ms2-color-text  !important;
-    background-color: @ms2-color-background  !important;
+    color: @ms-body-color  !important;
+    background-color: @ms-body-bg  !important;
 }
 
 .rw-input {
-    color: @ms2-color-text;
+    color: @ms-body-color;
 }
 
 .rw-filter-input {
-    border: 1px solid @ms2-color-primary  !important;
+    border: 1px solid @ms-primary  !important;
 }
 
 .rw-select {
-    border-left: 1px solid @ms2-color-shade-lighter  !important;
+    border-left: 1px solid @ms-body-border-color  !important;
 }
 
 .rw-combo-clearable {
-    background-color: @ms2-color-background  !important;
+    background-color: @ms-body-bg  !important;
 }
 
 .rw-combo-clearable input.rw-input {
@@ -66,39 +66,39 @@
     float: right;
     bottom: 2em;
     right: 2.3em;
-    color: @ms2-color-primary  !important;
+    color: @ms-primary  !important;
     cursor: pointer;
 }
 
 .rw-combo-clearable.disabled .rw-combo-clear {
     cursor: not-allowed;
-    color: fadeout(@ms2-color-primary, 30) !important;
+    color: fadeout(@ms-primary, 30) !important;
 }
 
 select.form-control {
-    border: 1px solid @ms2-color-shade-lighter;
+    border: 1px solid @ms-body-border-color;
 
     option {
-        color: @ms2-color-text;
-        background-color: darken(@ms2-color-background, 5%);
+        color: @ms-body-color;
+        background-color: darken(@ms-body-bg, 5%);
     }
 }
 
 select {
-    background-color: @ms2-color-background;
-    border: 1px solid @ms2-color-shade-lighter;
+    background-color: @ms-body-bg;
+    border: 1px solid @ms-body-border-color;
 
     option {
-        color: @ms2-color-text;
-        background-color: darken(@ms2-color-background, 5%);
+        color: @ms-body-color;
+        background-color: darken(@ms-body-bg, 5%);
     }
 }
 
 #mapstore-scalebox {
     select {
         margin-top: 2px;
-        background-color: darken(@ms2-color-background, 5%);
-        color: @ms2-color-text;
+        background-color: darken(@ms-body-bg, 5%);
+        color: @ms-body-color;
         border: none;
     }
 
@@ -110,8 +110,8 @@ select {
     }
 
     option {
-        background-color: @ms2-color-background;
-        color: @ms2-color-text;
+        background-color: @ms-body-bg;
+        color: @ms-body-color;
     }
 
     .form-control {

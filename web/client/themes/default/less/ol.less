@@ -1,15 +1,15 @@
 /* OpenLayers minimap style */
 .ol-custom-overviewmap button {
-	background-color: @ms2-color-primary !important;
+	background-color: @ms-primary !important;
 }
 
 .ol-custom-overviewmap .ol-control button:focus,
 .ol-custom-overviewmap button:hover {
-	background-color: @ms2-color-primary !important;
+	background-color: @ms-primary !important;
 }
 
 .ol-custom-overviewmap:not(.ol-collapsed) {
-	background: @ms2-color-primary !important;
+	background: @ms-primary !important;
 	border-radius: 3px !important;
 }
 
@@ -22,14 +22,14 @@
 }
 
 .ol-attribution.ol-uncollapsible {
-    color: @ms2-color-text;
+    color: @ms-body-color;
     li {
         font-size: 11px;
     }
 }
 
 div.ol-scale-line.ol-unselectable {
-	border: 2px solid @ms2-color-text;
+	border: 2px solid @ms-body-color;
 	border-top: none;
 	line-height: 1.0;
 	border-radius: 0;
@@ -45,14 +45,14 @@ div.ol-scale-line.ol-unselectable {
 }
 
 .ol-attribution ul {
-    color: @ms2-color-text;
+    color: @ms-body-color;
     text-shadow: none;
 }
 
 div.ol-scale-line-inner {
 	border: 0;
 	border-top: 0;
-	color: @ms2-color-text;
+	color: @ms-body-color;
 	font-size: 11px;
 	text-align: center;
 	margin: 0;
@@ -73,7 +73,7 @@ div.ol-scale-line-inner {
 
 .ol-scale-line {
 	background-color: transparent !important;
-	color: @ms2-color-text !important;
+	color: @ms-body-color !important;
 }
 
 .ol-viewport {
@@ -144,15 +144,15 @@ div.ol-scale-line-inner {
         box-shadow: -1px 1px 5px 1px #5e5e5e;
         height: @square-btn-size;
         width: @square-btn-size;
-        color: @ms2-color-text-primary;
-        background-color: @ms2-color-primary;
+        color: @ms-primary-color;
+        background-color: @ms-primary;
         border-color: @btn-primary-border;
         .ol-compass {
             font-size: 36px;
         }
     }
     .ol-rotate-reset:hover, .ol-rotate-reset:focus {
-        background-color: darken(@ms2-color-primary, 5%);
+        background-color: darken(@ms-primary, 5%);
     }
 }
 .ol-rotate:hover {

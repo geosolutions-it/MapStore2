@@ -625,7 +625,7 @@
 
     .dropzone .dropzone-content-image-added {
         .color-var(@theme-vars[body-bg]);
-        text-shadow: @ms2-color-shade-darker 2px 2px 2px;
+        text-shadow: @ms-body-border-color 2px 2px 2px;
     }
 
     .dropzone:hover .dropzone-remove span {
@@ -652,11 +652,11 @@
         }
 
         .ms-thumbnail-dropzone-active {
-            outline: 2px solid lighten(@ms2-color-primary, 20%);
+            outline: 2px solid lighten(@ms-primary, 20%);
         }
 
         .ms-thumbnail-dropzone-reject {
-            outline: 2px solid lighten(@ms2-color-danger, 10%);
+            outline: 2px solid lighten(@ms-danger, 10%);
         }
     }
 }
@@ -955,7 +955,7 @@
                 &.btn-group {
                     .btn-danger {
                         .background-color-var(@theme-vars[body-bg]);
-                        color: @ms2-color-danger;
+                        color: @ms-danger;
                     }
                 }
             }
@@ -1336,7 +1336,7 @@
         }
 
         &:focus {
-            outline: 2px solid @ms2-color-primary;
+            outline: 2px solid @ms-primary;
             .outline-color-var(@theme-vars[focus-color]);
         }
 
@@ -1380,7 +1380,7 @@
         &.row-selected .react-grid-Cell.modified.invalid {
             .color-var(@theme-vars[body-shade-color], true);
             .background-color-var(@theme-vars[body-shade-bg], true);
-            border-bottom: 3px solid @ms2-color-danger;
+            border-bottom: 3px solid @ms-danger;
             .border-bottom-color-var(@theme-vars[danger]);
         }
 
@@ -1459,13 +1459,13 @@
         }
 
         .ms-card-success {
-            border-bottom: 4px solid @ms2-color-success;
+            border-bottom: 4px solid @ms-success;
             .border-bottom-color-var(@theme-vars[success]);
 
         }
 
         .ms-card-danger {
-            border-bottom: 4px solid @ms2-color-danger;
+            border-bottom: 4px solid @ms-danger;
             .border-bottom-color-var(@theme-vars[danger]);
         }
 
@@ -1481,14 +1481,14 @@
 
         .ms-allow-row {
             .react-grid-Cell {
-                border-bottom: 2px solid @ms2-color-success;
+                border-bottom: 2px solid @ms-success;
                 .border-bottom-color-var(@theme-vars[success]);
             }
         }
 
         .ms-deny-row {
             .react-grid-Cell {
-                border-bottom: 2px solid @ms2-color-danger;
+                border-bottom: 2px solid @ms-danger;
                 .border-bottom-color-var(@theme-vars[danger]);
             }
         }
@@ -1497,7 +1497,7 @@
             .nav-tabs {
                 .disabled {
                     a {
-                        color: fade(@ms2-color-text, 20%);
+                        color: fade(@ms-body-color, 20%);
                     }
                 }
             }
@@ -1554,7 +1554,7 @@
     .rw-widget {
         .color-var(@theme-vars[primary], true);
         .background-color-var(@theme-vars[body-bg], true);
-        border: 1px solid @ms2-color-shade-lighter  !important;
+        border: 1px solid @ms-body-border-color  !important;
         .border-color-var(@theme-vars[body-border-color], true);
     }
 
@@ -1566,7 +1566,7 @@
     .rw-state-focus {
         .color-var(@theme-vars[primary], true);
         background-color: transparent !important;
-        border: 1px solid @ms2-color-primary  !important;
+        border: 1px solid @ms-primary  !important;
         .border-color-var(@theme-vars[focus-color], true);
     }
 
@@ -1585,12 +1585,12 @@
     }
 
     .rw-filter-input {
-        border: 1px solid @ms2-color-primary  !important;
+        border: 1px solid @ms-primary  !important;
         .border-color-var(@theme-vars[primary], true);
     }
 
     .rw-select {
-        border-left: 1px solid @ms2-color-shade-lighter  !important;
+        border-left: 1px solid @ms-body-border-color  !important;
         .border-left-color-var(@theme-vars[body-border-color], true);
     }
 
@@ -1603,11 +1603,11 @@
     }
 
     .rw-combo-clearable.disabled .rw-combo-clear {
-        color: fadeout(@ms2-color-primary, 30) !important;
+        color: fadeout(@ms-primary, 30) !important;
     }
 
     select.form-control {
-        border: 1px solid @ms2-color-shade-lighter;
+        border: 1px solid @ms-body-border-color;
         .border-color-var(@theme-vars[body-border-color]);
 
         option {
@@ -1618,7 +1618,7 @@
 
     select {
         .background-color-var(@theme-vars[body-bg]);
-        border: 1px solid @ms2-color-shade-lighter;
+        border: 1px solid @ms-body-border-color;
         .border-left-color-var(@theme-vars[body-border-color]);
 
         option {
@@ -1665,7 +1665,7 @@
         .background-color-var(@theme-vars[body-bg], true);
 
         .modal-body .form-group {
-            border-top: solid 1px @ms2-color-shade-lighter  !important;
+            border-top: solid 1px @ms-body-border-color  !important;
             .border-color-var(@theme-vars[body-border-color], true);
         }
     }
@@ -1687,7 +1687,7 @@
     .share-win {
         .input-link {
             +.input-link {
-                border-top: 1px solid @ms2-color-shade-lighter;
+                border-top: 1px solid @ms-body-border-color;
                 .border-color-var(@theme-vars[body-border-color]);
             }
         }
@@ -1706,7 +1706,7 @@
 .sidegrid-with-css-variables(@theme-vars) {
     .msSideGrid {
         .ms-drag-over {
-            border: 1px dashed @ms2-color-primary;
+            border: 1px dashed @ms-primary;
             .background-color-var(@theme-vars[body-bg]);
         }
     }
@@ -1717,7 +1717,7 @@
 
         .mapstore-side-card-info {
             .mapstore-side-card-desc {
-                border-bottom: 1px solid @ms2-color-shade-lighter;
+                border-bottom: 1px solid @ms-body-border-color;
                 .border-color-var(@theme-vars[body-border-color]);
             }
         }
@@ -1739,7 +1739,7 @@
         }
 
         &.ms-dragging {
-            border: 1px dashed @ms2-color-shade-lighter;
+            border: 1px dashed @ms-body-border-color;
             .border-color-var(@theme-vars[body-border-color]);
             .background-color-var(@theme-vars[body-bg]);
 
@@ -1754,7 +1754,7 @@
         .background-color-var(@theme-vars[body-bg]);
 
         .ms-preview {
-            border: 1px solid @ms2-color-shade-lighter;
+            border: 1px solid @ms-body-border-color;
             .border-color-var(@theme-vars[body-border-color]);
         }
 
@@ -1776,7 +1776,7 @@
                     .background-color-var(@theme-vars[body-shade-bg]);
 
                     .noUi-handle {
-                        border-top: 1px solid @ms2-color-background;
+                        border-top: 1px solid @ms-body-bg;
                         .border-color-var(@theme-vars[primary-color]);
                         .background-color-var(@theme-vars[primary-bg]);
 
@@ -1868,7 +1868,7 @@
         .ms-slider-arrows {
             .color-var(@theme-vars[primary-bg]);
             .background-color-var(@theme-vars[primary-color]);
-            border: 1px solid @ms2-color-primary;
+            border: 1px solid @ms-primary;
             .border-color-var(@theme-vars[primary-color]);
         }
     }
@@ -2650,11 +2650,11 @@
     }
     
     ul.CodeMirror-hints {
-        background-color: @ms2-color-text;
+        background-color: @ms-body-color;
         li.CodeMirror-hint {
-            color: @ms2-color-background;
+            color: @ms-body-bg;
             &.CodeMirror-hint-active {
-                background-color: @ms2-color-primary;
+                background-color: @ms-primary;
             }
         }
     }

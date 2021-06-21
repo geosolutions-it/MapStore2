@@ -34,7 +34,7 @@
             vertical-align: middle;
             width: 270px;
             height: @square-btn-size;
-            color: @ms2-color-primary;
+            color: @ms-primary;
             font-weight: bold;
             .glyphicon {
                 font-size: @icon-size-md;
@@ -44,7 +44,7 @@
 
     .col-xs-12 {
         height: @square-btn-size;
-        border-top: 1px solid @ms2-color-shade-lighter;
+        border-top: 1px solid @ms-body-border-color;
 
         .btn-sm {
             height: @square-btn-medium-size;
@@ -139,7 +139,7 @@
 .layer-expanded {
     &.toc-default-layer {
         .toc-default-layer-head {
-            border-bottom: 1px solid darken(@ms2-color-background, 10%);
+            border-bottom: 1px solid darken(@ms-body-bg, 10%);
         }
         padding: 0 0 10px 0;
         .toc-legend {
@@ -156,7 +156,7 @@
 
         overflow-y: auto;
         overflow-x: hidden;
-        border-top: 1px solid @ms2-color-shade-light;
+        border-top: 1px solid @ms-body-border-color;
     }
 
     &.toc-body-sections .mapstore-layers-container {
@@ -190,8 +190,8 @@
 
 .toc-default-group {
 
-    background-color: @ms2-color-background;
-    border-bottom: 1px solid @ms2-color-shade-light;
+    background-color: @ms-body-bg;
+    border-bottom: 1px solid @ms-body-border-color;
 
     .toc-default-group {
         border-bottom: none;
@@ -199,7 +199,7 @@
 
         .toc-default-group-head {
             margin-top: 10px;
-            border-top: 1px solid @ms2-color-shade-lighter;
+            border-top: 1px solid @ms-body-border-color;
         }
     }
 
@@ -225,9 +225,9 @@
     }
 
     .glyphicon {
-        color: @ms2-color-primary;
+        color: @ms-primary;
         &:hover {
-            color: darken(@ms2-color-primary, 10%);
+            color: darken(@ms-primary, 10%);
         }
     }
 
@@ -259,7 +259,7 @@
     }
 
     .toc-default-group-head {
-        background-color: @ms2-color-background;
+        background-color: @ms-body-bg;
         height: @square-btn-size;
         width: 100%;
         padding: floor(((@square-btn-size - @icon-size-md) / 2)) 0;
@@ -275,7 +275,7 @@
             cursor: pointer;
             &:hover {
                 font-weight: bold;
-                color: @ms2-color-primary;
+                color: @ms-primary;
             }
         }
 
@@ -293,21 +293,21 @@
     &.selected {
 
         .toc-default-group-head {
-            background-color: desaturate(@ms2-color-primary, 30%);
-            color:  @ms2-color-text-primary;
+            background-color: desaturate(@ms-primary, 30%);
+            color:  @ms-primary-color;
             .glyphicon {
-                color: @ms2-color-text-primary;
+                color: @ms-primary-color;
             }
             .toc-grab:hover,
             .visibility-check:hover,
             .toc-group-title:hover,
             .toc-status-icon:hover {
                 font-weight: bold;
-                .text-border(fade(@ms2-color-text, 20%));
+                .text-border(fade(@ms-body-color, 20%));
             }
 
             .toc-group-title:hover {
-                color: @ms2-color-text-primary;
+                color: @ms-primary-color;
             }
         }
     }
@@ -316,14 +316,14 @@
         opacity: 1.0;
         .toc-default-group-head {
             .toc-error {
-                color: @ms2-color-danger;
+                color: @ms-danger;
             }
 
         }
 
         &.selected {
             .toc-error {
-                color: @ms2-color-danger;
+                color: @ms-danger;
             }
         }
     }
@@ -347,8 +347,8 @@
         .toc-default-layer-head {
             height: @square-btn-size;
             width: 100%;
-            color: @ms2-color-text;
-            background-color: @ms2-color-background;
+            color: @ms-body-color;
+            background-color: @ms-body-bg;
             margin-bottom: 0;
             padding: floor(((@square-btn-size - @icon-size-md) / 2)) 0;
 
@@ -361,7 +361,7 @@
                 cursor: pointer;
                 &:hover {
                     font-weight: bold;
-                    color: @ms2-color-primary;
+                    color: @ms-primary;
                 }
             }
 
@@ -378,7 +378,7 @@
                 position: absolute;
 
                 font-size: @icon-size-md * (2/3);
-                color: @ms2-color-danger;
+                color: @ms-danger;
             }
         }
 
@@ -411,10 +411,10 @@
             .shadow-far;
 
             .toc-default-layer-head {
-                background-color: @ms2-color-primary;
-                color:  @ms2-color-text-primary;
+                background-color: @ms-primary;
+                color:  @ms-primary-color;
                 .glyphicon {
-                    color: @ms2-color-text-primary;
+                    color: @ms-primary-color;
                 }
 
                 .toc-grab:hover,
@@ -422,11 +422,11 @@
                 .toc-title:hover,
                 .toc-legend:hover {
                     font-weight: bold;
-                    .text-border(fade(@ms2-color-text, 20%));
+                    .text-border(fade(@ms-body-color, 20%));
                 }
 
                 .toc-title:hover {
-                    color: @ms2-color-text-primary;
+                    color: @ms-primary-color;
                 }
 
             }
@@ -434,36 +434,36 @@
 
         &.layer-error {
             opacity: 1.0;
-            background-color: darken(@ms2-color-background, 2%);
+            background-color: darken(@ms-body-bg, 2%);
             .toc-default-layer-head {
-                background-color: darken(@ms2-color-background, 2%);
+                background-color: darken(@ms-body-bg, 2%);
             }
             .glyphicon {
-                color: @ms2-color-text;
+                color: @ms-body-color;
                 &:hover {
                     text-shadow: none;
                 }
             }
             .toc-error {
-                color: @ms2-color-danger;
+                color: @ms-danger;
             }
             &.selected {
-                color: @ms2-color-primary;
+                color: @ms-primary;
                 .glyphicon {
-                    color: @ms2-color-primary;
+                    color: @ms-primary;
                 }
                 .toc-error {
-                    color: @ms2-color-danger;
+                    color: @ms-danger;
                 }
                 .toc-title {
-                    color: @ms2-color-primary;
+                    color: @ms-primary;
                 }
                 .toc-default-layer-head {
                     box-sizing: border-box;
                     -moz-box-sizing: border-box;
                     -webkit-box-sizing: border-box;
-                    border: 1px solid @ms2-color-danger;
-                    background-color: darken(@ms2-color-background, 2%);
+                    border: 1px solid @ms-danger;
+                    background-color: darken(@ms-body-bg, 2%);
                 }
 
             }
@@ -477,22 +477,22 @@
 
 .is-dragging.toc-default-layer,
 .is-dragging.toc-default-layer.selected {
-    background-color: @ms2-color-background !important;
-    border: 1px dashed @ms2-color-primary !important;
+    background-color: @ms-body-bg !important;
+    border: 1px dashed @ms-primary !important;
     height: @square-btn-size !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
     opacity: 0.8;
     .toc-default-layer-head {
-        background-color: @ms2-color-background;
-        color: @ms2-color-primary;
+        background-color: @ms-body-bg;
+        color: @ms-primary;
 
         .glyphicon {
-            color: @ms2-color-primary;
+            color: @ms-primary;
         }
 
         .toc-title {
-            color: @ms2-color-text;
+            color: @ms-body-color;
         }
     }
 
@@ -504,7 +504,7 @@
 .is-placeholder.toc-default-layer,
 .is-placeholder.toc-default-layer.selected {
     background-color: transparent !important;
-    border: 1px dashed @ms2-color-primary !important;
+    border: 1px dashed @ms-primary !important;
     height: @square-btn-size !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
@@ -522,22 +522,22 @@
 
 .is-dragging.toc-default-group,
 .is-dragging.toc-default-group.selected {
-    background-color: @ms2-color-background !important;
-    border: 1px dashed @ms2-color-primary !important;
+    background-color: @ms-body-bg !important;
+    border: 1px dashed @ms-primary !important;
     height: @square-btn-size !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
     opacity: 0.8;
     .toc-default-group-head {
-        background-color: @ms2-color-background;
-        color: @ms2-color-primary;
+        background-color: @ms-body-bg;
+        color: @ms-primary;
         margin-top: 0;
         .glyphicon {
-            color: @ms2-color-primary;
+            color: @ms-primary;
         }
 
         .toc-group-title {
-            color: @ms2-color-text;
+            color: @ms-body-color;
         }
     }
 
@@ -548,14 +548,14 @@
 
 .is-placeholder.toc-default-group,
 .is-placeholder.toc-default-group.selected {
-    background-color: @ms2-color-background !important;
+    background-color: @ms-body-bg !important;
     border: none !important;
-    border-bottom:  1px solid @ms2-color-primary !important;
+    border-bottom:  1px solid @ms-primary !important;
     height: @square-btn-size + 5 !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
     .toc-default-group-head {
-        border: 1px dashed @ms2-color-primary !important;
+        border: 1px dashed @ms-primary !important;
         margin: 2px 0;
 
         & * {
@@ -574,7 +574,7 @@
 
 .compact-legend-grid {
     margin: 15px;
-    background-color: @ms2-color-background;
+    background-color: @ms-body-bg;
     width: ~"calc(100% - 30px)";
     position: relative;
     .mapstore-side-card {
@@ -626,7 +626,7 @@
 .ms-legend-action {
     .shadow-far;
     position: absolute;
-    background-color: @ms2-color-background;
+    background-color: @ms-body-bg;
     overflow: hidden;
     display: flex;
     left: 4px;
@@ -658,7 +658,7 @@
                     display: flex;
                     align-items: center;
                     > .glyphicon {
-                        color: @ms2-color-primary;
+                        color: @ms-primary;
                     }
                     > div {
                         flex: 1;
@@ -684,7 +684,7 @@
         flex: 1;
         transition: unset;
         overflow: auto;
-        border-top: 1px solid @ms2-color-shade-lighter;
+        border-top: 1px solid @ms-body-border-color;
         .panel-body {
             padding: 0;
             .msSideGrid {

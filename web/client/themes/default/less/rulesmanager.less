@@ -245,7 +245,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 
     .ms-header {
         height: @square-btn-size;
-        border-bottom: 1px solid @ms2-color-shade-lighter;
+        border-bottom: 1px solid @ms-body-border-color;
         display: flex;
         .btn-group {
             margin: auto;
@@ -275,8 +275,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     }
 }
 .ms-grid-card {
-    color: @ms2-color-text;
-    background-color: @ms2-color-background;
+    color: @ms-body-color;
+    background-color: @ms-body-bg;
     .shadow-soft;
     flex: 1;
     width: 100%;
@@ -304,30 +304,30 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     .react-grid-Cell {
         font-weight: bold;
 
-        background-color: darken(@ms2-color-background, 10%);
-        color: @ms2-color-primary;
+        background-color: darken(@ms-body-bg, 10%);
+        color: @ms-primary;
         &:focus {
             outline: none;
         }
     }
 }
 .ms-card-success {
-    border-bottom: 4px solid @ms2-color-success;
+    border-bottom: 4px solid @ms-success;
 
 }
 .ms-card-danger {
-    border-bottom: 4px solid @ms2-color-danger;
+    border-bottom: 4px solid @ms-danger;
 }
 .ms-allow-cell {
-    color: @ms2-color-text-primary;
-    background-color: @ms2-color-success;
+    color: @ms-primary-color;
+    background-color: @ms-success;
     text-align: center;
     padding: 4px;
 }
 
 .ms-deny-cell {
-    color: @ms2-color-text-primary;
-    background-color: @ms2-color-danger;
+    color: @ms-primary-color;
+    background-color: @ms-danger;
     text-align: center;
     padding: 4px;
 }
@@ -345,13 +345,13 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 }
 .ms-allow-row {
     .react-grid-Cell {
-        border-bottom: 2px solid @ms2-color-success;
+        border-bottom: 2px solid @ms-success;
     }
 }
 
 .ms-deny-row {
     .react-grid-Cell {
-        border-bottom: 2px solid @ms2-color-danger;
+        border-bottom: 2px solid @ms-danger;
     }
 }
 
@@ -435,7 +435,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     .nav-tabs {
         .disabled {
             a {
-                color: fade(@ms2-color-text, 20%);
+                color: fade(@ms-body-color, 20%);
             }
         }
     }

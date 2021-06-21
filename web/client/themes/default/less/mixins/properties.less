@@ -75,3 +75,10 @@
     box-shadow: 0 0 0 0.2rem @fallback if(@important, ~'!important', );
     box-shadow: 0 0 0 0.2rem var(@value, @fallback) if(@important, ~'!important', );
 }
+
+.font-family-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    font-family: 0 0 0 0.2rem @fallback if(@important, ~'!important', );
+    font-family: 0 0 0 0.2rem var(@value, @fallback) if(@important, ~'!important', );
+}

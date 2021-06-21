@@ -1,13 +1,13 @@
-@ms-story-bg: @ms2-color-background;
-@ms-story-bg-grey: @ms2-color-shade-lighter;
-@ms-story-highlight: lighten(@ms2-color-primary, 20%);
-@ms-story-text: @ms2-color-text;
+@ms-story-bg: @ms-body-bg;
+@ms-story-bg-grey: @ms-body-border-color;
+@ms-story-highlight: lighten(@ms-primary, 20%);
+@ms-story-text: @ms-body-color;
 @ms-story-loader: lighten(@ms-story-text, 20%);
 @ms-story-bg-guidelines: #0571b0; // background guidelines color
 @ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
-@ms-story-active-button-text: @ms2-color-text-primary;
-@ms-story-active-button-bg: lighten(@ms2-color-success, 15%);
+@ms-story-active-button-text: @ms-success-color;
+@ms-story-active-button-bg: lighten(@ms-success-bg, 15%);
 
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
@@ -198,13 +198,13 @@
             &.ms-above {
                 & > div {
                     padding-bottom: @square-btn-medium-size;
-                    border-bottom: 2px solid @ms2-color-primary;
+                    border-bottom: 2px solid @ms-primary;
                 }
             }
             &.ms-below {
                 & > div {
                     padding-top: @square-btn-medium-size;
-                    border-top: 2px solid @ms2-color-primary;
+                    border-top: 2px solid @ms-primary;
                 }
             }
         }
@@ -1326,7 +1326,7 @@
         font-size: @font-size-small;
     }
     .glyphicon {
-        color: @ms2-color-danger;
+        color: @ms-danger;
     }
 }
 // override font size of the geostory for paragraph in popover
@@ -1343,7 +1343,7 @@
 .ms-custom-theme-picker-menuitem-header {
     display: flex;
     align-items: center;
-    color: @ms2-color-text;
+    color: @ms-body-color;
     padding: 8px 8px 0 8px;
     > div {
         flex: 1;
@@ -1355,7 +1355,7 @@
 }
 .ms-custom-theme-picker-menuitem {
     padding: 4px 12px;
-    border: 1px solid @ms2-color-shade-lighter;
+    border: 1px solid @ms-body-border-color;
     margin: 8px;
     min-width: 300px;
 }

@@ -6,8 +6,8 @@
         margin-top: 8px;
         padding: 4px;
         box-sizing: border-box;
-        border: 1px dashed @ms2-color-primary;
-        background-color: @ms2-color-background;
+        border: 1px dashed @ms-primary;
+        background-color: @ms-body-bg;
         &.ms-sm {
             height: @square-btn-size;
         }
@@ -36,8 +36,8 @@
     display: flex;
     transition: all 0.3s;
     flex-direction: column;
-    color: @ms2-color-text;
-    background: @ms2-color-background;
+    color: @ms-body-color;
+    background: @ms-body-bg;
     .ms-head {
         display: flex;
         height: @square-btn-size * 2;
@@ -115,7 +115,7 @@
             border-bottom: none;
             font-size: @font-size-small;
             margin-bottom: 10px;
-            border-bottom: 1px solid @ms2-color-shade-lighter;
+            border-bottom: 1px solid @ms-body-border-color;
             display: flex;
             span div {
                 text-overflow: ellipsis;
@@ -147,16 +147,16 @@
     }
 
     &.selected {
-        background-color: @ms2-color-primary;
-        color: @ms2-color-text-primary;
+        background-color: @ms-primary;
+        color: @ms-primary-color;
         .shadow-far;
         .mapstore-side-glyph {
-            color: @ms2-color-primary;
-            background-color: @ms2-color-text-primary;
+            color: @ms-primary;
+            background-color: @ms-primary-color;
         }
         .mapstore-side-card-tool {
             > .glyphicon {
-                color: @ms2-color-text-primary;
+                color: @ms-primary-color;
             }
         }
 
@@ -200,11 +200,11 @@
 
     &.ms-dragging {
         box-sizing: border-box;
-        border: 1px dashed @ms2-color-shade-lighter;
-        background-color: @ms2-color-background;
+        border: 1px dashed @ms-body-border-color;
+        background-color: @ms-body-bg;
         .shadow-soft;
         .ms-head {
-            background-color: @ms2-color-background;
+            background-color: @ms-body-bg;
             > * {
                 display: none;
             }
@@ -241,22 +241,22 @@
     padding: 4px;
     margin-right: 1%;
     float: left;
-    background-color: @ms2-color-background;
-    color: @ms2-color-text;
+    background-color: @ms-body-bg;
+    color: @ms-body-color;
     text-align: center;
     transition: all 0.3s;
     .shadow-soft;
     .ms-preview {
         font-size: 0;
-        border: 1px solid @ms2-color-shade-lighter;
+        border: 1px solid @ms-body-border-color;
     }
     &:hover {
         .shadow-far;
         cursor: pointer;
     }
     &.ms-selected {
-        background-color: @ms2-color-primary;
-        color: @ms2-color-text-primary;
+        background-color: @ms-primary;
+        color: @ms-primary-color;
         .shadow-far;
     }
     &.ms-disabled {

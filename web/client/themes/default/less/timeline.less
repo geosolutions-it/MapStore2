@@ -1,16 +1,16 @@
 
 @keyframes timeline-loading {
     0% {
-        background-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
-        border-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+        background-color: fade(darken(@ms-body-border-color, 10%), 70%);
+        border-color: fade(darken(@ms-body-border-color, 10%), 70%);
     }
     50% {
-        background-color: fade(@ms2-color-shade-lighter, 70%);
-        border-color: fade(@ms2-color-shade-lighter, 70%);
+        background-color: fade(@ms-body-border-color, 70%);
+        border-color: fade(@ms-body-border-color, 70%);
     }
     100% {
-        background-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
-        border-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+        background-color: fade(darken(@ms-body-border-color, 10%), 70%);
+        border-color: fade(darken(@ms-body-border-color, 10%), 70%);
     }
 }
 .timeline-plugin {
@@ -33,10 +33,10 @@
 
     /* local mixin to highlight handlers on timeline, used on active and over */
     .ms-time-color-active(
-        @color: @ms2-color-text,
-        @b-top: @ms2-color-text,
+        @color: @ms-body-color,
+        @b-top: @ms-body-color,
         @b-right: transparent,
-        @b-bottom: @ms2-color-text,
+        @b-bottom: @ms-body-color,
         @b-left: transparent,
         @a-color: 'unset'
     ) {
@@ -57,7 +57,7 @@
 
         &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
             .shadow-soft;
-            background-color: lighten(@ms2-color-text, 30%);
+            background-color: lighten(@ms-body-color, 30%);
             width: 2px;
             z-index: 65;
             cursor: ew-resize;
@@ -93,7 +93,7 @@
                         left: 50%;
                         margin-left: 1px;
                         transform: translateX(-50%);
-                        color: lighten(@ms2-color-text, 20%);
+                        color: lighten(@ms-body-color, 20%);
                     }
                 }
 
@@ -114,7 +114,7 @@
         }
 
         &.endPlaybackTime {
-            background-color: lighten(@ms2-color-danger, 5%);
+            background-color: lighten(@ms-danger, 5%);
             /* stop icon */
             &:after, &::after {
                 bottom: 24px;
@@ -122,31 +122,31 @@
                 .glyphicon-stop-content();
                 font-size: 18px;
                 font-family: "mapstore2";
-                color: lighten(@ms2-color-danger, 5%);
+                color: lighten(@ms-danger, 5%);
             }
             &:hover, &:active {
                 /* mixin hightlight handler, change background and stop icon colors */
                 .ms-time-color-active(
-                    @ms2-color-danger,
+                    @ms-danger,
                     transparent,
                     transparent,
                     transparent,
                     transparent,
-                    @ms2-color-danger
+                    @ms-danger
                 );
                 z-index: 67;
             }
             & > div {
                 &:active, &:hover {
                     &:before, &::before, &:after, &::after {
-                        color: @ms2-color-danger;
+                        color: @ms-danger;
                     }
                 }
             }
         }
 
         &.startPlaybackTime {
-            background-color: lighten(@ms2-color-success, 10%);
+            background-color: lighten(@ms-success, 10%);
             /* play icon */
             &:after, &::after {
                 bottom: 24px;
@@ -154,31 +154,31 @@
                 .glyphicon-play-content();
                 font-family: "mapstore2";
                 font-size: 18px;
-                color: lighten(@ms2-color-success, 10%);
+                color: lighten(@ms-success, 10%);
             }
             &:hover, &:active {
                 /* mixin hightlight handler, change background and play icon colors */
                 .ms-time-color-active(
-                    @ms2-color-success,
+                    @ms-success,
                     transparent,
                     transparent,
                     transparent,
                     transparent,
-                    @ms2-color-success
+                    @ms-success
                 );
                 z-index: 67;
             }
             & > div {
                 &:active, &:hover {
                     &:before, &::before, &:after, &::after {
-                        color: @ms2-color-success;
+                        color: @ms-success;
                     }
                 }
             }
         }
 
         &.currentTime {
-            background-color: lighten(@ms2-color-text, 30%);
+            background-color: lighten(@ms-body-color, 30%);
             cursor: move;
             cursor: grab;
             cursor: -moz-grab;
@@ -192,22 +192,22 @@
             &:before, &::before {
                 top: 0;
                 left: -9px;
-                border-top: 10px solid lighten(@ms2-color-text, 30%);
+                border-top: 10px solid lighten(@ms-body-color, 30%);
             }
             /* generate a triangle on bottom of the handler */
             &:after, &::after {
                 bottom: 0;
                 left: -9px;
-                border-bottom: 10px solid lighten(@ms2-color-text, 30%);
+                border-bottom: 10px solid lighten(@ms-body-color, 30%);
             }
 
             &:hover {
                 /* mixin hightlight handler, change background and triangles colors */
                 .ms-time-color-active(
-                    lighten(@ms2-color-text, 20%),
-                    lighten(@ms2-color-text, 20%),
+                    lighten(@ms-body-color, 20%),
+                    lighten(@ms-body-color, 20%),
                     transparent,
-                    lighten(@ms2-color-text, 20%)
+                    lighten(@ms-body-color, 20%)
                 );
             }
             &:active {
@@ -216,10 +216,10 @@
                 cursor: -webkit-grabbing;
                 /* mixin hightlight handler, change background and triangles colors */
                 .ms-time-color-active(
-                    lighten(@ms2-color-text, 20%),
-                    lighten(@ms2-color-text, 20%),
+                    lighten(@ms-body-color, 20%),
+                    lighten(@ms-body-color, 20%),
                     transparent,
-                    lighten(@ms2-color-text, 20%)
+                    lighten(@ms-body-color, 20%)
                 );
                 z-index: 67;
             }
@@ -235,7 +235,7 @@
                     top: 0;
                     left: 0;
                     border-bottom: 10px solid transparent;
-                    border-left: 10px solid lighten(@ms2-color-text, 30%);
+                    border-left: 10px solid lighten(@ms-body-color, 30%);
                     border-top: unset;
                 }
                 /* generate a smaller tiangle on top of the handler */
@@ -243,17 +243,17 @@
                     bottom: 0;
                     left: 0;
                     border-top: 10px solid transparent;
-                    border-left: 10px solid lighten(@ms2-color-text, 30%);
+                    border-left: 10px solid lighten(@ms-body-color, 30%);
                     border-bottom: unset;
                 }
                 &:hover, &:active {
                     /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active(
-                        lighten(@ms2-color-text, 20%),
+                        lighten(@ms-body-color, 20%),
                         transparent,
                         transparent,
                         transparent,
-                        lighten(@ms2-color-text, 20%)
+                        lighten(@ms-body-color, 20%)
                     );
                     z-index: 67;
                 }
@@ -265,22 +265,22 @@
                     top: 0;
                     left: -9px;
                     border-bottom: 10px solid transparent;
-                    border-right: 10px solid lighten(@ms2-color-text, 30%);
+                    border-right: 10px solid lighten(@ms-body-color, 30%);
                 }
                 /* generate a smaller tiangle on top of the handler */
                 &:after, &::after {
                     bottom: 0;
                     left: -9px;
                     border-top: 10px solid transparent;
-                    border-right: 10px solid lighten(@ms2-color-text, 30%);
+                    border-right: 10px solid lighten(@ms-body-color, 30%);
                 }
 
                 &:hover, &:active {
                     /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active(
-                        lighten(@ms2-color-text, 20%),
+                        lighten(@ms-body-color, 20%),
                         transparent,
-                        lighten(@ms2-color-text, 20%),
+                        lighten(@ms-body-color, 20%),
                         transparent,
                         transparent
                     );
@@ -295,7 +295,7 @@
         display: flex;
         align-items: center;
         position: relative;
-        background-color: @ms2-color-background;
+        background-color: @ms-body-bg;
         padding: 2px;
         z-index: 50;
         .shadow-soft;
@@ -327,14 +327,14 @@
                     width: 100%;
                     display: flex;
                     justify-content: center;
-                    border-top: 1px solid @ms2-color-shade-lighter;
+                    border-top: 1px solid @ms-body-border-color;
                 }
             }
         }
     }
 
     .vis-timeline {
-        background-color: fade(@ms2-color-background, 90%);
+        background-color: fade(@ms-body-bg, 90%);
         border: none;
         .vis-panel {
             &.vis-background {
@@ -348,14 +348,14 @@
             }
             &.vis-bottom {
                 .vis-time-axis {
-                    background-color: @ms2-color-background;
+                    background-color: @ms-body-bg;
                 }
             }
             &.vis-center {
                 .vis-group {
                     z-index: 10;
                     &.selected {
-                        background-color: fade(@ms2-color-primary, 5%);
+                        background-color: fade(@ms-primary, 5%);
                     }
                     &.loading {
                         .vis-item {
@@ -368,7 +368,7 @@
                                         .vis-item-content {
 
                                             .histogram-box {
-                                                border-color: @ms2-color-shade-lighter;
+                                                border-color: @ms-body-border-color;
                                                 animation: timeline-loading .3s linear infinite;
                                             }
                                             .histogram-count {
@@ -383,7 +383,7 @@
 
                     .vis-item {
                         &.vis-dot {
-                            border-color: fade(@ms2-color-primary, 50%);
+                            border-color: fade(@ms-primary, 50%);
                         }
                         &.vis-range {
                             &.histogram-item {
@@ -391,8 +391,8 @@
                                 .vis-item-content {
                                     padding: 0 5px;
                                     margin: 5px 0;
-                                    background-color: fade(@ms2-color-primary, 50%);
-                                    border-color: darken(@ms2-color-primary, 10%);
+                                    background-color: fade(@ms-primary, 50%);
+                                    border-color: darken(@ms-primary, 10%);
                                 }
 
                                 background-color: transparent;
@@ -415,8 +415,8 @@
                                             width: 100%;
                                             position: absolute;
                                             bottom: 0;
-                                            background-color: fade(@ms2-color-primary, 50%);
-                                            border-color: darken(@ms2-color-primary, 10%);
+                                            background-color: fade(@ms-primary, 50%);
+                                            border-color: darken(@ms-primary, 10%);
                                             bottom: 0;
                                             left: 0;
                                             right: 0;
@@ -434,29 +434,29 @@
             }
             &.vis-left {
                 height: 100% !important;
-                background-color: @ms2-color-background;
+                background-color: @ms-body-bg;
                 border: none;
                 .shadow;
                 z-index: 30;
                 .vis-content {
                     margin-bottom: 30%;
-                    border-bottom: 1px solid @ms2-color-shade-lighter;
+                    border-bottom: 1px solid @ms-body-border-color;
 
                     .vis-label {
                         &:hover {
-                            background-color: @ms2-color-shade-lighter;
+                            background-color: @ms-body-border-color;
                             cursor: pointer;
                         }
                         &.selected {
-                            background-color: @ms2-color-primary;
-                            color: @ms2-color-text-primary;
+                            background-color: @ms-primary-bg;
+                            color: @ms-primary-color;
                         }
                         .vis-inner {
                             .timeline-layer-label-container {
                                 .timeline-layer-icon {
                                     width: 18px;
                                     height: 18px;
-                                    border-right: 1px solid @ms2-color-shade-lighter;
+                                    border-right: 1px solid @ms-body-border-color;
                                     float: left;
                                     padding: 1px;
                                 }
@@ -488,14 +488,14 @@
             z-index: 70;
         }
 
-        background-color: fade(lighten(@ms2-color-text, 10%), 20%);
-        border-left: 1px dashed lighten(@ms2-color-text, 10%);
-        border-right: 1px dashed lighten(@ms2-color-text, 10%);
+        background-color: fade(lighten(@ms-body-color, 10%), 20%);
+        border-left: 1px dashed lighten(@ms-body-color, 10%);
+        border-right: 1px dashed lighten(@ms-body-color, 10%);
         box-sizing: border-box;
     }
 
     .vis-item.vis-background.ms-playback-range {
-        background-color: fade(lighten(@ms2-color-success, 10%), 20%);
+        background-color: fade(lighten(@ms-success, 10%), 20%);
     }
 
     &.hide-layers-name {
@@ -540,14 +540,14 @@
 
                 &.currentTime,
                 &.offsetTime {
-                    background-color: lighten(@ms2-color-text, 30%);
+                    background-color: lighten(@ms-body-color, 30%);
                 }
 
                 &.endPlaybackTime {
-                    background-color: @ms2-color-danger;
+                    background-color: @ms-danger;
                 }
                 &.startPlaybackTime {
-                    background-color: @ms2-color-success;
+                    background-color: @ms-success;
                 }
             }
         }
@@ -558,8 +558,8 @@
 .ms-inline-datetime {
     margin-right: 8px;
     padding-right: 8px;
-    border-right: 1px solid @ms2-color-shade-lighter;
-    background-color: @ms2-color-background;
+    border-right: 1px solid @ms-body-border-color;
+    background-color: @ms-body-bg;
     min-height: @square-btn-medium-size;
     display: flex;
     align-items: center;
@@ -612,7 +612,7 @@
         top: -5px;
         transform: ~"translateY(-100%)";
         padding: 8px;
-        background-color: @ms2-color-background;
+        background-color: @ms-body-bg;
         max-width: 400px;
         min-width: 300px;
         .shadow-far;
@@ -627,7 +627,7 @@
 
             }
             margin-left: 0;
-            border-bottom: 1px solid @ms2-color-shade-lighter;
+            border-bottom: 1px solid @ms-body-border-color;
         }
         .form-inline .react-numeric-input{
             display: inline-block !important;

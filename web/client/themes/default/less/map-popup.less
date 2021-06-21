@@ -5,7 +5,7 @@
     top: 0;
     right: 0;
     transform: translate(50%, -50%);
-    background: @ms2-color-background;
+    background: @ms-body-bg;
     padding: 0;
     color: #078aa3;
     font-size: 12px;
@@ -27,8 +27,8 @@
 
     > .ol-popup-content-wrapper {
         padding: 0;
-        background: @ms2-color-background;
-        color: @ms2-color-text;
+        background: @ms-body-bg;
+        color: @ms-body-color;
         .shadow-far;
         border-radius: 0;
 
@@ -36,7 +36,7 @@
             overflow: auto;
             position: relative;
             display: flex;
-            background-color: @ms2-color-background;
+            background-color: @ms-body-bg;
             margin: 0;
         }
     }
@@ -58,14 +58,14 @@
 }
 
 .map-popup-ol:after {
-    border-top-color: @ms2-color-background;
+    border-top-color: @ms-body-bg;
     border-width: 13px;
     left: 50%;
     margin-left: -13px;
 }
 
 .map-popup-ol:before {
-    border-top-color: @ms2-color-shade-lighter;
+    border-top-color: @ms-body-border-color;
     border-width: 13px;
     left: 50%;
     margin-left: -13px;
@@ -95,7 +95,7 @@
         overflow: auto;
         position: relative; 
         display: flex;
-        background-color: @ms2-color-background;
+        background-color: @ms-body-bg;
         margin: 0;
     }
 
@@ -112,7 +112,7 @@
             left: 50%;
             transform: translateX(-50%);
             display: block;
-            color: @ms2-color-primary;
+            color: @ms-primary;
             .glyphicon-1-close-content();
         }
     }
