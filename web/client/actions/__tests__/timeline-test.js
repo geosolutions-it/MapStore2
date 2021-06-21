@@ -24,10 +24,24 @@ import {
     SET_MAP_SYNC,
     setMapSync,
     INIT_TIMELINE,
-    initTimeline
+    initTimeline,
+    SELECT_LAYER,
+    selectLayer,
+    INIT_SELECT_LAYER,
+    initializeSelectLayer
 } from '../timeline';
 
 describe('timeline actions', () => {
+    it('selectLayer', () => {
+        const retVal = selectLayer();
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(SELECT_LAYER);
+    });
+    it('initializeSelectLayer', () => {
+        const retVal = initializeSelectLayer();
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(INIT_SELECT_LAYER);
+    });
     it('onRangeChanged', () => {
         const retVal = onRangeChanged();
         expect(retVal).toExist();
