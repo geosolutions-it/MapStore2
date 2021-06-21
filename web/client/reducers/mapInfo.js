@@ -324,7 +324,11 @@ function mapInfo(state = initState, action) {
         return assign({}, state, {
             showMarker: false,
             responses: [],
-            requests: []
+            requests: [],
+            configuration: {
+                ...state.configuration,
+                trigger: "click"
+            }
         });
     }
     case GET_VECTOR_INFO: {
