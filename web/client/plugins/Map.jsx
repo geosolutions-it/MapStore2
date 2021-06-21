@@ -15,7 +15,7 @@ import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
 import ConfigUtils from '../utils/ConfigUtils';
-import { errorLoadingFont, setMapResolutions } from '../actions/map';
+import { errorLoadingFont, setMapResolutions, mapPluginLoad } from '../actions/map';
 import { isString } from 'lodash';
 import selector from './map/selector';
 import mapReducer from "../reducers/map";
@@ -436,7 +436,7 @@ class MapPlugin extends React.Component {
             // to make the last mapType match the list of plugins
             if (plugins.mapType === this.currentMapType) {
                 this.setState({plugins});
-                props.onLoadingMapPlugins(false, props.mapType);
+                props.onLoadingMapPlugins(false, props.mapType, true);
             }
         });
     };
@@ -445,7 +445,8 @@ class MapPlugin extends React.Component {
 export default createPlugin('Map', {
     component: connect(selector, {
         onFontError: errorLoadingFont,
-        onResolutionsChange: setMapResolutions
+        onResolutionsChange: setMapResolutions,
+        onLoadingMapPlugins: mapPluginLoad
     })(withScalesDenominators(MapPlugin)),
     reducers: {
         map: mapReducer,
