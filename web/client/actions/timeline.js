@@ -48,13 +48,16 @@ export const LOADING = "TIMELINE:LOADING";
  */
 export const timeDataLoading = (layerId, loading) => ({ type: LOADING, layerId, loading});
 
+export const INIT_SELECT_LAYER = "TIMELINE:INIT_SELECT_LAYER";
+
+export const initializeSelectLayer = layerId => { return {type: INIT_SELECT_LAYER, layerId}; };
 
 export const SELECT_LAYER = "TIMELINE:SELECT_LAYER";
 /**
  * Triggered when a layer is selected from the timeline
  * @param {string} layerId the id of the selected layer
  */
-export const selectLayer = layerId => ({ type: SELECT_LAYER, layerId});
+export const selectLayer = layerId => { return {type: SELECT_LAYER, layerId}; };
 
 export const ENABLE_OFFSET = "TIMELINE:ENABLE_OFFSET";
 /**
