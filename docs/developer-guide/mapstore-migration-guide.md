@@ -23,6 +23,38 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2021.01.02 to 2021.02.00
 
+### Theme updates and CSS variables
+
+The theme of MapStore has been updated to support CSS variables to some aspect of the style in particular colors and font families.
+The `web/client/themes/default/variables.less` file contains all the available variables described under the `@ms-theme-vars` ruleset.
+It suggested to update the lesscss variables in the projects because the variables starting with `@ms2-` will be deprecated soon:
+
+`@ms2-color-text` -> `@ms-main-color`
+`@ms2-color-background` -> `@ms-main-bg`
+`@ms2-color-shade-lighter` -> `@ms-main-border-color`
+
+`@ms2-color-code` -> `@ms-code-color`
+
+`@ms2-color-text-placeholder` -> `@ms-placeholder-color`
+
+`@ms2-color-disabled` -> `@ms-disabled-bg`
+`@ms2-color-text-disabled` -> `@ms-disabled-color`
+
+`@ms2-color-text-primary` -> `@ms-primary-contrast`
+
+`@ms2-color-primary` -> `@ms-primary`
+`@ms2-color-info` -> `@ms-info`
+`@ms2-color-success` -> `@ms-success`
+`@ms2-color-warning` -> `@ms-warning`
+`@ms2-color-danger` -> `@ms-danger`
+
+The font family has been update to `Noto Sans` so all the html need to be updated removing the previous font link with:
+
+```html
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+```
+
 ### Project system
 
 During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon.
