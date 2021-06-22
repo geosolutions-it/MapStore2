@@ -43,6 +43,7 @@ function maptype(state = { mapType: "leaflet" }, action) {
         return state;
     case MAP_PLUGIN_LOAD:
         return {
+            ...state,
             loaded: {
                 ...state.loaded,
                 [action.mapType]: action.loaded
