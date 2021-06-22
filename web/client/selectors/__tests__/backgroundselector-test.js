@@ -12,7 +12,8 @@ import {
     metadataSourceSelector,
     modalParamsSelector,
     backgroundListSelector,
-    isDeletedIdSelector
+    isDeletedIdSelector,
+    backgroundLayersSelector
 } from '../backgroundselector';
 
 const backgrounds = [{id: '1', thumbId: 10}, {id: '2', thumbnail: {url: 'url', data: 'binary'}}];
@@ -47,5 +48,48 @@ describe('Test backgroundselector selectors', () => {
     it('test isDeletedIdSelector', () => {
         const deleted = isDeletedIdSelector(state);
         expect(deleted).toBe('61c9e030-4967-11e9-a528-a79c388c845f');
+    });
+    it('test backgroundLayersSelector', () => {
+        const bgLayers = [{
+            group: "background",
+            type: "wms"
+        }];
+        const layers = [{
+            group: "Annotations",
+            type: "wms"
+        }];
+        const result = backgroundLayersSelector({
+            layers: {
+                flat: layers.concat(bgLayers)
+            },
+            "maptype": {
+                mapType: "openlayers"
+            },
+            mode: "desktop"
+        });
+        expect(result).toEqual(bgLayers);
+    });
+    it('test backgroundLayersSelector with mode embedded', () => {
+        const bgLayers = [{
+            group: "background",
+            type: "wms"
+        }];
+        const layers = [{
+            group: "Annotations",
+            type: "wms"
+        }];
+        const result = backgroundLayersSelector({
+            layers: {
+                flat: layers.concat(bgLayers)
+            },
+            maptype: {
+                mapType: "openlayers",
+                loaded: {
+                    "openlayers": true
+                }
+            },
+            mode: "embedded"
+        });
+        expect(result).toEqual(bgLayers.map(l => ({...l, invalid: true})));
     });
 });

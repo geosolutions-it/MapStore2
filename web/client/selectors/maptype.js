@@ -21,6 +21,7 @@ import { get } from 'lodash';
  * @return {string}       the maptype in the state
  */
 export const mapTypeSelector = (state) => state && state.maptype && state.maptype.mapType || 'leaflet';
+export const mapTypeLoadedSelector = (state) => state && state.maptype && state.maptype.loaded;
 
 /**
  * Check if the mapType is cesium
