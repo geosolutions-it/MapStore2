@@ -50,7 +50,7 @@ It is suggested to :
 `@ms2-color-warning` -> `@ms-warning`
 `@ms2-color-danger` -> `@ms-danger`
 
-The font family has been update to `Noto Sans` so all the html need to be updated removing the previous font link with:
+- The font family has been update to `Noto Sans` so all the html need to be updated removing the previous font link with:
 
 ```html
 <link rel="preconnect" href="https://fonts.gstatic.com">
