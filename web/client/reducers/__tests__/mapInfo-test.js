@@ -265,8 +265,15 @@ describe('Test the mapInfo reducer', () => {
 
     it('should reset the state', () => {
         let state = mapInfo({showMarker: true}, {type: 'RESET_CONTROLS'});
-        expect(state).toExist();
-        expect(state.showMarker).toBe(false);
+        expect(state).toBeTruthy();
+        expect(state).toEqual({
+            showMarker: false,
+            responses: [],
+            requests: [],
+            configuration: {
+                trigger: "click"
+            }
+        });
     });
 
     it('should toggle mapinfo state', () => {
