@@ -25,9 +25,11 @@ This is a list of things to check if you want to update from a previous version 
 
 ### Theme updates and CSS variables
 
-The theme of MapStore has been updated to support CSS variables to some aspect of the style in particular colors and font families.
+The theme of MapStore has been updated to support CSS variables for some aspects of the style, in particular colors and font families.
 The `web/client/themes/default/variables.less` file contains all the available variables described under the `@ms-theme-vars` ruleset.
-It suggested to update the lesscss variables in the projects because the variables starting with `@ms2-` will be deprecated soon:
+It is suggested to : 
+
+- update the lesscss variables in the projects because the variables starting with `@ms2-` will be deprecated soon:
 
 `@ms2-color-text` -> `@ms-main-color`
 `@ms2-color-background` -> `@ms-main-bg`
