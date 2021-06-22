@@ -8,7 +8,7 @@
 
 import {createSelector} from 'reselect';
 import {layersSelector} from '../selectors/layers';
-import {mapTypeSelector} from '../selectors/maptype';
+import {mapTypeSelector, mapTypeLoadedSelector} from '../selectors/maptype';
 import {invalidateUnsupportedLayer} from '../utils/LayersUtils';
 
 export const metadataSourceSelector = (state) => state.backgroundSelector && state.backgroundSelector.source;
@@ -19,6 +19,7 @@ export const removedBackgroundsThumbIdsSelector = (state) => state.backgroundSel
 export const confirmDeleteBackgroundModalSelector = (state) => state.backgroundSelector && state.backgroundSelector.confirmDeleteBackgroundModal;
 export const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
 export const allowBackgroundsDeletionSelector = (state) => state.backgroundSelector && state.backgroundSelector.allowDeletion;
-export const backgroundLayersSelector = createSelector(layersSelector, mapTypeSelector, (layers, maptype) => {
-    return layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [];
+export const backgroundLayersSelector = createSelector(layersSelector, mapTypeSelector, mapTypeLoadedSelector, (layers, maptype, loaded) => {
+    const  backgroundLayers = layers.filter((l) => l && l.group === "background");
+    return loaded && loaded[maptype] ? backgroundLayers.map((l) => invalidateUnsupportedLayer(l, maptype)) || [] : backgroundLayers;
 });
