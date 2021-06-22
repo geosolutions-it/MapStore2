@@ -1,12 +1,104 @@
-.rw-widget {
-    color: @ms-primary  !important;
-    background-color: @ms-body-bg  !important;
-    border: 1px solid @ms-body-border-color  !important;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+.select-with-css-variables(@theme-vars) {
+    .rw-widget {
+        .color-var(@theme-vars[primary], true);
+        .background-color-var(@theme-vars[main-bg], true);
+        .border-color-var(@theme-vars[main-border-color], true);
+    }
+
+    .rw-list-option:hover {
+        .color-var(@theme-vars[primary-contrast], true);
+        .background-color-var(@theme-vars[primary], true);
+    }
+
+    .rw-state-focus {
+        .color-var(@theme-vars[primary], true);
+        .border-color-var(@theme-vars[focus-color], true);
+    }
+
+    .rw-i {
+        .color-var(@theme-vars[primary], true);
+    }
+
+    .rw-placeholder {
+        .color-var(@theme-vars[main-color], true);
+        .background-color-var(@theme-vars[main-bg], true);
+    }
+
+    .rw-input {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .rw-filter-input {
+        .border-color-var(@theme-vars[primary], true);
+    }
+
+    .rw-select {
+        .border-left-color-var(@theme-vars[main-border-color], true);
+    }
+
+    .rw-combo-clearable {
+        .background-color-var(@theme-vars[main-bg], true);
+    }
+
+    .rw-combo-clear {
+        .color-var(@theme-vars[primary], true);
+    }
+
+    .rw-combo-clearable.disabled .rw-combo-clear {
+        color: fadeout(@ms-primary, 30) !important;
+    }
+
+    select.form-control {
+        .border-color-var(@theme-vars[main-border-color]);
+
+        option {
+            .color-var(@theme-vars[main-variant-color]);
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+    }
+
+    select {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-left-color-var(@theme-vars[main-border-color]);
+
+        option {
+            .color-var(@theme-vars[main-variant-color]);
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+    }
+
+    #mapstore-scalebox {
+        select {
+            .color-var(@theme-vars[main-variant-color]);
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+
+        option {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
 }
 
-.rw-list-option:hover {
-    color: @ms-body-bg  !important;
-    background-color: @ms-primary  !important;
+// **************
+// Layout
+// **************
+.rw-widget {
+    border-width: 1px  !important;
+    border-style: solid !important;
 }
 
 .rw-list-option:focus {
@@ -14,36 +106,20 @@
 }
 
 .rw-state-focus {
-    color: @ms-primary  !important;
     background-color: transparent !important;
-    border: 1px solid @ms-primary  !important;
+    border-width: 1px  !important;
+    border-style: solid !important;
     outline: none;
 }
 
-.rw-i {
-    color: @ms-primary  !important;
-}
-
-
-.rw-placeholder {
-    color: @ms-body-color  !important;
-    background-color: @ms-body-bg  !important;
-}
-
-.rw-input {
-    color: @ms-body-color;
-}
-
 .rw-filter-input {
-    border: 1px solid @ms-primary  !important;
+    border-width: 1px  !important;
+    border-style: solid !important;
 }
 
 .rw-select {
-    border-left: 1px solid @ms-body-border-color  !important;
-}
-
-.rw-combo-clearable {
-    background-color: @ms-body-bg  !important;
+    border-left-width: 1px  !important;
+    border-left-style: solid !important;
 }
 
 .rw-combo-clearable input.rw-input {
@@ -66,39 +142,26 @@
     float: right;
     bottom: 2em;
     right: 2.3em;
-    color: @ms-primary  !important;
     cursor: pointer;
 }
 
 .rw-combo-clearable.disabled .rw-combo-clear {
     cursor: not-allowed;
-    color: fadeout(@ms-primary, 30) !important;
 }
 
 select.form-control {
-    border: 1px solid @ms-body-border-color;
-
-    option {
-        color: @ms-body-color;
-        background-color: darken(@ms-body-bg, 5%);
-    }
+    border-width: 1px  !important;
+    border-style: solid !important;
 }
 
 select {
-    background-color: @ms-body-bg;
-    border: 1px solid @ms-body-border-color;
-
-    option {
-        color: @ms-body-color;
-        background-color: darken(@ms-body-bg, 5%);
-    }
+    border-width: 1px  !important;
+    border-style: solid !important;
 }
 
 #mapstore-scalebox {
     select {
         margin-top: 2px;
-        background-color: darken(@ms-body-bg, 5%);
-        color: @ms-body-color;
         border: none;
     }
 
@@ -108,12 +171,6 @@ select {
         font-size: @font-size-small;
         margin-right: 5px;
     }
-
-    option {
-        background-color: @ms-body-bg;
-        color: @ms-body-color;
-    }
-
     .form-control {
         height: 25px;
         padding: 0 0 0 4px;

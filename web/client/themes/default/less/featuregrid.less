@@ -1,3 +1,23 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.featuregrid-with-css-variables(@theme-vars) {
+    .featuregrid-geometry-filter.filter-enabled {
+        .color-var(@theme-vars[primary]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .feature-grid-drag-handle-show .drag-handle {
     display: inline;
 }

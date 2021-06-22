@@ -1,4 +1,42 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+.geostory-navigation-with-css-variables(@theme-vars) {
+    .ms-geostory-navigation {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .ms-geostory-navigation-bar {
+            .progress-bar {
+                .background-color-var(@theme-vars[main-variant-bg]);
+
+                .progress-percent {
+                    .background-color-var(@theme-vars[primary]);
+                }
+            }
+        }
+
+        .ms-horizontal-menu {
+            .ms-menu-item {
+                .active {
+                    .color-var(@theme-vars[primary-contrast]);
+                    .background-color-var(@theme-vars[primary]);
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms-geostory-navigation-btn(@color; @background; @border) {
         color: @color;
         background-color: @background;

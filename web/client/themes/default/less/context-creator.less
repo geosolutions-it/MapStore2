@@ -1,3 +1,75 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.context-creator-with-css-variables(@theme-vars) {
+    .configure-plugins-step-upload {
+        .dropzone {
+            .color-var(@theme-vars[primary]);
+            .background-color-var(@theme-vars[primary-contrast]);
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+
+        .title-header {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+        }
+
+        .uploading-file {
+            .border-color-var(@theme-vars[main-border-color]);
+
+            .glyphicon-ok {
+                .color-var(@theme-vars[success]);
+            }
+
+            .glyphicon-remove {
+                .color-var(@theme-vars[danger]);
+            }
+        }
+    }
+
+    .configure-plugins-step {
+        .plugin-configuration-line-error {
+            .background-color-var(@theme-vars[danger]);
+        }
+
+        .plugin-configuration-errorarea {
+            .plugin-configuration-errorarea-header {
+                .color-var(@theme-vars[warning-contrast]);
+                .background-color-var(@theme-vars[warning]);
+            }
+
+            .plugin-configuration-errormsg {
+                .color-var(@theme-vars[danger-contrast]);
+                .background-color-var(@theme-vars[danger]);
+            }
+        }
+
+        .configure-map-templates-transfer {
+
+            .mapstore-side-preview {
+                .configure-map-templates-preview {
+                    .background-color-var(@theme-vars[main-variant-bg]);
+                }
+
+                .glyphicon {
+                    .color-var(@theme-vars[main-bg]);
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .page-context-creator {
     position: absolute;
 }

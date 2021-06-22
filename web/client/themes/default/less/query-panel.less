@@ -1,5 +1,48 @@
-/* query panel */
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+.query-panel-with-css-variables(@theme-vars) {
+    .mapstore-string-select {
+        .m-options {
+            .background-color-var(@theme-vars[main-bg]);
+
+            ul {
+                li {
+                    &:hover {
+                        .color-var(@theme-vars[primary-contrast]);
+                        .background-color-var(@theme-vars[primary]);
+                    }
+                }
+            }
+        }
+    }
+
+    .mapstore-query-builder {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .ms2-border-layout-body {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+
+    .mapstore-conditions-group {
+        .mapstore-conditions-group {
+            .border-left-color-var(@theme-vars[main-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .shadow-soft-up {
     -webkit-box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
@@ -132,7 +175,8 @@
     .mapstore-conditions-group {
         padding-left: @square-btn-small-size;
         padding-right: 0;
-        border-left: 2px solid contrast(@ms-body-bg);
+        border-left-width: 1px;
+        border-left-style: solid;
         .shadow-soft;
 
         +.filter-field-row,

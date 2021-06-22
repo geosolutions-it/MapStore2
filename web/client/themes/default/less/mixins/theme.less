@@ -14,8 +14,8 @@
 
     // app container styles
     [data-ms2-container] {
-        .color-var(@theme-vars[body-color]);
-        .background-color-var(@theme-vars[body-bg]);
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
         .font-family-var(@theme-vars[font-family-base]);
     }
 
@@ -77,7 +77,7 @@
     .select-with-css-variables(@theme-vars);
     .service-config-editor-with-css-variables(@theme-vars);
     .settings-with-css-variables(@theme-vars);
-    .shapefile-with-css-variables(@theme-vars);
+    .shapefile-upload-with-css-variables(@theme-vars);
     .share-with-css-variables(@theme-vars);
     .sidegrid-with-css-variables(@theme-vars);
     .sliders-with-css-variables(@theme-vars);
@@ -92,39 +92,4 @@
     .style-editor-with-css-variables(@theme-vars);
     .react-select-theme-with-css-variables(@theme-vars);
     .loaders-with-css-variables(@theme-vars);
-}
-
-// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
-// return the root selector with all the css variables used by the mapstore theme
-.get-root-css-variables(@theme-vars) {
-    :root {
-        each(@theme-vars, {
-            // exclude nested rule sets
-            & when not(isruleset(@value)) {
-                @css-var-key: extract(@value, 1);
-                @css-var-value: extract(@value, 2);
-                @{css-var-key}: @css-var-value;
-            }
-        })
-        each(@theme-vars[@button-default], {
-            @css-var-key: extract(@value, 1);
-            @css-var-value: extract(@value, 2);
-            @{css-var-key}: @css-var-value;
-        })
-        each(@theme-vars[@button-primary], {
-            @css-var-key: extract(@value, 1);
-            @css-var-value: extract(@value, 2);
-            @{css-var-key}: @css-var-value;
-        })
-        each(@theme-vars[@button-success], {
-            @css-var-key: extract(@value, 1);
-            @css-var-value: extract(@value, 2);
-            @{css-var-key}: @css-var-value;
-        })
-        each(@theme-vars[@button-tray], {
-            @css-var-key: extract(@value, 1);
-            @css-var-value: extract(@value, 2);
-            @{css-var-key}: @css-var-value;
-        })
-    }
 }

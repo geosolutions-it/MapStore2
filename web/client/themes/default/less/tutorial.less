@@ -1,13 +1,30 @@
-.joyride-overlay {
-    z-index: 4000 !important;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.tutorial-with-css-variables(@theme-vars) {
+
+    .joyride-tooltip__button--primary {
+        .background-color-var(@theme-vars[primary], true);
+
+        &:active,
+        &:focus,
+        &:hover {
+            .background-color-var(@theme-vars[primary], true);
+        }
+    }
 }
 
-.joyride-tooltip__button--primary {
-    background-color: @ms-primary  !important;
-
-    &:active,
-    &:focus,
-    &:hover {
-        background-color: @ms-primary  !important;
-    }
+// **************
+// Layout
+// **************
+.joyride-overlay {
+    z-index: 4000 !important;
 }

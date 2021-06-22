@@ -1,3 +1,49 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.panel-with-css-variables(@theme-vars) {
+    .ms-side-panel {
+        .ms-header {
+            .background-color-var(@theme-vars[main-bg]);
+
+            .row {
+                &:first-child {
+                    .color-var(@theme-vars[main-color]);
+                    .background-color-var(@theme-vars[main-bg]);
+
+                    .col-xs-8 {
+                        .color-var(@theme-vars[main-color]);
+                    }
+                }
+            }
+
+            &.ms-primary {
+                .row {
+                    &:first-child {
+                        .color-var(@theme-vars[primary-contrast]);
+                        .background-color-var(@theme-vars[primary]);
+
+                        .col-xs-8 {
+                            .color-var(@theme-vars[primary-contrast]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms-side-panel {
     /* needed to set right position when embedded */
     &.ms-absolute-dock {
@@ -23,7 +69,6 @@
     }
     .ms-header {
         z-index: 10;
-        background-color: @ms-body-bg;
         .shadow-soft;
         .btn {
             .no-border;
@@ -70,8 +115,6 @@
             }
             &:first-child {
                 display: flex;
-                color: @ms-body-color;
-                background-color: @ms-body-bg;
                 & > * {
                     padding: 0;
                     width: auto;
@@ -80,7 +123,6 @@
                     flex: 1;
                     text-align: center;
                     align-self: center;
-                    color: @ms-body-color;
                 }
             }
         }
@@ -90,18 +132,6 @@
                 width: 1%;
                 > a {
                     margin-bottom: 0;
-                }
-            }
-        }
-
-        &.ms-primary {
-            .row {
-                &:first-child {
-                    color: @ms-primary-color;
-                    background-color: @ms-primary;
-                    .col-xs-8 {
-                        color: @ms-primary-color;
-                    }
                 }
             }
         }

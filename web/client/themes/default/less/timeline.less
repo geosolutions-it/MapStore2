@@ -1,16 +1,365 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+.timeline-with-css-variables(@theme-vars) {
+    .timeline-plugin {
+        @ms-none-transparent: --ms-none, transparent;
+        @ms-none-unset: --ms-none, unset;
+        /* local mixin to highlight handlers on timeline, used on active and over */
+        .ms-time-color-active-with-css-variables(
+            @color: @theme-vars[main-color];
+            @b-top: @theme-vars[main-color];
+            @b-right: @ms-none-transparent;
+            @b-bottom: @theme-vars[main-color];
+            @b-left: @ms-none-transparent;
+            @a-color: @ms-none-unset;
+        ) {
+            .background-color-var(@color);
+            border-left-width: 1px;
+            border-left-style: solid;
+            .border-left-color-var(@color);
+            box-sizing: unset;
+            border-right-width: 1px;
+            border-right-style: solid;
+            .border-right-color-var(@color);
+            &:before, &::before, &:after, &::after {
+                .border-top-color-var(@b-top);
+                .border-right-color-var(@b-right);
+                .border-bottom-color-var(@b-bottom);
+                .border-left-color-var(@b-left);
+                .color-var(@a-color);
+            }
+        }
+    
+        .vis-custom-time {
+    
+            &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
+                .background-color-var(@theme-vars[main-color]);
+                & > div {
+                    &:hover, &:active {
+                        /* common style between chevron left and right */
+                        &:before, &::before, &:after, &::after {
+                            .color-var(@theme-vars[main-color]);
+                        }
+                    }
+                }
+            }
+
+            &.endPlaybackTime {
+                .background-color-var(@theme-vars[danger]);
+                /* stop icon */
+                &:after, &::after {
+                    .color-var(@theme-vars[danger]);
+                }
+                &:hover, &:active {
+                    /* mixin hightlight handler, change background and stop icon colors */
+                    .ms-time-color-active-with-css-variables(
+                        @theme-vars[danger];
+                        @ms-none-transparent;
+                        @ms-none-transparent;
+                        @ms-none-transparent;
+                        @ms-none-transparent;
+                        @theme-vars[danger];
+                    );
+                }
+                & > div {
+                    &:active, &:hover {
+                        &:before, &::before, &:after, &::after {
+                            .color-var(@theme-vars[danger]);
+                        }
+                    }
+                }
+            }
+    
+            &.startPlaybackTime {
+                .background-color-var(@theme-vars[success]);
+                /* play icon */
+                &:after, &::after {
+                    .color-var(@theme-vars[success]);
+                }
+                &:hover, &:active {
+                    /* mixin hightlight handler, change background and play icon colors */
+                    .ms-time-color-active-with-css-variables(
+                        @theme-vars[success];
+                        @ms-none-transparent;
+                        @ms-none-transparent;
+                        @ms-none-transparent;
+                        @ms-none-transparent;
+                        @theme-vars[success];
+                    );
+                }
+                & > div {
+                    &:active, &:hover {
+                        &:before, &::before, &:after, &::after {
+                            .color-var(@theme-vars[success]);
+                        }
+                    }
+                }
+            }
+    
+            &.currentTime {
+                .background-color-var(@theme-vars[main-color]);
+                /* generate a triangle on top of the handler */
+                &:before, &::before {
+                    .border-top-color-var(@theme-vars[main-color]);
+                }
+                /* generate a triangle on bottom of the handler */
+                &:after, &::after {
+                    .border-bottom-color-var(@theme-vars[main-color]);
+                }
+    
+                &:hover {
+                    /* mixin hightlight handler, change background and triangles colors */
+                    .ms-time-color-active-with-css-variables(
+                        @theme-vars[main-color];
+                        @theme-vars[main-color];
+                        @ms-none-transparent;
+                        @theme-vars[main-color];
+                    );
+                }
+                &:active {
+                    /* mixin hightlight handler, change background and triangles colors */
+                    .ms-time-color-active-with-css-variables(
+                        @theme-vars[main-color];
+                        @theme-vars[main-color];
+                        @ms-none-transparent;
+                        @theme-vars[main-color];
+                    );
+                }
+            }
+        }
+    
+        &.with-time-offset {
+            .vis-custom-time {
+                &.currentTime {
+                    /* generate a smaller tiangle on bottom of the handler */
+                    &:before, &::before {
+                        .border-left-color-var(@theme-vars[main-color]);
+                    }
+                    /* generate a smaller tiangle on top of the handler */
+                    &:after, &::after {
+                        .border-left-color-var(@theme-vars[main-color]);
+                    }
+                    &:hover, &:active {
+                        /* mixin hightlight handler, change background and triangles colors */
+                        .ms-time-color-active-with-css-variables(
+                            @theme-vars[main-color];
+                            @ms-none-transparent;
+                            @ms-none-transparent;
+                            @ms-none-transparent;
+                            @theme-vars[main-color];
+                        );
+                    }
+                }
+    
+                &.offsetTime {
+                    /* generate a smaller tiangle on bottom of the handler */
+                    &:before, &::before {
+                        .border-right-color-var(@theme-vars[main-color]);
+                    }
+                    /* generate a smaller tiangle on top of the handler */
+                    &:after, &::after {
+                        .border-right-color-var(@theme-vars[main-color]);
+                    }
+    
+                    &:hover, &:active {
+                        /* mixin hightlight handler, change background and triangles colors */
+                        .ms-time-color-active-with-css-variables(
+                            @theme-vars[main-color];
+                            @ms-none-transparent;
+                            @theme-vars[main-color];
+                            @ms-none-transparent;
+                            @ms-none-transparent;
+                        );
+                    }
+                }
+            }
+        }
+
+        .timeline-plugin-toolbar {
+            .background-color-var(@theme-vars[main-bg]);
+            &.ms-collapsed {
+                .ms-inline-datetime {
+                    + .timeline-plugin-btn-group {
+                        .border-top-color-var(@theme-vars[main-border-color]);
+                    }
+                }
+            }
+        }
+    
+        .vis-timeline {
+            .background-color-var(@theme-vars[main-bg]);
+            .vis-item {
+                .color-var(@theme-vars[main-color]);
+            }
+            .vis-panel {
+                .vis-time-axis {
+                    .vis-grid {
+                        &.vis-major, &.vis-minor {
+                            .border-color-var(@theme-vars[main-border-color]);
+                        }
+                    }
+                }
+                &.vis-bottom {
+                    .vis-time-axis {
+                        .vis-text {
+                            .color-var(@theme-vars[main-variant-color]);
+                        }
+                        .background-color-var(@theme-vars[main-variant-bg]);
+                    }
+                }
+                &.vis-center {
+                    .vis-group {
+                        &.selected {
+                            .background-color-var(@theme-vars[timeline-selected-bg]);
+                        }
+                        &.loading {
+                            .vis-item {
+                                &.vis-range {
+                                    &.histogram-item {
+                                        .vis-item-overflow {
+                                            .vis-item-content {
+                                                .histogram-box {
+                                                    .border-color-var(@theme-vars[main-border-color]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+    
+                        .vis-item {
+                            &.vis-dot {
+                                .border-color-var(@theme-vars[timeline-histogram-border-color]);
+                            }
+                            &.vis-range {
+                                &.histogram-item {
+                                    .vis-item-content {
+                                        .background-color-var(@theme-vars[timeline-histogram-bg]);
+                                        .border-color-var(@theme-vars[timeline-histogram-border-color]);
+                                    }
+                                    .vis-item-overflow {
+                                        .vis-item-content {
+                                            .histogram-box {
+                                                .background-color-var(@theme-vars[timeline-histogram-bg]);
+                                                .border-color-var(@theme-vars[timeline-histogram-border-color]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                &.vis-left {
+                    .color-var(@theme-vars[main-color]);
+                    .background-color-var(@theme-vars[main-bg]);
+                    .vis-content {
+                        .border-bottom-color-var(@theme-vars[main-border-color]);
+                        .vis-label {
+                            .color-var(@theme-vars[main-color]);
+                            &:hover {
+                                .color-var(@theme-vars[main-hover-color]);
+                                .background-color-var(@theme-vars[main-hover-bg]);
+                            }
+                            &.selected {
+                                .color-var(@theme-vars[primary-contrast]);
+                                .background-color-var(@theme-vars[primary]);
+                                .vis-inner {
+                                    .timeline-layer-label-container {
+                                        .timeline-layer-icon {
+                                            .timeline-spinner {
+                                                .mapstore-circle-loader-with-css-variables(1px, 12px, @theme-vars[loader-primary-contrast-color], @theme-vars[loader-primary-contrast-fade-color]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .vis-inner {
+                                .timeline-layer-label-container {
+                                    .timeline-layer-icon {
+                                        .border-right-color-var(@theme-vars[main-border-color]);
+                                        .timeline-spinner {
+                                            .mapstore-circle-loader-with-css-variables(1px, 12px, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .vis-item.vis-background.ms-current-range {
+            .background-color-var(@theme-vars[timeline-range-bg]);
+            .border-color-var(@theme-vars[main-color]);
+        }
+
+        .vis-item.vis-background.ms-playback-range {
+            .background-color-var(@theme-vars[timeline-playback-range-bg]);
+        }
+
+        /* read only section */
+        &, &.with-time-offset {
+            .read-only-timeline {
+                .vis-custom-time {
+                    &.currentTime,
+                    &.offsetTime {
+                        .background-color-var(@theme-vars[main-color]);
+                    }
+    
+                    &.endPlaybackTime {
+                        .background-color-var(@theme-vars[danger]);
+                    }
+                    &.startPlaybackTime {
+                        .background-color-var(@theme-vars[success]);
+                    }
+                }
+            }
+        }
+    
+    }
+    
+    .ms-inline-datetime {
+        .border-right-color-var(@theme-vars[main-border-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+    
+    .playback-plugin {
+        .ms-playback-settings {
+            .background-color-var(@theme-vars[main-bg]);
+            h4 {
+                .border-bottom-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 @keyframes timeline-loading {
     0% {
-        background-color: fade(darken(@ms-body-border-color, 10%), 70%);
-        border-color: fade(darken(@ms-body-border-color, 10%), 70%);
+        background-color: fade(darken(@ms-main-border-color, 10%), 70%);
+        border-color: fade(darken(@ms-main-border-color, 10%), 70%);
     }
     50% {
-        background-color: fade(@ms-body-border-color, 70%);
-        border-color: fade(@ms-body-border-color, 70%);
+        background-color: fade(@ms-main-border-color, 70%);
+        border-color: fade(@ms-main-border-color, 70%);
     }
     100% {
-        background-color: fade(darken(@ms-body-border-color, 10%), 70%);
-        border-color: fade(darken(@ms-body-border-color, 10%), 70%);
+        background-color: fade(darken(@ms-main-border-color, 10%), 70%);
+        border-color: fade(darken(@ms-main-border-color, 10%), 70%);
     }
 }
 .timeline-plugin {
@@ -33,10 +382,10 @@
 
     /* local mixin to highlight handlers on timeline, used on active and over */
     .ms-time-color-active(
-        @color: @ms-body-color,
-        @b-top: @ms-body-color,
+        @color: @ms-main-color,
+        @b-top: @ms-main-color,
         @b-right: transparent,
-        @b-bottom: @ms-body-color,
+        @b-bottom: @ms-main-color,
         @b-left: transparent,
         @a-color: 'unset'
     ) {
@@ -57,7 +406,7 @@
 
         &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
             .shadow-soft;
-            background-color: lighten(@ms-body-color, 30%);
+            background-color: lighten(@ms-main-color, 30%);
             width: 2px;
             z-index: 65;
             cursor: ew-resize;
@@ -93,7 +442,7 @@
                         left: 50%;
                         margin-left: 1px;
                         transform: translateX(-50%);
-                        color: lighten(@ms-body-color, 20%);
+                        color: lighten(@ms-main-color, 20%);
                     }
                 }
 
@@ -178,7 +527,7 @@
         }
 
         &.currentTime {
-            background-color: lighten(@ms-body-color, 30%);
+            background-color: lighten(@ms-main-color, 30%);
             cursor: move;
             cursor: grab;
             cursor: -moz-grab;
@@ -192,22 +541,22 @@
             &:before, &::before {
                 top: 0;
                 left: -9px;
-                border-top: 10px solid lighten(@ms-body-color, 30%);
+                border-top: 10px solid lighten(@ms-main-color, 30%);
             }
             /* generate a triangle on bottom of the handler */
             &:after, &::after {
                 bottom: 0;
                 left: -9px;
-                border-bottom: 10px solid lighten(@ms-body-color, 30%);
+                border-bottom: 10px solid lighten(@ms-main-color, 30%);
             }
 
             &:hover {
                 /* mixin hightlight handler, change background and triangles colors */
                 .ms-time-color-active(
-                    lighten(@ms-body-color, 20%),
-                    lighten(@ms-body-color, 20%),
+                    lighten(@ms-main-color, 20%),
+                    lighten(@ms-main-color, 20%),
                     transparent,
-                    lighten(@ms-body-color, 20%)
+                    lighten(@ms-main-color, 20%)
                 );
             }
             &:active {
@@ -216,10 +565,10 @@
                 cursor: -webkit-grabbing;
                 /* mixin hightlight handler, change background and triangles colors */
                 .ms-time-color-active(
-                    lighten(@ms-body-color, 20%),
-                    lighten(@ms-body-color, 20%),
+                    lighten(@ms-main-color, 20%),
+                    lighten(@ms-main-color, 20%),
                     transparent,
-                    lighten(@ms-body-color, 20%)
+                    lighten(@ms-main-color, 20%)
                 );
                 z-index: 67;
             }
@@ -235,7 +584,7 @@
                     top: 0;
                     left: 0;
                     border-bottom: 10px solid transparent;
-                    border-left: 10px solid lighten(@ms-body-color, 30%);
+                    border-left: 10px solid lighten(@ms-main-color, 30%);
                     border-top: unset;
                 }
                 /* generate a smaller tiangle on top of the handler */
@@ -243,17 +592,17 @@
                     bottom: 0;
                     left: 0;
                     border-top: 10px solid transparent;
-                    border-left: 10px solid lighten(@ms-body-color, 30%);
+                    border-left: 10px solid lighten(@ms-main-color, 30%);
                     border-bottom: unset;
                 }
                 &:hover, &:active {
                     /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active(
-                        lighten(@ms-body-color, 20%),
+                        lighten(@ms-main-color, 20%),
                         transparent,
                         transparent,
                         transparent,
-                        lighten(@ms-body-color, 20%)
+                        lighten(@ms-main-color, 20%)
                     );
                     z-index: 67;
                 }
@@ -265,22 +614,22 @@
                     top: 0;
                     left: -9px;
                     border-bottom: 10px solid transparent;
-                    border-right: 10px solid lighten(@ms-body-color, 30%);
+                    border-right: 10px solid lighten(@ms-main-color, 30%);
                 }
                 /* generate a smaller tiangle on top of the handler */
                 &:after, &::after {
                     bottom: 0;
                     left: -9px;
                     border-top: 10px solid transparent;
-                    border-right: 10px solid lighten(@ms-body-color, 30%);
+                    border-right: 10px solid lighten(@ms-main-color, 30%);
                 }
 
                 &:hover, &:active {
                     /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active(
-                        lighten(@ms-body-color, 20%),
+                        lighten(@ms-main-color, 20%),
                         transparent,
-                        lighten(@ms-body-color, 20%),
+                        lighten(@ms-main-color, 20%),
                         transparent,
                         transparent
                     );
@@ -295,7 +644,7 @@
         display: flex;
         align-items: center;
         position: relative;
-        background-color: @ms-body-bg;
+        background-color: @ms-main-bg;
         padding: 2px;
         z-index: 50;
         .shadow-soft;
@@ -327,14 +676,14 @@
                     width: 100%;
                     display: flex;
                     justify-content: center;
-                    border-top: 1px solid @ms-body-border-color;
+                    border-top: 1px solid @ms-main-border-color;
                 }
             }
         }
     }
 
     .vis-timeline {
-        background-color: fade(@ms-body-bg, 90%);
+        background-color: fade(@ms-main-bg, 90%);
         border: none;
         .vis-panel {
             &.vis-background {
@@ -348,7 +697,7 @@
             }
             &.vis-bottom {
                 .vis-time-axis {
-                    background-color: @ms-body-bg;
+                    background-color: @ms-main-bg;
                 }
             }
             &.vis-center {
@@ -368,7 +717,7 @@
                                         .vis-item-content {
 
                                             .histogram-box {
-                                                border-color: @ms-body-border-color;
+                                                border-color: @ms-main-border-color;
                                                 animation: timeline-loading .3s linear infinite;
                                             }
                                             .histogram-count {
@@ -434,29 +783,29 @@
             }
             &.vis-left {
                 height: 100% !important;
-                background-color: @ms-body-bg;
+                background-color: @ms-main-bg;
                 border: none;
                 .shadow;
                 z-index: 30;
                 .vis-content {
                     margin-bottom: 30%;
-                    border-bottom: 1px solid @ms-body-border-color;
+                    border-bottom: 1px solid @ms-main-border-color;
 
                     .vis-label {
                         &:hover {
-                            background-color: @ms-body-border-color;
+                            background-color: @ms-main-border-color;
                             cursor: pointer;
                         }
                         &.selected {
-                            background-color: @ms-primary-bg;
-                            color: @ms-primary-color;
+                            background-color: @ms-primary;
+                            color: @ms-primary-contrast;
                         }
                         .vis-inner {
                             .timeline-layer-label-container {
                                 .timeline-layer-icon {
                                     width: 18px;
                                     height: 18px;
-                                    border-right: 1px solid @ms-body-border-color;
+                                    border-right: 1px solid @ms-main-border-color;
                                     float: left;
                                     padding: 1px;
                                 }
@@ -488,9 +837,9 @@
             z-index: 70;
         }
 
-        background-color: fade(lighten(@ms-body-color, 10%), 20%);
-        border-left: 1px dashed lighten(@ms-body-color, 10%);
-        border-right: 1px dashed lighten(@ms-body-color, 10%);
+        background-color: fade(lighten(@ms-main-color, 10%), 20%);
+        border-left: 1px dashed lighten(@ms-main-color, 10%);
+        border-right: 1px dashed lighten(@ms-main-color, 10%);
         box-sizing: border-box;
     }
 
@@ -540,7 +889,7 @@
 
                 &.currentTime,
                 &.offsetTime {
-                    background-color: lighten(@ms-body-color, 30%);
+                    background-color: lighten(@ms-main-color, 30%);
                 }
 
                 &.endPlaybackTime {
@@ -558,8 +907,8 @@
 .ms-inline-datetime {
     margin-right: 8px;
     padding-right: 8px;
-    border-right: 1px solid @ms-body-border-color;
-    background-color: @ms-body-bg;
+    border-right: 1px solid @ms-main-border-color;
+    background-color: @ms-main-bg;
     min-height: @square-btn-medium-size;
     display: flex;
     align-items: center;
@@ -612,7 +961,7 @@
         top: -5px;
         transform: ~"translateY(-100%)";
         padding: 8px;
-        background-color: @ms-body-bg;
+        background-color: @ms-main-bg;
         max-width: 400px;
         min-width: 300px;
         .shadow-far;
@@ -627,7 +976,7 @@
 
             }
             margin-left: 0;
-            border-bottom: 1px solid @ms-body-border-color;
+            border-bottom: 1px solid @ms-main-border-color;
         }
         .form-inline .react-numeric-input{
             display: inline-block !important;

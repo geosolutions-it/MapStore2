@@ -1,3 +1,27 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.export-with-css-variables(@theme-vars) {
+    .export-panel {
+        .export-panel-formats-container {
+            .btn-default.format-selected {
+                .border-color-var(@theme-vars[primary]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .export-panel {
     position: fixed;
     top: 0;

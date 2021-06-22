@@ -1,3 +1,79 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.dropzone-with-css-variables(@theme-vars) {
+
+    .dropzone-thumbnail-container .alert,
+    .dropzone-filedrop-container .alert {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .dropzone-filedrop-container {
+        .dropzone:hover .dropzone-filedrop-remove span {
+            .color-var(@theme-vars[danger]);
+        }
+
+        .dropzone {
+            .dropzone-filedrop-remove span:hover {
+                .color-var(@theme-vars[danger]);
+                opacity: 0.7;
+            }
+        }
+    }
+
+    .dropzone .dropzone-content-image-added {
+        .color-var(@theme-vars[main-bg]);
+        text-shadow: @ms-main-border-color 2px 2px 2px;
+    }
+
+    .dropzone:hover .dropzone-remove span {
+        .color-var(@theme-vars[main-bg]);
+    }
+
+    .dropzone-remove span:hover {
+        .color-var(@theme-vars[danger], true);
+    }
+
+    .ms-thumbnail {
+        .border-color-var(@theme-vars[main-border-color]);
+
+        .dropzone-remove {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        .dropzone-remove .glyphicon {
+            .color-var(@theme-vars[main-color]);
+
+            &:hover {
+                .color-var(@theme-vars[main-color]);
+            }
+        }
+
+        .ms-thumbnail-dropzone-active {
+            outline-width: 2px;
+            outline-style: solid;
+            .outline-color-var(@theme-vars[primary]);
+        }
+
+        .ms-thumbnail-dropzone-reject {
+            outline-width: 2px;
+            outline-style: solid;
+            .outline-color-var(@theme-vars[danger]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .dropzone.alert.alert-info {
     cursor: pointer;
 }

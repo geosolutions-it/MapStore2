@@ -1,3 +1,41 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.home-with-css-variables(@theme-vars) {
+    .page-maps {
+        .ms-home-description {
+            .color-var(@theme-vars[jumbotron-color]);
+            .background-color-var(@theme-vars[jumbotron-bg]);
+
+            .container {
+                .background-color-var(@theme-vars[jumbotron-bg]);
+            }
+        }
+
+        .navbar-home {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        >.container {
+            +.container {
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .mapstore-langselector {
     height: @square-btn-size;
     float: right;
@@ -84,7 +122,8 @@
 
     >.container {
         +.container {
-            border-top: 1px solid @ms-body-border-color;
+            border-top-width: 1px;
+            border-top-style: solid;
         }
 
         &:last-child {

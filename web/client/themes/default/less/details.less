@@ -1,3 +1,29 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.details-with-css-variables(@theme-vars) {
+    .details-panel .panel-heading {
+        .color-var(@theme-vars[primary-contrast]);
+        .background-color-var(@theme-vars[primary]);
+    }
+
+
+    .details-panel div div div.ms2-border-layout-body {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .details-close {
     float: right
 }

@@ -1,3 +1,89 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.widget-with-css-variables(@theme-vars) {
+    .widget-container {
+        &.selection-active {
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+
+        .mapstore-widget-card {
+            .background-color-var(@theme-vars[main-bg]);
+
+            .mapstore-widget-header {
+                .border-bottom-color-var(@theme-vars[main-border-color]);
+                .color-var(@theme-vars[primary]);
+
+                .mapstore-info-popover .glyphicon {
+                    .color-var(@theme-vars[primary]);
+                }
+
+                .widget-icons {
+                    .btn-group {
+                        button {
+                            .glyphicon.active::before {
+                                .color-var(@theme-vars[primary]);
+                            }
+
+                            .glyphicon:not(.active) {
+                                .background-color-var(@theme-vars[main-variant-bg]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            .mapstore-widget-options {
+                .color-var(@theme-vars[primary]);
+            }
+        }
+    }
+
+    .mapstore-widget-remove {
+        .color-var(@theme-vars[primary]);
+    }
+
+    .mapstore-widget-loader {
+        .border-top-color-var(@theme-vars[loader-primary-fade-color]);
+        .border-right-color-var(@theme-vars[loader-primary-fade-color]);
+        .border-bottom-color-var(@theme-vars[loader-primary-fade-color]);
+        .border-left-color-var(@theme-vars[loader-primary-color]);
+    }
+
+    .widgets-tray {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .widgets-bar {
+            >span {
+                .border-right-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+
+    .mapstore-chart-advance-options {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .ms2-border-layout-body {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+
+    .ms-widget-empty-message {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .draggableHandle {
     cursor: -webkit-grab;
     cursor: -moz-grab;
@@ -54,7 +140,7 @@
             margin: 10px 5%;
             font-size: 22px;
             font-weight: bold;
-            border-bottom: 1px solid @ms-body-border-color;
+            border-bottom: 1px solid @ms-main-border-color;
             .widget-title {
                 text-overflow: ellipsis;
                 width: calc(100% - 30px);
@@ -268,7 +354,7 @@
             }
             padding-right: 8px;
             margin-right: 6px;
-            border-right: 1px solid @ms-body-border-color;
+            border-right: 1px solid @ms-main-border-color;
         }
     }
 }

@@ -1,3 +1,29 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.print-with-css-variables(@theme-vars) {
+    #mapstore-print-panel {
+        .panel-heading {
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+
+        .panel-body {
+            .border-color-var(@theme-vars[primary]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 #mapstore-print-panel {
     .panel-heading {
         a {
@@ -5,6 +31,7 @@
         }
     }
     .panel-body {
-        border: solid 1px @ms-primary;
+        border-width: 1px;
+        border-style: solid;
     }
 }

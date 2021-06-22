@@ -1,3 +1,73 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.common-with-css-variables(@theme-vars) {
+
+    .option-icon {
+        .color-var(@theme-vars[primary]);
+    }
+
+    .viewer {
+        .background-color-var(@theme-vars[main-bg], true);
+    }
+
+    textarea {
+        .color-var(@theme-vars[main-variant-color]);
+        .background-color-var(@theme-vars[main-variant-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .portal-dialog {
+        .background-color-var(@theme-vars[main-bg], true);
+    }
+
+    .sidepanel-content {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .m-header {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms2-border-layout-content {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    div#sync-popover.popover {
+        h3 {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+        }
+    }
+
+    .error-container {
+        .runtime-error-message {
+            .color-var(@theme-vars[main-variant-color]);
+            .background-color-var(@theme-vars[main-variant-bg]);
+
+            &.inverse {
+                .color-var(@theme-vars[main-variant-bg]);
+                .background-color-var(@theme-vars[main-variant-color]);
+            }
+
+            .refresh-icon:hover {
+                .color-var(@theme-vars[primary]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .shadow {
     -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
     -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
@@ -168,7 +238,7 @@ textarea {
 
         &.white-mask {
             background-color: rgba(255, 255, 255, 0.6);
-            color: @ms-body-color;
+            color: #000;
         }
 
         display: flex;

@@ -1,12 +1,44 @@
-.group-thumb,
-.user-thumb {
-    background-color: darken(@ms-body-bg, 4%);
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.manager-with-css-variables(@theme-vars) {
+
+    .group-thumb,
+    .user-thumb {
+        .background-color-var(@theme-vars[main-variant-bg]);
+    }
+
+    .group-edit-dialog,
+    .user-edit-dialog {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .user-status .glyphicon-ok-sign {
+        .color-var(@theme-vars[success]);
+    }
+
+    .user-status .glyphicon-minus-sign {
+        .color-var(@theme-vars[danger]);
+    }
+
+    .ms-user-details-table {
+        .row {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
 }
 
-.group-edit-dialog,
-.user-edit-dialog {
-    background: @ms-body-bg;
-}
+// **************
+// Layout
+// **************
 
 .user-status {
     width: @grid-btn-size + @grid-btn-padding-left * 2;
@@ -18,19 +50,12 @@
     padding: 0 0 @grid-btn-padding-left 0;
 }
 
-.user-status .glyphicon-ok-sign {
-    color: @ms-success;
-}
-
-.user-status .glyphicon-minus-sign {
-    color: @ms-danger;
-}
-
 .ms-user-details-table {
     padding: 15px;
 
     .row {
-        border-bottom: 1px solid @ms-body-border-color;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
         min-height: @square-btn-size;
         display: flex;
 

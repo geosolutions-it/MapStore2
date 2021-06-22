@@ -1,3 +1,29 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+.createnewmap-with-css-variables(@theme-vars) {
+    .new-map-dialog {
+        .new-map-preview {
+            .background-color-var(@theme-vars[main-variant-bg]);
+
+            .glyphicon {
+                .color-var(@theme-vars[main-bg]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .create-new-map-container {
     .dropdown-toggle {
         height: 52px;
