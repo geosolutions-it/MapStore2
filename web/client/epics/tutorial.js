@@ -110,7 +110,7 @@ export const switchGeostoryTutorialEpic = (action$, store) =>
             try {
                 isGeostoryTutorialDisabled = getApi().getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
             } catch (e) {
-                console.error(e);
+                console.error(e); // eslint-disable-line
             }
             // if no steps are found then do nothing
             return steps ? Rx.Observable.from(
