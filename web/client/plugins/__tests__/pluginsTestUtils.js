@@ -58,7 +58,7 @@ const createRegisterActionsMiddleware = (actions) => {
  * import MyPlugin from './MyPlugin';
  * const { Plugin, store, actions, containers } = getPluginForTest(MyPlugin, {}, {ContainerPlugin: {}});
  */
-export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [], containersReducers ) => {
+export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [], containersReducers, actions = [] ) => {
     const PluginImpl = Object.keys(pluginDef).reduce((previous, key) => {
         if (endsWith(key, 'Plugin')) {
             return pluginDef[key];
@@ -85,7 +85,6 @@ export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [],
     );
     const rootEpic = combineEpics.apply(null, [...pluginEpics, ...pluginsEpics, ...castArray(testEpics)]);
     const epicMiddleware = createEpicMiddleware(rootEpic);
-    const actions = [];
 
     const store = applyMiddleware(thunkMiddleware, epicMiddleware, createRegisterActionsMiddleware(actions))(createStore)(reducer, storeState);
     return {
