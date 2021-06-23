@@ -213,7 +213,8 @@ class MapPlugin extends React.Component {
         localizedLayerStylesName: PropTypes.string,
         currentLocaleLanguage: PropTypes.string,
         items: PropTypes.array,
-        onLoadingMapPlugins: PropTypes.func
+        onLoadingMapPlugins: PropTypes.func,
+        onMapTypeLoaded: PropTypes.func
     };
 
     static defaultProps = {
@@ -252,7 +253,8 @@ class MapPlugin extends React.Component {
         onFontError: () => {},
         onResolutionsChange: () => {},
         items: [],
-        onLoadingMapPlugins: () => {}
+        onLoadingMapPlugins: () => {},
+        onMapTypeLoaded: () => {}
     };
     state = {
         canRender: true
@@ -435,7 +437,8 @@ class MapPlugin extends React.Component {
             // to make the last mapType match the list of plugins
             if (plugins.mapType === this.currentMapType) {
                 this.setState({plugins});
-                props.onLoadingMapPlugins(false, props.mapType, true);
+                props.onLoadingMapPlugins(false, props.mapType);
+                props.onMapTypeLoaded(true, props.mapType);
             }
         });
     };
@@ -445,7 +448,7 @@ export default createPlugin('Map', {
     component: connect(selector, {
         onFontError: errorLoadingFont,
         onResolutionsChange: setMapResolutions,
-        onLoadingMapPlugins: mapPluginLoad
+        onMapTypeLoaded: mapPluginLoad
     })(withScalesDenominators(MapPlugin)),
     reducers: {
         map: mapReducer,
