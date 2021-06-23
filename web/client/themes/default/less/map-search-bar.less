@@ -1,6 +1,74 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+
+    #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+
+    .MapSearchBar .input-group-addon {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .navbar-dx .MapSearchBar .input-group {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+
+    #mapstore-navbar .search-result-list {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .MapSearchBar .input-group {
+        .background-color-var(@theme-vars[main-bg]);
+
+        // search toolbar
+        .search-toolbar-options {
+
+            .btn-group-menu-options,
+            .btn-group-menu-options-format {
+                [disabled] {
+                    .background-color-var(@theme-vars[main-bg]);
+                }
+
+                &.btn-group {
+                    .btn-danger {
+                        .background-color-var(@theme-vars[main-bg]);
+                        .color-var(@theme-vars[danger]);
+                    }
+                }
+            }
+        }
+    }
+
+    .advanced-search-panel {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .advanced-search-context {
+            .Select {
+                .Select-option.is-selected {
+                    .background-color-var(@theme-vars[main-bg]);
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 /* search */
 #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
-    background-color: @ms2-color-background;
     border-radius: 0;
     position: relative;
     width: 100%;
@@ -10,18 +78,20 @@
     display: table;
     border-collapse: separate;
 }
+
 /* remove default inbox bootstrap shadow on focus for the input */
 div.MapSearchBar .form-control:focus {
-	box-shadow: none;
+    box-shadow: none;
 }
 
 #mapstore-navbar .MapSearchBar {
-    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
     .square-button-md {
         .ms-loader {
-            > div{
+            >div {
                 border-top-color: rgba(7, 138, 163, 0.2);
                 border-right-color: rgba(7, 138, 163, 0.2);
                 border-bottom-color: rgba(7, 138, 163, 0.2);
@@ -31,16 +101,11 @@ div.MapSearchBar .form-control:focus {
     }
 }
 
-.MapSearchBar .input-group-addon{
-    background-color: #f2f2f2 !important;
-}
-
 #mapstore-navbar .navbar-dx .search-result-list {
-	top: @square-btn-size + @padding-left-square;
+    top: @square-btn-size + @padding-left-square;
 }
 
-.navbar-dx .MapSearchBar .input-group{
-    background-color: #ffffff;
+.navbar-dx .MapSearchBar .input-group {
     border-radius: 0;
     width: 100%;
     height: 100%;
@@ -53,98 +118,97 @@ div.MapSearchBar .form-control:focus {
     display: table;
     border-collapse: separate;
 }
+
 .navbar-dx .MapSearchBar .advanced-search-panel,
 .navbar-dx.shadow {
-	-webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-	-moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 #mapstore-navbar #helpbadge-null {
-	position: absolute;
-	left: -10px;
-	bottom: -8px;
-	z-index: 1;
+    position: absolute;
+    left: -10px;
+    bottom: -8px;
+    z-index: 1;
 }
-@media (max-width: 768px ) {
-	#mapstore-navbar .search-toggle {
-		display: inline-block;
-	}
 
-	#mapstore-navbar .MapSearchBar {
-		width: 400px;
-		top: @square-btn-size;
-		left: auto;
-	}
+@media (max-width: 768px) {
+    #mapstore-navbar .search-toggle {
+        display: inline-block;
+    }
 
-	#mapstore-navbar .search-result-list {
-		top: 85px;
-		left: auto;
-		width: 400px;
-	}
+    #mapstore-navbar .MapSearchBar {
+        width: 400px;
+        top: @square-btn-size;
+        left: auto;
+    }
+
+    #mapstore-navbar .search-result-list {
+        top: 85px;
+        left: auto;
+        width: 400px;
+    }
 }
+
 /* Small devices (tablets, 768px and up) */
-@media (max-width: 768px ) {
-	#mapstore-navbar .search-toggle {
-		display: inline-block;
-	}
+@media (max-width: 768px) {
+    #mapstore-navbar .search-toggle {
+        display: inline-block;
+    }
 
-	#mapstore-navbar .navbar-dx .MapSearchBar {
-		position: fixed;
-		left: 1px;
-		right: 1px;
-		top: @square-btn-size;
-		width: auto;
-	}
+    #mapstore-navbar .navbar-dx .MapSearchBar {
+        position: fixed;
+        left: 1px;
+        right: 1px;
+        top: @square-btn-size;
+        width: auto;
+    }
 
-	#mapstore-navbar .navbar-dx .MapSearchBar .input-group {
-		width: 100%;
-	}
+    #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
+        width: 100%;
+    }
 
-	#mapstore-navbar .navbar-dx .search-result-list {
-		position: fixed;
-		left: 15px;
-		right: 15px;
-		top: 105px;
-		width: 95%;
-	}
+    #mapstore-navbar .navbar-dx .search-result-list {
+        position: fixed;
+        left: 15px;
+        right: 15px;
+        top: 105px;
+        width: 95%;
+    }
 }
+
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-	#mapstore-navbar .MapSearchBar {
-		width: 500px;
-		right: auto;
-	}
+    #mapstore-navbar .MapSearchBar {
+        width: 500px;
+        right: auto;
+    }
 
-	#mapstore-navbar .search-result-list {
-		width: 500px;
-		right: auto;
-	}
+    #mapstore-navbar .search-result-list {
+        width: 500px;
+        right: auto;
+    }
 }
+
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-	#mapstore-navbar .MapSearchBar {
-		width: 500px;
-		position: absolute;
-	}
+    #mapstore-navbar .MapSearchBar {
+        width: 500px;
+        position: absolute;
+    }
 
-	#mapstore-navbar .search-result-list {
-		width: 500px;
-		right: auto;
-	}
+    #mapstore-navbar .search-result-list {
+        width: 500px;
+        right: auto;
+    }
 }
 
 #mapstore-navbar .form-group {
-	margin-bottom: 0;
+    margin-bottom: 0;
 }
-
-#mapstore-navbar .search-result-list {
-	background-color: @ms2-color-background;
-}
-
 
 .MapSearchBar .input-group {
-    background-color: @ms2-color-background;
     .searchInput {
         border: none;
         outline: none !important;
@@ -154,6 +218,7 @@ div.MapSearchBar .form-control:focus {
         min-height: 52px;
         align-items: center;
     }
+
     .search-select {
         display: flex;
         flex: 1;
@@ -162,6 +227,7 @@ div.MapSearchBar .form-control:focus {
         min-height: 52px;
         align-items: center;
     }
+
     .coordinateEditor {
         width: 75%;
         align-items: center;
@@ -177,26 +243,33 @@ div.MapSearchBar .form-control:focus {
             margin-right: unset;
             padding: 5px;
             flex: 1 1 0%;
+
             .coordinateLabel {
                 margin-top: 9px;
             }
-            .form-group{
+
+            .form-group {
                 width: 100%;
             }
+
             input {
                 font-family: inherit;
                 float: unset;
             }
-            .degrees, .minutes {
+
+            .degrees,
+            .minutes {
                 display: flex;
                 flex: 1;
                 min-width: 45px;
             }
+
             .seconds {
                 min-width: 80px;
                 display: flex;
                 flex: 1;
             }
+
             .direction-select select.form-control {
                 min-width: 55px !important;
                 display: flex;
@@ -204,43 +277,38 @@ div.MapSearchBar .form-control:focus {
             }
         }
     }
+
     // search toolbar
     .search-toolbar-options {
         .magnifying-glass {
             pointer-events: none;
+
             &.clickable {
                 pointer-events: auto
             }
         }
+
         //width: 25%;
         padding-right: 4px;
-        .dropdown-menu > .active > a,
-        .dropdown-menu > .active > a .glyphicon {
-          &,
-          &:hover,
-          &:focus {
-            color: @dropdown-link-active-color;
-            text-decoration: none;
-            outline: 0;
-            background-color: @dropdown-link-active-bg;
-          }
+
+        .dropdown-menu>.active>a,
+        .dropdown-menu>.active>a .glyphicon {
+
+            &,
+            &:hover,
+            &:focus {
+                text-decoration: none;
+                outline: 0;
+            }
         }
-        .btn-group-menu-options, .btn-group-menu-options-format {
-            //position: absolute;
-            //top: 13px;
-            //right: 5px;
-            //display: block;
-            [disabled]{
-                background-color: @ms2-color-background;
+
+        .btn-group-menu-options,
+        .btn-group-menu-options-format {
+            [disabled] {
                 opacity: 0.75;
             }
-            &.btn-group {
-                .btn-danger {
-                    background-color: @ms2-color-background;
-                    color: @ms2-color-danger;
-                }
-            }
         }
+
         .btn-group-menu-options-format {
             top: 60px;
 
@@ -256,7 +324,6 @@ div.MapSearchBar .form-control:focus {
     position: absolute;
     width: 100%;
     border-radius: 4px;
-    background-color: @ms2-color-background;
     padding: 8px;
 
     .advanced-search-title-area {
@@ -271,16 +338,11 @@ div.MapSearchBar .form-control:focus {
         h5 {
             font-weight: bold;
         }
-        .Select {
-            .Select-option.is-selected {
-                background-color: @ms2-color-background
-            }
-        }
     }
 }
 
-#map-search-bar{
-    .aeronautical .react-numeric-input{
+#map-search-bar {
+    .aeronautical .react-numeric-input {
         width: 100%;
     }
 }

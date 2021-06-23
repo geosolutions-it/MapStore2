@@ -59,64 +59,15 @@ button.close {
     &:first-child {
         font-family: "mapstore2";
         font-size: 0;
-        .glyphicon;
+        position: relative;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
     }
 
     &:first-child:before {
         .glyphicon-1-close-content();
         font-size: (@font-size-base * 1.5);
-    }
-}
-
-.btn-styles(@btn-color-hover) {
-
-    &:hover {
-      background-color: darken(@btn-color-hover, 10%);
-    }
-}
-
-.btn-primary {
-    .btn-styles(@ms2-color-primary-hover);
-    &:focus,
-    &.focus {
-        background-color: @ms2-color-primary;
-        border-color: @btn-primary-border;
-    }
-}
-
-.btn-success {
-    .btn-styles(@ms2-color-success-hover);
-    &:focus,
-    &.focus {
-        background-color: @ms2-color-success;
-        border-color: @btn-success-border;
-    }
-}
-
-.btn-info {
-    .btn-styles(@ms2-color-info-hover);
-    &:focus,
-    &.focus {
-        background-color: @ms2-color-info;
-        border-color: @btn-info-border;
-    }
-}
-
-.btn-warning {
-    .btn-styles(@ms2-color-warning-hover);
-    &:focus,
-    &.focus {
-        background-color: @ms2-color-warning;
-        border-color: @btn-warning-border;
-    }
-}
-
-.btn-danger {
-    .btn-styles(@ms2-color-danger-hover);
-    &:focus,
-    &.focus {
-        background-color: @ms2-color-danger;
-        border-color: @btn-danger-border;
     }
 }
 
@@ -128,11 +79,6 @@ button.close {
 .modal-dialog {
     width: 290px;
     margin: auto;
-}
-
-.modal-header {
-    background-color: @ms2-color-primary;
-    color: @ms2-color-text-primary;
 }
 
 @media (min-width: @screen-sm-min) {

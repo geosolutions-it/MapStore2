@@ -1,6 +1,140 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    .ms-style-editor-container {
+        .background-color-var(@theme-vars[main-bg]);
+        .ms2-mask-container   {
+            .ms2-mask {
+                .color-var(@theme-vars[main-color]);
+                .background-color-var(@theme-vars[main-bg]);
+            }
+        }
+    }
+    
+    .ms-style-editor {
+        .ms-style-editor-inline-widget {
+            .border-color-var(@theme-vars[main-bg]);
+        }
+        .ms-style-editor-error {
+            .color-var(@theme-vars[danger]);
+        }
+        .ms-style-editor-head {
+            background: #262626;
+            .border-bottom-color-var(@theme-vars[main-border-color]);
+            .mapstore-info-popover {
+                background-color: #eee;
+                .text-danger {
+                    .color-var(@theme-vars[danger]);
+                }
+            }
+        }
+    }
+    
+    ul.CodeMirror-hints {
+        background-color: @ms-main-color;
+        li.CodeMirror-hint {
+            color: @ms-main-bg;
+            &.CodeMirror-hint-active {
+                background-color: @ms-primary;
+            }
+        }
+    }
+    
+    .ms-style-template-title {
+        .border-top-color-var(@theme-vars[main-border-color]);
+    }
+
+    // color picker and selector
+    .ms-color-picker {
+        .color-var(@theme-vars[main-bg]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+    
+    .ms-color-picker-overlay {
+        .ms-sketch-picker {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+        .ms-sketch-picker-arrow {
+            .border-right-color-var(@theme-vars[main-bg]);
+        }
+    }
+    
+    .ms-color-selector {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .ms-style-editor-switch {
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+        .btn-group {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
+    
+    .ms-style-rules-editor {
+        .ms-style-rule {
+            &.ms-drop-target {
+                .border-color-var(@theme-vars[primary]);
+            }
+        }
+
+        .ms-symbolizer {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
+    
+    .ms-symbolizer-field {
+        .ms-symbolizer-value {
+            &.ms-symbolizer-value-invalid {
+                .outline-color-var(@theme-vars[danger]);
+            }
+            &.ms-symbolizer-value-warning {
+                .outline-color-var(@theme-vars[warning]);
+            }
+        }
+    }
+    
+    .ms-symbolizer-field-divider {
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+    }
+    
+    .ms-symbolizer {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+    
+    .ms-mark-list {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms-popover-overlay {
+        .ms-style-rule-scale {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+        .ms-style-rule-filter {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+
+    .ms-classification-popover {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms-style-editor-container {
     .shadow-soft;
-    background-color: @ms2-color-background;
+    background-color: @ms-main-bg;
     .ms2-border-layout-content {
         .ms2-border-layout-content {
             background-color: transparent;
@@ -33,8 +167,8 @@
     }
     .ms2-mask-container   {
         .ms2-mask {
-            background-color: @ms2-color-background;
-            color: @ms2-color-text;
+            background-color: @ms-main-bg;
+            color: @ms-main-color;
         }
     }
     .empty-state-container {
@@ -76,7 +210,7 @@
         margin-top: -15px;
         width: 10px;
         height: 10px;
-        border: 1px solid @ms2-color-background;
+        border: 1px solid @ms-main-bg;
         z-index: 10;
         &:hover {
             cursor: pointer;
@@ -118,12 +252,12 @@
 ul.CodeMirror-hints {
     border: none;
     border-radius: 0;
-    background-color: @ms2-color-text;
+    background-color: @ms-main-color;
     .shadow-soft;
     li.CodeMirror-hint {
-        color: @ms2-color-background;
+        color: @ms-main-bg;
         &.CodeMirror-hint-active {
-            background-color: @ms2-color-primary;
+            background-color: @ms-primary;
         }
     }
 }
@@ -134,7 +268,7 @@ ul.CodeMirror-hints {
     padding-top: 8px;
     text-align: center;
     font-style: italic;
-    border-top: 1px solid @ms2-color-shade-lighter;
+    border-top: 1px solid @ms-main-border-color;
 }
 
 .ms-inline-widget-container {
@@ -233,8 +367,8 @@ Ported to CodeMirror by Peter Kroon
 
 // color picker and selector
 .ms-color-picker {
-    color: @ms2-color-text;
-    background-color: @ms2-color-background;
+    color: @ms-main-color;
+    background-color: @ms-main-bg;
     position: relative;
     width: 100%;
     height: 100%;
@@ -269,14 +403,14 @@ Ported to CodeMirror by Peter Kroon
 .ms-color-picker-overlay {
     z-index: 9999;
     .ms-sketch-picker {
-        background: @ms2-color-background;
+        background: @ms-main-bg;
         .shadow-far();
     }
     .ms-sketch-picker-arrow {
         @ms-arrow-size: 12px;
         border-top: @ms-arrow-size solid transparent;
         border-bottom: @ms-arrow-size solid transparent;
-        border-right: @ms-arrow-size solid @ms2-color-background;
+        border-right: @ms-arrow-size solid @ms-main-bg;
         -webkit-filter: drop-shadow(-4px 2px 4px rgba(0, 0, 0, 0.2));
         filter: drop-shadow(-4px 2px 4px rgba(0, 0, 0, 0.2));
     }
@@ -287,7 +421,7 @@ Ported to CodeMirror by Peter Kroon
     display: flex;
     height: @square-btn-medium-size;
     width: 100%;
-    border: 1px solid @ms2-color-shade-lighter;
+    border: 1px solid @ms-main-border-color;
     padding: 4px;
     .ms-color-picker .ms-color-picker-swatch {
         padding: 0;
@@ -334,9 +468,9 @@ Ported to CodeMirror by Peter Kroon
 .ms-style-editor-switch {
     text-align: right;
     padding: 4px;
-    border-bottom: 1px solid @ms2-color-shade-lighter;
+    border-bottom: 1px solid @ms-main-border-color;
     .btn-group {
-        border: 1px solid @ms2-color-shade-lighter;
+        border: 1px solid @ms-main-border-color;
     }
     .btn-group span {
 
@@ -409,7 +543,7 @@ Ported to CodeMirror by Peter Kroon
         padding: 8px;
         .shadow-soft;
         &.ms-drop-target {
-            border: 1px dashed @ms2-color-primary;
+            border: 1px dashed @ms-primary;
             .box-shadow(none);
             > * {
                 opacity: 0;
@@ -433,7 +567,7 @@ Ported to CodeMirror by Peter Kroon
     }
     .ms-symbolizer {
         padding: 8px;
-        border: 1px solid @ms2-color-shade-lighter;
+        border: 1px solid @ms-main-border-color;
     }
     .ms-symbolizer + .ms-symbolizer {
         border-top: none;
@@ -473,10 +607,10 @@ Ported to CodeMirror by Peter Kroon
             }
         }
         &.ms-symbolizer-value-invalid {
-            outline: 1px solid @ms2-color-danger;
+            outline: 1px solid @ms-danger;
         }
         &.ms-symbolizer-value-warning {
-            outline: 1px solid @ms2-color-warning;
+            outline: 1px solid @ms-warning;
         }
         &.ms-symbolizer-value-disabled {
             opacity: 0.4;
@@ -485,7 +619,7 @@ Ported to CodeMirror by Peter Kroon
 }
 
 .ms-symbolizer-field-divider {
-    border-bottom: 1px solid @ms2-color-shade-lighter;
+    border-bottom: 1px solid @ms-main-border-color;
     padding-bottom: 8px;
     margin-bottom: 8px;
 }
@@ -494,14 +628,14 @@ Ported to CodeMirror by Peter Kroon
     padding: 8px;
     margin: 0;
     list-style-type: none;
-    background-color: @ms2-color-background;
+    background-color: @ms-main-bg;
     .Select-menu-outer {
         z-index: 2 !important;
     }
 }
 
 .ms-mark-list {
-    background-color: @ms2-color-background;
+    background-color: @ms-main-bg;
     position: relative;
     width: 100%;
     height: 100%;
@@ -529,14 +663,14 @@ Ported to CodeMirror by Peter Kroon
 
 .ms-popover-overlay {
     .ms-style-rule-scale {
-        background-color: @ms2-color-background;
+        background-color: @ms-main-bg;
         .shadow-far;
         width: 350px;
         overflow: visible;
         padding: 8px;
     }
     .ms-style-rule-filter {
-        background-color: @ms2-color-background;
+        background-color: @ms-main-bg;
         font-size: @font-size-small;
         * {
             font-size: @font-size-small;
@@ -559,7 +693,7 @@ Ported to CodeMirror by Peter Kroon
     width: 400px;
     height: 300px;
     padding: 8px;
-    background-color: @ms2-color-background;
+    background-color: @ms-main-bg;
     .shadow-far;
     overflow: auto;
 }

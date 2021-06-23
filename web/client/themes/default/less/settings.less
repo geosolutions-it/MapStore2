@@ -1,11 +1,34 @@
-#mapstore-settings {
-    background-color: @ms2-color-background !important;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
-    .modal-body .form-group {
-        border-top: solid 1px @ms2-color-shade-lighter !important;
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    #mapstore-settings {
+        .background-color-var(@theme-vars[main-bg], true);
+
+        .modal-body .form-group {
+            .border-color-var(@theme-vars[main-border-color], true);
+        }
+    }
+
+    #search-services-config-editor {
+        .background-color-var(@theme-vars[main-bg], true);
     }
 }
 
-#search-services-config-editor {
-    background-color: @ms2-color-background !important;
+// **************
+// Layout
+// **************
+#mapstore-settings {
+    .modal-body .form-group {
+        border-top-width: 1px !important;
+        border-top-style: solid !important;
+    }
 }
