@@ -363,13 +363,14 @@
 // @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
 // return all the css variables used by the mapstore theme
 .extract-css-variables(@theme-vars) {
-    each(@theme-vars, {
-        // exclude nested rule sets
-        & when not(isruleset(@value)) {
-            @css-var-key: extract(@value, 1);
-            @css-var-value: extract(@value, 2);
-            @{css-var-key}: @css-var-value;
-        }
+    // exclude nested rule sets, eg: @button-default
+    @rules: {
+        @theme-vars();
+    };
+    each(@rules, {
+        @css-var-key: extract(@value, 1);
+        @css-var-value: extract(@value, 2);
+        @{css-var-key}: @css-var-value;
     })
     each(@theme-vars[@button-default], {
         @css-var-key: extract(@value, 1);
