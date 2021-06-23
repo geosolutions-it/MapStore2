@@ -8,7 +8,7 @@
 
 const layerTypes = {};
 
-var Layers = {
+const Layers = {
 
     registerType: function(type, impl) {
         layerTypes[type] = impl;
@@ -44,4 +44,4 @@ var Layers = {
     }
 };
 
-module.exports = Layers;
+export default Layers;

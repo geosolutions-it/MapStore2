@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import { castArray } from 'lodash';
 import CesiumLayer from '../Layer';
 import expect from 'expect';
-import Cesium from '../../../../libs/cesium';
+import * as Cesium from 'Cesium';
 
 import assign from 'object-assign';
 
@@ -158,9 +158,9 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('{s}');
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource.proxy.proxy).toExist();
     });
 
     it('test wms vector formats must change to default image format (image/png)', () => {
@@ -181,8 +181,7 @@ describe('Cesium layer', () => {
             map={map} />, document.getElementById("container"));
 
         expect(layer).toExist();
-
-        expect(layer.layer._tileProvider._url.indexOf('format=image%2Fpng') !== -1).toBe(true);
+        expect(layer.layer._tileProvider._resource._queryParameters.format).toBe('image/png');
 
         layer = ReactDOM.render(<CesiumLayer
             type="wms"
@@ -193,7 +192,7 @@ describe('Cesium layer', () => {
             map={map} />, document.getElementById("container"));
 
         expect(layer).toExist();
-        expect(layer.layer._tileProvider._url.indexOf('format=image%2Fpng') !== -1).toBe(true);
+        expect(layer.layer._tileProvider._resource._queryParameters.format).toBe('image/png');
 
         layer = ReactDOM.render(<CesiumLayer
             type="wms"
@@ -204,7 +203,7 @@ describe('Cesium layer', () => {
             map={map} />, document.getElementById("container"));
 
         expect(layer).toExist();
-        expect(layer.layer._tileProvider._url.indexOf('format=image%2Fpng') !== -1).toBe(true);
+        expect(layer.layer._tileProvider._resource._queryParameters.format).toBe('image/png');
 
         // check if it switches to jpeg
         layer = ReactDOM.render(<CesiumLayer
@@ -216,7 +215,7 @@ describe('Cesium layer', () => {
             map={map} />, document.getElementById("container"));
 
         expect(layer).toExist();
-        expect(layer.layer._tileProvider._url.indexOf('format=image%2Fjpeg') !== -1).toBe(true);
+        expect(layer.layer._tileProvider._resource._queryParameters.format).toBe('image/jpeg');
     });
 
     it('wms layer with credits', () => {
@@ -258,10 +257,10 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('{s}');
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
-        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._url.toLowerCase().indexOf('tiled=true') !== -1).toBe(true);
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource.proxy.proxy).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._resource._queryParameters.tiled).toBe(true);
     });
     it('check wms layer proxy skip for relative urls', () => {
         var options = {
@@ -279,9 +278,9 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('{s}');
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toNotExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource.proxy.proxy).toNotExist();
     });
 
     it('creates a wmts layer for Cesium map', () => {
@@ -311,8 +310,8 @@ describe('Cesium layer', () => {
         expect(layer).toExist();
         // count layers
         expect(map.imageryLayers.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider._url).toExist();
-        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource.proxy.proxy).toExist();
     });
     it('custom name tile set', () => {
         var options = {
@@ -370,8 +369,8 @@ describe('Cesium layer', () => {
         expect(layer).toExist();
         // count layers
         expect(map.imageryLayers.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider._url).toExist();
-        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toNotExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource.proxy.proxy).toNotExist();
     });
 
     it('creates a wms layer with single tile for CesiumLayer map', () => {
@@ -391,7 +390,8 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider._url.indexOf('http://demo.geo-solutions.it/geoserver/wms?service=WMS')).toBe(0);
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('http://demo.geo-solutions.it/geoserver/wms');
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._queryParameters.service).toBe('WMS');
     });
 
     it('creates a wms layer with multiple urls for CesiumLayer map', () => {
@@ -410,7 +410,7 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
-        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('{s}');
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(2);
     });
 
@@ -418,6 +418,7 @@ describe('Cesium layer', () => {
         var options = {
             "type": "bing",
             "title": "Bing Aerial",
+            "apiKey": "aaa",
             "name": "Aerial",
             "group": "background"
         };
@@ -687,8 +688,8 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         // expect(map.imageryLayers.length).toBe(1);
-        let url = decodeURIComponent(layer.layer._tileProvider._url);
-        expect(url.match(/ms2-authkey=########-####-####-####-###########/g).length).toBe(1);
+        let token = layer.layer._tileProvider._resource._queryParameters["ms2-authkey"];
+        expect(token).toBe("########-####-####-####-###########");
 
         layer = ReactDOM.render(<CesiumLayer
             type="wms"
@@ -696,8 +697,8 @@ describe('Cesium layer', () => {
             map={map}
             securityToken=""/>, document.getElementById("container"));
 
-        url = decodeURIComponent(layer.layer._tileProvider._url);
-        expect(url.match(/ms2-authkey/g)).toBe(null);
+        token = layer.layer._tileProvider._resource._queryParameters["ms2-authkey"];
+        expect(token).toNotExist();
 
         layer = ReactDOM.render(<CesiumLayer
             type="wms"
@@ -705,8 +706,8 @@ describe('Cesium layer', () => {
             map={map}
             securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
 
-        url = decodeURIComponent(layer.layer._tileProvider._url);
-        expect(url.match(/ms2-authkey=########-####-\$\$\$\$-####-###########/g).length).toBe(1);
+        token = layer.layer._tileProvider._resource._queryParameters["ms2-authkey"];
+        expect(token).toBe("########-####-$$$$-####-###########");
     });
 
     it('test wmts security token', () => {
@@ -754,8 +755,8 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
 
-        let url = decodeURIComponent(castArray(layer.layer._url)[0]);
-        expect(url.match(/ms2-authkey=########-####-####-####-###########/g).length).toBe(1);
+        let token = layer.layer._resource._queryParameters["ms2-authkey"];
+        expect(token).toBe("########-####-####-####-###########");
 
         layer = ReactDOM.render(<CesiumLayer
             type="wmts"
@@ -763,8 +764,8 @@ describe('Cesium layer', () => {
             map={map}
             securityToken=""/>, document.getElementById("container"));
 
-        url = decodeURIComponent(castArray(layer.layer._url)[0]);
-        expect(url.match(/ms2-authkey/g)).toBe(null);
+        token = layer.layer._resource._queryParameters["ms2-authkey"];
+        expect(token).toNotExist();
 
         layer = ReactDOM.render(<CesiumLayer
             type="wmts"
@@ -772,8 +773,8 @@ describe('Cesium layer', () => {
             map={map}
             securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
 
-        url = decodeURIComponent(castArray(layer.layer._url)[0]);
-        expect(url.match(/ms2-authkey=########-####-\$\$\$\$-####-###########/g).length).toBe(1);
+        token = layer.layer._resource._queryParameters["ms2-authkey"];
+        expect(token).toBe("########-####-$$$$-####-###########");
 
     });
     it('test cql_filter param to be passed to the layer', () => {
@@ -797,8 +798,8 @@ describe('Cesium layer', () => {
         />, document.getElementById("container"));
 
         expect(layer).toExist();
-        const cqlFilter = decodeURIComponent(/cql_filter=([^&#]+)/.exec(layer.layer._tileProvider.url)[1]);
 
+        const cqlFilter = layer.layer._tileProvider._resource._queryParameters.cql_filter;
         expect(cqlFilter).toBe("prop = 'value'");
     });
     it('test filterObj paramto be transformed into cql_filter', () => {
@@ -836,8 +837,7 @@ describe('Cesium layer', () => {
         />, document.getElementById("container"));
 
         expect(layer).toExist();
-        const cqlFilter = decodeURIComponent(/cql_filter=([^&#]+)/.exec(layer.layer._tileProvider.url)[1]);
-
+        const cqlFilter = layer.layer._tileProvider._resource._queryParameters.cql_filter;
         expect(cqlFilter).toBe("(\"prop2\" = 'value2')");
     });
     it('test filterObj and cql_filter combination (featuregrid active filter use this combination)', () => {
@@ -876,10 +876,9 @@ describe('Cesium layer', () => {
             options={options}
             map={map}
         />, document.getElementById("container"));
-        const cqlFilter = decodeURIComponent(/cql_filter=([^&#]+)/.exec(layer.layer._tileProvider.url)[1]);
 
         expect(layer).toExist();
-
+        const cqlFilter = layer.layer._tileProvider._resource._queryParameters.cql_filter;
         expect(cqlFilter).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
     });
 

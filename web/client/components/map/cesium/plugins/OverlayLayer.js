@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var Cesium = require('../../../../libs/cesium');
+import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from "Cesium";
 
 var eventListener = require('eventlistener');
 /**
@@ -166,7 +166,7 @@ Layers.registerType('overlay', {
         const cloned = cloneOriginalOverlay(original, options);
 
         let infoWindow = new InfoWindow(map);
-        infoWindow.showAt(options.position.y, options.position.x, cloned);
+        infoWindow.showAt(options.position[1], options.position[0], cloned);
         infoWindow.setVisible(true);
         let info = map.scene.primitives.add(infoWindow);
 

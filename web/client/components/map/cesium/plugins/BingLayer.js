@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var Cesium = require('../../../../libs/cesium');
+import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from "Cesium";
 
 
 Layers.registerType('bing', (options) => {
