@@ -1,99 +1,84 @@
-/* dropdown-menu */
-.dropdown-menu .dropdown-header {
-	background-color: @ms2-color-primary;
-	color: @ms2-color-background;
-	padding: 15px;
-	font-weight: bold;
-}
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+// #ms-components-theme(@theme-vars) {}
+
+// **************
+// Layout
+// **************
 /* when flipped we need to let the dropdown to display on top */
 .react-selectize.bootstrap3.dropdown-menu.flipped {
     top: auto;
 }
+
 //
-.react-selectize.bootstrap3.root-node.simple-select{
+.react-selectize.bootstrap3.root-node.simple-select {
     width: 100%
 }
+
 .first-selectize {
     padding-right: 10px;
     padding-left: 0px;
 }
-.second-selectize{
+
+.second-selectize {
     padding: 0;
 }
-.dropdown-menu .glyphicon {
-	font-size: @icon-size-md;
-	margin-right: 15px;
-	color: @ms2-color-primary;
-	vertical-align: middle;
-}
-.dropdown-menu .active .glyphicon {
-    color: @ms2-color-background;
-}
 
-/* dropdown */
-.navbar-dx .dropdown-menu .dropdown-header,
-.navbar-home .dropdown-menu .dropdown-header {
-	background-color: @ms2-color-primary;
+.dropdown-menu .glyphicon {
+    font-size: @icon-size-md;
+    margin-right: 15px;
+    vertical-align: middle;
 }
 
 .navbar-dx .dropdown-menu,
 .navbar-home .dropdown-menu {
-	text-transform: uppercase;
-}
-
-.navbar-dx .dropdown-menu li,
-.navbar-home .dropdown-menu li {
-	border-bottom: 1px solid @ms2-color-background;
+    text-transform: uppercase;
 }
 
 .navbar-dx .dropdown-menu li a,
 .navbar-home .dropdown-menu li a {
-	max-height: @square-btn-size;
+    max-height: @square-btn-size;
     outline: none;
-	color: @ms2-color-text;
-}
-
-.navbar-dx .dropdown-menu li.active a,
-.navbar-home .dropdown-menu li.active a {
-	color: @ms2-color-text-primary;
 }
 
 .navbar-dx .dropdown-menu li a span {
-	position: relative;
-}
-
-#mapstore-navbar-container .dropdown-toggle,
-#mapstore-navbar-container .square-button {
-	border-left: 1px solid @ms2-color-info;
+    position: relative;
 }
 
 #mapstore-navbar-container .dropdown-menu {
-	> .btn-group {
-		width: 100%;
-		> .btn {
-			border: none;
-			box-shadow: none;
-			padding: 0;
-			width: 100%;
-			a {
-				width: 100%;
-				display: block;
-				text-align: left;
-				text-decoration: none;
-			}
-		}
-	}
-}
+    >.btn-group {
+        width: 100%;
 
-#mapstore-navbar-container .dropdown-menu > .btn-group li > a,
-#mapstore-navbar-container .dropdown-menu > li > a {
-    padding: 10px 15px;
+        >.btn {
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            width: 100%;
+
+            a {
+                width: 100%;
+                display: block;
+                text-align: left;
+                text-decoration: none;
+            }
+        }
+    }
 }
 
 #mapstore-burger-menu {
     .dropdown-menu {
-		z-index: 1040;
-		overflow-y: auto;
+        z-index: 1040;
+        overflow-y: auto;
         max-height: 80vh;
     }
 }

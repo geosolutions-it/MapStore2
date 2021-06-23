@@ -1,13 +1,53 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .modal-properties-container {
+
+        .dropzone-thumbnail-container,
+        .dropzone-filedrop-container {
+            .dropzone {
+                .background-color-var(@theme-vars[main-bg]);
+            }
+        }
+
+        .ms-section {
+            &.ms-transition {
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+
+        .ms-permissions-container {
+            .ms-permission-row {
+                .Select {
+                    .Select-control {
+                        .Select-arrow-zone {
+                            .border-color-var(@theme-vars[main-border-color]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms-detail-body {
     padding: 15px;
 
     p {
         word-wrap: break-word;
     }
-
-    /*img {
-        width: 100%;
-    }*/
 }
 
 .mapstore-permission-group {
@@ -106,7 +146,6 @@
                     font-size: inherit !important;
                 }
             }
-            background-color: @ms2-color-background;
             .shadow-soft;
             border: none;
             max-width: 300px;
@@ -150,7 +189,8 @@
 
                 flex: 1;
                 height: auto;
-                border-bottom: 1px solid @ms2-color-shade-lighter;
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
                 /* workaround for height transition */
 
                 /* end - workaround for height transition */
@@ -195,8 +235,6 @@
     }
 
     .ms-permissions-container {
-        /*border-bottom: 1px solid @ms2-color-shade-lighter;*/
-
         z-index: 50;
         & > .row {
             & > .col-xs-12 {
@@ -206,7 +244,6 @@
         .ms-permission-row {
             width: 100%;
 
-            /*border-left: 2px solid contrast(@ms2-color-background);*/
             height: @square-btn-size;
             & > * {
                 float: left;
@@ -226,7 +263,8 @@
                     }
                     .Select-arrow-zone {
                         padding-left: 5px;
-                        border-left: 1px solid @ms2-color-shade-lighter;
+                        border-left-width: 1px;
+                        border-left-style: solid;
                     }
                 }
             }
@@ -247,7 +285,6 @@
             border-left: none;
             margin-bottom: @square-btn-size / 4;
             margin-top: 10px;
-            /*border-bottom: 1px solid @ms2-color-shade-lighter;*/
         }
     }
 
@@ -281,13 +318,6 @@
                 width: 100%;
                 height: auto;
             }
-            /*.shadow;*/
-
-            /*&:hover {
-                @move-up: @square-btn-size * 3 / 4;
-                cursor: pointer;
-                transform: ~"translateY(-@{move-up})";
-            }*/
         }
     }
 }

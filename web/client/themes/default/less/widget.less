@@ -1,3 +1,89 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .widget-container {
+        &.selection-active {
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+
+        .mapstore-widget-card {
+            .background-color-var(@theme-vars[main-bg]);
+
+            .mapstore-widget-header {
+                .border-bottom-color-var(@theme-vars[main-border-color]);
+                .color-var(@theme-vars[primary]);
+
+                .mapstore-info-popover .glyphicon {
+                    .color-var(@theme-vars[primary]);
+                }
+
+                .widget-icons {
+                    .btn-group {
+                        button {
+                            .glyphicon.active::before {
+                                .color-var(@theme-vars[primary]);
+                            }
+
+                            .glyphicon:not(.active) {
+                                .background-color-var(@theme-vars[main-variant-bg]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            .mapstore-widget-options {
+                .color-var(@theme-vars[primary]);
+            }
+        }
+    }
+
+    .mapstore-widget-remove {
+        .color-var(@theme-vars[primary]);
+    }
+
+    .mapstore-widget-loader {
+        .border-top-color-var(@theme-vars[loader-primary-fade-color]);
+        .border-right-color-var(@theme-vars[loader-primary-fade-color]);
+        .border-bottom-color-var(@theme-vars[loader-primary-fade-color]);
+        .border-left-color-var(@theme-vars[loader-primary-color]);
+    }
+
+    .widgets-tray {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .widgets-bar {
+            >span {
+                .border-right-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+
+    .mapstore-chart-advance-options {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .ms2-border-layout-body {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+
+    .ms-widget-empty-message {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .draggableHandle {
     cursor: -webkit-grab;
     cursor: -moz-grab;
@@ -17,7 +103,6 @@
     }
     /* selection */
     &.selection-active {
-        background-color: #555;
         .disabled {
             opacity: 0.2;
             pointer-events: none;
@@ -36,7 +121,6 @@
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .mapstore-widget-card {
-        background: @ms2-color-background;
         margin: 20px 0;
         overflow: visible;
         position: absolute;
@@ -56,8 +140,7 @@
             margin: 10px 5%;
             font-size: 22px;
             font-weight: bold;
-            border-bottom: 1px solid @ms2-color-shade-lighter;
-            color: @ms2-color-primary;
+            border-bottom: 1px solid @ms-main-border-color;
             .widget-title {
                 text-overflow: ellipsis;
                 width: calc(100% - 30px);
@@ -68,7 +151,6 @@
                 position: absolute;
                 left: 22px;
                 font-size: 14px;
-                color: @ms2-color-primary;
             }
             .widget-icons {
                 text-align: left;
@@ -88,13 +170,11 @@
                         padding-right:4px;
                         // rotate pin icon
                         .glyphicon.active::before {
-                            color: @ms2-color-primary;
                             transform: rotate(45deg);
                             display: inline-block;
                         }
                         .glyphicon:not(.active)  {
                             opacity: .5;
-                            color: grey;
                         }
                     }
                 }
@@ -116,7 +196,6 @@
         .mapstore-widget-options {
             position: absolute;
             font-size: 18px;
-            color: @ms2-color-primary;
             right: 7px;
             top: 10px;
         }
@@ -163,7 +242,6 @@
     font-size: 18px;
     width: 100%;
     padding: 5px 5%;
-    color: #078aa3;
     margin-top: 5px;
 }
 
@@ -177,10 +255,6 @@
     position: absolute;
     left: 20px;
     text-indent: -9999em;
-    border-top: 1.6px solid rgba(7, 138, 163, 0.2);
-    border-right: 1.6px solid rgba(7, 138, 163, 0.2);
-    border-bottom: 1.6px solid rgba(7, 138, 163, 0.2);
-    border-left: 1.6px solid #078aa3;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
@@ -269,7 +343,6 @@
 
 .widgets-tray {
     .shadow-soft;
-    background-color: @ms2-color-background;
     padding: 4px;
     z-index: 1000;
     .widgets-bar {
@@ -281,7 +354,7 @@
             }
             padding-right: 8px;
             margin-right: 6px;
-            border-right: 1px solid @ms2-color-shade-lighter;
+            border-right: 1px solid @ms-main-border-color;
         }
     }
 }
@@ -293,7 +366,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: @ms2-color-background;
     .shadow-soft;
     .Select-menu-outer {
         // fix select options z-index that
@@ -306,9 +378,6 @@
     .ms2-border-layout-content{
         position: relative;
         overflow: auto;
-    }
-    .ms2-border-layout-body {
-        background-color: @ms2-color-background;
     }
     .ms2-border-layout-body {
         padding: 0;
@@ -329,7 +398,6 @@
 .ms-widget-empty-message {
     position: absolute;
     top: 0;
-    background-color: @ms2-color-background;
     width: 100%;
     height: 100%;
     display: flex;

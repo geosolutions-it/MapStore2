@@ -1,3 +1,37 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .maps-search .input-group-addon {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-top-color-var(@theme-vars[main-border-color]);
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+    }
+
+    .search-result-list {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .search-result-list .search-result {
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+    }
+
+    .search-result-list .search-result:hover {
+        .background-color-var(@theme-vars[main-hover-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .MapSearchBar {
     left: 65px;
     position: absolute;
@@ -11,7 +45,7 @@
 }
 .MapSearchBar .input-group,
 .MapSearchBar .advanced-search-panel {
-    box-shadow: 2px 2px 4px #A7A7A7;
+    .shadow();
     border-radius: 4px;
 }
 
@@ -21,14 +55,6 @@
     display: none;
 }
 
-/*.searchclear {
-    top:0;
-    bottom:0;
-    height:14px;
-    margin:auto;
-    font-size:14px;
-    cursor:pointer;
-}*/
 .search-result-list{
     position: absolute;
     top: 50px;
@@ -54,7 +80,6 @@
     height: 100%;
     margin-right: 5px;
     display: block;
-    vertical-align: middle;
     float: left;
 }
 .search-result-list .search-result .search-result-left-container {

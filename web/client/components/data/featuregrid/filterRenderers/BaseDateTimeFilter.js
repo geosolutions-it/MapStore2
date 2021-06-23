@@ -15,7 +15,6 @@ import {getMessageById} from '../../../../utils/LocaleUtils';
 import { getDateTimeFormat } from '../../../../utils/TimeUtils';
 import AttributeFilter from './AttributeFilter';
 import utcDateWrapper from '../../../misc/enhancers/utcDateWrapper';
-import 'react-widgets/lib/less/react-widgets.less';
 
 const UTCDateTimePicker = utcDateWrapper({
     dateProp: "value",
