@@ -7,7 +7,7 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import Cesium from '../../../../libs/cesium';
+import * as Cesium from 'Cesium';
 import TileProvider from '../../../../utils/TileConfigProvider';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {getProxyUrl, needProxy} from '../../../../utils/ProxyUtils';
