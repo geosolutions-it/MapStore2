@@ -24,3 +24,5 @@ web/docs
 .settings/
 debug.log
 .vscode/settings.json
+
+.DS_Store
