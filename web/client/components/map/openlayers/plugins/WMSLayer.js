@@ -68,7 +68,7 @@ const loadFunction = (options) => function(image, src) {
                 }
             }
         }).catch(e => {
-            console.error(e); // eslint-disable-line
+            console.error(e);
         });
 
     } else {
