@@ -22,7 +22,7 @@ export default {
             const id = session && name;
             return Promise.resolve([id, session]);
         } catch (e) {
-            console.error(e); // eslint-disable-line
+            console.error(e);
             return Promise.resolve([0, null]);
         }
     }),
@@ -30,7 +30,7 @@ export default {
         try {
             getApi().setItem(getSessionName(id || name), JSON.stringify(session));
         } catch (e) {
-            console.error(e); // eslint-disable-line
+            console.error(e);
         }
         return Promise.resolve(id || name);
     }),

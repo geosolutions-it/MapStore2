@@ -871,7 +871,7 @@ class AnnotationsEditor extends React.Component {
             try {
                 getApi().setItem("showPopupWarning", false);
             } catch (e) {
-                console.error(e); // eslint-disable-line
+                console.error(e);
             }
             this.props.onHideMeasureWarning();
         }

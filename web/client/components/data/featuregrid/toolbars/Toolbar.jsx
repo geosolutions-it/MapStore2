@@ -201,7 +201,7 @@ export default ({
                                 try {
                                     getApi().setItem("showPopoverSync", false);
                                 } catch (e) {
-                                    console.error(e); // eslint-disable-line
+                                    console.error(e);
                                 }
                             }
                             events.hideSyncPopover();

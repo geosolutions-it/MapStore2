@@ -29,7 +29,7 @@ export const cookiePolicyChecker = (action$) =>
             try {
                 return !getApi().getItem("cookies-policy-approved");
             } catch (e) {
-                console.error(e); // eslint-disable-line
+                console.error(e);
                 return false;
             }
         })
