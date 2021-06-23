@@ -96,7 +96,7 @@ export const layerInfoSyncLayersEpic = (action$, store) => action$
                         return  ['error', layerObj];
                     })
                     .catch((e) => {
-                        console.error(e);
+                        console.error(e); // eslint-disable-line
                         return Observable.of(['error', layerObj]);
                     }
                     ))
