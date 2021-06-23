@@ -61,9 +61,6 @@ jobs:
       - name: tests
         run: npm test
 
-      - name: compile
-        run: npm run compile
-
   test-back-end:
     runs-on: ubuntu-latest
     steps:
