@@ -1,13 +1,154 @@
-@ms-story-bg: @ms2-color-background;
-@ms-story-bg-grey: @ms2-color-shade-lighter;
-@ms-story-highlight: lighten(@ms2-color-primary, 20%);
-@ms-story-text: @ms2-color-text;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms-geostory-builder {
+        .ms-geostory-builder-header {
+            .border-bottom-color-var(@theme-vars[main-variant-bg]);
+        }
+
+        .msSideGrid {
+            .mapstore-side-card.ms-highlight {
+                .outline-color-var(@theme-vars[focus-color]);
+            }
+
+            .ms-over:not(.ms-dragging) {
+                &.ms-above {
+                    &>div {
+                        .border-bottom-color-var(@theme-vars[primary]);
+                    }
+                }
+
+                &.ms-below {
+                    &>div {
+                        .border-top-color-var(@theme-vars[primary]);
+                    }
+                }
+            }
+        }
+
+        .ms-section-preview {
+            .ms-section-preview-icon {
+                .border-top-color-var(@theme-vars[main-variant-bg]);
+            }
+        }
+    }
+
+    .ms-geostory-map-editor {
+        .ms-geostory-map-editor-header {
+            .border-bottom-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    .ms-cascade-story {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .ms-sections-container {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        .ms-section {
+
+            .ms-section-contents {
+                .ms-column-contents {
+                    .add-bar {
+                        .color-var(@theme-vars[main-color]);
+                        .background-color-var(@theme-vars[main-bg]);
+
+                        button {
+                            .color-var(@theme-vars[main-color]);
+                        }
+                    }
+                }
+            }
+
+            .add-bar {
+                .background-color-var(@theme-vars[main-bg]);
+                .border-top-color-var(@theme-vars[main-variant-bg]);
+                .border-right-color-var(@theme-vars[main-variant-bg]);
+                .border-left-color-var(@theme-vars[main-variant-bg]);
+            }
+        }
+
+        // style for active button in toolbar
+        .ms-content-toolbar>.btn-group>span>.btn.active {
+            .color-var(@theme-vars[success-contrast]);
+            .background-color-var(@theme-vars[success]);
+        }
+
+        .ms-content {
+            &.ms-content-text {
+                .ms-content-body {
+                    .ms-text-editor-toolbar {
+                        .color-var(@theme-vars[main-color]);
+                        .background-color-var(@theme-vars[main-bg]);
+
+                        .rdw-option-active {
+                            .outline-color-var(@theme-vars[focus-color]);
+                        }
+
+                        .rdw-colorpicker-modal-style-label-active {
+                            .border-bottom-color-var(@theme-vars[focus-color]);
+                        }
+                    }
+                }
+            }
+        }
+
+        .ms-media-caption {
+            .border-left-color-var(@theme-vars[main-variant-bg]);
+        }
+    }
+
+    .ms-expanded-media-container {
+        &>*:not(button) {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+
+    .ms-custom-theme-picker-field {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms-custom-theme-picker-popover {
+        .glyphicon {
+            .color-var(@theme-vars[danger]);
+        }
+    }
+
+    .ms-custom-theme-picker-menuitem-header {
+        .color-var(@theme-vars[main-color]);
+    }
+
+    .ms-custom-theme-picker-menuitem {
+        .border-color-var(@theme-vars[main-variant-bg]);
+    }
+}
+
+
+// **************
+// Layout
+// **************
+@ms-story-bg: @ms-main-bg;
+@ms-story-bg-grey: @ms-main-border-color;
+@ms-story-highlight: lighten(@ms-primary, 20%);
+@ms-story-text: @ms-main-color;
 @ms-story-loader: lighten(@ms-story-text, 20%);
 @ms-story-bg-guidelines: #0571b0; // background guidelines color
 @ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
-@ms-story-active-button-text: @ms2-color-text-primary;
-@ms-story-active-button-bg: lighten(@ms2-color-success, 15%);
+@ms-story-active-button-text: @ms-success-contrast;
+@ms-story-active-button-bg: lighten(@ms-success, 15%);
 
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
@@ -198,13 +339,13 @@
             &.ms-above {
                 & > div {
                     padding-bottom: @square-btn-medium-size;
-                    border-bottom: 2px solid @ms2-color-primary;
+                    border-bottom: 2px solid @ms-primary;
                 }
             }
             &.ms-below {
                 & > div {
                     padding-top: @square-btn-medium-size;
-                    border-top: 2px solid @ms2-color-primary;
+                    border-top: 2px solid @ms-primary;
                 }
             }
         }
@@ -505,7 +646,10 @@
             border-top-right-radius: 50%;
             .btn {
                 /* override default style of bootstrap */
-                .square-button-md();
+                height: @square-btn-medium-size;
+                width: @square-btn-medium-size;
+                padding: 0;
+                outline: 0;
                 .no-border();
                 background: transparent;
                 cursor: pointer;
@@ -1272,7 +1416,10 @@
 }
 
 .ms-expand-media-button {
-    .square-button-md();
+    height: @square-btn-medium-size;
+    width: @square-btn-medium-size;
+    padding: 0;
+    outline: 0;
     .shadow-soft();
     .no-border();
     position: absolute;
@@ -1320,7 +1467,7 @@
         font-size: @font-size-small;
     }
     .glyphicon {
-        color: @ms2-color-danger;
+        color: @ms-danger;
     }
 }
 // override font size of the geostory for paragraph in popover
@@ -1337,7 +1484,7 @@
 .ms-custom-theme-picker-menuitem-header {
     display: flex;
     align-items: center;
-    color: @ms2-color-text;
+    color: @ms-main-color;
     padding: 8px 8px 0 8px;
     > div {
         flex: 1;
@@ -1349,7 +1496,7 @@
 }
 .ms-custom-theme-picker-menuitem {
     padding: 4px 12px;
-    border: 1px solid @ms2-color-shade-lighter;
+    border: 1px solid @ms-main-border-color;
     margin: 8px;
     min-width: 300px;
 }

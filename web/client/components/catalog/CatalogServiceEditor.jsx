@@ -17,8 +17,6 @@ import Message from "../I18N/Message";
 import AdvancedSettings from './editor/AdvancedSettings';
 import MainForm from './editor/MainForm';
 
-
-import 'react-select/dist/react-select.css';
 import 'react-quill/dist/quill.snow.css';
 
 export default ({

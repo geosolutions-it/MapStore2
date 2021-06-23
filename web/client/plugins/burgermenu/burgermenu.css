@@ -9,13 +9,8 @@
     position: absolute;
     left: -160px;
     top: 0px;
-    background-color: white;
     width: 160px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-}
-
-.burger-menu-submenu li:hover {
-    background-color: #dddddd;
 }
 
 .burger-menu-submenu li a {
@@ -25,11 +20,10 @@
 
 .burger-menu-submenu li a:hover {
     text-decoration: none;
-    background-color: #dddddd;
 }
 
-#mapstore-burger-menu .dropdown-menu > li > a:hover > span > .burger-menu-submenu,
-.burger-menu-submenu > li > a:hover > span > .burger-menu-submenu {
+#mapstore-burger-menu .dropdown-menu>li>a:hover>span>.burger-menu-submenu,
+.burger-menu-submenu>li>a:hover>span>.burger-menu-submenu {
     display: block;
 }
 

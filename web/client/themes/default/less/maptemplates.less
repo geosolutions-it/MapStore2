@@ -1,9 +1,32 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .map-templates-preview {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .glyphicon {
+            .color-var(@theme-vars[primary-contrast]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .map-templates-preview {
     display: flex;
     position: relative;
     width: 100%;
     height: 100%;
-    background-color: #ddd;
 
     img {
         width: 100%;
@@ -13,7 +36,6 @@
     .glyphicon {
         font-size: @square-btn-size;
         margin: auto;
-        color: white;
     }
 
 }

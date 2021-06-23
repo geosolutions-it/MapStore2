@@ -1,3 +1,36 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .Select {
+        .paged-select-bar-container {
+            .paged-select-bar {
+
+                .prev-page-button.glyphicon,
+                .next-page-button.glyphicon {
+                    .color-var(@theme-vars[link-color]);
+                }
+
+                .prev-page-button.glyphicon:hover,
+                .next-page-button.glyphicon:hover {
+                    .color-var(@theme-vars[link-hover-color]);
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .Select {
     .paged-select-options {
         overflow-y: auto;
@@ -16,11 +49,9 @@
                 float: right;
             }
             .prev-page-button.glyphicon, .next-page-button.glyphicon {
-                color: @ms2-color-primary;
                 cursor: auto;
             }
             .prev-page-button.glyphicon:hover, .next-page-button.glyphicon:hover {
-                color: @ms2-color-primary-hover;
                 cursor: pointer;
             }
         }
