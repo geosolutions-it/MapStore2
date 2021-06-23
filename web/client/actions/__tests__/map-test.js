@@ -47,7 +47,9 @@ import {
     registerEventListener,
     unRegisterEventListener,
     mouseMove,
-    mouseOut
+    mouseOut,
+    mapPluginLoad,
+    MAP_PLUGIN_LOAD
 } from '../map';
 
 import { SHOW_NOTIFICATION } from '../notifications';
@@ -69,6 +71,16 @@ describe('Test correctness of the map actions', () => {
         expect(retval.bbox).toBe(testBbox);
         expect(retval.size).toBe(testSize);
         expect(retval.projection).toBe(testProjection);
+    });
+
+    it('test map plugin load', () => {
+        const errorMap = {status: 404};
+        const retval = mapPluginLoad('loading', 'mapType', 'loaded', errorMap);
+        expect(retval.type).toBe(MAP_PLUGIN_LOAD);
+        expect(retval.loading).toBe('loading');
+        expect(retval.mapType).toBe('mapType');
+        expect(retval.loaded).toBe('loaded');
+        expect(retval.error).toEqual(errorMap);
     });
 
     it('set a new clicked point', () => {
