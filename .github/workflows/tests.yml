@@ -58,7 +58,7 @@ jobs:
       # TESTS
       ############
       - name: npm install
-        run: npm ci # clean installation
+        run: npm install
 
       - name: check i18n
         run: npm run i18n
