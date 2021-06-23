@@ -58,7 +58,7 @@ function loadConfigFromStorage(name = 'mapstore.embedded') {
                 return JSON.parse(loaded);
             }
         } catch (e) {
-            console.error(e);
+            console.error(e); // eslint-disable-line
             return null;
         }
     }

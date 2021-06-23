@@ -133,7 +133,7 @@ class Cookie extends React.Component {
         try {
             getApi().setItem("cookies-policy-approved", true);
         } catch (e) {
-            console.error(e);
+            console.error(e); // eslint-disable-line
         }
         this.props.onSetCookieVisibility(false);
     }
