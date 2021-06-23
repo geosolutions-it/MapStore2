@@ -1,48 +1,87 @@
-/* Leaflet minimap style */
-.leaflet-control-minimap {
-	border: solid @ms2-color-primary 4px !important;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+
+    /* Leaflet minimap style */
+    .leaflet-control-minimap {
+        .border-color-var(@theme-vars[primary]);
+    }
+
+    .leaflet-control-minimap a {
+        .background-color-var(@theme-vars[primary]);
+    }
+
+    /* scale bar */
+    .leaflet-control-scale-line {
+        .color-var(@theme-vars[main-color]);
+        background-color: transparent;
+        .border-color-var(@theme-vars[main-color]);
+    }
+
+    .leaflet-container {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .leaflet-control-attribution {
+        .color-var(@theme-vars[main-color]);
+
+        a {
+            .color-var(@theme-vars[primary]);
+        }
+    }
+
 }
 
-.leaflet-control-minimap a {
-	background-color: @ms2-color-primary !important;
+// **************
+// Layout
+// **************
+/* Leaflet minimap style */
+.leaflet-control-minimap {
+    border-width: 4px !important;
+    border-style: solid !important;
 }
 
 .leaflet-control-minimap-toggle-display {
-	background-image: url("../img/toggle.svg") !important;
+    background-image: url("../img/toggle.svg") !important;
 }
 
 .leaflet-oldie .leaflet-control-minimap-toggle-display {
-	background-image: url("../img/toggle.png") !important;
+    background-image: url("../img/toggle.png") !important;
 }
 
 /* scale bar */
 .leaflet-control-scale-line {
-    border-color: @ms2-color-text;
-	background-color: transparent;
-	color: @ms2-color-text;
+    background-color: transparent;
     text-align: center;
 }
 
-.leafletbottom.leafletright, .leaflet-control-minimap{
+.leafletbottom.leafletright,
+.leaflet-control-minimap {
     bottom: 47px !important;
     right: 49px !important;
 }
 
 .leaflet-control-scale {
     top: 10px;
-	right: 10px;
-	clear: none;
+    right: 10px;
+    clear: none;
     z-index: 1000;
 }
 
 .leaflet-control-attribution {
-    color: @ms2-color-text;
     max-height: 2.6em;
+
     img {
         max-height: 2.6em;
-    }
-    a {
-        color: @ms2-color-primary;
     }
 }
 
@@ -52,12 +91,12 @@
 }
 
 .leaflet-edit-marker-selected {
-	background: transparent;
-	border: none;
+    background: transparent;
+    border: none;
 }
 
 .map-viewer-embedded {
     .leaflet-top {
-     top: 70px;
+        top: 70px;
     }
 }

@@ -16,8 +16,6 @@ import StyleCanvas from './StyleCanvas';
 import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
 import { NumberPicker } from 'react-widgets';
-import 'react-widgets/lib/less/react-widgets.less';
-
 class StylePolyline extends React.Component {
     static propTypes = {
         shapeStyle: PropTypes.object,

@@ -29,6 +29,7 @@ export const REGISTER_EVENT_LISTENER = 'REGISTER_EVENT_LISTENER';
 export const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
 export const MOUSE_MOVE = 'MOUSE_MOVE';
 export const MOUSE_OUT = 'MOUSE_OUT';
+export const MAP_PLUGIN_LOAD = 'MAP:MAP_PLUGIN_LOAD';
 
 export function errorLoadingFont(err = {family: ""}) {
     return error({
@@ -38,6 +39,23 @@ export function errorLoadingFont(err = {family: ""}) {
         position: "tc",
         autoDismiss: 10
     });
+}
+
+/**
+ * Event triggered when loading a different map type plugins (code for the specific implementation)
+ * @prop {boolean} loading true when the loading is active. False when the loading is finished.
+ * @prop {string} maptype
+ * @prop {boolean} loaded true if the plugin for the map type is effectively loaded. false or undefined if it is not loaded or there was some error loading
+ * @prop {Error} errorMap if valorized, contains the error occurred during the map plugin loading.
+ */
+export function mapPluginLoad(loading, mapType, loaded, errorMap) {
+    return {
+        type: MAP_PLUGIN_LOAD,
+        mapType,
+        loading,
+        loaded,
+        error: errorMap
+    };
 }
 
 /**
