@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Jumbotron, Grid, Row, Col } from 'react-bootstrap';
 import HTML from '../../components/I18N/HTML';
+import logo from "./attribution/atlalogo11.png";
 
 /**
  * Description of MapStore rendered in the home page.
@@ -35,18 +36,32 @@ class HomeDescription extends React.Component {
 
     render() {
         return (
-            <Jumbotron className={this.props.className} style={this.props.style}>
+            <div>
+                <Jumbotron className={this.props.className} style={this.props.style}>
+                    <Grid>
+                        <Row>
+                            <Col xs={12} className="text-center">
+                                <h1>{this.props.name}</h1>
+                                <p>
+                                    <HTML msgId="home.shortDescription"/>
+                                </p>
+                            </Col>
+                        </Row>
+                    </Grid>
+                </Jumbotron>
                 <Grid>
                     <Row>
-                        <Col xs={12} className="text-center">
-                            <h1>{this.props.name}</h1>
-                            <p>
-                                <HTML msgId="home.shortDescription"/>
-                            </p>
+                        <Col md={3}>
+                            <a href="http://atlanteintegrato.rse-web.it/"><img height={100} src={logo} className="d-block mx-auto"/></a>
+                        </Col>
+                        <Col md={7}>
+                            <h3><a href="http://atlanteintegrato.rse-web.it/">Atlante Integrato</a></h3>
+                            <p>Scopri di più</p>
                         </Col>
                     </Row>
                 </Grid>
-            </Jumbotron>
+
+            </div>
         );
     }
 }
