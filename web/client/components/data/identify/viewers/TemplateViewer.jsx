@@ -11,6 +11,7 @@ import React from 'react';
 import { template } from 'lodash';
 import { getCleanTemplate } from '../../../../utils/TemplateUtils';
 import HtmlRenderer from '../../../misc/HtmlRenderer';
+import Message from '../../../I18N/Message';
 
 export default ({layer = {}, response}) => (
     <div className="ms-template-viewer">
@@ -21,7 +22,9 @@ export default ({layer = {}, response}) => (
                 html = template(cleanTemplate)(feature);
             } catch (e) {
                 console.error(e);
-                html = "There was an error parsing the template, please check if the template contains a minus -, like ${ properties.data-array } ";
+                return (<div key={i}>
+                    <Message msgId="layerProperties.templateError"/>
+                </div>);
             }
             return (<div key={i}>
                 <HtmlRenderer html={html}/>

@@ -141,7 +141,9 @@
               "legendHeight": "Altura",
               "legendPreview": "Avance"
             },
-            "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
+            "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties } ora",
+            "templateFormatInfoAlertExample2": "{ properties['datos-valor'] }",
+            "templateError": "Se produjo un error al analizar la plantilla, revísela.",
             "templatePreview": "Vista previa de la plantilla",
             "enableLocalizedLayerStyles": {
                 "label": "Habilitar estilo localizado",

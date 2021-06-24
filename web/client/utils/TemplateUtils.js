@@ -33,16 +33,7 @@ export const validateStringAttribute = (feature, attribute, start = 0, end = 0) 
 export const getCleanTemplate = (chosenTemplate, feature, regex, start = 0, end = 0, getDefaultMissingProperty = () => "") => {
     const matchVariables = isString(chosenTemplate) && chosenTemplate.match(regex);
     const replacedTag = matchVariables && matchVariables.map(temp => {
-        let varReplaced = temp.replace(/(<([^>]+)>)/ig, '');
-        if (varReplaced.indexOf("-") !== -1) {
-            const pieces = varReplaced.split(".").map(part => {
-                if (part.indexOf("-") !== -1 && !(part.indexOf("['") !== -1 || part.indexOf('["') !== -1)) {
-                    return `['${part.replace(" ", "").replace("}", "']}")}`;
-                }
-                return part;
-            });
-            varReplaced = pieces.join(".");
-        }
+        const varReplaced = temp.replace(/(<([^>]+)>)/ig, '');
         return {
             previous: temp,
             next: validateStringAttribute(feature, varReplaced, start, end) ? varReplaced : getDefaultMissingProperty(temp)

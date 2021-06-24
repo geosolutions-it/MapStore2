@@ -75,24 +75,6 @@ describe('TemplateUtils', () => {
             };
             expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>the name is ${ properties.name } and the description  and again the name is ${ properties.name }</p>');
         });
-        it('cleaning a template with a - in attributes', () => {
-            const template = '<p>name ${ properties.name-surname }</p>';
-            const testObj = {
-                properties: {
-                    "name-surname": 'M-V'
-                }
-            };
-            expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe("<p>name ${ properties.['name-surname']}</p>");
-        });
-        it('cleaning a template with multiple - in attributes', () => {
-            const template = '<p>name ${ properties.name-surname-address }</p>';
-            const testObj = {
-                properties: {
-                    "name-surname-address": 'M-V'
-                }
-            };
-            expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe("<p>name ${ properties.['name-surname-address']}</p>");
-        });
         it('cleaning a template i with a - already escaped', () => {
             const template = '<p>name ${ properties["name-surname"] }</p>';
             const testObj = {
