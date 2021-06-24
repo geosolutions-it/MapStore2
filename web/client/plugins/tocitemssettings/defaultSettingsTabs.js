@@ -112,7 +112,8 @@ const formatCards = {
                         <span>
                             <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }' }} /></p>
                             <pre>
-                                <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }} />
+                                <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }} /><br/>
+                                <Message msgId="layerProperties.templateFormatInfoAlertExample2"/>
                             </pre>
                             <p><small><Message msgId="layerProperties.templateFormatInfoAlert1" /></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil" />&nbsp;)</p>
                         </span>}
