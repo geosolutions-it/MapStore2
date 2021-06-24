@@ -56,7 +56,8 @@ const TOCItemSettings = (props) => {
         position = 'left',
         tabs = [],
         tabsConfig = {},
-        isLocalizedLayerStylesEnabled = false
+        isLocalizedLayerStylesEnabled = false,
+        saveEnabled = true
     } = props;
 
 
@@ -68,7 +69,7 @@ const TOCItemSettings = (props) => {
         {
             glyph: 'floppy-disk',
             tooltipId: 'save',
-            visible: !!onSave,
+            visible: saveEnabled,
             onClick: () => onSave(tabsCloseActions)
         },
         ...(head(tabs.filter(tab => tab.id === activeTab && tab.toolbar).map(tab => tab.toolbar)) || [])];

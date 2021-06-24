@@ -201,4 +201,20 @@ describe("test TOCItemsSettings", () => {
         expect(customToolbar).toExist();
     });
 
+    it('test ToolbarComponent show save Button by default', () => {
+
+        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[]} element={layers[0]}/>, document.getElementById("container"));
+
+        const saveButton = document.querySelector('.glyphicon-floppy-disk');
+        expect(saveButton).toExist();
+    });
+
+    it('test ToolbarComponent hide save Button when saveEnabled is false', () => {
+
+        ReactDOM.render(<TOCItemsSettings settings={settings} saveEnabled={false} activeTab="general" tabs={[]} element={layers[0]}/>, document.getElementById("container"));
+
+        const saveButton = document.querySelector('.glyphicon-floppy-disk');
+        expect(saveButton).toNotExist;
+    });
+
 });
