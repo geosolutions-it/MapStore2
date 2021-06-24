@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/geosolutions-it/MapStore2.svg?branch=master)](https://travis-ci.org/geosolutions-it/MapStore2)
+![Build Checks](https://github.com/geosolutions-it/MapStore2/actions/workflows/tests.yml/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/geosolutions-it/MapStore2/badge.svg?branch=master)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1648d484427346e2877006dc287379b6)](https://app.codacy.com/app/geosolutions/MapStore2?utm_source=github.com&utm_medium=referral&utm_content=geosolutions-it/MapStore2&utm_campaign=badger)
 [![Documentation Status](https://readthedocs.org/projects/mapstore2/badge/?version=latest)](https://mapstore.readthedocs.io/en/latest/?badge=latest)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
