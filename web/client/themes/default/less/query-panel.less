@@ -56,6 +56,11 @@
     }
 }
 
+/* Avoid overflow of the right date-picker visibility when date filter "between" is used */
+.query-field-value.date-filter-right .rw-calendar-popup.rw-popup-container {
+    transform: translateX(-40%);
+}
+
 .mapstore-string-select {
     position: relative;
     display: inline-block;
