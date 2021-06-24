@@ -7,7 +7,6 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { castArray } from 'lodash';
 import CesiumLayer from '../Layer';
 import expect from 'expect';
 import * as Cesium from 'Cesium';
