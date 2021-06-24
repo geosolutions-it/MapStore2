@@ -154,6 +154,13 @@ const Immersive = ({
                 }
             },
             {
+                glyph: 'story-immersive-content',
+                tooltipId: 'geostory.addGeocarouselContent',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.CAROUSEL);
+                }
+            },
+            {
                 glyph: 'story-media-section',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
@@ -169,6 +176,7 @@ const Immersive = ({
             }]}/>}
     </section>);
 };
+
 
 export default compose(
     immersiveBackgroundManager,

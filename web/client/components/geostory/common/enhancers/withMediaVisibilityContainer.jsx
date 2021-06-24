@@ -23,7 +23,7 @@ const withMediaVisibility = (MediaComponent) => {
     function WithMediaVisibility(props) {
         let loaderStyle = {};
         const sectionType = props.sectionType;
-        if ((sectionType === SectionTypes.PARAGRAPH || sectionType === SectionTypes.IMMERSIVE) &&
+        if ((sectionType === SectionTypes.PARAGRAPH || sectionType === SectionTypes.IMMERSIVE || sectionType === SectionTypes.CAROUSEL) &&
         props.type === MediaTypes.IMAGE) {
             // Calculate paddingTop for setting a proper aspect ratio. The default values for
             // height and width are 9 and 16 respectively to give us 16:9 aspect ratio

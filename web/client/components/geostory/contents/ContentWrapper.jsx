@@ -19,7 +19,7 @@ export default ({ id, inViewRef, children, type, contentWrapperStyle, contentToo
     return (<div
         id={id}
         ref={inViewRef}
-        style={contentWrapperStyle}
+        style={{...contentWrapperStyle, display: props.hideContent ? 'none' : 'block'}}
         className={`ms-content ms-content-${type}${getClassNameFromProps(props)}`}>
         <div className="ms-content-body" style={getThemeStyleFromProps(props)}>
             {mode === Modes.EDIT

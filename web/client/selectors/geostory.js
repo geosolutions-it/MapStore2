@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, find, findIndex, isEqual, uniq} from 'lodash';
+import {get, find, findIndex, isEqual, uniq, includes, isEmpty} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 import { SectionTypes, findSectionIdFromColumnId } from './../utils/GeoStoryUtils';
 import { isAdminUserSelector } from './security';
@@ -103,7 +103,7 @@ export const isSettingsEnabledSelector = state => get(state, "geostory.isSetting
 export const settingsSelector = state => {
     // the expanded items are calculated based on checked ones
     const settings = get(currentStorySelector(state), "settings", {});
-    const immSections = sectionsSelector(state).filter(({type}) => type === SectionTypes.IMMERSIVE);
+    const immSections = sectionsSelector(state).filter(({type}) => includes([SectionTypes.CAROUSEL, SectionTypes.IMMERSIVE], type));
     const checked = settings.checked || [];
     const expanded = uniq(checked.map(chId => findSectionIdFromColumnId(immSections, chId)).filter(i => i));
     return {...settings, expanded};
@@ -185,7 +185,7 @@ export const navigableItemsSelectorCreator = ({withImmersiveSection = false, inc
             // include only the section
             return [...p, c];
         }
-        if (c.type === SectionTypes.IMMERSIVE) {
+        if (includes([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL], c.type)) {
             // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
                 if (includeAlways || visibleItems[column.id]) {
@@ -238,7 +238,7 @@ export const getCurrentFocusedContentEl = state =>  createPathSelector(get(state
 export const settingsItemsSelector = state => {
     const sections = sectionsSelector(state);
     return sections.reduce((p, c) => {
-        if (c.type === SectionTypes.IMMERSIVE) {
+        if (includes([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL], c.type)) {
             const children = c.contents && c.contents.map((column) => {
                 return {label: column.title || "", value: column.id};
             }) || [];
@@ -295,3 +295,31 @@ export const updateUrlOnScrollSelector = state => get(state, 'geostory.updateUrl
 export const currentStoryFonts = state => get(state, "geostory.currentStory.settings.theme.fontFamilies", []);
 
 export const getMediaEditorSettings = state => get(state, 'geostory.mediaEditorSettings');
+
+export const getAllGeoCarouselSections = (state) =>
+    (currentStorySelector(state)?.sections || []).filter(({type})=> type === SectionTypes.CAROUSEL);
+
+export const isGeoCarouselSection = sectionId => state => !!find(getAllGeoCarouselSections(state), {id: sectionId});
+
+export const getAllCarouselContentsOfSection = (sectionId)=>(state) => {
+    const section = find((getAllGeoCarouselSections(state) || []), {id: sectionId});
+    return (section?.contents || []);
+};
+
+export const getGeoCarouselSectionById = (sectionId) => (state) => {
+    const sections = getAllGeoCarouselSections(state) || [];
+    return find(sections, {id: sectionId});
+};
+
+export const currentCarouselContent = ({contentId, sectionId}) => (state) => {
+    const currSection = getGeoCarouselSectionById(sectionId)(state) || {};
+    return find(currSection.contents || [], {id: contentId});
+};
+
+export const getCurrentDrawContent = (state) => currentStorySelector(state)?.drawContent;
+
+export const isDrawControlEnabled = (state) => !isEmpty(getCurrentDrawContent(state));
+
+export const sideEffectState = (state) => get(state, 'geostory.sideEffect', false);
+
+export const geoCarouselSettings = (state) => get(state, 'geostory.geoCarouselSettings', {});

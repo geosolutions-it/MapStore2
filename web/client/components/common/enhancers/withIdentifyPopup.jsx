@@ -25,7 +25,7 @@ import {
 import { isInsideResolutionsLimits } from '../../../utils/LayersUtils';
 
 // verify if 'application/json' is available if not use default
-const getDefaultInfoFormat = () => {
+export const getDefaultInfoFormat = () => {
     const availableInfoFormats = getAvailableInfoFormatValues();
     return availableInfoFormats.indexOf('application/json') !== -1
         ? 'application/json'
