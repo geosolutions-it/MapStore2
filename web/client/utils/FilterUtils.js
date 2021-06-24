@@ -1084,7 +1084,6 @@ export const createFeatureFilter = (filterObj) => feature => {
 
             let dateFeature = new Date(feature.properties[filterFields[i].attribute]);
             let dateFilter = new Date(filterFields[i].value.startDate);
-            console.log(dateFeature, dateFilter);
 
             if (dateFeature.getFullYear() !== dateFilter.getFullYear() ||
                 dateFeature.getMonth() !== dateFilter.getMonth() ||
