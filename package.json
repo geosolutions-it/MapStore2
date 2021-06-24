@@ -49,7 +49,7 @@
     "@geosolutions/acorn-jsx": "4.0.2",
     "@geosolutions/jsdoc": "3.4.4",
     "@geosolutions/mocha": "6.2.1-3",
-    "@mapstore/eslint-config-mapstore": "1.0.2",
+    "@mapstore/eslint-config-mapstore": "1.0.3",
     "axios-mock-adapter": "1.16.0",
     "babel-loader": "8.0.5",
     "babel-plugin-add-module-exports": "0.1.4",
