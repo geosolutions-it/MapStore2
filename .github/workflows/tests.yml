@@ -59,7 +59,7 @@ jobs:
         run: npm run i18n
 
       - name: tests
-        run: npm test
+        run: npm test -- --reporters junit,coverage,coveralls
 
   test-back-end:
     runs-on: ubuntu-latest
