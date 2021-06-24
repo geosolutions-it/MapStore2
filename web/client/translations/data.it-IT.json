@@ -104,7 +104,7 @@
             "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
             "templateFormatInfoAlertExample": "id della feature è ${ properties } o",
             "templateFormatInfoAlertExample2": "{ properties['nome-cognome'] }",
-            "templateError": "C'è stato un errore durante l'analisi del modello, si consiglia di controllarlo",
+            "templateError": "Si è verificato un errore durante l'applicazione del formato del modello alle informazioni restituite dal server, controlla il formato del modello",
             "templatePreview": "Anteprima template",
             "visibilityLimits": {
                 "title": "Limiti di visibilità",

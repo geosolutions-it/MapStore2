@@ -104,7 +104,7 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties } or",
             "templateFormatInfoAlertExample2": "{ properties['data-value'] }",
-            "templateError": "There was an error while parsing the template, please review it",
+            "templateError": "There was an error applying the template format to the information returned by the server, please check the template",
             "templatePreview": "Template preview",
             "visibilityLimits": {
                 "title": "Visibility limits",
