@@ -49,17 +49,22 @@ jobs:
       - name: npm install
         run: npm install
 
-      - name: lint
+      - name: ESlint
         run: npm run lint
 
-      - name: doc
+      - name: Doc build
         run: npm run doc
 
-      - name: check i18n
+      - name: Check i18n
         run: npm run i18n
 
-      - name: tests
-        run: npm test
+      - name: Unit Tests
+        run: npm test -- --reporters mocha,coverage,coveralls
+        
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   test-back-end:
     runs-on: ubuntu-latest
