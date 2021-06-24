@@ -143,7 +143,7 @@
             },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties } ora",
             "templateFormatInfoAlertExample2": "{ properties['datos-valor'] }",
-            "templateError": "Hubo un error al aplicar el formato de la plantilla a la información devuelta por el servidor, verifique la plantilla",
+            "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
             "templatePreview": "Vista previa de la plantilla",
             "enableLocalizedLayerStyles": {
                 "label": "Habilitar estilo localizado",
