@@ -102,7 +102,9 @@
             "styleWarning": "L'editore dello stile di livello per il tipo di geometria '{geometryType}' non è supportato.",
             "templateFormatInfoAlert1": "Click sul bottone di modifica per aggiungere un nuovo template.",
             "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
-            "templateFormatInfoAlertExample": "id della feature è ${ properties }",
+            "templateFormatInfoAlertExample": "id della feature è ${ properties } o",
+            "templateFormatInfoAlertExample2": "{ properties['nome-cognome'] }",
+            "templateError": "Si è verificato un errore durante l'applicazione del template alle informazioni restituite dal server, controllare il template.",
             "templatePreview": "Anteprima template",
             "visibilityLimits": {
                 "title": "Limiti di visibilità",

@@ -102,7 +102,9 @@
             "styleWarning": "Ebenenstil-Editor für Geometrietyp '{geometryType}' wird nicht unterstützt.",
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
-            "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
+            "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties } oder",
+            "templateFormatInfoAlertExample2": "{ properties['daten-wert'] }",
+            "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
             "templatePreview": "Vorschau template",
             "visibilityLimits": {
                 "title": "Sichtbarkeitsgrenzen",

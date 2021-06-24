@@ -102,7 +102,9 @@
             "styleWarning": "L'éditeur de style de calque pour le type de géométrie '{geometryType}' n'est pas pris en charge.",
             "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
-            "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
+            "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties } ou",
+            "templateFormatInfoAlertExample2": "{ properties['données-valeur'] }",
+            "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
             "visibilityLimits": {
                 "title": "Limites de visibilité",
