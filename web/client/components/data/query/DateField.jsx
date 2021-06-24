@@ -71,7 +71,7 @@ class DateField extends React.Component {
 
         let dateRow = this.props.operator === "><" ?
             (<div className="query-field">
-                <div className="query-field-value">
+                <div className="query-field-value date-filter-left">
                     {this.props.showLabels && <Message msgId="queryform.from"/>}
                     <UTCDateTimePicker
                         type={this.props.attType}
@@ -82,7 +82,7 @@ class DateField extends React.Component {
                         format={getDateTimeFormat(this.context.locale, this.props.attType)}
                         onChange={(date) => this.updateValueState({startDate: date, endDate: enddate})}/>
                 </div>
-                <div className="query-field-value">
+                <div className="query-field-value date-filter-right">
                     {this.props.showLabels && <Message msgId="queryform.to"/>}
                     <UTCDateTimePicker
                         type={this.props.attType}
