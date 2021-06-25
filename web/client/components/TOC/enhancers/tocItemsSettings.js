@@ -38,7 +38,11 @@ export const settingsLifecycle = compose(
         onClose: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onUpdateNode = () => {}, originalSettings, settings, onHideSettings = () => {}, onShowAlertModal = () => {} }) => (forceClose, tabsCloseActions = []) => {
             const originalOptions = Object.keys(settings.options).reduce((options, key) => ({ ...options, [key]: key === 'opacity' && !originalSettings[key] && 1.0 || originalSettings[key] }), {});
             if (!isEqual(originalOptions, settings.options) && !forceClose) {
-                onShowAlertModal(true);
+                if (!isEqual(originalOptions.style, settings.options?.style)) {
+                    onHideSettings();
+                } else {
+                    onShowAlertModal(true);
+                }
             } else {
                 if (isArray(tabsCloseActions)) {
                     tabsCloseActions.forEach(tabOnClose => {

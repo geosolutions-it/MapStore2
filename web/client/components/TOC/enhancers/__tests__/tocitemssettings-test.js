@@ -245,7 +245,7 @@ describe("test updateSettingsLifecycle", () => {
         ReactDOM.render(<Component
             onUpdateNode={testHandlers.onUpdateNode}
             originalSettings={{}}
-            settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
+            settings={{node: '0', nodeType: 'layer', options: { opacity: 2 }}}
             onHideSettings={testHandlers.onHideSettings}
             onShowAlertModal={testHandlers.onShowAlertModal} />, document.getElementById("container"));
 
@@ -256,6 +256,27 @@ describe("test updateSettingsLifecycle", () => {
         expect(spyOnHideSettings).toNotHaveBeenCalled();
         expect(spyOnShowAlertModal).toHaveBeenCalled();
         expect(spyOnShowAlertModal).toHaveBeenCalledWith(true);
+    });
+
+    it('test component hideSettings on new style params', () => {
+        const testHandlers = {
+            onUpdateNode: () => {},
+            onHideSettings: () => {},
+            onShowAlertModal: () => {}
+        };
+        const spyOnHideSettings = expect.spyOn(testHandlers, 'onHideSettings');
+
+        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose()}></div>);
+        ReactDOM.render(<Component
+            onUpdateNode={testHandlers.onUpdateNode}
+            originalSettings={{}}
+            settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
+            onHideSettings={testHandlers.onHideSettings}
+            onShowAlertModal={testHandlers.onShowAlertModal} />, document.getElementById("container"));
+
+        const testClose = document.getElementById('test-close');
+        TestUtils.Simulate.click(testClose);
+        expect(spyOnHideSettings).toHaveBeenCalled();
     });
 
     it('test component on forced close', () => {
