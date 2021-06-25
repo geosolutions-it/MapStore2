@@ -65,15 +65,25 @@ describe('TemplateUtils', () => {
         expect(validateStringAttribute(testObj, 'properties.desc')).toBe(false);
     });
 
-    it('getCleanTemplate', () => {
-        const template = '<p>the name is ${ properties.name } and the description ${ properties.desc } and again the name is ${ <strong>properties.name</strong> }</p>';
-        const testObj = {
-            properties: {
-                name: 'object-name'
-            }
-        };
-        expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>the name is ${ properties.name } and the description  and again the name is ${ properties.name }</p>');
-
+    describe('getCleanTemplate', () => {
+        it('cleaning a normal template', () => {
+            const template = '<p>the name is ${ properties.name } and the description ${ properties.desc } and again the name is ${ <strong>properties.name</strong> }</p>';
+            const testObj = {
+                properties: {
+                    name: 'object-name'
+                }
+            };
+            expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>the name is ${ properties.name } and the description  and again the name is ${ properties.name }</p>');
+        });
+        it('cleaning a template i with a - already escaped', () => {
+            const template = '<p>name ${ properties["name-surname"] }</p>';
+            const testObj = {
+                properties: {
+                    "name-surname": 'M-V'
+                }
+            };
+            expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>name ${ properties["name-surname"] }</p>');
+        });
     });
 
     it('parseCustomTemplate with some missing attributes', () => {
