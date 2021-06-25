@@ -141,8 +141,7 @@
               "legendHeight": "Altura",
               "legendPreview": "Avance"
             },
-            "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties } ora",
-            "templateFormatInfoAlertExample2": "{ properties['datos-valor'] }",
+            "templateFormatInfoAlertExample": "La identificación de la característica es <span style='white-space:nowrap'>${ properties.datos }</span> ora <span style='white-space:nowrap'>${ properties['datos-valor'] }</span>",
             "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
             "templatePreview": "Vista previa de la plantilla",
             "enableLocalizedLayerStyles": {

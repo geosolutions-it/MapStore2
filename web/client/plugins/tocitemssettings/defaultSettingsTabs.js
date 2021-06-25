@@ -8,6 +8,7 @@
 
 import React from 'react';
 import Message from '../../components/I18N/Message';
+import HTML from '../../components/I18N/HTML';
 import { filter, head, sortBy } from 'lodash';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -112,8 +113,7 @@ const formatCards = {
                         <span>
                             <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }' }} /></p>
                             <pre>
-                                <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }} /><br/>
-                                <Message msgId="layerProperties.templateFormatInfoAlertExample2"/>
+                                <HTML msgId="layerProperties.templateFormatInfoAlertExample"/>
                             </pre>
                             <p><small><Message msgId="layerProperties.templateFormatInfoAlert1" /></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil" />&nbsp;)</p>
                         </span>}
