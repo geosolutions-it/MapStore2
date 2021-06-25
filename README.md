@@ -22,7 +22,7 @@ You can download the WAR file from the latest release <a href="https://github.co
 Quick Start
 ------------
 
-There are two quick ways to test out MapStore. Either using <a href="https://www.docker.com/" target="_blank">Docker</a> or a local java web container like <a href="http://tomcat.apache.org/" target="_blank">Apache Tomcat</a>
+There are two quick ways to test out MapStore. Either using <a href="https://www.docker.com/" target="_blank">Docker</a> (all tags are available in the [geosolutions dockerhub](https://hub.docker.com/r/geosolutionsit/mapstore2/tags?page=1&ordering=last_updated)) or a local java web container like <a href="http://tomcat.apache.org/" target="_blank">Apache Tomcat</a>
 
 ### Using Docker
 
