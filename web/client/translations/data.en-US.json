@@ -102,8 +102,7 @@
             "styleWarning": "Layer style editor for geometry type '{geometryType}' is not supported.",
             "templateFormatInfoAlert1": "Click on edit button to add a new template.",
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
-            "templateFormatInfoAlertExample": "The id of the feature is ${ properties } or",
-            "templateFormatInfoAlertExample2": "{ properties['data-value'] }",
+            "templateFormatInfoAlertExample": "The id of the feature is <span style='white-space:nowrap'>${ properties.id }</span> or <span style='white-space:nowrap'>${ properties['data-value'] }</span>",
             "templateError": "There was an error applying the template to the information returned by the server, please check the template",
             "templatePreview": "Template preview",
             "visibilityLimits": {
