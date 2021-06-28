@@ -20,7 +20,7 @@ import ContextCreator, { pluginsFilterOverride } from '../ContextCreator';
 
 const mockStore = configureMockStore();
 
-describe.only('ContextCreator component', () => {
+describe('ContextCreator component', () => {
     let store;
     beforeEach((done) => {
         store = mockStore();
