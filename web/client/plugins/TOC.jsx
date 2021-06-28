@@ -685,6 +685,7 @@ const checkPluginsEnhancer = branch(
  * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
+ * @prop {boolean} cfg.activateRemoveGroup activates readonly TOC with no option to add/remove layers and groups, default `true`
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
  * example :
  * ```
