@@ -15,13 +15,13 @@ import {newContextSelector, resourceSelector, creationStepSelector, reloadConfir
     loadFlagsSelector, isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector,
     validationStatusSelector, cfgErrorSelector, templatesSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
     availablePluginsFilterTextSelector, availableTemplatesFilterTextSelector, enabledPluginsFilterTextSelector,
-    enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector, tutorialStepSelector} from '../selectors/contextcreator';
+    enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector, tutorialStepSelector, selectedThemeSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {tutorialSelector} from '../selectors/tutorial';
 import {init, setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
     setSelectedPlugins, setSelectedTemplates, setParsedTemplate, setFileDropStatus, editPlugin, editTemplate, deleteTemplate, updateEditedCfg,
     changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin, uninstallPlugin,
-    addPluginToUpload, removePluginToUpload, showBackToPageConfirmation, showTutorial} from '../actions/contextcreator';
+    addPluginToUpload, removePluginToUpload, showBackToPageConfirmation, showTutorial, setSelectedTheme} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import { userSelector } from '../selectors/security';
@@ -60,7 +60,8 @@ export const contextCreatorSelector = createStructuredSelector({
     uploadResult: state => state.contextcreator && state.contextcreator.uploadResult,
     pluginsToUpload: state => state.contextcreator?.pluginsToUpload,
     pluginsConfig: () => ConfigUtils.getConfigProp('plugins'),
-    showBackToPageConfirmation: showBackToPageConfirmationSelector
+    showBackToPageConfirmation: showBackToPageConfirmationSelector,
+    selectedTheme: selectedThemeSelector
 });
 
 /**
@@ -78,6 +79,7 @@ export default createPlugin('ContextCreator', {
         onFilterEnabledTemplates: setFilterText.bind(null, 'enabledTemplates'),
         setSelectedPlugins,
         setSelectedTemplates,
+        setSelectedTheme,
         setParsedTemplate,
         setFileDropStatus,
         onEditPlugin: editPlugin,

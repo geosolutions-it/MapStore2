@@ -27,7 +27,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
-    wasTutorialShownSelector} from '../selectors/contextcreator';
+    wasTutorialShownSelector, selectedThemeSelector} from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
@@ -95,10 +95,12 @@ export const saveContextResource = (action$, store) => action$
         }) : plugin);
         const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
         const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
+        const theme = selectedThemeSelector(state);
 
         const newContext = {
             ...context,
             mapConfig,
+            theme,
             plugins: {desktop: unselectablePlugins},
             userPlugins
         };
