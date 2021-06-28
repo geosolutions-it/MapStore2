@@ -21,7 +21,8 @@ import {
     templatesSelector,
     editedPluginSelector,
     editedCfgSelector,
-    editedTemplateSelector
+    editedTemplateSelector,
+    selectedThemeSelector
 } from '../../selectors/contextcreator';
 import {
     setFilterText,
@@ -47,7 +48,8 @@ import {
     setSelectedTemplates,
     setEditedTemplate,
     setTemplates,
-    changeTemplatesKey
+    changeTemplatesKey,
+    setSelectedTheme
 } from '../../actions/contextcreator';
 
 const testContextResource = {
@@ -55,6 +57,7 @@ const testContextResource = {
         windowTitle: 'title',
         mapConfig: {},
         templates: [{id: 2}],
+        theme: "dark",
         plugins: {
             desktop: [{
                 name: 'Catalog',
@@ -173,6 +176,8 @@ describe('contextcreator reducer', () => {
         const newContext = newContextSelector(state);
         const plugins = pluginsSelector(state);
         const templates = templatesSelector(state);
+        const selectedTheme = selectedThemeSelector(state);
+        expect(selectedTheme).toBe(data.theme);
         expect(newContext).toExist();
         expect(newContext.windowTitle).toBe(data.windowTitle);
         expect(newContext.plugins).toNotExist();
@@ -558,5 +563,10 @@ describe('contextcreator reducer', () => {
         const state = contextcreator(undefined, showBackToPageConfirmation(true));
         expect(state).toExist();
         expect(state.showBackToPageConfirmation).toBe(true);
+    });
+    it('setSelectedTheme', () => {
+        const state = contextcreator(undefined, setSelectedTheme("dark"));
+        expect(state).toExist();
+        expect(selectedThemeSelector({contextcreator: state})).toBe("dark");
     });
 });

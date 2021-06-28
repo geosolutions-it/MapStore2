@@ -44,7 +44,9 @@ import {
     addPluginToUpload,
     ADD_PLUGIN_TO_UPLOAD,
     removePluginToUpload,
-    REMOVE_PLUGIN_TO_UPLOAD
+    REMOVE_PLUGIN_TO_UPLOAD,
+    SET_SELECTED_THEME,
+    setSelectedTheme
 } from '../contextcreator';
 
 describe('contextcreator actions', () => {
@@ -155,5 +157,12 @@ describe('contextcreator actions', () => {
         const retval = loadExtensions([{}]);
         expect(retval).toExist();
         expect(retval.type).toBe(LOAD_EXTENSIONS);
+    });
+    it('setSelectedTheme', () => {
+        const theme = "dark";
+        const retval = setSelectedTheme(theme);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_SELECTED_THEME);
+        expect(retval.theme).toBe(theme);
     });
 });
