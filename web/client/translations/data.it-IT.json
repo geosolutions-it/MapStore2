@@ -2875,6 +2875,11 @@
                 "windowTitle": "Titolo della finestra",
                 "windowTitlePlaceholder": "Inserisci il titolo della finestra..."
             },
+            "configureThemes": {
+              "label": "Configura il tema",
+              "themes": "Scegli un tema",
+              "noThemes": "Nessun tema trovato"
+            },
             "configurePlugins": {
                 "label": "Configura plugin",
                 "pluginsFilterPlaceholder": "Filtra plug-in per nome...",

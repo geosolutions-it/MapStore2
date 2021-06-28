@@ -2874,6 +2874,11 @@
                 "windowTitle": "Fenstertitel",
                 "windowTitlePlaceholder": "Fenstertitel eingeben..."
             },
+            "configureThemes": {
+              "label": "Thema konfigurieren",
+              "themes": "Wähle ein Thema",
+              "noThemes": "Keine gefunden"
+            },
             "configurePlugins": {
                 "label": "Plugins konfigurieren",
                 "pluginsFilterPlaceholder": "Plugins nach Namen filtern...",
