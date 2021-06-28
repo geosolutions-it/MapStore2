@@ -20,7 +20,7 @@ import ContextCreator, { pluginsFilterOverride } from '../ContextCreator';
 
 const mockStore = configureMockStore();
 
-describe('ContextCreator component', () => {
+describe.only('ContextCreator component', () => {
     let store;
     beforeEach((done) => {
         store = mockStore();
@@ -59,7 +59,7 @@ describe('ContextCreator component', () => {
                         <ContextCreator
                             isCfgValidated
                             allAvailablePlugins={allAvailablePlugins}
-                            curStepId="configure-plugins"
+                            curStepId="configure-themes"
                             onSave={actions.onSave} />
                     </Provider>
                 </Localized>, document.getElementById("container"));
@@ -92,7 +92,7 @@ describe('ContextCreator component', () => {
                         <ContextCreator
                             isCfgValidated
                             allAvailablePlugins={allAvailablePlugins}
-                            curStepId="configure-plugins"
+                            curStepId="configure-themes"
                             saveDestLocation="MY_DESTINATION"
                             onSave={actions.onSave} />
                     </Provider>
