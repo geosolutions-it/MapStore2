@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import React, {useState} from 'react';
+import React from 'react';
 import Select from 'react-select';
 import {ControlLabel} from 'react-bootstrap';
 import Message from '../I18N/Message';
