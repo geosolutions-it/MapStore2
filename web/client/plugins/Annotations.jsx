@@ -309,6 +309,7 @@ export default createPlugin('Annotations', {
             name: 'annotations',
             position: 40,
             text: <Message msgId="annotationsbutton"/>,
+            tooltip: "annotationsbutton",
             icon: <Glyphicon glyph="comment"/>,
             action: conditionalToggle,
             priority: 2,

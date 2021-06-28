@@ -93,6 +93,7 @@ export default createPlugin('Details', {
             priority: 1,
             doNotHide: true,
             text: <Message msgId="details.title"/>,
+            tooltip: "details.title",
             icon: <Glyphicon glyph="sheet"/>,
             action: openDetailsPanel,
             selector: (state) => {
