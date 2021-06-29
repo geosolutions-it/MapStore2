@@ -1,6 +1,6 @@
 version: "3.8"
 networks:
-  intergration-test:
+  mapstore-network:
     driver: bridge
 
 services:
@@ -23,7 +23,7 @@ services:
     ports:
       - 5432
     networks:
-      - intergration-test
+      - mapstore-network
 
   mapstore:
     build:
@@ -40,7 +40,7 @@ services:
     ports:
       - 8080
     networks:
-      - intergration-test
+      - mapstore-network
 
   proxy:
     image: nginx
@@ -52,7 +52,7 @@ services:
     depends_on:
       - mapstore
     networks:
-      - intergration-test
+      - mapstore-network
 
 volumes:
   pg_data:
