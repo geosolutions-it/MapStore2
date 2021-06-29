@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import { Plot } from './PlotlyChart';
+import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
+import LoadingView from '../misc/LoadingView';
 
+const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
     base: 190,
@@ -23,7 +24,7 @@ export const defaultColorGenerator = (total, colorOptions) => {
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
 };
 
-function getData({ type, xDataKey, yDataKey, data, formula}) {
+function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     switch (type) {
@@ -50,6 +51,7 @@ function getData({ type, xDataKey, yDataKey, data, formula}) {
 
         }
         return {
+            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x,
             y
         };
@@ -196,11 +198,13 @@ export default function WidgetChart({
 }) {
     const { data, layout, config } = toPlotly(props);
     return (
-        <Plot
-            onInitialized={onInitialized}
-            data={data}
-            layout={layout}
-            config={config}
-        />
+        <Suspense fallback={<LoadingView />}>
+            <Plot
+                onInitialized={onInitialized}
+                data={data}
+                layout={layout}
+                config={config}
+            />
+        </Suspense>
     );
 }

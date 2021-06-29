@@ -1,8 +1,8 @@
 var PropTypes = require('prop-types');
 var React = require('react');
 var connect = require('react-redux').connect;
-var LMap = require('../../../components/map/leaflet/Map');
-var LLayer = require('../../../components/map/leaflet/Layer');
+var LMap = require('../../../components/map/leaflet/Map').default;
+var LLayer = require('../../../components/map/leaflet/Layer').default;
 
 class MyApp extends React.Component {
     static propTypes = {

@@ -296,7 +296,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && this.props.selectedLayers[0].search !== 'vector' && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
+                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && this.props.selectedLayers[0].search && this.props.selectedLayers[0].search !== 'vector' && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
                     <OverlayTrigger
                         key="widgets"
                         placement="top"

@@ -194,7 +194,7 @@
             "Examples": "例子",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "滚动到页面顶部",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "ml": {
                 "title": "Keep in touch and stay up-to-date with the mailing lists",
                 "subscribe_users": "Subscribe Users Mailing List",
@@ -842,7 +842,8 @@
                 "clear": "Clear filter",
                 "operation": "Operation",
                 "errors": {
-                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
+                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer",
+                    "layersExcluded": "只能选择来自同一来源的图层作为此图层过滤器的目标图层"
                 }
             }
         },
@@ -1115,6 +1116,7 @@
                 "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
                 "serviceDeletedCorrectly": "The service was deleted correctly",
                 "errorServiceUrl": "Service not available. Please, check the provided url"
+
             }
         },
         "uploader": {

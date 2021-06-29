@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const LeafletMap = require('../Map.jsx');
-const LeafLetLayer = require('../Layer.jsx');
-const expect = require('expect');
-const {isNumber} = require('lodash');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import LeafletMap from '../Map.jsx';
+import LeafLetLayer from '../Layer.jsx';
+import expect from 'expect';
+import {isNumber} from 'lodash';
 const {
     clearHooks,
     getBbox,
@@ -184,7 +184,7 @@ describe('LeafletMap', () => {
 
         leafletMap.on('moveend', () => {
             expect(spy.calls.length).toEqual(expectedCalls);
-            expect(spy.calls[0].arguments.length).toEqual(6);
+            expect(spy.calls[0].arguments.length).toEqual(8);
 
             expect(spy.calls[0].arguments[0].y).toEqual(43.9);
             expect(spy.calls[0].arguments[0].x).toEqual(10.3);

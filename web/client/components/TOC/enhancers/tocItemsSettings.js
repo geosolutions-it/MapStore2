@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isArray, isEqual, isFunction, isNil } from 'lodash';
+import { isArray, isFunction, isNil } from 'lodash';
 import { compose, lifecycle, withHandlers, withState } from 'recompose';
 
 /**
@@ -17,7 +17,6 @@ import { compose, lifecycle, withHandlers, withState } from 'recompose';
  * @class
  */
 export const settingsState = compose(
-    withState('alertModal', 'onShowAlertModal', false),
     withState('showEditor', 'onShowEditor', false)
 );
 
@@ -35,31 +34,7 @@ export const settingsState = compose(
  */
 export const settingsLifecycle = compose(
     withHandlers({
-        onClose: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onUpdateNode = () => {}, originalSettings, settings, onHideSettings = () => {}, onShowAlertModal = () => {} }) => (forceClose, tabsCloseActions = []) => {
-            const originalOptions = Object.keys(settings.options).reduce((options, key) => ({ ...options, [key]: key === 'opacity' && !originalSettings[key] && 1.0 || originalSettings[key] }), {});
-            if (!isEqual(originalOptions, settings.options) && !forceClose) {
-                onShowAlertModal(true);
-            } else {
-                if (isArray(tabsCloseActions)) {
-                    tabsCloseActions.forEach(tabOnClose => {
-                        if (isFunction(tabOnClose)) {
-                            tabOnClose();
-                        }
-                    });
-                }
-                onUpdateNode(
-                    settings.node,
-                    settings.nodeType,
-                    { ...settings.options, ...originalSettings }
-                );
-                onHideSettings();
-                onShowAlertModal(false);
-                // clean up internal settings state
-                onUpdateOriginalSettings({});
-                onUpdateInitialSettings({});
-            }
-        },
-        onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { } }) => (tabsCloseActions = []) => {
+        onClose: ({ onUpdateInitialSettings = () => {}, onHideSettings = () => {}, onUpdateOriginalSettings = () => {} }) => (tabsCloseActions = []) => {
             if (isArray(tabsCloseActions)) {
                 tabsCloseActions.forEach(tabOnClose => {
                     if (isFunction(tabOnClose)) {
@@ -67,10 +42,9 @@ export const settingsLifecycle = compose(
                     }
                 });
             }
-            onHideSettings();
-            onShowAlertModal(false);
-            // clean up internal settings state
             onUpdateOriginalSettings({});
+            onHideSettings();
+            // clean up internal settings state
             onUpdateInitialSettings({});
         }
     }),

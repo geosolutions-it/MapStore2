@@ -47,6 +47,46 @@ Default themes in [`web/client/themes`](https://github.com/geosolutions-it/MapSt
 
 Note: we suggest to place the theme folder inside a `themes` directory for MapStore project
 
+### File structure of lesscss
+
+Each less file that represent a MapStore plugin or component is composed by two sections:
+
+- Theme section includes all the styles and classes that should change based on css variables. All the new declared selector must be included in a special function called `#ms-components-theme`. The `#ms-components-theme` function provide access to all the available variable of the theme via the `@theme-vars` argument.
+
+- Layout section includes all the styles and classes that should not change in a simple customization.
+
+Example:
+
+```less
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    // here all the selectors related to the theme
+    // use the mixins declared in the web/client/theme/default/less/mixins/css-properties.less
+    // to use one of the @theme-vars
+
+    // eg: use the main background and text colors to paint my plugin
+    .my-plugin-class {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
+
+// eg: fill all the available space in the parent container with my plugin
+.my-plugin-class {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+// here
+```
+
 ### variables.less
 MapStore uses basic less variables to change theme colors, buttons sizes and fonts.
 It possible also to override bootstrap less variable for advanced customization.
@@ -154,7 +194,7 @@ module.exports = require('./MapStore2/buildConfig')(
 
 ```less
 /* change primary color to blue */
-@ms2-color-primary: #0000ff;
+@ms-primary: #0000ff;
 ```
 
 - update `my-custom-module.less` to override existing rules or add new rules

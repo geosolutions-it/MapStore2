@@ -1,11 +1,11 @@
-import React from 'react';
-import Message from '../../I18N/Message';
 import emptyState from '../../misc/enhancers/emptyState';
+import WidgetEmptyMessage from '../widget/WidgetEmptyMessage';
 
 export default emptyState(
     ({text} = {}) => !text,
-    ({iconFit} = {}) => ({
-        iconFit,
-        tooltip: <Message msgId="widgets.errors.notext" />
-    })
+    () => ({
+        glyph: 'sheet',
+        messageId: 'widgets.errors.notext'
+    }),
+    WidgetEmptyMessage
 );

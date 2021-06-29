@@ -8,11 +8,30 @@
 import expect from 'expect';
 
 import maptype from '../maptype';
-import { changeMapType } from '../../actions/maptype';
+import { changeMapType, updateLast2dMapType } from '../../actions/maptype';
+import { mapPluginLoad } from '../../actions/map';
 
 describe('Test the maptype reducer', () => {
     it('set a maptype', () => {
         const state = maptype(undefined, changeMapType("leaflet"));
         expect(state.mapType).toBe('leaflet');
+    });
+    it('check to store last 2d map type', () => {
+        const state = maptype(undefined, changeMapType("leaflet"));
+        expect(state.last2dMapType).toBe('leaflet');
+        const state2 = maptype(state, changeMapType("cesium"));
+        expect(state2.last2dMapType).toBe('leaflet');
+
+        const state3 = maptype(state2, updateLast2dMapType("openlayers"));
+        expect(state3.last2dMapType).toBe('openlayers');
+        const state4 = maptype(state3, { type: "UNKNOWN" });
+        expect(state4.last2dMapType).toBe('openlayers');
+
+    });
+    it('check to store last 2d map type', () => {
+        let state = maptype(undefined, mapPluginLoad(false, "leaflet", true, "errorMap"));
+        expect(state.loaded).toEqual({"leaflet": true});
+        state = maptype({loaded: {"leaflet": false}}, mapPluginLoad(false, "openlayers", true, "errorMap"));
+        expect(state.loaded).toEqual({"leaflet": false, "openlayers": true});
     });
 });

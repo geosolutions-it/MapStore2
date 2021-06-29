@@ -24,7 +24,7 @@ npm start
 
 Then point your preferred browser to [http://localhost:8081](http://localhost:8081).
 
-**note:** This running demo uses [https://dev.geo-solutions.it/mapstore/](https://dev.geo-solutions.it/mapstore/) as back-end.
+**note:** This running demo uses [https://dev-mapstore.geosolutionsgroup.com/mapstore/](https://dev-mapstore.geosolutionsgroup.com/mapstore/) as back-end.
 
 ## Other useful commands
 

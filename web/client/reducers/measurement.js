@@ -25,6 +25,7 @@ import {
 import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY } from '../actions/controls';
 import { set } from '../utils/ImmutableUtils';
 import { getGeomTypeSelected } from '../utils/MeasurementUtils';
+import { validateCoord } from '../utils/MeasureUtils';
 import { isPolygon } from '../utils/openlayers/DrawUtils';
 import { dropRight, isEmpty, findIndex, isNumber } from 'lodash';
 import assign from 'object-assign';
@@ -56,7 +57,7 @@ const defaultState = {
 function measurement(state = defaultState, action) {
     switch (action.type) {
     case CHANGE_MEASUREMENT_TOOL: {
-        const currentFeatureIndex = findIndex(state.features, (f)=> ((f.properties.values[0] || {}).type === 'bearing' ? 'Bearing' : f.geometry.type) === action.geomType);
+        const currentFeatureIndex = action.geomType !== null && findIndex(state.features, (f)=> ((f.properties?.values?.[0] || {}).type === 'bearing' ? 'Bearing' : f.geometry.type) === action.geomType);
         return assign({}, state, {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
@@ -131,13 +132,14 @@ function measurement(state = defaultState, action) {
         });
     }
     case CHANGED_GEOMETRY: {
-        let {features} = action;
+        let {features = []} = action;
         const geomTypeSelected = getGeomTypeSelected(features);
+        const currentFeature = state.features?.length === features.length ? state.currentFeature : features.length ? features.length - 1 : 0;
         return {
             ...state,
             features,
+            currentFeature,
             geomTypeSelected,
-            currentFeature: features.length - 1, // current feature is the last feature added
             updatedByUI: false,
             isDrawing: false,
             ...(isEmpty(features) && {exportToAnnotation: false})
@@ -229,7 +231,8 @@ function measurement(state = defaultState, action) {
             feature: { properties: {
                 disabled: true
             }},
-            geomType: ""
+            geomType: "",
+            features: []
         };
     }
     case CHANGE_FORMAT: {
@@ -244,8 +247,7 @@ function measurement(state = defaultState, action) {
         const features = state.features || [];
         const currentFeatureObj = features[state.currentFeature] || {};
         const invalidCoordinates = coordinates.filter((c) => {
-            const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
-            return isValid;
+            return validateCoord(c);
         }).length !== coordinates.length;
 
         return {
@@ -254,8 +256,7 @@ function measurement(state = defaultState, action) {
                 type: "Feature",
                 properties: {
                     disabled: coordinates.filter((c) => {
-                        const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
-                        return isValid;
+                        return validateCoord(c);
                     }).length !== coordinates.length
                 },
                 geometry: {
@@ -273,7 +274,8 @@ function measurement(state = defaultState, action) {
                     },
                     geometry: {
                         type: state.bearingMeasureEnabled ? "LineString" : state.geomType,
-                        coordinates: state.areaMeasureEnabled ? [[...coordinates, coordinates[0]]] : coordinates
+                        coordinates: state.areaMeasureEnabled ? [[...coordinates, coordinates[0]]] : coordinates,
+                        textLabels: currentFeatureObj?.geometry?.textLabels || [] // Persist labels on edit
                     }
                 },
                 ...features.slice(state.currentFeature + 1, features.length)

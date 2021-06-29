@@ -1,9 +1,26 @@
-#helpbadge-scaleBox {
-	background-color: @ms2-color-text-primary;
-	color: @ms2-color-primary;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    #helpbadge-scaleBox {
+        .background-color-var(@theme-vars[primary-contrast]);
+        .color-var(@theme-vars[primary]);
+    }
+
+    #mapstore-navbar #helpbadge-search-help {
+        .background-color-var(@theme-vars[primary-contrast]);
+        .color-var(@theme-vars[primary]);
+    }
 }
 
-#mapstore-navbar #helpbadge-search-help {
-	background-color: @ms2-color-text-primary;
-	color: @ms2-color-primary;
-}
+// **************
+// Layout
+// **************

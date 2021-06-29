@@ -10,6 +10,8 @@ import React from 'react';
 import Layers from '../../../utils/cesium/Layers';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
+import isNil from 'lodash/isNil';
+import { getResolutions } from '../../../utils/MapUtils';
 
 class CesiumLayer extends React.Component {
     static propTypes = {
@@ -18,20 +20,21 @@ class CesiumLayer extends React.Component {
         options: PropTypes.object,
         onCreationError: PropTypes.func,
         position: PropTypes.number,
-        securityToken: PropTypes.string
+        securityToken: PropTypes.string,
+        zoom: PropTypes.number
     };
 
     componentDidMount() {
         this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map, this.props.securityToken);
-        if (this.props.options && this.layer && this.props.options.visibility !== false) {
+        if (this.props.options && this.layer && this.getVisibilityOption(this.props)) {
             this.addLayer(this.props);
             this.updateZIndex();
         }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        const newVisibility = newProps.options && newProps.options.visibility !== false;
-        this.setLayerVisibility(newVisibility, newProps);
+
+        this.setLayerVisibility(newProps);
 
         const newOpacity = newProps.options && newProps.options.opacity !== undefined ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
@@ -116,16 +119,39 @@ class CesiumLayer extends React.Component {
         }
     };
 
-    setLayerVisibility = (visibility, newProps) => {
-        var oldVisibility = this.props.options && this.props.options.visibility !== false;
-        if (visibility !== oldVisibility) {
-            if (visibility) {
+    setLayerVisibility = (newProps) => {
+        const oldVisibility = this.getVisibilityOption(this.props);
+        const newVisibility = this.getVisibilityOption(newProps);
+        if (newVisibility !== oldVisibility) {
+            if (newVisibility) {
                 this.addLayer(newProps);
                 this.updateZIndex();
             } else {
                 this.removeLayer();
             }
         }
+    };
+
+    getVisibilityOption = (props) => {
+        // use the global resolutions as fallback
+        // cesium does not provide resolutions
+        const { options = {}, zoom, resolutions = getResolutions() } = props;
+        const {
+            visibility,
+            minResolution = -Infinity,
+            maxResolution = Infinity,
+            disableResolutionLimits
+        } = options || {};
+        if (!disableResolutionLimits && !isNil(resolutions[zoom])) {
+            const resolution = resolutions[zoom];
+            // use similar approach of ol
+            // maxResolution is exclusive
+            // minResolution is inclusive
+            if (!(resolution < maxResolution && resolution >= minResolution)) {
+                return false;
+            }
+        }
+        return visibility !== false;
     };
 
     setLayerOpacity = (opacity) => {

@@ -1,0 +1,19 @@
+[
+    {
+      "op": "add",
+      "jsonpath": "/plugins/desktop/-",
+      "value": {
+        "name": "NewPlugin",
+        "cfg": {
+          "someParam": true
+        }
+      }
+    },
+    {
+      "op": "replace",
+      "jsonpath": "$.plugins.desktop..[?(@.name == 'NewPlugin')].cfg",
+      "value": {
+        "otherParam": false
+      }
+    }
+]

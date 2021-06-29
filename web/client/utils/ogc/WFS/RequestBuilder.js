@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const filterBuilder = require('../Filter/FilterBuilder');
-const {castArray} = require('lodash');
+const castArray = require('lodash/castArray');
 const {wfsToGmlVersion} = require("./base");
 const getStaticAttributesWFS1 = (ver) => 'service="WFS" version="' + ver + '" ' +
     (ver === "1.0.0" ? 'outputFormat="GML2" ' : "") +

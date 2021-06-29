@@ -14,7 +14,7 @@ import HTML from '../../../components/I18N/HTML';
 import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
 import ViewerPage from './viewers/ViewerPage';
-import { isEmpty, reverse } from 'lodash';
+import { isEmpty, reverse, startsWith } from 'lodash';
 import { getFormatForResponse } from '../../../utils/IdentifyUtils';
 
 class DefaultViewer extends React.Component {
@@ -75,7 +75,7 @@ class DefaultViewer extends React.Component {
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = validator.getValidResponses(responses);
+        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses) : responses;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
@@ -154,7 +154,7 @@ class DefaultViewer extends React.Component {
                 key={i}
                 collapsible={this.props.collapsible}
                 header={PageHeader ? <span><PageHeader
-                    size={responses.length}
+                    size={responses.filter(resp => !startsWith(resp.response !== "no features were found ")).length}
                     {...this.props.headerOptions}
                     {...layerMetadata}
                     index={this.props.index}

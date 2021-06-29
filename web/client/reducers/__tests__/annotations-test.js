@@ -12,6 +12,7 @@ import annotations from '../annotations';
 import { DEFAULT_ANNOTATIONS_STYLES } from '../../utils/AnnotationsUtils';
 import { isEmpty, round } from 'lodash';
 import { set } from '../../utils/ImmutableUtils';
+import { getApi, setApi } from '../../api/userPersistedStorage';
 
 const testFeatures = {
     point1: {
@@ -73,7 +74,8 @@ import {
     initPlugin,
     hideMeasureWarning,
     toggleShowAgain,
-    unSelectFeature
+    unSelectFeature,
+    startDrawing
 } from '../../actions/annotations';
 
 import { PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
@@ -1512,6 +1514,49 @@ describe('Test the annotations reducer', () => {
         expect(round(firstPoint[0], 10)).toBe(1);
         expect(round(firstPoint[1], 10)).toBe(-27.8323353334);
     });
+
+    it('changeSelected, Selected Properties for Circle Feature with Radius and Radius Undefined', () => {
+        const selected = {
+            properties: {
+                canEdit: true,
+                center: [-6.576492309570317, 41.6007838467891],
+                id: "259d79d0-053e-11ea-b0b3-379d853a3ff4",
+                isCircle: true,
+                isValidFeature: true
+            },
+            geometry: {
+                type: "Circle",
+                coordinates: [-6.576492309570317, 41.6007838467891]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [selected],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const coordinates = [[1, 1]];
+        // with defined radius
+        const state = annotations({
+            editing: featureColl,
+            selected,
+            featureType: "Text",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, 3567, null, "EPSG:3857"));
+
+        // with undefined radius
+        const state2 = annotations({
+            editing: featureColl,
+            selected: {...selected, properties: {...selected.properties}},
+            featureType: "Text",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, undefined, null, "EPSG:4326"));
+
+        expect(state.selected.properties).toNotEqual(state2.selected.properties);
+    });
     it('UPDATE_SYMBOLS', () => {
         let annotationsState = annotations({}, updateSymbols());
         expect(annotationsState.symbolList.length).toBe(0);
@@ -1668,8 +1713,19 @@ describe('Test the annotations reducer', () => {
         const state = annotations({
             config: {"config1": 1}
         }, initPlugin());
-        const showPopupWarning = localStorage?.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true;
+        const showPopupWarning = getApi().getItem("showPopupWarning") !== null ? getApi().getItem("showPopupWarning") === "true" : true;
         expect(state.showPopupWarning).toBe(showPopupWarning);
+    });
+    it('Init plugin with accessDenied', ()=>{
+        setApi("memoryStorage");
+        const api = getApi();
+        api.setAccessDenied(true);
+        const state = annotations({
+            config: {"config1": 1}
+        }, initPlugin());
+        expect(state).toEqual({config: {"config1": 1}});
+        api.setAccessDenied(false);
+        setApi("localStorage");
     });
     it('toggleShowAgain', ()=>{
         const state = annotations({
@@ -1710,5 +1766,13 @@ describe('Test the annotations reducer', () => {
         const features = state.editing.features;
         expect(features[0].properties.canEdit).toBe(false);
         expect(features[1].properties.canEdit).toBe(false);
+    });
+    it('START_DRAWING', () => {
+        let annotationsState = annotations({
+            editing: null,
+            selected: null
+        }, startDrawing({geodesic: true}));
+        expect(annotationsState.config).toBeTruthy();
+        expect(annotationsState.config.geodesic).toBe(true);
     });
 });

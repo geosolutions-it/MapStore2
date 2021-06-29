@@ -1,3 +1,137 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+
+    .react-grid-Cell,
+    .react-grid-HeaderCell,
+    .react-grid-Header,
+    .react-grid-Grid,
+    .react-grid-Canvas {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .react-grid-Main {
+        .background-color-var(@theme-vars[main-bg]);
+        .outline-color-var(@theme-vars[main-border-color]);
+    }
+
+    .react-grid-Grid {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .react-grid-checkbox:checked+.react-grid-checkbox-label:before {
+        .background-color-var(@theme-vars[primary]);
+    }
+
+    .radio-custom+.radio-custom-label:before,
+    .react-grid-checkbox+.react-grid-checkbox-label:before {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .react-grid-Canvas,
+    .react-grid-Grid {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .react-grid-HeaderCell {
+        .background-color-var(@theme-vars[main-variant-bg]);
+        .border-right-color-var(@theme-vars[main-border-color]);
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+    }
+
+    .react-grid-Header {
+        .background-color-var(@theme-vars[main-variant-bg]);
+    }
+
+    .react-grid-Cell {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-right-color-var(@theme-vars[main-border-color]);
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+
+        &:hover {
+            .color-var(@theme-vars[main-hover-color]);
+            .background-color-var(@theme-vars[main-hover-bg], true);
+        }
+
+        &:focus {
+            .outline-color-var(@theme-vars[focus-color]);
+        }
+
+        &.row-selected.editing input {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg], true);
+        }
+    }
+
+    .react-grid-Cell--locked:last-of-type {
+        .border-right-color-var(@theme-vars[main-border-color]);
+    }
+
+    .react-grid-Row {
+
+        &.row-selected,
+        .row-selected,
+        .row-selected .react-grid-Cell {
+            .color-var(@theme-vars[main-hover-color], true);
+            .background-color-var(@theme-vars[main-hover-bg], true);
+        }
+
+        .row-context-menu .react-grid-Cell,
+        &:hover .react-grid-Cell {
+            .color-var(@theme-vars[main-hover-color]);
+            .background-color-var(@theme-vars[main-hover-bg], true);
+        }
+
+        .react-grid-Cell.modified,
+        &.row-selected .react-grid-Cell.modified,
+        &.row-selected:active .react-grid-Cell.modified,
+        &:hover .react-grid-Cell.modified {
+            .color-var(@theme-vars[main-variant-color], true);
+            .background-color-var(@theme-vars[main-variant-bg], true);
+            .border-bottom-color-var(@theme-vars[primary]);
+        }
+
+        .react-grid-Cell.modified.invalid,
+        .react-grid-Cell.invalid,
+        &.row-selected .react-grid-Cell.invalid,
+        &.row-selected .react-grid-Cell.modified.invalid {
+            .color-var(@theme-vars[main-variant-color], true);
+            .background-color-var(@theme-vars[main-variant-bg], true);
+            .border-bottom-color-var(@theme-vars[danger]);
+        }
+
+        .react-grid-Cell.modified.invalid:after,
+        .react-grid-Cell.invalid:after,
+        &.row-selected .react-grid-Cell.invalid:after,
+        &.row-selected .react-grid-Cell.modified.invalid:after {
+            .color-var(@theme-vars[danger]);
+        }
+    }
+
+    .data-grid-bottom-toolbar {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .feature-grid-container .ms2-border-layout-body {
+        .background-color-var(@theme-vars[main-variant-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .dockpanel-wrapped-component .react-grid-Grid{
     min-height: 100% !important;
 }
@@ -16,64 +150,55 @@
 }
 
 .react-grid-Main {
-    background-color: @ms2-color-background;
-    outline: 1px solid @ms2-color-shade-lighter;
+    outline-width: 1px;
+    outline-style: solid;
 }
 
 .react-grid-Grid {
-    border: 1px solid @ms2-color-shade-lighter;
+    border-width: 1px;
+    border-style: solid;
 }
 
 .react-grid-checkbox:checked+.react-grid-checkbox-label:before {
-    background: @ms2-color-primary;
-    box-shadow: inset 0 0 0 4px @ms2-color-background;
+    box-shadow: inset 0 0 0 4px @ms-main-bg;
 }
 
 .radio-custom+.radio-custom-label:before,
 .react-grid-checkbox+.react-grid-checkbox-label:before {
-    background: @ms2-color-background;
-    border: 2px solid @ms2-color-shade-lighter;
-}
-
-.react-grid-Canvas,
-.react-grid-Grid {
-    background-color: @ms2-color-background;
+    border-width: 2px;
+    border-style: solid;
 }
 
 .react-grid-HeaderCell {
-    background: darken(@ms2-color-background, 5%);
-    border-right: 1px solid @ms2-color-shade-lighter;
-    border-bottom: 1px solid @ms2-color-shade-lighter;
-}
-
-.react-grid-Header {
-    background: darken(@ms2-color-background, 5%);
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 }
 
 .react-grid-Cell {
-    background-color: @ms2-color-background;
-    border-right: 1px solid @ms2-color-shade-lighter;
-    border-bottom: 1px solid @ms2-color-shade-lighter;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 
     &:hover {
-        color: @ms2-color-primary;
-        background-color: darken(@ms2-color-background, 5%) !important;
         cursor: pointer;
     }
 
     &:focus {
-        outline: 2px solid @ms2-color-primary;
+        outline-width: 2px;
+        outline-style: solid;
     }
 
     &.row-selected.editing input {
-        background-color: @ms2-color-background !important;
-        color: @ms2-color-text !important;
         font-weight: bold;
     }
 }
 
 .react-grid-Cell--locked:last-of-type {
-    border-right: 1px solid @ms2-color-shade-lighter;
+    border-right-width: 1px;
+    border-right-style: solid;
 }
 
 .react-grid-Row {
@@ -81,15 +206,11 @@
     &.row-selected,
     .row-selected,
     .row-selected .react-grid-Cell {
-        color: @ms2-color-primary !important;
-        background-color: darken(@ms2-color-background, 5%) !important;
         font-weight: bold;
     }
 
     .row-context-menu .react-grid-Cell,
     &:hover .react-grid-Cell {
-        color: @ms2-color-primary;
-        background-color: darken(@ms2-color-background, 5%) !important;
         cursor: pointer;
     }
 
@@ -98,18 +219,16 @@
     &.row-selected .react-grid-Cell.modified,
     &.row-selected:active .react-grid-Cell.modified,
     &:hover .react-grid-Cell.modified {
-        background-color: lighten(@ms2-color-background, 5%)  !important;
-        color: @ms2-color-text  !important;
-        border-bottom: 2px solid @ms2-color-primary;
+        border-bottom-width: 2px;
+        border-bottom-style: solid;
     }
 
     .react-grid-Cell.modified.invalid,
     .react-grid-Cell.invalid,
     &.row-selected .react-grid-Cell.invalid,
     &.row-selected .react-grid-Cell.modified.invalid {
-        background-color: lighten(@ms2-color-background, 5%)  !important;
-        color: @ms2-color-text  !important;
-        border-bottom: 3px solid @ms2-color-danger;
+        border-bottom-width: 3px;
+        border-bottom-style: solid;
     }
 
     .react-grid-Cell.modified.invalid:after,
@@ -122,7 +241,6 @@
         top: 0;
         right: 0;
         font-size: 32px;
-        color: @ms2-color-danger;
         margin-right: 4px;
     }
 
@@ -134,7 +252,6 @@
 }
 
 .data-grid-bottom-toolbar {
-    background-color: @ms2-color-background;
     z-index: 1;
     height: 32px;
     overflow: hidden;
@@ -167,10 +284,6 @@
         margin-right: 5px;
     }
 }
-.feature-grid-container .ms2-border-layout-body {
-    background-color: darken(@ms2-color-background, 2%);
-}
-
 
 .feature-grid-container{
      .ms2-border-layout-body{

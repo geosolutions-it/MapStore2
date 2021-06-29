@@ -51,10 +51,17 @@ import {
     updateSetting,
     removeResource, REMOVE_RESOURCE,
     updateUrlOnScroll, SET_UPDATE_URL_SCROLL,
-    updateMediaEditorSettings
+    updateMediaEditorSettings,
+    geostoryScrolling,
+    GEOSTORY_SCROLLING
 } from '../geostory';
 
 describe('test geostory action creators', () => {
+    it('geostoryScrolling', () => {
+        const status = true;
+        const action = geostoryScrolling(status);
+        expect(action).toEqual({type: GEOSTORY_SCROLLING, status});
+    });
     it('clearSaveError', () => {
         const action = clearSaveError();
         expect(action.type).toBe(CLEAR_SAVE_ERROR);

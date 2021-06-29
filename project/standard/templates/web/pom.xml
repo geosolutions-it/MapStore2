@@ -67,6 +67,12 @@
         <artifactId>ehcache-web</artifactId>
         <version>2.0.4</version>
     </dependency>
+    <!-- misc -->
+    <dependency>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>1.5.4</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -353,7 +359,7 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client/configs</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>

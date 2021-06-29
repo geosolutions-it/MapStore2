@@ -6,17 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {Observable} = require('rxjs');
+import {Observable} from 'rxjs';
 
-const {normalizeSRS} = require('../CoordinatesUtils');
-const { getLayerUrl } = require('../LayersUtils');
-const { isObject } = require('lodash');
-const { optionsToVendorParams } = require('../VendorParamsUtils');
-const { describeFeatureType, getFeature } = require('../../api/WFS');
-const { extractGeometryAttributeName } = require('../WFSLayerUtils');
+import {normalizeSRS} from '../CoordinatesUtils';
+import { getLayerUrl } from '../LayersUtils';
+import { isObject } from 'lodash';
+import { optionsToVendorParams } from '../VendorParamsUtils';
+import { describeFeatureType, getFeature } from '../../api/WFS';
+import { extractGeometryAttributeName } from '../WFSLayerUtils';
 
-const {addAuthenticationToSLD} = require('../SecurityUtils');
-const assign = require('object-assign');
+import {addAuthenticationToSLD} from '../SecurityUtils';
+import assign from 'object-assign';
 
 /**
  * Creates the request object and it's metadata for WFS GetFeature to simulate GetFeatureInfo.
@@ -72,7 +72,7 @@ const getIdentifyGeometry = point => {
     };
 };
 
-module.exports = {
+export default {
     buildRequest,
     getIdentifyFlow: (layer, baseURL, defaultParams) => {
         const { point, ...baseParams} = defaultParams;

@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const L = require('leaflet');
-const DrawSupport = require('../DrawSupport');
-const {} = require('../../../../test-resources/drawsupport/features');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import L from 'leaflet';
+import DrawSupport from '../DrawSupport';
+import {} from '../../../../test-resources/drawsupport/features';
 describe('Leaflet DrawSupport', () => {
     var msNode;
 

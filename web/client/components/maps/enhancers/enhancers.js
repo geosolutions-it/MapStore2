@@ -53,7 +53,7 @@ const loadPage = ({ text = "*", options = {} }, page = 0) => getResources({
         items: [],
         total: 0
     }));
-const scrollSpyOptions = { querySelector: ".ms2-border-layout-body", pageSize: PAGE_SIZE };
+const scrollSpyOptions = { querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE };
 
 /**
  * transforms loadPage to add the empty map item on top
@@ -70,7 +70,7 @@ const emptyMap = fn => (opts, page) => {
                 description: <Message msgId="widgets.selectMap.emptyMap.description" />,
                 preview: defaultPreview,
                 map: {
-                    id: "new.json"
+                    id: "configs/new.json"
                 }
             }, ...items]
         }));

@@ -27,6 +27,7 @@
         "showMore": "Laat meer zien...",
         "collapse": "Samenvouwen",
         "expand": "Uitvouwen",
+	"Links": "Links",
         "Forbidden": "Verboden",
         "layerNameChangeError": {
             "title": "Fout bij naamswijziging",
@@ -103,6 +104,25 @@
             "templateFormatInfoAlert2": "Gebruik ${ attribute } om de eigenschappen die je wenst te tonen aan te duiden.",
             "templateFormatInfoAlertExample": "Het id van het object is ${ properties }",
             "templatePreview": "Sjabloon voorbeeld",
+	    "visibilityLimits": {
+                "title": "Zichtbaarheidslimieten",
+                "serverValuesUpdateUndefined": "De server heeft geen limieten voor de zichtbaarheid van de schaal voor deze laag opgegeven",
+                "serverValuesUpdate": "De server heeft minimale en maximale zichtbaarheidslimieten voor deze laag opgegeven",
+                "serverValuesUpdateMinScale": "De server heeft alleen de minimale zichtbaarheidslimiet voor deze laag opgegeven",
+                "serverValuesUpdateMaxScale": "De server heeft alleen de maximale zichtbaarheidslimiet voor deze laag opgegeven",
+                "rangeError": "De minimumwaarde is groter dan de maximumwaarde. Geef een bereik op waarbij de maximumwaarde groter is dan de minimumwaarde",
+                "serverValuesError": "Het is niet mogelijk om minimale en maximale zichtbaarheidslimieten voor de schaal aan de server te vragen. Waarschijnlijk vanwege een fout in de netwerkverbinding of een ontbrekend capability endpoint",
+                "updateWMSCapabilities": "Verzoek minimale en maximale zichtbaarheidslimieten aan de server",
+                "maxValue": "Max waarde (uitgesloten)",
+                "maxValuePlaceholder": "Selecteer maximale waarde",
+                "valueNoResultsText": "Er zijn geen opties die overeenkomen met de invoerwaarde",
+                "createOption": "Voeg nieuwe waarde toe {label}",
+                "minValue": "Min waarde (included)",
+                "minValuePlaceholder": "Selecteer min. Waarde",
+                "type": "Limieten type",
+                "scale": "Schaal",
+                "resolution": "Resolutie"
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Titel",
@@ -255,7 +275,7 @@
             "Examples": "Voorbeelden",
             "LinkedinGroup": "Mapstore Linkedin groep",
             "scrollTop": "Terug naar boven",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "ml": {
                 "title": "Blijf op de hoogte van de laatste ontwikkelingen via mailinglijsten",
                 "subscribe_users": "Abonneer u op de gebruikers mailinglijsten",
@@ -390,14 +410,14 @@
                 "unsavedMapCancelButtonText": "Afsluiten"
             },
             "geostories": {
-                "newGeostory": "Nieuwe StoryMap",
-                "title": "StoryMaps ({count})",
-                "titleNoCount": "StoryMaps",
-                "create": "Maak een StoryMap",
-                "noGeostoryAvailable": "Geen StoryMap beschikbaar",
-                "createANewOne": "Maak een nieuwe StoryMap",
-                "deleteError": "Er is een fout opgetreden bij het verwijderen van de StoryMap",
-                "errorLoadingGeostories": "Er is een fout opgetreden bij het laden van StoryMaps"
+                "newGeostory": "Nieuwe Geostory",
+                "title": "Geostories ({count})",
+                "titleNoCount": "Geostory",
+                "create": "Maak een Geostory",
+                "noGeostoryAvailable": "Geen Geostory beschikbaar",
+                "createANewOne": "Maak een nieuwe Geostory",
+                "deleteError": "Er is een fout opgetreden bij het verwijderen van de Geostory",
+                "errorLoadingGeostories": "Er is een fout opgetreden bij het laden van Geostory"
             }
         },
         "map": {
@@ -533,6 +553,8 @@
             "radius": "Straal",
             "filterIconEnabled": "Schakel laagfilter uit",
             "filterIconDisabled": "Schakel laagfilter in",
+	    "notVisibleZoomIn": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom in om de laag te tonen",
+            "notVisibleZoomOut": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom uit om de laag weer te geven",	
             "refreshOptions": {
                 "bbox": "BBOX bijwerken",
                 "search": "De zoekopties bijwerken",
@@ -984,6 +1006,7 @@
             "attributefilter":{
                 "add_condition": "Voorwaarde toevoegen",
                 "delete": " Verwijderen",
+		"deleteGroup": "Groep verwijderen",
                 "add_group": " Groep toevoegen",
                 "group_label_a": "Overeenstemming",
                 "group_label_b": "van de volgende voorwaarden:",
@@ -1052,7 +1075,8 @@
                 "operation": "Operatie",
                 "placeholder": "Selecteer laag",
                 "errors": {
-                    "noCrossLayerAvailable": "Tussen lagen filteren is niet beschikbaar voor de geselecteerde laag"
+                    "noCrossLayerAvailable": "Tussen lagen filteren is niet beschikbaar voor de geselecteerde laag",
+                    "layersExcluded": "Alleen lagen die uit dezelfde bron komen, kunnen als doellaag voor dit laagfilter worden geselecteerd"
                 }
             },
             "changedFilter": "Filter gewijzigd",
@@ -1249,6 +1273,7 @@
             "msgToCopyUrl": "Klik om te kopiëren",
             "sharedTitle": "Bekijk mijn nieuwe kaart: ",
             "addCenterAndZoomParam": "Voeg centrum en zoom toe aan link voor delen",
+	    "addMarkerAndZoomParam": "Voeg plaatsmarkering toe en zoom in op link voor delen",
             "zoom": "Zoom",
             "marker": "Voeg marker toe op geladen kaart",
             "coordinate": "Coordinaat",
@@ -1263,7 +1288,8 @@
             "wrongBboxParamTitle": "Ongeldige parameter voor bouding box",
             "wrongBboxParamMessage": "Bounding box params moeten in EPSG: 4326 staan en geschreven zijn als bbox = minx, miny, maxx, maxy",
             "showHomeButton": "Link naar MapStore-startpagina",
-            "showSectionId": "Inclusief scroll-positie"
+            "showSectionId": "Inclusief scroll-positie",
+	    "showConnections": "Show connections"
         },
         "snapshot": {
             "title": "momentopname-voorbeeld",
@@ -1544,6 +1570,7 @@
             "backtosearch": "Terug naar zoeken",
             "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
             "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{total} Items}}",
+	    "selectedInfo": "( {selected} Geselecteerd )",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
             "pagination": {
                 "page": "Pagina",
@@ -1615,10 +1642,37 @@
             "srs":  "Coördinaten ReferentieSysteem",
             "export": "Exporteer",
             "downloadonlycurrentpage": "Download alleen de huidige pagina",
+	    "cropDataSet": "Snijd de dataset bij naar de huidige viewport",
+            "downloadFilteredDataSet": "Download gefilterde dataset",
+            "advancedOptions": "Geavanceerde opties",
+            "compression": "Compressie",
+            "tileWidth": "Tegel breedte",
+            "tileHeight": "Tegel hoogte",
+            "quality": "Kwaliteit",
             "error": {
                 "title": "Fout tijdens exporteren",
-                "invalidOutputFormat": "THet geselecteerde exportformaat is niet beschikbaar"
-            }
+                "invalidOutputFormat": "Het geselecteerde exportformaat is niet beschikbaar",
+		"downloadEstimatorTitle": "DownloadEstimator error",
+                "downloadEstimatorFailed": "DownloadEstimator-aanvraag is mislukt, wat betekent dat het geëxporteerde bestand de geconfigureerde serverlimieten overschrijdt. Probeer de downloadopties te wijzigen of een filter aan uw laag toe te voegen en probeer het opnieuw."
+            },
+            "exportResultsMessages": {
+                "newExport": "Het bestand is hier beschikbaar wanneer het exporteren is voltooid",
+                "exportFailure": "Export van laag \"{layerTitle}\" mislukt! Open het dialoogvenster met exportresultaten voor meer informatie.",
+                "exportSuccess": "Export van layer \"{layerTitle}\" succesvol afgerond.",
+                "invalidHref": "Het antwoord van de server bevat geen geldig url-adres voor geëxporteerde bestanden!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Downloadproces mislukt! De server heeft het volgende uitzonderingsrapport geretourneerd: \"{exceptionReport}\"",
+                "badResponse": "Downloadproces mislukt! De server heeft onjuiste gegevens geretourneerd, foutcode: \"{errorCode}\"",
+                "executeProcessXhrFailed": "ExecuteProcess-verzoek mislukt! De server is mogelijk verkeerd geconfigureerd of is onbereikbaar geworden",
+                "getExecutionStatusXhrFailed": "GetExecutionStatus-aanvraag is mislukt! De server is mogelijk verkeerd geconfigureerd of is onbereikbaar geworden",
+                "unexpectedError": "Er is een onverwachte fout opgetreden"
+            },
+            "noSupportedServiceFound": "De server ondersteunt geen WFS- of WPS-download voor deze laag!"
+        },
+        "exportDataResults": {
+            "title": "Export data results",
+            "emptyStateMessage": "Export list is empty"
         },
         "widgets": {
             "types": {
@@ -1726,6 +1780,8 @@
                     "confirmDelete": "Bent u zeker?",
                     "downloadData": "Download gegevens",
                     "exportImage": "Afbeelding exporteren",
+		    "maximize": "Maximaliseren",
+                    "minimize": "Minimaliseren",
                     "pin": "Vastprikken",
                     "unpin": "Losprikken",
                     "hide": "Verbergen",
@@ -1760,6 +1816,15 @@
             "widgetOptionsTitle": "Configureer Widget-info",
             "placeHolder":{
                 "default":"Selecteer attribuut"
+            },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUM":"SUM",
+              "AVG":"AVG",
+              "STDDEV":"STDDEV",
+              "MIN":"MIN",
+              "MAX":"MAX",
+              "NONE": "No Operation"
             },
             "groupByAttributes": {
                 "line": "X Attribuut",
@@ -1808,25 +1873,33 @@
                 "bar": "Legende weergeven",
                 "gauge": "Legende weergeven"
             },
-            "displayCartesian": {
-                "line": "Verberd Grid",
-                "bar": "Verberg Grid"
-            },
-            "xAxisAngle":{
-                "line": "X-as: rotatiehoek van label °",
-                "bar": "X-as: rotatiehoek van label °"
-            },
-            "yAxis":{
-                "line": "Verberg Y-as",
-                "bar": "Verberg Y-as"
-            },
-            "yAxisLabel":{
-                "line": "Legende Label",
-                "bar": "Legende Label"
-            },
-            "advancedOptions":{
-                "line": "Geavanceerde mogelijkheden",
-                "bar": "Geavanceerde mogelijkheden"
+            "advanced": {
+              "displayCartesian": "Verberg Grid",
+              "xAxis": "X as",
+              "xAxisAngle": "Label rotatie",
+              "hideLabels": "Verberg labels",
+              "format": "Formaat",
+              "prefix": "Prefix",
+              "suffix": "Suffix",
+              "examples": "Voorbeelden",
+              "formatExamples": "<div><ul><li><code>.0%</code>: rounded percentage, '12%'</li><li><code>.2s</code>:SI-prefix with two significant digits, '42M'</li><li><code>,.2r</code>: grouped thousands with two significant digits '4,200'</li></ul><em>More information about formatting syntax <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">here</a>.</em></div>",
+              "formula": "Formule",
+              "formulaExamples": "<div>Transform the value using a formula. Use the variable <code>value</code> in the expression:<h5>Examples</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em>More information about the syntax <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">here</a>.</em></div>",
+              "xAxisType": "Type",
+              "forceTicks": "Sla nooit labels over",
+              "maxXAxisLabels": "De labels kunnen sowieso niet meer zijn dan {max}",
+              "yAxis":  "Y as",
+              "yAxisType": "Type",
+              "yAxisLabel": "Legende Label",
+              "title": "Geavanceerde opties",
+              "legend": "Legende",
+              "axisTypes": {
+                "auto": "Automatisch",
+                "linear": "Linear",
+                "category": "Categorie",
+                "log": "Logaritme",
+                "date": "Datum"
+              }
             },
             "tray": {
                 "title": "Widgets",
@@ -1864,6 +1937,21 @@
                 "addACardToTheDashboard": "Voeg een widget toe aan het dashboard",
                 "showConnections": "Verbindingen weergeven",
                 "hideConnections": "Verbindingen verbergen"
+            },
+            "emptyTitle": "Het dashboard is leeg"
+        },
+	"dashboardEmbedded": {
+            "loadingSpinner": "Dashboard laden",
+            "errors":{
+                "loading": {
+                    "title": "Fout bij het laden van dashboard",
+                    "dashboardNotAccessible": "U heeft geen toestemming om dit dashboard te openen",
+                    "pleaseLogin": "Dit dashboard is niet openbaar",
+                    "dashboardDoesNotExist": "Het dashboard dat u probeert te openen, bestaat niet",
+                    "unknownError": "Er is een fout opgetreden bij het laden van het dashboard",
+                    "notFound": "Dashboard niet gevonden",
+	                "notAccessible": "Dashboard niet toegankelijk"
+                }
             },
             "emptyTitle": "Het dashboard is leeg"
         },
@@ -1976,6 +2064,9 @@
             "deletedStyleErrorMessage": "Kan huidige stijl niet verwijderen",
             "savedStyleTitle": "Stijl opgeslagen",
             "savedStyleMessage": "Stijl is succesvol opgeslagen",
+	    "errorTitle": "StyleEditor error",
+            "parsingCapabilitiesError": "<h4>Mogelijke oorzaken:</h4> het was niet mogelijk de mogelijkheden te ontleden en de stijlen op te halen",
+            "globalError": "<h4>Mogelijke oorzaken:</h4> het was niet mogelijk om verbinding te maken met de service",
             "missingAvailableStyles": "Ontbrekende stijlen",
             "missingAvailableStylesMessage": "<ul> <h4> Mogelijke oorzaken: </h4> <li> Geselecteerde laag is een lagengroep </li> <li> Laag is niet correct geconfigureerd aan de serverzijde </li> </ul>",
             "createTmpErrorTitle": "Nieuwe tijdelijke stijl",
@@ -2122,7 +2213,10 @@
             "customInterval": "Aangepaste interval",
             "styleEmpty": "Deze stijl heeft geen regels",
             "incompleteClassification": "De classificatie is onvolledig omdat de inzendingen niet beschikbaar zijn. Zorg ervoor dat alle eigenschappen correct zijn opgegeven",
-            "emptyImageIconSymbolizer": "Ontbrekende afbeeldings-URL in de pictogramstijl",
+            "imageSrcEmpty": "Ontbrekende afbeeldingsbron-URL in de pictogramstijl",
+            "imageSrcLoadError": "De geleverde afbeeldingsbron kan niet worden geladen. Probeer met een andere url of zorg ervoor dat de bron bereikbaar is voor MapStore",
+            "imageSrcInvalidBase64": "Dit is geen geldige base64-image. Sommige stijlrenderers ondersteunen dit type bron niet, je zou in plaats daarvan een externe url-bron kunnen gebruiken",
+            "imageSrcNotSupportedBase64Image": "Sommige stijlrenderers ondersteunen geen base64-afbeeldingen, zelfs niet als de huidige bron geldig is",
             "warningTextOrderTitle": "Waarschuwing",
             "warningTextOrder": "De volgorde van de regel met de tekststijl kan niet overeenkomen met de weergavevolgorde op de kaart. Dit gedrag is gerelateerd aan een rendering-engine die een label boven andere regels plaatst"
         },
@@ -2281,6 +2375,7 @@
             "selectworkspace": "U moet de werkruimte selecteren om geavanceerde opties in te schakelen"
         },
         "geostory": {
+	    "storyResources": "Story Resources",
             "geostoreMap": "MapStore kaarten",
             "loadingSpinner": "Story laden",
             "addTitleSection": "Titelsectie toevoegen",
@@ -2399,6 +2494,7 @@
             },
             "errors": {
                 "loading": {
+		    "notFound": "Geostory niet gevonden",
                     "title": "Fout",
                     "unknownError": "Onbekende fout",
                     "pleaseLogin": "Gelieve in te loggen",
@@ -2434,6 +2530,20 @@
                 "shadowLabel": "Schaduw",
                 "useAlternativeTextColor": "Gebruik een alternatieve tekstkleur",
                 "alternativeTextColorPopover": "<p>Waarschuwing: de geselecteerde tekstkleur is mogelijk niet leesbaar op deze achtergrond.</p><p>Een alternatieve tekstkleur is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Laden Story",
+            "errors": {
+                "loading": {
+                    "notFound": "Geostory niet gevonden",
+                    "title": "Fout",
+                    "unknownError": "Onbekende fout",
+                    "notAccessible": "Deze story is niet toegankelijk",
+                    "pleaseLogin": "De bron is niet openbaar",
+                    "geostoryNotAccessible": "U heeft geen toestemming om deze story te openen",
+                    "geostoryDoesNotExist": "Deze story bestaat niet"
+                }
             }
         },
         "saveDialog": {
@@ -2506,8 +2616,9 @@
             "mediaList" : {
                 "removeResourceTitle": "Bent u zeker?",
                 "confirmRemoveResource": "Wil je deze mediabron uit het verhaal verwijderen?",
-                "confirmRemoveUsedResource": "Deze bron wordt ook verwijderd uit alle secties / inhoud waarin het wordt gebruikt, waardoor ze leeg blijven. Wilt u ze uit de Story verwijderen?"
-            },
+                "confirmRemoveUsedResource": "Deze bron wordt ook verwijderd uit alle secties / inhoud waarin het wordt gebruikt, waardoor ze leeg blijven. Wilt u ze uit de Story verwijderen?",
+            	"resultsCount": "{count} van {total} {total, plural, one {Result} other {Results}}"
+	    },
             "imageList": {
                 "emptyList": "Klik op de plusknop om een nieuwe afbeelding toe te voegen. Zie de gebruikershandleiding <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>here</a>"
             },
@@ -2713,6 +2824,10 @@
           "WidgetsTray": {
             "description": "Een lade om widgets op de kaart in en uit te vouwen. ",
             "title": "Widgetslade"
+	  },
+          "Globe": {
+            "description": "Zijbalkknop om de 3D-modus in / uit te schakelen",
+            "title": "3D"
           },
           "ZoomAll": {
             "description": "Zijbalkknop om in te zoomen op het kaartbereik van de kaart",

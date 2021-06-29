@@ -6,13 +6,13 @@ MapStore can use 3 types of database:
 - [PostgreSQL](https://www.postgresql.org/)
 - [Oracle](https://www.oracle.com/database)
 
-MapStore uses an H2 in-memory DB as default DBMS for persist the data. This configuration is usefull for develop, test and evaluate the project but it is obviously NOT RECOMMENDED for production usage; moreover the H2 DB cannot be used for the [integration with GeoServer](../integrations/users/geoserver).
+MapStore uses an H2 in-memory DB as the default DBMS to persist the data. This configuration is useful for development and test purposes, or to evaluate the project but it is obviously NOT RECOMMENDED for production usage; moreover the H2 DB cannot be used for the [integration with GeoServer](../integrations/users/geoserver).
 
 In the following guide you will learn how to configure MapStore to use an external database.
 
 ## Externalize properties files
 
-MapStore has a file called `geostore-datasource-ovr.properties`. This file is on the repository in the folder `web/src/main/resources`, in the final mapstore.war package it will be copied into `WEB-INF/classes` path. It contains the set-up for the database connection. Anyway if you edit the file in `WEB-INF/classes` this file will be overridden on the next re-deploy. To preserve your configuration on every deploy you can user a environment variable, `geostore-ovr`, to configure the path to an override file in a different, external directory. In this file the user can re-define the default configuration and so set-up the database configuration.
+MapStore has a file called `geostore-datasource-ovr.properties`. This file is on the repository in the folder `java/web/src/main/resources`, in the final mapstore.war package it will be copied into `WEB-INF/classes` path. It contains the set-up for the database connection. Anyway if you edit the file in `WEB-INF/classes` this file will be overridden on the next re-deploy. To preserve your configuration on every deploy you can user a environment variable, `geostore-ovr`, to configure the path to an override file in a different, external directory. In this file the user can re-define the default configuration and so set-up the database configuration.
 
 For instance using tomcat on linux you will have to do something like this to add the environment variable to the JAVA_OPTS
 > where to add your JAVA_OPTS depends on your operating system. For instance the file could be `/etc/default/tomcat8`, or similar, in linux debian
@@ -120,6 +120,14 @@ geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=update
 geostoreVendorAdapter.generateDdl=true
 geostoreVendorAdapter.showSql=false
 ```
+
+### Migrate an existing H2 database to PostgreSQL
+
+If you used an H2 database during development, and you want to deploy the application in production, migrating the database to PostgreSQL is not that easy.
+
+For this reason we have created a specific tool for this task, called **H2ToPgSQLExport** that is part of the GeoStore CLI.
+
+More information on the migration tool is available in the [GeoStore CLI documentation page](https://github.com/geosolutions-it/geostore/tree/master/src/cli).
 
 ## Oracle
 

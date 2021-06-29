@@ -15,7 +15,10 @@ import { persistMiddleware, persistEpic } from '../utils/StateUtils';
 import localConfig from '../reducers/localConfig';
 import locale from '../reducers/locale';
 import browser from '../reducers/browser';
-
+import { getApi } from '../api/userPersistedStorage';
+import url from "url";
+import { findMapType } from './../utils/MapTypeUtils';
+import { set } from './../utils/ImmutableUtils';
 const standardEpics = {};
 
 const appStore = (
@@ -44,7 +47,13 @@ const appStore = (
     });
     const rootEpic = persistEpic(combineEpics(plugins, { ...standardEpics, ...appEpics }));
     const optsState = storeOpts.initialState || { defaultState: {}, mobile: {} };
-    const defaultState = { ...initialState.defaultState, ...optsState.defaultState };
+    let defaultState = { ...initialState.defaultState, ...optsState.defaultState };
+    const urlData = url.parse(window.location.href, true);
+    const mapType = findMapType(urlData.href);
+    if (mapType) {
+        defaultState = set("maptype.mapType", mapType, defaultState);
+    }
+
     const mobileOverride = { ...initialState.mobile, ...optsState.mobile };
     const epicMiddleware = persistMiddleware(createEpicMiddleware(rootEpic));
     const rootReducer = (state, action) => {
@@ -62,9 +71,13 @@ const appStore = (
     }
     if (storeOpts && storeOpts.persist) {
         storeOpts.persist.whitelist.forEach((fragment) => {
-            const fragmentState = localStorage.getItem('mapstore2.persist.' + fragment);
-            if (fragmentState) {
-                defaultState[fragment] = JSON.parse(fragmentState);
+            try {
+                const fragmentState = getApi().getItem('mapstore2.persist.' + fragment);
+                if (fragmentState) {
+                    defaultState[fragment] = JSON.parse(fragmentState);
+                }
+            } catch (e) {
+                console.error(e);
             }
         });
         if (storeOpts.onPersist) {
@@ -87,7 +100,11 @@ const appStore = (
                 const fragmentState = store.getState()[fragment];
                 if (fragmentState && persisted[fragment] !== fragmentState) {
                     persisted[fragment] = fragmentState;
-                    localStorage.setItem('mapstore2.persist.' + fragment, JSON.stringify(fragmentState));
+                    try {
+                        getApi().setItem('mapstore2.persist.' + fragment, JSON.stringify(fragmentState));
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
             });
         });

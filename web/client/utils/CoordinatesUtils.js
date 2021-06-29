@@ -34,6 +34,9 @@ import toPoint from 'turf-point';
 import bboxPolygon from '@turf/bbox-polygon';
 import overlap from '@turf/boolean-overlap';
 import contains from '@turf/boolean-contains';
+import turfBbox from '@turf/bbox';
+import { getConfigProp } from './ConfigUtils';
+
 let CoordinatesUtils;
 
 export const FORMULAS = {
@@ -541,8 +544,8 @@ export const getGeoJSONExtent = function(geoJSON) {
     let newExtent = [Infinity, Infinity, -Infinity, -Infinity];
     const reduceCollectionExtent = (extent, collectionElement) => {
         let ext = CoordinatesUtils.getGeoJSONExtent(collectionElement);
-        if (this.isValidExtent(ext)) {
-            return this.extendExtent(ext, extent);
+        if (CoordinatesUtils.isValidExtent(ext)) {
+            return CoordinatesUtils.extendExtent(ext, extent);
         }
         return ext;
     };
@@ -1030,6 +1033,57 @@ export const getPolygonFromCircle = (center, radius, units = "degrees", steps = 
     return turfCircle(center, radius, {steps, units});
 };
 
+/**
+ * Returns an array of projections
+ * @return {array} of projection Definitions [{code, extent}]
+ */
+export const getProjections = () => {
+    const projections = (getConfigProp('projectionDefs') || []).concat([{code: "EPSG:3857", extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]},
+        {code: "EPSG:4326", extent: [-180, -90, 180, 90]}
+    ]);
+    return projections;
+};
+
+/**
+ * Return a projection from a list of projections
+ * @param code {string} code for the projection EPSG:3857
+ * @return {object} {extent, code} fallsback to default {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]}
+ */
+export const getExtentForProjection = (code = "EPSG:3857") => {
+    return getProjections().find(project => project.code === code) || {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]};
+};
+
+/**
+ * Return a boolean to show if a layer fits within a boundary/extent
+ * @param layer {object} to check if fits with in a projection boundary
+ * @return {boolean} true or false
+ */
+export const checkIfLayerFitsExtentForProjection = (layer = {}) => {
+    const crs = layer.bbox?.crs || "EPSG:3857";
+    const [crsMinX, crsMinY, crsMaxX, crsMaxY] = getExtentForProjection(crs).extent;
+    const [minx, minY, maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
+    return ((minx >= crsMinX) && (minY >= crsMinY) && (maxX <= crsMaxX) && (maxY <= crsMaxY));
+};
+
+/**
+ * Generates longitude and latitude value from the point
+ * @param {object} point with latlng data
+ * @return {array} corrected longitude and latitude
+ */
+export const getLonLatFromPoint = (point) => {
+    const latlng = point && point.latlng || null;
+    let lngCorrected = null;
+    /* lngCorrected is the converted longitude in order to have the value between
+         * the range (-180 / +180).
+         * Precision has to be >= than the coordinate editor precision
+         * especially in the case of aeronautical degree editor which is 12
+    */
+    if (latlng) {
+        lngCorrected = latlng && Math.round(latlng.lng * 100000000000000000) / 100000000000000000;
+        lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
+    }
+    return [lngCorrected, latlng && latlng.lat];
+};
 
 CoordinatesUtils = {
     setCrsLabels,
@@ -1084,7 +1138,8 @@ CoordinatesUtils = {
     crsCodeTable,
     makeNumericEPSG,
     makeBboxFromOWS,
-    getPolygonFromCircle
-
+    getPolygonFromCircle,
+    checkIfLayerFitsExtentForProjection,
+    getLonLatFromPoint
 };
 export default CoordinatesUtils;

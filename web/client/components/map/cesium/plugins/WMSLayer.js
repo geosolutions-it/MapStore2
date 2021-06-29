@@ -6,22 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Layers = require('../../../../utils/cesium/Layers');
-const Cesium = require('../../../../libs/cesium');
-const BILTerrainProvider = require('../../../../utils/cesium/BILTerrainProvider')(Cesium);
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
-const {
-    getProxyUrl,
-    needProxy
-} = require('../../../../utils/ProxyUtils');
-const assign = require('object-assign');
-const {isArray} = require('lodash');
-const WMSUtils = require('../../../../utils/cesium/WMSUtils');
-const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
-const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
-const {addAuthenticationToSLD} = require('../../../../utils/SecurityUtils');
+import Layers from '../../../../utils/cesium/Layers';
+import Cesium from '../../../../libs/cesium';
+import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
+const BILTerrainProvider = createBILTerrainProvider(Cesium);
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import {getProxyUrl, needProxy} from "../../../../utils/ProxyUtils";
+import assign from 'object-assign';
+import {isArray, isEqual} from 'lodash';
+import WMSUtils from '../../../../utils/cesium/WMSUtils';
+import {getAuthenticationParam, getURLs} from '../../../../utils/LayersUtils';
+import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
+import {addAuthenticationToSLD} from '../../../../utils/SecurityUtils';
 
-const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
+import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -116,17 +114,17 @@ function wmsToCesiumOptions(options) {
 }
 
 function wmsToCesiumOptionsBIL(options) {
+
+    let url = options.url;
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
-    let url = options.url;
     if (proxyUrl) {
-        proxy = needProxy(options.url) && proxyUrl;
-        if (proxy) {
-            url = proxy + encodeURIComponent(url);
-        }
+        proxy = options.noCors || needProxy(url);
     }
     return assign({
         url,
+        proxy: proxy ? new WMSProxy(proxyUrl) : new NoProxy(),
+        littleEndian: options.littleendian || false,
         layerName: options.name
     });
 }
@@ -160,9 +158,12 @@ const updateLayer = (layer, newOptions, oldOptions) => {
         .filter((key) => {
             const oldOption = oldOptions[key] === undefined ? oldParams && oldParams[key] : oldOptions[key];
             const newOption = newOptions[key] === undefined ? newParams && newParams[key] : newOptions[key];
-            return oldOption !== newOption;
+            return !isEqual(oldOption, newOption);
         });
-    if (newParameters.length > 0 || newOptions.securityToken !== oldOptions.securityToken || newOptions.tileSize !== oldOptions.tileSize) {
+    if (newParameters.length > 0 ||
+        newOptions.securityToken !== oldOptions.securityToken ||
+        !isEqual(newOptions.layerFilter, oldOptions.layerFilter) ||
+        newOptions.tileSize !== oldOptions.tileSize) {
         return createLayer(newOptions);
     }
     return null;

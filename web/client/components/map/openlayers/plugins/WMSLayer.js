@@ -162,7 +162,7 @@ function getElevation(pos) {
     try {
         const tilePoint = getTileFromCoords(this, pos);
         const tileSize = this.getSource().getTileGrid().getTileSize();
-        const elevation = getElevationFunc(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'));
+        const elevation = getElevationFunc(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'), this.get('littleEndian'));
         if (elevation.available) {
             return elevation.value;
         }
@@ -187,6 +187,8 @@ const createLayer = (options, map) => {
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
+            minResolution: options.minResolution,
+            maxResolution: options.maxResolution,
             source: new ImageWMS({
                 url: urls[0],
                 crossOrigin: options.crossOrigin,
@@ -217,7 +219,9 @@ const createLayer = (options, map) => {
         msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility !== false,
-        zIndex: options.zIndex
+        zIndex: options.zIndex,
+        minResolution: options.minResolution,
+        maxResolution: options.maxResolution
     };
     let layer;
     if (vectorFormat) {
@@ -247,6 +251,7 @@ const createLayer = (options, map) => {
     }
     if (options.useForElevation) {
         layer.set('nodata', options.nodata);
+        layer.set('littleEndian', options.littleendian ?? false);
         layer.set('getElevation', getElevation.bind(layer));
     }
     return layer;
@@ -336,18 +341,22 @@ Layers.registerType('wms', {
             needsRefresh = needsRefresh || changed;
         }
 
+        if (oldOptions.minResolution !== newOptions.minResolution) {
+            layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+        }
+        if (oldOptions.maxResolution !== newOptions.maxResolution) {
+            layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
+        }
         if (needsRefresh) {
             // forces tile cache drop
             // this prevents old cached tiles at lower zoom levels to be
-            // rendered during new params load, but causes a blink glitch.
-            // TODO: find out a way to refresh only once to clear lower zoom level cache.
-            if (wmsSource.refresh) {
-                wmsSource.refresh();
-            }
+            // rendered during new params load
+            wmsSource?.tileCache?.pruneExceptNewestZ?.();
             if (vectorSource) {
                 vectorSource.clear();
                 vectorSource.refresh();
             }
+
             if (changed) {
                 const params = assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 

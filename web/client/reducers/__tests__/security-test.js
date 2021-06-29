@@ -17,7 +17,8 @@ import {
     CHANGE_PASSWORD_SUCCESS,
     CHANGE_PASSWORD_FAIL,
     REFRESH_SUCCESS,
-    SESSION_VALID
+    SESSION_VALID,
+    CHANGE_PASSWORD
 } from '../../actions/security';
 
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
@@ -140,6 +141,13 @@ describe('Test the security reducer', () => {
         expect(state.user.name).toBe("user");
     });
 
+    it('change password start set changePasswordLoading', () => {
+        let state = security({user: testUser.User}, {type: CHANGE_PASSWORD});
+        expect(state).toExist();
+        expect(state.changePasswordLoading).toBeTruthy();
+        expect(state.passwordError).toBe(null);
+    });
+
     it('change password success', () => {
         let state = security({user: testUser.User}, {type: CHANGE_PASSWORD_SUCCESS, user: {
             id: 6,
@@ -148,12 +156,15 @@ describe('Test the security reducer', () => {
         expect(state).toExist();
         expect(state.user.password).toBe("newpassword");
         expect(state.passwordChanged).toBe(true);
+        expect(state.changePasswordLoading).toBeFalsy();
+
     });
 
     it('change password fail', () => {
         let state = security({user: testUser.User}, {type: CHANGE_PASSWORD_FAIL, error: {message: 'error'}});
         expect(state).toExist();
         expect(state.passwordError).toExist();
+        expect(state.changePasswordLoading).toBeFalsy();
     });
 
     it('reset password error', () => {

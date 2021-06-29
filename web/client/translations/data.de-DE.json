@@ -71,7 +71,6 @@
             "styleCustom": "Stil \"{value}\" nutzen",
             "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",
             "stylesRefreshList": "Aktualisiere die Liste von Stilen",
-            "format": "Format",
             "delete": "Löschen",
             "deleteLayer":"Ebene löschen",
             "deleteLayerMessage": "Möchten Sie diese Ebene wirklich löschen?",
@@ -100,10 +99,31 @@
             "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
             "hideFormatTitle": "IDENTIFIZIERUNG DEAKTIVIEREN",
             "hideFormatDescription": "Deaktivieren Sie die Funktionsinformationen für diese Ebene",
+            "styleWarning": "Ebenenstil-Editor für Geometrietyp '{geometryType}' wird nicht unterstützt.",
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
-            "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
+            "templateFormatInfoAlertExample": "Die ID des Features lautet <span style='white-space:nowrap'>${ properties.daten }</span> oder <span style='white-space:nowrap'>${ properties['daten-wert'] }</span>",
+            "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
             "templatePreview": "Vorschau template",
+            "visibilityLimits": {
+                "title": "Sichtbarkeitsgrenzen",
+                "serverValuesUpdateUndefined": "Der Server hat keine Skalierungssichtbarkeitsbeschränkungen für diese Ebene angegeben",
+                "serverValuesUpdate": "Der Server hat für diese Ebene minimale und maximale Sichtbarkeitsgrenzen für die Skalierung angegeben",
+                "serverValuesUpdateMinScale": "Der Server hat für diese Ebene nur eine minimale Sichtbarkeitsgrenze für die Skalierung angegeben",
+                "serverValuesUpdateMaxScale": "Der Server hat nur die maximale Sichtbarkeitsgrenze für diese Ebene angegeben",
+                "rangeError": "Der Minimalwert ist größer als der Maximalwert. Bitte geben Sie einen Bereich an, in dem der Maximalwert größer als der Minimalwert ist",
+                "serverValuesError": "Es ist nicht möglich, minimale und maximale Sichtbarkeitsbeschränkungen für den Server anzufordern. Wahrscheinlich aufgrund eines Fehlers in der Netzwerkverbindung oder eines fehlenden Funktionsendpunkts",
+                "updateWMSCapabilities": "Minimale und maximale Sichtbarkeitsbeschränkungen für den Server anfordern",
+                "maxValue": "Maximaler Wert (ausgeschlossen)",
+                "maxValuePlaceholder": "Maximalwert auswählen",
+                "valueNoResultsText": "Keine Optionen stimmen mit dem Eingabewert überein",
+                "createOption": "Neuen Wert hinzufügen {label}",
+                "minValue": "Mindestwert (enthalten)",
+                "minValuePlaceholder": "Mindestwert auswählen",
+                "type": "Limits Typ",
+                "scale": "Maßstab",
+                "resolution": "Auflösung"
+            },
             "tooltip": {
                 "label": "QuickInfo",
                 "title": "Titel",
@@ -127,6 +147,16 @@
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
+            },
+            "format": {
+                "title": "Format",
+                "refresh": "Unterstütztes Format abrufen",
+                "loading": "Wird geladen...",
+                "noOption": "Keine Option",
+                "error": {
+                    "title": "Error",
+                    "message": "Format konnte nicht abgerufen werden"
+                }
             }
         },
         "longitude": "Lon",
@@ -256,7 +286,7 @@
             "Examples": "Beispiele",
             "LinkedinGroup": "Mapstore Linkedin Gruppe",
             "scrollTop": "An den Anfang der Seite scrollen",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "ml": {
                 "title": "Bleibe in Verbindung und auf dem Laufenden mit der Mailing Liste",
                 "subscribe_users": "Abonniere die Benutzer Mailing Liste",
@@ -535,6 +565,8 @@
             "radius": "Radius",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
+            "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
+            "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -612,6 +644,7 @@
                 "interval_limit": "Intervalle sollten eine Zahl zwischen {min} und {max} sein",
                 "invalid_object": "Ungültige Serviceantwort",
                 "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon",
+                "invalid_attribute": "Ungültiger Attributtyp bei Auswahl. Bitte wählen Sie ein gültiges Attribut aus der Liste für die Klassifizierungsmethode aus",
                 "invalid_classes": "Max muss in jeder Klasse größer als min sein"
             },
             "error": {
@@ -790,7 +823,7 @@
                 "single_layer": "Einzelne Ebene",
                 "no_info_description": "Das Identifizierungsfeld wird bei der Suche nicht angezeigt",
                 "all_layers_description": "Das Fenster Identifizieren zeigt Informationen zu allen in der Karte sichtbaren Layern an",
-                "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind",
+                "single_layer_description": "Im Bereich Identifizieren werden nur Informationen für diese Ebene angezeigt",
                 "openFeatureInfoButtonCheckbox": "Verwenden Sie die Schaltfläche, um Funktionsinformationen zu öffnen",
                 "forceSearchLayerVisibility": "Sichtbarkeit der Suchebene erzwingen"
             },
@@ -986,6 +1019,7 @@
             "attributefilter":{
                 "add_condition": "Bedingung hinzufügen",
                 "delete": " Löschen",
+                "deleteGroup": " Gruppe löschen",
                 "add_group": "Gruppe hinzufügen",
                 "group_label_a": "Übereinstimmung",
                 "group_label_b": "der folgenden Bedingungen:",
@@ -1054,7 +1088,8 @@
                 "operation": "Geometrische Operation",
                 "placeholder": "Wählen Sie eine Ebene aus",
                 "errors": {
-                    "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar"
+                    "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar",
+                    "layersExcluded": "Für diesen Ebenenfilter können nur Ebenen ausgewählt werden, die von derselben Quelle stammen"
                 }
             },
             "changedFilter": "Filter geändert",
@@ -1267,7 +1302,11 @@
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu ändern / festzulegen",
             "zoomToolTip": "Min: 1 und Max: 35",
             "showSectionId": "Bildlaufposition einschließen",
-            "showConnections": "Verbindungen anzeigen"
+            "showConnections": "Verbindungen anzeigen",
+            "sizeOptions": {
+                "width": "Breite",
+                "height": "Höhe"
+            }
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1301,10 +1340,12 @@
             "next": "Nächster",
             "skip": "springen",
             "finish": "Fertig",
-            "layerOf": "Ebene {count} von {total}:"
+            "layerOf": "Ebene {count} von {total}:",
+            "styleCustomizationDisabled":"Diese Ebene hat bereits einen Stil definiert und kann nicht angepasst werden."
         },
         "mapImport": {
                 "title": "Importieren",
+                "tooltip": "Importieren Sie eine Kartendatei oder Vektordaten",
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkonfigurations- oder Vektordateien ab </h4> <small> oder nutzen Sie </small> </p>",
                     "selectFiles": "Dateien auswählen...",
@@ -1314,11 +1355,13 @@
                 "errors": {
                     "fileNotSupported": "Datei wird nicht unterstützt",
                     "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten",
-                    "projectionNotSupported": "Die Projektion der Datei, die Sie importieren möchten, wird nicht unterstützt"
+                    "projectionNotSupported": "Die Projektion der Datei, die Sie importieren möchten, wird nicht unterstützt",
+                    "fileBeyondBoundaries": "Die Datei {Dateiname} kann nicht importiert werden, da sie nicht zu den Kartengrenzen passt"
                 }
             },
         "mapExport": {
             "title": "Karte exportieren",
+            "tooltip": "Exportieren Sie die aktuelle Karte",
             "exportPanel": {
                 "title": "<p><h4>Wählen Sie ein Format</h4></p>",
                 "exportButtonLabel": "Export"
@@ -1342,13 +1385,13 @@
             "end": "Enddatum ",
             "notAvailable": "Nicht verfügbar",
             "title": "Katalog",
+            "tooltip": "Fügen Sie der Karte Ebenen hinzu",
             "autoload": "Suche in Serviceauswahl",
             "clearValueText": "Auswahl aufheben",
             "noResultsText": "keine Ergebnisse gefunden",
-            "tooltip": "Katalog durchsuchen",
             "addToMap": "Zur Karte hinzufügen",
             "getWMSLink": "WMS Link erhalten",
-            "error": "Es gab einen Fehler beim Laden von Einträgen aus dem Katalog",
+            "error": "Beim Laden der Daten ist ein Fehler aufgetreten",
             "pageInfo": "Resultat {start}-{end} von {total}",
             "resultInfo": "{total, plural, =0 {Keine Gegenstände} =1 {{total} von {total} stimmt überein} other {{start}-{end} von {total}}}",
             "pageInfoInfinite": "{total, plural, =undefined {} =0 {Keine Ergebnisse} =1 {{total} von {total} stimmt überein} other {Geladen {loaded} von {total} übereinstimmend}",
@@ -1391,6 +1434,7 @@
             "showPreview": "Vorschau zeigen",
             "advancedSettings": "Erweiterte Einstellungen",
             "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Dieser Katalog kann nicht zu den verfügbaren hinzugefügt werden, da er ein http-Protokoll verwendet. Bitte geben Sie eine Katalog-URL an, die das https-Protokoll verwendet.",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Einige Datensätze wurden nicht gefunden: {records} . Bitte überprüfen Sie die URL des Abfrageparameters",
@@ -1404,6 +1448,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
+            },
+            "format": {
+                "noOption": "Keine Option",
+                "loading": "Wird geladen..."
             }
         },
         "uploader": {
@@ -2040,8 +2088,10 @@
             "deletedStyleErrorMessage": "Der aktuelle Stil konnte nicht gelöscht werden",
             "savedStyleTitle": "Stil gespeichert",
             "savedStyleMessage": "Der Style wurde erfolgreich gespeichert",
-            "missingAvailableStyles": "Fehlende Stile",
-            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li> </ul>",
+            "errorTitle": "StyleEditor-Fehler",
+            "parsingCapabilitiesError": "<h4>Mögliche Ursachen:</h4>Es war nicht möglich, die Cababilites zu analysieren und die Stile abzurufen",
+            "globalError": "<h4>Mögliche Ursachen:</h4> Es war nicht möglich, eine Verbindung zum Dienst herzustellen",
+            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li></ul>",
             "createTmpErrorTitle": "Neuer temporärer Stil",
             "createTmpStyleErrorMessage": "Temporärer Stil konnte nicht erstellt werden. Dies könnte aufgrund eines nicht unterstützten Formatformats des Style-Service erfolgen",
             "updateTmpErrorTitle": "Temporäre Stilaktualisierung",
@@ -2070,6 +2120,7 @@
             "addIconSymbolizer": "Symbol-Symbolisierer hinzufügen",
             "addIconRule": "Symbolregel hinzufügen",
             "image": "Bild",
+            "format": "Format",
             "opacity": "Deckkraft",
             "size": "Größe",
             "addLineSymbolizer": "Liniensymbolisierer hinzufügen",
@@ -2113,6 +2164,9 @@
             "fontWeightBold": "Bold",
             "boolTrue": "True",
             "boolFalse": "False",
+            "addRuleBefore": "Fügen Sie zuvor einen neuen Eintrag hinzu",
+            "addRuleAfter": "Neuen Eintrag hinzufügen nach",
+            "remove": "Entfernen",
             "circle": "Kreis",
             "square": "Quadrat",
             "triangle": "Dreieck",
@@ -2155,6 +2209,7 @@
             "undoStyle": "Stil rückgängig machen",
             "redoStyle": "Redo style",
             "equalInterval": "Gleiches Intervall",
+            "uniqueInterval": "Einzigartiges Intervall",
             "quantile": "Quantil",
             "jenks": "Natürliche Pausen (Jenks)",
             "standardDeviation": "Varianz",
@@ -2169,6 +2224,7 @@
             "emptyRuleEditor": "Es gibt keine Regeln für diesen Stil. Fügen Sie eine neue Regel hinzu, indem Sie in der Symbolleiste auf den gewünschten Symbolisierungstyp klicken",
             "classificationError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Klassifizierung zu erstellen",
             "classificationRasterError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Rasterklassifizierung zu erstellen.",
+            "classificationUniqueIntervalError": "Maximale Intervallgrenzen überschritten! Sie versuchen, eine eindeutige Intervallklassifizierung mit einem Attribut zu generieren, das mehr als {intervalsForUnique} verschiedene Klassen enthält. Eine eindeutige Intervallklassifizierung sollte auf Attribute mit einem begrenzten Satz von Intervallen angewendet werden, um eine bessere Lesbarkeit des Stils zu ermöglichen. Sie können eine andere Methode für das ausgewählte Attribut ausprobieren",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
@@ -2182,6 +2238,7 @@
             "imageSrcLoadError": "Die angegebene Bildquelle konnte nicht geladen werden. Versuchen Sie es mit einer anderen URL oder stellen Sie sicher, dass die Quelle über MapStore erreichbar ist.",
             "imageSrcInvalidBase64": "Dies ist kein gültiges base64-Image. Einige Style-Renderer unterstützen diesen Quelltyp nicht. Sie können stattdessen eine externe URL-Quelle verwenden.",
             "imageSrcNotSupportedBase64Image": "Einige Style-Renderer unterstützen Base64-Images nicht, selbst wenn die aktuelle Quelle gültig ist",
+            "imageFormatEmpty": "Das Bildformat kann nicht identifiziert werden. Bitte wählen Sie das Bildformat aus den verfügbaren in der Dropdown-Liste 'Format' aus",
             "warningTextOrderTitle": "Warnung",
             "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
         },
@@ -2465,7 +2522,8 @@
                     "pleaseLogin": "Bitte loggen Sie sich ein",
                     "notAccessible": "Diese Geschichte ist nicht zugänglich",
                     "geostoryNotAccessible": "Sie haben keine Berechtigung, auf diese Geschichte zuzugreifen. Bitte wenden Sie sich an den Eigentümer der Ressource",
-                    "geostoryDoesNotExist": "Diese Geschichte existiert nicht"
+                    "geostoryDoesNotExist": "Diese Geschichte existiert nicht",
+                    "video": "Es tut uns leid! Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
                 }
             },
             "mapEditor": {
@@ -2947,6 +3005,7 @@
         },
         "mapCatalog": {
             "title": "Kartenkatalog",
+            "tooltip": "Karten durchsuchen und laden",
             "filterPlaceholder": "Karten suchen...",
             "deleteConfirmContent": "Möchten Sie die Karte \"{mapName}\" wirklich löschen?",
             "tooltips": {

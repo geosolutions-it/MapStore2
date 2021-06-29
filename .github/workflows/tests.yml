@@ -1,0 +1,153 @@
+# This workflow will run tests for npm and java
+
+name: checks
+
+on:
+  push:
+    branches: 
+    - master
+    # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+    - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
+  pull_request:
+    branches: 
+    - master
+    # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+    - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
+
+jobs:
+  test-front-end:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checking out"
+        uses: actions/checkout@v2
+
+      - name: "setting up npm"
+        uses: actions/setup-node@v2
+        with:
+            node-version: '12.x'
+
+      ############
+      # CACHING
+      ##########
+      - name: "cache node modules"
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      ###############
+      # NPM CHECKS
+      #############
+      - name: npm install
+        run: npm install
+
+      - name: ESlint
+        run: npm run lint
+
+      - name: Doc build
+        run: npm run doc
+
+      - name: Check i18n
+        run: npm run i18n
+
+      - name: Unit Tests
+        run: npm test -- --reporters mocha,coverage,coveralls
+        
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-back-end:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checking out"
+        uses: actions/checkout@v2
+
+      ###########
+      # SET UP 
+      #########
+      - name: "setting up Java"
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.x'
+
+      - name: "cache maven dependencies"
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            mapstore-${{ runner.os }}-maven-
+      ################
+      # JAVA CHECKS
+      ##############
+      - name: java
+        run: mvn --batch-mode --update-snapshots verify
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checking out"
+        uses: actions/checkout@v2
+
+      ###########
+      # SET UP 
+      #########
+      - name: "setting up Java"
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.x'
+
+      - name: "setting up npm"
+        uses: actions/setup-node@v2
+        with:
+            node-version: '12.x'
+
+      ############
+      # CACHING
+      ##########
+      - name: "cache node modules"
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: "cache maven dependencies"
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            mapstore-${{ runner.os }}-maven-
+
+      ###############
+      # NPM CHECKS
+      #############
+      - name: npm install
+        run: npm install
+
+      - name: compile
+        run: npm run compile
+      ################
+      # JAVA CHECKS
+      ##############
+      - name: java
+        run: mvn --batch-mode --update-snapshots verify
+
+
+
+

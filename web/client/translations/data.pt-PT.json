@@ -195,7 +195,7 @@
             "Examples": "Exemplos",
             "LinkedinGroup": "Grupo Mapstore no Linkedin",
             "scrollTop": "Navegar para o topo da página",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "ml": {
                 "title": "Mantenha-se em contacto e actualizado com as mailing lists",
                 "subscribe_users": "Subscrever a Mailing List de Utilizadores",
@@ -864,7 +864,8 @@
                 "clear": "Clear filter",
                 "operation": "Operation",
                 "errors": {
-                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
+                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer",
+                    "layersExcluded": "Apenas as camadas provenientes da mesma origem podem ser selecionadas como camada de destino para este filtro de camada"
                 }
             }
         },

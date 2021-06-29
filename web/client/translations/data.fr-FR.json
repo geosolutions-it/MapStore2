@@ -71,7 +71,6 @@
             "styleCustom": "Utiliser un style nommé \"{value} \"",
             "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste des styles",
             "stylesRefreshList": "Actualiser la liste des styles",
-            "format": "Format",
             "delete": "Supprimer",
             "deleteLayer": "Supprimer la couche",
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche ?",
@@ -100,10 +99,31 @@
             "templateFormatDescription": "Personnaliser le format des résultats d'interrogation des attributs",
             "hideFormatTitle": "DÉSACTIVER L'IDENTIFICATION",
             "hideFormatDescription": "Désactiver les informations sur les caractéristiques de cette couche",
+            "styleWarning": "L'éditeur de style de calque pour le type de géométrie '{geometryType}' n'est pas pris en charge.",
             "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
-            "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
+            "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est <span style='white-space:nowrap'>${ properties.ID }</span> ou <span style='white-space:nowrap'>${ properties['données-valeur'] }</span>",
+            "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
+            "visibilityLimits": {
+                "title": "Limites de visibilité",
+                "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",
+                "serverValuesUpdate": "Le serveur a fourni des limites de visibilité d'échelle minimale et maximale pour cette couche",
+                "serverValuesUpdateMinScale": "Le serveur a fourni uniquement une limite de visibilité d'échelle minimale pour cette couche",
+                "serverValuesUpdateMaxScale": "Le serveur n'a fourni que la limite de visibilité d'échelle maximale pour cette couche",
+                "rangeError": "La valeur minimale est supérieure à la valeur maximale. Veuillez fournir une plage où la valeur maximale est supérieure à la valeur minimale",
+                "serverValuesError": "Il n'est pas possible de demander des limites de visibilité d'échelle minimale et maximale au serveur. Probablement en raison d'une erreur de connexion réseau ou d'un point de terminaison de capacité manquant",
+                "updateWMSCapabilities": "Demander des limites de visibilité d'échelle minimale et maximale au serveur",
+                "maxValue": "Valeur max (exclue)",
+                "maxValuePlaceholder": "Sélectionnez la valeur maximale",
+                "valueNoResultsText": "Aucune option ne correspond à la valeur d'entrée",
+                "createOption": "Ajouter une nouvelle valeur {label}",
+                "minValue": "Valeur min (inclus)",
+                "minValuePlaceholder": "Sélectionnez la valeur minimale",
+                "type": "Type de limites",
+                "scale": "Échelle",
+                "resolution": "Résolution"
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -127,6 +147,16 @@
             "enableLocalizedLayerStyles": {
                 "label": "Activer le style localisé",
                 "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
+            },
+            "format": {
+                "title": "Format",
+                "refresh": "Récupérer le format pris en charge",
+                "loading": "Chargement...",
+                "noOption": "Pas d'option",
+                "error": {
+                    "title": "Erreur",
+                    "message": "Échec de la récupération du format"
+                }
             }
         },
         "longitude": "Lon",
@@ -256,7 +286,7 @@
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "ml": {
                 "title": "Restez au courant des derniers développements via les mailing lists",
                 "subscribe_users": "Souscrire à la liste de diffusion utilisateurs",
@@ -534,6 +564,8 @@
             "radius": "Rayon",
             "filterIconEnabled": "Désactiver le filtre de couche",
             "filterIconDisabled": "Activer le filtre de couche",
+            "notVisibleZoomIn": "Le calque n'est pas visible car il est en dehors des limites de résolution. Zoomez pour afficher le calque",
+            "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -611,6 +643,7 @@
                 "interval_limit": "Les intervalles doivent être compris entre {min} et {max}",
                 "invalid_object": "Réponse du service non valide",
                 "invalid_geometry": "Le type de géométrie n'est pas valide, pas un point, une ligne ou un polygone",
+                "invalid_attribute": "Type d'attribut non valide dans la sélection. Veuillez sélectionner un attribut valide dans la liste pour la méthode de classification",
                 "invalid_classes": "Max doit être supérieur à min dans chaque classe"
             },
             "error": {
@@ -789,7 +822,7 @@
                 "single_layer": "Une seule couche",
                 "no_info_description": "Le panneau d'identification n'apparaîtra pas lors de la recherche",
                 "all_layers_description": "Le panneau d'identification affichera des informations sur toutes les couches visibles sur la carte",
-                "single_layer_description": "Le panneau d'identification apparaîtra avec les données déjà disponibles via la recherche WFS",
+                "single_layer_description": "Le panneau identifier s'affichera et affichera les informations uniquement pour cette couche",
                 "openFeatureInfoButtonCheckbox": "Utilisez le bouton pour ouvrir les informations sur les fonctionnalités",
                 "forceSearchLayerVisibility": "Forcer la visibilité de la couche de recherche"
             },
@@ -985,6 +1018,7 @@
             "attributefilter": {
                 "add_condition": " Ajouter une condition",
                 "delete": " Effacer",
+                "deleteGroup": " Effacer le groupe",
                 "add_group": " Ajouter un groupe",
                 "group_label_a": "Correspondance",
                 "group_label_b": "des conditions suivantes:",
@@ -1053,7 +1087,8 @@
                 "operation": "Opération",
                 "placeholder": "Sélectionner une couche",
                 "errors": {
-                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné"
+                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné",
+                    "layersExcluded": "Seuls les calques provenant de la même source peuvent être sélectionnés comme calque cible pour ce filtre de calque"
                 }
             },
             "changedFilter": "Filtre modifié",
@@ -1267,7 +1302,11 @@
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
             "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
             "showSectionId": "Inclure la position de défilement",
-            "showConnections": "Afficher les connexions"
+            "showConnections": "Afficher les connexions",
+            "sizeOptions": {
+                "width": "largeur",
+                "height": "la taille"
+            }
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -1301,10 +1340,12 @@
             "next": "Suivant",
             "skip": "Passer",
             "finish": "Terminer",
-            "layerOf": "Couche {count} sur {total} :"
+            "layerOf": "Couche {count} sur {total} :",
+            "styleCustomizationDisabled":"Ce calque a déjà un style défini et il n'est pas possible de le personnaliser."
         },
         "mapImport": {
             "title": "Importer",
+            "tooltip": "Importer un fichier de carte ou des données vectorielles.",
             "dropZone": {
                 "heading": "<p> <h4> Déposez votre contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez des fichiers...",
@@ -1314,14 +1355,16 @@
             "errors": {
                 "fileNotSupported": "Fichier non pris en charge",
                 "unknownError": "il y a eu une erreur inconnue lors de l'import",
-                "projectionNotSupported": "La projection du/des fichier(s) que vous essayez d'importer n'est pas prise en charge"
+                "projectionNotSupported": "La projection du/des fichier(s) que vous essayez d'importer n'est pas prise en charge",
+                "fileBeyondBoundaries": "Le fichier {filename} ne peut pas être importé car il ne correspond pas aux limites de la carte"
             }
         },
         "mapExport": {
-            "title": "Exporter la carte",
+            "title": "Exporter",
+            "tooltip": "Exporter la carte actuelle",
             "exportPanel": {
                 "title": "<p><h4>Sélectionnez votre format</h4></p>",
-                "exportButtonLabel": "Export"
+                "exportButtonLabel": "Exporter"
             },
             "formats": {
                 "mapstore2": {
@@ -1342,13 +1385,13 @@
             "end": "Date de fin ",
             "notAvailable": "Indisponible",
             "title": "Catalogue",
+            "tooltip": "Ajouter des couches à la carte",
             "autoload": "Recherche sur la sélection du service",
             "clearValueText": "Effacer la sélection",
             "noResultsText": "Aucun résultat trouvé",
-            "tooltip": "Parcourir le catalogue",
             "addToMap": "Ajouter à la carte",
             "getWMSLink": "Lien WMS",
-            "error": "Une erreur s'est produite lors du chargement des données du catalogue",
+            "error": "Une erreur s'est produite lors du chargement des données.",
             "pageInfo": "{start}-{end} résultats parmi {total}",
             "resultInfo": "{total, plural, =0 {Pas d'objet} =1 {{total} sur {total}} other {{start}-{end} sur {total}}}",
             "pageInfoInfinite": "{total, plural, =undefined {} =0 {Aucun résultat} =1 {{total} sur {total} trouvés} other {chargé {loaded} sur {total} trouvés}}",
@@ -1392,6 +1435,7 @@
             "showPreview": "Afficher l'aperçu",
             "advancedSettings": "Réglages avancés",
             "templateMetadataAvailable": "Métadonnées disponibles pour le format Dublin Core : abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
+            "invalidUrlHttpProtocol": "Ce catalogue ne peut pas être ajouté à ceux disponibles car il utilise un protocole http. Veuillez fournir une URL de catalogue qui utilise le protocole https.",
             "notification": {
                 "errorTitle": "Erreur",
                 "errorSearchingRecords": "Certains enregistrements n'ont pas été trouvés: {records} . Veuillez vérifier l'URL de la requête et ses paramètres.",
@@ -1405,6 +1449,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Activer les styles localisés",
                 "tooltip": "Remarque : ce paramètre nécessite des configurations spécifiques sur GeoServer"
+            },
+            "format": {
+                "noOption": "Pas d'option",
+                "loading": "Chargement..."
             }
         },
         "uploader": {
@@ -1418,34 +1466,34 @@
             "dropfileImport": "Déposez ici les fichiers à ajouter au traitement"
         },
         "importer": {
-            "title": "Import des données",
-            "imports": "Import des processus",
+            "title": "Importer des données",
+            "imports": "Processus d'import",
             "importN": "Processus {id}",
-            "creatingImportProcess": "Création de l'import ...",
-            "dropfile": "faire glisser les fichiers ici pour créer un nouveau processus d'import",
-            "dropfileImport": "faire glisser les fichiers ici pour les ajouter à ce processus",
+            "creatingImportProcess": "Création d'import...",
+            "dropfile": "faire glisser des fichiers ici pour créer un nouveau processus d'import",
+            "dropfileImport": "faites glisser les fichiers ici pour les ajouter à ce processus",
             "process": "Processus",
             "number": "#",
             "workspace": {
                 "create": "Créer",
-                "createWS": "Créez un nouvel espace de travail: ",
-                "target": "Espace de travail cible: ",
-                "failure": "Erreur de création d'espace de travail: {statusWS}",
+                "createWS": "Créez un nouvel espace de travail : ",
+                "target": "Espace de travail cible : ",
+                "failure": "Erreur de création d'espace de travail : {statusWS}",
                 "success": "Espace de travail {statusWS} créé avec succès",
                 "select": "Sélectionnez l'espace de travail cible",
                 "new": "Nouveau nom..."
             },
             "import": {
                 "actions": "Actions",
-                "tasks": "Paquetages",
-                "runImport": "Lancement",
-                "deleteImport": "Supprimer le processus d'import",
+                "tasks": "Paquet",
+                "runImport": "Début",
+                "deleteImport": "Supprimer le processus",
                 "deleteTask": "Supprimer",
                 "status": "Statut",
-                "archive": "Archivage",
-                "deleting": "Suppression en cours ...",
-                "analyzing": "Analyse du paquetage...",
-                "applyingPreset": "Pré-réglages en cours ..."
+                "archive": "Archives",
+                "deleting": "Nettoyage en cours...",
+                "analyzing": "Analyse du paquet...",
+                "applyingPreset": "Pré-réglages d'application..."
             },
             "task": {
                 "panelTitle": "Import du paquetage {id}",
@@ -1618,7 +1666,7 @@
             "title": "Exporter des données",
             "format": "Format de fichier",
             "srs": "Système de référence spatiale",
-            "export": "Export",
+            "export": "Exporter",
             "downloadonlycurrentpage": "Télécharger uniquement la page actuelle",
             "cropDataSet": "Recadrer le jeu de données dans la fenêtre courante",
             "downloadFilteredDataSet": "Télécharger l'ensemble de données filtré",
@@ -1634,7 +1682,7 @@
                 "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez."
             },
             "exportResultsMessages": {
-                "newExport": "Die Datei ist hier verfügbar, wenn der Export abgeschlossen ist",
+                "newExport": "Le fichier sera disponible ici lorsque l'export sera terminé.",
                 "exportFailure": "L'exportation pour le calque \"{layerTitle}\" a échoué! Ouvrez la boîte de dialogue des résultats d'exportation pour plus d'informations.",
                 "exportSuccess": "L'exportation pour le calque \"{layerTitle}\" s'est terminée avec succès.",
                 "invalidHref": "La réponse du serveur ne contenait pas d'adresse URL valide pour les fichiers exportés!"
@@ -2041,8 +2089,10 @@
             "deletedStyleErrorMessage": "Impossible de supprimer le style actuel",
             "savedStyleTitle": "Style sauvegardé",
             "savedStyleMessage": "Le style a été enregistré avec succès",
-            "missingAvailableStyles": "Styles manquants",
-            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li> </ul>",
+            "errorTitle": "Erreur StyleEditor",
+            "parsingCapabilitiesError": "<h4>Causes possibles:</h4> il n'a pas été possible d'analyser les cababilites et de récupérer les styles",
+            "globalError": "<h4>causes possibles:</h4> il n'a pas été possible de se connecter au service",
+            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li><li></li> </ul>",
             "createTmpErrorTitle": "Nouveau style temporaire",
             "createTmpStyleErrorMessage": "Le style temporaire n'a pas pu être créé. Cela pourrait être dû à un format de style non pris en charge sur le service de styles.",
             "updateTmpErrorTitle": "Mise à jour de style temporaire",
@@ -2071,6 +2121,7 @@
             "addIconSymbolizer": "Ajouter un symboliseur d'icône",
             "addIconRule": "Ajouter une règle d'icône",
             "image": "Image",
+            "format": "Format",
             "opacity": "Opacity",
             "size": "Taille",
             "addLineSymbolizer": "Ajouter un symboliseur de ligne",
@@ -2114,6 +2165,9 @@
             "fontWeightBold": "Bold",
             "boolTrue": "True",
             "boolFalse": "False",
+            "addRuleBefore": "Ajouter une nouvelle entrée avant",
+            "addRuleAfter": "Ajouter une nouvelle entrée après",
+            "remove": "Supprimer",
             "circle": "Cercle",
             "square": "Carré",
             "triangle": "Triangle",
@@ -2156,6 +2210,7 @@
             "undoStyle": "Annuler le style",
             "redoStyle": "Refaire le style",
             "equalInterval": "intervalle égal",
+            "uniqueInterval": "Intervalle unique",
             "quantile": "Quantile",
             "jenks": "Pauses naturelles (Jenks)",
             "standardDeviation": "Écart type",
@@ -2170,6 +2225,7 @@
             "emptyRuleEditor": "Il n'y a pas de règles pour ce style. Ajoutez une nouvelle règle en cliquant sur le type de symboliseur souhaité dans la barre d'outils",
             "classificationError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification",
             "classificationRasterError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification raster",
+            "classificationUniqueIntervalError": "Limites d'intervalles maximales dépassées! Vous essayez de générer une classification d'intervalle unique avec un attribut qui contient plus de {intervalsForUnique} classes différentes. La classification par intervalle unique doit être appliquée aux attributs avec un ensemble limité d'intervalles pour permettre une meilleure lisibilité du style. Vous pouvez essayer une méthode différente pour l'attribut sélectionné",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
@@ -2183,6 +2239,7 @@
             "imageSrcLoadError": "La source d'image fournie n'a pas pu être chargée. Essayez avec une URL différente ou assurez-vous que la source est accessible par MapStore",
             "imageSrcInvalidBase64": "Ceci n'est pas une image base64 valide. Certains rendus de style ne prennent pas en charge ce type de source, vous pouvez utiliser une source d'url externe à la place",
             "imageSrcNotSupportedBase64Image": "Certains rendus de style ne prennent pas en charge les images base64 même si la source actuelle est valide",
+            "imageFormatEmpty": "Le format d'image ne peut pas être identifié. Veuillez sélectionner le format d'image parmi ceux disponibles dans la liste déroulante 'Format'",
             "warningTextOrderTitle": "Avertissement",
             "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
         },
@@ -2466,7 +2523,9 @@
                     "pleaseLogin": "Veuillez vous connecter",
                     "notAccessible": "Cette story n'est pas accessible",
                     "geostoryNotAccessible": "Vous n'avez pas la permission d'accéder à cette story. Veuillez contacter le propriétaire de la ressource",
-                    "geostoryDoesNotExist": "Cette story n'existe pas"
+                    "geostoryDoesNotExist": "Cette story n'existe pas",
+                    "video": "Pardon! Un erreur est survenue, veuillez réessayer plus tard."
+
                 }
             },
             "mapEditor": {
@@ -2852,7 +2911,7 @@
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",
                     "removePlugin": "Supprimer cette extension de MapStore",
-                    "mapTemplatesConfig": "Configurer le modèle de carte"
+                    "mapTemplatesConfig": "Configurer les cartes modèles"
                 },
                 "tutorialPlugins": {
                     "availableTitle": "Plugin disponible",
@@ -2866,30 +2925,30 @@
                 }
             },
             "configureTemplates": {
-                "title": "Configurer les modèles de carte",
-                "availableTemplates": "Modèles disponibles",
-                "enabledTemplates": "Modèles activés",
-                "templatesFilterPlaceholder": "Filtrer les modèles par nom...",
-                "availableTemplatesEmpty": "Tous les modèles disponibles sont activés",
-                "enabledTemplatesEmpty": "Ajouter des modèles à la configuration à partir de la liste des modèles disponibles",
-                "searchResultsEmpty": "Aucun modèle trouvé répondant aux critères de recherche",
+                "title": "Configurer les cartes modèles",
+                "availableTemplates": "Cartes modèles disponibles",
+                "enabledTemplates": "Cartes modèles activées",
+                "templatesFilterPlaceholder": "Filtrer les cartes modèles par nom...",
+                "availableTemplatesEmpty": "Tous les cartes modèles disponibles sont activés.",
+                "enabledTemplatesEmpty": "Ajouter des cartes modèles à la configuration à partir de la liste des cartes modèles disponibles.",
+                "searchResultsEmpty": "Aucune carte modèle ne répond aux critères de recherche.",
                 "fileDrop": {
-                    "label": "Modèle",
-                    "clear": "Déposez ou cliquez pour sélectionner un fichier de modèle de carte (les cartes JSON MapStore exportées ou les fichiers WMC sont pris en charge)"
+                    "label": "Carte modèle",
+                    "clear": "Déposez ou cliquez pour sélectionner un fichier de carte (les cartes JSON MapStore exportées ou les fichiers WMC sont pris en charge)"
                 },
                 "uploadDialog": {
-                    "title": "Télécharger un modèle de carte",
+                    "title": "Télécharger une carte modèle",
                     "save": "Télécharger",
                     "jsonParsingError": "Échec de l'analyse JSON: \"{error}\"",
                     "fileReadError": "Une erreur de lecture de fichier inattendue s'est produite"
                 },
                 "tooltips": {
-                    "uploadTool": "Télécharger un nouveau modèle",
-                    "editTemplate": "Modifier les propriétés du modèle",
-                    "deleteTemplate": "Supprimer le modèle"
+                    "uploadTool": "Télécharger une nouvelle carte modèle",
+                    "editTemplate": "Modifier les propriétés de la carte modèle",
+                    "deleteTemplate": "Supprimer la carte modèle"
                 },
-                "deleteError": "Impossible de supprimer le modèle, une erreur s'est produite",
-                "deleteConfirm": "Voulez-vous vraiment supprimer le modèle \"{templateName}\"?"
+                "deleteError": "Impossible de supprimer la carte modèle, une erreur s'est produite",
+                "deleteConfirm": "Voulez-vous vraiment supprimer cette carte modèle \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configurer la carte",
@@ -2930,24 +2989,25 @@
           "removeExtension": "Supprimer l'extension"
         },
         "mapTemplates": {
-            "title": "Modèles de carte",
+            "title": "Cartes modèles",
             "favouritesTitle": "Favoris",
             "allTitle": "Tout",
-            "filterPlaceholder": "Filtrer les modèles de carte...",
+            "filterPlaceholder": "Filtrer les cartes modèles...",
             "transfer": "Remplacer la carte par ce modèle",
             "merge": "Ajouter ce modèle à la carte",
             "favouriteAdd": "Ajouter aux favoris",
             "favouriteRemove": "Supprimer des favoris",
             "emptyTitle": "Pas de résultat",
-            "emptyDescription": "Le filtre entré ne correspond pas au nom ou à la description d'aucun des modèles",
-            "noTemplatesTitle": "Aucun modèle trouvé",
-            "noTemplatesDescription": "Le contexte actuel ne contient aucun modèle",
+            "emptyDescription": "Le filtre entré ne correspond au nom ou à la description d'aucune des cartes modèles",
+            "noTemplatesTitle": "Aucune carte modèle trouvée",
+            "noTemplatesDescription": "Le contexte actuel ne contient aucune carte modèle",
             "confirmReplaceTitle": "Remplacer le contenu de la carte",
-            "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par le modèle sélectionné en cliquant sur le bouton remplacer",
+            "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par la carte modèle sélectionnéz en cliquant sur le bouton 'Remplacer'.",
             "confirmReplaceConfirmButton": "Remplacer"
         },
         "mapCatalog": {
             "title": "Catalogue de cartes",
+            "tooltip": "Parcourir et charger des cartes",
             "filterPlaceholder": "Rechercher des cartes...",
             "deleteConfirmContent": "Voulez-vous vraiment supprimer la carte \"{mapName}\"?",
             "tooltips": {
@@ -3196,8 +3256,8 @@
                         "text": "<p>En appuyant sur ce bouton, vous accédez à la page de documentation du plugin où vous pouvez rechercher des informations sur ce que fait le plugin et les paramètres de configuration qu'il prend en charge.</p>"
                     },
                     "mapTemplatesTool": {
-                        "title": "Outils de plug-in: modèles de carte",
-                        "text": "<p>Le plugin Map Templates dispose également d'un outil spécial qui vous permet de configurer des modèles de carte qui seront accessibles dans le contexte.</p>"
+                        "title": "Plugin Tools : Cartes modèles",
+                        "text": "<p>Le greffon 'Cartes modèles' dispose également d'un outil spécial qui vous permet de configurer des cartes modèles qui seront accessibles dans le contexte / l'application.</p>"
                     },
                     "extensions": {
                         "title": "Extensions",

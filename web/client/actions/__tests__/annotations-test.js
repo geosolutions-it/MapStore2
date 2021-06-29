@@ -215,6 +215,12 @@ describe('Test correctness of the annotations actions', () => {
         const result = startDrawing();
         expect(result.type).toEqual(START_DRAWING);
     });
+    it('startDrawing with options', () => {
+        const options = {geodesic: false};
+        const result = startDrawing(options);
+        expect(result.type).toEqual(START_DRAWING);
+        expect(result.options).toEqual(options);
+    });
     it('toggleUnsavedChangesModal', () => {
         const result = toggleUnsavedChangesModal();
         expect(result.type).toEqual(TOGGLE_CHANGES_MODAL);

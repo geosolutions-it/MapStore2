@@ -1,0 +1,45 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>zip</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <outputDirectory>/WEB-INF</outputDirectory>
+            <directory>${project.build.directory}/mapstore-printing/WEB-INF</directory>
+            <includes>
+                <include>**/*.xml</include>
+                <include>**/print-lib*.jar</include>
+                <include>**/avalon-*.jar</include>
+                <include>**/batik-*.jar</include>
+                <include>**/bcmail-*.jar</include>
+                <include>**/bcprov-*.jar</include>
+                <include>**/commons-lang3-*.jar</include>
+                <include>**/ejml-*.jar</include>
+                <include>**/fontbox-*.jar</include>
+                <include>**/fop-*.jar</include>
+                <include>**/GeographicLib-*.jar</include>
+                <include>**/gt-*.jar</include>
+                <include>**/hsqldb-*.jar</include>
+                <include>**/itext-*.jar</include>
+                <include>**/jai*.jar</include>
+                <include>**/jempbox-*.jar</include>
+                <include>**/jgridshift-*.jar</include>
+                <include>**/json-2008*.jar</include>
+                <include>**/jts-core-*.jar</include>
+                <include>**/jyaml-*.jar</include>
+                <include>**/pdfbox-*.jar</include>
+                <include>**/si-*.jar</include>
+                <include>**/systems-common-*.jar</include>
+                <include>**/unit-*.jar</include>
+                <include>**/uom-*.jar</include>
+                <include>**/xml-apis-ext-*.jar</include>
+                <include>**/xmlgraphics-commons-*.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

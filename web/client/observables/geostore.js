@@ -68,7 +68,7 @@ const updateOrDeleteLinkedResource = (id, attributeName, linkedResource = {}, re
             .switchMap( () => Observable.fromPromise( API.updateResourceAttribute(id, attributeName, "NODATA")))
         // update flow.
         : Observable.forkJoin([
-            API.putResource(resourceId, linkedResource.data)
+            Observable.defer(() => API.putResource(resourceId, linkedResource.data))
                 .switchMap(() => Observable.defer(() => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(resourceId, linkedResource.tail)))),
             ...(permission ? [updateResourcePermissions(resourceId, permission, API)] : [])
         ]);

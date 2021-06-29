@@ -1,6 +1,6 @@
-const expect = require('expect');
-const {get} = require('lodash');
-const parser = require('../parser');
+import expect from 'expect';
+import {get} from 'lodash';
+import parser from '../parser';
 
 const COMPARISON_TESTS = [
     // numeric

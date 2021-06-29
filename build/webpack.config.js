@@ -3,9 +3,13 @@ const path = require("path");
 const themeEntries = require('./themes.js').themeEntries;
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 const moduleFederationPlugin = require('./moduleFederation.js').plugin;
+
 module.exports = require('./buildConfig')(
     {
-        [process.env.bundle || "mapstore2"]: path.join(__dirname, "..", "web", "client", "product", process.env.entrypoint || process.env.bundle || "app")
+        [process.env.bundle || "mapstore2"]: path.join(__dirname, "..", "web", "client", "product", process.env.entrypoint || process.env.bundle || "app"),
+        "embedded": path.join(__dirname, "..", "web", "client", "product", "embedded"),
+        "dashboard-embedded": path.join(__dirname, "..", "web", "client", "product", "dashboardEmbedded"),
+        "geostory-embedded": path.join(__dirname, "..", "web", "client", "product", "geostoryEmbedded")
     },
     { ["themes/default"]: themeEntries["themes/" + (process.env.theme || "default")]},
     {

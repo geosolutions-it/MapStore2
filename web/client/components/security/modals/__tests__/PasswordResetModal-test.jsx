@@ -54,4 +54,20 @@ describe("Test password reset modal", () => {
         ReactTestUtils.Simulate.click(button);
         expect(spy.calls.length).toEqual(1);
     });
+
+    it('test password show spinner on Submit', () => {
+        let callbacks = {
+            onPasswordChange: (user, pass) => {
+                expect(pass).toEqual("test");
+                expect(pass).toEqual("password");
+            }
+        };
+        expect.spyOn(callbacks, 'onPasswordChange');
+        ReactDOM.render(<PRModal loading={false} options={{animation: false}} show user={{name: "test"}} onPasswordChange={callbacks.onPasswordChange}/>, document.getElementById("container"));
+        let button = document.getElementsByTagName("button")[1];
+        ReactTestUtils.Simulate.click(button);
+        let spinner = document.getElementsByTagName("Spinner");
+        expect(spinner).toExist();
+    });
+
 });
