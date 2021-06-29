@@ -65,6 +65,7 @@ Just below the chart's preview, the following configurations are available:
 In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
 
 <img src="../img/widgets/advanced_options.jpg" class="ms-docimage"/>
+<<<<<<< HEAD
 
 Through this section, the user is allowed to:
 
@@ -74,6 +75,17 @@ Through this section, the user is allowed to:
 
 <img src="../img/widgets/yaxis_options.jpg" class="ms-docimage"/>
 
+=======
+
+Through this section, the user is allowed to:
+
+* Show/Hide the chart's grid in backgroung with the **Hide Grid** control
+
+* Customize **Y axis** tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). The user can also choose to completely hide labels through the *Hide labels* control or customize them by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`). It is also possible to configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more) 
+
+<img src="../img/widgets/yaxis_options.jpg" class="ms-docimage"/>
+
+>>>>>>> master
 !!! Note
     More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation. 
 
@@ -215,6 +227,7 @@ An example of counter widget could be:
 ## Manage existing widgets
 
 Once widgets have been created, they will be placed on the bottom right of the map viewer and the *Widgets Tray* appears:
+<<<<<<< HEAD
 
 <img src="../img/widgets/widgets-tray.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -222,14 +235,29 @@ Through the buttons available on each widget the user can  perform the followin
 
 <img src="../img/widgets/widget-button.jpg" class="ms-docimage" style="max-width:500px;"/>
 
+=======
+
+<img src="../img/widgets/widgets-tray.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+Through the buttons available on each widget the user can  perform the following operations:
+
+<img src="../img/widgets/widget-button.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+>>>>>>> master
 * Drag and drop the widget to move it within the map area of the viewer and **resize** it through the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
 <img src="../img/widgets/ded-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
 * **Pin** the position and the dimension of the widget through the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
+<<<<<<< HEAD
 
 * **Collapse** the widget through the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
 
+=======
+
+* **Collapse** the widget through the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
+
+>>>>>>> master
 <img src="../img/widgets/collapse-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
 !!!note
@@ -239,10 +267,19 @@ Through the buttons available on each widget the user can  perform the followin
     When both **[Timeline](timeline.md)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
 
 * Make the widget **Full screen** through the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
+<<<<<<< HEAD
 
 <img src="../img/widgets/maximize-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
 * Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
+=======
+
+<img src="../img/widgets/maximize-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
+
+* Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
+
+<img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
+>>>>>>> master
 
 <img src="../img/widgets/wid-description.jpg" class="ms-docimage" style="max-width:500px;"/>
 ### Access widgets menu

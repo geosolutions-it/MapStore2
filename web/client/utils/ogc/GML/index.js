@@ -1,4 +1,4 @@
-const {isArray} = require('lodash');
+const isArray = require('lodash/isArray');
 const isGML2 = (version) => version.indexOf("2.") === 0;
 const closePolygon = (coords) => {
     if (coords.length >= 3) {

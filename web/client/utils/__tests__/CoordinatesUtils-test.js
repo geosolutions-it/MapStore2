@@ -35,8 +35,18 @@ import {
     makeBboxFromOWS,
     extractCrsFromURN,
     makeNumericEPSG,
+<<<<<<< HEAD
     getPolygonFromCircle
 } from '../CoordinatesUtils';
+=======
+    getPolygonFromCircle,
+    getProjections,
+    getExtentForProjection,
+    checkIfLayerFitsExtentForProjection,
+    getLonLatFromPoint
+} from '../CoordinatesUtils';
+import { setConfigProp, removeConfigProp } from '../ConfigUtils';
+>>>>>>> master
 import Proj4js from 'proj4';
 
 describe('CoordinatesUtils', () => {
@@ -821,5 +831,116 @@ describe('CoordinatesUtils', () => {
         expect(isNearlyEqual(polygon.geometry.coordinates[0][50][1], 15.053959221823476)).toBe(true);
         expect(isNearlyEqual(polygon.geometry.coordinates[0][20][0], 39.96717142640955)).toBe(true);
         expect(isNearlyEqual(polygon.geometry.coordinates[0][20][1], 14.956343723081114)).toBe(true);
+    });
+
+    it('getProjections returns an array projections', () => {
+        let projections = getProjections();
+        expect(Array.isArray(projections)).toBe(true);
+        // 2 items because there are no projectionDefs in config
+        expect(projections.length).toBe(2);
+
+        setConfigProp('projectionDefs',  [{code: "EPSG:900913", extent: [1, 2, 3, 5]}]);
+        projections = getProjections();
+        expect(projections.length).toBe(3);
+        removeConfigProp('projectionDefs');
+    });
+
+    it('getExtentForProjection find an Extent by projection code', () => {
+        const {extent} = getExtentForProjection("EPSG:3857");
+        expect(extent.length).toEqual(4);
+
+        // returns default incase projection doesnot exist
+        const res = getExtentForProjection("EPSG:900913");
+        expect(res.extent.length).toBe(4);
+        expect(res.extent).toEqual([-20026376.39, -20048966.10, 20026376.39, 20048966.10]);
+    });
+
+    it('checkIfLayerFitsExtentForProjection out of bounds layer with crs EPSG:4326', () => {
+        const geoJson = {
+            bbox: {crs: "EPSG:4326"},
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-150, 94]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
+        expect(canFitWithBounds).toBe(false);
+    });
+
+    it('checkIfLayerFitsExtentForProjection within bounds layer with crs EPSG:4326', () => {
+        const geoJson = {
+            bbox: {crs: "EPSG:4326"},
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-150, 90]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
+        expect(canFitWithBounds).toBe(true);
+    });
+
+    it('checkIfLayerFitsExtentForProjection out of bounds layer crs projection EPSG:3857', () => {
+        const geoJson = {
+            bbox: {crs: "EPSG:3857"},
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-20026376, 23026376]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
+        expect(canFitWithBounds).toBe(false);
+    });
+
+    it('checkIfLayerFitsExtentForProjection within bounds layer crs projection EPSG:3857', () => {
+        const geoJson = {
+            bbox: {crs: "EPSG:3857"},
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-20026376, 13026376]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        };
+        const canFitWithBounds = checkIfLayerFitsExtentForProjection({name: "test", ...geoJson});
+        expect(canFitWithBounds).toBe(true);
+    });
+    it('test getLonLatFromPoint', ()=> {
+        const [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: -80}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(-80);
+    });
+    it('test getLonLatFromPoint with lng > +-180', ()=> {
+        let [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: -280}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(80);
+        [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: 280}});
+        expect(lat).toBe(40);
+        expect(lon).toBe(-80);
     });
 });

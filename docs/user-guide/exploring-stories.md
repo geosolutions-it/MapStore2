@@ -51,4 +51,8 @@ The elements available in the top bar can be the following:
 
 The Story layout allows to navigate contents by scrolling up and down the Story page by using the mouse or the **Navigation bar**.
 
+<<<<<<< HEAD
 <img src="../img/exploring-stories/view-mode-nava.gif" class="ms-docimage" width="700px"/>
+=======
+<img src="../img/exploring-stories/view-mode-nava.gif" class="ms-docimage" width="700px"/>
+>>>>>>> master

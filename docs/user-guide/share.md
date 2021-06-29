@@ -1,7 +1,11 @@
 # Sharing Resources
 *******************
 
+<<<<<<< HEAD
 [MapStore](https://mapstore.geo-solutions.it/mapstore/#/)  provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
+=======
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
+>>>>>>> master
 
 * Directly from the MapStore [Homepage](home-page.md) by clicking on the Share button <img src="../img/button/share.jpg" class="ms-docbutton"/> present in the toolbar of each resource card
 
@@ -34,14 +38,30 @@ The **Social** section allows the user to share the resource on the most common 
 ## Embed
 
 The **Embed** section provides to the user the needed snippets, **embedded code** or the **MS APIs** (only available for *maps*) to embed MapStore in a third party web page.
+<<<<<<< HEAD
+=======
 
-<img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/>
+<img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/> 
 
+In addition, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides options to customize a bit the *embedded code*:
+
+* The user can configure **height** and **width** of the embedded resource by choosing `Small` (*600x500*), `Medium` (*800x600*), `Large` (*1000x800*) and `Custom` (it is possible to choose the desired size).
+
+<img src="../img/share/embed_maps_size.jpg" class="ms-docimage"  style="max-width:400px;"/>
+>>>>>>> master
+
+* For maps, the user can choose to show the [TOC](toc.md) in the embedded map by enabling the **Shown TOC** option
+
+<<<<<<< HEAD
 In addition, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides two options to customize a bit the *embedded code*:
 
 * For maps, the user can choose to show the [TOC](toc.md) in the embedded map by enabling the **Shown TOC** option
 
 <img src="../img/share/embed_maps.jpg" class="ms-docimage"  style="max-width:400px;"/>
+=======
+<img src="../img/share/embed_maps_toc.jpg" class="ms-docimage"  style="max-width:400px;"/> 
+
+>>>>>>> master
 
 * For dashboards, the user can show the [connections](connecting-widgets.md) between widgets on the embedded dashboard by enabling the **Show connections**
 

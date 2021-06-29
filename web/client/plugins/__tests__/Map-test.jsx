@@ -51,6 +51,7 @@ describe('Map Plugin', () => {
         const { Plugin } = getPluginForTest(MapPlugin, { map, maptype: {
             mapType: 'openlayers'
         } });
+
         ReactDOM.render(<Plugin
             pluginCfg={{ shouldLoadFont: false }}
             onLoadingMapPlugins={(loading, mapType) => {

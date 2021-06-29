@@ -7,21 +7,39 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+<<<<<<< HEAD
 const castArray = require('lodash').castArray;
+=======
+const castArray = require('lodash/castArray');
+>>>>>>> master
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
+ * This function takes one single object as first argument, containing all the configurations described below. For backward compatibility, if arguments list is longer then one, the function will get the arguments as the parameters described below in the following order (**the argument list usage has been deprecated and will be removed in the future**).
+ - bundles,
+ - themeEntries,
+ - paths,
+ - plugins = [],
+ - prod,
+ - publicPath,
+ - cssPrefix,
+ - prodPlugins = [],
+ - alias = {},
+ - proxy,
+ - devPlugins = []
  *
- * @param {object} bundles object that defines the javascript (or jsx) entry points and related bundles
+ * @param {object} config the object containing the various parameters
+ * @param {object} config.bundles object that defines the javascript (or jsx) entry points and related bundles
  * to be built (bundle name -> entry point path)
- * @param {object} themeEntries object that defines the css (or less) entry points and related bundles
+ * @param {object} config.themeEntries object that defines the css (or less) entry points and related bundles
  * to be built (bundle name -> entry point path)
- * @param {object} paths object with paths used by the configuration builder:
+ * @param {object} config.paths object with paths used by the configuration builder:
  *  - dist: path to the output folder for the bundles
  *  - base: root folder of the project
  *  - framework: root folder of the MapStore2 framework
  *  - code: root folder(s) for javascript / jsx code, can be an array with several folders (e.g. framework code and
  *    project code)
+<<<<<<< HEAD
  * @param {object} plugins plugin to be added
  * @param {boolean} prod flag for production / development mode (true = production)
  * @param {string} publicPath web public path for loading bundles (e.g. dist/)
@@ -29,14 +47,90 @@ const castArray = require('lodash').castArray;
  * @param {array} prodPlugins plugins to be used only in production mode
  * @param {object} alias aliases to be used by webpack to resolve paths (alias -> real path)
  * @param {object} proxy webpack-devserver custom proxy configuration object
+=======
+ * @param {object} config.plugins plugin to be added
+ * @param {boolean} config.prod flag for production / development mode (true = production)
+ * @param {string} config.publicPath web public path for loading bundles (e.g. dist/)
+ * @param {string} config.cssPrefix prefix to be appended on every generated css rule (e.g. ms2)
+ * @param {array} config.prodPlugins plugins to be used only in production mode
+ * @param {array} config.devPlugins plugins to be used only in development mode
+ * @param {object} config.alias aliases to be used by webpack to resolve paths (alias -> real path)
+ * @param {object} config.proxy webpack-devserver custom proxy configuration object
+ * @param {object} config.devServer webpack devserver configuration object, available only with object syntax
+ * @param {object} config.resolveModules webpack resolve configuration object, available only with object syntax
+ * @param {object} config.projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
+>>>>>>> master
  * @returns a webpack configuration object
+ * @example
+ * // It's possible to use a single object argument to pass the parameters.
+ * // this configuration is preferred and it will replace the previous arguments structure
+ * const buildConfig = require('./buildConfig');
+ * module.export = buildConfig({
+ *  bundles: {},
+ *  themeEntries: {},
+ *  paths: {
+ *      base: path.join(__dirname, ".."),
+ *      dist: path.join(__dirname, "..", "web", "client", "dist"),
+ *      framework: path.join(__dirname, "..", "web", "client"),
+ *      code: path.join(__dirname, "..", "web", "client")
+ *  },
+ *  plugins: [],
+ *  prod: false,
+ *  publicPath: "dist/"
+ * });
  */
+
+/**
+ * this function adds support for object argument in buildConfig
+ * but it keeps compatibility with the previous arguments structure
+ */
+<<<<<<< HEAD
 module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, cssPrefix, prodPlugins, alias = {}, proxy) => ({
     target: "web",
     entry: assign(!prod ? {
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
     } : {}, bundles, themeEntries),
+=======
+function mapArgumentsToObject(args, func) {
+    if (args.length === 1) {
+        return func(args[0]);
+    }
+    const [
+        bundles,
+        themeEntries,
+        paths,
+        plugins = [],
+        prod,
+        publicPath,
+        cssPrefix,
+        prodPlugins = [],
+        alias = {},
+        proxy,
+        devPlugins = []
+    ] = args;
+    return func({ bundles, themeEntries, paths, plugins, prod, publicPath, cssPrefix, prodPlugins, alias, proxy, devPlugins});
+}
+module.exports = (...args) => mapArgumentsToObject(args, ({
+    bundles,
+    themeEntries,
+    paths,
+    plugins = [],
+    prod,
+    publicPath,
+    cssPrefix,
+    prodPlugins = [],
+    devPlugins = [],
+    alias = {},
+    proxy,
+    // new optional only for single object argument
+    projectConfig = {},
+    devServer,
+    resolveModules
+}) => ({
+    target: "web",
+    entry: assign({}, bundles, themeEntries),
+>>>>>>> master
     mode: prod ? "production" : "development",
     optimization: {
         minimize: !!prod
@@ -45,7 +139,7 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
         path: paths.dist,
         publicPath,
         filename: "[name].js",
-        chunkFilename: prod ? "[name].[hash].chunk.js" : "[name].js"
+        chunkFilename: prod ? (paths.chunks || "") + "[name].[hash].chunk.js" : (paths.chunks || "") + "[name].js"
     },
     plugins: [
         new CopyWebpackPlugin([
@@ -68,6 +162,10 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
                 'NODE_ENV': prod ? '"production"' : '""'
             }
         }),
+<<<<<<< HEAD
+=======
+        new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
+>>>>>>> master
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
         }),
@@ -75,7 +173,11 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin()]
         .concat(castArray(plugins))
+<<<<<<< HEAD
         .concat(prod && prodPlugins || []),
+=======
+        .concat(prod ? prodPlugins : devPlugins),
+>>>>>>> master
     resolve: {
         fallback: {
             timers: false,
@@ -87,7 +189,8 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
             // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
             proj4: '@geosolutions/proj4',
             "react-joyride": '@geosolutions/react-joyride'
-        }, alias)
+        }, alias),
+        ...(resolveModules && { modules: resolveModules })
     },
     module: {
         noParse: [/html2canvas/],
@@ -101,9 +204,14 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
                 }, {
                     loader: 'postcss-loader',
                     options: {
-                        plugins: [
-                            require('postcss-prefix-selector')({ prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : []) })
-                        ]
+                        postcssOptions: {
+                            plugins: {
+                                "postcss-prefix-selector": {
+                                    prefix: cssPrefix || '.ms2',
+                                    exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
+                                }
+                            }
+                        }
                     }
                 }]
             },
@@ -122,14 +230,21 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
                 test: /themes[\\\/]?.+\.less$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    'css-loader', {
+                    'css-loader',
+                    {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: [
-                                require('postcss-prefix-selector')({ prefix: cssPrefix || '.ms2', exclude: ['.ms2', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : []) })
-                            ]
+                            postcssOptions: {
+                                plugins: {
+                                    "postcss-prefix-selector": {
+                                        prefix: cssPrefix || '.ms2',
+                                        exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
+                                    }
+                                }
+                            }
                         }
-                    }, 'less-loader'
+                    },
+                    'less-loader'
                 ]
             },
             {
@@ -183,35 +298,39 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
             loader: 'html-loader'
         }] : [])
     },
+<<<<<<< HEAD
     devServer: {
+=======
+    devServer: devServer || {
+>>>>>>> master
         publicPath: "/" + publicPath,
         proxy: proxy || {
             '/rest': {
-                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev.mapstore.geo-solutions.it"
+                    host: "dev-mapstore.geosolutionsgroup.com"
                 }
             },
             '/pdf': {
-                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev.mapstore.geo-solutions.it"
+                    host: "dev-mapstore.geosolutionsgroup.com"
                 }
             },
             '/mapstore/pdf': {
-                target: "https://dev.mapstore.geo-solutions.it",
+                target: "https://dev-mapstore.geosolutionsgroup.com",
                 secure: false,
                 headers: {
-                    host: "dev.mapstore.geo-solutions.it"
+                    host: "dev-mapstore.geosolutionsgroup.com"
                 }
             },
             '/proxy': {
-                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev.mapstore.geo-solutions.it"
+                    host: "dev-mapstore.geosolutionsgroup.com"
                 }
             },
             '/docs': {
@@ -222,4 +341,5 @@ module.exports = (bundles, themeEntries, paths, plugins = [], prod, publicPath, 
     },
 
     devtool: !prod ? 'eval' : undefined
-});
+}));
+

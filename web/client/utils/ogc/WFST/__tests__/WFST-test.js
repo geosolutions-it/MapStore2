@@ -75,7 +75,7 @@ describe('Test WFS-T request bodies generation', () => {
     it('WFS-T transaction with update (arg list)', () => {
         const {update, propertyChange, transaction} = requestBuilder(describePois);
         const result = transaction(
-            update(propertyChange("NAME", "newName"), fidFilter("ogc", "poi.7")),
+            update(propertyChange("NAME", "newName"), fidFilter("ogc", "poi.7"))
         );
         expect(result).toExist();
         expect(result).toEqual(expectedUpdate.replace(/[\n\r]/g, ''));

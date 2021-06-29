@@ -359,7 +359,7 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client/configs</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
@@ -536,7 +536,11 @@
                 <dependency>
                     <groupId>org.mapfish.print</groupId>
                     <artifactId>print-lib</artifactId>
+<<<<<<< HEAD
                     <version>geosolutions-2.0</version>
+=======
+                    <version>geosolutions-2.0-SNAPSHOT</version>
+>>>>>>> master
                 </dependency>
             </dependencies>
             </profile>

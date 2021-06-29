@@ -211,7 +211,7 @@ export const textSearchShowGFIEpic = (action$, store) =>
                     featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: getInfoFormat(layerObj, state), featureid: itemId } }, itemId),
                     showMapinfoMarker(),
                     zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item?.__SERVICE__?.options?.maxZoomLevel || 21),
-                    addMarker(item),
+                    addMarker(item)
                 ) :
                 Rx.Observable.empty();
         });

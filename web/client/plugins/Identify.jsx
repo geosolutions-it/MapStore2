@@ -46,6 +46,7 @@ import FeatureInfoFormatSelectorComp from '../components/misc/FeatureInfoFormatS
 import FeatureInfoTriggerSelectorComp from '../components/misc/FeatureInfoTriggerSelector';
 import epics from '../epics/identify';
 import mapInfo from '../reducers/mapInfo';
+import mapPopups from '../reducers/mapPopups';
 import { isEditingAllowedSelector } from '../selectors/featuregrid';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
@@ -62,7 +63,12 @@ import {
     responsesSelector,
     showEmptyMessageGFISelector,
     validResponsesSelector,
+<<<<<<< HEAD
     hoverEnabledSelector
+=======
+    hoverEnabledSelector,
+    mapInfoEnabledSelector
+>>>>>>> master
 } from '../selectors/mapInfo';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { isCesium, mapTypeSelector } from '../selectors/maptype';
@@ -73,7 +79,7 @@ import getToolButtons from './identify/toolButtons';
 import Message from './locale/Message';
 
 const selector = createStructuredSelector({
-    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
+    enabled: (state) => mapInfoEnabledSelector(state) || state.controls && state.controls.info && state.controls.info.enabled || false,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: requestsSelector,
@@ -269,7 +275,9 @@ const FeatureInfoTriggerSelector = connect((state) => ({
     trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click',
     hoverEnabled: hoverEnabledSelector(state)
 }), {
-    onSetMapTrigger: setMapTrigger
+    onSetMapTrigger: setMapTrigger,
+    onPurgeMapInfoResults: purgeMapInfoResults,
+    onHideMapinfoMarker: hideMapinfoMarker
 })(FeatureInfoTriggerSelectorComp);
 
 export default {
@@ -295,6 +303,10 @@ export default {
             position: 3
         }
     }),
+<<<<<<< HEAD
     reducers: { mapInfo },
+=======
+    reducers: { mapInfo, mapPopups },
+>>>>>>> master
     epics
 };

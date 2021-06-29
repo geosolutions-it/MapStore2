@@ -1,28 +1,27 @@
-div#mapstore-globalspinner {
-    display: inline-block;
-    margin-bottom: 0;
-    vertical-align: middle;
-    width: @square-btn-size !important;
-    height: @square-btn-size !important;
-    border: none !important;
-    box-shadow: none !important;
-}
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
-.ms2-loading {
-	background-color: @ms2-color-primary !important;
-	border-bottom: 2px solid @ms2-color-info !important;
-}
-
-.ms2-loading .sk-circle-wrapper .sk-circle:before {
-	background-color: @ms2-color-text-primary !important;
-}
-
-.mapstore-circle-loader(@border: 1.1em, @size: 10em, @color: #fff) {
+// **************
+// Theme
+// **************
+.mapstore-circle-loader-with-css-variables(
+    @border: 1.1em;
+    @size: 10em;
+    @color: @ms-theme-vars[loader-primary-contrast-color];
+    @color-fade: @ms-theme-vars[loader-primary-contrast-fade-color];
+) {
     text-indent: -9999em;
-    border-top: @border solid fade(@color, 20%);
-    border-right: @border solid fade(@color, 20%);
-    border-bottom: @border solid fade(@color, 20%);
-    border-left: @border solid @color;
+    border-width: @border;
+    border-style: solid;
+    .border-top-color-var(@color-fade);
+    .border-right-color-var(@color-fade);
+    .border-bottom-color-var(@color-fade);
+    .border-left-color-var(@color);
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
@@ -37,19 +36,44 @@ div#mapstore-globalspinner {
         height: @size;
     }
 }
-.mapstore-small-size-loader{
-	.mapstore-circle-loader(2px, 100%, @ms2-color-primary);
+
+#ms-components-theme(@theme-vars) {
+    .ms2-loading {
+        .background-color-var(@theme-vars[primary], true);
+        .border-bottom-color-var(@theme-vars[primary], true);
+    }
+    .ms2-loading .sk-circle-wrapper .sk-circle:before {
+        .background-color-var(@theme-vars[primary-contrast], true);
+    }
+
+    .mapstore-small-size-loader {
+        .mapstore-circle-loader-with-css-variables(2px, 100%, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+    }
+    .mapstore-medium-size-loader {
+        .mapstore-circle-loader-with-css-variables(6px, 100%, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+    }
+    .mapstore-full-size-loader {
+        .mapstore-circle-loader-with-css-variables(12px, 100%, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+    }
+    .mapstore-inline-loader {
+        margin: @padding-left-square-md;
+        .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+    }
 }
-.mapstore-medium-size-loader{
-	.mapstore-circle-loader(6px, 100%, @ms2-color-primary);
+
+// **************
+// Layout
+// **************
+div#mapstore-globalspinner {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+    width: @square-btn-size !important;
+    height: @square-btn-size !important;
+    border: none !important;
+    box-shadow: none !important;
 }
-.mapstore-full-size-loader{
-	.mapstore-circle-loader(12px, 100%, @ms2-color-primary);
-}
-.mapstore-inline-loader {
-    margin: @padding-left-square-md;
-    .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-primary);
-}
+
 @-webkit-keyframes mapstore-circle-load8 {
     0% {
         -webkit-transform: rotate(0deg);

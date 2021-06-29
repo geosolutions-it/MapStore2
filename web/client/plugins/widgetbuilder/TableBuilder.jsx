@@ -28,6 +28,7 @@ import { wizardStateToProps, wizardSelector} from './commons';
 import TableWizard from '../../components/widgets/builder/wizard/TableWizard';
 import BaseToolbar from '../../components/widgets/builder/wizard/table/Toolbar';
 import LayerSelector from './LayerSelector';
+import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
 
 const Builder = connect(
     wizardSelector,
@@ -78,6 +79,7 @@ const Toolbar = compose(
 const chooseLayerEnhancer = compose(
     connect(wizardSelector),
     viewportBuilderConnectMask,
+    catalogEditorEnhancer,
     branch(
         ({ layer } = {}) => !layer,
         renderComponent(chartLayerSelector(LayerSelector))

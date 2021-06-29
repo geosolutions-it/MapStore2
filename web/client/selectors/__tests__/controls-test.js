@@ -18,7 +18,8 @@ import {
     originalSettingsSelector,
     activeTabSettingsSelector,
     drawerEnabledControlSelector,
-    showCoordinateEditorSelector
+    showCoordinateEditorSelector,
+    shareSelector
 } from '../controls';
 
 const state = {
@@ -114,6 +115,11 @@ describe('Test controls selectors', () => {
     });
     it('test showCoordinateEditorSelector', () => {
         const retVal = showCoordinateEditorSelector({controls: {measure: {showCoordinateEditor: true}}});
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
+    });
+    it('test shareSelector', () => {
+        const retVal = shareSelector({controls: {share: {enabled: true}}});
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });

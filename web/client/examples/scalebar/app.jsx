@@ -24,7 +24,11 @@ var Debug = require('../../components/development/Debug');
 var mapConfig = require('../../reducers/map').default;
 var browser = require('../../reducers/browser').default;
 
+<<<<<<< HEAD
 var LMap = require('../../components/map/leaflet/Map');
+=======
+var LMap = require('../../components/map/leaflet/Map').default;
+>>>>>>> master
 var LLayer = require('../../components/map/leaflet/Layer').default;
 
 var {changeMapView, changeZoomLevel} = require('../../actions/map');

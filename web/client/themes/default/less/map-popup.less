@@ -1,13 +1,74 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms-popup-close-button {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .map-popup-ol {
+        >.ol-popup-content-wrapper {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+
+            >.ol-popup-content {
+                .background-color-var(@theme-vars[main-bg]);
+            }
+        }
+    }
+
+    .map-popup-ol:after {
+        .border-top-color-var(@theme-vars[main-bg]);
+    }
+
+    .map-popup-ol:before {
+        .border-top-color-var(@theme-vars[main-border-color]);
+    }
+
+    .ol-popup-closer {
+        .ms-popup-close-button();
+    }
+
+    .ms-leaflet-popup {
+        .leaflet-popup-content {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        .leaflet-popup-content-wrapper,
+        .leaflet-popup-tip {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        a.leaflet-popup-close-button {
+            .ms-popup-close-button();
+
+            &:before {
+                .color-var(@theme-vars[main-color]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms-popup-close-button {
     text-decoration: none;
     position: absolute;
     top: 0;
     right: 0;
     transform: translate(50%, -50%);
-    background: @ms2-color-background;
     padding: 0;
-    color: #078aa3;
     font-size: 12px;
     align-items: center;
     justify-content: center;
@@ -27,8 +88,6 @@
 
     > .ol-popup-content-wrapper {
         padding: 0;
-        background: @ms2-color-background;
-        color: @ms2-color-text;
         .shadow-far;
         border-radius: 0;
 
@@ -36,7 +95,6 @@
             overflow: auto;
             position: relative;
             display: flex;
-            background-color: @ms2-color-background;
             margin: 0;
         }
     }
@@ -58,14 +116,12 @@
 }
 
 .map-popup-ol:after {
-    border-top-color: @ms2-color-background;
     border-width: 13px;
     left: 50%;
     margin-left: -13px;
 }
 
 .map-popup-ol:before {
-    border-top-color: @ms2-color-shade-lighter;
     border-width: 13px;
     left: 50%;
     margin-left: -13px;
@@ -95,7 +151,6 @@
         overflow: auto;
         position: relative; 
         display: flex;
-        background-color: @ms2-color-background;
         margin: 0;
     }
 
@@ -112,7 +167,6 @@
             left: 50%;
             transform: translateX(-50%);
             display: block;
-            color: @ms2-color-primary;
             .glyphicon-1-close-content();
         }
     }

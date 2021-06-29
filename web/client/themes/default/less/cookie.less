@@ -1,3 +1,31 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+
+    .mapstore-cookie-panel,
+    .cookie-body-container {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .cookie-title,
+    .cookie-header {
+        .color-var(@theme-vars[primary-contrast]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .mapstore-cookie-panel {
     height: 100%;
     overflow: auto;
@@ -7,7 +35,6 @@
     width: auto;
     box-shadow: 0 0 5px 1px #5e5e5e;
     z-index: 9998;
-    background-color: white;
     box-sizing: border-box;
     top: auto;
     bottom: 0px;
@@ -87,7 +114,6 @@
     transition: 0.3s ease-in-out;
     transform: translate3d(0px, 0px, 0px);
     will-change: transform, opacity;
-    background-color: white;
     left: 0px;
     text-align: justify;
 }
@@ -97,7 +123,6 @@
     margin: 0px 0px 5px;
     padding: 0px;
     font-weight: bold;
-    color: @ms2-color-primary;
 }
 
 .cookie-action, .cookie-message {
@@ -114,7 +139,6 @@
 }
 
 .cookie-header {
-    color: @ms2-color-primary;
     height: 44px;
 }
 

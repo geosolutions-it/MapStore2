@@ -23,6 +23,10 @@ setConfigProp('themePrefix', '__PROJECTNAME__');
  *
  * setLocalConfigurationFile('localConfig.json');
  */
+<<<<<<< HEAD
 setLocalConfigurationFile('MapStore2/web/client/localConfig.json');
+=======
+setLocalConfigurationFile('MapStore2/web/client/configs/localConfig.json');
+>>>>>>> master
 
 import('@mapstore/product/embedded');

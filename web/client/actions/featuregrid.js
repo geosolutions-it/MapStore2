@@ -52,6 +52,10 @@ export const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
 export const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
 export const UPDATE_EDITORS_OPTIONS = 'FEATUREGRID:UPDATE_EDITORS_OPTIONS';
 export const LAUNCH_UPDATE_FILTER_FUNC = 'FEATUREGRID:LAUNCH_UPDATE_FILTER_FUNC';
+<<<<<<< HEAD
+=======
+export const SET_SYNC_TOOL = 'FEATUREGRID:SET_SYNC_TOOL';
+>>>>>>> master
 
 export const MODES = {
     EDIT: "EDIT",
@@ -380,3 +384,15 @@ export const launchUpdateFilterFunc = (updateFilterAction) => ({
     type: LAUNCH_UPDATE_FILTER_FUNC,
     updateFilterAction
 });
+<<<<<<< HEAD
+=======
+
+/**
+ * Enables/Disables wms sync tool for feature grid.
+ * @param {boolean} syncWmsFilter of wms sync tool to set
+ */
+export const setSyncTool = (syncWmsFilter) => ({
+    type: SET_SYNC_TOOL,
+    syncWmsFilter
+});
+>>>>>>> master

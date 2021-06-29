@@ -20,6 +20,85 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+<<<<<<< HEAD
+=======
+
+## Migration from 2021.01.02 to 2021.02.00
+
+### Theme updates and CSS variables
+
+The theme of MapStore has been updated to support CSS variables for some aspects of the style, in particular colors and font families.
+The `web/client/themes/default/variables.less` file contains all the available variables described under the `@ms-theme-vars` ruleset.
+It is suggested to : 
+
+- update the lesscss variables in the projects because the variables starting with `@ms2-` will be deprecated soon:
+
+`@ms2-color-text` -> `@ms-main-color`
+`@ms2-color-background` -> `@ms-main-bg`
+`@ms2-color-shade-lighter` -> `@ms-main-border-color`
+
+`@ms2-color-code` -> `@ms-code-color`
+
+`@ms2-color-text-placeholder` -> `@ms-placeholder-color`
+
+`@ms2-color-disabled` -> `@ms-disabled-bg`
+`@ms2-color-text-disabled` -> `@ms-disabled-color`
+
+`@ms2-color-text-primary` -> `@ms-primary-contrast`
+
+`@ms2-color-primary` -> `@ms-primary`
+`@ms2-color-info` -> `@ms-info`
+`@ms2-color-success` -> `@ms-success`
+`@ms2-color-warning` -> `@ms-warning`
+`@ms2-color-danger` -> `@ms-danger`
+
+- The font family has been update to `Noto Sans` so all the html need to be updated removing the previous font link with:
+
+```html
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+```
+
+- if you are importing `react-select` or `react-widgets` inline css/less in your own project, you have to remove the import. Now the stile of these libraries is managed at project level
+
+### Project system
+
+During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon.
+
+**The following key files have been moved to the new `configs` folder:**
+We suggest you to move them aswell from root to configs folder
+
+- localConfig.json
+- new.json
+- pluginsConfig.json
+- config.json
+- simple.json
+
+Back-end has been reorganized
+In particular:
+- all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
+- `mapstore-backend` has been renamed into `mapstore-services`.
+
+Check the changes in pom.xml to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
+
+- **pom.xml**
+- **java/web/pom.xml**
+
+### Configurations
+ - Embedded now uses popup as default. Align localConfig.json `plugins --> embedded --> Identify` with the latest one:
+```json
+{
+    "name": "Identify",
+    "cfg": {
+        "showInMapPopup":true,
+        "viewerOptions": {
+            "container": "{context.ReactSwipe}"
+        }
+    }
+}
+```
+
+>>>>>>> master
 ## Migration from 2021.01.01 to 2021.01.03
 
 Generally speaking this is not properly a breaking change, but more a fix to apply to your installations. Certificate for 'cesiumjs.org' has expired at 2021.05.05, so to continue using CesiumJS with MapStore
@@ -43,7 +122,11 @@ import {
 // example for additional translations in the project folder
 // setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './translations']);
 setConfigProp('translationsPath', './MapStore2/web/client/translations');
+<<<<<<< HEAD
 // __PROJECTNAME__ is the name of the project used in the creation process 
+=======
+// __PROJECTNAME__ is the name of the project used in the creation process
+>>>>>>> master
 setConfigProp('themePrefix', '__PROJECTNAME__');
 
 // Use a custom plugins configuration file
@@ -56,7 +139,11 @@ import('@mapstore/product/embedded');
 ```
 2 - update the path of the embedded entry inside the `webpack.config.js` and `prod-webpack.config.js` files with:
 ```js
+<<<<<<< HEAD
 // __PROJECTNAME__ is the name of the project used in the creation process 
+=======
+// __PROJECTNAME__ is the name of the project used in the creation process
+>>>>>>> master
 '__PROJECTNAME__-embedded': path.join(__dirname, "js", "embedded"),
 ```
 ### Locate plugin configuration
@@ -425,8 +512,13 @@ For more details see [this](https://github.com/geosolutions-it/MapStore2/commit/
 
 new files have been added:
 
+<<<<<<< HEAD
 -  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml` 
 -  `web/src/main/resources/mapstore.properties` 
+=======
+-  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml`
+-  `web/src/main/resources/mapstore.properties`
+>>>>>>> master
 
 some files has been changed:
 

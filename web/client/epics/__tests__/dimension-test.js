@@ -15,7 +15,7 @@ import { testEpic } from './epicTestUtils';
 import { updateLayerDimensionDataOnMapLoad } from '../dimension';
 import { configureMap } from '../../actions/config';
 import {
-    SELECT_LAYER,
+    INIT_SELECT_LAYER,
     AUTOSELECT
 } from '../../actions/timeline';
 import {
@@ -85,7 +85,7 @@ describe('dimension epics', () => {
         mockAxios.onGet('/sample/url').reply(200, domainsTestResponse);
         testEpic(updateLayerDimensionDataOnMapLoad, 5, startActions, actions => {
             expect(actions.length).toBe(5);
-            expect(actions[0].type).toBe(SELECT_LAYER);
+            expect(actions[0].type).toBe(INIT_SELECT_LAYER);
             expect(actions[0].layerId).toBe(testConfig.timelineData.selectedLayer);
             expect(actions[1].type).toBe(SET_CURRENT_TIME);
             expect(actions[1].time).toBe(testConfig.dimensionData.currentTime);

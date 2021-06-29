@@ -103,6 +103,18 @@ class StyleEditorPanel extends React.Component {
  * @prop {array} cfg.styleService.formats supported formats, could be one of [ 'sld' ] or [ 'sld', 'css' ]
  * @prop {array} cfg.editingAllowedRoles all roles with edit permission eg: [ 'ADMIN' ], if null all roles have edit permission
  * @prop {array} cfg.enableSetDefaultStyle enable set default style functionality
+ * @prop {array} cfg.editorConfig contains editor configurations
+ * @prop {array} cfg.editorConfig.classification configuration of the classification symbolizer
+ * For example adding default editor configuration to the classification
+ * ```
+ * "cfg": {
+ *    "editorConfig" : {
+ *       "classification": {
+ *           "intervalsForUnique": 100
+ *       },
+ *    }
+ *  }
+ * ```
  * @memberof plugins
  * @class StyleEditor
  */

@@ -55,8 +55,16 @@ Through the second section of the layer settings panel it is possible to change 
 
 In particular, the user is allowed to:
 
+<<<<<<< HEAD
 * Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif` 
 
+=======
+* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` and `gif` 
+
+!!! note
+    The list of available format is the same of the related [catalog source](catalog.md#catalog-types). Therefore, for WMS services, the updated list of formats supported by the WMS server is used.
+    
+>>>>>>> master
 * Set the size of layer tiles: choosing between `256` or `512`
 
 * Set the opacity value of the layer (in %)
@@ -195,7 +203,11 @@ The Text rule is used to style features as text labels. Text labels are position
 
 <img src="../img/layer-settings/text_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
+<<<<<<< HEAD
 The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered text (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Halo color` and Halo weight. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
+=======
+The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered text (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
+>>>>>>> master
 
 <img src="../img/layer-settings/ex_text_style.gif" class="ms-docimage">
 

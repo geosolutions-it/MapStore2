@@ -52,7 +52,7 @@ const Builder = compose(
     renameProps({
         editorData: "data",
         onEditorChange: "onChange"
-    }),
+    })
 
 )(LegendWizard);
 

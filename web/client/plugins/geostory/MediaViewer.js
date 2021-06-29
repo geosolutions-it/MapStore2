@@ -44,7 +44,7 @@ const image = branch(
 const map = compose(
     branch(
         ({ resourceId }) => resourceId,
-        connectMap,
+        connectMap
     ),
     autoMapType,
     withScalesDenominators,

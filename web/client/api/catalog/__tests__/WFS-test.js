@@ -32,7 +32,7 @@ describe('WFS (Abstraction) API', () => {
     });
     it('WFS single record', (done) => {
         mockAxios.onGet().reply(200, SINGLE_LAYER_CAPABILITIES);
-        textSearch('someurl', 1, 4, "",).then((result) => {
+        textSearch('someurl', 1, 4, "").then((result) => {
             try {
                 expect(result.numberOfRecordsReturned).toBe(1);
                 expect(result.numberOfRecordsMatched).toBe(1);

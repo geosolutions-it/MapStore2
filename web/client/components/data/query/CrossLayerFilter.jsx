@@ -39,7 +39,8 @@ export default ({
     setQueryCollectionParameter = () => {},
     addCrossLayerFilterField = () => {},
     updateCrossLayerFilterField = () => {},
-    removeCrossLayerFilterField = () => {}
+    removeCrossLayerFilterField = () => {},
+    toggleMenu = () => {}
 } = {}) => {
     const {typeName, geometryName, filterFields, groupFields = [{
         id: 1,
@@ -115,7 +116,8 @@ export default ({
             ? (<Row className="filter-field-fixed-row">
                 <Col xs={12}>
                     <GroupField
-                        autocompleteEnabled={false /* TODO make it work with stream enhancer */}
+                        dropUp
+                        autocompleteEnabled
                         withContainer={false}
                         attributes={attributes}
                         groupLevels={-1}
@@ -124,7 +126,8 @@ export default ({
                             onUpdateLogicCombo: updateLogicCombo,
                             onAddFilterField: addCrossLayerFilterField,
                             onUpdateFilterField: updateCrossLayerFilterField,
-                            onRemoveFilterField: removeCrossLayerFilterField
+                            onRemoveFilterField: removeCrossLayerFilterField,
+                            toggleMenu: toggleMenu
                         }}
                         groupFields={groupFields} filterField/>
                 </Col>

@@ -1,3 +1,79 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .msSideGrid {
+        .ms-drag-over {
+            border: 1px dashed @ms-primary;
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+
+    .mapstore-side-card {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+
+        .mapstore-side-card-info {
+            .mapstore-side-card-desc {
+                border-bottom: 1px solid @ms-main-border-color;
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+
+        &.selected {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+
+            .mapstore-side-glyph {
+                .color-var(@theme-vars[primary]);
+                .background-color-var(@theme-vars[primary-contrast]);
+            }
+
+            .mapstore-side-card-tool {
+                >.glyphicon {
+                    .color-var(@theme-vars[primary-contrast]);
+                }
+            }
+        }
+
+        &.ms-dragging {
+            border: 1px dashed @ms-main-border-color;
+            .border-color-var(@theme-vars[main-border-color]);
+            .background-color-var(@theme-vars[main-bg]);
+
+            .ms-head {
+                .background-color-var(@theme-vars[main-bg]);
+            }
+        }
+    }
+
+    .ms-square-card {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+
+        .ms-preview {
+            border: 1px solid @ms-main-border-color;
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+
+        &.ms-selected {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .msSideGrid {
     margin: 8px 16px;
     width: ~"calc(100% - 32px)";
@@ -6,8 +82,8 @@
         margin-top: 8px;
         padding: 4px;
         box-sizing: border-box;
-        border: 1px dashed @ms2-color-primary;
-        background-color: @ms2-color-background;
+        border-width: 1px;
+        border-style: dashed;
         &.ms-sm {
             height: @square-btn-size;
         }
@@ -36,8 +112,6 @@
     display: flex;
     transition: all 0.3s;
     flex-direction: column;
-    color: @ms2-color-text;
-    background: @ms2-color-background;
     .ms-head {
         display: flex;
         height: @square-btn-size * 2;
@@ -115,7 +189,8 @@
             border-bottom: none;
             font-size: @font-size-small;
             margin-bottom: 10px;
-            border-bottom: 1px solid @ms2-color-shade-lighter;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
             display: flex;
             span div {
                 text-overflow: ellipsis;
@@ -146,21 +221,6 @@
         flex-direction: column;
     }
 
-    &.selected {
-        background-color: @ms2-color-primary;
-        color: @ms2-color-text-primary;
-        .shadow-far;
-        .mapstore-side-glyph {
-            color: @ms2-color-primary;
-            background-color: @ms2-color-text-primary;
-        }
-        .mapstore-side-card-tool {
-            > .glyphicon {
-                color: @ms2-color-text-primary;
-            }
-        }
-
-    }
     &:hover {
         cursor: pointer;
         .shadow-far;
@@ -200,11 +260,10 @@
 
     &.ms-dragging {
         box-sizing: border-box;
-        border: 1px dashed @ms2-color-shade-lighter;
-        background-color: @ms2-color-background;
+        border-width: 1px;
+        border-style: dashed;
         .shadow-soft;
         .ms-head {
-            background-color: @ms2-color-background;
             > * {
                 display: none;
             }
@@ -241,22 +300,19 @@
     padding: 4px;
     margin-right: 1%;
     float: left;
-    background-color: @ms2-color-background;
-    color: @ms2-color-text;
     text-align: center;
     transition: all 0.3s;
     .shadow-soft;
     .ms-preview {
         font-size: 0;
-        border: 1px solid @ms2-color-shade-lighter;
+        border-width: 1px;
+        border-style: solid;
     }
     &:hover {
         .shadow-far;
         cursor: pointer;
     }
     &.ms-selected {
-        background-color: @ms2-color-primary;
-        color: @ms2-color-text-primary;
         .shadow-far;
     }
     &.ms-disabled {

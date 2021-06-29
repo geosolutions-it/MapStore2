@@ -8,6 +8,9 @@
 
 import property from './property';
 import omit from 'lodash/omit';
+import includes from 'lodash/includes';
+import isObject from 'lodash/isObject';
+import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const getBlocks = (/* config = {} */) => {
     const symbolizerBlock = {
@@ -44,7 +47,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.rotation'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Mark',
                 wellKnownName: 'Circle',
                 color: '#dddddd',
@@ -66,6 +69,19 @@ const getBlocks = (/* config = {} */) => {
                 image: property.image({
                     label: 'styleeditor.image',
                     key: 'image'
+<<<<<<< HEAD
+=======
+                }),
+                format: property.select({
+                    label: 'styleeditor.format',
+                    key: 'format',
+                    isVisible: (value, { image } = {}, format) => {
+                        return format !== 'css'
+                        && !isObject(image)
+                        && !['png', 'jpg', 'svg', 'gif', 'jpeg'].includes(image.split('.').pop());
+                    },
+                    getOptions: () => SUPPORTED_MIME_TYPES
+>>>>>>> master
                 }),
                 opacity: property.opacity({
                     label: 'styleeditor.opacity'
@@ -78,7 +94,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.rotation'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Icon',
                 image: '',
                 opacity: 1,
@@ -128,7 +144,7 @@ const getBlocks = (/* config = {} */) => {
                     key: 'join'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Line',
                 color: '#777777',
                 width: 1,
@@ -174,7 +190,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.outlineWidth'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Fill',
                 color: '#dddddd',
                 fillOpacity: 1,
@@ -253,9 +269,8 @@ const getBlocks = (/* config = {} */) => {
                     axis: 'y'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Text',
-                label: 'Label',
                 color: '#333333',
                 size: 14,
                 fontStyle: 'normal',
@@ -277,7 +292,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.opacity'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Raster',
                 opacity: 1,
                 contrastEnhancement: {}
@@ -321,16 +336,20 @@ const getBlocks = (/* config = {} */) => {
                     method: property.select({
                         key: 'method',
                         label: 'styleeditor.method',
-                        getOptions: ({ methods, method }) => {
+                        isDisabled: (value, properties, {attributes})=>
+                            attributes?.filter(({label}) => label === properties?.attribute)?.[0]?.type === 'string'
+                            && properties?.method !== 'customInterval',
+                        getOptions: ({ methods, method, methodEdit }) => {
                             const options = methods?.map((value) => ({
                                 labelId: 'styleeditor.' + value,
                                 value
                             })) || [];
                             return [
-                                ...(method === 'customInterval'
+                                ...(method === "customInterval"
                                     ? [
                                         {
-                                            labelId: 'styleeditor.' + method,
+                                            labelId: "styleeditor." + methodEdit,
+                                            glyphId: 'edit',
                                             value: method
                                         }
                                     ]
@@ -340,7 +359,9 @@ const getBlocks = (/* config = {} */) => {
                         }
                     }),
                     intervals: property.intervals({
-                        label: 'styleeditor.intervals'
+                        label: 'styleeditor.intervals',
+                        isDisabled: (value, properties) =>
+                            includes(['customInterval', 'uniqueInterval'], properties?.method)
                     })
                 },
                 (symbolizerKind) => {
@@ -383,7 +404,7 @@ const getBlocks = (/* config = {} */) => {
                     })
                 }
             ],
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Classification',
                 classification: [],
                 intervals: 5,
@@ -430,7 +451,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.intervals'
                 })
             }],
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Raster',
                 opacity: 1,
                 classification: [],

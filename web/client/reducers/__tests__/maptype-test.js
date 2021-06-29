@@ -9,6 +9,10 @@ import expect from 'expect';
 
 import maptype from '../maptype';
 import { changeMapType, updateLast2dMapType } from '../../actions/maptype';
+<<<<<<< HEAD
+=======
+import { mapPluginLoad } from '../../actions/map';
+>>>>>>> master
 
 describe('Test the maptype reducer', () => {
     it('set a maptype', () => {
@@ -27,4 +31,13 @@ describe('Test the maptype reducer', () => {
         expect(state4.last2dMapType).toBe('openlayers');
 
     });
+<<<<<<< HEAD
+=======
+    it('check to store last 2d map type', () => {
+        let state = maptype(undefined, mapPluginLoad(false, "leaflet", true, "errorMap"));
+        expect(state.loaded).toEqual({"leaflet": true});
+        state = maptype({loaded: {"leaflet": false}}, mapPluginLoad(false, "openlayers", true, "errorMap"));
+        expect(state.loaded).toEqual({"leaflet": false, "openlayers": true});
+    });
+>>>>>>> master
 });

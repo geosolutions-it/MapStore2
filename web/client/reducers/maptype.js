@@ -7,6 +7,11 @@
  */
 
 import { MAP_TYPE_CHANGED, UPDATE_LAST_2D_MAPTYPE } from '../actions/maptype';
+<<<<<<< HEAD
+=======
+import { MAP_PLUGIN_LOAD } from '../actions/map';
+
+>>>>>>> master
 
 /**
  * stores state for the mapType to use (typically one of leaflet, openlayers, cesium... )
@@ -39,6 +44,17 @@ function maptype(state = { mapType: "leaflet" }, action) {
             };
         }
         return state;
+<<<<<<< HEAD
+=======
+    case MAP_PLUGIN_LOAD:
+        return {
+            ...state,
+            loaded: {
+                ...state.loaded,
+                [action.mapType]: action.loaded
+            }
+        };
+>>>>>>> master
     default:
         return state;
     }

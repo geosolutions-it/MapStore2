@@ -27,7 +27,13 @@ import {
     overrideParamsSelector,
     mapTriggerSelector,
     hoverEnabledSelector,
+<<<<<<< HEAD
     currentFeatureSelector
+=======
+    currentFeatureSelector,
+    mapInfoEnabledSelector,
+    mapInfoDisabledSelector
+>>>>>>> master
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -376,4 +382,17 @@ describe('Test mapinfo selectors', () => {
         expect(feature).toBeTruthy();
         expect(feature.id).toBe('poi.4');
     });
+<<<<<<< HEAD
+=======
+    it('test mapInfoEnabledSelector ', () => {
+        const state = { mapInfo: { enabled: true}};
+        const mapInfoEnabled = mapInfoEnabledSelector(state);
+        expect(mapInfoEnabled).toBeTruthy();
+    });
+    it('test mapInfoDisabledSelector ', () => {
+        const state = { mapInfo: { enabled: true}};
+        const mapInfoEnabled = mapInfoDisabledSelector(state);
+        expect(mapInfoEnabled).toBeFalsy();
+    });
+>>>>>>> master
 });

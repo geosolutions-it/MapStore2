@@ -16,7 +16,12 @@ import {
     dashboardResource,
     isDashboardLoading,
     getDashboardSaveErrors,
-    buttonCanEdit
+    buttonCanEdit,
+    dashboardServicesSelector,
+    selectedDashboardServiceSelector,
+    dashboardCatalogModeSelector,
+    dashboardIsNewServiceSelector,
+    dashboardSaveServiceSelector
 } from '../dashboard';
 
 describe('dashboard selectors', () => {
@@ -88,4 +93,27 @@ describe('dashboard selectors', () => {
             }
         })).toBe(false);
     });
+
+    it("test dashboardServicesSelector", () => {
+        const services = {test: {name: 'test'}};
+        expect(dashboardServicesSelector({dashboard: {services}})).toBe(services);
+    });
+
+    it("test selectedDashboardServiceSelector", () => {
+        const selectedService = {name: 'test'};
+        expect(selectedDashboardServiceSelector({dashboard: {selectedService}})).toBe(selectedService);
+    });
+
+    it("test dashboardCatalogModeSelector", () => {
+        expect(dashboardCatalogModeSelector({dashboard: {mode: "edit"}})).toBe("edit");
+    });
+
+    it("test dashboardIsNewServiceSelector", () => {
+        expect(dashboardIsNewServiceSelector({dashboard: {isNew: true}})).toBe(true);
+    });
+
+    it("test dashboardSaveServiceSelector", () => {
+        expect(dashboardSaveServiceSelector({dashboard: {saveServiceLoading: true}})).toBe(true);
+    });
+
 });

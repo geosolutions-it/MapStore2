@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var Cesium = require('../../../../libs/cesium');
+import Layers from '../../../../utils/cesium/Layers';
+import Cesium from '../../../../libs/cesium';
 
-const {isEqual} = require('lodash');
-const assign = require('object-assign');
+import {isEqual} from 'lodash';
+import assign from 'object-assign';
 
 Layers.registerType('marker', {
     create: (options, map) => {

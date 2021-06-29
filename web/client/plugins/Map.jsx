@@ -15,7 +15,7 @@ import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
 import ConfigUtils from '../utils/ConfigUtils';
-import { errorLoadingFont, setMapResolutions } from '../actions/map';
+import { errorLoadingFont, setMapResolutions, mapPluginLoad } from '../actions/map';
 import { isString } from 'lodash';
 import selector from './map/selector';
 import mapReducer from "../reducers/map";
@@ -28,6 +28,10 @@ import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
 import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
+<<<<<<< HEAD
+=======
+import { createFeatureFilter } from '../utils/FilterUtils';
+>>>>>>> master
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -213,7 +217,8 @@ class MapPlugin extends React.Component {
         localizedLayerStylesName: PropTypes.string,
         currentLocaleLanguage: PropTypes.string,
         items: PropTypes.array,
-        onLoadingMapPlugins: PropTypes.func
+        onLoadingMapPlugins: PropTypes.func,
+        onMapTypeLoaded: PropTypes.func
     };
 
     static defaultProps = {
@@ -252,7 +257,8 @@ class MapPlugin extends React.Component {
         onFontError: () => {},
         onResolutionsChange: () => {},
         items: [],
-        onLoadingMapPlugins: () => {}
+        onLoadingMapPlugins: () => {},
+        onMapTypeLoaded: () => {}
     };
     state = {
         canRender: true
@@ -348,7 +354,7 @@ class MapPlugin extends React.Component {
     renderLayerContent = (layer, projection) => {
         const plugins = this.state.plugins;
         if (layer.features && layer.type === "vector") {
-            return layer.features.map( (feature) => {
+            return layer.features.filter(createFeatureFilter(layer.filterObj)).map( (feature) => {
                 return (
                     <plugins.Feature
                         key={feature.id}
@@ -436,6 +442,10 @@ class MapPlugin extends React.Component {
             if (plugins.mapType === this.currentMapType) {
                 this.setState({plugins});
                 props.onLoadingMapPlugins(false, props.mapType);
+<<<<<<< HEAD
+=======
+                props.onMapTypeLoaded(true, props.mapType);
+>>>>>>> master
             }
         });
     };
@@ -444,7 +454,12 @@ class MapPlugin extends React.Component {
 export default createPlugin('Map', {
     component: connect(selector, {
         onFontError: errorLoadingFont,
+<<<<<<< HEAD
         onResolutionsChange: setMapResolutions
+=======
+        onResolutionsChange: setMapResolutions,
+        onMapTypeLoaded: mapPluginLoad
+>>>>>>> master
     })(withScalesDenominators(MapPlugin)),
     reducers: {
         map: mapReducer,
