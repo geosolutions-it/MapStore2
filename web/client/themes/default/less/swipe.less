@@ -1,16 +1,40 @@
-/*
-* Copyright 2020, GeoSolutions Sas.
-* All rights reserved.
-*
-* This source code is licensed under the BSD-style license found in the
-* LICENSE file in the root directory of this source tree.
-*/
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .mapstore-swipe-slider {
+        .background-color-var(@theme-vars[primary]);
+
+        .ms-vertical-swipe-slider-arrows {
+            .color-var(@theme-vars[primary-contrast]);
+        }
+
+        .ms-horizontal-swipe-slider-arrows {
+            .color-var(@theme-vars[primary-contrast]);
+        }
+
+        .ms-slider-arrows {
+            .color-var(@theme-vars[primary]);
+            .background-color-var(@theme-vars[primary-contrast]);
+            .border-color-var(@theme-vars[primary-contrast]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .mapstore-swipe-slider {
     position: absolute;
     z-index: 100;
-    background-color: @ms2-color-primary;
-
     .ms-vertical-swipe-slider-arrows {
         position: absolute;
         z-index: 99;
@@ -22,7 +46,6 @@
         justify-content: space-between;
         padding: 0 2px;
         align-items: center;
-        color: white;
     }
 
     .ms-horizontal-swipe-slider-arrows {
@@ -37,16 +60,14 @@
         justify-content: space-between;
         padding: 2px 0;
         align-items: center;
-        color: white;
     }
 
     .ms-slider-arrows {
         height: @square-btn-medium-size;
         width: @square-btn-medium-size;
         padding: 0;
-        color: @ms2-color-primary;
-        background-color: #ffffff;
-        border: 1px solid @ms2-color-primary;
+        border-width: 1px;
+        border-style: solid;
         display: flex;
         justify-content: center;
         align-items: center;

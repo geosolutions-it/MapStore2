@@ -1,3 +1,41 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .mapstore-switch-btn {
+        .m-slider {
+            .background-color-var(@theme-vars[primary]);
+
+            &:before {
+                .background-color-var(@theme-vars[primary-contrast]);
+            }
+        }
+
+        input {
+            &:checked {
+                +.m-slider {
+                    .background-color-var(@theme-vars[primary]);
+                }
+            }
+
+            &:disabled+.m-slider {
+                .background-color-var(@theme-vars[main-variant-bg]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .mapstore-switch-panel {
     .panel {
         margin: 0;
@@ -30,7 +68,6 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color:  @ms2-color-primary;
         opacity: 0.4;
         -webkit-transition: 0.4s;
         transition: 0.4s;
@@ -42,7 +79,6 @@
             width: @square-btn-small-size - 8px;
             left: 4px;
             bottom: 4px;
-            background-color: @ms2-color-text-primary;
             -webkit-transition: 0.4s;
             transition: 0.4s;
 
@@ -54,7 +90,6 @@
 
         &:checked {
             + .m-slider {
-                background-color:  @ms2-color-primary;
                 opacity: 1.0;
                 &:before {
                     transform: translateX(@square-btn-small-size - 8px);

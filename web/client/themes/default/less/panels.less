@@ -1,3 +1,49 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms-side-panel {
+        .ms-header {
+            .background-color-var(@theme-vars[main-bg]);
+
+            .row {
+                &:first-child {
+                    .color-var(@theme-vars[main-color]);
+                    .background-color-var(@theme-vars[main-bg]);
+
+                    .col-xs-8 {
+                        .color-var(@theme-vars[main-color]);
+                    }
+                }
+            }
+
+            &.ms-primary {
+                .row {
+                    &:first-child {
+                        .color-var(@theme-vars[primary-contrast]);
+                        .background-color-var(@theme-vars[primary]);
+
+                        .col-xs-8 {
+                            .color-var(@theme-vars[primary-contrast]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms-side-panel {
     /* needed to set right position when embedded */
     &.ms-absolute-dock {
@@ -23,7 +69,6 @@
     }
     .ms-header {
         z-index: 10;
-        background-color: @ms2-color-background;
         .shadow-soft;
         .btn {
             .no-border;
@@ -70,8 +115,6 @@
             }
             &:first-child {
                 display: flex;
-                color: @ms2-color-text;
-                background-color: @ms2-color-background;
                 & > * {
                     padding: 0;
                     width: auto;
@@ -80,7 +123,6 @@
                     flex: 1;
                     text-align: center;
                     align-self: center;
-                    color: @ms2-color-text;
                 }
             }
         }
@@ -88,45 +130,8 @@
             > li {
                 display: table-cell;
                 width: 1%;
-
                 > a {
                     margin-bottom: 0;
-                    border-bottom: 1px solid @nav-tabs-justified-link-border-color;
-                    border-radius: @border-radius-base @border-radius-base 0 0;
-                }
-
-                &:first-child {
-                    &.active > a,
-                    &.active > a:hover,
-                    &.active > a:focus {
-                        border-left-color: @nav-tabs-justified-active-link-border-color;
-                    }
-                }
-
-                &:last-child {
-                    &.active > a,
-                    &.active > a:hover,
-                    &.active > a:focus {
-                        border-right-color: @nav-tabs-justified-active-link-border-color;
-                    }
-                }
-            }
-
-            > .active > a,
-            > .active > a:hover,
-            > .active > a:focus {
-                border-bottom-color: @nav-tabs-justified-active-link-border-color;
-            }
-        }
-
-        &.ms-primary {
-            .row {
-                &:first-child {
-                    color: @ms2-color-text-primary;
-                    background-color: @ms2-color-primary;
-                    .col-xs-8 {
-                        color: @ms2-color-text-primary;
-                    }
                 }
             }
         }
@@ -177,8 +182,6 @@
         .panel-collapse {
             .panel-body {
                 padding: 8px;
-                border: 1px solid @ms2-color-shade-lighter;
-
             }
         }
     }

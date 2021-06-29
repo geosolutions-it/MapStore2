@@ -1,3 +1,300 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .mapstore-layers-container {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .mapstore-toc-head {
+        .toc-inline-loader {
+            .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+        }
+
+        .mapstore-toc-head-title-container {
+            .mapstore-toc-head-title {
+                .color-var(@theme-vars[main-color]);
+            }
+        }
+
+        .col-xs-12 {
+            .border-top-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    .layer-expanded {
+        &.toc-default-layer {
+            .toc-default-layer-head {
+                .border-bottom-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+
+    .mapstore-toc {
+        .mapstore-layers-container {
+            .border-top-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    .toc-default-group {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+
+        .toc-default-group {
+            .toc-default-group-head {
+                .border-top-color-var(@theme-vars[main-border-color]);
+            }
+        }
+
+        .glyphicon {
+            .color-var(@theme-vars[main-color]);
+
+            &:hover {
+                .color-var(@theme-vars[main-hover-color]);
+            }
+        }
+
+        .toc-default-group-head {
+            .background-color-var(@theme-vars[main-bg]);
+
+            .toc-group-title {
+                &:hover {
+                    .color-var(@theme-vars[main-hover-color]);
+                }
+            }
+        }
+
+        &.selected {
+            .toc-default-group-head {
+                .color-var(@theme-vars[primary-contrast]);
+                .background-color-var(@theme-vars[primary]);
+
+                .glyphicon {
+                    .color-var(@theme-vars[primary-contrast]);
+                }
+
+                .toc-group-title:hover {
+                    .color-var(@theme-vars[primary-contrast]);
+                }
+            }
+        }
+
+        &.group-error {
+            .toc-default-group-head {
+                .toc-error {
+                    .color-var(@theme-vars[danger]);
+                }
+
+            }
+
+            &.selected {
+                .toc-error {
+                    .color-var(@theme-vars[danger]);
+                }
+            }
+        }
+
+
+        .toc-default-layer {
+            .background-color-var(@theme-vars[main-bg]);
+
+            .toc-default-layer-head {
+                .color-var(@theme-vars[main-color]);
+                .background-color-var(@theme-vars[main-bg]);
+
+                .toc-title {
+                    &:hover {
+                        .color-var(@theme-vars[main-hover-color]);
+                    }
+                }
+
+                .toc-inline-loader {
+                    .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+                }
+            }
+
+            &.layer-warning {
+                .visibility-check:after {
+                    .color-var(@theme-vars[danger]);
+                }
+            }
+
+            .collapsible-toc {
+
+                .row {
+                    .toc-full-title {
+                        .color-var(@theme-vars[main-color]);
+                    }
+
+                    .toc-collapse-desc {
+                        .color-var(@theme-vars[main-color]);
+                    }
+                }
+            }
+
+            &.selected {
+                .toc-default-layer-head {
+                    .color-var(@theme-vars[primary-contrast]);
+                    .background-color-var(@theme-vars[primary]);
+
+                    .glyphicon {
+                        .color-var(@theme-vars[primary-contrast]);
+                    }
+
+                    .toc-title:hover {
+                        .color-var(@theme-vars[primary-contrast]);
+                    }
+
+                    .toc-inline-loader {
+                        .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-contrast-color], @theme-vars[loader-primary-contrast-fade-color]);
+                    }
+                }
+            }
+
+            &.layer-error {
+                .background-color-var(@theme-vars[main-variant-bg]);
+
+                .toc-default-layer-head {
+                    .background-color-var(@theme-vars[main-variant-bg]);
+                }
+
+                .glyphicon {
+                    .color-var(@theme-vars[main-color]);
+                }
+
+                .toc-error {
+                    .color-var(@theme-vars[danger]);
+                }
+
+                &.selected {
+                    .color-var(@theme-vars[primary]);
+
+                    .glyphicon {
+                        .color-var(@theme-vars[primary]);
+                    }
+
+                    .toc-error {
+                        .color-var(@theme-vars[danger]);
+                    }
+
+                    .toc-title {
+                        .color-var(@theme-vars[primary]);
+                    }
+
+                    .toc-default-layer-head {
+                        .border-color-var(@theme-vars[danger]);
+                        .background-color-var(@theme-vars[main-variant-bg]);
+
+                        .toc-inline-loader {
+                            .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-contrast-color], @theme-vars[loader-primary-contrast-fade-color]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .is-dragging.toc-default-layer,
+    .is-dragging.toc-default-layer.selected {
+        .background-color-var(@theme-vars[main-bg], true);
+        .border-color-var(@theme-vars[primary], true);
+
+        .toc-default-layer-head {
+            .background-color-var(@theme-vars[main-bg]);
+            .color-var(@theme-vars[primary]);
+
+            .glyphicon {
+                .color-var(@theme-vars[primary]);
+            }
+
+            .toc-title {
+                .color-var(@theme-vars[main-color]);
+            }
+        }
+    }
+
+    .is-placeholder.toc-default-layer,
+    .is-placeholder.toc-default-layer.selected {
+        .border-color-var(@theme-vars[primary], true);
+    }
+
+    .is-dragging.toc-default-group,
+    .is-dragging.toc-default-group.selected {
+        .background-color-var(@theme-vars[main-bg], true);
+        .border-color-var(@theme-vars[primary], true);
+
+        .toc-default-group-head {
+            .background-color-var(@theme-vars[main-bg]);
+            .color-var(@theme-vars[primary]);
+
+            .glyphicon {
+                .color-var(@theme-vars[primary]);
+            }
+
+            .toc-group-title {
+                .color-var(@theme-vars[main-color]);
+            }
+        }
+
+    }
+
+    .is-placeholder.toc-default-group,
+    .is-placeholder.toc-default-group.selected {
+        .background-color-var(@theme-vars[main-bg], true);
+        .border-bottom-color-var(@theme-vars[primary], true);
+
+        .toc-default-group-head {
+            .border-color-var(@theme-vars[primary], true);
+        }
+    }
+
+    .compact-legend-grid {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms-legend-action {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .panel-heading {
+            .panel-title {
+                .row {
+                    .ms-legend-header {
+                        >.glyphicon {
+                            .color-var(@theme-vars[primary]);
+                        }
+                    }
+                }
+            }
+        }
+
+        .panel-collapse {
+            .border-top-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    .thematic_layer {
+        .square-button-sm.no-border[disabled] {
+            .color-var(@theme-vars[primary]);
+            .background-color-var(@theme-vars[primary-contrast]);
+        }
+    }
+
+    .legend-preview {
+        .background-color-var(@theme-vars[main-variant-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 #mapstore-layer-settings {
     z-index: 1022 !important;
 }
@@ -26,7 +323,6 @@
 
     .toc-inline-loader {
         margin: @padding-left-square-md;
-        .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-primary);
     }
     .mapstore-toc-head-title-container {
         overflow: hidden;
@@ -35,7 +331,7 @@
             vertical-align: middle;
             width: 270px;
             height: @square-btn-size;
-            color: @ms2-color-primary;
+            color: @ms-primary;
             font-weight: bold;
             .glyphicon {
                 font-size: @icon-size-md;
@@ -45,7 +341,7 @@
 
     .col-xs-12 {
         height: @square-btn-size;
-        border-top: 1px solid @ms2-color-shade-lighter;
+        border-top: 1px solid @ms-main-border-color;
 
         .btn-sm {
             height: @square-btn-medium-size;
@@ -140,7 +436,7 @@
 .layer-expanded {
     &.toc-default-layer {
         .toc-default-layer-head {
-            border-bottom: 1px solid darken(@ms2-color-background, 10%);
+            border-bottom: 1px solid darken(@ms-main-bg, 10%);
         }
         padding: 0 0 10px 0;
         .toc-legend {
@@ -157,7 +453,7 @@
 
         overflow-y: auto;
         overflow-x: hidden;
-        border-top: 1px solid @ms2-color-shade-light;
+        border-top: 1px solid @ms-main-border-color;
     }
 
     &.toc-body-sections .mapstore-layers-container {
@@ -191,8 +487,8 @@
 
 .toc-default-group {
 
-    background-color: @ms2-color-background;
-    border-bottom: 1px solid @ms2-color-shade-light;
+    background-color: @ms-main-bg;
+    border-bottom: 1px solid @ms-main-border-color;
 
     .toc-default-group {
         border-bottom: none;
@@ -200,7 +496,7 @@
 
         .toc-default-group-head {
             margin-top: 10px;
-            border-top: 1px solid @ms2-color-shade-lighter;
+            border-top: 1px solid @ms-main-border-color;
         }
     }
 
@@ -226,9 +522,9 @@
     }
 
     .glyphicon {
-        color: @ms2-color-primary;
+        color: @ms-primary;
         &:hover {
-            color: darken(@ms2-color-primary, 10%);
+            color: darken(@ms-primary, 10%);
         }
     }
 
@@ -260,7 +556,7 @@
     }
 
     .toc-default-group-head {
-        background-color: @ms2-color-background;
+        background-color: @ms-main-bg;
         height: @square-btn-size;
         width: 100%;
         padding: floor(((@square-btn-size - @icon-size-md) / 2)) 0;
@@ -276,7 +572,7 @@
             cursor: pointer;
             &:hover {
                 font-weight: bold;
-                color: @ms2-color-primary;
+                color: @ms-primary;
             }
         }
 
@@ -294,21 +590,21 @@
     &.selected {
 
         .toc-default-group-head {
-            background-color: desaturate(@ms2-color-primary, 30%);
-            color:  @ms2-color-text-primary;
+            background-color: desaturate(@ms-primary, 30%);
+            color:  @ms-primary-contrast;
             .glyphicon {
-                color: @ms2-color-text-primary;
+                color: @ms-primary-contrast;
             }
             .toc-grab:hover,
             .visibility-check:hover,
             .toc-group-title:hover,
-            .toc-status-icon:hover, {
+            .toc-status-icon:hover {
                 font-weight: bold;
-                .text-border(fade(@ms2-color-text, 20%));
+                .text-border(fade(@ms-main-color, 20%));
             }
 
             .toc-group-title:hover {
-                color: @ms2-color-text-primary;
+                color: @ms-primary-contrast;
             }
         }
     }
@@ -317,14 +613,14 @@
         opacity: 1.0;
         .toc-default-group-head {
             .toc-error {
-                color: @ms2-color-danger;
+                color: @ms-danger;
             }
 
         }
 
         &.selected {
             .toc-error {
-                color: @ms2-color-danger;
+                color: @ms-danger;
             }
         }
     }
@@ -340,7 +636,6 @@
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
 
         .noUi-target {
-            background-color: @ms2-color-primary;
             &.noUi-horizontal {
                 margin: 0;
             }
@@ -349,8 +644,8 @@
         .toc-default-layer-head {
             height: @square-btn-size;
             width: 100%;
-            color: @ms2-color-text;
-            background-color: @ms2-color-background;
+            color: @ms-main-color;
+            background-color: @ms-main-bg;
             margin-bottom: 0;
             padding: floor(((@square-btn-size - @icon-size-md) / 2)) 0;
 
@@ -363,14 +658,13 @@
                 cursor: pointer;
                 &:hover {
                     font-weight: bold;
-                    color: @ms2-color-primary;
+                    color: @ms-primary;
                 }
             }
 
             .toc-inline-loader {
                 float: right;
                 margin: 0 10px;
-                .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-primary);
             }
         }
 
@@ -381,7 +675,7 @@
                 position: absolute;
 
                 font-size: @icon-size-md * (2/3);
-                color: @ms2-color-danger;
+                color: @ms-danger;
             }
         }
 
@@ -414,66 +708,59 @@
             .shadow-far;
 
             .toc-default-layer-head {
-                background-color: @ms2-color-primary;
-                color:  @ms2-color-text-primary;
+                background-color: @ms-primary;
+                color:  @ms-primary-contrast;
                 .glyphicon {
-                    color: @ms2-color-text-primary;
+                    color: @ms-primary-contrast;
                 }
 
                 .toc-grab:hover,
                 .visibility-check:hover,
                 .toc-title:hover,
-                .toc-legend:hover, {
+                .toc-legend:hover {
                     font-weight: bold;
-                    .text-border(fade(@ms2-color-text, 20%));
+                    .text-border(fade(@ms-main-color, 20%));
                 }
 
                 .toc-title:hover {
-                    color: @ms2-color-text-primary;
+                    color: @ms-primary-contrast;
                 }
 
-                .toc-inline-loader {
-                    .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-text-primary);
-                }
             }
         }
 
         &.layer-error {
             opacity: 1.0;
-            background-color: darken(@ms2-color-background, 2%);
+            background-color: darken(@ms-main-bg, 2%);
             .toc-default-layer-head {
-                background-color: darken(@ms2-color-background, 2%);
+                background-color: darken(@ms-main-bg, 2%);
             }
             .glyphicon {
-                color: @ms2-color-text;
+                color: @ms-main-color;
                 &:hover {
                     text-shadow: none;
                 }
             }
             .toc-error {
-                color: @ms2-color-danger;
+                color: @ms-danger;
             }
             &.selected {
-                color: @ms2-color-primary;
+                color: @ms-primary;
                 .glyphicon {
-                    color: @ms2-color-primary;
+                    color: @ms-primary;
                 }
                 .toc-error {
-                    color: @ms2-color-danger;
+                    color: @ms-danger;
                 }
                 .toc-title {
-                    color: @ms2-color-primary;
+                    color: @ms-primary;
                 }
                 .toc-default-layer-head {
                     box-sizing: border-box;
                     -moz-box-sizing: border-box;
                     -webkit-box-sizing: border-box;
-                    border: 1px solid @ms2-color-danger;
-                    background-color: darken(@ms2-color-background, 2%);
-
-                    .toc-inline-loader {
-                        .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-danger);
-                    }
+                    border: 1px solid @ms-danger;
+                    background-color: darken(@ms-main-bg, 2%);
                 }
 
             }
@@ -487,22 +774,22 @@
 
 .is-dragging.toc-default-layer,
 .is-dragging.toc-default-layer.selected {
-    background-color: @ms2-color-background !important;
-    border: 1px dashed @ms2-color-primary !important;
+    background-color: @ms-main-bg !important;
+    border: 1px dashed @ms-primary !important;
     height: @square-btn-size !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
     opacity: 0.8;
     .toc-default-layer-head {
-        background-color: @ms2-color-background;
-        color: @ms2-color-primary;
+        background-color: @ms-main-bg;
+        color: @ms-primary;
 
         .glyphicon {
-            color: @ms2-color-primary;
+            color: @ms-primary;
         }
 
         .toc-title {
-            color: @ms2-color-text;
+            color: @ms-main-color;
         }
     }
 
@@ -514,7 +801,7 @@
 .is-placeholder.toc-default-layer,
 .is-placeholder.toc-default-layer.selected {
     background-color: transparent !important;
-    border: 1px dashed @ms2-color-primary !important;
+    border: 1px dashed @ms-primary !important;
     height: @square-btn-size !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
@@ -532,22 +819,22 @@
 
 .is-dragging.toc-default-group,
 .is-dragging.toc-default-group.selected {
-    background-color: @ms2-color-background !important;
-    border: 1px dashed @ms2-color-primary !important;
+    background-color: @ms-main-bg !important;
+    border: 1px dashed @ms-primary !important;
     height: @square-btn-size !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
     opacity: 0.8;
     .toc-default-group-head {
-        background-color: @ms2-color-background;
-        color: @ms2-color-primary;
+        background-color: @ms-main-bg;
+        color: @ms-primary;
         margin-top: 0;
         .glyphicon {
-            color: @ms2-color-primary;
+            color: @ms-primary;
         }
 
         .toc-group-title {
-            color: @ms2-color-text;
+            color: @ms-main-color;
         }
     }
 
@@ -558,14 +845,14 @@
 
 .is-placeholder.toc-default-group,
 .is-placeholder.toc-default-group.selected {
-    background-color: @ms2-color-background !important;
+    background-color: @ms-main-bg !important;
     border: none !important;
-    border-bottom:  1px solid @ms2-color-primary !important;
+    border-bottom:  1px solid @ms-primary !important;
     height: @square-btn-size + 5 !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
     .toc-default-group-head {
-        border: 1px dashed @ms2-color-primary !important;
+        border: 1px dashed @ms-primary !important;
         margin: 2px 0;
 
         & * {
@@ -584,7 +871,7 @@
 
 .compact-legend-grid {
     margin: 15px;
-    background-color: @ms2-color-background;
+    background-color: @ms-main-bg;
     width: ~"calc(100% - 30px)";
     position: relative;
     .mapstore-side-card {
@@ -628,7 +915,6 @@
 
     }
     .noUi-target {
-        background-color: @ms2-color-primary;
         &.noUi-horizontal {
             margin: 0;
         }
@@ -637,7 +923,7 @@
 .ms-legend-action {
     .shadow-far;
     position: absolute;
-    background-color: @ms2-color-background;
+    background-color: @ms-main-bg;
     overflow: hidden;
     display: flex;
     left: 4px;
@@ -669,7 +955,7 @@
                     display: flex;
                     align-items: center;
                     > .glyphicon {
-                        color: @ms2-color-primary;
+                        color: @ms-primary;
                     }
                     > div {
                         flex: 1;
@@ -695,7 +981,7 @@
         flex: 1;
         transition: unset;
         overflow: auto;
-        border-top: 1px solid @ms2-color-shade-lighter;
+        border-top: 1px solid @ms-main-border-color;
         .panel-body {
             padding: 0;
             .msSideGrid {

@@ -1,3 +1,26 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .mapstore-switch-panel {
+        .panel-heading {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .mapstore-switch-panel {
     padding: 8px;
     .panel {
@@ -9,8 +32,6 @@
         height: @square-btn-size;
         border: none;
         padding: 0;
-        background-color: @ms2-color-background;
-        color: @ms2-color-text;
         .pull-left {
             line-height: @square-btn-size;
         }
@@ -58,7 +79,6 @@
         padding: 0;
         /** TODO MOVE THIS ANIMATION IN QUERY PANEL */
         .switch-panel-transition-enter {
-            /*background-color: darken(@ms2-color-text-primary, 5%);*/
             &.mapstore-block-width,
             &.mapstore-conditions-group .mapstore-block-width {
                 height: 0;
@@ -66,7 +86,6 @@
         }
 
         .switch-panel-transition-enter.switch-panel-transition-enter-active {
-            /*background-color: @ms2-color-text-primary;*/
             &.mapstore-block-width,
             &.mapstore-conditions-group .mapstore-block-width {
                 overflow: hidden;
@@ -76,7 +95,6 @@
         }
 
         .switch-panel-transition-leave {
-            /*background-color: @ms2-color-text-primary;*/
             &.mapstore-block-width,
             &.mapstore-conditions-group .mapstore-block-width {
                 overflow: hidden;
@@ -86,7 +104,6 @@
         }
 
         .switch-panel-transition-leave.switch-panel-transition-leave-active {
-            /*background-color: darken(@ms2-color-text-primary, 5%);*/
             &.mapstore-block-width,
             &.mapstore-conditions-group .mapstore-block-width {
                 height: 0;

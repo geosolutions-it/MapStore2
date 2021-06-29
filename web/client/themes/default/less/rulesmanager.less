@@ -1,11 +1,125 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .rules-manager-modal {
+        .ms-style-modal .mapstore-side-card.ms-sm.ms-selected {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+        }
+    }
+
+    .rules-manager {
+        .react-grid-Row+div {
+            border-top: 4px dashed rgb(255, 238, 0);
+            .border-top-color-var(@theme-vars[warning]);
+        }
+
+        textarea {
+            .background-color-var(@theme-vars[main-variant-bg]);
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+
+        .rulesmanager-editor {
+            .border-right-color-var(@theme-vars[main-border-color]);
+        }
+
+        .ms-vertical-toolbar.rules-editor.re-toolbar {
+            .border-left-color-var(@theme-vars[main-border-color]);
+        }
+
+        #rules-editor {
+            .border-right-color-var(@theme-vars[main-border-color]);
+        }
+
+        .ms-circle-loader-md {
+            border-top: 3.5px solid rgba(7, 138, 163, 0.2);
+            border-right: 3.5px solid rgba(7, 138, 163, 0.2);
+            border-bottom: 3.5px solid rgba(7, 138, 163, 0.2);
+            border-left: 3.5px solid #078aa3;
+        }
+
+        .ms-header {
+            .border-bottom-color-var(@theme-vars[main-border-color]);
+        }
+
+
+        .ms-grid-card {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        .ms-row-select {
+            .react-grid-Cell {
+                .color-var(@theme-vars[main-variant-color]);
+                .background-color-var(@theme-vars[main-variant-bg]);
+            }
+        }
+
+        .ms-card-success {
+            border-bottom: 4px solid @ms-success;
+            .border-bottom-color-var(@theme-vars[success]);
+
+        }
+
+        .ms-card-danger {
+            border-bottom: 4px solid @ms-danger;
+            .border-bottom-color-var(@theme-vars[danger]);
+        }
+
+        .ms-allow-cell {
+            .color-var(@theme-vars[danger-contrast]);
+            .background-color-var(@theme-vars[danger]);
+        }
+
+        .ms-deny-cell {
+            .color-var(@theme-vars[success-contrast]);
+            .background-color-var(@theme-vars[success]);
+        }
+
+        .ms-allow-row {
+            .react-grid-Cell {
+                border-bottom: 2px solid @ms-success;
+                .border-bottom-color-var(@theme-vars[success]);
+            }
+        }
+
+        .ms-deny-row {
+            .react-grid-Cell {
+                border-bottom: 2px solid @ms-danger;
+                .border-bottom-color-var(@theme-vars[danger]);
+            }
+        }
+
+        .ms-panel-header-container {
+            .nav-tabs {
+                .disabled {
+                    a {
+                        color: fade(@ms-main-color, 20%);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .rm-alert-padded {
     padding: 0px 15px;
 }
 .rules-manager-modal{
 
     .ms-style-modal .mapstore-side-card.ms-sm.ms-selected {
-        color: #ffffff;
-        background-color: #078aa3;
         -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
         -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -245,7 +359,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 
     .ms-header {
         height: @square-btn-size;
-        border-bottom: 1px solid @ms2-color-shade-lighter;
+        border-bottom: 1px solid @ms-main-border-color;
         display: flex;
         .btn-group {
             margin: auto;
@@ -275,8 +389,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     }
 }
 .ms-grid-card {
-    color: @ms2-color-text;
-    background-color: @ms2-color-background;
+    color: @ms-main-color;
+    background-color: @ms-main-bg;
     .shadow-soft;
     flex: 1;
     width: 100%;
@@ -304,30 +418,30 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     .react-grid-Cell {
         font-weight: bold;
 
-        background-color: darken(@ms2-color-background, 10%);
-        color: @ms2-color-primary;
+        background-color: darken(@ms-main-bg, 10%);
+        color: @ms-primary;
         &:focus {
             outline: none;
         }
     }
 }
 .ms-card-success {
-    border-bottom: 4px solid @ms2-color-success;
+    border-bottom: 4px solid @ms-success;
 
 }
 .ms-card-danger {
-    border-bottom: 4px solid @ms2-color-danger;
+    border-bottom: 4px solid @ms-danger;
 }
 .ms-allow-cell {
-    color: @ms2-color-text-primary;
-    background-color: @ms2-color-success;
+    color: @ms-primary-contrast;
+    background-color: @ms-success;
     text-align: center;
     padding: 4px;
 }
 
 .ms-deny-cell {
-    color: @ms2-color-text-primary;
-    background-color: @ms2-color-danger;
+    color: @ms-primary-contrast;
+    background-color: @ms-danger;
     text-align: center;
     padding: 4px;
 }
@@ -345,13 +459,13 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 }
 .ms-allow-row {
     .react-grid-Cell {
-        border-bottom: 2px solid @ms2-color-success;
+        border-bottom: 2px solid @ms-success;
     }
 }
 
 .ms-deny-row {
     .react-grid-Cell {
-        border-bottom: 2px solid @ms2-color-danger;
+        border-bottom: 2px solid @ms-danger;
     }
 }
 
@@ -435,7 +549,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
     .nav-tabs {
         .disabled {
             a {
-                color: fade(@ms2-color-text, 20%);
+                color: fade(@ms-main-color, 20%);
             }
         }
     }
