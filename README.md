@@ -59,6 +59,13 @@ There are two quick ways to test out MapStore. Either using <a href="https://www
   ```shell
   docker-compose up -d
   ```
+
+---
+**Note**
+
+-  Take in consideration due to the requirements of the deployment, you should update the docker-compose to the latest version.
+---
+
 - After the docker-compose finish, you can access to the site using following URL:
 
   [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
