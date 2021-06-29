@@ -67,7 +67,7 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
                     }
                 }]
             }, {
-                test: /\.(png|jpg|gif)$/,
+                test: /\.(png|jpg|gif|svg)$/,
                 use: [{
                     loader: 'url-loader',
                     options: {

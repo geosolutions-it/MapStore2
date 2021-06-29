@@ -1,4 +1,42 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms-geostory-navigation {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .ms-geostory-navigation-bar {
+            .progress-bar {
+                .background-color-var(@theme-vars[main-variant-bg]);
+
+                .progress-percent {
+                    .background-color-var(@theme-vars[primary]);
+                }
+            }
+        }
+
+        .ms-horizontal-menu {
+            .ms-menu-item {
+                .active {
+                    .color-var(@theme-vars[primary-contrast]);
+                    .background-color-var(@theme-vars[primary]);
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms-geostory-navigation-btn(@color; @background; @border) {
         color: @color;
         background-color: @background;
@@ -13,7 +51,7 @@
             color: @color;
             background-color: @background;
             border-color: @border;
-            outline: 1px auto @ms2-color-primary !important;
+            outline: 1px auto @ms-primary !important;
             outline-color: inherit !important;
         }
     
@@ -26,13 +64,12 @@
             color: @color;
             background-color: @background;
             border-color: @border;
-            outline: 2px auto @ms2-color-primary !important;
+            outline: 2px auto @ms-primary !important;
             outline-color: inherit !important;
         }
 }
 
 .ms-geostory-navigation {
-    background-color: @ms-story-bg;
     .btn-default {
         .ms-geostory-navigation-btn(inherit; inherit; transparent);
     }
@@ -46,11 +83,9 @@
         flex-direction: column;
         background-color: inherit;
         .progress-bar {
-            background-color: @ms-story-bg-grey;
             height: 4px;
             width: 100%;
             .progress-percent {
-                background-color: @ms2-color-primary;
                 height: 4px;
                 transition: width 0.3s;
             }
@@ -121,10 +156,6 @@
         background-color: inherit;
         .ms-menu-item {
             margin: 0 6px;
-            .active {
-                background-color: @ms2-color-primary;
-                color: @ms2-color-background;
-            }
         }
     }
 }

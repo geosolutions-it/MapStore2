@@ -1,0 +1,151 @@
+[
+  {
+    "op": "replace",
+    "jsonpath": "$.plugins..[?(@.name == 'Search')].cfg",
+    "value": {
+      "searchOptions": {
+        "services": [
+          {
+            "type": "nominatim",
+            "options": {
+              "countrycodes": "at,de"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "op": "add",
+    "jsonpath": "$.plugins.desktop[0]",
+    "value": {"name": "LayerInfo"}
+  },
+  {
+    "op": "add",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'TOC')]",
+    "value": {"name": "IdentifySettings"}
+  },
+  { "op": "replace",
+    "jsonpath": "$.plugins.mobile..[?(@.name == 'Annotations')].cfg",
+    "value": {
+      "lineDashOptions": [{"value": "1 0"}, {"value":"10 50 30"}, {"value":"6 6"}, {"value":"20 20"}, {"value":"30 30"}],
+      "symbolsPath": "assets/symbols/",
+      "defaultShape": "CMP"
+    }
+  },
+  { "op": "replace",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'Identify')]","value": {
+      "name": "Identify",
+      "cfg": {
+        "showHighlightFeatureButton": true,
+        "viewerOptions": {
+            "container": "{context.ReactSwipe}"
+        }
+      },
+      "override": {
+        "Toolbar": {
+          "position": 11
+        }
+      }
+    }
+  },
+  { "op": "replace",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'WFSDownload')].cfg",
+    "value": {
+      "srsList": [
+        {"name": "EPSG:4326", "label": "WGS84"},
+        {"name": "native", "label": "Native"}
+      ]
+    }
+  },
+  { "op": "add", "jsonpath": "$.plugins.desktop..[?(@.name == 'TOC')]", "value": {"name": "DateFilter"} },
+  { "op": "replace",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'TOC')].cfg",
+    "value": {
+      "activateQueryTool": true,
+      "activateDownloadTool": true,
+      "activateAddLayerButton": true,
+      "layerOptions": {
+        "indicators": [{
+          "key": "dimension",
+          "type": "dimension",
+          "glyph": "calendar",
+          "props": {
+            "style": {
+              "color": "#dddddd",
+              "float": "right"
+            },
+            "tooltip": "dateFilter.supportedDateFilter",
+            "placement": "bottom"
+          },
+          "condition": {
+            "name": "time"
+          }
+        }]
+      }
+  }},
+  { "op": "replace",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'Measure')].cfg",
+    "value": {
+      "defaultOptions": {
+        "showSegmentLengths": true,
+        "showAddAsAnnotation": true,
+        "showCoordinateEditor": true,
+        "showLengthAndBearingLabel": true,
+        "trueBearing": {
+          "measureTrueBearing": true,
+          "fractionDigits": 0
+        }
+      }
+    }
+  },
+  { "op": "replace",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'Search')].cfg",
+    "value": {
+      "searchOptions": {
+        "services": [
+          {
+            "type": "nominatim",
+            "options": {
+              "countrycodes": "at,de"
+            }
+          }
+        ]
+      },
+      "withToggle": ["max-width: 768px", "min-width: 768px"]
+    }
+  },
+  { "op": "replace",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'SearchByBookmark')].cfg",
+    "value": {
+      "bookmarkEditing": "ADMIN"
+    }
+  },
+  { "op": "replace",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'Widgets')].cfg",
+    "value": {
+      "toolsOptions": {
+        "showPin": "user.role===ADMIN",
+        "seeHidden": "user.role===ADMIN",
+        "showHide": "user.role===ADMIN",
+        "showCollapse": true
+     }
+    }
+  },
+  { "op": "remove",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'Fork')]"
+  },
+  { "op": "replace",
+    "jsonpath": "$.plugins.desktop..[?(@.name == 'DashboardEditor')].cfg",
+    "value": {
+      "catalog": {
+        "url": "https://inspire/geoserver/free/wms",
+        "type": "wms",
+        "title": "Inspire WMS Service",
+        "autoload": true
+      },
+      "containerPosition": "columns"
+    }
+  }
+
+]

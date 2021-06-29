@@ -21,7 +21,8 @@ const {
     getMetadataRecordById,
     autoSearchEpic,
     openCatalogEpic,
-    recordSearchEpic
+    recordSearchEpic,
+    getSupportedFormatsEpic
 } = catalog(API);
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
 import {CLOSE_FEATURE_GRID} from '../../actions/featuregrid';
@@ -36,7 +37,10 @@ import {
     textSearch, TEXT_SEARCH,
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
-    SET_LOADING
+    SET_LOADING,
+    formatOptionsFetch,
+    FORMAT_OPTIONS_LOADING,
+    SET_FORMAT_OPTIONS
 } from '../../actions/catalog';
 
 
@@ -114,15 +118,20 @@ describe('catalog Epics', () => {
                     expect(action.loading).toBe(true);
                     break;
                 case RECORD_LIST_LOADED:
-                    expect(action.result.records.length).toBe(2);
-                    const rec0 = action.result.records[0];
+                    expect(action.result.records.length).toBe(4);
+                    const [rec0, rec1, rec2, rec3] = action.result.records;
                     expect(rec0.boundingBox).toExist();
                     expect(rec0.boundingBox.crs).toBe('EPSG:4326');
                     expect(rec0.boundingBox.extent).toEqual([45.542, 11.874, 46.026, 12.718]);
-                    const rec1 = action.result.records[1];
                     expect(rec1.boundingBox).toExist();
                     expect(rec1.boundingBox.crs).toBe('EPSG:4326');
                     expect(rec1.boundingBox.extent).toEqual([12.002717999999996, 45.760718, 12.429282000000002, 46.187282]);
+                    expect(rec2.boundingBox).toExist();
+                    expect(rec2.boundingBox.crs).toBe('EPSG:4326');
+                    expect(rec2.boundingBox.extent).toEqual([ -4.14168, 47.93257, -4.1149, 47.959353362144 ]);
+                    expect(rec3.boundingBox).toExist();
+                    expect(rec3.boundingBox.crs).toBe('EPSG:4326');
+                    expect(rec3.boundingBox.extent).toEqual([ 12.56, 47.46, 13.27, 48.13 ]);
                     break;
                 case TEST_TIMEOUT:
                     break;
@@ -311,6 +320,31 @@ describe('catalog Epics', () => {
                 },
                 pageSize: 2
             }
+        });
+    });
+    it('getSupportedFormatsEpic wms', (done) => {
+        const NUM_ACTIONS = 3;
+        const url = "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml";
+        testEpic(addTimeoutEpic(getSupportedFormatsEpic, 0), NUM_ACTIONS, formatOptionsFetch(url), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case SET_FORMAT_OPTIONS:
+                    expect(action.formats).toBeTruthy();
+                    expect(action.formats.imageFormats).toEqual([{"label": "image/png", "value": "image/png"}, {"label": "image/gif", "value": "image/gif"}, {"label": "image/jpeg", "value": "image/jpeg"}, {"label": "image/png8", "value": "image/png8"}, {"label": "image/vnd.jpeg-png", "value": "image/vnd.jpeg-png"}]);
+                    expect(action.formats.infoFormats).toEqual(["text/plain", "text/html", "application/json"]);
+                    break;
+                case FORMAT_OPTIONS_LOADING:
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, {
+            catalog: {}
         });
     });
 });

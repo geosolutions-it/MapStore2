@@ -8,11 +8,13 @@
 
 import expect from 'expect';
 
-import { getActionsFromStepEpic, switchTutorialEpic, switchGeostoryTutorialEpic } from '../tutorial';
-import { SETUP_TUTORIAL, updateTutorial, initTutorial } from '../../actions/tutorial';
+import { getActionsFromStepEpic, switchTutorialEpic, switchGeostoryTutorialEpic, openDetailsPanelEpic } from '../tutorial';
+import { SETUP_TUTORIAL, updateTutorial, initTutorial, closeTutorial } from '../../actions/tutorial';
 import { geostoryLoaded, setEditing } from '../../actions/geostory';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { onLocationChanged } from 'connected-react-router';
+import { setApi, getApi } from '../../api/userPersistedStorage';
+import { OPEN_DETAILS_PANEL } from './../../actions/details';
 
 describe('tutorial Epics', () => {
     const GEOSTORY_EDIT_STEPS = [{
@@ -381,7 +383,7 @@ describe('tutorial Epics', () => {
 
     describe("tests for switchGeostoryTutorialEpic", () => {
         beforeEach(() => {
-            localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
+            getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
         });
         const GEOSTORY_TUTORIAL_ID = "geostory";
         const ID_STORY = "1";
@@ -442,6 +444,37 @@ describe('tutorial Epics', () => {
                 }
             });
         });
+        it('tests the correct tutorial setup when passing from edit to view, intercepting throw', (done) => {
+            const IS_GOING_TO_EDIT_MODE = true;
+            setApi("memoryStorage");
+            getApi().setAccessDenied(true);
+            testEpic(switchGeostoryTutorialEpic, NUM_ACTIONS, [
+                setEditing(IS_GOING_TO_EDIT_MODE)
+            ], (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case SETUP_TUTORIAL:
+                        expect(action.steps).toEqual(GEOSTORY_EDIT_STEPS);
+                        expect(action.stop).toEqual(false);
+                        expect(action.id).toBe(GEOSTORY_TUTORIAL_ID);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+                getApi().setAccessDenied(false);
+                setApi("localStorage");
+            }, {
+                tutorial: {
+                    presetList: {
+                        'geostory_edit_tutorial': GEOSTORY_EDIT_STEPS,
+                        'geostory_view_tutorial': GEOSTORY_VIEW_STEPS
+                    }
+                }
+            });
+        });
         it('tests when steps are not correctly configured, back off to default (switchGeostoryTutorialEpic)', (done) => {
             const IS_GOING_TO_EDIT_MODE = false;
 
@@ -472,7 +505,7 @@ describe('tutorial Epics', () => {
         });
         it('does not setup tutorial if it has been disabled (switchGeostoryTutorialEpic)', (done) => {
             const IS_GOING_TO_EDIT_MODE = false;
-            localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "true");
+            getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "true");
 
             testEpic(addTimeoutEpic(switchGeostoryTutorialEpic, 50), NUM_ACTIONS, [
                 geostoryLoaded(ID_STORY),
@@ -487,7 +520,7 @@ describe('tutorial Epics', () => {
                         expect(true).toBe(false);
                     }
                 });
-                localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
+                getApi().setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
                 done();
             }, {
                 tutorial: {
@@ -496,6 +529,48 @@ describe('tutorial Epics', () => {
                             translationHTML: "default",
                             selector: "#intro-tutorial"
                         }]
+                    }
+                }
+            });
+        });
+    });
+    describe('openDetailsPanelEpic tests', () => {
+        it('should open the details panel if it has showAtStartup set to true', (done) => {
+            const NUM_ACTIONS = 1;
+
+            testEpic(openDetailsPanelEpic, NUM_ACTIONS, closeTutorial(), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [action] = actions;
+                expect(action.type).toBe(OPEN_DETAILS_PANEL);
+                done();
+            }, {
+                map: {
+                    present: {
+                        info: {
+                            detailsSettings: {
+                                showAtStartup: true
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        it('should open the details panel if it has showAtStartup set to false', (done) => {
+            const NUM_ACTIONS = 1;
+
+            testEpic(addTimeoutEpic(openDetailsPanelEpic, 100), NUM_ACTIONS, closeTutorial(), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [action] = actions;
+                expect(action.type).toBe(TEST_TIMEOUT);
+                done();
+            }, {
+                map: {
+                    present: {
+                        info: {
+                            detailsSettings: {
+                                showAtStartup: false
+                            }
+                        }
                     }
                 }
             });

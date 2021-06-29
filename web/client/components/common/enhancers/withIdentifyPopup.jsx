@@ -22,6 +22,8 @@ import {
     getValidator
 } from '../../../utils/MapInfoUtils';
 
+import { isInsideResolutionsLimits } from '../../../utils/LayersUtils';
+
 // verify if 'application/json' is available if not use default
 const getDefaultInfoFormat = () => {
     const availableInfoFormats = getAvailableInfoFormatValues();
@@ -37,8 +39,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
         .map(({map, layers, options}) => ({map, layers, options}))
         .distinctUntilChanged((a, b ) => isEqual(a, b)))
         .switchMap(([{point}, {map, layers = [], options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}]) => {
-            const queryableLayers = layers.filter(defaultQueryableFilter);
-
+            const queryableLayers = layers.filter((layer) => isInsideResolutionsLimits(layer, map.resolution) && defaultQueryableFilter(layer));
             const excludeParams = ["SLD_BODY"];
             const includeOptions = [
                 "buffer",
@@ -46,6 +47,16 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                 "filter",
                 "propertyName"
             ];
+            if (queryableLayers.length === 0) {
+                // mock a empty response to display the error message
+                return Observable.of({
+                    requests: [{}],
+                    responses: [{
+                        response: { features: [] }
+                    }],
+                    validResponses: []
+                });
+            }
 
             return Observable.from(queryableLayers)
                 .mergeMap(layer => {

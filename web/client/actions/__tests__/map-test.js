@@ -47,7 +47,9 @@ import {
     registerEventListener,
     unRegisterEventListener,
     mouseMove,
-    mouseOut
+    mouseOut,
+    mapPluginLoad,
+    MAP_PLUGIN_LOAD
 } from '../map';
 
 import { SHOW_NOTIFICATION } from '../notifications';
@@ -69,6 +71,16 @@ describe('Test correctness of the map actions', () => {
         expect(retval.bbox).toBe(testBbox);
         expect(retval.size).toBe(testSize);
         expect(retval.projection).toBe(testProjection);
+    });
+
+    it('test map plugin load', () => {
+        const errorMap = {status: 404};
+        const retval = mapPluginLoad('loading', 'mapType', 'loaded', errorMap);
+        expect(retval.type).toBe(MAP_PLUGIN_LOAD);
+        expect(retval.loading).toBe('loading');
+        expect(retval.mapType).toBe('mapType');
+        expect(retval.loaded).toBe('loaded');
+        expect(retval.error).toEqual(errorMap);
     });
 
     it('set a new clicked point', () => {
@@ -134,13 +146,15 @@ describe('Test correctness of the map actions', () => {
     });
 
     it('zoom to extent', () => {
-        const retval = zoomToExtent([-30, -30, 30, 30], 'EPSG:4326', 18);
+        const options = {nearest: true};
+        const retval = zoomToExtent([-30, -30, 30, 30], 'EPSG:4326', 18, options);
 
         expect(retval).toExist();
         expect(retval.type).toBe(ZOOM_TO_EXTENT);
         expect(retval.extent).toExist();
         expect(retval.crs).toBe('EPSG:4326');
         expect(retval.maxZoom).toBe(18);
+        expect(retval.options).toEqual(options);
     });
 
     it('changes map crs', () => {

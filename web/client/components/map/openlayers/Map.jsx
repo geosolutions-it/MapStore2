@@ -154,6 +154,9 @@ class OpenlayersMap extends React.Component {
         });
 
         this.map = map;
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         this.map.disabledListeners = {};
         this.map.disableEventListener = (event) => {
             this.map.disabledListeners[event] = true;
@@ -234,16 +237,12 @@ class OpenlayersMap extends React.Component {
         const mouseMove = throttle(this.mouseMoveEvent, 100);
         // TODO support disableEventListener
         map.on('pointermove', mouseMove);
-
         this.updateMapInfoState();
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
 
         this.props.onResolutionsChange(this.getResolutions());
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -455,7 +454,8 @@ class OpenlayersMap extends React.Component {
                 onLayerError: this.props.onLayerError,
                 onLayerLoad: this.props.onLayerLoad,
                 projection: this.props.projection,
-                onCreationError: this.props.onCreationError
+                onCreationError: this.props.onCreationError,
+                resolutions: this.getResolutions()
             }) : null;
         }) : null;
 
@@ -516,16 +516,28 @@ class OpenlayersMap extends React.Component {
                 width: this.map.getSize()[0],
                 height: this.map.getSize()[1]
             };
-            this.props.onMapViewChanges({ x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326' }, view.getZoom(), {
-                bounds: {
-                    minx: bbox[0],
-                    miny: bbox[1],
-                    maxx: bbox[2],
-                    maxy: bbox[3]
+            this.props.onMapViewChanges(
+                {
+                    x: c[0] || 0.0, y: c[1] || 0.0,
+                    crs: 'EPSG:4326'
                 },
-                crs,
-                rotation: view.getRotation()
-            }, size, this.props.id, this.props.projection);
+                view.getZoom(),
+                {
+                    bounds: {
+                        minx: bbox[0],
+                        miny: bbox[1],
+                        maxx: bbox[2],
+                        maxy: bbox[3]
+                    },
+                    crs,
+                    rotation: view.getRotation()
+                },
+                size,
+                this.props.id,
+                this.props.projection,
+                undefined, // viewerOptions,
+                view.getResolution() // resolution
+            );
         }
     };
 
@@ -612,7 +624,7 @@ class OpenlayersMap extends React.Component {
         this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration} = {}) => {
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {}) => {
             let bounds = reprojectBbox(extent, crs, this.props.projection);
             // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
@@ -629,7 +641,8 @@ class OpenlayersMap extends React.Component {
                 size: this.map.getSize(),
                 padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
                 maxZoom,
-                duration
+                duration,
+                nearest
             });
         });
     };

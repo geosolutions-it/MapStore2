@@ -14,8 +14,6 @@ import DockablePanel from '../misc/panels/DockablePanel';
 import Toolbar from '../misc/toolbar/Toolbar';
 import tooltip from '../misc/enhancers/tooltip';
 const NavItemT = tooltip(NavItem);
-import ResizableModal from '../misc/ResizableModal';
-import Portal from '../misc/Portal';
 import { head, isObject, isString } from 'lodash';
 import Message from '../I18N/Message';
 
@@ -40,15 +38,12 @@ const TOCItemSettings = (props) => {
         groups = [],
         element = {},
         settings = {},
-        onSave = () => {},
         onClose = () => {},
         onHideSettings = () => {},
         onSetTab = () => {},
         onUpdateParams = () => {},
         onRetrieveLayerData = () => {},
-        onShowAlertModal = () => {},
         realtimeUpdate = true,
-        alertModal = false,
         dockStyle = {},
         dock = true,
         showFullscreen,
@@ -65,12 +60,6 @@ const TOCItemSettings = (props) => {
     const tabsCloseActions = tabs && tabs.map(tab => tab && tab.onClose).filter(val => val) || [];
 
     const toolbarButtons = [
-        {
-            glyph: 'floppy-disk',
-            tooltipId: 'save',
-            visible: !!onSave,
-            onClick: () => onSave(tabsCloseActions)
-        },
         ...(head(tabs.filter(tab => tab.id === activeTab && tab.toolbar).map(tab => tab.toolbar)) || [])];
 
     return (
@@ -82,7 +71,7 @@ const TOCItemSettings = (props) => {
                 className={className}
                 onClose={() => {
                     if (onClose) {
-                        onClose(false, tabsCloseActions);
+                        onClose(tabsCloseActions);
                     } else {
                         tabsCloseActions.forEach(tabOnClose => { tabOnClose(); });
                         onHideSettings();
@@ -139,32 +128,6 @@ const TOCItemSettings = (props) => {
                         currentLocaleLanguage={currentLocaleLanguage}/>
                 ))}
             </DockablePanel>
-            <Portal>
-                <ResizableModal
-                    fade
-                    show={alertModal}
-                    title={<Message msgId="layerProperties.changedSettings"/>}
-                    size="xs"
-                    onClose={() => onShowAlertModal(false)}
-                    buttons={[
-                        {
-                            bsStyle: 'primary',
-                            text: <Message msgId="close"/>,
-                            onClick: () => onClose(true, tabsCloseActions)
-                        },
-                        {
-                            bsStyle: 'primary',
-                            text: <Message msgId="save"/>,
-                            onClick: () => onSave(tabsCloseActions)
-                        }
-                    ]}>
-                    <div className="ms-alert">
-                        <div className="ms-alert-center">
-                            <Message msgId="layerProperties.changedSettingsAlert"/>
-                        </div>
-                    </div>
-                </ResizableModal>
-            </Portal>
         </div>
     );
 };

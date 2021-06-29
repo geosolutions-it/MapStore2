@@ -20,9 +20,9 @@ const reducePropsToState = (props) => {
             version: validateVersion(innermostProps.version) ? "?" + trim(innermostProps.version) : '',
             theme: innermostProps.theme || 'default',
             themeElement: innermostProps.themeElement || 'theme_stylesheet',
-            prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
+            prefix: innermostProps.prefix || __MAPSTORE_PROJECT_CONFIG__.themePrefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
             prefixContainer: innermostProps.prefixContainer && document.querySelector(innermostProps.prefixContainer) || document.body,
-            path: innermostProps.path || 'dist/themes',
+            path: innermostProps.path || __MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes',
             onLoad: innermostProps.onLoad || null
         };
     }

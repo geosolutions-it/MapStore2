@@ -18,11 +18,11 @@ import {
     saveMap,
     deleteMap
 } from '../actions/mapcatalog';
-import { mapTypeSelector } from '../selectors/maptype';
 import { userSelector } from '../selectors/security';
 import {
     triggerReloadValueSelector,
-    filterReloadDelaySelector
+    filterReloadDelaySelector,
+    mapTypeSelector
 } from '../selectors/mapcatalog';
 
 import MapCatalogPanel from '../components/mapcatalog/MapCatalogPanel';
@@ -40,6 +40,7 @@ import * as epics from '../epics/mapcatalog';
  * @name MapCatalog
  */
 const MapCatalogComponent = ({
+    allow3d,
     active,
     mapType,
     user,
@@ -101,6 +102,7 @@ export default createPlugin('MapCatalog', {
             position: 6,
             text: <Message msgId="mapCatalog.title" />,
             icon: <Glyphicon glyph="maps-catalog" />,
+            tooltip: "mapCatalog.tooltip",
             action: () => toggleControl('mapCatalog', 'enabled'),
             priority: 2,
             doNotHide: true

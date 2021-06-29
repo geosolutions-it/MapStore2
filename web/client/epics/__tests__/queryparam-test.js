@@ -69,6 +69,7 @@ describe('queryparam epics', () => {
                     expect(Math.floor(actions[0].extent[2])).toBe(10);
                     expect(Math.floor(actions[0].extent[3])).toBe(46);
                     expect(actions[0].crs).toBe('EPSG:4326');
+                    expect(actions[0].options.nearest).toBe(true);
                 } catch (e) {
                     done(e);
                 }
@@ -99,9 +100,8 @@ describe('queryparam epics', () => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
                     expect(actions[0].type).toBe("TEXT_SEARCH_RESET");
-                    expect(actions[1].type).toBe("FEATURE_INFO_CLICK");
-                    expect(actions[1].point).toEqual({"latlng": {"lat": 39.01, "lng": -89.97}});
-                    expect(actions[1].layer).toBe("layer01");
+                    expect(actions[1].type).toBe("TEXT_SEARCH_ADD_MARKER");
+                    expect(actions[1].markerPosition).toEqual(point);
                 } catch (e) {
                     done(e);
                 }
@@ -122,6 +122,27 @@ describe('queryparam epics', () => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
                     expect(actions[0].type).toBe("TOGGLE_MAPINFO_STATE");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('test disableGFIForShareEpic, on share panel open with mapInfo enabled and mapInfo open', (done)=>{
+
+        const NUMBER_OF_ACTIONS = 2;
+        const state = {controls: {share: {enabled: true}}, mapInfo: {enabled: true, clickPoint: {latlng: {lat: 40, lng: -80}}, requests: ["test"]}};
+
+        testEpic(
+            addTimeoutEpic(disableGFIForShareEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                toggleControl('share', null)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe("TOGGLE_MAPINFO_STATE");
+                    expect(actions[1].type).toBe("TEXT_SEARCH_ADD_MARKER");
+                    expect(actions[1].markerPosition).toEqual({"latlng": {"lat": 40, "lng": -80}});
                 } catch (e) {
                     done(e);
                 }

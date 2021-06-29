@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const L = require('leaflet');
-const MeasurementSupport = require('../MeasurementSupport');
-const {getFormattedBearingValue} = require("../../../../utils/MeasureUtils");
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import L from 'leaflet';
+import MeasurementSupport from '../MeasurementSupport';
+import {getFormattedBearingValue} from "../../../../utils/MeasureUtils";
 let defaultPrecision = {
     km: 2,
     ha: 2,

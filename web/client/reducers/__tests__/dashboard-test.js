@@ -16,7 +16,13 @@ import {
     dashboardLoaded,
     dashboardSaved,
     dashboardSaveError,
-    dashboardLoading
+    dashboardLoading,
+    dashboardSetSelectedService,
+    dashboardUpdateServices,
+    setDashboardCatalogMode,
+    setDashboardServiceSaveLoading,
+    dashboardDeleteService,
+    updateDashboardService
 } from '../../actions/dashboard';
 
 import { insertWidget, updateWidget, deleteWidget } from '../../actions/widgets';
@@ -52,11 +58,15 @@ describe('Test the dashboard reducer', () => {
         expect(state.showSaveAsModal).toBe(true);
     });
     it('dashboard dashboardLoaded', () => {
-        const action = dashboardLoaded("TEST", "DATA");
+        const data = {
+            catalogs: {"service": {name: "ws", ur: "url"}}
+        };
+        const action = dashboardLoaded("TEST", data);
         const state = dashboard( undefined, action);
         expect(state).toExist();
         expect(state.resource).toBe("TEST");
-        expect(state.originalData).toBe("DATA");
+        expect(state.originalData).toBe(data);
+        expect(state.services).toBe(data.catalogs);
     });
     it('dashboard dashboardSaveError', () => {
         const action = dashboardSaveError(["error1"]);
@@ -78,5 +88,63 @@ describe('Test the dashboard reducer', () => {
         expect(state.loadFlags.saving).toBe(true);
     });
 
+    it('dashboard dashboardSetSelectedService', () => {
+        const selectedService = {name: "ws", url: "url", title: 'test', key: 'gs_ws'};
+        const action = dashboardSetSelectedService(selectedService, {});
+        const state = dashboard(undefined, action);
+        expect(state).toExist();
+        expect(state.selectedService).toBe(selectedService.key);
+    });
+
+    it('dashboard dashboardUpdateServices', () => {
+        const services = {ws: {name: "ws", url: "url", key: 'ws'}};
+        const action = dashboardUpdateServices(services);
+        const state = dashboard(undefined, action);
+        expect(state).toExist();
+        expect(state.services).toBe(services);
+
+    });
+
+    it('dashboard setDashboardCatalogMode', () => {
+        const action = setDashboardCatalogMode("edit", false);
+        const state = dashboard(undefined, action);
+        expect(state).toExist();
+        expect(state.mode).toBe("edit");
+        expect(state.isNew).toBe(false);
+
+    });
+
+    it('dashboard setDashboardServiceSaveLoading', () => {
+        const action = setDashboardServiceSaveLoading(false);
+        const state = dashboard(undefined, action);
+        expect(state).toExist();
+        expect(state.saveServiceLoading).toBe(false);
+
+    });
+
+    it('dashboard dashboardDeleteService', () => {
+        const services = {test: {title: 'test'}};
+        const action = dashboardDeleteService({title: 'deleted'}, services);
+        const state = dashboard(undefined, action);
+        expect(state).toExist();
+        expect(state.mode).toBe('view');
+        expect(state.services).toBe(services);
+        expect(state.selectedService).toBe(services.test.title);
+
+
+    });
+
+
+    it('dashboard updateDashboardService', () => {
+        const services = {test: {title: 'test', key: 'test'}};
+        const service = {title: 'deleted', key: 'test'};
+        const action = updateDashboardService(service, services, true);
+        const state = dashboard(undefined, action);
+        expect(state).toExist();
+        expect(state.mode).toBe('view');
+        expect(state.services.test).toBe(service);
+        expect(state.selectedService).toBe('test');
+
+    });
 
 });

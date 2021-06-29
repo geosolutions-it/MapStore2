@@ -1,4 +1,4 @@
-Contributing to MapStore 2
+Contributing to MapStore 
 ==========================
 
  1. [Getting Involved](#getting-involved)
@@ -8,7 +8,7 @@ Contributing to MapStore 2
 
 ## Getting Involved
 
-There are several ways you can contribute to MapStore 2 development.
+There are several ways you can contribute to MapStore development.
 If you are a developer, you can contribute new features and bug fixes, using pull requests.
 But you can also help by discovering and [reporting bugs](#reporting-bugs);
 [improving documentation](#improving-documentation);
@@ -18,16 +18,16 @@ and [GitHub issues](https://github.com/geosolutions-it/MapStore2/issues).
 ## Reporting Bugs
 
 Before reporting a bug on the project's [issues page](https://github.com/geosolutions-it/MapStore2/issues),
-first make sure that your issue is caused by MapStore 2, not your application code
+first make sure that your issue is caused by MapStore, not your application code
 (e.g. passing incorrect arguments to methods, etc.).
 Second, search the already reported issues for similar cases,
 and if it's already reported, just add any additional details in the comments.
 
-After you've made sure that you've found a new MapStore 2 bug,
+After you've made sure that you've found a new MapStore bug,
 here are some tips for creating a helpful report that will make fixing it much easier and quicker:
 
  * Write a **descriptive, specific title**. Bad: *Map does not show*. Good: *Doing X in IE9 causes Z*.
- * Include **browser, OS and MapStore 2 version** info in the description.
+ * Include **browser, OS and MapStore version** info in the description.
  * Create a **simple test case** that demonstrates the bug (e.g. using [JSFiddle](http://jsfiddle.net/) or [JS Bin](http://jsbin.com/)).
  * Check whether the bug can be reproduced in **other browsers**.
  * Check if the bug occurs in the stable version, master, or both.
@@ -50,14 +50,14 @@ Before sending a pull request with a new feature, check if it's been discussed b
 or [on the MapStore developers mailing list](https://groups.google.com/d/forum/mapstore-developers)),
 and ask yourself two questions:
 
- 1. Are you sure that this new feature is important enough to justify its presence in the MapStore 2 core?
+ 1. Are you sure that this new feature is important enough to justify its presence in the MapStore core?
     Or will it look better as a plugin in a separate repository?
  2. Is it written in a simple, concise way that doesn't add bulk to the codebase?
 
 If your feature did get merged into master,
 please consider submitting another pull request with the corresponding [documentation update](#improving-documentation).
 
-### Making Changes to MapStore 2 Source
+### Making Changes to MapStore Source
 
 If you're not yet familiar with the way GitHub works (forking, pull requests, etc.),
 be sure to check out the awesome [article about forking](https://help.github.com/articles/fork-a-repo)
@@ -70,7 +70,7 @@ Please do not commit to the `master` branch, or your unrelated changes will go i
 
 Your pull request must:
 
- * Follow MapStore 2's coding style.
+ * Follow MapStore's coding style.
 
  * Pass the integration tests run automatically by the Travis Continuous
    Integration system.
@@ -110,9 +110,9 @@ If you are testing a specific component follow the following convention:
 * Component: `MyComponent.jsx`
 * Test File: `MyComponent-test.jsx`
 
-### Follow MapStore 2's coding style
+### Follow MapStore's coding style
 
-MapStore 2 follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules.
+MapStore follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules.
 
 The set of used rules can be found in the ESLint config package[eslint-config-mapstore](https://github.com/geosolutions-it/MapStore2/blob/master/utility/eslint/index.js) file, deployed on npm and configured in the `package.json`.
 
@@ -146,7 +146,7 @@ http://editorconfig.org/#download) site links to plugins for various editors.
 ### Pass the integration tests run automatically by the Travis CI system
 
 The integration tests contain a number of automated checks to ensure that the
-code follows the MapStore 2 style and does not break tests or examples.  You
+code follows the MapStore style and does not break tests or examples.  You
 can run the integration tests locally using the `test` target:
 
     $ npm test

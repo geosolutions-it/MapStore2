@@ -14,7 +14,9 @@ const {isAuthenticationActivated, getAuthenticationRule, getToken,
     getBasicAuthHeader} = require('../utils/SecurityUtils');
 
 const assign = require('object-assign');
-const {isObject, omitBy, isNil} = require('lodash');
+const isObject = require('lodash/isObject');
+const omitBy = require('lodash/omitBy');
+const isNil = require('lodash/isNil');
 const urlUtil = require('url');
 
 /**

@@ -18,6 +18,7 @@ import crossLayerFilterEnhancer from './enhancers/crossLayerFilter';
 import GroupField from './GroupField';
 import QueryToolbar from './QueryToolbar';
 import SpatialFilter from './SpatialFilter';
+import QueryPanelHeader from './QueryPanelHeader';
 
 const CrossLayerFilter = crossLayerFilterEnhancer(CrossLayerFilterComp);
 
@@ -61,6 +62,9 @@ class QueryBuilder extends React.Component {
         crossLayerFilterOptions: PropTypes.object,
         crossLayerFilterActions: PropTypes.object,
         hits: PropTypes.bool,
+        clearFilterOptions: PropTypes.object,
+        buttonStyle: PropTypes.string,
+        removeGroupButtonIcon: PropTypes.string,
         maxHeight: PropTypes.number,
         allowEmptyFilter: PropTypes.bool,
         autocompleteEnabled: PropTypes.bool,
@@ -72,7 +76,8 @@ class QueryBuilder extends React.Component {
         appliedFilter: PropTypes.object,
         storedFilter: PropTypes.object,
         advancedToolbar: PropTypes.bool,
-        loadingError: PropTypes.bool
+        loadingError: PropTypes.bool,
+        controlActions: PropTypes.object
     };
 
     static defaultProps = {
@@ -80,6 +85,8 @@ class QueryBuilder extends React.Component {
         featureTypeConfigUrl: null,
         useMapProjection: true,
         groupLevels: 1,
+        buttonStyle: "default",
+        removeGroupButtonIcon: "trash",
         groupFields: [],
         filterFields: [],
         attributes: [],
@@ -140,12 +147,18 @@ class QueryBuilder extends React.Component {
             onSaveFilter: () => {},
             onRestoreFilter: () => {}
         },
-        toolsOptions: {}
+        toolsOptions: {},
+        controlActions: {
+            onToggleQuery: () => {}
+        }
     };
 
     render() {
         if (this.props.featureTypeError !== "") {
-            return <div style={{margin: "0 auto", "text-align": "center"}}>{this.props.featureTypeErrorText}</div>;
+            return (<div>
+                <QueryPanelHeader onToggleQuery={this.props.controlActions.onToggleQuery}/>
+                <div style={{margin: "0 auto", "text-align": "center"}}>{this.props.featureTypeErrorText}</div>
+            </div>);
         }
 
         const header = (<div className="m-header">{this.props.header}
@@ -181,6 +194,8 @@ class QueryBuilder extends React.Component {
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
                 <GroupField
+                    buttonStyle={this.props.buttonStyle}
+                    removeGroupButtonIcon={this.props.removeGroupButtonIcon}
                     autocompleteEnabled={this.props.autocompleteEnabled}
                     maxFeaturesWPS={this.props.maxFeaturesWPS}
                     attributes={this.props.attributes}
@@ -194,6 +209,7 @@ class QueryBuilder extends React.Component {
                 {this.props.toolsOptions.hideSpatialFilter ? null : <SpatialFilter
                     useMapProjection={this.props.useMapProjection}
                     spatialField={this.props.spatialField}
+                    clearFilterOptions={this.props.clearFilterOptions}
                     spatialOperations={this.props.spatialOperations}
                     spatialMethodOptions={this.props.spatialMethodOptions}
                     showDetailsButton={this.props.showDetailsButton}

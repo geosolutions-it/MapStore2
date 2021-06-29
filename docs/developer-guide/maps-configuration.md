@@ -31,7 +31,7 @@ This is used for the **new map**. If you're logged in and allowed to create maps
 http://localhost:8081/#viewer/openlayers/new
 ```
 
-This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects.
+This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client/configs` directory for standard MapStore or in `configs/` folder for a custom projects.
 You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).
 
 If you have enabled the datadir, then you can externalize the new.json or config.json files. (see [here](../externalized-configuration) for more details)
@@ -63,6 +63,7 @@ The following options define the map options (projection, position, layers):
 - `center: [object]` center of the map with starting point in the bottom-left corner
 - `zoom: {number}` level of zoom
 - `resolutions: {number[]}` resolutions for each level of zoom
+- `scales: {number[]}` scales used to compute the map resolutions
 - `maxExtent: {number[]}` max bbox of the map expressed [minx, miny, maxx, maxy]
 - `layers: {object[]}` list of layers to be loaded on the map
 - `groups {object[]}`: contains information about the layer groups
@@ -78,6 +79,7 @@ i.e.
     "zoom": 15,
     "mapOptions": {
       "view": {
+        "scales": [175000, 125000, 100000, 75000, 50000, 25000, 10000, 5000, 2500],
         "resolutions": [
           84666.66666666688,
           42333.33333333344,
@@ -111,6 +113,13 @@ i.e.
 }
 ```
 
+!!! note
+    The option to configure a list of scale denominators allow to have them in human friendly format, and calculate the map resolutions from scales.
+
+!!! warning
+    If the scales and resolutions property are declared, in the same json object, the scales have priority.
+    In the array, the values have be in descending order.
+
 !!! warning
     Actually the custom resolution values are valid for one single CRS. It's therefore suggested to avoid to add this parameter when multiple CRSs in the same map configuration are needed.
 
@@ -139,6 +148,9 @@ Every layer has it's own properties. Anyway there are some options valid for eve
 - `visibility`: `{boolean}`: indicates if the layer is visible or not
 - `queriable`: `{boolean}`: Indicates if the layer is queriable (e.g. getFeatureInfo). If not present the default is true for every layer that have some implementation available (WMS, WMTS). Usually used to set it explicitly to false, where the query service is not available.
 - `hideLoading`: {boolean}. If true, loading events will be ignored ( useful to hide loading with some layers that have problems or trigger errors loading some tiles or if they do not have any kind of loading.).
+- `minResolution`: `{number}`: layer is visible if zoom resolution is greater or equal than this value (inclusive)
+- `maxResolution`: `{number}`: layer is visible if zoom resolution is less than this value (exclusive)
+- `disableResolutionLimits`: `{boolean}`: this property disables the effect of minResolution and maxResolution if set to true
 
 i.e.
 
@@ -263,6 +275,7 @@ in `localConfig.json`
             "format": "application/bil16",
             ...
             "name": "elevation",
+            "littleendian": false,
             "visibility": true,
             "useForElevation": true
         }]

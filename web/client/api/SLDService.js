@@ -166,6 +166,9 @@ const getRuleColor = (rule) => {
 };
 
 const validateClassification = (classificationObj) => {
+    if (classificationObj && classificationObj.Rule) {
+        throw new Error("toc.thematic.invalid_attribute");
+    }
     if (!classificationObj || !classificationObj.Rules || !classificationObj.Rules.Rule) {
         throw new Error("toc.thematic.invalid_object");
     }
@@ -306,27 +309,32 @@ const API = {
      * @memberof API.SLDService
      * @method readClassification
      * @param {object} classificationObj object returned by SLDService classifier service
+     * @param {string} method name of classification
      * @returns {array} simplified classification classes list
      */
-    readClassification: (classificationObj) => {
+    readClassification: (classificationObj, method) => {
         validateClassification(classificationObj);
         const rules = castArray(classificationObj.Rules.Rule || []);
         return rules.map((rule, idx) => ({
             title: rule.Title,
             color: getRuleColor(rule),
             type: getGeometryType(rule),
-            min: getNumber([
-                rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal,
-                rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal,
-                // standard deviation
-                idx === rules.length - 1 && rule?.Filter?.PropertyIsGreaterThanOrEqualTo?.Literal
-            ]),
-            max: getNumber([
-                rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal,
-                rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal,
-                // standard deviation
-                idx === 0 && rule?.Filter?.PropertyIsLessThan?.Literal
-            ])
+            ...(method === 'uniqueInterval'
+                ? { unique: rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal }
+                : {
+                    min: getNumber([
+                        rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal,
+                        rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal,
+                        // standard deviation
+                        idx === rules.length - 1 && rule?.Filter?.PropertyIsGreaterThanOrEqualTo?.Literal
+                    ]),
+                    max: getNumber([
+                        rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal,
+                        rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal,
+                        // standard deviation
+                        idx === 0 && rule?.Filter?.PropertyIsLessThan?.Literal
+                    ])
+                })
         })) || [];
     },
     /**

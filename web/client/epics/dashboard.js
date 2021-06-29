@@ -162,7 +162,7 @@ export const saveDashboard = action$ => action$
                 resource.id ? triggerSave(false) : triggerSaveAs(false),
                 !resource.id
                     ? push(`/dashboard/${rid}`)
-                    : loadDashboard(rid),
+                    : loadDashboard(rid)
             ).merge(
                 Rx.Observable.of(show({
                     id: "DASHBOARD_SAVE_SUCCESS",
@@ -179,7 +179,6 @@ export const saveDashboard = action$ => action$
                 ({ status, statusText, data, message, ...other } = {}) => Rx.Observable.of(dashboardSaveError(status ? { status, statusText, data } : message || other), dashboardLoading(false, "saving"))
             )
     );
-
 
 export default {
     openDashboardWidgetEditor,

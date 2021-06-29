@@ -18,7 +18,8 @@ import {
     saveTemplateEpic,
     saveContextResource,
     checkIfContextExists,
-    editTemplateEpic
+    editTemplateEpic,
+    mapViewerLoadEpic
 } from '../contextcreator';
 import {
     editPlugin,
@@ -31,6 +32,7 @@ import {
     saveTemplate,
     saveNewContext,
     editTemplate,
+    mapViewerLoad,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
     SET_CFG_ERROR,
@@ -51,6 +53,8 @@ import {
     SET_PARSED_TEMPLATE,
     SET_FILE_DROP_STATUS
 } from '../../actions/contextcreator';
+import {INIT_MAP} from '../../actions/map';
+import {LOAD_MAP_CONFIG} from '../../actions/config';
 import {
     SHOW_NOTIFICATION
 } from '../../actions/notifications';
@@ -941,5 +945,13 @@ describe('contextcreator epics', () => {
                 }
             }
         }, done);
+    });
+    it('mapViewerLoadEpic loads a map with empty context, to skip session', (done) => {
+        testEpic(mapViewerLoadEpic, 2, mapViewerLoad(), ([a, b]) => {
+            expect(a.type).toEqual(INIT_MAP);
+            expect(b.type).toEqual(LOAD_MAP_CONFIG);
+            expect(b.overrideConfig).toEqual({});
+            done();
+        });
     });
 });

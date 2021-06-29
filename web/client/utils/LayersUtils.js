@@ -53,10 +53,10 @@ const initialReorderLayers = (groups, allLayers) => {
 const reorderLayers = (groups, allLayers) => {
     return initialReorderLayers(groups, allLayers);
 };
-const createGroup = (groupId, groupName, layers, addLayers) => {
+const createGroup = (groupId, groupTitle, groupName, layers, addLayers) => {
     return assign({}, {
         id: groupId,
-        title: (groupName || "").replace(/\${dot}/g, "."),
+        title: groupTitle ?? (groupName || "").replace(/\${dot}/g, "."),
         name: groupName,
         nodes: addLayers ? getLayersId(groupId, layers) : [],
         expanded: true
@@ -343,7 +343,7 @@ export const getLayersByGroup = (configLayers, configGroups) => {
             const addLayers = idx === array.length - 1;
             if (!group) {
                 const groupTitle = getNestedGroupTitle(groupId, configGroups);
-                group = createGroup(groupId, groupTitle || groupName, mapLayers, addLayers);
+                group = createGroup(groupId, groupTitle || groupName, groupName, mapLayers, addLayers);
                 subGroups.push(group);
             } else if (addLayers) {
                 group.nodes = group.nodes.concat(getLayersId(groupId, mapLayers));
@@ -515,6 +515,9 @@ export const saveLayer = (layer) => {
         dimensions: layer.dimensions || [],
         maxZoom: layer.maxZoom,
         maxNativeZoom: layer.maxNativeZoom,
+        maxResolution: layer.maxResolution,
+        minResolution: layer.minResolution,
+        disableResolutionLimits: layer.disableResolutionLimits,
         hideLoading: layer.hideLoading || false,
         handleClickOnLayer: layer.handleClickOnLayer || false,
         queryable: layer.queryable,
@@ -672,6 +675,21 @@ export const formatCapabitiliesOptions = function(capabilities) {
 };
 export const getLayerTitle = ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.default || title || name;
 
+/**
+ * Check if a resolution is inside of the min and max resolution limits of a layer
+ * @param {object} layer layer object
+ * @param {number} resolution resolutions of the current view
+ */
+export const isInsideResolutionsLimits = (layer, resolution) => {
+    if (layer.disableResolutionLimits) {
+        return true;
+    }
+    const minResolution = layer.minResolution || -Infinity;
+    const maxResolution = layer.maxResolution || Infinity;
+    return resolution !== undefined
+        ? resolution < maxResolution && resolution >= minResolution
+        : true;
+};
 
 LayersUtils = {
     getGroupByName,
@@ -682,5 +700,6 @@ LayersUtils = {
     deepChange,
     reorder: reorderFunc,
     getRegGeoserverRule,
-    findGeoServerName
+    findGeoServerName,
+    isInsideResolutionsLimits
 };

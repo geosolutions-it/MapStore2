@@ -14,7 +14,6 @@ import { isPluginInContext } from './context';
 import { currentLocaleSelector } from './locale';
 import {getValidator} from '../utils/MapInfoUtils';
 import { isCesium } from './maptype';
-import { pluginsSelectorCreator } from './localConfig';
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -22,12 +21,10 @@ import { pluginsSelectorCreator } from './localConfig';
  * @static
  */
 
-export const isMapPopup =  createSelector(
-    (state) => pluginsSelectorCreator("desktop")(state) || {},
+export const isMapPopup = createSelector(
     isCesium,
-    (plugins, cesium) => {
-        return !cesium && !!((Object.values(plugins).filter(({name}) => name === "Identify").pop() || {}).cfg || {}).showInMapPopup;
-    }
+    state => !!state?.mapInfo?.showInMapPopup,
+    (cesium, showInMapPopup) => !cesium && showInMapPopup
 );
 /**
   * Get mapinfo requests from state
@@ -70,7 +67,8 @@ export const drawSupportActiveSelector = (state) => {
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
 export const annotationsEditingSelector = (state) => get(state, "annotations.editing");
-export const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
+export const mapInfoEnabledSelector = (state) => get(state, "mapInfo.enabled", false);
+export const mapInfoDisabledSelector = (state) => !mapInfoEnabledSelector(state);
 
 /**
  * selects stopGetFeatureInfo from state
@@ -126,7 +124,7 @@ export const validResponsesSelector = createSelector(
     });
 
 export const currentResponseSelector = createSelector(
-    validResponsesSelector, indexSelector,
+    responsesSelector, indexSelector,
     (responses = [], index = 0) => responses[index]
 );
 export const currentFeatureSelector = state => {
@@ -194,4 +192,4 @@ export const clickedPointWithFeaturesSelector = createSelector(
 export const currentEditFeatureQuerySelector = state => state.mapInfo?.currentEditFeatureQuery;
 
 export const mapTriggerSelector = state => get(state, "mapInfo.configuration.trigger", "click");
-export const hoverEnabledSelector = state => get(state, "mapInfo.configuration.hoverEnabled", true);
+export const hoverEnabledSelector = state => isCesium(state) ? false : true;

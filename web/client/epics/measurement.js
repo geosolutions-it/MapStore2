@@ -10,7 +10,8 @@ import Rx from 'rxjs';
 import uuidv1 from 'uuid/v1';
 
 import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../utils/MeasurementUtils';
-import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, SET_ANNOTATION_MEASUREMENT, setMeasurementConfig, changeMeasurement} from '../actions/measurement';
+import {validateCoord} from '../utils/MeasureUtils';
+import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, SET_ANNOTATION_MEASUREMENT, setMeasurementConfig, changeMeasurement, changeCoordinates} from '../actions/measurement';
 import {addLayer} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
 import {toggleControl, setControlProperty, SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from '../actions/controls';
@@ -18,7 +19,8 @@ import {closeFeatureGrid} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {showCoordinateEditorSelector, measureSelector} from '../selectors/controls';
 import {geomTypeSelector} from '../selectors/measurement';
-import {newAnnotation, setEditingFeature, cleanHighlight} from '../actions/annotations';
+import { CLICK_ON_MAP } from '../actions/map';
+import {newAnnotation, setEditingFeature, cleanHighlight, toggleVisibilityAnnotation} from '../actions/annotations';
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -73,11 +75,32 @@ export const closeMeasureEpics = (action$, store) =>
 
 export const setMeasureStateFromAnnotationEpic = (action$, store) =>
     action$.ofType(SET_ANNOTATION_MEASUREMENT)
-        .switchMap(({features}) => {
+        .switchMap(({features, properties}) => {
             const isGeomSelected = geomTypeSelector(store.getState()) === getGeomTypeSelected(features)?.[0];
             return Rx.Observable.of( !isGeomSelected && changeMeasurement({geomType: getGeomTypeSelected(features)?.[0]}),
                 setControlProperty("measure", "enabled", true),
-                setControlProperty("annotations", "enabled", false));
+                setControlProperty("annotations", "enabled", false),
+                toggleVisibilityAnnotation(properties.id, false));
+        });
+
+export const addCoordinatesEpic = (action$, {getState = () => {}}) =>
+    action$.ofType(CLICK_ON_MAP)
+        .filter(() => {
+            const {showCoordinateEditor, enabled} = getState().controls.measure;
+            return showCoordinateEditor && enabled;
+        } )
+        .switchMap(({point}) => {
+            const { currentFeature: index, features = [], geomType } = getState()?.measurement || {};
+            const { lng: lon, lat } = point?.latlng || {};
+            let coordinates = features[index]?.geometry?.coordinates || [];
+            coordinates = geomType === 'Polygon' ? coordinates[0] : coordinates;
+            const invalidCoordinateIndex = coordinates !== undefined ? coordinates.findIndex(c=> !validateCoord(c)) : -1;
+            if (invalidCoordinateIndex !== -1) {
+                coordinates = coordinates.map(c=> ({lon: c[0], lat: c[1]}));
+                coordinates[invalidCoordinateIndex] = {lon, lat};
+                return Rx.Observable.of(changeCoordinates(coordinates));
+            }
+            return Rx.Observable.empty();
         });
 
 export default {
@@ -85,5 +108,6 @@ export default {
     addAsLayerEpic,
     openMeasureEpic,
     closeMeasureEpics,
-    setMeasureStateFromAnnotationEpic
+    setMeasureStateFromAnnotationEpic,
+    addCoordinatesEpic
 };

@@ -23,9 +23,10 @@ import { mapSelector } from '../selectors/map';
 import { currentContextSelector } from '../selectors/context';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
-import {featureInfoClick, changeFormat, hideMapinfoMarker} from '../actions/mapInfo';
-import { clickPointSelector} from '../selectors/mapInfo';
+import { changeFormat } from '../actions/mapInfo';
+import { addMarker, hideMarker } from '../actions/search';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
+import { shareSelector } from "../selectors/controls";
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedIn)
@@ -60,13 +61,13 @@ import { updateUrlOnScrollSelector } from '../selectors/geostory';
  */
 
 const Share = connect(createSelector([
-    state => state.controls && state.controls.share && state.controls.share.enabled,
+    shareSelector,
     versionSelector,
     mapSelector,
     currentContextSelector,
     state => get(state, 'controls.share.settings', {}),
     (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
-    clickPointSelector,
+    state => state.search && state.search.markerPosition || {},
     updateUrlOnScrollSelector
 ], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({
     isVisible,
@@ -88,13 +89,12 @@ const Share = connect(createSelector([
     },
     formatCoords: formatCoords,
     point,
-    isScrollPosition
-})), {
+    isScrollPosition})), {
     onClose: toggleControl.bind(null, 'share', null),
-    hideMarker: hideMapinfoMarker,
+    hideMarker,
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
-    onSubmitClickPoint: featureInfoClick,
-    onChangeFormat: changeFormat
+    onChangeFormat: changeFormat,
+    addMarker: addMarker
 })(SharePanel);
 
 export const SharePlugin = assign(Share, {

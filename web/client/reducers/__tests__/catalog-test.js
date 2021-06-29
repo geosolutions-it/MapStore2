@@ -53,7 +53,9 @@ import {
     addCatalogService,
     changeText,
     changeServiceFormat,
-    setLoading
+    setLoading,
+    formatsLoading,
+    setSupportedFormats
 } from '../../actions/catalog';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
@@ -323,5 +325,19 @@ describe('Test the catalog reducer', () => {
             newService: {}
         }, {type: CHANGE_METADATA_TEMPLATE, metadataTemplate: ""});
         expect(state.newService.metadataTemplate).toBe("");
+    });
+    it('FORMAT_OPTIONS_LOADING ', () => {
+        const state = catalog({
+            newService: {}
+        }, formatsLoading(false));
+        expect(state.formatsLoading).toBe(false);
+    });
+    it('SET_FORMAT_OPTIONS ', () => {
+        const formats = {imageFormats: ["image/png"], infoFormats: ["text/html"]};
+        const state = catalog({
+            newService: {}
+        }, setSupportedFormats(formats, url));
+        expect(state.newService.formatUrlUsed).toBe(url);
+        expect(state.newService.supportedFormats).toEqual(formats);
     });
 });

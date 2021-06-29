@@ -36,6 +36,7 @@ import { defaults as defaultControls } from 'ol/control';
 import axios from "../../../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
 import {get} from 'ol/proj';
+import { getResolutions } from '../../../../utils/MapUtils';
 
 let mockAxios;
 
@@ -1729,18 +1730,18 @@ describe('Openlayers layer', () => {
 
         expect(layer).toExist();
         const source = layer.layer.getSource();
-        const spy = expect.spyOn(source, "refresh");
+        const spy = expect.spyOn(source.tileCache, "pruneExceptNewestZ");
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getSource()).toExist();
-        expect(layer.layer.getSource().getParams()).toExist();
-        expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
+        expect(source).toExist();
+        expect(source.getParams()).toExist();
+        expect(source.getParams().cql_filter).toBe("INCLUDE");
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
-        expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
+        expect(source.getParams().cql_filter).toBe("EXCLUDE");
 
         // this prevents old cache to be rendered while loading
         expect(spy).toHaveBeenCalled();
@@ -1763,10 +1764,9 @@ describe('Openlayers layer', () => {
         var layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={options} map={map} />, document.getElementById("container"));
-
         expect(layer).toExist();
-        const source = layer.layer.getSource();
-        const spyRefresh = expect.spyOn(source, "refresh");
+        let source = layer.layer.getSource();
+        const spy = expect.spyOn(source.tileCache, "pruneExceptNewestZ");
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -1778,8 +1778,8 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
 
-        expect(spyRefresh).toHaveBeenCalled();
-        expect(layer.layer.getSource().getParams().time).toBe("2019-01-01T00:00:00Z");
+        expect(spy).toHaveBeenCalled();
+        expect(source.getParams().time).toBe("2019-01-01T00:00:00Z");
     });
     it('wms empty params not removed on update', () => {
         var options = {
@@ -2828,4 +2828,250 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
     });
+
+    it('should apply native ol min and max resolution on wms layer', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const maxResolution = 39135; // ~ zoom 2 Web Mercator
+        const resolutions = getResolutions();
+        const options = {
+            type: 'wms',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png8',
+            url: 'http://localhost:8080/geoserver/wms'
+        };
+        let layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="wms"
+                options={{
+                    ...options,
+                    minResolution,
+                    maxResolution
+                }}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer).toBeTruthy();
+        expect(layer.layer.getMinResolution()).toBe(minResolution);
+        expect(layer.layer.getMaxResolution()).toBe(maxResolution);
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="wms"
+                options={options}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer.getMinResolution()).toBe(0);
+        expect(layer.layer.getMaxResolution()).toBe(Infinity);
+    });
+
+    it('should apply native ol min and max resolution on wmts layer', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const maxResolution = 39135; // ~ zoom 2 Web Mercator
+        const resolutions = getResolutions();
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png8',
+            url: 'http://localhost:8080/geoserver/gwc/service/wmts',
+            tileMatrixSet: [
+                {
+                    "TileMatrix": [],
+                    "ows:Identifier": "EPSG:900913",
+                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913"
+                }
+            ]
+        };
+        let layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="wmts"
+                options={{
+                    ...options,
+                    minResolution,
+                    maxResolution
+                }}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer).toBeTruthy();
+        expect(layer.layer.getMinResolution()).toBe(minResolution);
+        expect(layer.layer.getMaxResolution()).toBe(maxResolution);
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="wmts"
+                options={options}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer.getMinResolution()).toBe(0);
+        expect(layer.layer.getMaxResolution()).toBe(Infinity);
+    });
+
+    it('should apply native ol min and max resolution on wfs layer', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
+            return [200, SAMPLE_FEATURE_COLLECTION];
+        });
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const maxResolution = 39135; // ~ zoom 2 Web Mercator
+        const resolutions = getResolutions();
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        let layer;
+        map.on('rendercomplete', () => {
+            if (layer.layer.getSource().getFeatures().length > 0) {
+                expect(layer.layer.getMinResolution()).toBe(minResolution);
+                expect(layer.layer.getMaxResolution()).toBe(maxResolution);
+                done();
+            }
+        });
+        // first render
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={{
+                ...options,
+                minResolution,
+                maxResolution
+            }}
+            map={map}
+            resolutions={resolutions}/>, document.getElementById("container"));
+        expect(layer.layer.getSource()).toBeTruthy();
+    });
+
+    it('should apply native ol min and max resolution on vector layer', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const maxResolution = 39135; // ~ zoom 2 Web Mercator
+        const resolutions = getResolutions();
+        const options = {
+            crs: 'EPSG:4326',
+            features: {
+                'type': 'FeatureCollection',
+                'crs': {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                'features': [
+                    {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Polygon',
+                            'coordinates': [[
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
+                            ]]
+                        }
+                    }
+                ]
+            }
+        };
+        let layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="vector"
+                options={{
+                    ...options,
+                    minResolution,
+                    maxResolution
+                }}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer).toBeTruthy();
+        expect(layer.layer.getMinResolution()).toBe(minResolution);
+        expect(layer.layer.getMaxResolution()).toBe(maxResolution);
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="vector"
+                options={options}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer.getMinResolution()).toBe(0);
+        expect(layer.layer.getMaxResolution()).toBe(Infinity);
+    });
+
+    it('should apply native ol min and max resolution on osm layer', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const maxResolution = 39135; // ~ zoom 2 Web Mercator
+        const resolutions = getResolutions();
+        const options = {
+            source: 'osm',
+            title: 'Open Street Map',
+            name: 'mapnik',
+            group: 'background'
+        };
+        let layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="osm"
+                options={{
+                    ...options,
+                    minResolution,
+                    maxResolution
+                }}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer).toBeTruthy();
+        expect(layer.layer.getMinResolution()).toBe(minResolution);
+        expect(layer.layer.getMaxResolution()).toBe(maxResolution);
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="osm"
+                options={options}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer.getMinResolution()).toBe(0);
+        expect(layer.layer.getMaxResolution()).toBe(Infinity);
+    });
+
+    it('should not apply native ol min and max resolution when disableResolutionLimits is set to true', () => {
+        const minResolution = 1222; // ~ zoom 7 Web Mercator
+        const maxResolution = 39135; // ~ zoom 2 Web Mercator
+        const resolutions = getResolutions();
+        const layer = ReactDOM.render(
+            <OpenlayersLayer
+                type="wms"
+                options={{
+                    type: 'wms',
+                    visibility: true,
+                    name: 'nurc:Arc_Sample',
+                    group: 'Meteo',
+                    format: 'image/png8',
+                    url: 'http://localhost:8080/geoserver/wms',
+                    minResolution,
+                    maxResolution,
+                    disableResolutionLimits: true
+                }}
+                map={map}
+                resolutions={resolutions}
+            />, document.getElementById("container"));
+
+        expect(layer.layer).toBeTruthy();
+        expect(layer.layer.getMinResolution()).toBe(0);
+        expect(layer.layer.getMaxResolution()).toBe(Infinity);
+    });
+
 });

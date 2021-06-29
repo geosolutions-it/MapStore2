@@ -36,8 +36,9 @@ export default (config) => ({
         action$.ofType(LOAD_CLASSIFICATION)
             .switchMap((action) => {
                 const url = config.getStyleMetadataService(action.layer, action.params);
+                const method = action.params?.method;
                 return Rx.Observable.defer(() => axios.get(url))
-                    .switchMap((response) => Rx.Observable.of(classificationLoaded(action.layer, config.readClassification(response.data))))
+                    .switchMap((response) => Rx.Observable.of(classificationLoaded(action.layer, config.readClassification(response.data, method))))
                     .catch(e => Rx.Observable.of(classificationError(action.layer, e)));
             }),
     removeThematicEpic: (action$, store) =>

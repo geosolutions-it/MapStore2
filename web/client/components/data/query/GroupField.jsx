@@ -25,6 +25,7 @@ import Button from '../../misc/Button';
 
 class GroupField extends React.Component {
     static propTypes = {
+        dropUp: PropTypes.bool,
         groupLevels: PropTypes.number,
         withContainer: PropTypes.bool,
         autocompleteEnabled: PropTypes.bool,
@@ -35,13 +36,16 @@ class GroupField extends React.Component {
         fieldWidth: PropTypes.string,
         removeButtonIcon: PropTypes.string,
         addButtonIcon: PropTypes.string,
+        removeGroupButtonIcon: PropTypes.string,
+        buttonStyle: PropTypes.string,
         logicComboOptions: PropTypes.array,
         attributePanelExpanded: PropTypes.bool,
         actions: PropTypes.object,
         listOperators: PropTypes.array,
         stringOperators: PropTypes.array,
         booleanOperators: PropTypes.array,
-        defaultOperators: PropTypes.array
+        defaultOperators: PropTypes.array,
+        comboOptions: PropTypes.object
     };
 
     static contextTypes = {
@@ -56,6 +60,8 @@ class GroupField extends React.Component {
         filterFields: [],
         attributes: [],
         removeButtonIcon: "trash",
+        removeGroupButtonIcon: "trash",
+        bsStyle: "default",
         addButtonIcon: "glyphicon glyphicon-plus",
         attributePanelExpanded: true,
         logicComboOptions: [
@@ -128,17 +134,18 @@ class GroupField extends React.Component {
         let comboValues = this.getComboValues(selectedAttribute, this.props.attributes);
         const deleteButton = filterField.exception ?
             (<OverlayTrigger placement="bottom" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong><I18N.Message msgId={filterField.exception || ""}/></strong></Tooltip>)}>
-                <Button id="remove-filter-field" className="filter-buttons no-border" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                <Button id="remove-filter-field" className="filter-buttons no-border" bsStyle={this.props.buttonStyle} style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
                     <Glyphicon style={{color: "white"}} glyph="glyphicon glyphicon-warning-sign"/>
                 </Button>
             </OverlayTrigger>)
             :
             (<OverlayTrigger placement="top" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong>
-                <I18N.Message msgId="queryform.attributefilter.delete" /></strong></Tooltip>)}><Button id="remove-filter-field" className="filter-buttons no-border" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                <I18N.Message msgId="queryform.attributefilter.delete" /></strong></Tooltip>)}><Button id="remove-filter-field" bsStyle={this.props.buttonStyle} className="filter-buttons no-border" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
                     <Glyphicon glyph={this.props.removeButtonIcon}/>
                 </Button></OverlayTrigger>);
         return (
             <FilterField
+                dropUp={this.props.dropUp}
                 key={filterField.rowId}
                 deleteButton={deleteButton}
                 attributes={this.props.attributes}
@@ -150,6 +157,7 @@ class GroupField extends React.Component {
                 onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
                 onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
                 <ComboField
+                    dropUp={this.props.dropUp}
                     attType="list"
                     valueField={'id'}
                     textField={'name'}
@@ -176,6 +184,7 @@ class GroupField extends React.Component {
                     // flag to swtich from AutocompleteField to TextField
                     this.props.autocompleteEnabled ?
                         (<AutocompleteField
+                            dropUp={this.props.dropUp}
                             filterField={filterField}
                             attType="string"/>) :
                         (<TextField
@@ -184,6 +193,7 @@ class GroupField extends React.Component {
                 }
 
                 <ComboField
+                    dropUp={this.props.dropUp}
                     fieldOptions={['true', 'false']}
                     attType="boolean"
                     comboFilter={"contains"}/>
@@ -198,6 +208,7 @@ class GroupField extends React.Component {
                 id: "add-condition-group",
                 className: "filter-buttons no-border",
                 glyph: "list-alt",
+                bsStyle: this.props.buttonStyle,
                 tooltipId: "queryform.attributefilter.add_group",
                 onClick: () => this.props.actions.onAddGroupField(groupField.id, groupField.index)
             });
@@ -207,6 +218,7 @@ class GroupField extends React.Component {
             id: "add-filter-field",
             className: "filter-buttons no-border",
             glyph: this.props.addButtonIcon,
+            bsStyle: this.props.buttonStyle,
             tooltipId: "queryform.attributefilter.add_condition",
             onClick: () => this.props.actions.onAddFilterField(groupField.id)
         });
@@ -214,8 +226,9 @@ class GroupField extends React.Component {
             buttons.push({
                 key: "remove-group",
                 className: "filter-buttons no-border",
-                tooltipId: "queryform.attributefilter.delete",
-                glyph: this.props.removeButtonIcon,
+                bsStyle: this.props.buttonStyle,
+                tooltipId: "queryform.attributefilter.deleteGroup",
+                glyph: this.props.removeGroupButtonIcon,
                 onClick: () => this.props.actions.onRemoveGroupField(groupField.id)
             });
         }

@@ -9,27 +9,28 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
-import { get, pick } from 'lodash';
+import { get, pick, isEqual } from 'lodash';
 import {compose, lifecycle} from 'recompose';
 import ReactDock from 'react-dock';
-
-import { createPlugin } from '../utils/PluginsUtils';
-
-import * as epics from '../epics/featuregrid';
-import featuregrid from '../reducers/featuregrid';
+import ContainerDimensions from 'react-container-dimensions';
 
 import Grid from '../components/data/featuregrid/FeatureGrid';
+import BorderLayout from '../components/layout/BorderLayout';
+
+import { createPlugin } from '../utils/PluginsUtils';
+import { toChangesMap} from '../utils/FeatureGridUtils';
+import { initPlugin, sizeChange, setUp, setSyncTool} from '../actions/featuregrid';
+import * as epics from '../epics/featuregrid';
+import featuregrid from '../reducers/featuregrid';
+import {mapLayoutValuesSelector} from '../selectors/maplayout';
 import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} from '../selectors/featuregrid';
-import { toChangesMap} from '../utils/FeatureGridUtils';
+
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './featuregrid/panels/index';
-import BorderLayout from '../components/layout/BorderLayout';
+import {gridTools, gridEvents, pageEvents, toolbarEvents} from './featuregrid/index';
+
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
-import {gridTools, gridEvents, pageEvents, toolbarEvents} from './featuregrid/index';
-import { initPlugin, sizeChange, setUp} from '../actions/featuregrid';
-import ContainerDimensions from 'react-container-dimensions';
-import {mapLayoutValuesSelector} from '../selectors/maplayout';
 
 
 const Dock = connect(createSelector(
@@ -81,6 +82,7 @@ const Dock = connect(createSelector(
   * @prop {boolean} cfg.showFilteredObject default false. Displays spatial filter selection area when true
   * @prop {boolean} cfg.showTimeSync default false. Shows the button to enable time sync
   * @prop {boolean} cfg.timeSync default false. If true, the timeSync is active by default.
+  * @prop {boolean} cfg.enableMapFilterSync default false. If true, the wms sync tool will be active by default.
   * @prop {number} cfg.maxZoom the maximum zoom level for the "zoom to feature" functionality
   * @classdesc
   * FeatureEditor Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
@@ -152,7 +154,7 @@ const FeatureDock = (props = {
     dialogs: EMPTY_OBJ,
     select: EMPTY_ARR
 }) => {
-    const { maxZoom } = props.pluginCfg;
+    const maxZoom  = props?.pluginCfg?.maxZoom;
     const dockProps = {
         dimMode: "none",
         defaultSize: 0.35,
@@ -261,9 +263,32 @@ const selector = createSelector(
     })
 );
 const EditorPlugin = compose(
-    connect(selector,
+    connect(() => ({}),
         (dispatch) => ({
             onMount: bindActionCreators(setUp, dispatch),
+            setSyncTool: bindActionCreators(setSyncTool, dispatch)
+        })),
+    lifecycle({
+        componentDidMount() {
+            // only the passed properties will be picked
+            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
+            if (this.props.enableMapFilterSync) {
+                this.props.setSyncTool(true);
+            }
+        },
+        // TODO: fix this in contexts
+        // due to multiple renders of plugins in contexts (one with default props, then with context props)
+        // the options have to be updated when change.
+        componentDidUpdate(oldProps) {
+            const newOptions = pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
+            const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
+            if (!isEqual(newOptions, oldOptions) ) {
+                this.props.onMount(newOptions);
+            }
+        }
+    }),
+    connect(selector,
+        (dispatch) => ({
             gridEvents: bindActionCreators(gridEvents, dispatch),
             pageEvents: bindActionCreators(pageEvents, dispatch),
             initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
@@ -274,13 +299,7 @@ const EditorPlugin = compose(
             })),
             onSizeChange: (...params) => dispatch(sizeChange(...params))
         })
-    ),
-    lifecycle({
-        componentDidMount() {
-            // only the passed properties will be picked
-            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync']));
-        }
-    })
+    )
 )(FeatureDock);
 
 export default createPlugin('FeatureEditor', {

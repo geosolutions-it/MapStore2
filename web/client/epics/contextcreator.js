@@ -133,7 +133,7 @@ export const saveContextResource = (action$, store) => action$
                     push(destLocation || `/context/${context.name}`),
                     loadExtensions(),
                     loading(false, 'contextSaving')
-                ),
+                )
             ))
             .catch(({status, data}) => Rx.Observable.of(error({
                 title: 'contextCreator.saveErrorNotification.titleContext',
@@ -492,9 +492,9 @@ export const mapViewerLoadEpic = (action$, store) => action$
             Rx.Observable.merge(
                 Rx.Observable.of(
                     initMap(true),
-                    loadMapConfig(configUrl, null, cloneDeep(mapConfig)),
+                    loadMapConfig(configUrl, null, cloneDeep(mapConfig), undefined, {}),
                     mapViewerLoaded(true)
-                ),
+                )
             );
     });
 

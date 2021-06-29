@@ -559,7 +559,7 @@
                     "html": "<h3>Trình xem</h3><p>Trình xem đơn giản</p>"
                 }
             },
-            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3 / A, 55054 Massarosa (Lucca) - Ý info@geo-solutions.it | Điện thoại: 39 0584 962313 | Fax: 39 0584 1660272</small>",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
             "forkMeOnGitHub": "Chia đôi tôi trên GitHub",
             "ml": {
                 "email": "E-mail:",
@@ -1028,7 +1028,8 @@
             "crossLayerFilter": {
                 "clear": "Xóa bộ lọc",
                 "errors": {
-                    "noCrossLayerAvailable": "Lọc lớp chéo không khả dụng cho lớp đã chọn"
+                    "noCrossLayerAvailable": "Lọc lớp chéo không khả dụng cho lớp đã chọn",
+                    "layersExcluded": "Chỉ các lớp đến từ cùng một nguồn mới có thể được chọn làm lớp đích cho bộ lọc lớp này"
                 },
                 "operation": "Hoạt động",
                 "placeholder": "Chọn lớp",

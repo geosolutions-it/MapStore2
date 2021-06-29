@@ -194,7 +194,7 @@
       "Examples": "Esimerkit",
       "LinkedinGroup": "Mapstore Linkedin Group",
       "scrollTop": "Vieritä sivun yläosaan",
-      "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+      "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
       "ml": {
         "title": "Ota yhteyttä ja pysy ajan tasalla postituslistojen avulla",
         "subscribe_users": "Liity käyttäjien postituslistalle",
@@ -900,7 +900,8 @@
         "operation": "Toiminto",
         "placeholder": "Valitse taso",
         "errors": {
-          "noCrossLayerAvailable": "Ristiinsuodatus ei ole käytettävissä valitulle tasolle"
+          "noCrossLayerAvailable": "Ristiinsuodatus ei ole käytettävissä valitulle tasolle",
+          "layersExcluded": "Vain kerrokset, jotka tulevat samasta lähteestä, voidaan valita tämän kerroksen suodattimen kohdekerrokseksi"
         }
       },
       "changedFilter": "Suodatin vaihdettu",

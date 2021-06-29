@@ -19,12 +19,12 @@ export default (state = DEFAULT_STATE, action) => {
     case SHOW:
         return compose(
             set('open', true),
-            set('owner', action.owner),
+            set('owner', action.owner)
         )(state);
     case HIDE:
         return compose(
             set('open', false),
-            set('owner', undefined),
+            set('owner', undefined)
         )(state);
     default:
         return state;

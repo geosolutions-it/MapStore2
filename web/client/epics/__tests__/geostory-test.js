@@ -32,13 +32,16 @@ import {
     openWebPageComponentCreator,
     editWebPageComponent,
     handlePendingGeoStoryChanges,
-    loadStoryOnHistoryPop
+    loadStoryOnHistoryPop,
+    scrollOnLoad
 } from '../geostory';
 import {
     ADD,
     LOADING_GEOSTORY,
     loadGeostory,
     SET_CURRENT_STORY,
+    setCurrentStory,
+    GEOSTORY_SCROLLING,
     LOAD_GEOSTORY_ERROR,
     add,
     UPDATE,
@@ -1629,7 +1632,17 @@ describe('Geostory Epics', () => {
             });
         });
     });
-
+    it('scrollOnLoad', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(scrollOnLoad, NUM_ACTIONS, {...setCurrentStory({}), delay: 0}, // replace default delay for testing
+            (actions) => {
+                expect(actions[0].type).toBe(GEOSTORY_SCROLLING);
+                expect(actions[0].status).toBe(true);
+                expect(actions[1].type).toBe(GEOSTORY_SCROLLING);
+                expect(actions[1].status).toBe(false);
+                done();
+            });
+    });
     describe('loadStoryOnHistoryPop', () => {
         it('loadStoryOnHistoryPop without shared', (done) => {
             const NUM_ACTIONS = 1;

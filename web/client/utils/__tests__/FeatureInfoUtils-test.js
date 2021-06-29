@@ -67,6 +67,34 @@ describe('FeatureInfoUtils', () => {
 
     });
 
+    it('HTML valid html contained in xml',  () => {
+        const htmlInXML =  '<?xml version="1.0" encoding="ISO-8859-1"?>' + rowHTML;
+        const validResults = Validator.HTML.getValidResponses([{response: htmlInXML}]);
+        expect(validResults.length).toBe(1);
+    });
+
+    it("HTML should return invalid if html is not valid", () => {
+        const inValidXML = `<?xml version='1.0' encoding="ISO-8859-1"  standalone="no" ?>
+        <ServiceExceptionReport version="1.1.1">
+          <ServiceException code="InvalidFormat">
+            <![CDATA[
+            Parámetros erroneos:
+            formato = image/png
+            XMin = -412208.172942018
+            YMin =  4928258.28942967
+            XMax = -411725.664200968
+            YMax =  4928740.79817072
+            AnchoPixels =  101
+            AltoPixels =  101
+            Transparente = No
+            Descripción error:
+            layers (AD.ADDRESSA) No soportada.]]>
+           </ServiceException>
+        </ServiceExceptionReport>`;
+        const validResults = Validator.HTML.getNoValidResponses([{response: inValidXML}]);
+        expect(validResults.length).toBe(1);
+    });
+
     // **********************************
     // TEXT
     // **********************************

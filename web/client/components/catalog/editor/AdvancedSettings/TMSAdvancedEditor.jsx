@@ -58,11 +58,11 @@ export default ({
     return (<div>
         <FormGroup controlId="autoload" key="autoload">
             <Col xs={12}>
-                <Checkbox key="autoload" value="autoload"
+                {service.autoload !== undefined && <Checkbox key="autoload" value="autoload"
                     onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
                     checked={!isNil(service.autoload) ? service.autoload : false}>
                     <Message msgId="catalog.autoload" />
-                </Checkbox>
+                </Checkbox>}
                 <Checkbox key="thumbnail" value="thumbnail"
                     onChange={() => onToggleThumbnail()}
                     checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>

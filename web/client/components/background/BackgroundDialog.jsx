@@ -276,7 +276,7 @@ export default class BackgroundDialog extends React.Component {
                 id: index,
                 param: key,
                 type,
-                val: type === 'string' ? value.toString() : value
+                val: type === 'string' ? value ? value.toString() : "" : value
             };
         });
     addAdditionalParameter = (event, key, id, type)=> {

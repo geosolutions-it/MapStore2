@@ -31,7 +31,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     ],
 
     preprocessors: {
-        [testFile]: [ 'webpack', 'coverage' ]
+        [testFile]: [ 'webpack' ]
     },
 
     reporters: [ 'mocha', 'coverage' ],
@@ -139,6 +139,9 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
             }),
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': JSON.stringify('development')
+            }),
+            new webpack.DefinePlugin({
+                '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify({})
             }),
             new webpack.ProvidePlugin({
                 process: 'process/browser'

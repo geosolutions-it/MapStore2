@@ -8,7 +8,8 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import src from './attribution/geosolutions-brand-sm.png';
+import src from '../assets/img/mapstorelogo.png';
+
 import assign from 'object-assign';
 import tooltip from '../../components/misc/enhancers/tooltip';
 import { isString, trimStart, isFunction } from 'lodash';
@@ -65,7 +66,7 @@ class NavMenu extends React.Component {
 
     static defaultProps = {
         src: src,
-        link: 'https://www.geo-solutions.it/',
+        link: 'https://www.geosolutionsgroup.com/',
         label: 'GeoSolutions',
         style: {
             position: "absolute",

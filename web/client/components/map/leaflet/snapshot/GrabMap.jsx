@@ -5,17 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const PropTypes = require('prop-types');
-const React = require('react');
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
-const {getProxyUrl} = require('../../../../utils/ProxyUtils');
-const {isEqual} = require('lodash');
-const html2canvas = require('html2canvas');
-const canvg = require('canvg-browser');
+import PropTypes from 'prop-types';
+import React from 'react';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import {getProxyUrl} from '../../../../utils/ProxyUtils';
+import {isEqual} from 'lodash';
+import html2canvas from 'html2canvas';
+import canvg from 'canvg-browser';
 
-const {Promise} = require('es6-promise');
+import {Promise} from 'es6-promise';
 
-require("./snapshotMapStyle.css");
+import "./snapshotMapStyle.css";
 
 /**
  * GrabMap for Leaflet uses HTML2CANVAS to generate the image for the existing
@@ -335,4 +335,4 @@ class GrabLMap extends React.Component {
     };
 }
 
-module.exports =  GrabLMap;
+export default GrabLMap;

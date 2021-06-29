@@ -16,7 +16,6 @@ import ColorSelector from './ColorSelector';
 import StyleCanvas from './StyleCanvas';
 import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
-import 'react-widgets/lib/less/react-widgets.less';
 import { getMessageById } from '../../utils/LocaleUtils';
 import { createFont } from '../../utils/AnnotationsUtils';
 import Message from '../I18N/Message';

@@ -8,7 +8,7 @@
 
 import 'react-quill/dist/quill.snow.css';
 
-import { head, isEmpty, isFunction } from 'lodash';
+import { head, isEmpty, isFunction, isUndefined } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -43,6 +43,7 @@ import Manager from '../../style/vector/Manager';
 import defaultConfig from './AnnotationsConfig';
 import FeaturesList from './FeaturesList';
 import GeometryEditor from './GeometryEditor';
+import { getApi } from '../../../api/userPersistedStorage';
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -831,7 +832,13 @@ class AnnotationsEditor extends React.Component {
             if (Object.keys(errors).length === 0) {
                 this.props.onError({});
                 this.props.onSave(this.props.id, assign({}, this.props.editedFields),
-                    this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
+                    this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, {
+                        ...this.props.editing.properties,
+                        visibility: !isUndefined(this.props.editing.properties.visibility)
+                            ? this.props.editing.properties.visibility
+                            : this.props.editing.visibility
+                    }
+                );
             } else {
                 this.props.onError(errors);
             }
@@ -861,7 +868,11 @@ class AnnotationsEditor extends React.Component {
 
     hideWarning = () => {
         if (this.props.showAgain) {
-            localStorage.setItem("showPopupWarning", false);
+            try {
+                getApi().setItem("showPopupWarning", false);
+            } catch (e) {
+                console.error(e);
+            }
             this.props.onHideMeasureWarning();
         }
         this.setPopupWarning(false);

@@ -60,7 +60,8 @@ import {
     HIDE_MEASURE_WARNING,
     TOGGLE_SHOW_AGAIN,
     INIT_PLUGIN,
-    UNSELECT_FEATURE
+    UNSELECT_FEATURE,
+    START_DRAWING
 } from '../actions/annotations';
 
 import {
@@ -77,6 +78,7 @@ import {
 import { set } from '../utils/ImmutableUtils';
 import { head, findIndex, isNil, slice, castArray, get } from 'lodash';
 import uuid from 'uuid';
+import { getApi } from '../api/userPersistedStorage';
 
 const fixCoordinates = (coords, type) => {
     switch (type) {
@@ -89,10 +91,15 @@ const fixCoordinates = (coords, type) => {
 function annotations(state = {validationErrors: {}}, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
-        return {
-            ...state,
-            showPopupWarning: localStorage && localStorage.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true
-        };
+        try {
+            return {
+                ...state,
+                showPopupWarning: getApi().getItem("showPopupWarning") !== null ? getApi().getItem("showPopupWarning") === "true" : true
+            };
+        } catch (e) {
+            console.error(e);
+            return state;
+        }
     }
     case CHANGED_SELECTED: {
         let newState = set(`unsavedGeometry`, true, state);
@@ -148,9 +155,11 @@ function annotations(state = {validationErrors: {}}, action) {
             if (validateCoordsArray(selected.properties.center)) {
                 center = selected.properties.center;
                 // turf/circle by default use km unit hence we divide by 1000 the radius(in meters)
+                // this try catch prevents the app from crashing when there is no radius maybe we can use a default value for radius incase action.radius === undefined
+                const circleRadius = action.radius ?? 0.0001;
                 c = circle(
                     center,
-                    action.crs === "EPSG:4326" ? action.radius : action.radius / 1000,
+                    action.crs === "EPSG:4326" ? circleRadius : circleRadius / 1000,
                     { steps: 100, units: action.crs === "EPSG:4326" ? "degrees" : "kilometers" }
                 ).geometry;
             } else {
@@ -733,6 +742,8 @@ function annotations(state = {validationErrors: {}}, action) {
     case HIDE_MEASURE_WARNING: {
         return {...state, showPopupWarning: false};
     }
+    case START_DRAWING:
+        return {...state, config: {...state.config, geodesic: get(action.options, 'geodesic', false)}};
     default:
         return state;
 

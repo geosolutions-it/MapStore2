@@ -1,5 +1,5 @@
 /* eslint-disable */
-module.exports = function(Cesium) {
+const createBilTerrainProvider = function(Cesium) {
 	var OGCHelper = {};
 	 var intersectionRectangle=function(rectangle0,rectangle1){
 		var west = Math.max(rectangle0.west, rectangle1.west);
@@ -47,7 +47,8 @@ module.exports = function(Cesium) {
 	 * static array where image formats available for OGCHelper are
 	 * defined
 	 */
-	OGCHelper.FormatImage = [ {
+	OGCHelper.FormatImage = []; // edit: disabled to avoid unnecessary requests. MapStore only supports WMS "image/bil"
+    /* [ {
 		format : "image/png",
 		extension: "png"
 	}, {
@@ -63,6 +64,7 @@ module.exports = function(Cesium) {
 		format : "image/png; mode=8bit",
 		extension: "png"
 	} ];
+    */
 
 	/**
 	 * static array where data array availables for OGCHelper are defined
@@ -72,11 +74,12 @@ module.exports = function(Cesium) {
 		/**
 		* bufferIn : buffer to process (switch byte order and check the data limitations)
 		* size: defines the dimension of the array (size.height* size.width cells)
-		* highest: defines the highest altitude (without offset) of the data. 
-		* lowest: defines the lowest altitude (without offset) of the data. 
+		* highest: defines the highest altitude (without offset) of the data.
+		* lowest: defines the lowest altitude (without offset) of the data.
 		* offset: defines the offset of the data in order adjust the limitations
+		* littleEndian: defines whether buffer is in little or big endian
 		*/
-		postProcessArray : function(bufferIn, size,highest,lowest,offset) {
+		postProcessArray : function(bufferIn, size,highest,lowest,offset,littleEndian) {
 			var resultat;
 			var viewerIn = new DataView(bufferIn);
 			var littleEndianBuffer = new ArrayBuffer(size.height * size.width * 2);
@@ -85,7 +88,7 @@ module.exports = function(Cesium) {
 				// time to switch bytes!!
 				var temp, goodCell = 0, somme = 0;
 				for (var i = 0; i < littleEndianBuffer.byteLength; i += 2) {
-					temp = viewerIn.getInt16(i, false)-offset;
+					temp = viewerIn.getInt16(i, littleEndian)-offset;
 					if (temp > lowest && temp < highest) {
 						viewerOut.setInt16(i, temp, true);
 						somme += temp;
@@ -105,8 +108,8 @@ module.exports = function(Cesium) {
 	OGCHelper.WMTSParser={};
 	/**
 	 * parse wms,TMS or WMTS url from an url and a layer. request metadata information on server.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param {String}
 	 *            description.layerName the name of the layer.
 	 * @param {String}
@@ -144,7 +147,7 @@ module.exports = function(Cesium) {
 	 *            [description.formatImage] see OGCHelper.FormatImage
 	 * @param {Object}
 	 *            [description.formatArray] see OGCHelper.FormatArray
-	 * return a promise with:
+	 * @return a promise with:
 	 *	- ready : boolean which indicates that the parsing didn't have issue
 	 *	- [URLtemplateImage]: function which takes in parameters x,y,level and return the good URL template to request an image
 	 *	- [URLtemplateArray]: function which takes in parameters x,y,level and return the good URL template to request an typedArray
@@ -220,6 +223,7 @@ module.exports = function(Cesium) {
 		resultat.heightMapHeight = Cesium.defaultValue(description.heightMapHeight,resultat.heightMapWidth);
 		var requestedSize={width:65,height:65};
 		var CRS = undefined;
+		resultat.littleEndian = description.littleEndian;
 		resultat.formatImage = description.formatImage;
 		resultat.formatArray = description.formatArray;
 		resultat.tilingScheme = undefined;
@@ -247,9 +251,6 @@ module.exports = function(Cesium) {
 		var index=url.indexOf("?");
 		if(index>-1){
 			url=url.substring(0,index);
-		}
-		if (Cesium.defined(description.proxy)) {
-			url = description.proxy.getURL(url);
 		}
 
 		// get list of map format
@@ -421,6 +422,7 @@ module.exports = function(Cesium) {
 				resultat.URLtemplateArray=function(){return URLtemplateArray;};
 			}
 		}
+        resultat.proxy = description.proxy;
 		return resultat;
 	};
 
@@ -452,9 +454,6 @@ module.exports = function(Cesium) {
 			var mapServiceNodes=[].slice.apply(xml.querySelectorAll("TileMap[title='"+description.layerName+"']"));
 			var promises=mapServiceNodes.map(function(elt){
 				var url=elt.getAttribute("href");
-				if(Cesium.defined(description.proxy)){
-					url=description.proxy.getURL(url);
-				}
 				return Cesium.when(Cesium.loadXML(url),function(xml){
 					return OGCHelper.TMSParser.getMetaDatafromXML(xml,description);
 				});
@@ -490,7 +489,6 @@ module.exports = function(Cesium) {
 		resultat.offset=Cesium.defaultValue(description.offset,0);
 		resultat.highest=Cesium.defaultValue(description.highest,12000);
 		resultat.lowest=Cesium.defaultValue(description.lowest,-500);
-    	
 		var srs=xml.querySelector("SRS").textContent;
 		var goodCRS=OGCHelper.CRS.filter(function(elt){
 			return elt.name===srs;
@@ -518,9 +516,6 @@ module.exports = function(Cesium) {
 		if(Cesium.defined(resultat.formatImage)){
 			tileSets=tilsetsNode.map(function(tileSet){
 				var url=tileSet.getAttribute("href")+"/{x}/{tmsY}."+resultat.formatImage.extension;
-				if(Cesium.defined(proxy)){
-					url=proxy.getURL(url);
-				}
 				var level=parseInt(tileSet.getAttribute("order"));
 				return {url:url,level:level};
 			});
@@ -555,6 +550,7 @@ module.exports = function(Cesium) {
 			}
 			resultat.ready=true;
 		}
+        resultat.proxy = description.proxy;
 		return resultat;
     };
 
@@ -629,15 +625,9 @@ module.exports = function(Cesium) {
 			var node=correctEncoding[i];
 			if(node.type==="RESTful" && !Cesium.defined(urlRESTful)){
 				urlRESTful=node.node.getAttribute("xlink:href");
-				if (Cesium.defined(proxy)) {
-					urlRESTful = proxy.getURL(urlRESTful);
-				}
 			}
 			if(node.type==="KVP" && !Cesium.defined(urlKVP)){
 				urlKVP=node.node.getAttribute("xlink:href");
-				if (Cesium.defined(proxy)) {
-					urlKVP = proxy.getURL(urlKVP);
-				}
 			}
 		}
 
@@ -654,7 +644,7 @@ module.exports = function(Cesium) {
 			var styleNodes=layerNode.querySelectorAll("Style");
 			var defaultStyle;
 			var selectedStyle;
-			
+
 			for (var i = 0; i < styleNodes.length; i++) {
 				var style=styleNodes[i].querySelector("Identifier").textContent;
 				if(styleNodes[i].getAttribute("isDefault")!=null){
@@ -694,7 +684,7 @@ module.exports = function(Cesium) {
 			for (var i = 0; i < nodeMatrixSetIds.length && !Cesium.defined(tileMatrixSetNode); i++) {
 				if(nodeMatrixSetIds[i].textContent===tileMatrixSetLinkName){
 					tileMatrixSetNode=nodeMatrixSetIds[i].parentNode;
-				} 
+				}
 			}
 
 			var supportedCRS=tileMatrixSetNode.querySelector("SupportedCRS").textContent;
@@ -703,10 +693,10 @@ module.exports = function(Cesium) {
 					CRSSelected = OGCHelper.CRS[n];
 				}
 			}
-			
+
 			if(Cesium.defined(CRSSelected)){
 				var tileSets;
-				
+
 				var nodeTileSets=[].slice.call(tileMatrixSetNode.querySelectorAll("TileMatrix"));
 				tileSets=nodeTileSets.map(function(noeud){
 					var id=noeud.querySelector("Identifier").textContent;
@@ -751,7 +741,7 @@ module.exports = function(Cesium) {
 					}else if(Cesium.defined(urlKVP)){
 						template=urlKVP+"service=WMTS&request=GetTile&version=1.0.0&layer="+layerName+"&style=&"+styleName+"format="+formatImage.format+"&TileMatrixSet="+tileMatrixSetLinkName+"&TileMatrix={TileMatrix}&TileRow={y}&TileCol={x}"
 					}
-					
+
 					if(Cesium.defined(template)){
 						resultat.getTileDataAvailable=function(x,y,level){
 							var retour=false;
@@ -784,19 +774,20 @@ module.exports = function(Cesium) {
 						resultat.ready=true;
 					}
 				}
-				
+
 			}
 		}
+        resultat.proxy = description.proxy;
 		return resultat;
 	};
 
 	/**
 	 * A {@link TerrainProvider} that produces geometry by tessellating height
 	 * maps retrieved from a geoserver terrain server.
-	 * 
+	 *
 	 * @alias GeoserverTerrainProvider
 	 * @constructor
-	 * 
+	 *
 	 * @param {String}
 	 *            description.url The URL of the geoserver terrain server.
 	 * @param {String}
@@ -814,7 +805,7 @@ module.exports = function(Cesium) {
 	 * @param {Number}
 	 *            [description.maxLevel] max level of tiles
 	 * @param {String}
-	 *            [description.service] type of service to use (WMS, TMS or WMTS) 
+	 *            [description.service] type of service to use (WMS, TMS or WMTS)
 	 * @param {String}
 	 *            [description.xml] the xml after requesting "getCapabilities".
 	 * @see TerrainProvider
@@ -856,21 +847,21 @@ module.exports = function(Cesium) {
 	/**
 	*
 	* arrayBuffer: 	the arrayBuffer to process to have a HeightmapTerrainData
-	* limitations: 	object which defines highest (limitations.highest), lowest (limitations.lowest) altitudes 
+	* limitations: 	object which defines highest (limitations.highest), lowest (limitations.lowest) altitudes
 	* 			   	and the offset (limitations.offset) of the terrain.
 	* size: 		number defining the height and width of the tile (can be a int or an object with two attributs: height and width)
-	* formatArray: 	object which defines the terrainDataStructure (formatArray.terrainDataStructure) and 
+	* formatArray: 	object which defines the terrainDataStructure (formatArray.terrainDataStructure) and
 	* 			   	the postProcessArray (formatArray.postProcessArray)
 	* hasWaterMask: boolean to indicate to generate a waterMask
 	* childrenMask: Number defining the childrenMask
 	*
 	*/
-	GeoserverTerrainProvider.arrayToHeightmapTerrainData=function(arrayBuffer,limitations,size,formatArray,hasWaterMask,childrenMask){
+	GeoserverTerrainProvider.arrayToHeightmapTerrainData=function(arrayBuffer,limitations,size,formatArray,hasWaterMask,littleEndian,childrenMask){
 		if(typeof(size)=="number"){
 			size={width:size,height:size};
 		}
 		var heightBuffer = formatArray.postProcessArray(arrayBuffer,size,limitations.highest,limitations.lowest,
-			limitations.offset);
+			limitations.offset, littleEndian);
 		if (!Cesium.defined(heightBuffer)) {
 			throw new Cesium.DeveloperError("no good size");
 		}
@@ -897,7 +888,7 @@ module.exports = function(Cesium) {
 /**
 	*
 	* image: 					the image to process to have a HeightmapTerrainData
-	* limitations: 				object which defines highest (limitations.highest), lowest (limitations.lowest) altitudes 
+	* limitations: 				object which defines highest (limitations.highest), lowest (limitations.lowest) altitudes
 	* 			   				and the offset (limitations.offset) of the terrain. The style defined in mySLD use an offset of 32768 meters
 	* size: 					number defining the height and width of the tile
 	* hasWaterMask: 			boolean to indicate to generate a waterMask
@@ -950,7 +941,7 @@ module.exports = function(Cesium) {
 		}
 		return new Cesium.HeightmapTerrainData(optionsHeihtmapTerrainData);
 	};
-	
+
 	function TerrainParser(promise,provider){
 		Cesium.when(promise,function(resultat){
 			if(Cesium.defined(resultat)&&(resultat.ready)){
@@ -961,10 +952,11 @@ module.exports = function(Cesium) {
 					resultat.getHeightmapTerrainDataImage=function(x,y,level){
 						var retour;
 						if(!isNaN(x+y+level)){
-							var urlArray=templateToURL(resultat.URLtemplateImage(x,y,level),x, y, level,provider);
+							var url=templateToURL(resultat.URLtemplateImage(x,y,level),x, y, level,provider);
 							var limitations={highest:resultat.highest,lowest:resultat.lowest,offset:resultat.offset};
+                            var proxy = resultat.proxy || { getURL: v => v } ;
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
-							var promise = Cesium.throttleRequestByServer(urlArray,Cesium.loadImage);
+                            var promise = Cesium.throttleRequestByServer(proxy.getURL(url),Cesium.loadImage);
 							if (Cesium.defined(promise)) {
 								retour = Cesium.when(promise,function(image){
 											return GeoserverTerrainProvider.imageToHeightmapTerrainData(image,limitations,
@@ -994,13 +986,13 @@ module.exports = function(Cesium) {
 							var urlArray=templateToURL(resultat.URLtemplateArray(x,y,level),x, y, level,provider);
 							var limitations={highest:resultat.highest,lowest:resultat.lowest,offset:resultat.offset};
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
-							
-					        var promise = Cesium.throttleRequestByServer(urlArray,Cesium.loadArrayBuffer);
+                            var proxy = resultat.proxy || { getURL: v => v };
+                            var promise = Cesium.throttleRequestByServer(proxy.getURL(urlArray),Cesium.loadArrayBuffer);
 					        if (Cesium.defined(promise)) {
 								retour = Cesium.when(promise,
 													function(arrayBuffer) {
 														return GeoserverTerrainProvider.arrayToHeightmapTerrainData(arrayBuffer,limitations,
-															{width:resultat.heightMapWidth,height:resultat.heightMapHeight},resultat.formatArray,resultat.waterMask,hasChildren);
+															{width:resultat.heightMapWidth,height:resultat.heightMapHeight},resultat.formatArray,resultat.waterMask,resultat.littleEndian,hasChildren);
 													}
 												).otherwise(
 													function() {
@@ -1021,7 +1013,7 @@ module.exports = function(Cesium) {
 														}
 													});
 							}
-					        
+
 						}
 						return retour;
 					};
@@ -1076,8 +1068,17 @@ module.exports = function(Cesium) {
 			}
 		});
 	}
-
-	function templateToURL(urlParam,x,y,level,provider){
+    /**
+     * Transforms the URL template, x,y,z and the tiling scheme into a real URL.
+     * @param {string} urlParam the url template
+     * @param {number} x coordinate x of the tile set
+     * @param {number} y coordinate y of the tile set
+     * @param {number} level zoom level
+     * @param {object} provider data provider
+     * @param {*} param5
+     * @returns
+     */
+	function templateToURL(urlParam,x,y,level,provider, {getURL = v => v} = {}){
 		var rect= provider.tilingScheme.tileXYToNativeRectangle(x, y,level);
 		var xSpacing = (rect.east - rect.west)/ (provider.heightMapWidth - 1);
 		var ySpacing = (rect.north - rect.south)/ (provider.heightMapHeight - 1);
@@ -1102,7 +1103,8 @@ module.exports = function(Cesium) {
 	        mask |= provider.getTileDataAvailable( 2 * x + 1, 2 * y + 1,childLevel) ? 8 : 0;
 		return mask;
 	}
-	
+
 	return GeoserverTerrainProvider;
 };
 /* eslint-enable */
+export default createBilTerrainProvider;

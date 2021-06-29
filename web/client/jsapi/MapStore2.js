@@ -17,13 +17,14 @@ import { connect } from 'react-redux';
 import { configureMap, loadMapConfig } from '../actions/config';
 import { initMap } from '../actions/map';
 import StandardApp from '../components/app/StandardApp';
-import defaultConfig from '../config.json';
+import defaultConfig from '../configs/config.json';
 import { generateActionTrigger } from '../epics/jsapi';
-import localConfig from '../localConfig.json';
+import localConfig from '../configs/localConfig.json';
 import { standardEpics, standardReducers, standardRootReducerFunc } from '../stores/defaultOptions';
 import ConfigUtils from '../utils/ConfigUtils';
 import { ensureIntl } from '../utils/LocaleUtils';
 import { renderFromLess } from '../utils/ThemeUtils';
+import { getApi } from '../api/userPersistedStorage';
 
 const defaultPlugins = {
     "mobile": localConfig.plugins.embedded,
@@ -50,9 +51,15 @@ function mergeDefaultConfig(pluginName, cfg) {
 
 function loadConfigFromStorage(name = 'mapstore.embedded') {
     if (name) {
-        const loaded = localStorage.getItem(name);
-        if (loaded) {
-            return JSON.parse(loaded);
+        let loaded = false;
+        try {
+            loaded = getApi().getItem(name);
+            if (loaded) {
+                return JSON.parse(loaded);
+            }
+        } catch (e) {
+            console.error(e);
+            return null;
         }
     }
     return null;

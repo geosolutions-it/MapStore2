@@ -1,6 +1,6 @@
 # Configuration of Application Context Manager
 
-The Application Context Manager can be configured editing the `pluginsConfig.json` file.
+The Application Context Manager can be configured editing the `configs/pluginsConfig.json` file.
 
 The configuration file has this shape:
 

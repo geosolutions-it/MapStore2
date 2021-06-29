@@ -8,8 +8,10 @@
 
 import React from 'react';
 import Message from '../../components/I18N/Message';
+import HTML from '../../components/I18N/HTML';
 import { filter, head, sortBy } from 'lodash';
-
+import { createSelector } from 'reselect';
+import { connect } from 'react-redux';
 import { defaultProps } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 
@@ -31,7 +33,7 @@ import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
 import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
 import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
 import SimpleVectorStyleEditor from './SimpleVectorStyleEditor';
-
+import { mapSelector } from '../../selectors/map';
 
 const responses = {
     html,
@@ -42,6 +44,9 @@ const responses = {
 import { StyleSelector } from '../styleeditor/index';
 
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
+const ConnectedDisplay = connect(
+    createSelector([mapSelector], ({ zoom, projection }) => ({ zoom, projection }))
+)(Display);
 
 const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
 const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "vector" && element.id !== "annotations";
@@ -108,7 +113,7 @@ const formatCards = {
                         <span>
                             <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }' }} /></p>
                             <pre>
-                                <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }} />
+                                <HTML msgId="layerProperties.templateFormatInfoAlertExample"/>
                             </pre>
                             <p><small><Message msgId="layerProperties.templateFormatInfoAlert1" /></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil" />&nbsp;)</p>
                         </span>}
@@ -222,7 +227,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             tooltipId: 'layerProperties.display',
             glyph: 'eye-open',
             visible: isLayerNode(props),
-            Component: Display
+            Component: ConnectedDisplay
         },
         {
             id: 'style',

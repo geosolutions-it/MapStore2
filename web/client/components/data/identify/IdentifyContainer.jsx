@@ -35,7 +35,7 @@ export default props => {
     const {
         enabled,
         requests = [],
-        onClose,
+        onClose = () => {},
         responses = [],
         index,
         viewerOptions = {},
@@ -68,10 +68,13 @@ export default props => {
         onChangeFormat,
         formatCoord,
         loaded,
-        validator = () => null
+        validator = () => null,
+        toggleHighlightFeature = () => {}
     } = props;
     const latlng = point && point.latlng || null;
-    const targetResponse = validResponses[index]; // the index is calculated on the valid responses hence using all responses leads to wrong results
+
+    // Layer selector allows only selection of valid response's index, so target response will always be valid.
+    const targetResponse = responses[index];
     const {layer} = targetResponse || {};
 
     let lngCorrected = null;
@@ -112,7 +115,10 @@ export default props => {
                 fluid={fluid}
                 position={position}
                 draggable={draggable}
-                onClose={onClose}
+                onClose={() => {
+                    onClose();
+                    toggleHighlightFeature(false);
+                }}
                 dock={dock}
                 style={dockStyle}
                 showFullscreen={showFullscreen}
@@ -122,7 +128,7 @@ export default props => {
                         <div className="layer-col">
                             <span className="identify-icon glyphicon glyphicon-1-layer"/>
                             <LayerSelector
-                                responses={validResponses}
+                                responses={responses}
                                 index={index}
                                 loaded={loaded}
                                 setIndex={setIndex}
@@ -140,7 +146,7 @@ export default props => {
                     </Row>,
                     <Row className="coordinates-edit-row">
                         <span className="identify-icon glyphicon glyphicon-point"/>
-                        <div className={"coordinate-editor"}>
+                        <div style={showCoordinateEditor ? {zIndex: 1} : {}} className={"coordinate-editor"}>
                             <Coordinate
                                 key="coordinate-editor"
                                 formatCoord={formatCoord}

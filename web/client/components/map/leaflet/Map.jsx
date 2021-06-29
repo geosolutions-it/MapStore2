@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const L = require('leaflet');
-const PropTypes = require('prop-types');
-const React = require('react');
-const ConfigUtils = require('../../../utils/ConfigUtils').default;
-const {reprojectBbox, reproject} = require('../../../utils/CoordinatesUtils');
-const assign = require('object-assign');
-const {
+import L from 'leaflet';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ConfigUtils from '../../../utils/ConfigUtils';
+import {reprojectBbox, reproject} from '../../../utils/CoordinatesUtils';
+import assign from 'object-assign';
+import {
     getGoogleMercatorResolutions,
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -20,12 +20,12 @@ const {
     GET_COORDINATES_FROM_PIXEL_HOOK,
     ZOOM_TO_EXTENT_HOOK,
     registerHook
-} = require('../../../utils/MapUtils');
-const Rx = require('rxjs');
+} from '../../../utils/MapUtils';
+import Rx from 'rxjs';
 
-const {throttle} = require('lodash');
+import {throttle} from 'lodash';
 
-require('./SingleClick');
+import './SingleClick';
 
 class LeafletMap extends React.Component {
     static propTypes = {
@@ -125,7 +125,9 @@ class LeafletMap extends React.Component {
             Math.round(this.props.zoom));
 
         this.map = map;
-
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         // store zoomControl in the class to target the right control while add/remove
         if (this.props.zoomControl) {
             this.mapZoomControl = L.control.zoom();
@@ -247,10 +249,6 @@ class LeafletMap extends React.Component {
         });
 
         this.drawControl = null;
-
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -335,7 +333,9 @@ class LeafletMap extends React.Component {
                 projection: mapProj,
                 zoomOffset: this.zoomOffset,
                 onCreationError: this.props.onCreationError,
-                onClick: this.props.onClick
+                onClick: this.props.onClick,
+                resolutions: this.getResolutions(),
+                zoom: this.props.zoom
             }) : null;
         }) : null;
         return (
@@ -396,16 +396,30 @@ class LeafletMap extends React.Component {
             width: this.map.getSize().x
         };
         const center = this.map.getCenter();
-        this.props.onMapViewChanges({x: center.lng, y: center.lat, crs: "EPSG:4326"}, this.map.getZoom(), {
-            bounds: {
-                minx: parseFloat(bbox[0]),
-                miny: parseFloat(bbox[1]),
-                maxx: parseFloat(bbox[2]),
-                maxy: parseFloat(bbox[3])
+        const zoom = this.map.getZoom();
+        this.props.onMapViewChanges(
+            {
+                x: center.lng,
+                y: center.lat,
+                crs: "EPSG:4326"
             },
-            crs: 'EPSG:4326',
-            rotation: 0
-        }, size, this.props.id, this.props.projection );
+            zoom,
+            {
+                bounds: {
+                    minx: parseFloat(bbox[0]),
+                    miny: parseFloat(bbox[1]),
+                    maxx: parseFloat(bbox[2]),
+                    maxy: parseFloat(bbox[3])
+                },
+                crs: 'EPSG:4326',
+                rotation: 0
+            },
+            size,
+            this.props.id,
+            this.props.projection,
+            undefined, // viewerOptions
+            this.getResolutions()[zoom] // resolution
+        );
     };
 
     setMousePointer = (pointer) => {
@@ -526,4 +540,4 @@ class LeafletMap extends React.Component {
     };
 }
 
-module.exports = LeafletMap;
+export default LeafletMap;

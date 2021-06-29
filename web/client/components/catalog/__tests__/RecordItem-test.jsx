@@ -293,9 +293,11 @@ describe('This test for RecordItem', () => {
 
             }
         };
+        const service = { format: "image/jpeg", title: "GeoServer WMS", type: "wms", url: 'fakeURL'};
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
         const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
+            service={service}
             onLayerAdd={actions.onLayerAdd}
             catalogURL="fakeURL"
             catalogType="wms"
@@ -312,6 +314,8 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.calls[0].arguments[0].format).toBeTruthy();
+        expect(actionsSpy.calls[0].arguments[0].format).toBe(service.format);
         expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check wms default format', () => {
@@ -857,5 +861,33 @@ describe('This test for RecordItem', () => {
         expect(descDiv).toExist();
         expect(descDiv.hasChildNodes()).toBe(true);
         expect(descDiv.firstElementChild.tagName).toBe('SPAN');
+    });
+    it('check formats are added to layer props (WMS)', () => {
+        const defaultFormat = 'image/jpeg';
+        const formatOptions = ["image/png", "image/png8"];
+        const infoFormatOptions = ["text/html", "text/plain"];
+        let actions = {
+            onLayerAdd: () => {}
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<RecordItem
+            defaultFormat={defaultFormat}
+            formatOptions={formatOptions}
+            infoFormatOptions={infoFormatOptions}
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].format).toBe(defaultFormat);
+        expect(actionsSpy.calls[0].arguments[0].imageFormats).toEqual(formatOptions);
+        expect(actionsSpy.calls[0].arguments[0].infoFormats).toBe(infoFormatOptions);
     });
 });

@@ -18,7 +18,8 @@ import {
     uniq,
     includes,
     get,
-    isNil
+    isNil,
+    isEmpty
 } from 'lodash';
 
 import urlUtil from 'url';
@@ -29,6 +30,7 @@ import {getMessageById} from './LocaleUtils';
 import * as WMTSUtils from './WMTSUtils';
 import { cleanAuthParamsFromURL } from './SecurityUtils';
 import WMS from '../api/WMS';
+import { getAvailableInfoFormat } from "./MapInfoUtils";
 
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
@@ -491,7 +493,7 @@ const toURLArray = (url) => {
  *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
  *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
  */
-export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url} = {}, baseConfig = {}, localizedLayerStyles) => {
+export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url, formats = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
         return null;
@@ -553,7 +555,8 @@ export const recordToLayer = (record, type = "wms", {removeParams = [], format, 
         catalogURL,
         ...baseConfig,
         ...record.layerOptions,
-        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined
+        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
+        ...(type === 'wms' && !isEmpty(formats) && {imageFormats: formats.imageFormats, infoFormats: formats.infoFormats})
     };
 };
 export const getCatalogRecords = (format, records, options, locales) => {
@@ -669,4 +672,67 @@ export const tileProviderToLayer = (record) => {
         provider: record.provider, // "ProviderName.VariantName"
         name: record.provider
     };
+};
+
+export const DEFAULT_FORMAT_WMS = [{
+    label: 'image/png',
+    value: 'image/png'
+}, {
+    label: 'image/png8',
+    value: 'image/png8'
+}, {
+    label: 'image/jpeg',
+    value: 'image/jpeg'
+}, {
+    label: 'image/vnd.jpeg-png',
+    value: 'image/vnd.jpeg-png'
+}, {
+    label: 'image/vnd.jpeg-png8',
+    value: 'image/vnd.jpeg-png8'
+}, {
+    label: 'image/gif',
+    value: 'image/gif'
+}];
+
+/**
+ * Get unique array of supported info formats
+ * @return {array} info formats
+ */
+export const getUniqueInfoFormats = () => {
+    return uniq(Object.values(getAvailableInfoFormat()));
+};
+
+/**
+ * Fetch the supported formats of the WMS service
+ * @param url
+ * @param includeGFIFormats
+ * @return {object|string} formats
+ */
+export const getSupportedFormat = (url, includeGFIFormats = false) => {
+    return WMS.getCapabilities(url).then((caps) => {
+        let getMapFormats = get(caps, 'capability.request.getMap.format', []);
+        let imageFormats;
+        if (!isEmpty(getMapFormats)) {
+            const defaultFormats = DEFAULT_FORMAT_WMS.map(({value}) => value);
+            getMapFormats = getMapFormats.map(({value})=> ({label: value, value}));
+            imageFormats = getMapFormats.filter(({value})=> includes(defaultFormats, value)) || [];
+        } else {
+            imageFormats = DEFAULT_FORMAT_WMS;
+        }
+
+        let infoFormats;
+        if (includeGFIFormats) {
+            let getFeatureInfoFormats = get(caps, 'capability.request.getFeatureInfo.format', []);
+            const defaultFormats = getUniqueInfoFormats();
+            if (!isEmpty(getFeatureInfoFormats)) {
+                getFeatureInfoFormats = getFeatureInfoFormats.map(({value})=> value);
+                infoFormats = uniq(getFeatureInfoFormats.filter((value)=> includes(defaultFormats, value))) || [];
+            } else {
+                infoFormats = defaultFormats;
+            }
+        }
+        return includeGFIFormats ? {imageFormats, infoFormats} : imageFormats;
+    }).catch(()=>
+        // Fallback to default formats on exception
+        includeGFIFormats ? {imageFormats: DEFAULT_FORMAT_WMS, infoFormats: getUniqueInfoFormats()} : DEFAULT_FORMAT_WMS);
 };

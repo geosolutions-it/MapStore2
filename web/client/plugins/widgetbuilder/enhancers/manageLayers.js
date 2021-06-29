@@ -23,7 +23,7 @@ export default compose(
         setLayers: layers => onEditorChange('map.layers', layers)
     }),
     withHandlers({
-        addLayer: ({ layers = [], setLayers = () => { }, catalog}) => layer => catalog.localizedLayerStyles ?
+        addLayer: ({ layers = [], setLayers = () => { }, catalog = {}}) => layer => catalog.localizedLayerStyles ?
             setLayers([...layers, normalizeLayer({...layer, localizedLayerStyles: catalog.localizedLayerStyles})])
             : setLayers([...layers, normalizeLayer(layer)]),
         removeLayersById: ({ layers = [], setLayers = () => { } }) => (ids = []) => setLayers(layers.filter(l => !find(castArray(ids), id => id === l.id)))

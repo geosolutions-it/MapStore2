@@ -1,6 +1,6 @@
 import { REMOVE_NODE } from '../actions/layers';
 import { RESET_CONTROLS } from '../actions/controls';
-import { RANGE_CHANGED, RANGE_DATA_LOADED, LOADING, SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC } from '../actions/timeline';
+import { RANGE_CHANGED, RANGE_DATA_LOADED, LOADING, SELECT_LAYER, INIT_SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC, INIT_TIMELINE } from '../actions/timeline';
 import { set } from '../utils/ImmutableUtils';
 import { assign, pickBy, has } from 'lodash';
 
@@ -10,6 +10,7 @@ import { assign, pickBy, has } from 'lodash';
  * {
  *     settings: {
  *         autoSelect: true // true by defaults, if set the first layer available will be selected on startup
+ *         showHiddenLayers: true // false by default. If set to false, the guide layers will be in sync with time layer's visibility in TOC and automatically switches to the next available guide layer (if snap to guide layer is enabled)
  *     },
  *     range: {
  *         start: // start date of the current range
@@ -76,7 +77,7 @@ export default (state = {
     case LOADING: {
         return action.layerId ? set(`loading[${action.layerId}]`, action.loading, state) : set(`loading.timeline`, action.loading, state);
     }
-    case SELECT_LAYER: {
+    case SELECT_LAYER: case INIT_SELECT_LAYER: {
         return set('selectedLayer', action.layerId, state);
     }
     case REMOVE_NODE: {
@@ -89,6 +90,9 @@ export default (state = {
     }
     case RESET_CONTROLS: {
         return assign({}, state, { range: undefined, rangeData: undefined, selectedLayer: undefined, loading: undefined, MouseEvent: undefined});
+    }
+    case INIT_TIMELINE: {
+        return set(`settings.showHiddenLayers`, action.showHiddenLayers, state);
     }
     default:
         return state;

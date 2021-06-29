@@ -55,7 +55,7 @@ import { generalInfoFormatSelector } from '../selectors/mapInfo';
 import { userSelector } from '../selectors/security';
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
 import { getNode, toggleByType } from '../utils/LayersUtils';
-import { getScales } from '../utils/MapUtils';
+import { getScales, getResolutions } from '../utils/MapUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import Message from '../components/I18N/Message';
 import assign from 'object-assign';
@@ -258,7 +258,8 @@ class LayerTree extends React.Component {
         onLayerInfo: PropTypes.func,
         onSetSwipeActive: PropTypes.func,
         updatableLayersCount: PropTypes.number,
-        onSetSwipeMode: PropTypes.func
+        onSetSwipeMode: PropTypes.func,
+        resolutions: PropTypes.func
     };
 
     static contextTypes = {
@@ -366,6 +367,8 @@ class LayerTree extends React.Component {
     }
     getDefaultLayer = () => {
         const LayerNode = this.props.layerNodeComponent || DefaultLayer;
+        const resolutions = this.props.resolutions || getResolutions();
+        const resolution = resolutions[this.props.currentZoomLvl];
         return (
             <LayerNode
                 {...this.props.layerOptions}
@@ -386,6 +389,7 @@ class LayerTree extends React.Component {
                 onUpdateNode={this.props.updateNode}
                 hideOpacityTooltip={this.props.hideOpacityTooltip}
                 language={this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : null}
+                resolution={resolution}
             />
         );
     }
@@ -681,6 +685,13 @@ const checkPluginsEnhancer = branch(
  * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
+ * @prop {boolean} cfg.activateRemoveGroup if set to false, do not show the remove button for layer groups. default `true`
+  * @prop {boolean} [addLayersPermissions=true] if false, only users of role ADMIN can see has the permission to see add layers button. Default true.
+   @prop {boolean} [removeLayersPermissions=true] if false, only users of role ADMIN can see has the permission to remove layers. Default true.
+   @prop {boolean} [sortingPermissions=true] if false, only users of role ADMIN can see has the permission to move layers in the TOC. Default true.
+   @prop {boolean} [addGroupsPermissions=true] if false, only users of role ADMIN can see has the permission add groups to the TOC. Default true.
+   @prop {boolean} [removeGroupsPermissions=true] if false, only users of role ADMIN can see has the permission remove groups from the TOC. Default true.
+   @prop {boolean} [layerInfoToolPermissions=false] if false, only users of role ADMIN can see has the permission see the layer info tool.. Default false.
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
  * example :
  * ```

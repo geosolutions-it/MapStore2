@@ -97,4 +97,35 @@ describe('Test Catalog panel', () => {
         const preview = document.querySelector(previewClassName);
         expect(preview).toNotExist(`${previewClassName} does not exist`);
     });
+    it('renders records with default_map_backgrounds', () => {
+        const title = "title";
+        const description = "description";
+        const item = ReactDOM.render(<Catalog
+            services={{
+                "default_map_backgrounds": {
+                    "type": "backgrounds",
+                    "title": "Default bg",
+                    "titleMsgId": "defaultMapBackgroundsServiceTitle",
+                    "autoload": true
+                },
+                "csw": {
+                    type: "csw",
+                    url: "url",
+                    title: "csw",
+                    format: "image/png8",
+                    metadataTemplate: "<p>${title} and ${description}</p>",
+                    hideThumbnail: true
+                }
+            }}
+            searchOptions={{}}
+            selectedService="default_map_backgrounds"
+            loading={false}
+            mode="view"
+            result={{numberOfRecordsMatched: 1}}
+            records={[{title, description, references: []}]}
+        />, document.getElementById("container"));
+        const inputField = document.querySelector(".form-group .Select-value-label");
+        expect(inputField.innerText).toBe("defaultMapBackgroundsServiceTitle");
+        expect(item).toExist();
+    });
 });
