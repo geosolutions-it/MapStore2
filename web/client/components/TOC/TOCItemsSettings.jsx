@@ -71,7 +71,7 @@ const TOCItemSettings = (props) => {
                 className={className}
                 onClose={() => {
                     if (onClose) {
-                        onClose(false, tabsCloseActions);
+                        onClose(tabsCloseActions);
                     } else {
                         tabsCloseActions.forEach(tabOnClose => { tabOnClose(); });
                         onHideSettings();

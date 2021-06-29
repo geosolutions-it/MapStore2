@@ -214,7 +214,7 @@ describe("test updateSettingsLifecycle", () => {
             testHandlers.tabCloseAction
         ];
 
-        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(true, tabCloseActions)}></div>);
+        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(tabCloseActions)}></div>);
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
@@ -236,7 +236,7 @@ describe("test updateSettingsLifecycle", () => {
             "not a function"
         ];
 
-        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(true, tabCloseActions)}></div>);
+        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(tabCloseActions)}></div>);
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
@@ -258,7 +258,7 @@ describe("test updateSettingsLifecycle", () => {
             tabCloseAction: testHandlers.tabCloseAction
         };
 
-        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(true, tabCloseActions)}></div>);
+        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(tabCloseActions)}></div>);
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}

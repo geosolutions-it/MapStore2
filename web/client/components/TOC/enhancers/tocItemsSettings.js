@@ -34,7 +34,7 @@ export const settingsState = compose(
  */
 export const settingsLifecycle = compose(
     withHandlers({
-        onClose: ({ onUpdateInitialSettings = () => {}, onHideSettings = () => {} }) => (forceClose, tabsCloseActions = []) => {
+        onClose: ({ onUpdateInitialSettings = () => {}, onHideSettings = () => {}, onUpdateOriginalSettings = () => {} }) => (tabsCloseActions = []) => {
             if (isArray(tabsCloseActions)) {
                 tabsCloseActions.forEach(tabOnClose => {
                     if (isFunction(tabOnClose)) {
@@ -42,6 +42,7 @@ export const settingsLifecycle = compose(
                     }
                 });
             }
+            onUpdateOriginalSettings({});
             onHideSettings();
             // clean up internal settings state
             onUpdateInitialSettings({});
