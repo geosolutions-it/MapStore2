@@ -6,20 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Rx from 'rxjs';
-<<<<<<< HEAD
-
-import { TOGGLE_3D } from '../actions/globeswitcher';
-
-import { changeMapType } from '../actions/maptype';
-import { last2dMapTypeSelector } from './../selectors/maptype';
-
-
-=======
 import { TOGGLE_3D } from '../actions/globeswitcher';
 import { changeMapType } from '../actions/maptype';
 import { last2dMapTypeSelector } from './../selectors/maptype';
 import { closeDetailsPanel } from '../actions/details';
->>>>>>> master
 /**
  * Gets every `TOGGLE_3D` event.
  * @memberof epics.globeswitcher
@@ -31,11 +21,6 @@ export const updateRouteOn3dSwitch = (action$, store) =>
     action$.ofType(TOGGLE_3D)
         .switchMap((action) => {
             const last2dMapType = last2dMapTypeSelector(store.getState());
-<<<<<<< HEAD
-            return Rx.Observable.of(changeMapType(action.originalMapType !== "cesium" ? "cesium" : last2dMapType));
-        });
-=======
->>>>>>> master
 
             return Rx.Observable.from([
                 changeMapType(action.originalMapType !== "cesium" ? "cesium" : last2dMapType),

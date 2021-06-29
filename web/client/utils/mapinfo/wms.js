@@ -6,21 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-<<<<<<< HEAD
-const {getCurrentResolution} = require('../MapUtils');
-const {reproject, getProjectedBBox, normalizeSRS} = require('../CoordinatesUtils');
-const {getLayerUrl} = require('../LayersUtils');
-const {isObject, isNil} = require('lodash');
-const { optionsToVendorParams } = require('../VendorParamsUtils');
-const { generateEnvString } = require('../LayerLocalizationUtils');
-=======
 import {getCurrentResolution} from '../MapUtils';
 import {reproject, getProjectedBBox, normalizeSRS} from '../CoordinatesUtils';
 import {getLayerUrl} from '../LayersUtils';
 import {isObject, isNil} from 'lodash';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 import { generateEnvString } from '../LayerLocalizationUtils';
->>>>>>> master
 
 import {addAuthenticationToSLD} from '../SecurityUtils';
 import assign from 'object-assign';

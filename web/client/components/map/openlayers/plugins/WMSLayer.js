@@ -347,10 +347,6 @@ Layers.registerType('wms', {
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         if (needsRefresh) {
             // forces tile cache drop
             // this prevents old cached tiles at lower zoom levels to be

@@ -26,14 +26,10 @@ class ShareEmbed extends React.Component {
     static propTypes = {
         shareUrl: PropTypes.string,
         showTOCToggle: PropTypes.bool,
-<<<<<<< HEAD
-        showConnectionsParamToggle: PropTypes.bool
-=======
         showConnectionsParamToggle: PropTypes.bool,
         sizeOptions: PropTypes.object,
         selectedOption: PropTypes.string,
         allowFullScreen: PropTypes.bool
->>>>>>> master
     };
 
     static defaultProps = {
@@ -45,10 +41,6 @@ class ShareEmbed extends React.Component {
     state = {
         copied: false,
         forceDrawer: false,
-<<<<<<< HEAD
-        connections: false
-    };
-=======
         connections: false,
         sizeOptions: {
             Small: { width: 600, height: 500 },
@@ -64,7 +56,6 @@ class ShareEmbed extends React.Component {
             this.setState({sizeOptions: this.props.sizeOptions, selectedOption: this.props.selectedOption || 'Small'});
         }
     }
->>>>>>> master
 
     renderTools = () => {
         return (<>

@@ -31,10 +31,7 @@ const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.re
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi } from '../api/userPersistedStorage';
-<<<<<<< HEAD
-=======
 import { mapSelector } from './../selectors/map';
->>>>>>> master
 
 /**
  * Closes the tutorial if 3D button has been toggled

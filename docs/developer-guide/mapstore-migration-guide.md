@@ -20,8 +20,6 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-<<<<<<< HEAD
-=======
 
 ## Migration from 2021.01.02 to 2021.02.00
 
@@ -98,7 +96,6 @@ Check the changes in pom.xml to update. (future evolution of the project will av
 }
 ```
 
->>>>>>> master
 ## Migration from 2021.01.01 to 2021.01.03
 
 Generally speaking this is not properly a breaking change, but more a fix to apply to your installations. Certificate for 'cesiumjs.org' has expired at 2021.05.05, so to continue using CesiumJS with MapStore
@@ -122,11 +119,7 @@ import {
 // example for additional translations in the project folder
 // setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './translations']);
 setConfigProp('translationsPath', './MapStore2/web/client/translations');
-<<<<<<< HEAD
-// __PROJECTNAME__ is the name of the project used in the creation process 
-=======
 // __PROJECTNAME__ is the name of the project used in the creation process
->>>>>>> master
 setConfigProp('themePrefix', '__PROJECTNAME__');
 
 // Use a custom plugins configuration file
@@ -139,11 +132,7 @@ import('@mapstore/product/embedded');
 ```
 2 - update the path of the embedded entry inside the `webpack.config.js` and `prod-webpack.config.js` files with:
 ```js
-<<<<<<< HEAD
-// __PROJECTNAME__ is the name of the project used in the creation process 
-=======
 // __PROJECTNAME__ is the name of the project used in the creation process
->>>>>>> master
 '__PROJECTNAME__-embedded': path.join(__dirname, "js", "embedded"),
 ```
 ### Locate plugin configuration
@@ -512,13 +501,8 @@ For more details see [this](https://github.com/geosolutions-it/MapStore2/commit/
 
 new files have been added:
 
-<<<<<<< HEAD
--  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml` 
--  `web/src/main/resources/mapstore.properties` 
-=======
 -  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml`
 -  `web/src/main/resources/mapstore.properties`
->>>>>>> master
 
 some files has been changed:
 

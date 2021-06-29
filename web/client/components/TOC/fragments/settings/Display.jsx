@@ -9,24 +9,16 @@
 import { clamp, isNil, isNumber } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-<<<<<<< HEAD
-import { Checkbox, Col, ControlLabel, FormGroup, Grid, Row } from 'react-bootstrap';
-
-=======
 import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB} from 'react-bootstrap';
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 const Button = tooltip(ButtonRB);
->>>>>>> master
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 import Message from '../../../I18N/Message';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import Legend from '../legend/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
 import Select from 'react-select';
-<<<<<<< HEAD
-=======
 import { DEFAULT_FORMAT_WMS, getSupportedFormat } from '../../../../utils/CatalogUtils';
->>>>>>> master
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -129,18 +121,6 @@ export default class extends React.Component {
                 <Row>
                     <Col xs={12}>
                         <FormGroup>
-<<<<<<< HEAD
-                            <ControlLabel><Message msgId="layerProperties.format" /></ControlLabel>
-                            <Select
-                                key="format-dropdown"
-                                clearable={false}
-                                options={(this.props.formats || ["image/png", "image/png8", "image/jpeg", "image/vnd.jpeg-png", "image/gif"])
-                                    .map((value) => ({ value, label: value }))}
-                                value={this.props.element && this.props.element.format || "image/png"}
-                                onChange={({ value }) => {
-                                    this.props.onChange("format", value);
-                                }}/>
-=======
                             <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
                             <div className={'ms-format-container'}>
                                 <Select
@@ -170,7 +150,6 @@ export default class extends React.Component {
                                     <Glyphicon glyph="refresh" />
                                 </Button>
                             </div>
->>>>>>> master
                         </FormGroup>
                     </Col>
                     <Col xs={12}>

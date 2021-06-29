@@ -618,8 +618,6 @@ describe('RulesEditor', () => {
 
     it('should trigger on change callback', (done) => {
         TestUtils.act(() => {
-<<<<<<< HEAD
-=======
             const Image = global.Image;
             global.Image = class {
                 constructor() {
@@ -628,7 +626,6 @@ describe('RulesEditor', () => {
                     }, 100);
                 }
             };
->>>>>>> master
             ReactDOM.render(
                 <RulesEditor
                     rules={[
@@ -648,15 +645,10 @@ describe('RulesEditor', () => {
                         try {
                             expect(newRules[0].symbolizers[0].image).toBe('new-url');
                         } catch (e) {
-<<<<<<< HEAD
-                            done(e);
-                        }
-=======
                             global.Image = Image;
                             done(e);
                         }
                         global.Image = Image;
->>>>>>> master
                         done();
                     }}
                 />, document.getElementById('container'));
@@ -671,11 +663,7 @@ describe('RulesEditor', () => {
         expect(symbolizersNode.length).toBe(1);
 
         const inputNodes = symbolizersNode[0].querySelectorAll('input');
-<<<<<<< HEAD
-        expect(inputNodes.length).toBe(1);
-=======
         expect(inputNodes.length).toBe(2);
->>>>>>> master
         TestUtils.act(() => {
             TestUtils.Simulate.change(inputNodes[0], { target: { value: 'new-url' }});
         });

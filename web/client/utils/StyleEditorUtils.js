@@ -463,8 +463,6 @@ export function validateImageSrc(src) {
     });
 }
 
-<<<<<<< HEAD
-=======
 export const SUPPORTED_MIME_TYPES = [{
     label: 'image/png',
     value: 'image/png'
@@ -538,7 +536,6 @@ export const updateExternalGraphicNode = (options, parsedSLD) => {
     return { parsedCode, errorObj };
 };
 
->>>>>>> master
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
@@ -554,10 +551,6 @@ export default {
     stringifyNameParts,
     parseJSONStyle,
     formatJSONStyle,
-<<<<<<< HEAD
-    validateImageSrc
-=======
     validateImageSrc,
     updateExternalGraphicNode
->>>>>>> master
 };

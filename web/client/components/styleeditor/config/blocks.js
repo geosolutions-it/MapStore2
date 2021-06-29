@@ -69,8 +69,6 @@ const getBlocks = (/* config = {} */) => {
                 image: property.image({
                     label: 'styleeditor.image',
                     key: 'image'
-<<<<<<< HEAD
-=======
                 }),
                 format: property.select({
                     label: 'styleeditor.format',
@@ -81,7 +79,6 @@ const getBlocks = (/* config = {} */) => {
                         && !['png', 'jpg', 'svg', 'gif', 'jpeg'].includes(image.split('.').pop());
                     },
                     getOptions: () => SUPPORTED_MIME_TYPES
->>>>>>> master
                 }),
                 opacity: property.opacity({
                     label: 'styleeditor.opacity'

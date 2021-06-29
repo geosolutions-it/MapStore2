@@ -8,11 +8,7 @@
 
 import timeline from '../timeline';
 
-<<<<<<< HEAD
-import { rangeDataLoaded, selectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
-=======
 import { rangeDataLoaded, selectLayer, initializeSelectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
->>>>>>> master
 import { isCollapsed, isMapSync } from '../../selectors/timeline';
 import expect from 'expect';
 

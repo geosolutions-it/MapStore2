@@ -14,10 +14,7 @@ import { geostoryLoaded, setEditing } from '../../actions/geostory';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { onLocationChanged } from 'connected-react-router';
 import { setApi, getApi } from '../../api/userPersistedStorage';
-<<<<<<< HEAD
-=======
 import { OPEN_DETAILS_PANEL } from './../../actions/details';
->>>>>>> master
 
 describe('tutorial Epics', () => {
     const GEOSTORY_EDIT_STEPS = [{

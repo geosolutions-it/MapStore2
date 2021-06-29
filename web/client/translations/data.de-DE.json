@@ -1019,10 +1019,7 @@
             "attributefilter":{
                 "add_condition": "Bedingung hinzufügen",
                 "delete": " Löschen",
-<<<<<<< HEAD
-=======
                 "deleteGroup": " Gruppe löschen",
->>>>>>> master
                 "add_group": "Gruppe hinzufügen",
                 "group_label_a": "Übereinstimmung",
                 "group_label_b": "der folgenden Bedingungen:",
@@ -1305,15 +1302,11 @@
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu ändern / festzulegen",
             "zoomToolTip": "Min: 1 und Max: 35",
             "showSectionId": "Bildlaufposition einschließen",
-<<<<<<< HEAD
-            "showConnections": "Verbindungen anzeigen"
-=======
             "showConnections": "Verbindungen anzeigen",
             "sizeOptions": {
                 "width": "Breite",
                 "height": "Höhe"
             }
->>>>>>> master
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1352,10 +1345,7 @@
         },
         "mapImport": {
                 "title": "Importieren",
-<<<<<<< HEAD
-=======
                 "tooltip": "Importieren Sie eine Kartendatei oder Vektordaten",
->>>>>>> master
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkonfigurations- oder Vektordateien ab </h4> <small> oder nutzen Sie </small> </p>",
                     "selectFiles": "Dateien auswählen...",
@@ -1371,10 +1361,7 @@
             },
         "mapExport": {
             "title": "Karte exportieren",
-<<<<<<< HEAD
-=======
             "tooltip": "Exportieren Sie die aktuelle Karte",
->>>>>>> master
             "exportPanel": {
                 "title": "<p><h4>Wählen Sie ein Format</h4></p>",
                 "exportButtonLabel": "Export"
@@ -2251,10 +2238,7 @@
             "imageSrcLoadError": "Die angegebene Bildquelle konnte nicht geladen werden. Versuchen Sie es mit einer anderen URL oder stellen Sie sicher, dass die Quelle über MapStore erreichbar ist.",
             "imageSrcInvalidBase64": "Dies ist kein gültiges base64-Image. Einige Style-Renderer unterstützen diesen Quelltyp nicht. Sie können stattdessen eine externe URL-Quelle verwenden.",
             "imageSrcNotSupportedBase64Image": "Einige Style-Renderer unterstützen Base64-Images nicht, selbst wenn die aktuelle Quelle gültig ist",
-<<<<<<< HEAD
-=======
             "imageFormatEmpty": "Das Bildformat kann nicht identifiziert werden. Bitte wählen Sie das Bildformat aus den verfügbaren in der Dropdown-Liste 'Format' aus",
->>>>>>> master
             "warningTextOrderTitle": "Warnung",
             "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
         },

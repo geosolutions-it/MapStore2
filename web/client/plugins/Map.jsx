@@ -28,10 +28,7 @@ import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
 import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
-<<<<<<< HEAD
-=======
 import { createFeatureFilter } from '../utils/FilterUtils';
->>>>>>> master
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -442,10 +439,7 @@ class MapPlugin extends React.Component {
             if (plugins.mapType === this.currentMapType) {
                 this.setState({plugins});
                 props.onLoadingMapPlugins(false, props.mapType);
-<<<<<<< HEAD
-=======
                 props.onMapTypeLoaded(true, props.mapType);
->>>>>>> master
             }
         });
     };
@@ -454,12 +448,8 @@ class MapPlugin extends React.Component {
 export default createPlugin('Map', {
     component: connect(selector, {
         onFontError: errorLoadingFont,
-<<<<<<< HEAD
-        onResolutionsChange: setMapResolutions
-=======
         onResolutionsChange: setMapResolutions,
         onMapTypeLoaded: mapPluginLoad
->>>>>>> master
     })(withScalesDenominators(MapPlugin)),
     reducers: {
         map: mapReducer,

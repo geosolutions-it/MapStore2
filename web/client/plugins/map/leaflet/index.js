@@ -7,17 +7,10 @@
 */
 
 export default {
-<<<<<<< HEAD
-    LMap: require('../../../components/map/leaflet/Map'),
-    Layer: require('../../../components/map/leaflet/Layer').default,
-    Feature: require('../../../components/map/leaflet/Feature'),
-    MeasurementSupport: require('../../../components/map/leaflet/MeasurementSupport'),
-=======
     LMap: require('../../../components/map/leaflet/Map').default,
     Layer: require('../../../components/map/leaflet/Layer').default,
     Feature: require('../../../components/map/leaflet/Feature').default,
     MeasurementSupport: require('../../../components/map/leaflet/MeasurementSupport').default,
->>>>>>> master
     Overview: require('../../../components/map/leaflet/Overview'),
     ScaleBar: require('../../../components/map/leaflet/ScaleBar'),
     DrawSupport: require('../../../components/map/leaflet/DrawSupport').default,

@@ -267,18 +267,6 @@ const property = {
         type: 'image',
         label,
         config: {},
-<<<<<<< HEAD
-        getValue: (value = '') => {
-            return {
-                [key]: value
-            };
-        }
-    }),
-    text: ({ label, key = 'label' }) => ({
-        type: 'input',
-        label,
-=======
->>>>>>> master
         getValue: (value = '') => {
             return {
                 [key]: value

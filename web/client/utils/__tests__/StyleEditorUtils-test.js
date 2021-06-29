@@ -27,12 +27,8 @@ import {
     stringifyNameParts,
     parseJSONStyle,
     formatJSONStyle,
-<<<<<<< HEAD
-    validateImageSrc
-=======
     validateImageSrc,
     updateExternalGraphicNode
->>>>>>> master
 } from '../StyleEditorUtils';
 
 describe('StyleEditorUtils test', () => {
@@ -747,8 +743,6 @@ describe('StyleEditorUtils test', () => {
             symbolizerId: 'id'
         });
     });
-<<<<<<< HEAD
-=======
     it('test parseJSONStyle for unique interval method classification translation', () => {
         const style = {
             name: 'Style',
@@ -824,7 +818,6 @@ describe('StyleEditorUtils test', () => {
             }]
         });
     });
->>>>>>> master
     it('should return an error with empty image src (validateImageSrc)', (done) => {
         validateImageSrc('')
             .then(() => {})
@@ -863,8 +856,6 @@ describe('StyleEditorUtils test', () => {
                 done();
             });
     });
-<<<<<<< HEAD
-=======
     describe('test updateExternalGraphicNode', ()=>{
         it('should return an valid parsed SLD with format specified', () => {
             const format = 'image/png';
@@ -994,5 +985,4 @@ describe('StyleEditorUtils test', () => {
             expect(parsedCode).toBeFalsy();
         });
     });
->>>>>>> master
 });

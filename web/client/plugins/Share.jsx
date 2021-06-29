@@ -23,13 +23,8 @@ import { mapSelector } from '../selectors/map';
 import { currentContextSelector } from '../selectors/context';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
-<<<<<<< HEAD
-import {featureInfoClick, changeFormat, hideMapinfoMarker} from '../actions/mapInfo';
-import { addMarker } from '../actions/search';
-=======
 import { changeFormat } from '../actions/mapInfo';
 import { addMarker, hideMarker } from '../actions/search';
->>>>>>> master
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
 import { shareSelector } from "../selectors/controls";
 /**
@@ -98,10 +93,6 @@ const Share = connect(createSelector([
     onClose: toggleControl.bind(null, 'share', null),
     hideMarker,
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
-<<<<<<< HEAD
-    onSubmitClickPoint: featureInfoClick,
-=======
->>>>>>> master
     onChangeFormat: changeFormat,
     addMarker: addMarker
 })(SharePanel);

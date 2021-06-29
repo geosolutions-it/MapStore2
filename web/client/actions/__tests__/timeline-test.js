@@ -24,15 +24,11 @@ import {
     SET_MAP_SYNC,
     setMapSync,
     INIT_TIMELINE,
-<<<<<<< HEAD
-    initTimeline
-=======
     initTimeline,
     SELECT_LAYER,
     selectLayer,
     INIT_SELECT_LAYER,
     initializeSelectLayer
->>>>>>> master
 } from '../timeline';
 
 describe('timeline actions', () => {

@@ -133,11 +133,7 @@ function search(state = null, action) {
         return {...state, format: action.format};
     case CHANGE_COORD:
         return {...state, coordinate: {...state.coordinate, [action.coord]: action.val}};
-<<<<<<< HEAD
-    case HIDE_MAPINFO_MARKER:
-=======
     case HIDE_MARKER:
->>>>>>> master
         return assign({}, state, {markerPosition: state?.markerPosition?.latlng ? {} : state?.markerPosition});
     default:
         return state;

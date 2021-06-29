@@ -1,10 +1,6 @@
 import { REMOVE_NODE } from '../actions/layers';
 import { RESET_CONTROLS } from '../actions/controls';
-<<<<<<< HEAD
-import { RANGE_CHANGED, RANGE_DATA_LOADED, LOADING, SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC, INIT_TIMELINE } from '../actions/timeline';
-=======
 import { RANGE_CHANGED, RANGE_DATA_LOADED, LOADING, SELECT_LAYER, INIT_SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC, INIT_TIMELINE } from '../actions/timeline';
->>>>>>> master
 import { set } from '../utils/ImmutableUtils';
 import { assign, pickBy, has } from 'lodash';
 

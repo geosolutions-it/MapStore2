@@ -536,11 +536,7 @@
                 <dependency>
                     <groupId>org.mapfish.print</groupId>
                     <artifactId>print-lib</artifactId>
-<<<<<<< HEAD
-                    <version>geosolutions-2.0</version>
-=======
                     <version>geosolutions-2.0-SNAPSHOT</version>
->>>>>>> master
                 </dependency>
             </dependencies>
             </profile>

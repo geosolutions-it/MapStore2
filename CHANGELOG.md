@@ -1,7 +1,5 @@
 # Change Log
 
-<<<<<<< HEAD
-=======
 ## [2021.01.04](https://github.com/geosolutions-it/MapStore2/tree/v2021.01.04) (2021-06-28)
 
 - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2021.01.03...v2021.01.04)**
@@ -12,7 +10,6 @@
 
 - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.01.04%22+is%3Aclosed)**
 
->>>>>>> master
 ## [2021.01.03](https://github.com/geosolutions-it/MapStore2/tree/v2021.01.02) (2021-05-13)
 
 This release contains hotfix for issue with CesiumJS certificate (#6838).

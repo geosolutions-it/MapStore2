@@ -439,8 +439,6 @@ describe('PluginsUtils', () => {
         ReactDOM.render(<LoadedPlugin/>, document.getElementById('container'));
         expect(document.querySelector('.selector')).toBeTruthy();
     });
-<<<<<<< HEAD
-=======
 
     it('should not throw an error if the loaded plugin is an object with component key', () => {
 
@@ -470,5 +468,4 @@ describe('PluginsUtils', () => {
         expect(result.loaded).toBe(true);
 
     });
->>>>>>> master
 });

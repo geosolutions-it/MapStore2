@@ -1301,15 +1301,11 @@
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
             "showSectionId": "Incluir posición de desplazamiento",
-<<<<<<< HEAD
-            "showConnections": "Mostrar conexiones"
-=======
             "showConnections": "Mostrar conexiones",
             "sizeOptions": {
                 "width": "ancho",
                 "height": "altura"
             }
->>>>>>> master
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",
@@ -2242,10 +2238,7 @@
             "imageSrcLoadError": "No se pudo cargar la fuente de la imagen proporcionada. Pruebe con una URL diferente o asegúrese de que MapStore pueda acceder a la fuente",
             "imageSrcInvalidBase64": "Esta no es una imagen base64 válida. Algunos procesadores de estilo no son compatibles con este tipo de fuente; en su lugar, puede utilizar una fuente de URL externa",
             "imageSrcNotSupportedBase64Image": "Algunos procesadores de estilo no admiten imágenes en base64 incluso si la fuente actual es válida",
-<<<<<<< HEAD
-=======
             "imageFormatEmpty": "No se puede identificar el formato de la imagen. Seleccione el formato de imagen de los disponibles en el menú desplegable 'Formato'",
->>>>>>> master
             "warningTextOrderTitle": "Advertencia",
             "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
         },

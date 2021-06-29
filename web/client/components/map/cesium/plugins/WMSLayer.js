@@ -6,25 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-<<<<<<< HEAD
-const Layers = require('../../../../utils/cesium/Layers');
-const Cesium = require('../../../../libs/cesium');
-const createBILTerrainProvider = require('../../../../utils/cesium/BILTerrainProvider').default;
-const BILTerrainProvider = createBILTerrainProvider(Cesium);
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
-const {
-    getProxyUrl,
-    needProxy
-} = require('../../../../utils/ProxyUtils');
-const assign = require('object-assign');
-const {isArray, isEqual} = require('lodash');
-const WMSUtils = require('../../../../utils/cesium/WMSUtils');
-const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
-const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
-const {addAuthenticationToSLD} = require('../../../../utils/SecurityUtils');
-
-const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
-=======
 import Layers from '../../../../utils/cesium/Layers';
 import Cesium from '../../../../libs/cesium';
 import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
@@ -39,7 +20,6 @@ import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import {addAuthenticationToSLD} from '../../../../utils/SecurityUtils';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
->>>>>>> master
 
 function splitUrl(originalUrl) {
     let url = originalUrl;

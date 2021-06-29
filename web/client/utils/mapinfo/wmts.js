@@ -17,11 +17,7 @@ import {
 import {getLayerUrl} from '../LayersUtils';
 import {optionsToVendorParams} from '../VendorParamsUtils';
 
-<<<<<<< HEAD
-const {isObject, isNil} = require('lodash');
-=======
 import {isObject, isNil} from 'lodash';
->>>>>>> master
 
 import assign from 'object-assign';
 

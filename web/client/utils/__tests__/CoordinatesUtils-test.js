@@ -35,10 +35,6 @@ import {
     makeBboxFromOWS,
     extractCrsFromURN,
     makeNumericEPSG,
-<<<<<<< HEAD
-    getPolygonFromCircle
-} from '../CoordinatesUtils';
-=======
     getPolygonFromCircle,
     getProjections,
     getExtentForProjection,
@@ -46,7 +42,6 @@ import {
     getLonLatFromPoint
 } from '../CoordinatesUtils';
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
->>>>>>> master
 import Proj4js from 'proj4';
 
 describe('CoordinatesUtils', () => {

@@ -20,15 +20,10 @@ import { warning } from '../actions/notifications';
 import {getLonLatFromPoint, isValidExtent} from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
 import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from "../actions/mapInfo";
-<<<<<<< HEAD
-import {getBbox} from "../utils/MapUtils";
-import {mapSelector} from '../selectors/map';
-=======
 import { getBbox } from "../utils/MapUtils";
 import { mapSelector } from '../selectors/map';
 import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
 import { shareSelector } from "../selectors/controls";
->>>>>>> master
 
 /*
 it maps params key to function.

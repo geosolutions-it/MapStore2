@@ -63,12 +63,8 @@ import {
     responsesSelector,
     showEmptyMessageGFISelector,
     validResponsesSelector,
-<<<<<<< HEAD
-    hoverEnabledSelector
-=======
     hoverEnabledSelector,
     mapInfoEnabledSelector
->>>>>>> master
 } from '../selectors/mapInfo';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { isCesium, mapTypeSelector } from '../selectors/maptype';
@@ -303,10 +299,6 @@ export default {
             position: 3
         }
     }),
-<<<<<<< HEAD
-    reducers: { mapInfo },
-=======
     reducers: { mapInfo, mapPopups },
->>>>>>> master
     epics
 };

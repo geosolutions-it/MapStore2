@@ -24,10 +24,7 @@ import PropertyField from './PropertyField';
 import MarkSelector from './MarkSelector';
 import Band from './Band';
 import IconInput from './IconInput';
-<<<<<<< HEAD
-=======
 import SelectInput from './SelectInput';
->>>>>>> master
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
 
@@ -180,11 +177,7 @@ export const fields = {
                     }}
                     onLoad={(err, src) => {
                         setError(err);
-<<<<<<< HEAD
-                        if (err.type === 'error') {
-=======
                         if (err) {
->>>>>>> master
                             // send the error to VisualStyleEditor component
                             onChange({ src, errorId: err.messageId });
                         }

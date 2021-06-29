@@ -229,8 +229,6 @@ describe('VisualStyleEditor', () => {
                 onError={(error) => {
                     try {
                         expect(error).toEqual({ messageId: 'styleeditor.imageSrcEmpty', status: 400 });
-<<<<<<< HEAD
-=======
                     } catch (e) {
                         done(e);
                     }
@@ -268,7 +266,6 @@ describe('VisualStyleEditor', () => {
                 onError={(error) => {
                     try {
                         expect(error).toEqual({ messageId: 'styleeditor.imageFormatEmpty', status: 400 });
->>>>>>> master
                     } catch (e) {
                         done(e);
                     }

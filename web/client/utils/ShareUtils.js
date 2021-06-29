@@ -19,23 +19,15 @@ export const DASHBOARD_DEFAULT_SHARE_OPTIONS = {
     shareUrlReplaceString: "$1dashboard-embedded.html#/$2",
     embedOptions: {
         showTOCToggle: false,
-<<<<<<< HEAD
-        showConnectionsParamToggle: true
-=======
         showConnectionsParamToggle: true,
         allowFullScreen: false
->>>>>>> master
     }
 };
 
 export const GEOSTORY_DEFAULT_SHARE_OPTIONS = {
     embedPanel: true,
     showAPI: false,
-<<<<<<< HEAD
-    embedOptions: { showTOCToggle: false },
-=======
     embedOptions: { showTOCToggle: false, allowFullScreen: false },
->>>>>>> master
     shareUrlRegex: "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
     shareUrlReplaceString: "$1geostory-embedded.html#/$3",
     advancedSettings: {

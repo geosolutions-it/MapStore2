@@ -124,11 +124,7 @@ class AeronauticalCoordinateEditor extends React.Component {
         } else {
             const parsedVal = type === SECONDS ? parseFloat(val) : parseInt(val, 10);
             const maxValue = type === DEGREES ? this.props.maxDegrees : 60;
-<<<<<<< HEAD
-            newValue = Math.round(parsedVal * 10) / 10 < maxValue ? parsedVal : maxValue - 1;
-=======
             newValue = Math.round(parsedVal * 10) / 10 < maxValue ? parsedVal : this.props[type];
->>>>>>> master
         }
         return newValue;
     }

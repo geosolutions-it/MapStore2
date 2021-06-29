@@ -264,29 +264,6 @@ const selector = createSelector(
 );
 const EditorPlugin = compose(
     connect(() => ({}),
-<<<<<<< HEAD
-        (dispatch) => ({
-            onMount: bindActionCreators(setUp, dispatch)
-        })),
-    lifecycle({
-        componentDidMount() {
-            // only the passed properties will be picked
-            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
-        },
-        // TODO: fix this in contexts
-        // due to multiple renders of plugins in contexts (one with default props, then with context props)
-        // the options have to be updated when change.
-        componentDidUpdate(oldProps) {
-            const newOptions = pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
-            const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
-            if (!isEqual(newOptions, oldOptions) ) {
-                this.props.onMount(newOptions);
-            }
-        }
-    }),
-    connect(selector,
-        (dispatch) => ({
-=======
         (dispatch) => ({
             onMount: bindActionCreators(setUp, dispatch),
             setSyncTool: bindActionCreators(setSyncTool, dispatch)
@@ -312,7 +289,6 @@ const EditorPlugin = compose(
     }),
     connect(selector,
         (dispatch) => ({
->>>>>>> master
             gridEvents: bindActionCreators(gridEvents, dispatch),
             pageEvents: bindActionCreators(pageEvents, dispatch),
             initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),

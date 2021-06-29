@@ -28,10 +28,7 @@ import {
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
-<<<<<<< HEAD
-=======
 import { getLonLatFromPoint } from '../../utils/CoordinatesUtils';
->>>>>>> master
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';

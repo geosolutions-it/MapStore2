@@ -77,11 +77,7 @@ const PAGE_SIZE = 10;
 const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
     .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text, catalog.type === 'tms' ? {options: {service: catalog}} : {}))
     .map((result) => ({ result, records: getCatalogRecords(catalog.type, result || [], { url: catalog && catalog.url, service: catalog })}))
-<<<<<<< HEAD
-    .map(resToProps);
-=======
     .map(({records, result}) => resToProps({records, result, catalog}));
->>>>>>> master
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE};
 /**
  * Compat catalog : Reusable catalog component, with infinite scroll.
