@@ -45,4 +45,23 @@ describe('ContextTheme', () => {
         expect(contextStyles.length).toBe(1);
     });
 
+    it('should render a link tag with version', () => {
+        ReactDOM.render(
+            <ContextTheme
+                version="DEV"
+                theme={[
+                    {
+                        id: 'dark',
+                        type: 'link',
+                        href: 'path/to/dark.css'
+                    }
+                ]}
+            />,
+            document.getElementById("container")
+        );
+        const contextStyles = document.querySelectorAll('[data-ms-context-theme]');
+        expect(contextStyles.length).toBe(1);
+        expect(contextStyles[0].getAttribute('href')).toBe('path/to/dark.css?DEV');
+    });
+
 });
