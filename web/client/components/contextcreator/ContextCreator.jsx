@@ -166,7 +166,12 @@ export default class ContextCreator extends React.Component {
         contextNameChecked: true,
         newContext: {},
         resource: {},
-        themes: [{value: "default", label: "Default"}, {value: "dark", label: "Dark"}],
+        themes: [{
+            id: 'dark',
+            label: 'Dark',
+            type: 'link',
+            href: (__MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes') + '/dark.css'
+        }],
         viewerPlugins: [
             "Map",
             "BackgroundSelector",
