@@ -20,7 +20,6 @@ services:
     volumes:
     - pg_data:${PGDATA:-/var/lib/postgresql/data}:rw
     - ./docker/01-init-user.sh:/docker-entrypoint-initdb.d/01-init-user.sh
-    - ./docker/02_create_schema_postgres.sql:/docker-entrypoint-initdb.d/02_create_schema_postgres.sql
     ports:
       - 5432
     networks:
@@ -36,8 +35,7 @@ services:
         PG_CLIENT_VERSION: 11
     container_name: mapstore
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     ports:
       - 8080
     networks:
