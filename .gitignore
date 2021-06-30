@@ -9,7 +9,6 @@ coverage/
 web/client/libs/Cesium/
 web/cesium.zip
 web/.classpath
-web/overlays
 web/.project
 .idea
 *.iml

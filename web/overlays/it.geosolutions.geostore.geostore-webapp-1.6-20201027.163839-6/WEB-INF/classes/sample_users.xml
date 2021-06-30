@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<InitUserList>
+    <User>
+        <name>admin</name>
+        <newPassword>admin</newPassword>
+        <role>ADMIN</role>
+    </User>
+    <User>
+        <name>user</name>
+        <newPassword>user</newPassword>
+        <role>USER</role>
+    </User>
+</InitUserList>

@@ -1,0 +1,176 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+
+	xmlns:security="http://www.springframework.org/schema/security"
+
+	xmlns:cxf="http://cxf.apache.org/core" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://cxf.apache.org/jaxws                     http://cxf.apache.org/schemas/jaxws.xsd
+            http://cxf.apache.org/jaxrs                     http://cxf.apache.org/schemas/jaxrs.xsd
+            http://cxf.apache.org/core                      http://cxf.apache.org/schemas/core.xsd
+            http://www.springframework.org/schema/security  http://www.springframework.org/schema/security/spring-security.xsd
+            http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-autowire="byName">
+
+	<!-- ==================================================================== -->
+	<!-- === REST Security ================================================== -->
+	<!-- ==================================================================== -->
+	<security:global-method-security secured-annotations="enabled" />
+
+	<security:http auto-config="true" create-session="never" >
+		<security:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
+		<security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
+		<security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
+		<!--
+		To enable SSO headers based authentication uncomment the following 
+		<security:custom-filter ref="headersProcessingFilter" before="FORM_LOGIN_FILTER"/>
+		-->
+		<security:anonymous />
+	</security:http>
+	<!-- Entry point -->
+	<bean id="restAuthenticationEntryPoint" class="it.geosolutions.geostore.services.rest.security.RestAuthenticationEntryPoint" >
+		<property name="realmName" value="GeoStore"></property>
+	</bean>
+	<!-- GeoStore Auth Provider -->
+	<bean id="geoStoreUserServiceAuthenticationProvider"
+		class="it.geosolutions.geostore.services.rest.security.UserServiceAuthenticationProvider">
+	</bean>
+	
+	<bean class="it.geosolutions.geostore.services.rest.security.UserAttributeTokenAuthenticationFilter"
+        id="authenticationTokenProcessingFilter">
+	</bean>
+	
+	<bean class="it.geosolutions.geostore.services.rest.security.SessionTokenAuthenticationFilter"
+        id="sessionTokenProcessingFilter">
+	</bean>
+	
+	<!-- bean class="it.geosolutions.geostore.services.rest.security.WebServiceTokenAuthenticationFilter"
+        id="authenticationTokenProcessingFilter">
+        <constructor-arg><value>http://localhost:8080/geoserver/www/{token}.txt</value></constructor-arg>
+    </bean-->
+
+	<!-- Inject into the Authentication Manager the GeoStore Auth Provider -->
+	<security:authentication-manager>
+		<security:authentication-provider ref='geoStoreUserServiceAuthenticationProvider' />
+		<!-- security:authentication-provider ref='geostoreLdapProvider' / -->
+	</security:authentication-manager>
+
+    <!-- SSO headers based authentication provider
+    <security:authentication-manager>
+        <security:authentication-provider ref='preauthenticatedAuthenticationProvider' />
+    </security:authentication-manager>
+    
+    <bean id="preauthenticatedAuthenticationProvider" class="it.geosolutions.geostore.services.rest.security.PreAuthenticatedAuthenticationProvider">
+    </bean>
+    
+    <bean class="it.geosolutions.geostore.services.rest.security.HeadersAuthenticationFilter" id="headersProcessingFilter">
+        <property name="usernameHeader" value="x-geostore-user"/>
+        <property name="groupsHeader" value="x-geostore-groups"/>
+        <property name="roleHeader" value="x-geostore-role"/>
+        <property name="listDelimiter" value=","/>
+        <property name="defaultRole" value="USER"/>
+        
+        <property name="authoritiesMapper" ref="...options mapper..."/>
+    </bean>
+    
+     -->
+
+	<!-- LDAP Auth Provider -->
+	<!-- Simple namespace-based configuration -->
+
+	<!-- Starts an internal LDAP server -->
+	<!-- security:ldap-server ldif="classpath*:users.ldif" port="33389" root="${ldap.root}"/ -->
+
+	<!-- security:authentication-manager>
+		<security:ldap-authentication-provider
+			user-search-filter="(uid={0})" 
+			user-search-base="ou=people"
+			group-search-filter="(member={0})" 
+			group-search-base="ou=groups"
+			group-role-attribute="cn" 
+			role-prefix="ROLE_">
+		</security:ldap-authentication-provider>
+		<security:authentication-provider ref='geostoreLdapProvider' />
+	</security:authentication-manager -->
+
+	<!-- Traditional Bean version of the same configuration -->
+
+	<!-- This bean points at the embedded directory server created by the ldap-server element above -->
+	<bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+		<constructor-arg value="ldap://${ldap.host}:${ldap.port}/${ldap.root}" />
+	</bean>
+
+    <!-- 
+     <bean id="ldapInitializer" class="it.geosolutions.geostore.init.LDAPInit" lazy-init="false">
+       <constructor-arg ref="geostoreLdapProvider" />
+     </bean>
+     -->
+
+	<bean id="geostoreLdapProvider"
+		class="it.geosolutions.geostore.services.rest.security.UserLdapAuthenticationProvider">
+		<constructor-arg>
+			<bean
+				class="org.springframework.security.ldap.authentication.BindAuthenticator">
+				<constructor-arg ref="contextSource" />
+				<property name="userSearch">
+					<bean id="userSearch"
+						class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+						<constructor-arg index="0" value="ou=people" />
+						<constructor-arg index="1" value="(uid={0})" />
+						<constructor-arg index="2" ref="contextSource" />
+					</bean>
+				</property>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean
+				class="it.geosolutions.geostore.services.rest.security.GeoStoreLdapAuthoritiesPopulator">
+				<constructor-arg ref="contextSource" />
+				<!-- groupSearchBase -->
+				<constructor-arg value="ou=groups" />
+				<!-- roleSearchBase -->
+				<constructor-arg value="ou=roles" />
+				<property name="groupSearchFilter" value="(lrGroupOccupant={0})" />
+				<property name="roleSearchFilter" value="(roleOccupant={0})" />
+				
+				<!-- nested groups support -->
+				<property name="enableHierarchicalGroups" value="false" />
+				<property name="groupInGroupSearchFilter" value="(lrGroupInGroupOccupant={0})" />
+				<property name="maxLevelGroupsSearch" value="3" />
+				<!-- the GeoStore convetion is:
+				  * Groups starting with 'ROLE_' will be threated as Auth Roles
+				  * Groups starting withOUT 'ROLE_' will be threated as Groups
+				 -->
+				<property name="rolePrefix" value="ROLE_" />
+				<property name="searchSubtree" value="true" />
+				<property name="convertToUpperCase" value="true" />
+			</bean>
+		</constructor-arg>
+	</bean>
+	<!-- Enable LDAP readonly User and UserGroup fetching -->
+	<!--
+    <bean id="ldapUserDAO" class="it.geosolutions.geostore.core.dao.ldap.impl.UserDAOImpl">
+        <constructor-arg ref="contextSource"/>
+        <property name="searchBase" value="ou=users"/>
+        <property name="memberPattern" value="^uid=([^,]+).*$"/>
+        <property name="attributesMapper">
+            <map>
+                <entry key="mail" value="email"/>
+                <entry key="givenName" value="fullname"/>
+                <entry key="description" value="description"/>
+            </map>
+        </property>
+    </bean>
+    <bean id="ldapUserGroupDAO" class="it.geosolutions.geostore.core.dao.ldap.impl.UserGroupDAOImpl">
+        <constructor-arg ref="contextSource"/>
+        <property name="searchBase" value="ou=roles"/>
+        <property name="addEveryOneGroup" value="true"/>
+    </bean>
+    
+    <alias name="ldapUserGroupDAO" alias="userGroupDAO"/>
+    <alias name="ldapUserDAO" alias="userDAO"/-->
+    
+</beans>
