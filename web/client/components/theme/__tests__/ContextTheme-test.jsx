@@ -43,6 +43,7 @@ describe('ContextTheme', () => {
         );
         const contextStyles = document.querySelectorAll('[data-ms-context-theme]');
         expect(contextStyles.length).toBe(1);
+        expect(contextStyles[0].getAttribute('href')).toBe('path/to/dark.css');
     });
 
     it('should render a link tag with version', () => {
