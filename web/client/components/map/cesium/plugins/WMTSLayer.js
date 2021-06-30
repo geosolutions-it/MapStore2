@@ -13,7 +13,7 @@ import {
     needProxy
 } from '../../../../utils/ProxyUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
-import * as Cesium from 'Cesium';
+import * as Cesium from 'cesium';
 import { getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
 import assign from 'object-assign';
 import { isObject, isArray, slice, get, head} from 'lodash';

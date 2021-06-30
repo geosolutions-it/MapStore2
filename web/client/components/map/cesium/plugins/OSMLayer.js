@@ -7,7 +7,7 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import * as Cesium from 'Cesium';
+import * as Cesium from 'cesium';
 
 Layers.registerType('osm', () => {
     return new Cesium.OpenStreetMapImageryProvider({

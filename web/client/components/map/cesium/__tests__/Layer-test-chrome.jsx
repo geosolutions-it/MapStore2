@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import CesiumLayer from '../Layer';
 import expect from 'expect';
-import * as Cesium from 'Cesium';
+import * as Cesium from 'cesium';
 
 import assign from 'object-assign';
 
