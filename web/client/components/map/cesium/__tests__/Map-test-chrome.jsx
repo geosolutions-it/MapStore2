@@ -17,7 +17,7 @@ import {
     registerHook,
     createRegisterHooks,
     GET_PIXEL_FROM_COORDINATES_HOOK,
-    GET_COORDINATES_FROM_PIXEL_HOOK,
+    GET_COORDINATES_FROM_PIXEL_HOOK
 } from "../../../../utils/MapUtils";
 
 import "../../../../utils/cesium/Layers";
@@ -130,7 +130,7 @@ describe("CesiumMap", () => {
 
     it("check layers init", () => {
         var options = {
-            visibility: true,
+            visibility: true
         };
         const map = ReactDOM.render(
             <CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
@@ -147,7 +147,7 @@ describe("CesiumMap", () => {
             url: "http://fake",
             name: "mylayer",
             visibility: true,
-            useForElevation: true,
+            useForElevation: true
         };
         const map = ReactDOM.render(
             <CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
@@ -163,7 +163,7 @@ describe("CesiumMap", () => {
         const expectedCalls = 1;
         const precision = 1000000000;
         const testHandlers = {
-            handler: () => {},
+            handler: () => {}
         };
         var spy = expect.spyOn(testHandlers, "handler");
 
@@ -176,8 +176,8 @@ describe("CesiumMap", () => {
                     orientation: {
                         heading: 0,
                         pitch: (-1 * Math.PI) / 2,
-                        roll: 0,
-                    },
+                        roll: 0
+                    }
                 }}
             />,
             document.getElementById("container")
@@ -212,13 +212,13 @@ describe("CesiumMap", () => {
             orientation: {
                 heading: 1,
                 pitch: (-1 * Math.PI) / 2,
-                roll: 0,
-            },
+                roll: 0
+            }
         });
     });
     it("check mouse click handler", (done) => {
         const testHandlers = {
-            handler: () => {},
+            handler: () => {}
         };
         var spy = expect.spyOn(testHandlers, "handler");
 
@@ -280,7 +280,7 @@ describe("CesiumMap", () => {
                 expect(args.x).toBeLessThan(16);
                 expect(args.y).toBeLessThan(16);
                 done();
-            },
+            }
         };
         ReactDOM.render(
             <CesiumMap
