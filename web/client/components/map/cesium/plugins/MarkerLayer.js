@@ -7,7 +7,7 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import * as Cesium from "Cesium";
+import * as Cesium from "cesium";
 
 import {isEqual} from 'lodash';
 import assign from 'object-assign';

@@ -8,7 +8,7 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
-import * as Cesium from "Cesium";
+import * as Cesium from "cesium";
 const BILTerrainProvider = createBILTerrainProvider(Cesium);
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {getProxyUrl, needProxy} from "../../../../utils/ProxyUtils";
