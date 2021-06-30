@@ -7,7 +7,7 @@
  */
 import { createSelector } from 'reselect';
 import { monitorStateSelector } from './localConfig';
-import { get, findIndex } from 'lodash';
+import { get, findIndex, castArray } from 'lodash';
 import ConfigUtils from '../utils/ConfigUtils';
 
 
@@ -95,3 +95,9 @@ export const contextMonitoredStateSelector = createSelector(
  * @param {object} state the app state
  */
 export const resourceSelector = ({context = {}} = {}) => context.resource;
+
+/**
+ * Get the theme configuration for the selected context
+ * @param {object} state the app state
+ */
+export const contextThemeSelector = ({context = {}} = {}) => castArray(context?.currentContext?.theme || []);
