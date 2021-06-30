@@ -14,7 +14,15 @@ import MapViewerCmp from '../components/viewer/MapViewerCmp';
 import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
-import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
+import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector } from '../../selectors/context';
+import ContextTheme from '../../components/theme/ContextTheme';
+
+const ConnectedContextTheme = connect(
+    createStructuredSelector({
+        theme: contextThemeSelector
+    })
+)(ContextTheme);
+
 /**
   * @name Context
   * @memberof pages
@@ -99,7 +107,12 @@ class Context extends React.Component {
         this.props.reset();
     }
     render() {
-        return (<MapViewerCmp {...this.props} />);
+        return (
+            <>
+                <ConnectedContextTheme />
+                <MapViewerCmp {...this.props} />
+            </>
+        );
     }
 }
 

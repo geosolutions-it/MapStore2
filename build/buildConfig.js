@@ -7,6 +7,7 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const castArray = require('lodash/castArray');
 /**
  * Webpack configuration builder.
@@ -110,7 +111,14 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     entry: assign({}, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
-        minimize: !!prod
+        minimize: !!prod,
+        ...(prod && {
+            minimizer: [
+                // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`)
+                `...`,
+                new CssMinimizerPlugin() // minify css bundle
+            ]
+        })
     },
     output: {
         path: paths.dist,
