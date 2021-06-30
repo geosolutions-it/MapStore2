@@ -6,26 +6,31 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import React, {useState} from 'react';
-import Select from 'react-select';
+import React from 'react';
+import ReactSelect from 'react-select';
 import {ControlLabel} from 'react-bootstrap';
 import Message from '../I18N/Message';
-
+import localizedProps from '../misc/enhancers/localizedProps';
+const Select = localizedProps("noResultsText")(ReactSelect);
+import { getMessageById } from '../../utils/LocaleUtils';
 
 const ConfigureThemes = ({
-    themes,
+    themes = [],
     setSelectedTheme = () => {},
-    selectedTheme = "default"
+    selectedTheme = "",
+    disabled = false,
+    context = {}
 }) => {
     return (
         <div className="configure-themes-step">
             <div className="choose-theme">
                 <ControlLabel><Message msgId="contextCreator.configureThemes.themes"/></ControlLabel>
                 <Select
-                    onChange={({value})  => setSelectedTheme(value)}
+                    clearable
+                    onChange={(option)  => setSelectedTheme(option?.theme)}
                     value={selectedTheme}
-                    options={themes}
-                    disabled={false}
+                    options={themes.map(theme => ({ value: theme.id, label: getMessageById(context, theme?.label) || theme?.id, theme }))}
+                    disabled={disabled}
                     noResultsText="contextCreator.configureThemes.noThemes"
                 />
             </div>

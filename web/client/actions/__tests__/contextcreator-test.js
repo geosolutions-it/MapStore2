@@ -159,10 +159,15 @@ describe('contextcreator actions', () => {
         expect(retval.type).toBe(LOAD_EXTENSIONS);
     });
     it('setSelectedTheme', () => {
-        const theme = "dark";
+        const theme = {
+            id: 'dark',
+            label: 'Dark',
+            type: 'link',
+            href: 'dist/themes/dark.css'
+        };
         const retval = setSelectedTheme(theme);
         expect(retval).toExist();
         expect(retval.type).toBe(SET_SELECTED_THEME);
-        expect(retval.theme).toBe(theme);
+        expect(retval.theme).toEqual(theme);
     });
 });

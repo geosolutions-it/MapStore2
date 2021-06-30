@@ -51,13 +51,18 @@ import {
     changeTemplatesKey,
     setSelectedTheme
 } from '../../actions/contextcreator';
-
+const themeDark = {
+    id: 'dark',
+    label: 'Dark',
+    type: 'link',
+    href: 'dist/themes/dark.css'
+};
 const testContextResource = {
     data: {
         windowTitle: 'title',
         mapConfig: {},
         templates: [{id: 2}],
-        theme: "dark",
+        theme: themeDark,
         plugins: {
             desktop: [{
                 name: 'Catalog',
@@ -177,7 +182,7 @@ describe('contextcreator reducer', () => {
         const plugins = pluginsSelector(state);
         const templates = templatesSelector(state);
         const selectedTheme = selectedThemeSelector(state);
-        expect(selectedTheme).toBe(data.theme);
+        expect(selectedTheme).toEqual(data.theme);
         expect(newContext).toExist();
         expect(newContext.windowTitle).toBe(data.windowTitle);
         expect(newContext.plugins).toNotExist();
@@ -565,8 +570,8 @@ describe('contextcreator reducer', () => {
         expect(state.showBackToPageConfirmation).toBe(true);
     });
     it('setSelectedTheme', () => {
-        const state = contextcreator(undefined, setSelectedTheme("dark"));
+        const state = contextcreator(undefined, setSelectedTheme(themeDark));
         expect(state).toExist();
-        expect(selectedThemeSelector({contextcreator: state})).toBe("dark");
+        expect(selectedThemeSelector({contextcreator: state})).toEqual(themeDark);
     });
 });

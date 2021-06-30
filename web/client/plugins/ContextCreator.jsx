@@ -70,6 +70,16 @@ export const contextCreatorSelector = createStructuredSelector({
  * @name ContextCreator
  * @class
  * @prop {string} cfg.saveDestLocation router path when the application is redirected when a context is saved
+ * @prop {object[]} cfg.themes list of themes with default configuration that will appear in the context creation process
+ *
+ * @example
+ * "cfg": {
+ * "themes": [{
+ *      id: 'dark',
+ *      type: 'link',
+ *      href: 'dist/themes/dark.css'
+ *  }]
+ * }
  */
 export default createPlugin('ContextCreator', {
     component: connect(contextCreatorSelector, {
