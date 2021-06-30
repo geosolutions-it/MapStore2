@@ -15,7 +15,7 @@ import { trim } from 'lodash';
  * Theme component provider for the context pages
  * @memberof components.theme
  * @name ContextTheme
- * @prop {array} theme a list of theme configurations to apply in a specific context
+ * @prop {object[]} theme a list of theme configurations to apply in a specific context
  * @prop {string} version version string to use for the css href
  * @example
  * // add a css link tag in the context page
