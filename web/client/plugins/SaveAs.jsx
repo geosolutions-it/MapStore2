@@ -51,6 +51,7 @@ export default createPlugin('SaveAs', {
             text: <Message msgId="saveAs"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: toggleControl.bind(null, 'mapSaveAs', null),
+            tooltip: "saveDialog.saveAsTooltip",
             // display the BurgerMenu button only if the map can be edited
             selector: (state) => {
                 if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {

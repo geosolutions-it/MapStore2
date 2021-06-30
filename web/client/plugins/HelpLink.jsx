@@ -35,7 +35,7 @@ export default createPlugin('HelpLink', {
         BurgerMenu: {
             name: 'helplink',
             position: 1100,
-            tooltip: "docs",
+            tooltip: "docsTooltip",
             text: <Message msgId="docs"/>,
             icon: <Glyphicon glyph="question-sign"/>,
             action: () => ({type: ''}),

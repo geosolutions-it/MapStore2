@@ -44,6 +44,7 @@ export default createPlugin('Save', {
             text: <Message msgId="save"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: toggleControl.bind(null, 'mapSave', null),
+            tooltip: "saveDialog.saveTooltip",
             // display the BurgerMenu button only if the map can be edited
             selector: createSelector(
                 isLoggedIn,

@@ -5,6 +5,7 @@
         "msgId0": "{name} a pris {numPhotos, plural, =0 {aucune photo} =1 {une photo} other {# photos}} le {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "A propos...",
+        "aboutTooltip": "A propos...",
         "aboutLbl": "A propos",
         "about_p0-0": "MapStore est un cadriciel permettant de développer des applications cartographiques web à l'aide des librairies cartographiques standards telles que",
         "about_p0-1": "et",
@@ -51,7 +52,8 @@
             "404": "Fichier de traduction introuvable"
         },
         "details": {
-            "title": "À propos de cette carte"
+            "title": "À propos de cette carte",
+            "tooltip": "À propos de cette carte"
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
@@ -205,11 +207,14 @@
         "menu": "Menu",
         "options": "Options",
         "settings": "Réglages",
+        "settingsTooltip": "Réglages",
         "help": "Aide",
         "docs": "Documentation",
+        "docsTooltip": "Documentation",
         "gohome": "Retour à la page d'accueil",
         "back": "Retour à l'import",
         "printbutton": "Imprimer",
+        "printToolTip": "Imprimer",
         "annotationsbutton": "Annotations",
         "noresultfound": "Aucun résultat trouvé",
         "save": "Enregistrer",
@@ -1149,6 +1154,7 @@
             "loadoverride": "Remplacer les annotations",
             "loaderror": "Sélectionnez un ou plusieurs fichiers d'annotations. (fichiers supportés : JSON)",
             "defaulttitle": "Modifier le titre par défaut",
+            "tooltip": "Annotations",
             "field": {
                 "title": "Titre",
                 "description": "Description"
@@ -1271,6 +1277,7 @@
         },
         "share": {
             "title": "Partager",
+            "tooltip": "Partager",
             "titlePanel": "Partager la carte",
             "socialIntro": "Via votre réseau social favori",
             "directLinkTitle": "Via un lien direct",
@@ -2583,7 +2590,9 @@
             "close": "Fermer",
             "cancel": "Annuler",
             "saveSuccessTitle": "Succès",
-            "saveSuccessMessage": "Enregistré avec succès"
+            "saveSuccessMessage": "Enregistré avec succès",
+            "saveTooltip": "Salvar",
+            "saveAsTooltip": "Enregistrer sous"
         },
         "mapEditor": {
             "modalTitle": "Editeur de carte",
@@ -2606,7 +2615,7 @@
                 "selectService": "Sélectionner un service",
                 "add": "Ajouter",
                 "back": "Retour",
-                "save": "Sauver",
+                "save": "Salvar",
                 "edit": "Modifier",
                 "sourcePlaceholder": "Entrer une source",
                 "source": "Source",

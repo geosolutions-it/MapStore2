@@ -490,6 +490,7 @@ export default {
         BurgerMenu: {
             name: 'print',
             position: 2,
+            tooltip: "printToolTip",
             text: <Message msgId="printbutton"/>,
             icon: <Glyphicon glyph="print"/>,
             action: toggleControl.bind(null, 'print', null),

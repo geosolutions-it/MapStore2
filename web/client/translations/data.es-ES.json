@@ -5,6 +5,7 @@
         "msgId0": "{name} ha tomado {numPhotos, plural, =0 {ninguna foto} =1 {una foto} other {# fotos}} el {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "Acerca de",
+        "aboutTooltip": "Acerca de",
         "aboutLbl": "Acerca de",
         "about_p0-0": "MapStore es un marco de trabajo para el desarrollo de aplicaciones cartográficas con la ayuda de librerías cartográficas estándar, tales como:",
         "about_p0-1": "y",
@@ -51,7 +52,8 @@
             "404": "Archivo de traducción no encontrado"
         },
         "details": {
-            "title": "Información en este mapa"
+            "title": "Información en este mapa",
+            "tooltip": "Información en este mapa"
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
@@ -205,11 +207,14 @@
         "menu": "Menú",
         "options": "Opciones",
         "settings": "Ajustes",
+        "settingsTooltip": "Ajustes",
         "help": "Ayuda",
         "docs": "Documentación",
+        "docsTooltip": "Documentación",
         "gohome": "Volver a la página de inicio",
         "back": "Volver al Importador",
         "printbutton": "Imprimir",
+        "printToolTip": "Imprimir",
         "annotationsbutton": "Anotaciones",
         "noresultfound": "Ningún resultado encontrado",
         "save": "Guardar",
@@ -1149,6 +1154,7 @@
             "loadoverride": "Reemplazar anotaciones",
             "loaderror": "Seleccione uno o más archivos de anotaciones. (archivos compatibles: json)",
             "defaulttitle": "Edita el título predeterminado",
+            "tooltip": "Anotaciones",
             "field": {
                 "title": "Título",
                 "description": "Descripción"
@@ -1271,6 +1277,7 @@
         },
         "share":{
             "title": "Compartir",
+            "tooltip": "Compartir",
             "titlePanel": "Compartir el mapa",
             "socialIntro": "A través de su red social favorita",
             "directLinkTitle": "A través de un enlace directo",
@@ -2581,7 +2588,9 @@
             "close": "Cerrar",
             "cancel": "Cancelar",
             "saveSuccessTitle": "éxito",
-            "saveSuccessMessage": "Guardado con éxito"
+            "saveSuccessMessage": "Guardado con éxito",
+            "saveTooltip": "Salvar",
+            "saveAsTooltip": "Guardar como"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",
