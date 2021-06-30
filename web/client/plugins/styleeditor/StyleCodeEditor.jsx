@@ -138,7 +138,7 @@ const editors = {
     textarea: ConnectedTextareaEditor
 };
 
-function StyleEditor({
+export function StyleEditor({
     code,
     error,
     canEdit,
@@ -198,11 +198,11 @@ function StyleEditor({
                     <Toolbar
                         buttons={[
                             {
-                                className: 'square-button-md no-border',
-                                glyph: 'code',
-                                active: editorType === 'textarea',
+                                className: 'no-border',
+                                bsSize: 'xs',
                                 disabled: loading,
-                                tooltipId: editorType === 'visual'
+                                active: editorType === 'textarea',
+                                textId: editorType === 'visual'
                                     ? 'styleeditor.switchToTextareaEditor'
                                     : 'styleeditor.switchToVisualEditor',
                                 onClick: () => {
