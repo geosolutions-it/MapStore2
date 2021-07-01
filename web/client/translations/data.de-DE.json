@@ -5,6 +5,7 @@
         "msgId0": "{name} machte {numPhotos, plural, =0 {keine Fotos} =1 {ein Foto} other {# Fotos}} am {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "Über",
+        "aboutTooltip": "Über",
         "aboutLbl": "Über",
         "about_p0-0": "MapStore ist ein Framework zur Erstellung von webbasierten Karten-Anwendungen mit Standard-Karten-Bibliotheken wie",
         "about_p0-1": "und",
@@ -51,7 +52,8 @@
             "404": "Übersetzungsdatei nicht gefunden"
         },
         "details": {
-            "title": "Infos zu dieser Karte"
+            "title": "Infos zu dieser Karte",
+            "tooltip": "Infos zu dieser Karte"
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
@@ -205,11 +207,14 @@
         "menu": "Menü",
         "options": "Optionen",
         "settings": "Einstellungen",
+        "settingsTooltip": "Einstellungen",
         "help": "Hilfe",
         "docs": "Dokumentation",
+        "docsTooltip": "Dokumentation",
         "gohome": "Zurück zur Startseite",
         "back": "Zurück zum Import",
         "printbutton": "Drucken",
+        "printToolTip": "Drucken",
         "annotationsbutton": "Notizen / Zeichnen",
         "noresultfound": "Keine Ergebnisse gefunden",
         "save": "Speichern",
@@ -1150,6 +1155,7 @@
             "loadoverride": "Notizen / Zeichnungen ersetzen",
             "loaderror": "Wählen Sie eine oder mehrere Notizen / Zeichnungen aus. (unterstützte Dateien: JSON)",
             "defaulttitle": "Standardtitel bearbeiten",
+            "tooltip": "Notizen / Zeichnen",
             "field": {
                 "title": "Titel",
                 "description": "Beschreibung"
@@ -1272,6 +1278,7 @@
         },
         "share":{
             "title": "Teilen",
+            "tooltip": "Teilen",
             "titlePanel": "Teile die Karte",
             "socialIntro": "In deinem bevorzugten sozialen Netzwerk",
             "directLinkTitle": "Über einen direkten Link",
@@ -2581,7 +2588,9 @@
             "close": "Schließen",
             "cancel": "Abbrechen",
             "saveSuccessTitle": "Erfolg",
-            "saveSuccessMessage": "Erfolgreich gespeichert"
+            "saveSuccessMessage": "Erfolgreich gespeichert",
+            "saveTooltip": "Sparen",
+            "saveAsTooltip": "Speichern als"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",

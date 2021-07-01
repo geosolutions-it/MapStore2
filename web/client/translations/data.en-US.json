@@ -5,6 +5,7 @@
         "msgId0": "{name} took {numPhotos, plural, =0 {no photos} =1 {one photo} other {# photos}} on {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "About",
+        "aboutTooltip": "About",
         "aboutLbl": "About",
         "about_p0-0": "MapStore is a framework to build web mapping applications using standard mapping libraries, such as",
         "about_p0-1": "and",
@@ -51,7 +52,8 @@
             "404": "Translation file not found"
         },
         "details": {
-            "title": "About this map"
+            "title": "About this map",
+            "tooltip": "About this map"
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",
@@ -205,11 +207,14 @@
         "menu": "Menu",
         "options": "Options",
         "settings": "Settings",
+        "settingsTooltip": "Settings",
         "help": "Help",
         "docs": "Docs",
+        "docsTooltip": "Docs",
         "gohome": "Back to home page",
         "back": "Back to the Importer",
         "printbutton": "Print",
+        "printToolTip": "Print",
         "annotationsbutton": "Annotations",
         "noresultfound": "No Result found",
         "save": "Save",
@@ -1149,6 +1154,7 @@
             "loadoverride": "Replace annotations",
             "loaderror": "Select one or more annotations files. (supported files: JSON)",
             "defaulttitle": "Edit default title",
+            "tooltip": "Annotations",
             "field": {
                 "title": "Title",
                 "description": "Description"
@@ -1271,6 +1277,7 @@
         },
         "share":{
             "title": "Share",
+            "tooltip": "Share",
             "titlePanel": "Share the map",
             "socialIntro": "In your favourite social network",
             "directLinkTitle": "Via a direct link",
@@ -2594,7 +2601,9 @@
             "close": "Close",
             "cancel": "Cancel",
             "saveSuccessTitle": "Success",
-            "saveSuccessMessage": "Saved successfully"
+            "saveSuccessMessage": "Saved successfully",
+            "saveTooltip": "Save",
+            "saveAsTooltip": "Save As"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",

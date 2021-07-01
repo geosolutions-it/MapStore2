@@ -35,6 +35,7 @@ export default {
             BurgerMenu: {
                 name: 'about',
                 position: 1500,
+                tooltip: "aboutTooltip",
                 text: <Message msgId="about_title"/>,
                 icon: <Glyphicon glyph="info-sign"/>,
                 action: toggleControl.bind(null, 'about', null),
