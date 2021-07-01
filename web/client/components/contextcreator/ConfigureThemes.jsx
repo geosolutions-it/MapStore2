@@ -29,7 +29,7 @@ const ConfigureThemes = ({
                     clearable
                     onChange={(option)  => setSelectedTheme(option?.theme)}
                     value={selectedTheme}
-                    options={themes.map(theme => ({ value: theme.id, label: getMessageById(context, theme?.label) || theme?.id, theme }))}
+                    options={themes.map(theme => ({ value: theme.id, label: theme?.label && getMessageById(context, theme?.label) || theme?.id, theme }))}
                     disabled={disabled}
                     noResultsText="contextCreator.configureThemes.noThemes"
                 />
