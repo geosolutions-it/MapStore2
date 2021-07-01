@@ -40,4 +40,4 @@ export const showBackToPageConfirmationSelector = state => get(state, 'contextcr
 export const tutorialsSelector = state => state.contextcreator?.tutorials;
 export const wasTutorialShownSelector = stepId => state => state.contextcreator?.wasTutorialShown?.[stepId] || false;
 export const tutorialStepSelector = state => state.contextcreator?.tutorialStep;
-export const selectedThemeSelector = state => get(state, 'contextcreator.selectedTheme', "default");
+export const selectedThemeSelector = state => get(state, 'contextcreator.selectedTheme');

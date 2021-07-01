@@ -249,7 +249,7 @@ export default (state = {}, action) => {
                 enabled: (pluginTemplates || templates || []).reduce((result, cur) => result || cur.id === template.id, false),
                 selected: false
             })),
-            set('newContext', otherData, set('plugins', contextCreatorPlugins, set('resource', resource, set('selectedTheme', theme || "", state))))));
+            set('newContext', otherData, set('plugins', contextCreatorPlugins, set('resource', resource, set('selectedTheme', theme, state))))));
     }
     case UPDATE_TEMPLATE: {
         const newResource = action.resource || {};

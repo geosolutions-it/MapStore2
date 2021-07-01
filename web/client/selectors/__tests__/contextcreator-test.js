@@ -32,13 +32,19 @@ describe('contextcreator selectors', () => {
         expect(creationStepSelector(testState)).toBe('step');
     });
     it('selectedThemeSelector', () => {
-        expect(selectedThemeSelector(testState)).toBe('default');
+        const themeDark = {
+            id: 'dark',
+            label: 'Dark',
+            type: 'link',
+            href: 'dist/themes/dark.css'
+        };
+        expect(selectedThemeSelector(testState)).toBeFalsy();
         expect(selectedThemeSelector({
             ...testState,
             contextcreator: {
                 ...testState.contextcreator,
-                selectedTheme: "dark"
+                selectedTheme: themeDark
             }
-        })).toBe('dark');
+        })).toEqual(themeDark);
     });
 });
