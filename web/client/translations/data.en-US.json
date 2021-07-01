@@ -2887,6 +2887,11 @@
                 "windowTitle": "Window title",
                 "windowTitlePlaceholder": "Enter window title..."
             },
+            "configureThemes": {
+              "label": "Configure Theme",
+              "themes": "Choose a theme",
+              "noThemes": "No themes found"
+            },
             "configurePlugins": {
                 "label": "Configure Plugins",
                 "pluginsFilterPlaceholder": "Filter plugins by name...",
