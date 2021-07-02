@@ -8,7 +8,7 @@
 
 import React from 'react';
 import ReactSelect from 'react-select';
-import {ControlLabel} from 'react-bootstrap';
+import {ControlLabel, Glyphicon} from 'react-bootstrap';
 import Message from '../I18N/Message';
 import localizedProps from '../misc/enhancers/localizedProps';
 const Select = localizedProps("noResultsText")(ReactSelect);
@@ -24,6 +24,10 @@ const ConfigureThemes = ({
     return (
         <div className="configure-themes-step">
             <div className="choose-theme">
+                <div className="text-center">
+                    <Glyphicon glyph="dropper" style={{ fontSize: 128 }}/>
+                </div>
+                <h1 className="text-center"><Message msgId="contextCreator.configureThemes.title"/></h1>
                 <ControlLabel><Message msgId="contextCreator.configureThemes.themes"/></ControlLabel>
                 <Select
                     clearable
