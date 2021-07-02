@@ -25,7 +25,7 @@ import {
 } from '../../actions/search';
 
 import { resetControls } from '../../actions/controls';
-import { hideMapinfoMarker } from '../../actions/mapInfo';
+// import { hideMapinfoMarker } from '../../actions/mapInfo';
 
 describe('Test the search reducer', () => {
     it('search results loading', () => {

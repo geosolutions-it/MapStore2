@@ -25,7 +25,7 @@ import {
 } from '../actions/search';
 
 import { RESET_CONTROLS } from '../actions/controls';
-import { HIDE_MAPINFO_MARKER } from '../actions/mapInfo';
+// import { HIDE_MAPINFO_MARKER } from '../actions/mapInfo';
 import assign from 'object-assign';
 /**
  * Manages the state of the map search with it's results
