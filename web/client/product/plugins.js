@@ -16,7 +16,7 @@ export default {
         AttributionPlugin: require('./plugins/Attribution').default,
         ExamplesPlugin: require('./plugins/Examples').default,
         FooterPlugin: require('./plugins/Footer'),
-        ForkPlugin: require('./plugins/Fork').default,
+        //ForkPlugin: require('./plugins/Fork').default,
         HeaderPlugin: require('./plugins/Header').default,
         HomeDescriptionPlugin: require('./plugins/HomeDescription').default,
         MadeWithLovePlugin: require('./plugins/MadeWithLove').default,

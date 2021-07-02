@@ -1,0 +1,9 @@
+molti file della home page si trovano in questa cartella.
+web\client\product\plugins
+
+in particolare:
+nel file home description si trova la parte alta:
+web\client\product\plugins\HomeDescription.jsx
+
+il piede è:
+web\client\product\plugins\MailingLists.jsx

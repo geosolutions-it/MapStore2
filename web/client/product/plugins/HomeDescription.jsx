@@ -29,7 +29,7 @@ class HomeDescription extends React.Component {
     };
 
     static defaultProps = {
-        name: 'MapStore',
+        name: 'Geoportale RSE',
         className: 'ms-home-description',
         style: {}
     };
@@ -41,7 +41,7 @@ class HomeDescription extends React.Component {
                     <Grid>
                         <Row>
                             <Col xs={12} className="text-center">
-                                <h1>{this.props.name}</h1>
+                                <h1><HTML msgId="home.titolo_pagina"/></h1>
                                 <p>
                                     <HTML msgId="home.shortDescription"/>
                                 </p>
@@ -52,10 +52,10 @@ class HomeDescription extends React.Component {
                 <Grid>
                     <Row>
                         <Col md={3}>
-                            <a href="http://atlanteintegrato.rse-web.it/"><img height={100} src={logo} className="d-block mx-auto"/></a>
+                            <a href="http://atlanteintegrato.rse-web.it/" target="_blank"><img height={150} src={logo} className="d-block mx-auto"/></a>
                         </Col>
                         <Col md={7}>
-                            <h3><a href="http://atlanteintegrato.rse-web.it/">Atlante Integrato</a></h3>
+                            <h3><a href="http://localhost:3001" target="_blank">New Atlante Integrato - Terria</a></h3>
                             <p>Scopri di più</p>
                         </Col>
                     </Row>
