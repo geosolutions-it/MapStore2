@@ -167,6 +167,28 @@ const property = {
             };
         }
     }),
+    colorMapType: ({ key = 'colorMapType', label = 'Color map type', isDisabled }) => ({
+        type: 'toolbar',
+        label,
+        config: {
+            options: [{
+                labelId: 'styleeditor.colorMapType.ramp',
+                value: 'ramp'
+            }, {
+                labelId: 'styleeditor.colorMapType.intervals',
+                value: 'intervals'
+            }, {
+                labelId: 'styleeditor.colorMapType.values',
+                value: 'values'
+            }]
+        },
+        getValue: (value) => {
+            return {
+                [key]: value
+            };
+        },
+        isDisabled
+    }),
     size: ({ key = 'radius', label = 'Radius' }) => ({
         type: 'slider',
         label,

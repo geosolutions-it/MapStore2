@@ -364,12 +364,12 @@ describe('StyleEditorUtils test', () => {
                     ramp: 'custom',
                     reverse: false,
                     continuous: true,
+                    colorMapType: 'ramp',
                     symbolizerKind: 'Raster',
                     name: 'raster'
                 }
             ]
         };
-
         expect(parseJSONStyle(style)).toEqual({
             name: 'Style',
             rules: [ {
@@ -395,7 +395,8 @@ describe('StyleEditorUtils test', () => {
                             opacity: 1,
                             label: '1840',
                             quantity: 1840
-                        }]
+                        }],
+                        type: 'ramp'
                     }
                 }]
             } ]

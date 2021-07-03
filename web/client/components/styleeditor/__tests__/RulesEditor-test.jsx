@@ -419,6 +419,7 @@ describe('RulesEditor', () => {
             'styleeditor.colorRamp',
             'styleeditor.reverse',
             'styleeditor.continuous',
+            'styleeditor.colorMapType.label',
             'styleeditor.method',
             'styleeditor.intervals'
         ]);

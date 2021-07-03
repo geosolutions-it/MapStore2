@@ -32,6 +32,49 @@ class ThemaClassesEditor extends React.Component {
         className: ""
     };
 
+    renderFieldByClassification = (classItem, index) => {
+        let fieldRender;
+        if (!isNil(classItem.unique)) {
+            if (isNumber(classItem.unique)) {
+                fieldRender = (<NumberPicker
+                    format="- ###.###"
+                    value={classItem.unique}
+                    onChange={(value) => this.updateUnique(index, value, 'number')}
+                />);
+            } else {
+                fieldRender = (<FormControl
+                    value={classItem.unique}
+                    type="text"
+                    onChange={ e => this.updateUnique(index, e.target.value)}
+                />);
+            }
+        } else if (!isNil(classItem.min)) {
+            fieldRender =  <>
+                <NumberPicker
+                    format="- ###.###"
+                    value={classItem.min}
+                    onChange={(value) => this.updateMin(index, value)}
+                />
+                <NumberPicker
+                    format="- ###.###"
+                    value={classItem.max}
+                    precision={3}
+                    onChange={(value) => this.updateMax(index, value)}
+                />
+            </>;
+        } else {
+            fieldRender = <>
+                <FormControl value={classItem.label} type="text" onChange={ e => this.updateRaster(index, e.target.value)} />
+                <NumberPicker
+                    format="- ###.###"
+                    value={classItem.quantity}
+                    onChange={(value) => this.updateRaster(index, value, 'number')}
+                />
+            </>;
+        }
+        return fieldRender;
+    }
+
     renderClasses = () => {
         return this.props.classification.map((classItem, index) => (
             <FormGroup
@@ -43,27 +86,7 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
-                { !isNil(classItem.unique)
-                    ? isNumber(classItem.unique)
-                        ? <NumberPicker
-                            format="- ###.###"
-                            value={classItem.unique}
-                            onChange={(value) => this.updateUnique(index, value, 'number')}
-                        />
-                        : <FormControl value={classItem.unique} type="text" onChange={ e => this.updateUnique(index, e.target.value)} />
-                    : <>
-                        <NumberPicker
-                            format="- ###.###"
-                            value={classItem.min}
-                            onChange={(value) => this.updateMin(index, value)}
-                        />
-                        <NumberPicker
-                            format="- ###.###"
-                            value={classItem.max}
-                            precision={3}
-                            onChange={(value) => this.updateMax(index, value)}
-                        /></>
-                }
+                { this.renderFieldByClassification(classItem, index) }
                 <DropdownButton
                     style={{flex: 0}}
                     className="square-button-md no-border add-rule"
@@ -113,6 +136,19 @@ class ThemaClassesEditor extends React.Component {
             if (index === classIndex) {
                 return assign({}, classItem, {
                     unique: isNil(unique) ? type === 'number' ? 0 : '' : unique
+                });
+            }
+            return classItem;
+        });
+        this.props.onUpdateClasses(newClassification, 'interval');
+    };
+
+    updateRaster = (classIndex, value, type = 'text') => {
+        const fieldProp = type === 'number' ? 'quantity' : 'label';
+        const newClassification = this.props.classification.map((classItem, index) => {
+            if (index === classIndex) {
+                return assign({}, classItem, {
+                    [fieldProp]: value
                 });
             }
             return classItem;
@@ -179,6 +215,8 @@ class ThemaClassesEditor extends React.Component {
             if (!isNil(currentRule.unique)) {
                 const uniqueValue = isNumber(currentRule.unique) ? 0 : '';
                 classifyObj = { ...currentRule, color, title: uniqueValue, unique: uniqueValue };
+            } else if (!isNil(currentRule.quantity)) {
+                classifyObj = { ...currentRule, color, label: '0', quantity: 0 };
             } else {
                 classifyObj = { ...currentRule, ...updateMinMax, color,
                     title: ` >= ${updateMinMax.min} AND <${updateMinMax.max}`

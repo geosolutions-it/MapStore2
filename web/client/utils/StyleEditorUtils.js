@@ -364,7 +364,8 @@ export function parseJSONStyle(style) {
                         quantity: entry.quantity,
                         color: entry.color,
                         opacity: entry.opacity
-                    }))
+                    })),
+                    type: rule.colorMapType
                 };
                 return {
                     name: rule.name || '',
@@ -380,7 +381,8 @@ export function parseJSONStyle(style) {
                                 'reverse',
                                 'continuous',
                                 'symbolizerKind',
-                                'name'
+                                'name',
+                                'colorMapType'
                             ]),
                             kind: 'Raster',
                             ...(colorMap && { colorMap })

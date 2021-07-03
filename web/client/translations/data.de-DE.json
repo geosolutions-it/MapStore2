@@ -2171,6 +2171,12 @@
             "fontWeightBold": "Bold",
             "boolTrue": "True",
             "boolFalse": "False",
+            "colorMapType": {
+              "label": "Farbkartentyp",
+              "ramp": "Rampe",
+              "intervals": "Intervalle",
+              "values": "Werte"
+            },
             "addRuleBefore": "Fügen Sie zuvor einen neuen Eintrag hinzu",
             "addRuleAfter": "Neuen Eintrag hinzufügen nach",
             "remove": "Entfernen",
@@ -2231,6 +2237,7 @@
             "emptyRuleEditor": "Es gibt keine Regeln für diesen Stil. Fügen Sie eine neue Regel hinzu, indem Sie in der Symbolleiste auf den gewünschten Symbolisierungstyp klicken",
             "classificationError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Klassifizierung zu erstellen",
             "classificationRasterError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Rasterklassifizierung zu erstellen.",
+            "classificationRasterUniqueIntervalError": "Eindeutige Wertklassifizierung über Raster vom Typ Float nicht möglich, nur Ganzzahlen werden unterstützt. Versuchen Sie es stattdessen mit einer anderen Klassifizierung",
             "classificationUniqueIntervalError": "Maximale Intervallgrenzen überschritten! Sie versuchen, eine eindeutige Intervallklassifizierung mit einem Attribut zu generieren, das mehr als {intervalsForUnique} verschiedene Klassen enthält. Eine eindeutige Intervallklassifizierung sollte auf Attribute mit einem begrenzten Satz von Intervallen angewendet werden, um eine bessere Lesbarkeit des Stils zu ermöglichen. Sie können eine andere Methode für das ausgewählte Attribut ausprobieren",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
