@@ -304,6 +304,13 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result.indexOf('param1=value1') > 0).toBe(true);
         expect(result.indexOf('param2=value2') > 0).toBe(true);
     });
+    it('check getStyleMetadataService with static style service', () => {
+        const styleService = { baseUrl: 'http://localhost:8080/static/wms', isStatic: true };
+        const result = API.getStyleMetadataService(layer, params, styleService);
+        expect(result.indexOf('http://localhost:8080/static/rest/sldservice/mylayer/classify.json')).toBe(0);
+        expect(result.indexOf('param1=value1') > 0).toBe(true);
+        expect(result.indexOf('param2=value2') > 0).toBe(true);
+    });
     it('check getStyleParameters', () => {
         const result = API.getStyleParameters(layer, params);
         expect(result).toIncludeKey('SLD');

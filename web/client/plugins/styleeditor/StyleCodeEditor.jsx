@@ -103,7 +103,8 @@ const ConnectedVisualStyleEditor = connect(
             fonts: styleService.fonts || [],
             methods: (geometryType === 'raster'
                 ? styleService?.classificationMethods?.raster
-                : styleService?.classificationMethods?.vector) || SLDService.methods
+                : styleService?.classificationMethods?.vector) || SLDService.methods,
+            styleService: { baseUrl: styleService?.baseUrl, isStatic: styleService?.isStatic }
         })
     ),
     {

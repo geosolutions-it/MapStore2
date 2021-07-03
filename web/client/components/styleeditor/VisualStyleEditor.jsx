@@ -61,6 +61,7 @@ const updateFunc = ({
     properties,
     rules,
     layer,
+    styleService,
     styleUpdateTypes = {}
 }) => {
 
@@ -81,7 +82,7 @@ const updateFunc = ({
     return new Promise((resolve) => {
         const request = properties.type && styleUpdateTypes[properties.type];
         return request
-            ? resolve(request({ values, properties, rules, layer }))
+            ? resolve(request({ values, properties, rules, layer, styleService }))
             : resolve(defaultUpdateRules());
     });
 };
@@ -145,6 +146,7 @@ function validateStyle(rules) {
  * @prop {object} error error object
  * @prop {function} getColors return colors for available ramps in classification
  * @prop {number} debounceTime debounce time for on change function, default 300
+ * @prop {object} styleService style service configuration object
  */
 function VisualStyleEditor({
     code,
@@ -165,7 +167,8 @@ function VisualStyleEditor({
     methods,
     getColors,
     styleUpdateTypes,
-    debounceTime
+    debounceTime,
+    styleService
 }) {
 
     const { symbolizerBlock, ruleBlock } = getBlocks(config);
@@ -365,6 +368,7 @@ function VisualStyleEditor({
                     properties,
                     layer,
                     rules: state.current.style.rules,
+                    styleService,
                     styleUpdateTypes
                 })
                     .then(newRules => handleUpdateStyle(newRules))
