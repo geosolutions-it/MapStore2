@@ -8,7 +8,7 @@
 import React from 'react';
 import { isNil } from 'lodash';
 import Select from 'react-select';
-import { Col, FormGroup, FormControl, ControlLabel, Glyphicon } from 'react-bootstrap';
+import { Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Message from '../../../../I18N/Message';
 import HTML from '../../../../I18N/HTML';
@@ -44,12 +44,9 @@ const AXIS_TYPES = [{
 
 const MAX_X_AXIS_LABELS = 200;
 
-function Header({data}) {
+function Header({}) {
     return (<span>
         <span style={{ cursor: "pointer" }}><Message msgId="widgets.advanced.title"/></span>
-        <button className="close">
-            {data.panel ? <Glyphicon glyph="glyphicon glyphicon-collapse-down" /> : <Glyphicon glyph="glyphicon glyphicon-expand" />}
-        </button>
     </span>);
 }
 
