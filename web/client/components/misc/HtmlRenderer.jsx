@@ -19,8 +19,15 @@ import React from 'react';
 class HtmlRenderer extends React.Component {
     static propTypes = {
         html: PropTypes.string,
-        id: PropTypes.string
+        id: PropTypes.string,
+        style: PropTypes.object
     };
+
+    static defaultProps = {
+        // the content of an html is not dependent of the MapStore theme
+        // we should provide the default color of the browser
+        style: { color: '#000000' }
+    }
 
     getSourceCode = () => {
         return {
@@ -29,7 +36,7 @@ class HtmlRenderer extends React.Component {
     };
 
     render() {
-        return <div id={this.props.id} dangerouslySetInnerHTML={this.getSourceCode()} />;
+        return <div id={this.props.id} style={this.props.style} dangerouslySetInnerHTML={this.getSourceCode()} />;
     }
 }
 
