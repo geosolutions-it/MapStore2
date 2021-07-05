@@ -61,12 +61,23 @@
     }
     
     .ms-color-picker-overlay {
-        .ms-sketch-picker {
+        .ms-sketch-picker,
+        .ms-sketch-picker input {
             .background-color-var(@theme-vars[main-bg]);
+        }
+        .ms-sketch-picker span {
+            .color-var(@theme-vars[main-color], true);
         }
         .ms-sketch-picker-arrow {
             .border-right-color-var(@theme-vars[main-bg]);
         }
+        .flexbox-fix {
+            .border-color-var(@theme-vars[main-border-color], true);
+        }
+    }
+
+    .ms-dash-array {
+        .stroke-var(@theme-vars[main-color]);
     }
     
     .ms-color-selector {
@@ -109,6 +120,10 @@
     
     .ms-symbolizer {
         .background-color-var(@theme-vars[main-bg]);
+    }
+    .ms-style-rule-overlay-loader {
+        .background-color-var(@theme-vars[main-bg]);
+        opacity: 0.4;
     }
     
     .ms-mark-list {
@@ -165,7 +180,7 @@
             }
         }
     }
-    .ms2-mask-container   {
+    .ms2-mask-container {
         .ms2-mask {
             background-color: @ms-main-bg;
             color: @ms-main-color;

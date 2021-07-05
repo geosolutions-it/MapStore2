@@ -376,11 +376,11 @@ const RulesEditor = forwardRef(({
                         </Rule>);
                 })}
                 {loading && <div
+                    className="ms-style-rule-overlay-loader"
                     style={{
                         position: 'absolute',
                         width: '100%',
                         height: '100%',
-                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
                         zIndex: 10,
                         transition: '0.3s all'
                     }}>
