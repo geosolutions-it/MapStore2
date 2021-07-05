@@ -437,13 +437,13 @@
 
         @media (min-width: @screen-sm-min) {
             >li>a {
-                border-color: transparent;
+                .border-bottom-color-var(@theme-vars[main-border-color]);
             }
 
             >.active>a,
             >.active>a:hover,
             >.active>a:focus {
-                .border-color-var(@theme-vars[main-border-color]);
+                .border-bottom-color-var(@theme-vars[main-bg]);
             }
         }
     }
