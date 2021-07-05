@@ -10,7 +10,23 @@
 // Theme
 // **************
 
-// #ms-components-theme(@theme-vars) {}
+#ms-components-theme(@theme-vars) {
+    // quill style
+    .ql-container.ql-snow,
+    .ql-toolbar.ql-snow {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .ql-snow .ql-stroke {
+        .stroke-var(@theme-vars[main-color]);
+    }
+    .ql-snow .ql-picker-options {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .ql-snow .ql-picker {
+        .color-var(@theme-vars[main-color]);
+    }
+}
 
 // **************
 // Layout
