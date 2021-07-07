@@ -8,7 +8,7 @@
 import expect from 'expect';
 
 import {
-    createFromSearch,
+    isValidNewGroupOption,
     getTooltip,
     getTooltipFragment,
     flattenGroups,
@@ -16,7 +16,6 @@ import {
     getLabelName
 } from '../TOCUtils';
 
-let options = [{label: "lab1", value: "val1"}];
 const groups = [{
     "id": "first",
     "title": "first",
@@ -85,16 +84,16 @@ const groups = [{
 }];
 
 describe('TOCUtils', () => {
-    it('test createFromSearch for General Fragment with value not allowed', () => {
-        let val = createFromSearch(options, "/as");
-        expect(val).toBe(null);
-        val = createFromSearch(options, "a//s");
-        expect(val).toBe(null);
-        val = createFromSearch(options, "s/d&/");
-        expect(val).toBe(null);
+    it('test isValidNewGroupOption for General Fragment with value not allowed', () => {
+        let val = isValidNewGroupOption({ label: "/as" });
+        expect(val).toBe(false);
+        val = isValidNewGroupOption({ label: "a//s" });
+        expect(val).toBe(false);
+        val = isValidNewGroupOption({ label: "s/d&/" });
+        expect(val).toBe(false);
     });
 
-    it('test createFromSearch for General Fragment with new valid value', () => {
+    it('test getTooltip for General Fragment with new valid value', () => {
         const node = {
             name: 'layer00',
             title: {
