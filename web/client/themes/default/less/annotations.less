@@ -15,8 +15,14 @@
         .color-var(@theme-vars[danger]);
     }
     
+    .ms-marker-shape-content,
+    .ms-marker-icon-content,
     #mapstore-annotations-panel {
         .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms-marker-selected {
+        .border-color-var(@theme-vars[focus-color]);
     }
 
     .mapstore-annotations-info-viewer-marker-selected {
@@ -353,6 +359,10 @@
     cursor: inherit;
 }
 
+.ms-marker-selected {
+    border-width: 2px;
+    border-style: solid;
+}
 
 .mapstore-annotations-info-viewer .annotations-edit-error {
     margin-left: 10px;

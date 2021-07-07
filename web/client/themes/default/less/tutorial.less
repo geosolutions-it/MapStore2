@@ -12,11 +12,13 @@
 #ms-components-theme(@theme-vars) {
 
     .joyride-tooltip__button--primary {
+        .color-var(@theme-vars[primary-contrast], true);
         .background-color-var(@theme-vars[primary], true);
 
         &:active,
         &:focus,
         &:hover {
+            .color-var(@theme-vars[primary-contrast], true);
             .background-color-var(@theme-vars[primary], true);
         }
     }

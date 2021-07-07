@@ -11,6 +11,11 @@
 // **************
 #ms-components-theme(@theme-vars) {
     .ms-side-panel {
+
+        > div > div {
+            // override the inline style
+            .background-color-var(@theme-vars[main-bg], true);
+        }
         .ms-header {
             .background-color-var(@theme-vars[main-bg]);
 
