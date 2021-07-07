@@ -475,6 +475,43 @@ describe('RulesEditor', () => {
 
     });
 
+    it('should not crash the app if attributes is false', () => {
+        ReactDOM.render(
+            <RulesEditor
+                config={{
+                    attributes: false
+                }}
+                rules={[
+                    {
+                        name: 'Fill rule',
+                        ruleId: 1,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Fill',
+                            color: '#dddddd',
+                            fillOpacity: 1,
+                            outlineColor: '#777777',
+                            outlineWidth: 1
+                        }]
+                    }
+                ]}
+            />, document.getElementById('container'));
+        const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
+        expect(ruleEditorNode).toBeTruthy();
+
+        const rulesNode = document.querySelectorAll('.ms-style-rule');
+        expect(rulesNode.length).toBe(1);
+
+        const ruleHeadNode = rulesNode[0].querySelector('.ms-style-rule-head');
+
+        const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
+        expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-1-ruler',
+            'glyphicon glyphicon-trash'
+        ]);
+
+    });
+
 
     it('should render symbolizer with mark pattern', () => {
         ReactDOM.render(

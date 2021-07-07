@@ -253,7 +253,9 @@ const RulesEditor = forwardRef(({
                         hideScaleDenominator,
                         classificationType
                     } = ruleBlock[ruleKind] || {};
-                    const isCustomNumber =  attributes?.filter(({label}) => label === rule?.attribute)?.[0]?.type === 'number';
+
+                    // attributes could be false so it is not possible to use ?. operator
+                    const isCustomNumber =  attributes && attributes.filter(({label}) => label === rule?.attribute)?.[0]?.type === 'number';
                     return (
                         <Rule
                             // force render if draggable is enabled
