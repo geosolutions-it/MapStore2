@@ -5,7 +5,9 @@ networks:
 
 services:
   db:
-    image: postgis/postgis
+    build:
+      context: ./docker/postgres/
+    image: geosolutions-mapstore/postgis
     container_name: postgres
     restart: on-failure
     healthcheck:
@@ -19,7 +21,6 @@ services:
       POSTGRES_DB: postgres
     volumes:
     - pg_data:${PGDATA:-/var/lib/postgresql/data}:rw
-    - ./docker/01-init-user.sh:/docker-entrypoint-initdb.d/01-init-user.sh
     ports:
       - 5432
     networks:
