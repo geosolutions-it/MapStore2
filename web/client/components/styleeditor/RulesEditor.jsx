@@ -9,6 +9,7 @@
 import React, { useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
+import isArray from 'lodash/isArray';
 import { Glyphicon, FormControl as FormControlRB, FormGroup } from 'react-bootstrap';
 import Fields from './Fields';
 import uuidv1 from 'uuid/v1';
@@ -254,8 +255,12 @@ const RulesEditor = forwardRef(({
                         classificationType
                     } = ruleBlock[ruleKind] || {};
 
-                    // attributes could be false so it is not possible to use ?. operator
-                    const isCustomNumber =  attributes && attributes.filter(({label}) => label === rule?.attribute)?.[0]?.type === 'number';
+                    // ensure that attributes is an array
+                    // before to look if the current selected attribute is of type number
+                    // the attribute select of the classification rule changes the disabled attribute based on type
+                    const isCustomNumber =  isArray(attributes)
+                        ? (attributes.find(({ label }) => label === rule?.attribute) || {})?.type === 'number'
+                        : false;
                     return (
                         <Rule
                             // force render if draggable is enabled
