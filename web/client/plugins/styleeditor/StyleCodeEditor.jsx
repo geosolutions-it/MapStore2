@@ -71,7 +71,7 @@ function getAttributes(hintProperties, geometryType) {
                     ? 'number'
                     : 'string'
             };
-        });
+        }) || [];
 }
 
 const ConnectedVisualStyleEditor = connect(
