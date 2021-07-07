@@ -126,6 +126,10 @@ You can also have a continuously running watching test runner, that will execute
 
 `npm run continuoustest`
 
+Usually during the development you may need to execute less tests, when working on some specific files.
+
+You can reduce the tests invoked in `npm run continuoustest` execution by editing the file `tests.webpack.js` and modifying the directory (`/web`) and/or the regular expression that intercept the files to execute.
+
 To run ESLint checks launch:
 
 `npm run lint`
