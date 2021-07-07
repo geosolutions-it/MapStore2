@@ -2884,7 +2884,8 @@
                 "windowTitlePlaceholder": "Ingrese el título de la ventana..."
             },
             "configureThemes": {
-              "label": "Configurar tema",
+              "title": "Configurar tema",
+              "label": "Tema",
               "themes": "Elige un tema",
               "noThemes": "No se encontraron"
             },
