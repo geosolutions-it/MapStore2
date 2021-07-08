@@ -1,0 +1,59 @@
+version: "3.8"
+networks:
+  mapstore-network:
+    driver: bridge
+
+services:
+  db:
+    build:
+      context: ./docker/postgres/
+    image: geosolutions-mapstore/postgis
+    container_name: postgres
+    restart: on-failure
+    healthcheck:
+      test: /usr/bin/pg_isready -U postgres
+      interval: 5s
+      timeout: 10s
+      retries: 120
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+    - pg_data:${PGDATA:-/var/lib/postgresql/data}:rw
+    ports:
+      - 5432
+    networks:
+      - mapstore-network
+
+  mapstore:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        OVR: "geostore-datasource-ovr.properties"
+        MAPSTORE_WEBAPP_SRC: "https://github.com/geosolutions-it/MapStore2/releases/latest/download/mapstore.war"
+        PG_CLIENT_VERSION: 11
+    container_name: mapstore
+    depends_on:
+      - db
+    ports:
+      - 8080
+    networks:
+      - mapstore-network
+
+  proxy:
+    image: nginx
+    container_name: proxy
+    volumes:
+      - ./docker/mapstore.conf:/etc/nginx/conf.d/default.conf:rw
+    ports:
+      - 80:80
+    depends_on:
+      - mapstore
+    networks:
+      - mapstore-network
+
+volumes:
+  pg_data:
+
