@@ -5,7 +5,7 @@ The *Menu Bar* consist of four different parts:
 
 * The **Search bar**
 
-* The **Homepage** button <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/>, that redirect the user to the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/)
+* The **Homepage** button <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/>, that redirect the user to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 * The **Login** button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
 
@@ -15,7 +15,7 @@ The *Menu Bar* consist of four different parts:
 
 ## Search Bar
 
-The search bar is a tool that allows the user to query the layers in order to find a specific information. In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to perform the search in four different ways:
+The search bar is a tool that allows the user to query the layers in order to find a specific information. In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to perform the search in four different ways:
 
 * By **Location name**
 
@@ -51,7 +51,7 @@ Once the coordinates are set, it is possible to perform the search with the <img
 
 ### Configuring a search service
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user also to extend or replace the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/>, the following window opens:
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user also to extend or replace the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/>, the following window opens:
 
 <img src="../img/menu-bar/create-edit-service-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -178,6 +178,6 @@ In particular, with these options it is possible to:
 
 * Start the **Tutorial** 
 
-* Know more information **About** [MapStore](https://mapstore.geo-solutions.it/mapstore/#/)
+* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 <img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:500px;"/>

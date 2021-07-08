@@ -1,7 +1,7 @@
 # Sharing Resources
 *******************
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
 
 * Directly from the MapStore [Homepage](home-page.md) by clicking on the Share button <img src="../img/button/share.jpg" class="ms-docbutton"/> present in the toolbar of each resource card
 
@@ -37,7 +37,7 @@ The **Embed** section provides to the user the needed snippets, **embedded code*
 
 <img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/> 
 
-In addition, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides options to customize a bit the *embedded code*:
+In addition, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides options to customize a bit the *embedded code*:
 
 * The user can configure **height** and **width** of the embedded resource by choosing `Small` (*600x500*), `Medium` (*800x600*), `Large` (*1000x800*) and `Custom` (it is possible to choose the desired size).
 

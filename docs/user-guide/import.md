@@ -1,7 +1,7 @@
 # Import Files
 **************
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to add map context files or vector files to a map. This operation can be performed by clicking on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton"/> from the [Menu Bar](menu-bar.md) and by selecting the <img src="../img/button/import.jpg" class="ms-docbutton"/> option. Following these steps the import screen appears:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to add map context files or vector files to a map. This operation can be performed by clicking on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton"/> from the [Menu Bar](menu-bar.md) and by selecting the <img src="../img/button/import.jpg" class="ms-docbutton"/> option. Following these steps the import screen appears:
 
 <img src="../img/import/import-screen.jpg" class="ms-docimage" style="max-width:700px;"/>
 
