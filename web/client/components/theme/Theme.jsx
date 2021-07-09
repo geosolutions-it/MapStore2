@@ -43,8 +43,6 @@ const Theme = memo(({
 
     const prefix = prefixProp || __MAPSTORE_PROJECT_CONFIG__.themePrefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2';
     const path = pathProp || __MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes';
-    console.log("prefix", prefix);
-    console.log("themePrefix", ConfigUtils.getConfigProp('themePrefix'));
     const link = useRef();
 
     function handleError(event) {
