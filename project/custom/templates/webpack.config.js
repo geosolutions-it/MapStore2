@@ -157,10 +157,10 @@ module.exports = (env) => {
         devServer: isProduction ? undefined : {
             proxy: {
                 '/mapstore/rest/geostore': {
-                    target: "http://dev.mapstore.geo-solutions.it"
+                    target: "http://dev-mapstore.geosolutionsgroup.com"
                 },
                 '/mapstore/proxy': {
-                    target: "http://dev.mapstore.geo-solutions.it"
+                    target: "http://dev-mapstore.geosolutionsgroup.com"
                 }
             }
         },

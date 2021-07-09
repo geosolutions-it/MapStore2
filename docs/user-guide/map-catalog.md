@@ -1,7 +1,7 @@
 # Map Catalog
 *******************
 
-The **Map Catalog** is an extension that can be included in the step #3 of the application context wizard to allow the end user to browse the existing MapStore maps directly inside the viewer itself. The <img src="../img/button/map-catalog-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provides to the user the list of the MapStore maps that are also available in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/). 
+The **Map Catalog** is an extension that can be included in the step #3 of the application context wizard to allow the end user to browse the existing MapStore maps directly inside the viewer itself. The <img src="../img/button/map-catalog-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provides to the user the list of the MapStore maps that are also available in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/). 
 
 <img src="../img/map-catalog/map-catalog-panel.jpg" class="ms-docimage"/>
 

@@ -1,7 +1,7 @@
 # Home Page
 ***********
 
-In order to get started, let's take a look at the portal interface and get an idea of how to navigate around it. First of all it's necessary to specify that the user can take advantage of different tools and sections according to his authentication in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/). In particular, a user can access the [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) application by:
+In order to get started, let's take a look at the portal interface and get an idea of how to navigate around it. First of all it's necessary to specify that the user can take advantage of different tools and sections according to his authentication in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/). In particular, a user can access the [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) application by:
 
 * Anonymous user
 
@@ -11,7 +11,7 @@ In order to get started, let's take a look at the portal interface and get an id
 
 ## Anonymous user
 
-Accessing [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) as anonymous user, the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) shows up as in the figure below:
+Accessing [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) as anonymous user, the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) shows up as in the figure below:
 
 <img src="../img/home-page/homepage-anonym.jpg" class="ms-docimage"/>
 
@@ -41,7 +41,7 @@ The anonymous user is allowed to:
 
 ## Normal user
 
-With a login as normal user, the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) displays as below:
+With a login as normal user, the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) displays as below:
 
 <img src="../img/home-page/homepage-user.jpg" class="ms-docimage" />
 
@@ -55,7 +55,7 @@ The normal user, in addition to what the anonymous user can do, is allowed to:
 
 ## Administrator user
 
-Once logged in as *Administrator*, the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) it's like the following:
+Once logged in as *Administrator*, the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) it's like the following:
 
 <img src="../img/home-page/homepage-admin.jpg" class="ms-docimage" />
 
