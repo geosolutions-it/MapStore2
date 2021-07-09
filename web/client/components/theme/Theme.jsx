@@ -27,19 +27,24 @@ import { trim } from 'lodash';
  * @prop {boolean} disabled disable the theme functionalities. This could be used while using hardcoded link in the html pages
  */
 
+
 const Theme = memo(({
     version,
     theme,
     themeElement,
-    prefix,
+    prefix: prefixProp,
     containerNodeTarget,
     prefixContainer,
-    path,
+    path: pathProp,
     onLoad,
     children,
     disabled
 }) => {
 
+    const prefix = prefixProp || __MAPSTORE_PROJECT_CONFIG__.themePrefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2';
+    const path = pathProp || __MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes';
+    console.log("prefix", prefix);
+    console.log("themePrefix", ConfigUtils.getConfigProp('themePrefix'));
     const link = useRef();
 
     function handleError(event) {
@@ -147,10 +152,8 @@ Theme.defaultProps = {
     version: '',
     theme: 'default',
     themeElement: 'theme_stylesheet',
-    prefix: __MAPSTORE_PROJECT_CONFIG__.themePrefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
     containerNodeTarget: '',
     prefixContainer: '',
-    path: __MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes',
     onLoad: () => {}
 };
 
