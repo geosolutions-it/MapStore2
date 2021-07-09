@@ -17,7 +17,7 @@ import { getMessageById } from '../../utils/LocaleUtils';
 const ConfigureThemes = ({
     themes = [],
     setSelectedTheme = () => {},
-    selectedTheme = "",
+    selectedTheme = {},
     disabled = false,
     context = {}
 }) => {
@@ -32,7 +32,7 @@ const ConfigureThemes = ({
                 <Select
                     clearable
                     onChange={(option)  => setSelectedTheme(option?.theme)}
-                    value={selectedTheme}
+                    value={selectedTheme?.id}
                     options={themes.map(theme => ({ value: theme.id, label: theme?.label && getMessageById(context, theme?.label) || theme?.id, theme }))}
                     disabled={disabled}
                     noResultsText="contextCreator.configureThemes.noThemes"
