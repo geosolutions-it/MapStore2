@@ -2,7 +2,7 @@
 *****************
 
 In GIS, the Attribute Table associated to a vector layer is a table that stores tabular information related to the layer. The columns of the table are called fields and the rows are called records. Each record of the attribute table corresponds to a feature geometry of the layer. This relation allows to find records in the table (information) by selecting features on the map and viceversa.<br>
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), through the <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/> button in [Layers Toolbar](toc.md#toolbar-options) it is possible to access the Attribute table:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), through the <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/> button in [Layers Toolbar](toc.md#toolbar-options) it is possible to access the Attribute table:
 
 <img src="../img/attributes-table/attributes-table-1.jpg" class="ms-docimage"/>
 
@@ -32,7 +32,7 @@ Accessing this panel the user can perform the following main operations:
 
 ## Manage records
 
-The basic Web Feature Service allows querying and retrieval of features. Through Transactional Web Feature Services (WFS-T) [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows creation, deletion, and updating of features.
+The basic Web Feature Service allows querying and retrieval of features. Through Transactional Web Feature Services (WFS-T) [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows creation, deletion, and updating of features.
 
 !!! warning
     By default editing functionalities are available only for MapStore *Admin* users. Other users can use these tools only if explicitly configured in the plugin configuration (see the [APIs documentation](https://dev.mapstore.geo-solutions.it/mapstore/docs/api/plugins#plugins.FeatureEditor) for more details). In any case, the user must have editing rights on the layer to edit it (see for example the [GeoServer Security Settings](https://docs.geoserver.org/stable/en/user/security/webadmin/data.html)).
@@ -122,7 +122,7 @@ With a click on the <img src="../img/button/export_at.jpg" class="ms-docbutton"/
 
 ## Customize Attribute table display
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user to customize the fields displayed in Attribute table mainly in two way:
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to customize the fields displayed in Attribute table mainly in two way:
 
 * Ordering the records in alphabetic order (if it's a text field) or from the minimum to the maximum value and viceversa (if it's a numerical field):
 

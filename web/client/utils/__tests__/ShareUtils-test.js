@@ -19,14 +19,14 @@ const STANDALONE_GEOSTORE_PATH = "/geostore/rest/";
 
 const LOCALURL = "http://localhost:8081";
 const SOMEHOST = "http://somehost.it";
-const DEV_URL = "http://dev.mapstore.geo-solutions.it";
+const DEV_URL = "http://dev-mapstore.geosolutionsgroup.com";
 
 const LOCALURL_PATH = LOCALURL + MAPSTORE_PATH;
 const DEV_URL_PATH = DEV_URL + MAPSTORE_PATH;
 const DEV_URL_MAP_PATH = DEV_URL_PATH + MAP_HASH_PATH;
 const SOMEHOST_PATH = SOMEHOST + MAPSTORE_PATH;
 const SOMEHOST_PATH_QUERY_STRING = SOMEHOST_PATH + QUERY_STRING;
-const EXTERNAL_GEOSTORE = "http://dev.mapstore.geo-solutions.it/geostore/rest/";
+const EXTERNAL_GEOSTORE = "http://dev-mapstore.geosolutionsgroup.com/geostore/rest/";
 
 describe('ShareUtils test', () => {
     it('getAbsoluteURL', () => {

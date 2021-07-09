@@ -37,7 +37,7 @@ Example:
 }
 ```
 
-For more details check out the [zoomToExtent](https://mapstore.geo-solutions.it/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
+For more details check out the [zoomToExtent](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
 
 #### Map info
 It performs a [GetFeature](https://docs.geoserver.org/stable/en/user/services/wfs/reference.html#getfeature) request on the specified layer and then a [GetFeatureInfo](https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo) by taking a point from the retrieved features's geometry. This action can be used only for existing maps (map previously created).
@@ -73,7 +73,7 @@ The MapStore invocation URL above executes the following operations:
 - Execution of a search request filtering by **STATE_FIPS** with value 34 on the **topp:states** layer
 - Execution of a map zoom to the provided extent
 
-For more details check out the [searchLayerWithFilter](https://mapstore.geo-solutions.it/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
+For more details check out the [searchLayerWithFilter](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
 
 
 #### Add Layers
