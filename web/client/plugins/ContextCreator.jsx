@@ -61,7 +61,7 @@ export const contextCreatorSelector = createStructuredSelector({
     pluginsToUpload: state => state.contextcreator?.pluginsToUpload,
     pluginsConfig: () => ConfigUtils.getConfigProp('plugins'),
     showBackToPageConfirmation: showBackToPageConfirmationSelector,
-    selectedTheme: state => selectedThemeSelector(state)?.id
+    selectedTheme: selectedThemeSelector
 });
 
 /**
