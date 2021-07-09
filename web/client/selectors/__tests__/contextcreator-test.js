@@ -45,6 +45,6 @@ describe('contextcreator selectors', () => {
                 ...testState.contextcreator,
                 selectedTheme: themeDark
             }
-        })).toEqual(themeDark);
+        })).toEqual(themeDark.id);
     });
 });
