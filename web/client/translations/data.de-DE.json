@@ -754,7 +754,7 @@
             "decimal": "Dezimal",
             "aeronautical": "Luftfahrt",
             "changeSearchInputField": "Suchwerkzeug ändern",
-            "addressSearch": "Suchen auf …",
+            "addressSearch": "Suche nach Standortname",
             "coordinatesSearch": "Suche nach Koordinaten",
             "searchservicesbutton": "Suchdienste konfigurieren",
             "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",

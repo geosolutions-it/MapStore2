@@ -609,7 +609,7 @@
       "decimal": "Desimaali",
       "aeronautical": "Linnuntietä",
       "changeSearchInputField": "Vaihda hakutyökalu",
-      "addressSearch": "Paikanna …",
+      "addressSearch": "Etsi sijaintinimen perusteella",
       "coordinatesSearch": "Etsi koordinaattien perusteella",
       "searchservicesbutton": "Määritä hakupalvelut",
       "configpaneltitle": "Luo / muokkaa hakupalvelua",
