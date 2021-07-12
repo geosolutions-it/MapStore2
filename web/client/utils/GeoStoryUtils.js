@@ -200,6 +200,7 @@ export const filterResources = (resources = [], filterText, regex = RegExp(filte
 /**
  * Creates a default template for the given type
  * @param {string} type can be section type, a content type or a template (custom. i.e. paragraph with initial image for add media)
+ * @param {function/string} localize localization function or localized string
  * @return {object} the template object of the content/section
  */
 export const getDefaultSectionTemplate = (type, localize = v => v) => {
@@ -265,7 +266,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             id: uuid(),
             type: SectionTypes.IMMERSIVE,
             title: localize("geostory.builder.defaults.titleImmersive"),
-            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize)]
+            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize("geostory.builder.defaults.titleImmersiveContent"))]
         };
     case SectionTypes.CAROUSEL:
         return {
@@ -273,24 +274,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             type,
             title: localize("geostory.builder.defaults.titleGeocarousel"),
             template: type,
-            contents: [{
-                id: uuid(),
-                type: ContentTypes.COLUMN,
-                align: 'left',
-                size: 'small',
-                theme: '',
-                title: localize("geostory.builder.defaults.titleGeocarouselContent"),
-                contents: [{
-                    id: uuid(),
-                    type: ContentTypes.TEXT,
-                    html: ''
-                }],
-                background: {
-                    fit: 'cover',
-                    size: 'full',
-                    align: 'center'
-                }
-            }]
+            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize("geostory.builder.defaults.titleGeocarouselContent"))]
         };
     case SectionTemplates.MEDIA: {
         return {
@@ -337,7 +321,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             align: 'left',
             size: 'small',
             theme: '',
-            title: localize("geostory.builder.defaults.titleImmersiveContent"),
+            title: localize,
             contents: [{
                 id: uuid(),
                 type: ContentTypes.TEXT,

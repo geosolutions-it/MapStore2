@@ -61,7 +61,7 @@ const GeoStory = ({
     ...props
 }) => {
     const localize = useCallback((id) => getMessageById(messages, id), [messages]);
-    const addFunc = (path, position, element) => onAdd(path, position, element, localize);
+    const addFunc = (path, position, element, id) => onAdd(path, position, element, id ? localize(id) : localize);
 
     useEffect(() => {
         window.__geostory_interaction = (type, param) => {

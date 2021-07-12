@@ -55,13 +55,13 @@ const GeoCarousel = ({
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
-    const overlayStoryTheme = {...storyTheme?.overlay, ...(mode === Modes.VIEW && {maxHeight: 400, overflowY: 'auto'})} || {};
+    const overlayStoryTheme = {...storyTheme?.overlay, ...(mode === Modes.VIEW && {maxHeight: 540, overflowY: 'auto'})} || {};
     const generalStoryTheme = storyTheme?.general || {};
     const minHeight = (viewHeight - (mode === Modes.EDIT ? 200 : 180 ));
 
     // On add column (new section content)
     const addContentColumn = () => {
-        add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN);
+        add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN, "geostory.builder.defaults.titleGeocarouselContent");
         update(`sections[{"id":"${id}"}].contents[{"id":"${contentId}"}].hideContent`, true);
     };
 
@@ -173,11 +173,6 @@ const GeoCarousel = ({
                 glyph: 'story-immersive-content',
                 tooltipId: 'geostory.addImmersiveContent',
                 onClick: () =>  add(`sections`, id, SectionTypes.IMMERSIVE)
-            },
-            {
-                glyph: 'story-immersive-content',
-                tooltipId: 'geostory.addGeocarouselContent',
-                onClick: ()=> addContentColumn()
             },
             {
                 glyph: 'story-media-section',
