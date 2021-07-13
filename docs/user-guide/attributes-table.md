@@ -8,23 +8,23 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), through the <
 
 Accessing this panel the user can perform the following main operations:
 
-* [Edit records](attributes-table.md#editing-and-removing-existing-features) through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button 
+* [Edit records](attributes-table.md#editing-and-removing-existing-features) through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
 * Filter records in Attribute Table in different ways as described in the [Set filter](attributes-table.md#set-filters) section below
 
 * Opening the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button
 
-* Activating the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button 
+* Activating the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button
 
 * Using the [quick filter by attribute](filtering-layers.md#quick-filter-by-attributes)
 
-* Download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button 
+* Download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button
 
 * Customize the attribute table display through the <img src="../img/button/customize_attribute_table.jpg" class="ms-docbutton"/> button
 
 * Create [Widgets](widgets.md) through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
 
-* Zoom to features through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record or zoom to the page max extent through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton"/> button (available only if the virtual scrolling is disabled, it is enabled by default in MapStore). 
+* Zoom to features through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record or zoom to the page max extent through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton"/> button (available only if the virtual scrolling is disabled, it is enabled by default in MapStore).
 
 !!!warning
     When GeoServer is set to strict CITE compliance for WFS (by default), the feature grid do not work correctly.
@@ -35,7 +35,7 @@ Accessing this panel the user can perform the following main operations:
 The basic Web Feature Service allows querying and retrieval of features. Through Transactional Web Feature Services (WFS-T) [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows creation, deletion, and updating of features.
 
 !!! warning
-    By default editing functionalities are available only for MapStore *Admin* users. Other users can use these tools only if explicitly configured in the plugin configuration (see the [APIs documentation](https://dev.mapstore.geo-solutions.it/mapstore/docs/api/plugins#plugins.FeatureEditor) for more details). In any case, the user must have editing rights on the layer to edit it (see for example the [GeoServer Security Settings](https://docs.geoserver.org/stable/en/user/security/webadmin/data.html)).
+    By default editing functionalities are available only for MapStore *Admin* users. Other users can use these tools only if explicitly configured in the plugin configuration (see the [APIs documentation](https://dev-mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.FeatureEditor) for more details). In any case, the user must have editing rights on the layer to edit it (see for example the [GeoServer Security Settings](https://docs.geoserver.org/stable/en/user/security/webadmin/data.html)).
 
 The *Edit mode* can be reached from the <img src="../img/button/editing-button.jpg" class="ms-docbutton"/> button in *Attribute Table* panel, allowing to menage only the layer which the table refers to:
 

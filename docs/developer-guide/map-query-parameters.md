@@ -65,7 +65,7 @@ Example:
 The sample request below illustrates how two actions can be concatenated:
 
 ```
-https://dev.mapstore.geo-solutions.it/mapstore/#/viewer/openlayers/4093?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"STATE_FIPS=34","layer":"topp:states"},{"type":"ZOOM_TO_EXTENT","extent":[-77.48202256347649,38.74612266051003,-72.20858506347648,40.66664704515103],"crs":"EPSG:4326","maxZoom":8}]
+https://dev-mapstore.geosolutionsgroup.com/mapstore/#/viewer/openlayers/4093?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"STATE_FIPS=34","layer":"topp:states"},{"type":"ZOOM_TO_EXTENT","extent":[-77.48202256347649,38.74612266051003,-72.20858506347648,40.66664704515103],"crs":"EPSG:4326","maxZoom":8}]
 ```
 
 The MapStore invocation URL above executes the following operations:
