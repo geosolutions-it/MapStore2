@@ -37,7 +37,7 @@ Example:
 }
 ```
 
-For more details check out the [zoomToExtent](https://mapstore.geo-solutions.it/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
+For more details check out the [zoomToExtent](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
 
 #### Map info
 It performs a [GetFeature](https://docs.geoserver.org/stable/en/user/services/wfs/reference.html#getfeature) request on the specified layer and then a [GetFeatureInfo](https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo) by taking a point from the retrieved features's geometry. This action can be used only for existing maps (map previously created).
@@ -65,7 +65,7 @@ Example:
 The sample request below illustrates how two actions can be concatenated:
 
 ```
-https://dev.mapstore.geo-solutions.it/mapstore/#/viewer/openlayers/4093?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"STATE_FIPS=34","layer":"topp:states"},{"type":"ZOOM_TO_EXTENT","extent":[-77.48202256347649,38.74612266051003,-72.20858506347648,40.66664704515103],"crs":"EPSG:4326","maxZoom":8}]
+https://dev-mapstore.geosolutionsgroup.com/mapstore/#/viewer/openlayers/4093?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"STATE_FIPS=34","layer":"topp:states"},{"type":"ZOOM_TO_EXTENT","extent":[-77.48202256347649,38.74612266051003,-72.20858506347648,40.66664704515103],"crs":"EPSG:4326","maxZoom":8}]
 ```
 
 The MapStore invocation URL above executes the following operations:
@@ -73,7 +73,7 @@ The MapStore invocation URL above executes the following operations:
 - Execution of a search request filtering by **STATE_FIPS** with value 34 on the **topp:states** layer
 - Execution of a map zoom to the provided extent
 
-For more details check out the [searchLayerWithFilter](https://mapstore.geo-solutions.it/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
+For more details check out the [searchLayerWithFilter](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
 
 
 #### Add Layers

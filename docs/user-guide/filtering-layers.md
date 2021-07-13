@@ -1,15 +1,15 @@
 # Filtering Layers
 ******************
 
-When using vector layers it might be useful to work with a subset of features. About that, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) let the user set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.
+When using vector layers it might be useful to work with a subset of features. About that, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) let the user set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.
 The map will immediately update when a filter is applied.
 
 !!!warning
-    The [MapStore](https://mapstore.geo-solutions.it/mapstore/#/)'s filtering capabilities are working on top of the WFS specifications so that service must be enabled if you want to filter a layer using the tools described in this section.
+    The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)'s filtering capabilities are working on top of the WFS specifications so that service must be enabled if you want to filter a layer using the tools described in this section.
 
 ## Filter types
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to apply filters on layers in three different ways:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to apply filters on layers in three different ways:
 
 * With the *Layer Filter* tool available in [TOC](toc.md)
 
@@ -118,7 +118,7 @@ The list of records in the *Attribute Table* will be automatically filtered acco
 
 ## Query Panel
 
-This tool is used to define advanced filters in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/). It includes three main sections:
+This tool is used to define advanced filters in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/). It includes three main sections:
 
 * **Attribute Filter**
 

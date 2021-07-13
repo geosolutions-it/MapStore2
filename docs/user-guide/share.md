@@ -1,13 +1,14 @@
 # Sharing Resources
 *******************
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/)  provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
+[MapStore]https://mapstore.geosolutionsgroup.com/mapstore/#/)  provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
+
 
 * Directly from the MapStore [Homepage](home-page.md) by clicking on the Share button <img src="../img/button/share.jpg" class="ms-docbutton"/> present in the toolbar of each resource card
 
 <img src="../img/share/share_cards.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* Inside the resource by selecting the <img src="../img/button/share-button-bm.jpg" class="ms-docbutton" style="max-height:25px;"/> option from [Burger Menu](menu-bar.md#burger-menu) 
+* Inside the resource by selecting the <img src="../img/button/share-button-bm.jpg" class="ms-docbutton" style="max-height:25px;"/> option from [Burger Menu](menu-bar.md#burger-menu)
 
 From the *Share panel* the user is allowed to share a resource in different ways:
 
@@ -37,7 +38,7 @@ The **Embed** section provides to the user the needed snippets, **embedded code*
 
 <img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-In addition, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides two options to customize a bit the *embedded code*:
+In addition, [MapStore](mapstore.geosolutionsgroup.com/mapstore/#/) provides two options to customize a bit the *embedded code*:
 
 * For maps, the user can choose to show the [TOC](toc.md) in the embedded map by enabling the **Shown TOC** option
 
@@ -49,7 +50,7 @@ In addition, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides 
 
 ## Advanced options
 
-Some **Advanced options** are available for maps and geostories inside the **Share** tool. 
+Some **Advanced options** are available for maps and geostories inside the **Share** tool.
 
 !!!note
     Some **Advanced options** are available only opening *Share tool* from the [Burger Menu](menu-bar.md#burger-menu) and not from the MapStore home page.
@@ -62,17 +63,17 @@ In case of maps, enabling the **Advanced options** in the *Share tool* the user 
 
 * The **bounding box** parameter to share the current viewport of the map visualized by the user
 
-* The desired center and zoom of the map by enabling the **Add center and zoom** 
+* The desired center and zoom of the map by enabling the **Add center and zoom**
 
 <img src="../img/share/share_window_center_zoom.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 The related available options allow the user to:
 
-* Center the shared map to specific coordinates by typing them in two different formats (*Decimal* or *Aeronautical* that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button) or by clicking on the map to set automatically the coordinate fields. 
+* Center the shared map to specific coordinates by typing them in two different formats (*Decimal* or *Aeronautical* that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button) or by clicking on the map to set automatically the coordinate fields.
 
 * Share the map at a specific **Zoom level** (`Min:1` and `Max:35`)
 
-* **Add marker on loaded map** to show the center point in the shared map 
+* **Add marker on loaded map** to show the center point in the shared map
 
 ### Advanced options for sharing GeoStories
 

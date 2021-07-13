@@ -2,7 +2,7 @@
 
 The Catalog Service for the Web (CSW) is an [OGC Standard](https://www.ogc.org/standards) used to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS) and Web Map Tile Service (WMTS).
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the Catalog offers the possibility to access WMS, WFS, CSW, WMTS and TMS Remote Services and to add the related layers to the map. By default, as soon as a user opens the Catalog, a CSW a WMS and a WMTS Demo Services are available, allowing to import layers from the GeoSolutions GeoServer.
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the Catalog offers the possibility to access WMS, WFS, CSW, WMTS and TMS Remote Services and to add the related layers to the map. By default, as soon as a user opens the Catalog, a CSW a WMS and a WMTS Demo Services are available, allowing to import layers from the GeoSolutions GeoServer.
 The user can access the Catalog with a click on the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:25px;" /> option present in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. As soon as you open it, the first display is like the following:
 
 <img src="../img/catalog/catalog_panel.jpg" class="ms-docimage"  style="max-width:500px;" />
@@ -28,7 +28,7 @@ By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docb
 
 ## Managing Remote Services
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
 
 <img src="../img/catalog/add_edit_services.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
