@@ -16,7 +16,7 @@ import {changePage} from '../../../actions/mapInfo';
 import Viewer from './DefaultViewer';
 import {isArray, isUndefined} from 'lodash';
 import SwipeHeader from './SwipeHeader';
-import { isMouseMoveIdentifyActiveSelector as identifyFloatingTool } from '../../../selectors/map';
+import { identifyFloatingToolSelector } from '../../../selectors/map';
 
 /**
  * Container that render only the selected result
@@ -45,7 +45,7 @@ const selector = createSelector([
     requestsSelector,
     generalInfoFormatSelector,
     showEmptyMessageGFISelector,
-    identifyFloatingTool,
+    identifyFloatingToolSelector,
     isLoadedResponseSelector],
 (responses, validResponses, requests, format, showEmptyMessageGFI, renderEmpty, loaded) => ({
     responses,

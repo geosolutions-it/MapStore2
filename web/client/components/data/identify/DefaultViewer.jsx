@@ -149,12 +149,13 @@ class DefaultViewer extends React.Component {
             if (layerMetadata?.viewer?.type) {
                 customViewer = getViewer(layerMetadata.viewer.type);
             }
+            const size = responses.filter(resp => !startsWith(resp.response, "no features were found")).length;
             return (<Panel
                 eventKey={i}
                 key={i}
                 collapsible={this.props.collapsible}
                 header={PageHeader ? <span><PageHeader
-                    size={responses.filter(resp => !startsWith(resp.response !== "no features were found ")).length}
+                    size={size}
                     {...this.props.headerOptions}
                     {...layerMetadata}
                     index={this.props.index}
