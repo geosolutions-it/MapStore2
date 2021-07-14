@@ -26,23 +26,18 @@ describe('LangBar', () => {
     });
 
     it('checks default', () => {
-        let newLang;
-
-        const cmp = ReactDOM.render(<LangBar onLanguageChange={ (lang) => {newLang = lang; }}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LangBar />, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName("button");
+        expect(buttons.length).toBe(1);
+        const numSupportedLocales = Object.keys(getSupportedLocales()).length;
+        const flags = cmpDom.querySelectorAll(".lang-button");
+        expect(numSupportedLocales).toBe(flags.length);
 
-        expect(buttons.length === getSupportedLocales().length);
-        const select = cmpDom.getElementsByTagName("button").item(1);
-
-        select.value = "it-IT";
-        TestUtils.Simulate.click(select, {target: {value: 'it-IT'}});
-
-        expect(newLang).toBe('it-IT');
     });
 
     it('checks button click fires the proper action', () => {

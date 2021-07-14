@@ -66,7 +66,6 @@ class LangBar extends React.Component {
             <ButtonGroup id={this.props.id} type="select" bsSize="small">
                 {Object.keys(locales).map(lang => (
                     <FlagButton
-                        componentAsButton={false}
                         key={lang}
                         code={locales[lang].code}
                         label={locales[lang].description}
