@@ -26,16 +26,17 @@ describe('LangBar', () => {
     });
 
     it('checks default', () => {
-
-        const cmp = ReactDOM.render(<LangBar/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LangBar />, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName("button");
-
-        expect(buttons.length === getSupportedLocales().length);
+        expect(buttons.length).toBe(1);
+        const numSupportedLocales = Object.keys(getSupportedLocales()).length;
+        const flags = cmpDom.querySelectorAll(".lang-button");
+        expect(numSupportedLocales).toBe(flags.length);
 
     });
 
@@ -47,7 +48,6 @@ describe('LangBar', () => {
 
         select.value = "it-IT";
         TestUtils.Simulate.click(select, {target: {value: 'it-IT'}});
-        // select.children[1].click();
 
         expect(newLang).toBe('it-IT');
     });
