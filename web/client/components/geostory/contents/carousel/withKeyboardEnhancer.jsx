@@ -12,11 +12,13 @@ export default (Component) => (props) => {
     const cardRef = createRef();
     const onTraverseCard = (e) => {
         const currentIndex = findIndex(props.items, ({id}) => id === props.selectedId);
-        if (e.keyCode === 37) {
-            const id = props.items?.[currentIndex === 0 ? 0 : currentIndex - 1]?.id;
-            props.update(`sections[{"id":"${props.sectionId}"}].contents[{"id":"${id}"}].carouselToggle`, true);
-        } else if (e.keyCode === 39) {
-            const id = props.items?.[currentIndex === props.items.length - 1 ? currentIndex : currentIndex + 1]?.id;
+        if ([37, 38].includes(e.keyCode)) {
+            let id;
+            if (e.keyCode === 37) {
+                id = props.items?.[currentIndex === 0 ? 0 : currentIndex - 1]?.id;
+            } else {
+                id = props.items?.[currentIndex === props.items.length - 1 ? currentIndex : currentIndex + 1]?.id;
+            }
             props.update(`sections[{"id":"${props.sectionId}"}].contents[{"id":"${id}"}].carouselToggle`, true);
         }
     };

@@ -15,6 +15,7 @@ import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, MediaTypes, Modes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
 import get from 'lodash/get';
+import find from 'lodash/find';
 import Carousel from "../../contents/carousel/Carousel";
 
 /**
@@ -55,7 +56,7 @@ const GeoCarousel = ({
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
-    const overlayStoryTheme = {...storyTheme?.overlay, ...(mode === Modes.VIEW && {maxHeight: 540, overflowY: 'auto'})} || {};
+    const overlayStoryTheme = {...storyTheme?.overlay, ...(mode === Modes.VIEW && {maxHeight: viewHeight - 350, overflowY: 'auto'})} || {};
     const generalStoryTheme = storyTheme?.general || {};
     const minHeight = (viewHeight - (mode === Modes.EDIT ? 200 : 180 ));
 
@@ -63,6 +64,12 @@ const GeoCarousel = ({
     const addContentColumn = () => {
         add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN, "geostory.builder.defaults.titleGeocarouselContent");
         update(`sections[{"id":"${id}"}].contents[{"id":"${contentId}"}].hideContent`, true);
+    };
+
+    // Hide 'remove' button when only one inner content present for a Carousel section
+    const computeButton = (value = []) =>{
+        const {contents: _contents = []} = find(contents, {id: contentId}) || {};
+        return value.filter(v=> SectionTypes.CAROUSEL === sectionType && _contents.length === 1 ? v !== 'remove' : v);
     };
 
     return (<section
@@ -123,7 +130,10 @@ const GeoCarousel = ({
                 contentWrapperStyle: { minHeight, visibility },
                 expandable: expandableMedia,
                 mediaViewer,
-                contentToolbar
+                contentToolbar,
+                overrideTools: (tools) => Object.fromEntries(
+                    Object.entries(tools).map(([key, value])=> [key, computeButton(value)])
+                )
             }}
             focusedContent={focusedContent}
             bubblingTextEditing={bubblingTextEditing}
@@ -144,6 +154,7 @@ const GeoCarousel = ({
             mode={mode}
             onSort={onSort}
             isMapBackground={background?.type === MediaTypes.MAP}
+            containerWidth={viewWidth}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}

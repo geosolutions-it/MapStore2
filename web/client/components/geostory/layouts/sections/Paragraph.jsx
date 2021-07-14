@@ -63,9 +63,10 @@ export default ({
                 expandable: expandableMedia,
                 mediaViewer,
                 contentToolbar,
-                overrideTools: {
+                overrideTools: (tools) => ({
+                    ...tools,
                     [ContentTypes.TEXT]: [size(true), 'remove']
-                }
+                })
             }}
             sections={sections}
             storyFonts={storyFonts}

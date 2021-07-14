@@ -44,9 +44,10 @@ describe('Column component', () => {
     describe('Column contents has proper toolbars', () => {
         it('text', () => {
             const size = () => ({id: 'size'});
-            const overrideTools =  {
+            const overrideTools = (tools) => ({
+                ...tools,
                 [ContentTypes.TEXT]: [size(), 'remove']
-            };
+            });
             // text content should contain only size and delete button
             ReactDOM.render(<Column
                 mode={Modes.EDIT}
@@ -90,31 +91,6 @@ describe('Column component', () => {
                     'glyphicon glyphicon-audio', // muted tool
                     'glyphicon glyphicon-play-circle', // autoplay tool
                     'glyphicon glyphicon-loop', // loop tool
-                    'glyphicon glyphicon-trash' // delete tool
-                ]);
-        });
-        it('should render computed content buttons for GeoCarousel section', () => {
-            ReactDOM.render(<Column mode={Modes.EDIT} sectionType={"carousel"} contents={[{ type: MediaTypes.VIDEO }]} />, document.getElementById("container"));
-            let mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
-            expect(mediaToolbar).toExist();
-            let buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
-            expect(buttons.length).toBe(4);
-            let classes = [
-                'glyphicon glyphicon-pencil', // edit tool
-                'glyphicon glyphicon-audio', // muted tool
-                'glyphicon glyphicon-play-circle', // autoplay tool
-                'glyphicon glyphicon-loop' // loop tool
-            ];
-            expect([...mediaToolbar.querySelectorAll('button .glyphicon')].map(glyphicon => glyphicon.getAttribute('class')))
-                .toEqual(classes);
-
-            ReactDOM.render(<Column mode={Modes.EDIT} sectionType={"carousel"} contents={[{ type: MediaTypes.VIDEO }, { type: MediaTypes.IMAGE }]} />, document.getElementById("container"));
-            mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
-            expect(mediaToolbar).toExist();
-            buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
-            expect(buttons.length).toBe(5);
-            expect([...mediaToolbar.querySelectorAll('button .glyphicon')].map(glyphicon => glyphicon.getAttribute('class')))
-                .toEqual([...classes,
                     'glyphicon glyphicon-trash' // delete tool
                 ]);
         });

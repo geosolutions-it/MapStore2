@@ -9,7 +9,7 @@ import React from "react";
 import ContentBase from './Content';
 import Contents from './Contents';
 import ContentWrapper from './ContentWrapper';
-import { ContentTypes, MediaTypes, SectionTypes } from '../../../utils/GeoStoryUtils';
+import { ContentTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
 
 import { nest, compose, setDisplayName } from "recompose";
 const wrap = (...outerComponents) => wrappedComponent => nest(...outerComponents, wrappedComponent);
@@ -28,9 +28,6 @@ const size = (pullRight) => ({
     filterOptions: ({ value }) => value !== 'full',
     pullRight
 });
-// Hide 'remove' button when only one inner content present for a Carousel section
-const computeButton = (value = [], sectionType, contents) =>
-    value.filter(v=> SectionTypes.CAROUSEL === sectionType && contents.length === 1 ? v !== 'remove' : v);
 
 export default ({
     viewWidth,
@@ -48,21 +45,10 @@ export default ({
     contentToolbar,
     sections = [],
     sectionType,
-    overrideTools,
+    overrideTools = (tools) => tools,
     storyFonts
-}) => {
-    let tools = {
-        [ContentTypes.TEXT]: ['remove'],
-        [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
-        [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
-        [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
-        [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove'],
-        ...overrideTools
-    };
-    tools = Object.fromEntries(Object.entries(tools).map(([key, value])=>
-        [key, computeButton(value, sectionType, contents)]));
-
-    return (<Contents
+}) => (
+    <Contents
         className="ms-column-contents"
         ContentComponent={ColumnContent}
         contents={contents}
@@ -83,7 +69,13 @@ export default ({
         }}
         sections={sections}
         storyFonts={storyFonts}
-        tools={tools}
+        tools={overrideTools({
+            [ContentTypes.TEXT]: ['remove'],
+            [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
+            [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
+            [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
+            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove']
+        })}
         addButtons={[{
             glyph: 'sheet',
             tooltipId: 'geostory.addTextContent',
@@ -98,5 +90,5 @@ export default ({
             tooltipId: 'geostory.addWebPageContent',
             template: ContentTypes.WEBPAGE
         }]}
-    />);
-};
+    />
+);

@@ -54,7 +54,8 @@ const DraggableCarousel = draggableContainer(({
     items,
     contentToolbar: ContentToolbar = DefaultContentToolbar,
     cardComponent: Card,
-    expandable
+    expandable,
+    containerWidth
 }) => {
     const [edit, setEdit] = useState(false);
     const [contentId, setContentId] = useState(undefined);
@@ -102,10 +103,11 @@ const DraggableCarousel = draggableContainer(({
     return (
         <>
             <div className={'ms-section-carousel'}>
-                {editable && <ContentToolbar bsStyle={'primary'} addDisabled={!isMapBackground || disableAddItem()}
+                {editable && <ContentToolbar addDisabled={!isMapBackground || disableAddItem()}
                     add={add} editMap={isEditMap} remove={onRemoveAll} tools={['add', 'remove']}/>}
                 <Carousel
                     expandable={expandable}
+                    containerWidth={containerWidth}
                     editable={editable}
                     currentContentId={currentContentId}
                     items={items}
@@ -127,7 +129,6 @@ const DraggableCarousel = draggableContainer(({
                         items.map((item, i) =>
                             <>
                                 {editable && <ContentToolbar
-                                    bsStyle={'primary'}
                                     editMap={isEditMap}
                                     markerDisabled={!isMapBackground || item?.id !== currentContentId}
                                     edit={()=> onEdit(item)}
