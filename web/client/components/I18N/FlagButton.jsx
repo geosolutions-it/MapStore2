@@ -51,7 +51,7 @@ class FlagButton extends React.Component {
                         onClick={this.launchFlagAction.bind(this, this.props.code)}
                         active={this.props.active}>
                         <img src={imgSrc} alt={this.props.label}/>
-                    </Button> : <span>
+                    </Button> : <span className= "lang-button">
                         <img src={imgSrc} alt={this.props.label}/>
                     </span>}
         </OverlayTrigger>) : null;
