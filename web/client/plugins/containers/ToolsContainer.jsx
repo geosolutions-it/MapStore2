@@ -45,12 +45,13 @@ const HelpBadge = connect((state) => ({
  * ```
  *
  */
+
 class ToolsContainer extends React.Component {
     static propTypes = {
         id: PropTypes.string.isRequired,
         container: PropTypes.func,
         containerWrapperStyle: PropTypes.object,
-        tool: PropTypes.func,
+        tool: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
         className: PropTypes.string,
         style: PropTypes.object,
         tools: PropTypes.array,

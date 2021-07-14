@@ -12,6 +12,7 @@ import { DropdownButton, MenuItem, ButtonGroup } from 'react-bootstrap';
 import { head } from 'lodash';
 import { getSupportedLocales } from '../../utils/LocaleUtils';
 import FlagButton from './FlagButton';
+import Button from '../misc/Button';
 
 class LangBar extends React.Component {
     static propTypes = {
@@ -39,10 +40,12 @@ class LangBar extends React.Component {
             <div
                 className={this.props.className}>
                 <DropdownButton
+                    noCaret
                     pullRight
                     id={this.props.id}
                     title={
                         <FlagButton
+                            asButton={false}
                             key={currentLanguage}
                             code={this.props.currentLocale}
                             label={locales[currentLanguage] && locales[currentLanguage].description}

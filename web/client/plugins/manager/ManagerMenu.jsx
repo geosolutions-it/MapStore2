@@ -18,7 +18,7 @@ const Container = connect(() => ({
     pullRight: true,
     bsStyle: "primary",
     title: <Glyphicon glyph="1-menu-manage"/>
-}))(DropdownButton);
+}), {})(DropdownButton);
 
 import ToolsContainer from '../containers/ToolsContainer';
 import Message from '../locale/Message';

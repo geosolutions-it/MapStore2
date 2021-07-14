@@ -78,7 +78,8 @@ function maps(state = {
     errors: [],
     searchFilter: {},
     searchText: "",
-    results: ""}, action) {
+    results: []
+}, action) {
     switch (action.type) {
     case MAPS_SEARCH_TEXT_CHANGED: {
         return assign({}, state, {
