@@ -13,11 +13,13 @@ import Immersive from './Immersive';
 import Paragraph from './Paragraph';
 import Title from './Title';
 import Banner from './Banner';
+import GeoCarousel from './GeoCarousel';
 
 import visibilityHandler from '../../contents/enhancers/visibilityHandler';
 
 const types = {
     [SectionTypes.IMMERSIVE]: Immersive,
+    [SectionTypes.CAROUSEL]: GeoCarousel,
     [SectionTypes.PARAGRAPH]: Paragraph,
     [SectionTemplates.MEDIA]: Paragraph,
     [SectionTemplates.WEBPAGE]: Paragraph,
@@ -56,7 +58,9 @@ class Section extends React.Component {
         contentToolbar: PropTypes.func,
         inView: PropTypes.bool,
         sections: PropTypes.array,
-        storyFonts: PropTypes.array
+        storyFonts: PropTypes.array,
+        onSort: PropTypes.func,
+        isDrawEnabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -67,6 +71,7 @@ class Section extends React.Component {
         editWebPage: () => {},
         updateCurrentPage: () => {},
         remove: () => {},
+        onSort: () => {},
         storyType: StoryTypes.CASCADE,
         viewHeight: 0,
         viewWidth: 0,
@@ -106,6 +111,8 @@ class Section extends React.Component {
                 inView={this.props.inView}
                 sections={this.props.sections}
                 storyFonts={this.props.storyFonts}
+                onSort={this.props.onSort}
+                isDrawEnabled={this.props.isDrawEnabled}
             />
         );
     }

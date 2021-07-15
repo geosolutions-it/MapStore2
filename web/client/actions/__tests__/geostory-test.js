@@ -49,11 +49,20 @@ import {
     update,
     updateCurrentPage,
     updateSetting,
-    removeResource, REMOVE_RESOURCE,
-    updateUrlOnScroll, SET_UPDATE_URL_SCROLL,
+    removeResource,
+    REMOVE_RESOURCE,
+    updateUrlOnScroll,
+    SET_UPDATE_URL_SCROLL,
     updateMediaEditorSettings,
     geostoryScrolling,
-    GEOSTORY_SCROLLING
+    GEOSTORY_SCROLLING,
+    drawingFeatures,
+    DRAWING_FEATURE,
+    sideEffect,
+    SIDE_EFFECT,
+    updateGeoCarouselSetting,
+    UPDATE_GEO_CAROUSEL_SETTINGS,
+    hideCarouselItems, HIDE_CAROUSEL_ITEMS, syncCarouselMap, SYNC_CAROUSEL_MAP
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -249,5 +258,60 @@ describe('test geostory action creators', () => {
         const action = updateMediaEditorSettings(mediaEditorSettings);
         expect(action.type).toBe(UPDATE_MEDIA_EDITOR_SETTINGS);
         expect(action.mediaEditorSettings).toBe(mediaEditorSettings);
+    });
+    it('drawingFeatures', () => {
+        const value = ['test'];
+        const action = drawingFeatures(['test']);
+        expect(action.type).toBe(DRAWING_FEATURE);
+        expect(action.features).toEqual(value);
+    });
+    it('drawingFeatures default', () => {
+        const value = [];
+        const action = drawingFeatures();
+        expect(action.type).toBe(DRAWING_FEATURE);
+        expect(action.features).toEqual(value);
+    });
+    it('sideEffect', () => {
+        const value = true;
+        const action = sideEffect(value);
+        expect(action.type).toBe(SIDE_EFFECT);
+        expect(action.status).toBe(value);
+    });
+    it('updateGeoCarouselSetting', () => {
+        const value = {map: {mapInfoControl: true}};
+        const action = updateGeoCarouselSetting(value);
+        expect(action.type).toBe(UPDATE_GEO_CAROUSEL_SETTINGS);
+        expect(action.geoCarouselSettings).toBe(value);
+    });
+    it('hideCarouselItems', () => {
+        const sectionId = 1;
+        const showContentId = 2;
+        const action = hideCarouselItems(sectionId, showContentId);
+        expect(action.type).toBe(HIDE_CAROUSEL_ITEMS);
+        expect(action.sectionId).toBe(sectionId);
+        expect(action.showContentId).toBe(showContentId);
+    });
+    it('syncCarouselMap default', () => {
+        const sectionId = 1;
+        const action = syncCarouselMap(sectionId);
+        expect(action.type).toBe(SYNC_CAROUSEL_MAP);
+        expect(action.sectionId).toBe(sectionId);
+        expect(action.hideContentId).toBeFalsy();
+        expect(action.layers).toBeFalsy();
+        expect(action.resourceId).toBeFalsy();
+    });
+    it('syncCarouselMap', () => {
+        const sectionId = 1;
+        const obj = {
+            hideContentId: '2',
+            layers: [{name: "test"}],
+            resourceId: '3'
+        };
+        const action = syncCarouselMap(sectionId, obj);
+        expect(action.type).toBe(SYNC_CAROUSEL_MAP);
+        expect(action.sectionId).toBe(sectionId);
+        expect(action.hideContentId).toBe(obj.hideContentId);
+        expect(action.layers).toEqual(obj.layers);
+        expect(action.resourceId).toBe(obj.resourceId);
     });
 });

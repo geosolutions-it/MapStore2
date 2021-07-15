@@ -86,6 +86,7 @@ export default compose(
         : expandMapOptions;
 
     const isMapInfoControlActive = m.mapInfoControl && !(expandable && !active);
+    const isMapDrawControlActive = m.mapDrawControl && !(expandable && !active);
     // BaseMap component overrides the MapView id with map's id
     const mapView = (
         <>
@@ -106,7 +107,7 @@ export default compose(
                     }
                 }} // if map id is passed as number, the resource id, ol throws an error
                 layers={layers}
-                tools={isMapInfoControlActive ? ["popup"] : []}
+                tools={isMapInfoControlActive ? ["popup"] : isMapDrawControlActive ? ["draw"] : []}
                 options={applyDefaults(updatedMapOptions)}
                 mapType={mapType}
                 onMapTypeLoaded={onMapTypeLoaded}

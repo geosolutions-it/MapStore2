@@ -71,6 +71,27 @@
                 }
             }
 
+            .ms-section-carousel {
+                .items-wrapper {
+                    .background-color-var(@theme-vars[main-bg]);
+                }
+                .carousel-item {
+                    .background-color-var(@theme-vars[main-bg]);
+                    .border-color-var(@theme-vars[main-border-color]);
+                    .color-var(@theme-vars[main-color]);
+                }
+                .carousel-item-inner {
+                    .background-color-var(@theme-vars[main-bg]);
+                }
+                .carousel-item-inner-index {
+                    .background-color-var(@theme-vars[main-bg]);
+                    .color-var(@theme-vars[main-color]);
+                }
+                .carousel-item-selected {
+                    .border-color-var(@theme-vars[primary]);
+                }
+            }
+
             .add-bar {
                 .background-color-var(@theme-vars[main-bg]);
                 .border-top-color-var(@theme-vars[main-variant-bg]);
@@ -133,6 +154,11 @@
     .ms-custom-theme-picker-menuitem {
         .border-color-var(@theme-vars[main-variant-bg]);
     }
+
+    .ms-geostory-carousel-viewer-info {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
 }
 
 
@@ -160,6 +186,7 @@
 @ms-story-font-size-h5: @ms-story-font-size-base;
 @ms-story-font-size-h6: floor((@ms-story-font-size-base * 0.85));
 @ms-story-font-size-li: floor((@ms-story-font-size-base * 0.66));
+@ms-story-font-size-normal: ceil((@ms-story-font-size-base * 0.66));
 @ms-story-font-size-caption: 11px;
 @ms-story-size-full: 100%;
 @ms-story-size-large: 85%;
@@ -632,6 +659,89 @@
             }
         }
 
+        .ms-section-carousel {
+            padding: 0;
+            margin: 0 auto;
+            position: relative;
+            overflow-x: clip;
+            .items-wrapper {
+                padding: 10px 40px 0 40px;
+                .shadow-soft();
+            }
+            .items-inner-wrapper {
+                padding: 10px 0 40px;
+            }
+            .items-inner-wrapper-view {
+                padding: 10px 0 20px;
+            }
+            .carousel-item {
+                cursor: pointer;
+                height: 140px;
+                width: 140px;
+                .shadow-soft();
+                outline: 0;
+            }
+            .carousel-item:hover {
+                .shadow();
+            }
+            .carousel-item-selected {
+                border-width: 4px;
+                border-style: solid;
+            }
+            .disable-event {
+                pointer-events: none;
+            }
+            .chevron-wrapper {
+                background-color: transparent;
+            }
+            .left-chevron {
+                left: -15px;
+            }
+
+            .right-chevron {
+                right: -15px;
+            }
+            .carousel-item-inner-wrapper {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-position: center center;
+                background-repeat: no-repeat;
+            }
+            .carousel-item-inner {
+                position: absolute;
+                width: 100%;
+                text-align: center;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 8px;
+            }
+
+            .carousel-item-inner-index {
+                position: absolute;
+                bottom: 2px;
+                left: 2px;
+                padding: 2px 4px;
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .items-inner-wrapper div > .ms-content-toolbar .btn-group span {
+                display: flex;
+                flex-direction: row;
+            }
+            .items-inner-wrapper div > .ms-content-toolbar .btn-group span .glyphicon {
+                display: block;
+            }
+
+        }
+
         .add-bar {
             position: relative;
             background-color: @ms-story-bg;
@@ -798,7 +908,7 @@
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                        } 
+                        }
                     }
                 }
                 .ms-content.ms-content-webPage {
@@ -819,7 +929,7 @@
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                        } 
+                        }
                     }
                 }
                 .ms-content-toolbar {
@@ -935,7 +1045,7 @@
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                        } 
+                        }
                     }
                 }
 
@@ -957,7 +1067,7 @@
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                        } 
+                        }
                     }
                 }
             }
@@ -1340,6 +1450,26 @@
                     padding-bottom: 120px;
                 }
             }
+            &.ms-section-immersive {
+                .ms-section-carousel {
+                    .items-inner-wrapper {
+                        & > div > .ms-content-toolbar {
+                            bottom: 0;
+                            margin-bottom: 20px;
+                            margin-left: 40px;
+                        }
+                    }
+                    .ms-content-toolbar {
+                        position: absolute;
+                        margin-left: abs((-@square-btn-medium-size / 2));
+                        margin-top: (-@square-btn-medium-size * 0.6);
+                        padding: 0;
+                        z-index: 2;
+                        border-top: none;
+                        .shadow-soft();
+                    }
+                }
+            }
         }
     }
 
@@ -1354,7 +1484,7 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-            } 
+            }
         }
     }
     /////////////////////
@@ -1551,4 +1681,21 @@
         word-break: break-word;
         padding: 0 4px;
     }
+}
+
+.ms-geostory-carousel-viewer {
+    min-width: 100px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: @ms-story-font-size-normal;
+    max-width: 200px;
+    max-height: 200px;
+    padding: 10px;
+}
+
+.ms-geostory-carousel-viewer-alert-info {
+    font-style: italic;
+    min-height: 40px;
 }

@@ -122,4 +122,11 @@ describe('ContentWrapper component', () => {
         expect(contentBodyNode.style.backgroundColor).toBe('rgb(0, 0, 0)');
         expect(contentBodyNode.style.color).toBe('rgb(255, 255, 255)');
     });
+    it('test hideContent prop', () => {
+        ReactDOM.render(<ContentWrapper hideContent/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-content');
+        expect(el).toExist();
+        expect(el.getAttribute('style')).toContain('display: none');
+    });
 });

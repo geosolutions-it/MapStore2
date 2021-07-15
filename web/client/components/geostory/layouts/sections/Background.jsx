@@ -51,7 +51,8 @@ class Background extends Component {
         theme: PropTypes.string,
         mediaViewer: PropTypes.func,
         contentToolbar: PropTypes.func,
-        inView: PropTypes.bool
+        inView: PropTypes.bool,
+        sections: PropTypes.array
     };
 
     static defaultProps = {

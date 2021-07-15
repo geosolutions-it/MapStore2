@@ -14,6 +14,7 @@ import { LOCATION_CHANGE, CALL_HISTORY_METHOD } from 'connected-react-router';
 import get from 'lodash/get';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import axios from '../../libs/ajax';
+import isEmpty from 'lodash/isEmpty';
 
 import { logout, loginSuccess } from '../../actions/security';
 
@@ -33,7 +34,13 @@ import {
     editWebPageComponent,
     handlePendingGeoStoryChanges,
     loadStoryOnHistoryPop,
-    scrollOnLoad
+    scrollOnLoad,
+    setDrawModeOnCarouselMarkerToggle,
+    updateLayerWithdrawnFeature,
+    synchronizeCarouselOnMapRemove,
+    synchronizeCarouselOnMapUpdate,
+    hideCarouselItemsOnUpdateCurrentPage,
+    updateResourceOnAddCarouselItem
 } from '../geostory';
 import {
     ADD,
@@ -60,7 +67,12 @@ import {
     editWebPage,
     setResource,
     SET_PENDING_CHANGES,
-    LOAD_GEOSTORY
+    LOAD_GEOSTORY,
+    SIDE_EFFECT,
+    SYNC_CAROUSEL_MAP,
+    update,
+    drawingFeatures,
+    HIDE_CAROUSEL_ITEMS
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -69,7 +81,8 @@ import {
     hide,
     chooseMedia,
     editMedia,
-    SET_MEDIA_TYPE
+    SET_MEDIA_TYPE,
+    MEDIA_TYPE_DISABLE
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
@@ -81,6 +94,8 @@ import {
     HIDE as HIDE_MAP_EDITOR
 
 } from '../../actions/mapEditor';
+import {includes} from "ol/array";
+import {CHANGE_DRAWING_STATUS} from "../../actions/draw";
 
 let mockAxios;
 describe('Geostory Epics', () => {
@@ -255,6 +270,7 @@ describe('Geostory Epics', () => {
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
                             a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
+                            a.story.sections[4].id = get(TEST_STORY, 'sections[4].id');
                             expect(a.story).toEqual(TEST_STORY);
                         } else {
                             expect(a.story).toEqual({});
@@ -303,6 +319,7 @@ describe('Geostory Epics', () => {
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
                             a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
+                            a.story.sections[4].id = get(TEST_STORY, 'sections[4].id');
                             expect(a.story).toEqual(TEST_STORY);
                         } else {
                             expect(a.story).toEqual({});
@@ -865,7 +882,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('update story with already existing image (geostory)', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
             chooseMedia({id: "resourceId"})
@@ -886,6 +903,67 @@ describe('Geostory Epics', () => {
                     break;
                 case SELECT_ITEM:
                     expect(a.id).toEqual("resourceId");
+                    break;
+                case MEDIA_TYPE_DISABLE:
+                    expect(a.mediaTypes).toEqual([]);
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resourceId",
+                        type: "image",
+                        data: {
+                            id: "resource_id"
+                        }
+                    }],
+                    sections: [{
+                        id: "section_id",
+                        contents: [{
+                            id: "content_id",
+                            resourceId: "resourceId"
+                        }]
+                    }]
+                }
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image",
+                    sourceId: "geostory"
+                }
+            }
+        });
+    });
+    it('set disabled media type when section type is carousel', (done) => {
+        const NUM_ACTIONS = 4;
+        testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}, 'carousel'),
+            chooseMedia({id: "resourceId"})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case UPDATE:
+                    expect(a.element).toEqual({
+                        resourceId: "resourceId",
+                        type: "image"
+                    });
+                    expect(a.mode).toEqual("merge");
+                    expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}]`);
+                    break;
+                case SHOW:
+                    expect(a.owner).toEqual("geostore");
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toEqual("resourceId");
+                    break;
+                case MEDIA_TYPE_DISABLE:
+                    expect(a.mediaTypes).toEqual(['image', 'video']);
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -970,7 +1048,7 @@ describe('Geostory Epics', () => {
     });
 
     it('update story with a new map resource (geostore) from external service', (done) => {
-        const NUM_ACTIONS = 4;
+        const NUM_ACTIONS = 5;
         const mediaType = "map";
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
@@ -998,6 +1076,9 @@ describe('Geostory Epics', () => {
                     break;
                 case SELECT_ITEM:
                     expect(a.id).toEqual("resource_id");
+                    break;
+                case MEDIA_TYPE_DISABLE:
+                    expect(a.mediaTypes).toEqual([]);
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -1028,8 +1109,8 @@ describe('Geostory Epics', () => {
             }
         });
     });
-    it('test removes mediaType when resousrce is empty', (done) => {
-        const NUM_ACTIONS = 3;
+    it('test removes mediaType when resource is empty', (done) => {
+        const NUM_ACTIONS = 4;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
             chooseMedia(undefined)
@@ -1045,6 +1126,8 @@ describe('Geostory Epics', () => {
                     break;
                 case REMOVE:
                     expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}]`);
+                    break;
+                case MEDIA_TYPE_DISABLE:
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -1080,7 +1163,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('test restore background to the empty value when resource is empty', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}].background`, owner: "geostore"}),
             chooseMedia(undefined)
@@ -1096,6 +1179,8 @@ describe('Geostory Epics', () => {
                     break;
                 case REMOVE:
                     expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}].background`);
+                    break;
+                case MEDIA_TYPE_DISABLE:
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -1137,7 +1222,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('should use custom media editor settings if available with editMediaForBackgroundEpic', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         const mediaEditorSettings = {
             sourceId: 'geostory',
             mediaTypes: {
@@ -1175,6 +1260,8 @@ describe('Geostory Epics', () => {
                     expect(a.settings).toEqual(mediaEditorSettings);
                     break;
                 case SELECT_ITEM:
+                    break;
+                case MEDIA_TYPE_DISABLE:
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -1313,7 +1400,7 @@ describe('Geostory Epics', () => {
                 target,
                 position
             );
-            const NUM_ACTIONS = 2;
+            const NUM_ACTIONS = 5;
             testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 actions.forEach(({type, ...a}) => {
@@ -1335,6 +1422,11 @@ describe('Geostory Epics', () => {
                         break;
                     case REMOVE:
                         expect(a.path).toBe(source);
+                        break;
+                    case SIDE_EFFECT:
+                        expect(includes([true, false], a.status)).toBeTruthy();
+                        break;
+                    case SYNC_CAROUSEL_MAP:
                         break;
                     default:
                         expect(true).toBe(false);
@@ -1390,7 +1482,7 @@ describe('Geostory Epics', () => {
                 target,
                 position
             );
-            const NUM_ACTIONS = 2;
+            const NUM_ACTIONS = 5;
             testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 actions.forEach(({type, ...a}) => {
@@ -1405,6 +1497,73 @@ describe('Geostory Epics', () => {
                         break;
                     case REMOVE:
                         expect(a.path).toBe(source);
+                        break;
+                    case SIDE_EFFECT:
+                        break;
+                    case SYNC_CAROUSEL_MAP:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                "id": "SECTION-PARAGRAPH-1",
+                                "type": "paragraph",
+                                "title": "Paragraph Section",
+                                "contents": [
+                                    {
+                                        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+                                        "type": "column",
+                                        "contents": [
+                                            {
+                                                "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "id": "c5245e82-7dd8-403d-b7ae-781abfae6e81",
+                                                "type": "image"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
+        });
+        it('sortContentEpic sorting two items under carousel section', done => {
+            const source = `sections[{"id": "SECTION-CAROUSEL-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}]`;
+            const target = `sections[{"id": "SECTION-CAROUSEL-1"}].contents`;
+            const position = 1;
+            const moveAction = move(
+                source,
+                target,
+                position
+            );
+            const NUM_ACTIONS = 5;
+            testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.forEach(({type, ...a}) => {
+                    switch (type) {
+                    case ADD:
+                        expect(a.path).toBe(target);
+                        expect(a.position).toBe(position);
+                        break;
+                    case REMOVE:
+                        expect(a.path).toBe(source);
+                        break;
+                    case SIDE_EFFECT:
+                        expect(includes([true, false], a.status)).toBeTruthy();
+                        break;
+                    case SYNC_CAROUSEL_MAP:
+                        expect(a.sectionId).toBe('SECTION-CAROUSEL-1');
                         break;
                     default:
                         expect(true).toBe(false);
@@ -1662,6 +1821,499 @@ describe('Geostory Epics', () => {
                     expect(actions[0].id).toBe('344');
                     done();
                 });
+        });
+    });
+    it('setDrawModeOnCarouselMarkerToggle, draw marker from existing feature data associated with a carousel item', (done) => {
+        const NUM_ACTIONS = 4;
+        const path = '"sections"[{"id": "SomeID_carousel"}]."contents"[{"id": "ccol1"}].background.map';
+        testEpic(setDrawModeOnCarouselMarkerToggle, NUM_ACTIONS, [
+            update(path + '.mapDrawControl', true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case CHANGE_DRAWING_STATUS:
+                    expect(includes(['clean', 'drawOrEdit'], a.status)).toBeTruthy();
+                    expect(a.method).toEqual("Point");
+                    expect(a.owner).toEqual("geostory");
+                    if (isEmpty(a.features)) {
+                        expect(a.features).toEqual([]);
+                        expect(a.options).toEqual({});
+                    } else {
+                        const {type, contentRefId, features} = a.features[0];
+                        expect(type).toBe('FeatureCollection');
+                        expect(contentRefId).toBe('ccol1'); // Feature from matched content id
+                        const {type: _type, style} = features[0];
+                        expect(_type).toBe('Feature');
+                        expect(style).toBeTruthy();
+                        expect(style.highlight).toBeTruthy();
+                        expect(style.iconText).toBe('2');
+
+                        // Options
+                        expect(a.options).toBeTruthy();
+                        expect(a.options.addClickCallback).toBeTruthy();
+                        expect(a.options.drawEnabled).toBeFalsy();
+                        expect(a.options.editEnabled).toBeTruthy();
+                        expect(a.options.transformToFeatureCollection).toBeTruthy();
+                        expect(a.options.useSelectedStyle).toBeTruthy();
+                        expect(a.options.stopAfterDrawing).toBeFalsy();
+
+                        // Style param
+                        expect(a.style).toBeTruthy();
+                        expect(a.style).toEqual({highlight: false});
+                    }
+                    break;
+                case UPDATE:
+                    expect(includes([path + '.tempFeature', 'drawContent'], a.path)).toBeTruthy();
+                    expect(a.element).toBeTruthy();
+                    expect(a.mode).toBe('replace');
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('setDrawModeOnCarouselMarkerToggle, draw new marker to associate with a carousel item', (done) => {
+        const NUM_ACTIONS = 4;
+        const path = '"sections"[{"id": "SomeID_carousel"}]."contents"[{"id": "ccol1"}].background.map';
+        testEpic(setDrawModeOnCarouselMarkerToggle, NUM_ACTIONS, [
+            update(path + '.mapDrawControl', true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case CHANGE_DRAWING_STATUS:
+                    expect(includes(['clean', 'drawOrEdit'], a.status)).toBeTruthy();
+                    expect(a.method).toEqual("Point");
+                    expect(a.owner).toEqual("geostory");
+                    if (isEmpty(a.features)) {
+                        expect(a.features).toEqual([]);
+                        expect(a.options).toEqual({});
+                    } else {
+                        const {type, contentRefId, features} = a.features[0];
+                        expect(type).toBe('FeatureCollection');
+                        expect(contentRefId).toBe('ccol1');
+                        const {type: _type, style} = features[0];
+                        expect(_type).toBe('Feature');
+                        expect(style).toBeTruthy();
+                        expect(style.highlight).toBeTruthy();
+                        expect(style.iconText).toBe('0');
+
+                        // Options
+                        expect(a.options).toBeTruthy();
+                        expect(a.options.addClickCallback).toBeTruthy();
+                        expect(a.options.drawEnabled).toBeFalsy();
+                        expect(a.options.editEnabled).toBeTruthy();
+                        expect(a.options.transformToFeatureCollection).toBeTruthy();
+                        expect(a.options.useSelectedStyle).toBeTruthy();
+                        expect(a.options.stopAfterDrawing).toBeFalsy();
+
+                        // Style param
+                        expect(a.style).toBeTruthy();
+                        expect(a.style).toEqual({highlight: false});
+                    }
+                    break;
+                case UPDATE:
+                    expect(includes([path + '.tempFeature', 'drawContent'], a.path)).toBeTruthy();
+                    expect(a.element).toBeTruthy();
+                    expect(a.mode).toBe('replace');
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: { sections: [] }
+            }
+        });
+    });
+    it('updateLayerWithdrawnFeature', (done) => {
+        const ftCollection = {
+            "type": "vector",
+            "id": "geostory",
+            "features": [{
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "geometry": null,
+                    "properties": "1",
+                    "style": [{
+                        "id": "2", "highlight": true, "iconColor": "cyan", "iconText": "2", "iconShape": "circle"}]
+                }],
+                "contentRefId": "ccol1"
+            },
+            {
+                "type": "FeatureCollection",
+                "features": [],
+                "contentRefId": "ccol2"
+            }
+            ]
+        };
+        const NUM_ACTIONS = 1;
+        const ft = {type: 'Feature', geometry: {coordinates: ['0', '1']}};
+        testEpic(updateLayerWithdrawnFeature, NUM_ACTIONS, [
+            drawingFeatures([ft])
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case UPDATE:
+                    expect(a.path).toContain('background.map');
+                    expect(a.element).toBeTruthy();
+                    expect(a.element.layers).toBeTruthy();
+                    const { type, id, handleClickOnLayer, features: [{contentRefId, features: [{geometry}]}] } = a.element.layers[0];
+                    expect(type).toBe('vector');
+                    expect(id).toBe('geostory');
+                    expect(handleClickOnLayer).toBeTruthy();
+                    expect(contentRefId).toBe('ccol1');
+                    expect(geometry).toEqual(ft.geometry);
+                    expect(a.mode).toBe('replace');
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    sections: [{
+                        "type": "carousel",
+                        "id": "SomeID_carousel",
+                        "title": "Abstract",
+                        contents: [{
+                            "id": "ccol1",
+                            "type": "column",
+                            "background": {
+                                "map": {
+                                    tempFeature: ftCollection.features[0],
+                                    "layers": [ftCollection]
+                                }
+                            },
+                            "contents": [
+                                {
+                                    "id": "car1_col1_content1",
+                                    "type": "text",
+                                    "html": "<p>this is some html content</p>"
+                                }
+                            ],
+                            "thumbnail": {
+                                "data": "img1.png",
+                                "title": "Card one"
+                            }
+                        }]}],
+                    drawContent: { sectionId: 'SomeID_carousel', contentId: 'ccol1'}
+                }
+            }
+        });
+    });
+    it('updateLayerWithdrawnFeature, skip update when draw triggered content is not matched', (done) => {
+        const ftCollection = {
+            "type": "vector",
+            "id": "geostory",
+            "features": [{
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "geometry": null,
+                    "properties": "1",
+                    "style": [{
+                        "id": "2", "highlight": true, "iconColor": "cyan", "iconText": "2", "iconShape": "circle"}]
+                }],
+                "contentRefId": "ccol1"
+            },
+            {
+                "type": "FeatureCollection",
+                "features": [],
+                "contentRefId": "ccol2"
+            }
+            ]
+        };
+        const NUM_ACTIONS = 1;
+        const ft = {type: 'Feature', geometry: {coordinates: ['0', '1']}};
+        testEpic(updateLayerWithdrawnFeature, NUM_ACTIONS, [
+            drawingFeatures([ft])
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case UPDATE:
+                    expect(a.path).toContain('background.map');
+                    expect(a.element).toBeTruthy();
+                    expect(a.element.layers).toBeTruthy();
+                    const { type, id, features: [{features: [{geometry}]}] } = a.element.layers[0];
+                    expect(type).toBe('vector');
+                    expect(id).toBe('geostory');
+                    expect(geometry).toEqual(null);
+                    expect(a.mode).toBe('replace');
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    sections: [{
+                        "type": "carousel",
+                        "id": "SomeID_carousel",
+                        "title": "Abstract",
+                        contents: [{
+                            "id": "ccol1",
+                            "type": "column",
+                            "background": {
+                                "map": {
+                                    "layers": [ftCollection]
+                                }
+                            },
+                            "contents": [
+                                {
+                                    "id": "car1_col1_content1",
+                                    "type": "text",
+                                    "html": "<p>this is some html content</p>"
+                                }
+                            ],
+                            "thumbnail": {
+                                "data": "img1.png",
+                                "title": "Card one"
+                            }
+                        }]}],
+                    drawContent: { sectionId: 'SomeID_carousel', contentId: 'ccol1'}
+                }
+            }
+        });
+    });
+    it('synchronizeCarouselOnMapRemove', (done) => {
+        const NUM_ACTIONS = 1;
+        const path = 'sections[{"id": "SomeID_carousel"}].contents[{"id": "ccol12"}]';
+        testEpic(synchronizeCarouselOnMapRemove, NUM_ACTIONS, [
+            remove(path)
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case SYNC_CAROUSEL_MAP:
+                    expect(a.sectionId).toBe("SomeID_carousel");
+                    expect(a.hideContentId).toBe("ccol12");
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('synchronizeCarouselOnMapRemove, skip map sync other than carousel section', (done) => {
+        const NUM_ACTIONS = 1;
+        const path = 'sections[{"id": "SomeID_carousel1"}].contents[{"id": "ccol1"}]';
+        testEpic(addTimeoutEpic(synchronizeCarouselOnMapRemove, 10), NUM_ACTIONS, [
+            remove(path)
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case TEST_TIMEOUT:
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('synchronizeCarouselOnMapUpdate', (done) => {
+        const NUM_ACTIONS = 1;
+        const path = 'sections[{"id": "SomeID_carousel"}].contents[{"id": "ccol12"}].background.map';
+        testEpic(synchronizeCarouselOnMapUpdate, NUM_ACTIONS, [
+            update(path, {layers: ["test"]})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case SYNC_CAROUSEL_MAP:
+                    expect(a.layers).toEqual(["test"]);
+                    expect(a.sectionId).toBe("SomeID_carousel");
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('synchronizeCarouselOnMapUpdate, skip map sync other than map', (done) => {
+        const NUM_ACTIONS = 1;
+        const path = 'sections[{"id": "SomeID_carousel"}].contents[{"id": "ccol12"}].background.image';
+        testEpic(addTimeoutEpic(synchronizeCarouselOnMapUpdate, 10), NUM_ACTIONS, [
+            update(path, {layers: ["test"]})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case TEST_TIMEOUT:
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('hideCarouselItemsOnUpdateCurrentPage, skip update other than carousel marker toggle', (done) => {
+        const NUM_ACTIONS = 1;
+        const path = 'sections[{"id": "SomeID_carousel"}].contents[{"id": "ccol12"}].background.image';
+        testEpic(addTimeoutEpic(hideCarouselItemsOnUpdateCurrentPage, 10), NUM_ACTIONS, [
+            update(path, {layers: ["test"]})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case TEST_TIMEOUT:
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('hideCarouselItemsOnUpdateCurrentPage, on selection of an item hide other carousel items', (done) => {
+        const NUM_ACTIONS = 4;
+        const path = 'sections[{"id": "SomeID_carousel"}].contents[{"id": "ccol1"}].carouselToggle';
+        testEpic(hideCarouselItemsOnUpdateCurrentPage, NUM_ACTIONS, [
+            update(path, true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case HIDE_CAROUSEL_ITEMS:
+                    expect(a.sectionId).toBe('SomeID_carousel');
+                    expect(a.showContentId).toBe('ccol1');
+                    break;
+                case UPDATE:
+                    const _path = a.path;
+                    if (_path.includes('background.map.resetPanAndZoom')) {
+                        expect(a.element).toBeTruthy();
+                    } else if (_path.includes('carouselToggle')) {
+                        expect(a.element).toBeFalsy();
+                    } else {
+                        expect(a.element).toBeTruthy();
+                        expect(a.element[0].id).toBe('geostory');
+                        expect(a.element[0].type).toBe('vector');
+                        expect(a.element[0].features).toBeTruthy();
+                        expect(a.element[0].features[0].contentRefId).toBe('ccol1');
+                        expect(a.element[0].features[1].contentRefId).toBe('ccol2');
+                    }
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('updateResourceOnAddCarouselItem, update carousel with map data on adding first new item', (done) => {
+        const NUM_ACTIONS = 1;
+        const path = 'sections';
+        testEpic(updateResourceOnAddCarouselItem, NUM_ACTIONS, [
+            add(path, undefined, {type: 'carousel', id: 'section_id', contents: [{id: 'content_id'}]})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case UPDATE:
+                    expect(a.path).toEqual('sections[{"id":"section_id"}].contents[{"id":"content_id"}].background.map.mapInfoControl');
+                    expect(a.element).toBeTruthy();
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('updateResourceOnAddCarouselItem, update carousel with map data on adding a new item', (done) => {
+        const NUM_ACTIONS = 1;
+        const path = 'sections[{"id": "SomeID_carousel"}].contents';
+        testEpic(updateResourceOnAddCarouselItem, NUM_ACTIONS, [
+            add(path, undefined, {type: 'column', id: 'content_id'})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case UPDATE:
+                    expect(a.path).toEqual('sections[{"id":"SomeID_carousel"}].contents[{"id":"content_id"}].background');
+                    expect(a.element).toBeTruthy();
+                    expect(a.element.resourceId).toEqual('resource_id');
+                    expect(a.element.type).toEqual('map');
+                    expect(a.element.map).toBeTruthy();
+                    expect(a.element.map.layers).toBeTruthy();
+                    expect(a.element.map.mapInfoControl).toBeTruthy();
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
         });
     });
 });

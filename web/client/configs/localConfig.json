@@ -772,7 +772,16 @@
           "NavMenu",
           "Attribution",
           "Home",
-          "GeoStory",
+          {
+            "name": "GeoStory",
+            "cfg": {
+              "geoCarouselSettings": {
+                "map": {
+                  "mapInfoControl": true
+                }
+              }
+            }
+          },
           "GeoStorySave",
           "GeoStorySaveAs",
           "MapEditor",
