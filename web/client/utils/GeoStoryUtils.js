@@ -22,7 +22,9 @@ import isObject from "lodash/isObject";
 import includes from "lodash/includes";
 import replace from 'lodash/replace';
 import uuid from 'uuid';
+import {find} from "lodash";
 
+export const GEOSTORY = "geostory";
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
 // Allowed StoryTypes
 export const StoryTypes = {
@@ -33,7 +35,8 @@ export const SectionTypes = {
     TITLE: 'title',
     PARAGRAPH: 'paragraph',
     IMMERSIVE: 'immersive',
-    BANNER: 'banner'
+    BANNER: 'banner',
+    CAROUSEL: 'carousel'
 };
 /**
  * Allowed contents
@@ -197,6 +200,7 @@ export const filterResources = (resources = [], filterText, regex = RegExp(filte
 /**
  * Creates a default template for the given type
  * @param {string} type can be section type, a content type or a template (custom. i.e. paragraph with initial image for add media)
+ * @param {function/string} localize localization function or localized string
  * @return {object} the template object of the content/section
  */
 export const getDefaultSectionTemplate = (type, localize = v => v) => {
@@ -262,7 +266,15 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             id: uuid(),
             type: SectionTypes.IMMERSIVE,
             title: localize("geostory.builder.defaults.titleImmersive"),
-            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize)]
+            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize("geostory.builder.defaults.titleImmersiveContent"))]
+        };
+    case SectionTypes.CAROUSEL:
+        return {
+            id: uuid(),
+            type,
+            title: localize("geostory.builder.defaults.titleGeocarousel"),
+            template: type,
+            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize("geostory.builder.defaults.titleGeocarouselContent"))]
         };
     case SectionTemplates.MEDIA: {
         return {
@@ -309,7 +321,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             align: 'left',
             size: 'small',
             theme: '',
-            title: localize("geostory.builder.defaults.titleImmersiveContent"),
+            title: localize,
             contents: [{
                 id: uuid(),
                 type: ContentTypes.TEXT,
@@ -560,4 +572,95 @@ export const getGeostoryMode = () => {
     return window.location.href.match('geostory-embedded')
         ? 'geostoryEmbedded'
         : 'geostory';
+};
+
+/**
+ * Get content and section Id from the path
+ * @param {string} path
+ * @return {object} {sectionId, contentId, innerContentId}
+ */
+export const getIdFromPath = (path) => {
+    const getId = (_path) => {
+        try {
+            return JSON.parse(_path)?.id;
+        } catch {
+            return null;
+        }
+    };
+    const pathArray = toPath(path) || [];
+    // Returns null when not an id
+    return {
+        sectionId: getId(pathArray?.[1]),
+        contentId: getId(pathArray?.[3]),
+        innerContentId: getId(pathArray?.[5])
+    };
+};
+
+/**
+ * Update the background of the carouse contents based on update type
+ */
+const updateGeoCarouselBackground = (action, content = {}, section = {}, resources) => {
+    const getIndex = (contents, id) => findIndex(contents, {id}) + 1;
+    const getLayersFromResourceId = (resourceId) => ((find(resources, {id: resourceId}) || {})?.data?.layers || []);
+    switch (action.updateType) {
+    case 'resource':
+        return {
+            resourceId: action.resourceId,
+            type: 'map',
+            map: {...content?.background?.map,
+                // Update layers with new layer data from the updated source
+                layers: [...(content.background?.map?.layers || []), ...getLayersFromResourceId(action.resourceId)]
+                    .filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i)
+            }
+        };
+    case 'replace':
+        return {map: {...content.background.map, layers: action.layers}};
+    case 'merge':
+        return {
+            map: { ...content.background.map,
+                layers: (content?.background?.map?.layers || [])?.map((layer = {}) => {
+                    if (layer.id === GEOSTORY && layer.type === 'vector') {
+                        return {...layer,
+                            features: layer.features.filter(({contentRefId}) => contentRefId !== action.hideContentId) // Filter the removed content
+                                .map(l => ({...l, features: l.features.map(ft => ({...ft,
+                                    // Update iconText value on update/removal of content
+                                    style: [{...ft.style[0], iconText: getIndex(section.contents, l.contentRefId)}]}))
+                                }))
+                        };
+                    }
+                    return layer;
+                })
+            }
+        };
+    default:
+        return {};
+    }
+};
+
+/**
+ * Update carousel section content's background
+ * @param {array} resources
+ * @param {array} sections
+ * @param {object} action
+ * @param {string} mode
+ * @return {array} updated sections
+ */
+export const updateGeoCarouselSections = (resources, sections = [], action, mode = 'background') => {
+    const _action = {...action, updateType: action.resourceId ? 'resource' :  action.layers ? 'replace' : 'merge'};
+    return sections.map(_section=> {
+        if (_action.sectionId === _section.id) {
+            return {..._section,
+                contents: (_section.contents || []).map(content=> ({
+                    ...content,
+                    ...(mode === 'background' ? {
+                        background: {
+                            ...content.background,
+                            ...updateGeoCarouselBackground(_action, content, _section, resources)
+                        }
+                    } : {hideContent: content.id !== action.showContentId})
+                }))
+            };
+        }
+        return _section;
+    });
 };

@@ -40,7 +40,7 @@ const toolButtons = {
         tooltipId: cover ? "geostory.contentToolbar.contentHeightAuto" : "geostory.contentToolbar.contentHeightView",
         onClick: () => updateSection({cover: !cover}, "merge")
     }),
-    editMedia: ({editMap: disabled = false, path, editMedia = () => {} }) => ({
+    editMedia: ({editMap: disabled = false, path, editMedia = () => {}, sectionType }) => ({
         // using normal ToolbarButton because this has no options
         glyph: "pencil",
         "data-button": "pencil",
@@ -48,7 +48,7 @@ const toolButtons = {
         disabled,
         tooltipId: "geostory.contentToolbar.editMedia",
         onClick: () => {
-            editMedia({path});
+            editMedia({path}, path ? sectionType : "");
         }
     }),
     // remove content
@@ -112,6 +112,43 @@ const toolButtons = {
         tooltipId: showCaption ? 'geostory.contentToolbar.hideCaption' : 'geostory.contentToolbar.showCaption',
         onClick: () => {
             update('showCaption', !showCaption);
+        }
+    }),
+    add: ({ editMap = false, addDisabled = false, add = () => {}, bsStyle = 'default' }) => ({
+        glyph: 'plus',
+        visible: true,
+        bsStyle,
+        tooltipId: "geostory.contentToolbar.add",
+        disabled: editMap || addDisabled,
+        onClick: add
+    }),
+    edit: ({ editMap: disabled = false, edit = () => {}, bsStyle = 'default' }) => ({
+        glyph: 'pencil',
+        visible: true,
+        bsStyle,
+        tooltipId: "geostory.contentToolbar.edit",
+        disabled,
+        onClick: edit
+    }),
+    marker: ({ editMap = false, markerDisabled = false, marker = () => {}, bsStyle = 'default' }) => ({
+        glyph: 'map-marker',
+        visible: true,
+        tooltipId: "geostory.contentToolbar.marker",
+        bsStyle,
+        disabled: editMap || markerDisabled,
+        onClick: marker
+    }),
+    closeDraw: ({editMap = false, bsStyle = 'default', update = () => {}, map: {resetMapInfo} = {}}) => ({
+        glyph: '1-close',
+        visible: true,
+        tooltipId: "geostory.contentToolbar.closeMapEditing",
+        bsStyle,
+        disabled: !editMap,
+        onClick: ()=> {
+            // Separate update calls to trigger side effects
+            update('editMap', !editMap);
+            update('map.mapDrawControl', false);
+            resetMapInfo && update( 'map.mapInfoControl', true); // Reset Map Info state
         }
     })
 };

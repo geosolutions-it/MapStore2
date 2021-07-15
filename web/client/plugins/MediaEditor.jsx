@@ -18,7 +18,8 @@ import {
     openSelector,
     editingSelector,
     selectedItemSelector,
-    addingSelector
+    addingSelector,
+    disableApplyMapMedia
 } from '../selectors/mediaEditor';
 
 import MediaModal from './mediaEditor/MediaModal';
@@ -34,7 +35,7 @@ export default createPlugin('MediaEditor', {
     component: connect(
         createStructuredSelector({
             mediaType: currentMediaTypeSelector,
-            editing: editingSelector,
+            editing: (state) => editingSelector(state) || disableApplyMapMedia(state),
             adding: addingSelector,
             open: openSelector,
             selectedItem: selectedItemSelector

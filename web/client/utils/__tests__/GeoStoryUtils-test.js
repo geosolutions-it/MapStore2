@@ -129,6 +129,7 @@ describe("GeoStory Utils", () => {
             TITLE: "title",
             PARAGRAPH: "paragraph",
             IMMERSIVE: "immersive",
+            CAROUSEL: "carousel",
             BANNER: 'banner'
         });
     });

@@ -94,5 +94,22 @@ describe('Section component', () => {
                 }}
             />, document.getElementById("container"));
         });
+        it('carousel', done => {
+            ReactDOM.render(<Section
+                type="carousel"
+                id={`test-carousel-section`}
+                onVisibilityChange={({id, visible, entry}) => {
+                    try {
+                        expect(id).toBe(`test-carousel-section`);
+                        expect(visible).toBe(false);
+                        expect(entry).toExist();
+                        expect(entry.intersectionRatio).toNotBe(undefined);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+        });
     });
 });

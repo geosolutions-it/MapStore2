@@ -43,7 +43,7 @@ describe('Builder component', () => {
         const el = container.querySelector('.ms-geostory-builder');
         expect(el).toExist();
         expect(el.querySelector('.mapstore-side-preview')).toExist();
-        expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(4); // 4 sections
+        expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(5); // 5 sections
 
     });
     it('Builder rendering with sections, preview disabled', () => {
