@@ -20,6 +20,7 @@ import {
     CHANGE_TYPE,
     CHANGE_URL,
     CHANGE_SERVICE_FORMAT,
+    CHANGE_SERVICE_INFO_FORMAT,
     FOCUS_SERVICES_LIST,
     ADD_CATALOG_SERVICE,
     DELETE_CATALOG_SERVICE,
@@ -135,6 +136,8 @@ function catalog(state = {
         return set("newService.url", action.url, state);
     case CHANGE_SERVICE_FORMAT:
         return set("newService.format", action.format, state);
+    case CHANGE_SERVICE_INFO_FORMAT:
+        return set("newService.infoFormat", action.infoFormat, state);
     case CHANGE_TYPE: {
         const type = action.newType.toLowerCase();
         let templateOptions = {};

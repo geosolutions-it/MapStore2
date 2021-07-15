@@ -65,7 +65,7 @@ class RecordItem extends React.Component {
         clearModal: PropTypes.func,
         service: PropTypes.service,
         showTemplate: PropTypes.bool,
-        defaultFormat: PropTypes.string,
+        defaultFormat: PropTypes.object,
         formatOptions: PropTypes.array,
         infoFormatOptions: PropTypes.array
     };
@@ -285,6 +285,7 @@ class RecordItem extends React.Component {
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then these defaults also have to change
         return record ? (<div>
+
             <SideCard
                 style={{transform: "none", opacity: disabled ? 0.4 : 1}}
                 fullText={this.state.fullText}
@@ -373,12 +374,18 @@ class RecordItem extends React.Component {
                         format: this.getLayerFormat(
                             formats.filter(f => f.indexOf("image/") === 0)
                         ),
+                        featureInfo: this.props.infoFormat ? {format: this.props.service.infoFormat} : undefined,
+                        // featureInfo: this.props.infoFormat ? {format: this.props.infoFormat} : undefined,
+                        infoFormatTest: this.props.service.infoFormat,
                         formats: {
                             imageFormats: this.props.formatOptions,
-                            infoFormats: this.props.infoFormatOptions
+                            infoFormats: this.props.infoFormatOptions,
+                            featureInfo: this.props.infoFormat ? {format: this.props.service.infoFormat} : undefined,
+
                         }
                     }
                     : {
+                        featureInfo: this.props.infoFormat ? {format: this.props.service.infoFormat} : undefined,
                         format: this.getLayerFormat(
                             formats.filter(f => f.indexOf("image/") === 0)
                         )

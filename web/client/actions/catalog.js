@@ -45,6 +45,7 @@ export const CHANGE_TEXT = 'CATALOG:CHANGE_TEXT';
 export const CHANGE_TYPE = 'CATALOG:CHANGE_TYPE';
 export const CHANGE_SERVICE_PROPERTY = 'CATALOG:CHANGE_SERVICE_PROPERTY';
 export const CHANGE_SERVICE_FORMAT = 'CATALOG:CHANGE_SERVICE_FORMAT';
+export const CHANGE_SERVICE_INFO_FORMAT = 'CATALOG:CHANGE_SERVICE_INFO_FORMAT';
 export const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
 export const CHANGE_URL = 'CATALOG:CHANGE_URL';
 export const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
@@ -165,6 +166,13 @@ export function changeServiceFormat(format) {
         format
     };
 }
+export function changeServiceInfoFormat(infoFormat) {
+    return {
+        type: CHANGE_SERVICE_INFO_FORMAT,
+        infoFormat
+    };
+}
+
 export function changeType(newType) {
     return {
         type: CHANGE_TYPE,

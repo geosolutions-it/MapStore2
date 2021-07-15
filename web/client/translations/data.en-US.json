@@ -149,6 +149,7 @@
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             },
             "format": {
+                "infoFormat": "Info format",
                 "title": "Format",
                 "refresh": "Fetch supported format",
                 "loading": "Loading...",

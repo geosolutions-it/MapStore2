@@ -9,7 +9,30 @@ import React from 'react';
 import { FormGroup, Col, ControlLabel } from "react-bootstrap";
 import RS from 'react-select';
 import { DEFAULT_FORMAT_WMS } from '../../../../utils/CatalogUtils';
+import { services } from '../../../../utils/MapInfoUtils';
 import localizedProps from '../../../misc/enhancers/localizedProps';
+
+// TODO: import this from the proper file (the original has something like {HTML: "text/html"})
+
+const DEFAULT_INFO_FORMATS = [{
+    label: "DISABLED",
+    value: "HTML",
+    format: "text/html"
+}, {
+    label: "HTML",
+    value: "HTML",
+    format: "text/html"
+}, {
+    label: "TEXT",
+    value: "TEXT",
+    format: "text/plain"
+}, {
+    label: "PROPERTIES",
+    value: "PROPERTIES",
+    format: "application/json"
+}];
+
+
 const Select = localizedProps('noResultsText')(RS);
 
 import CommonAdvancedSettings from './CommonAdvancedSettings';
@@ -25,6 +48,7 @@ export default ({
     service,
     formatOptions =  DEFAULT_FORMAT_WMS,
     onChangeServiceFormat = () => { },
+    onChangeServiceInfoFormat = () => { },
     onChangeServiceProperty = () => {},
     currentWMSCatalogLayerSize,
     selectedService,
@@ -34,8 +58,19 @@ export default ({
     ...props
 }) => {
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
+    const infoFormats = service?.supportedFormats?.infoFormats;
+    const infoFormatOptions =  DEFAULT_INFO_FORMATS.filter( ({format}) => {
+        if (infoFormats) {
+            if (format) {
+                return infoFormats.includes(format);
+            }
+
+        }
+        return true;
+    });
     return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
-        <FormGroup style={advancedRasterSettingsStyles}>
+
+        <FormGroup style={advancedRasterSettingsStyles} className={"formatStyle"}>
             <Col xs={6}>
                 <ControlLabel>Format</ControlLabel>
             </Col >
@@ -49,6 +84,25 @@ export default ({
                         ? "catalog.format.loading" : "catalog.format.noOption"}
                     options={props.formatsLoading ? [] : formatOptions}
                     onChange={event => onChangeServiceFormat(event && event.value)} />
+            </Col >
+        </FormGroup>
+
+        <FormGroup style={advancedRasterSettingsStyles}>
+            <Col xs={6}>
+                <ControlLabel>Info Format</ControlLabel>
+            </Col >
+            <Col xs={6} style={{marginBottom: '5px'}}>
+                <Select
+                    id="infoFormats"
+                    isLoading={props.formatsLoading}
+                    onOpen={() => onFormatOptionsFetch(service.url)}
+                    value={service && service.infoFormat}
+                    clearable
+                    noResultsText={props.formatsLoading
+                        ? "catalog.format.loading" : "catalog.format.noOption"}
+                    options={infoFormatOptions}
+                    onChange={event => onChangeServiceInfoFormat(event && event.value)}
+                />
             </Col >
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles}>

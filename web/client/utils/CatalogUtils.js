@@ -694,6 +694,26 @@ export const DEFAULT_FORMAT_WMS = [{
     value: 'image/gif'
 }];
 
+
+// export const DEFAULT_INFO_FORMATS = [{
+//     label: "DISABLED",
+//     value: "HTML",
+//     format: "text/html"
+// }, {
+//     label: "HTML",
+//     value: "HTML",
+//     format: "text/html"
+// }, {
+//     label: "TEXT",
+//     value: "TEXT",
+//     format: "text/plain"
+// }, {
+//     label: "PROPERTIES",
+//     value: "PROPERTIES",
+//     format: "application/json"
+// }];
+
+
 /**
  * Get unique array of supported info formats
  * @return {array} info formats
