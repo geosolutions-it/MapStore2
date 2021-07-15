@@ -9,7 +9,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import Cascade from '../Cascade';
+import Comp from '../Cascade';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+const Cascade = dragDropContext(HTML5Backend)(Comp);
 import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 
 describe('Cascade component', () => {

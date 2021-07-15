@@ -44,9 +44,10 @@ describe('Column component', () => {
     describe('Column contents has proper toolbars', () => {
         it('text', () => {
             const size = () => ({id: 'size'});
-            const overrideTools =  {
+            const overrideTools = (tools) => ({
+                ...tools,
                 [ContentTypes.TEXT]: [size(), 'remove']
-            };
+            });
             // text content should contain only size and delete button
             ReactDOM.render(<Column
                 mode={Modes.EDIT}

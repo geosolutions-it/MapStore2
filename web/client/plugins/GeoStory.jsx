@@ -22,7 +22,9 @@ import {
     updateCurrentPage,
     remove,
     editWebPage,
-    updateMediaEditorSettings
+    updateMediaEditorSettings,
+    move,
+    updateGeoCarouselSetting
 } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
@@ -32,7 +34,8 @@ import {
     getFocusedContentSelector,
     isFocusOnContentSelector,
     settingsSelector,
-    currentStoryFonts } from '../selectors/geostory';
+    currentStoryFonts, isDrawControlEnabled
+} from '../selectors/geostory';
 import { currentMessagesSelector } from '../selectors/locale';
 import geostory from '../reducers/geostory';
 import BorderLayout from '../components/layout/BorderLayout';
@@ -53,10 +56,12 @@ const GeoStory = ({
     onBasicError = () => {},
     onUpdateMediaEditorSetting,
     mediaEditorSettings,
+    geoCarouselSettings,
+    onUpdateGeoCarouselSetting,
     ...props
 }) => {
     const localize = useCallback((id) => getMessageById(messages, id), [messages]);
-    const addFunc = (path, position, element) => onAdd(path, position, element, localize);
+    const addFunc = (path, position, element, id) => onAdd(path, position, element, id ? localize(id) : localize);
 
     useEffect(() => {
         window.__geostory_interaction = (type, param) => {
@@ -72,6 +77,10 @@ const GeoStory = ({
         // so we could use them later when we open the media editor plugin
         if (mediaEditorSettings) {
             onUpdateMediaEditorSetting(mediaEditorSettings);
+        }
+
+        if (geoCarouselSettings) {
+            onUpdateGeoCarouselSetting(geoCarouselSettings);
         }
     }, []);
 
@@ -186,17 +195,20 @@ export default createPlugin("GeoStory", {
             focusedContent: getFocusedContentSelector,
             isContentFocused: isFocusOnContentSelector,
             theme: storyThemeSelector,
-            storyFonts: currentStoryFonts
+            storyFonts: currentStoryFonts,
+            isDrawEnabled: isDrawControlEnabled
         }), {
             onAdd: add,
             onUpdate: update,
             updateCurrentPage,
             onUpdateSetting: updateSetting,
             remove,
+            onSort: move,
             editMedia,
             editWebPage,
             onBasicError: basicError,
-            onUpdateMediaEditorSetting: updateMediaEditorSettings
+            onUpdateMediaEditorSetting: updateMediaEditorSettings,
+            onUpdateGeoCarouselSetting: updateGeoCarouselSetting
         }
     )(GeoStory),
     reducers: {

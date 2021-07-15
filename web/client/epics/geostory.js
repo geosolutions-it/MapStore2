@@ -17,6 +17,10 @@ import words from 'lodash/words';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
+import findIndex from 'lodash/findIndex';
+import find from 'lodash/find';
+import isFunction from "lodash/isFunction";
+
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -56,7 +60,11 @@ import {
     EDIT_RESOURCE,
     UPDATE_CURRENT_PAGE,
     UPDATE_SETTING,
-    SET_CURRENT_STORY
+    SET_CURRENT_STORY,
+    DRAWING_FEATURE,
+    sideEffect,
+    hideCarouselItems,
+    syncCarouselMap
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -67,7 +75,8 @@ import {
     CHOOSE_MEDIA,
     selectItem,
     setMediaType,
-    hide
+    hide,
+    disableMediaType
 } from '../actions/mediaEditor';
 import { show, error } from '../actions/notifications';
 
@@ -76,16 +85,22 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
 import {
-     resourceIdSelectorCreator,
-     createPathSelector,
-     currentStorySelector,
-     resourcesSelector,
-     getFocusedContentSelector,
-     isSharedStory,
-     resourceByIdSelectorCreator,
-     modeSelector,
-     updateUrlOnScrollSelector,
-     getMediaEditorSettings
+    resourceIdSelectorCreator,
+    createPathSelector,
+    currentStorySelector,
+    resourcesSelector,
+    getFocusedContentSelector,
+    isSharedStory,
+    resourceByIdSelectorCreator,
+    modeSelector,
+    updateUrlOnScrollSelector,
+    getMediaEditorSettings,
+    getAllCarouselContentsOfSection,
+    getCurrentDrawContent,
+    currentCarouselContent,
+    isGeoCarouselSection,
+    sideEffectState,
+    geoCarouselSettings
 } from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
@@ -101,13 +116,16 @@ import {
     MediaTypes,
     Modes,
     parseHashUrlScrollUpdate,
-    getGeostoryMode
+    getGeostoryMode,
+    SectionTypes,
+    GEOSTORY,
+    getIdFromPath
 } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
-
+import { changeDrawingStatus } from "../actions/draw";
 
 const updateMediaSection = (store, path) => action$ =>
     action$.ofType(CHOOSE_MEDIA)
@@ -134,7 +152,15 @@ const updateMediaSection = (store, path) => action$ =>
                 actions = [...actions, addResource(resourceId, mediaType, resource.data ? resource.data : resource)];
             }
             let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
-            actions = [...actions, update(`${path}`, media, "merge" ), hide()];
+            let updateAction = update(`${path}`, media, "merge" );
+            const { sectionId, innerContentId } = getIdFromPath(path);
+            // On editing or updating the source map preserve the GeoCarousel section's map data
+            // by updating the new resource id and associated map data
+            // and skip for section's inner contents
+            if (!isEmpty(resource) && mediaType === MediaTypes.MAP && isGeoCarouselSection(sectionId)(state) && !innerContentId ) {
+                updateAction = syncCarouselMap(sectionId, {resourceId});
+            }
+            actions = [...actions, updateAction, hide()];
             return Observable.from(actions);
         });
 
@@ -266,7 +292,7 @@ export const scrollToContentEpic = action$ =>
  */
 export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
-        .switchMap(({path, owner}) => {
+        .switchMap(({path, owner, sectionType}) => {
             const selectedResource = resourceIdSelectorCreator(path)(store.getState());
             const resource = resourceByIdSelectorCreator(selectedResource)(store.getState());
             return Observable.of(currentMediaTypeSelector(store.getState()))
@@ -277,7 +303,9 @@ export const editMediaForBackgroundEpic = (action$, store) =>
             .merge(
                 Observable.of(
                     showMediaEditor(owner, getMediaEditorSettings(store.getState())),
-                    selectItem(selectedResource)
+                    selectItem(selectedResource),
+                    // Disable media type that are not supported by GeoCarousel section as background
+                    disableMediaType(sectionType === SectionTypes.CAROUSEL ? ['image', 'video'] : [])
                 )
                           .merge(
                     action$.let(updateMediaSection(store, path))
@@ -421,11 +449,19 @@ export const sortContentEpic = (action$, {getState = () => {}}) =>
         const current = createPathSelector(source)(state);
 
         // remove first so, the highlight works correctly
-        return Observable.of(
+        return Observable.from([
             remove(source),
-            add(target, position, current)
-        );
+            add(target, position, current),
+            sideEffect(false)
+        ])
+            .concat(Observable.of(
+                syncCarouselMap(getIdFromPath(target)?.sectionId)))
+            // Side effect is toggled to prevent any carousel actions from being triggered when moving item
+            .startWith(sideEffect(true));
     });
+
+const cleanDraw = changeDrawingStatus("clean", "Point", GEOSTORY, [], {});
+
 /**
  * trigger actions for focus a map on map editing
  * @param {Observable} action$ stream of redux actions
@@ -433,7 +469,7 @@ export const sortContentEpic = (action$, {getState = () => {}}) =>
  */
 export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
          action$.ofType(UPDATE).filter(({path = ""}) => path.endsWith("editMap"))
-     .map(({path: rowPath, element: status}) => {
+     .switchMap(({path: rowPath, element: status}) => {
             const {flatPath, path} = getFlatPath(rowPath, currentStorySelector(getState()));
             const target = flatPath.pop();
             const section = flatPath.shift();
@@ -441,9 +477,314 @@ export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
             const selector = hideContent && `#${section.id} .ms-section-background-container` || `#${target.id}`;
             scrollToContent(target.id);
 
-            return setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""));
+            return Observable.from([
+                setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""))
+            ]).concat(status ? [] : [cleanDraw, update(`drawContent`, {})]); // Reset draw
      });
 
+const updateGeoCarousel = (sectionId, contentId, path, value, mode = 'replace') => {
+    const _path = `sections[{"id":"${sectionId}"}].contents[{"id":"${contentId}"}]` + (path ? `.${path}` : '');
+    return update(_path, value, mode);
+};
+
+/**
+ * Triggers actions to allow drawing point feature on map
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits actions allows to draw on map
+ */
+export const setDrawModeOnCarouselMarkerToggle = (action$, {getState} = {}) =>
+    action$.ofType(UPDATE)
+        .filter(({path = "", element}) => path.endsWith("mapDrawControl") && element)
+        .debounceTime(500)
+        .switchMap(({path}) => {
+            const state = getState() || {};
+            const sectionAndContentId = getIdFromPath(path) || {};
+            const {contentId} = sectionAndContentId || {};
+            const { background: {map: {layers = []} = {}} = {}} = currentCarouselContent(sectionAndContentId)(state) || {};
+            const index = findIndex(getAllCarouselContentsOfSection(sectionAndContentId?.sectionId)(state), {id: contentId});
+            const features = find(layers, ({id}) => id === GEOSTORY)?.features || [];
+            const contentFt = find(features, ({contentRefId}) => contentRefId === contentId);
+            let ftWithStyle = contentFt && {...contentFt, features: contentFt?.features.map(ft=> ({...ft, properties: {...ft.properties, canEdit: true}, style: ft?.style?.[0]}))};
+            if (!ftWithStyle) {
+                const ftCollId = uuid();
+                ftWithStyle = {
+                    type: "FeatureCollection",
+                    id: ftCollId,
+                    contentRefId: contentId,
+                    properties: {id: ftCollId, visibility: true},
+                    newFeature: true,
+                    geometry: null,
+                    features: [
+                        {
+                            type: "Feature",
+                            properties: {id: uuid(), canEdit: true},
+                            geometry: null,
+                            style: {
+                                id: uuid(),
+                                highlight: true,
+                                iconColor: "cyan",
+                                iconText: `${index + 1}`,
+                                iconShape: "circle"
+                            }
+                        }
+                    ]
+                };
+            }
+            const contentSectionId = getIdFromPath(path) || {};
+            const updateAction = update(path.replace('mapDrawControl', 'tempFeature'), ftWithStyle);
+            const drawContent = update(`drawContent`, contentSectionId);
+            const draw = changeDrawingStatus('drawOrEdit', "Point", GEOSTORY, [ftWithStyle], {
+                editFilter: f => f.getProperties().canEdit,
+                addClickCallback: true,
+                drawEnabled: false,
+                editEnabled: true,
+                featureProjection: "EPSG:4326",
+                geodesic: false,
+                stopAfterDrawing: false,
+                transformToFeatureCollection: true,
+                translateEnabled: false,
+                useSelectedStyle: true
+            }, {highlight: false});
+
+            return Observable.from([cleanDraw, draw, updateAction, drawContent]);
+        });
+
+/**
+ * Create a new feature object
+ * @param drawnFt drawn feature object
+ * @param newFeature newly formulated feature object
+ * @return {object} updated feature
+ */
+const createNewFeature = (drawnFt, newFeature) => {
+    return {
+        ...newFeature,
+        features: newFeature.features.map(ft=>{
+            if (drawnFt?.properties?.id === ft?.properties?.id) {
+                return {...ft, geometry: drawnFt?.geometry, style: [ft.style]};
+            }
+            return ft;
+        }),
+        style: {}
+    };
+};
+
+/**
+ * Triggers actions to create new or update existing feature from the drawn feature object
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits actions setting point feature
+ */
+export const updateLayerWithdrawnFeature = (action$, {getState}) =>
+    action$.ofType(DRAWING_FEATURE)
+        .switchMap(({features: [feature] = []} = {})=>{
+            const state = getState();
+            const drawContent = getCurrentDrawContent(state);
+            const {sectionId, contentId} = drawContent || {};
+            const currContent = currentCarouselContent(drawContent)(state);
+            if (!!sectionId && !!contentId && !!currContent) {
+                const contentMap = currContent?.background?.map;
+                const isMapDataPresent = !!contentMap?.layers;
+                const gVectorFeatures = isMapDataPresent && find(contentMap?.layers, ({id})=> id === GEOSTORY)?.features || [];
+                const { data: {type, name, id, ...map} = {} } = resourceByIdSelectorCreator(currContent?.background?.resourceId)(state) || {};
+                const {newFeature, geometry, ...tempFeatures} = contentMap?.tempFeature || {};
+                const updatedFeatures = !isEmpty(gVectorFeatures)
+                    ? gVectorFeatures.map((fts)=> {
+                        if (fts?.contentRefId === contentId && fts?.contentRefId === tempFeatures.contentRefId) {
+                            return {...fts,
+                                features: fts.features.map(ft => {
+                                    return {...ft, geometry: feature?.geometry};
+                                })
+                            };
+                        }
+                        return fts;
+                    }).concat(newFeature ? [createNewFeature(feature, tempFeatures)] : [])
+                    : [createNewFeature(feature, tempFeatures)];
+
+                // Vector layer data
+                let updateElementFt = {
+                    type: 'vector',
+                    visibility: true,
+                    id: GEOSTORY,
+                    name: "Geostory",
+                    hideLoading: true,
+                    features: updatedFeatures.filter((v, i, a)=>a.findIndex(t=>(t.id === v.id)) === i),
+                    handleClickOnLayer: true
+                };
+
+                // Construct map data by updating existing layers or by appending new one
+                let updateElementMap;
+                if (isMapDataPresent) {
+                    const layerIndex = findIndex(contentMap.layers, ({id: layerId})=> layerId === updateElementFt.id);
+                    let layers = contentMap.layers;
+                    if (layerIndex !== -1) {
+                        layers[layerIndex] = updateElementFt;
+                    } else {
+                        layers = [...layers, updateElementFt];
+                    }
+                    updateElementMap = {...contentMap, layers};
+                } else {
+                    updateElementMap = {...map, ...contentMap, layers: [...map.layers, updateElementFt]};
+                }
+
+                // Update the corresponding with content's map data
+                const updateObj = [sectionId, contentId, 'background.map', updateElementMap];
+                return Observable.of(updateGeoCarousel(...updateObj));
+            }
+            return Observable.empty();
+        });
+
+/**
+ * Synchronize the map data of all carousel content on removing an item
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits action of update carousel map data
+ */
+export const synchronizeCarouselOnMapRemove = (action$, {getState}) =>
+    action$.ofType(REMOVE)
+        .filter(()=> !sideEffectState(getState()))
+        .switchMap(({path}) => {
+            const state = getState() || {};
+            const currentSectionAndContentId = getIdFromPath(path);
+            const {sectionId, contentId} = currentSectionAndContentId || {};
+            let observable$ = Observable.empty();
+            if (sectionId && isGeoCarouselSection(sectionId)(state)) {
+                const content = currentCarouselContent(currentSectionAndContentId)(getState());
+                if (!content) {
+                    observable$ = Observable.of(
+                        syncCarouselMap(sectionId, {hideContentId: contentId})
+                    );
+                }
+            }
+            return observable$;
+        });
+
+/**
+ * Synchronize the map data of all carousel content on update an item
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits action of update carousel map data
+ */
+export const synchronizeCarouselOnMapUpdate = (action$, {getState}) =>
+    action$.ofType(UPDATE)
+        .filter(({path}) => path.endsWith('map') && !sideEffectState(getState()))
+        .switchMap(({path, element: {layers = []} = {}} = {})=>{
+            const state = getState() || {};
+            const currentSectionAndContentId = getIdFromPath(path);
+            const {sectionId, innerContentId} = currentSectionAndContentId || {};
+            let observable$ = Observable.empty();
+            if (isGeoCarouselSection(sectionId)(state) && !innerContentId) {
+                if (!isEmpty(layers)) {
+                    observable$ = Observable.of(syncCarouselMap(sectionId, {layers}));
+                }
+            }
+            return observable$;
+        });
+
+/**
+ * Update highlight of carousel vector layer
+ */
+const updateFeatureHighlight = (layers = [], highlight) => {
+    return isEmpty(layers) ? [] : layers?.map(layer => {
+        if (layer.id === GEOSTORY) {
+            return {...layer,
+                features: layer?.features?.map(ft => ({...ft,
+                    features: ft.features.map(f => ({...f,
+                        style: [{...f?.style?.[0],
+                            highlight: isFunction(highlight) ? highlight(ft) : highlight
+                        }]
+                    }))
+                }))
+            };
+        }
+        return layer;
+    });
+};
+
+/**
+ * Triggers an update action to highlight carousel marker
+ * @param highlight
+ * @param sectionAndContentId
+ * @param contents
+ * @return {action} update geocarousel
+ */
+const highlightCarouselMarker = (highlight, sectionAndContentId, contents) => {
+    const { contentId, sectionId } = sectionAndContentId || {};
+    const {layers = []} = get(find(contents, ({id}) => id === contentId) || {}, 'background.map', {});
+    const updatedLayers = updateFeatureHighlight(layers, (ft)=> ft?.contentRefId === contentId ? highlight : false);
+    return updateGeoCarousel(sectionId, contentId, 'background.map.layers', updatedLayers);
+};
+
+/**
+ * Triggers actions to hide carousel items
+ * and reset zoom if clicked again on the selected item
+ * and higlights the marker if present
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits actions to hide other carousel items
+ * and toggle on the selected one
+ */
+export const hideCarouselItemsOnUpdateCurrentPage = (action$, {getState}) =>
+    action$.ofType(UPDATE)
+        .filter(({path, element}) => path && path.endsWith('carouselToggle') && element)
+        .switchMap(({path}) => {
+            const { sectionId, contentId } = getIdFromPath(path) || {};
+            const contents = getAllCarouselContentsOfSection(sectionId)(getState()) || [];
+            const {id: matchedContentId} = find(contents, ({id}) => id === contentId) || {};
+            return contentId && !isEmpty(contents)
+                ? Observable.from([hideCarouselItems(sectionId, contentId)])
+                    .concat(
+                        Observable.of(
+                            updateGeoCarousel(sectionId, matchedContentId, 'background.map.resetPanAndZoom', true),
+                            update(path, false), // Reset carouselToggle
+                            highlightCarouselMarker(true, {sectionId, contentId }, contents)
+                        )
+                    )
+                : Observable.empty();
+        });
+
+/**
+ * Triggers actions to update carousel items with map data
+ * on adding new carousel item
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits action of updating newly added
+ * carousel item with map data
+ */
+export const updateResourceOnAddCarouselItem = (action$, {getState}) =>
+    action$.ofType(ADD)
+        .filter(()=> !sideEffectState(getState()))
+        .switchMap(({element, path})=>{
+            const state = getState() || {};
+            const currentSectionAndContentId = getIdFromPath(path);
+            const {sectionId} = currentSectionAndContentId || {};
+            let observable$ = Observable.empty();
+            if ((isGeoCarouselSection(sectionId)(state)
+                    && element?.type === ContentTypes.COLUMN) || element?.type === SectionTypes.CAROUSEL) {
+                const contents = getAllCarouselContentsOfSection(sectionId)(getState());
+                const {background: {map = {}} = {}} = contents?.[0] || {}; // Take a copy of map from first content
+                const _resourceId = get(
+                    find(contents, ({background: {resourceId, type} = {}} = {}) => resourceId && type === 'map') || {},
+                    'background.resourceId'
+                );
+                // Set the default config for map info control (default is set to `true` for carousel section)
+                const {map: {mapInfoControl = true} = {}} = geoCarouselSettings(state) || {};
+
+                // Toggle highlight off on other carousel markers
+                const updatedMap = !isEmpty(map) && {...map, mapInfoControl, layers: updateFeatureHighlight(map?.layers, false)};
+                if (_resourceId && updatedMap) {
+                    observable$ = Observable.of(updateGeoCarousel(sectionId, element?.id,
+                        'background',
+                        { resourceId: _resourceId, type: 'map', ...(!isEmpty(map) && {map: updatedMap})},
+                        'merge'));
+                } else {
+                    const {id,  contents: [{id: contentId} = {}] = []} = element || {};
+                    observable$ = Observable.of(updateGeoCarousel(id, contentId,
+                        'background.map.mapInfoControl', mapInfoControl));
+                }
+            }
+            return observable$;
+        });
 /**
 * Handles map editing from inline editor
 * On map save:
@@ -461,7 +802,7 @@ export const inlineEditorEditMap = (action$, {getState}) =>
             return action$.ofType(SAVE_MAP_EDITOR)
             .switchMap(({map}) => {
                 const {path} = getFocusedContentSelector(getState());
-                return  Observable.of(update(`${path}.map`, map), update(`${path}.editMap`, false), hideMapEditor())
+                return  Observable.of(update(`${path}.map`, map, 'merge'), update(`${path}.editMap`, false), hideMapEditor())
                         .takeUntil(action$.ofType(HIDE_MAP_EDITOR));
             });
         });

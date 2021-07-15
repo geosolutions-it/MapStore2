@@ -33,7 +33,16 @@ import {
     isMediaResourceUsed,
     geostoryIdSelector,
     updateUrlOnScrollSelector,
-    currentStoryFonts
+    currentStoryFonts,
+    getAllGeoCarouselSections,
+    isGeoCarouselSection,
+    getAllCarouselContentsOfSection,
+    getGeoCarouselSectionById,
+    currentCarouselContent,
+    getCurrentDrawContent,
+    isDrawControlEnabled,
+    sideEffectState,
+    geoCarouselSettings
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -76,13 +85,14 @@ describe('geostory selectors', () => { // TODO: check default
             expect(navigableItemsSelectorCreator()({
                 geostory: {
                     currentStory: TEST_STORY
-                }}).map(item => item.id)).toEqual([ 'SomeID', 'col1', 'col2', 'SomeID_title', 'SomeID_banner' ]);
+                }}).map(item => item.id)).toEqual([ 'SomeID', 'col1', 'col2', 'SomeID_title', 'SomeID_banner', 'ccol1', 'ccol2' ]);
         });
         it('with all sections and columns', () => {
             expect(navigableItemsSelectorCreator({withImmersiveSection: true})({
                 geostory: {
                     currentStory: TEST_STORY
-                }}).map(item => item.id)).toEqual([ 'SomeID', 'SomeID2', 'col1', 'col2', 'SomeID_title', 'SomeID_banner']);
+                }}).map(item => item.id)).toEqual([ 'SomeID', 'SomeID2', 'col1', 'col2', 'SomeID_title',
+                'SomeID_banner', 'SomeID_carousel', 'ccol1', 'ccol2']);
         });
         it('with all sections except immersive, and columns, with some items disabled', () => {
             expect(navigableItemsSelectorCreator({includeAlways: false})({
@@ -93,8 +103,8 @@ describe('geostory selectors', () => { // TODO: check default
         it('with all sections and columns, with some items disabled', () => {
             expect(navigableItemsSelectorCreator({withImmersiveSection: true, includeAlways: false})({
                 geostory: {
-                    currentStory: {...TEST_STORY, settings: {checked: ["col2", "col1"] }}
-                }}).map(item => item.id)).toEqual([ 'SomeID2', 'col1', 'col2' ]);
+                    currentStory: {...TEST_STORY, settings: {checked: ["col2", "col1", 'ccol1', 'ccol2' ] }}
+                }}).map(item => item.id)).toEqual([ 'SomeID2', 'col1', 'col2', 'SomeID_carousel', 'ccol1', 'ccol2' ]);
         });
     });
     it('settingsItemsSelector ', () => expect(settingsItemsSelector({ geostory: { currentStory: TEST_STORY } })).toEqual(
@@ -102,13 +112,14 @@ describe('geostory selectors', () => { // TODO: check default
             { label: 'Abstract', value: 'SomeID' },
             { label: 'Abstract', value: 'SomeID2', children: [ { label: "", value: 'col1' }, { label: "", value: 'col2' } ] },
             { label: 'Abstract', value: 'SomeID_title' },
-            { label: 'Abstract', value: 'SomeID_banner' }
+            { label: 'Abstract', value: 'SomeID_banner' },
+            { label: 'Abstract', value: 'SomeID_carousel', children: [ { label: "", value: 'ccol1' }, { label: "", value: 'ccol2' } ] }
         ])
     );
     it('currentPositionSelector ', () => expect(currentPositionSelector({ geostory: { currentStory: TEST_STORY, currentPage: {
         sectionId: "SomeID"
     } } })).toBe(0));
-    it('totalItemsSelector ', () => expect(totalItemsSelector({ geostory: { currentStory: TEST_STORY } })).toBe(5));
+    it('totalItemsSelector ', () => expect(totalItemsSelector({ geostory: { currentStory: TEST_STORY } })).toBe(7));
     it('settingsSelector ', () => expect(settingsSelector({ geostory: { currentStory: {...TEST_STORY, settings: {
         checked: ["col2"]
     }} } })).toEqual({checked: [ 'col2' ], expanded: [ 'SomeID2' ] }));
@@ -138,5 +149,43 @@ describe('geostory selectors', () => { // TODO: check default
             src: "test"
         }];
         expect(currentStoryFonts({ geostory: { currentStory: {settings: { theme: { fontFamilies } }}}})).toEqual(fontFamilies);
+    });
+    it('getAllGeoCarouselSections ', () => {
+        const geoCarouselSections = getAllGeoCarouselSections({ geostory: { currentStory: TEST_STORY } });
+        expect(geoCarouselSections.length).toBeTruthy();
+        expect(geoCarouselSections[0].id).toBe('SomeID_carousel');
+    });
+    it('isGeoCarouselSection ', () => {
+        const isGeo = isGeoCarouselSection('SomeID_carousel')({ geostory: { currentStory: TEST_STORY } });
+        expect(isGeo).toBeTruthy();
+    });
+    it('getAllCarouselContentsOfSection ', () => {
+        const contents = getAllCarouselContentsOfSection('SomeID_carousel')({ geostory: { currentStory: TEST_STORY } });
+        expect(contents.length).toBe(2);
+    });
+    it('getGeoCarouselSectionById ', () => {
+        const section = getGeoCarouselSectionById('SomeID_carousel')({ geostory: { currentStory: TEST_STORY } });
+        expect(section.id).toBe('SomeID_carousel');
+    });
+    it('currentCarouselContent ', () => {
+        const content = currentCarouselContent({contentId: 'ccol1', sectionId: 'SomeID_carousel'})({ geostory: { currentStory: TEST_STORY } });
+        expect(content.id).toBe('ccol1');
+    });
+    it('getCurrentDrawContent ', () => {
+        const drawContent = getCurrentDrawContent({ geostory: { currentStory: {...TEST_STORY, drawContent: {contentId: 'ccol1'}} } });
+        expect(drawContent).toEqual({contentId: 'ccol1'});
+    });
+    it('isDrawControlEnabled ', () => {
+        const isDrawContent = isDrawControlEnabled({ geostory: { currentStory: {...TEST_STORY, drawContent: {contentId: 'ccol1'}} } });
+        expect(isDrawContent).toBeTruthy();
+    });
+    it('sideEffectState ', () => {
+        const sideEffect = sideEffectState({ geostory: { sideEffect: true}});
+        expect(sideEffect).toBeTruthy();
+    });
+    it('geoCarouselSettings ', () => {
+        const _settings = {map: {mapInfoControl: true}};
+        const settings = geoCarouselSettings({ geostory: { geoCarouselSettings: _settings }});
+        expect(settings).toBe(_settings);
     });
 });

@@ -66,9 +66,10 @@ const MapEditor = ({
     buttons = [],
     editNode,
     closeNodeEditor,
-    CloseBtn = () => (null)
+    CloseBtn = () => (null),
+    isDrawEnabled = false
 }) => {
-    return (mode === Modes.EDIT && isFocused ? <div
+    return (mode === Modes.EDIT && isFocused && !isDrawEnabled ? <div
         key="left-column"
         style={{ order: -1, width: 400, position: 'relative' }}>
         <BorderLayout className="ms-geostory-map-editor"
@@ -112,7 +113,9 @@ const MapEditor = ({
                     />
                 ]}
         </BorderLayout>
-    </div> : null);
+    </div>
+        : null
+    );
 };
 
 export default branch(

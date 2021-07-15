@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { compose, branch, withProps } from 'recompose';
 import find from 'lodash/find';
+import includes from 'lodash/includes';
 import Image from '../../components/geostory/media/Image';
 import Map from '../../components/geostory/media/Map';
 import Video from '../../components/geostory/media/Video';
@@ -34,7 +35,7 @@ const image = branch(
         )
     ),
     emptyState(
-        ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && sectionType !== SectionTypes.IMMERSIVE),
+        ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && !includes([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL], sectionType)),
         () => ({
             glyph: "picture"
         })
@@ -72,7 +73,7 @@ const video = branch(
         )
     ),
     emptyState(
-        ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && sectionType !== SectionTypes.IMMERSIVE),
+        ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && !includes([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL], sectionType)),
         () => ({
             glyph: "play"
         })

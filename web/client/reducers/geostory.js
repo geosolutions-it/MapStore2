@@ -5,10 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, find, isPlainObject, isArray, castArray, uniqBy } from "lodash";
+import { get, isString, isNumber, findIndex, find, isPlainObject, isArray, castArray, uniqBy, isEmpty } from "lodash";
 import { set, unset, arrayUpdate, compose,
     arrayDelete } from '../utils/ImmutableUtils';
-import { getEffectivePath, MediaTypes } from '../utils/GeoStoryUtils';
+import {
+    getEffectivePath,
+    MediaTypes,
+    SectionTypes,
+    updateGeoCarouselSections
+} from '../utils/GeoStoryUtils';
 
 import {
     ADD,
@@ -34,7 +39,10 @@ import {
     REMOVE_RESOURCE,
     SET_PENDING_CHANGES,
     SET_UPDATE_URL_SCROLL,
-    UPDATE_MEDIA_EDITOR_SETTINGS
+    UPDATE_MEDIA_EDITOR_SETTINGS,
+    SIDE_EFFECT,
+    UPDATE_GEO_CAROUSEL_SETTINGS,
+    HIDE_CAROUSEL_ITEMS, SYNC_CAROUSEL_MAP
 } from '../actions/geostory';
 
 
@@ -193,8 +201,10 @@ export default (state = INITIAL_STATE, action) => {
         let newState = arrayUpdate("currentStory.resources", { id, type, data }, { id }, state);
         // With a map resource we have to reset all contents' custom map configurations.
         if (type === MediaTypes.MAP) {
-            state.currentStory.sections.reduce((acc, section) =>  ([...acc, ...getContentsByResourceId(id, "sections[", section)])
-                , [])
+            state.currentStory.sections
+                .filter((section)=> section.type !== SectionTypes.CAROUSEL)
+                .reduce((acc, section) =>  ([...acc, ...getContentsByResourceId(id, "sections[", section)])
+                    , [])
                 .map(rawPath => {
                     const path = getEffectivePath(`currentStory.${rawPath}.map`, state);
                     newState = set(path, undefined, newState);
@@ -348,6 +358,39 @@ export default (state = INITIAL_STATE, action) => {
     }
     case UPDATE_MEDIA_EDITOR_SETTINGS: {
         return set('mediaEditorSettings', action.mediaEditorSettings, state);
+    }
+    case SIDE_EFFECT: {
+        return set('sideEffect', action.status, state);
+    }
+    case UPDATE_GEO_CAROUSEL_SETTINGS: {
+        return set('geoCarouselSettings', action.geoCarouselSettings, state);
+    }
+    case HIDE_CAROUSEL_ITEMS: {
+        if (action.sectionId) {
+            const section = find(state.currentStory.sections, s => find(s.contents, {id: action.showContentId}));
+            if (section && find(section.contents, {id: action.showContentId})) {
+                return set('currentStory', {
+                    ...state.currentStory,
+                    sections: updateGeoCarouselSections([], state.currentStory.sections, action, 'content')
+                }, state);
+            }
+            return state;
+        }
+        return state;
+    }
+    case SYNC_CAROUSEL_MAP: {
+        if (action.sectionId) {
+            const carouselSections = state.currentStory.sections.filter(({type})=> type === SectionTypes.CAROUSEL);
+            const {resources, sections} = state.currentStory || {};
+            if (!isEmpty(carouselSections)) {
+                return set('currentStory', {
+                    ...state.currentStory,
+                    sections: updateGeoCarouselSections(resources, sections, action)
+                }, state);
+            }
+            return state;
+        }
+        return state;
     }
     default:
         return state;

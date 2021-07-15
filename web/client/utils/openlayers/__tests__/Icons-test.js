@@ -65,6 +65,27 @@ describe('Icons openlayers styles', () => {
         expect(highlightStyleIcon).toExist();
         expect(highlightStyleIcon.anchor_).toEqual([0.5, 122]);
     });
+    it('test extra getIcon with text icon', () => {
+        const getIcon = Icons.extra.getIcon;
+        const options = {
+            style: {
+                rotation: 1,
+                iconColor: "orange",
+                iconShape: "square",
+                iconText: "1",
+                highlight: true
+            }
+        };
+        const styles = getIcon(options);
+        expect(styles).toExist();
+        expect(styles.length).toBe(3);
+        const iconStyle = styles[1];
+        expect(iconStyle).toExist();
+        const textStyleIcon = iconStyle.getText();
+        expect(textStyleIcon).toExist();
+        expect(textStyleIcon.text_).toEqual("1");
+        expect(textStyleIcon.font_).toContain("sans-serif");
+    });
     it('test standard getIcon iconUrl, no shadow, no highlight', () => {
         const getIcon = Icons.standard.getIcon;
         const options = {

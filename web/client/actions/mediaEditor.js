@@ -24,6 +24,7 @@ export const IMPORT_IN_LOCAL = "MEDIA_EDITOR:IMPORT_IN_LOCAL";
 export const REMOVE_MEDIA = "MEDIA_EDITOR:REMOVE_MEDIA";
 export const LOADING_SELECTED_MEDIA = "MEDIA_EDITOR:LOADING_SELECTED_MEDIA";
 export const LOADING_MEDIA_LIST = "MEDIA_EDITOR:LOADING_MEDIA_LIST";
+export const MEDIA_TYPE_DISABLE = "MEDIA_EDITOR:MEDIA_TYPE_DISABLE";
 
 import {SourceTypes} from '../utils/MediaEditorUtils';
 // RESOURCE FORMAT :
@@ -120,10 +121,11 @@ export const show = (owner, settings) => ({type: SHOW, owner, settings});
  * @prop {string} options.path path to the element
  * @prop {string} options.owner of the media editor
  */
-export const editMedia = ({path, owner = "geostory"}) => ({
+export const editMedia = ({path, owner = "geostory"}, sectionType) => ({
     type: EDIT_MEDIA,
     path,
-    owner
+    owner,
+    sectionType
 });
 
 /**
@@ -143,3 +145,5 @@ export const removeMedia = (mediaType, owner = "geostory") => ({type: REMOVE_MED
 export const loadingSelectedMedia = (loading) => ({ type: LOADING_SELECTED_MEDIA, loading });
 
 export const loadingMediaList = () => ({ type: LOADING_MEDIA_LIST });
+
+export const disableMediaType = (mediaTypes = []) => ({type: MEDIA_TYPE_DISABLE, mediaTypes});
