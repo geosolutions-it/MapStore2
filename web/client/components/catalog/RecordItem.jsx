@@ -358,6 +358,7 @@ class RecordItem extends React.Component {
         const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
 
         return recordToLayer(
+            {format: this.props?.service?.infoFormat},
             this.props.record,
             type,
             {
@@ -374,18 +375,12 @@ class RecordItem extends React.Component {
                         format: this.getLayerFormat(
                             formats.filter(f => f.indexOf("image/") === 0)
                         ),
-                        featureInfo: this.props.infoFormat ? {format: this.props.service.infoFormat} : undefined,
-                        // featureInfo: this.props.infoFormat ? {format: this.props.infoFormat} : undefined,
-                        infoFormatTest: this.props.service.infoFormat,
                         formats: {
                             imageFormats: this.props.formatOptions,
                             infoFormats: this.props.infoFormatOptions,
-                            featureInfo: this.props.infoFormat ? {format: this.props.service.infoFormat} : undefined,
-
                         }
                     }
                     : {
-                        featureInfo: this.props.infoFormat ? {format: this.props.service.infoFormat} : undefined,
                         format: this.getLayerFormat(
                             formats.filter(f => f.indexOf("image/") === 0)
                         )

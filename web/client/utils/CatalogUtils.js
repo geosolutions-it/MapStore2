@@ -493,7 +493,7 @@ const toURLArray = (url) => {
  *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
  *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
  */
-export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url, formats = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
+export const recordToLayer = (featureInfo, record, type = "wms", {removeParams = [], format, catalogURL, url, formats = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
         return null;
@@ -525,6 +525,7 @@ export const recordToLayer = (record, type = "wms", {removeParams = [], format, 
 
     const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
     return {
+        featureInfo,
         type: type,
         requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
         style: record.style,
