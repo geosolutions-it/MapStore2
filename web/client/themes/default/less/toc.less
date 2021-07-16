@@ -16,7 +16,7 @@
 
     .mapstore-toc-head {
         .toc-inline-loader {
-            .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+            .mapstore-circle-loader-with-css-variables((@icon-size-md/10), @icon-size-md, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
         }
 
         .mapstore-toc-head-title-container {
@@ -117,7 +117,7 @@
                 }
 
                 .toc-inline-loader {
-                    .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+                    .mapstore-circle-loader-with-css-variables((@icon-size-md/10), @icon-size-md, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
                 }
             }
 
@@ -128,14 +128,16 @@
             }
 
             .collapsible-toc {
-
+                // force white background to match the legend image background
+                color: #333333;
+                background-color: #ffffff;
                 .row {
                     .toc-full-title {
-                        .color-var(@theme-vars[main-color]);
+                        color: #333333;
                     }
 
                     .toc-collapse-desc {
-                        .color-var(@theme-vars[main-color]);
+                        color: #333333;
                     }
                 }
             }
@@ -154,7 +156,7 @@
                     }
 
                     .toc-inline-loader {
-                        .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-contrast-color], @theme-vars[loader-primary-contrast-fade-color]);
+                        .mapstore-circle-loader-with-css-variables((@icon-size-md/10), @icon-size-md, @theme-vars[loader-primary-contrast-color], @theme-vars[loader-primary-contrast-fade-color]);
                     }
                 }
             }
@@ -194,7 +196,7 @@
                         .background-color-var(@theme-vars[main-variant-bg]);
 
                         .toc-inline-loader {
-                            .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md, @theme-vars[loader-primary-contrast-color], @theme-vars[loader-primary-contrast-fade-color]);
+                            .mapstore-circle-loader-with-css-variables((@icon-size-md/10), @icon-size-md, @theme-vars[loader-primary-contrast-color], @theme-vars[loader-primary-contrast-fade-color]);
                         }
                     }
                 }
@@ -288,7 +290,7 @@
     }
 
     .legend-preview {
-        .background-color-var(@theme-vars[main-variant-bg]);
+        .background-color-var(@theme-vars[main-bg]);
     }
 }
 
