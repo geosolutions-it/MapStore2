@@ -25,32 +25,39 @@ class ToolbarPopover extends React.Component {
         popoverClassName: PropTypes.string,
         placement: PropTypes.string,
         title: PropTypes.node,
-        content: PropTypes.node
+        content: PropTypes.node,
+        useBody: PropTypes.bool
     };
 
     static defaultProps = {
         id: ''
     };
+    static state = {};
 
-    getContainerNode = () => {
-        // The overlay contain should always have a target root container to ensure all mapstore2 styles can be applied.
+    getContainerNode = (useBody) => {
+        // The overlay container should always have a target root container to ensure all mapstore2 styles can be applied.
         // The parentNode is the default and fallback is got from the themePrefix
-        return this.parentNode || document.querySelector('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div") || document.body;
+        return useBody ? document.body : this.parentNode || document.querySelector('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div") || document.body;
     }
 
     render() {
+        const container = this.getContainerNode(this.props.useBody);
         return (
             <div
-                ref={div => { this.parentNode = div && div.parentNode; }}
+                ref={div => {
+                    this.parentNode = div && div.parentNode;
+                }}
                 className={this.props.className} style={this.props.style}>
                 <OverlayTrigger
+                    key={this.props.id}
                     ref={trigger => { this.trigger = trigger; }}
                     trigger={['click']}
-                    container={this.getContainerNode()}
+                    container={container}
                     placement={this.props.placement}
                     rootClose
                     overlay={
                         <Popover
+                            key={this.props.id}
                             id={this.props.id}
                             title={this.props.title}
                             className={this.props.popoverClassName}>

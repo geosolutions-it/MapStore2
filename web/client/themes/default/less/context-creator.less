@@ -163,6 +163,38 @@
     .choose-theme {
         width: 500px;
         margin: auto;
+        & > .color-item:not(:last-child) {
+            margin-bottom: 10px;
+
+        }
+        .clear-all {
+            float: right;
+        }
+        .label-theme {
+            display: flex;
+            align-items: center;
+        }
+        .custom-variables {
+            display: flex;
+            align-items: baseline;
+            .mapstore-info-popover {
+                padding-left: 10px;
+            }
+        }
+        .color-item {
+            height: 37px;
+            display: flex;
+            justify-content: space-between;
+            .color-choice {
+                display: flex;
+                align-items: center;
+                .ms-color-selector {
+                    width: 50%;
+                    min-width: 200px;
+                    margin-right: 18px;
+                }
+            }
+        }
     }
 }
 

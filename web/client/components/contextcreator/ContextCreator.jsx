@@ -361,6 +361,7 @@ export default class ContextCreator extends React.Component {
                     disableNext: false,
                     component: <ConfigureThemes
                         themes={this.props.themes}
+                        colors={this.props.colors}
                         setSelectedTheme={this.props.setSelectedTheme}
                         selectedTheme={this.props.selectedTheme}
                     />
