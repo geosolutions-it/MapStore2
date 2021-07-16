@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import 'react-quill/dist/quill.snow.css';
-
 import {identity} from 'lodash';
 import React from 'react';
 import ReactQuill from 'react-quill';
