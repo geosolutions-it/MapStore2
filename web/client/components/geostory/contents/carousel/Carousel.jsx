@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import CarouselI from 'react-items-carousel';
 import cs from 'classnames';
 import isEmpty from 'lodash/isEmpty';
@@ -21,6 +21,7 @@ import uuid from "uuid";
 import defaultThumb from './img/default.jpg';
 import withScrollEnhancer from './withScrollEnhancer';
 import withKeyboardEnhancer from './withKeyboardEnhancer';
+import InfoCarousel from "./InfoCarousel";
 const Carousel = withScrollEnhancer(CarouselI);
 
 const CarouselItem = draggableComponent(({
@@ -60,6 +61,7 @@ const DraggableCarousel = draggableContainer(({
     const [edit, setEdit] = useState(false);
     const [contentId, setContentId] = useState(undefined);
     const [thumbnail, setThumbnail] = useState({});
+    const [addDisabled, setAddDisabled] = useState(false);
     const onEdit = (item) => {
         setContentId(item?.id);
         setEdit(true);
@@ -94,16 +96,23 @@ const DraggableCarousel = draggableContainer(({
 
     const isEditMap = items.some(({background: { editMap = false } = {} })=> editMap);
 
-    const disableAddItem = () => {
-        const {background: {map: { layers = []} = {}} = {}} = find(items, {id: currentContentId}) || {};
-        const {features = []} = find(layers, {id: GEOSTORY}) || {};
-        return !find(features, {contentRefId: currentContentId});
-    };
+    useEffect(()=>{
+        const disableItem = items.some(({background: { map: { layers = []} = {}} = {}} = {}) => {
+            const {features = []} = find(layers, {id: GEOSTORY}) || {};
+            return isEmpty(features) || features.length !== items.length;
+        });
+        setAddDisabled(!isMapBackground || disableItem);
+    }, [items, isMapBackground]);
+
+    const displayMarkerInfo = () => isEditMap && editable &&
+        !!find(items, ({id, background: {map: {mapDrawControl} = {}} = {}} = {}) => id === currentContentId && mapDrawControl);
 
     return (
         <>
             <div className={'ms-section-carousel'}>
-                {editable && <ContentToolbar addDisabled={!isMapBackground || disableAddItem()}
+                {editable && items.length === 1 && addDisabled && !isEditMap && <InfoCarousel type={"addInfo"}/>}
+                {displayMarkerInfo() && <InfoCarousel type={"addMarker"}/>}
+                {editable && <ContentToolbar addDisabled={addDisabled}
                     add={add} editMap={isEditMap} remove={onRemoveAll} tools={['add', 'remove']}/>}
                 <Carousel
                     expandable={expandable}

@@ -12,11 +12,18 @@ import SectionContents from '../../contents/SectionContents';
 import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, MediaTypes, Modes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
+import {
+    SectionTypes,
+    ContentTypes,
+    MediaTypes,
+    Modes,
+    SectionTemplates
+} from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
 import get from 'lodash/get';
 import find from 'lodash/find';
 import Carousel from "../../contents/carousel/Carousel";
+import InfoCarousel from "../../contents/carousel/InfoCarousel";
 
 /**
  * GeoCarousel Section Type
@@ -71,9 +78,10 @@ const GeoCarousel = ({
         const {contents: _contents = []} = find(contents, {id: contentId}) || {};
         return value.filter(v=> SectionTypes.CAROUSEL === sectionType && _contents.length === 1 ? v !== 'remove' : v);
     };
+    const isMapBackground = background?.type === MediaTypes.MAP;
 
     return (<section
-        className={`ms-section ms-section-immersive${expandableBackgroundClassName}`}
+        className={`ms-section ms-section-carousel${expandableBackgroundClassName}`}
         id={id}
         ref={inViewRef}
     >
@@ -109,6 +117,7 @@ const GeoCarousel = ({
             mediaViewer={mediaViewer}
             contentToolbar={contentToolbar}
             inView={inView}/>
+        {!isMapBackground && mode === Modes.EDIT && <InfoCarousel type={'addMap'}/>}
         <SectionContents
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']
@@ -153,7 +162,7 @@ const GeoCarousel = ({
             contentToolbar={contentToolbar}
             mode={mode}
             onSort={onSort}
-            isMapBackground={background?.type === MediaTypes.MAP}
+            isMapBackground={isMapBackground}
             containerWidth={viewWidth}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
@@ -181,8 +190,8 @@ const GeoCarousel = ({
                 }
             },
             {
-                glyph: 'story-immersive-content',
-                tooltipId: 'geostory.addImmersiveContent',
+                glyph: 'story-immersive-section',
+                tooltipId: 'geostory.addImmersiveSection',
                 onClick: () =>  add(`sections`, id, SectionTypes.IMMERSIVE)
             },
             {

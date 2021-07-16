@@ -6,14 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { compose, branch, withStateHandlers, withPropsOnChange, mapPropsStream, createEventHandler } from 'recompose';
+import {
+    compose,
+    branch,
+    withStateHandlers,
+    withPropsOnChange,
+    mapPropsStream,
+    createEventHandler,
+    withHandlers
+} from 'recompose';
 import uuidv1 from 'uuid/v1';
 import buffer from "turf-buffer";
 import intersect from "turf-intersect";
 import MapInfoViewer from '../../../common/MapInfoViewer';
-import SimpleCarouselVectorInfoViewer from '../../contents/carousel/VectorInfoViewer';
 import { getDefaultInfoFormat } from '../../../common/enhancers/withIdentifyPopup';
-import { GEOSTORY } from "../../../../utils/GeoStoryUtils";
+import {GEOSTORY} from "../../../../utils/GeoStoryUtils";
 import { isEqual } from "lodash";
 import { isInsideResolutionsLimits } from "../../../../utils/LayersUtils";
 import {
@@ -24,6 +31,10 @@ import {
 } from "../../../../utils/MapInfoUtils";
 import {Observable} from "rxjs";
 import { getFeatureInfo } from "../../../../api/identify";
+import find from "lodash/find";
+import { connect } from "react-redux";
+import { update } from "../../../../actions/geostory";
+import { getAllGeoCarouselSections } from "../../../../selectors/geostory";
 
 export const getIntersectedFeature = (layer, request, metadata) => {
     const point = {
@@ -81,6 +92,26 @@ export const getIntersectedFeature = (layer, request, metadata) => {
         layerMetadata: metadata
     };
 };
+
+export const withCarouselMarkerInteraction = compose(
+    connect((state)=>({sections: getAllGeoCarouselSections(state)}), {onClickMarker: update}),
+    withHandlers({
+        onClickMarker: ({onClickMarker = () => {}, sections = {}}) => (responses, layerInfo, popups) => {
+            const {response: { features: [{contentRefId} = {}] = []} = {}} = find(responses,
+                ({queryParams: {request} = {}, layerMetadata: {title} = {}} = {})=> !request && title.toLowerCase() === layerInfo) || {};
+            const result = find(sections, ({contents}) => find(contents, {id: contentRefId}));
+            let _popup = {popups: []};
+            if (result) {
+                const {id: contentId, thumbnail: {title = ''} = {}} = find(result.contents, {id: contentRefId}) || {};
+                onClickMarker(`sections[{"id":"${result.id}"}].contents[{"id":"${contentId}"}].carouselToggle`, true);
+                if (title) {
+                    _popup = {popups: popups.map((popup) => ({...popup, component: ()=> (<div className={"ms-geostory-carousel-viewer"}>{title}</div>)}))};
+                }
+            }
+            return _popup;
+        }
+    })
+);
 
 const withIdentifyRequest  = mapPropsStream(props$ => {
     const { stream: loadFeatureInfo$, handler: getFeatureInfoHandler} = createEventHandler();
@@ -181,7 +212,6 @@ const withIdentifyRequest  = mapPropsStream(props$ => {
  */
 export default branch(
     ({map: {mapInfoControl = false, mapDrawControl = false} = {}}) => mapInfoControl || !mapDrawControl,
-    // ({map: {mapInfoControl = false} = {}}) => mapInfoControl,
     compose(
         withIdentifyRequest,
         withStateHandlers(({'popups': []}), {
@@ -196,21 +226,18 @@ export default branch(
             onPopupClose: () => () => ({popups: []})
         }),
         withPropsOnChange(["mapInfo", "popups"],
-            ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}, map = {}}) => {
+            ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}, map = {}, onClickMarker = () => {}}) => {
                 const {responses, requests, validResponses, layerInfo} = mapInfo;
-                let Component = null;
                 if (map.hasOwnProperty('mapDrawControl') && layerInfo === GEOSTORY) {
-                    Component = (<SimpleCarouselVectorInfoViewer layerInfo={layerInfo} responses={validResponses}/>);
-                } else {
-                    Component = (<MapInfoViewer
-                        renderEmpty
-                        responses={responses} requests={requests}
-                        validResponses={validResponses}
-                        format={mapInfoFormat} showEmptyMessageGFI
-                        missingResponses={(requests || []).length - (responses || []).length}/>);
+                    return onClickMarker(validResponses, layerInfo, popups);
                 }
-                const component = () => Component;
-                return {popups: popups.map((popup) => ({...popup, component}))};
+                return {popups: popups.map((popup) => ({...popup, component: ()=> (<MapInfoViewer
+                    renderEmpty
+                    responses={responses} requests={requests}
+                    validResponses={validResponses}
+                    format={mapInfoFormat} showEmptyMessageGFI
+                    missingResponses={(requests || []).length - (responses || []).length}/>)}))
+                };
             }),
         withPropsOnChange(
             ['plugins', 'onPopupClose', 'popups'],

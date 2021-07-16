@@ -2427,6 +2427,9 @@
             "showFullscreenMap": "Montrer la carte en plein écran",
             "carouselAddTitle": "Ajouter une nouvelle vignette de carte",
             "carouselEditTitle": "Modifier la miniature de la carte",
+            "carouselAddMapInfo": "Ajouter un arrière-plan de carte pour configurer la position de l'élément du carrousel",
+            "carouselAddItemInfo": "Associez l'élément actuel à une position sur la carte pour ajouter plus d'éléments de carrousel",
+            "carouselPlaceMarkerInfo": "Cliquez n'importe où sur la carte pour placer ou repositionner le marqueur",
             "contentToolbar": {
                 "contentSize": "Changer la taille",
                 "contentHeightAuto": "S'adapter à la hauteur du contenu",

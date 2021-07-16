@@ -71,7 +71,7 @@ describe('GeoCarousel component', () => {
     it('Geocarousel rendering with defaults', () => {
         ReactDOM.render(<Comp />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-section-immersive');
+        const el = container.querySelector('.ms-section-carousel');
         expect(el).toExist();
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toNotExist();
@@ -79,7 +79,7 @@ describe('GeoCarousel component', () => {
     it('GeoCarousel rendering in edit mode ', () => {
         ReactDOM.render(<Comp mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-section-immersive');
+        const el = container.querySelector('.ms-section-carousel');
         expect(el).toExist();
         const contentToolbar = container.querySelector('.ms-content-toolbar');
         expect(contentToolbar).toExist();
@@ -143,7 +143,7 @@ describe('GeoCarousel component', () => {
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-section-immersive.ms-expandable-background');
+        const el = container.querySelector('.ms-section-carousel.ms-expandable-background');
         expect(el).toExist();
     });
     it('render carousel component along with section and background', () => {
@@ -157,7 +157,7 @@ describe('GeoCarousel component', () => {
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-section-immersive.ms-expandable-background');
+        const el = container.querySelector('.ms-section-carousel.ms-expandable-background');
         expect(el).toExist();
         expect(el.querySelector('.ms-section-carousel')).toBeTruthy();
     });
@@ -175,5 +175,20 @@ describe('GeoCarousel component', () => {
         const el = container.querySelector('.ms-section');
         expect(el).toExist();
         expect(el.querySelector('.add-bar')).toBeTruthy();
+    });
+    it('render Geocarousel with helper tooltip', () => {
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Comp mode={Modes.EDIT} expandableMedia contents={[{...CONTENTS_MAP, background: {}}]} />
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-carousel-map-info');
+        expect(el).toBeTruthy();
+        expect(el.textContent).toBe('geostory.carouselAddMapInfo');
     });
 });

@@ -2426,6 +2426,9 @@
             "showFullscreenMap": "Vollbild-Anzeige Karte",
             "carouselAddTitle": "Neue Kartenminiaturansicht hinzufügen",
             "carouselEditTitle": "Kartenminiaturansicht bearbeiten",
+            "carouselAddMapInfo": "Fügen Sie einen Kartenhintergrund hinzu, um die Position für das Karussellelement zu konfigurieren",
+            "carouselAddItemInfo": "Verknüpfen Sie das aktuelle Element mit einer Position auf der Karte, um weitere Karussell-Elemente hinzuzufügen",
+            "carouselPlaceMarkerInfo": "Klicken Sie auf eine beliebige Stelle auf der Karte, um die Markierung zu platzieren oder neu zu positionieren",
             "contentToolbar": {
                 "contentSize": "Größe ändern",
                 "contentHeightAuto": "Passen Sie diesen Abschnitt an die Höhe des Inhalts an",

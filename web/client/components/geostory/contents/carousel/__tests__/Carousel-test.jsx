@@ -110,11 +110,61 @@ describe('Carousel component', () => {
     });
 
     it('Carousel item on add', () => {
+        const secondContent = {
+            "id": "ccol2",
+            "type": "column",
+            "background": {
+                "resourceId": "resource_id",
+                "type": "map",
+                "map": {
+                    "layers": [{
+                        "type": "vector",
+                        "id": "geostory",
+                        "features": [
+                            {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "type": "Feature",
+                                    "geometry": null,
+                                    "properties": "1",
+                                    "style": [{
+                                        "id": "2",
+                                        "highlight": true,
+                                        "iconColor": "cyan",
+                                        "iconText": "2",
+                                        "iconShape": "circle"
+                                    }]
+                                }],
+                                "contentRefId": "ccol1"
+                            },
+                            {
+                                "type": "FeatureCollection",
+                                "features": [],
+                                "contentRefId": "ccol2"
+                            }
+                        ]
+                    }]
+                }
+            },
+            "contents": [
+                {
+                    "id": "car1_col2_content1",
+                    "type": "text",
+                    "html": "<p>this is some html content</p>"
+                },
+                {
+                    "id": "car1_col2_content2",
+                    "type": "media",
+                    "lazy": false
+                }
+            ]
+        };
+        const _contents = [contents[0], secondContent];
         const action = { add: ()=>{} };
         const spyAdd = expect.spyOn(action, 'add');
         ReactDOM.render(<Comp
             sectionId={'SomeID_carousel'} contentId={'ccol1'}
-            contents={contents} mode={'edit'} isMapBackground
+            contents={_contents} mode={'edit'} isMapBackground
             contentToolbar={DefaultContentToolbar}
             add={action.add}
         />, document.getElementById("container"));
@@ -224,5 +274,37 @@ describe('Carousel component', () => {
         expect(path2).toEqual('sections[{"id":"SomeID_carousel"}].contents[{"id":"ccol1"}].background.editMap');
         expect(element2).toBeTruthy();
         expect(mode2).toBe('replace');
+    });
+    it('Carousel render section default with helper tooltips', () => {
+        ReactDOM.render(<Comp
+            sectionId={'SomeID_carousel'} contentId={'ccol1'}
+            contents={[contents[1]]} mode={'edit'}
+            contentToolbar={DefaultContentToolbar}
+        />, document.getElementById("container"));
+        let container = document.getElementById("container");
+        let el = container.querySelector('.ms-section-carousel');
+        expect(el).toExist();
+        const items = container.querySelectorAll('.carousel-item');
+        expect(items.length).toBeTruthy();
+
+        // Default helper tooltip on add button
+        const [addButtonInfo] = el.getElementsByClassName('ms-carousel-add-info');
+        expect(addButtonInfo).toBeTruthy();
+        expect(addButtonInfo.textContent).toBe('geostory.carouselAddItemInfo');
+
+        const _contents = {...contents[1], background: { editMap: true, map: {mapDrawControl: true}}};
+        ReactDOM.render(<Comp
+            sectionId={'SomeID_carousel'} contentId={'ccol2'}
+            contents={[_contents]} mode={'edit'}
+            contentToolbar={DefaultContentToolbar}
+        />, document.getElementById("container"));
+        container = document.getElementById("container");
+        el = container.querySelector('.ms-section-carousel');
+        expect(el).toExist();
+
+        // Default helper tooltip on edit map background
+        const [mediaButtonInfo] = el.getElementsByClassName('ms-carousel-marker-info');
+        expect(mediaButtonInfo).toBeTruthy();
+        expect(mediaButtonInfo.textContent).toBe('geostory.carouselPlaceMarkerInfo');
     });
 });

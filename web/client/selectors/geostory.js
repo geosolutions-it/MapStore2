@@ -185,7 +185,11 @@ export const navigableItemsSelectorCreator = ({withImmersiveSection = false, inc
             // include only the section
             return [...p, c];
         }
-        if (includes([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL], c.type)) {
+        if (c.type === SectionTypes.CAROUSEL && (includeAlways || visibleItems[c.id])) {
+            // include only the section
+            return [...p, c];
+        }
+        if (c.type === SectionTypes.IMMERSIVE) {
             // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
                 if (includeAlways || visibleItems[column.id]) {
@@ -242,7 +246,7 @@ export const settingsItemsSelector = state => {
             const children = c.contents && c.contents.map((column) => {
                 return {label: column.title || "", value: column.id};
             }) || [];
-            return [ ...p, {label: c.title || "", value: c.id, children}];
+            return [ ...p, {label: c.title || "", value: c.id, ...(c.type === SectionTypes.IMMERSIVE && {children})}];
         }
         return [...p, {label: c.title || "", value: c.id}];
     }, []);

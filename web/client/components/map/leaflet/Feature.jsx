@@ -103,7 +103,8 @@ class Feature extends React.Component {
                         x: event.originalEvent && event.originalEvent.x,
                         y: event.originalEvent && event.originalEvent.y
                     },
-                    latlng: event.latlng
+                    latlng: event.latlng,
+                    rawPos: [event.latlng.lat, event.latlng.lng]
                 }, this.props.options.handleClickOnLayer ? this.props.options.id : null);
             }
         });

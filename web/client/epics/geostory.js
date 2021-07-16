@@ -268,17 +268,20 @@ export const saveGeoStoryResource = action$ => action$
  * side effect to scroll to new sections
  * it tries for max 10 times with an interval of 200 ms between each
  * @param {*} action$
+ * @param {object} store
  */
-export const scrollToContentEpic = action$ =>
+export const scrollToContentEpic = (action$, {getState = () => {}} = {})=>
     action$.ofType(ADD)
-        .switchMap(({element}) => {
+        .switchMap(({path, element}) => {
             return Observable.of(element)
                 .switchMap(() => {
                     if (!document.getElementById(element.id)) {
                         const err = new Error("Item not mounted yet");
                         throw err;
                     } else {
-                        scrollToContent(element.id, {behavior: "auto", block: "center"});
+                        const {sectionId} = getIdFromPath(path);
+                        const id = isGeoCarouselSection(sectionId)(getState()) ? sectionId : element.id;
+                        scrollToContent(id, {behavior: "auto", block: "center"});
                         return Observable.empty();
                     }
                 })

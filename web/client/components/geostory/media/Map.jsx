@@ -38,7 +38,8 @@ export default compose(
     showCaption,
     caption: contentCaption,
     mapType = "leaflet", // default for when map MediaViewer is not connected to redux
-    onMapTypeLoaded
+    onMapTypeLoaded,
+    ...props
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
@@ -91,6 +92,7 @@ export default compose(
     const mapView = (
         <>
             <MapView
+                {...props}
                 // force unmount to setup correct interactions
                 key={expandable ? 'overlay' : 'block'}
                 onMapViewChanges={onMapViewChanges}
