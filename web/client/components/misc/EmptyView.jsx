@@ -23,7 +23,7 @@ import FitIcon from './FitIcon';
  * @param  {string|node} [description]         The description to display
  * @param  {string|node} [content]             Additional content for the empty view (e.g. buttons...)
  */
-export default ({
+function EmptyView({
     style = {},
     mainViewStyle = {},
     contentStyle = {},
@@ -35,8 +35,8 @@ export default ({
     tooltipId,
     description,
     content
-} = {}) =>
-    (<div className="empty-state-container" style={{height: iconFit ? "100%" : undefined, ...style}}>
+} = {}) {
+    return (<div className="empty-state-container" style={{height: iconFit ? "100%" : undefined, ...style}}>
         <div key="main-view" className="empty-state-main-view" style={{height: iconFit ? "100%" : undefined, ...mainViewStyle}} >
             {glyph
                 ? <div key="glyph" className="empty-state-image" style={{height: iconFit ? "100%" : undefined, ...imageStyle}}>
@@ -48,3 +48,5 @@ export default ({
         </div>
         <div key="content" className="empty-state-content" style={contentStyle}>{content}</div>
     </div>);
+}
+export default EmptyView;

@@ -1758,7 +1758,8 @@
                 "nodatainviewport": "Aucune donnée dans la fenêtre courante",
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
                 "genericError": "Erreur lors de la récupération des données",
-                "genericErrorWithMessage": "Erreur lors de la récupération des données: \"{message}\""
+                "genericErrorWithMessage": "Erreur lors de la récupération des données: \"{message}\"",
+                "layerNotAvailable": "Le calque {layerName} n'est plus disponible"
             },
             "builder": {
                 "header": {
