@@ -24,7 +24,8 @@ export default ({
         title: "",
         type: "wms",
         url: "",
-        format: "image/png"
+        format: "image/png",
+        infoFormat: "TEXT"
     },
     serviceTypes = [{ name: "csw", label: "CSW" }],
     onChangeTitle = () => {},
@@ -36,6 +37,7 @@ export default ({
     buttonStyle,
     saving,
     onChangeServiceFormat = () => {},
+    onChangeServiceInfoFormat = () => {},
     onChangeMetadataTemplate = () => {},
     onToggleAdvancedSettings = () => { },
     onChangeServiceProperty = () => {},
@@ -76,6 +78,7 @@ export default ({
                 buttonStyle={buttonStyle}
                 saving={saving}
                 onChangeServiceFormat={onChangeServiceFormat}
+                onChangeServiceInfoFormat={onChangeServiceInfoFormat}
                 onChangeMetadataTemplate={onChangeMetadataTemplate}
                 onToggleAdvancedSettings={onToggleAdvancedSettings}
                 onChangeServiceProperty={onChangeServiceProperty}

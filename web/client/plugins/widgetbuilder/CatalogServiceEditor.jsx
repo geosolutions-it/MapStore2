@@ -58,6 +58,7 @@ export default ({service: defaultService, catalogServices,
             onChangeUrl={(url) => setService({...service, url})}
             onChangeType={(type) => setService({...service, type})}
             onChangeTitle={(title) => setService({...service, title})}
+            onChangeServiceInfoFormat={(infoFormat) => setService({...service, infoFormat})}
             service={service}
             onChangeServiceFormat={(format) => setService({...service, format})}
             onToggleAdvancedSettings={() => setService({...service, showAdvancedSettings: !service.showAdvancedSettings})}

@@ -81,7 +81,8 @@ class Catalog extends React.Component {
         formatOptions: PropTypes.array,
         infoFormatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object,
-        service: PropTypes.object
+        service: PropTypes.object,
+        infoFormat: PropTypes.string
     };
 
     static contextTypes = {
@@ -271,7 +272,10 @@ class Catalog extends React.Component {
                 onAddBackground={this.props.onAddBackground}
                 defaultFormat={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].format}
                 formatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.formatOptions : DEFAULT_FORMAT_WMS}
-                infoFormatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.infoFormatOptions : getUniqueInfoFormats()}
+                // infoFormatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.infoFormatOptions : getUniqueInfoFormats()}
+                infoFormatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.infoFormat : getUniqueInfoFormats()}
+                defaultInfoFormat={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].infoFormat}
+
                 layerBaseConfig={this.props.layerBaseConfig}
                 onAdd={() => {
                     this.search({ services: this.props.services, selectedService: this.props.selectedService });

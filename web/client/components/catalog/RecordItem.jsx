@@ -65,7 +65,7 @@ class RecordItem extends React.Component {
         clearModal: PropTypes.func,
         service: PropTypes.service,
         showTemplate: PropTypes.bool,
-        defaultFormat: PropTypes.string,
+        defaultFormat: PropTypes.object,
         formatOptions: PropTypes.array,
         infoFormatOptions: PropTypes.array
     };
@@ -285,6 +285,7 @@ class RecordItem extends React.Component {
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then these defaults also have to change
         return record ? (<div>
+
             <SideCard
                 style={{transform: "none", opacity: disabled ? 0.4 : 1}}
                 fullText={this.state.fullText}
@@ -357,6 +358,7 @@ class RecordItem extends React.Component {
         const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
 
         return recordToLayer(
+            {format: this.props?.service?.infoFormat},
             this.props.record,
             type,
             {
@@ -375,7 +377,7 @@ class RecordItem extends React.Component {
                         ),
                         formats: {
                             imageFormats: this.props.formatOptions,
-                            infoFormats: this.props.infoFormatOptions
+                            infoFormats: this.props.infoFormatOptions,
                         }
                     }
                     : {
