@@ -3898,7 +3898,7 @@ define("UserInterfaceControl", ["Knockout", "knockoutes5"], function(e, t) {
         e.track(this, ["name", "svgIcon", "svgHeight", "svgWidth", "cssClass", "isActive"])
     }
     ;
-    return Cesium.defineProperties(n.prototype, {
+    return Object.defineProperties(n.prototype, {
         terria: {
             get: function() {
                 return this._terria
@@ -12496,7 +12496,7 @@ define("CameraView", [], function() {
         this._up = r
     }
     ;
-    return Cesium.defineProperties(e.prototype, {
+    return Object.defineProperties(e.prototype, {
         rectangle: {
             get: function() {
                 return this._rectangle

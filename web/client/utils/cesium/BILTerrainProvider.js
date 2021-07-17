@@ -193,7 +193,7 @@ const createBilTerrainProvider = function(Cesium) {
 			if (Cesium.defined(description.proxy)) {
 				urlGetCapabilities = description.proxy.getURL(urlGetCapabilities);
 			}
-			resultat=Cesium.when(Cesium.loadXML(urlGetCapabilities), function(xml) {
+			resultat=Cesium.when(Cesium.Resource.fetchXML(urlGetCapabilities), function(xml) {
 				return OGCHelper.WMSParser.getMetaDatafromXML(xml, description);
 			});
 		} else if (Cesium.defined(description.xml)) {
@@ -824,7 +824,7 @@ const createBilTerrainProvider = function(Cesium) {
 
 		this.ready=false;
 
-		Cesium.defineProperties(this, {
+		Object.defineProperties(this, {
 			errorEvent : {
 				get : function() {
 					return errorEvent;
@@ -1033,7 +1033,7 @@ const createBilTerrainProvider = function(Cesium) {
 					return retour;
 				}
 
-				Cesium.defineProperties(provider, {
+				Object.defineProperties(provider, {
 					tilingScheme : {
 						get : function() {
 							return resultat.tilingScheme ;

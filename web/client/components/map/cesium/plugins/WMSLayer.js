@@ -7,8 +7,8 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import Cesium from '../../../../libs/cesium';
 import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
+import * as Cesium from "cesium";
 const BILTerrainProvider = createBILTerrainProvider(Cesium);
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {getProxyUrl, needProxy} from "../../../../utils/ProxyUtils";
@@ -89,10 +89,9 @@ function wmsToCesiumOptions(options) {
     const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     return assign({
-        url: "{s}",
+        url: new Cesium.Resource({url: "{s}", proxy: proxy && new WMSProxy(proxy) || new NoProxy()}),
         credit,
         subdomains: getURLs(isArray(options.url) ? options.url : [options.url]),
-        proxy: proxy && new WMSProxy(proxy) || new NoProxy(),
         layers: options.name,
         enablePickFeatures: false,
         parameters: assign({

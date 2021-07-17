@@ -7,7 +7,7 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import Cesium from '../../../../libs/cesium';
+import * as Cesium from "cesium";
 
 import {isEqual} from 'lodash';
 import assign from 'object-assign';
@@ -24,7 +24,7 @@ Layers.registerType('marker', {
         }, options.style);
 
         const point = map.entities.add(assign({
-            position: Cesium.Cartesian3.fromDegrees(options.point.lng, options.point.lat)
+            position: Cesium.Cartesian3.fromDegrees(options.point[0], options.point[1])
         }, style));
         return {
             detached: true,

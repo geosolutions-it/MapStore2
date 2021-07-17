@@ -10,7 +10,7 @@ const getCartesian = function(viewer, event) {
     if (event.position !== null) {
         const scene = viewer.scene;
         const ellipsoid = scene._globe.ellipsoid;
-        const cartesian = scene._camera.pickEllipsoid(event.position || event.endPosition, ellipsoid);
+        const cartesian = scene.camera.pickEllipsoid(event.position || event.endPosition, ellipsoid);
         return cartesian;
     }
     return null;

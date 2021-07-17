@@ -10,6 +10,7 @@ import { TOGGLE_3D } from '../actions/globeswitcher';
 import { changeMapType } from '../actions/maptype';
 import { last2dMapTypeSelector } from './../selectors/maptype';
 import { closeDetailsPanel } from '../actions/details';
+import { closeIdentify } from '../actions/mapInfo';
 /**
  * Gets every `TOGGLE_3D` event.
  * @memberof epics.globeswitcher
@@ -24,7 +25,8 @@ export const updateRouteOn3dSwitch = (action$, store) =>
 
             return Rx.Observable.from([
                 changeMapType(action.originalMapType !== "cesium" ? "cesium" : last2dMapType),
-                closeDetailsPanel()
+                closeDetailsPanel(),
+                closeIdentify()
             ]);
         });
 /**

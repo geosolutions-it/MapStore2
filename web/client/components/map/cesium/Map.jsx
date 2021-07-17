@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Cesium from '../../../libs/cesium';
+import * as Cesium from 'cesium';
 
 import PropTypes from 'prop-types';
 import Rx from 'rxjs';

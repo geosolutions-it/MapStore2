@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React from "react";
 
-import Layers from '../../../utils/cesium/Layers';
-import assign from 'object-assign';
-import PropTypes from 'prop-types';
-import isNil from 'lodash/isNil';
-import { getResolutions } from '../../../utils/MapUtils';
+import Layers from "../../../utils/cesium/Layers";
+import assign from "object-assign";
+import PropTypes from "prop-types";
+import isNil from "lodash/isNil";
+import { getResolutions } from "../../../utils/MapUtils";
 
 class CesiumLayer extends React.Component {
     static propTypes = {
@@ -25,18 +25,30 @@ class CesiumLayer extends React.Component {
     };
 
     componentDidMount() {
-        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map, this.props.securityToken);
-        if (this.props.options && this.layer && this.getVisibilityOption(this.props)) {
+        this.createLayer(
+            this.props.type,
+            this.props.options,
+            this.props.position,
+            this.props.map,
+            this.props.securityToken
+        );
+        if (
+            this.props.options &&
+            this.layer &&
+            this.getVisibilityOption(this.props)
+        ) {
             this.addLayer(this.props);
             this.updateZIndex();
         }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-
         this.setLayerVisibility(newProps);
 
-        const newOpacity = newProps.options && newProps.options.opacity !== undefined ? newProps.options.opacity : 1.0;
+        const newOpacity =
+            newProps.options && newProps.options.opacity !== undefined
+                ? newProps.options.opacity
+                : 1.0;
         this.setLayerOpacity(newOpacity);
 
         if (newProps.position !== this.props.position) {
@@ -45,22 +57,34 @@ class CesiumLayer extends React.Component {
                 this.provider._position = newProps.position;
             }
         }
-        if (this.props.options && this.props.options.params && this.layer.updateParams && newProps.options.visibility) {
-            const changed = Object.keys(this.props.options.params).reduce((found, param) => {
-                if (newProps.options.params[param] !== this.props.options.params[param]) {
-                    return true;
-                }
-                return found;
-            }, false);
+        if (
+            this.props.options &&
+            this.props.options.params &&
+            this.layer.updateParams &&
+            newProps.options.visibility
+        ) {
+            const changed = Object.keys(this.props.options.params).reduce(
+                (found, param) => {
+                    if (
+                        newProps.options.params[param] !==
+                        this.props.options.params[param]
+                    ) {
+                        return true;
+                    }
+                    return found;
+                },
+                false
+            );
             if (changed) {
                 const oldProvider = this.provider;
-                const newLayer = this.layer.updateParams(newProps.options.params);
+                const newLayer = this.layer.updateParams(
+                    newProps.options.params
+                );
                 this.layer = newLayer;
                 this.addLayer(newProps);
                 setTimeout(() => {
                     this.removeLayer(oldProvider);
                 }, 1000);
-
             }
         }
         this.updateLayer(newProps, this.props);
@@ -86,36 +110,59 @@ class CesiumLayer extends React.Component {
     render() {
         if (this.props.children) {
             const layer = this.layer;
-            const children = layer ? React.Children.map(this.props.children, child => {
-                return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
-            }) : null;
-            return (
-                <>
-                    {children}
-                </>
-            );
+            const children = layer
+                ? React.Children.map(this.props.children, (child) => {
+                    return child
+                        ? React.cloneElement(child, {
+                            container: layer,
+                            styleName:
+                                this.props.options &&
+                                this.props.options.styleName
+                        })
+                        : null;
+                })
+                : null;
+            return <>{children}</>;
         }
-        return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.map.id, this.layer);
-
+        return Layers.renderLayer(
+            this.props.type,
+            this.props.options,
+            this.props.map,
+            this.props.map.id,
+            this.layer
+        );
     }
 
     updateZIndex = (position) => {
-        const layerPos = position || this.props.position;
-        const actualPos = this.props.map.imageryLayers._layers.reduce((previous, current, index) => {
-            return this.provider === current ? index : previous;
-        }, -1);
-        let newPos = this.props.map.imageryLayers._layers.reduce((previous, current, index) => {
-            return previous === -1 && layerPos < current._position ? index : previous;
-        }, -1);
-        if (newPos === -1) {
-            newPos = actualPos;
-        }
-        const diff = newPos - actualPos;
-        if (diff !== 0) {
-            Array.apply(null, {length: Math.abs(diff)}).map(Number.call, Number)
-                .forEach(() => {
-                    this.props.map.imageryLayers[diff > 0 ? 'raise' : 'lower'](this.provider);
-                });
+        // Here, the empty background is not treated as imageryLayer. Because it will throw an error.
+        // see https://github.com/geosolutions-it/MapStore2/pull/7026#issuecomment-870652800
+        if (!(this.props.type === "empty")) {
+            const layerPos = position || this.props.position;
+            const actualPos = this.props.map.imageryLayers._layers.reduce(
+                (previous, current, index) => {
+                    return this.provider === current ? index : previous;
+                },
+                -1
+            );
+            let newPos = this.props.map.imageryLayers._layers.reduce(
+                (previous, current, index) => {
+                    return previous === -1 && layerPos < current._position
+                        ? index
+                        : previous;
+                },
+                -1
+            );
+            if (newPos === -1) {
+                newPos = actualPos;
+            }
+            const diff = newPos - actualPos;
+            if (diff !== 0) {
+                Array.apply(null, { length: Math.abs(diff) })
+                    .map(Number.call, Number)
+                    .forEach(() => {
+                        this.props.map.imageryLayers[diff > 0 ? "raise" : "lower"](this.provider);
+                    });
+            }
         }
     };
 
@@ -155,7 +202,10 @@ class CesiumLayer extends React.Component {
     };
 
     setLayerOpacity = (opacity) => {
-        var oldOpacity = this.props.options && this.props.options.opacity !== undefined ? this.props.options.opacity : 1.0;
+        var oldOpacity =
+            this.props.options && this.props.options.opacity !== undefined
+                ? this.props.options.opacity
+                : 1.0;
         if (opacity !== oldOpacity && this.layer && this.provider) {
             this.provider.alpha = opacity;
         }
@@ -163,7 +213,12 @@ class CesiumLayer extends React.Component {
 
     createLayer = (type, options, position, map, securityToken) => {
         if (type) {
-            const opts = assign({}, options, position ? {zIndex: position} : null, {securityToken});
+            const opts = assign(
+                {},
+                options,
+                position ? { zIndex: position } : null,
+                { securityToken }
+            );
             this.layer = Layers.createLayer(type, opts, map);
 
             if (this.layer) {
@@ -173,12 +228,17 @@ class CesiumLayer extends React.Component {
             if (this.layer === null) {
                 this.props.onCreationError(options);
             }
-
         }
     };
 
     updateLayer = (newProps, oldProps) => {
-        const newLayer = Layers.updateLayer(newProps.type, this.layer, {...newProps.options, securityToken: newProps.securityToken}, {...oldProps.options, securityToken: oldProps.securityToken}, this.props.map);
+        const newLayer = Layers.updateLayer(
+            newProps.type,
+            this.layer,
+            { ...newProps.options, securityToken: newProps.securityToken },
+            { ...oldProps.options, securityToken: oldProps.securityToken },
+            this.props.map
+        );
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;
@@ -190,7 +250,9 @@ class CesiumLayer extends React.Component {
         if (newProps.options.useForElevation) {
             this.props.map.terrainProvider = this.layer;
         } else {
-            this.provider = this.props.map.imageryLayers.addImageryProvider(this.layer);
+            this.provider = this.props.map.imageryLayers.addImageryProvider(
+                this.layer
+            );
             this.provider._position = this.props.position;
             if (newProps.options.opacity !== undefined) {
                 this.provider.alpha = newProps.options.opacity;
@@ -204,7 +266,11 @@ class CesiumLayer extends React.Component {
             if (this.props.options.refresh && this.layer.updateParams) {
                 let counter = 0;
                 this.refreshTimer = setInterval(() => {
-                    const newLayer = this.layer.updateParams(assign({}, this.props.options.params, {_refreshCounter: counter++}));
+                    const newLayer = this.layer.updateParams(
+                        assign({}, this.props.options.params, {
+                            _refreshCounter: counter++
+                        })
+                    );
                     this.removeLayer();
                     this.layer = newLayer;
                     this.addLayerInternal(newProps);
