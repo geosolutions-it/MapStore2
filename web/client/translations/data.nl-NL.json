@@ -504,7 +504,7 @@
         "toc": {
             "toggleLayerVisibility": "Wijzig zichtbaarheid van de laag",
             "toggleGroupVisibility": "Wijzig de zichtbaarheid van de groep",
-            "displayLegendAndTools": "Toon de legende en de tools",
+            "displayLegendAndTools": "Toon de legende",
             "zoomToLayerExtent": "Zoom in op de laag",
             "addLayer": "Laag toevoegen",
             "addLayerToGroup": "Laag toevoegen aan geselecteerde groep",
