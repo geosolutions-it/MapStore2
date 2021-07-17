@@ -1,7 +1,7 @@
 # Application Context
 *******************
 
-In order to create a context, the *Admin* can click on the **New Context** button <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> in the [Contexts page](managing-contexts.md) and he will be addressed directly to a wizard. The wizard is composed by the following three steps:
+In order to create a context, the *Admin* can click on the **New Context** button <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> in the [Contexts page](managing-contexts.md) and he will be addressed directly to a wizard. The wizard is composed by the following four steps:
 
 <img src="../img/application-context/wizard.jpg" class="ms-docimage"/>
 
@@ -120,6 +120,25 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 
 <img src="../img/application-context/plugin-config.jpg" class="ms-docimage" style="max-width:300px;"/>
 
-* The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins) in another page.
+* The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geo-solutions.it/mapstore/docs/api/plugins#plugins) in another page.
+
+
+## Configure Theme
+
+The last wizard steps allows to configure the theme of the context. In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the theme can be **default**  or **dark**.
+
+<img src="../img/application-context/step_four.jpg" class="ms-docimage"/>
+
+The **default** theme is automatically applied when the user clicks the **Save** button <img src="../img/button/save_blue_button.jpg" class="ms-docbutton"/> by skipping the *Configure Theme* page. An example of a default context can be the following:
+
+<img src="../img/application-context/default_theme.jpg" class="ms-docimage"/>
+
+To activate the **dark** theme, the user can click on dark in the drop-down menu.
+
+<img src="../img/application-context/dark_theme.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+An example of a dark context can be the following:
+
+<img src="../img/application-context/dark_context.jpg" class="ms-docimage"/>
 
 
