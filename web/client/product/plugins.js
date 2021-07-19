@@ -14,7 +14,6 @@ export default {
         // product plugins
         AboutPlugin: require('./plugins/About').default,
         AttributionPlugin: require('./plugins/Attribution').default,
-        ExamplesPlugin: require('./plugins/Examples').default,
         FooterPlugin: require('./plugins/Footer'),
         ForkPlugin: require('./plugins/Fork').default,
         HeaderPlugin: require('./plugins/Header').default,
