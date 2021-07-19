@@ -41,7 +41,6 @@ export default ({
     const  {service = {}} = props;
     const type = service.type;
     const Panel = getPanel(type);
-    // const supportedF =  props.supportedFormats != undefined  ?  props.supportedFormats : "no data" ; 
     return (<SwitchPanel
         useToolbar
         title={<Message msgId="catalog.advancedSettings" />}

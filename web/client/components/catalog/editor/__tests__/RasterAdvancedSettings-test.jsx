@@ -9,7 +9,7 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import TestUtils from 'react-dom/test-utils';
+
 import RasterAdvancedSettings from '../AdvancedSettings/RasterAdvancedSettings';
 
 describe('Test Advanced Settings', () => {
@@ -25,7 +25,7 @@ describe('Test Advanced Settings', () => {
 
 
     it('Test Advanced Settings rendering with defaults', () => {
-        const containerCom = ReactDOM.render(<RasterAdvancedSettings
+        ReactDOM.render(<RasterAdvancedSettings
             id="mapstore-metadata-explorer"
             service= {[{
                 "url": "https://public.sig.rennesmetropole.fr/geoserver/wms",

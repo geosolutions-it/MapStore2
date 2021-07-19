@@ -9,7 +9,6 @@ import React from 'react';
 import { FormGroup, Col, ControlLabel } from "react-bootstrap";
 import RS from 'react-select';
 import { DEFAULT_FORMAT_WMS } from '../../../../utils/CatalogUtils';
-import { services } from '../../../../utils/MapInfoUtils';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import Message from '../../../I18N/Message';
 
