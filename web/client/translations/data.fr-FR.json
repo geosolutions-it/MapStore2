@@ -150,6 +150,7 @@
             },
             "format": {
                 "title": "Format",
+                "refresh": "Récupérer le format pris en charge",
                 "loading": "Chargement...",
                 "noOption": "Pas d'option",
                 "error": {
@@ -1383,7 +1384,7 @@
             "advanced": {
                 "format": "Format",
                 "infoFormat": "Format d'informations",
-                "refresh": "Récupérer le format pris en charge",
+                "WMSLayerTileSize":"Dimensions des dalles du niveau WMS"
               },
             "start": "Date de début ",
             "end": "Date de fin ",

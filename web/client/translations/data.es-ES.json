@@ -1384,7 +1384,7 @@
             "advanced": {
                 "format": "Formato",
                 "infoFormat": "Formato de información",
-                "WMSLayerTileSize":"Tamaño de mosaico de la capa WMS",
+                "WMSLayerTileSize":"Tamaño de mosaico de la capa WMS"
               },
             "start": "Fecha de inicio ",
             "end": "Fecha de finalización ",

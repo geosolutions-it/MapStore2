@@ -1383,7 +1383,7 @@
             "advanced": {
                 "format": "Formato",
                 "infoFormat": "Formato informazioni",
-                "WMSLayerTileSize":"Dimensioni delle piastrelle del livello WMS",
+                "WMSLayerTileSize":"Dimensioni delle piastrelle del livello WMS"
               },
             "start": "Data d'inizio ",
             "end": "Data di fine ",

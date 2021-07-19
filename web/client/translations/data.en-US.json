@@ -149,8 +149,6 @@
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             },
             "format": {
-                "infoFormat": "Info format",
-                "WMSLayerTileSize":"WMS Layer tile size",
                 "title": "Format",
                 "refresh": "Fetch supported format",
                 "loading": "Loading...",
