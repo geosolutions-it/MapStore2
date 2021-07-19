@@ -159,6 +159,7 @@
                 }
             }
         },
+
         "longitude": "Lon",
         "latitude": "Lat",
         "notification": {
@@ -1380,6 +1381,11 @@
             "wmcNoLayersError": "Se necesita al menos una capa WMS para exportar a WMC, se encontró cero"
         },
         "catalog": {
+            "advanced": {
+                "format": "Formato",
+                "infoFormat": "Formato de información",
+                "WMSLayerTileSize":"Tamaño de mosaico de la capa WMS",
+              },
             "start": "Fecha de inicio ",
             "end": "Fecha de finalización ",
             "notAvailable": "No disponible",

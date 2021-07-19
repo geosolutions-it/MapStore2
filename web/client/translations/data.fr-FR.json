@@ -150,7 +150,6 @@
             },
             "format": {
                 "title": "Format",
-                "refresh": "Récupérer le format pris en charge",
                 "loading": "Chargement...",
                 "noOption": "Pas d'option",
                 "error": {
@@ -1381,6 +1380,11 @@
             "wmcNoLayersError": "Au moins une couche WMS est nécessaire pour exporter vers WMC, aucune trouvée"
         },
         "catalog": {
+            "advanced": {
+                "format": "Format",
+                "infoFormat": "Format d'informations",
+                "refresh": "Récupérer le format pris en charge",
+              },
             "start": "Date de début ",
             "end": "Date de fin ",
             "notAvailable": "Indisponible",

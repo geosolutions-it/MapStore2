@@ -11,6 +11,7 @@ import RS from 'react-select';
 import { DEFAULT_FORMAT_WMS } from '../../../../utils/CatalogUtils';
 import { services } from '../../../../utils/MapInfoUtils';
 import localizedProps from '../../../misc/enhancers/localizedProps';
+import Message from '../../../I18N/Message';
 
 // TODO: import this from the proper file (the original has something like {HTML: "text/html"})
 
@@ -72,7 +73,7 @@ export default ({
 
         <FormGroup style={advancedRasterSettingsStyles} className={"formatStyle"}>
             <Col xs={6}>
-                <ControlLabel>Format</ControlLabel>
+                <ControlLabel><Message msgId="catalog.advanced.format" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
@@ -89,7 +90,7 @@ export default ({
 
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6}>
-                <ControlLabel>Info Format</ControlLabel>
+                <ControlLabel><Message msgId="catalog.advanced.infoFormat" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
@@ -107,7 +108,7 @@ export default ({
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6} >
-                <ControlLabel>WMS Layer tile size</ControlLabel>
+                <ControlLabel><Message msgId="catalog.advanced.WMSLayerTileSize" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select

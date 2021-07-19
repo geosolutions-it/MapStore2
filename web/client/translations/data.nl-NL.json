@@ -71,7 +71,6 @@
             "styleCustom": "Gebruik een stijl genaamd \"{value}\"",
             "styleListLoadError": "Er is een fout opgetreden bij het laden van de lijst met stijlen",
             "stylesRefreshList": "Vernieuw de lijst met stijlen",
-            "format": "Formaat",
             "delete": "Verwijderen",
             "deleteLayer":"Verwijder de laag",
             "deleteLayerMessage": "Weet u zeker dat u deze laag wilt verwijderen?",
@@ -104,7 +103,7 @@
             "templateFormatInfoAlert2": "Gebruik ${ attribute } om de eigenschappen die je wenst te tonen aan te duiden.",
             "templateFormatInfoAlertExample": "Het id van het object is ${ properties }",
             "templatePreview": "Sjabloon voorbeeld",
-	    "visibilityLimits": {
+	        "visibilityLimits": {
                 "title": "Zichtbaarheidslimieten",
                 "serverValuesUpdateUndefined": "De server heeft geen limieten voor de zichtbaarheid van de schaal voor deze laag opgegeven",
                 "serverValuesUpdate": "De server heeft minimale en maximale zichtbaarheidslimieten voor deze laag opgegeven",
@@ -136,6 +135,17 @@
                 "top": "Boven",
                 "editLayerName": "Bewerk laagnaam",
                 "confirmLayerName": "Bevestig de wijziging van de laagnaam"
+            },
+            "format": {
+                "infoFormat": "Info-muoto",
+                "title": "Muoto",
+                "refresh": "Hae tuettu muoto",
+                "loading": "Ladataan ...",
+                "noOption": "Ei vaihtoehtoa",
+                "error": {
+                    "title": "Virhe",
+                    "message": "Muoto noutaminen epäonnistui"
+                }
             },
             "legendOptions": {
               "title": "Legende",

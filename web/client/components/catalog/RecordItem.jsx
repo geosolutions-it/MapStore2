@@ -358,13 +358,13 @@ class RecordItem extends React.Component {
         const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
 
         return recordToLayer(
-            {format: this.props?.service?.infoFormat},
             this.props.record,
             type,
             {
                 removeParams: this.props.authkeyParamNames,
                 ...(type === "wms"
                     ? {
+                        featureInfo: {format: this.props?.service?.infoFormat},
                         catalogURL:
                             this.props.catalogType === "csw" &&
                             this.props.catalogURL
@@ -377,7 +377,7 @@ class RecordItem extends React.Component {
                         ),
                         formats: {
                             imageFormats: this.props.formatOptions,
-                            infoFormats: this.props.infoFormatOptions,
+                            infoFormats: this.props.infoFormatOptions
                         }
                     }
                     : {

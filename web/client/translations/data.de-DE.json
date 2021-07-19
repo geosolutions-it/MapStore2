@@ -149,16 +149,17 @@
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
             },
             "format": {
-                "title": "Format",
-                "refresh": "Unterstütztes Format abrufen",
-                "loading": "Wird geladen...",
-                "noOption": "Keine Option",
-                "error": {
-                    "title": "Error",
-                    "message": "Format konnte nicht abgerufen werden"
-                }
+            "title": "Format",
+            "refresh": "Unterstütztes Format abrufen",
+            "loading": "Wird geladen...",
+            "noOption": "Keine Option",
+            "error": {
+                "title": "Error",
+                "message": "Format konnte nicht abgerufen werden"
             }
+        }
         },
+
         "longitude": "Lon",
         "latitude": "Lat",
         "notification": {
@@ -1381,6 +1382,11 @@
             "wmcNoLayersError": "Mindestens eine WMS-Schicht, die für den Export nach WMC benötigt wird, hat Null gefunden"
         },
         "catalog": {
+            "advanced": {
+                "format": "Format",
+                "infoFormat": "Infoformat",
+                "WMSLayerTileSize":"WMS Layer Kachelgröße"
+              },
             "start": "Startdatum ",
             "end": "Enddatum ",
             "notAvailable": "Nicht verfügbar",

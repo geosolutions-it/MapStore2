@@ -104,6 +104,17 @@
                 "top": "Top"
             }
         },
+        "Format": {
+            "infoFormat": "信息格式",
+            "Titel": "格式",
+            "refresh": "获取支持的格式",
+            "loading": "加载中...",
+            "noOption": "无选项",
+            "Error": {
+                "title": "错误",
+                "message": "获取格式时出错"
+            }
+        },
         "longitude": "Longitude",
         "latitude": "Latitude",
         "notification": {
