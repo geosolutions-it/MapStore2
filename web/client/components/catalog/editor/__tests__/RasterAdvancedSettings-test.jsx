@@ -57,10 +57,6 @@ describe('Test Advanced Settings', () => {
         expect(el).toExist();
 
 
-        const AdvancedSettingsText = TestUtils.scryRenderedDOMComponentsWithClass(containerCom, "pull-left");
-        expect(AdvancedSettingsText.innerText).toBe('Advanced settings');
-
-
     });
 
 
@@ -96,20 +92,10 @@ describe('Test Advanced Settings', () => {
         />, document.getElementById("container"));
 
 
-        const actions = {
-            onFormatOptionsFetch: () => {}
-        };
-
         const container = document.getElementById('container');
-
-        const spyOnonFormatOptionsFetch = expect.spyOn(actions, 'onFormatOptionsFetch');
         const el = container.querySelectorAll('.Select-arrow-zone');
         expect(el).toExist();
         expect(el.length).toBe(3);
-
-
-        TestUtils.Simulate.focus(el[0]);
-        expect(spyOnonFormatOptionsFetch).toHaveBeenCalled();
 
 
     });
