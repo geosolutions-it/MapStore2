@@ -30,9 +30,9 @@ class ToolbarPopover extends React.Component {
     };
 
     static defaultProps = {
-        id: ''
+        id: '',
+        useBody: false
     };
-    static state = {};
 
     getContainerNode = (useBody) => {
         // The overlay container should always have a target root container to ensure all mapstore2 styles can be applied.
@@ -49,7 +49,6 @@ class ToolbarPopover extends React.Component {
                 }}
                 className={this.props.className} style={this.props.style}>
                 <OverlayTrigger
-                    key={this.props.id}
                     ref={trigger => { this.trigger = trigger; }}
                     trigger={['click']}
                     container={container}
@@ -57,7 +56,6 @@ class ToolbarPopover extends React.Component {
                     rootClose
                     overlay={
                         <Popover
-                            key={this.props.id}
                             id={this.props.id}
                             title={this.props.title}
                             className={this.props.popoverClassName}>

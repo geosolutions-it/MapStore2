@@ -75,11 +75,17 @@ export const contextCreatorSelector = createStructuredSelector({
  * @example
  * "cfg": {
  * "themes": [{
- *      id: 'dark',
- *      type: 'link',
- *      href: 'dist/themes/dark.css'
+ *    "id": "dark",
+ *    "type": "link",
+ *    "href": "dist/themes/dark.css"
+ *    "variables": {
+ *      "ms-main-color": "#000000",
+ *      "ms-main-bg": "#000000",
+ *      "ms-primary": "#078aa3",
+ *      "ms-primary-contrast": "#FFFFFF"
+ *    }
  *  }]
- * }
+ *}
  */
 export default createPlugin('ContextCreator', {
     component: connect(contextCreatorSelector, {
