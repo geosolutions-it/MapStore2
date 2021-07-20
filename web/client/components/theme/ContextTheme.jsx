@@ -37,17 +37,17 @@ function ContextTheme({
 }) {
     const validatedVersion = validateVersion(version) ? trim(version) : '';
     let newVars = "";
-        try {
-            less.render(themeVars + ".get-root-css-variables(@ms-theme-vars);", {
-                modifyVars: theme?.[0]?.colors || {}
-            }, (error, output) => {
-                if (output.css) {
-                    newVars = output.css;
-                }
-            });
-        } catch (error) {
-            console.error("error during parsing", error);
-        }
+    try {
+        less.render(themeVars + ".get-root-css-variables(@ms-theme-vars);", {
+            modifyVars: theme?.[0]?.colors || {}
+        }, (error, output) => {
+            if (output.css) {
+                newVars = output.css;
+            }
+        });
+    } catch (error) {
+        console.error("error during parsing", error);
+    }
     return <>
         {[createPortal(
             <>
