@@ -12,6 +12,7 @@ import {
     getTooltip,
     getTooltipFragment,
     flattenGroups,
+    flattenGroupsByTitle,
     getTitleAndTooltip,
     getLabelName
 } from '../TOCUtils';
@@ -147,6 +148,18 @@ describe('TOCUtils', () => {
         expect(allGroups[2].id).toBe("first.second.third");
         expect(allGroups[2].value).toBe(undefined);
     });
+
+    it('test flattenGroupsByTitle, wholeGroup true', () => {
+        const allGroups = flattenGroupsByTitle(groups, 0, true);
+        expect(allGroups.length).toBe(3);
+        expect(allGroups[0].id).toBe("first");
+        expect(allGroups[0].value).toBe(undefined);
+        expect(allGroups[1].id).toBe("first.second");
+        expect(allGroups[1].value).toBe(undefined);
+        expect(allGroups[2].id).toBe("first.second.third");
+        expect(allGroups[2].value).toBe(undefined);
+    });
+
     it('test flattenGroups, wholeGroup false', () => {
         const allGroups = flattenGroups(groups);
         expect(allGroups.length).toBe(3);

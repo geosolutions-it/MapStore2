@@ -91,6 +91,17 @@ export const flattenGroups = (groups, idx = 0, wholeGroup = false) => {
         return acc;
     }, []);
 };
+
+export const flattenGroupsByTitle = (groups, idx = 0, wholeGroup = false) => {
+    return groups.filter((group) => group.nodes).reduce((acc, g) => {
+        acc.push(wholeGroup ? g : {label: g.title.replace(/\./g, '/').replace(/\${dot}/g, '.'), value: g.id});
+        if (g.nodes.length > 0) {
+            return acc.concat(flattenGroupsByTitle(g.nodes, idx + 1, wholeGroup));
+        }
+        return acc;
+    }, []);
+};
+
 export const getLabelName = (groupLabel = "", groups = []) => {
     let label = groupLabel.replace(/[^\.\/]+/g, match => {
         const title = get(getGroupByName(match, groups), 'title');
@@ -104,3 +115,4 @@ export const getLabelName = (groupLabel = "", groups = []) => {
     label = label.replace(/\${dot}/g, '.');
     return label;
 };
+
