@@ -10,10 +10,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import { compose } from 'recompose';
+import { createStructuredSelector } from 'reselect';
+
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
 import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
-import { createStructuredSelector } from 'reselect';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector } from '../../selectors/context';
 import ContextTheme from '../../components/theme/ContextTheme';
 

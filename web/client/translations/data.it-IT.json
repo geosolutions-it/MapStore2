@@ -2888,7 +2888,13 @@
               "title": "Configura il tema",
               "label": "Tema",
               "themes": "Scegli un tema",
-              "noThemes": "Nessun tema trovato"
+              "noThemes": "Nessun tema trovato",
+              "customColors": "Colori personalizzati",
+              "main": "Principale",
+              "background": "Sfondo",
+              "primary": "Primario",
+              "primaryContrast": "Primario Sfondo",
+              "customColorsDescription": "Puoi cambiare uno di questi colori a partire da uno dei temi scelti in precedenza, oppure no"
             },
             "configurePlugins": {
                 "label": "Configura plugin",

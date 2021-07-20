@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-
 import React, {useRef} from 'react';
 import ReactSelect from 'react-select';
 import {ControlLabel, Glyphicon} from 'react-bootstrap';
@@ -46,7 +45,7 @@ function ConfigureThemes ({
     const triggerPrimary = useRef();
     const colors = {
         ...defaultColors,
-        ...(selectedTheme.initColors),
+        ...(selectedTheme.variables),
         ...(selectedTheme.colors)
     };
 
@@ -60,10 +59,11 @@ function ConfigureThemes ({
     ? tinycolor.mostReadable(colors[PRIMARY_CONTRAST], [colors[PRIMARY], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
     : null;
 
-    const hasMainColorChanged = !tinycolor.equals(colors?.[MAIN_COLOR], selectedTheme?.initColors?.[MAIN_COLOR] || defaultColors[MAIN_COLOR]);
-    const hasMainBgColorChanged = !tinycolor.equals(colors?.[MAIN_BG_COLOR], selectedTheme?.initColors?.[MAIN_BG_COLOR] || defaultColors[MAIN_BG_COLOR]);
-    const hasPrimaryColorChanged = !tinycolor.equals(colors?.[PRIMARY], selectedTheme?.initColors?.[PRIMARY] || defaultColors[PRIMARY]);
-    const hasPrimaryContrastColorChanged = !tinycolor.equals(colors?.[PRIMARY_CONTRAST], selectedTheme?.initColors?.[PRIMARY_CONTRAST] || defaultColors[PRIMARY_CONTRAST]);
+    const hasMainColorChanged = !tinycolor.equals(colors?.[MAIN_COLOR], selectedTheme?.variables?.[MAIN_COLOR] || defaultColors[MAIN_COLOR]);
+    const hasMainBgColorChanged = !tinycolor.equals(colors?.[MAIN_BG_COLOR], selectedTheme?.variables?.[MAIN_BG_COLOR] || defaultColors[MAIN_BG_COLOR]);
+    const hasPrimaryColorChanged = !tinycolor.equals(colors?.[PRIMARY], selectedTheme?.variables?.[PRIMARY] || defaultColors[PRIMARY]);
+    const hasPrimaryContrastColorChanged = !tinycolor.equals(colors?.[PRIMARY_CONTRAST], selectedTheme?.variables?.[PRIMARY_CONTRAST] || defaultColors[PRIMARY_CONTRAST]);
+
     return (
         <div className="configure-themes-step">
             <div className="choose-theme">
@@ -88,7 +88,7 @@ function ConfigureThemes ({
                         onClick={() => {
                             setSelectedTheme({
                                 ...selectedTheme,
-                                colors: {...defaultColors, ...(selectedTheme.initColors) }
+                                colors: {...defaultColors, ...(selectedTheme.variables) }
                             })
                         }}
                         className="clear-all no-border"
@@ -142,7 +142,7 @@ function ConfigureThemes ({
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
-                            onOpen={() => {}}
+                            onOpen={() => ({})}
                             color={colors[MAIN_COLOR]}
                             line={false}
                             disableAlpha={false}
@@ -151,7 +151,7 @@ function ConfigureThemes ({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [MAIN_COLOR]: color
+                                        [MAIN_COLOR]: tinycolor(color).toHexString()
                                     }
                                 })
                             }}/>
@@ -163,7 +163,7 @@ function ConfigureThemes ({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [MAIN_COLOR]: selectedTheme?.initColors?.[MAIN_COLOR] || defaultColors[MAIN_COLOR]
+                                        [MAIN_COLOR]: selectedTheme?.variables?.[MAIN_COLOR] || defaultColors[MAIN_COLOR]
                                     }
                                 })
                             }}
@@ -177,7 +177,7 @@ function ConfigureThemes ({
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
-                            onOpen={() => {}}
+                            onOpen={() => ({})}
                             color={colors[MAIN_BG_COLOR]}
                             line={false}
                             disableAlpha={false}
@@ -186,7 +186,7 @@ function ConfigureThemes ({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [MAIN_BG_COLOR]: color
+                                        [MAIN_BG_COLOR]: tinycolor(color).toHexString()
                                     }
                                 })
                             }}/>
@@ -198,7 +198,7 @@ function ConfigureThemes ({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [MAIN_BG_COLOR]: selectedTheme?.initColors?.[MAIN_BG_COLOR] || defaultColors[MAIN_COLOR]
+                                        [MAIN_BG_COLOR]: selectedTheme?.variables?.[MAIN_BG_COLOR] || defaultColors[MAIN_COLOR]
                                     }
                                 })
                             }}
@@ -254,7 +254,7 @@ function ConfigureThemes ({
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
-                            onOpen={() => {}}
+                            onOpen={() => ({})}
                             color={colors[PRIMARY]}
                             line={false}
                             disableAlpha={false}
@@ -263,7 +263,7 @@ function ConfigureThemes ({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [PRIMARY]: color
+                                        [PRIMARY]: tinycolor(color).toHexString()
                                     }
                                 })
                             }}/>
@@ -275,7 +275,7 @@ function ConfigureThemes ({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [PRIMARY]: selectedTheme?.initColors?.[PRIMARY] || defaultColors[MAIN_COLOR]
+                                        [PRIMARY]: selectedTheme?.variables?.[PRIMARY] || defaultColors[MAIN_COLOR]
                                     }
                                 })
                             }}
@@ -289,7 +289,7 @@ function ConfigureThemes ({
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
-                            onOpen={() => {}}
+                            onOpen={() => ({})}
                             color={colors[PRIMARY_CONTRAST]}
                             line={false}
                             disableAlpha={false}
@@ -298,7 +298,7 @@ function ConfigureThemes ({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [PRIMARY_CONTRAST]: color
+                                        [PRIMARY_CONTRAST]: tinycolor(color).toHexString()
                                     }
                                 })
                             }}/>
@@ -310,7 +310,7 @@ function ConfigureThemes ({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [PRIMARY_CONTRAST]: selectedTheme?.initColors?.[PRIMARY_CONTRAST] || defaultColors[MAIN_COLOR]
+                                        [PRIMARY_CONTRAST]: selectedTheme?.variables?.[PRIMARY_CONTRAST] || defaultColors[MAIN_COLOR]
                                     }
                                 })
                             }}

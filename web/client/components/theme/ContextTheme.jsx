@@ -9,8 +9,12 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
-import { validateVersion } from '../../selectors/version';
 import { trim } from 'lodash';
+import less from "less";
+
+import { validateVersion } from '../../selectors/version';
+import themeVars from "!!raw-loader!../../themes/default/ms-variables.less";
+
 /**
  * Theme component provider for the context pages
  * @memberof components.theme
@@ -32,8 +36,20 @@ function ContextTheme({
     version
 }) {
     const validatedVersion = validateVersion(version) ? trim(version) : '';
+    let newVars = "";
+        try {
+            less.render(themeVars + ".get-root-css-variables(@ms-theme-vars);", {
+                modifyVars: theme?.[0]?.colors || {}
+            }, (error, output) => {
+                if (output.css) {
+                    newVars = output.css;
+                }
+            });
+        } catch (error) {
+            console.error("error during parsing", error);
+        }
     return <>
-        {createPortal(
+        {[createPortal(
             <>
                 {theme.map(({ type, ...options }) => {
                     if (type === 'link') {
@@ -50,7 +66,10 @@ function ContextTheme({
                 })}
             </>,
             document.head
-        )}
+        ),
+        createPortal(<style dangerouslySetInnerHTML={{ __html: newVars }} />, document.head)
+        ]}
+
     </>;
 }
 

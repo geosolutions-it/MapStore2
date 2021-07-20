@@ -2887,7 +2887,13 @@
               "title": "Thema konfigurieren",
               "label": "Thema",
               "themes": "Wähle ein Thema",
-              "noThemes": "Keine gefunden"
+              "noThemes": "Keine gefunden",
+              "customColors": "Benutzerdefinierte Farben",
+              "main": "Haupt",
+              "background" : "Hintergrund",
+              "primary": "Primär",
+              "primaryContrast": "Primärkontrast",
+              "customColorsDescription": "Sie können eine dieser Farben zusätzlich (oder nicht) zu einem oben ausgewählten vorkonfigurierten Thema ändern"
             },
             "configurePlugins": {
                 "label": "Plugins konfigurieren",
