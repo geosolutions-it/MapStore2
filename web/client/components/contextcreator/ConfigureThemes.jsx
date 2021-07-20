@@ -198,7 +198,7 @@ function ConfigureThemes({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [MAIN_BG_COLOR]: selectedTheme?.variables?.[MAIN_BG_COLOR] || defaultColors[MAIN_COLOR]
+                                        [MAIN_BG_COLOR]: selectedTheme?.variables?.[MAIN_BG_COLOR] || defaultColors[MAIN_BG_COLOR]
                                     }
                                 });
                             }}
@@ -275,7 +275,7 @@ function ConfigureThemes({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [PRIMARY]: selectedTheme?.variables?.[PRIMARY] || defaultColors[MAIN_COLOR]
+                                        [PRIMARY]: selectedTheme?.variables?.[PRIMARY] || defaultColors[PRIMARY]
                                     }
                                 });
                             }}
@@ -310,7 +310,7 @@ function ConfigureThemes({
                                     ...selectedTheme,
                                     colors: {
                                         ...colors,
-                                        [PRIMARY_CONTRAST]: selectedTheme?.variables?.[PRIMARY_CONTRAST] || defaultColors[MAIN_COLOR]
+                                        [PRIMARY_CONTRAST]: selectedTheme?.variables?.[PRIMARY_CONTRAST] || defaultColors[PRIMARY_CONTRAST]
                                     }
                                 });
                             }}
