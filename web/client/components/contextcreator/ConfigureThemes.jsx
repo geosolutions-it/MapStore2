@@ -28,7 +28,7 @@ const PRIMARY = "ms-primary";
 const PRIMARY_CONTRAST = "ms-primary-contrast";
 
 
-function ConfigureThemes ({
+function ConfigureThemes({
     themes = [],
     setSelectedTheme = () => {},
     selectedTheme = {},
@@ -36,9 +36,9 @@ function ConfigureThemes ({
     context = {},
     defaultColors = {
         [MAIN_COLOR]: "#000000",
-        [MAIN_BG_COLOR] : "#FFFFFF",
-        [PRIMARY] : "#078aa3",
-        [PRIMARY_CONTRAST] : "#FFFFFF"
+        [MAIN_BG_COLOR]: "#FFFFFF",
+        [PRIMARY]: "#078aa3",
+        [PRIMARY_CONTRAST]: "#FFFFFF"
     }
 }) {
     const triggerMain = useRef();
@@ -56,8 +56,8 @@ function ConfigureThemes ({
 
     const mostReadablePrimaryColor = colors[PRIMARY] && colors[PRIMARY_CONTRAST]
     && !tinycolor.isReadable(colors[PRIMARY], colors[PRIMARY_CONTRAST])
-    ? tinycolor.mostReadable(colors[PRIMARY_CONTRAST], [colors[PRIMARY], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
-    : null;
+        ? tinycolor.mostReadable(colors[PRIMARY_CONTRAST], [colors[PRIMARY], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
+        : null;
 
     const hasMainColorChanged = !tinycolor.equals(colors?.[MAIN_COLOR], selectedTheme?.variables?.[MAIN_COLOR] || defaultColors[MAIN_COLOR]);
     const hasMainBgColorChanged = !tinycolor.equals(colors?.[MAIN_BG_COLOR], selectedTheme?.variables?.[MAIN_BG_COLOR] || defaultColors[MAIN_BG_COLOR]);
@@ -89,7 +89,7 @@ function ConfigureThemes ({
                             setSelectedTheme({
                                 ...selectedTheme,
                                 colors: {...defaultColors, ...(selectedTheme.variables) }
-                            })
+                            });
                         }}
                         className="clear-all no-border"
                     >clear all</Button>
@@ -153,7 +153,7 @@ function ConfigureThemes ({
                                         ...colors,
                                         [MAIN_COLOR]: tinycolor(color).toHexString()
                                     }
-                                })
+                                });
                             }}/>
                         <Button
                             disabled={!hasMainColorChanged}
@@ -165,7 +165,7 @@ function ConfigureThemes ({
                                         ...colors,
                                         [MAIN_COLOR]: selectedTheme?.variables?.[MAIN_COLOR] || defaultColors[MAIN_COLOR]
                                     }
-                                })
+                                });
                             }}
                             className="no-border"
                         ><Glyphicon glyph="remove" /></Button>
@@ -188,7 +188,7 @@ function ConfigureThemes ({
                                         ...colors,
                                         [MAIN_BG_COLOR]: tinycolor(color).toHexString()
                                     }
-                                })
+                                });
                             }}/>
                         <Button
                             disabled={!hasMainBgColorChanged}
@@ -200,7 +200,7 @@ function ConfigureThemes ({
                                         ...colors,
                                         [MAIN_BG_COLOR]: selectedTheme?.variables?.[MAIN_BG_COLOR] || defaultColors[MAIN_COLOR]
                                     }
-                                })
+                                });
                             }}
                             className="no-border"
                         ><Glyphicon glyph="remove" /></Button>
@@ -265,7 +265,7 @@ function ConfigureThemes ({
                                         ...colors,
                                         [PRIMARY]: tinycolor(color).toHexString()
                                     }
-                                })
+                                });
                             }}/>
                         <Button
                             disabled={!hasPrimaryColorChanged}
@@ -277,7 +277,7 @@ function ConfigureThemes ({
                                         ...colors,
                                         [PRIMARY]: selectedTheme?.variables?.[PRIMARY] || defaultColors[MAIN_COLOR]
                                     }
-                                })
+                                });
                             }}
                             className="no-border"
                         ><Glyphicon glyph="remove" /></Button>
@@ -300,7 +300,7 @@ function ConfigureThemes ({
                                         ...colors,
                                         [PRIMARY_CONTRAST]: tinycolor(color).toHexString()
                                     }
-                                })
+                                });
                             }}/>
                         <Button
                             disabled={!hasPrimaryContrastColorChanged}
@@ -312,7 +312,7 @@ function ConfigureThemes ({
                                         ...colors,
                                         [PRIMARY_CONTRAST]: selectedTheme?.variables?.[PRIMARY_CONTRAST] || defaultColors[MAIN_COLOR]
                                     }
-                                })
+                                });
                             }}
                             className="no-border"
                         ><Glyphicon glyph="remove" /></Button>
@@ -320,5 +320,5 @@ function ConfigureThemes ({
                 </div>
             </div>
         </div>);
-};
+}
 export default ConfigureThemes;
