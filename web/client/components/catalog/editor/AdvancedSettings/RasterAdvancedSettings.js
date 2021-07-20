@@ -72,7 +72,7 @@ export default ({
 
         <FormGroup style={advancedRasterSettingsStyles} className={"formatStyle"}>
             <Col xs={6}>
-                <ControlLabel><Message msgId="catalog.advanced.format" /></ControlLabel>
+                <ControlLabel><Message msgId="about_title" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
@@ -86,7 +86,6 @@ export default ({
                     onChange={event => onChangeServiceFormat(event && event.value)} />
             </Col >
         </FormGroup>
-
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6}>
                 <ControlLabel><Message msgId="catalog.advanced.infoFormat" /></ControlLabel>

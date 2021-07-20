@@ -1381,7 +1381,7 @@
         },
         "catalog": {
             "advanced": {
-                "format": "Formato",
+                "format": "Format",
                 "infoFormat": "Formato informazioni",
                 "WMSLayerTileSize":"Dimensioni delle piastrelle del livello WMS"
               },
