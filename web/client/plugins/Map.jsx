@@ -273,7 +273,26 @@ class MapPlugin extends React.Component {
                     loadFont(f, {
                         timeoutAfter: 5000 // 5 seconds in milliseconds
                     }).catch(() => {
-                        this.props.onFontError({family: f});
+
+                        function listFonts() {
+                            let myfonts = [];
+                            for (let node of document.querySelectorAll('*')) {
+                                if (!node.style) continue;
+                                for (let pseudo of ['', ':before', ':after']) {
+                                    let fontFamily = getComputedStyle(node, pseudo).fontFamily;
+                                    myfonts = myfonts.concat(fontFamily.split(/\n*,\n*/g));
+                                }
+                            }
+                            // Remove duplicate elements from fonts array
+                            // and remove the surrounding quotes around elements
+                            return [...new Set(myfonts)]
+                                .map(font => font.replace(/^\s*['"]([^'"]*)['"]\s*$/, '$1').trim());
+                        }
+
+                        if (listFonts().includes('FontAwesome')) {
+                            this.props.onFontError({family: f});
+                        }
+ 
                     }
                     ))
             ).then(() => {
