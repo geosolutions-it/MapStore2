@@ -103,17 +103,6 @@
                 "top": "Vrh"
             }
         },
-        "format": {
-            "infoFormat": "Info format",
-            "title": "Format",
-            "refresh": "Dohvati podržani format",
-            "loading": "Učitavanje ...",
-            "noOption": "Nema opcije",
-            "error": {
-                "title": "Pogreška",
-                "message": "Dohvaćanje formata nije uspjelo"
-            }
-        },
         "longitude": "Geografska dužina",
         "latitude": "Geografska širina",
         "notification": {
