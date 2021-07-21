@@ -271,7 +271,7 @@ class MapPlugin extends React.Component {
                     loadFont(f, {
                         timeoutAfter: 5000 // 5 seconds in milliseconds
                     }).catch(() => {
-
+                        console.warn("Fonts loading check for map style responded slowly or with an error. Fonts in map may not be rendered correctly. This is not necessarily an issue.", error);  // eslint-disable-line
                     }
                     ))
             ).then(() => {
