@@ -493,7 +493,7 @@ const toURLArray = (url) => {
  *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
  *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
  */
-export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url, formats = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
+export const recordToLayer = (record, type = "wms", {featureInfo, removeParams = [], format, catalogURL, url, formats = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
         return null;
@@ -556,7 +556,7 @@ export const recordToLayer = (record, type = "wms", {removeParams = [], format, 
         ...baseConfig,
         ...record.layerOptions,
         localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
-        ...(type === 'wms' && !isEmpty(formats) && {imageFormats: formats.imageFormats, infoFormats: formats.infoFormats})
+        ...(type === 'wms' && !isEmpty(formats) && {featureInfo, imageFormats: formats.imageFormats, infoFormats: formats.infoFormats})
     };
 };
 export const getCatalogRecords = (format, records, options, locales) => {
@@ -693,26 +693,6 @@ export const DEFAULT_FORMAT_WMS = [{
     label: 'image/gif',
     value: 'image/gif'
 }];
-
-
-// export const DEFAULT_INFO_FORMATS = [{
-//     label: "DISABLED",
-//     value: "HTML",
-//     format: "text/html"
-// }, {
-//     label: "HTML",
-//     value: "HTML",
-//     format: "text/html"
-// }, {
-//     label: "TEXT",
-//     value: "TEXT",
-//     format: "text/plain"
-// }, {
-//     label: "PROPERTIES",
-//     value: "PROPERTIES",
-//     format: "application/json"
-// }];
-
 
 /**
  * Get unique array of supported info formats

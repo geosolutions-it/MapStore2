@@ -669,7 +669,6 @@
             "featureInfoFormatLbl": "Xác định định dạng phản hồi",
             "featureTypeError": "Không thể tải thuộc tính lớp",
             "featureTypeErrorInvalidJSON": "Không thể tải thuộc tính lớp. Phản hồi không hợp lệ",
-            "format": "định dạng",
             "general": "Chung",
             "group": "Nhóm",
             "groupProperties": "Thuộc tính nhóm",
@@ -708,7 +707,18 @@
                 "top": "Hàng đầu"
             },
             "transparent": "Trong suốt",
-            "windowTitle": "Thuộc tính lớp"
+            "windowTitle": "Thuộc tính lớp",
+            "format": {
+                "infoFormat": "Info format",
+                "title": "Format",
+                "refresh": "Dohvati podržani format",
+                "loading": "Učitavanje ...",
+                "noOption": "Nema opcije",
+                "error": {
+                    "title": "Pogreška",
+                    "message": "Dohvaćanje formata nije uspjelo"
+                }
+            }
         },
         "layers": "Các lớp",
         "loading": "Đang tải...",

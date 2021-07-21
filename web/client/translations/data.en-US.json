@@ -149,7 +149,6 @@
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             },
             "format": {
-                "infoFormat": "Info format",
                 "title": "Format",
                 "refresh": "Fetch supported format",
                 "loading": "Loading...",
@@ -1381,6 +1380,11 @@
             "wmcNoLayersError": "At least one WMS layer needed to export to WMC, found zero"
         },
         "catalog": {
+            "advanced": {
+                "format": "Format",
+                "infoFormat": "Info format",
+                "WMSLayerTileSize":"WMS Layer Tile Size"
+              },
             "start": "Start date ",
             "end": "End date ",
             "notAvailable": "Not Available",

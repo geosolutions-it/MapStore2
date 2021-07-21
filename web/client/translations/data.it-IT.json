@@ -1380,6 +1380,11 @@
             "wmcNoLayersError": "É necessario almeno un livello WMS per esportare in formato WMC. Non ne è stato trovato nessuno."
         },
         "catalog": {
+            "advanced": {
+                "format": "Format",
+                "infoFormat": "Formato informazioni",
+                "WMSLayerTileSize":"Dimensioni delle piastrelle del livello WMS"
+              },
             "start": "Data d'inizio ",
             "end": "Data di fine ",
             "notAvailable": "Non disponibile",

@@ -9,7 +9,7 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import TestUtils from 'react-dom/test-utils';
+
 import RasterAdvancedSettings from '../AdvancedSettings/RasterAdvancedSettings';
 
 describe('Test Advanced Settings', () => {
@@ -25,7 +25,7 @@ describe('Test Advanced Settings', () => {
 
 
     it('Test Advanced Settings rendering with defaults', () => {
-        const containerCom = ReactDOM.render(<RasterAdvancedSettings
+        ReactDOM.render(<RasterAdvancedSettings
             id="mapstore-metadata-explorer"
             service= {[{
                 "url": "https://public.sig.rennesmetropole.fr/geoserver/wms",
@@ -55,10 +55,6 @@ describe('Test Advanced Settings', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.formatStyle');
         expect(el).toExist();
-
-
-        const AdvancedSettingsText = TestUtils.scryRenderedDOMComponentsWithClass(containerCom, "pull-left");
-        expect(AdvancedSettingsText.innerText).toBe('Advanced settings');
 
 
     });
@@ -96,20 +92,10 @@ describe('Test Advanced Settings', () => {
         />, document.getElementById("container"));
 
 
-        const actions = {
-            onFormatOptionsFetch: () => {}
-        };
-
         const container = document.getElementById('container');
-
-        const spyOnonFormatOptionsFetch = expect.spyOn(actions, 'onFormatOptionsFetch');
         const el = container.querySelectorAll('.Select-arrow-zone');
         expect(el).toExist();
         expect(el.length).toBe(3);
-
-
-        TestUtils.Simulate.focus(el[0]);
-        expect(spyOnonFormatOptionsFetch).toHaveBeenCalled();
 
 
     });

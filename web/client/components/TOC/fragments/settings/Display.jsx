@@ -18,25 +18,8 @@ import InfoPopover from '../../../widgets/widget/InfoPopover';
 import Legend from '../legend/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
 import Select from 'react-select';
-import { DEFAULT_FORMAT_WMS, getSupportedFormat, getUniqueInfoFormats} from '../../../../utils/CatalogUtils';
+import { DEFAULT_FORMAT_WMS, getSupportedFormat} from '../../../../utils/CatalogUtils';
 
-const DEFAULT_INFO_FORMATS = [{
-    label: "DISABLED",
-    value: "HTML",
-    format: "text/html"
-}, {
-    label: "HTML",
-    value: "HTML",
-    format: "text/html"
-}, {
-    label: "TEXT",
-    value: "TEXT",
-    format: "text/plain"
-}, {
-    label: "PROPERTIES",
-    value: "PROPERTIES",
-    format: "application/json"
-}];
 
 export default class extends React.Component {
     static propTypes = {

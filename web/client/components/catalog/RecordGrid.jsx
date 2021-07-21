@@ -43,7 +43,7 @@ class RecordGrid extends React.Component {
         formatOptions: PropTypes.array,
         infoFormatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object,
-        defaultInfoFormat: PropTypes.string,
+        defaultInfoFormat: PropTypes.string
     };
 
     static defaultProps = {

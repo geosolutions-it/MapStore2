@@ -9,15 +9,15 @@ import React from 'react';
 import { FormGroup, Col, ControlLabel } from "react-bootstrap";
 import RS from 'react-select';
 import { DEFAULT_FORMAT_WMS } from '../../../../utils/CatalogUtils';
-import { services } from '../../../../utils/MapInfoUtils';
 import localizedProps from '../../../misc/enhancers/localizedProps';
+import Message from '../../../I18N/Message';
 
 // TODO: import this from the proper file (the original has something like {HTML: "text/html"})
 
 const DEFAULT_INFO_FORMATS = [{
     label: "DISABLED",
-    value: "HTML",
-    format: "text/html"
+    value: "HIDDEN",
+    format: "DISABLED"
 }, {
     label: "HTML",
     value: "HTML",
@@ -30,7 +30,13 @@ const DEFAULT_INFO_FORMATS = [{
     label: "PROPERTIES",
     value: "PROPERTIES",
     format: "application/json"
-}];
+},
+{
+    label: "TEMPLATE ",
+    value: "TEMPLATE ",
+    format: "application/json"
+}
+];
 
 
 const Select = localizedProps('noResultsText')(RS);
@@ -62,6 +68,7 @@ export default ({
     const infoFormatOptions =  DEFAULT_INFO_FORMATS.filter( ({format}) => {
         if (infoFormats) {
             if (format) {
+
                 return infoFormats.includes(format);
             }
 
@@ -69,10 +76,9 @@ export default ({
         return true;
     });
     return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
-
         <FormGroup style={advancedRasterSettingsStyles} className={"formatStyle"}>
             <Col xs={6}>
-                <ControlLabel>Format</ControlLabel>
+                <ControlLabel><Message msgId="catalog.advanced.format" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
@@ -86,10 +92,9 @@ export default ({
                     onChange={event => onChangeServiceFormat(event && event.value)} />
             </Col >
         </FormGroup>
-
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6}>
-                <ControlLabel>Info Format</ControlLabel>
+                <ControlLabel><Message msgId="catalog.advanced.infoFormat" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
@@ -107,7 +112,7 @@ export default ({
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6} >
-                <ControlLabel>WMS Layer tile size</ControlLabel>
+                <ControlLabel><Message msgId="catalog.advanced.WMSLayerTileSize" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select

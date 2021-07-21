@@ -59,7 +59,6 @@
       "styleCustom": "Käytä tyyliä \"{value}\"",
       "styleListLoadError": "Tyyliluettelon lataamisessa tapahtui virhe",
       "stylesRefreshList": "Päivitä tyyliluettelo",
-      "format": "Formaatti",
       "delete": "Poista",
       "deleteLayer": "Poista taso",
       "deleteLayerMessage": "Haluatko poistaa tämän tason?",
@@ -102,7 +101,18 @@
         "right": "Oikea",
         "bottom": "Alaosa",
         "top": "Yläosa"
-      }
+      },
+      "format": {
+        "infoFormat": "Info-muoto",
+        "title": "Muoto",
+        "refresh": "Hae tuettu muoto",
+        "loading": "Ladataan ...",
+        "noOption": "Ei vaihtoehtoa",
+        "error": {
+            "title": "Virhe",
+            "message": "Muoto noutaminen epäonnistui"
+        }
+    }
     },
     "longitude": "Pituusaste",
     "latitude": "Leveysaste",
