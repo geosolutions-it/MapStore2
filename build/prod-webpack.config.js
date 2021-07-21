@@ -15,7 +15,7 @@ module.exports = require('./buildConfig')(
     {
         "mapstore2": path.join(paths.code, "product", "app"),
         "embedded": path.join(paths.code, "product", "embedded"),
-        "api": path.join(paths.code, "product", "api"),
+        "ms2-api": path.join(paths.code, "product", "api"),
         "dashboard-embedded": path.join(paths.code, "product", "dashboardEmbedded"),
         "geostory-embedded": path.join(paths.code, "product", "geostoryEmbedded")
     },
