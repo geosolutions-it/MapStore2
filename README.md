@@ -7,10 +7,6 @@ MapStore
 ========
 MapStore is a framework to build *web mapping* applications using standard mapping libraries, such as <a href="http://openlayers.org/" target="_blank">OpenLayers</a> and <a href="http://leafletjs.com/" target="_blank">Leaflet</a>.
 
-MapStore has several example applications:
- * MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)
- * MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents by server like OpenStreetMap, Google Maps, MapQuest or specific servers provided by your organization or third party.
-
 For more information check the <a href="https://mapstore.readthedocs.io/en/latest/" target="_blank">MapStore documentation!</a>
 
 Download
