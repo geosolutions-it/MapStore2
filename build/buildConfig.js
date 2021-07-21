@@ -277,7 +277,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         }] : [])
     },
     devServer: devServer || {
-        publicPath: "/" + publicPath,
+        publicPath: "/dist/",
         proxy: proxy || {
             '/rest': {
                 target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
