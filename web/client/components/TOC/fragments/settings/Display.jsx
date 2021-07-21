@@ -28,7 +28,6 @@ export default class extends React.Component {
         formats: PropTypes.array,
         settings: PropTypes.object,
         onChange: PropTypes.func,
-        getUniqueInfoFormats: PropTypes.func,
         containerWidth: PropTypes.number,
         currentLocaleLanguage: PropTypes.string,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
