@@ -22,9 +22,7 @@ import isObject from "lodash/isObject";
 import includes from "lodash/includes";
 import replace from 'lodash/replace';
 import uuid from 'uuid';
-import {find} from "lodash";
 
-export const GEOSTORY = "geostory";
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
 // Allowed StoryTypes
 export const StoryTypes = {
@@ -274,6 +272,11 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             type,
             title: localize("geostory.builder.defaults.titleGeocarousel"),
             template: type,
+            background: {
+                fit: 'cover',
+                size: 'full',
+                align: 'center'
+            },
             contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize("geostory.builder.defaults.titleGeocarouselContent"))]
         };
     case SectionTemplates.MEDIA: {
@@ -597,70 +600,54 @@ export const getIdFromPath = (path) => {
 };
 
 /**
- * Update the background of the carouse contents based on update type
- */
-const updateGeoCarouselBackground = (action, content = {}, section = {}, resources) => {
-    const getIndex = (contents, id) => findIndex(contents, {id}) + 1;
-    const getLayersFromResourceId = (resourceId) => ((find(resources, {id: resourceId}) || {})?.data?.layers || []);
-    switch (action.updateType) {
-    case 'resource':
-        return {
-            resourceId: action.resourceId,
-            type: 'map',
-            map: {...content?.background?.map,
-                // Update layers with new layer data from the updated source
-                layers: [...(content.background?.map?.layers || []), ...getLayersFromResourceId(action.resourceId)]
-                    .filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i)
-            }
-        };
-    case 'replace':
-        return {map: {...content.background.map, layers: action.layers}};
-    case 'merge':
-        return {
-            map: { ...content.background.map,
-                layers: (content?.background?.map?.layers || [])?.map((layer = {}) => {
-                    if (layer.id === GEOSTORY && layer.type === 'vector') {
-                        return {...layer,
-                            features: layer.features.filter(({contentRefId}) => contentRefId !== action.hideContentId) // Filter the removed content
-                                .map(l => ({...l, features: l.features.map(ft => ({...ft,
-                                    // Update iconText value on update/removal of content
-                                    style: [{...ft.style[0], iconText: getIndex(section.contents, l.contentRefId)}]}))
-                                }))
-                        };
-                    }
-                    return layer;
-                })
-            }
-        };
-    default:
-        return {};
-    }
-};
-
-/**
- * Update carousel section content's background
+ * Update carousel section content
  * @param {array} resources
  * @param {array} sections
  * @param {object} action
  * @param {string} mode
  * @return {array} updated sections
  */
-export const updateGeoCarouselSections = (resources, sections = [], action, mode = 'background') => {
+
+export const updateGeoCarouselSections = (sections = [], action) => {
     const _action = {...action, updateType: action.resourceId ? 'resource' :  action.layers ? 'replace' : 'merge'};
     return sections.map(_section=> {
         if (_action.sectionId === _section.id) {
             return {..._section,
                 contents: (_section.contents || []).map(content=> ({
                     ...content,
-                    ...(mode === 'background' ? {
-                        background: {
-                            ...content.background,
-                            ...updateGeoCarouselBackground(_action, content, _section, resources)
-                        }
-                    } : {hideContent: content.id !== action.showContentId})
+                    hideContent: content.id !== action.showContentId
                 }))
             };
         }
         return _section;
     });
 };
+
+
+export function getVectorLayerFromContents({
+    id,
+    contents,
+    featureStyle,
+    layerOptions
+}) {
+    return {
+        visibility: true,
+        handleClickOnLayer: true,
+        ...layerOptions,
+        id: `geostory-vector-${id}`,
+        name: `geostory-vector-${id}`,
+        type: 'vector',
+        features: contents.reduce((acc, content, idx) => [
+            ...acc, ...(
+                (content?.features || [])
+                    .map((feature) => ({
+                        ...feature,
+                        contentRefId: content.id,
+                        ...(featureStyle && {
+                            style: featureStyle({ content, feature }, idx)
+                        })
+                    }))
+            || [])
+        ], []).reverse()
+    };
+}

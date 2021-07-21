@@ -52,7 +52,8 @@ class Background extends Component {
         mediaViewer: PropTypes.func,
         contentToolbar: PropTypes.func,
         inView: PropTypes.bool,
-        sections: PropTypes.array
+        sections: PropTypes.array,
+        innerRef: PropTypes.func
     };
 
     static defaultProps = {
@@ -96,6 +97,7 @@ class Background extends Component {
                 style={{ ...this.props.style }}>
                 <div
                     className={`ms-section-background-container${getClassNameFromProps(this.props)}`}
+                    ref={this.props.innerRef}
                     style={{
                         height: this.props.height,
                         ...theme,
@@ -110,7 +112,9 @@ class Background extends Component {
                         descriptionEnabled={false}
                         mediaViewer={this.props.mediaViewer}
                         containerInView={this.props.inView}
-                    />
+                    >
+                        {this.props.children}
+                    </Media>
                     { this.props.mode === Modes.EDIT && (
                         parentNode
                             ? (

@@ -67,12 +67,12 @@ const MapEditor = ({
     editNode,
     closeNodeEditor,
     CloseBtn = () => (null),
-    isDrawEnabled = false
+    isDrawEnabled
 }) => {
-    return (mode === Modes.EDIT && isFocused && !isDrawEnabled ? <div
+    return (mode === Modes.EDIT && isFocused ? <div
         key="left-column"
         style={{ order: -1, width: 400, position: 'relative' }}>
-        <BorderLayout className="ms-geostory-map-editor"
+        {!isDrawEnabled && <BorderLayout className="ms-geostory-map-editor"
             header={
                 <div className="ms-geostory-map-editor-header text-center">
                     <Row>
@@ -112,7 +112,7 @@ const MapEditor = ({
                         onSelect={onNodeSelect}
                     />
                 ]}
-        </BorderLayout>
+        </BorderLayout>}
     </div>
         : null
     );

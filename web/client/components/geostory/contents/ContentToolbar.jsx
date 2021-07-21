@@ -138,17 +138,15 @@ const toolButtons = {
         disabled: editMap || markerDisabled,
         onClick: marker
     }),
-    closeDraw: ({editMap = false, bsStyle = 'default', update = () => {}, map: {resetMapInfo} = {}}) => ({
+    closeDraw: ({editMap = false, bsStyle = 'default', update = () => {}, onEnableDraw = () => {}}) => ({
         glyph: '1-close',
         visible: true,
         tooltipId: "geostory.contentToolbar.closeMapEditing",
         bsStyle,
         disabled: !editMap,
         onClick: ()=> {
-            // Separate update calls to trigger side effects
+            onEnableDraw(null);
             update('editMap', !editMap);
-            update('map.mapDrawControl', false);
-            resetMapInfo && update( 'map.mapInfoControl', true); // Reset Map Info state
         }
     })
 };

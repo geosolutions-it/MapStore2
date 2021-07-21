@@ -20,7 +20,6 @@ import buffer from "turf-buffer";
 import intersect from "turf-intersect";
 import MapInfoViewer from '../../../common/MapInfoViewer';
 import { getDefaultInfoFormat } from '../../../common/enhancers/withIdentifyPopup';
-import {GEOSTORY} from "../../../../utils/GeoStoryUtils";
 import { isEqual } from "lodash";
 import { isInsideResolutionsLimits } from "../../../../utils/LayersUtils";
 import {
@@ -35,6 +34,10 @@ import find from "lodash/find";
 import { connect } from "react-redux";
 import { update } from "../../../../actions/geostory";
 import { getAllGeoCarouselSections } from "../../../../selectors/geostory";
+
+function isGeoStoryVectorLayer(layerInfo) {
+    return layerInfo && layerInfo.indexOf('geostory-vector') === 0;
+}
 
 export const getIntersectedFeature = (layer, request, metadata) => {
     const point = {
@@ -120,8 +123,8 @@ const withIdentifyRequest  = mapPropsStream(props$ => {
         .distinctUntilChanged((a, b ) => isEqual(a, b)))
         .switchMap(([{point, layerInfo}, {map, layers = [], options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}]) => {
             let queryableLayers = layers.filter((layer) => isInsideResolutionsLimits(layer, map.resolution) && defaultQueryableFilter(layer));
-            if (layerInfo === GEOSTORY) {
-                queryableLayers = queryableLayers.filter(({id}) => id === layerInfo);
+            if (isGeoStoryVectorLayer(layerInfo)) {
+                queryableLayers = queryableLayers.filter(({id}) => layerInfo === id);
             }
             const excludeParams = ["SLD_BODY"];
             const includeOptions = [
@@ -217,7 +220,7 @@ export default branch(
         withStateHandlers(({'popups': []}), {
             onClick: (_state, {getFeatureInfoHandler = () => {}, map: {mapInfoControl} = {}}) =>
                 ({rawPos: coordinates = [], ...point}, layerInfo) =>  {
-                    if (layerInfo === GEOSTORY || mapInfoControl) {
+                    if (isGeoStoryVectorLayer(layerInfo) || mapInfoControl) {
                         getFeatureInfoHandler({point, layerInfo});
                         return {popups: [{position: {coordinates}, id: uuidv1()}]};
                     }
@@ -226,9 +229,9 @@ export default branch(
             onPopupClose: () => () => ({popups: []})
         }),
         withPropsOnChange(["mapInfo", "popups"],
-            ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}, map = {}, onClickMarker = () => {}}) => {
+            ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}, onClickMarker = () => {}}) => {
                 const {responses, requests, validResponses, layerInfo} = mapInfo;
-                if (map.hasOwnProperty('mapDrawControl') && layerInfo === GEOSTORY) {
+                if (isGeoStoryVectorLayer(layerInfo)) {
                     return onClickMarker(validResponses, layerInfo, popups);
                 }
                 return {popups: popups.map((popup) => ({...popup, component: ()=> (<MapInfoViewer
@@ -250,4 +253,3 @@ export default branch(
                 return {plugins: {...rest, tools: {...tools, popup: Popups}}};
             })
     ));
-

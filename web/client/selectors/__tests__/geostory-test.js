@@ -37,11 +37,7 @@ import {
     getAllGeoCarouselSections,
     isGeoCarouselSection,
     getAllCarouselContentsOfSection,
-    getGeoCarouselSectionById,
-    currentCarouselContent,
-    getCurrentDrawContent,
     isDrawControlEnabled,
-    sideEffectState,
     geoCarouselSettings
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
@@ -163,25 +159,9 @@ describe('geostory selectors', () => { // TODO: check default
         const contents = getAllCarouselContentsOfSection('SomeID_carousel')({ geostory: { currentStory: TEST_STORY } });
         expect(contents.length).toBe(2);
     });
-    it('getGeoCarouselSectionById ', () => {
-        const section = getGeoCarouselSectionById('SomeID_carousel')({ geostory: { currentStory: TEST_STORY } });
-        expect(section.id).toBe('SomeID_carousel');
-    });
-    it('currentCarouselContent ', () => {
-        const content = currentCarouselContent({contentId: 'ccol1', sectionId: 'SomeID_carousel'})({ geostory: { currentStory: TEST_STORY } });
-        expect(content.id).toBe('ccol1');
-    });
-    it('getCurrentDrawContent ', () => {
-        const drawContent = getCurrentDrawContent({ geostory: { currentStory: {...TEST_STORY, drawContent: {contentId: 'ccol1'}} } });
-        expect(drawContent).toEqual({contentId: 'ccol1'});
-    });
     it('isDrawControlEnabled ', () => {
-        const isDrawContent = isDrawControlEnabled({ geostory: { currentStory: {...TEST_STORY, drawContent: {contentId: 'ccol1'}} } });
+        const isDrawContent = isDrawControlEnabled({ geostory: { drawOptions: { sectionId: 'section1', contentId: 'ccol1'} } });
         expect(isDrawContent).toBeTruthy();
-    });
-    it('sideEffectState ', () => {
-        const sideEffect = sideEffectState({ geostory: { sideEffect: true}});
-        expect(sideEffect).toBeTruthy();
     });
     it('geoCarouselSettings ', () => {
         const _settings = {map: {mapInfoControl: true}};

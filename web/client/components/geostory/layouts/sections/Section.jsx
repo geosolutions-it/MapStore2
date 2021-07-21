@@ -60,7 +60,9 @@ class Section extends React.Component {
         sections: PropTypes.array,
         storyFonts: PropTypes.array,
         onSort: PropTypes.func,
-        isDrawEnabled: PropTypes.bool
+        isDrawEnabled: PropTypes.bool,
+        onEnableDraw: PropTypes.func,
+        background: PropTypes.object
     };
 
     static defaultProps = {
@@ -78,7 +80,8 @@ class Section extends React.Component {
         mode: Modes.VIEW,
         expandableMedia: false,
         sections: [],
-        storyFonts: []
+        storyFonts: [],
+        onEnableDraw: () => {}
     };
 
     state = {
@@ -113,6 +116,8 @@ class Section extends React.Component {
                 storyFonts={this.props.storyFonts}
                 onSort={this.props.onSort}
                 isDrawEnabled={this.props.isDrawEnabled}
+                background={this.props.background}
+                onEnableDraw={this.props.onEnableDraw}
             />
         );
     }

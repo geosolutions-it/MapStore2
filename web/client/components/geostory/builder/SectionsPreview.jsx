@@ -51,7 +51,7 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         banner: 'story-banner-section',
         paragraph: 'story-paragraph-section',
         immersive: 'story-immersive-section',
-        carousel: 'story-immersive-section',
+        carousel: 'story-carousel-section',
         media: 'story-media-section',
         map: '1-map',
         columnleft: 'align-left',

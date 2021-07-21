@@ -31,8 +31,7 @@ import {
     setPendingChanges,
     updateUrlOnScroll,
     updateMediaEditorSettings,
-    sideEffect,
-    updateGeoCarouselSetting, hideCarouselItems, syncCarouselMap
+    hideCarouselItems
 } from '../../actions/geostory';
 import geostory from '../../reducers/geostory';
 import {
@@ -54,8 +53,7 @@ import {
     sectionsSelector,
     settingsSelector,
     hasPendingChanges,
-    updateUrlOnScrollSelector,
-    sideEffectState
+    updateUrlOnScrollSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import TEST_STORY_1 from "../../test-resources/geostory/story_state.json";
@@ -454,15 +452,6 @@ describe('geostory reducer', () => {
         const state = geostory(undefined, updateMediaEditorSettings(mediaEditorSettings));
         expect(state.mediaEditorSettings).toBe(mediaEditorSettings);
     });
-    it('SIDE_EFFECT', () => {
-        expect(sideEffectState( { geostory: geostory(undefined, sideEffect(true)) } )).toBeTruthy();
-        expect(sideEffectState( { geostory: geostory(undefined, sideEffect(false)) } )).toBeFalsy();
-    });
-    it('UPDATE_GEO_CAROUSEL_SETTINGS', () => {
-        const carouselSettings = { map: { mapInfoControl: true}};
-        const state = geostory(undefined, updateGeoCarouselSetting(carouselSettings));
-        expect(state.geoCarouselSettings).toEqual(carouselSettings);
-    });
     it('HIDE_CAROUSEL_ITEMS', () => {
         let state = geostory(undefined, setCurrentStory(TEST_STORY));
         expect(state.currentStory.sections.length).toBe(5);
@@ -471,23 +460,5 @@ describe('geostory reducer', () => {
         expect(section.contents.length).toBe(2);
         expect(section.contents[0].hideContent).toBe(false);
         expect(section.contents[1].hideContent).toBe(true);
-    });
-    it('SYNC_CAROUSEL_MAP on remove content', () => {
-        let state = geostory(undefined, setCurrentStory(TEST_STORY));
-        expect(state.currentStory.sections.length).toBe(5);
-        state = geostory(state, syncCarouselMap('SomeID_carousel', {hideContentId: 'ccol1'}));
-        const [section] = state.currentStory.sections.filter(({type})=> type === 'carousel') || [];
-        expect(section.contents.length).toBe(2);
-        const [{background: {map: { layers: [{features}]}}}] = section.contents || [];
-        expect(features.length).toBe(1);
-    });
-    it('SYNC_CAROUSEL_MAP on update content', () => {
-        let state = geostory(undefined, setCurrentStory(TEST_STORY));
-        expect(state.currentStory.sections.length).toBe(5);
-        state = geostory(state, syncCarouselMap('SomeID_carousel', {layers: ['layer1']}));
-        const [section] = state.currentStory.sections.filter(({type})=> type === 'carousel') || [];
-        expect(section.contents.length).toBe(2);
-        const [{background: {map: { layers }}}] = section.contents || [];
-        expect(layers).toEqual(['layer1']);
     });
 });

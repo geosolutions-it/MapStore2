@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { cloneElement, Children } from 'react';
 import { compose, withState } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 
@@ -39,6 +39,8 @@ export default compose(
     caption: contentCaption,
     mapType = "leaflet", // default for when map MediaViewer is not connected to redux
     onMapTypeLoaded,
+    layers: geoStoryLayers,
+    children,
     ...props
 }) => {
 
@@ -87,7 +89,6 @@ export default compose(
         : expandMapOptions;
 
     const isMapInfoControlActive = m.mapInfoControl && !(expandable && !active);
-    const isMapDrawControlActive = m.mapDrawControl && !(expandable && !active);
     // BaseMap component overrides the MapView id with map's id
     const mapView = (
         <>
@@ -108,12 +109,14 @@ export default compose(
                         cursor: isMapInfoControlActive ? 'pointer' : 'default'
                     }
                 }} // if map id is passed as number, the resource id, ol throws an error
-                layers={layers}
-                tools={isMapInfoControlActive ? ["popup"] : isMapDrawControlActive ? ["draw"] : []}
+                layers={geoStoryLayers ? [ ...layers, ...geoStoryLayers ] : layers}
+                tools={isMapInfoControlActive ? ["popup"] : []}
                 options={applyDefaults(updatedMapOptions)}
                 mapType={mapType}
                 onMapTypeLoaded={onMapTypeLoaded}
-            />
+            >
+                {Children.map(children, child => child ? cloneElement(child, { mapType }) : null)}
+            </MapView>
             {expandable && !editMap &&
         <Button
             className="ms-expand-media-button"

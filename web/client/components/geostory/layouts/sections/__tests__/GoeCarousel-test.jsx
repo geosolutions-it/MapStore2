@@ -24,9 +24,7 @@ const CONTENTS = [
     {
         id: '000',
         type: 'column',
-        background: {
-            type: 'map'
-        },
+        background: {},
         contents: [{
             type: 'text',
             html: '<p>column</p>'
@@ -36,28 +34,15 @@ const CONTENTS = [
     {
         id: '001',
         type: 'column',
-        background: {
-            type: 'map'
-        },
+        background: {},
         contents: [{
             type: 'image',
             src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
             lazy: false
-
         }]
     }
 ];
-const CONTENTS_MAP = [{
-    id: '000',
-    type: 'column',
-    background: {
-        type: 'map'
-    },
-    contents: [{
-        type: 'text',
-        html: '<p>column</p>'
-    }]
-}];
+
 describe('GeoCarousel component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -87,7 +72,7 @@ describe('GeoCarousel component', () => {
 
     it('Check contents and background tools', () => {
         // Column content should have
-        ReactDOM.render(<Comp mode={Modes.EDIT} contents={CONTENTS} />, document.getElementById("container"));
+        ReactDOM.render(<Comp mode={Modes.EDIT} background={{ type: 'map' }} contents={CONTENTS} />, document.getElementById("container"));
 
         // Background tools should have edit, map configuration, resize and align
         const backgroundToolbar = document.querySelector('.ms-section-background .ms-content-toolbar .btn-group');
@@ -123,7 +108,7 @@ describe('GeoCarousel component', () => {
                 subscribe: () => {},
                 dispatch: () => {}
             }}>
-                <Comp mode={Modes.EDIT} isDrawEnabled contents={CONTENTS_MAP} />
+                <Comp mode={Modes.EDIT} isDrawEnabled background={{ type: 'map' }} contents={CONTENTS} />
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');
@@ -139,7 +124,7 @@ describe('GeoCarousel component', () => {
                 subscribe: () => {},
                 dispatch: () => {}
             }}>
-                <Comp mode={Modes.EDIT} expandableMedia contents={CONTENTS_MAP} />
+                <Comp mode={Modes.EDIT} expandableMedia background={{ type: 'map' }} contents={CONTENTS} />
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');
@@ -153,13 +138,13 @@ describe('GeoCarousel component', () => {
                 subscribe: () => {},
                 dispatch: () => {}
             }}>
-                <Comp mode={Modes.EDIT} expandableMedia contents={CONTENTS_MAP} />
+                <Comp mode={Modes.EDIT} expandableMedia background={{ type: 'map' }} contents={CONTENTS} />
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-carousel.ms-expandable-background');
         expect(el).toExist();
-        expect(el.querySelector('.ms-section-carousel')).toBeTruthy();
+        expect(el.querySelector('.ms-geo-carousel')).toBeTruthy();
     });
     it('render Geocarousel with addbar component', () => {
         ReactDOM.render(
@@ -168,7 +153,7 @@ describe('GeoCarousel component', () => {
                 subscribe: () => {},
                 dispatch: () => {}
             }}>
-                <Comp mode={Modes.EDIT} expandableMedia contents={CONTENTS_MAP} />
+                <Comp mode={Modes.EDIT} expandableMedia background={{ type: 'map' }} contents={CONTENTS} />
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');
@@ -183,7 +168,7 @@ describe('GeoCarousel component', () => {
                 subscribe: () => {},
                 dispatch: () => {}
             }}>
-                <Comp mode={Modes.EDIT} expandableMedia contents={[{...CONTENTS_MAP, background: {}}]} />
+                <Comp mode={Modes.EDIT} expandableMedia background={{}} contents={CONTENTS} />
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');

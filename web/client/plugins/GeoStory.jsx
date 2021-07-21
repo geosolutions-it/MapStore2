@@ -24,7 +24,7 @@ import {
     editWebPage,
     updateMediaEditorSettings,
     move,
-    updateGeoCarouselSetting
+    enableDraw
 } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
@@ -34,7 +34,8 @@ import {
     getFocusedContentSelector,
     isFocusOnContentSelector,
     settingsSelector,
-    currentStoryFonts, isDrawControlEnabled
+    currentStoryFonts,
+    isDrawControlEnabled
 } from '../selectors/geostory';
 import { currentMessagesSelector } from '../selectors/locale';
 import geostory from '../reducers/geostory';
@@ -56,8 +57,6 @@ const GeoStory = ({
     onBasicError = () => {},
     onUpdateMediaEditorSetting,
     mediaEditorSettings,
-    geoCarouselSettings,
-    onUpdateGeoCarouselSetting,
     ...props
 }) => {
     const localize = useCallback((id) => getMessageById(messages, id), [messages]);
@@ -77,10 +76,6 @@ const GeoStory = ({
         // so we could use them later when we open the media editor plugin
         if (mediaEditorSettings) {
             onUpdateMediaEditorSetting(mediaEditorSettings);
-        }
-
-        if (geoCarouselSettings) {
-            onUpdateGeoCarouselSetting(geoCarouselSettings);
         }
     }, []);
 
@@ -208,7 +203,7 @@ export default createPlugin("GeoStory", {
             editWebPage,
             onBasicError: basicError,
             onUpdateMediaEditorSetting: updateMediaEditorSettings,
-            onUpdateGeoCarouselSetting: updateGeoCarouselSetting
+            onEnableDraw: enableDraw
         }
     )(GeoStory),
     reducers: {

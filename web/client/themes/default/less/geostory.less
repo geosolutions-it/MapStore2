@@ -71,23 +71,21 @@
                 }
             }
 
-            .ms-section-carousel {
-                .items-wrapper {
-                    .background-color-var(@theme-vars[main-bg]);
-                }
-                .carousel-item {
+            .ms-geo-carousel {
+                .background-color-var(@theme-vars[main-bg]);
+                .ms-geo-carousel-item {
                     .background-color-var(@theme-vars[main-bg]);
                     .border-color-var(@theme-vars[main-border-color]);
                     .color-var(@theme-vars[main-color]);
                 }
-                .carousel-item-inner {
+                .ms-geo-carousel-item-inner {
                     .background-color-var(@theme-vars[main-bg]);
                 }
-                .carousel-item-inner-index {
+                .ms-geo-carousel-item-inner-index {
                     .background-color-var(@theme-vars[main-bg]);
                     .color-var(@theme-vars[main-color]);
                 }
-                .carousel-item-selected {
+                .ms-geo-carousel-item-selected {
                     .border-color-var(@theme-vars[primary]);
                 }
             }
@@ -465,6 +463,9 @@
             padding-right: @ms-story-padding-small-screen;
             min-width: auto;
         }
+        .ms-geo-carousel {
+            margin: 0 8px;
+        }
     }
     .ms-content {
         /* size of content */
@@ -731,51 +732,38 @@
             left: 15px;
             font-weight: bold;
         }
-        .ms-section-carousel {
+        .ms-geo-carousel {
             padding: 0;
-            margin: 0 auto;
+            margin: 0 40px;
+            margin-bottom: 32px;
             position: sticky;
-            overflow-x: clip;
             z-index: 2;
             bottom: 0;
-            .items-wrapper {
-                padding: 10px 40px 0 40px;
-                .shadow-soft();
+            height: 160px;
+            .shadow-soft();
+            .ms-horizontal-menu {
+                display: flex;
+                align-items: center;
             }
-            .items-inner-wrapper {
-                padding: 10px 0 40px;
-            }
-            .items-inner-wrapper-view {
-                padding: 10px 0 20px;
-            }
-            .carousel-item {
+            .ms-geo-carousel-item {
                 cursor: pointer;
-                height: 140px;
-                width: 140px;
+                height: 120px;
+                width: 120px;
                 .shadow-soft();
                 outline: 0;
+                margin: 8px;
             }
-            .carousel-item:hover {
+            .ms-geo-carousel-item:hover {
                 .shadow();
             }
-            .carousel-item-selected {
+            .ms-geo-carousel-item-selected {
                 border-width: 4px;
                 border-style: solid;
             }
             .disable-event {
                 pointer-events: none;
             }
-            .chevron-wrapper {
-                background-color: transparent;
-            }
-            .left-chevron {
-                left: -15px;
-            }
-
-            .right-chevron {
-                right: -15px;
-            }
-            .carousel-item-inner-wrapper {
+            .ms-geo-carousel-item-inner-wrapper {
                 position: relative;
                 width: 100%;
                 height: 100%;
@@ -783,7 +771,7 @@
                 background-position: center center;
                 background-repeat: no-repeat;
             }
-            .carousel-item-inner {
+            .ms-geo-carousel-item-inner {
                 position: absolute;
                 width: 100%;
                 text-align: center;
@@ -794,7 +782,7 @@
                 padding: 8px;
             }
 
-            .carousel-item-inner-index {
+            .ms-geo-carousel-item-inner-index {
                 position: absolute;
                 bottom: 2px;
                 left: 2px;
@@ -805,15 +793,12 @@
                 text-align: center;
                 font-weight: bold;
             }
-
-            .items-inner-wrapper div > .ms-content-toolbar .btn-group span {
-                display: flex;
-                flex-direction: row;
+            .ms-geo-carousel-item-wrapper {
+                position: relative;
             }
-            .items-inner-wrapper div > .ms-content-toolbar .btn-group span .glyphicon {
-                display: block;
+            .ms-geo-carousel-control {
+                height: 100%;
             }
-
         }
 
         .add-bar {
@@ -1146,6 +1131,12 @@
                         }
                     }
                 }
+            }
+        }
+        &.ms-section-carousel {
+            /* floating add section button */
+            & > .add-bar {
+                position: sticky;
             }
         }
     }
@@ -1528,22 +1519,23 @@
             }
             &.ms-section-immersive,
             &.ms-section-carousel {
-                .ms-section-carousel {
-                    .items-inner-wrapper {
-                        & > div > .ms-content-toolbar {
-                            bottom: 0;
-                            margin-bottom: 20px;
-                            margin-left: 40px;
-                        }
-                    }
+                .ms-geo-carousel {
+                    height: 180px;
                     .ms-content-toolbar {
                         position: absolute;
-                        margin-left: abs((-@square-btn-medium-size / 2));
+                        margin-left: (-@square-btn-medium-size / 2);
                         margin-top: (-@square-btn-medium-size * 0.6);
                         padding: 0;
                         z-index: 2;
                         border-top: none;
                         .shadow-soft();
+                    }
+                    .ms-geo-carousel-item-wrapper .ms-content-toolbar {
+                        bottom: 0;
+                        right: 0;
+                        left: auto;
+                        top: auto;
+                        margin: 0;
                     }
                 }
             }

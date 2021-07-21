@@ -5,11 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from "react";
-import {compose, withStateHandlers} from "recompose";
-
+import React, { useRef, useState } from "react";
+import { compose } from "recompose";
 import SectionContents from '../../contents/SectionContents';
-import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
+import {
+    backgroundVisibilityStream,
+    updateBackgroundSectionEnhancer,
+    backgroundSectionProp
+} from "./enhancers/immersiveBackgroundManager";
 import Background from './Background';
 import AddBar from '../../common/AddBar';
 import {
@@ -17,13 +20,16 @@ import {
     ContentTypes,
     MediaTypes,
     Modes,
-    SectionTemplates
+    SectionTemplates,
+    getVectorLayerFromContents
 } from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
 import get from 'lodash/get';
 import find from 'lodash/find';
 import Carousel from "../../contents/carousel/Carousel";
 import InfoCarousel from "../../contents/carousel/InfoCarousel";
+import LocalDrawSupport from '../../common/map/LocalDrawSupport';
+import FitBounds from '../../common/map/FitBounds';
 
 /**
  * GeoCarousel Section Type
@@ -58,14 +64,73 @@ const GeoCarousel = ({
     sections = [],
     storyFonts,
     onSort = () => {},
+    onEnableDraw = () => {},
     isDrawEnabled
 }) => {
-    const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
+
+    const innerBackgroundNode = useRef();
+    const sectionContentsNode = useRef();
+    const carouselNode = useRef();
+
+    function verifyMapVisibility(padding, width) {
+        const minWidthVisibility = 128;
+        if (width - (padding.left + padding.right) < minWidthVisibility) {
+            return { top: 0, left: 0, bottom: 0, right: 0 };
+        }
+        return padding;
+    }
+
+    function computeCarouselMapPadding() {
+        let padding = { top: 0, left: 0, bottom: 0, right: 0 };
+
+        const mediaMapNode = innerBackgroundNode.current && innerBackgroundNode.current.querySelector('.ms-media-map');
+        const contentNode = sectionContentsNode.current && sectionContentsNode.current.querySelector(`[id='${contentId}']`);
+        if (mediaMapNode && contentNode) {
+            const backgroundRect = innerBackgroundNode.current.getBoundingClientRect() || {};
+            const mediaMapRect = mediaMapNode.getBoundingClientRect() || {};
+            const contentRect = contentNode.getBoundingClientRect() || {};
+
+            if (carouselNode.current) {
+                const carouselRect = carouselNode.current.getBoundingClientRect() || {};
+                padding.bottom = backgroundRect.height - (carouselRect.top - backgroundRect.top);
+            }
+
+            const mediaMapMinX = mediaMapRect.left - backgroundRect.left;
+            const mediaMapMaxX = mediaMapMinX + mediaMapRect.width;
+            const contentMinX = contentRect.left - backgroundRect.left;
+            const contentMaxX = contentMinX + contentRect.width;
+            const isContentOverMap = contentMinX >= mediaMapMinX && contentMaxX <= mediaMapMaxX;
+            if (isContentOverMap) {
+                const leftVisibility = contentMinX - mediaMapMinX;
+                const rightVisibility = mediaMapMaxX - contentMaxX;
+                if (rightVisibility >= leftVisibility) {
+                    padding.left = leftVisibility + contentRect.width;
+                } else {
+                    padding.right = rightVisibility + contentRect.width;
+                }
+                return verifyMapVisibility(padding, mediaMapRect.width);
+            }
+            const isContentMaxXOverMap = contentMaxX >= mediaMapMinX && contentMaxX <= mediaMapMaxX;
+            if (isContentMaxXOverMap) {
+                padding.left = contentMaxX - mediaMapMinX;
+                return verifyMapVisibility(padding, mediaMapRect.width);
+            }
+            const isContentMinXOverMap = contentMinX >= mediaMapMinX && contentMinX <= mediaMapMaxX;
+            if (isContentMinXOverMap) {
+                padding.right = mediaMapMaxX - contentMinX;
+                return verifyMapVisibility(padding, mediaMapRect.width);
+            }
+
+        }
+        return padding;
+    }
+
+    const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === id);
     const visibility = hideContent ? 'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     const overlayStoryTheme = {...storyTheme?.overlay, ...(mode === Modes.VIEW && {maxHeight: viewHeight - 350, overflowY: 'auto'})} || {};
     const generalStoryTheme = storyTheme?.general || {};
-    const minHeight = (viewHeight - (mode === Modes.EDIT ? 200 : 180 ));
+    const minHeight = (viewHeight - (mode === Modes.EDIT ? 220 : 200 ));
 
     // On add column (new section content)
     const addContentColumn = () => {
@@ -80,6 +145,20 @@ const GeoCarousel = ({
     };
     const isMapBackground = background?.type === MediaTypes.MAP;
 
+    const { features = [] } = contents.find(content => content.id === contentId) || {};
+
+    const contentsLayer = getVectorLayerFromContents({
+        id,
+        contents,
+        featureStyle: ({ content, feature }, idx) => ({
+            iconColor: 'cyan',
+            iconText: `${idx + 1}`,
+            iconShape: 'circle',
+            ...feature.style,
+            highlight: contentId === content.id
+        })
+    });
+
     return (<section
         className={`ms-section ms-section-carousel${expandableBackgroundClassName}`}
         id={id}
@@ -88,6 +167,7 @@ const GeoCarousel = ({
         <Background
             { ...background }
             mode={mode}
+            innerRef={innerBackgroundNode}
             disableToolbarPortal
             tools={{
                 [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme'],
@@ -116,9 +196,30 @@ const GeoCarousel = ({
             storyTheme={generalStoryTheme}
             mediaViewer={mediaViewer}
             contentToolbar={contentToolbar}
-            inView={inView}/>
+            inView={inView}
+            layers={[ contentsLayer ]}
+            isDrawEnabled={isDrawEnabled}
+            onEnableDraw={onEnableDraw}
+        >
+            <LocalDrawSupport
+                active={isDrawEnabled}
+                features={features}
+                method="Point"
+                onChange={(mapId, newFeatures) => {
+                    update(`sections[{"id":"${id}"}].contents[{"id":"${contentId}"}].features`, newFeatures);
+                }}
+            />
+            <FitBounds
+                active={!isDrawEnabled && !background?.editMap}
+                geometry={features?.[0]?.geometry?.coordinates}
+                padding={computeCarouselMapPadding()}
+                fixedZoom
+                duration={300}
+            />
+        </Background>
         {!isMapBackground && mode === Modes.EDIT && <InfoCarousel type={'addMap'}/>}
         <SectionContents
+            innerRef={sectionContentsNode}
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']
             }}
@@ -152,6 +253,13 @@ const GeoCarousel = ({
             storyFonts={storyFonts}
         />
         <Carousel
+            innerRef={carouselNode}
+            style={storyTheme?.overlay ? {
+                ...storyTheme.overlay
+            } : {}}
+            controlStyle={generalStoryTheme ? {
+                ...generalStoryTheme
+            } : {}}
             sectionId={id}
             contentId={contentId}
             contents={contents}
@@ -163,7 +271,13 @@ const GeoCarousel = ({
             mode={mode}
             onSort={onSort}
             isMapBackground={isMapBackground}
+            isEditMap={background?.editMap}
             containerWidth={viewWidth}
+            isDrawEnabled={isDrawEnabled}
+            onEnableDraw={(content) => {
+                update(`sections[{"id":"${id}"}].background.editMap`, true, 'replace');
+                onEnableDraw({ contentId: content.id, sectionId: id });
+            }}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}
@@ -195,6 +309,13 @@ const GeoCarousel = ({
                 onClick: () =>  add(`sections`, id, SectionTypes.IMMERSIVE)
             },
             {
+                glyph: 'story-carousel-section',
+                tooltipId: 'geostory.addGeocarouselSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.CAROUSEL);
+                }
+            },
+            {
                 glyph: 'story-media-section',
                 tooltipId: 'geostory.addMediaSection',
                 onClick: () => {
@@ -212,9 +333,17 @@ const GeoCarousel = ({
 };
 
 export default compose(
-    immersiveBackgroundManager,
-    withStateHandlers({textEditorActive: false}, {
-        bubblingTextEditing: () => (editing) => {
-            return  {textEditorActiveClass: editing ? ' ms-text-editor-active' : ''};
-        }
-    }))(GeoCarousel);
+    backgroundVisibilityStream,
+    backgroundSectionProp,
+    updateBackgroundSectionEnhancer,
+    (Component) => (props) => {
+        const [textEditorActiveClass, setTextEditorActiveClass] = useState('');
+        return (
+            <Component
+                {...props}
+                textEditorActiveClass={textEditorActiveClass}
+                bubblingTextEditing={(editing) => setTextEditorActiveClass(editing ? ' ms-text-editor-active' : '')}
+            />
+        );
+    }
+)(GeoCarousel);
