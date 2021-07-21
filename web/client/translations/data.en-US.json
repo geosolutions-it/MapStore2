@@ -299,44 +299,6 @@
                 "visit_group": "Visit this group",
                 "subscribe": "Subscribe",
                 "email": "Email:"
-            },
-            "examples":{
-                "viewer":{
-                    "html":"<h3>Viewer</h3><p>Simple Viewer</p>"
-                },
-                "3dviewer":{
-                    "html":"<h3>3D Viewer</h3><p>Simple CesiumJS based 3D Viewer</p>"
-                },
-                "manager":{
-                    "html":"<h3>Manager</h3><p>Browse MapStore maps</p>"
-                },
-                "mouseposition":{
-                    "html":"<h3>Mouse Position Control</h3><p>Custom examples</p>"
-                },
-                "scalebar":{
-                    "html":"<h3>Scale Control</h3><p>Custom examples</p>"
-                },
-                "layertree":{
-                    "html":"<h3>Advanced LayerTree</h3><p>Custom examples</p>"
-                },
-                "queryform":{
-                    "html":"<h3>Query Builder</h3><p>Custom examples</p>"
-                },
-                "featuregrid":{
-                    "html":"<h3>Feature Editor</h3><p>Custom examples</p>"
-                },
-                "print":{
-                    "html":"<h3>Printing</h3><p>Custom examples</p>"
-                },
-                "plugins":{
-                    "html":"<h3>Plugins</h3><p>Build your own application</p>"
-                },
-                "api":{
-                    "html":"<h3>API</h3><p>Use APIs to include a MapStore map in your application</p>"
-                },
-                "rasterstyler":{
-                    "html":"<h3>Raster Styler</h3><p>Style your raster layer</p>"
-                }
             }
         },
         "cookiesPolicyNotification": {

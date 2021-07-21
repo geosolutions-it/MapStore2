@@ -76,7 +76,6 @@ In particular:
 |--------------------------|--------------------------------------------------------------|
 | `npm install`            | download dependencies and init developer environment         |
 | `npm start`              | start development instance                                   |
-| `npm run examples`       | start development instance with examples                     |
 | `npm run compile`        | run single build / bundling                                  |
 | `npm test`               | run test suite once                                          |
 | `npm run continuoustest` | run continuous test suite running (useful during developing) |

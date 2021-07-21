@@ -70,16 +70,6 @@ devServer: {
 
 * **re-run** `npm start`
 
-### Examples
-
-`npm start` doesn't run the examples by default (for dev performance reasons). If you want to  run in dev mode the application with also the examples you can run, instead of `npm start` the following command:
-
-```bash
-npm run examples
-```
-
-This command will compile and run both mapstore and examples, with the same live editing functionalities of `npm start`.
-
 ### Debugging the frontend
 
 The development instance uses file watching and live reload, so each time a MapStore file is changed, the browser will reload the updated application.

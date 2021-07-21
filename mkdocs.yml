@@ -111,7 +111,6 @@ pages:
       - Internationalization: 'developer-guide/internationalization.md'
       - Custom dependencies: 'developer-guide/custom-dependencies.md'
       - Styling and theming: 'developer-guide/customize-theme.md'
-      - Application tutorial: 'developer-guide/application-tutorial.md'
       - Working with Extensions: 'developer-guide/extensions.md'
       - Printing Module: 'developer-guide/printing-module.md'
       - FAQ: 'developer-guide/dev-faq.md'
