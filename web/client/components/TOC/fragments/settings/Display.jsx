@@ -167,8 +167,6 @@ export default class extends React.Component {
                                 }}/>
                         </FormGroup>
                     </Col>
-
-
                 </Row>}
 
                 <Row>
