@@ -22,6 +22,7 @@ import InfoCarousel from "./InfoCarousel";
 import useSwipeControls from '../../common/hooks/useSwipeControls';
 
 const DraggableCarouselItem = draggableComponent(({
+    title,
     thumbnail,
     index,
     isSelected,
@@ -32,7 +33,7 @@ const DraggableCarouselItem = draggableComponent(({
             className={cs('ms-geo-carousel-item', {'ms-geo-carousel-item-selected': isSelected })}
             onClick={props.onClick}>
             <div className={'ms-geo-carousel-item-inner-wrapper'} style={{backgroundImage: `url(${thumbnail?.image || defaultThumb})`}}>
-                <span className={'ms-geo-carousel-item-inner'}>{thumbnail?.title || `Item ${index + 1}`}</span>
+                <span className={'ms-geo-carousel-item-inner'}>{title || `Item ${index + 1}`}</span>
                 <span className={'ms-geo-carousel-item-inner-index'}>{index + 1}</span>
             </div>
         </div>
@@ -64,12 +65,14 @@ const DraggableCarousel = draggableContainer(({
 
     const [edit, setEdit] = useState(false);
     const [contentId, setContentId] = useState(undefined);
+    const [title, setTitle] = useState('');
     const [thumbnail, setThumbnail] = useState({});
 
     const onEdit = (item) => {
         setContentId(item?.id);
         setEdit(true);
         setThumbnail(item?.thumbnail);
+        setTitle(item?.title);
     };
 
     const {
@@ -193,7 +196,7 @@ const DraggableCarousel = draggableContainer(({
                     </Button>}
                 </div>
             </div>
-            {edit && <ItemThumbnail thumbnail={thumbnail} update={onUpdate} onClose={()=>setEdit(false)}/>}
+            {edit && <ItemThumbnail title={title} thumbnail={thumbnail} update={onUpdate} onClose={()=>setEdit(false)}/>}
         </>
     );
 });
@@ -221,7 +224,7 @@ export default ({
         }}
         {...{...props, sectionId: id}}
         cardComponent={DraggableCarouselItem}
-        items={ contents.map(({id: contentId, thumbnail = {}, features}) =>({id: contentId, thumbnail, features}))}
+        items={ contents.map(({id: contentId, thumbnail = {}, features, title }) =>({id: contentId, thumbnail, features, title }))}
         isDrawEnabled={isDrawEnabled}
         onEnableDraw={onEnableDraw}
         isEditMap={isEditMap}

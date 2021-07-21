@@ -31,7 +31,8 @@ import {
     setPendingChanges,
     updateUrlOnScroll,
     updateMediaEditorSettings,
-    hideCarouselItems
+    hideCarouselItems,
+    enableDraw
 } from '../../actions/geostory';
 import geostory from '../../reducers/geostory';
 import {
@@ -460,5 +461,10 @@ describe('geostory reducer', () => {
         expect(section.contents.length).toBe(2);
         expect(section.contents[0].hideContent).toBe(false);
         expect(section.contents[1].hideContent).toBe(true);
+    });
+    it('ENABLE_DRAW', () => {
+        const drawOptions = {};
+        let state = geostory(undefined, enableDraw(drawOptions));
+        expect(state.drawOptions).toBe(drawOptions);
     });
 });

@@ -10,6 +10,16 @@ import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import DrawSupport from '../../../map/openlayers/DrawSupport';
 
+/**
+ * A draw support interface to use as component instead of plugin
+ * @prop {object} map map library instance object
+ * @prop {string} mapType type of map library
+ * @prop {boolean} active activate draw support
+ * @prop {string} method drawing method based on geometry type (eg: Point)
+ * @prop {array} features initial features to edit
+ * @prop {object} options options for the draw support
+ * @prop {function} onChange callback called after drawing/editing a feature
+ */
 function LocalDrawSupport({
     map,
     active,
@@ -18,7 +28,6 @@ function LocalDrawSupport({
     mapType,
     features,
     options,
-    style,
     onChange
 }) {
 
@@ -51,7 +60,6 @@ function LocalDrawSupport({
                 ...options
             }}
             onDrawingFeatures={onChange.bind(null, mapId)}
-            style={style}
         />
     );
 }

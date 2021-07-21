@@ -623,7 +623,13 @@ export const updateGeoCarouselSections = (sections = [], action) => {
     });
 };
 
-
+/**
+ * Create a vector layer based on content's features
+ * @param {string} id id of section
+ * @param {array} contents array of content objects
+ * @param {function} featureStyle a function to generate a feature style ({ content, feature }, idx) => ({  })
+ * @param {object} layerOptions additional layer option for a vector layer
+ */
 export function getVectorLayerFromContents({
     id,
     contents,

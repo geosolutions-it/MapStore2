@@ -57,7 +57,9 @@ import {
     geostoryScrolling,
     GEOSTORY_SCROLLING,
     hideCarouselItems,
-    HIDE_CAROUSEL_ITEMS
+    HIDE_CAROUSEL_ITEMS,
+    enableDraw,
+    ENABLE_DRAW
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -261,5 +263,12 @@ describe('test geostory action creators', () => {
         expect(action.type).toBe(HIDE_CAROUSEL_ITEMS);
         expect(action.sectionId).toBe(sectionId);
         expect(action.showContentId).toBe(showContentId);
+    });
+    it('enableDraw', () => {
+        const sectionId = 1;
+        const contentId = 2;
+        const action = enableDraw({ sectionId, contentId });
+        expect(action.type).toBe(ENABLE_DRAW);
+        expect(action.drawOptions).toEqual({ sectionId, contentId });
     });
 });

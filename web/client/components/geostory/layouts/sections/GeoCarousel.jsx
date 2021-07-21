@@ -21,7 +21,8 @@ import {
     MediaTypes,
     Modes,
     SectionTemplates,
-    getVectorLayerFromContents
+    getVectorLayerFromContents,
+    getDefaultSectionTemplate
 } from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
 import get from 'lodash/get';
@@ -134,7 +135,8 @@ const GeoCarousel = ({
 
     // On add column (new section content)
     const addContentColumn = () => {
-        add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN, "geostory.builder.defaults.titleGeocarouselContent");
+        const newContent = { ...getDefaultSectionTemplate(ContentTypes.COLUMN), title: 'Item ' + (contents.length + 1), background: {} };
+        add(`sections[{"id": "${id}"}].contents`, undefined, newContent, "geostory.builder.defaults.titleGeocarouselContent");
         update(`sections[{"id":"${id}"}].contents[{"id":"${contentId}"}].hideContent`, true);
     };
 

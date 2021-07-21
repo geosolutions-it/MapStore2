@@ -251,6 +251,8 @@ const previewContents = {
                         preview: <Icon type={contentType} />,
                         tools: null,
                         title: <TitleEditable
+                            // render again when it gets a new title from the state
+                            key={content.title}
                             title={content.title || capitalize(content.type)}
                             onUpdate={(text) => onUpdate(`sections[{"id": "${id}"}].contents[{"id":"${content.id}"}]`, {title: text}, "merge")}/>,
                         description: `type: ${content.type}`,
