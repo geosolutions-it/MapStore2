@@ -15,7 +15,7 @@ import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
 import ConfigUtils from '../utils/ConfigUtils';
-import { errorLoadingFont, setMapResolutions, mapPluginLoad } from '../actions/map';
+import { setMapResolutions, mapPluginLoad } from '../actions/map';
 import { isString } from 'lodash';
 import selector from './map/selector';
 import mapReducer from "../reducers/map";
@@ -203,7 +203,6 @@ class MapPlugin extends React.Component {
         mapOptions: PropTypes.object,
         projectionDefs: PropTypes.array,
         toolsOptions: PropTypes.object,
-        onFontError: PropTypes.func,
         onResolutionsChange: PropTypes.func,
         actions: PropTypes.object,
         features: PropTypes.array,
@@ -251,7 +250,6 @@ class MapPlugin extends React.Component {
         additionalLayers: [],
         shouldLoadFont: false,
         elevationEnabled: false,
-        onFontError: () => {},
         onResolutionsChange: () => {},
         items: [],
         onLoadingMapPlugins: () => {},
@@ -274,25 +272,6 @@ class MapPlugin extends React.Component {
                         timeoutAfter: 5000 // 5 seconds in milliseconds
                     }).catch(() => {
 
-                        function listFonts() {
-                            let myfonts = [];
-                            for (let node of document.querySelectorAll('*')) {
-                                if (!node.style) continue;
-                                for (let pseudo of ['', ':before', ':after']) {
-                                    let fontFamily = getComputedStyle(node, pseudo).fontFamily;
-                                    myfonts = myfonts.concat(fontFamily.split(/\n*,\n*/g));
-                                }
-                            }
-                            // Remove duplicate elements from fonts array
-                            // and remove the surrounding quotes around elements
-                            return [...new Set(myfonts)]
-                                .map(font => font.replace(/^\s*['"]([^'"]*)['"]\s*$/, '$1').trim());
-                        }
-
-                        if (listFonts().includes('FontAwesome')) {
-                            this.props.onFontError({family: f});
-                        }
- 
                     }
                     ))
             ).then(() => {
@@ -466,7 +445,6 @@ class MapPlugin extends React.Component {
 
 export default createPlugin('Map', {
     component: connect(selector, {
-        onFontError: errorLoadingFont,
         onResolutionsChange: setMapResolutions,
         onMapTypeLoaded: mapPluginLoad
     })(withScalesDenominators(MapPlugin)),
