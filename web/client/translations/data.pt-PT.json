@@ -103,17 +103,6 @@
                 "right": "Right",
                 "bottom": "Bottom",
                 "top": "Top"
-            },
-            "Format": {
-                "infoFormat": "Information format",
-                "title": "Format",
-                "update": "Search for a compatible format",
-                "loading": "Loading...",
-                "noOption": "No option",
-                "error": {
-                    "title": "Error",
-                    "message": "Failed to fetch format"
-                }
             }
         },
         "longitude": "Longitude",
