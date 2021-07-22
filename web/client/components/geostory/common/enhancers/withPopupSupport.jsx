@@ -105,7 +105,7 @@ export const withCarouselMarkerInteraction = compose(
             const result = find(sections, ({contents}) => find(contents, {id: contentRefId}));
             let _popup = {popups: []};
             if (result) {
-                const {id: contentId, thumbnail: {title = ''} = {}} = find(result.contents, {id: contentRefId}) || {};
+                const {id: contentId, title = ''} = find(result.contents, {id: contentRefId}) || {};
                 onClickMarker(`sections[{"id":"${result.id}"}].contents[{"id":"${contentId}"}].carouselToggle`, true);
                 if (title) {
                     _popup = {popups: popups.map((popup) => ({...popup, component: ()=> (<div className={"ms-geostory-carousel-viewer"}>{title}</div>)}))};
