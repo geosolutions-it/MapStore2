@@ -45,7 +45,7 @@ module.exports = require('./buildConfig')(
             template: path.join(paths.framework, 'apiTemplate.html'),
             publicPath: 'dist/',
             chunks: ['ms2-api'],
-            inject: 'head',
+            inject: 'body',
             hash: true,
             filename: 'api.html'
         }),
