@@ -28,12 +28,14 @@ module.exports = require('./buildConfig')(
     [
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'indexTemplate.html'),
+            publicPath: 'dist/',
             chunks: ['mapstore2'],
             inject: "body",
             hash: true
         }),
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'embeddedTemplate.html'),
+            publicPath: 'dist/',
             chunks: ['embedded'],
             inject: "body",
             hash: true,
@@ -41,6 +43,7 @@ module.exports = require('./buildConfig')(
         }),
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'apiTemplate.html'),
+            publicPath: 'dist/',
             chunks: ['ms2-api'],
             inject: 'head',
             hash: true,
@@ -48,6 +51,7 @@ module.exports = require('./buildConfig')(
         }),
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'geostory-embedded-template.html'),
+            publicPath: 'dist/',
             chunks: ['geostory-embedded'],
             inject: "body",
             hash: true,
@@ -55,6 +59,7 @@ module.exports = require('./buildConfig')(
         }),
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'dashboard-embedded-template.html'),
+            publicPath: 'dist/',
             chunks: ['dashboard-embedded'],
             inject: 'body',
             hash: true,
