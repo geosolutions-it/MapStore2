@@ -2900,6 +2900,7 @@
             "generalSettings": {
                 "label": "General Settings",
                 "title": "Create new app context",
+                "edit": "Edit app context",
                 "name": "Name",
                 "namePlaceholder": "Enter app context name...",
                 "windowTitle": "Window title",

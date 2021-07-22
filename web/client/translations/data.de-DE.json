@@ -2887,6 +2887,7 @@
             "generalSettings": {
                 "label": "Allgemeine Einstellungen",
                 "title": "Erstellen Sie einen neuen App-Kontext",
+                "edit": "App-Kontext bearbeiten",
                 "name": "Name",
                 "namePlaceholder": "Geben Sie den Namen des App-Kontexts ein...",
                 "windowTitle": "Fenstertitel",

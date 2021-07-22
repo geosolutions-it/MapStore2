@@ -12,13 +12,15 @@ import Message from '../I18N/Message';
 import {FormGroup, ControlLabel, FormControl, Glyphicon} from 'react-bootstrap';
 import {getMessageById} from '../../utils/LocaleUtils';
 
-export default ({contextName = "", windowTitle = "", isValidContextName = true, contextNameChecked = true, loading = false, onChange = () => {}, context = {}}) => (
+export default ({contextId, contextName = "", windowTitle = "", isValidContextName = true, contextNameChecked = true, loading = false, onChange = () => {}, context = {}}) => (
     <div className="general-settings-step">
         <div style={{ margin: 'auto' }}>
             <div className="text-center">
                 <Glyphicon glyph="wrench" style={{ fontSize: 128 }}/>
             </div>
-            <h1 className="text-center"><Message msgId="contextCreator.generalSettings.title"/></h1>
+            <h1 className="text-center">
+                {contextId === "new" ? <Message msgId="contextCreator.generalSettings.title"/> : <Message msgId="contextCreator.generalSettings.edit"/> }
+            </h1>
             <FormGroup validationState={contextName.length > 0 && contextNameChecked ? (isValidContextName ? 'success' : 'error') : null}>
                 <ControlLabel>
                     <Message msgId="contextCreator.generalSettings.name"/>
