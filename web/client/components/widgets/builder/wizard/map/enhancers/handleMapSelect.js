@@ -8,10 +8,10 @@
 
 import { compose, withState, mapPropsStream, withHandlers } from 'recompose';
 
-import GeoStoreDAO from '../../../../../../api/GeoStoreDAO';
 import axios from '../../../../../../libs/ajax';
 import ConfigUtils from '../../../../../../utils/ConfigUtils';
 import { excludeGoogleBackground, extractTileMatrixFromSources } from '../../../../../../utils/LayersUtils';
+import { getResource } from '../../../../../../api/persistence';
 import '../../../../../../libs/bindings/rxjsRecompose';
 
 const handleMapSelect = compose(
@@ -20,7 +20,9 @@ const handleMapSelect = compose(
         onMapChoice: ({ onMapSelected = () => { }, onSetIdentifyTrue = () => {}, selectedSource = {}, includeMapId = false } = {}) => map =>
             (typeof map.id === 'string'
                 ? axios.get(map.id).then(response => response.data)
-                : GeoStoreDAO.getData(map.id, {baseURL: selectedSource.baseURL})
+                : getResource(map.id, { baseURL: selectedSource.baseURL, includeAttributes: false })
+                    .toPromise()
+                    .then(({ data }) => data)
             ).then(config => {
                 let mapState = (!config.version && typeof map.id !== 'string') ? ConfigUtils.convertFromLegacy(config) : ConfigUtils.normalizeConfig(config.map);
                 return {
