@@ -2887,10 +2887,10 @@
         "contextCreator": {
             "generalSettings": {
                 "label": "Impostazioni Generali",
-                "title": "Crea un nuovo contesto per l'app",
-                "edit": "Modifica il contesto dell'app",
+                "title": "Crea un nuovo contesto applicativo",
+                "edit": "Modifica il contesto applicativo",
                 "name": "Nome",
-                "namePlaceholder": "Inserisci il nome del contesto dell'app...",
+                "namePlaceholder": "Inserisci il nome del contesto applicativo...",
                 "windowTitle": "Titolo della finestra",
                 "windowTitlePlaceholder": "Inserisci il titolo della finestra..."
             },
