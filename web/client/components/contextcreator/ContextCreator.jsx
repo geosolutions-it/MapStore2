@@ -79,6 +79,7 @@ export default class ContextCreator extends React.Component {
         user: PropTypes.object,
         loading: PropTypes.bool,
         loadFlags: PropTypes.object,
+        contextId: PropTypes.object,
         isValidContextName: PropTypes.bool,
         contextNameChecked: PropTypes.bool,
         curStepId: PropTypes.string,
@@ -267,6 +268,7 @@ export default class ContextCreator extends React.Component {
                         this.props.loading || !this.props.isValidContextName || !this.props.contextNameChecked,
                     component:
                         <GeneralSettings
+                            contextId={this.props.contextId}
                             contextName={this.props.resource.name}
                             windowTitle={this.props.newContext.windowTitle}
                             isValidContextName={this.props.isValidContextName}
