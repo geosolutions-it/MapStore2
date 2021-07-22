@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import { error } from './notifications';
 
 export const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
 export const CLICK_ON_MAP = 'CLICK_ON_MAP';
@@ -31,15 +30,6 @@ export const MOUSE_MOVE = 'MOUSE_MOVE';
 export const MOUSE_OUT = 'MOUSE_OUT';
 export const MAP_PLUGIN_LOAD = 'MAP:MAP_PLUGIN_LOAD';
 
-export function errorLoadingFont(err = {family: ""}) {
-    return error({
-        title: "warning",
-        message: "map.errorLoadingFont",
-        values: err,
-        position: "tc",
-        autoDismiss: 10
-    });
-}
 
 /**
  * Event triggered when loading a different map type plugins (code for the specific implementation)
