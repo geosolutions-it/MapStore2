@@ -2887,6 +2887,7 @@
             "generalSettings": {
                 "label": "Configuración general",
                 "title": "Crear nuevo contexto de aplicación",
+                "edit": "Editar el contexto de la aplicación",
                 "name": "Nombre",
                 "namePlaceholder": "Ingrese el nombre del contexto de la aplicación...",
                 "windowTitle": "Título de la ventana",

@@ -18,7 +18,9 @@ export default ({contextName = "", windowTitle = "", isValidContextName = true, 
             <div className="text-center">
                 <Glyphicon glyph="wrench" style={{ fontSize: 128 }}/>
             </div>
-            <h1 className="text-center"><Message msgId="contextCreator.generalSettings.title"/></h1>
+            <h1 className="text-center">
+                {window.location.href.indexOf('new') === -1   ? <Message msgId="contextCreator.generalSettings.edit"/> : <Message msgId="contextCreator.generalSettings.title"/>}
+            </h1>
             <FormGroup validationState={contextName.length > 0 && contextNameChecked ? (isValidContextName ? 'success' : 'error') : null}>
                 <ControlLabel>
                     <Message msgId="contextCreator.generalSettings.name"/>

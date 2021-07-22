@@ -2889,6 +2889,7 @@
             "generalSettings": {
                 "label": "Paramètres Généraux",
                 "title": "Créer un nouveau contexte applicatif",
+                "edit": "Modifier le contexte de l'application",
                 "name": "Nom",
                 "namePlaceholder": "Entrez le nom du contexte applicatif...",
                 "windowTitle": "Titre de la fenêtre",
