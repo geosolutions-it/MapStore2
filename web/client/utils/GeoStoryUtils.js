@@ -609,9 +609,8 @@ export const getIdFromPath = (path) => {
  */
 
 export const updateGeoCarouselSections = (sections = [], action) => {
-    const _action = {...action, updateType: action.resourceId ? 'resource' :  action.layers ? 'replace' : 'merge'};
     return sections.map(_section=> {
-        if (_action.sectionId === _section.id) {
+        if (action.sectionId === _section.id) {
             return {..._section,
                 contents: (_section.contents || []).map(content=> ({
                     ...content,
