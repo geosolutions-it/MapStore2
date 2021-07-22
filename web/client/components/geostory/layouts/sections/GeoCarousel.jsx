@@ -202,6 +202,7 @@ const GeoCarousel = ({
             layers={[ contentsLayer ]}
             isDrawEnabled={isDrawEnabled}
             onEnableDraw={onEnableDraw}
+            contentToolbarChildren={!isMapBackground && mode === Modes.EDIT && <InfoCarousel type={'addMap'}/>}
         >
             <LocalDrawSupport
                 active={isDrawEnabled}
@@ -219,7 +220,6 @@ const GeoCarousel = ({
                 duration={300}
             />
         </Background>
-        {!isMapBackground && mode === Modes.EDIT && <InfoCarousel type={'addMap'}/>}
         <SectionContents
             innerRef={sectionContentsNode}
             tools={{

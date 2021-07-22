@@ -248,7 +248,7 @@ const previewContents = {
                             ? 'ms-highlight'
                             : '',
                         id: content.id,
-                        preview: <Icon type={contentType} />,
+                        preview: <Icon type={contentType} thumbnail={content?.thumbnail?.image} />,
                         tools: null,
                         title: <TitleEditable
                             // render again when it gets a new title from the state

@@ -53,7 +53,8 @@ class Background extends Component {
         contentToolbar: PropTypes.func,
         inView: PropTypes.bool,
         sections: PropTypes.array,
-        innerRef: PropTypes.func
+        innerRef: PropTypes.func,
+        contentToolbarChildren: PropTypes.node
     };
 
     static defaultProps = {
@@ -85,7 +86,9 @@ class Background extends Component {
                     || this.props.sectionType === SectionTypes.BANNER && [...defaultTools, 'cover', 'remove']
                     || defaultTools
                 }
-            />
+            >
+                {this.props.contentToolbarChildren}
+            </ContentToolbar>
         );
 
         const id = `${this.props.sectionId || "ms"}-media-${(this.props.id || this.props.resourceId)}`;

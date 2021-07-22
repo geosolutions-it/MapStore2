@@ -179,6 +179,7 @@ const toolButtons = {
  */
 export default function ContentToolbar({
     tools = [],
+    children,
     ...props
 }) {
     return (
@@ -191,6 +192,7 @@ export default function ContentToolbar({
                 buttons={tools
                     .filter((tool) => tool?.id && toolButtons[tool.id] || toolButtons[tool])
                     .map(tool => tool?.id && toolButtons[tool.id]({ ...props, ...tool }) || toolButtons[tool](props))}/>
+            {children}
         </div>
     );
 }

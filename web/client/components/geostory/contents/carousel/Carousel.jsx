@@ -93,12 +93,12 @@ const DraggableCarousel = draggableContainer(({
     const editable = mode === Modes.EDIT;
 
     useEffect(() => {
-        if (!editable && currentContentId) {
+        if (currentContentId) {
             moveItemInViewById(currentContentId, {
                 margin: 32
             });
         }
-    }, [ editable, currentContentId ]);
+    }, [ currentContentId ]);
 
     const onUpdate = (_path, value, id = contentId, _mode = 'replace') => {
         const path = !isEmpty(_path) ? `.${_path}` : '';
@@ -151,13 +151,19 @@ const DraggableCarousel = draggableContainer(({
                                         {editable && <ContentToolbar
                                             editMap={isEditMap}
                                             markerDisabled={!isMapBackground || item?.id !== currentContentId}
-                                            edit={()=> onEdit(item)}
+                                            edit={(event)=> {
+                                                event.stopPropagation();
+                                                onEdit(item);
+                                            }}
                                             remove={() => onRemove(item?.id, i === 0 && items.length > 0
                                                 ? items[i + 1]?.id : items[i - 1]?.id)
                                             }
                                             forceDelBtnDisable={item?.id === currentContentId}
                                             add={add}
-                                            marker={()=> onEnableDraw(item)}
+                                            marker={(event)=> {
+                                                event.stopPropagation();
+                                                onEnableDraw(item);
+                                            }}
                                             tools={['edit', 'remove', 'marker']}/>
                                         }
                                         <Card

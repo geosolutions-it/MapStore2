@@ -143,6 +143,7 @@ const useSwipeControls = ({
 
     useEffect(() => {
         function onWheel(event) {
+            event.preventDefault();
             const newCanSwipe = computeCanSwipe();
             setCanSwipe(computeCanSwipe());
             if (!newCanSwipe) {
