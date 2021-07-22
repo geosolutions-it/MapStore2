@@ -214,7 +214,7 @@ const withIdentifyRequest  = mapPropsStream(props$ => {
  * Add identify popup support to base map of geostory with custom popup viewer
  */
 export default branch(
-    ({map: {mapInfoControl = false, mapDrawControl = false} = {}}) => mapInfoControl || !mapDrawControl,
+    ({map: {mapInfoControl = false} = {}}) => mapInfoControl,
     compose(
         withIdentifyRequest,
         withStateHandlers(({'popups': []}), {
