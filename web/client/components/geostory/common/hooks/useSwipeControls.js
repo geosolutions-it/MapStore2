@@ -22,7 +22,7 @@ import { useSwipeable } from 'react-swipeable';
  * const Menu = ({ width, height, items = [] }) => {
  *
  *     const {
- *         canSwipe, // {boolean} detect if the list of item cha swipe
+ *         canSwipe, // {boolean} detect if the list of item can swipe
  *         isStartControlActive, // {boolean} detect if the list has hidden items to the start (useful to display button control)
  *         isEndControlActive, // {boolean} detect if the list has hidden items to the end (useful to display button control)
  *         positionLabel, // {string} position of the list: `start`, `center` or `end`
