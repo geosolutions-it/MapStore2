@@ -162,12 +162,12 @@ When we say "running the back-end", in fact we say that we are running some sort
 
 MapStore is configured to use a tomcat maven plugin-in to build and run mapstore locally. To use it you have to:
 
-* make sure to run at least once `mvn install` in the root directory, to make `mapstore-webapp` artifact available.
+* make sure to run at least once `mvn install` in the root directory, to make `mapstore-product` artifact available.
 * `cd product` directory
 * run `mvn tomcat7:run-war`
 
 Your local back-end will now start at [http://localhost:8080/mapstore/](http://localhost:8080/mapstore/).
-If you want to change the port you can edit the dedicated entry in `web/pom.xml`, just remember to change also the dev-server proxy configuration on the front-end in the same way.
+If you want to change the port you can edit the dedicated entry in `product/pom.xml`, just remember to change also the dev-server proxy configuration on the front-end in the same way.
 
 #### Local tomcat instance
 
@@ -218,8 +218,8 @@ mvn eclipse:eclipse
 
 * Import the project in eclipse from **File --> Import**
 * Then select Existing project into the Workspace
-* Select root directory as "web" (to avoid eclipse to iterate over all node_modules directories looking for eclipse project)
-* import the project
+* Select root directory as MapStore root (to avoid eclipse to iterate over all node_modules directories looking for eclipse project)
+* import all projects
 
 ### Start Debugging with eclipse
 
