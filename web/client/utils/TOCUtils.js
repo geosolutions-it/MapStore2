@@ -102,6 +102,15 @@ export const flattenGroupsByTitle = (groups, idx = 0, wholeGroup = false) => {
     }, []);
 };
 
+// eslint-disable-next-line consistent-return
+export const getGroupTitle = (groupLabel, groups ) => {
+    for (let i = 0; i < groups.length; i++) {
+        if (groups[i].value === groupLabel) {
+            return groups[i].label;
+        }
+    }
+};
+
 export const getLabelName = (groupLabel = "", groups = []) => {
     let label = groupLabel.replace(/[^\.\/]+/g, match => {
         const title = get(getGroupByName(match, groups), 'title');

@@ -15,7 +15,7 @@ import Select from 'react-select';
 import Spinner from 'react-spinkit';
 
 import { getMessageById, getSupportedLocales } from '../../../../utils/LocaleUtils';
-import { isValidNewGroupOption, getLabelName, flattenGroupsByTitle} from '../../../../utils/TOCUtils';
+import { isValidNewGroupOption, getLabelName, flattenGroupsByTitle, getGroupTitle} from '../../../../utils/TOCUtils';
 import Message from '../../../I18N/Message';
 import LayerNameEditField from './LayerNameEditField';
 
@@ -143,7 +143,7 @@ class General extends React.Component {
                                         className: 'Select-create-option-placeholder'
                                     };
                                 }}
-                                value={{ label: getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
+                                value={{ label: getGroupTitle(this.props.element.group, groups), value: this.props.element && this.props.element.group || "Default" }}
                                 placeholder={getLabelName(this.props.element && this.props.element.group || "Default", groups)}
                                 onChange={(item) => {
                                     this.updateEntry("group", { target: { value: item.value || "Default" } });
