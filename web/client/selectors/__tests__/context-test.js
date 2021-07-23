@@ -62,16 +62,16 @@ describe('context selectors', () => {
                     theme: theme
                 }
             }
-        })).toEqual([theme]);
+        })).toEqual(theme);
         expect(contextThemeSelector({
             context: {
                 currentContext: {
-                    theme: [theme]
+                    theme: theme
                 }
             }
         })).toEqual([theme]);
         expect(contextThemeSelector({
             context: {}
-        })).toEqual([]);
+        })).toEqual({});
     });
 });

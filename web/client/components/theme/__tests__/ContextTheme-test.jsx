@@ -31,13 +31,13 @@ describe('ContextTheme', () => {
     it('should render a link tag when a theme object is declared', () => {
         ReactDOM.render(
             <ContextTheme
-                theme={[
+                theme={
                     {
                         id: 'dark',
                         type: 'link',
                         href: 'path/to/dark.css'
                     }
-                ]}
+                }
             />,
             document.getElementById("container")
         );
@@ -50,19 +50,20 @@ describe('ContextTheme', () => {
         ReactDOM.render(
             <ContextTheme
                 version="DEV"
-                theme={[
+                theme={
                     {
                         id: 'dark',
                         type: 'link',
                         href: 'path/to/dark.css'
                     }
-                ]}
+                }
             />,
             document.getElementById("container")
         );
         const contextStyles = document.querySelectorAll('[data-ms-context-theme]');
         expect(contextStyles.length).toBe(1);
         expect(contextStyles[0].getAttribute('href')).toBe('path/to/dark.css?DEV');
+
     });
 
 });
