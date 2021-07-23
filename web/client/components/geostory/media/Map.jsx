@@ -88,7 +88,7 @@ export default compose(
         }
         : expandMapOptions;
 
-    const isMapInfoControlActive = m.mapInfoControl && !(expandable && !active);
+    const isMapInfoControlActive = !props.isDrawEnabled && m.mapInfoControl && !(expandable && !active);
     // BaseMap component overrides the MapView id with map's id
     const mapView = (
         <>

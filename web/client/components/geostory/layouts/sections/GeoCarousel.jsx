@@ -66,7 +66,11 @@ const GeoCarousel = ({
     storyFonts,
     onSort = () => {},
     onEnableDraw = () => {},
-    isDrawEnabled
+    isDrawEnabled,
+    defaultMarkerStyle = {
+        iconColor: 'cyan',
+        iconShape: 'circle'
+    }
 }) => {
 
     const innerBackgroundNode = useRef();
@@ -153,9 +157,8 @@ const GeoCarousel = ({
         id,
         contents,
         featureStyle: ({ content, feature }, idx) => ({
-            iconColor: 'cyan',
+            ...defaultMarkerStyle,
             iconText: `${idx + 1}`,
-            iconShape: 'circle',
             ...feature.style,
             highlight: contentId === content.id
         })
