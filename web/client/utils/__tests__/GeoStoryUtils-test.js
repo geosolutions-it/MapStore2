@@ -33,7 +33,8 @@ import {
     getWebPageComponentHeight,
     parseHashUrlScrollUpdate,
     createWebFontLoaderConfig,
-    extractFontNames
+    extractFontNames,
+    getVectorLayerFromContents
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -520,5 +521,112 @@ describe("GeoStory Utils", () => {
             }
         ];
         expect(extractFontNames(fontFamilies)).toEqual(["fam1", "fam2"]);
+    });
+    it('getVectorLayerFromContents', () => {
+        const id = 'section-id';
+        const contents = [
+            {
+                id: 'content-1',
+                features: [{
+                    properties: {},
+                    geometry: { type: 'Point', coordinates: [0, 0] }
+                }]
+            }
+        ];
+
+        const layer = getVectorLayerFromContents({
+            id,
+            contents
+        });
+
+        expect(layer).toEqual({
+            visibility: true,
+            handleClickOnLayer: true,
+            id: 'geostory-vector-section-id',
+            name: 'geostory-vector-section-id',
+            type: 'vector',
+            features: [
+                {
+                    properties: {},
+                    geometry: { type: 'Point', coordinates: [ 0, 0 ] },
+                    contentRefId: 'content-1'
+                }
+            ]
+        });
+    });
+    it('getVectorLayerFromContents with featureStyle', () => {
+        const featureStyle = ({ content, feature }, idx) => ({
+            iconColor: 'cyan',
+            iconText: content.id + '-idx-' + idx,
+            iconShape: 'circle',
+            ...feature.style
+        });
+        const layer = getVectorLayerFromContents({
+            id: 'section-id',
+            contents: [
+                {
+                    id: 'content-1',
+                    features: [{
+                        properties: {},
+                        geometry: { type: 'Point', coordinates: [0, 0] },
+                        style: { iconColor: 'red' }
+                    }]
+                }
+            ],
+            featureStyle
+        });
+
+        expect(layer).toEqual({
+            visibility: true,
+            handleClickOnLayer: true,
+            id: 'geostory-vector-section-id',
+            name: 'geostory-vector-section-id',
+            type: 'vector',
+            features: [
+                {
+                    properties: {},
+                    geometry: { type: 'Point', coordinates: [ 0, 0 ] },
+                    contentRefId: 'content-1',
+                    style: {
+                        iconColor: 'red',
+                        iconText: 'content-1-idx-0',
+                        iconShape: 'circle'
+                    }
+                }
+            ]
+        });
+    });
+    it('getVectorLayerFromContents with layerOptions', () => {
+        const layerOptions = {
+            visibility: false
+        };
+        const layer = getVectorLayerFromContents({
+            id: 'section-id',
+            contents: [
+                {
+                    id: 'content-1',
+                    features: [{
+                        properties: {},
+                        geometry: { type: 'Point', coordinates: [0, 0] }
+                    }]
+                }
+            ],
+            layerOptions
+        });
+
+        expect(layer).toEqual({
+            visibility: false,
+            handleClickOnLayer: true,
+            id: 'geostory-vector-section-id',
+            name: 'geostory-vector-section-id',
+            type: 'vector',
+            features: [
+                {
+                    properties: {},
+                    geometry: { type: 'Point', coordinates: [ 0, 0 ] },
+                    contentRefId: 'content-1'
+                }
+            ]
+        });
     });
 });

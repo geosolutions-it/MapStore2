@@ -773,14 +773,7 @@
           "Attribution",
           "Home",
           {
-            "name": "GeoStory",
-            "cfg": {
-              "geoCarouselSettings": {
-                "map": {
-                  "mapInfoControl": true
-                }
-              }
-            }
+            "name": "GeoStory"
           },
           "GeoStorySave",
           "GeoStorySaveAs",

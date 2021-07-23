@@ -163,7 +163,7 @@ export default compose(
                     }
                 },
                 {
-                    glyph: 'story-immersive-section',
+                    glyph: 'story-carousel-section',
                     tooltipId: 'geostory.addGeocarouselSection',
                     onClick: () => {
                         add('sections', id, SectionTypes.CAROUSEL);

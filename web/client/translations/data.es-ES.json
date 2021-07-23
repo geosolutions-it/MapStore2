@@ -2426,6 +2426,9 @@
             "showFullscreenMap": "Ver mapa en pantalla completa",
             "carouselAddTitle": "Agregar nueva miniatura de tarjeta",
             "carouselEditTitle": "Editar miniatura de tarjeta",
+            "carouselAddMapInfo": "Agregar un mapa de fondo",
+            "carouselAddItemInfo": "Agregar un nuevo marcador para el elemento de carrusel seleccionado",
+            "carouselPlaceMarkerInfo": "Haga clic en el mapa para agregar un nuevo marcador",
             "contentToolbar": {
                 "contentSize": "Cambiar tamaño",
                 "contentHeightAuto": "Haga esta sección para adaptarse a la altura del contenido",

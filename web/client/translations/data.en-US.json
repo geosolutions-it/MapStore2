@@ -2438,6 +2438,9 @@
             "showFullscreenMap": "Show fullscreen map",
             "carouselAddTitle": "Add new card thumbnail",
             "carouselEditTitle": "Edit card thumbnail",
+            "carouselAddMapInfo": "Add a background map",
+            "carouselAddItemInfo": "Add a new marker for the selected carousel item",
+            "carouselPlaceMarkerInfo": "Click on the map to add a new marker",
             "contentToolbar": {
                 "contentSize": "Change size",
                 "contentHeightAuto": "Make this section to adapt to the content height",

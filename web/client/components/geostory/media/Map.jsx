@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { cloneElement, Children } from 'react';
 import { compose, withState } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 
@@ -38,7 +38,10 @@ export default compose(
     showCaption,
     caption: contentCaption,
     mapType = "leaflet", // default for when map MediaViewer is not connected to redux
-    onMapTypeLoaded
+    onMapTypeLoaded,
+    layers: geoStoryLayers,
+    children,
+    ...props
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
@@ -85,12 +88,12 @@ export default compose(
         }
         : expandMapOptions;
 
-    const isMapInfoControlActive = m.mapInfoControl && !(expandable && !active);
-    const isMapDrawControlActive = m.mapDrawControl && !(expandable && !active);
+    const isMapInfoControlActive = !props.isDrawEnabled && m.mapInfoControl && !(expandable && !active);
     // BaseMap component overrides the MapView id with map's id
     const mapView = (
         <>
             <MapView
+                {...props}
                 // force unmount to setup correct interactions
                 key={expandable ? 'overlay' : 'block'}
                 onMapViewChanges={onMapViewChanges}
@@ -106,12 +109,14 @@ export default compose(
                         cursor: isMapInfoControlActive ? 'pointer' : 'default'
                     }
                 }} // if map id is passed as number, the resource id, ol throws an error
-                layers={layers}
-                tools={isMapInfoControlActive ? ["popup"] : isMapDrawControlActive ? ["draw"] : []}
+                layers={geoStoryLayers ? [ ...layers, ...geoStoryLayers ] : layers}
+                tools={isMapInfoControlActive ? ["popup"] : []}
                 options={applyDefaults(updatedMapOptions)}
                 mapType={mapType}
                 onMapTypeLoaded={onMapTypeLoaded}
-            />
+            >
+                {Children.map(children, child => child ? cloneElement(child, { mapType }) : null)}
+            </MapView>
             {expandable && !editMap &&
         <Button
             className="ms-expand-media-button"
