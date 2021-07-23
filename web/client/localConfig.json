@@ -744,7 +744,9 @@
           "NavMenu",
           "Attribution",
           "Home",
-          "GeoStory",
+          {
+            "name": "GeoStory"
+          },
           "GeoStorySave",
           "GeoStorySaveAs",
           "MapEditor",

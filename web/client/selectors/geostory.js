@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, find, findIndex, isEqual, uniq, includes, isEmpty} from 'lodash';
+import {get, find, findIndex, isEqual, uniq, includes} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 import { SectionTypes, findSectionIdFromColumnId } from './../utils/GeoStoryUtils';
 import { isAdminUserSelector } from './security';
@@ -185,7 +185,11 @@ export const navigableItemsSelectorCreator = ({withImmersiveSection = false, inc
             // include only the section
             return [...p, c];
         }
-        if (includes([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL], c.type)) {
+        if (c.type === SectionTypes.CAROUSEL && (includeAlways || visibleItems[c.id])) {
+            // include only the section
+            return [...p, c];
+        }
+        if (c.type === SectionTypes.IMMERSIVE) {
             // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
                 if (includeAlways || visibleItems[column.id]) {
@@ -242,7 +246,7 @@ export const settingsItemsSelector = state => {
             const children = c.contents && c.contents.map((column) => {
                 return {label: column.title || "", value: column.id};
             }) || [];
-            return [ ...p, {label: c.title || "", value: c.id, children}];
+            return [ ...p, {label: c.title || "", value: c.id, ...(c.type === SectionTypes.IMMERSIVE && {children})}];
         }
         return [...p, {label: c.title || "", value: c.id}];
     }, []);
@@ -306,20 +310,6 @@ export const getAllCarouselContentsOfSection = (sectionId)=>(state) => {
     return (section?.contents || []);
 };
 
-export const getGeoCarouselSectionById = (sectionId) => (state) => {
-    const sections = getAllGeoCarouselSections(state) || [];
-    return find(sections, {id: sectionId});
-};
-
-export const currentCarouselContent = ({contentId, sectionId}) => (state) => {
-    const currSection = getGeoCarouselSectionById(sectionId)(state) || {};
-    return find(currSection.contents || [], {id: contentId});
-};
-
-export const getCurrentDrawContent = (state) => currentStorySelector(state)?.drawContent;
-
-export const isDrawControlEnabled = (state) => !isEmpty(getCurrentDrawContent(state));
-
-export const sideEffectState = (state) => get(state, 'geostory.sideEffect', false);
+export const isDrawControlEnabled = (state) => state?.geostory?.drawOptions ? true : false;
 
 export const geoCarouselSettings = (state) => get(state, 'geostory.geoCarouselSettings', {});

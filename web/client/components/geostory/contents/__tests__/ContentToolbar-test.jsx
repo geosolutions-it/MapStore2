@@ -350,10 +350,8 @@ describe('ContentToolbar component', () => {
             expect(buttons.length).toBe(1);
             ReactTestUtils.Simulate.click(buttons[0]);
             expect(spyUpdate).toHaveBeenCalled();
-            expect(spyUpdate.calls.length).toBe(3);
+            expect(spyUpdate.calls.length).toBe(1);
             expect(spyUpdate.calls[0].arguments).toEqual(["editMap", false]);
-            expect(spyUpdate.calls[1].arguments).toEqual(["map.mapDrawControl", false]);
-            expect(spyUpdate.calls[2].arguments).toEqual(["map.mapInfoControl", true]);
             const buttonIcon = document.getElementsByClassName('glyphicon-1-close');
             expect(buttonIcon.length).toBe(1);
             done();

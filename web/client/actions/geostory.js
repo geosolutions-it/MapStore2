@@ -42,11 +42,8 @@ export const REMOVE_RESOURCE = "GEOSTORY:REMOVE_RESOURCE";
 export const SET_PENDING_CHANGES = "GEOSTORY:SET_PENDING_CHANGES";
 export const SET_UPDATE_URL_SCROLL = "GEOSTORY:SET_UPDATE_URL_SCROLL";
 export const UPDATE_MEDIA_EDITOR_SETTINGS = "GEOSTORY:UPDATE_MEDIA_EDITOR_SETTINGS";
-export const DRAWING_FEATURE = "GEOSTORY:DRAWING_FEATURE";
-export const SIDE_EFFECT = "GEOSTORY:SIDE_EFFECT";
-export const UPDATE_GEO_CAROUSEL_SETTINGS = "GEOSTORY:UPDATE_GEO_CAROUSEL_SETTINGS";
 export const HIDE_CAROUSEL_ITEMS = "GEOSTORY:HIDE_CAROUSEL_ITEMS";
-export const SYNC_CAROUSEL_MAP = "GEOSTORY:SYNC_CAROUSEL_MAP";
+export const ENABLE_DRAW = "GEOSTORY:ENABLE_DRAW";
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
  *
@@ -257,31 +254,11 @@ export const updateMediaEditorSettings = mediaEditorSettings => ({ type: UPDATE_
 export const geostoryScrolling = (status) => ({ type: GEOSTORY_SCROLLING, status});
 
 /**
- * Set the feature drawn
- */
-export const drawingFeatures = (features = []) => ({ type: DRAWING_FEATURE, features });
-
-/**
- * Set the side effect flag for carousel section's action
- */
-export const sideEffect = (status) => ({ type: SIDE_EFFECT, status });
-
-/**
- * Set the carousel setting configuration from localconfig
- */
-export const updateGeoCarouselSetting = (geoCarouselSettings) => ({ type: UPDATE_GEO_CAROUSEL_SETTINGS, geoCarouselSettings });
-
-/**
  * Hide the carousel item in the section
  */
 export const hideCarouselItems = (sectionId, showContentId) => ({ type: HIDE_CAROUSEL_ITEMS, sectionId, showContentId });
 
-/**
- * Sync the map background with carousel section's contents
- * for a seamless transition
- */
-export const syncCarouselMap = (sectionId, {
-    hideContentId,
-    layers,
-    resourceId} = {}) =>
-    ({ type: SYNC_CAROUSEL_MAP, layers, sectionId, hideContentId, resourceId });
+export const enableDraw = (drawOptions) => ({
+    type: ENABLE_DRAW,
+    drawOptions
+});

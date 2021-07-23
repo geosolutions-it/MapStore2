@@ -99,42 +99,44 @@
       "type": "carousel",
       "id": "SomeID_carousel",
       "title": "Abstract",
+      "background": {
+        "resourceId": "resource_id",
+        "type": "map",
+        "map": {
+          "layers": [{
+            "type": "vector",
+            "id": "geostory",
+            "features": [{
+              "type": "FeatureCollection",
+              "features": [{
+                "type": "Feature",
+                "geometry": null,
+                "properties": "1",
+                "style": [{
+                  "id": "2",
+                  "highlight":true,
+                  "iconColor":"cyan",
+                  "iconText":"2",
+                  "iconShape":"circle"
+                }]
+              }],
+              "contentRefId": "ccol1"
+              },
+              {
+                "type": "FeatureCollection",
+                "features": [],
+                "contentRefId": "ccol2"
+              }
+            ]
+          }]
+        }
+      },
       "contents": [
         {
           "id": "ccol1",
           "type": "column",
-          "background": {
-            "resourceId": "resource_id",
-            "type": "map",
-            "map": {
-              "layers": [{
-                "type": "vector",
-                "id": "geostory",
-                "features": [{
-                  "type": "FeatureCollection",
-                  "features": [{
-                    "type": "Feature",
-                    "geometry": null,
-                    "properties": "1",
-                    "style": [{
-                      "id": "2",
-                      "highlight":true,
-                      "iconColor":"cyan",
-                      "iconText":"2",
-                      "iconShape":"circle"
-                    }]
-                  }],
-                  "contentRefId": "ccol1"
-                  },
-                  {
-                    "type": "FeatureCollection",
-                    "features": [],
-                    "contentRefId": "ccol2"
-                  }
-                ]
-              }]
-            }
-          },
+          "background": {},
+          "title": "Card one",
           "contents": [
             {
               "id": "car1_col1_content1",
@@ -149,8 +151,7 @@
             }
           ],
           "thumbnail": {
-            "data": "img1.png",
-            "title": "Card one"
+            "data": "img1.png"
           }
         },
         {

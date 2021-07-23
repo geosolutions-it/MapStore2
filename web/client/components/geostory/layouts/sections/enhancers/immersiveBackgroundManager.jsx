@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import React from 'react';
 import { compose, createEventHandler, withProps, mapPropsStream, withHandlers, setObservableConfig } from 'recompose';
 import { findIndex, get, maxBy } from "lodash";
 import { Observable } from "rxjs";
@@ -96,20 +97,43 @@ export const backgroundPropWithHandler = compose(
     updateBackgroundEnhancer
 );
 
+export const backgroundSectionProp = (Component) => (props) => {
+    const contentInView = getContentInView(props.contents || [], props.backgroundId) || {};
+    const contentId = contentInView && contentInView.id;
+    const newProps = {
+        ...props,
+        contentId,
+        sectionId: props.id,
+        path: `sections[{"id": "${props.id}"}].background`
+    };
+    return <Component { ...newProps } />;
+};
+
+export const updateBackgroundSectionEnhancer = (Component) => (props) => {
+    const newProps = {
+        ...props,
+        updateBackground: (path, ...args) => props.update(`sections[{"id": "${props.sectionId}"}].background.` + path, ...args),
+        updateSection: (...args) => props.update(`sections[{"id": "${props.sectionId}"}]`, ...args)
+    };
+    return <Component { ...newProps } />;
+};
+
+export const backgroundVisibilityStream = mapPropsStream(props$ => {
+    // create an handler for intersection events
+    const { handler: onVisibilityChange, stream: intersection$ } = createEventHandler();
+    return Observable.combineLatest(
+        props$, // rendering properties stream
+        createBackgroundIdStream(intersection$, props$) // generates backgroundId property stream
+            .startWith({}), // emit first event from all the streams to allow first rendering
+        // HERE WE CAN PLACE EVERY OTHER INTERSECTION EVENT STREAM HANDLER
+        (...propsParts) => ({
+            ...(propsParts.reduce((props = {}, part) => ({ ...props, ...part }), {})),
+            onVisibilityChange
+        })
+    );
+});
+
 export default compose(
-    mapPropsStream(props$ => {
-        // create an handler for intersection events
-        const { handler: onVisibilityChange, stream: intersection$ } = createEventHandler();
-        return Observable.combineLatest(
-            props$, // rendering properties stream
-            createBackgroundIdStream(intersection$, props$) // generates backgroundId property stream
-                .startWith({}), // emit first event from all the streams to allow first rendering
-            // HERE WE CAN PLACE EVERY OTHER INTERSECTION EVENT STREAM HANDLER
-            (...propsParts) => ({
-                ...(propsParts.reduce((props = {}, part) => ({ ...props, ...part }), {})),
-                onVisibilityChange
-            })
-        );
-    }),
+    backgroundVisibilityStream,
     backgroundPropWithHandler
 );

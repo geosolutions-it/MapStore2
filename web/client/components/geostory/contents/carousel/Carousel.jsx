@@ -5,48 +5,46 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useState} from 'react';
-import CarouselI from 'react-items-carousel';
+import React, { useState, useEffect } from 'react';
 import cs from 'classnames';
 import isEmpty from 'lodash/isEmpty';
 import find from 'lodash/find';
-import get from 'lodash/get';
 import {Glyphicon} from "react-bootstrap";
 import DefaultContentToolbar from '../../contents/ContentToolbar';
-import {GEOSTORY, Modes} from "../../../../utils/GeoStoryUtils";
+import { Modes } from "../../../../utils/GeoStoryUtils";
 import ItemThumbnail from "./carouselItem/ItemThumbnail";
 import draggableComponent from '../../../misc/enhancers/draggableComponent';
 import draggableContainer from "../../../misc/enhancers/draggableContainer";
 import uuid from "uuid";
+import Button from '../../../misc/Button';
 import defaultThumb from './img/default.jpg';
-import withScrollEnhancer from './withScrollEnhancer';
-import withKeyboardEnhancer from './withKeyboardEnhancer';
-const Carousel = withScrollEnhancer(CarouselI);
+import InfoCarousel from "./InfoCarousel";
+import useSwipeControls from '../../common/hooks/useSwipeControls';
 
-const CarouselItem = draggableComponent(({
+const DraggableCarouselItem = draggableComponent(({
+    title,
     thumbnail,
     index,
     isSelected,
-    disableEvent,
     ...props
 }) => {
-    return props.isDraggable && props.connectDragSource && props.connectDragSource(
-        <div tabIndex={index}
-            className={cs('carousel-item', {'carousel-item-selected': isSelected, 'disable-event': disableEvent})}
+    const cardComponent = (
+        <div
+            className={cs('ms-geo-carousel-item', {'ms-geo-carousel-item-selected': isSelected })}
             onClick={props.onClick}>
-            <div className={'carousel-item-inner-wrapper'} style={{backgroundImage: `url(${thumbnail?.image || defaultThumb})`}}>
-                <span className={'carousel-item-inner'}>{thumbnail?.title || `Item ${index + 1}`}</span>
-                <span className={'carousel-item-inner-index'}>{index + 1}</span>
+            <div className={'ms-geo-carousel-item-inner-wrapper'} style={{backgroundImage: `url(${thumbnail?.image || defaultThumb})`}}>
+                <span className={'ms-geo-carousel-item-inner'}>{title || `Item ${index + 1}`}</span>
+                <span className={'ms-geo-carousel-item-inner-index'}>{index + 1}</span>
             </div>
         </div>
     );
+    return props.isDraggable && props.connectDragSource ? props.connectDragSource(cardComponent) : cardComponent;
 });
-const DraggableCarouselItem = withKeyboardEnhancer(CarouselItem);
 
 const DraggableCarousel = draggableContainer(({
     mode,
     add,
-    update,
+    update = () => {},
     remove,
     sectionId,
     isMapBackground,
@@ -54,18 +52,53 @@ const DraggableCarousel = draggableContainer(({
     items,
     contentToolbar: ContentToolbar = DefaultContentToolbar,
     cardComponent: Card,
-    expandable,
-    containerWidth
+    containerWidth,
+    isDrawEnabled,
+    onEnableDraw,
+    isEditMap,
+    innerRef,
+    deltaSwipeSize = 200,
+    transition = 300,
+    style,
+    controlStyle
 }) => {
+
     const [edit, setEdit] = useState(false);
     const [contentId, setContentId] = useState(undefined);
+    const [title, setTitle] = useState('');
     const [thumbnail, setThumbnail] = useState({});
+
     const onEdit = (item) => {
         setContentId(item?.id);
         setEdit(true);
         setThumbnail(item?.thumbnail);
+        setTitle(item?.title);
     };
+
+    const {
+        isStartControlActive,
+        isEndControlActive,
+        containerPropsHandlers,
+        contentPropsHandlers,
+        itemPropsHandlers,
+        moveToDeltaSize,
+        moveItemInViewById
+    } = useSwipeControls({
+        direction: 'horizontal',
+        width: containerWidth,
+        deltaScroll: deltaSwipeSize,
+        transition
+    }, [items.length]);
+
     const editable = mode === Modes.EDIT;
+
+    useEffect(() => {
+        if (currentContentId) {
+            moveItemInViewById(currentContentId, {
+                margin: 32
+            });
+        }
+    }, [ currentContentId ]);
 
     const onUpdate = (_path, value, id = contentId, _mode = 'replace') => {
         const path = !isEmpty(_path) ? `.${_path}` : '';
@@ -77,86 +110,99 @@ const DraggableCarousel = draggableContainer(({
         currentContentId === id && update(`sections[{"id":"${sectionId}"}].contents[{"id":"${prevId}"}].hideContent`, false);
     };
 
-    const onMarker = (item) => {
-        // Separate the call to allow side-effects
-        onUpdate('background.map.mapDrawControl', true, item?.id);
-        onUpdate('background.editMap', true, item?.id);
-
-        // Disable info control when drawing
-        const mapInfoPath = 'background.map.mapInfoControl';
-        const isMapInfoControl = get(item, mapInfoPath);
-        if (isMapInfoControl) {
-            onUpdate('background.map', { mapInfoControl: false, resetMapInfo: true}, item?.id, 'merge');
-        }
-    };
-
     const onRemoveAll = () => remove(`sections[{"id":"${sectionId}"}]`);
 
-    const isEditMap = items.some(({background: { editMap = false } = {} })=> editMap);
+    // enable add only if the background is a map and all the contents as at least one feature
+    const addDisabled = !(isMapBackground && !find(items, item => (item?.features?.length || 0) === 0));
 
-    const disableAddItem = () => {
-        const {background: {map: { layers = []} = {}} = {}} = find(items, {id: currentContentId}) || {};
-        const {features = []} = find(layers, {id: GEOSTORY}) || {};
-        return !find(features, {contentRefId: currentContentId});
-    };
+    const displayMarkerInfo = () => isEditMap && editable && isDrawEnabled && !!find(items, item => item.id === currentContentId && (item?.features?.length || 0) === 0);
 
     return (
         <>
-            <div className={'ms-section-carousel'}>
-                {editable && <ContentToolbar addDisabled={!isMapBackground || disableAddItem()}
+            <div
+                ref={innerRef}
+                style={style}
+                className={'ms-geo-carousel'}>
+                {editable && items.length === 1 && addDisabled && !isEditMap && <InfoCarousel type={"addInfo"}/>}
+                {displayMarkerInfo() && <InfoCarousel type={"addMarker"}/>}
+                {editable && <ContentToolbar addDisabled={addDisabled}
                     add={add} editMap={isEditMap} remove={onRemoveAll} tools={['add', 'remove']}/>}
-                <Carousel
-                    expandable={expandable}
-                    containerWidth={containerWidth}
-                    editable={editable}
-                    currentContentId={currentContentId}
-                    items={items}
-                    gutter={12}
-                    activePosition={'center'}
-                    chevronWidth={60}
-                    alwaysShowChevrons
-                    showSlither
-                    rightChevron={<Glyphicon glyph={'chevron-right'}/>}
-                    leftChevron={<Glyphicon glyph={'chevron-left'}/>}
-                    classes={{
-                        itemsInnerWrapper: cs('items-inner-wrapper', {'items-inner-wrapper-view': mode === Modes.VIEW}),
-                        rightChevronWrapper: 'chevron-wrapper right-chevron',
-                        leftChevronWrapper: 'chevron-wrapper left-chevron',
-                        itemsWrapper: 'items-wrapper'
-                    }}
-                >
-                    {
-                        items.map((item, i) =>
-                            <>
-                                {editable && <ContentToolbar
-                                    editMap={isEditMap}
-                                    markerDisabled={!isMapBackground || item?.id !== currentContentId}
-                                    edit={()=> onEdit(item)}
-                                    remove={() => onRemove(item?.id, i === 0 && items.length > 0
-                                        ? items[i + 1]?.id : items[i - 1]?.id)
-                                    }
-                                    forceDelBtnDisable={item?.id === currentContentId}
-                                    add={add}
-                                    marker={()=>onMarker(item)}
-                                    tools={['edit', 'remove', 'marker']}/>
-                                }
-                                <Card
-                                    key={i}
-                                    index={i}
-                                    items={items}
-                                    update={update}
-                                    sectionId={sectionId}
-                                    selectedId={currentContentId}
-                                    isSelected={ item?.id === currentContentId}
-                                    disableEvent={isEditMap} {...item}
-                                />
-                            </>
-                        )
-                    }
-                </Carousel>
-
+                <div
+                    { ...containerPropsHandlers() }
+                    className="ms-horizontal-menu">
+                    <div { ...contentPropsHandlers() }>
+                        {
+                            items.map((item, i) => {
+                                const itemProps = itemPropsHandlers({
+                                    id: item.id,
+                                    onClick: !isEditMap
+                                        ? () => {
+                                            update(`sections[{"id":"${sectionId}"}].contents[{"id":"${item.id}"}].carouselToggle`, true);
+                                        }
+                                        : undefined
+                                });
+                                return (
+                                    <div
+                                        key={i}
+                                        { ...itemProps }
+                                        className="ms-geo-carousel-item-wrapper"
+                                        style={isEditMap ? { pointerEvents: 'none' } : {}}
+                                    >
+                                        {editable && <ContentToolbar
+                                            editMap={isEditMap}
+                                            markerDisabled={!isMapBackground || item?.id !== currentContentId}
+                                            edit={(event)=> {
+                                                event.stopPropagation();
+                                                onEdit(item);
+                                            }}
+                                            remove={() => onRemove(item?.id, i === 0 && items.length > 0
+                                                ? items[i + 1]?.id : items[i - 1]?.id)
+                                            }
+                                            forceDelBtnDisable={item?.id === currentContentId}
+                                            add={add}
+                                            marker={(event)=> {
+                                                event.stopPropagation();
+                                                onEnableDraw(item);
+                                            }}
+                                            tools={['edit', 'remove', 'marker']}/>
+                                        }
+                                        <Card
+                                            key={i}
+                                            index={i}
+                                            items={items}
+                                            update={update}
+                                            sectionId={sectionId}
+                                            selectedId={currentContentId}
+                                            isSelected={ item?.id === currentContentId}
+                                            {...item}
+                                        />
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                    {isStartControlActive && <Button
+                        className="square-button-md no-border ms-geo-carousel-control"
+                        style={{
+                            ...controlStyle,
+                            position: 'absolute'
+                        }}
+                        onClick={() => moveToDeltaSize(deltaSwipeSize)}>
+                        <Glyphicon glyph="chevron-left"/>
+                    </Button>}
+                    {isEndControlActive && <Button
+                        className="square-button-md no-border ms-geo-carousel-control"
+                        style={{
+                            ...controlStyle,
+                            position: 'absolute',
+                            right: 0
+                        }}
+                        onClick={() => moveToDeltaSize(-deltaSwipeSize)}>
+                        <Glyphicon glyph="chevron-right"/>
+                    </Button>}
+                </div>
             </div>
-            {edit && <ItemThumbnail thumbnail={thumbnail} update={onUpdate} onClose={()=>setEdit(false)}/>}
+            {edit && <ItemThumbnail title={title} thumbnail={thumbnail} update={onUpdate} onClose={()=>setEdit(false)}/>}
         </>
     );
 });
@@ -165,11 +211,14 @@ export default ({
     onSort,
     sectionId: id,
     contents = [],
+    onEnableDraw = () => {},
+    isEditMap,
+    isDrawEnabled,
     ...props
 }) =>  (
     <DraggableCarousel
         containerId={id}
-        isDraggable
+        isDraggable={props.mode === Modes.EDIT}
         onSort={(sortIdTo, sortIdFrom, itemDataTo, itemDataFrom) => {
             if (itemDataTo.containerId === itemDataFrom.containerId) {
                 const source = `sections[{ "id": "${id}" }].contents[{"id":"${itemDataFrom.id}"}]`;
@@ -181,6 +230,9 @@ export default ({
         }}
         {...{...props, sectionId: id}}
         cardComponent={DraggableCarouselItem}
-        items={ contents.map(({id: contentId, thumbnail = {}, background}) =>({id: contentId, thumbnail, background}))}
+        items={ contents.map(({id: contentId, thumbnail = {}, features, title }) =>({id: contentId, thumbnail, features, title }))}
+        isDrawEnabled={isDrawEnabled}
+        onEnableDraw={onEnableDraw}
+        isEditMap={isEditMap}
     />
 );

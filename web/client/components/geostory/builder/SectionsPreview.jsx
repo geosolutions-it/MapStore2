@@ -51,7 +51,7 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         banner: 'story-banner-section',
         paragraph: 'story-paragraph-section',
         immersive: 'story-immersive-section',
-        carousel: 'story-immersive-section',
+        carousel: 'story-carousel-section',
         media: 'story-media-section',
         map: '1-map',
         columnleft: 'align-left',
@@ -248,9 +248,11 @@ const previewContents = {
                             ? 'ms-highlight'
                             : '',
                         id: content.id,
-                        preview: <Icon type={contentType} />,
+                        preview: <Icon type={contentType} thumbnail={content?.thumbnail?.image} />,
                         tools: null,
                         title: <TitleEditable
+                            // render again when it gets a new title from the state
+                            key={content.title}
                             title={content.title || capitalize(content.type)}
                             onUpdate={(text) => onUpdate(`sections[{"id": "${id}"}].contents[{"id":"${content.id}"}]`, {title: text}, "merge")}/>,
                         description: `type: ${content.type}`,
