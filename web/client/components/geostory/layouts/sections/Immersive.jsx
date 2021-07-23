@@ -154,8 +154,8 @@ const Immersive = ({
                 }
             },
             {
-                glyph: 'story-immersive-content',
-                tooltipId: 'geostory.addGeocarouselContent',
+                glyph: 'story-carousel-section',
+                tooltipId: 'geostory.addGeocarouselSection',
                 onClick: () => {
                     add(`sections`, id, SectionTypes.CAROUSEL);
                 }

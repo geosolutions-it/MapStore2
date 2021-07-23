@@ -68,7 +68,7 @@ const ContainerDimensions = emptyState(
                 }
             },
             {
-                glyph: 'story-immersive-section',
+                glyph: 'story-carousel-section',
                 tooltipId: 'geostory.addGeocarouselContent',
                 onClick: () => {
                     add(`sections`, 0, SectionTypes.CAROUSEL);
@@ -125,7 +125,9 @@ const Cascade = ({
     contentToolbar,
     storyFonts,
     onSort = () => {},
-    isDrawEnabled = false
+    isDrawEnabled = false,
+    onEnableDraw = () => {},
+    defaultMarkerStyle
 }) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
@@ -162,7 +164,7 @@ const Cascade = ({
             }
         `}} />}
                     {
-                        sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
+                        sections.map(({ contents = [], id: sectionId, type: sectionType, cover, background }) => {
                             return (
                                 <Section
                                     focusedContent={focusedContent}
@@ -189,6 +191,9 @@ const Cascade = ({
                                     storyFonts={storyFonts}
                                     onSort={onSort}
                                     isDrawEnabled={isDrawEnabled}
+                                    onEnableDraw={onEnableDraw}
+                                    background={background}
+                                    defaultMarkerStyle={defaultMarkerStyle}
                                 />
                             );
                         })

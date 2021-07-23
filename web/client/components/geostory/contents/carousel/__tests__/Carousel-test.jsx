@@ -30,21 +30,21 @@ describe('Carousel component', () => {
     it('Carousel rendering with defaults', () => {
         ReactDOM.render(<Comp/>, document.getElementById("container"));
         const container = document.getElementById("container");
-        const el = container.querySelector('.ms-section-carousel');
+        const el = container.querySelector('.ms-geo-carousel');
         expect(el).toExist();
     });
     it('Carousel render items in view mode', () => {
         ReactDOM.render(<Comp sectionId={'SomeID_carousel'} contentId={'ccol1'}
             contents={contents} mode={'view'} isMapBackground/>, document.getElementById("container"));
         const container = document.getElementById("container");
-        const el = container.querySelector('.ms-section-carousel');
+        const el = container.querySelector('.ms-geo-carousel');
         expect(el).toExist();
-        const items = container.querySelectorAll('.carousel-item');
+        const items = container.querySelectorAll('.ms-geo-carousel-item');
         expect(items.length).toBeTruthy();
-        expect(items[0].classList.contains('carousel-item-selected')).toBeTruthy();
-        const [card] = container.querySelectorAll('.carousel-item-inner-wrapper');
-        const title = card.getElementsByClassName('carousel-item-inner').item(0);
-        const index = card.getElementsByClassName('carousel-item-inner-index').item(0);
+        expect(items[0].classList.contains('ms-geo-carousel-item-selected')).toBeTruthy();
+        const [card] = container.querySelectorAll('.ms-geo-carousel-item-inner-wrapper');
+        const title = card.getElementsByClassName('ms-geo-carousel-item-inner').item(0);
+        const index = card.getElementsByClassName('ms-geo-carousel-item-inner-index').item(0);
         expect(title.textContent).toBe('Card one');
         expect(index.textContent).toBe('1');
     });
@@ -55,9 +55,9 @@ describe('Carousel component', () => {
             contentToolbar={DefaultContentToolbar}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
-        const el = container.querySelector('.ms-section-carousel');
+        const el = container.querySelector('.ms-geo-carousel');
         expect(el).toExist();
-        const items = container.querySelectorAll('.carousel-item');
+        const items = container.querySelectorAll('.ms-geo-carousel-item');
         expect(items.length).toBeTruthy();
 
         // Carousel toolbar
@@ -69,7 +69,7 @@ describe('Carousel component', () => {
         expect(buttons[1].querySelector('.glyphicon-trash')).toExist();
 
         // Carousel item toolbar
-        const itemToolbar = container.querySelector('.items-inner-wrapper .ms-content-toolbar');
+        const itemToolbar = container.querySelector('.ms-geo-carousel-item-wrapper .ms-content-toolbar');
         expect(itemToolbar).toBeTruthy();
         const itemButtons = itemToolbar.querySelectorAll('.btn-group span button');
         expect(itemButtons.length).toBe(3);
@@ -85,9 +85,9 @@ describe('Carousel component', () => {
             contentToolbar={DefaultContentToolbar}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
-        const el = container.querySelector('.ms-section-carousel');
+        const el = container.querySelector('.ms-geo-carousel');
         expect(el).toExist();
-        const items = container.querySelectorAll('.carousel-item');
+        const items = container.querySelectorAll('.ms-geo-carousel-item');
         expect(items.length).toBeTruthy();
 
         // Carousel toolbar
@@ -99,7 +99,7 @@ describe('Carousel component', () => {
         expect(buttons[1].classList.contains('disabled')).toBeFalsy();
 
         // Carousel item toolbar
-        const itemToolbar = container.querySelector('.items-inner-wrapper .ms-content-toolbar');
+        const itemToolbar = container.querySelector('.ms-geo-carousel-item-wrapper .ms-content-toolbar');
         expect(itemToolbar).toBeTruthy();
         const itemButtons = itemToolbar.querySelectorAll('.btn-group span button');
         expect(itemButtons.length).toBe(3);
@@ -110,18 +110,67 @@ describe('Carousel component', () => {
     });
 
     it('Carousel item on add', () => {
+        const _contents = [
+            {
+                "id": "ccol1",
+                "type": "column",
+                features: [{
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {type: 'Point', coordinates: [0, 0]}
+                }],
+                "contents": [
+                    {
+                        "id": "car1_col1_content1",
+                        "type": "text",
+                        "html": "<p>this is some html content</p>"
+                    },
+                    {
+                        "id": "car1_col1_content2",
+                        "type": "media",
+                        "lazy": false
+                    }
+                ],
+                "thumbnail": {
+                    "data": "img1.png",
+                    "title": "Card one"
+                }
+            }, {
+                "id": "ccol2",
+                "type": "column",
+                features: [{
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {type: 'Point', coordinates: [0, 0]}
+                }],
+                "contents": [
+                    {
+                        "id": "car1_col2_content1",
+                        "type": "text",
+                        "html": "<p>this is some html content</p>"
+                    },
+                    {
+                        "id": "car1_col2_content2",
+                        "type": "media",
+                        "lazy": false
+                    }
+                ]
+            }];
         const action = { add: ()=>{} };
         const spyAdd = expect.spyOn(action, 'add');
         ReactDOM.render(<Comp
-            sectionId={'SomeID_carousel'} contentId={'ccol1'}
-            contents={contents} mode={'edit'} isMapBackground
+            sectionId={'SomeID_carousel'}
+            contentId={'ccol1'}
+            contents={_contents}
+            mode={'edit'}
+            isMapBackground
             contentToolbar={DefaultContentToolbar}
             add={action.add}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
-        const el = container.querySelector('.ms-section-carousel');
+        const el = container.querySelector('.ms-geo-carousel');
         expect(el).toExist();
-        const items = container.querySelectorAll('.carousel-item');
+        const items = container.querySelectorAll('.ms-geo-carousel-item');
         expect(items.length).toBeTruthy();
 
         // Carousel toolbar
@@ -144,9 +193,9 @@ describe('Carousel component', () => {
             remove={action.remove}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
-        const el = container.querySelector('.ms-section-carousel');
+        const el = container.querySelector('.ms-geo-carousel');
         expect(el).toExist();
-        const items = container.querySelectorAll('.carousel-item');
+        const items = container.querySelectorAll('.ms-geo-carousel-item');
         expect(items.length).toBeTruthy();
 
         // Carousel toolbar
@@ -174,13 +223,13 @@ describe('Carousel component', () => {
             remove={action.remove}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
-        const el = container.querySelector('.ms-section-carousel');
+        const el = container.querySelector('.ms-geo-carousel');
         expect(el).toExist();
-        const items = container.querySelectorAll('.carousel-item');
+        const items = container.querySelectorAll('.ms-geo-carousel-item');
         expect(items.length).toBeTruthy();
 
         // Carousel item toolbar
-        const itemToolbar = container.querySelectorAll('.items-inner-wrapper .ms-content-toolbar');
+        const itemToolbar = container.querySelectorAll('.ms-geo-carousel-item-wrapper .ms-content-toolbar');
         expect(itemToolbar.length).toBeTruthy();
         const itemButtons = itemToolbar[1].querySelectorAll('.btn-group span button');
         expect(itemButtons.length).toBe(3);
@@ -194,35 +243,96 @@ describe('Carousel component', () => {
         expect(spyRemove.calls[0].arguments[0]).toEqual('sections[{"id":"SomeID_carousel"}].contents[{"id":"ccol2"}]');
     });
     it('Carousel item on toggle map marker', () => {
-        const action = { update: ()=>{} };
-        const spyUpdate = expect.spyOn(action, 'update');
+        const action = { onEnableDraw: ()=>{} };
+        const spyOnEnableDraw = expect.spyOn(action, 'onEnableDraw');
         ReactDOM.render(<Comp
             sectionId={'SomeID_carousel'} contentId={'ccol1'}
             contents={contents} mode={'edit'} isMapBackground
             contentToolbar={DefaultContentToolbar}
-            update={action.update}
+            onEnableDraw={action.onEnableDraw}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
-        const el = container.querySelector('.ms-section-carousel');
+        const el = container.querySelector('.ms-geo-carousel');
         expect(el).toExist();
-        const items = container.querySelectorAll('.carousel-item');
+        const items = container.querySelectorAll('.ms-geo-carousel-item');
         expect(items.length).toBeTruthy();
 
         // Carousel item toolbar
-        const itemToolbar = container.querySelector('.items-inner-wrapper .ms-content-toolbar');
+        const itemToolbar = container.querySelector('.ms-geo-carousel-item-wrapper .ms-content-toolbar');
         expect(itemToolbar).toBeTruthy();
         const itemButtons = itemToolbar.querySelectorAll('.btn-group span button');
         expect(itemButtons.length).toBe(3);
         const markerButton = itemButtons[2];
         TestUtils.Simulate.click(markerButton);
-        expect(spyUpdate).toHaveBeenCalled();
-        const [path1, element1, mode1] = spyUpdate.calls[0].arguments;
-        const [path2, element2, mode2] = spyUpdate.calls[1].arguments;
-        expect(path1).toEqual('sections[{"id":"SomeID_carousel"}].contents[{"id":"ccol1"}].background.map.mapDrawControl');
-        expect(element1).toBeTruthy();
-        expect(mode1).toBe('replace');
-        expect(path2).toEqual('sections[{"id":"SomeID_carousel"}].contents[{"id":"ccol1"}].background.editMap');
-        expect(element2).toBeTruthy();
-        expect(mode2).toBe('replace');
+        expect(spyOnEnableDraw).toHaveBeenCalled();
+    });
+    it('Carousel render section default with helper tooltips', () => {
+
+        let content = {
+            "id": "ccol2",
+            "type": "column",
+            "background": {},
+            "contents": [
+                {
+                    "id": "car1_col2_content1",
+                    "type": "text",
+                    "html": "<p>this is some html content</p>"
+                },
+                {
+                    "id": "car1_col2_content2",
+                    "type": "media",
+                    "lazy": false
+                }
+            ]
+        };
+
+        ReactDOM.render(<Comp
+            sectionId={'SomeID_carousel'} contentId={'ccol1'}
+            contents={[content]} mode={'edit'}
+            contentToolbar={DefaultContentToolbar}
+        />, document.getElementById("container"));
+        let container = document.getElementById("container");
+        let el = container.querySelector('.ms-geo-carousel');
+        expect(el).toExist();
+        const items = container.querySelectorAll('.ms-geo-carousel-item');
+        expect(items.length).toBeTruthy();
+
+        // Default helper tooltip on add button
+        const [addButtonInfo] = el.getElementsByClassName('ms-carousel-add-info');
+        expect(addButtonInfo).toBeTruthy();
+        expect(addButtonInfo.textContent).toBe('geostory.carouselAddItemInfo');
+
+        content = {
+            "id": "ccol2",
+            "type": "column",
+            "background": {},
+            "contents": [
+                {
+                    "id": "car1_col2_content1",
+                    "type": "text",
+                    "html": "<p>this is some html content</p>"
+                },
+                {
+                    "id": "car1_col2_content2",
+                    "type": "media",
+                    "lazy": false
+                }
+            ]
+        };
+        ReactDOM.render(<Comp
+            sectionId={'SomeID_carousel'} contentId={'ccol2'}
+            contents={[content]} mode={'edit'}
+            contentToolbar={DefaultContentToolbar}
+            isEditMap
+            isDrawEnabled
+        />, document.getElementById("container"));
+        container = document.getElementById("container");
+        el = container.querySelector('.ms-geo-carousel');
+        expect(el).toExist();
+
+        // Default helper tooltip on edit map background
+        const [mediaButtonInfo] = el.getElementsByClassName('ms-carousel-marker-info');
+        expect(mediaButtonInfo).toBeTruthy();
+        expect(mediaButtonInfo.textContent).toBe('geostory.carouselPlaceMarkerInfo');
     });
 });

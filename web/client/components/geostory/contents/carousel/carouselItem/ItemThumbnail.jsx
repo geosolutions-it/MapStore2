@@ -17,7 +17,7 @@ const FormControl = localizedProps('placeholder')(FC);
 export default (props) => {
     const [thumbnailErrors, setThumbnailErrors] = useState([]);
     const [thumbnail, setThumbnail] = useState({data: props?.thumbnail?.image});
-    const [title, setTitle] = useState(props.thumbnail?.title);
+    const [title, setTitle] = useState(props?.title);
     const renderThumbnailErrors = () => {
         const errorMessages = {
             "FORMAT": <Message msgId="map.errorFormat" />,
@@ -48,7 +48,8 @@ export default (props) => {
                     text: <Message msgId={props.editing ? 'save' : 'backgroundDialog.add'}/>,
                     bsStyle: 'primary',
                     onClick: () => {
-                        props.update("thumbnail", {image: thumbnail.data, title});
+                        props.update("thumbnail", { image: thumbnail.data });
+                        props.update("title", title);
                         props.onClose();
                     }
                 }

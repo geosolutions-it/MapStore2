@@ -28,7 +28,7 @@ describe('ItemThumbnail component', () => {
         expect(el).toExist();
     });
     it('ItemThumbnail rendering with data', () => {
-        ReactDOM.render(<ItemThumbnail thumbnail={{title: "Card one"}}/>, document.getElementById("container"));
+        ReactDOM.render(<ItemThumbnail title={"Card one"} thumbnail={{}}/>, document.getElementById("container"));
         const container = document.getElementById("container");
         const el = container.querySelector('.modal-dialog');
         expect(el).toExist();
@@ -39,7 +39,7 @@ describe('ItemThumbnail component', () => {
         const action = {update: () => {}, onClose: () => {}};
         const spyUpdate = expect.spyOn(action, 'update');
         const spyClose = expect.spyOn(action, 'onClose');
-        ReactDOM.render(<ItemThumbnail thumbnail={{title: "Card one"}} onClose={action.onClose}
+        ReactDOM.render(<ItemThumbnail title={"Card one"} thumbnail={{}} onClose={action.onClose}
             update={action.update}/>, document.getElementById("container"));
         const container = document.getElementById("container");
         const el = container.querySelector('.modal-dialog');

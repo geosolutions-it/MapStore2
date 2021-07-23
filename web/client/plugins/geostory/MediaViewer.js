@@ -22,6 +22,7 @@ import { SectionTypes } from '../../utils/GeoStoryUtils';
 import withMediaVisibilityContainer from '../../components/geostory/common/enhancers/withMediaVisibilityContainer';
 import autoMapType from '../../components/map/enhancers/autoMapType';
 import withScalesDenominators from "../../components/map/enhancers/withScalesDenominators";
+import { withCarouselMarkerInteraction } from "../../components/geostory/common/enhancers/withPopupSupport";
 
 const image = branch(
     ({resourceId}) => resourceId,
@@ -50,7 +51,8 @@ const map = compose(
     autoMapType,
     withScalesDenominators,
     withLocalMapState,
-    withMapEditingAndLocalMapState
+    withMapEditingAndLocalMapState,
+    withCarouselMarkerInteraction
 )(withMediaVisibilityContainer(Map));
 
 const video = branch(

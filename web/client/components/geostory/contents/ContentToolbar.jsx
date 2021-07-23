@@ -138,17 +138,15 @@ const toolButtons = {
         disabled: editMap || markerDisabled,
         onClick: marker
     }),
-    closeDraw: ({editMap = false, bsStyle = 'default', update = () => {}, map: {resetMapInfo} = {}}) => ({
+    closeDraw: ({editMap = false, bsStyle = 'default', update = () => {}, onEnableDraw = () => {}}) => ({
         glyph: '1-close',
         visible: true,
         tooltipId: "geostory.contentToolbar.closeMapEditing",
         bsStyle,
         disabled: !editMap,
         onClick: ()=> {
-            // Separate update calls to trigger side effects
+            onEnableDraw(null);
             update('editMap', !editMap);
-            update('map.mapDrawControl', false);
-            resetMapInfo && update( 'map.mapInfoControl', true); // Reset Map Info state
         }
     })
 };
@@ -181,6 +179,7 @@ const toolButtons = {
  */
 export default function ContentToolbar({
     tools = [],
+    children,
     ...props
 }) {
     return (
@@ -193,6 +192,7 @@ export default function ContentToolbar({
                 buttons={tools
                     .filter((tool) => tool?.id && toolButtons[tool.id] || toolButtons[tool])
                     .map(tool => tool?.id && toolButtons[tool.id]({ ...props, ...tool }) || toolButtons[tool](props))}/>
+            {children}
         </div>
     );
 }
