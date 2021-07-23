@@ -97,7 +97,7 @@ export default createPlugin('MapTemplates', {
             action: openMapTemplatesPanel,
             priority: 2,
             doNotHide: true,
-            tooltip: <Message msgId="mapTemplates.title" />
+            tooltip: <Message msgId="mapTemplates.tooltip" />
         }
     },
     reducers: {
