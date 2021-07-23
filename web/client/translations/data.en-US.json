@@ -2902,10 +2902,10 @@
               "themes": "Choose a theme",
               "noThemes": "No themes found",
               "customColors": "Custom Colors",
-              "main": "Main",
-              "background": "Background",
-              "primary": "Primary",
-              "primaryContrast": "Primary Contrast",
+              "main": "Main Text Color",
+              "background": "Main Background Color",
+              "primaryContrast": "Primary Text Color",
+              "primary": "Primary Color",
               "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfiured theme chosen above"
             },
             "configurePlugins": {

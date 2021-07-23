@@ -2891,10 +2891,10 @@
               "themes": "Choisissez un thème",
               "noThemes": "Aucun thème trouvé",
               "customColors": "Couleurs personnalisées",
-              "main": "Principal",
-              "background" : "Fond de plan",
-              "primary": "Primaire",
-              "primaryContrast": "Contraste primaire",
+              "main": "Couleur du texte principal",
+              "background" : "Couleur d'arrière-plan principale",
+              "primaryContrast": "Couleur primaire du texte",
+              "primary": "Couleur primaire",
               "customColorsDescription": "Vous pouvez changer l'une de ces couleurs en plus (ou non) d'un thème préconfiguré choisi ci-dessus"
             },
             "configurePlugins": {

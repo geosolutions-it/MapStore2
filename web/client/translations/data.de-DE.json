@@ -2889,10 +2889,10 @@
               "themes": "Wähle ein Thema",
               "noThemes": "Keine gefunden",
               "customColors": "Benutzerdefinierte Farben",
-              "main": "Haupt",
-              "background" : "Hintergrund",
-              "primary": "Primär",
-              "primaryContrast": "Primärkontrast",
+              "main": "Haupttextfarbe",
+              "background" : "Haupthintergrundfarbe",
+              "primaryContrast": "Primäre Textfarbe",
+              "primary": "Primärfarbe",
               "customColorsDescription": "Sie können eine dieser Farben zusätzlich (oder nicht) zu einem oben ausgewählten vorkonfigurierten Thema ändern"
             },
             "configurePlugins": {

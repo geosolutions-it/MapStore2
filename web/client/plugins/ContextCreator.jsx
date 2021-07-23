@@ -78,11 +78,11 @@ export const contextCreatorSelector = createStructuredSelector({
  *    "id": "dark",
  *    "type": "link",
  *    "href": "dist/themes/dark.css"
- *    "variables": {
+ *    "defaultVariables": {
  *      "ms-main-color": "#000000",
  *      "ms-main-bg": "#000000",
- *      "ms-primary": "#078aa3",
- *      "ms-primary-contrast": "#FFFFFF"
+ *      "ms-primary-contrast": "#FFFFFF",
+ *      "ms-primary": "#078aa3"
  *    }
  *  }]
  *}

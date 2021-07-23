@@ -2890,10 +2890,10 @@
               "themes": "Scegli un tema",
               "noThemes": "Nessun tema trovato",
               "customColors": "Colori personalizzati",
-              "main": "Principale",
-              "background": "Sfondo",
-              "primary": "Primario",
-              "primaryContrast": "Primario Sfondo",
+              "main": "Colore Testo Principale",
+              "background": "Colore Sfondo Principale",
+              "primaryContrast": "Colore Testo Primario",
+              "primary": "Colore Primario",
               "customColorsDescription": "Puoi cambiare uno di questi colori a partire da uno dei temi scelti in precedenza, oppure no"
             },
             "configurePlugins": {

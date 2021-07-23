@@ -100,4 +100,4 @@ export const resourceSelector = ({context = {}} = {}) => context.resource;
  * Get the theme configuration for the selected context
  * @param {object} state the app state
  */
-export const contextThemeSelector = ({context = {}} = {}) => castArray(context?.currentContext?.theme || []);
+export const contextThemeSelector = ({context = {}} = {}) => context?.currentContext?.theme || {};

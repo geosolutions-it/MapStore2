@@ -9,6 +9,7 @@ import React, {useRef} from 'react';
 import ReactSelect from 'react-select';
 import {ControlLabel, Glyphicon} from 'react-bootstrap';
 import tinycolor from 'tinycolor2';
+import find from 'lodash/find';
 
 import Message from '../I18N/Message';
 import HTML from '../I18N/HTML';
@@ -24,8 +25,8 @@ import { getMessageById } from '../../utils/LocaleUtils';
 const Select = localizedProps("noResultsText")(ReactSelect);
 const MAIN_COLOR = "ms-main-color";
 const MAIN_BG_COLOR = "ms-main-bg";
-const PRIMARY = "ms-primary";
 const PRIMARY_CONTRAST = "ms-primary-contrast";
+const PRIMARY = "ms-primary";
 
 
 function ConfigureThemes({
@@ -34,35 +35,36 @@ function ConfigureThemes({
     selectedTheme = {},
     disabled = false,
     context = {},
-    defaultColors = {
+    basicVariables = {
         [MAIN_COLOR]: "#000000",
         [MAIN_BG_COLOR]: "#FFFFFF",
-        [PRIMARY]: "#078aa3",
-        [PRIMARY_CONTRAST]: "#FFFFFF"
+        [PRIMARY_CONTRAST]: "#FFFFFF",
+        [PRIMARY]: "#0D7185"
     }
 }) {
     const triggerMain = useRef();
     const triggerPrimary = useRef();
-    const colors = {
-        ...defaultColors,
-        ...(selectedTheme.variables),
-        ...(selectedTheme.colors)
+    const defaultVariables = find(themes, {id: selectedTheme.id}) || {};
+    const variables = {
+        ...basicVariables,
+        ...(defaultVariables),
+        ...(selectedTheme?.variables)
     };
 
-    const mostReadableTextColor = colors[MAIN_COLOR] && colors[MAIN_BG_COLOR]
-        && !tinycolor.isReadable(colors[MAIN_COLOR], colors[MAIN_BG_COLOR])
-        ? tinycolor.mostReadable(colors[MAIN_BG_COLOR], [colors[MAIN_COLOR], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
+    const mostReadableTextColor = variables[MAIN_COLOR] && variables[MAIN_BG_COLOR]
+        && !tinycolor.isReadable(variables[MAIN_COLOR], variables[MAIN_BG_COLOR])
+        ? tinycolor.mostReadable(variables[MAIN_BG_COLOR], [variables[MAIN_COLOR], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
         : null;
 
-    const mostReadablePrimaryColor = colors[PRIMARY] && colors[PRIMARY_CONTRAST]
-    && !tinycolor.isReadable(colors[PRIMARY], colors[PRIMARY_CONTRAST])
-        ? tinycolor.mostReadable(colors[PRIMARY_CONTRAST], [colors[PRIMARY], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
+    const mostReadablePrimaryColor = variables[PRIMARY] && variables[PRIMARY_CONTRAST]
+    && !tinycolor.isReadable(variables[PRIMARY], variables[PRIMARY_CONTRAST])
+        ? tinycolor.mostReadable(variables[PRIMARY_CONTRAST], [variables[PRIMARY], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
         : null;
 
-    const hasMainColorChanged = !tinycolor.equals(colors?.[MAIN_COLOR], selectedTheme?.variables?.[MAIN_COLOR] || defaultColors[MAIN_COLOR]);
-    const hasMainBgColorChanged = !tinycolor.equals(colors?.[MAIN_BG_COLOR], selectedTheme?.variables?.[MAIN_BG_COLOR] || defaultColors[MAIN_BG_COLOR]);
-    const hasPrimaryColorChanged = !tinycolor.equals(colors?.[PRIMARY], selectedTheme?.variables?.[PRIMARY] || defaultColors[PRIMARY]);
-    const hasPrimaryContrastColorChanged = !tinycolor.equals(colors?.[PRIMARY_CONTRAST], selectedTheme?.variables?.[PRIMARY_CONTRAST] || defaultColors[PRIMARY_CONTRAST]);
+    const hasMainColorChanged = !tinycolor.equals(variables?.[MAIN_COLOR], defaultVariables?.[MAIN_COLOR] || basicVariables[MAIN_COLOR]);
+    const hasMainBgColorChanged = !tinycolor.equals(variables?.[MAIN_BG_COLOR], defaultVariables?.[MAIN_BG_COLOR] || basicVariables[MAIN_BG_COLOR]);
+    const hasPrimaryColorChanged = !tinycolor.equals(variables?.[PRIMARY], defaultVariables?.[PRIMARY] || basicVariables[PRIMARY]);
+    const hasPrimaryContrastColorChanged = !tinycolor.equals(variables?.[PRIMARY_CONTRAST], defaultVariables?.[PRIMARY_CONTRAST] || basicVariables[PRIMARY_CONTRAST]);
 
     return (
         <div className="configure-themes-step">
@@ -88,7 +90,7 @@ function ConfigureThemes({
                         onClick={() => {
                             setSelectedTheme({
                                 ...selectedTheme,
-                                colors: {...defaultColors, ...(selectedTheme.variables) }
+                                variables: {...basicVariables, ...(defaultVariables) }
                             });
                         }}
                         className="clear-all no-border"
@@ -123,8 +125,8 @@ function ConfigureThemes({
                                         onClick={() =>  {
                                             setSelectedTheme({
                                                 ...selectedTheme,
-                                                colors: {
-                                                    ...colors,
+                                                variables: {
+                                                    ...variables,
                                                     [MAIN_COLOR]: mostReadableTextColor
                                                 }
                                             });
@@ -143,14 +145,14 @@ function ConfigureThemes({
                     <div className="color-choice">
                         <ColorSelector
                             onOpen={() => ({})}
-                            color={colors[MAIN_COLOR]}
+                            color={variables[MAIN_COLOR]}
                             line={false}
                             disableAlpha={false}
                             onChangeColor={(color) => {
                                 setSelectedTheme({
                                     ...selectedTheme,
-                                    colors: {
-                                        ...colors,
+                                    variables: {
+                                        ...variables,
                                         [MAIN_COLOR]: tinycolor(color).toHexString()
                                     }
                                 });
@@ -161,9 +163,9 @@ function ConfigureThemes({
                             onClick={() => {
                                 setSelectedTheme({
                                     ...selectedTheme,
-                                    colors: {
-                                        ...colors,
-                                        [MAIN_COLOR]: selectedTheme?.variables?.[MAIN_COLOR] || defaultColors[MAIN_COLOR]
+                                    variables: {
+                                        ...variables,
+                                        [MAIN_COLOR]: defaultVariables?.[MAIN_COLOR] || basicVariables[MAIN_COLOR]
                                     }
                                 });
                             }}
@@ -178,14 +180,14 @@ function ConfigureThemes({
                     <div className="color-choice">
                         <ColorSelector
                             onOpen={() => ({})}
-                            color={colors[MAIN_BG_COLOR]}
+                            color={variables[MAIN_BG_COLOR]}
                             line={false}
                             disableAlpha={false}
                             onChangeColor={(color) => {
                                 setSelectedTheme({
                                     ...selectedTheme,
-                                    colors: {
-                                        ...colors,
+                                    variables: {
+                                        ...variables,
                                         [MAIN_BG_COLOR]: tinycolor(color).toHexString()
                                     }
                                 });
@@ -196,9 +198,44 @@ function ConfigureThemes({
                             onClick={() => {
                                 setSelectedTheme({
                                     ...selectedTheme,
-                                    colors: {
-                                        ...colors,
-                                        [MAIN_BG_COLOR]: selectedTheme?.variables?.[MAIN_BG_COLOR] || defaultColors[MAIN_BG_COLOR]
+                                    variables: {
+                                        ...variables,
+                                        [MAIN_BG_COLOR]: defaultVariables?.[MAIN_BG_COLOR] || basicVariables[MAIN_BG_COLOR]
+                                    }
+                                });
+                            }}
+                            className="no-border"
+                        ><Glyphicon glyph="remove" /></Button>
+                    </div>
+                </div>
+                <div className="color-item">
+                    <ControlLabel className="label-theme">
+                        <Message msgId="contextCreator.configureThemes.primaryContrast"/>
+                    </ControlLabel>
+                    <div className="color-choice">
+                        <ColorSelector
+                            onOpen={() => ({})}
+                            color={variables[PRIMARY_CONTRAST]}
+                            line={false}
+                            disableAlpha={false}
+                            onChangeColor={(color) => {
+                                setSelectedTheme({
+                                    ...selectedTheme,
+                                    variables: {
+                                        ...variables,
+                                        [PRIMARY_CONTRAST]: tinycolor(color).toHexString()
+                                    }
+                                });
+                            }}/>
+                        <Button
+                            disabled={!hasPrimaryContrastColorChanged}
+                            key={PRIMARY_CONTRAST}
+                            onClick={() => {
+                                setSelectedTheme({
+                                    ...selectedTheme,
+                                    variables: {
+                                        ...variables,
+                                        [PRIMARY_CONTRAST]: defaultVariables?.[PRIMARY_CONTRAST] || basicVariables[PRIMARY_CONTRAST]
                                     }
                                 });
                             }}
@@ -235,8 +272,8 @@ function ConfigureThemes({
                                         onClick={() =>  {
                                             setSelectedTheme({
                                                 ...selectedTheme,
-                                                colors: {
-                                                    ...colors,
+                                                variables: {
+                                                    ...variables,
                                                     [PRIMARY]: mostReadablePrimaryColor
                                                 }
                                             });
@@ -255,14 +292,14 @@ function ConfigureThemes({
                     <div className="color-choice">
                         <ColorSelector
                             onOpen={() => ({})}
-                            color={colors[PRIMARY]}
+                            color={variables[PRIMARY]}
                             line={false}
                             disableAlpha={false}
                             onChangeColor={(color) => {
                                 setSelectedTheme({
                                     ...selectedTheme,
-                                    colors: {
-                                        ...colors,
+                                    variables: {
+                                        ...variables,
                                         [PRIMARY]: tinycolor(color).toHexString()
                                     }
                                 });
@@ -273,44 +310,9 @@ function ConfigureThemes({
                             onClick={() => {
                                 setSelectedTheme({
                                     ...selectedTheme,
-                                    colors: {
-                                        ...colors,
-                                        [PRIMARY]: selectedTheme?.variables?.[PRIMARY] || defaultColors[PRIMARY]
-                                    }
-                                });
-                            }}
-                            className="no-border"
-                        ><Glyphicon glyph="remove" /></Button>
-                    </div>
-                </div>
-                <div className="color-item">
-                    <ControlLabel className="label-theme">
-                        <Message msgId="contextCreator.configureThemes.primaryContrast"/>
-                    </ControlLabel>
-                    <div className="color-choice">
-                        <ColorSelector
-                            onOpen={() => ({})}
-                            color={colors[PRIMARY_CONTRAST]}
-                            line={false}
-                            disableAlpha={false}
-                            onChangeColor={(color) => {
-                                setSelectedTheme({
-                                    ...selectedTheme,
-                                    colors: {
-                                        ...colors,
-                                        [PRIMARY_CONTRAST]: tinycolor(color).toHexString()
-                                    }
-                                });
-                            }}/>
-                        <Button
-                            disabled={!hasPrimaryContrastColorChanged}
-                            key={PRIMARY_CONTRAST}
-                            onClick={() => {
-                                setSelectedTheme({
-                                    ...selectedTheme,
-                                    colors: {
-                                        ...colors,
-                                        [PRIMARY_CONTRAST]: selectedTheme?.variables?.[PRIMARY_CONTRAST] || defaultColors[PRIMARY_CONTRAST]
+                                    variables: {
+                                        ...variables,
+                                        [PRIMARY]: defaultVariables?.[PRIMARY] || basicVariables[PRIMARY]
                                     }
                                 });
                             }}
