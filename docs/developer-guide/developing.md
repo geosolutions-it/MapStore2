@@ -191,7 +191,7 @@ for embedded tomcat you can configure the following:
 
 ```bash
 # Linux
-MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n"
+export MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n"
 ```
 
 ```bash
@@ -202,6 +202,7 @@ set MAVEN_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_soc
 then start tomcat
 
 ```bash
+cd product
 mvn tomcat7:run-war
 ```
 
@@ -223,7 +224,7 @@ mvn eclipse:eclipse
 ### Start Debugging with eclipse
 
 * Start Eclipse and open **Run --> Debug Configurations**
-* Create a new Remote Java Application selecting the project "mapstore-web" setting:
+* Create a new Remote Java Application selecting the project "mapstore-product" setting:
   * host localhost
   * port 4000
   * Click on *Debug*
