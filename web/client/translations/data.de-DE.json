@@ -3016,6 +3016,7 @@
         },
         "mapTemplates": {
             "title": "Kartenvorlagen",
+            "tooltip": "Kartenvorlagen durchsuchen",
             "favouritesTitle": "Favoriten",
             "allTitle": "Alle",
             "filterPlaceholder": "Kartenvorlagen filtern...",
@@ -3359,6 +3360,7 @@
             "titleContext": "Entfernen der Benutzersitzung fehlgeschlagen",
             "defaultMessage": "Unbekannter Fehler"
           },
+          "tooltip": "Aktuelle gespeicherte Benutzersitzung löschen user",
           "successRemoved": "Benutzersitzung entfernt",
           "remove": "Benutzersitzung zurücksetzen",
           "confirmRemove": "Möchten Sie die Standardkonfiguration wirklich wiederherstellen?"

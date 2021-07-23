@@ -3017,6 +3017,7 @@
         },
         "mapTemplates": {
             "title": "Modelli di mappa",
+            "tooltip": "Sfoglia i modelli di mappa",
             "favouritesTitle": "Preferiti",
             "allTitle": "Tutti",
             "filterPlaceholder": "Filtra i modelli di mappa...",
@@ -3359,6 +3360,7 @@
             "titleContext": "Cancellazione della sessione utente non riuscita",
             "defaultMessage": "Errore sconosciuto"
           },
+          "tooltip": "Cancella la sessione utente corrente salvata",
           "successRemoved": "Sessione utente cancellata",
           "remove": "Reset Sessione Utente",
           "confirmRemove": "Sei sicuro di voler ripristinare la configurazione di default?"

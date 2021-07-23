@@ -98,6 +98,7 @@ export default createPlugin('UserSession', {
             text: <Message msgId="userSession.remove" />,
             icon: <Glyphicon glyph="trash" />,
             action: toggleControl.bind(null, 'resetUserSession', null),
+            tooltip: <Message msgId="userSession.tooltip" />,
             selector: (state) => {
                 return { style: hasSession(state) ? {} : {display: "none"} };
             },

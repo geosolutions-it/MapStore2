@@ -3018,6 +3018,7 @@
         },
         "mapTemplates": {
             "title": "Cartes modèles",
+            "tooltip": "Parcourir les modèles de carte",
             "favouritesTitle": "Favoris",
             "allTitle": "Tout",
             "filterPlaceholder": "Filtrer les cartes modèles...",
@@ -3360,6 +3361,7 @@
             "titleContext": "La suppression de la session utilisateur a échoué",
             "defaultMessage": "Erreur inconnue"
           },
+          "tooltip": "Effacer la session utilisateur actuelle enregistrée",
           "successRemoved": "Session utilisateur supprimée",
           "remove": "Réinitialiser la session utilisateur",
           "confirmRemove": "Êtes-vous sûr de vouloir restaurer la configuration par défaut?"

@@ -3016,6 +3016,7 @@
         },
         "mapTemplates": {
             "title": "Plantillas de mapas",
+            "tooltip": "Examinar plantillas de mapas",
             "favouritesTitle": "Favoritos",
             "allTitle": "Todos",
             "filterPlaceholder": "Filtrar plantillas de mapa...",
@@ -3359,6 +3360,7 @@
             "titleContext": "Error al eliminar sesión de usuario",
             "defaultMessage": "Error desconocido"
           },
+          "tooltip": "Borrar la sesión de usuario actual guardada",
           "successRemoved": "Sesión de usuario eliminada",
           "remove": "Restablecer sesión de usuario",
           "confirmRemove": "¿Está seguro de que desea restaurar la configuración predeterminada?"

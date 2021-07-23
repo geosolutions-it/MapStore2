@@ -3029,6 +3029,7 @@
         },
         "mapTemplates": {
             "title": "Map templates",
+            "tooltip": "Browse map templates",
             "favouritesTitle": "Favourites",
             "allTitle": "All",
             "filterPlaceholder": "Filter map template...",
@@ -3372,6 +3373,7 @@
             "titleContext": "User session removing failed",
             "defaultMessage": "Unknown error"
           },
+          "tooltip": "Clear the current user session saved",
           "successRemoved": "User session removed",
           "remove": "Reset User Session",
           "confirmRemove": "Are you sure you want to restore the default configuration?"
