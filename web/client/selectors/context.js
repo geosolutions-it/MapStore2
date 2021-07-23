@@ -7,7 +7,7 @@
  */
 import { createSelector } from 'reselect';
 import { monitorStateSelector } from './localConfig';
-import { get, findIndex, castArray } from 'lodash';
+import { get, findIndex } from 'lodash';
 import ConfigUtils from '../utils/ConfigUtils';
 
 
