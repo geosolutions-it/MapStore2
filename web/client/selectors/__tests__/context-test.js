@@ -69,7 +69,7 @@ describe('context selectors', () => {
                     theme: theme
                 }
             }
-        })).toEqual([theme]);
+        })).toEqual(theme);
         expect(contextThemeSelector({
             context: {}
         })).toEqual({});

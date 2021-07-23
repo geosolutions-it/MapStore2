@@ -65,7 +65,7 @@ function ContextTheme({
     return <>
         {[createPortal(
             <>
-                {() => {
+                {(() => {
                     if (theme.type === 'link') {
                         const href = `${theme.href}${validatedVersion ? '?' + validatedVersion : ''}`;
                         return (
@@ -77,7 +77,7 @@ function ContextTheme({
                         );
                     }
                     return null;
-                }}
+                })()}
             </>,
             document.head
         ),
