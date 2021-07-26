@@ -175,14 +175,19 @@
             align-items: center;
         }
         .custom-variables {
+            position: relative;
             display: flex;
             align-items: baseline;
-            .mapstore-info-popover {
-                padding-left: 10px;
+            padding-bottom: 16px;
+            padding-top: 16px;
+            .mapstore-switch-btn {
+                position: absolute;
+                right: 0;
+                top: 15px;
             }
         }
         .color-item {
-            height: 37px;
+            height: 40px;
             display: flex;
             justify-content: space-between;
             .color-choice {
@@ -194,6 +199,9 @@
                     margin-right: 18px;
                 }
             }
+        }
+        .mapstore-info-popover {
+            padding-left: 10px;
         }
     }
 }

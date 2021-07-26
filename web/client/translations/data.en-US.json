@@ -2901,12 +2901,20 @@
               "label": "Theme",
               "themes": "Choose a theme",
               "noThemes": "No themes found",
-              "customColors": "Custom Colors",
+              "customVariables": "Custom Variables",
               "main": "Main Text Color",
               "background": "Main Background Color",
               "primaryContrast": "Primary Text Color",
               "primary": "Primary Color",
-              "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfiured theme chosen above"
+              "success": "Secondary Color",
+              "tooltips": {
+                "success": "Background color used to show when a button is 'active' or 'selected'",
+                "main": "Text color used in panels or dialogs",
+                "background": "Background color used in panels or dialogs",
+                "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers",
+                "primary": "Background primary color: toolbars, headers",
+                "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
+              }
             },
             "configurePlugins": {
                 "label": "Configure Plugins",

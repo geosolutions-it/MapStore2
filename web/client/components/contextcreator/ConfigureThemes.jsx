@@ -21,30 +21,34 @@ import InfoPopover from '../widgets/widget/InfoPopover';
 
 import localizedProps from '../misc/enhancers/localizedProps';
 import { getMessageById } from '../../utils/LocaleUtils';
+import SwitchButton from '../misc/switch/SwitchButton';
 
 const Select = localizedProps("noResultsText")(ReactSelect);
 const MAIN_COLOR = "ms-main-color";
 const MAIN_BG_COLOR = "ms-main-bg";
 const PRIMARY_CONTRAST = "ms-primary-contrast";
 const PRIMARY = "ms-primary";
+const SUCCESS = "ms-success";
 
 
 function ConfigureThemes({
     themes = [],
     setSelectedTheme = () => {},
+    onToggleCustomVariables = () => {},
     selectedTheme = {},
-    disabled = false,
+    customVariablesEnabled = false,
     context = {},
     basicVariables = {
         [MAIN_COLOR]: "#000000",
         [MAIN_BG_COLOR]: "#FFFFFF",
         [PRIMARY_CONTRAST]: "#FFFFFF",
-        [PRIMARY]: "#0D7185"
+        [PRIMARY]: "#0D7185",
+        [SUCCESS]: "#398439"
     }
 }) {
     const triggerMain = useRef();
     const triggerPrimary = useRef();
-    const defaultVariables = find(themes, {id: selectedTheme.id}) || {};
+    const defaultVariables = (find(themes, {id: selectedTheme.id}) || {}).defaultVariables;
     const variables = {
         ...basicVariables,
         ...(defaultVariables),
@@ -63,8 +67,9 @@ function ConfigureThemes({
 
     const hasMainColorChanged = !tinycolor.equals(variables?.[MAIN_COLOR], defaultVariables?.[MAIN_COLOR] || basicVariables[MAIN_COLOR]);
     const hasMainBgColorChanged = !tinycolor.equals(variables?.[MAIN_BG_COLOR], defaultVariables?.[MAIN_BG_COLOR] || basicVariables[MAIN_BG_COLOR]);
-    const hasPrimaryColorChanged = !tinycolor.equals(variables?.[PRIMARY], defaultVariables?.[PRIMARY] || basicVariables[PRIMARY]);
     const hasPrimaryContrastColorChanged = !tinycolor.equals(variables?.[PRIMARY_CONTRAST], defaultVariables?.[PRIMARY_CONTRAST] || basicVariables[PRIMARY_CONTRAST]);
+    const hasPrimaryColorChanged = !tinycolor.equals(variables?.[PRIMARY], defaultVariables?.[PRIMARY] || basicVariables[PRIMARY]);
+    const hasSuccessColorChanged = !tinycolor.equals(variables?.[SUCCESS], defaultVariables?.[SUCCESS] || basicVariables[SUCCESS]);
 
     return (
         <div className="configure-themes-step">
@@ -79,12 +84,11 @@ function ConfigureThemes({
                     onChange={(option)  => setSelectedTheme(option?.theme)}
                     value={selectedTheme?.id}
                     options={themes.map(theme => ({ value: theme.id, label: theme?.label && getMessageById(context, theme?.label) || theme?.id, theme }))}
-                    disabled={disabled}
                     noResultsText="contextCreator.configureThemes.noThemes"
                 />
                 <div className="custom-variables">
-                    <h3 className="text-center"><Message msgId="contextCreator.configureThemes.customColors"/></h3>
-                    <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.customColorsDescription" />}/>
+                    <ControlLabel><Message msgId="contextCreator.configureThemes.customVariables"/></ControlLabel>
+                    <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.customColorsDescription" />}/>
                     <Button
                         key="clear-all"
                         onClick={() => {
@@ -95,10 +99,15 @@ function ConfigureThemes({
                         }}
                         className="clear-all no-border"
                     >clear all</Button>
+                    <SwitchButton
+                        onChange={() => onToggleCustomVariables()}
+                        className="ms-geostory-settings-switch"
+                        checked={customVariablesEnabled}/>
                 </div>
                 <div className="color-item">
                     <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.main"/>
+                        <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.main" />}/>
                         {mostReadableTextColor ? (<ToolbarPopover
                             useBody
                             className="ms-custom-theme-picker-popover"
@@ -136,6 +145,7 @@ function ConfigureThemes({
                                     </Button>
                                 </div>
                             }><Button
+                                disabled={!customVariablesEnabled}
                                 className="square-button-md no-border"
                                 style={{ display: mostReadableTextColor ? 'block' : 'none' }}>
                                 <Glyphicon glyph="exclamation-mark"/>
@@ -144,6 +154,7 @@ function ConfigureThemes({
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
+                            disabled={!customVariablesEnabled}
                             onOpen={() => ({})}
                             color={variables[MAIN_COLOR]}
                             line={false}
@@ -158,7 +169,7 @@ function ConfigureThemes({
                                 });
                             }}/>
                         <Button
-                            disabled={!hasMainColorChanged}
+                            disabled={!hasMainColorChanged || !customVariablesEnabled}
                             key={MAIN_COLOR}
                             onClick={() => {
                                 setSelectedTheme({
@@ -170,15 +181,17 @@ function ConfigureThemes({
                                 });
                             }}
                             className="no-border"
-                        ><Glyphicon glyph="remove" /></Button>
+                        ><Glyphicon glyph="repeat" /></Button>
                     </div>
                 </div>
                 <div className="color-item">
                     <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.background"/>
+                        <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.background" />}/>
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
+                            disabled={!customVariablesEnabled}
                             onOpen={() => ({})}
                             color={variables[MAIN_BG_COLOR]}
                             line={false}
@@ -193,7 +206,7 @@ function ConfigureThemes({
                                 });
                             }}/>
                         <Button
-                            disabled={!hasMainBgColorChanged}
+                            disabled={!hasMainBgColorChanged || !customVariablesEnabled}
                             key={MAIN_BG_COLOR}
                             onClick={() => {
                                 setSelectedTheme({
@@ -205,15 +218,17 @@ function ConfigureThemes({
                                 });
                             }}
                             className="no-border"
-                        ><Glyphicon glyph="remove" /></Button>
+                        ><Glyphicon glyph="repeat" /></Button>
                     </div>
                 </div>
                 <div className="color-item">
                     <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.primaryContrast"/>
+                        <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.primaryContrast" />}/>
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
+                            disabled={!customVariablesEnabled}
                             onOpen={() => ({})}
                             color={variables[PRIMARY_CONTRAST]}
                             line={false}
@@ -228,7 +243,7 @@ function ConfigureThemes({
                                 });
                             }}/>
                         <Button
-                            disabled={!hasPrimaryContrastColorChanged}
+                            disabled={!hasPrimaryContrastColorChanged  || !customVariablesEnabled}
                             key={PRIMARY_CONTRAST}
                             onClick={() => {
                                 setSelectedTheme({
@@ -240,12 +255,13 @@ function ConfigureThemes({
                                 });
                             }}
                             className="no-border"
-                        ><Glyphicon glyph="remove" /></Button>
+                        ><Glyphicon glyph="repeat" /></Button>
                     </div>
                 </div>
                 <div className="color-item">
                     <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.primary"/>
+                        <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.primary" />}/>
                         {mostReadablePrimaryColor ? (<ToolbarPopover
                             useBody
                             className="ms-custom-theme-picker-popover"
@@ -283,6 +299,7 @@ function ConfigureThemes({
                                     </Button>
                                 </div>
                             }><Button
+                                disabled={!customVariablesEnabled}
                                 className="square-button-md no-border"
                                 style={{ display: mostReadablePrimaryColor ? 'block' : 'none' }}>
                                 <Glyphicon glyph="exclamation-mark"/>
@@ -291,6 +308,7 @@ function ConfigureThemes({
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
+                            disabled={!customVariablesEnabled}
                             onOpen={() => ({})}
                             color={variables[PRIMARY]}
                             line={false}
@@ -305,7 +323,7 @@ function ConfigureThemes({
                                 });
                             }}/>
                         <Button
-                            disabled={!hasPrimaryColorChanged}
+                            disabled={!hasPrimaryColorChanged || !customVariablesEnabled}
                             key={PRIMARY}
                             onClick={() => {
                                 setSelectedTheme({
@@ -317,7 +335,44 @@ function ConfigureThemes({
                                 });
                             }}
                             className="no-border"
-                        ><Glyphicon glyph="remove" /></Button>
+                        ><Glyphicon glyph="repeat" /></Button>
+                    </div>
+                </div>
+                <div className="color-item">
+                    <ControlLabel className="label-theme">
+                        <Message msgId="contextCreator.configureThemes.success"/>
+                        <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.success" />}/>
+                    </ControlLabel>
+                    <div className="color-choice">
+                        <ColorSelector
+                            disabled={!customVariablesEnabled}
+                            onOpen={() => ({})}
+                            color={variables[SUCCESS]}
+                            line={false}
+                            disableAlpha={false}
+                            onChangeColor={(color) => {
+                                setSelectedTheme({
+                                    ...selectedTheme,
+                                    variables: {
+                                        ...variables,
+                                        [SUCCESS]: tinycolor(color).toHexString()
+                                    }
+                                });
+                            }}/>
+                        <Button
+                            disabled={!hasSuccessColorChanged || !customVariablesEnabled}
+                            key={SUCCESS}
+                            onClick={() => {
+                                setSelectedTheme({
+                                    ...selectedTheme,
+                                    variables: {
+                                        ...variables,
+                                        [SUCCESS]: defaultVariables?.[SUCCESS] || basicVariables[SUCCESS]
+                                    }
+                                });
+                            }}
+                            className="no-border"
+                        ><Glyphicon glyph="repeat" /></Button>
                     </div>
                 </div>
             </div>

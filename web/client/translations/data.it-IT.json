@@ -2889,12 +2889,20 @@
               "label": "Tema",
               "themes": "Scegli un tema",
               "noThemes": "Nessun tema trovato",
-              "customColors": "Colori personalizzati",
+              "customVariables": "Variabili personalizzate",
               "main": "Colore Testo Principale",
               "background": "Colore Sfondo Principale",
               "primaryContrast": "Colore Testo Primario",
               "primary": "Colore Primario",
-              "customColorsDescription": "Puoi cambiare uno di questi colori a partire da uno dei temi scelti in precedenza, oppure no"
+              "success": "Colore Secondario",
+              "tooltips": {
+                "success": "Colore dello sfondo usato per segnalare lo stato 'attivo' o 'selezionato' dei pulsanti",
+                "main": "Colore del testo usato nei pannelli, nella toc",
+                "background": "Colore dello sfondo usato nei pannelli, nella toc",
+                "primaryContrast": "Colore del testo dove lo sfondo è il primario ad esempio: icone nelle barre dei pulsanti, intestazioni",
+                "primary": "Colore dello sfondo: barra dei pulsanti, intestazioni",
+                "customColorsDescription": "Puoi cambiare uno di questi colori a partire da uno dei temi scelti in precedenza, oppure no"
+              }
             },
             "configurePlugins": {
                 "label": "Configura plugin",
