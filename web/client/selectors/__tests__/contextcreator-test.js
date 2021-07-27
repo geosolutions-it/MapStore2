@@ -10,7 +10,8 @@ import expect from 'expect';
 import {
     newContextSelector,
     creationStepSelector,
-    selectedThemeSelector
+    selectedThemeSelector,
+    customVariablesEnabledSelector
 } from '../contextcreator';
 
 const testState = {
@@ -18,7 +19,8 @@ const testState = {
         newContext: {
             name: 'name'
         },
-        stepId: 'step'
+        stepId: 'step',
+        customVariablesEnabled: true
     }
 };
 
@@ -30,6 +32,9 @@ describe('contextcreator selectors', () => {
     });
     it('creationStepSelector', () => {
         expect(creationStepSelector(testState)).toBe('step');
+    });
+    it('customVariablesEnabledSelector', () => {
+        expect(customVariablesEnabledSelector(testState)).toBe(true);
     });
     it('selectedThemeSelector', () => {
         const themeDark = {
