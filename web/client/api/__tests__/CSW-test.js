@@ -7,6 +7,9 @@
  */
 
 import expect from 'expect';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+import GRDCResponse from 'raw-loader!../../test-resources/csw/getRecordsResponseDC.xml';
 
 import API, { constructXMLBody } from '../CSW';
 
@@ -91,6 +94,46 @@ describe('Test correctness of the CSW APIs', () => {
             } catch (ex) {
                 done(ex);
             }
+        });
+    });
+});
+
+describe('workspaceSearch', () => {
+    let mockAxios;
+    beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
+    });
+    afterEach(() => {
+        mockAxios.restore();
+    });
+    it('workspaceSearch', (done) => {
+        mockAxios.onPost().reply( (config) => {
+            expect(config.data).toEqual(
+                "<csw:GetRecords xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" "
+                + "xmlns:ogc=\"http://www.opengis.net/ogc\" "
+                + "xmlns:gml=\"http://www.opengis.net/gml\" "
+                + "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" "
+                + "xmlns:dct=\"http://purl.org/dc/terms/\" "
+                + "xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" "
+                + "xmlns:gco=\"http://www.isotc211.org/2005/gco\" "
+                + "xmlns:gmi=\"http://www.isotc211.org/2005/gmi\" "
+                + "xmlns:ows=\"http://www.opengis.net/ows\" service=\"CSW\" "
+                + "version=\"2.0.2\" resultType=\"results\" startPosition=\"1\" "
+                + "maxRecords=\"1\">"
+                +    "<csw:Query typeNames=\"csw:Record\"><csw:ElementSetName>full</csw:ElementSetName>"
+                +       "<csw:Constraint version=\"1.1.0\"><ogc:Filter><ogc:PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\\\">"
+                +       "<ogc:PropertyName>dc:identifier</ogc:PropertyName><ogc:Literal>wp:%test%</ogc:Literal></ogc:PropertyIsLike>"
+                +       "</ogc:Filter></csw:Constraint>"
+                +    "</csw:Query>"
+                + "</csw:GetRecords>"
+            );
+            return [200, GRDCResponse];
+        });
+        API.workspaceSearch('/TESTURL', 1, 1, "test", "wp").then((data) => {
+            expect(data).toExist();
+            expect(data.records).toExist();
+            expect(data.records.length).toBe(4);
+            done();
         });
     });
 });
