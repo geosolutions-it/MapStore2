@@ -1757,7 +1757,8 @@
                 "nodatainviewport": "Keine Daten im aktuellen Ansichtsfenster",
                 "timeoutExpired": "Der Aufruf des Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
                 "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten",
-                "genericErrorWithMessage": "Beim Abrufen der Daten ist ein Fehler aufgetreten: \"{message}\""
+                "genericErrorWithMessage": "Beim Abrufen der Daten ist ein Fehler aufgetreten: \"{message}\"",
+                "layerNotAvailable": "Der Layer {layerName} ist nicht mehr verfügbar"
             },
             "builder": {
                 "header": {
