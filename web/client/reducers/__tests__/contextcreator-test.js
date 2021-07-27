@@ -579,6 +579,6 @@ describe('contextcreator reducer', () => {
     it('onToggleCustomVariables', () => {
         const state = contextcreator(undefined, onToggleCustomVariables(themeDark));
         expect(state).toExist();
-        expect(customVariablesEnabledSelector({contextcreator: state})).toEqual(false);
+        expect(customVariablesEnabledSelector({contextcreator: state})).toEqual(true);
     });
 });
