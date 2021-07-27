@@ -13,15 +13,15 @@ const getErrorMessage = (error = {}) => {
 };
 
 export default emptyState(
-    ({error}) => error,
+    ({error}) => !!error,
     ({error, layer} = {}) => {
-        const content = (error?.message?.indexOf("Could not locate") !== 1) ?
+        const content = (error?.message?.indexOf("Could not locate") !== -1) ?
             <WidgetEmptyMessage glyph="stats" messageId="widgets.errors.layerNotAvailable" msgParams={{layerName: layer?.name}} /> :
             getErrorMessage(error);
         return {
-            glyph: null,
+            glyph: error?.message?.indexOf("Could not locate") !== -1 ? null : "warning-sign",
             iconFit: false,
-            content: content
+            content
         };
     }
 );
