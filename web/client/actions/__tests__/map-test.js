@@ -29,7 +29,6 @@ import {
     MOUSE_MOVE,
     MOUSE_OUT,
     zoomToPoint,
-    errorLoadingFont,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -52,7 +51,6 @@ import {
     MAP_PLUGIN_LOAD
 } from '../map';
 
-import { SHOW_NOTIFICATION } from '../notifications';
 
 describe('Test correctness of the map actions', () => {
 
@@ -92,40 +90,6 @@ describe('Test correctness of the map actions', () => {
         expect(retval.point).toBe(testVal);
     });
 
-    it('test errorLoadingFont', () => {
-        const err = {family: "FontAwesome"};
-        let {type, values, title, message, autoDismiss, position } = errorLoadingFont(err);
-
-        expect(type).toBe(SHOW_NOTIFICATION);
-        expect(values).toExist();
-        expect(values.family).toExist();
-        expect(title).toExist();
-        expect(message).toExist();
-        expect(position).toExist();
-        expect(autoDismiss).toExist();
-        expect(values.family).toBe("FontAwesome");
-        expect(title).toBe("warning");
-        expect(message).toBe("map.errorLoadingFont");
-        expect(position).toBe("tc");
-        expect(autoDismiss).toBe(10);
-    });
-
-    it('test errorLoadingFont default', () => {
-        let {type, values, title, message, autoDismiss, position } = errorLoadingFont();
-
-        expect(type).toBe(SHOW_NOTIFICATION);
-        expect(values).toExist();
-        expect(title).toExist();
-        expect(message).toExist();
-        expect(position).toExist();
-        expect(autoDismiss).toExist();
-        expect(values.family).toBe("");
-        expect(title).toBe("warning");
-        expect(message).toBe("map.errorLoadingFont");
-        expect(position).toBe("tc");
-        expect(autoDismiss).toBe(10);
-
-    });
 
     it('set a new mouse pointer', () => {
         const testVal = 'pointer';
