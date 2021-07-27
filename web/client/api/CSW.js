@@ -234,7 +234,7 @@ var Api = {
                 const {Filter} = require('../utils/ogc/Filter');
                 const workspaceTerm = workspace || "%";
                 const layerNameTerm = text && "%" + text + "%" || "%";
-                const ops = Filter.propertyIsLike("identifier", workspaceTerm + ":" + layerNameTerm);
+                const ops = Filter.propertyIsLike("dc:identifier", workspaceTerm + ":" + layerNameTerm);
                 const filter = Filter.filter(ops);
                 resolve(Api.getRecords(url, startPosition, maxRecords, filter));
             });
