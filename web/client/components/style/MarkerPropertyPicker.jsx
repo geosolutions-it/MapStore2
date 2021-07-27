@@ -13,7 +13,7 @@ import { getConfigProp } from '../../utils/ConfigUtils';
 
 function MarkerPropertyPicker({
     disabled,
-    containerNode,
+    containerNode = document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body,
     onOpen,
     placement,
     children,
@@ -288,8 +288,7 @@ MarkerPropertyPicker.defaultProps = {
     line: false,
     onChangeColor: () => {},
     pickerProps: {},
-    onOpen: () => {},
-    containerNode: document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body
+    onOpen: () => {}
 };
 
 export default MarkerPropertyPicker;
