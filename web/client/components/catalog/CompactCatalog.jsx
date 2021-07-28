@@ -59,7 +59,7 @@ const resToProps = ({records, result = {}}) => ({
         title: record.title && isObject(record.title) && record.title.default || record.title,
         caption: record.identifier,
         description: record.description,
-        preview: record.thumbnail ? <img src="thumbnail" /> : defaultPreview,
+        preview: record.thumbnail ? <img src={record.thumbnail} /> : defaultPreview,
         record
     })),
     total: result && result.numberOfRecordsMatched
