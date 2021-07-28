@@ -23,7 +23,8 @@ import {
     mouseMoveListenerSelector,
     isMouseMoveActiveSelector,
     isMouseMoveCoordinatesActiveSelector,
-    isMouseMoveIdentifyActiveSelector
+    isMouseMoveIdentifyActiveSelector,
+    identifyFloatingToolSelector
 } from '../map';
 
 const center = {x: 1, y: 1};
@@ -167,5 +168,9 @@ describe('Test map selectors', () => {
     it('test isMouseMoveIdentifyActiveSelector', () => {
         const isMouseMoveIdentifyActive = isMouseMoveIdentifyActiveSelector({map: {present: {eventListeners: {mousemove: ['identifyFloatingTool']}}}});
         expect(isMouseMoveIdentifyActive).toBe(true);
+    });
+    it('test identifyFloatingToolSelector', () => {
+        const renderEmpty = identifyFloatingToolSelector({mode: "embedded"});
+        expect(renderEmpty).toBe(true);
     });
 });

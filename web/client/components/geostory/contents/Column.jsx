@@ -45,7 +45,7 @@ export default ({
     contentToolbar,
     sections = [],
     sectionType,
-    overrideTools,
+    overrideTools = (tools) => tools,
     storyFonts
 }) => (
     <Contents
@@ -69,14 +69,13 @@ export default ({
         }}
         sections={sections}
         storyFonts={storyFonts}
-        tools={{
+        tools={overrideTools({
             [ContentTypes.TEXT]: ['remove'],
             [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
             [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
-            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove'],
-            ...overrideTools
-        }}
+            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove']
+        })}
         addButtons={[{
             glyph: 'sheet',
             tooltipId: 'geostory.addTextContent',

@@ -59,7 +59,7 @@ module.exports = {
         "no-only-tests/no-only-tests": ["error", { "block": ["it", "describe"], "focus": ["only"] }],
         "comma-dangle": [2, "never"],    // http://eslint.org/docs/rules/comma-dangle
         "no-cond-assign": [2, "always"], // http://eslint.org/docs/rules/no-cond-assign
-        "no-console": 1,                 // http://eslint.org/docs/rules/no-console
+        "no-console": ["error", { allow: ["error", "warn"] }],                 // http://eslint.org/docs/rules/no-console
         "no-debugger": 1,                // http://eslint.org/docs/rules/no-debugger
         "no-undef": 2,                   // https://eslint.org/docs/rules/no-undef
         "no-const-assign": 2,            // https://eslint.org/docs/rules/no-const-assign

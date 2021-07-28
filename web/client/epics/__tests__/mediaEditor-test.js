@@ -19,7 +19,8 @@ import {
     importInLocalSource,
     editRemoteMap,
     removeMediaEpic,
-    updateSelectedItem
+    updateSelectedItem,
+    setMediaTypeOnDisable
 } from '../mediaEditor';
 import {
     show as showMapEditor,
@@ -43,7 +44,8 @@ import {
     SET_MEDIA_SERVICE,
     LOADING_MEDIA_LIST,
     selectItem,
-    LOADING_SELECTED_MEDIA
+    LOADING_SELECTED_MEDIA,
+    disableMediaType, SET_MEDIA_TYPE
 } from '../../actions/mediaEditor';
 
 describe('MediaEditor Epics', () => {
@@ -577,6 +579,18 @@ describe('MediaEditor Epics', () => {
                     }
                 }
             }
+        });
+    });
+    it('setMediaTypeOnDisable', (done) => {
+        const NUM_ACTIONS = 1;
+        testEpic(setMediaTypeOnDisable, NUM_ACTIONS, disableMediaType(['image', 'video']), (actions) => {
+            actions.forEach(({type, mediaType})=>{
+                expect(type).toEqual(SET_MEDIA_TYPE);
+                expect(mediaType).toEqual('map');
+            });
+            done();
+        }, {
+            mediaEditor: {}
         });
     });
 });

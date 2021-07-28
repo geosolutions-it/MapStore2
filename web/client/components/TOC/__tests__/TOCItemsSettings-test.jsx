@@ -83,12 +83,6 @@ describe("test TOCItemsSettings", () => {
         expect(testGeneralBody).toExist();
     });
 
-    it('test alert modal', () => {
-        ReactDOM.render(<TOCItemsSettings settings={settings} alertModal/>, document.getElementById("container"));
-        const alertModal = document.getElementsByClassName('ms-resizable-modal');
-        expect(alertModal.length).toBe(1);
-    });
-
     it('test with a title ', () => {
         ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[
             {
@@ -200,5 +194,4 @@ describe("test TOCItemsSettings", () => {
         const customToolbar = document.querySelector('.custom-toolbar');
         expect(customToolbar).toExist();
     });
-
 });

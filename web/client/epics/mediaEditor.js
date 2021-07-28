@@ -29,7 +29,7 @@ import {
     SET_MEDIA_SERVICE,
     SELECT_ITEM,
     loadingSelectedMedia,
-    loadingMediaList
+    loadingMediaList, MEDIA_TYPE_DISABLE, setMediaType
 } from '../actions/mediaEditor';
 
 import { HIDE, SAVE, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
@@ -39,6 +39,7 @@ import {MediaTypes } from '../utils/GeoStoryUtils';
 import {SourceTypes} from '../utils/MediaEditorUtils';
 
 import mediaAPI from '../api/media';
+import {find, includes, isEmpty} from "lodash";
 
 export const loadMediaEditorDataEpic = (action$, store) =>
     action$.ofType(SHOW, LOAD_MEDIA, SET_MEDIA_TYPE, SET_MEDIA_SERVICE)
@@ -299,4 +300,12 @@ export const updateSelectedItem = (action$, store) =>
                 .startWith(
                     loadingSelectedMedia(true)
                 );
+        });
+
+export const setMediaTypeOnDisable = (action$) =>
+    action$.ofType(MEDIA_TYPE_DISABLE)
+        .filter(({mediaTypes})=> !isEmpty(mediaTypes))
+        .switchMap(({mediaTypes})=> {
+            const mediaType = find(Object.values(MediaTypes), val => !includes(mediaTypes, val));
+            return mediaType ? Observable.of(setMediaType(mediaType)) : Observable.empty();
         });

@@ -25,7 +25,8 @@ import {
     show, SHOW,
     removeMedia, REMOVE_MEDIA,
     loadingSelectedMedia, LOADING_SELECTED_MEDIA,
-    loadingMediaList, LOADING_MEDIA_LIST
+    loadingMediaList, LOADING_MEDIA_LIST,
+    disableMediaType, MEDIA_TYPE_DISABLE
 } from '../mediaEditor';
 
 describe('mediaEditor actions', () => {
@@ -154,5 +155,16 @@ describe('mediaEditor actions', () => {
     it('loadingMediaList', () => {
         const action = loadingMediaList();
         expect(action.type).toBe(LOADING_MEDIA_LIST);
+    });
+    it('disableMediaType default', () => {
+        const action = disableMediaType();
+        expect(action.type).toBe(MEDIA_TYPE_DISABLE);
+        expect(action.mediaTypes).toEqual([]);
+    });
+    it('disableMediaType', () => {
+        const mediaTypes = ['image'];
+        const action = disableMediaType(mediaTypes);
+        expect(action.type).toBe(MEDIA_TYPE_DISABLE);
+        expect(action.mediaTypes).toEqual(mediaTypes);
     });
 });

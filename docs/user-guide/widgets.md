@@ -1,7 +1,7 @@
 # Widgets
 *********
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to create widgets from the layers added to the map. Widgets are components such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide the user the opportunity to analyze information more effectively.
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to create widgets from the layers added to the map. Widgets are components such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide the user the opportunity to analyze information more effectively.
 
 !!! Note
     Some widgets (in maps or in dashboards) need some WPS back-end support to work:
@@ -62,7 +62,7 @@ Just below the chart's preview, the following configurations are available:
 
 * Enable the chart's legend by activating **Display Legend**
 
-In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
+In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
 
 <img src="../img/widgets/advanced_options.jpg" class="ms-docimage"/>
 

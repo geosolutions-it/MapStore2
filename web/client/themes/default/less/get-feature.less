@@ -1,4 +1,47 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    #identify-container {
+        .coordinates-edit-row {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    .ms-properties-viewer {
+        thead {
+            .color-var(@theme-vars[main-variant-color]);
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+
+        tr+tr {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    .ms-template-viewer {
+        &>div+div {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    .coordinates-text {
+        .color-var(@theme-vars[main-color], true);
+        .background-color-var(@theme-vars[main-bg], true);
+    }
+}
+
+// **************
+// Layout
+// **************
 #identify-container {
     .degrees, .minutes {
         width: auto;
@@ -18,8 +61,10 @@
         align-items: center;
         padding: 8px;
         margin-top: 8px;
-        border-top: 1px solid rgb(221, 221, 221);
-        border-bottom: 1px solid rgb(221, 221, 221);
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
         .coordinate-editor {
             flex: 1 1 0%;
             font-family: @font-family-monospace;
@@ -233,8 +278,6 @@
         padding-bottom: 8px;
     }
     thead {
-        background-color: darken(@ms2-color-background, 5%);
-        color: contrast(darken(@ms2-color-background, 5%));
         font-size: 1.1em;
         margin-bottom: 4px;
         th {
@@ -256,7 +299,8 @@
         }
     }
     tr + tr {
-        border-top: 1px solid @ms2-color-shade-lighter;
+        border-top-width: 1px;
+        border-top-style: solid;
     }
 }
 
@@ -287,7 +331,8 @@
     & > div + div {
         margin-top: 4px;
         padding-top: 8px;
-        border-top: 1px solid @ms2-color-shade-lighter;
+        border-top-width: 1px;
+        border-top-style: solid;
     }
 }
 
@@ -300,8 +345,6 @@
 .coordinates-text {
     flex: 1 1 0%;
     margin-left: 8px;
-    color: #333333 !important;
-    background-color: #ffffff !important;
     font-family: @font-family-monospace;
 }
 .identify-icon{

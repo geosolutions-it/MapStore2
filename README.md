@@ -1,16 +1,11 @@
-[![Build Status](https://travis-ci.org/geosolutions-it/MapStore2.svg?branch=master)](https://travis-ci.org/geosolutions-it/MapStore2)
+![Build Checks](https://github.com/geosolutions-it/MapStore2/actions/workflows/tests.yml/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/geosolutions-it/MapStore2/badge.svg?branch=master)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1648d484427346e2877006dc287379b6)](https://app.codacy.com/app/geosolutions/MapStore2?utm_source=github.com&utm_medium=referral&utm_content=geosolutions-it/MapStore2&utm_campaign=badger)
 [![Documentation Status](https://readthedocs.org/projects/mapstore2/badge/?version=latest)](https://mapstore.readthedocs.io/en/latest/?badge=latest)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
 MapStore
 ========
 MapStore is a framework to build *web mapping* applications using standard mapping libraries, such as <a href="http://openlayers.org/" target="_blank">OpenLayers</a> and <a href="http://leafletjs.com/" target="_blank">Leaflet</a>.
-
-MapStore has several example applications:
- * MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)
- * MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents by server like OpenStreetMap, Google Maps, MapQuest or specific servers provided by your organization or third party.
 
 For more information check the <a href="https://mapstore.readthedocs.io/en/latest/" target="_blank">MapStore documentation!</a>
 
@@ -23,7 +18,7 @@ You can download the WAR file from the latest release <a href="https://github.co
 Quick Start
 ------------
 
-There are two quick ways to test out MapStore. Either using <a href="https://www.docker.com/" target="_blank">Docker</a> or a local java web container like <a href="http://tomcat.apache.org/" target="_blank">Apache Tomcat</a>
+There are two quick ways to test out MapStore. Either using <a href="https://www.docker.com/" target="_blank">Docker</a> (all tags are available in the [geosolutions dockerhub](https://hub.docker.com/r/geosolutionsit/mapstore2/tags?page=1&ordering=last_updated)) or a local java web container like <a href="http://tomcat.apache.org/" target="_blank">Apache Tomcat</a>
 
 ### Using Docker
 
@@ -68,7 +63,7 @@ Demo Instances
 We have the following instances:
 
 1. a DEV instance, which can be accessed <a href="http://dev-mapstore.geosolutionsgroup.com" target="_blank">here</a>, where all the changes are deployed once they are published on the Master branch of our repo
-2. a QA instance, which can be accessed  <a href="http://qa.mapstore.geosolutionsgroup.com" target="_blank">here</a>, that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
+2. a QA instance, which can be accessed  <a href="http://qa-mapstore.geosolutionsgroup.com" target="_blank">here</a>, that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
 3. a STABLE instance, which can be accessed <a href="http://mapstore.geosolutionsgroup.com" target="_blank">here</a>, that gets deployed on demand after each release.
 
 As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.

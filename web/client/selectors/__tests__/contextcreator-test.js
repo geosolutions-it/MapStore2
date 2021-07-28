@@ -9,7 +9,8 @@ import expect from 'expect';
 
 import {
     newContextSelector,
-    creationStepSelector
+    creationStepSelector,
+    selectedThemeSelector
 } from '../contextcreator';
 
 const testState = {
@@ -29,5 +30,21 @@ describe('contextcreator selectors', () => {
     });
     it('creationStepSelector', () => {
         expect(creationStepSelector(testState)).toBe('step');
+    });
+    it('selectedThemeSelector', () => {
+        const themeDark = {
+            id: 'dark',
+            label: 'Dark',
+            type: 'link',
+            href: 'dist/themes/dark.css'
+        };
+        expect(selectedThemeSelector(testState)).toBeFalsy();
+        expect(selectedThemeSelector({
+            ...testState,
+            contextcreator: {
+                ...testState.contextcreator,
+                selectedTheme: themeDark
+            }
+        })).toEqual(themeDark);
     });
 });

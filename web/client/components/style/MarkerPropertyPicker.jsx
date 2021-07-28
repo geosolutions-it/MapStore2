@@ -252,7 +252,7 @@ function MarkerPropertyPicker({
             <div
                 className="ms-property-picker-swatch"
                 ref={swatch}
-                style={{ padding: 0, backgroundColor: '#ffffff', boxShadow: 'none' }}
+                style={{ padding: 0, boxShadow: 'none' }}
                 onClick={ () => {
                     if (!disabled) {
                         setDisplayPropertyPicker(!displayPropertyPicker);

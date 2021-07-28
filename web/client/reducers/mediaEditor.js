@@ -20,7 +20,8 @@ import {
     SET_MEDIA_TYPE,
     SHOW,
     LOADING_SELECTED_MEDIA,
-    LOADING_MEDIA_LIST
+    LOADING_MEDIA_LIST,
+    MEDIA_TYPE_DISABLE
 } from '../actions/mediaEditor';
 import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set, unset} from '../utils/ImmutableUtils';
@@ -114,7 +115,8 @@ export default (state = DEFAULT_STATE, action) => {
                 ...(state.settings?.mediaType && { mediaType: state.settings.mediaType }) // restore the latest selected media type
             }),
             set('stashedSettings', undefined),
-            unset('selected')
+            unset('selected'),
+            set('disabledMediaType', [])
         )(state);
     // set adding media state (to toggle add/select in media selectors)
     case LOAD_MEDIA_SUCCESS: {
@@ -177,6 +179,8 @@ export default (state = DEFAULT_STATE, action) => {
         return set('loadingSelected', action.loading, state);
     case LOADING_MEDIA_LIST:
         return set('loadingList', true, state);
+    case MEDIA_TYPE_DISABLE:
+        return set('disabledMediaType', action.mediaTypes || [], state);
     default:
         return state;
     }

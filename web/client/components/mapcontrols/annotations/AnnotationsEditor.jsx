@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import 'react-quill/dist/quill.snow.css';
-
 import { head, isEmpty, isFunction, isUndefined } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';

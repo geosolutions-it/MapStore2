@@ -33,7 +33,8 @@ export const SectionTypes = {
     TITLE: 'title',
     PARAGRAPH: 'paragraph',
     IMMERSIVE: 'immersive',
-    BANNER: 'banner'
+    BANNER: 'banner',
+    CAROUSEL: 'carousel'
 };
 /**
  * Allowed contents
@@ -197,6 +198,7 @@ export const filterResources = (resources = [], filterText, regex = RegExp(filte
 /**
  * Creates a default template for the given type
  * @param {string} type can be section type, a content type or a template (custom. i.e. paragraph with initial image for add media)
+ * @param {function/string} localize localization function or localized string
  * @return {object} the template object of the content/section
  */
 export const getDefaultSectionTemplate = (type, localize = v => v) => {
@@ -262,7 +264,20 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             id: uuid(),
             type: SectionTypes.IMMERSIVE,
             title: localize("geostory.builder.defaults.titleImmersive"),
-            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize)]
+            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize("geostory.builder.defaults.titleImmersiveContent"))]
+        };
+    case SectionTypes.CAROUSEL:
+        return {
+            id: uuid(),
+            type,
+            title: localize("geostory.builder.defaults.titleGeocarousel"),
+            template: type,
+            background: {
+                fit: 'cover',
+                size: 'full',
+                align: 'center'
+            },
+            contents: [getDefaultSectionTemplate(ContentTypes.COLUMN, localize("geostory.builder.defaults.titleGeocarouselContent"))]
         };
     case SectionTemplates.MEDIA: {
         return {
@@ -309,7 +324,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             align: 'left',
             size: 'small',
             theme: '',
-            title: localize("geostory.builder.defaults.titleImmersiveContent"),
+            title: localize,
             contents: [{
                 id: uuid(),
                 type: ContentTypes.TEXT,
@@ -561,3 +576,83 @@ export const getGeostoryMode = () => {
         ? 'geostoryEmbedded'
         : 'geostory';
 };
+
+/**
+ * Get content and section Id from the path
+ * @param {string} path
+ * @return {object} {sectionId, contentId, innerContentId}
+ */
+export const getIdFromPath = (path) => {
+    const getId = (_path) => {
+        try {
+            return JSON.parse(_path)?.id;
+        } catch {
+            return null;
+        }
+    };
+    const pathArray = toPath(path) || [];
+    // Returns null when not an id
+    return {
+        sectionId: getId(pathArray?.[1]),
+        contentId: getId(pathArray?.[3]),
+        innerContentId: getId(pathArray?.[5])
+    };
+};
+
+/**
+ * Update carousel section content
+ * @param {array} resources
+ * @param {array} sections
+ * @param {object} action
+ * @param {string} mode
+ * @return {array} updated sections
+ */
+
+export const updateGeoCarouselSections = (sections = [], action) => {
+    return sections.map(_section=> {
+        if (action.sectionId === _section.id) {
+            return {..._section,
+                contents: (_section.contents || []).map(content=> ({
+                    ...content,
+                    hideContent: content.id !== action.showContentId
+                }))
+            };
+        }
+        return _section;
+    });
+};
+
+/**
+ * Create a vector layer based on content's features
+ * @param {string} id id of section
+ * @param {array} contents array of content objects
+ * @param {function} featureStyle a function to generate a feature style ({ content, feature }, idx) => ({  })
+ * @param {object} layerOptions additional layer option for a vector layer
+ */
+export function getVectorLayerFromContents({
+    id,
+    contents,
+    featureStyle,
+    layerOptions
+}) {
+    return {
+        visibility: true,
+        handleClickOnLayer: true,
+        ...layerOptions,
+        id: `geostory-vector-${id}`,
+        name: `geostory-vector-${id}`,
+        type: 'vector',
+        features: contents.reduce((acc, content, idx) => [
+            ...acc, ...(
+                (content?.features || [])
+                    .map((feature) => ({
+                        ...feature,
+                        contentRefId: content.id,
+                        ...(featureStyle && {
+                            style: featureStyle({ content, feature }, idx)
+                        })
+                    }))
+            || [])
+        ], []).reverse()
+    };
+}

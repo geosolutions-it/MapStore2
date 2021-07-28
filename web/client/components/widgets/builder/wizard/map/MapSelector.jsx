@@ -22,7 +22,7 @@ const MapCatalog = mcEnhancer(MapCatalogComp);
 /**
  * Builder page that allows layer's selection
  */
-export default handleMapSelect(({ onClose = () => { }, setSelected = () => { }, onMapChoice = () => { }, stepButtons = [], selected } = {}) =>
+export default handleMapSelect(({ onClose = () => { }, setSelected = () => { }, onMapChoice = () => { }, stepButtons = [], selected, disableEmptyMap } = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -40,5 +40,5 @@ export default handleMapSelect(({ onClose = () => { }, setSelected = () => { }, 
                 }]} />
         </BuilderHeader>}
     >
-        <MapCatalog title={<Message msgId="widgets.builder.wizard.selectAMap" />} selected={selected} onSelected={r => setSelected(r)} />
+        <MapCatalog title={<Message msgId="widgets.builder.wizard.selectAMap" />} selected={selected} onSelected={r => setSelected(r)} disableEmptyMap={disableEmptyMap}/>
     </BorderLayout>));

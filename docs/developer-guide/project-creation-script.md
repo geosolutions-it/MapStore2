@@ -82,3 +82,5 @@ To sync MapStore2 dependencies just run npm install from project root folder.
 ```sh
 npm install
 ```
+
+Also make sure to follow the migration guidelines [here](../mapstore-migration-guide). 

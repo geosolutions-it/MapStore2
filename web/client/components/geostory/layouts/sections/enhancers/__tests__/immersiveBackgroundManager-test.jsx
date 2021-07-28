@@ -12,7 +12,7 @@ import expect from 'expect';
 
 // config for recompose usage of RXJS
 import rxjsconfig from 'recompose/rxjsObservableConfig';
-import immersiveBackgroundManager from '../immersiveBackgroundManager';
+import immersiveBackgroundManager, { backgroundSectionProp } from '../immersiveBackgroundManager';
 
 import STORY from '../../../../../../test-resources/geostory/sampleStory_1.json';
 const contents = STORY.sections[1].contents;
@@ -49,5 +49,24 @@ describe('immersiveBackgroundManager enhancer', () => {
 
         }));
         ReactDOM.render(<Sink contents={contents}/>, document.getElementById("container"));
+    });
+    it('should export backgroundSectionProp HOC', () => {
+        const Component = backgroundSectionProp(({ contentId, sectionId, path }) => (
+            <div>
+                <div id="content-id">{contentId}</div>
+                <div id="section-id">{sectionId}</div>
+                <div id="path">{path}</div>
+            </div>
+        ));
+
+        ReactDOM.render(<Component
+            id={'section-id'}
+            backgroundId={'content-id'}
+            contents={[{ id: 'content-id' }]}
+        />, document.getElementById("container"));
+
+        expect(document.getElementById('content-id').innerText).toBe('content-id');
+        expect(document.getElementById('section-id').innerText).toBe('section-id');
+        expect(document.getElementById('path').innerText).toBe('sections[{"id": "section-id"}].background');
     });
 });

@@ -1,7 +1,7 @@
 # Timeline
 **********
 
-The Timeline is a [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) tool for managing layers with a time dimension.
+The Timeline is a [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tool for managing layers with a time dimension.
 It makes possible to observe the layers' evolution over time, to inspect the layer configuration at a specific time instant (or in a time range) and to view different layer configurations time by time dynamically through animations.<br>
 
 !!! Warning

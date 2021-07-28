@@ -93,7 +93,8 @@ class CesiumMap extends React.Component {
             selectionIndicator: false,
             timeline: false,
             navigationHelpButton: false,
-            navigationInstructionsInitiallyVisible: false
+            navigationInstructionsInitiallyVisible: false,
+            creditContainer: "footer-attribution-container"
         }, this.getMapOptions(this.props.mapOptions)));
         if (this.props.registerHooks) {
             this.registerHooks();

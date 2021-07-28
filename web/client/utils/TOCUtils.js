@@ -11,20 +11,12 @@ import { isObject, get } from 'lodash';
 import {getGroupByName} from './LayersUtils';
 import {getLocale} from './LocaleUtils';
 
-export const createFromSearch = function(options, search) {
-    /* only create an option from search if the length of the search string is > 0 and
-    it does no match the label property of an existing option
-    MV: it should also avoid the creation of group with an empty name therefore a new regex has been introduced
-    */
+export const isValidNewGroupOption = function({ label }) {
     const filterWrongGroupRegex = RegExp('^\/|\/$|\/{2,}');
-    if (search.length === 0 || (options.map(function(option) {
-        return option.label;
-    })).indexOf(search) > -1 || filterWrongGroupRegex.test(search)) {
-        return null;
+    if (!label || filterWrongGroupRegex.test(label)) {
+        return false;
     }
-
-    const val = search.replace(/\./g, '${dot}').replace(/\//g, '.');
-    return {label: search, value: val};
+    return true;
 };
 
 /**

@@ -227,6 +227,145 @@ describe('ContentToolbar component', () => {
             expect(buttons.length).toBe(1);
             expect(buttons[0].classList.contains('disabled')).toBe(true);
         });
+        it('add', (done) => {
+            const action = {
+                onAdd() { }
+            };
+            const spyAdd = expect.spyOn(action, 'onAdd');
+            ReactDOM.render(<ContentToolbar
+                tools={["add"]}
+                add={action.onAdd}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+            expect(spyAdd).toHaveBeenCalled();
+            const buttonIcon = document.getElementsByClassName('glyphicon-plus');
+            expect(buttonIcon.length).toBe(1);
+            done();
+        });
+        it('add disable on editMap or force disabled', (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["add"]}
+                editMap
+            />, document.getElementById("container"));
+            let buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].classList.contains('disabled')).toBe(true);
+
+            ReactDOM.render(<ContentToolbar
+                tools={["add"]}
+                addDisabled
+            />, document.getElementById("container"));
+            buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].classList.contains('disabled')).toBe(true);
+            done();
+        });
+        it('edit', (done) => {
+            const action = {
+                onEdit() { }
+            };
+            const spyEdit = expect.spyOn(action, 'onEdit');
+            ReactDOM.render(<ContentToolbar
+                tools={["edit"]}
+                edit={action.onEdit}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+            expect(spyEdit).toHaveBeenCalled();
+            expect(spyEdit).toHaveBeenCalled();
+            const buttonIcon = document.getElementsByClassName('glyphicon-pencil');
+            expect(buttonIcon.length).toBe(1);
+            done();
+        });
+        it('edit disable on editMap', (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["edit"]}
+                editMap
+            />, document.getElementById("container"));
+            let buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].classList.contains('disabled')).toBe(true);
+            done();
+        });
+        it('marker', (done) => {
+            const action = {
+                onMarker() { }
+            };
+            const spyMarker = expect.spyOn(action, 'onMarker');
+            ReactDOM.render(<ContentToolbar
+                tools={["marker"]}
+                marker={action.onMarker}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+            expect(spyMarker).toHaveBeenCalled();
+            expect(spyMarker).toHaveBeenCalled();
+            const buttonIcon = document.getElementsByClassName('glyphicon-map-marker');
+            expect(buttonIcon.length).toBe(1);
+            done();
+        });
+        it('marker disable on editMap or force disabled', (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["marker"]}
+                editMap
+            />, document.getElementById("container"));
+            let buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].classList.contains('disabled')).toBe(true);
+
+            ReactDOM.render(<ContentToolbar
+                tools={["marker"]}
+                markerDisabled
+            />, document.getElementById("container"));
+            buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].classList.contains('disabled')).toBe(true);
+            done();
+        });
+        it('closeDraw', (done) => {
+            const action = {
+                update() { }
+            };
+            const spyUpdate = expect.spyOn(action, 'update');
+            ReactDOM.render(<ContentToolbar
+                tools={["closeDraw"]}
+                update={action.update}
+                editMap
+                map ={{resetMapInfo: true}}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+            expect(spyUpdate).toHaveBeenCalled();
+            expect(spyUpdate.calls.length).toBe(1);
+            expect(spyUpdate.calls[0].arguments).toEqual(["editMap", false]);
+            const buttonIcon = document.getElementsByClassName('glyphicon-1-close');
+            expect(buttonIcon.length).toBe(1);
+            done();
+        });
+        it('closeDraw disable on editMap', (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["closeDraw"]}
+            />, document.getElementById("container"));
+            let buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].classList.contains('disabled')).toBe(true);
+            done();
+        });
     });
 
 });

@@ -1,7 +1,7 @@
 # Adding Annotations 
 ********************
 
-[Mapstore](https://mapstore.geo-solutions.it/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
+[Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
 Those features make up the so called **Annotations** layers.
 
 Starting from a new map or an already existing one:
@@ -63,7 +63,7 @@ The annotations layer will be added to the TOC and the annotation will be visibl
 Styling Annotations
 -------------------
 
-Based on which type of annotation was chosen, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
+Based on which type of annotation was chosen, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
 
 <img src="../img/annotations/annotations_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
 

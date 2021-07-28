@@ -14,6 +14,7 @@ import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
 import ConfigurePlugins from './ConfigurePluginsStep';
 import ConfigureMap from './ConfigureMapStep';
+import ConfigureThemes from './ConfigureThemes';
 import {CONTEXT_TUTORIALS} from '../../actions/contextcreator';
 /**
  * Filters plugins and applies overrides.
@@ -78,6 +79,7 @@ export default class ContextCreator extends React.Component {
         user: PropTypes.object,
         loading: PropTypes.bool,
         loadFlags: PropTypes.object,
+        contextId: PropTypes.object,
         isValidContextName: PropTypes.bool,
         contextNameChecked: PropTypes.bool,
         curStepId: PropTypes.string,
@@ -146,7 +148,10 @@ export default class ContextCreator extends React.Component {
         showBackToPageConfirmation: PropTypes.bool,
         backToPageDestRoute: PropTypes.string,
         backToPageConfirmationMessage: PropTypes.string,
-        tutorials: PropTypes.object
+        tutorials: PropTypes.object,
+        themes: PropTypes.array,
+        setSelectedTheme: PropTypes.func,
+        selectedTheme: PropTypes.string
     };
 
     static contextTypes = {
@@ -162,6 +167,12 @@ export default class ContextCreator extends React.Component {
         contextNameChecked: true,
         newContext: {},
         resource: {},
+        themes: [{
+            id: 'dark',
+            label: 'Dark',
+            type: 'link',
+            href: (__MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes') + '/dark.css'
+        }],
         viewerPlugins: [
             "Map",
             "BackgroundSelector",
@@ -257,6 +268,7 @@ export default class ContextCreator extends React.Component {
                         this.props.loading || !this.props.isValidContextName || !this.props.contextNameChecked,
                     component:
                         <GeneralSettings
+                            contextId={this.props.contextId}
                             contextName={this.props.resource.name}
                             windowTitle={this.props.newContext.windowTitle}
                             isValidContextName={this.props.isValidContextName}
@@ -343,7 +355,19 @@ export default class ContextCreator extends React.Component {
                             onEditTemplate={this.props.onEditTemplate}
                             onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
                             onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>
-                }]} />
+                },
+                {
+                    id: 'configure-themes',
+                    label: 'contextCreator.configureThemes.label',
+                    extraToolbarButtons: extraToolbarButtons('configure-themes'),
+                    disableNext: false,
+                    component: <ConfigureThemes
+                        themes={this.props.themes}
+                        setSelectedTheme={this.props.setSelectedTheme}
+                        selectedTheme={this.props.selectedTheme}
+                    />
+                }
+                ]} />
         );
     }
 }

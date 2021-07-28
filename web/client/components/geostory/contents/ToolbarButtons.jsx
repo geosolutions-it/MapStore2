@@ -17,6 +17,7 @@ import isObject from "lodash/isObject";
 import isString from "lodash/isString";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
+const BUTTON_BSSTYLE = { primary: 'btn-primary', "default": 'btn-default'};
 
 /**
  * these components have been created because it was causing an excessive re-rendering
@@ -127,13 +128,13 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme
     );
 
 
-export const DeleteButtonToolbar = ({ editMap: disabled = false, path, remove = () => { } }) =>
+export const DeleteButtonToolbar = ({ editMap: disabled = false, forceDelBtnDisable = false, path, remove = () => { }, bsStyle }) =>
     (<DeleteButton
         glyph={"trash"}
         visible
         noTooltipWhenDisabled
-        disabled={disabled}
-        className={BUTTON_CLASSES}
+        disabled={disabled || forceDelBtnDisable}
+        className={`${BUTTON_CLASSES} ${bsStyle && BUTTON_BSSTYLE[bsStyle]}`}
         tooltipId={"geostory.contentToolbar.remove"}
         confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
         confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}

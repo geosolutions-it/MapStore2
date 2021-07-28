@@ -5,6 +5,7 @@
         "msgId0": "{name} took {numPhotos, plural, =0 {no photos} =1 {one photo} other {# photos}} on {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "About",
+        "aboutTooltip": "About",
         "aboutLbl": "About",
         "about_p0-0": "MapStore is a framework to build web mapping applications using standard mapping libraries, such as",
         "about_p0-1": "and",
@@ -51,7 +52,8 @@
             "404": "Translation file not found"
         },
         "details": {
-            "title": "About this map"
+            "title": "About this map",
+            "tooltip": "About this map"
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",
@@ -99,9 +101,11 @@
             "templateFormatDescription": "Customize feature info results format",
             "hideFormatTitle": "DISABLE IDENTIFY",
             "hideFormatDescription": "Disable the feature info for this layer",
+            "styleWarning": "Layer style editor for geometry type '{geometryType}' is not supported.",
             "templateFormatInfoAlert1": "Click on edit button to add a new template.",
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
-            "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
+            "templateFormatInfoAlertExample": "The id of the feature is <span style='white-space:nowrap'>${ properties.id }</span> or <span style='white-space:nowrap'>${ properties['data-value'] }</span>",
+            "templateError": "There was an error applying the template to the information returned by the server, please check the template",
             "templatePreview": "Template preview",
             "visibilityLimits": {
                 "title": "Visibility limits",
@@ -203,11 +207,14 @@
         "menu": "Menu",
         "options": "Options",
         "settings": "Settings",
+        "settingsTooltip": "Settings",
         "help": "Help",
         "docs": "Docs",
+        "docsTooltip": "Docs",
         "gohome": "Back to home page",
         "back": "Back to the Importer",
         "printbutton": "Print",
+        "printToolTip": "Print",
         "annotationsbutton": "Annotations",
         "noresultfound": "No Result found",
         "save": "Save",
@@ -1147,6 +1154,7 @@
             "loadoverride": "Replace annotations",
             "loaderror": "Select one or more annotations files. (supported files: JSON)",
             "defaulttitle": "Edit default title",
+            "tooltip": "Annotations",
             "field": {
                 "title": "Title",
                 "description": "Description"
@@ -1269,6 +1277,7 @@
         },
         "share":{
             "title": "Share",
+            "tooltip": "Share",
             "titlePanel": "Share the map",
             "socialIntro": "In your favourite social network",
             "directLinkTitle": "Via a direct link",
@@ -2222,8 +2231,8 @@
             "quantile": "Quantile",
             "jenks": "Natural breaks (Jenks)",
             "standardDeviation": "Standard deviation",
-            "switchToTextareaEditor": "Switch to text editor",
-            "switchToVisualEditor": "Switch to visual editor",
+            "switchToTextareaEditor": "Code editor",
+            "switchToVisualEditor": "Visual editor",
             "alertForceTranslate": "You will lose all the changes added in the text mode by switching to visual editor. Are you sure to switch to visual style editor mode?",
             "stayInTextareaEditor": "No, continue with text editor",
             "useLatestValidStyle": "Yes, switch to visual editor",
@@ -2417,6 +2426,8 @@
             "addMediaSection": "Add Media Section",
             "addWebPageSection": "Add Web Page Section",
             "addImmersiveContent": "Add Immersive Content",
+            "addGeocarouselSection": "Add Geocarousel Section",
+            "addGeocarouselContent": "Add Geocarousel Content",
             "addTextContent": "Add Text Content",
             "addMediaContent": "Add Media Content",
             "addWebPageContent": "Add Web Page Content",
@@ -2425,6 +2436,11 @@
             "emptyDescription": "Start creating an awesome geostory by adding new content",
             "closeFullscreenMap": "Close fullscreen map",
             "showFullscreenMap": "Show fullscreen map",
+            "carouselAddTitle": "Add new card thumbnail",
+            "carouselEditTitle": "Edit card thumbnail",
+            "carouselAddMapInfo": "Add a background map",
+            "carouselAddItemInfo": "Add a new marker for the selected carousel item",
+            "carouselPlaceMarkerInfo": "Click on the map to add a new marker",
             "contentToolbar": {
                 "contentSize": "Change size",
                 "contentHeightAuto": "Make this section to adapt to the content height",
@@ -2449,6 +2465,9 @@
                 "fit": "Make the whole background visible inside the container",
                 "editMedia": "Change media source",
                 "remove": "Remove",
+                "add": "Add",
+                "edit": "Edit",
+                "marker": "Add marker to map",
                 "removeConfirmTitle": "Are you sure?",
                 "removeConfirmContent": "Do you want to remove this content from the story?",
                 "editMap": "Edit map configuration",
@@ -2482,6 +2501,8 @@
                     "titleParagraph": "Paragraph Section",
                     "titleImmersive": "Immersive Section",
                     "titleImmersiveContent": "Immersive Content",
+                    "titleGeocarousel": "Geocarousel Section",
+                    "titleGeocarouselContent": "Geocarousel Content",
                     "titleMedia": "Media Section",
                     "titleImage": "Image",
                     "titleText": "Text",
@@ -2592,7 +2613,9 @@
             "close": "Close",
             "cancel": "Cancel",
             "saveSuccessTitle": "Success",
-            "saveSuccessMessage": "Saved successfully"
+            "saveSuccessMessage": "Saved successfully",
+            "saveTooltip": "Save",
+            "saveAsTooltip": "Save As"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",
@@ -2880,10 +2903,17 @@
             "generalSettings": {
                 "label": "General Settings",
                 "title": "Create new app context",
+                "edit": "Edit app context",
                 "name": "Name",
                 "namePlaceholder": "Enter app context name...",
                 "windowTitle": "Window title",
                 "windowTitlePlaceholder": "Enter window title..."
+            },
+            "configureThemes": {
+              "title": "Configure Theme",
+              "label": "Theme",
+              "themes": "Choose a theme",
+              "noThemes": "No themes found"
             },
             "configurePlugins": {
                 "label": "Configure Plugins",
@@ -2999,6 +3029,7 @@
         },
         "mapTemplates": {
             "title": "Map templates",
+            "tooltip": "Browse map templates",
             "favouritesTitle": "Favourites",
             "allTitle": "All",
             "filterPlaceholder": "Filter map template...",
@@ -3342,6 +3373,7 @@
             "titleContext": "User session removing failed",
             "defaultMessage": "Unknown error"
           },
+          "tooltip": "Clear the current user session saved",
           "successRemoved": "User session removed",
           "remove": "Reset User Session",
           "confirmRemove": "Are you sure you want to restore the default configuration?"

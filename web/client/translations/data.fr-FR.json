@@ -5,6 +5,7 @@
         "msgId0": "{name} a pris {numPhotos, plural, =0 {aucune photo} =1 {une photo} other {# photos}} le {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "A propos...",
+        "aboutTooltip": "A propos...",
         "aboutLbl": "A propos",
         "about_p0-0": "MapStore est un cadriciel permettant de développer des applications cartographiques web à l'aide des librairies cartographiques standards telles que",
         "about_p0-1": "et",
@@ -51,7 +52,8 @@
             "404": "Fichier de traduction introuvable"
         },
         "details": {
-            "title": "À propos de cette carte"
+            "title": "À propos de cette carte",
+            "tooltip": "À propos de cette carte"
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
@@ -99,9 +101,11 @@
             "templateFormatDescription": "Personnaliser le format des résultats d'interrogation des attributs",
             "hideFormatTitle": "DÉSACTIVER L'IDENTIFICATION",
             "hideFormatDescription": "Désactiver les informations sur les caractéristiques de cette couche",
+            "styleWarning": "L'éditeur de style de calque pour le type de géométrie '{geometryType}' n'est pas pris en charge.",
             "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
             "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
-            "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
+            "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est <span style='white-space:nowrap'>${ properties.ID }</span> ou <span style='white-space:nowrap'>${ properties['données-valeur'] }</span>",
+            "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
             "visibilityLimits": {
                 "title": "Limites de visibilité",
@@ -203,11 +207,14 @@
         "menu": "Menu",
         "options": "Options",
         "settings": "Réglages",
+        "settingsTooltip": "Réglages",
         "help": "Aide",
         "docs": "Documentation",
+        "docsTooltip": "Documentation",
         "gohome": "Retour à la page d'accueil",
         "back": "Retour à l'import",
         "printbutton": "Imprimer",
+        "printToolTip": "Imprimer",
         "annotationsbutton": "Annotations",
         "noresultfound": "Aucun résultat trouvé",
         "save": "Enregistrer",
@@ -1147,6 +1154,7 @@
             "loadoverride": "Remplacer les annotations",
             "loaderror": "Sélectionnez un ou plusieurs fichiers d'annotations. (fichiers supportés : JSON)",
             "defaulttitle": "Modifier le titre par défaut",
+            "tooltip": "Annotations",
             "field": {
                 "title": "Titre",
                 "description": "Description"
@@ -1269,6 +1277,7 @@
         },
         "share": {
             "title": "Partager",
+            "tooltip": "Partager",
             "titlePanel": "Partager la carte",
             "socialIntro": "Via votre réseau social favori",
             "directLinkTitle": "Via un lien direct",
@@ -2212,8 +2221,8 @@
             "quantile": "Quantile",
             "jenks": "Pauses naturelles (Jenks)",
             "standardDeviation": "Écart type",
-            "switchToTextareaEditor": "Passer à l'éditeur de zone de texte",
-            "switchToVisualEditor": "Passer à l'éditeur visuel",
+            "switchToTextareaEditor": "Éditeur de code",
+            "switchToVisualEditor": "Éditeur visuel",
             "alertForceTranslate": "Vous perdrez toutes les modifications ajoutées dans le texte en passant à l'éditeur visuel. Êtes-vous sûr de passer en mode éditeur de style visuel?",
             "stayInTextareaEditor": "Non, continuez dans la zone de texte",
             "useLatestValidStyle": "Oui, passez à l'éditeur visuel",
@@ -2406,6 +2415,8 @@
             "addMediaSection": "Ajouter une section multimédia",
             "addWebPageSection": "Ajouter une section de page Web",
             "addImmersiveContent": "Ajouter du contenu immersif",
+            "addGeocarouselSection": "Ajouter une section de géocarrousel",
+            "addGeocarouselContent": "Ajouter du contenu de géocarrousel",
             "addTextContent": "Ajouter du contenu texte",
             "addMediaContent": "Ajouter du contenu multimédia",
             "zoomToContent": "Zoom sur le contenu",
@@ -2414,6 +2425,11 @@
             "emptyDescription": "Commencer une story géniale en ajoutant du nouveau contenu",
             "closeFullscreenMap": "Fermer la carte plein écran",
             "showFullscreenMap": "Montrer la carte en plein écran",
+            "carouselAddTitle": "Ajouter une nouvelle vignette de carte",
+            "carouselEditTitle": "Modifier la miniature de la carte",
+            "carouselAddMapInfo": "Ajouter un fond de carte",
+            "carouselAddItemInfo": "Ajouter un nouveau marqueur pour l'élément de carrousel sélectionné",
+            "carouselPlaceMarkerInfo": "Cliquez sur la carte pour ajouter un nouveau marqueur",
             "contentToolbar": {
                 "contentSize": "Changer la taille",
                 "contentHeightAuto": "S'adapter à la hauteur du contenu",
@@ -2438,6 +2454,9 @@
                 "fit": "Rendre tout le fond visible à l'intérieur du conteneur",
                 "editMedia": "Changer de source média",
                 "remove": "Supprimer",
+                "add": "Ajouter",
+                "edit": "Éditer",
+                "marker": "Ajouter un marqueur à la carte",
                 "removeConfirmTitle": "Êtes-vous sûr?",
                 "removeConfirmContent": "Voulez-vous supprimer ce contenu de la story ?",
                 "editMap": "Modifier l'étendue initiale de la carte",
@@ -2471,6 +2490,8 @@
                     "titleParagraph": "Section de paragraphe",
                     "titleImmersive": "Section immersive",
                     "titleImmersiveContent": "Contenu immersif",
+                    "titleGeocarousel": "Section Géocarrousel",
+                    "titleGeocarouselContent": "Contenu du géocarrousel",
                     "titleMedia": "Section multimédia",
                     "titleImage": "Image",
                     "titleText": "Texte",
@@ -2581,7 +2602,9 @@
             "close": "Fermer",
             "cancel": "Annuler",
             "saveSuccessTitle": "Succès",
-            "saveSuccessMessage": "Enregistré avec succès"
+            "saveSuccessMessage": "Enregistré avec succès",
+            "saveTooltip": "Salvar",
+            "saveAsTooltip": "Enregistrer sous"
         },
         "mapEditor": {
             "modalTitle": "Editeur de carte",
@@ -2604,7 +2627,7 @@
                 "selectService": "Sélectionner un service",
                 "add": "Ajouter",
                 "back": "Retour",
-                "save": "Sauver",
+                "save": "Salvar",
                 "edit": "Modifier",
                 "sourcePlaceholder": "Entrer une source",
                 "source": "Source",
@@ -2869,10 +2892,17 @@
             "generalSettings": {
                 "label": "Paramètres Généraux",
                 "title": "Créer un nouveau contexte applicatif",
+                "edit": "Modifier le contexte de l'application",
                 "name": "Nom",
                 "namePlaceholder": "Entrez le nom du contexte applicatif...",
                 "windowTitle": "Titre de la fenêtre",
                 "windowTitlePlaceholder": "Entrez le titre de la fenêtre..."
+            },
+            "configureThemes": {
+              "title": "Configurer le thème",
+              "label": "Thème",
+              "themes": "Choisissez un thème",
+              "noThemes": "Aucun thème trouvé"
             },
             "configurePlugins": {
                 "label": "Configurer les plugins",
@@ -2988,6 +3018,7 @@
         },
         "mapTemplates": {
             "title": "Cartes modèles",
+            "tooltip": "Parcourir les modèles de carte",
             "favouritesTitle": "Favoris",
             "allTitle": "Tout",
             "filterPlaceholder": "Filtrer les cartes modèles...",
@@ -3330,6 +3361,7 @@
             "titleContext": "La suppression de la session utilisateur a échoué",
             "defaultMessage": "Erreur inconnue"
           },
+          "tooltip": "Effacer la session utilisateur actuelle enregistrée",
           "successRemoved": "Session utilisateur supprimée",
           "remove": "Réinitialiser la session utilisateur",
           "confirmRemove": "Êtes-vous sûr de vouloir restaurer la configuration par défaut?"

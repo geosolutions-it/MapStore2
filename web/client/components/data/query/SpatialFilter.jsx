@@ -9,7 +9,7 @@
 import { find, isNil } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Col, Glyphicon, Panel, Row } from 'react-bootstrap';
+import { Col, Panel, Row } from 'react-bootstrap';
 
 import { createWFSFetchStream } from '../../../observables/autocomplete';
 import { getMessageById } from '../../../utils/LocaleUtils';
@@ -85,9 +85,6 @@ class SpatialFilter extends React.Component {
                 <span
                     style={{cursor: "pointer"}}
                     onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, !this.props.spatialPanelExpanded)}>{spatialFilterHeader}</span>
-                <button onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, !this.props.spatialPanelExpanded)} className="close">
-                    {this.props.spatialPanelExpanded ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
-                </button>
             </span>
         );
     };

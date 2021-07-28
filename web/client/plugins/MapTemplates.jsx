@@ -96,7 +96,8 @@ export default createPlugin('MapTemplates', {
             icon: <Glyphicon glyph="1-map" />,
             action: openMapTemplatesPanel,
             priority: 2,
-            doNotHide: true
+            doNotHide: true,
+            tooltip: <Message msgId="mapTemplates.tooltip" />
         }
     },
     reducers: {

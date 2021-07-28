@@ -1,0 +1,27 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+// #ms-components-theme(@theme-vars) {}
+
+// **************
+// Layout
+// **************
+// Overrides for react-widget styles
+@import 'react-widgets/lib/less/react-widgets.less';
+// override the computation of the buttons using parenthesis
+// to get the correct value
+.rw-numberpicker {
+    .rw-btn {
+        height: (@input-height / 2);
+        line-height: (@input-height / 2);
+    }
+}
