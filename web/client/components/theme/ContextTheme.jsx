@@ -30,14 +30,17 @@ import { validateVersion } from '../../selectors/version';
  *      href: 'dist/themes/dark.css',
  *      variables: {
  *          "ms-main-color": "#005500",
- *          "ms-main-bg": "#005500",
+ *          "ms-main-bg": "#FFFFFF",
  *          "ms-primary-contrast": "#FFFFFF",
- *          "ms-primary": "#078aa3"
+ *          "ms-primary": "#0D7185"
+ *          "ms-success-contrast": "#FFFFFF",
+ *          "ms-success": "#398439",
  *      }
  *  }}/>
  */
 
 function ContextTheme({
+    customVariablesEnabled,
     theme,
     version
 }) {
@@ -46,7 +49,7 @@ function ContextTheme({
 
     useEffect( () => {
         import(/* webpackChunkName: 'less' */ "less").then(({"default": less}) => {
-            if (theme.variables) {
+            if (theme.variables && customVariablesEnabled) {
                 try {
                     // we add the dispatch of the mixin so that we trigger the recompilation of the variables
                     less.render(themeVars + ".get-root-css-variables(@ms-theme-vars);", {

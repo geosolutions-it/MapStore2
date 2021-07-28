@@ -10,6 +10,8 @@ import ReactSelect from 'react-select';
 import {ControlLabel, Glyphicon} from 'react-bootstrap';
 import tinycolor from 'tinycolor2';
 import find from 'lodash/find';
+import isEqual from 'lodash/isEqual';
+import memoize from 'lodash/memoize';
 
 import Message from '../I18N/Message';
 import HTML from '../I18N/HTML';
@@ -28,9 +30,29 @@ const MAIN_COLOR = "ms-main-color";
 const MAIN_BG_COLOR = "ms-main-bg";
 const PRIMARY_CONTRAST = "ms-primary-contrast";
 const PRIMARY = "ms-primary";
+const SUCCESS_CONTRAST = "ms-success-contrast";
 const SUCCESS = "ms-success";
 
+/**
+ *
+ * @param {object} vars variables currently selected in the theme
+ * @param {object} defaultVars variables of the theme used to initialize the pickers
+ * @param {object} basic variables to use if a theme is not selected
+ * @param {string} varName variable name to be use for comparison
+ * @returns
+ */
+const hasColorChanged = memoize((vars, defaultVars, basic, varName) => {
+    return !tinycolor.equals(vars?.[varName], defaultVars?.[varName] || basic[varName]), isEqual
+});
 
+
+/**
+ *
+ * @param {object} basicVariables the variables used as default values if a theme is not selected
+ * @param {object[]} themes the list of themes to show in the selector field
+ * @param {boolean} customVariablesEnabled flag to enabled/disable the custom variables section
+ * @returns
+ */
 function ConfigureThemes({
     themes = [],
     setSelectedTheme = () => {},
@@ -43,11 +65,13 @@ function ConfigureThemes({
         [MAIN_BG_COLOR]: "#FFFFFF",
         [PRIMARY_CONTRAST]: "#FFFFFF",
         [PRIMARY]: "#0D7185",
+        [SUCCESS_CONTRAST]: "#FFFFFF",
         [SUCCESS]: "#398439"
     }
 }) {
     const triggerMain = useRef();
     const triggerPrimary = useRef();
+    const triggerSuccess = useRef();
     const defaultVariables = (find(themes, {id: selectedTheme.id}) || {}).defaultVariables;
     const variables = {
         ...basicVariables,
@@ -65,11 +89,17 @@ function ConfigureThemes({
         ? tinycolor.mostReadable(variables[PRIMARY_CONTRAST], [variables[PRIMARY], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
         : null;
 
-    const hasMainColorChanged = !tinycolor.equals(variables?.[MAIN_COLOR], defaultVariables?.[MAIN_COLOR] || basicVariables[MAIN_COLOR]);
-    const hasMainBgColorChanged = !tinycolor.equals(variables?.[MAIN_BG_COLOR], defaultVariables?.[MAIN_BG_COLOR] || basicVariables[MAIN_BG_COLOR]);
-    const hasPrimaryContrastColorChanged = !tinycolor.equals(variables?.[PRIMARY_CONTRAST], defaultVariables?.[PRIMARY_CONTRAST] || basicVariables[PRIMARY_CONTRAST]);
-    const hasPrimaryColorChanged = !tinycolor.equals(variables?.[PRIMARY], defaultVariables?.[PRIMARY] || basicVariables[PRIMARY]);
-    const hasSuccessColorChanged = !tinycolor.equals(variables?.[SUCCESS], defaultVariables?.[SUCCESS] || basicVariables[SUCCESS]);
+    const mostReadableSuccessColor = variables[SUCCESS] && variables[SUCCESS_CONTRAST]
+    && !tinycolor.isReadable(variables[SUCCESS], variables[SUCCESS_CONTRAST])
+        ? tinycolor.mostReadable(variables[SUCCESS_CONTRAST], [variables[SUCCESS], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
+        : null;
+
+    const hasMainColorChanged = hasColorChanged(variables, defaultVariables, basicVariables, MAIN_COLOR);
+    const hasMainBgColorChanged = hasColorChanged(variables, defaultVariables, basicVariables, MAIN_BG_COLOR);
+    const hasPrimaryContrastColorChanged = hasColorChanged(variables, defaultVariables, basicVariables, PRIMARY_CONTRAST);
+    const hasPrimaryColorChanged = hasColorChanged(variables, defaultVariables, basicVariables, PRIMARY);
+    const hasSuccessContrastColorChanged = hasColorChanged(variables, defaultVariables, basicVariables, SUCCESS_CONTRAST);
+    const hasSuccessColorChanged = hasColorChanged(variables, defaultVariables, basicVariables, SUCCESS);
 
     return (
         <div className="configure-themes-step">
@@ -340,8 +370,88 @@ function ConfigureThemes({
                 </div>
                 <div className="color-item">
                     <ControlLabel className="label-theme">
+                        <Message msgId="contextCreator.configureThemes.successContrast"/>
+                        <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.successContrast" />}/>
+                    </ControlLabel>
+                    <div className="color-choice">
+                        <ColorSelector
+                            disabled={!customVariablesEnabled}
+                            onOpen={() => ({})}
+                            color={variables[SUCCESS_CONTRAST]}
+                            line={false}
+                            disableAlpha={false}
+                            onChangeColor={(color) => {
+                                setSelectedTheme({
+                                    ...selectedTheme,
+                                    variables: {
+                                        ...variables,
+                                        [SUCCESS_CONTRAST]: tinycolor(color).toHexString()
+                                    }
+                                });
+                            }}/>
+                        <Button
+                            disabled={!hasSuccessContrastColorChanged  || !customVariablesEnabled}
+                            key={SUCCESS_CONTRAST}
+                            onClick={() => {
+                                setSelectedTheme({
+                                    ...selectedTheme,
+                                    variables: {
+                                        ...variables,
+                                        [SUCCESS_CONTRAST]: defaultVariables?.[SUCCESS_CONTRAST] || basicVariables[SUCCESS_CONTRAST]
+                                    }
+                                });
+                            }}
+                            className="no-border"
+                        ><Glyphicon glyph="repeat" /></Button>
+                    </div>
+                </div>
+                <div className="color-item">
+                    <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.success"/>
                         <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.success" />}/>
+                        {mostReadableSuccessColor ? (<ToolbarPopover
+                            useBody
+                            className="ms-custom-theme-picker-popover"
+                            ref={(popoverSuccess) => {
+                                if (popoverSuccess) {
+                                    triggerSuccess.current = popoverSuccess.trigger;
+                                }
+                            }}
+                            placement="top"
+                            content={
+                                <div>
+                                    <HTML
+                                        msgId="geostory.customizeTheme.alternativeTextColorPopover"
+                                        msgParams={{
+                                            color: mostReadableSuccessColor
+                                        }}/>
+                                    <Button
+                                        bsSize="xs"
+                                        bsStyle="primary"
+                                        style={{
+                                            margin: 'auto',
+                                            display: 'block'
+                                        }}
+                                        onClick={() =>  {
+                                            setSelectedTheme({
+                                                ...selectedTheme,
+                                                variables: {
+                                                    ...variables,
+                                                    [SUCCESS]: mostReadableSuccessColor
+                                                }
+                                            });
+                                            triggerSuccess.current?.hide?.();
+                                        }}>
+                                        <Message msgId="geostory.customizeTheme.useAlternativeTextColor"/>
+                                    </Button>
+                                </div>
+                            }><Button
+                                disabled={!customVariablesEnabled}
+                                className="square-button-md no-border"
+                                style={{ display: mostReadableSuccessColor ? 'block' : 'none' }}>
+                                <Glyphicon glyph="exclamation-mark"/>
+                            </Button>
+                        </ToolbarPopover>) : null }
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector

@@ -2896,11 +2896,12 @@
               "primary": "Colore Primario",
               "success": "Colore Secondario",
               "tooltips": {
-                "success": "Colore dello sfondo usato per segnalare lo stato 'attivo' o 'selezionato' dei pulsanti",
                 "main": "Colore del testo usato nei pannelli, nella toc",
                 "background": "Colore dello sfondo usato nei pannelli, nella toc",
                 "primaryContrast": "Colore del testo dove lo sfondo è il primario ad esempio: icone nelle barre dei pulsanti, intestazioni",
                 "primary": "Colore dello sfondo: barra dei pulsanti, intestazioni",
+                "successContrast": "Colore del testo usato dove lo sfondo è il secondario",
+                "success": "Colore dello sfondo usato per segnalare lo stato 'attivo' o 'selezionato' dei pulsanti",
                 "customColorsDescription": "Puoi cambiare uno di questi colori a partire da uno dei temi scelti in precedenza, oppure no"
               }
             },

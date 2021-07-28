@@ -73,6 +73,8 @@ export const contextCreatorSelector = createStructuredSelector({
  * @class
  * @prop {string} cfg.saveDestLocation router path when the application is redirected when a context is saved
  * @prop {object[]} cfg.themes list of themes with default configuration that will appear in the context creation process
+ * @prop {object} cfg.themes[index].defaultVariables variables of the theme used to initialize the pickers
+ * @prop {object} cfg.basicVariables variables used as default values if a theme is not selected
  *
  * @example
  * "cfg": {
@@ -82,11 +84,21 @@ export const contextCreatorSelector = createStructuredSelector({
  *    "href": "dist/themes/dark.css"
  *    "defaultVariables": {
  *      "ms-main-color": "#000000",
- *      "ms-main-bg": "#000000",
+ *      "ms-main-bg": "#FFFFFF",
  *      "ms-primary-contrast": "#FFFFFF",
  *      "ms-primary": "#078aa3"
+ *      "ms-success-contrast": "#FFFFFF",
+ *      "ms-success": "#398439"
  *    }
- *  }]
+ *  }],
+ * "basicVariables": {
+ *      "ms-main-color": "#000000",
+ *      "ms-main-bg": "#FFFFFF",
+ *      "ms-primary-contrast": "#FFFFFF",
+ *      "ms-primary": "#078aa3"
+ *      "ms-success-contrast": "#FFFFFF",
+ *      "ms-success": "#398439"
+ *    }
  *}
  */
 export default createPlugin('ContextCreator', {

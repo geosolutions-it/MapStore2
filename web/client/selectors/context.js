@@ -101,3 +101,8 @@ export const resourceSelector = ({context = {}} = {}) => context.resource;
  * @param {object} state the app state
  */
 export const contextThemeSelector = ({context = {}} = {}) => context?.currentContext?.theme || {};
+/**
+ * Get the customVariablesEnabled flag the selected context
+ * @param {object} state the app state
+ */
+export const contextCustomVariablesEnabledSelector = ({context = {}} = {}) => context?.currentContext?.customVariablesEnabled;
