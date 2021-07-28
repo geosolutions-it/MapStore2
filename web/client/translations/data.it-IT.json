@@ -2895,6 +2895,7 @@
               "primaryContrast": "Colore Testo Primario",
               "primary": "Colore Primario",
               "success": "Colore Secondario",
+              "successContrast": "Colore Testo Secondario",
               "tooltips": {
                 "main": "Colore del testo usato nei pannelli, nella toc",
                 "background": "Colore dello sfondo usato nei pannelli, nella toc",

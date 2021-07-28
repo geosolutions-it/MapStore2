@@ -2894,6 +2894,7 @@
               "primaryContrast": "Primäre Textfarbe",
               "primary": "Primärfarbe",
               "success": "Sekundäre Farbe",
+              "successContrast": "Sekundäre Textfarbe",
               "tooltips": {
                 "main": "In Panels oder Dialogen verwendete Textfarbe",
                 "background": "Hintergrundfarbe in Panels oder Dialogen",
