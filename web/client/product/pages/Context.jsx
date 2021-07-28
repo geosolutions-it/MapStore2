@@ -15,13 +15,13 @@ import { createStructuredSelector } from 'reselect';
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
 import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
-import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector } from '../../selectors/context';
+import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector, customVariablesEnabledSelector } from '../../selectors/context';
 import ContextTheme from '../../components/theme/ContextTheme';
 
 const ConnectedContextTheme = connect(
     createStructuredSelector({
         theme: contextThemeSelector,
-        customVariablesEnabled: contextCustomVariablesEnabledSelector
+        customVariablesEnabled: customVariablesEnabledSelector
     })
 )(ContextTheme);
 

@@ -42,8 +42,8 @@ const SUCCESS = "ms-success";
  * @returns
  */
 const hasColorChanged = memoize((vars, defaultVars, basic, varName) => {
-    return !tinycolor.equals(vars?.[varName], defaultVars?.[varName] || basic[varName]), isEqual
-});
+    return !tinycolor.equals(vars?.[varName], defaultVars?.[varName] || basic[varName])
+}, isEqual);
 
 
 /**
