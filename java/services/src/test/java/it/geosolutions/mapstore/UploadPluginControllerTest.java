@@ -22,6 +22,8 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import it.geosolutions.mapstore.controllers.rest.config.UploadPluginController;
+
 public class UploadPluginControllerTest {
     UploadPluginController controller;
     

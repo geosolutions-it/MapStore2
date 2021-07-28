@@ -294,6 +294,8 @@
     "xpath": "0.0.27"
   },
   "scripts": {
+    "build-backend": "mvn clean install",
+    "backend": "npm run build-backend && mvn tomcat7:run-war -f ./product/pom.xml",
     "doc": "docma -c build/docma-config.json --dest web/docs",
     "cleandoc": "rimraf web/docs && rimraf web/client/mapstore/docs",
     "doctest": "docma -c build/docma-config.json --dest web/client/mapstore/docs && echo documentation is accessible from the mapstore/docs path when running npm start",
