@@ -5,6 +5,7 @@
         "msgId0": "{name} ha tomado {numPhotos, plural, =0 {ninguna foto} =1 {una foto} other {# fotos}} el {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "Acerca de",
+        "aboutTooltip": "Acerca de",
         "aboutLbl": "Acerca de",
         "about_p0-0": "MapStore es un marco de trabajo para el desarrollo de aplicaciones cartográficas con la ayuda de librerías cartográficas estándar, tales como:",
         "about_p0-1": "y",
@@ -51,7 +52,8 @@
             "404": "Archivo de traducción no encontrado"
         },
         "details": {
-            "title": "Información en este mapa"
+            "title": "Información en este mapa",
+            "tooltip": "Información en este mapa"
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
@@ -99,6 +101,7 @@
             "templateFormatDescription": "Personalizar el formato de resultados de información de la capa",
             "hideFormatTitle": "DESACTIVAR IDENTIFICAR",
             "hideFormatDescription": "Deshabilite la información de la entidad para esta capa",
+            "styleWarning": "El editor de estilo de capa para el tipo de geometría '{geometryType}' no es compatible.",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "visibilityLimits": {
@@ -140,7 +143,8 @@
               "legendHeight": "Altura",
               "legendPreview": "Avance"
             },
-            "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
+            "templateFormatInfoAlertExample": "La identificación de la característica es <span style='white-space:nowrap'>${ properties.datos }</span> ora <span style='white-space:nowrap'>${ properties['datos-valor'] }</span>",
+            "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
             "templatePreview": "Vista previa de la plantilla",
             "enableLocalizedLayerStyles": {
                 "label": "Habilitar estilo localizado",
@@ -203,11 +207,14 @@
         "menu": "Menú",
         "options": "Opciones",
         "settings": "Ajustes",
+        "settingsTooltip": "Ajustes",
         "help": "Ayuda",
         "docs": "Documentación",
+        "docsTooltip": "Documentación",
         "gohome": "Volver a la página de inicio",
         "back": "Volver al Importador",
         "printbutton": "Imprimir",
+        "printToolTip": "Imprimir",
         "annotationsbutton": "Anotaciones",
         "noresultfound": "Ningún resultado encontrado",
         "save": "Guardar",
@@ -1147,6 +1154,7 @@
             "loadoverride": "Reemplazar anotaciones",
             "loaderror": "Seleccione uno o más archivos de anotaciones. (archivos compatibles: json)",
             "defaulttitle": "Edita el título predeterminado",
+            "tooltip": "Anotaciones",
             "field": {
                 "title": "Título",
                 "description": "Descripción"
@@ -1269,6 +1277,7 @@
         },
         "share":{
             "title": "Compartir",
+            "tooltip": "Compartir",
             "titlePanel": "Compartir el mapa",
             "socialIntro": "A través de su red social favorita",
             "directLinkTitle": "A través de un enlace directo",
@@ -2217,8 +2226,8 @@
             "quantile": "Cuantil",
             "jenks": "Descansos naturales (Jenks)",
             "standardDeviation": "Desviación estándar",
-            "switchToTextareaEditor": "Cambiar al editor de textarea",
-            "switchToVisualEditor": "Cambiar al editor visual",
+            "switchToTextareaEditor": "Editor de código",
+            "switchToVisualEditor": "Editora visual",
             "alertForceTranslate": "Perderá todos los cambios agregados en el texto al cambiar al editor visual. ¿Está seguro de cambiar al modo editor de estilo visual?",
             "stayInTextareaEditor": "No, continuar en textarea",
             "useLatestValidStyle": "Sí, cambie al editor visual",
@@ -2412,6 +2421,8 @@
             "addMediaSection": "Agregar sección de multimedia",
             "addWebPageSection": "Agregar sección de página web",
             "addImmersiveContent": "Añadir contenido inmersivo",
+            "addGeocarouselSection": "Agregar sección de geocarousel",
+            "addGeocarouselContent": "Agregar contenido de geocarousel",
             "addTextContent": "Agregar contenido de texto",
             "addMediaContent": "Agregar contenido multimedia",
             "zoomToContent": "Zoom al contenido",
@@ -2420,6 +2431,11 @@
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
             "closeFullscreenMap": "Cerrar mapa a pantalla completa",
             "showFullscreenMap": "Ver mapa en pantalla completa",
+            "carouselAddTitle": "Agregar nueva miniatura de tarjeta",
+            "carouselEditTitle": "Editar miniatura de tarjeta",
+            "carouselAddMapInfo": "Agregar un mapa de fondo",
+            "carouselAddItemInfo": "Agregar un nuevo marcador para el elemento de carrusel seleccionado",
+            "carouselPlaceMarkerInfo": "Haga clic en el mapa para agregar un nuevo marcador",
             "contentToolbar": {
                 "contentSize": "Cambiar tamaño",
                 "contentHeightAuto": "Haga esta sección para adaptarse a la altura del contenido",
@@ -2444,6 +2460,9 @@
                 "fit": "Hacer visible todo el fondo dentro del contenedor",
                 "editMedia": "Cambiar fuente de medios",
                 "remove": "Eliminar",
+                "add": "Agregar",
+                "edit": "Editar",
+                "marker": "Agregar marcador al mapa",
                 "removeConfirmTitle": "¿Estás seguro?",
                 "removeConfirmContent": "¿Quieres eliminar este contenido de la historia?",
                 "editMap": "Modifier la carte",
@@ -2477,6 +2496,8 @@
                     "titleParagraph": "Sección de párrafo",
                     "titleImmersive": "Sección inmersiva",
                     "titleImmersiveContent": "Contenido inmersivo",
+                    "titleGeocarousel": "Sección del geocarousel",
+                    "titleGeocarouselContent": "Contenido del geocarousel",
                     "titleMedia": "Sección de multimedia",
                     "titleImage": "Imagen",
                     "titleText": "Texto",
@@ -2586,7 +2607,9 @@
             "close": "Cerrar",
             "cancel": "Cancelar",
             "saveSuccessTitle": "éxito",
-            "saveSuccessMessage": "Guardado con éxito"
+            "saveSuccessMessage": "Guardado con éxito",
+            "saveTooltip": "Salvar",
+            "saveAsTooltip": "Guardar como"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",
@@ -2874,10 +2897,17 @@
             "generalSettings": {
                 "label": "Configuración general",
                 "title": "Crear nuevo contexto de aplicación",
+                "edit": "Editar el contexto de la aplicación",
                 "name": "Nombre",
                 "namePlaceholder": "Ingrese el nombre del contexto de la aplicación...",
                 "windowTitle": "Título de la ventana",
                 "windowTitlePlaceholder": "Ingrese el título de la ventana..."
+            },
+            "configureThemes": {
+              "title": "Configurar tema",
+              "label": "Tema",
+              "themes": "Elige un tema",
+              "noThemes": "No se encontraron"
             },
             "configurePlugins": {
                 "label": "Configurar complementos",
@@ -2993,6 +3023,7 @@
         },
         "mapTemplates": {
             "title": "Plantillas de mapas",
+            "tooltip": "Examinar plantillas de mapas",
             "favouritesTitle": "Favoritos",
             "allTitle": "Todos",
             "filterPlaceholder": "Filtrar plantillas de mapa...",
@@ -3336,6 +3367,7 @@
             "titleContext": "Error al eliminar sesión de usuario",
             "defaultMessage": "Error desconocido"
           },
+          "tooltip": "Borrar la sesión de usuario actual guardada",
           "successRemoved": "Sesión de usuario eliminada",
           "remove": "Restablecer sesión de usuario",
           "confirmRemove": "¿Está seguro de que desea restaurar la configuración predeterminada?"

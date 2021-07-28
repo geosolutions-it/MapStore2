@@ -5,6 +5,7 @@
         "msgId0": "{name} machte {numPhotos, plural, =0 {keine Fotos} =1 {ein Foto} other {# Fotos}} am {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "Über",
+        "aboutTooltip": "Über",
         "aboutLbl": "Über",
         "about_p0-0": "MapStore ist ein Framework zur Erstellung von webbasierten Karten-Anwendungen mit Standard-Karten-Bibliotheken wie",
         "about_p0-1": "und",
@@ -51,7 +52,8 @@
             "404": "Übersetzungsdatei nicht gefunden"
         },
         "details": {
-            "title": "Infos zu dieser Karte"
+            "title": "Infos zu dieser Karte",
+            "tooltip": "Infos zu dieser Karte"
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
@@ -99,9 +101,11 @@
             "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
             "hideFormatTitle": "IDENTIFIZIERUNG DEAKTIVIEREN",
             "hideFormatDescription": "Deaktivieren Sie die Funktionsinformationen für diese Ebene",
+            "styleWarning": "Ebenenstil-Editor für Geometrietyp '{geometryType}' wird nicht unterstützt.",
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um Attribut-Werte anzuzeigen",
-            "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
+            "templateFormatInfoAlertExample": "Die ID des Features lautet <span style='white-space:nowrap'>${ properties.daten }</span> oder <span style='white-space:nowrap'>${ properties['daten-wert'] }</span>",
+            "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
             "templatePreview": "Vorschau template",
             "visibilityLimits": {
                 "title": "Sichtbarkeitsgrenzen",
@@ -203,11 +207,14 @@
         "menu": "Menü",
         "options": "Optionen",
         "settings": "Einstellungen",
+        "settingsTooltip": "Einstellungen",
         "help": "Hilfe",
         "docs": "Dokumentation",
+        "docsTooltip": "Dokumentation",
         "gohome": "Zurück zur Startseite",
         "back": "Zurück zum Import",
         "printbutton": "Drucken",
+        "printToolTip": "Drucken",
         "annotationsbutton": "Notizen / Zeichnen",
         "noresultfound": "Keine Ergebnisse gefunden",
         "save": "Speichern",
@@ -1148,6 +1155,7 @@
             "loadoverride": "Notizen / Zeichnungen ersetzen",
             "loaderror": "Wählen Sie eine oder mehrere Notizen / Zeichnungen aus. (unterstützte Dateien: JSON)",
             "defaulttitle": "Standardtitel bearbeiten",
+            "tooltip": "Notizen / Zeichnen",
             "field": {
                 "title": "Titel",
                 "description": "Beschreibung"
@@ -1270,6 +1278,7 @@
         },
         "share":{
             "title": "Teilen",
+            "tooltip": "Teilen",
             "titlePanel": "Teile die Karte",
             "socialIntro": "In deinem bevorzugten sozialen Netzwerk",
             "directLinkTitle": "Über einen direkten Link",
@@ -2217,8 +2226,8 @@
             "quantile": "Quantil",
             "jenks": "Natürliche Pausen (Jenks)",
             "standardDeviation": "Varianz",
-            "switchToTextareaEditor": "Zum Textarea-Editor wechseln",
-            "switchToVisualEditor": "Zum visuellen Editor wechseln",
+            "switchToTextareaEditor": "Code-Editor",
+            "switchToVisualEditor": "Visueller Editor",
             "alertForceTranslate": "Sie verlieren alle im Textaree hinzugefügten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
             "stayInTextareaEditor": "Nein, weiter im Textbereich",
             "useLatestValidStyle": "Ja, zum visuellen Editor wechseln",
@@ -2409,9 +2418,11 @@
             "addBannerSection": "Bannerbereich hinzufügen",
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
+            "addGeocarouselSection": "Geokarussell-Abschnitt hinzufügen",
             "addMediaSection": "Medienabschnitt hinzufügen",
             "addWebPageSection": "Webseitenabschnitt hinzufügen",
             "addImmersiveContent": "Fügen Sie immersiven Inhalt hinzu",
+            "addGeocarouselContent": "Geokarussell-Inhalt hinzufügen",
             "addTextContent": "Textinhalt hinzufügen",
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
@@ -2420,6 +2431,11 @@
             "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "closeFullscreenMap": "Schließen Vollbild-Karte",
             "showFullscreenMap": "Vollbild-Anzeige Karte",
+            "carouselAddTitle": "Neue Kartenminiaturansicht hinzufügen",
+            "carouselEditTitle": "Kartenminiaturansicht bearbeiten",
+            "carouselAddMapInfo": "Hinzufügen einer Hintergrundkarte",
+            "carouselAddItemInfo": "Neue Markierung für das ausgewählte Karussellelement hinzufügen",
+            "carouselPlaceMarkerInfo": "Klicken Sie auf die Karte, um eine neue Markierung hinzuzufügen",
             "contentToolbar": {
                 "contentSize": "Größe ändern",
                 "contentHeightAuto": "Passen Sie diesen Abschnitt an die Höhe des Inhalts an",
@@ -2444,6 +2460,9 @@
                 "fit": "Machen Sie den gesamten Hintergrund im Container sichtbar",
                 "editMedia": "Ändern Sie die Medienquelle",
                 "remove": "Entfernen",
+                "add": "Hinzufügen",
+                "edit": "Bearbeiten",
+                "marker": "Markierung zur Karte hinzufügen",
                 "removeConfirmTitle": "Sind Sie sicher?",
                 "removeConfirmContent": "Wollen Sie diesen Inhalt aus der Geschichte entfernen?",
                 "editMap": "Bearbeiten Sie die ursprüngliche Kartenausdehnung",
@@ -2477,6 +2496,8 @@
                     "titleParagraph": "Absatz Abschnitt",
                     "titleImmersiveContent": "Immersiver Inhalt",
                     "titleImmersive": "Immersive Section",
+                    "titleGeocarousel": "Abschnitt Geokarussell",
+                    "titleGeocarouselContent": "Geokarussell-Inhalt",
                     "titleMedia": "Medienbereich",
                     "titleImage": "Bild",
                     "titleText": "Text",
@@ -2586,7 +2607,9 @@
             "close": "Schließen",
             "cancel": "Abbrechen",
             "saveSuccessTitle": "Erfolg",
-            "saveSuccessMessage": "Erfolgreich gespeichert"
+            "saveSuccessMessage": "Erfolgreich gespeichert",
+            "saveTooltip": "Sparen",
+            "saveAsTooltip": "Speichern als"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",
@@ -2874,10 +2897,17 @@
             "generalSettings": {
                 "label": "Allgemeine Einstellungen",
                 "title": "Erstellen Sie einen neuen App-Kontext",
+                "edit": "App-Kontext bearbeiten",
                 "name": "Name",
                 "namePlaceholder": "Geben Sie den Namen des App-Kontexts ein...",
                 "windowTitle": "Fenstertitel",
                 "windowTitlePlaceholder": "Fenstertitel eingeben..."
+            },
+            "configureThemes": {
+              "title": "Thema konfigurieren",
+              "label": "Thema",
+              "themes": "Wähle ein Thema",
+              "noThemes": "Keine gefunden"
             },
             "configurePlugins": {
                 "label": "Plugins konfigurieren",
@@ -2993,6 +3023,7 @@
         },
         "mapTemplates": {
             "title": "Kartenvorlagen",
+            "tooltip": "Kartenvorlagen durchsuchen",
             "favouritesTitle": "Favoriten",
             "allTitle": "Alle",
             "filterPlaceholder": "Kartenvorlagen filtern...",
@@ -3336,6 +3367,7 @@
             "titleContext": "Entfernen der Benutzersitzung fehlgeschlagen",
             "defaultMessage": "Unbekannter Fehler"
           },
+          "tooltip": "Aktuelle gespeicherte Benutzersitzung löschen user",
           "successRemoved": "Benutzersitzung entfernt",
           "remove": "Benutzersitzung zurücksetzen",
           "confirmRemove": "Möchten Sie die Standardkonfiguration wirklich wiederherstellen?"

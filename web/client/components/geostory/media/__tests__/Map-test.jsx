@@ -35,6 +35,7 @@ describe('Map component', () => {
         const mockStore = { subscribe: () => {}, getState: () => ({}) };
         ReactDOM.render(<Provider store={mockStore}>
             <Map expandable
+                mapType="openlayers"
                 onMapTypeLoaded={() => {
                     const container = document.getElementById('container');
                     const mediaMapNode = container.querySelector('.ms-media-map');

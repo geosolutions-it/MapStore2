@@ -156,10 +156,10 @@ ConfigUtils.setConfigProp("extensionsRegistry", "rest/config/load/extensions.jso
 ConfigUtils.setConfigProp("contextPluginsConfiguration", "rest/config/load/pluginsConfig.json");
 ```
 
-* Assets folder: (setting this will cause assets are loaded using a different service, `/rest/config/loadasset.`):
+* Assets folder: (setting this will cause assets are loaded using a different service, `/rest/config/loadasset/`):
 
 ```javascript
-ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset?resource=");
+ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset/");
 ```
 
 !!! note

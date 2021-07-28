@@ -147,6 +147,7 @@ Inside defaultState you can set default catalog services adding the following ke
         "layerOptions": {
           "tileSize": 512
           },
+          "format": "image/png8"
         "type": "wms",
         "title": "A title for Demo WMS Service",
         "autoload": false
@@ -173,8 +174,10 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   "title": "the label used for recognizing the catalog service",
   "autoload": "if true, when selected or when catalog panel is opened it will trigger an automatic search of the layers. if false, search must be manually performed."
   "readOnly": "if true, makes the service not editable from catalog plugin"
-  "titleMsgId": "optional, string used to localize the title of the service, the string must be present in translations"
+  "titleMsgId": "optional, string used to localize the title of the service, the string must be present in translations",
+  "format": "image/png8" // the image format to use by default for layers coming from this catalog (or tiles).
   "layerOptions": { // optional
+      "format": "image/png8", // image format needs to be configured also inside layerOptions
       "tileSize": 512 // determine the default tile size for the catalog, valid for WMS and CSW catalogs
   },
 }

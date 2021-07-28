@@ -38,9 +38,9 @@ class MarkerGlyph extends React.Component {
             return (
                 <div
                     onClick={() => this.selectStyle(marker)}
+                    className={this.isCurrentStyle(marker) ? 'ms-marker-selected' : ''}
                     style={{
-                        ...marker.thumbnailStyle,
-                        ...(this.isCurrentStyle(marker) && {border: '2px solid #1bd2f5'})
+                        ...marker.thumbnailStyle
                     }}
                 />);
         });
@@ -72,12 +72,12 @@ class MarkerGlyph extends React.Component {
                                 </div>
                             }>
                             <div
+                                className="ms-marker-icon-content"
                                 style={{
                                     width: 256,
                                     height: 256,
                                     overflow: 'auto',
-                                    position: 'relative',
-                                    backgroundColor: '#ffffff'
+                                    position: 'relative'
                                 }}>
                                 <div style={{ position: 'sticky', top: 0 }}>
                                     <Filter filterPlaceholder="Filter icons..." filterText={this.props.markersOptions.filter} onFilter={this.props.markersOptions.onFilterMarker}/>
@@ -91,6 +91,7 @@ class MarkerGlyph extends React.Component {
                                         if (this.filterMarkerGlyph(glyph)) {
                                             return (
                                                 <div
+                                                    className={glyph === this.props.style.iconGlyph ? 'ms-marker-selected' : ''}
                                                     style={{
                                                         width: 32,
                                                         height: 32,
@@ -98,8 +99,7 @@ class MarkerGlyph extends React.Component {
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
                                                         fontSize: 20,
-                                                        cursor: 'pointer',
-                                                        ...(glyph === this.props.style.iconGlyph && {border: '2px solid #1bd2f5'})
+                                                        cursor: 'pointer'
                                                     }}
                                                     onClick={() => {
                                                         this.props.onChange(this.props.style.id, {iconGlyph: glyph});
@@ -129,11 +129,11 @@ class MarkerGlyph extends React.Component {
                                 }}/>
                             }>
                             <div
+                                className="ms-marker-shape-content"
                                 style={{
                                     display: 'flex',
                                     flexWrap: 'wrap',
                                     justifyContent: 'center',
-                                    backgroundColor: '#ffffff',
                                     width: 256,
                                     height: 256,
                                     overflow: 'auto'

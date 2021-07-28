@@ -15,7 +15,7 @@ export default () => {
         MeasurementSupport: require('../leaflet/MeasurementSupport').default,
         Overview: require('../leaflet/Overview'),
         ScaleBar: require('../leaflet/ScaleBar'),
-        DrawSupport: require('../leaflet/DrawSupport'),
+        DrawSupport: require('../leaflet/DrawSupport').default,
         PopupSupport: require('../leaflet/PopupSupport').default
     };
 };

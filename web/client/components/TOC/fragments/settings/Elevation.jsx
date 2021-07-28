@@ -14,7 +14,6 @@ import ElevationChart from './ElevationChart';
 import { Grid } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import { getDimension } from '../../../../utils/LayersUtils';
-import 'react-widgets/lib/less/react-widgets.less';
 import './css/elevation.css';
 
 export default class extends React.Component {

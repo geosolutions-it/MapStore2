@@ -15,7 +15,7 @@ import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
 import ConfigUtils from '../utils/ConfigUtils';
-import { errorLoadingFont, setMapResolutions } from '../actions/map';
+import { setMapResolutions, mapPluginLoad } from '../actions/map';
 import { isString } from 'lodash';
 import selector from './map/selector';
 import mapReducer from "../reducers/map";
@@ -203,7 +203,6 @@ class MapPlugin extends React.Component {
         mapOptions: PropTypes.object,
         projectionDefs: PropTypes.array,
         toolsOptions: PropTypes.object,
-        onFontError: PropTypes.func,
         onResolutionsChange: PropTypes.func,
         actions: PropTypes.object,
         features: PropTypes.array,
@@ -214,7 +213,8 @@ class MapPlugin extends React.Component {
         localizedLayerStylesName: PropTypes.string,
         currentLocaleLanguage: PropTypes.string,
         items: PropTypes.array,
-        onLoadingMapPlugins: PropTypes.func
+        onLoadingMapPlugins: PropTypes.func,
+        onMapTypeLoaded: PropTypes.func
     };
 
     static defaultProps = {
@@ -250,10 +250,10 @@ class MapPlugin extends React.Component {
         additionalLayers: [],
         shouldLoadFont: false,
         elevationEnabled: false,
-        onFontError: () => {},
         onResolutionsChange: () => {},
         items: [],
-        onLoadingMapPlugins: () => {}
+        onLoadingMapPlugins: () => {},
+        onMapTypeLoaded: () => {}
     };
     state = {
         canRender: true
@@ -271,7 +271,7 @@ class MapPlugin extends React.Component {
                     loadFont(f, {
                         timeoutAfter: 5000 // 5 seconds in milliseconds
                     }).catch(() => {
-                        this.props.onFontError({family: f});
+                        console.warn("Fonts loading check for map style responded slowly or with an error. Fonts in map may not be rendered correctly. This is not necessarily an issue.", error);  // eslint-disable-line
                     }
                     ))
             ).then(() => {
@@ -437,6 +437,7 @@ class MapPlugin extends React.Component {
             if (plugins.mapType === this.currentMapType) {
                 this.setState({plugins});
                 props.onLoadingMapPlugins(false, props.mapType);
+                props.onMapTypeLoaded(true, props.mapType);
             }
         });
     };
@@ -444,8 +445,8 @@ class MapPlugin extends React.Component {
 
 export default createPlugin('Map', {
     component: connect(selector, {
-        onFontError: errorLoadingFont,
-        onResolutionsChange: setMapResolutions
+        onResolutionsChange: setMapResolutions,
+        onMapTypeLoaded: mapPluginLoad
     })(withScalesDenominators(MapPlugin)),
     reducers: {
         map: mapReducer,

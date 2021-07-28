@@ -59,7 +59,8 @@ import {
     UPDATE_SETTING,
     SET_CURRENT_STORY,
     geostoryScrolling,
-    GEOSTORY_SCROLLING
+    GEOSTORY_SCROLLING,
+    hideCarouselItems
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -70,7 +71,8 @@ import {
     CHOOSE_MEDIA,
     selectItem,
     setMediaType,
-    hide
+    hide,
+    disableMediaType
 } from '../actions/mediaEditor';
 import { show, error } from '../actions/notifications';
 
@@ -79,16 +81,18 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
 import {
-     resourceIdSelectorCreator,
-     createPathSelector,
-     currentStorySelector,
-     resourcesSelector,
-     getFocusedContentSelector,
-     isSharedStory,
-     resourceByIdSelectorCreator,
-     modeSelector,
-     updateUrlOnScrollSelector,
-     getMediaEditorSettings
+    resourceIdSelectorCreator,
+    createPathSelector,
+    currentStorySelector,
+    resourcesSelector,
+    getFocusedContentSelector,
+    isSharedStory,
+    resourceByIdSelectorCreator,
+    modeSelector,
+    updateUrlOnScrollSelector,
+    getMediaEditorSettings,
+    getAllCarouselContentsOfSection,
+    isGeoCarouselSection
 } from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
@@ -104,15 +108,16 @@ import {
     MediaTypes,
     Modes,
     parseHashUrlScrollUpdate,
-    getGeostoryMode
+    getGeostoryMode,
+    SectionTypes,
+    getIdFromPath
 } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
 
-
-const updateMediaSection = (store, path) => action$ =>
+const updateMediaSection = (store, path, sectionType) => action$ =>
     action$.ofType(CHOOSE_MEDIA)
         .switchMap( ({resource = {}}) => {
             let actions = [];
@@ -137,7 +142,16 @@ const updateMediaSection = (store, path) => action$ =>
                 actions = [...actions, addResource(resourceId, mediaType, resource.data ? resource.data : resource)];
             }
             let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
-            actions = [...actions, update(`${path}`, media, "merge" ), hide()];
+            let updateActions = [update(`${path}`, media, "merge" )];
+
+            // set default value for carousel map
+            if (sectionType === SectionTypes.CAROUSEL) {
+                updateActions.push(
+                    update(`${path}.map`, { mapInfoControl: true }, "merge" )
+                );
+            }
+
+            actions = [...actions, ...updateActions, hide()];
             return Observable.from(actions);
         });
 
@@ -243,17 +257,20 @@ export const saveGeoStoryResource = action$ => action$
  * side effect to scroll to new sections
  * it tries for max 10 times with an interval of 200 ms between each
  * @param {*} action$
+ * @param {object} store
  */
-export const scrollToContentEpic = action$ =>
+export const scrollToContentEpic = (action$, {getState = () => {}} = {})=>
     action$.ofType(ADD)
-        .switchMap(({element}) => {
+        .switchMap(({path, element}) => {
             return Observable.of(element)
                 .switchMap(() => {
                     if (!document.getElementById(element.id)) {
                         const err = new Error("Item not mounted yet");
                         throw err;
                     } else {
-                        scrollToContent(element.id, {behavior: "auto", block: "center"});
+                        const {sectionId} = getIdFromPath(path);
+                        const id = isGeoCarouselSection(sectionId)(getState()) ? sectionId : element.id;
+                        scrollToContent(id, {behavior: "auto", block: "center"});
                         return Observable.empty();
                     }
                 })
@@ -269,7 +286,7 @@ export const scrollToContentEpic = action$ =>
  */
 export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
-        .switchMap(({path, owner}) => {
+        .switchMap(({path, owner, sectionType}) => {
             const selectedResource = resourceIdSelectorCreator(path)(store.getState());
             const resource = resourceByIdSelectorCreator(selectedResource)(store.getState());
             return Observable.of(currentMediaTypeSelector(store.getState()))
@@ -280,10 +297,12 @@ export const editMediaForBackgroundEpic = (action$, store) =>
             .merge(
                 Observable.of(
                     showMediaEditor(owner, getMediaEditorSettings(store.getState())),
-                    selectItem(selectedResource)
+                    selectItem(selectedResource),
+                    // Disable media type that are not supported by GeoCarousel section as background
+                    disableMediaType(sectionType === SectionTypes.CAROUSEL ? ['image', 'video'] : [])
                 )
                           .merge(
-                    action$.let(updateMediaSection(store, path))
+                    action$.let(updateMediaSection(store, path, sectionType))
                         .takeUntil(action$.ofType(HIDE, ADD)
                         )
                 ));
@@ -424,11 +443,12 @@ export const sortContentEpic = (action$, {getState = () => {}}) =>
         const current = createPathSelector(source)(state);
 
         // remove first so, the highlight works correctly
-        return Observable.of(
+        return Observable.from([
             remove(source),
             add(target, position, current)
-        );
+        ]);
     });
+
 /**
  * trigger actions for focus a map on map editing
  * @param {Observable} action$ stream of redux actions
@@ -436,16 +456,44 @@ export const sortContentEpic = (action$, {getState = () => {}}) =>
  */
 export const setFocusOnMapEditing = (action$, {getState = () =>{}}) =>
          action$.ofType(UPDATE).filter(({path = ""}) => path.endsWith("editMap"))
-     .map(({path: rowPath, element: status}) => {
+     .switchMap(({path: rowPath, element: status}) => {
             const {flatPath, path} = getFlatPath(rowPath, currentStorySelector(getState()));
-            const target = flatPath.pop();
-            const section = flatPath.shift();
+            const isSectionBackground = flatPath.length === 1;
+            const target = isSectionBackground ? flatPath[0] : flatPath.pop();
+            const section = isSectionBackground ? flatPath[0] : flatPath.shift();
             const hideContent = path[path.length - 2] === "background";
             const selector = hideContent && `#${section.id} .ms-section-background-container` || `#${target.id}`;
             scrollToContent(target.id);
 
-            return setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""));
+            return Observable.from([
+                setFocusOnContent(status, target, selector, hideContent, rowPath.replace(".editMap", ""))
+            ]);
      });
+
+/**
+ * Triggers actions to hide carousel items
+ * and reset zoom if clicked again on the selected item
+ * and higlights the marker if present
+ * @param {Observable} action$ stream of redux actions
+ * @param {object} store simplified redux store
+ * @returns {Observable} a stream that emits actions to hide other carousel items
+ * and toggle on the selected one
+ */
+export const hideCarouselItemsOnUpdateCurrentPage = (action$, {getState}) =>
+    action$.ofType(UPDATE)
+        .filter(({path, element}) => path && path.endsWith('carouselToggle') && element)
+        .switchMap(({path}) => {
+            const { sectionId, contentId } = getIdFromPath(path) || {};
+            const contents = getAllCarouselContentsOfSection(sectionId)(getState()) || [];
+            return contentId && !isEmpty(contents)
+                ? Observable.from([hideCarouselItems(sectionId, contentId)])
+                    .concat(
+                        Observable.of(
+                            update(path, false)
+                        )
+                    )
+                : Observable.empty();
+        });
 
 /**
 * Handles map editing from inline editor
@@ -464,7 +512,7 @@ export const inlineEditorEditMap = (action$, {getState}) =>
             return action$.ofType(SAVE_MAP_EDITOR)
             .switchMap(({map}) => {
                 const {path} = getFocusedContentSelector(getState());
-                return  Observable.of(update(`${path}.map`, map), update(`${path}.editMap`, false), hideMapEditor())
+                return  Observable.of(update(`${path}.map`, map, 'merge'), update(`${path}.editMap`, false), hideMapEditor())
                         .takeUntil(action$.ofType(HIDE_MAP_EDITOR));
             });
         });
@@ -521,7 +569,8 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
     action$.ofType(UPDATE_CURRENT_PAGE)
         .let(semaphore(
             action$.ofType(GEOSTORY_SCROLLING)
-                .map(a => !a.value)
+                .map(a => !a.status)
+                .startWith(true)
         ))
         .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
         .switchMap(({sectionId, columnId}) => {
@@ -544,10 +593,9 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
  */
 export const scrollOnLoad = (action$) =>
     action$.ofType(SET_CURRENT_STORY)
-        .switchMap(({delay = 500}) => {
+        .switchMap(({delay = 2000}) => {
             const storyIds = window?.location?.hash?.split('/');
             return Observable.of(storyIds)
-                .delay(delay)
                 .do(() => {
                     if (window?.location?.hash?.includes('shared')) {
                             scrollToContent(storyIds[7] || storyIds[5], {block: "start", behavior: "auto"});

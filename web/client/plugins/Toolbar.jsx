@@ -10,7 +10,6 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import './toolbar/assets/css/toolbar.css';
 import { CSSTransitionGroup } from 'react-transition-group';
 import { isFeatureGridOpen } from '../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';

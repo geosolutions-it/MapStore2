@@ -165,6 +165,7 @@ export default {
         BurgerMenu: {
             name: 'tutorial',
             position: 1200,
+            tooltip: "tutorial.title",
             text: <I18N.Message msgId="tutorial.title"/>,
             icon: <Glyphicon glyph="book"/>,
             action: toggleTutorial,

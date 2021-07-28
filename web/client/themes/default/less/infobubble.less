@@ -1,3 +1,62 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .mapstore-info-bubble {
+        .mapstore-info-bubble-container {
+            .mapstore-info-bubble-arrow-container {
+                &.arrow-bottom {
+                    .mapstore-info-bubble-arrow {
+                        .border-top-color-var(@theme-vars[main-bg]);
+                    }
+                }
+
+                &.arrow-top {
+                    .mapstore-info-bubble-arrow {
+                        .border-bottom-color-var(@theme-vars[main-bg]);
+                    }
+                }
+
+                &.arrow-left {
+                    .mapstore-info-bubble-arrow {
+                        .border-right-color-var(@theme-vars[main-bg]);
+                    }
+                }
+
+                &.arrow-right {
+                    .mapstore-info-bubble-arrow {
+                        .border-left-color-var(@theme-vars[main-bg]);
+                    }
+                }
+            }
+
+            .mapstore-info-bubble-default-inner {
+                .border-color-var(@theme-vars[main-bg]);
+                .background-color-var(@theme-vars[main-bg]);
+
+                &.mapstore-info-bubble-default-inner-level-success {
+                    .color-var(@theme-vars[success]);
+                }
+
+                &.mapstore-info-bubble-default-inner-level-danger {
+                    .color-var(@theme-vars[danger]);
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 @info-bubble-default-size: 10px;
 @info-bubble-container-border-size: 1px;
 @info-bubble-default-background-color: #fff;

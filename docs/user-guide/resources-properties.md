@@ -1,7 +1,7 @@
 # Resource Properties
 *********************
 
-In order to customize the properties of a resource, the Admin or a normal user with permission can access the *Edit properties* window from the **Edit properties** button <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) or from the **Save** and the **Save as** buttons inside the resource viewer.
+In order to customize the properties of a resource, the Admin or a normal user with permission can access the *Edit properties* window from the **Edit properties** button <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) or from the **Save** and the **Save as** buttons inside the resource viewer.
 
 <img src="../img/resource-properties/edit-properties.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -76,7 +76,7 @@ Here, the user is allowed to:
 
 * **Delete** the details sheet <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>
 
-Once the details are saved, the **Show details** button <img src="../img/button/details_button.jpg" class="ms-docbutton"/> appears also on the map card in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/)
+Once the details are saved, the **Show details** button <img src="../img/button/details_button.jpg" class="ms-docbutton"/> appears also on the map card in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 <img src="../img/resource-properties/card-map-details-button.jpg" class="ms-docimage" style="max-width:400px;"/>
 

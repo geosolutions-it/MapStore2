@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import 'react-widgets/lib/less/react-widgets.less';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Col, Row, Panel, Label, Alert } from 'react-bootstrap';

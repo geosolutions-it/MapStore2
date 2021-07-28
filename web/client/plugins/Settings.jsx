@@ -204,6 +204,7 @@ export default {
             name: 'settings',
             position: 100,
             text: <Message msgId="settings"/>,
+            tooltip: "settingsTooltip",
             icon: <Glyphicon glyph="cog"/>,
             action: toggleControl.bind(null, 'settings', null),
             priority: 3,

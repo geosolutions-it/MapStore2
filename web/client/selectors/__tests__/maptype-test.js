@@ -9,7 +9,7 @@
 
 import expect from 'expect';
 
-import { mapTypeSelector, isCesium, isOpenlayers, isLeaflet } from '../maptype';
+import { mapTypeSelector, isCesium, isOpenlayers, isLeaflet, mapTypeLoadedSelector } from '../maptype';
 
 describe('Test maptype', () => {
     it('test mapTypeSelector default', () => {
@@ -45,5 +45,17 @@ describe('Test maptype', () => {
         expect(bool).toExist();
         expect(bool).toBe(true);
         expect(isOpenlayers({maptype: {mapType: "cesium"}})).toBe(false);
+    });
+    it('test mapTypeLoadedSelector', () => {
+        const state = mapTypeLoadedSelector({
+            maptype: {
+                mapType: "openlayers",
+                loaded: {
+                    "openlayers": true
+                }
+            }
+        });
+        expect(state).toExist();
+        expect(state).toEqual({"openlayers": true});
     });
 });

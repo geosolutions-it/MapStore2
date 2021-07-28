@@ -1,5 +1,34 @@
-/* drawer menu */
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    #mapstore-drawermenu {
+        .navHeader {
+            &>.glyphicon {
+                &:hover {
+                    background-color: transparent;
+                    .color-var(@theme-vars[primary]);
+                }
+            }
+        }
+    }
+
+    .nav-menu {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 #drawer-menu-button {
     .shadow;
     left: 0;
@@ -29,10 +58,6 @@
             background-color: transparent;
             font-size: @icon-size;
             margin: floor(((@padding-left-square - 1) / 1.230769231) /* font ratio height/width */) (@padding-left-square - 1);
-            &:hover {
-                background-color: transparent;
-                color: darken(@ms2-color-primary, 10%);
-            }
         }
     }
 

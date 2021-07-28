@@ -8,7 +8,12 @@
 import { get, isString, isNumber, findIndex, find, isPlainObject, isArray, castArray, uniqBy } from "lodash";
 import { set, unset, arrayUpdate, compose,
     arrayDelete } from '../utils/ImmutableUtils';
-import { getEffectivePath, MediaTypes } from '../utils/GeoStoryUtils';
+import {
+    getEffectivePath,
+    MediaTypes,
+    SectionTypes,
+    updateGeoCarouselSections
+} from '../utils/GeoStoryUtils';
 
 import {
     ADD,
@@ -34,7 +39,9 @@ import {
     REMOVE_RESOURCE,
     SET_PENDING_CHANGES,
     SET_UPDATE_URL_SCROLL,
-    UPDATE_MEDIA_EDITOR_SETTINGS
+    UPDATE_MEDIA_EDITOR_SETTINGS,
+    HIDE_CAROUSEL_ITEMS,
+    ENABLE_DRAW
 } from '../actions/geostory';
 
 
@@ -193,8 +200,10 @@ export default (state = INITIAL_STATE, action) => {
         let newState = arrayUpdate("currentStory.resources", { id, type, data }, { id }, state);
         // With a map resource we have to reset all contents' custom map configurations.
         if (type === MediaTypes.MAP) {
-            state.currentStory.sections.reduce((acc, section) =>  ([...acc, ...getContentsByResourceId(id, "sections[", section)])
-                , [])
+            state.currentStory.sections
+                .filter((section)=> section.type !== SectionTypes.CAROUSEL)
+                .reduce((acc, section) =>  ([...acc, ...getContentsByResourceId(id, "sections[", section)])
+                    , [])
                 .map(rawPath => {
                     const path = getEffectivePath(`currentStory.${rawPath}.map`, state);
                     newState = set(path, undefined, newState);
@@ -348,6 +357,22 @@ export default (state = INITIAL_STATE, action) => {
     }
     case UPDATE_MEDIA_EDITOR_SETTINGS: {
         return set('mediaEditorSettings', action.mediaEditorSettings, state);
+    }
+    case HIDE_CAROUSEL_ITEMS: {
+        if (action.sectionId) {
+            const section = find(state.currentStory.sections, s => find(s.contents, {id: action.showContentId}));
+            if (section && find(section.contents, {id: action.showContentId})) {
+                return set('currentStory', {
+                    ...state.currentStory,
+                    sections: updateGeoCarouselSections(state.currentStory.sections, action)
+                }, state);
+            }
+            return state;
+        }
+        return state;
+    }
+    case ENABLE_DRAW: {
+        return set('drawOptions', action.drawOptions, state);
     }
     default:
         return state;

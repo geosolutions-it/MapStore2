@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { compose, branch, withProps } from 'recompose';
 import find from 'lodash/find';
+import includes from 'lodash/includes';
 import Image from '../../components/geostory/media/Image';
 import Map from '../../components/geostory/media/Map';
 import Video from '../../components/geostory/media/Video';
@@ -21,6 +22,7 @@ import { SectionTypes } from '../../utils/GeoStoryUtils';
 import withMediaVisibilityContainer from '../../components/geostory/common/enhancers/withMediaVisibilityContainer';
 import autoMapType from '../../components/map/enhancers/autoMapType';
 import withScalesDenominators from "../../components/map/enhancers/withScalesDenominators";
+import { withCarouselMarkerInteraction } from "../../components/geostory/common/enhancers/withPopupSupport";
 
 const image = branch(
     ({resourceId}) => resourceId,
@@ -34,7 +36,7 @@ const image = branch(
         )
     ),
     emptyState(
-        ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && sectionType !== SectionTypes.IMMERSIVE),
+        ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && !includes([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL], sectionType)),
         () => ({
             glyph: "picture"
         })
@@ -49,7 +51,8 @@ const map = compose(
     autoMapType,
     withScalesDenominators,
     withLocalMapState,
-    withMapEditingAndLocalMapState
+    withMapEditingAndLocalMapState,
+    withCarouselMarkerInteraction
 )(withMediaVisibilityContainer(Map));
 
 const video = branch(
@@ -72,7 +75,7 @@ const video = branch(
         )
     ),
     emptyState(
-        ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && sectionType !== SectionTypes.IMMERSIVE),
+        ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && !includes([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL], sectionType)),
         () => ({
             glyph: "play"
         })

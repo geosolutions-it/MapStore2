@@ -301,4 +301,13 @@ describe('MapEditor component', () => {
         ReactTestUtils.Simulate.click(visibilityBtn);
 
     });
+    it('Hide MapEditor in draw mode', () => {
+        ReactDOM.render(<Provider store={store}>
+            <TestMapEditor
+                isDrawEnabled
+            /></Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-geostory-map-editor');
+        expect(el).toNotExist();
+    });
 });

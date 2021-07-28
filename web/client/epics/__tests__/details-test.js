@@ -32,7 +32,7 @@ import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { EMPTY_RESOURCE_VALUE } from '../../utils/MapInfoUtils';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
-import { TOGGLE_CONTROL } from '../../actions/controls';
+import { TOGGLE_CONTROL, SET_CONTROL_PROPERTY } from '../../actions/controls';
 
 const baseUrl = "base/web/client/test-resources/geostore/";
 const mapId = 1;
@@ -107,7 +107,7 @@ describe('details epics tests', () => {
                 const actions = store.getActions();
                 expect(actions.length).toBe(2);
                 expect(actions[0].type).toBe(CLOSE_DETAILS_PANEL);
-                expect(actions[1].type).toBe(TOGGLE_CONTROL);
+                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
             } catch (e) {
                 done(e);
             }

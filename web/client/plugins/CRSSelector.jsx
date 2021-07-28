@@ -60,6 +60,10 @@ class Selector extends React.Component {
         allowedRoles: ['ALL']
     };
 
+    state = {
+        toggled: false
+    };
+
     render() {
 
         let list = [];
@@ -93,11 +97,13 @@ class Selector extends React.Component {
         const isAllowed = includes(this.props.allowedRoles, "ALL") || includes(this.props.allowedRoles, this.props.currentRole);
         return (this.props.enabled && isAllowed ? <Dropdown
             dropup
-            className="ms-prj-selector">
+            className="ms-prj-selector"
+            onToggle={(toggled) => this.setState({ toggled })}
+        >
             <Button
                 bsRole="toggle"
                 bsStyle="primary"
-                className="map-footer-btn"
+                className={`map-footer-btn btn-${this.state.toggled ? 'success' : 'primary'}`}
                 tooltip={<Message msgId="showCrsSelector"/>}
                 tooltipPosition="top">
                 <Glyphicon glyph="crs" />

@@ -211,10 +211,12 @@ const isNearlyEqual = function(a, b) {
  * Handle editing, when mapEditing is true, map changes updates the geostory state, otherwise local map state is updated
  */
 export const withMapEditingAndLocalMapState = withHandlers( {
-    onMapViewChanges: ({update, editMap = false, onMapViewLocalChanges, map: {center: oCenter = {}, zoom: oZoom} = {}} = {}) => ({center = {}, zoom, mapStateSource, resolution}) => {
+    onMapViewChanges: ({update, editMap = false, onMapViewLocalChanges, map: {center: oCenter = {}, zoom: oZoom, mapStateSource: oMapStateSource, resolution: oResolution, resetPanAndZoom} = {}} = {}) => ({center = {}, zoom, mapStateSource, resolution}) => {
         const equalCenter =  isNearlyEqual(oCenter.x, center.x) && isNearlyEqual(oCenter.y, center.y);
-        if (editMap && !(equalCenter && oZoom === zoom)) {
-            update("map", {center, zoom, mapStateSource: uuid(), resolution}, 'merge');
+        if ((editMap && !(equalCenter && oZoom === zoom))) {
+            update("map", {center, zoom, mapStateSource: uuid(), resolution, resetPanAndZoom: false}, 'merge');
+        } else if (resetPanAndZoom) {
+            update("map", {center: oCenter, zoom: oZoom, mapStateSource: oMapStateSource, resolution: oResolution, resetPanAndZoom: false}, 'merge');
         } else {
             onMapViewLocalChanges({center, zoom, mapStateSource, resolution});
         }

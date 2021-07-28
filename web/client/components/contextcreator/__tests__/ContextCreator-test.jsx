@@ -59,7 +59,7 @@ describe('ContextCreator component', () => {
                         <ContextCreator
                             isCfgValidated
                             allAvailablePlugins={allAvailablePlugins}
-                            curStepId="configure-plugins"
+                            curStepId="configure-themes"
                             onSave={actions.onSave} />
                     </Provider>
                 </Localized>, document.getElementById("container"));
@@ -92,7 +92,7 @@ describe('ContextCreator component', () => {
                         <ContextCreator
                             isCfgValidated
                             allAvailablePlugins={allAvailablePlugins}
-                            curStepId="configure-plugins"
+                            curStepId="configure-themes"
                             saveDestLocation="MY_DESTINATION"
                             onSave={actions.onSave} />
                     </Provider>
