@@ -15,13 +15,14 @@ import {newContextSelector, resourceSelector, creationStepSelector, reloadConfir
     loadFlagsSelector, isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector,
     validationStatusSelector, cfgErrorSelector, templatesSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
     availablePluginsFilterTextSelector, availableTemplatesFilterTextSelector, enabledPluginsFilterTextSelector,
-    enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector, tutorialStepSelector, selectedThemeSelector} from '../selectors/contextcreator';
+    enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector, tutorialStepSelector, selectedThemeSelector,
+    customVariablesEnabledSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {tutorialSelector} from '../selectors/tutorial';
 import {init, setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
     setSelectedPlugins, setSelectedTemplates, setParsedTemplate, setFileDropStatus, editPlugin, editTemplate, deleteTemplate, updateEditedCfg,
     changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin, uninstallPlugin,
-    addPluginToUpload, removePluginToUpload, showBackToPageConfirmation, showTutorial, setSelectedTheme} from '../actions/contextcreator';
+    addPluginToUpload, removePluginToUpload, showBackToPageConfirmation, showTutorial, setSelectedTheme, onToggleCustomVariables} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import { userSelector } from '../selectors/security';
@@ -61,7 +62,8 @@ export const contextCreatorSelector = createStructuredSelector({
     pluginsToUpload: state => state.contextcreator?.pluginsToUpload,
     pluginsConfig: () => ConfigUtils.getConfigProp('plugins'),
     showBackToPageConfirmation: showBackToPageConfirmationSelector,
-    selectedTheme: selectedThemeSelector
+    selectedTheme: selectedThemeSelector,
+    customVariablesEnabled: customVariablesEnabledSelector
 });
 
 /**
@@ -71,15 +73,33 @@ export const contextCreatorSelector = createStructuredSelector({
  * @class
  * @prop {string} cfg.saveDestLocation router path when the application is redirected when a context is saved
  * @prop {object[]} cfg.themes list of themes with default configuration that will appear in the context creation process
+ * @prop {object} cfg.themes[index].defaultVariables variables of the theme used to initialize the pickers
+ * @prop {object} cfg.basicVariables variables used as default values if a theme is not selected
  *
  * @example
  * "cfg": {
  * "themes": [{
- *      id: 'dark',
- *      type: 'link',
- *      href: 'dist/themes/dark.css'
- *  }]
- * }
+ *    "id": "dark",
+ *    "type": "link",
+ *    "href": "dist/themes/dark.css"
+ *    "defaultVariables": {
+ *      "ms-main-color": "#000000",
+ *      "ms-main-bg": "#FFFFFF",
+ *      "ms-primary-contrast": "#FFFFFF",
+ *      "ms-primary": "#078aa3"
+ *      "ms-success-contrast": "#FFFFFF",
+ *      "ms-success": "#398439"
+ *    }
+ *  }],
+ * "basicVariables": {
+ *      "ms-main-color": "#000000",
+ *      "ms-main-bg": "#FFFFFF",
+ *      "ms-primary-contrast": "#FFFFFF",
+ *      "ms-primary": "#078aa3"
+ *      "ms-success-contrast": "#FFFFFF",
+ *      "ms-success": "#398439"
+ *    }
+ *}
  */
 export default createPlugin('ContextCreator', {
     component: connect(contextCreatorSelector, {
@@ -114,7 +134,8 @@ export default createPlugin('ContextCreator', {
         onRemoveUploadPlugin: removePluginToUpload,
         onShowDialog: showDialog,
         onRemovePlugin: uninstallPlugin,
-        onShowBackToPageConfirmation: showBackToPageConfirmation
+        onShowBackToPageConfirmation: showBackToPageConfirmation,
+        onToggleCustomVariables
     })(ContextCreator),
     reducers: {
         contextcreator

@@ -22,7 +22,8 @@ import {
     editedPluginSelector,
     editedCfgSelector,
     editedTemplateSelector,
-    selectedThemeSelector
+    selectedThemeSelector,
+    customVariablesEnabledSelector
 } from '../../selectors/contextcreator';
 import {
     setFilterText,
@@ -49,7 +50,8 @@ import {
     setEditedTemplate,
     setTemplates,
     changeTemplatesKey,
-    setSelectedTheme
+    setSelectedTheme,
+    onToggleCustomVariables
 } from '../../actions/contextcreator';
 const themeDark = {
     id: 'dark',
@@ -573,5 +575,10 @@ describe('contextcreator reducer', () => {
         const state = contextcreator(undefined, setSelectedTheme(themeDark));
         expect(state).toExist();
         expect(selectedThemeSelector({contextcreator: state})).toEqual(themeDark);
+    });
+    it('onToggleCustomVariables', () => {
+        const state = contextcreator(undefined, onToggleCustomVariables(themeDark));
+        expect(state).toExist();
+        expect(customVariablesEnabledSelector({contextcreator: state})).toEqual(true);
     });
 });

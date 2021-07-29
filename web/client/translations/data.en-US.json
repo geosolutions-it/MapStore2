@@ -2913,7 +2913,23 @@
               "title": "Configure Theme",
               "label": "Theme",
               "themes": "Choose a theme",
-              "noThemes": "No themes found"
+              "noThemes": "No themes found",
+              "customVariables": "Custom Variables",
+              "main": "Main Text Color",
+              "background": "Main Background Color",
+              "primaryContrast": "Primary Text Color",
+              "primary": "Primary Color",
+              "successContrast": "Secondary Text Color",
+              "success": "Secondary Color",
+              "tooltips": {
+                "main": "Text color used in panels or dialogs",
+                "background": "Background color used in panels or dialogs",
+                "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers",
+                "primary": "Background primary color: toolbars, headers",
+                "successContrast": "Text color used in opposition to the secondary background color",
+                "success": "Background color used to show when a button is 'active' or 'selected'",
+                "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
+              }
             },
             "configurePlugins": {
                 "label": "Configure Plugins",

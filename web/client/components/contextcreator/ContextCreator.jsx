@@ -151,7 +151,10 @@ export default class ContextCreator extends React.Component {
         tutorials: PropTypes.object,
         themes: PropTypes.array,
         setSelectedTheme: PropTypes.func,
-        selectedTheme: PropTypes.string
+        selectedTheme: PropTypes.string,
+        basicVariables: PropTypes.object,
+        customVariablesEnabled: PropTypes.bool,
+        onToggleCustomVariables: PropTypes.func
     };
 
     static contextTypes = {
@@ -226,6 +229,7 @@ export default class ContextCreator extends React.Component {
         onSetStep: () => { },
         onShowTutorial: () => { },
         onChangeAttribute: () => { },
+        onToggleCustomVariables: () => { },
         onReloadConfirm: () => { },
         uploadEnabled: false,
         pluginsToUpload: [],
@@ -363,7 +367,10 @@ export default class ContextCreator extends React.Component {
                     disableNext: false,
                     component: <ConfigureThemes
                         themes={this.props.themes}
+                        customVariablesEnabled={this.props.customVariablesEnabled}
+                        basicVariables={this.props.basicVariables}
                         setSelectedTheme={this.props.setSelectedTheme}
+                        onToggleCustomVariables={this.props.onToggleCustomVariables}
                         selectedTheme={this.props.selectedTheme}
                     />
                 }

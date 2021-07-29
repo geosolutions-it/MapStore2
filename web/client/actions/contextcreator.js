@@ -68,6 +68,7 @@ export const PLUGIN_UNINSTALLED = 'CONTEXTCREATOR:PLUGIN_UNINSTALLED';
 export const UNINSTALL_PLUGIN_ERROR = 'CONTEXTCREATOR:UNINSTALL_PLUGIN_ERROR';
 export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_CONFIRMATION';
 export const LOAD_EXTENSIONS = 'CONTEXTCREATOR:LOAD_EXTENSIONS';
+export const ON_TOGGLE_CUSTOM_VARIABLES = 'CONTEXTCREATOR:ON_TOGGLE_CUSTOM_VARIABLES';
 export const CONTEXT_TUTORIALS = {
     "general-settings": "contextcreator_generalsettings_tutorial",
     "configure-map": "contextcreator_configuremap_tutorial",
@@ -556,4 +557,8 @@ export const uninstallPluginError = (plugin, error) => ({
 export const showBackToPageConfirmation = (show) => ({
     type: BACK_TO_PAGE_SHOW_CONFIRMATION,
     show
+});
+
+export const onToggleCustomVariables = () => ({
+    type: ON_TOGGLE_CUSTOM_VARIABLES
 });

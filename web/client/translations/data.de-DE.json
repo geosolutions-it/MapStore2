@@ -2900,7 +2900,23 @@
               "title": "Thema konfigurieren",
               "label": "Thema",
               "themes": "Wähle ein Thema",
-              "noThemes": "Keine gefunden"
+              "noThemes": "Keine gefunden",
+              "customVariables": "Benutzerdefinierte Variablen",
+              "main": "Haupttextfarbe",
+              "background" : "Haupthintergrundfarbe",
+              "primaryContrast": "Primäre Textfarbe",
+              "primary": "Primärfarbe",
+              "success": "Sekundäre Farbe",
+              "successContrast": "Sekundäre Textfarbe",
+              "tooltips": {
+                "main": "In Panels oder Dialogen verwendete Textfarbe",
+                "background": "Hintergrundfarbe in Panels oder Dialogen",
+                "primaryContrast": "Textfarbe im Gegensatz zur Primär- und Erfolgshintergrundfarbe: Symbole in Symbolleisten, Kopfzeilen",
+                "primary": "Primärfarbe des Hintergrunds: Symbolleisten, Kopfzeilen",
+                "successContrast": "Textfarbe im Gegensatz zur sekundären Hintergrundfarbe",
+                "success": "Hintergrundfarbe, die verwendet wird, um anzuzeigen, wenn eine Schaltfläche 'aktiv' oder 'ausgewählt' ist",
+                "customColorsDescription": "Sie können eine dieser Farben zusätzlich (oder nicht) zu einem oben ausgewählten vorkonfigurierten Thema ändern"
+              }
             },
             "configurePlugins": {
                 "label": "Plugins konfigurieren",

@@ -2902,7 +2902,23 @@
               "title": "Configurer le thème",
               "label": "Thème",
               "themes": "Choisissez un thème",
-              "noThemes": "Aucun thème trouvé"
+              "noThemes": "Aucun thème trouvé",
+              "customVariables": "Variables personnalisées",
+              "main": "Couleur du texte principal",
+              "background" : "Couleur d'arrière-plan principale",
+              "primaryContrast": "Couleur primaire du texte",
+              "primary": "Couleur primaire",
+              "success": "Couleur secondaire",
+              "successContrast": "Couleur du texte secondaire",
+              "tooltips": {
+                "main": "Couleur du texte utilisée dans les panneaux ou les boîtes de dialogue",
+                "background": "Couleur d'arrière-plan utilisée dans les panneaux ou les boîtes de dialogue",
+                "primaryContrast": "Couleur du texte opposée à la couleur de fond principale et de réussite : icônes à l'intérieur des barres d'outils, en-têtes",
+                "primary": "Couleur primaire d'arrière-plan : barres d'outils, en-têtes",
+                "success": "Couleur d'arrière-plan utilisée pour montrer quand un bouton est 'actif' ou 'sélectionné'",
+                "successContrast": "Couleur du texte utilisée en opposition à la couleur de fond secondaire",
+                "customColorsDescription": "Vous pouvez changer l'une de ces couleurs en plus (ou non) d'un thème préconfiguré choisi ci-dessus"
+              }
             },
             "configurePlugins": {
                 "label": "Configurer les plugins",
