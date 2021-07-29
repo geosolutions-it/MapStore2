@@ -69,7 +69,7 @@ export default ({
     <Row>
         <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
         {/* this sticky style helps to keep showing chart when scrolling*/}
-        <Col xs={12} style={{ position: "sticky", top: 0, zIndex: 1, background: "linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255, 1) 30px)"}}>
+        <Col xs={12} style={{ position: "sticky", top: 0, zIndex: 1}}>
             <div style={{marginBottom: "30px"}}>
                 {sampleChart}
             </div>
