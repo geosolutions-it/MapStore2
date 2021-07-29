@@ -16,6 +16,8 @@
     <security:global-method-security secured-annotations="enabled" />
     <mvc:annotation-driven/>
     <context:component-scan base-package="it.geosolutions.mapstore.controllers.configs" />
+    <!-- TODO: remove these duplucations -->
+    <context:property-placeholder location="classpath:mapstore.properties,file:${datadir.location:}/mapstore.properties" ignore-resource-not-found="true"/>
 
-    <context:property-placeholder location="classpath:mapstore.properties" />
+
 </beans>
