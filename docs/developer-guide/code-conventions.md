@@ -24,7 +24,7 @@ It will help also future refactoring because any change to the state structure (
 A selector should be placed into the proper `selectors/<state-slice>.js` file with the same name of the relative reducer.
 When a selector retrieves data from more than one state slices, you should place it in the selector nearest by concern. For instance `isFeatureGridOpen` should be placed into `featuregrid`
 
-If you don't work on a core functionality, where the state is shared between many components, defining the selector directly in the plug-in is not denied (e.g. examples).
+If you don't work on a core functionality, where the state is shared between many components, defining the selector directly in the plug-in is not denied.
 
 ## Prefer `initialState` over plugin configuration
 

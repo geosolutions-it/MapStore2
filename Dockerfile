@@ -5,7 +5,7 @@ MAINTAINER geosolutions<info@geo-solutions.it>
 ENV CATALINA_BASE "$CATALINA_HOME"
 ENV JAVA_OPTS="${JAVA_OPTS}  -Xms512m -Xmx512m -XX:MaxPermSize=128m"
 
-# Optionally remove Tomcat manager, docs, and examples
+# Optionally remove Tomcat manager, docs
 ARG TOMCAT_EXTRAS=false
 RUN if [ "$TOMCAT_EXTRAS" = false ]; then \
       find "${CATALINA_BASE}/webapps/" -delete; \

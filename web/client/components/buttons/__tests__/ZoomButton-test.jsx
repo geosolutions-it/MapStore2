@@ -14,7 +14,21 @@ import expect from 'expect';
 // initializes Redux store
 import { Provider } from 'react-redux';
 
-import store from './../../../examples/myapp/stores/myappstore';
+import {createStore, combineReducers, applyMiddleware} from 'redux';
+
+import thunkMiddleware from 'redux-thunk';
+import mapConfig from '../../../reducers/config';
+
+// reducers
+const reducers = combineReducers({
+    mapConfig
+});
+
+// compose middleware(s) to createStore
+let finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
+
+// export the store with the given reducers (and middleware applied)
+const store = finalCreateStore(reducers, {});
 
 describe('This test for ZoomButton', () => {
     beforeEach((done) => {

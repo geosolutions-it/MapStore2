@@ -299,44 +299,6 @@
                 "visit_group": "Aller à ce groupe",
                 "subscribe": "Souscrire",
                 "email": "Courriel:"
-            },
-            "examples": {
-                "viewer": {
-                    "html": "<h3>Visualiseur</h3><p>Visualiseur simple</p>"
-                },
-                "3dviewer": {
-                    "html": "<h3>Visualiseur 3D</h3><p>Visualiseur 3D simple basé sur CesiumJS</p>"
-                },
-                "manager": {
-                    "html": "<h3>Gestionnaire</h3><p>Parcourir des cartes Mapstore</p>"
-                },
-                "mouseposition": {
-                    "html": "<h3>Contrôleur de position de pointeur</h3><p>Exemples particuliers</p>"
-                },
-                "scalebar": {
-                    "html": "<h3>Contrôleur d'échelle</h3><p>Exemples particuliers</p>"
-                },
-                "layertree": {
-                    "html": "<h3>Arborescence de couches avancée</h3><p>Exemples particuliers</p>"
-                },
-                "queryform": {
-                    "html": "<h3>Constructeur de requête</h3><p>Exemples particuliers</p>"
-                },
-                "featuregrid": {
-                    "html": "<h3>Éditeur d'objet</h3><p>Exemples particuliers</p>"
-                },
-                "print": {
-                    "html": "<h3>Impression</h3><p>Exemples particuliers</p>"
-                },
-                "plugins": {
-                    "html": "<h3>Plugins</h3><p>Contruire sa propre application</p>"
-                },
-                "api": {
-                    "html": "<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore dans votre application</p>"
-                },
-                "rasterstyler": {
-                    "html": "<h3>Représentation d'image</h3><p>Représenter votre couche image</p>"
-                }
             }
         },
         "cookiesPolicyNotification": {

@@ -46,17 +46,8 @@ This is the overall framework folder structure:
         +-- epics      (redux-observable epics)
         +-- reducers   (Redux reducers)
         +-- stores     (Redux stores)
-        |  ...
-        |  product (the MapStore main application)
-        |   +...
-        +-- examples   (example applications)
-             +-- 3dviewer
-             |   +-- index.html
-             |   +-- app.jsx
-             |   +-- containers (app specific smart components)
-             |   +-- components (app specific dumb components)
-             |   +-- stores     (app specific stores)
-             |   +-- reducers   (app specific reducers)
-             |   +-- ...
-             +-- ...
+           ...
+           product (the MapStore main application)
+            +...
+
 ```

@@ -299,44 +299,6 @@
                 "visit_group": "Visita il gruppo",
                 "subscribe": "Sottoscrivi",
                 "email": "Email:"
-            },
-            "examples":{
-                "viewer":{
-                    "html":"<h3>Viewer</h3><p>Semplice Visualizzatore di mappa</p>"
-                },
-                "3dviewer":{
-                    "html":"<h3>Viewer 3D</h3><p>Visualizzatore 3D basato su CesiumJS</p>"
-                },
-                "manager":{
-                    "html":"<h3>Manager</h3><p>Sfoglia le mappe</p>"
-                },
-                "mouseposition":{
-                    "html":"<h3>Posizione del mouse</h3><p>Esempi personalizzati</p>"
-                },
-                "scalebar":{
-                    "html":"<h3>Scale Control</h3><p>Esempi personalizzati</p>"
-                },
-                "layertree":{
-                    "html":"<h3>LayerTree Avanzato</h3><p>Esempi personalizzati</p>"
-                },
-                "queryform":{
-                    "html":"<h3>Query Builder</h3><p>Esempi personalizzati</p>"
-                },
-                "featuregrid":{
-                    "html":"<h3>Feature Editor</h3><p>Esempi personalizzati</p>"
-                },
-                "print":{
-                    "html":"<h3>Printing</h3><p>Esempi personalizzati</p>"
-                },
-                "plugins":{
-                    "html":"<h3>Plugins</h3><p>Costruisci la tua applicazione</p>"
-                },
-                "api":{
-                    "html":"<h3>API</h3><p>Usa le API per includere una mappa MapStore nella tua applicazione</p>"
-                },
-                "rasterstyler":{
-                    "html":"<h3>Raster Styler</h3><p>Crea stile per dati raster</p>"
-                }
             }
         },
         "cookiesPolicyNotification": {

@@ -299,44 +299,6 @@
                 "visit_group": "Visite este grupo",
                 "subscribe": "Suscribir",
                 "email": "Correo:"
-            },
-            "examples":{
-                "viewer":{
-                    "html":"<h3>Visor</h3><p>Visualizador simple</p>"
-                },
-                "3dviewer":{
-                    "html":"<h3>Visor 3D</h3><p>Visualizador 3D simple basado en CesiumJS</p>"
-                },
-                "manager":{
-                    "html":"<h3>Administrador</h3><p>Mostrar los mapas Mapstore</p>"
-                },
-                "mouseposition":{
-                    "html":"<h3>Controlador de position del puntero</h3><p>Exemple particulier</p>"
-                },
-                "scalebar":{
-                    "html":"<h3>Controlador de escala</h3><p>Ejemplo personalizado</p>"
-                },
-                "layertree":{
-                    "html":"<h3>Árbol de mapas avanzado</h3><p>Ejemplo personalizado</p>"
-                },
-                "queryform":{
-                    "html":"<h3>Constructor de consultas</h3><p>Ejemplo personalizado</p>"
-                },
-                "featuregrid":{
-                    "html":"<h3>Editor de características</h3><p>Ejemplo personalizado</p>"
-                },
-                "print":{
-                    "html":"<h3>Impresión</h3><p>Ejemplo personalizado</p>"
-                },
-                "plugins":{
-                    "html":"<h3>Plugins</h3><p>Construya su propia aplicación</p>"
-                },
-                "api":{
-                    "html":"<h3>API</h3><p>Use las API para  incluir un mapa de MapStore en su  aplicación</p>"
-                },
-                "rasterstyler":{
-                    "html":"<h3>Estilos ráster</h3><p>Estilo ráster</p>"
-                }
             }
         },
         "cookiesPolicyNotification": {
