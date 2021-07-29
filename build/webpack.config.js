@@ -11,7 +11,7 @@ const config = require('./buildConfig')(
         "dashboard-embedded": path.join(__dirname, "..", "web", "client", "product", "dashboardEmbedded"),
         "geostory-embedded": path.join(__dirname, "..", "web", "client", "product", "geostoryEmbedded")
     },
-    { ["themes/default"]: themeEntries["themes/" + (process.env.theme || "default")]},
+    themeEntries,
     {
         base: path.join(__dirname, ".."),
         dist: path.join(__dirname, "..", "web", "client", "dist"),

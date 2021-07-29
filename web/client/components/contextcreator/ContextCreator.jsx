@@ -174,7 +174,15 @@ export default class ContextCreator extends React.Component {
             id: 'dark',
             label: 'Dark',
             type: 'link',
-            href: (__MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes') + '/dark.css'
+            href: (__MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes') + '/dark.css',
+            defaultVariables: {
+                "ms-main-color": "#eeeeee",
+                "ms-main-bg": "#333333",
+                "ms-primary-contrast": "#111111",
+                "ms-primary": "#43a4ff",
+                "ms-success-contrast": "#111111",
+                "ms-success": "#398439"
+            }
         }],
         viewerPlugins: [
             "Map",

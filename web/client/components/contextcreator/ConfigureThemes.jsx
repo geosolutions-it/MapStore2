@@ -10,8 +10,6 @@ import ReactSelect from 'react-select';
 import {ControlLabel, Glyphicon} from 'react-bootstrap';
 import tinycolor from 'tinycolor2';
 import find from 'lodash/find';
-import isEqual from 'lodash/isEqual';
-import memoize from 'lodash/memoize';
 
 import Message from '../I18N/Message';
 import HTML from '../I18N/HTML';
@@ -41,9 +39,9 @@ const SUCCESS = "ms-success";
  * @param {string} varName variable name to be use for comparison
  * @returns
  */
-const hasColorChanged = memoize((vars, defaultVars, basic, varName) => {
+const hasColorChanged = (vars, defaultVars, basic, varName) => {
     return !tinycolor.equals(vars?.[varName], defaultVars?.[varName] || basic[varName]);
-}, isEqual);
+};
 
 
 /**
