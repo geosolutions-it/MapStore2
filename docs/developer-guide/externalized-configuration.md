@@ -81,7 +81,7 @@ Logging has not been externalized yet, You can manually do this change in `WEB-I
 
 ### Database Connection
 
-Creating a file in `geostore-datasource-ovr.properties` file, it will be used and override the current
+If you create a file in the datadir called `geostore-datasource-ovr.properties` , it will be used and override the current
 
 *Example:*
 
