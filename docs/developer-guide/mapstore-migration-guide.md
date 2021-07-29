@@ -27,7 +27,7 @@ This is a list of things to check if you want to update from a previous version 
 
 The theme of MapStore has been updated to support CSS variables for some aspects of the style, in particular colors and font families.
 The `web/client/themes/default/variables.less` file contains all the available variables described under the `@ms-theme-vars` ruleset.
-It is suggested to : 
+It is suggested to :
 
 - update the lesscss variables in the projects because the variables starting with `@ms2-` will be deprecated soon:
 
@@ -63,27 +63,48 @@ It is suggested to :
 
 During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon.
 
-**The following key files have been moved to the new `configs` folder:**
-We suggest you to move them aswell from root to configs folder
+#### The following key files have been moved to the new `configs` folder
 
-- localConfig.json
-- new.json
-- pluginsConfig.json
-- config.json
-- simple.json
+We suggest you to move them as well from root to configs folder
+
+- `localConfig.json`
+- `new.json`
+- `pluginsConfig.json`
+- `config.json`
+- `simple.json`
 
 Back-end has been reorganized
 In particular:
+
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
 
-Check the changes in pom.xml to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
+Check the changes in `pom.xml` to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
 
-- **pom.xml**
-- **java/web/pom.xml**
+- `pom.xml`
+- `java/web/pom.xml`
+
+#### Data directory has been reorganized and is now available also for product
+
+The new organization of the data directory is:
+
+- `configs` will contain all json files (`localConfig.json`, `new.json`, `pluginsConfig.json`, ...) and all the `.patch` files applied to them.
+- `extensions` folder contains all the data for the extensions, including `extensions.json`
+- The root contains the properties files to configure database, proxy and other configs
+
+To organize your old data directory accordingly to the new specification.
+
+- Move all `.json` and `.json.patch` files in `configs` folder (except `extensions.json`)
+- Move the directory `dist/extensions` to simply `extensions`.
+- The file `extensions.json` have to be moved in `extensions/extensions.json`.
+- Edit the file `extensions/extensions.json` changing the paths from `dist/extensions/<Plugin-Name>/...` to `<Plugin-Name>/...`
+
+You can set it up by configuring `datadir.location` java system property. Changes to paths or configuration files are not required anymore.
 
 ### Configurations
- - Embedded now uses popup as default. Align localConfig.json `plugins --> embedded --> Identify` with the latest one:
+
+- Embedded now uses popup as default. Align localConfig.json `plugins --> embedded --> Identify` with the latest one:
+
 ```json
 {
     "name": "Identify",

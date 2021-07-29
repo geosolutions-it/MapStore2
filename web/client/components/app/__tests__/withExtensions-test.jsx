@@ -43,10 +43,11 @@ describe('StandardApp withExtensions', () => {
     });
     it('extensions plugins are available if extensions are enabled', (done) => {
         mockAxios = new MockAdapter(axios);
+        ConfigUtils.setConfigProp('extensionsFolder', 'base/web/client/test-resources/extensions/');
         mockAxios.onGet(/localconfig/i).reply(200, {});
         mockAxios.onGet(/extensions\.json/i).reply(200, {
             My: {
-                bundle: "base/web/client/test-resources/extensions/myextension.js"
+                bundle: "myextension.js"
             }
         });
         const store = () => ({
@@ -85,7 +86,7 @@ describe('StandardApp withExtensions', () => {
         expect(app).toExist();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(2);
-            expect(mockAxios.history.get[1].url).toBe("extensions.json");
+            expect(mockAxios.history.get[1].url).toBe("extensions/extensions.json");
             done();
         }, 0);
     });
@@ -131,8 +132,8 @@ describe('StandardApp withExtensions', () => {
         expect(app).toExist();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(3);
-            expect(mockAxios.history.get[1].url).toBe("extensions.json");
-            expect(mockAxios.history.get[2].url).toBe("extensions.json");
+            expect(mockAxios.history.get[1].url).toBe("extensions/extensions.json");
+            expect(mockAxios.history.get[2].url).toBe("extensions/extensions.json");
             done();
         }, 0);
     });
