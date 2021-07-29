@@ -14,7 +14,7 @@ import expect from 'expect';
 // initializes Redux store
 import { Provider } from 'react-redux';
 
-import{createStore, combineReducers, applyMiddleware} from 'redux';
+import {createStore, combineReducers, applyMiddleware} from 'redux';
 
 import thunkMiddleware from 'redux-thunk';
 import mapConfig from '../../../reducers/config';
