@@ -7,14 +7,21 @@ import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Base class that provides the main configured variables
+ * Can be configured using the following properties:
+ *  - datadir.location absolute path of a folder where configuration files are fetched from (default: empty)
+ *  - overrides.config: optional properties file path where overrides for the base config file are stored (default: empty)
+ *  - overrides.mappings: optional list of mappings from the override configuration files, to the configuration files properties (default: empty)
+ *    format: <json_path>=<propertyName>,...,<json_path>=<propertyName>
+ *    example: header.height=headerHeight,header.url=headerUrl
+ *
  * @author Lorenzo Natali, GeoSolutionsGroup
  *
  */
 public class BaseMapStoreController {
-	
+
 	@Autowired
     private ServletContext context;
-	
+
     @Value("${datadir.location:}") private String dataDir = "";
 	@Value("${overrides.mappings:}") private String mappings;
     @Value("${overrides.config:}") private String overrides = "";
@@ -23,7 +30,7 @@ public class BaseMapStoreController {
     @Value("${context.configs.folder:configs}") private String configsFolder = "configs";
     @Value("${context.plugins.config:pluginsConfig.json}") private String pluginsConfig = "pluginsConfig.json";
     @Value("${context.plugins.savepatch:true}") private Boolean pluginsConfigAsPatch = true;
-    
+
     public void setContext(ServletContext context) {
         this.context = context;
     }

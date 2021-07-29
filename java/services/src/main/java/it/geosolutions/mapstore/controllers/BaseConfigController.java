@@ -42,8 +42,6 @@ import it.geosolutions.mapstore.utils.ResourceUtils;
  * Allows loading configuration files from an external source (a folder outside of the webserver).
  * Can be configured using the following properties:
  *  - datadir.location absolute path of a folder where configuration files are fetched from (default: empty)
- *  - allowed.resources comma delimited list of configuration files that can be loaded using this service (whitelist),
- *    (default: localConfig, pluginsConfig, extensions) - do not specify the json extension
  *  - overrides.config: optional properties file path where overrides for the base config file are stored (default: empty)
  *  - overrides.mappings: optional list of mappings from the override configuration files, to the configuration files properties (default: empty)
  *    format: <json_path>=<propertyName>,...,<json_path>=<propertyName>
@@ -59,13 +57,13 @@ public class BaseConfigController extends BaseMapStoreController {
         public String type;
         public File file;
     }
-    
+
     static {
     	MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
     }
 
     protected ObjectMapper jsonMapper = new ObjectMapper();
-    
+
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public class ResourceNotFoundException extends RuntimeException {
 
@@ -85,7 +83,7 @@ public class BaseConfigController extends BaseMapStoreController {
             super(message);
         }
     }
-    
+
     /**
     * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
     * Allows loading externalized assets (javascript bundles, translation files, and so on.
@@ -94,9 +92,9 @@ public class BaseConfigController extends BaseMapStoreController {
    public byte[] loadAsset(String resourcePath) throws IOException {
 		return toBytes(readResource(resourcePath, false, ""));
    }
-   
 
-    
+
+
     protected InputStream toStream(Resource resource) throws IOException {
     	 // data has been processed (read in UTF-8, must be converted again)
         if(resource.data != null) {
@@ -125,18 +123,18 @@ public class BaseConfigController extends BaseMapStoreController {
     protected Resource readResourceFromFile(File file, boolean applyOverrides, Optional<File> patch) throws IOException {
     	Resource resource = new Resource();
         resource.file = file;
-        
+
         MimeType type = MimeUtil.getMostSpecificMimeType(MimeUtil.getMimeTypes(file));
         resource.type = type != null ? type.toString() : null;
         try (Stream<String> stream =
                 Files.lines( Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8); ) {
             Properties props = readOverrides();
             if (applyOverrides && (!"".equals(getMappings()) && props != null || patch.isPresent())) {
-            	resource.data = resourceWithPatch(stream, props, patch); 
+            	resource.data = resourceWithPatch(stream, props, patch);
                 return resource;
             }
-            
-            
+
+
             try {
             	StringBuilder contentBuilder = new StringBuilder();
                 stream.forEach(new Consumer<String>() {
@@ -165,7 +163,7 @@ public class BaseConfigController extends BaseMapStoreController {
             for(String mapping : getMappings().split(",")) {
                 jsonObject = fillMapping(mapping, props, jsonObject);
             }
-        } 
+        }
         return jsonObject.toString();
     }
 
@@ -235,5 +233,5 @@ public class BaseConfigController extends BaseMapStoreController {
         }
     }
 
-    
+
 }

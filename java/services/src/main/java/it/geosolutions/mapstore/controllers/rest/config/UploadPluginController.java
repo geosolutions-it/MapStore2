@@ -44,22 +44,13 @@ import it.geosolutions.mapstore.controllers.BaseMapStoreController;
 import it.geosolutions.mapstore.utils.ResourceUtils;
 
 /**
- * REST service used to upload an extension. Can be configured using the
- * following properties: - datadir.location: base folder where the configuration
- * files will be stored (default: empty, stores in application root) -
- * extensions.folder: base folder where the extension will be stored (default:
- * "extensions") - context.configsFolder: folder where to find JSON
- * configuration files for the client (default "configs/") -
- * extensions.registry: JSON file name in configsFolder where uploaded
- * extensions are registered (default: "extensions.json") -
- * context.plugins.config: JSON file name in configsFolder where context creator
- * plugins are configured (default: "pluginsConfig.json") -
- * context.plugins.savepatch: uses JSON-patch format for the context creator
- * plugins configuration (default: true)
- *
- * When a datadir is available, the pluginsConfig.json original file is not
- * touched, a pluginsConfig.json.patch file is used, in json-patch format to
- * list only the uploaded extensions.
+ * REST service used to upload (install) or uninstall extensions.
+ * When a plugin is installed, this class takes care of :
+ * - Storing the data in the proper folder (data-dir or webpapp), in `extensionsFolder`.
+ * - Modifying `pluginsConfig.json` and `extensions.json` (in `extensionsFolder). to include the new plugin.
+ * - When a datadir is available, the pluginsConfig.json original file is not touched, a `pluginsConfig.json.patch` file is used instead
+ *   in json-patch format to list only the uploaded extensions.
+ * On uninstall, the class will clean up the files and the directories above to remove the plugins.
  */
 @Controller
 public class UploadPluginController extends BaseMapStoreController {

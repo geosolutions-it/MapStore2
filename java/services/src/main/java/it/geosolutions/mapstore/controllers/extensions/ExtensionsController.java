@@ -15,27 +15,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
 
 import it.geosolutions.mapstore.controllers.BaseConfigController;
 
 /**
  * REST service for Extensions.
- * Provides extensions resources from the extensions directory.
- *
+ * Provides extensions resources from the extensions directory from webapp or data-dir.
  */
 @Controller
 public class ExtensionsController extends BaseConfigController {
-    
+
     /**
      * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
      * Allows loading externalized assets (javascript bundles, translation files, and so on).
-     * The rest of the URL from /loadasset/ is intended to be the path to resource.
      */
     @RequestMapping(value="**", method = RequestMethod.GET)
     public void loadAsset(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -45,9 +40,7 @@ public class ExtensionsController extends BaseConfigController {
     		throw new IOException("Absolute paths are not allowed!");
     	}
         Resource resource = readResource(Paths.get(getExtensionsFolder(), resourcePath).toString() , false, "");
-        response.setContentType(resource.type); 
+        response.setContentType(resource.type);
         IOUtils.copy(toStream(resource), response.getOutputStream());
     }
-    
-    
 }

@@ -20,24 +20,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import it.geosolutions.mapstore.controllers.BaseConfigController;
 
 /**
- * REST service for configuration files usage.
- * Allows loading configuration files from an external source (a folder outside of the webserver).
- * Can be configured using the following properties:
- *  - datadir.location absolute path of a folder where configuration files are fetched from (default: empty)
- *  - allowed.resources comma delimited list of configuration files that can be loaded using this service (whitelist),
- *    (default: localConfig, pluginsConfig, extensions) - do not specify the json extension
- *  - overrides.config: optional properties file path where overrides for the base config file are stored (default: empty)
- *  - overrides.mappings: optional list of mappings from the override configuration files, to the configuration files properties (default: empty)
- *    format: <json_path>=<propertyName>,...,<json_path>=<propertyName>
- *    example: header.height=headerHeight,header.url=headerUrl
- *
- * The overrides technique allows to take some values to insert in the config json from a simple Java properties file.
+ * Service for configuration files usage.
+ * Allows to mask the path /configs/ to provide the JSON files
+ * - from data-dir, if present, or from configs directory of the webapp
+ * - Applying patch files, where present
+ * - Applying overrides, when present
  *
  */
 @Controller
 public class ConfigsController extends BaseConfigController {
-	
-	
+
+
     /**
      * Loads the resource, from the configured location (datadir or web root).
      * Both locations are tested and the resource is returned from the first location found.

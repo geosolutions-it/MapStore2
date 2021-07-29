@@ -31,15 +31,9 @@ import it.geosolutions.mapstore.controllers.BaseConfigController;
  * REST service for configuration files usage.
  * Allows loading configuration files from an external source (a folder outside of the webserver).
  * Can be configured using the following properties:
- *  - datadir.location absolute path of a folder where configuration files are fetched from (default: empty)
- *  - allowed.resources comma delimited list of configuration files that can be loaded using this service (whitelist),
- *    (default: localConfig, pluginsConfig, extensions) - do not specify the json extension
- *  - overrides.config: optional properties file path where overrides for the base config file are stored (default: empty)
- *  - overrides.mappings: optional list of mappings from the override configuration files, to the configuration files properties (default: empty)
- *    format: <json_path>=<propertyName>,...,<json_path>=<propertyName>
- *    example: header.height=headerHeight,header.url=headerUrl
- *
+ *  - allowed.resources comma delimited list of configuration files that can be loaded using this service (whitelist), *
  * The overrides technique allows to take some values to insert in the config json from a simple Java properties file.
+ * @deprecated in favor of configs and extensions controllers
  *
  */
 @Controller
@@ -64,7 +58,7 @@ public class LoadAssetsController extends BaseConfigController {
         }
         throw new ResourceNotAllowedException("Resource is not allowed");
     }
-    
+
     /**
      * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
      * Allows loading externalized assets (javascript bundles, translation files, and so on).
@@ -78,7 +72,7 @@ public class LoadAssetsController extends BaseConfigController {
     		throw new IOException("Absolute paths are not allowed!");
     	}
         Resource resource = readResource(resourcePath, false, "");
-        response.setContentType(resource.type); 
+        response.setContentType(resource.type);
         IOUtils.copy(toStream(resource), response.getOutputStream());
     }
     protected boolean isAllowed(String resourceName) {
@@ -90,6 +84,6 @@ public class LoadAssetsController extends BaseConfigController {
 
         });
     }
-    
-    
+
+
 }
