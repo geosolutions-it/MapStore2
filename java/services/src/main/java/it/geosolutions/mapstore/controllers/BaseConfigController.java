@@ -48,10 +48,11 @@ import it.geosolutions.mapstore.utils.ResourceUtils;
  *    example: header.height=headerHeight,header.url=headerUrl
  *
  * The overrides technique allows to take some values to insert in the config json from a simple Java properties file.
+ * TODO: make this a configuration bean that can be shared across controllers.
  *
  */
 @Controller
-public class BaseConfigController extends BaseMapStoreController {
+public abstract class BaseConfigController extends BaseMapStoreController {
     public class Resource {
         public String data;
         public String type;

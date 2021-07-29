@@ -51,6 +51,7 @@ import it.geosolutions.mapstore.utils.ResourceUtils;
  * - When a datadir is available, the pluginsConfig.json original file is not touched, a `pluginsConfig.json.patch` file is used instead
  *   in json-patch format to list only the uploaded extensions.
  * On uninstall, the class will clean up the files and the directories above to remove the plugins.
+ * TODO: move this in extensions package (and services path, aligning the client)
  */
 @Controller
 public class UploadPluginController extends BaseMapStoreController {

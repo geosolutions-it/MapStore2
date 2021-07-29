@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
  * @author Lorenzo Natali, GeoSolutionsGroup
  *
  */
-public class BaseMapStoreController {
+public abstract class BaseMapStoreController {
 
 	@Autowired
     private ServletContext context;
