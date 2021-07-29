@@ -14,10 +14,10 @@ import expect from 'expect';
 // initializes Redux store
 import { Provider } from 'react-redux';
 
-var {createStore, combineReducers, applyMiddleware} = require('redux');
+import{createStore, combineReducers, applyMiddleware} from 'redux';
 
-var thunkMiddleware = require('redux-thunk');
-var mapConfig = require('../../../reducers/config').default;
+import thunkMiddleware from 'redux-thunk';
+import mapConfig from '../../../reducers/config';
 
 // reducers
 const reducers = combineReducers({
