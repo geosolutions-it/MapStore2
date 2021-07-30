@@ -348,7 +348,7 @@ class MapPlugin extends React.Component {
 
     renderLayerContent = (layer, projection) => {
         const plugins = this.state.plugins;
-        if (layer.features && layer.type === "vector") {
+        if (layer.features) {
             return layer.features.filter(createFeatureFilter(layer.filterObj)).map( (feature) => {
                 return (
                     <plugins.Feature
