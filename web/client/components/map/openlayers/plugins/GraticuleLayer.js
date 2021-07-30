@@ -8,7 +8,7 @@
 
 import Layers from '../../../../utils/openlayers/Layers';
 
-import Graticule from 'ol/Graticule';
+import Graticule from 'ol/layer/Graticule';
 import {Stroke} from 'ol/style';
 
 Layers.registerType('graticule', {

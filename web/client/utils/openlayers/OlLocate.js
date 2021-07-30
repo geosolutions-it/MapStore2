@@ -10,7 +10,6 @@
 import olPopUp from './OlPopUp';
 import assign from 'object-assign';
 
-import {inherits} from 'ol';
 import BaseObject from 'ol/Object';
 import Overlay from 'ol/Overlay';
 import Feature from 'ol/Feature';
@@ -89,7 +88,12 @@ const OlLocate = function(map, optOptions) {
     this.errorHandler = this.options.onLocationError.bind(this);
 };
 
-inherits(OlLocate, BaseObject);
+var olExtInherits = function(child, parent) {
+    child.prototype = Object.create(parent.prototype);
+    child.prototype.constructor = child;
+};
+
+olExtInherits(OlLocate, BaseObject);
 
 OlLocate.prototype.start = function() {
     this.geolocate.on('error', this.errorHandler);
