@@ -20,7 +20,7 @@
             }
         }
     }
-    
+
     .ms-style-editor {
         .ms-style-editor-inline-widget {
             .border-color-var(@theme-vars[main-bg]);
@@ -39,7 +39,7 @@
             }
         }
     }
-    
+
     ul.CodeMirror-hints {
         background-color: @ms-main-color;
         li.CodeMirror-hint {
@@ -49,7 +49,7 @@
             }
         }
     }
-    
+
     .ms-style-template-title {
         .border-top-color-var(@theme-vars[main-border-color]);
     }
@@ -59,7 +59,7 @@
         .color-var(@theme-vars[main-bg]);
         .background-color-var(@theme-vars[main-bg]);
     }
-    
+
     .ms-color-picker-overlay {
         .ms-sketch-picker,
         .ms-sketch-picker input {
@@ -79,7 +79,13 @@
     .ms-dash-array {
         .stroke-var(@theme-vars[main-color]);
     }
-    
+    .Select-option.is-selected .ms-dash-array {
+        .stroke-var(@theme-vars[primary-contrast]);
+    }
+    .Select-option.is-focused .ms-dash-array {
+        .stroke-var(@theme-vars[main-color]);
+    }
+
     .ms-color-selector {
         .border-color-var(@theme-vars[main-border-color]);
     }
@@ -90,7 +96,7 @@
             .border-color-var(@theme-vars[main-border-color]);
         }
     }
-    
+
     .ms-style-rules-editor {
         .ms-style-rule {
             &.ms-drop-target {
@@ -102,7 +108,7 @@
             .border-color-var(@theme-vars[main-border-color]);
         }
     }
-    
+
     .ms-symbolizer-field {
         .ms-symbolizer-value {
             &.ms-symbolizer-value-invalid {
@@ -113,11 +119,11 @@
             }
         }
     }
-    
+
     .ms-symbolizer-field-divider {
         .border-bottom-color-var(@theme-vars[main-border-color]);
     }
-    
+
     .ms-symbolizer {
         .background-color-var(@theme-vars[main-bg]);
     }
@@ -125,7 +131,7 @@
         .background-color-var(@theme-vars[main-bg]);
         opacity: 0.4;
     }
-    
+
     .ms-mark-list {
         .background-color-var(@theme-vars[main-bg]);
     }
