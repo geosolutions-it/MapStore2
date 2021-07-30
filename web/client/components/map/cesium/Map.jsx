@@ -82,6 +82,7 @@ class CesiumMap extends React.Component {
     }
 
     componentDidMount() {
+        const creditContainer = document.querySelector(this.props.mapOptions?.attribution?.container || '#footer-attribution-container');
         let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
             baseLayerPicker: false,
             animation: false,
@@ -94,7 +95,11 @@ class CesiumMap extends React.Component {
             timeline: false,
             navigationHelpButton: false,
             navigationInstructionsInitiallyVisible: false,
-            creditContainer: "footer-attribution-container"
+            // if creditContainer is null we should pass undefined
+            // to avoid error on mount
+            creditContainer: creditContainer
+                ? creditContainer
+                : undefined
         }, this.getMapOptions(this.props.mapOptions)));
         if (this.props.registerHooks) {
             this.registerHooks();

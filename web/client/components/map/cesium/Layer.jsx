@@ -218,6 +218,9 @@ class CesiumLayer extends React.Component {
         if (toRemove) {
             this.props.map.imageryLayers.remove(toRemove);
         }
+        if (this.layer.detached && this.layer?.remove) {
+            this.layer.remove();
+        }
     };
 }
 
