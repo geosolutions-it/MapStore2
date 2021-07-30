@@ -82,14 +82,19 @@ function ConfigureThemes({
         ? tinycolor.mostReadable(variables[MAIN_BG_COLOR], [variables[MAIN_COLOR], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
         : null;
 
-    const mostReadablePrimaryColor = variables[PRIMARY] && variables[PRIMARY_CONTRAST]
+    const mostReadablePrimaryContrastColor = variables[PRIMARY] && variables[PRIMARY_CONTRAST]
     && !tinycolor.isReadable(variables[PRIMARY], variables[PRIMARY_CONTRAST])
         ? tinycolor.mostReadable(variables[PRIMARY_CONTRAST], [variables[PRIMARY], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
         : null;
 
-    const mostReadableSuccessColor = variables[SUCCESS] && variables[SUCCESS_CONTRAST]
+    const mostReadableSuccessContrastColor = variables[SUCCESS] && variables[SUCCESS_CONTRAST]
     && !tinycolor.isReadable(variables[SUCCESS], variables[SUCCESS_CONTRAST])
         ? tinycolor.mostReadable(variables[SUCCESS_CONTRAST], [variables[SUCCESS], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
+        : null;
+
+    const mostReadableSuccessPrimaryColor = variables[SUCCESS] && variables[PRIMARY]
+    && !tinycolor.isReadable(variables[SUCCESS], variables[PRIMARY])
+        ? tinycolor.mostReadable(variables[PRIMARY], [variables[SUCCESS], '#ffffff', '#000000'], { includeFallbackColors: true }).toHexString()
         : null;
 
     const hasMainColorChanged = hasColorChanged(variables, defaultVariables, basicVariables, MAIN_COLOR);
@@ -109,7 +114,24 @@ function ConfigureThemes({
                 <ControlLabel className="label-theme"><Message msgId="contextCreator.configureThemes.themes"/></ControlLabel>
                 <Select
                     clearable
-                    onChange={(option)  => setSelectedTheme(option?.theme)}
+                    onChange={(option)  => {
+                        const themeSelected = option?.theme;
+                        if (customVariablesEnabled) {
+                            if (!themeSelected) {
+                                // clicking on X to clear selection, restore basic variables
+                                setSelectedTheme({
+                                    variables: basicVariables
+                                });
+                            } else {
+                                setSelectedTheme({
+                                    ...themeSelected,
+                                    variables: {...basicVariables, ...themeSelected.defaultVariables}
+                                });
+                            }
+                        } else {
+                            setSelectedTheme(themeSelected);
+                        }
+                    }}
                     value={selectedTheme?.id}
                     options={themes.map(theme => ({ value: theme.id, label: theme?.label && getMessageById(context, theme?.label) || theme?.id, theme }))}
                     noResultsText="contextCreator.configureThemes.noThemes"
@@ -122,13 +144,21 @@ function ConfigureThemes({
                         onClick={() => {
                             setSelectedTheme({
                                 ...selectedTheme,
-                                variables: {...basicVariables, ...(defaultVariables) }
+                                variables: {...basicVariables, ...defaultVariables}
                             });
                         }}
                         className="clear-all no-border"
                     >clear all</Button>
                     <SwitchButton
-                        onChange={() => onToggleCustomVariables()}
+                        onChange={(value) => {
+                            onToggleCustomVariables();
+                            if (value) {
+                                setSelectedTheme({
+                                    ...selectedTheme,
+                                    variables
+                                });
+                            }
+                        }}
                         className="ms-geostory-settings-switch"
                         checked={customVariablesEnabled}/>
                 </div>
@@ -253,6 +283,49 @@ function ConfigureThemes({
                     <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.primaryContrast"/>
                         <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.primaryContrast" />}/>
+                        {mostReadablePrimaryContrastColor ? (<ToolbarPopover
+                            useBody
+                            className="ms-custom-theme-picker-popover"
+                            ref={(popoverPrimary) => {
+                                if (popoverPrimary) {
+                                    triggerPrimary.current = popoverPrimary.trigger;
+                                }
+                            }}
+                            placement="top"
+                            content={
+                                <div>
+                                    <HTML
+                                        msgId="geostory.customizeTheme.alternativeTextColorPopover"
+                                        msgParams={{
+                                            color: mostReadablePrimaryContrastColor
+                                        }}/>
+                                    <Button
+                                        bsSize="xs"
+                                        bsStyle="primary"
+                                        style={{
+                                            margin: 'auto',
+                                            display: 'block'
+                                        }}
+                                        onClick={() =>  {
+                                            setSelectedTheme({
+                                                ...selectedTheme,
+                                                variables: {
+                                                    ...variables,
+                                                    [PRIMARY_CONTRAST]: mostReadablePrimaryContrastColor
+                                                }
+                                            });
+                                            triggerPrimary.current?.hide?.();
+                                        }}>
+                                        <Message msgId="geostory.customizeTheme.useAlternativeTextColor"/>
+                                    </Button>
+                                </div>
+                            }><Button
+                                disabled={!customVariablesEnabled}
+                                className="square-button-md no-border"
+                                style={{ display: mostReadablePrimaryContrastColor ? 'block' : 'none' }}>
+                                <Glyphicon glyph="exclamation-mark"/>
+                            </Button>
+                        </ToolbarPopover>) : null }
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
@@ -290,49 +363,6 @@ function ConfigureThemes({
                     <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.primary"/>
                         <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.primary" />}/>
-                        {mostReadablePrimaryColor ? (<ToolbarPopover
-                            useBody
-                            className="ms-custom-theme-picker-popover"
-                            ref={(popoverPrimary) => {
-                                if (popoverPrimary) {
-                                    triggerPrimary.current = popoverPrimary.trigger;
-                                }
-                            }}
-                            placement="top"
-                            content={
-                                <div>
-                                    <HTML
-                                        msgId="geostory.customizeTheme.alternativeTextColorPopover"
-                                        msgParams={{
-                                            color: mostReadablePrimaryColor
-                                        }}/>
-                                    <Button
-                                        bsSize="xs"
-                                        bsStyle="primary"
-                                        style={{
-                                            margin: 'auto',
-                                            display: 'block'
-                                        }}
-                                        onClick={() =>  {
-                                            setSelectedTheme({
-                                                ...selectedTheme,
-                                                variables: {
-                                                    ...variables,
-                                                    [PRIMARY]: mostReadablePrimaryColor
-                                                }
-                                            });
-                                            triggerPrimary.current?.hide?.();
-                                        }}>
-                                        <Message msgId="geostory.customizeTheme.useAlternativeTextColor"/>
-                                    </Button>
-                                </div>
-                            }><Button
-                                disabled={!customVariablesEnabled}
-                                className="square-button-md no-border"
-                                style={{ display: mostReadablePrimaryColor ? 'block' : 'none' }}>
-                                <Glyphicon glyph="exclamation-mark"/>
-                            </Button>
-                        </ToolbarPopover>) : null }
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
@@ -370,6 +400,49 @@ function ConfigureThemes({
                     <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.successContrast"/>
                         <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.successContrast" />}/>
+                        {mostReadableSuccessContrastColor ? (<ToolbarPopover
+                            useBody
+                            className="ms-custom-theme-picker-popover"
+                            ref={(popoverSuccess) => {
+                                if (popoverSuccess) {
+                                    triggerSuccess.current = popoverSuccess.trigger;
+                                }
+                            }}
+                            placement="top"
+                            content={
+                                <div>
+                                    <HTML
+                                        msgId="geostory.customizeTheme.alternativeTextColorPopover"
+                                        msgParams={{
+                                            color: mostReadableSuccessContrastColor
+                                        }}/>
+                                    <Button
+                                        bsSize="xs"
+                                        bsStyle="primary"
+                                        style={{
+                                            margin: 'auto',
+                                            display: 'block'
+                                        }}
+                                        onClick={() =>  {
+                                            setSelectedTheme({
+                                                ...selectedTheme,
+                                                variables: {
+                                                    ...variables,
+                                                    [SUCCESS_CONTRAST]: mostReadableSuccessContrastColor
+                                                }
+                                            });
+                                            triggerSuccess.current?.hide?.();
+                                        }}>
+                                        <Message msgId="geostory.customizeTheme.useAlternativeTextColor"/>
+                                    </Button>
+                                </div>
+                            }><Button
+                                disabled={!customVariablesEnabled}
+                                className="square-button-md no-border"
+                                style={{ display: mostReadableSuccessContrastColor ? 'block' : 'none' }}>
+                                <Glyphicon glyph="exclamation-mark"/>
+                            </Button>
+                        </ToolbarPopover>) : null }
                     </ControlLabel>
                     <div className="color-choice">
                         <ColorSelector
@@ -407,7 +480,7 @@ function ConfigureThemes({
                     <ControlLabel className="label-theme">
                         <Message msgId="contextCreator.configureThemes.success"/>
                         <InfoPopover bsStyle="link" text={<Message msgId="contextCreator.configureThemes.tooltips.success" />}/>
-                        {mostReadableSuccessColor ? (<ToolbarPopover
+                        {mostReadableSuccessPrimaryColor ? (<ToolbarPopover
                             useBody
                             className="ms-custom-theme-picker-popover"
                             ref={(popoverSuccess) => {
@@ -419,9 +492,9 @@ function ConfigureThemes({
                             content={
                                 <div>
                                     <HTML
-                                        msgId="geostory.customizeTheme.alternativeTextColorPopover"
+                                        msgId="contextCreator.configureThemes.alternativeTextPrimarySecondary"
                                         msgParams={{
-                                            color: mostReadableSuccessColor
+                                            color: mostReadableSuccessPrimaryColor
                                         }}/>
                                     <Button
                                         bsSize="xs"
@@ -435,7 +508,7 @@ function ConfigureThemes({
                                                 ...selectedTheme,
                                                 variables: {
                                                     ...variables,
-                                                    [SUCCESS]: mostReadableSuccessColor
+                                                    [SUCCESS]: mostReadableSuccessPrimaryColor
                                                 }
                                             });
                                             triggerSuccess.current?.hide?.();
@@ -446,7 +519,7 @@ function ConfigureThemes({
                             }><Button
                                 disabled={!customVariablesEnabled}
                                 className="square-button-md no-border"
-                                style={{ display: mostReadableSuccessColor ? 'block' : 'none' }}>
+                                style={{ display: mostReadableSuccessPrimaryColor ? 'block' : 'none' }}>
                                 <Glyphicon glyph="exclamation-mark"/>
                             </Button>
                         </ToolbarPopover>) : null }
@@ -483,6 +556,9 @@ function ConfigureThemes({
                         ><Glyphicon glyph="repeat" /></Button>
                     </div>
                 </div>
+                <p>
+                    <Message msgId="contextCreator.configureThemes.guidelines" />
+                </p>
             </div>
         </div>);
 }

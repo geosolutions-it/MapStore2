@@ -64,7 +64,7 @@ function ContextTheme({
                 }
             }
         });
-    }, [theme.id, JSON.stringify(theme.variables)]); // id cannot be defined if a theme preset is not chosen
+    }, [theme.id, JSON.stringify(theme.variables), customVariablesEnabled]); // id cannot be defined if a theme preset is not chosen
     return <>
         {[createPortal(
             <>

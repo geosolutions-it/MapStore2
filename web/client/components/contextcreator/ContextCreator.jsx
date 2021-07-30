@@ -183,7 +183,8 @@ export default class ContextCreator extends React.Component {
                 "ms-success-contrast": "#111111",
                 "ms-success": "#398439"
             }
-        }],
+        }
+        ],
         viewerPlugins: [
             "Map",
             "BackgroundSelector",

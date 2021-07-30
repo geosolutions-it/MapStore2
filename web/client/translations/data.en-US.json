@@ -2883,12 +2883,14 @@
               "primary": "Primary Color",
               "successContrast": "Secondary Text Color",
               "success": "Secondary Color",
+              "guidelines": "Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary)",
+              "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Text color used in panels or dialogs",
                 "background": "Background color used in panels or dialogs",
-                "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers",
-                "primary": "Background primary color: toolbars, headers",
-                "successContrast": "Text color used in opposition to the secondary background color",
+                "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers, buttons",
+                "primary": "Background primary color: toolbars, headers, buttons",
+                "successContrast": "Text color applied when the secondary color is used as background",
                 "success": "Background color used to show when a button is 'active' or 'selected'",
                 "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
               }

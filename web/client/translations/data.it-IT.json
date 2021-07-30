@@ -2871,12 +2871,14 @@
               "primary": "Colore Primario",
               "success": "Colore Secondario",
               "successContrast": "Colore Testo Secondario",
+              "guidelines": "Assicurati di non utilizzare un colore secondario troppo simile a quello primario e ovviamente il colore primario del testo con la sua controparte (lo stesso vale per le altre coppie di colori: principale, secondario)",
+              "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Colore del testo usato nei pannelli, nella toc",
                 "background": "Colore dello sfondo usato nei pannelli, nella toc",
-                "primaryContrast": "Colore del testo dove lo sfondo è il primario ad esempio: icone nelle barre dei pulsanti, intestazioni",
-                "primary": "Colore dello sfondo: barra dei pulsanti, intestazioni",
-                "successContrast": "Colore del testo usato dove lo sfondo è il secondario",
+                "primaryContrast": "Colore del testo dove lo sfondo è il primario ad esempio: icone nelle barre dei pulsanti, intestazioni, pulsanti",
+                "primary": "Colore dello sfondo: barra dei pulsanti, intestazioni, pulsanti",
+                "successContrast": "Colore del testo usato dove lo sfondo è il colore secondario",
                 "success": "Colore dello sfondo usato per segnalare lo stato 'attivo' o 'selezionato' dei pulsanti",
                 "customColorsDescription": "Puoi cambiare uno di questi colori a partire da uno dei temi scelti in precedenza, oppure no"
               }
