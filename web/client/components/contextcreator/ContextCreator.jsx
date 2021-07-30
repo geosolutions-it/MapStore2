@@ -183,7 +183,22 @@ export default class ContextCreator extends React.Component {
                 "ms-success-contrast": "#111111",
                 "ms-success": "#398439"
             }
-        }],
+        },
+        {
+            id: 'dark2',
+            label: 'Dark2',
+            type: 'link',
+            href: (__MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes') + '/dark.css',
+            defaultVariables: {
+                "ms-main-color": "#111111",
+                "ms-main-bg": "#111111",
+                "ms-primary-contrast": "#111111",
+                "ms-primary": "#111111",
+                "ms-success-contrast": "#111111",
+                "ms-success": "#111111"
+            }
+        }
+        ],
         viewerPlugins: [
             "Map",
             "BackgroundSelector",

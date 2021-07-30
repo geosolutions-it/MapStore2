@@ -2870,12 +2870,14 @@
               "primary": "Color primario",
               "success": "Color secundario",
               "successContrast": "Color de texto secundario",
+              "guidelines": "Asegúrese de no usar un color secundario demasiado similar al primario y, obviamente, el color del texto primario con su contraparte (lo mismo se aplica a las otras parejas de colores: principal, secundario)",
+              "alternativeTextPrimarySecondary": "<p>Advertencia: el color secundario podría no ser legible en comparación con el principal</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Color de texto utilizado en paneles o cuadros de diálogo",
                 "background": "Color de fondo utilizado en paneles o cuadros de diálogo",
-                "primaryContrast": "Color del texto opuesto al color de fondo principal y de éxito: iconos dentro de las barras de herramientas, encabezados",
-                "primary": "Color primario de fondo: barras de herramientas, encabezados",
-                "successContrast": "Color de texto utilizado en oposición al color de fondo secundario",
+                "primaryContrast": "Color del texto opuesto al color de fondo principal y de éxito: iconos dentro de las barras de herramientas, encabezados, botones",
+                "primary": "Color primario de fondo: barras de herramientas, encabezados, botones",
+                "successContrast": "El color del texto se aplica cuando el color secundario se utiliza como fondo.",
                 "success": "Color de fondo utilizado para mostrar cuando un botón está 'activo' o 'seleccionado'",
                 "customColorsDescription": "Puede cambiar uno de estos colores además (o no) a un tema preconfigurado elegido anteriormente"
               }

@@ -2872,13 +2872,15 @@
               "primary": "Couleur primaire",
               "success": "Couleur secondaire",
               "successContrast": "Couleur du texte secondaire",
+              "guidelines": "Attention à ne pas utiliser une couleur secondaire trop proche de la primaire et bien évidemment la couleur primaire du texte avec sa contrepartie (il en est de même pour les autres couples de couleurs : principale, secondaire)",
+              "alternativeTextPrimarySecondary": "<p>Attention : la couleur secondaire pourrait être illisible par rapport à la couleur primaire</p><p>Une couleur de texte alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Couleur du texte utilisée dans les panneaux ou les boîtes de dialogue",
                 "background": "Couleur d'arrière-plan utilisée dans les panneaux ou les boîtes de dialogue",
-                "primaryContrast": "Couleur du texte opposée à la couleur de fond principale et de réussite : icônes à l'intérieur des barres d'outils, en-têtes",
-                "primary": "Couleur primaire d'arrière-plan : barres d'outils, en-têtes",
+                "primaryContrast": "Couleur du texte opposée à la couleur de fond principale et de réussite : icônes à l'intérieur des barres d'outils, en-têtes, boutons",
+                "primary": "Couleur primaire d'arrière-plan : barres d'outils, en-têtes, boutons",
                 "success": "Couleur d'arrière-plan utilisée pour montrer quand un bouton est 'actif' ou 'sélectionné'",
-                "successContrast": "Couleur du texte utilisée en opposition à la couleur de fond secondaire",
+                "successContrast": "Couleur du texte appliquée lorsque la couleur secondaire est utilisée comme arrière-plan",
                 "customColorsDescription": "Vous pouvez changer l'une de ces couleurs en plus (ou non) d'un thème préconfiguré choisi ci-dessus"
               }
             },
