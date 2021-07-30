@@ -82,7 +82,7 @@ class CesiumMap extends React.Component {
     }
 
     componentDidMount() {
-        const creditContainer = document.querySelector(this.props.mapOptions?.attribution?.container || '.footer-attribution-container');
+        const creditContainer = document.querySelector(this.props.mapOptions?.attribution?.container || '#footer-attribution-container');
         let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
             baseLayerPicker: false,
             animation: false,
