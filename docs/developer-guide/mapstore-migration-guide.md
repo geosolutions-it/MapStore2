@@ -21,6 +21,47 @@ This is a list of things to check if you want to update from a previous version 
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
 
+## Migration from 2021.02.00 to 2021.03.00
+
+This release includes several libraries upgrade on the backend side,
+in particular the following have been migrated to the latest available versions:
+
+| Library      | Old |New|
+| ----------- | ----------- |--|
+| Spring| 3.0.5|5.3.9|
+| Spring-security| 3.0.5        |5.3.10|
+| CXF| 2.3.2        |3.4.4|
+| Hibernate|      3.3.2   |5.5.0|
+| JPA| 1.0        |2.1|
+| hibernate-generic-dao| 0.5.1        |1.3.0-SNAPSHOT|
+| h2| 1.3.168        |1.3.175|
+| servlet-api| 2.5        |3.1|
+
+This requires also an upgrade of Tomcat to at least version 8.5.x
+
+### Updating projects configuration
+
+Projects need the following to update to this MapStore release:
+
+ - upgrade Tomcat to 8.5 or greater
+ - update your geostore-spring-security.xml file to add the following setting, needed to disable CSRF validation, that MapStore services do not implement yet:
+
+```xml
+<security:http ... >
+    ...
+    <security:csrf disabled="true"/>
+    ...
+</security:http>
+```
+
+ - remove the spring log4j listener from web.xml
+
+```xml
+ <!-- spring context loader
+    <listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>-->
+```
 ## Migration from 2021.01.02 to 2021.02.00
 
 ### Theme updates and CSS variables

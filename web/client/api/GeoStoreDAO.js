@@ -158,10 +158,10 @@ const Api = {
                 password: password
             }
         } : {}, options))).then((response) => {
-            authData = response.data;
+            authData = response.data?.sessionToken;
             return axios.get("users/user/details", this.addBaseUrl(merge({
                 headers: {
-                    'Authorization': 'Bearer ' + response.data.access_token
+                    'Authorization': 'Bearer ' + authData?.access_token
                 },
                 params: {
                     includeattributes: true

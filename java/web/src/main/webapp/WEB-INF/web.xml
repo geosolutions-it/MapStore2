@@ -25,10 +25,10 @@
 	<!-- <context-param> <param-name>log4jConfigLocation</param-name> <param-value>file:${config.dir}/log4j.xml</param-value>
 		</context-param> -->
 
-	<!-- spring context loader -->
+	<!-- spring context loader
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-	</listener>
+	</listener>-->
 
 	<!--
       - Loads the root application context of this web app at startup.
