@@ -3,7 +3,7 @@ In this section you can have a glance of the minimum and recommended versions of
 
 ## War Installation
 
-You can download a java web container like Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it.
+You can download a java web container like Apache Tomcat (>= 8.5) from [here](hhttps://tomcat.apache.org/download-80.cgi) and install it.
 
 You will also need a Java [JRE](https://www.java.com/it/download/)(minimum version: 8)
 
