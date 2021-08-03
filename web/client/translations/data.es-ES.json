@@ -2871,7 +2871,7 @@
               "success": "Color secundario",
               "successContrast": "Color de texto secundario",
               "guidelines": "Asegúrese de no usar un color secundario demasiado similar al primario y, obviamente, el color del texto primario con su contraparte (lo mismo se aplica a las otras parejas de colores: principal, secundario)",
-              "alternativeTextPrimarySecondary": "<p>Advertencia: el color secundario podría no ser legible en comparación con el principal</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "alternativeTextPrimarySecondary": "<p>Advertencia: el color secundario podría no ser legible en comparación con el principal</p><p>Una alternativa es el color {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Color de texto utilizado en paneles o cuadros de diálogo",
                 "background": "Color de fondo utilizado en paneles o cuadros de diálogo",

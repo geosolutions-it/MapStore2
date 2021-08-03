@@ -2909,7 +2909,7 @@
               "success": "Sekundäre Farbe",
               "successContrast": "Sekundäre Textfarbe",
               "guidelines": "Stellen Sie sicher, dass Sie keine Sekundärfarbe verwenden, die der Primärfarbe zu ähnlich ist und offensichtlich die Primärtextfarbe mit ihrem Gegenstück (das gleiche gilt für die anderen Farbpaare: Hauptfarbe, Sekundärfarbe)",
-              "alternativeTextPrimarySecondary": "<p>Achtung: Die Sekundärfarbe könnte im Vergleich zur Primärfarbe nicht lesbar sein</p><p>AEine alternative Textfarbe ist {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "alternativeTextPrimarySecondary": "<p>Achtung: Die Sekundärfarbe könnte im Vergleich zur Primärfarbe nicht lesbar sein</p><p>Eine alternative farbe ist {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "In Panels oder Dialogen verwendete Textfarbe",
                 "background": "Hintergrundfarbe in Panels oder Dialogen",
