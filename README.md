@@ -53,6 +53,7 @@ There are two quick ways to test out MapStore. Either using <a href="https://www
 
 - To test a different release of MapStore, you should change the `MAPSTORE_WEBAPP_SRC` build argument in the docker-compose file.
 - You should change the value of `POSTGRES_PASSWORD` for more security. 
+- Due to proxy binding on host port 80, you may need to run docker-compose as root.
 
 ---
 
@@ -179,4 +180,3 @@ We welcome contributions in any form:
 
 
 For more information check <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md" target="_blank">this</a> page.
-
