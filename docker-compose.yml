@@ -37,7 +37,7 @@ services:
     container_name: mapstore
     command: [ "wait-for-postgres", "postgres", "5432", "postgres", "postgres", "catalina.sh", "run" ]
     depends_on:
-      - db
+      - postgres
     ports:
       - 8080
     networks:
