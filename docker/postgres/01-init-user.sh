@@ -15,4 +15,4 @@ psql -v ON_ERROR_STOP=1 --username postgres --dbname geostore <<-EOSQL
 EOSQL
 
 cd /code
-psql -v ON_ERROR_STOP=1 --username postgres --dbname geostore < 002_create_schema_postgres.sql
+PGPASSWORD="geostore" PGOPTIONS="--search_path=geostore" psql -v ON_ERROR_STOP=1 --username geostore --dbname geostore < 002_create_schema_postgres.sql
