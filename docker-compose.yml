@@ -4,7 +4,7 @@ networks:
     driver: bridge
 
 services:
-  db:
+  postgres:
     build:
       context: ./docker/postgres/
     image: geosolutions-mapstore/postgis
@@ -56,4 +56,3 @@ services:
 
 volumes:
   pg_data:
-
