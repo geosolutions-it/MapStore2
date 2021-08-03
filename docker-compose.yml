@@ -18,7 +18,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_DB: geostore
     volumes:
     - pg_data:${PGDATA:-/var/lib/postgresql/data}:rw
     ports:
