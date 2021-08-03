@@ -132,7 +132,7 @@ describe('workspaceSearch', () => {
         API.workspaceSearch('/TESTURL', 1, 1, "test", "wp").then((data) => {
             expect(data).toExist();
             expect(data.records).toExist();
-            expect(data.records.length).toBe(2);
+            expect(data.records.length).toBe(4);
             done();
         });
     });
