@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-psql -v ON_ERROR_STOP=1 --username postgres --dbname postgres <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username postgres --dbname geostore <<-EOSQL
     CREATE user geostore LOGIN PASSWORD 'geostore' NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE;
     CREATE SCHEMA geostore;
     GRANT USAGE ON SCHEMA geostore TO geostore ;
@@ -29,4 +29,3 @@ EOSQL
 
 cd /code
 psql -v ON_ERROR_STOP=1 --username postgres --dbname geostore < 002_create_schema_postgres.sql
-
