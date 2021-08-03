@@ -3,7 +3,7 @@ MAINTAINER geosolutions<info@geo-solutions.it>
 
 # Tomcat specific options
 ENV CATALINA_BASE "$CATALINA_HOME"
-ENV JAVA_OPTS="${JAVA_OPTS}  -Xms512m -Xmx512m -XX:MaxPermSize=128m"
+ENV JAVA_OPTS="${JAVA_OPTS}  -Xms512m -Xmx512m"
 
 # Optionally remove Tomcat manager, docs
 ARG TOMCAT_EXTRAS=false
