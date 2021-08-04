@@ -2872,7 +2872,7 @@
               "success": "Colore Secondario",
               "successContrast": "Colore Testo Secondario",
               "guidelines": "Assicurati di non utilizzare un colore secondario troppo simile a quello primario e ovviamente il colore primario del testo con la sua controparte (lo stesso vale per le altre coppie di colori: principale, secondario)",
-              "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "alternativeTextPrimarySecondary": "<p>Attenzione: il colore secondario selezionato potrebbe non essere leggibile rispetto a quello primario</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Colore del testo usato nei pannelli, nella toc",
                 "background": "Colore dello sfondo usato nei pannelli, nella toc",
