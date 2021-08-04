@@ -200,6 +200,7 @@ i.e.
     "name": "mapnik",
     "group": "background",
     "visibility": false,
+    "params": {}, // can be used to add parameters to the request, or override the default ones
     "credits": { // optional
         "imageUrl": "somePic.png", // URL for the image to put in attribution
         "link": "http://someURL.org", // URL where attribution have to link to
