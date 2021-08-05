@@ -150,7 +150,6 @@ const Dock = connect(createSelector(
   * }
   * ```
   * As plugin container, it can render additional components coming from other plugins.
-  *
   * You can render additional buttons to the Toolbar by configuring a container with your component and `"target": 'toolbar'`.
   * The component will receive as props all the properties passed to the featuregrid Toolbar. Some of them are  :
   * - `disabled`: tells when the toolbar is completely disabled.
