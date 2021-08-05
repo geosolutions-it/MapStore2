@@ -28,7 +28,6 @@ const getSaveMessageId = ({saving, saved}) => {
  * @param {bool} disableToolbar if true it disables all the buttons in the toolbar
  * @param {bool} disableZoomAll if true it disables the ZoomAll button (defaults to false)
  * @param {bool} showAdvancedFilterButton shows / hide the advanced filter button (defaults to true)
- * @param {bool} showChartButton shows / hide the Chart (widget) button (defaults to true)
  * @param {bool} showSyncOnMapButton shows / hide the show on map button (defaults to true)
  * @param {bool} showTimeSyncButton shows / hide the timeSync button (defaults to false)
 */
@@ -53,7 +52,6 @@ export default (props = {}) => {
         saving = false,
         selectedCount,
         showAdvancedFilterButton = true,
-        showChartButton = true,
         showSyncOnMapButton = true,
         showTimeSyncButton = false,
         syncPopover = { showPopoverSync: true, dockSize: "32.2%" }, mode = "VIEW",
@@ -152,14 +150,6 @@ export default (props = {}) => {
             visible={selectedCount <= 1 && mode === "VIEW"}
             onClick={events.settings}
             glyph="features-grid-set"/>
-        <TButton
-            id="grid-map-chart"
-            keyProp="grid-map-chart"
-            tooltipId="featuregrid.toolbar.createNewChart"
-            disabled={disableToolbar}
-            visible={mode === "VIEW" && showChartButton}
-            onClick={events.chart}
-            glyph="stats"/>
         {toolbarItems.map(({Component}) => <Component {...props} disabled={disableToolbar} />)}
         <TButton
             id="grid-map-filter"

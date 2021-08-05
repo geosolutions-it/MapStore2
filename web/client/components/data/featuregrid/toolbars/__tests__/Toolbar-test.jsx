@@ -375,16 +375,4 @@ describe('Featuregrid toolbar component', () => {
             expect(spy.calls[1].arguments[0]).toBe(true);
         });
     });
-    it('check chart button', () => {
-        const events = {
-            chart: () => {}
-        };
-        spyOn(events, "chart");
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" showChartButton />, document.getElementById("container"));
-        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
-        let chart = document.getElementById("fg-grid-map-chart");
-        expect(isVisibleButton(chart)).toBe(true);
-
-    });
 });

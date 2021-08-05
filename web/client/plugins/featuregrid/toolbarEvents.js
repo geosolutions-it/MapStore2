@@ -15,7 +15,6 @@ import {
     zoomAll
 } from '../../actions/featuregrid';
 
-import { createChart } from '../../actions/widgets';
 import { toggleSyncWms } from '../../actions/wfsquery';
 
 export default {
@@ -35,6 +34,5 @@ export default {
     sync: () => toggleSyncWms(),
     setTimeSync,
     hideSyncPopover: () => hideSyncPopover(),
-    toggleShowAgain: () => toggleShowAgain(),
-    chart: () => createChart()
+    toggleShowAgain: () => toggleShowAgain()
 };

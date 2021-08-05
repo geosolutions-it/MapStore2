@@ -26,9 +26,7 @@ import { getFilterRenderer } from '../../../components/data/featuregrid/filterRe
 import FooterComp from '../../../components/data/featuregrid/Footer';
 import HeaderComp from '../../../components/data/featuregrid/Header';
 import ToolbarComp from '../../../components/data/featuregrid/toolbars/Toolbar';
-import { widgetBuilderAvailable } from '../../../selectors/controls';
 import {
-    chartDisabledSelector,
     getAttributeFilter,
     getTitleSelector,
     hasChangesSelector,
@@ -80,7 +78,6 @@ const Toolbar = connect(
             dockSize: mapLayoutValuesSelector(state, {dockSize: true}).dockSize + 3.2 + "%"
         }),
         isDrawing: isDrawingSelector,
-        showChartButton: state => !chartDisabledSelector(state) && widgetBuilderAvailable(state),
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
         disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar || !isDescribeLoaded(state, selectedLayerNameSelector(state)),
