@@ -26,42 +26,39 @@ const getSaveMessageId = ({saving, saved}) => {
  * Standard Toolbar for the FeatureGrid plugin.
  *
  * @param {bool} disableToolbar if true it disables all the buttons in the toolbar
- * @param {bool} disableDownload if true it disables the Download button
  * @param {bool} disableZoomAll if true it disables the ZoomAll button (defaults to false)
- * @param {bool} displayDownload used to set visibility of download button
  * @param {bool} showAdvancedFilterButton shows / hide the advanced filter button (defaults to true)
  * @param {bool} showChartButton shows / hide the Chart (widget) button (defaults to true)
  * @param {bool} showSyncOnMapButton shows / hide the show on map button (defaults to true)
  * @param {bool} showTimeSyncButton shows / hide the timeSync button (defaults to false)
 */
-export default ({
-    disableToolbar,
-    disableDownload,
-    disableZoomAll = false,
-    displayDownload,
-    events = {},
-    hasChanges,
-    hasGeometry,
-    hasNewFeatures,
-    hasSupportedGeometry = true,
-    isColumnsOpen,
-    isDrawing = false,
-    isEditingAllowed,
-    isFilterActive = false,
-    isDownloadOpen,
-    isSearchAllowed,
-    isSimpleGeom,
-    isSyncActive = false,
-    saved = false,
-    saving = false,
-    selectedCount,
-    showAdvancedFilterButton = true,
-    showChartButton = true,
-    showSyncOnMapButton = true,
-    showTimeSyncButton = false,
-    syncPopover = { showPopoverSync: true, dockSize: "32.2%" }, mode = "VIEW",
-    timeSync = false
-} = {}) => {
+export default (props = {}) => {
+    const {
+        toolbarItems = [],
+        disableToolbar,
+        disableZoomAll = false,
+        events = {},
+        hasChanges,
+        hasGeometry,
+        hasNewFeatures,
+        hasSupportedGeometry = true,
+        isColumnsOpen,
+        isDrawing = false,
+        isEditingAllowed,
+        isFilterActive = false,
+        isSearchAllowed,
+        isSimpleGeom,
+        isSyncActive = false,
+        saved = false,
+        saving = false,
+        selectedCount,
+        showAdvancedFilterButton = true,
+        showChartButton = true,
+        showSyncOnMapButton = true,
+        showTimeSyncButton = false,
+        syncPopover = { showPopoverSync: true, dockSize: "32.2%" }, mode = "VIEW",
+        timeSync = false
+    } = props;
     return (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <TButton
             id="edit-mode"
@@ -147,15 +144,6 @@ export default ({
             onClick={events.deleteGeometry}
             glyph="polygon-trash"/>
         <TButton
-            id="download-grid"
-            keyProp="download-grid"
-            tooltipId="featuregrid.toolbar.downloadGridData"
-            disabled={disableToolbar || disableDownload}
-            active={isDownloadOpen}
-            visible={displayDownload && mode === "VIEW"}
-            onClick={events.download}
-            glyph="download"/>
-        <TButton
             id="grid-settings"
             keyProp="grid-settings"
             tooltipId="featuregrid.toolbar.hideShowColumns"
@@ -172,6 +160,7 @@ export default ({
             visible={mode === "VIEW" && showChartButton}
             onClick={events.chart}
             glyph="stats"/>
+        {toolbarItems.map(({Component}) => <Component {...props} disabled={disableToolbar} />)}
         <TButton
             id="grid-map-filter"
             keyProp="grid-map-filter"
@@ -222,6 +211,5 @@ export default ({
             active={timeSync}
             onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
             glyph="time" />
-
     </ButtonGroup>);
 };

@@ -1,5 +1,3 @@
-import { toggleControl } from '../../actions/controls';
-
 import {
     toggleTool,
     toggleEditMode,
@@ -26,7 +24,6 @@ export default {
     clearFeatureEditing: () => toggleTool("clearConfirm", true),
     deleteGeometry: () => deleteGeometry(),
     deleteFeatures: () => toggleTool("deleteConfirm", true),
-    download: () => toggleControl("layerdownload"),
     settings: () => toggleTool("settings"),
     switchEditMode: () => toggleEditMode(),
     startEditingFeature: () => startEditingFeature(),

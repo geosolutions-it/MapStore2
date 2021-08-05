@@ -18,7 +18,7 @@ import {
     removeExportDataResult,
     checkExportDataEntries
 } from '../actions/layerdownload';
-import { toggleControl, setControlProperty } from '../actions/controls';
+import { toggleControl } from '../actions/controls';
 
 import {
     layerDonwloadControlEnabledSelector,
@@ -41,6 +41,7 @@ import { currentLocaleSelector } from '../selectors/locale';
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
 import ExportDataResultsComponent from '../components/data/download/ExportDataResultsComponent';
+import FeatureEditorButton from '../components/data/download/FeatureEditorButton';
 
 import * as epics from '../epics/layerdownload';
 import layerdownload from '../reducers/layerdownload';
@@ -94,8 +95,6 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         onClearDownloadOptions: clearDownloadOptions,
         onFormatOptionsFetch,
         onCheckWPSAvailability: checkWPSAvailability,
-        onMount: () => setControlProperty("layerdownload", "available", true),
-        onUnmount: () => setControlProperty("layerdownload", "available", false),
         onClose: () => toggleControl("layerdownload")
     })(DownloadDialog),
     containers: {
@@ -103,7 +102,18 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
             doNotHide: true,
             name: "LayerDownload"
         },
+        FeatureEditor: {
+            doNotHide: true,
+            name: "LayerDownload",
+            target: "toolbar",
+            Component: connect(createStructuredSelector({
+                isDownloadOpen: state =>  state?.controls?.layerdownload?.enabled
+            }), {
+                onClick: () => toggleControl("layerdownload")
+            })(FeatureEditorButton)
+        },
         MapFooter: {
+            doNotHide: true,
             name: "LayerDownload",
             position: 1,
             tool: connect(createStructuredSelector({

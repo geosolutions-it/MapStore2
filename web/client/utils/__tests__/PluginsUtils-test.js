@@ -141,6 +141,53 @@ describe('PluginsUtils', () => {
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
         expect(items2.length).toBe(1);
     });
+    describe('getPluginItems - containers as array', () => {
+        it('getPluginItems supports arrays', () => {
+            const plugins = {
+                Test1Plugin: {
+                    Container1: [{
+                        id: 1
+                    }, {
+                        id: 2
+                    }]
+                },
+                Container1: {}
+            };
+
+            const pluginsConfig = [{
+                name: "Test1"
+            }, "Container1", "Container2"];
+            const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+            expect(items.length).toBe(2);
+            expect(items.map(({id}) => id).includes(1, 2));
+        });
+        it('getPluginItems priority with arrays', () => {
+            const plugins = {
+                Test1Plugin: {
+                    Container1: [{
+                        id: 1,
+                        priority: 3
+                    }, {
+                        id: 2,
+                        priority: 3
+                    }],
+                    Container2: {
+                        id: 3,
+                        priority: 1
+                    }
+                },
+                Container1Plugin: {},
+                Container2Plugin: {}
+            };
+
+            const pluginsConfig = [{
+                name: "Test1"
+            }, "Container1", "Container2"];
+            const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+            expect(items.length).toBe(2);
+            expect(items.map(({id}) => id).includes(1, 2));
+        });
+    });
 
     it('getPluginItems with showIn', () => {
         const plugins = {

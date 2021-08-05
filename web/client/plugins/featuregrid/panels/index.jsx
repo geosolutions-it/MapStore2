@@ -26,7 +26,7 @@ import { getFilterRenderer } from '../../../components/data/featuregrid/filterRe
 import FooterComp from '../../../components/data/featuregrid/Footer';
 import HeaderComp from '../../../components/data/featuregrid/Header';
 import ToolbarComp from '../../../components/data/featuregrid/toolbars/Toolbar';
-import { wfsDownloadAvailable, widgetBuilderAvailable } from '../../../selectors/controls';
+import { widgetBuilderAvailable } from '../../../selectors/controls';
 import {
     chartDisabledSelector,
     getAttributeFilter,
@@ -84,9 +84,7 @@ const Toolbar = connect(
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
         disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar || !isDescribeLoaded(state, selectedLayerNameSelector(state)),
-        displayDownload: wfsDownloadAvailable,
-        disableDownload: state => (resultsSelector(state) || []).length === 0,
-        isDownloadOpen: state => state && state.controls && state.controls.layerdownload && state.controls.layerdownload.enabled,
+        results: resultsSelector,
         isSyncActive: isSyncWmsActive,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         disableZoomAll: (state) => state && state.featuregrid.virtualScroll || featureCollectionResultSelector(state).features.length === 0,
@@ -163,8 +161,8 @@ export const getPanels = (tools = {}) =>
             const Panel = panels[t];
             return <Panel key={t} {...(panelDefaultProperties[t] || {})} />;
         });
-export const getHeader = () => {
-    return <Header ><Toolbar /></Header>;
+export const getHeader = (toolbarItems) => {
+    return <Header ><Toolbar toolbarItems={toolbarItems}/></Header>;
 };
 export const getFooter = (props) => {
     return ( props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;
