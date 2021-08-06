@@ -254,7 +254,6 @@ const RulesEditor = forwardRef(({
                         hideScaleDenominator,
                         classificationType
                     } = ruleBlock[ruleKind] || {};
-
                     // ensure that attributes is an array
                     // before to look if the current selected attribute is of type number
                     // the attribute select of the classification rule changes the disabled attribute based on type
