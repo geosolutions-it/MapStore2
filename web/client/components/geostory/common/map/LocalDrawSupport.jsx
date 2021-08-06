@@ -28,7 +28,8 @@ function LocalDrawSupport({
     mapType,
     features,
     options,
-    onChange
+    onChange,
+    ...props
 }) {
 
     const [status, setStatus] = useState([]);
@@ -42,6 +43,7 @@ function LocalDrawSupport({
 
     return (
         <DrawSupport
+            { ...props }
             map={map}
             drawOwner={mapId}
             drawStatus={status}
