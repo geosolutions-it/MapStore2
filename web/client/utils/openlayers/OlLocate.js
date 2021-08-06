@@ -22,6 +22,9 @@ import GeometryCollection from 'ol/geom/GeometryCollection';
 import {Style, Fill, Stroke} from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import throttle from 'lodash/throttle';
+import isNil from 'lodash/isNil';
+import {getMarkerStyleLegacy} from "../../components/map/openlayers/VectorStyle";
+import {createSvgUrl} from "../VectorStyleUtils";
 
 
 const popUp = olPopUp();
@@ -30,6 +33,7 @@ const popUp = olPopUp();
 const OlLocate = function(map, optOptions) {
     BaseObject.call(this, {state: "DISABLED"});
     this.map = map;
+    const { heading, circleAccuracy, locate } = this._getDefaultStyles() || {};
     let defOptions = {
         drawCircle: true, // draw accuracy circle
         follow: true, // follow with zoom and pan the user's location
@@ -37,7 +41,11 @@ const OlLocate = function(map, optOptions) {
         // if true locate control remains active on click even if the user's location is in view.
         // clicking control will just pan to location not implemented
         remainActive: true,
-        locateStyle: this._getDefaultStyles(),
+        style: {
+            locate,
+            heading,
+            circleAccuracy
+        },
         metric: true,
         onLocationError: this.onLocationError,
         // keep the current map zoom level when displaying the user's location. (if 'false', use maxZoom)
@@ -81,7 +89,7 @@ const OlLocate = function(map, optOptions) {
         geometry: this.geolocate.getAccuracyGeometry(),
         name: 'position',
         id: '_locate-pos'});
-    this.posFt.setStyle(this.options.locateStyle);
+    this.posFt.setStyle(this.options.style.locate);
     this.layer.getSource().addFeature(this.posFt);
 
     this.clickHandler = this.mapClick.bind(this);
@@ -149,6 +157,7 @@ OlLocate.prototype._updatePosFt = function() {
         this.set("state", nState);
     }
     let p = this.geolocate.getPosition();
+    const heading = this.geolocate.getHeading();
     this.p = p;
     let point = new Point([parseFloat(p[0]), parseFloat(p[1])]);
     if (this.options.drawCircle) {
@@ -166,6 +175,24 @@ OlLocate.prototype._updatePosFt = function() {
     // Update only once
     if (!this.options.remainActive) {
         this.geolocate.setTracking(false);
+    }
+
+    const {
+        locate,
+        heading: hStyle,
+        circleAccuracy
+    } = this.options.style || {};
+    if (!isNil(heading)) {
+        // Add heading style (navigation arrow with circle accuracy)
+        createSvgUrl(hStyle, hStyle.symbolUrl)
+            .then(symbolUrlCustomized => {
+                return getMarkerStyleLegacy({
+                    style: { ...hStyle, symbolUrlCustomized, rotation: heading }
+                }).concat(new Style({ ...circleAccuracy }));
+            })
+            .then(style => this.posFt.setStyle(style));
+    } else {
+        this.posFt.setStyle(locate); // Reset style when stationary
     }
 };
 
@@ -210,15 +237,37 @@ OlLocate.prototype.mapClick = function(evt) {
 };
 
 OlLocate.prototype._getDefaultStyles = function() {
-    return new Style({
-        image: new CircleStyle({
-            radius: 6,
-            fill: new Fill({color: 'rgba(42,147,238,0.7)'}),
-            stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
-        }),
+    const color = '#2A93EE';
+    const shape = 'navigation_arrow';
+    const circleAccuracyStyle = {
         fill: new Fill({color: 'rgba(19,106,236,0.15)'}),
         stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
-    });
+    };
+
+    return {
+        locate: new Style({
+            image: new CircleStyle({
+                radius: 6,
+                fill: new Fill({color}),
+                stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
+            }),
+            ...circleAccuracyStyle
+        }),
+        circleAccuracy: circleAccuracyStyle,
+        heading: {
+            iconLibrary: 'standard',
+            iconAnchor: [0.5, 0.5],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            color,
+            fillColor: color,
+            opacity: 1,
+            size: 41,
+            fillOpacity: 1,
+            shape,
+            symbolUrl: `product/assets/symbols/${shape}.svg`
+        }
+    };
 };
 
 OlLocate.prototype.setStrings = function(newStrings) {
