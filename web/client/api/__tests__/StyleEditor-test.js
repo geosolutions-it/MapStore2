@@ -113,7 +113,7 @@ describe('StyleEditor API', () => {
                 done();
             });
         });
-        it('should send a classification request with style service url when service is static', (done) => {
+        it('should send a classification vector request with style service url when service is static', (done) => {
 
             mockAxios.onGet(/static/).reply(200, CLASSIFY_VECTOR_RESPONSE.SAMPLE1);
 
@@ -764,7 +764,7 @@ describe('StyleEditor API', () => {
                 done();
             });
         });
-        it('should send a classification request with style service url when service is static', (done) => {
+        it('should send a classification raster request with style service url when service is static', (done) => {
             mockAxios.onGet(/static/).reply(200, CLASSIFY_RASTER_RESPONSE);
             const values = {
                 ramp: 'spectral'
@@ -775,7 +775,8 @@ describe('StyleEditor API', () => {
                 method: 'equalInterval',
                 reverse: false,
                 continuous: true,
-                type: 'classificationRaster'
+                type: 'classificationRaster',
+                ...DEFAULT_CONFIG
             };
             const rules = [
                 {
@@ -800,31 +801,31 @@ describe('StyleEditor API', () => {
                     expect(newRules[0].classification).toEqual(
                         [
                             {
-                                color: '#9E0142',
+                                color: '#9e0142',
                                 opacity: 1,
                                 label: '0',
                                 quantity: 0
                             },
                             {
-                                color: '#F98E52',
+                                color: '#f98e52',
                                 opacity: 1,
                                 label: '1789.75',
                                 quantity: 1789.75
                             },
                             {
-                                color: '#FFFFBF',
+                                color: '#ffffbf',
                                 opacity: 1,
                                 label: '3579.5',
                                 quantity: 3579.5
                             },
                             {
-                                color: '#89D0A5',
+                                color: '#89d0a5',
                                 opacity: 1,
                                 label: '5369.25',
                                 quantity: 5369.25
                             },
                             {
-                                color: '#5E4FA2',
+                                color: '#5e4fa2',
                                 opacity: 1,
                                 label: '7159',
                                 quantity: 7159
