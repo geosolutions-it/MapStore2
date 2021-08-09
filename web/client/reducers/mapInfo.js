@@ -84,7 +84,7 @@ function receiveResponse(state, action, type) {
         // Handle data and vector responses
         const {configuration: config, requests} = state;
         let responses = state.responses || [];
-        const isHover = (config?.trigger === "hover"); // Display info trigger
+        const isHover = (config?.trigger === "hover") || state?.showInMapPopup; // Display feature info in popup
 
         if (!isVector) {
             const updateResponse = {
@@ -381,7 +381,8 @@ function mapInfo(state = initState, action) {
 
         );
         let responses = state.responses || [];
-        const isHover = state?.configuration?.trigger === 'hover' || false;
+        // Display feature info in popup
+        const isHover = state?.configuration?.trigger === 'hover' || state?.showInMapPopup;
         const vectorResponse = {
             response: {
                 crs: null,

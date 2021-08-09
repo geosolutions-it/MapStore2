@@ -235,7 +235,7 @@ export default branch(
                     return onClickMarker(validResponses, layerInfo, popups);
                 }
                 return {popups: popups.map((popup) => ({...popup, component: ()=> (<MapInfoViewer
-                    renderEmpty
+                    renderValidOnly
                     responses={responses} requests={requests}
                     validResponses={validResponses}
                     format={mapInfoFormat} showEmptyMessageGFI

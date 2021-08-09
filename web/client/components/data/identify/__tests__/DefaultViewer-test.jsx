@@ -86,7 +86,7 @@ describe('DefaultViewer', () => {
             }]
         });
         const viewer = ReactDOM.render(
-            <DefaultViewer validator={validator} renderEmpty/>,
+            <DefaultViewer validator={validator} renderValidOnly/>,
             document.getElementById("container")
         );
 
@@ -152,7 +152,7 @@ describe('DefaultViewer', () => {
             }
         }];
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses} renderEmpty/>,
+            <DefaultViewer responses={responses} renderValidOnly/>,
             document.getElementById("container")
         );
 
@@ -230,7 +230,7 @@ describe('DefaultViewer', () => {
             }
         }];
         ReactDOM.render(
-            <DefaultViewer responses={responses} header={SwipeHeader} renderEmpty/>,
+            <DefaultViewer responses={responses} header={SwipeHeader} renderValidOnly/>,
             document.getElementById("container")
         );
         const header = document.querySelector('.ms-identify-swipe-header');
