@@ -84,6 +84,9 @@
             text-decoration: none;
         }
     }
+    .print-download a {
+        .color-var(@theme-vars[primary-contrast]);
+    }
 
     hr {
         .border-top-color-var(@theme-vars[main-border-color]);
@@ -110,6 +113,19 @@
         .color-var(@theme-vars[primary-contrast]);
         .background-color-var(@theme-vars[primary]);
     }
+    .close {
+        .color-var(@theme-vars[primary-contrast]);
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0); // todo verify if this needs to be removed
+        &:hover,
+        &:focus {
+            .color-var(@theme-vars[primary-contrast]);
+        }
+    }
+    pre {
+        .color-var(@theme-vars[main-variant-color]);
+        .background-color-var(@theme-vars[main-variant-bg]);
+    }
+
 }
 
 // @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file

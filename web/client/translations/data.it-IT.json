@@ -299,44 +299,6 @@
                 "visit_group": "Visita il gruppo",
                 "subscribe": "Sottoscrivi",
                 "email": "Email:"
-            },
-            "examples":{
-                "viewer":{
-                    "html":"<h3>Viewer</h3><p>Semplice Visualizzatore di mappa</p>"
-                },
-                "3dviewer":{
-                    "html":"<h3>Viewer 3D</h3><p>Visualizzatore 3D basato su CesiumJS</p>"
-                },
-                "manager":{
-                    "html":"<h3>Manager</h3><p>Sfoglia le mappe</p>"
-                },
-                "mouseposition":{
-                    "html":"<h3>Posizione del mouse</h3><p>Esempi personalizzati</p>"
-                },
-                "scalebar":{
-                    "html":"<h3>Scale Control</h3><p>Esempi personalizzati</p>"
-                },
-                "layertree":{
-                    "html":"<h3>LayerTree Avanzato</h3><p>Esempi personalizzati</p>"
-                },
-                "queryform":{
-                    "html":"<h3>Query Builder</h3><p>Esempi personalizzati</p>"
-                },
-                "featuregrid":{
-                    "html":"<h3>Feature Editor</h3><p>Esempi personalizzati</p>"
-                },
-                "print":{
-                    "html":"<h3>Printing</h3><p>Esempi personalizzati</p>"
-                },
-                "plugins":{
-                    "html":"<h3>Plugins</h3><p>Costruisci la tua applicazione</p>"
-                },
-                "api":{
-                    "html":"<h3>API</h3><p>Usa le API per includere una mappa MapStore nella tua applicazione</p>"
-                },
-                "rasterstyler":{
-                    "html":"<h3>Raster Styler</h3><p>Crea stile per dati raster</p>"
-                }
             }
         },
         "cookiesPolicyNotification": {
@@ -520,7 +482,7 @@
         "toc": {
             "toggleLayerVisibility": "Attiva o disattiva la visibilità del livello",
             "toggleGroupVisibility": "Attiva o disattiva la visibilità del gruppo",
-            "displayLegendAndTools": "Visualizza legenda e strumenti aggiuntivi",
+            "displayLegendAndTools": "Visualizza legenda",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
             "addLayer": "Aggiungi Livello",
             "addLayerToGroup": "Aggiungi livello al gruppo selezionato",
@@ -2172,6 +2134,12 @@
             "fontWeightBold": "Grassetto",
             "boolTrue": "Si",
             "boolFalse": "No",
+            "colorMapType": {
+              "label": "Tipo di mappa dei colori",
+              "ramp": "Rampa",
+              "intervals": "Intervalli",
+              "values": "Valori"
+            },
             "addRuleBefore": "Aggiungi una nuova voce prima",
             "addRuleAfter": "Aggiungi nuova voce dopo",
             "remove": "Rimuovere",
@@ -2232,6 +2200,7 @@
             "emptyRuleEditor": "Non ci sono regole per questo stile. Aggiungi una nuova regola facendo clic sul tipo di stile desiderato nella barra degli strumenti",
             "classificationError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione",
             "classificationRasterError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione raster",
+            "classificationRasterUniqueIntervalError": "Impossibile eseguire la classificazione di valori univoci su raster di tipo float, sono supportati solo numeri interi. Prova invece un'altra classificazione",
             "classificationUniqueIntervalError": "Superato il limite massimo di intervalli! Stai tentando di generare una classificazione ad intervallo univoco con un attributo che contiene più di {intervalsForUnique} classi diverse. La classificazione ad intervallo univoco dovrebbe essere applicata agli attributi con un insieme limitato di intervalli per consentire una migliore leggibilità dello stile. Puoi provare un metodo diverso per l'attributo selezionato",
             "redChannel": "Canale rosso",
             "greenChannel": "Canale verde",
@@ -2901,7 +2870,25 @@
               "title": "Configura il tema",
               "label": "Tema",
               "themes": "Scegli un tema",
-              "noThemes": "Nessun tema trovato"
+              "noThemes": "Nessun tema trovato",
+              "customVariables": "Variabili personalizzate",
+              "main": "Colore Testo Principale",
+              "background": "Colore Sfondo Principale",
+              "primaryContrast": "Colore Testo Primario",
+              "primary": "Colore Primario",
+              "success": "Colore Secondario",
+              "successContrast": "Colore Testo Secondario",
+              "guidelines": "Assicurati di non utilizzare un colore secondario troppo simile a quello primario e ovviamente il colore primario del testo con la sua controparte (lo stesso vale per le altre coppie di colori: principale, secondario)",
+              "alternativeTextPrimarySecondary": "<p>Attenzione: il colore secondario selezionato potrebbe non essere leggibile rispetto a quello primario</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "tooltips": {
+                "main": "Colore del testo usato nei pannelli, nella toc",
+                "background": "Colore dello sfondo usato nei pannelli, nella toc",
+                "primaryContrast": "Colore del testo dove lo sfondo è il primario ad esempio: icone nelle barre dei pulsanti, intestazioni, pulsanti",
+                "primary": "Colore dello sfondo: barra dei pulsanti, intestazioni, pulsanti",
+                "successContrast": "Colore del testo usato dove lo sfondo è il colore secondario",
+                "success": "Colore dello sfondo usato per segnalare lo stato 'attivo' o 'selezionato' dei pulsanti",
+                "customColorsDescription": "Puoi cambiare uno di questi colori a partire da uno dei temi scelti in precedenza, oppure no"
+              }
             },
             "configurePlugins": {
                 "label": "Configura plugin",

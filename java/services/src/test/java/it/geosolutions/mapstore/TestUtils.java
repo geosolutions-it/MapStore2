@@ -20,6 +20,9 @@ import com.google.common.io.Files;
 public class TestUtils {
     public static File copyTo(InputStream resource, File dataDir, String name) throws FileNotFoundException, IOException {
         File output = new File(dataDir.getAbsolutePath() + File.separator + name);
+        if(!output.getParentFile().exists()) {
+        	output.getParentFile().mkdirs();
+        }
         try (FileOutputStream outStream = new FileOutputStream(output)) {
             IOUtils.copy(resource, outStream);
         }
@@ -34,6 +37,7 @@ public class TestUtils {
     }
 
     public static File copyToTemp(Class<ConfigControllerTest> classObj, String path) throws IOException {
+
         File temp = File.createTempFile("config", "." + Files.getFileExtension(path));
         try (FileOutputStream outStream = new FileOutputStream(temp)) {
             IOUtils.copy(classObj.getResourceAsStream(path), outStream);

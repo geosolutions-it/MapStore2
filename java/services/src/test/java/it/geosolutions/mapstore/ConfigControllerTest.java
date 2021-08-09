@@ -26,14 +26,15 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.HandlerMapping;
 
-import it.geosolutions.mapstore.ConfigController.ResourceNotAllowedException;
+import it.geosolutions.mapstore.controllers.BaseConfigController.ResourceNotAllowedException;
+import it.geosolutions.mapstore.controllers.rest.config.LoadAssetsController;
 
 public class ConfigControllerTest {
-    ConfigController controller;
+    LoadAssetsController controller;
 
     @Before
     public void setUp() {
-        controller = new ConfigController();
+        controller = new LoadAssetsController();
     }
 
     @Test

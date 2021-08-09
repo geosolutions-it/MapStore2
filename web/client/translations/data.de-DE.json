@@ -520,7 +520,7 @@
         "toc": {
             "toggleLayerVisibility": "Ebenensichtbarkeit umschalten",
             "toggleGroupVisibility": "Gruppensichtbarkeit umschalten",
-            "displayLegendAndTools": "Legende und Werkzeuge einblenden",
+            "displayLegendAndTools": "Legende einblenden",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "addLayer": "Ebene hinzufügen",
             "addLayerToGroup": "Ebene zur ausgewählten Gruppe hinzufügen",
@@ -2171,6 +2171,12 @@
             "fontWeightBold": "Bold",
             "boolTrue": "True",
             "boolFalse": "False",
+            "colorMapType": {
+              "label": "Farbkartentyp",
+              "ramp": "Rampe",
+              "intervals": "Intervalle",
+              "values": "Werte"
+            },
             "addRuleBefore": "Fügen Sie zuvor einen neuen Eintrag hinzu",
             "addRuleAfter": "Neuen Eintrag hinzufügen nach",
             "remove": "Entfernen",
@@ -2231,6 +2237,7 @@
             "emptyRuleEditor": "Es gibt keine Regeln für diesen Stil. Fügen Sie eine neue Regel hinzu, indem Sie in der Symbolleiste auf den gewünschten Symbolisierungstyp klicken",
             "classificationError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Klassifizierung zu erstellen",
             "classificationRasterError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Rasterklassifizierung zu erstellen.",
+            "classificationRasterUniqueIntervalError": "Eindeutige Wertklassifizierung über Raster vom Typ Float nicht möglich, nur Ganzzahlen werden unterstützt. Versuchen Sie es stattdessen mit einer anderen Klassifizierung",
             "classificationUniqueIntervalError": "Maximale Intervallgrenzen überschritten! Sie versuchen, eine eindeutige Intervallklassifizierung mit einem Attribut zu generieren, das mehr als {intervalsForUnique} verschiedene Klassen enthält. Eine eindeutige Intervallklassifizierung sollte auf Attribute mit einem begrenzten Satz von Intervallen angewendet werden, um eine bessere Lesbarkeit des Stils zu ermöglichen. Sie können eine andere Methode für das ausgewählte Attribut ausprobieren",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
@@ -2900,7 +2907,25 @@
               "title": "Thema konfigurieren",
               "label": "Thema",
               "themes": "Wähle ein Thema",
-              "noThemes": "Keine gefunden"
+              "noThemes": "Keine gefunden",
+              "customVariables": "Benutzerdefinierte Variablen",
+              "main": "Haupttextfarbe",
+              "background" : "Haupthintergrundfarbe",
+              "primaryContrast": "Primäre Textfarbe",
+              "primary": "Primärfarbe",
+              "success": "Sekundäre Farbe",
+              "successContrast": "Sekundäre Textfarbe",
+              "guidelines": "Stellen Sie sicher, dass Sie keine Sekundärfarbe verwenden, die der Primärfarbe zu ähnlich ist und offensichtlich die Primärtextfarbe mit ihrem Gegenstück (das gleiche gilt für die anderen Farbpaare: Hauptfarbe, Sekundärfarbe)",
+              "alternativeTextPrimarySecondary": "<p>Achtung: Die Sekundärfarbe könnte im Vergleich zur Primärfarbe nicht lesbar sein</p><p>Eine alternative farbe ist {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "tooltips": {
+                "main": "In Panels oder Dialogen verwendete Textfarbe",
+                "background": "Hintergrundfarbe in Panels oder Dialogen",
+                "primaryContrast": "Textfarbe im Gegensatz zur Primär- und Erfolgshintergrundfarbe: Symbole in Symbolleisten, Kopfzeilen, Tasten",
+                "primary": "Primärfarbe des Hintergrunds: Symbolleisten, Kopfzeilen, Tasten",
+                "successContrast": "Textfarbe angewendet, wenn die Sekundärfarbe als Hintergrund verwendet wird",
+                "success": "Hintergrundfarbe, die verwendet wird, um anzuzeigen, wenn eine Schaltfläche 'aktiv' oder 'ausgewählt' ist",
+                "customColorsDescription": "Sie können eine dieser Farben zusätzlich (oder nicht) zu einem oben ausgewählten vorkonfigurierten Thema ändern"
+              }
             },
             "configurePlugins": {
                 "label": "Plugins konfigurieren",

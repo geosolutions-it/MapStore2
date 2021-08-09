@@ -399,7 +399,7 @@
         },
         "toc": {
             "toggleLayerVisibility": "Activar visibilidade do tema",
-            "displayLegendAndTools": "Visualizar legenda e ferramentas",
+            "displayLegendAndTools": "Visualizar legenda",
             "zoomToLayerExtent": "Zoom para extensão do tema",
             "addLayer": "Adicionar tema",
             "toolZoomToLayerTooltip": "Zoom para extensão do tema seleccionado",

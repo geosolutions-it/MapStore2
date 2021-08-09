@@ -416,38 +416,68 @@ const getBlocks = (/* config = {} */) => {
             classificationType: 'classificationRaster',
             hideInputLabel: false,
             hideFilter: true,
-            params: [{
-                channel: property.channel({}),
-                opacity: property.opacity({
-                    label: 'styleeditor.opacity'
-                }),
-                ramp: property.colorRamp({
-                    key: 'ramp',
-                    label: 'styleeditor.colorRamp',
-                    getOptions: ({ getColors }) => getColors()
-                }),
-                reverse: property.bool({
-                    key: 'reverse',
-                    label: 'styleeditor.reverse'
-                }),
-                continuous: property.bool({
-                    key: 'continuous',
-                    label: 'styleeditor.continuous'
-                }),
-                method: property.select({
-                    key: 'method',
-                    label: 'styleeditor.method',
-                    getOptions: ({ methods }) => {
-                        return methods?.map((value) => ({
-                            labelId: 'styleeditor.' + value,
-                            value
-                        }));
-                    }
-                }),
-                intervals: property.intervals({
-                    label: 'styleeditor.intervals'
-                })
-            }],
+            params: [
+                {
+                    channel: property.channel({}),
+                    opacity: property.opacity({
+                        label: 'styleeditor.opacity'
+                    }),
+                    ramp: property.colorRamp({
+                        key: 'ramp',
+                        label: 'styleeditor.colorRamp',
+                        getOptions: ({ getColors }) => getColors()
+                    }),
+                    reverse: property.bool({
+                        key: 'reverse',
+                        label: 'styleeditor.reverse',
+                        isDisabled: (value, properties) =>
+                            properties?.ramp === 'custom'
+                            || properties?.method === 'customInterval'
+                    }),
+                    continuous: property.bool({
+                        key: 'continuous',
+                        label: 'styleeditor.continuous',
+                        isDisabled: (value, properties) =>
+                            properties?.ramp === 'custom'
+                            || properties?.method === 'customInterval'
+                    }),
+                    colorMapType: property.colorMapType({
+                        key: 'colorMapType',
+                        label: 'styleeditor.colorMapType.label'
+                    }),
+                    method: property.select({
+                        key: 'method',
+                        label: 'styleeditor.method',
+                        getOptions: ({ methods, method, methodEdit }) => {
+                            const options = methods?.map((value) => ({
+                                labelId: 'styleeditor.' + value,
+                                value
+                            })) || [];
+                            return [
+                                ...(method === "customInterval"
+                                    ? [
+                                        {
+                                            labelId: "styleeditor." + methodEdit,
+                                            glyphId: 'edit',
+                                            value: method
+                                        }
+                                    ]
+                                    : []),
+                                ...options
+                            ];
+                        }
+                    }),
+                    intervals: property.intervals({
+                        label: 'styleeditor.intervals'
+                    })
+                },
+                {
+                    classification: property.colorMap({
+                        key: 'classification',
+                        rampKey: 'ramp'
+                    })
+                }
+            ],
             defaultProperties: {
                 kind: 'Raster',
                 opacity: 1,
@@ -456,6 +486,7 @@ const getBlocks = (/* config = {} */) => {
                 method: 'equalInterval',
                 reverse: false,
                 continuous: true,
+                colorMapType: 'ramp',
                 symbolizerKind: 'Raster'
             }
         }

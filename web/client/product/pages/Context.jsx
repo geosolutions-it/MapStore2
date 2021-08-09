@@ -10,16 +10,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import { compose } from 'recompose';
+import { createStructuredSelector } from 'reselect';
+
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
 import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
-import { createStructuredSelector } from 'reselect';
-import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector } from '../../selectors/context';
+import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector, contextCustomVariablesEnabledSelector } from '../../selectors/context';
 import ContextTheme from '../../components/theme/ContextTheme';
 
 const ConnectedContextTheme = connect(
     createStructuredSelector({
-        theme: contextThemeSelector
+        theme: contextThemeSelector,
+        customVariablesEnabled: contextCustomVariablesEnabledSelector
     })
 )(ContextTheme);
 
@@ -52,7 +54,8 @@ const ConnectedContextTheme = connect(
   * // localConfig configuration example
   * "plugins": {
   *  "importer": [
-  *         // ...
+  *   import { customVariablesEnabledSelector } from './../../selectors/contextcreator';
+      // ...
   *         {
   *             "name": "Importer",
   *            "cfg": {} // see plugin configuration

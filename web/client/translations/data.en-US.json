@@ -299,44 +299,6 @@
                 "visit_group": "Visit this group",
                 "subscribe": "Subscribe",
                 "email": "Email:"
-            },
-            "examples":{
-                "viewer":{
-                    "html":"<h3>Viewer</h3><p>Simple Viewer</p>"
-                },
-                "3dviewer":{
-                    "html":"<h3>3D Viewer</h3><p>Simple CesiumJS based 3D Viewer</p>"
-                },
-                "manager":{
-                    "html":"<h3>Manager</h3><p>Browse MapStore maps</p>"
-                },
-                "mouseposition":{
-                    "html":"<h3>Mouse Position Control</h3><p>Custom examples</p>"
-                },
-                "scalebar":{
-                    "html":"<h3>Scale Control</h3><p>Custom examples</p>"
-                },
-                "layertree":{
-                    "html":"<h3>Advanced LayerTree</h3><p>Custom examples</p>"
-                },
-                "queryform":{
-                    "html":"<h3>Query Builder</h3><p>Custom examples</p>"
-                },
-                "featuregrid":{
-                    "html":"<h3>Feature Editor</h3><p>Custom examples</p>"
-                },
-                "print":{
-                    "html":"<h3>Printing</h3><p>Custom examples</p>"
-                },
-                "plugins":{
-                    "html":"<h3>Plugins</h3><p>Build your own application</p>"
-                },
-                "api":{
-                    "html":"<h3>API</h3><p>Use APIs to include a MapStore map in your application</p>"
-                },
-                "rasterstyler":{
-                    "html":"<h3>Raster Styler</h3><p>Style your raster layer</p>"
-                }
             }
         },
         "cookiesPolicyNotification": {
@@ -520,7 +482,7 @@
         "toc": {
             "toggleLayerVisibility": "Toggle layer visibility",
             "toggleGroupVisibility": "Toggle group visibility",
-            "displayLegendAndTools": "Display legend and tools",
+            "displayLegendAndTools": "Display legend",
             "zoomToLayerExtent": "Zoom to layer extent",
             "addLayer": "Add layer",
             "addLayerToGroup": "Add layer to selected group",
@@ -2177,6 +2139,13 @@
             "boolTrue": "True",
             "boolFalse": "False",
 
+            "colorMapType": {
+                "label": "Color map type",
+                "ramp": "Ramp",
+                "intervals": "Intervals",
+                "values": "Values"
+            },
+
             "addRuleBefore": "Add new entry before",
             "addRuleAfter": "Add new entry after",
             "remove": "Remove",
@@ -2243,6 +2212,7 @@
             "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
             "classificationError": "Service unavailable. Currently it is not possible to create a classification",
             "classificationRasterError": "Service unavailable. Currently it is not possible to create a raster classification",
+            "classificationRasterUniqueIntervalError": "Cannot perform unique value classification over raster of float type, only integer numbers are supported. Try another classification instead",
             "classificationUniqueIntervalError": "Maximum intervals limits exceeded! You are trying to generate an unique interval classification with an attribute that contains more than {intervalsForUnique} different classes. Unique Interval classification should be applied to attributes with a limited set of intervals to allow a better readability of the style. You could try different method for the selected attribute",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
@@ -2252,7 +2222,7 @@
             "ruleRaster": "Raster",
             "customInterval": "Custom Interval",
             "styleEmpty": "This style has no rules",
-            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
+            "incompleteClassification": "The classification is incomplete because the entries are not available. Ensure all properties are correctly provided",
             "imageSrcEmpty": "Missing image source url in the icon style",
             "imageSrcLoadError": "The provided image source could not be loaded. Try with a different url or ensure the source is reachable by MapStore",
             "imageSrcInvalidBase64": "This is not a valid base64 image. Some style renderer does not support this type of source, you could use an external url source instead",
@@ -2913,7 +2883,25 @@
               "title": "Configure Theme",
               "label": "Theme",
               "themes": "Choose a theme",
-              "noThemes": "No themes found"
+              "noThemes": "No themes found",
+              "customVariables": "Custom Variables",
+              "main": "Main Text Color",
+              "background": "Main Background Color",
+              "primaryContrast": "Primary Text Color",
+              "primary": "Primary Color",
+              "successContrast": "Secondary Text Color",
+              "success": "Secondary Color",
+              "guidelines": "Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary)",
+              "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>An alternative color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "tooltips": {
+                "main": "Text color used in panels or dialogs",
+                "background": "Background color used in panels or dialogs",
+                "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers, buttons",
+                "primary": "Background primary color: toolbars, headers, buttons",
+                "successContrast": "Text color applied when the secondary color is used as background",
+                "success": "Background color used to show when a button is 'active' or 'selected'",
+                "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
+              }
             },
             "configurePlugins": {
                 "label": "Configure Plugins",

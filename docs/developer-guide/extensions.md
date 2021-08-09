@@ -12,11 +12,10 @@ The easiest way to develop an extension is to start from the [MapStoreExtension 
 Read [the readme of the project](https://github.com/geosolutions-it/MapStoreExtension/blob/master/README.md) to understand how to run, debug and build a new extension starting from the sampleExtension in the project.
 
 Here you can find some details about the structure extension files, useful for development and debugging.
+
 ## An extension example
 
 A MapStore extension is a plugin, with some additional features.
-
-`build/extensions/plugins/SampleExtension.jsx`
 
 ```javascript
 import {connect} from "react-redux";

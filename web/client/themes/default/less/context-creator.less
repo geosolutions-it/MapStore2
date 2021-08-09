@@ -163,6 +163,46 @@
     .choose-theme {
         width: 500px;
         margin: auto;
+        & > .color-item:not(:last-child) {
+            margin-bottom: 10px;
+
+        }
+        .clear-all {
+            float: right;
+        }
+        .label-theme {
+            display: flex;
+            align-items: center;
+        }
+        .custom-variables {
+            position: relative;
+            display: flex;
+            align-items: baseline;
+            padding-bottom: 16px;
+            padding-top: 16px;
+            .mapstore-switch-btn {
+                position: absolute;
+                right: 0;
+                top: 15px;
+            }
+        }
+        .color-item {
+            height: 40px;
+            display: flex;
+            justify-content: space-between;
+            .color-choice {
+                display: flex;
+                align-items: center;
+                .ms-color-selector {
+                    width: 50%;
+                    min-width: 200px;
+                    margin-right: 18px;
+                }
+            }
+        }
+        .mapstore-info-popover {
+            padding-left: 10px;
+        }
     }
 }
 

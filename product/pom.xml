@@ -191,44 +191,6 @@
                     </configuration>
                 </execution>
                 <execution>
-                    <id>example data</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/examples</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/../web/client/examples</directory>
-                                <includes>
-                                    <include>data/*</include>
-                                </includes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>example js</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/examples</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/../web/client/examples</directory>
-                                <includes>
-                                    <include>**/*.js</include>
-                                </includes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
                     <id>translations</id>
                     <phase>process-classes</phase>
                     <goals>

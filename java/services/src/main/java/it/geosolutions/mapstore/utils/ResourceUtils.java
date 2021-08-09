@@ -19,8 +19,6 @@ import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 
-import net.sf.json.JSONObject;
-
 public class ResourceUtils {
 	public static Optional<String> findExisting(String[] candidates) {
         return Stream.of(candidates)
@@ -94,6 +92,7 @@ public class ResourceUtils {
 
     public static void storeJSONConfig(String baseFolder, ServletContext context, Object config, String configName) throws FileNotFoundException, IOException {
 		String outputFile = getResourcePath(baseFolder, context, configName, true);
+		new File(outputFile).getParentFile().mkdirs();
         try (FileOutputStream output = new FileOutputStream(outputFile)) {
             output.write(config.toString().getBytes());
         }

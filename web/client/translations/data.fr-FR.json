@@ -299,44 +299,6 @@
                 "visit_group": "Aller à ce groupe",
                 "subscribe": "Souscrire",
                 "email": "Courriel:"
-            },
-            "examples": {
-                "viewer": {
-                    "html": "<h3>Visualiseur</h3><p>Visualiseur simple</p>"
-                },
-                "3dviewer": {
-                    "html": "<h3>Visualiseur 3D</h3><p>Visualiseur 3D simple basé sur CesiumJS</p>"
-                },
-                "manager": {
-                    "html": "<h3>Gestionnaire</h3><p>Parcourir des cartes Mapstore</p>"
-                },
-                "mouseposition": {
-                    "html": "<h3>Contrôleur de position de pointeur</h3><p>Exemples particuliers</p>"
-                },
-                "scalebar": {
-                    "html": "<h3>Contrôleur d'échelle</h3><p>Exemples particuliers</p>"
-                },
-                "layertree": {
-                    "html": "<h3>Arborescence de couches avancée</h3><p>Exemples particuliers</p>"
-                },
-                "queryform": {
-                    "html": "<h3>Constructeur de requête</h3><p>Exemples particuliers</p>"
-                },
-                "featuregrid": {
-                    "html": "<h3>Éditeur d'objet</h3><p>Exemples particuliers</p>"
-                },
-                "print": {
-                    "html": "<h3>Impression</h3><p>Exemples particuliers</p>"
-                },
-                "plugins": {
-                    "html": "<h3>Plugins</h3><p>Contruire sa propre application</p>"
-                },
-                "api": {
-                    "html": "<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore dans votre application</p>"
-                },
-                "rasterstyler": {
-                    "html": "<h3>Représentation d'image</h3><p>Représenter votre couche image</p>"
-                }
             }
         },
         "cookiesPolicyNotification": {
@@ -520,7 +482,7 @@
         "toc": {
             "toggleLayerVisibility": "Changer la visibilité de la couche",
             "toggleGroupVisibility": "Changer la visibilité du groupe",
-            "displayLegendAndTools": "Afficher la légende et les outils",
+            "displayLegendAndTools": "Afficher la légende",
             "zoomToLayerExtent": "Zoomer sur l'étendue de la couche",
             "addLayer": "Ajouter une couche",
             "addLayerToGroup": "Ajouter une couche au groupe sélectionné",
@@ -2172,6 +2134,12 @@
             "fontWeightBold": "Bold",
             "boolTrue": "True",
             "boolFalse": "False",
+            "colorMapType": {
+              "label": "Type de carte de couleur",
+              "ramp": "Rampe",
+              "intervals": "Intervalles",
+              "values": "Valeurs"
+            },
             "addRuleBefore": "Ajouter une nouvelle entrée avant",
             "addRuleAfter": "Ajouter une nouvelle entrée après",
             "remove": "Supprimer",
@@ -2231,6 +2199,7 @@
             "emptyRuleEditorTitle": "Ajouter de nouvelles règles",
             "emptyRuleEditor": "Il n'y a pas de règles pour ce style. Ajoutez une nouvelle règle en cliquant sur le type de symboliseur souhaité dans la barre d'outils",
             "classificationError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification",
+            "classificationRasterUniqueIntervalError": "Impossible d'effectuer une classification de valeur unique sur un raster de type flottant, seuls les nombres entiers sont pris en charge. Essayez plutôt une autre classification",
             "classificationRasterError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification raster",
             "classificationUniqueIntervalError": "Limites d'intervalles maximales dépassées! Vous essayez de générer une classification d'intervalle unique avec un attribut qui contient plus de {intervalsForUnique} classes différentes. La classification par intervalle unique doit être appliquée aux attributs avec un ensemble limité d'intervalles pour permettre une meilleure lisibilité du style. Vous pouvez essayer une méthode différente pour l'attribut sélectionné",
             "redChannel": "Red channel",
@@ -2902,7 +2871,25 @@
               "title": "Configurer le thème",
               "label": "Thème",
               "themes": "Choisissez un thème",
-              "noThemes": "Aucun thème trouvé"
+              "noThemes": "Aucun thème trouvé",
+              "customVariables": "Variables personnalisées",
+              "main": "Couleur du texte principal",
+              "background" : "Couleur d'arrière-plan principale",
+              "primaryContrast": "Couleur primaire du texte",
+              "primary": "Couleur primaire",
+              "success": "Couleur secondaire",
+              "successContrast": "Couleur du texte secondaire",
+              "guidelines": "Attention à ne pas utiliser une couleur secondaire trop proche de la primaire et bien évidemment la couleur primaire du texte avec sa contrepartie (il en est de même pour les autres couples de couleurs : principale, secondaire)",
+              "alternativeTextPrimarySecondary": "<p>Attention : la couleur secondaire pourrait être illisible par rapport à la couleur primaire</p><p>Une couleur alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "tooltips": {
+                "main": "Couleur du texte utilisée dans les panneaux ou les boîtes de dialogue",
+                "background": "Couleur d'arrière-plan utilisée dans les panneaux ou les boîtes de dialogue",
+                "primaryContrast": "Couleur du texte opposée à la couleur de fond principale et de réussite : icônes à l'intérieur des barres d'outils, en-têtes, boutons",
+                "primary": "Couleur primaire d'arrière-plan : barres d'outils, en-têtes, boutons",
+                "success": "Couleur d'arrière-plan utilisée pour montrer quand un bouton est 'actif' ou 'sélectionné'",
+                "successContrast": "Couleur du texte appliquée lorsque la couleur secondaire est utilisée comme arrière-plan",
+                "customColorsDescription": "Vous pouvez changer l'une de ces couleurs en plus (ou non) d'un thème préconfiguré choisi ci-dessus"
+              }
             },
             "configurePlugins": {
                 "label": "Configurer les plugins",

@@ -21,7 +21,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
     },
     [extractThemesPlugin, ModuleFederationPlugin],
     false,
-    "dist/",
+    undefined,
     '.__PROJECTNAME__',
     [],
     {

@@ -151,7 +151,10 @@ export default class ContextCreator extends React.Component {
         tutorials: PropTypes.object,
         themes: PropTypes.array,
         setSelectedTheme: PropTypes.func,
-        selectedTheme: PropTypes.string
+        selectedTheme: PropTypes.string,
+        basicVariables: PropTypes.object,
+        customVariablesEnabled: PropTypes.bool,
+        onToggleCustomVariables: PropTypes.func
     };
 
     static contextTypes = {
@@ -171,8 +174,17 @@ export default class ContextCreator extends React.Component {
             id: 'dark',
             label: 'Dark',
             type: 'link',
-            href: (__MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes') + '/dark.css'
-        }],
+            href: (__MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes') + '/dark.css',
+            defaultVariables: {
+                "ms-main-color": "#eeeeee",
+                "ms-main-bg": "#333333",
+                "ms-primary-contrast": "#111111",
+                "ms-primary": "#43a4ff",
+                "ms-success-contrast": "#111111",
+                "ms-success": "#398439"
+            }
+        }
+        ],
         viewerPlugins: [
             "Map",
             "BackgroundSelector",
@@ -226,6 +238,7 @@ export default class ContextCreator extends React.Component {
         onSetStep: () => { },
         onShowTutorial: () => { },
         onChangeAttribute: () => { },
+        onToggleCustomVariables: () => { },
         onReloadConfirm: () => { },
         uploadEnabled: false,
         pluginsToUpload: [],
@@ -363,7 +376,10 @@ export default class ContextCreator extends React.Component {
                     disableNext: false,
                     component: <ConfigureThemes
                         themes={this.props.themes}
+                        customVariablesEnabled={this.props.customVariablesEnabled}
+                        basicVariables={this.props.basicVariables}
                         setSelectedTheme={this.props.setSelectedTheme}
+                        onToggleCustomVariables={this.props.onToggleCustomVariables}
                         selectedTheme={this.props.selectedTheme}
                     />
                 }

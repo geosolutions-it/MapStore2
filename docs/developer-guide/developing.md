@@ -70,16 +70,6 @@ devServer: {
 
 * **re-run** `npm start`
 
-### Examples
-
-`npm start` doesn't run the examples by default (for dev performance reasons). If you want to  run in dev mode the application with also the examples you can run, instead of `npm start` the following command:
-
-```bash
-npm run examples
-```
-
-This command will compile and run both mapstore and examples, with the same live editing functionalities of `npm start`.
-
 ### Debugging the frontend
 
 The development instance uses file watching and live reload, so each time a MapStore file is changed, the browser will reload the updated application.
@@ -162,12 +152,12 @@ When we say "running the back-end", in fact we say that we are running some sort
 
 MapStore is configured to use a tomcat maven plugin-in to build and run mapstore locally. To use it you have to:
 
-* make sure to run at least once `mvn install` in the root directory, to make `mapstore-webapp` artifact available.
+* make sure to run at least once `mvn install` in the root directory, to make `mapstore-product` artifact available.
 * `cd product` directory
 * run `mvn tomcat7:run-war`
 
 Your local back-end will now start at [http://localhost:8080/mapstore/](http://localhost:8080/mapstore/).
-If you want to change the port you can edit the dedicated entry in `web/pom.xml`, just remember to change also the dev-server proxy configuration on the front-end in the same way.
+If you want to change the port you can edit the dedicated entry in `product/pom.xml`, just remember to change also the dev-server proxy configuration on the front-end in the same way.
 
 #### Local tomcat instance
 
@@ -191,7 +181,7 @@ for embedded tomcat you can configure the following:
 
 ```bash
 # Linux
-MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n"
+export MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n"
 ```
 
 ```bash
@@ -202,6 +192,7 @@ set MAVEN_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_soc
 then start tomcat
 
 ```bash
+cd product
 mvn tomcat7:run-war
 ```
 
@@ -217,13 +208,13 @@ mvn eclipse:eclipse
 
 * Import the project in eclipse from **File --> Import**
 * Then select Existing project into the Workspace
-* Select root directory as "web" (to avoid eclipse to iterate over all node_modules directories looking for eclipse project)
-* import the project
+* Select root directory as MapStore root (to avoid eclipse to iterate over all node_modules directories looking for eclipse project)
+* import all projects
 
 ### Start Debugging with eclipse
 
 * Start Eclipse and open **Run --> Debug Configurations**
-* Create a new Remote Java Application selecting the project "mapstore-web" setting:
+* Create a new Remote Java Application selecting the project "mapstore-product" setting:
   * host localhost
   * port 4000
   * Click on *Debug*
