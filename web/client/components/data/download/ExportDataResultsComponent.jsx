@@ -56,7 +56,6 @@ const ExportDataResultsComponent = ({
                 {active && <Portal>
                     <Dialog
                         id="mapstore-export-data-results"
-                        style={{display: active ? "block" : "none"}}
                         draggable={false}
                         modal>
                         <span role="header">
