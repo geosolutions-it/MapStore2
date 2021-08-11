@@ -176,4 +176,47 @@ describe('GeoCarousel component', () => {
         expect(el).toBeTruthy();
         expect(el.textContent).toBe('geostory.carouselAddMapInfo');
     });
+    it('render Geocarousel with viewer slider', () => {
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Comp mode={Modes.VIEW} background={{}} contents={CONTENTS} />
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelectorAll('.ms-carousel-slider');
+        expect(el.length).toBe(2);
+    });
+    it('render Geocarousel viewer slider only in desktop & in view only mode', () => {
+        // Edit mode
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Comp mode={Modes.EDIT} background={{}} contents={CONTENTS} />
+            </Provider>
+            , document.getElementById("container"));
+        let container = document.getElementById('container');
+        let el = container.querySelectorAll('.ms-carousel-slider');
+        expect(el.length).toBe(0);
+
+        // Mobile view
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Comp mode={Modes.VIEW} expandableMedia background={{}} contents={CONTENTS} />
+            </Provider>
+            , document.getElementById("container"));
+        container = document.getElementById('container');
+        el = container.querySelectorAll('.ms-carousel-slider');
+        expect(el.length).toBe(0);
+    });
 });
