@@ -54,7 +54,7 @@ import ToggleButton from './searchbar/ToggleButton';
 const searchSelector = createSelector([
     state => state.search || null,
     state => state.controls && state.controls.searchBookmarkConfig || null,
-    state=> state.mapConfigRawData || {},
+    state => state.mapConfigRawData || {},
     state => state?.searchbookmarkconfig || ''
 ], (searchState, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
     enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
@@ -166,37 +166,59 @@ const SearchResultList = connect(selector, {
  * a **wfs** service look like this:
  * ```
  * {
- *      "type": "wfs",
- *      "priority": 2,
- *      "displayName": "${properties.propToDisplay}",
- *      "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
- *      "options": {
- *        "url": "/geoserver/wfs",
- *        "typeName": "workspace:layer",
- *        "queriableAttributes": ["attribute_to_query"],
- *        "sortBy": "ID",
- *        "srsName": "EPSG:4326",
- *        "maxFeatures": 4,
- *        "blacklist": [... an array of strings to exclude from the final search filter ]
- *      },
- *      "nestedPlaceholder": "Write other text to refine the search...",
- *      "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
- *      "then": [ ... an array of services to use when one item of this service is selected],
- *      "geomService": { optional service to retrieve the geometry}
- *  }
+ *  "type": "wfs",
+ *  "priority": 3,
+ *  "displayName": "${properties.propToDisplay}",
+ *  "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+ *  "options": {
+ *    "url": "/geoserver/wfs",
+ *    "typeName": "workspace:layer",
+ *    "queriableAttributes": ["attribute_to_query"],
+ *    "sortBy": "id",
+ *    "srsName": "EPSG:4326",
+ *    "maxFeatures": 20,
+ *    "blacklist": [... an array of strings to exclude from the final search filter ]
+ * }
  *
  * ```
- * The typical nested service needs to have some additional parameters:
+ * a **wfs** with **nested services** allow to search in several steps,
+ * </br> (e.g *search for a street and in the next step search for the street number.*)
+ * </br>The typical service with nested service needs to have some additional parameters:
  * ```
  * {
- *     "type": "wfs",
- *     "filterTemplate": " AND SOMEPROP = '${properties.OLDPROP}'", // will be appended to the original filter, it gets the properties of the current selected item (of the parent service)
- *     "options": {
- *       ...
+ *  "nestedPlaceholder": "the placeholder will be displayed in the input text, after you have performed the first search",
+ *  "then": [{
+ *    "type": "wfs",
+ *    "priority": 1,
+ *    "displayName": "${properties.propToDisplay} ${properties.propToDisplay}",
+ *    "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+ *    "searchTextTemplate": "${properties.propToDisplay}",
+ *    "options": {
+ *      "staticFilter": " AND SOMEPROP = '${properties.OLDPROP}'", // will be appended to the original filter, it gets the properties of the current selected item (of the parent service)
+ *      "url": "/geoserver/wfs",
+ *      "typeName": "workspace:layer",
+ *      "queriableAttributes": ["attribute_to_query"],
+ *      "srsName": "EPSG:4326",
+ *       "maxFeatures": 10
  *     }
+ *  }]
  * }
+ *
  * ```
- * **note:** `searchTextTemplate` is useful to populate the search text input when a search result is selected, typically with "leaf" services.
+ * **note:** `then` is the mandatory property to configure the nested service, every object in array,
+ * defines the steps of the search, performed by priority order.
+ * <br/> *Nested services can be used also with custom service, instead of `wfs`, in this case you will need to write your own code*
+ * <br/>
+ * <br/>
+ * **note:** `staticFilter` is valid for every service (even not nested), but if it is nested,
+ * you can use the selected feature from the parent service to specify this filter,
+ * that will be appended to the usual ilike filter used for searching text (wfs only)
+ * <br/>
+ * <br/>
+ * **note:** `searchTextTemplate` used to complete the text when an item is selected.
+ * (e.g. *I type "ro", I select an entry relative to "rome" and I want that the final text in search is "rome".*
+ * Using this property you can do it, by using the properites of the result as variables for the template.
+ * Can be used for every service that is a leaf (so it doesn't contain any nested service)
  * @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
  * @prop {string} cfg.searchOptions.services[].launchInfoPanel this is used to trigger get feature requests once a record is selected after a search.
  * it has the following values:
@@ -214,98 +236,98 @@ const SearchPlugin = connect((state) => ({
     onUpdateResultsStyle: updateResultsStyle
 })(
     class extends React.Component {
-    static propTypes = {
-        splitTools: PropTypes.bool,
-        showOptions: PropTypes.bool,
-        isSearchClickable: PropTypes.bool,
-        fitResultsToMapSize: PropTypes.bool,
-        searchOptions: PropTypes.object,
-        resultsStyle: PropTypes.object,
-        selectedItems: PropTypes.array,
-        selectedServices: PropTypes.array,
-        userServices: PropTypes.array,
-        withToggle: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
-        enabled: PropTypes.bool,
-        textSearchConfig: PropTypes.object
-    };
+        static propTypes = {
+            splitTools: PropTypes.bool,
+            showOptions: PropTypes.bool,
+            isSearchClickable: PropTypes.bool,
+            fitResultsToMapSize: PropTypes.bool,
+            searchOptions: PropTypes.object,
+            resultsStyle: PropTypes.object,
+            selectedItems: PropTypes.array,
+            selectedServices: PropTypes.array,
+            userServices: PropTypes.array,
+            withToggle: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
+            enabled: PropTypes.bool,
+            textSearchConfig: PropTypes.object
+        };
 
-    static defaultProps = {
-        searchOptions: {
-            services: [{type: "nominatim", priority: 5}]
-        },
-        isSearchClickable: false,
-        splitTools: true,
-        resultsStyle: {
-            color: '#3388ff',
-            weight: 4,
-            dashArray: '',
-            fillColor: '#3388ff',
-            fillOpacity: 0.2
-        },
-        fitResultsToMapSize: true,
-        withToggle: false,
-        enabled: true
-    };
+        static defaultProps = {
+            searchOptions: {
+                services: [{ type: "nominatim", priority: 5 }]
+            },
+            isSearchClickable: false,
+            splitTools: true,
+            resultsStyle: {
+                color: '#3388ff',
+                weight: 4,
+                dashArray: '',
+                fillColor: '#3388ff',
+                fillOpacity: 0.2
+            },
+            fitResultsToMapSize: true,
+            withToggle: false,
+            enabled: true
+        };
 
-    componentDidMount() {
-        this.props.onUpdateResultsStyle({...defaultIconStyle, ...this.props.resultsStyle});
-    }
-
-    getServiceOverrides = (propSelector) => {
-        return this.props.selectedItems && this.props.selectedItems[this.props.selectedItems.length - 1] && get(this.props.selectedItems[this.props.selectedItems.length - 1], propSelector);
-    };
-
-    getSearchOptions = () => {
-        const { searchOptions, textSearchConfig } = this.props;
-        if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
-            return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
+        componentDidMount() {
+            this.props.onUpdateResultsStyle({ ...defaultIconStyle, ...this.props.resultsStyle });
         }
-        return searchOptions;
-    };
 
-    getCurrentServices = () => {
-        const {selectedServices} = this.props;
-        const searchOptions = this.getSearchOptions();
-        return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, {services: selectedServices}) : searchOptions;
-    };
+        getServiceOverrides = (propSelector) => {
+            return this.props.selectedItems && this.props.selectedItems[this.props.selectedItems.length - 1] && get(this.props.selectedItems[this.props.selectedItems.length - 1], propSelector);
+        };
 
-    getSearchAndToggleButton = () => {
-        const search = (<SearchBar
-            key="searchBar"
-            {...this.props}
-            searchOptions={this.getCurrentServices()}
-            placeholder={this.getServiceOverrides("placeholder")}
-            placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
-        />);
-        if (this.props.withToggle === true) {
-            return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
+        getSearchOptions = () => {
+            const { searchOptions, textSearchConfig } = this.props;
+            if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
+                return textSearchConfig.override ? assign({}, searchOptions, { services: textSearchConfig.services }) : assign({}, searchOptions, { services: searchOptions.services.concat(textSearchConfig.services) });
+            }
+            return searchOptions;
+        };
+
+        getCurrentServices = () => {
+            const { selectedServices } = this.props;
+            const searchOptions = this.getSearchOptions();
+            return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, { services: selectedServices }) : searchOptions;
+        };
+
+        getSearchAndToggleButton = () => {
+            const search = (<SearchBar
+                key="searchBar"
+                {...this.props}
+                searchOptions={this.getCurrentServices()}
+                placeholder={this.getServiceOverrides("placeholder")}
+                placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
+            />);
+            if (this.props.withToggle === true) {
+                return [<ToggleButton />].concat(this.props.enabled ? [search] : null);
+            }
+            if (isArray(this.props.withToggle)) {
+                return (
+                    <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
+                        <ToggleButton />
+                        {this.props.enabled ? search : null}
+                    </MediaQuery>
+                    <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
+                        {search}
+                    </MediaQuery>
+                    </span>
+                );
+            }
+            return search;
+        };
+
+        render() {
+            return (<span>
+                {this.getSearchAndToggleButton()}
+                <SearchResultList
+                    fitToMapSize={this.props.fitResultsToMapSize}
+                    searchOptions={this.props.searchOptions}
+                    onUpdateResultsStyle={this.props.onUpdateResultsStyle}
+                    key="nominatimresults" />
+            </span>)
+            ;
         }
-        if (isArray(this.props.withToggle)) {
-            return (
-                <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
-                    <ToggleButton/>
-                    {this.props.enabled ? search : null}
-                </MediaQuery>
-                <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
-                    {search}
-                </MediaQuery>
-                </span>
-            );
-        }
-        return search;
-    };
-
-    render() {
-        return (<span>
-            {this.getSearchAndToggleButton()}
-            <SearchResultList
-                fitToMapSize={this.props.fitResultsToMapSize}
-                searchOptions={this.props.searchOptions}
-                onUpdateResultsStyle={this.props.onUpdateResultsStyle}
-                key="nominatimresults"/>
-        </span>)
-        ;
-    }
     });
 
 export default {
@@ -317,7 +339,7 @@ export default {
             priority: 1
         }
     }),
-    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
+    epics: { searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic },
     reducers: {
         search: searchReducers,
         mapInfo: mapInfoReducers
