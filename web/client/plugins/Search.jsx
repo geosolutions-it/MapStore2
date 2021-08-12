@@ -315,9 +315,9 @@ const SearchPlugin = connect((state) => ({
     };
 
     getCurrentServices = () => {
-        const { selectedServices } = this.props;
+        const {selectedServices} = this.props;
         const searchOptions = this.getSearchOptions();
-        return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, { services: selectedServices }) : searchOptions;
+        return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, {services: selectedServices}) : searchOptions;
     };
 
     getSearchAndToggleButton = () => {
@@ -329,12 +329,12 @@ const SearchPlugin = connect((state) => ({
             placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
         />);
         if (this.props.withToggle === true) {
-            return [<ToggleButton />].concat(this.props.enabled ? [search] : null);
+            return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
         }
         if (isArray(this.props.withToggle)) {
             return (
                 <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
-                    <ToggleButton />
+                    <ToggleButton/>
                     {this.props.enabled ? search : null}
                 </MediaQuery>
                 <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
@@ -353,11 +353,11 @@ const SearchPlugin = connect((state) => ({
                 fitToMapSize={this.props.fitResultsToMapSize}
                 searchOptions={this.props.searchOptions}
                 onUpdateResultsStyle={this.props.onUpdateResultsStyle}
-                key="nominatimresults" />
+                key="nominatimresults"/>
         </span>)
         ;
     }
-});
+    });
 
 export default {
     SearchPlugin: assign(SearchPlugin, {
@@ -368,7 +368,7 @@ export default {
             priority: 1
         }
     }),
-    epics: { searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic },
+    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
     reducers: {
         search: searchReducers,
         mapInfo: mapInfoReducers
