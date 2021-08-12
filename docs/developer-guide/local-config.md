@@ -429,23 +429,23 @@ Configuration parameters for searchOptions:
 - **geomService** - this param can be used when you have to get the geometry from a different service (e.g. with custom services, that do not contain the geometry, need to get it from a different, wfs, service)
 ```javascript
 {
-                  "type": "custom Service Name",
-                  "searchTextTemplate": "${properties.propToDisplay}",
-                  "displayName": "${properties.propToDisplay}",
-                  "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
-                  "options": {
-                    "pathname": "/path/to/service",
-                    "idVia": "${properties.code}"
-                  },
-                "priority": 2,
-                "geomService" : {
-                  "type": "wfs",
-                  "options": {
-                    "url": "/geoserver/wfs",
-                    "typeName":  "workspace:layer",
-                    "srsName": "EPSG:4326",
-                    "staticFilter": "ID = ${properties.code}"
-                  }
-                }
-              }
+  "type": "custom Service Name",
+  "searchTextTemplate": "${properties.propToDisplay}",
+  "displayName": "${properties.propToDisplay}",
+  "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+  "options": {
+    "pathname": "/path/to/service",
+    "idVia": "${properties.code}"
+  },
+  "priority": 2,
+  "geomService" : {
+    "type": "wfs",
+    "options": {
+      "url": "/geoserver/wfs",
+      "typeName":  "workspace:layer",
+      "srsName": "EPSG:4326",
+      "staticFilter": "ID = ${properties.code}"
+    }
+  }
+}
 ```
