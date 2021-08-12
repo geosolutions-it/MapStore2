@@ -265,99 +265,99 @@ const SearchPlugin = connect((state) => ({
     onUpdateResultsStyle: updateResultsStyle
 })(
     class extends React.Component {
-        static propTypes = {
-            splitTools: PropTypes.bool,
-            showOptions: PropTypes.bool,
-            isSearchClickable: PropTypes.bool,
-            fitResultsToMapSize: PropTypes.bool,
-            searchOptions: PropTypes.object,
-            resultsStyle: PropTypes.object,
-            selectedItems: PropTypes.array,
-            selectedServices: PropTypes.array,
-            userServices: PropTypes.array,
-            withToggle: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
-            enabled: PropTypes.bool,
-            textSearchConfig: PropTypes.object
-        };
+    static propTypes = {
+        splitTools: PropTypes.bool,
+        showOptions: PropTypes.bool,
+        isSearchClickable: PropTypes.bool,
+        fitResultsToMapSize: PropTypes.bool,
+        searchOptions: PropTypes.object,
+        resultsStyle: PropTypes.object,
+        selectedItems: PropTypes.array,
+        selectedServices: PropTypes.array,
+        userServices: PropTypes.array,
+        withToggle: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
+        enabled: PropTypes.bool,
+        textSearchConfig: PropTypes.object
+    };
 
-        static defaultProps = {
-            searchOptions: {
-                services: [{ type: "nominatim", priority: 5 }]
-            },
-            isSearchClickable: false,
-            splitTools: true,
-            resultsStyle: {
-                color: '#3388ff',
-                weight: 4,
-                dashArray: '',
-                fillColor: '#3388ff',
-                fillOpacity: 0.2
-            },
-            fitResultsToMapSize: true,
-            withToggle: false,
-            enabled: true
-        };
+    static defaultProps = {
+        searchOptions: {
+            services: [{ type: "nominatim", priority: 5 }]
+        },
+        isSearchClickable: false,
+        splitTools: true,
+        resultsStyle: {
+            color: '#3388ff',
+            weight: 4,
+            dashArray: '',
+            fillColor: '#3388ff',
+            fillOpacity: 0.2
+        },
+        fitResultsToMapSize: true,
+        withToggle: false,
+        enabled: true
+    };
 
-        componentDidMount() {
-            this.props.onUpdateResultsStyle({ ...defaultIconStyle, ...this.props.resultsStyle });
+    componentDidMount() {
+        this.props.onUpdateResultsStyle({ ...defaultIconStyle, ...this.props.resultsStyle });
+    }
+
+    getServiceOverrides = (propSelector) => {
+        return this.props.selectedItems && this.props.selectedItems[this.props.selectedItems.length - 1] && get(this.props.selectedItems[this.props.selectedItems.length - 1], propSelector);
+    };
+
+    getSearchOptions = () => {
+        const { searchOptions, textSearchConfig } = this.props;
+        if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
+            return textSearchConfig.override ? assign({}, searchOptions, { services: textSearchConfig.services }) : assign({}, searchOptions, { services: searchOptions.services.concat(textSearchConfig.services) });
         }
+        return searchOptions;
+    };
 
-        getServiceOverrides = (propSelector) => {
-            return this.props.selectedItems && this.props.selectedItems[this.props.selectedItems.length - 1] && get(this.props.selectedItems[this.props.selectedItems.length - 1], propSelector);
-        };
+    getCurrentServices = () => {
+        const { selectedServices } = this.props;
+        const searchOptions = this.getSearchOptions();
+        return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, { services: selectedServices }) : searchOptions;
+    };
 
-        getSearchOptions = () => {
-            const { searchOptions, textSearchConfig } = this.props;
-            if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
-                return textSearchConfig.override ? assign({}, searchOptions, { services: textSearchConfig.services }) : assign({}, searchOptions, { services: searchOptions.services.concat(textSearchConfig.services) });
-            }
-            return searchOptions;
-        };
-
-        getCurrentServices = () => {
-            const { selectedServices } = this.props;
-            const searchOptions = this.getSearchOptions();
-            return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, { services: selectedServices }) : searchOptions;
-        };
-
-        getSearchAndToggleButton = () => {
-            const search = (<SearchBar
-                key="searchBar"
-                {...this.props}
-                searchOptions={this.getCurrentServices()}
-                placeholder={this.getServiceOverrides("placeholder")}
-                placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
-            />);
-            if (this.props.withToggle === true) {
-                return [<ToggleButton />].concat(this.props.enabled ? [search] : null);
-            }
-            if (isArray(this.props.withToggle)) {
-                return (
-                    <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
-                        <ToggleButton />
-                        {this.props.enabled ? search : null}
-                    </MediaQuery>
-                    <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
-                        {search}
-                    </MediaQuery>
-                    </span>
-                );
-            }
-            return search;
-        };
-
-        render() {
-            return (<span>
-                {this.getSearchAndToggleButton()}
-                <SearchResultList
-                    fitToMapSize={this.props.fitResultsToMapSize}
-                    searchOptions={this.props.searchOptions}
-                    onUpdateResultsStyle={this.props.onUpdateResultsStyle}
-                    key="nominatimresults" />
-            </span>)
-            ;
+    getSearchAndToggleButton = () => {
+        const search = (<SearchBar
+            key="searchBar"
+            {...this.props}
+            searchOptions={this.getCurrentServices()}
+            placeholder={this.getServiceOverrides("placeholder")}
+            placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
+        />);
+        if (this.props.withToggle === true) {
+            return [<ToggleButton />].concat(this.props.enabled ? [search] : null);
         }
-    });
+        if (isArray(this.props.withToggle)) {
+            return (
+                <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
+                    <ToggleButton />
+                    {this.props.enabled ? search : null}
+                </MediaQuery>
+                <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
+                    {search}
+                </MediaQuery>
+                </span>
+            );
+        }
+        return search;
+    };
+
+    render() {
+        return (<span>
+            {this.getSearchAndToggleButton()}
+            <SearchResultList
+                fitToMapSize={this.props.fitResultsToMapSize}
+                searchOptions={this.props.searchOptions}
+                onUpdateResultsStyle={this.props.onUpdateResultsStyle}
+                key="nominatimresults" />
+        </span>)
+        ;
+    }
+});
 
 export default {
     SearchPlugin: assign(SearchPlugin, {
