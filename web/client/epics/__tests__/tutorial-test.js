@@ -9,12 +9,14 @@
 import expect from 'expect';
 
 import { getActionsFromStepEpic, switchTutorialEpic, switchGeostoryTutorialEpic, openDetailsPanelEpic } from '../tutorial';
-import { SETUP_TUTORIAL, updateTutorial, initTutorial, closeTutorial } from '../../actions/tutorial';
+import { SETUP_TUTORIAL, updateTutorial, closeTutorial } from '../../actions/tutorial';
 import { geostoryLoaded, setEditing } from '../../actions/geostory';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
-import { onLocationChanged } from 'connected-react-router';
 import { setApi, getApi } from '../../api/userPersistedStorage';
 import { OPEN_DETAILS_PANEL } from './../../actions/details';
+import { changeMapType } from './../../actions/maptype';
+import { loadFinished } from './../../actions/contextcreator';
+import { setEditorAvailable } from './../../actions/dashboard';
 
 describe('tutorial Epics', () => {
     const GEOSTORY_EDIT_STEPS = [{
@@ -94,17 +96,12 @@ describe('tutorial Epics', () => {
 
     it('switchTutorialEpic with path', (done) => {
 
-        testEpic(switchTutorialEpic, 1, [
-            onLocationChanged({
-                pathname: '/dashboard'
-            }),
-            initTutorial('id', [], {}, null, {}, {})
-        ], (actions) => {
+        testEpic(switchTutorialEpic, 1, setEditorAvailable(true), (actions) => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
                 case SETUP_TUTORIAL:
-                    expect(action.id).toBe('/dashboard');
+                    expect(action.id).toBe('dashboard');
                     break;
                 default:
                     expect(true).toBe(false);
@@ -121,17 +118,11 @@ describe('tutorial Epics', () => {
                 }
             }
         });
-
     });
 
     it('switchTutorialEpic with viewer path', (done) => {
 
-        testEpic(switchTutorialEpic, 1, [
-            onLocationChanged({
-                pathname: '/viewer/cesium/001'
-            }),
-            initTutorial('id', [], {}, null, {}, {})
-        ], (actions) => {
+        testEpic(switchTutorialEpic, 1, changeMapType("cesium"), (actions) => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
@@ -156,46 +147,9 @@ describe('tutorial Epics', () => {
 
     });
 
-    it('switchTutorialEpic with path and id', (done) => {
-
-        testEpic(switchTutorialEpic, 1, [
-            onLocationChanged({
-                pathname: '/dashboard/001'
-            }),
-            initTutorial('id', [], {}, null, {}, {})
-        ], (actions) => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case SETUP_TUTORIAL:
-                    expect(action.id).toBe('dashboard');
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            tutorial: {
-                presetList: {
-                    'dashboard_mobile_tutorial': [],
-                    'dashboard_tutorial': [],
-                    'default_tutorial': [],
-                    'default_mobile_tutorial': []
-                }
-            }
-        });
-
-    });
-
     it('switchTutorialEpic mobile', (done) => {
 
-        testEpic(switchTutorialEpic, 1, [
-            onLocationChanged({
-                pathname: '/dashboard/001'
-            }),
-            initTutorial('id', [], {}, null, {}, {})
-        ], (actions) => {
+        testEpic(switchTutorialEpic, 1, setEditorAvailable(true), (actions) => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
@@ -225,12 +179,7 @@ describe('tutorial Epics', () => {
 
     it('switchTutorialEpic missing preset steps', (done) => {
 
-        testEpic(switchTutorialEpic, 1, [
-            onLocationChanged({
-                pathname: '/dashboard/001'
-            }),
-            initTutorial('id', [], {}, null, {}, {})
-        ], (actions) => {
+        testEpic(switchTutorialEpic, 1, setEditorAvailable(true), (actions) => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
@@ -253,12 +202,7 @@ describe('tutorial Epics', () => {
     });
     it('switchTutorialEpic selecting geostory_edit_tutorial preset for newgeostory page', (done) => {
         const NUM_ACTIONS = 1;
-        testEpic(switchTutorialEpic, NUM_ACTIONS, [
-            onLocationChanged({
-                pathname: '/geostory/newgeostory'
-            }),
-            initTutorial("", [], {}, null, {}, {})
-        ], (actions) => {
+        testEpic(switchTutorialEpic, NUM_ACTIONS, geostoryLoaded('newgeostory'), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
@@ -289,12 +233,7 @@ describe('tutorial Epics', () => {
     });
     it('switchTutorialEpic selecting geostory_view_tutorial preset for story viewer page', (done) => {
         const NUM_ACTIONS = 1;
-        testEpic(switchTutorialEpic, NUM_ACTIONS, [
-            onLocationChanged({
-                pathname: '/geostory/123'
-            }),
-            initTutorial("", [], {}, null, {}, {})
-        ], (actions) => {
+        testEpic(switchTutorialEpic, NUM_ACTIONS, geostoryLoaded('123'), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
@@ -325,12 +264,7 @@ describe('tutorial Epics', () => {
     });
     it('switchTutorialEpic selecting geostory_view_tutorial preset for story viewer page, missing presetList', (done) => {
         const NUM_ACTIONS = 1;
-        testEpic(addTimeoutEpic(switchTutorialEpic, 50), NUM_ACTIONS, [
-            onLocationChanged({
-                pathname: '/geostory/newgeostory'
-            }),
-            initTutorial("", [], {}, null, {}, {})
-        ], (actions) => {
+        testEpic(addTimeoutEpic(switchTutorialEpic, 50), NUM_ACTIONS,  geostoryLoaded('newgeostory'), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
@@ -352,12 +286,7 @@ describe('tutorial Epics', () => {
     });
     it('switchTutorialEpic loads correct tutorial for context', (done) => {
         const NUM_ACTIONS = 1;
-        testEpic(switchTutorialEpic, NUM_ACTIONS, [
-            onLocationChanged({
-                pathname: '/context-creator/new'
-            }),
-            initTutorial("", [], {}, null, {}, {})
-        ], (actions) => {
+        testEpic(switchTutorialEpic, NUM_ACTIONS, loadFinished(), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {

@@ -12,23 +12,18 @@ import {
     START_TUTORIAL,
     UPDATE_TUTORIAL,
     CLOSE_TUTORIAL,
-    INIT_TUTORIAL,
     CHANGE_PRESET,
     closeTutorial,
     setupTutorial
 } from '../actions/tutorial';
 import { openDetailsPanel } from '../actions/details';
-import { CHANGE_MAP_VIEW } from '../actions/map';
-import { MAPS_LIST_LOADED } from '../actions/maps';
+import { MAP_TYPE_CHANGED } from '../actions/maptype';
+import { SET_EDITOR_AVAILABLE as DASHBOARD_AVAILABLE} from '../actions/dashboard';
 import { TOGGLE_3D } from '../actions/globeswitcher';
+import { CHANGE_MODE, GEOSTORY_LOADED } from '../actions/geostory';
 import { modeSelector } from '../selectors/geostory';
-import { CHANGE_MODE } from '../actions/geostory';
 import { creationStepSelector } from '../selectors/contextcreator';
-import { CONTEXT_TUTORIALS } from '../actions/contextcreator';
-const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
-    || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
-    || path.match(/\/(\w+)\//) && path.replace(/\/(\w+)\//, "$1");
-import { LOCATION_CHANGE } from 'connected-react-router';
+import { CONTEXT_TUTORIALS, LOAD_FINISHED as CONTEXTCREATOR_LOADED } from '../actions/contextcreator';
 import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi } from '../api/userPersistedStorage';
 import { mapSelector } from './../selectors/map';
@@ -43,7 +38,7 @@ import { mapSelector } from './../selectors/map';
 export const closeTutorialEpic = (action$) =>
     action$.ofType(START_TUTORIAL)
         .audit(() => action$.ofType(TOGGLE_3D))
-        .switchMap( () => Rx.Observable.of(closeTutorial()));
+        .switchMap(() => Rx.Observable.of(closeTutorial()));
 
 /**
  * Setup new steps based on the current path
@@ -53,46 +48,59 @@ export const closeTutorialEpic = (action$) =>
  */
 
 export const switchTutorialEpic = (action$, store) =>
-    action$.ofType(LOCATION_CHANGE)
-        .filter(action =>
-            action.payload
-            && action.payload.location
-            && action.payload.location.pathname)
-        .switchMap( (action) =>
-            action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW, INIT_TUTORIAL)
-                .take(1)
-                .switchMap( () => {
-                    let id = findTutorialId(action.payload.location.pathname);
-                    const state = store.getState();
-                    const presetList = state.tutorial && state.tutorial.presetList || {};
-                    const browser = state.browser;
-                    const mobile = browser && browser.mobile ? '_mobile' : '';
-                    const defaultName = id ? 'default' : action.payload && action.payload.location && action.payload.location.pathname || 'default';
-                    const prevTutorialId = state.tutorial && state.tutorial.id;
-                    let presetName = id + mobile + '_tutorial';
-                    if (defaultName.indexOf("context") !== -1) {
-                        const currentStep = creationStepSelector(state) || "general-settings";
-                        const currentPreset = CONTEXT_TUTORIALS[currentStep];
-                        return Rx.Observable.of(setupTutorial(currentPreset, presetList[currentPreset], null, null, null, prevTutorialId === (currentPreset)));
-                    }
-                    if (id && id?.indexOf("geostory") !== -1 && !isEmpty(presetList)) {
-                        // this is needed to setup correct geostory tutorial based on the current mode and page
-                        if (modeSelector(state) === "edit" || id && id?.indexOf("newgeostory") !== -1) {
-                            id  = "geostory";
-                            presetName = `geostory_edit_tutorial`;
-                            return Rx.Observable.from([
-                                setupTutorial(id, presetList[presetName], null, null, null, false)
-                            ]);
-                        }
-                        presetName = `geostory_view_tutorial`;
-                        return Rx.Observable.of(setupTutorial(id, presetList[presetName], null, null, null, true));
-                    }
-                    return !isEmpty(presetList) ? Rx.Observable.of(presetList[presetName] ?
-                        setupTutorial(id + mobile, presetList[presetName], null, null, null, prevTutorialId === (id + mobile)) :
-                        setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'], null, null, null, prevTutorialId === (defaultName + mobile))
-                    ) : Rx.Observable.empty();
-                })
-        );
+    action$.ofType(MAP_TYPE_CHANGED, GEOSTORY_LOADED, DASHBOARD_AVAILABLE, CONTEXTCREATOR_LOADED)
+        .switchMap((action) => {
+            const state = store.getState();
+            const presetList = state.tutorial && state.tutorial.presetList || {};
+            const browser = state.browser;
+            const mobile = browser && browser.mobile ? '_mobile' : '';
+            const prevTutorialId = state.tutorial && state.tutorial.id;
+            const defaultName = 'default';
+
+            let id;
+            let presetName;
+            let ignoreDisabled;
+            switch (action.type) {
+            case 'CONTEXTCREATOR:LOAD_FINISHED':
+                const currentStep = creationStepSelector(state) || "general-settings";
+                id = CONTEXT_TUTORIALS[currentStep];
+                presetName = id;
+                ignoreDisabled = prevTutorialId === id;
+                break;
+            case 'GEOSTORY:GEOSTORY_LOADED':
+                // this is needed to setup correct geostory tutorial based on the current mode and page
+                id = "geostory";
+                if (modeSelector(state) === "edit" || id && id?.indexOf("newgeostory") !== -1) {
+                    presetName = `geostory_edit_tutorial`;
+                    ignoreDisabled = false;
+                } else {
+                    presetName = `geostory_view_tutorial`;
+                    ignoreDisabled = true;
+                }
+                break;
+            case 'MAP_TYPE_CHANGED':
+                id = action.mapType + mobile;
+                presetName = id + '_tutorial';
+                ignoreDisabled = prevTutorialId === id;
+                break;
+            case 'DASHBOARD:SET_AVAILABLE':
+                // there is a DASHBOARD_LOADED event for existing dashboards, but nothing equivalent for dashboards in creation
+                // DASHBOARD:SET_AVAILABLE is fired after opening/leaving an existing dashboards AND after creating/leaving a new dashboard
+                id = (action.available) ? 'dashboard' + mobile : defaultName + mobile;
+                presetName = id + '_tutorial';
+                ignoreDisabled = prevTutorialId === id;
+                break;
+            default:
+                id = defaultName + mobile;
+                presetName = id + '_tutorial';
+                ignoreDisabled = prevTutorialId === id;
+            }
+
+            return !isEmpty(presetList) ? Rx.Observable.of(presetList[presetName] ?
+                setupTutorial(id, presetList[presetName], null, null, null, ignoreDisabled) :
+                setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'], null, null, null, prevTutorialId === (defaultName + mobile))
+            ) : Rx.Observable.empty();
+        });
 
 /**
  * It changes the Geostory tutorial when changing mode only
@@ -100,7 +108,7 @@ export const switchTutorialEpic = (action$, store) =>
 */
 export const switchGeostoryTutorialEpic = (action$, store) =>
     action$.ofType(CHANGE_MODE)
-        .switchMap( ({mode}) => {
+        .switchMap(({ mode }) => {
             const id = "geostory";
             const state = store.getState();
             const presetList = state.tutorial && state.tutorial.presetList || {};
@@ -128,7 +136,7 @@ export const switchGeostoryTutorialEpic = (action$, store) =>
  */
 export const changePresetEpic = (action$, store) =>
     action$.ofType(CHANGE_PRESET)
-        .switchMap(({preset, presetGroup, ignoreDisabled}) => {
+        .switchMap(({ preset, presetGroup, ignoreDisabled }) => {
             const state = store.getState();
             const presetList = state.tutorial && state.tutorial.presetList || {};
             const checkbox = state.tutorial && state.tutorial.checkbox;
@@ -149,10 +157,10 @@ export const changePresetEpic = (action$, store) =>
 export const getActionsFromStepEpic = (action$) =>
     action$.ofType(UPDATE_TUTORIAL)
         .filter(action => action.tour && action.tour.step && action.tour.step.action && action.tour.step.action[action.tour.action])
-        .switchMap( (action) => {
+        .switchMap((action) => {
             return isArray(action.tour.step.action[action.tour.action]) && Rx.Observable.of(...action.tour.step.action[action.tour.action])
-            || isObject(action.tour.step.action[action.tour.action]) && Rx.Observable.of(action.tour.step.action[action.tour.action])
-            || Rx.Observable.empty();
+                || isObject(action.tour.step.action[action.tour.action]) && Rx.Observable.of(action.tour.step.action[action.tour.action])
+                || Rx.Observable.empty();
         });
 
 /**
@@ -163,8 +171,8 @@ export const getActionsFromStepEpic = (action$) =>
 
 export const openDetailsPanelEpic = (action$, store) =>
     action$.ofType(CLOSE_TUTORIAL)
-        .filter(() => mapSelector(store.getState())?.info?.detailsSettings?.showAtStartup )
-        .switchMap( () => {
+        .filter(() => mapSelector(store.getState())?.info?.detailsSettings?.showAtStartup)
+        .switchMap(() => {
             return Rx.Observable.of(openDetailsPanel());
         });
 
