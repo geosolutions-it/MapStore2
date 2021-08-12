@@ -311,7 +311,7 @@ const SearchPlugin = connect((state) => ({
     };
 
     getSearchOptions = () => {
-        const {searchOptions, textSearchConfig} = this.props;
+        const { searchOptions, textSearchConfig } = this.props;
         if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
             return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
         }
