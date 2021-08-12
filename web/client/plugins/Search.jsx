@@ -178,7 +178,11 @@ const SearchResultList = connect(selector, {
  *    "srsName": "EPSG:4326",
  *    "maxFeatures": 20,
  *    "blacklist": [... an array of strings to exclude from the final search filter ]
- * }
+ * },
+ *  "nestedPlaceholder": "Write other text to refine the search...",
+ *  "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
+ *  "then": [ ... an array of services to use when one item of this service is selected],
+ *  "geomService": { optional service to retrieve the geometry}
  *
  * ```
  * a service, may have nested services, that allow you to search in several steps,
