@@ -183,7 +183,11 @@ const SearchResultList = connect(selector, {
  * ```
  * a **wfs** with **nested services** allow to search in several steps,
  * </br> (e.g *search for a street and in the next step search for the street number.*)
- * </br>The typical service with nested service needs to have some additional parameters:
+ * </br>The typical service with nested service needs to have some additional parameters, like **nestedPlaceholder**, **then**
+* @prop {string} cfg.searchOptions.services[].nestedPlaceholder the placeholder will be displayed in the input text, after you have performed the first search.
+* @prop {then[]} cfg.searchOptions.services[].then is the mandatory property to configure the nested service, every object in array,
+ * defines the steps of the search, performed by priority order
+
  * ```
  * {
  *  "nestedPlaceholder": "the placeholder will be displayed in the input text, after you have performed the first search",
@@ -205,11 +209,6 @@ const SearchResultList = connect(selector, {
  * }
  *
  * ```
- * **note:** `then` is the mandatory property to configure the nested service, every object in array,
- * defines the steps of the search, performed by priority order.
- * <br/> *Nested services can be used also with custom service, instead of `wfs`, in this case you will need to write your own code*
- * <br/>
- * <br/>
  * **note:** `staticFilter` is valid for every service (even not nested), but if it is nested,
  * you can use the selected feature from the parent service to specify this filter,
  * that will be appended to the usual ilike filter used for searching text (wfs only)
@@ -217,15 +216,45 @@ const SearchResultList = connect(selector, {
  * <br/>
  * **note:** `searchTextTemplate` used to complete the text when an item is selected.
  * (e.g. *I type "ro", I select an entry relative to "rome" and I want that the final text in search is "rome".*
- * Using this property you can do it, by using the properites of the result as variables for the template.
  * Can be used for every service that is a leaf (so it doesn't contain any nested service)
- * @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
+* <br/> <br/> *Nested services can be used also with custom service, instead of `wfs`, in this case you will need to write your own code,
+to require the data to remote API*
+
+```
+"then" : [
+                {
+                  "type": "custom Service Name",
+                  "searchTextTemplate": "${properties.propToDisplay}",
+                  "displayName": "${properties.propToDisplay}",
+                  "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+                  "options": {
+                    "pathname": "/path/to/service",
+                    "idVia": "${properties.code}"
+                  },
+                "priority": 2,
+                "geomService" : {
+                  "type": "wfs",
+                  "options": {
+                    "url": "/geoserver/wfs",
+                    "typeName":  "workspace:layer",
+                    "srsName": "EPSG:4326",
+                    "staticFilter": "ID = ${properties.code}"
+                  }
+                }
+              }]
+```
+* if you use a custom service, you may need to get the geometry from third party services, this option
+is define by **geomService** param
+
+
  * @prop {string} cfg.searchOptions.services[].launchInfoPanel this is used to trigger get feature requests once a record is selected after a search.
  * it has the following values:
  * - undefined | not configured, it does not perform the GFI request
  * Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
  * - "single_layer", it performs the GFI request for one layer only with only that record as a result, info_format is forced to be application/json
  * - "all_layers", it performs the GFI for all layers, as a normal GFI triggered by clicking on the map
+
+* @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
  */
 const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false,
