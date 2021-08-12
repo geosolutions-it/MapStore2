@@ -181,7 +181,7 @@ const SearchResultList = connect(selector, {
  * }
  *
  * ```
- * a **wfs** with **nested services** allow to search in several steps,
+ * a service, may have nested services, that allow you to search in several steps,
  * </br> (e.g *search for a street and in the next step search for the street number.*)
  * </br>The typical service with nested service needs to have some additional parameters, like **nestedPlaceholder**, **then**
 * @prop {string} cfg.searchOptions.services[].nestedPlaceholder the placeholder will be displayed in the input text, after you have performed the first search.
