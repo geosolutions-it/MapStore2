@@ -286,7 +286,7 @@ const SearchPlugin = connect((state) => ({
 
     static defaultProps = {
         searchOptions: {
-            services: [{ type: "nominatim", priority: 5 }]
+            services: [{type: "nominatim", priority: 5}]
         },
         isSearchClickable: false,
         splitTools: true,
@@ -303,7 +303,7 @@ const SearchPlugin = connect((state) => ({
     };
 
     componentDidMount() {
-        this.props.onUpdateResultsStyle({ ...defaultIconStyle, ...this.props.resultsStyle });
+        this.props.onUpdateResultsStyle({...defaultIconStyle, ...this.props.resultsStyle});
     }
 
     getServiceOverrides = (propSelector) => {
@@ -311,9 +311,9 @@ const SearchPlugin = connect((state) => ({
     };
 
     getSearchOptions = () => {
-        const { searchOptions, textSearchConfig } = this.props;
+        const {searchOptions, textSearchConfig} = this.props;
         if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
-            return textSearchConfig.override ? assign({}, searchOptions, { services: textSearchConfig.services }) : assign({}, searchOptions, { services: searchOptions.services.concat(textSearchConfig.services) });
+            return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
         }
         return searchOptions;
     };
