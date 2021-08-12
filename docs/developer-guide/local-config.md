@@ -327,7 +327,18 @@ with the following properties:
 
 Provides search functionalities for the map. Allows to display results and place them on the map. Supports nominatim and WFS as search protocols. You can configure the services and each service can trigger a nested search.
 
-WFS configuration :
+Nominatim configuration:
+```javascript
+{
+   "type": "nominatim",
+   "searchTextTemplate": "${properties.display_name}", // text to use as searchText when an item is selected. Gets the result properties.
+   "options": {
+     "polygon_geojson": 1,
+     "limit": 3
+}
+```
+
+WFS configuration:
 ```javascript
 "plugins": {
   ...
@@ -427,6 +438,8 @@ Configuration parameters for searchOptions:
   - "all_layers", it performs the GFI for all layers, as a normal GFI triggered by clicking on the map
 
 - **geomService** - this param can be used when you have to get the geometry from a different service (e.g. with custom services, that do not contain the geometry, need to get it from a different, wfs, service)
+
+Custom services configuration:
 ```javascript
 {
   "type": "custom Service Name",
