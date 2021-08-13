@@ -244,4 +244,74 @@ describe('leaflet Feature component', () => {
         }, 0);
 
     });
+
+    it('test onClick feature', () => {
+        const actions = {
+            handler: () => { }
+        };
+        var spyOnClick = expect.spyOn(actions, 'handler');
+        const geometry = {
+            type: 'Point',
+            coordinates: [-90, 40]
+        };
+        const type = 'Feature';
+        let point = ReactDOM.render(<Feature
+            type={type}
+            container={container}
+            onClick={actions.handler}
+            options={{id: "markerFt"}}
+            geometry={geometry}/>, document.getElementById("container"));
+        expect(point._layers).toExist();
+        expect(point._layers[0]).toExist();
+        point._layers[0].fire('click', {
+            type: 'click',
+            latlng: {lat: 10, lng: 43},
+            originalEvent: {
+                x: 100, y: 435
+            }
+        });
+        expect(spyOnClick).toHaveBeenCalled();
+        const [{arguments: results}] = spyOnClick.calls || [];
+        expect(results).toBeTruthy();
+        expect(results[0].pixel).toEqual({x: 100, y: 435});
+        expect(results[0].latlng).toEqual({lat: 10, lng: 43});
+        expect(results[0].rawPos).toEqual([10, 43]);
+    });
+
+    it('test onClick with handleClickOnLayer', () => {
+        const actions = {
+            handler: () => { }
+        };
+        var spyOnClick = expect.spyOn(actions, 'handler');
+        const geometry = {
+            type: 'Point',
+            coordinates: [-90, 40]
+        };
+        const type = 'Feature';
+        let point = ReactDOM.render(<Feature
+            type={type}
+            container={container}
+            onClick={actions.handler}
+            options={{handleClickOnLayer: true, id: "markerFt"}}
+            geometry={geometry}/>, document.getElementById("container"));
+        expect(point._layers).toExist();
+        expect(point._layers[0]).toExist();
+        point._layers[0]._map = {
+            mouseEventToLatLng: ()=> ({lat: 11, lng: 45})
+        };
+        point._layers[0].fire('click', {
+            type: 'click',
+            latlng: {lat: 10, lng: 43},
+            originalEvent: {
+                x: 100, y: 435
+            }
+        });
+        expect(spyOnClick).toHaveBeenCalled();
+        const [{arguments: results}] = spyOnClick.calls || [];
+        expect(results).toBeTruthy();
+        expect(results[0].pixel).toEqual({x: 100, y: 435});
+        expect(results[0].latlng).toEqual({"lat": 10, "lng": 43});
+        expect(results[0].rawPos).toEqual([11, 45]);
+        expect(results[1]).toBe("markerFt");
+    });
 });
