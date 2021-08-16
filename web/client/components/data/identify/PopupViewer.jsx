@@ -47,14 +47,14 @@ const selector = createSelector([
     showEmptyMessageGFISelector,
     identifyFloatingToolSelector,
     isLoadedResponseSelector],
-(responses, validResponses, requests, format, showEmptyMessageGFI, renderEmpty, loaded) => ({
+(responses, validResponses, requests, format, showEmptyMessageGFI, renderValidOnly, loaded) => ({
     responses,
     validResponses,
     requests,
     format,
     showEmptyMessageGFI,
     missingResponses: (requests || []).length - (responses || []).length,
-    renderEmpty,
+    renderValidOnly,
     loaded
 }));
 
