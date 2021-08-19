@@ -206,12 +206,12 @@ export const ogcArrayField = (attribute, operator, value, nsplaceholder) => {
     if (checkOperatorValidity(value, operator)) {
         if (operator === "contains" && value !== "") {
             fieldFilter = `<${nsplaceholder}:PropertyIsEqualTo>
-              <${nsplaceholder}:Function name="InArray">
-                 <${nsplaceholder}:Literal>${value}</${nsplaceholder}:Literal>
-                 <${nsplaceholder}:PropertyName>${attribute}</${nsplaceholder}:PropertyName>
-              </${nsplaceholder}:Function>
-              <${nsplaceholder}:Literal>true</${nsplaceholder}:Literal>
-            </${nsplaceholder}:PropertyIsEqualTo>`
+                <${nsplaceholder}:Function name="InArray">
+                    <${nsplaceholder}:Literal>${value}</${nsplaceholder}:Literal>
+                    <${nsplaceholder}:PropertyName>${attribute}</${nsplaceholder}:PropertyName>
+                </${nsplaceholder}:Function>
+                <${nsplaceholder}:Literal>true</${nsplaceholder}:Literal>
+            </${nsplaceholder}:PropertyIsEqualTo>`;
         }
     }
     return fieldFilter;
@@ -827,12 +827,13 @@ export const cqlDateField = function(attribute, operator, value) {
 
 export const cqlArrayField = function(attribute, operator, value) {
     switch (operator) {
-        case "contains": {
-            return `InArray(${attribute},${value})=true`
-        }
+    case "contains": {
+        return `InArray(${attribute},${value})=true`;
     }
-    return "";
-}
+    default: return "";
+    }
+};
+
 export const cqlStringField = function(attribute, operator, value) {
     let fieldFilter;
     const wrappedAttr = wrapAttributeWithDoubleQuotes(attribute);
