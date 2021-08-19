@@ -33,7 +33,7 @@ describe('StyleEditor API', () => {
         });
         it('should send a classification request', (done) => {
 
-            mockAxios.onGet().reply(200, CLASSIFY_VECTOR_RESPONSE.SAMPLE1);
+            mockAxios.onGet(/geoserver/).reply(200, CLASSIFY_VECTOR_RESPONSE.SAMPLE1);
 
             const values = {
                 attribute: 'ATTRIBUTE'
@@ -66,6 +66,90 @@ describe('StyleEditor API', () => {
                 properties,
                 rules,
                 layer
+            }).then((newRules) => {
+                try {
+                    expect(newRules[0].classification).toEqual(
+                        [
+                            {
+                                title: ' >= 168839.0 AND <2211312.4',
+                                color: '#9e0142',
+                                type: 'Polygon',
+                                min: 168839,
+                                max: 2211312.4
+                            },
+                            {
+                                title: ' >= 2211312.4 AND <4253785.8',
+                                color: '#f98e52',
+                                type: 'Polygon',
+                                min: 2211312.4,
+                                max: 4253785.8
+                            },
+                            {
+                                title: ' >= 4253785.8 AND <6296259.2',
+                                color: '#ffffbf',
+                                type: 'Polygon',
+                                min: 4253785.8,
+                                max: 6296259.2
+                            },
+                            {
+                                title: ' >= 6296259.2 AND <8338732.6',
+                                color: '#89d0a5',
+                                type: 'Polygon',
+                                min: 6296259.2,
+                                max: 8338732.6
+                            },
+                            {
+                                title: ' >= 8338732.6 AND <=1.0381206E7',
+                                color: '#5e4fa2',
+                                type: 'Polygon',
+                                min: 8338732.6,
+                                max: 10381206
+                            }
+                        ]
+                    );
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+        });
+        it('should send a classification vector request with style service url when service is static', (done) => {
+
+            mockAxios.onGet(/static/).reply(200, CLASSIFY_VECTOR_RESPONSE.SAMPLE1);
+
+            const values = {
+                attribute: 'ATTRIBUTE'
+            };
+            const properties = {
+                ruleId: 'rule0',
+                intervals: 5,
+                method: 'equalInterval',
+                reverse: false,
+                ramp: 'spectral',
+                type: 'classificationVector',
+                ...DEFAULT_CONFIG
+            };
+            const rules = [
+                {
+                    color: '#dddddd',
+                    fillOpacity: 1,
+                    kind: 'Classification',
+                    outlineColor: '#777777',
+                    outlineWidth: 1,
+                    symbolizerKind: 'Fill',
+                    ...properties
+                }
+            ];
+            const layer = {
+                url: '/geoserver/wms'
+            };
+            const styleService = {baseUrl: '/static/wms', isStatic: true};
+            classificationVector({
+                values,
+                properties,
+                rules,
+                layer,
+                styleService
             }).then((newRules) => {
                 try {
                     expect(newRules[0].classification).toEqual(
@@ -609,7 +693,7 @@ describe('StyleEditor API', () => {
             setTimeout(done);
         });
         it('should send a classification request', (done) => {
-            mockAxios.onGet().reply(200, CLASSIFY_RASTER_RESPONSE);
+            mockAxios.onGet(/geoserver/).reply(200, CLASSIFY_RASTER_RESPONSE);
             const values = {
                 ramp: 'spectral'
             };
@@ -638,6 +722,80 @@ describe('StyleEditor API', () => {
                 properties,
                 rules,
                 layer
+            }).then((newRules) => {
+                try {
+                    expect(newRules[0].classification).toEqual(
+                        [
+                            {
+                                color: '#9e0142',
+                                opacity: 1,
+                                label: '0',
+                                quantity: 0
+                            },
+                            {
+                                color: '#f98e52',
+                                opacity: 1,
+                                label: '1789.75',
+                                quantity: 1789.75
+                            },
+                            {
+                                color: '#ffffbf',
+                                opacity: 1,
+                                label: '3579.5',
+                                quantity: 3579.5
+                            },
+                            {
+                                color: '#89d0a5',
+                                opacity: 1,
+                                label: '5369.25',
+                                quantity: 5369.25
+                            },
+                            {
+                                color: '#5e4fa2',
+                                opacity: 1,
+                                label: '7159',
+                                quantity: 7159
+                            }
+                        ]
+                    );
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+        });
+        it('should send a classification raster request with style service url when service is static', (done) => {
+            mockAxios.onGet(/static/).reply(200, CLASSIFY_RASTER_RESPONSE);
+            const values = {
+                ramp: 'spectral'
+            };
+            const properties = {
+                ruleId: 'rule0',
+                intervals: 5,
+                method: 'equalInterval',
+                reverse: false,
+                continuous: true,
+                type: 'classificationRaster',
+                ...DEFAULT_CONFIG
+            };
+            const rules = [
+                {
+                    kind: 'Raster',
+                    opacity: 1,
+                    symbolizerKind: 'Raster',
+                    ...properties
+                }
+            ];
+            const layer = {
+                url: '/geoserver/wms'
+            };
+            const styleService = {baseUrl: '/static/wms', isStatic: true};
+            classificationRaster({
+                values,
+                properties,
+                rules,
+                layer,
+                styleService
             }).then((newRules) => {
                 try {
                     expect(newRules[0].classification).toEqual(
