@@ -37,7 +37,7 @@ class DefaultViewer extends React.Component {
         onUpdateIndex: PropTypes.func,
         setIndex: PropTypes.func,
         showEmptyMessageGFI: PropTypes.bool,
-        renderEmpty: PropTypes.bool,
+        renderValidOnly: PropTypes.bool,
         loaded: PropTypes.bool,
         isMobile: PropTypes.bool
     };
@@ -58,7 +58,7 @@ class DefaultViewer extends React.Component {
         },
         containerProps: {},
         showEmptyMessageGFI: true,
-        renderEmpty: false,
+        renderValidOnly: false,
         onNext: () => {},
         onPrevious: () => {},
         setIndex: () => {},
@@ -75,7 +75,7 @@ class DefaultViewer extends React.Component {
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses) : responses;
+        const validResponses = this.props.renderValidOnly ? validator.getValidResponses(responses) : responses;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
@@ -101,7 +101,7 @@ class DefaultViewer extends React.Component {
             return null;
         }
         let allowRender = invalidResponses.length !== 0;
-        if (!this.props.renderEmpty) {
+        if (!this.props.renderValidOnly) {
             allowRender =  allowRender && this.props.missingResponses === 0;
         }
         if (allowRender) {

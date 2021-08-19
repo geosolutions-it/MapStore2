@@ -170,7 +170,7 @@ describe('Test map selectors', () => {
         expect(isMouseMoveIdentifyActive).toBe(true);
     });
     it('test identifyFloatingToolSelector', () => {
-        const renderEmpty = identifyFloatingToolSelector({mode: "embedded"});
-        expect(renderEmpty).toBe(true);
+        const renderValidOnly = identifyFloatingToolSelector({mode: "embedded"});
+        expect(renderValidOnly).toBe(true);
     });
 });
