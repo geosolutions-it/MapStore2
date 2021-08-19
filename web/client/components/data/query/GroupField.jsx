@@ -41,6 +41,7 @@ class GroupField extends React.Component {
         logicComboOptions: PropTypes.array,
         attributePanelExpanded: PropTypes.bool,
         actions: PropTypes.object,
+        arrayOperators: PropTypes.array,
         listOperators: PropTypes.array,
         stringOperators: PropTypes.array,
         booleanOperators: PropTypes.array,
@@ -83,6 +84,7 @@ class GroupField extends React.Component {
         },
         listOperators: ["="],
         stringOperators: ["=", "like", "ilike", "isNull"],
+        arrayOperators: ["contains"],
         booleanOperators: ["="],
         defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "><"]
     };
@@ -123,6 +125,9 @@ class GroupField extends React.Component {
         }
         case "boolean": {
             return this.props.booleanOperators;
+        }
+        case "array": {
+            return this.props.arrayOperators;
         }
         default:
             return this.props.defaultOperators;
@@ -171,6 +176,9 @@ class GroupField extends React.Component {
                     attType="date-time"
                     timeEnabled
                     dateEnabled
+                    operator={filterField.operator}/>
+                <TextField
+                    attType="array"
                     operator={filterField.operator}/>
                 <DateField
                     attType="time"
