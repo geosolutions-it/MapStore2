@@ -828,7 +828,7 @@ export const cqlDateField = function(attribute, operator, value) {
 export const cqlArrayField = function(attribute, operator, value) {
     switch (operator) {
     case "contains": {
-        return `InArray(${attribute},${value})=true`;
+        return `InArray(${value},${attribute})=true`;
     }
     default: return "";
     }
