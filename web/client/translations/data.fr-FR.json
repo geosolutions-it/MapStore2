@@ -2134,6 +2134,12 @@
             "fontWeightBold": "Bold",
             "boolTrue": "True",
             "boolFalse": "False",
+            "colorMapType": {
+              "label": "Type de carte de couleur",
+              "ramp": "Rampe",
+              "intervals": "Intervalles",
+              "values": "Valeurs"
+            },
             "addRuleBefore": "Ajouter une nouvelle entrée avant",
             "addRuleAfter": "Ajouter une nouvelle entrée après",
             "remove": "Supprimer",
@@ -2193,6 +2199,7 @@
             "emptyRuleEditorTitle": "Ajouter de nouvelles règles",
             "emptyRuleEditor": "Il n'y a pas de règles pour ce style. Ajoutez une nouvelle règle en cliquant sur le type de symboliseur souhaité dans la barre d'outils",
             "classificationError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification",
+            "classificationRasterUniqueIntervalError": "Impossible d'effectuer une classification de valeur unique sur un raster de type flottant, seuls les nombres entiers sont pris en charge. Essayez plutôt une autre classification",
             "classificationRasterError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification raster",
             "classificationUniqueIntervalError": "Limites d'intervalles maximales dépassées! Vous essayez de générer une classification d'intervalle unique avec un attribut qui contient plus de {intervalsForUnique} classes différentes. La classification par intervalle unique doit être appliquée aux attributs avec un ensemble limité d'intervalles pour permettre une meilleure lisibilité du style. Vous pouvez essayer une méthode différente pour l'attribut sélectionné",
             "redChannel": "Red channel",

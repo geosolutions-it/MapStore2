@@ -2139,6 +2139,13 @@
             "boolTrue": "True",
             "boolFalse": "False",
 
+            "colorMapType": {
+                "label": "Color map type",
+                "ramp": "Ramp",
+                "intervals": "Intervals",
+                "values": "Values"
+            },
+
             "addRuleBefore": "Add new entry before",
             "addRuleAfter": "Add new entry after",
             "remove": "Remove",
@@ -2205,6 +2212,7 @@
             "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
             "classificationError": "Service unavailable. Currently it is not possible to create a classification",
             "classificationRasterError": "Service unavailable. Currently it is not possible to create a raster classification",
+            "classificationRasterUniqueIntervalError": "Cannot perform unique value classification over raster of float type, only integer numbers are supported. Try another classification instead",
             "classificationUniqueIntervalError": "Maximum intervals limits exceeded! You are trying to generate an unique interval classification with an attribute that contains more than {intervalsForUnique} different classes. Unique Interval classification should be applied to attributes with a limited set of intervals to allow a better readability of the style. You could try different method for the selected attribute",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
@@ -2214,7 +2222,7 @@
             "ruleRaster": "Raster",
             "customInterval": "Custom Interval",
             "styleEmpty": "This style has no rules",
-            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
+            "incompleteClassification": "The classification is incomplete because the entries are not available. Ensure all properties are correctly provided",
             "imageSrcEmpty": "Missing image source url in the icon style",
             "imageSrcLoadError": "The provided image source could not be loaded. Try with a different url or ensure the source is reachable by MapStore",
             "imageSrcInvalidBase64": "This is not a valid base64 image. Some style renderer does not support this type of source, you could use an external url source instead",

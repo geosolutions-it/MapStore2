@@ -2133,6 +2133,12 @@
             "fontWeightBold": "Negrita",
             "boolTrue": "Verdadero",
             "boolFalse": "Falso",
+            "colorMapType": {
+              "label": "Tipo de mapa de color",
+              "ramp": "Rampa",
+              "intervals": "Intervalos",
+              "values": "Valores"
+            },
             "addRuleBefore": "Agregar nueva entrada antes",
             "addRuleAfter": "Agregar nueva entrada después",
             "remove": "Eliminar",
@@ -2193,6 +2199,7 @@
             "emptyRuleEditor": "No hay reglas para este estilo. Agregue una nueva regla haciendo clic en el tipo de simbolizador deseado en la barra de herramientas",
             "classificationError": "Servicio no disponible. Actualmente no es posible crear una clasificación",
             "classificationRasterError": "Servicio no disponible. Actualmente no es posible crear una clasificación ráster",
+            "classificationRasterUniqueIntervalError": "No se puede realizar una clasificación de valor único sobre ráster de tipo flotante, solo se admiten números enteros. Prueba con otra clasificación en su lugar",
             "classificationUniqueIntervalError": "¡Se excedieron los límites máximos de intervalos! Está intentando generar una clasificación de intervalo única con un atributo que contiene más de {intervalsForUnique} clases diferentes. La clasificación de intervalo único debe aplicarse a los atributos con un conjunto limitado de intervalos para permitir una mejor legibilidad del estilo. Puede probar un método diferente para el atributo seleccionado",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",

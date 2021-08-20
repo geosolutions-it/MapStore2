@@ -2134,6 +2134,12 @@
             "fontWeightBold": "Grassetto",
             "boolTrue": "Si",
             "boolFalse": "No",
+            "colorMapType": {
+              "label": "Tipo di mappa dei colori",
+              "ramp": "Rampa",
+              "intervals": "Intervalli",
+              "values": "Valori"
+            },
             "addRuleBefore": "Aggiungi una nuova voce prima",
             "addRuleAfter": "Aggiungi nuova voce dopo",
             "remove": "Rimuovere",
@@ -2194,6 +2200,7 @@
             "emptyRuleEditor": "Non ci sono regole per questo stile. Aggiungi una nuova regola facendo clic sul tipo di stile desiderato nella barra degli strumenti",
             "classificationError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione",
             "classificationRasterError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione raster",
+            "classificationRasterUniqueIntervalError": "Impossibile eseguire la classificazione di valori univoci su raster di tipo float, sono supportati solo numeri interi. Prova invece un'altra classificazione",
             "classificationUniqueIntervalError": "Superato il limite massimo di intervalli! Stai tentando di generare una classificazione ad intervallo univoco con un attributo che contiene più di {intervalsForUnique} classi diverse. La classificazione ad intervallo univoco dovrebbe essere applicata agli attributi con un insieme limitato di intervalli per consentire una migliore leggibilità dello stile. Puoi provare un metodo diverso per l'attributo selezionato",
             "redChannel": "Canale rosso",
             "greenChannel": "Canale verde",
