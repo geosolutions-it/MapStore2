@@ -180,6 +180,21 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
       "format": "image/png8", // image format needs to be configured also inside layerOptions
       "tileSize": 512 // determine the default tile size for the catalog, valid for WMS and CSW catalogs
   },
+  "filter": { // applicable only for CSW service
+      "staticFilter": "filter is always applied, even when search text is NOT PRESENT",
+      "dynamicFilter": "filter is used when search text is PRESENT and is applied in `AND` with staticFilter. The template is used with ${searchText} placeholder to append search string"
+  }
+}
+```
+CSW service
+<br> `filter` - For both static and dynamic filter, input only xml element contained within <ogc:Filter> (i.e. Do not enclose the filter value in <ogc:Filter>)<br>
+<br>Example:<br>
+```javascript
+{
+    "filter": { // Default filter values
+        "staticFilter": "<ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or>",
+        "dynamicFilter": "<ogc:PropertyIsLike wildCard='%' singleChar='_' escapeChar='\\'><ogc:PropertyName>csw:AnyText</ogc:PropertyName><ogc:Literal>%${searchText}%</ogc:Literal></ogc:PropertyIsLike>"
+    }
 }
 ```
 

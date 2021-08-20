@@ -12,6 +12,7 @@ import { FormGroup, Checkbox, Col } from "react-bootstrap";
 
 import Message from "../../../I18N/Message";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
+import CSWFilters from "./CSWFilters";
 
 /**
  * Common Advanced settings form, used by WMS/CSW/WMTS
@@ -96,5 +97,8 @@ export default ({
             </Col>
         </FormGroup>)}
         {children}
+        {!isNil(service.type) && service.type === "csw" &&
+            <CSWFilters filter={service?.filter} onChangeServiceProperty={onChangeServiceProperty}/>
+        }
     </div>
 );

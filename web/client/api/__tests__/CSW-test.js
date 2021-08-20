@@ -156,4 +156,19 @@ describe("constructXMLBody", () => {
         const body2 = constructXMLBody(1, 5, null);
         expect(body2.indexOf("PropertyIsEqualTo")).toNotBe(-1);
     });
+    it("construct body with custom filter", () => {
+        const filter = {
+            staticFilter: "<ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or>",
+            dynamicFilter: "<ogc:PropertyIsLike wildCard='*' singleChar='_' escapeChar='\\'><ogc:PropertyName>csw:AnyText</ogc:PropertyName><ogc:Literal>${searchText}*</ogc:Literal></ogc:PropertyIsLike>"
+        };
+        // With search text
+        let body = constructXMLBody(1, 5, "text", {filter});
+
+        expect(body.indexOf("text*")).toNotBe(-1); // Dynamic filter
+
+        // Empty search
+        body = constructXMLBody(1, 5, null);
+        expect(body.indexOf("dc:type")).toNotBe(-1); // Static filter
+        expect(body.indexOf("text*")).toBe(-1); // Dynamic filter
+    });
 });
