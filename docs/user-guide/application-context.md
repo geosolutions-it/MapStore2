@@ -125,15 +125,19 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 
 ## Configure Theme
 
-The last wizard steps allows to configure the theme of the context. In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the theme can be **default**  or **dark**.
+The last wizard steps allows to configure the theme of the context. In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the theme can be **default**, **dark** or **custom**.
 
 <img src="../img/application-context/step_four.jpg" class="ms-docimage"/>
 
-The **default** theme is automatically applied when the user clicks the **Save** button <img src="../img/button/save_blue_button.jpg" class="ms-docbutton"/> by skipping the *Configure Theme* page. An example of a default context can be the following:
+### Default Theme
+
+The **default** theme is automatically applied when the editor clicks the **Save** button <img src="../img/button/save_blue_button.jpg" class="ms-docbutton"/> by skipping the *Configure Theme* page. An example of a default context can be the following:
 
 <img src="../img/application-context/default_theme.jpg" class="ms-docimage"/>
 
-To activate the **dark** theme, the user can click on dark in the drop-down menu.
+### Dark Theme
+
+To activate the **dark** theme, the editor can click on dark in the drop-down menu.
 
 <img src="../img/application-context/dark_theme.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -141,4 +145,33 @@ An example of a dark context can be the following:
 
 <img src="../img/application-context/dark_context.jpg" class="ms-docimage"/>
 
+### Custom Theme
 
+The editor is allows to customize the theme enabling the **Custom Variables**. 
+
+<img src="../img/application-context/custom_variables.jpg" class="ms-docimage" style="max-width:400px;"/>
+
+Once the **Custom Variables** is enable, the editor can choose the color of the different variables by clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> so thet a color picker is displayed to allow the selection of the desire color, as follows:
+
+<img src="../img/application-context/color_picker_theme.gif" class="ms-docimage"/>
+
+The variables to customized are:
+
+* **Main Text Color** to choose the color used in panel or dialog texts
+
+* **Main Background Color** to choose the color used in panel or dialog backgrounds
+
+* **Primary Text Color** to choose the color used on icons inside toolbar, header and button texts
+
+* **Primary Color** to choose the color used on icons inside toolbar, header and button backgrounds
+
+* **Secondary Text Color** to choose the color used as button text when a button is active or selected 
+
+* **Secondary Color** to choose the color used as button background when a button is active or selected 
+
+!!! warning
+    Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary).
+
+An example of a custom context can be the following:
+
+<img src="../img/application-context/cutom_context.jpg" class="ms-docimage"/>
