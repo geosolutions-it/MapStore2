@@ -1893,7 +1893,7 @@ describe('FilterUtils', () => {
         const operator = "contains";
         const value = "1234";
         let filter = cqlArrayField(attribute, operator, value);
-        expect(filter).toEqual(`InArray(${attribute},${value})=true`);
+        expect(filter).toEqual(`InArray(${value},${attribute})=true`);
 
         filter = cqlArrayField(attribute, "<", value);
         expect(filter).toEqual("");
