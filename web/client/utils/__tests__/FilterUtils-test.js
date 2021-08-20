@@ -1916,7 +1916,7 @@ describe('FilterUtils', () => {
             }]
         };
         let filter = processCQLFilterFields(group, objFilter);
-        expect(filter).toEqual(`InArray(${attribute},${value})=true`);
+        expect(filter).toEqual(`InArray(${value},${attribute})=true`);
         objFilter = {
             filterFields: [{
                 groupId: 1
