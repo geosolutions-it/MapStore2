@@ -28,6 +28,8 @@ RUN if [ "${OVR}" = "geostore-datasource-ovr.properties" ]; then \
         cp ${CATALINA_BASE}/docker/geostore-datasource-ovr.properties ${CATALINA_BASE}/conf; \
     fi
 
+RUN cp ${CATALINA_BASE}/docker/wait-for-postgres.sh /usr/bin/wait-for-postgres && chmod +x /usr/bin/wait-for-postgres
+
 RUN apt-get update \
     && apt-get install --yes postgresql-client-${PG_CLIENT_VERSION}
 
