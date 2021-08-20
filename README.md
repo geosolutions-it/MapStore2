@@ -70,7 +70,7 @@ There are two quick ways to test out MapStore. Either using <a href="https://www
 
 - After the docker-compose finish, you can access to the site using following URL:
 
-  [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
+  [http://localhost/mapstore](http://localhost/mapstore)
 
 
 - Use the default credentials (**admin** / **admin**) to login and start creating your maps!
