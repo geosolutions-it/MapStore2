@@ -60,7 +60,7 @@ const renderHelpText = (
     </HelpBlock>
 );
 
-const FilterCodeMirror = ({ type, code, setCode, error }) => {
+const FilterCode = ({ type, code, setCode, error }) => {
     const filterProp = `${type}Filter`;
     return (
         <FormGroup>
@@ -93,9 +93,6 @@ export default ({
     const [code, setCode] = useState({ staticFilter, dynamicFilter });
 
     const cmProps = { code, setCode, error };
-    const StaticFilter = FilterCodeMirror;
-    const DynamicFilter = FilterCodeMirror;
-
     const isValid = value => {
         const _filter = template(cswGetRecordsXml)({
             filterXml: value,
@@ -125,8 +122,8 @@ export default ({
 
     return (
         <div className={"catalog-csw-filters"}>
-            <StaticFilter type={"static"} {...cmProps} />
-            <DynamicFilter type={"dynamic"} {...cmProps} />
+            <FilterCode type={"static"} {...cmProps} />
+            <FilterCode type={"dynamic"} {...cmProps} />
         </div>
     );
 };
