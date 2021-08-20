@@ -209,13 +209,15 @@ export function updateStyleService({ baseUrl, styleService }) {
  * @param {object} properties current properties of the rule that needs update
  * @param {array} rules rules of a style object
  * @param {object} layer layer configuration object
+ * @param {object} styleService style service configuration object
  * @returns {promise} return new rules with updated property and classification
  */
 export function classificationVector({
     values,
     properties,
     rules,
-    layer
+    layer,
+    styleService
 }) {
 
     let paramsKeys = [
@@ -276,7 +278,7 @@ export function classificationVector({
             attribute: params.attribute,
             intervalsForUnique: params.intervalsForUnique
         };
-        return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService))
+        return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService, styleService))
             .then(({ data }) => {
                 return updateRules(ruleId, rules, (rule) => ({
                     ...rule,
@@ -300,13 +302,15 @@ export function classificationVector({
  * @param {object} properties current properties of the rule that needs update
  * @param {array} rules rules of a style object
  * @param {object} layer layer configuration object
+ * @param {object} styleService style service configuration object
  * @returns {promise} return new rules with updated property and classification
  */
 export function classificationRaster({
     values,
     properties,
     rules,
-    layer
+    layer,
+    styleService
 }) {
 
     const paramsKeys = [
@@ -367,7 +371,7 @@ export function classificationRaster({
             method: params.method,
             reverse: params.reverse,
             intervalsForUnique: params.intervalsForUnique
-        }))
+        }, styleService))
             .then(({ data }) => {
                 return updateRules(ruleId, rules, (rule) => ({
                     ...rule,
