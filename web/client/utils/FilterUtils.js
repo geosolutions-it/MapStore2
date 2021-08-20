@@ -193,6 +193,29 @@ export const  ogcBooleanField = (attribute, operator, value, nsplaceholder) => {
     }
     return fieldFilter;
 };
+/**
+ * it creates a ogc filter for array attributes
+ * it ignores empty values
+ * @param {string} attribute
+ * @param {string} operator
+ * @param {string|number} value can be anything
+ * @return the ogc filter
+*/
+export const ogcArrayField = (attribute, operator, value, nsplaceholder) => {
+    let fieldFilter = "";
+    if (checkOperatorValidity(value, operator)) {
+        if (operator === "contains" && value !== "") {
+            fieldFilter = `<${nsplaceholder}:PropertyIsEqualTo>
+                <${nsplaceholder}:Function name="InArray">
+                    <${nsplaceholder}:Literal>${value}</${nsplaceholder}:Literal>
+                    <${nsplaceholder}:PropertyName>${attribute}</${nsplaceholder}:PropertyName>
+                </${nsplaceholder}:Function>
+                <${nsplaceholder}:Literal>true</${nsplaceholder}:Literal>
+            </${nsplaceholder}:PropertyIsEqualTo>`;
+        }
+    }
+    return fieldFilter;
+};
 export const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
     if (operator === "><") {
@@ -242,6 +265,9 @@ export const processOGCSimpleFilterField = (field, nsplaceholder) => {
     switch (field.type) {
     case "date":
         filter = ogcDateField(field.attribute, field.operator, field.values, nsplaceholder);
+        break;
+    case "array":
+        filter = ogcArrayField(field.attribute, field.operator, field.values, nsplaceholder);
         break;
     case "number":
         filter = ogcNumberField(field.attribute, field.operator, field.values, nsplaceholder);
@@ -457,6 +483,9 @@ export const processOGCFilterFields = function(group, objFilter, nsplaceholder) 
                 break;
             case "list":
                 fieldFilter = ogcListField(field.attribute, field.operator, field.value, nsplaceholder);
+                break;
+            case "array":
+                fieldFilter = ogcArrayField(field.attribute, field.operator, field.value, nsplaceholder);
                 break;
             default:
                 break;
@@ -796,6 +825,15 @@ export const cqlDateField = function(attribute, operator, value) {
     return fieldFilter;
 };
 
+export const cqlArrayField = function(attribute, operator, value) {
+    switch (operator) {
+    case "contains": {
+        return `InArray(${attribute},${value})=true`;
+    }
+    default: return "";
+    }
+};
+
 export const cqlStringField = function(attribute, operator, value) {
     let fieldFilter;
     const wrappedAttr = wrapAttributeWithDoubleQuotes(attribute);
@@ -890,6 +928,9 @@ export const processCQLFilterFields = function(group, objFilter) {
                 break;
             case "list":
                 fieldFilter = FilterUtils.cqlListField(field.attribute, field.operator, field.value);
+                break;
+            case "array":
+                fieldFilter = FilterUtils.cqlArrayField(field.attribute, field.operator, field.value);
                 break;
             default:
                 break;
@@ -1148,6 +1189,7 @@ FilterUtils = {
     cqlStringField,
     cqlDateField,
     cqlNumberField,
+    cqlArrayField,
     cqlBooleanField,
     cqlListField,
     toOGCFilter,

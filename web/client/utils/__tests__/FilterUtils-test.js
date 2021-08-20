@@ -18,7 +18,12 @@ import {
     cqlStringField,
     ogcBooleanField,
     getCrossLayerCqlFilter,
-    composeAttributeFilters
+    composeAttributeFilters,
+    ogcArrayField,
+    cqlArrayField,
+    processOGCFilterFields,
+    processOGCSimpleFilterField,
+    processCQLFilterFields
 } from '../FilterUtils';
 
 
@@ -1796,5 +1801,128 @@ describe('FilterUtils', () => {
         expect(filter).toExist();
         expect(filter).toBe("(\"attribute1\"='value1') AND " +
             "(INTERSECTS(\"the_geom\",SRID=4326;Polygon((1 2, 2 3, 3 4, 1 2))) AND INTERSECTS(\"the_geom\",SRID=4326;Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
+    });
+    it('ogcArrayField', () => {
+        const attribute = "array_field";
+        const operator = "contains";
+        const value = "1234";
+        const nsplaceholder = "ogc";
+        let filter = ogcArrayField(attribute, operator, value, nsplaceholder);
+        expect(filter).toEqual(`<${nsplaceholder}:PropertyIsEqualTo>
+                <${nsplaceholder}:Function name="InArray">
+                    <${nsplaceholder}:Literal>${value}</${nsplaceholder}:Literal>
+                    <${nsplaceholder}:PropertyName>${attribute}</${nsplaceholder}:PropertyName>
+                </${nsplaceholder}:Function>
+                <${nsplaceholder}:Literal>true</${nsplaceholder}:Literal>
+            </${nsplaceholder}:PropertyIsEqualTo>`);
+
+        filter = ogcArrayField(attribute, operator, "", nsplaceholder);
+        expect(filter).toEqual("");
+        filter = ogcArrayField(attribute, "<", "val", nsplaceholder);
+        expect(filter).toEqual("");
+    });
+    it('processOGCSimpleFilterField', () => {
+        const attribute = "array_field";
+        const operator = "contains";
+        const values = "1234";
+        const nsplaceholder = "ogc";
+        const type = "array";
+        const groupId = 1;
+
+        let field = {
+            groupId,
+            attribute,
+            type,
+            operator,
+            values
+        };
+        let filter = processOGCSimpleFilterField(field, nsplaceholder);
+        expect(filter).toEqual(`<${nsplaceholder}:PropertyIsEqualTo>
+                <${nsplaceholder}:Function name="InArray">
+                    <${nsplaceholder}:Literal>${values}</${nsplaceholder}:Literal>
+                    <${nsplaceholder}:PropertyName>${attribute}</${nsplaceholder}:PropertyName>
+                </${nsplaceholder}:Function>
+                <${nsplaceholder}:Literal>true</${nsplaceholder}:Literal>
+            </${nsplaceholder}:PropertyIsEqualTo>`);
+        field = {
+            groupId,
+            attribute,
+            type,
+            operator: "<",
+            values
+        };
+        filter = processOGCSimpleFilterField(field, nsplaceholder);
+        expect(filter).toEqual("");
+    });
+    it('processOGCFilterFields', () => {
+        const group = {id: 1};
+        const attribute = "array_field";
+        const operator = "contains";
+        const value = "1234";
+        const nsplaceholder = "ogc";
+        const type = "array";
+        const groupId = 1;
+        let objFilter = {
+            filterFields: [{
+                groupId,
+                attribute,
+                type,
+                operator,
+                value
+            }]
+        };
+        let filter = processOGCFilterFields(group, objFilter, nsplaceholder);
+        expect(filter).toEqual(`<${nsplaceholder}:PropertyIsEqualTo>
+                <${nsplaceholder}:Function name="InArray">
+                    <${nsplaceholder}:Literal>${value}</${nsplaceholder}:Literal>
+                    <${nsplaceholder}:PropertyName>${attribute}</${nsplaceholder}:PropertyName>
+                </${nsplaceholder}:Function>
+                <${nsplaceholder}:Literal>true</${nsplaceholder}:Literal>
+            </${nsplaceholder}:PropertyIsEqualTo>`);
+        objFilter = {
+            filterFields: [{
+                groupId: 1
+            }]
+        };
+        filter = processOGCFilterFields(group, objFilter, nsplaceholder);
+        expect(filter).toEqual("");
+
+    });
+    it('cqlArrayField', () => {
+        const attribute = "array_field";
+        const operator = "contains";
+        const value = "1234";
+        let filter = cqlArrayField(attribute, operator, value);
+        expect(filter).toEqual(`InArray(${attribute},${value})=true`);
+
+        filter = cqlArrayField(attribute, "<", value);
+        expect(filter).toEqual("");
+    });
+    it('processCQLFilterFields', () => {
+        const group = {id: 1};
+
+        const attribute = "array_field";
+        const operator = "contains";
+        const value = "1234";
+        const type = "array";
+        const groupId = 1;
+        let objFilter = {
+            filterFields: [{
+                groupId,
+                attribute,
+                type,
+                operator,
+                value
+            }]
+        };
+        let filter = processCQLFilterFields(group, objFilter);
+        expect(filter).toEqual(`InArray(${attribute},${value})=true`);
+        objFilter = {
+            filterFields: [{
+                groupId: 1
+            }]
+        };
+        filter = processCQLFilterFields(group, objFilter);
+        expect(filter).toEqual("");
     });
 });
