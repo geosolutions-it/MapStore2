@@ -88,6 +88,9 @@
                 .ms-geo-carousel-item-selected {
                     .border-color-var(@theme-vars[primary]);
                 }
+                .ms-carousel-slider {
+                    .background-color-var(@theme-vars[main-bg]);
+                }
             }
 
             .ms-carousel-map-info,
@@ -800,6 +803,23 @@
                 height: 100%;
             }
         }
+        .ms-carousel-slider {
+            position: absolute;
+            top: calc(50% - 10px);
+            bottom: 2px;
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: bold;
+            border-color: transparent;
+            &.left-arrow {
+                left: 4px;
+            }
+            &.right-arrow {
+                right: 4px;
+            }
+        }
 
         .add-bar {
             position: relative;
@@ -1012,7 +1032,7 @@
                 min-width: 500px;
                     display: flex; // align vertically the content
                     pointer-events: none; // pass pointer events to background (this div takes full width and height)
-                    padding: 64px (@square-btn-medium-size + 6px);
+                    padding: 64px (@square-btn-size + 8px);
                     padding-top: 164px;
                 &>.ms-content-body {
                     // override background of paragraph (or title) content.

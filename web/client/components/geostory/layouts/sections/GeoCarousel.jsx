@@ -27,10 +27,12 @@ import {
 import pattern from './patterns/world.svg';
 import get from 'lodash/get';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import Carousel from "../../contents/carousel/Carousel";
 import InfoCarousel from "../../contents/carousel/InfoCarousel";
 import LocalDrawSupport from '../../common/map/LocalDrawSupport';
 import FitBounds from '../../common/map/FitBounds';
+import ViewerSlider from "../../contents/carousel/ViewerSlider";
 
 /**
  * GeoCarousel Section Type
@@ -152,6 +154,17 @@ const GeoCarousel = ({
     const isMapBackground = background?.type === MediaTypes.MAP;
 
     const { features = [] } = contents.find(content => content.id === contentId) || {};
+
+    const currentContentIndex = findIndex(contents, ({id: _id}) => contentId === _id);
+    const onTraverseCard = (traverse = 'left') => {
+        let _contentId;
+        if (traverse === 'left') {
+            _contentId = contents?.[currentContentIndex === 0 ? 0 : currentContentIndex - 1]?.id;
+        } else {
+            _contentId = contents?.[currentContentIndex === contents.length - 1 ? currentContentIndex : currentContentIndex + 1]?.id;
+        }
+        update(`sections[{"id":"${id}"}].contents[{"id":"${_contentId}"}].carouselToggle`, true);
+    };
 
     const contentsLayer = getVectorLayerFromContents({
         id,
@@ -284,6 +297,9 @@ const GeoCarousel = ({
                 onEnableDraw({ contentId: content.id, sectionId: id });
             }}
         />
+        {mode === Modes.VIEW && !expandableMedia && <ViewerSlider
+            currentIndex={currentContentIndex} contents={contents} onTraverseCard={onTraverseCard}/>
+        }
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}
             containerHeight={viewHeight}
