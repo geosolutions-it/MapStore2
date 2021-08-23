@@ -278,7 +278,7 @@
             }
         },
         "home":{
-            "titolo_pagina": "Geoportale RSE - ART",
+            "titolo_pagina": "Geoportale RSE - ART ART",
             "open": "Apri",
             "shortDescription": "Il geoportale di RSE - versione 2021 <br/><small><a href=\"http://www.rse-web.it\" target='_blank'>Visita il sito di RSE</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
