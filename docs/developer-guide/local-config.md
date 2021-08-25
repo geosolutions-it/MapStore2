@@ -422,22 +422,6 @@ WFS configuration with nested services:
   ]
 }
 ```
-Configuration parameters for searchOptions:
-
-- **then** - is the mandatory property to configure the nested service, every object in array, defines the steps of the search, performed by priority order.
-
-- **nestedPlacehodler** / **nestedPlaceholderMsgId** - the placeholder will be displayed in the input text, after you have performed the search"
-
-- **staticFilter** - is valid for every service (even not nested), but if it is nested, you can use the selected feature from the parent service to specify this filter, that will be appended to the usual ilike filter used for searching text (wfs only)
-
-- **searchTextTemplate** - used to complete the text when an item is selected. (e.g. *I type "ro", I select an entry relative to "rome" and I want that the final text in search is "rome". Can be used for every service that is a leaf (so it doesn't contain any nested service)
-
-- **launchInfoPanel** - this is used to trigger get feature requests once a record is selected after a search. it has the following values:
-  - undefined | not configured, it does not perform the GFI request
-  - "single_layer", it performs the GFI request for one layer only with only that record as a result, info_format is forced to be application/json
-  - "all_layers", it performs the GFI for all layers, as a normal GFI triggered by clicking on the map
-
-- **geomService** - this param can be used when you have to get the geometry from a different service (e.g. with custom services, that do not contain the geometry, need to get it from a different, wfs, service)
 
 Custom services configuration:
 ```javascript
@@ -462,3 +446,7 @@ Custom services configuration:
   }
 }
 ```
+Custom service allow you to define your remote service for text search,
+in this case you will need to write **your own service**, to require the data to remote API
+
+For more details, please go to plugin api documentation: [https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search)

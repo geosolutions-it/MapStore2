@@ -182,7 +182,7 @@ const SearchResultList = connect(selector, {
  *  "nestedPlaceholder": "Write other text to refine the search...",
  *  "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
  *  "then": [ ... an array of services to use when one item of this service is selected],
- *  "geomService": { optional service to retrieve the geometry}
+ *  "geomService": { optional service to retrieve the geometry }
  *
  * ```
  * a service, may have nested services, that allow you to search in several steps,
@@ -221,9 +221,41 @@ const SearchResultList = connect(selector, {
  * **note:** `searchTextTemplate` used to complete the text when an item is selected.
  * (e.g. *I type "ro", I select an entry relative to "rome" and I want that the final text in search is "rome".*
  * Can be used for every service that is a leaf (so it doesn't contain any nested service)
-* <br/> <br/> *Nested services can be used also with custom service, instead of `wfs`, in this case you will need to write your own code,
-to require the data to remote API*
+* <br/> <br/> Nested services can be used also with **custom service**, that allow you to define your remote service for text search,
+in this case you will need to write your own service, to require the data to remote API
+<br/>
+<br/>
+An example to require the data api:
 
+```
+* const {API} = require('../../MapStore2/web/client/api/searchText');
+
+*function myRoads(text, options) {
+*    axios.get(`/myService?text=${text}`).then(( results ) => {
+*              // results are [{title: "text", description: "description"}]
+*              return results.map((item) => ({
+*                        "type": "Feature",
+*                        "properties": {
+*                            "title": item.title,
+*                            "description": item.description
+*                        }
+*                    })
+*    })
+* }
+* API.Utils.setService("myRoads", myRoads);
+```
+*the myRoads service, must be a function, with this params:
+*
+* - text: the text to search
+* - options: the configurations of the service (like protocol, host, pathname, lang)
+*
+* the function return a promise, that must emit an array of geoJSON features,
+* if the geometry is not in the result, is possible to use the **geomService**.
+* GeomService is a service like other, that use  same properties to retrive the geometry of the selected result.
+*
+*<br>
+*an example of custom service with geomService
+*<br>
 ```
 "then" : [
                 {
@@ -247,9 +279,6 @@ to require the data to remote API*
                 }
               }]
 ```
-* if you use a custom service, you may need to get the geometry from third party services, this option
-is define by **geomService** param
-
 
  * @prop {string} cfg.searchOptions.services[].launchInfoPanel this is used to trigger get feature requests once a record is selected after a search.
  * it has the following values:
