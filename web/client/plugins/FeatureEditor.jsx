@@ -285,6 +285,9 @@ const EditorPlugin = compose(
             if (!isEqual(newOptions, oldOptions) ) {
                 this.props.onMount(newOptions);
             }
+            if (this.props.enableMapFilterSync) {
+                this.props.setSyncTool(true);
+            }
         }
     }),
     connect(selector,
