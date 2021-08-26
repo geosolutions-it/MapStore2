@@ -69,6 +69,7 @@ export const drawSupportActiveSelector = (state) => {
 export const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 export const mapInfoEnabledSelector = (state) => get(state, "mapInfo.enabled", false);
 export const mapInfoDisabledSelector = (state) => !mapInfoEnabledSelector(state);
+export const confirmIdentifyIsMounted = (state) => get(state, "mapInfo.confirmIdentifyIsMounted");
 
 /**
  * selects stopGetFeatureInfo from state
@@ -81,6 +82,7 @@ export const stopGetFeatureInfoSelector = createSelector(
     measureActiveSelector,
     drawSupportActiveSelector,
     annotationsEditingSelector,
+    confirmIdentifyIsMounted,
     isPluginInContext('Identify'),
     (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, identifyPluginPresent) =>
         isMapInfoDisabled

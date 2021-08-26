@@ -37,6 +37,7 @@ export const SET_MAP_TRIGGER = 'IDENTIFY:SET_MAP_TRIGGER';
 export const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 
 export const SET_SHOW_IN_MAP_POPUP = "IDENTIFY:SET_SHOW_IN_MAP_POPUP";
+export const IDENTIFY_IS_MOUNTED = "IDENTIFY:IDENTIFY_IS_MOUNTED";
 
 export const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
 
@@ -284,4 +285,14 @@ export const setMapTrigger = (trigger) => ({
 export const setShowInMapPopup = (value) => ({
     type: SET_SHOW_IN_MAP_POPUP,
     value
+});
+
+/**
+ * Checks if Identify plugin is mounted to the DOM
+ * @param identifyIsMounted
+ * @returns {{type: string, identifyIsMounted}}
+ */
+export const checkIdentifyIsMounted = (identifyIsMounted)=>({
+    type: IDENTIFY_IS_MOUNTED,
+    identifyIsMounted
 });
