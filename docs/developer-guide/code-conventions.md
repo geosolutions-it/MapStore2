@@ -2,7 +2,7 @@
 
 In order to preserve quality, maintainability and testability when you develop in MapStore  you should follow the following rules and best practices.
 
-# TL;DR
+## TL;DR
 
 - Access to the state using state selectors
 - Prefer plugins `cfg` over `initialState` for plugins configurations
