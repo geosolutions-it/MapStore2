@@ -45,7 +45,8 @@ describe('LangSelector', () => {
             'Hrvatski': 'hr-HR',
             'Português': 'pt-PT',
             "tiếng Việt": "vi-VN",
-            'Suomi': 'fi-FI'
+            'Suomi': 'fi-FI',
+            'Svenska': 'sv-SE'
         };
 
         for (let i = 0; i < opts.length; i++) {
