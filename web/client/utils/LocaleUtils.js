@@ -72,6 +72,10 @@ let supportedLocales = {
     "fi": {
         code: "fi-FI",
         description: "Suomi"
+    },
+    "sv": {
+        code: "sv-SE",
+        description: "Svenska"
     }
 };
 export const DATE_FORMATS = {

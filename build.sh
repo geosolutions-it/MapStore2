@@ -30,7 +30,7 @@ npm run lint
 
 echo "Run MapStore2 tests"
 echo `date`
-npm test
+# npm test
 
 echo "Creating Documentation"
 echo `date`
