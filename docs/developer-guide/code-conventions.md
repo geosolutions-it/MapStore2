@@ -5,7 +5,7 @@ In order to preserve quality, maintainability and testability when you develop i
 # TL;DR
 
 - Access to the state using state selectors
-- Prefer plugin configuration over `initialState` for plugins configurations
+- Prefer plugins `cfg` over `initialState` for plugins configurations
 - Use `web/client/libs/ajax` in your hooks or in redux-observable for async
 
 ## Access to the state using state selectors
@@ -28,7 +28,7 @@ If you don't work on a core functionality, where the state is shared between man
 
 ## Prefer plugin configuration over `initialState` 
 
-In order to create self contained plugins that can be reused you should prefer to configure the plugins using `cfg`. Using `initialState` should be considered deprecated. When the configuration is needed at an higher level, you should properly initialize the state of the plugin on your own triggering an action on mount/unmont. (`cfg` are passed to the plugin as react props). 
+In order to create self contained plugins that can be reused you should prefer to configure the plugins using `cfg`. Using `initialState` should be considered deprecated. When the configuration is needed at an higher level (e.g. application state, for epics or to share this information), you should properly initialize the state of the plugin on your own triggering an action on mount/unmont. (`cfg` are passed to the plugin as react props). 
 
 
 ## Use custom axios version for async requests
