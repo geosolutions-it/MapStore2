@@ -325,7 +325,13 @@ with the following properties:
 
 ### Search plugin configuration
 
-Provides search functionalities for the map. Allows to display results and place them on the map. Supports nominatim and WFS as search protocols. You can configure the services and each service can trigger a nested search.
+The search plugin provides several configurations to customize the services behind the search bar in the map: 
+- Allow to configure more many services to use in parallel, in the `services` array.
+- Natively supports nominatim and WFS protcols
+- Allows to register **your own** custom services to develop and use in your custom project
+- Allows to configure services in cascade, typically when you have a hierarchical data structures ( e.g. search for municipality, then for street name, than for house number, or search state,then region, then specific feature, and so on...)
+
+Following you can find some examples of the various configurations. For more details about the properties, please check to plugin API documentation: [https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search)
 
 Nominatim configuration:
 ```javascript
@@ -446,7 +452,3 @@ Custom services configuration:
   }
 }
 ```
-Custom service allow you to define your remote service for text search,
-in this case you will need to write **your own service**, to require the data to remote API
-
-For more details, please go to plugin api documentation: [https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search)
