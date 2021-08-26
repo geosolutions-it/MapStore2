@@ -4,9 +4,9 @@ import {PropTypes} from 'prop-types';
 import Message from '../../I18N/Message';
 
 
-function WidgetEmptyMessage({ glyph = 'info-sign', messageId}) {
+function WidgetEmptyMessage({ glyph = 'info-sign', messageId, msgParams = {}}) {
     return (<div className="ms-widget-empty-message">
-        <Glyphicon glyph={glyph}/>&nbsp; <Message msgId={messageId} />
+        <Glyphicon glyph={glyph}/>&nbsp; <Message msgId={messageId} msgParams={msgParams}/>
     </div>);
 }
 
