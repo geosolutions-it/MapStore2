@@ -190,7 +190,7 @@ const SearchResultList = connect(selector, {
  * </br>When a service has nested services it needs some additional configurations, like `nestedPlaceholder` and `then`
 * @prop {string} cfg.searchOptions.services[].nestedPlaceholder the placeholder will be displayed in the input text, after you have performed the first search.
 * @prop {object[]} cfg.searchOptions.services[].then is the mandatory property to configure the nested service(s). Every object in array. When a entry is selected from the parent service, then the search bar will use these services for the next step (also in this case performed by `priority` order).
- * defines the steps of the search, performed by priority order
+ * To get  information from the item selected in the parent service, you can use `staticFilter` property (for WFS) as a template to complete the CQL_FILTER of the nested service (see the example below). _TODO: this is limited to WFS. For custom services it may be useful to pass the whole item selected to the nested service_.
 
  * ```
  * {
