@@ -22,7 +22,8 @@ import {
     isEmpty,
     findIndex,
     cloneDeep,
-    minBy
+    minBy,
+    omit
 } from 'lodash';
 
 import uuidv1 from 'uuid/v1';
@@ -482,7 +483,10 @@ export const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
             ]
         }] : [])
     ];
-    const backgroundLayers = layers.filter(layer => layer.group === 'background');
+    const toleratedFields = ['id', 'visibility'];
+    const backgroundLayers = layers.filter(layer => layer.group === 'background')
+        // remove duplication by comparing all fields with some level of tolerance
+        .filter((l1, i, a) => findIndex(a, (l2) => isEqual(omit(l1, toleratedFields), omit(l2, toleratedFields))) === i);
     const firstVisible = findIndex(backgroundLayers, layer => layer.visibility);
 
     const sources1 = get(cfg1, 'map.sources', {});
