@@ -189,7 +189,7 @@ const SearchResultList = connect(selector, {
  * </br> (e.g. *search for a street and in the next step search for the street number.*)
  * </br>When a service has nested services it needs some additional configurations, like `nestedPlaceholder` and `then`
 * @prop {string} cfg.searchOptions.services[].nestedPlaceholder the placeholder will be displayed in the input text, after you have performed the first search.
-* @prop {then[]} cfg.searchOptions.services[].then is the mandatory property to configure the nested service, every object in array,
+* @prop {object[]} cfg.searchOptions.services[].then is the mandatory property to configure the nested service(s). Every object in array. When a entry is selected from the parent service, then the search bar will use these services for the next step (also in this case performed by `priority` order).
  * defines the steps of the search, performed by priority order
 
  * ```
