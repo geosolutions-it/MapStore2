@@ -15,6 +15,7 @@ import {
     SET_CONTROL_PROPERTIES,
     RESET_CONTROLS
 } from '../../actions/controls';
+import {IDENTIFY_IS_MOUNTED} from "../../actions/mapInfo";
 
 describe('Test the controls reducer', () => {
     it('default case', () => {
@@ -143,5 +144,14 @@ describe('Test the controls reducer', () => {
         expect(state.c3.enabled).toNotExist();
         expect(state.c3.idonthaveenabledfield).toExist();
         expect(state.c3.idonthaveenabledfield).toBe("whatever");
+    });
+
+    it('controls reducer: IDENTIFY_IS_MOUNTED', () => {
+        const initialState = {};
+        expect(controls(initialState, {
+            type: IDENTIFY_IS_MOUNTED,
+            isMounted: true
+        })).toEqual({info: { available: true}});
+
     });
 });
