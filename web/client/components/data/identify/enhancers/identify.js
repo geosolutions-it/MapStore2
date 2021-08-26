@@ -91,9 +91,11 @@ export const identifyLifecycle = compose(
             const {
                 hideMarker = () => { },
                 purgeResults = () => { },
-                changeMousePointer = () => { }
+                changeMousePointer = () => { },
+                checkIdentifyIsMounted = () => {}
             } = this.props;
             changeMousePointer('auto');
+            checkIdentifyIsMounted(false);
             hideMarker();
             purgeResults();
         },

@@ -31,7 +31,7 @@ import {
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
     SET_MAP_TRIGGER,
-    SET_SHOW_IN_MAP_POPUP, IDENTIFY_IS_MOUNTED
+    SET_SHOW_IN_MAP_POPUP
 } from '../actions/mapInfo';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -472,12 +472,6 @@ function mapInfo(state = initState, action) {
             };
         }
         return state;
-    }
-    case IDENTIFY_IS_MOUNTED: {
-        return {
-            ...state,
-            confirmIdentifyIsMounted: action.identifyIsMounted
-        };
     }
     default:
         return state;

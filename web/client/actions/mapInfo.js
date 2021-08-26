@@ -288,11 +288,11 @@ export const setShowInMapPopup = (value) => ({
 });
 
 /**
- * Checks if Identify plugin is mounted to the DOM
+ * Action performed when the identify plugin mounts
  * @param identifyIsMounted
  * @returns {{type: string, identifyIsMounted}}
  */
-export const checkIdentifyIsMounted = (identifyIsMounted)=>({
+export const checkIdentifyIsMounted = (isMounted)=>({
     type: IDENTIFY_IS_MOUNTED,
-    identifyIsMounted
+    isMounted
 });

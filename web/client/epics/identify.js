@@ -227,16 +227,12 @@ export const onMapClick = (action$, store) =>
         return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
     })
         .switchMap(({point, layer}) => {
-            let observable = Rx.Observable.empty();
             const projection = projectionSelector(store.getState());
-            // console.log('|---------->', store.getState(), stopGetFeatureInfoSelector(store.getState()));
-            if (!stopFeatureInfo(store.getState())) {
-                return Rx.Observable.of(featureInfoClick(updatePointWithGeometricFilter(point, projection), layer), cancelSelectedItem())
-                    .merge(Rx.Observable.of(addPopup(uuid(),
-                        {component: IDENTIFY_POPUP, maxWidth: 600, position: {coordinates: point ? point.rawPos : []}}))
-                        .filter(() => isMapPopup(store.getState()))
-                    );
-            } return observable;
+            return Rx.Observable.of(featureInfoClick(updatePointWithGeometricFilter(point, projection), layer), cancelSelectedItem())
+                .merge(Rx.Observable.of(addPopup(uuid(),
+                    {component: IDENTIFY_POPUP, maxWidth: 600, position: {coordinates: point ? point.rawPos : []}}))
+                    .filter(() => isMapPopup(store.getState()))
+                );
         });
 /**
  * Reacts to an update of FeatureInfo coordinates recalculating geometry filter from the map and re-trigger the feature info.
