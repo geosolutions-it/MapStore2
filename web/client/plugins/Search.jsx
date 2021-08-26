@@ -213,8 +213,8 @@ const SearchResultList = connect(selector, {
  * }
  *
  * ```
- * **note:** `staticFilter` is valid for every service (even not nested), but if it is nested,
- * you can use the selected feature from the parent service to specify this filter,
+ * **note:** `staticFilter` is valid for every service (even not nested), but the service it is nested,
+ * it can be used as a template to pass values from the item selected in the parent service to complete this filter
  * that will be appended to the usual ilike filter used for searching text (wfs only)
  * <br/>
  * <br/>
