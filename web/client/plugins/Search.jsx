@@ -185,9 +185,9 @@ const SearchResultList = connect(selector, {
  *  "geomService": { optional service to retrieve the geometry }
  *
  * ```
- * a service, may have nested services, that allow you to search in several steps,
- * </br> (e.g *search for a street and in the next step search for the street number.*)
- * </br>The typical service with nested service needs to have some additional parameters, like **nestedPlaceholder**, **then**
+ * A service may have nested services. This allows you to search in several steps,
+ * </br> (e.g. *search for a street and in the next step search for the street number.*)
+ * </br>When a service has nested services it needs some additional configurations, like `nestedPlaceholder` and `then`
 * @prop {string} cfg.searchOptions.services[].nestedPlaceholder the placeholder will be displayed in the input text, after you have performed the first search.
 * @prop {then[]} cfg.searchOptions.services[].then is the mandatory property to configure the nested service, every object in array,
  * defines the steps of the search, performed by priority order
