@@ -20,6 +20,7 @@ const hr = require('react-intl/locale-data/hr');
 const pt = require('react-intl/locale-data/pt');
 const vi = require('react-intl/locale-data/vi');
 const fi = require('react-intl/locale-data/fi');
+const sv = require('react-intl/locale-data/sv');
 
 addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr, ...pt, ...vi, ...fi, ...sv]);
 
