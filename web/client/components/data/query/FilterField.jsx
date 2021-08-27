@@ -106,7 +106,12 @@ class FilterField extends React.Component {
         let selectedAttribute;
         if (name === "attribute") {
             selectedAttribute = this.props.attributes.filter((attribute) => attribute.attribute === value)[0];
-            this.props.onUpdateField(rowId, name, value, selectedAttribute && selectedAttribute.type || type, fieldOptions);
+            const fieldType = selectedAttribute && selectedAttribute.type || type;
+            this.props.onUpdateField(rowId, name, value, fieldType, fieldOptions);
+
+            if (fieldType === "array") {
+                this.props.onUpdateField(rowId, "operator", "contains", fieldType, fieldOptions);
+            }
         } else {
             this.props.onUpdateField(rowId, name, value, type === 'boolean' ? 'string' : type, fieldOptions);
 
