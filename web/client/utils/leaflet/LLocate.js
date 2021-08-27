@@ -69,7 +69,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
         // Inner marker
         if (this.options.drawMarker) {
             this._marker && this._map.removeLayer(this._marker);
-            if (isFollowing && !isNil(heading)) {
+            if (!isNil(heading)) {
                 this._marker = L.marker(latlng, {
                     ...this.options.followMarkerStyle,
                     rotationAngle: heading
