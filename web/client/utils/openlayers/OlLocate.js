@@ -74,7 +74,7 @@ const OlLocate = function(map, optOptions) {
         this.posFt.setProperties({
             heading
         });
-    })
+    });
     this.popup = popUp;
     this.popup.hidden = true;
     this.popCnt = popUp.getElementsByClassName("ol-popup-cnt")[0];
