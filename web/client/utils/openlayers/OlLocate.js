@@ -69,6 +69,12 @@ const OlLocate = function(map, optOptions) {
     this.geolocate.on('change:position', (this.options.locateOptions.rateControl)
         ? throttle( this.updateHandler, this.options.locateOptions.rateControl )
         : this.updateHandler);
+    this.geolocate.on('change:heading', () => {
+        const heading = this.geolocate.getHeading();
+        this.posFt.setProperties({
+            heading
+        });
+    })
     this.popup = popUp;
     this.popup.hidden = true;
     this.popCnt = popUp.getElementsByClassName("ol-popup-cnt")[0];
