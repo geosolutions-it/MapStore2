@@ -19,12 +19,11 @@ import VectorLayer from 'ol/layer/Vector';
 import Geolocation from 'ol/Geolocation';
 import {Point, Circle} from 'ol/geom';
 import GeometryCollection from 'ol/geom/GeometryCollection';
-import {Style, Fill, Stroke} from 'ol/style';
+import {Style, Fill, Stroke, Icon} from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import throttle from 'lodash/throttle';
 import isNil from 'lodash/isNil';
-import {getMarkerStyleLegacy} from "../../components/map/openlayers/VectorStyle";
-import {createSvgUrl} from "../VectorStyleUtils";
+import {getNavigationArrowSVG} from '../LocateUtils';
 
 
 const popUp = olPopUp();
@@ -33,7 +32,7 @@ const popUp = olPopUp();
 const OlLocate = function(map, optOptions) {
     BaseObject.call(this, {state: "DISABLED"});
     this.map = map;
-    const { heading, circleAccuracy, locate } = this._getDefaultStyles() || {};
+    const locateStyle = this._getDefaultStyles() || {};
     let defOptions = {
         drawCircle: true, // draw accuracy circle
         follow: true, // follow with zoom and pan the user's location
@@ -41,11 +40,7 @@ const OlLocate = function(map, optOptions) {
         // if true locate control remains active on click even if the user's location is in view.
         // clicking control will just pan to location not implemented
         remainActive: true,
-        style: {
-            locate,
-            heading,
-            circleAccuracy
-        },
+        locateStyle,
         metric: true,
         onLocationError: this.onLocationError,
         // keep the current map zoom level when displaying the user's location. (if 'false', use maxZoom)
@@ -71,10 +66,9 @@ const OlLocate = function(map, optOptions) {
     });
     this.updateHandler = this._updatePosFt.bind(this);
 
-    this.geolocate.on('change:position', (this.options.locateOptions.rateControl)
+    this.geolocate.on('change', (this.options.locateOptions.rateControl)
         ? throttle( this.updateHandler, this.options.locateOptions.rateControl )
         : this.updateHandler);
-
     this.popup = popUp;
     this.popup.hidden = true;
     this.popCnt = popUp.getElementsByClassName("ol-popup-cnt")[0];
@@ -87,9 +81,12 @@ const OlLocate = function(map, optOptions) {
         source: new VectorSource({useSpatialIndex: false})});
     this.posFt = new Feature({
         geometry: this.geolocate.getAccuracyGeometry(),
+        properties: {
+            heading: this.geolocate.getHeading()
+        },
         name: 'position',
         id: '_locate-pos'});
-    this.posFt.setStyle(this.options.style.locate);
+    this.posFt.setStyle(this.options.locateStyle);
     this.layer.getSource().addFeature(this.posFt);
 
     this.clickHandler = this.mapClick.bind(this);
@@ -166,6 +163,9 @@ OlLocate.prototype._updatePosFt = function() {
     } else {
         this.posFt.setGeometry(new GeometryCollection([point]));
     }
+    this.posFt.setProperties({
+        heading
+    });
     if (!this.popup.hidden) {
         this._updatePopUpCnt();
     }
@@ -175,24 +175,6 @@ OlLocate.prototype._updatePosFt = function() {
     // Update only once
     if (!this.options.remainActive) {
         this.geolocate.setTracking(false);
-    }
-
-    const {
-        locate,
-        heading: hStyle,
-        circleAccuracy
-    } = this.options.style || {};
-    if (!isNil(heading)) {
-        // Add heading style (navigation arrow with circle accuracy)
-        createSvgUrl(hStyle, hStyle.symbolUrl)
-            .then(symbolUrlCustomized => {
-                return getMarkerStyleLegacy({
-                    style: { ...hStyle, symbolUrlCustomized, rotation: heading }
-                }).concat(new Style({ ...circleAccuracy }));
-            })
-            .then(style => this.posFt.setStyle(style));
-    } else {
-        this.posFt.setStyle(locate); // Reset style when stationary
     }
 };
 
@@ -238,35 +220,37 @@ OlLocate.prototype.mapClick = function(evt) {
 
 OlLocate.prototype._getDefaultStyles = function() {
     const color = '#2A93EE';
-    const shape = 'navigation_arrow';
     const circleAccuracyStyle = {
         fill: new Fill({color: 'rgba(19,106,236,0.15)'}),
         stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
     };
+    const navArrow = getNavigationArrowSVG({color, svgAttributes: 'width="100" height="100"'});
+    return (feature) => {
+        const heading = feature.getProperties()?.heading;
+        if (!isNil(heading)) {
+            return new Style({
+                image: new Icon({
+                    imgSize: [100, 100],
 
-    return {
-        locate: new Style({
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    anchor: [0.5, 0.5],
+                    scale: 0.3,
+                    rotation: heading ?? 0,
+                    opacity: 1,
+                    src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(navArrow)
+                }),
+                ...circleAccuracyStyle
+            });
+        }
+        return new Style({
             image: new CircleStyle({
                 radius: 6,
                 fill: new Fill({color}),
                 stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
             }),
             ...circleAccuracyStyle
-        }),
-        circleAccuracy: circleAccuracyStyle,
-        heading: {
-            iconLibrary: 'standard',
-            iconAnchor: [0.5, 0.5],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            color,
-            fillColor: color,
-            opacity: 1,
-            size: 41,
-            fillOpacity: 1,
-            shape,
-            symbolUrl: `product/assets/symbols/${shape}.svg`
-        }
+        });
     };
 };
 

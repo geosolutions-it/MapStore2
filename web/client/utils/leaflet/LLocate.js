@@ -4,6 +4,7 @@ import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
 import 'leaflet-rotatedmarker';
 import throttle from 'lodash/throttle';
 import isNil from 'lodash/isNil';
+import { getNavigationArrowSVG } from '../LocateUtils';
 
 L.Control.MSLocate = L.Control.Locate.extend({
     setMap: function(map) {
@@ -102,6 +103,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
         this.options.strings = { ...this.options.strings, ...newStrings };
     },
     defaultFollowMarkerStyle: function() {
+        const color = "#2A93EE";
         return {
             icon: L.divIcon({
                 className: 'div-heading-icon',
@@ -109,7 +111,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
                 iconSize: 40,
                 fillOpacity: 1,
                 // inline svg as leaflet doesn't allow to set icon color
-                html: `<svg viewBox="-100 0 100 100" xml:space="preserve"><path fill="#2A93EE" transform="rotate(90)" d="M 0,50 L 100,0 L 70,50 L 100,100"/></svg>`
+                html: getNavigationArrowSVG({color})
             }),
             rotationOrigin: 'center center'
         };
