@@ -322,3 +322,133 @@ with the following properties:
   - EPSG:3857
   - EPSG:4326
 - **allowedRoles** - CRS Selector will be accessible only to these roles. By default, CRS Selector will be available for any logged in user.
+
+### Search plugin configuration
+
+The search plugin provides several configurations to customize the services behind the search bar in the map: 
+- Allow to configure more many services to use in parallel, in the `services` array.
+- Natively supports nominatim and WFS protcols
+- Allows to register **your own** custom services to develop and use in your custom project
+- Allows to configure services in cascade, typically when you have a hierarchical data structures ( e.g. search for municipality, then for street name, than for house number, or search state,then region, then specific feature, and so on...)
+
+Following you can find some examples of the various configurations. For more details about the properties, please check to plugin API documentation: [https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search)
+
+Nominatim configuration:
+```javascript
+{
+   "type": "nominatim",
+   "searchTextTemplate": "${properties.display_name}", // text to use as searchText when an item is selected. Gets the result properties.
+   "options": {
+     "polygon_geojson": 1,
+     "limit": 3
+}
+```
+
+WFS configuration:
+```javascript
+"plugins": {
+  ...
+  "desktop": [
+    ...}, {
+      "name": "Search",
+      "cfg": {
+        "showCoordinatesSearchOption": false,
+        "maxResults": 20,
+        "searchOptions": {
+          "services": [{
+            "type": "wfs",
+            "priority": 3,
+            "displayName": "${properties.propToDisplay}",
+            "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+            "options": {
+              "url": "/geoserver/wfs",
+              "typeName": "workspace:layer",
+              "queriableAttributes": ["attribute_to_query"],
+              "sortBy": "id",
+              "srsName": "EPSG:4326",
+              "maxFeatures": 20,
+              "blacklist": ["... an array of strings to exclude from the final search filter "]
+            }
+        ]
+        }
+      }
+    }, {
+  ]
+}
+```
+
+WFS configuration with nested services:
+```javascript
+"plugins": {
+  ...
+  "desktop": [
+    ...}, {
+      "name": "Search",
+      "cfg": {
+        "showCoordinatesSearchOption": false,
+        "maxResults": 20,
+        "searchOptions": {
+          "services": [{
+            "type": "wfs",
+            "priority": 3,
+            "displayName": "${properties.propToDisplay}",
+            "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+            "options": {
+              "url": "/geoserver/wfs",
+              "typeName": "workspace:layer",
+              "queriableAttributes": ["attribute_to_query"],
+              "sortBy": "id",
+              "srsName": "EPSG:4326",
+              "maxFeatures": 20,
+              "blacklist": ["... an array of strings to exclude from the final search filter "]
+            },
+
+            "nestedPlaceholder": "the placeholder will be displayed in the input text, after you have performed the first search",
+            "then": [{
+              "type": "wfs",
+              "priority": 1,
+              "displayName": "${properties.propToDisplay} ${properties.propToDisplay}",
+              "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+              "searchTextTemplate": "${properties.propToDisplay}",
+              "options": {
+                "staticFilter": " AND SOMEPROP = '${properties.OLDPROP}'", // will be appended to the original filter, it gets the properties of the current selected item (of the parent service)
+                "url": "/geoserver/wfs",
+                "typeName": "workspace:layer",
+                "queriableAttributes": ["attribute_to_query"],
+                "srsName": "EPSG:4326",
+                  "maxFeatures": 10
+                }
+            }]
+  }
+
+        ]
+        }
+      }
+    }, {
+  ]
+}
+```
+
+Custom services configuration:
+```javascript
+{
+  "type": "custom Service Name",
+  "searchTextTemplate": "${properties.propToDisplay}",
+  "displayName": "${properties.propToDisplay}",
+  "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+  "options": {
+    "pathname": "/path/to/service",
+    "idVia": "${properties.code}"
+  },
+  "priority": 2,
+  "geomService" : {
+    "type": "wfs",
+    "options": {
+      "url": "/geoserver/wfs",
+      "typeName":  "workspace:layer",
+      "srsName": "EPSG:4326",
+      "staticFilter": "ID = ${properties.code}"
+    }
+  }
+}
+```
