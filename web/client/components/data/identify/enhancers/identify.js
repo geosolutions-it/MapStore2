@@ -80,6 +80,8 @@ export const identifyLifecycle = compose(
             if (enabled) {
                 changeMousePointer('pointer');
                 checkIdentifyIsMounted(true);
+            } else {
+                checkIdentifyIsMounted(false);
             }
 
             if (!disableCenterToMarker) {
