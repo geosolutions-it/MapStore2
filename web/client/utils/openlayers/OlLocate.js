@@ -32,7 +32,7 @@ const popUp = olPopUp();
 const OlLocate = function(map, optOptions) {
     BaseObject.call(this, {state: "DISABLED"});
     this.map = map;
-    const locateStyle = this._getDefaultStyles() || {};
+    const style = this._getDefaultStyles() || {};
     let defOptions = {
         drawCircle: true, // draw accuracy circle
         follow: true, // follow with zoom and pan the user's location
@@ -40,7 +40,7 @@ const OlLocate = function(map, optOptions) {
         // if true locate control remains active on click even if the user's location is in view.
         // clicking control will just pan to location not implemented
         remainActive: true,
-        locateStyle,
+        style,
         metric: true,
         onLocationError: this.onLocationError,
         // keep the current map zoom level when displaying the user's location. (if 'false', use maxZoom)
@@ -66,7 +66,7 @@ const OlLocate = function(map, optOptions) {
     });
     this.updateHandler = this._updatePosFt.bind(this);
 
-    this.geolocate.on('change', (this.options.locateOptions.rateControl)
+    this.geolocate.on('change:position', (this.options.locateOptions.rateControl)
         ? throttle( this.updateHandler, this.options.locateOptions.rateControl )
         : this.updateHandler);
     this.popup = popUp;
@@ -86,7 +86,7 @@ const OlLocate = function(map, optOptions) {
         },
         name: 'position',
         id: '_locate-pos'});
-    this.posFt.setStyle(this.options.locateStyle);
+    this.posFt.setStyle(this.options.style);
     this.layer.getSource().addFeature(this.posFt);
 
     this.clickHandler = this.mapClick.bind(this);
@@ -154,7 +154,6 @@ OlLocate.prototype._updatePosFt = function() {
         this.set("state", nState);
     }
     let p = this.geolocate.getPosition();
-    const heading = this.geolocate.getHeading();
     this.p = p;
     let point = new Point([parseFloat(p[0]), parseFloat(p[1])]);
     if (this.options.drawCircle) {
@@ -163,6 +162,7 @@ OlLocate.prototype._updatePosFt = function() {
     } else {
         this.posFt.setGeometry(new GeometryCollection([point]));
     }
+    const heading = this.geolocate.getHeading();
     this.posFt.setProperties({
         heading
     });
@@ -176,6 +176,21 @@ OlLocate.prototype._updatePosFt = function() {
     if (!this.options.remainActive) {
         this.geolocate.setTracking(false);
     }
+    // debug
+    /*
+    let div = document.getElementById("OL_LOCATION_DEBUG");
+    if (!div) {
+        div = document.createElement("div");
+        div.setAttribute('id', "OL_LOCATION_DEBUG");
+        div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
+        document.body.appendChild(div);
+    }
+    div.innerHTML = `<pre>
+        Position: ${p[0]}, ${p[1]},
+        Heading: ${heading}
+    </pre>`;
+    */
+
 };
 
 OlLocate.prototype.updateView = function(point) {
