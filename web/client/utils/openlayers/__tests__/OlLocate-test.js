@@ -8,6 +8,7 @@
 import expect from 'expect';
 import Map from 'ol/Map';
 import View from 'ol/View';
+
 import OlLocate from '../OlLocate';
 
 const defaultOpt = {
@@ -45,13 +46,11 @@ describe('Test the OlLocate utils', () => {
         expect(olLocate.options.remainActive).toBeTruthy();
         expect(olLocate.options.follow).toBeTruthy();
         expect(olLocate.options.style).toBeTruthy();
-        expect(olLocate.options.style.locate).toBeTruthy();
-        expect(olLocate.options.style.heading).toBeTruthy();
-        expect(olLocate.options.style.circleAccuracy).toBeTruthy();
         expect(olLocate.options.strings).toBeTruthy();
         expect(olLocate.options.locateOptions).toBeTruthy();
         expect(olLocate.options.locateOptions).toEqual(defaultOpt.locateOptions);
     });
+
     it('test olLocate setTrackingOptions', () => {
         let olLocate = new OlLocate(map, defaultOpt);
         expect(olLocate).toBeTruthy();
@@ -76,7 +75,7 @@ describe('Test the OlLocate utils', () => {
         expect(olLocate.p).toEqual([10, 20]);
         expect(olLocate.posFt).toBeTruthy();
         expect(olLocate.posFt.getGeometry()).toBeTruthy();
-        expect(olLocate.posFt.getStyle().getImage().getRadius()).toBe(6);
+        expect(olLocate.posFt.getStyle()(olLocate.posFt).getImage().getRadius()).toBe(6);
         expect(olLocate.map.getView().getCenter()).toEqual([10, 20]);
         expect(olLocate.geolocate.getTracking()).toBeFalsy();
     });
@@ -90,10 +89,8 @@ describe('Test the OlLocate utils', () => {
         expect(olLocate.p).toEqual([10, 20]);
         expect(olLocate.posFt).toBeTruthy();
         expect(olLocate.posFt.getGeometry()).toBeTruthy();
-        setTimeout(() => {
-            expect(olLocate.posFt.getStyle().length).toBe(2);
-            done();
-        }, 1000);
+        expect(olLocate.posFt.getStyle()(olLocate.posFt).getImage().getRotation()).toBe(90);
+        done();
 
     });
 });
