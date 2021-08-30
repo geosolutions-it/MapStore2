@@ -14,7 +14,7 @@ import { isPluginInContext } from './context';
 import { currentLocaleSelector } from './locale';
 import {getValidator} from '../utils/MapInfoUtils';
 import { isCesium } from './maptype';
-import {available} from "./controls";
+import {isIdentifyAvailable} from "./controls";
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -83,7 +83,7 @@ export const stopGetFeatureInfoSelector = createSelector(
     measureActiveSelector,
     drawSupportActiveSelector,
     annotationsEditingSelector,
-    available,
+    isIdentifyAvailable,
     (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, identifyPluginPresent) =>
         isMapInfoDisabled
         || !!isMeasureActive
