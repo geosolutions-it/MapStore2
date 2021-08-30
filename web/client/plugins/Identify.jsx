@@ -34,7 +34,8 @@ import {
     toggleMapInfoState,
     toggleShowCoordinateEditor,
     updateCenterToMarker,
-    updateFeatureInfoClickPoint
+    updateFeatureInfoClickPoint,
+    checkIdentifyIsMounted
 } from '../actions/mapInfo';
 import DefaultViewerComp from '../components/data/identify/DefaultViewer';
 import { defaultViewerDefaultProps, defaultViewerHandlers } from '../components/data/identify/enhancers/defaultViewer';
@@ -131,6 +132,7 @@ const identifyDefaultProps = defaultProps({
     clearWarning: () => { },
     changeMousePointer: () => { },
     showRevGeocode: () => { },
+    checkIdentifyIsMounted: () => {},
     hideRevGeocode: () => { },
     containerProps: {
         continuous: false
@@ -229,7 +231,8 @@ const IdentifyPlugin = compose(
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
-        onEdit: editLayerFeatures
+        onEdit: editLayerFeatures,
+        checkIdentifyIsMounted
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,

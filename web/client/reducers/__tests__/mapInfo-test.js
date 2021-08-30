@@ -909,7 +909,6 @@ describe('Test the mapInfo reducer', () => {
         const state = mapInfo(initialState, action);
         expect(state.configuration.trigger).toBe("click");
     });
-
     it('setShowInMapPopup', () => {
         const initialState = { configuration: {} };
         const state = mapInfo(initialState, setShowInMapPopup(true));
