@@ -151,9 +151,9 @@ describe('Test correctness of the map actions', () => {
 
 ```
 In order to speed up the unit test runner, you can:
+
 - change the path in tests.webpack.js (custom/standard project) or build\tests.webpack.js (framework) to point to the folder parent of __tests__
 for example `'/js/actions'` for custom/standard project or `'../web/client/actions'` for framework
-
 - then run this command:
 `npm run continuoustest`
 

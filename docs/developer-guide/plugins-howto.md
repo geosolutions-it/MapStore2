@@ -723,7 +723,7 @@ We can also add the plugin to the root container, using the doNotHide property (
 ```
 
 ### Conditionally disabling plugins
-Dynamyc expression can also be used to enable a plugin only when a specific application state is met, using the **disablePluginIf** property.
+Dynamic expression can also be used to enable a plugin only when a specific application state is met, using the **disablePluginIf** property.
 
 ```javascript
 {

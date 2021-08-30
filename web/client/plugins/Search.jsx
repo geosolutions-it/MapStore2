@@ -54,7 +54,7 @@ import ToggleButton from './searchbar/ToggleButton';
 const searchSelector = createSelector([
     state => state.search || null,
     state => state.controls && state.controls.searchBookmarkConfig || null,
-    state=> state.mapConfigRawData || {},
+    state => state.mapConfigRawData || {},
     state => state?.searchbookmarkconfig || ''
 ], (searchState, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
     enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
@@ -166,44 +166,128 @@ const SearchResultList = connect(selector, {
  * a **wfs** service look like this:
  * ```
  * {
- *      "type": "wfs",
- *      "priority": 2,
- *      "displayName": "${properties.propToDisplay}",
- *      "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
- *      "options": {
- *        "url": "/geoserver/wfs",
- *        "typeName": "workspace:layer",
- *        "queriableAttributes": ["attribute_to_query"],
- *        "sortBy": "ID",
- *        "srsName": "EPSG:4326",
- *        "maxFeatures": 4,
- *        "blacklist": [... an array of strings to exclude from the final search filter ]
- *      },
- *      "nestedPlaceholder": "Write other text to refine the search...",
- *      "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
- *      "then": [ ... an array of services to use when one item of this service is selected],
- *      "geomService": { optional service to retrieve the geometry}
- *  }
+ *  "type": "wfs",
+ *  "priority": 3,
+ *  "displayName": "${properties.propToDisplay}",
+ *  "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+ *  "options": {
+ *    "url": "/geoserver/wfs",
+ *    "typeName": "workspace:layer",
+ *    "queriableAttributes": ["attribute_to_query"],
+ *    "sortBy": "id",
+ *    "srsName": "EPSG:4326",
+ *    "maxFeatures": 20,
+ *    "blacklist": [... an array of strings to exclude from the final search filter ]
+ * },
+ *  "nestedPlaceholder": "Write other text to refine the search...",
+ *  "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
+ *  "then": [ ... an array of services to use when one item of this service is selected],
+ *  "geomService": { optional service to retrieve the geometry }
  *
  * ```
- * The typical nested service needs to have some additional parameters:
+ * A service may have nested services. This allows you to search in several steps,
+ * </br> (e.g. *search for a street and in the next step search for the street number.*)
+ * </br>When a service has nested services it needs some additional configurations, like `nestedPlaceholder` and `then`
+* @prop {string} cfg.searchOptions.services[].nestedPlaceholder the placeholder will be displayed in the input text, after you have performed the first search.
+* @prop {object[]} cfg.searchOptions.services[].then is the mandatory property to configure the nested service(s). Every object in array. When a entry is selected from the parent service, then the search bar will use these services for the next step (also in this case performed by `priority` order).
+ * To get  information from the item selected in the parent service, you can use `staticFilter` property (for WFS) as a template to complete the CQL_FILTER of the nested service (see the example below). _TODO: this is limited to WFS. For custom services it may be useful to pass the whole item selected to the nested service_.
+
  * ```
  * {
- *     "type": "wfs",
- *     "filterTemplate": " AND SOMEPROP = '${properties.OLDPROP}'", // will be appended to the original filter, it gets the properties of the current selected item (of the parent service)
- *     "options": {
- *       ...
+ *  "nestedPlaceholder": "the placeholder will be displayed in the input text, after you have performed the first search",
+ *  "then": [{
+ *    "type": "wfs",
+ *    "priority": 1,
+ *    "displayName": "${properties.propToDisplay} ${properties.propToDisplay}",
+ *    "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+ *    "searchTextTemplate": "${properties.propToDisplay}",
+ *    "options": {
+ *      "staticFilter": " AND SOMEPROP = '${properties.OLDPROP}'", // will be appended to the original filter, it gets the properties of the current selected item (of the parent service)
+ *      "url": "/geoserver/wfs",
+ *      "typeName": "workspace:layer",
+ *      "queriableAttributes": ["attribute_to_query"],
+ *      "srsName": "EPSG:4326",
+ *       "maxFeatures": 10
  *     }
+ *  }]
  * }
+ *
  * ```
- * **note:** `searchTextTemplate` is useful to populate the search text input when a search result is selected, typically with "leaf" services.
- * @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
+ * **note:** `staticFilter` is valid for every service (even not nested), but the service it is nested,
+ * it can be used as a template to pass values from the item selected in the parent service to complete this filter
+ * that will be appended to the usual ilike filter used for searching text (wfs only)
+ * <br/>
+ * <br/>
+ * **note:** `searchTextTemplate` used to complete the text when an item is selected.
+ * (e.g. *I type "ro", I select an entry relative to "rome" and I want that the final text in search is "rome".*
+ * Can be used for every service that is a leaf (so it doesn't contain any nested service)
+* <br/> <br/> Nested services can be used also with **custom service**, that allow you to define your remote service for text search,
+in this case you will need to write your own service, to require the data to remote API
+<br/>
+<br/>
+An example to require the data api:
+
+```
+* const {API} = require('../../MapStore2/web/client/api/searchText');
+
+*function myRoads(text, options) {
+*    axios.get(`/myService?text=${text}`).then(( results ) => {
+*              // results are [{title: "text", description: "description"}]
+*              return results.map((item) => ({
+*                        "type": "Feature",
+*                        "properties": {
+*                            "title": item.title,
+*                            "description": item.description
+*                        }
+*                    })
+*    })
+* }
+* API.Utils.setService("myRoads", myRoads);
+```
+*the myRoads service, must be a function, with this params:
+*
+* - text: the text to search
+* - options: the configurations of the service (like protocol, host, pathname, lang)
+*
+* the function return a promise, that must emit an array of geoJSON features,
+* if the geometry is not in the result, is possible to use the **geomService**.
+* GeomService is a service like other, that use  same properties to retrive the geometry of the selected result.
+*
+*<br>
+*an example of custom service with geomService
+*<br>
+```
+"then" : [
+                {
+                  "type": "custom Service Name",
+                  "searchTextTemplate": "${properties.propToDisplay}",
+                  "displayName": "${properties.propToDisplay}",
+                  "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+                  "options": {
+                    "pathname": "/path/to/service",
+                    "idVia": "${properties.code}"
+                  },
+                "priority": 2,
+                "geomService" : {
+                  "type": "wfs",
+                  "options": {
+                    "url": "/geoserver/wfs",
+                    "typeName":  "workspace:layer",
+                    "srsName": "EPSG:4326",
+                    "staticFilter": "ID = ${properties.code}"
+                  }
+                }
+              }]
+```
+
  * @prop {string} cfg.searchOptions.services[].launchInfoPanel this is used to trigger get feature requests once a record is selected after a search.
  * it has the following values:
  * - undefined | not configured, it does not perform the GFI request
  * Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
  * - "single_layer", it performs the GFI request for one layer only with only that record as a result, info_format is forced to be application/json
  * - "all_layers", it performs the GFI for all layers, as a normal GFI triggered by clicking on the map
+
+* @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
  */
 const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false,

@@ -1,6 +1,7 @@
 import React from 'react';
 import Message from '../../I18N/Message';
 import emptyState from '../../misc/enhancers/emptyState';
+import WidgetEmptyMessage from '../widget/WidgetEmptyMessage';
 
 const getErrorMessage = (error = {}) => {
     if (error.code === "ECONNABORTED") {
@@ -12,10 +13,15 @@ const getErrorMessage = (error = {}) => {
 };
 
 export default emptyState(
-    ({error}) => error,
-    ({error, iconFit} = {}) => ({
-        glyph: "warning-sign",
-        iconFit,
-        tooltip: getErrorMessage(error)
-    })
+    ({error}) => !!error,
+    ({error, layer} = {}) => {
+        const content = (error?.message?.indexOf("Could not locate") !== -1) ?
+            <WidgetEmptyMessage glyph="stats" messageId="widgets.errors.layerNotAvailable" msgParams={{layerName: layer?.name}} /> :
+            getErrorMessage(error);
+        return {
+            glyph: error?.message?.indexOf("Could not locate") !== -1 ? null : "warning-sign",
+            iconFit: false,
+            content
+        };
+    }
 );

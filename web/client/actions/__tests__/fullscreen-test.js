@@ -18,6 +18,6 @@ describe('Test correctness of the fullscreen actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(TOGGLE_FULLSCREEN);
         expect(retval.enable).toBe(true);
-        expect(retval.elementSelector).toBe(testControl);
+        expect(retval.querySelector).toBe(testControl);
     });
 });

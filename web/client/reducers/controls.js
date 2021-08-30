@@ -14,6 +14,8 @@ import {
 } from '../actions/controls';
 
 import assign from 'object-assign';
+import {IDENTIFY_IS_MOUNTED} from "../actions/mapInfo";
+
 /**
  * Manages the state of the controls in MapStore2
  * The root elements of the state returned by this reducers ar variable, but they have
@@ -87,6 +89,15 @@ function controls(state = {}, action) {
             });
         }, {});
         return assign({}, state, resetted);
+    }
+    case IDENTIFY_IS_MOUNTED: {
+        return {
+            ...state,
+            info: {
+                ...state.info,
+                available: action.isMounted
+            }
+        };
     }
     default:
         return state;

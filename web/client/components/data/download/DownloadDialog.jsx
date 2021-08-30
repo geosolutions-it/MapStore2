@@ -15,6 +15,7 @@ import Spinner from 'react-spinkit';
 
 import Loader from '../../misc/Loader';
 import Dialog from '../../misc/Dialog';
+import Portal from '../../misc/Portal';
 import Message from '../../I18N/Message';
 import EmptyView from '../../misc/EmptyView';
 import DownloadOptions from './DownloadOptions';
@@ -104,7 +105,7 @@ class DownloadDialog extends React.Component {
             validWFSFormats.filter(f => this.props.wfsFormats.find(wfsF => wfsF.name.toLowerCase() === f.name.toLowerCase())) :
             this.props.wfsFormats;
 
-        return this.props.enabled ? (<Dialog id="mapstore-export" draggable={false} modal>
+        return this.props.enabled ? (<Portal><Dialog id="mapstore-export" draggable={false} modal>
             <span role="header">
                 <span className="about-panel-title"><Message msgId="layerdownload.title" /></span>
                 <button onClick={this.onClose} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
@@ -137,7 +138,7 @@ class DownloadDialog extends React.Component {
                     {this.renderIcon()} <Message msgId="layerdownload.export" />
                 </Button>
             </div>}
-        </Dialog>) : null;
+        </Dialog></Portal>) : null;
     }
     handleExport = () => {
         const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport, layer} = this.props;

@@ -227,7 +227,7 @@ export const fetchFormatsWFSDownload = (action$) =>
 export const startFeatureExportDownload = (action$, store) =>
     action$.ofType(DOWNLOAD_FEATURES).switchMap(action => {
         const state = store.getState();
-        const {virtualScroll = false} = state.featuregrid;
+        const {virtualScroll = false} = state.featuregrid || {};
         const service = serviceSelector(state);
         const layer = getSelectedLayer(state);
         const mapBbox = mapBboxSelector(state);

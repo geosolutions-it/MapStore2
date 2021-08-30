@@ -1720,7 +1720,8 @@
                 "nodatainviewport": "Aucune donnée dans la fenêtre courante",
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
                 "genericError": "Erreur lors de la récupération des données",
-                "genericErrorWithMessage": "Erreur lors de la récupération des données: \"{message}\""
+                "genericErrorWithMessage": "Erreur lors de la récupération des données: \"{message}\"",
+                "layerNotAvailable": "Le calque {layerName} n'est plus disponible"
             },
             "builder": {
                 "header": {
@@ -2134,6 +2135,12 @@
             "fontWeightBold": "Bold",
             "boolTrue": "True",
             "boolFalse": "False",
+            "colorMapType": {
+              "label": "Type de carte de couleur",
+              "ramp": "Rampe",
+              "intervals": "Intervalles",
+              "values": "Valeurs"
+            },
             "addRuleBefore": "Ajouter une nouvelle entrée avant",
             "addRuleAfter": "Ajouter une nouvelle entrée après",
             "remove": "Supprimer",
@@ -2193,6 +2200,7 @@
             "emptyRuleEditorTitle": "Ajouter de nouvelles règles",
             "emptyRuleEditor": "Il n'y a pas de règles pour ce style. Ajoutez une nouvelle règle en cliquant sur le type de symboliseur souhaité dans la barre d'outils",
             "classificationError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification",
+            "classificationRasterUniqueIntervalError": "Impossible d'effectuer une classification de valeur unique sur un raster de type flottant, seuls les nombres entiers sont pris en charge. Essayez plutôt une autre classification",
             "classificationRasterError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification raster",
             "classificationUniqueIntervalError": "Limites d'intervalles maximales dépassées! Vous essayez de générer une classification d'intervalle unique avec un attribut qui contient plus de {intervalsForUnique} classes différentes. La classification par intervalle unique doit être appliquée aux attributs avec un ensemble limité d'intervalles pour permettre une meilleure lisibilité du style. Vous pouvez essayer une méthode différente pour l'attribut sélectionné",
             "redChannel": "Red channel",
@@ -2873,7 +2881,7 @@
               "success": "Couleur secondaire",
               "successContrast": "Couleur du texte secondaire",
               "guidelines": "Attention à ne pas utiliser une couleur secondaire trop proche de la primaire et bien évidemment la couleur primaire du texte avec sa contrepartie (il en est de même pour les autres couples de couleurs : principale, secondaire)",
-              "alternativeTextPrimarySecondary": "<p>Attention : la couleur secondaire pourrait être illisible par rapport à la couleur primaire</p><p>Une couleur de texte alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "alternativeTextPrimarySecondary": "<p>Attention : la couleur secondaire pourrait être illisible par rapport à la couleur primaire</p><p>Une couleur alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Couleur du texte utilisée dans les panneaux ou les boîtes de dialogue",
                 "background": "Couleur d'arrière-plan utilisée dans les panneaux ou les boîtes de dialogue",

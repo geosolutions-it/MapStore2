@@ -1719,7 +1719,8 @@
                 "nodatainviewport": "Sin datos en la ventana gráfica actual",
                 "timeoutExpired": "El servicio tardó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
                 "genericError": "Hubo un error durante la recuperación de datos",
-                "genericErrorWithMessage": "Hubo un error durante la recuperación de datos: \"{message}\""
+                "genericErrorWithMessage": "Hubo un error durante la recuperación de datos: \"{message}\"",
+                "layerNotAvailable": "La capa {layerName} ya no está disponible"
             },
             "builder": {
                 "header": {
@@ -2133,6 +2134,12 @@
             "fontWeightBold": "Negrita",
             "boolTrue": "Verdadero",
             "boolFalse": "Falso",
+            "colorMapType": {
+              "label": "Tipo de mapa de color",
+              "ramp": "Rampa",
+              "intervals": "Intervalos",
+              "values": "Valores"
+            },
             "addRuleBefore": "Agregar nueva entrada antes",
             "addRuleAfter": "Agregar nueva entrada después",
             "remove": "Eliminar",
@@ -2193,6 +2200,7 @@
             "emptyRuleEditor": "No hay reglas para este estilo. Agregue una nueva regla haciendo clic en el tipo de simbolizador deseado en la barra de herramientas",
             "classificationError": "Servicio no disponible. Actualmente no es posible crear una clasificación",
             "classificationRasterError": "Servicio no disponible. Actualmente no es posible crear una clasificación ráster",
+            "classificationRasterUniqueIntervalError": "No se puede realizar una clasificación de valor único sobre ráster de tipo flotante, solo se admiten números enteros. Prueba con otra clasificación en su lugar",
             "classificationUniqueIntervalError": "¡Se excedieron los límites máximos de intervalos! Está intentando generar una clasificación de intervalo única con un atributo que contiene más de {intervalsForUnique} clases diferentes. La clasificación de intervalo único debe aplicarse a los atributos con un conjunto limitado de intervalos para permitir una mejor legibilidad del estilo. Puede probar un método diferente para el atributo seleccionado",
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
@@ -2871,7 +2879,7 @@
               "success": "Color secundario",
               "successContrast": "Color de texto secundario",
               "guidelines": "Asegúrese de no usar un color secundario demasiado similar al primario y, obviamente, el color del texto primario con su contraparte (lo mismo se aplica a las otras parejas de colores: principal, secundario)",
-              "alternativeTextPrimarySecondary": "<p>Advertencia: el color secundario podría no ser legible en comparación con el principal</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "alternativeTextPrimarySecondary": "<p>Advertencia: el color secundario podría no ser legible en comparación con el principal</p><p>Una alternativa es el color {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Color de texto utilizado en paneles o cuadros de diálogo",
                 "background": "Color de fondo utilizado en paneles o cuadros de diálogo",

@@ -73,11 +73,15 @@ export const identifyLifecycle = compose(
                 changeMousePointer = () => {},
                 disableCenterToMarker,
                 onEnableCenterToMarker = () => {},
-                setShowInMapPopup = () => {}
+                setShowInMapPopup = () => {},
+                checkIdentifyIsMounted = () => {}
             } = this.props;
 
             if (enabled) {
                 changeMousePointer('pointer');
+                checkIdentifyIsMounted(true);
+            } else {
+                checkIdentifyIsMounted(false);
             }
 
             if (!disableCenterToMarker) {
@@ -89,9 +93,11 @@ export const identifyLifecycle = compose(
             const {
                 hideMarker = () => { },
                 purgeResults = () => { },
-                changeMousePointer = () => { }
+                changeMousePointer = () => { },
+                checkIdentifyIsMounted = () => {}
             } = this.props;
             changeMousePointer('auto');
+            checkIdentifyIsMounted(false);
             hideMarker();
             purgeResults();
         },
