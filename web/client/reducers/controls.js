@@ -95,7 +95,7 @@ function controls(state = {}, action) {
             ...state,
             info: {
                 ...state.info,
-                isIdentifyAvailable: action.isMounted
+                available: action.isMounted
             }
         };
     }

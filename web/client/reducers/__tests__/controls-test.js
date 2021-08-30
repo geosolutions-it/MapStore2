@@ -151,7 +151,7 @@ describe('Test the controls reducer', () => {
         expect(controls(initialState, {
             type: IDENTIFY_IS_MOUNTED,
             isMounted: true
-        })).toEqual({info: { isIdentifyAvailable: true}});
+        })).toEqual({info: { available: true}});
 
     });
 });
