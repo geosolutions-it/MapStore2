@@ -16,7 +16,7 @@ const defaultOpt = {
     keepCurrentZoomLevel: false,
     locateOptions: {
         maximumAge: 2000,
-        enableHighAccuracy: false,
+        enableHighAccuracy: true, // heading is only defined if the enableHighAccuracy is set to true
         timeout: 10000,
         maxZoom: 18
     }

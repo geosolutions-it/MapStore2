@@ -19,9 +19,11 @@ import VectorLayer from 'ol/layer/Vector';
 import Geolocation from 'ol/Geolocation';
 import {Point, Circle} from 'ol/geom';
 import GeometryCollection from 'ol/geom/GeometryCollection';
-import {Style, Fill, Stroke} from 'ol/style';
+import {Style, Fill, Stroke, Icon} from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import throttle from 'lodash/throttle';
+import isNil from 'lodash/isNil';
+import {getNavigationArrowSVG} from '../LocateUtils';
 
 
 const popUp = olPopUp();
@@ -30,6 +32,7 @@ const popUp = olPopUp();
 const OlLocate = function(map, optOptions) {
     BaseObject.call(this, {state: "DISABLED"});
     this.map = map;
+    const style = this._getDefaultStyles() || {};
     let defOptions = {
         drawCircle: true, // draw accuracy circle
         follow: true, // follow with zoom and pan the user's location
@@ -37,7 +40,7 @@ const OlLocate = function(map, optOptions) {
         // if true locate control remains active on click even if the user's location is in view.
         // clicking control will just pan to location not implemented
         remainActive: true,
-        locateStyle: this._getDefaultStyles(),
+        style,
         metric: true,
         onLocationError: this.onLocationError,
         // keep the current map zoom level when displaying the user's location. (if 'false', use maxZoom)
@@ -66,7 +69,12 @@ const OlLocate = function(map, optOptions) {
     this.geolocate.on('change:position', (this.options.locateOptions.rateControl)
         ? throttle( this.updateHandler, this.options.locateOptions.rateControl )
         : this.updateHandler);
-
+    this.geolocate.on('change:heading', () => {
+        const heading = this.geolocate.getHeading();
+        this.posFt.setProperties({
+            heading
+        });
+    });
     this.popup = popUp;
     this.popup.hidden = true;
     this.popCnt = popUp.getElementsByClassName("ol-popup-cnt")[0];
@@ -79,9 +87,12 @@ const OlLocate = function(map, optOptions) {
         source: new VectorSource({useSpatialIndex: false})});
     this.posFt = new Feature({
         geometry: this.geolocate.getAccuracyGeometry(),
+        properties: {
+            heading: this.geolocate.getHeading()
+        },
         name: 'position',
         id: '_locate-pos'});
-    this.posFt.setStyle(this.options.locateStyle);
+    this.posFt.setStyle(this.options.style);
     this.layer.getSource().addFeature(this.posFt);
 
     this.clickHandler = this.mapClick.bind(this);
@@ -157,6 +168,10 @@ OlLocate.prototype._updatePosFt = function() {
     } else {
         this.posFt.setGeometry(new GeometryCollection([point]));
     }
+    const heading = this.geolocate.getHeading();
+    this.posFt.setProperties({
+        heading
+    });
     if (!this.popup.hidden) {
         this._updatePopUpCnt();
     }
@@ -167,6 +182,21 @@ OlLocate.prototype._updatePosFt = function() {
     if (!this.options.remainActive) {
         this.geolocate.setTracking(false);
     }
+    // debug
+    /*
+    let div = document.getElementById("OL_LOCATION_DEBUG");
+    if (!div) {
+        div = document.createElement("div");
+        div.setAttribute('id', "OL_LOCATION_DEBUG");
+        div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
+        document.body.appendChild(div);
+    }
+    div.innerHTML = `<pre>
+        Position: ${p[0]}, ${p[1]},
+        Heading: ${heading}
+    </pre>`;
+    */
+
 };
 
 OlLocate.prototype.updateView = function(point) {
@@ -210,15 +240,39 @@ OlLocate.prototype.mapClick = function(evt) {
 };
 
 OlLocate.prototype._getDefaultStyles = function() {
-    return new Style({
-        image: new CircleStyle({
-            radius: 6,
-            fill: new Fill({color: 'rgba(42,147,238,0.7)'}),
-            stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
-        }),
+    const color = '#2A93EE';
+    const circleAccuracyStyle = {
         fill: new Fill({color: 'rgba(19,106,236,0.15)'}),
         stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
-    });
+    };
+    const navArrow = getNavigationArrowSVG({color, svgAttributes: 'width="100" height="100"'});
+    return (feature) => {
+        const heading = feature.getProperties()?.heading;
+        if (!isNil(heading)) {
+            return new Style({
+                image: new Icon({
+                    imgSize: [100, 100],
+
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    anchor: [0.5, 0.5],
+                    scale: 0.3,
+                    rotation: heading ?? 0,
+                    opacity: 1,
+                    src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(navArrow)
+                }),
+                ...circleAccuracyStyle
+            });
+        }
+        return new Style({
+            image: new CircleStyle({
+                radius: 6,
+                fill: new Fill({color}),
+                stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
+            }),
+            ...circleAccuracyStyle
+        });
+    };
 };
 
 OlLocate.prototype.setStrings = function(newStrings) {
