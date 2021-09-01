@@ -14,6 +14,7 @@ import { isPluginInContext } from './context';
 import { currentLocaleSelector } from './locale';
 import {getValidator} from '../utils/MapInfoUtils';
 import { isCesium } from './maptype';
+import {isIdentifyAvailable} from "./controls";
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -70,6 +71,7 @@ export const annotationsEditingSelector = (state) => get(state, "annotations.edi
 export const mapInfoEnabledSelector = (state) => get(state, "mapInfo.enabled", false);
 export const mapInfoDisabledSelector = (state) => !mapInfoEnabledSelector(state);
 
+
 /**
  * selects stopGetFeatureInfo from state
  * @memberof selectors.mapinfo
@@ -81,7 +83,7 @@ export const stopGetFeatureInfoSelector = createSelector(
     measureActiveSelector,
     drawSupportActiveSelector,
     annotationsEditingSelector,
-    isPluginInContext('Identify'),
+    isIdentifyAvailable,
     (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, identifyPluginPresent) =>
         isMapInfoDisabled
         || !!isMeasureActive
