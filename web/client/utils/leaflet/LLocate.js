@@ -4,7 +4,7 @@ import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
 import 'leaflet-rotatedmarker';
 import throttle from 'lodash/throttle';
 import isNil from 'lodash/isNil';
-import { getNavigationArrowSVG } from '../LocateUtils';
+import { getNavigationArrowSVG, getNavigationCircleSVG } from '../LocateUtils';
 
 L.Control.MSLocate = L.Control.Locate.extend({
     setMap: function(map) {
@@ -15,7 +15,6 @@ L.Control.MSLocate = L.Control.Locate.extend({
         this._prevBounds = null;
         // extend the follow marker style and circle from the normal style
         let tmp = {};
-        this.options.followMarkerStyle = this.defaultFollowMarkerStyle();
         L.extend(tmp, this.options.circleStyle, this.options.followCircleStyle);
         this.options.followCircleStyle = tmp;
         this._resetVariables();
@@ -42,7 +41,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
             : this._onLocationFound;
     },
     _drawMarker: function() {
-        let { accuracy: radius, latlng, heading } = this._event || {};
+        let { accuracy: radius, latlng, heading, speed } = this._event || {};
         if (radius === undefined) {
             radius = 0;
         }
@@ -69,14 +68,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
         // Inner marker
         if (this.options.drawMarker) {
             this._marker && this._map.removeLayer(this._marker);
-            if (!isNil(heading)) {
-                this._marker = L.marker(latlng, {
-                    ...this.options.followMarkerStyle,
-                    rotationAngle: heading
-                }).addTo(this._layer);
-            } else {
-                this._marker = L.circleMarker(latlng, this.options.markerStyle).addTo(this._layer);
-            }
+            this.setFollowMarkerStyle(latlng, heading, speed);
         }
         const t = this.options?.strings?.popup;
         if (this.options.showPopup && t && this._marker) {
@@ -84,6 +76,21 @@ L.Control.MSLocate = L.Control.Locate.extend({
                 .bindPopup(L.Util.template(t, {distance: distance, unit: unit}))
                 ._popup.setLatLng(latlng);
         }
+
+        /*
+        // DEBUG
+        let div = document.getElementById("LEAFLET_LOCATION_DEBUG");
+        if (!div) {
+            div = document.createElement("div");
+            div.setAttribute('id', "LEAFLET_LOCATION_DEBUG");
+            div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
+            document.body.appendChild(div);
+        }
+        div.innerHTML = `<pre>
+            Position: ${latlng},
+            Heading: ${heading}
+            speed: ${speed}
+        </pre>`;*/
     },
     _setClasses: function(state) {
         this._map.fire('locatestatus', {state: state});
@@ -102,19 +109,29 @@ L.Control.MSLocate = L.Control.Locate.extend({
     setStrings: function(newStrings) {
         this.options.strings = { ...this.options.strings, ...newStrings };
     },
-    defaultFollowMarkerStyle: function() {
+    removeMarker: function() {
+        if (this._marker) {
+            this._map.removeLayer(this._marker);
+        }
+    },
+    setFollowMarkerStyle: function(latlng, heading, speed) {
         const color = "#2A93EE";
-        return {
+        this.removeMarker();
+        const style = {
             icon: L.divIcon({
                 className: 'div-heading-icon',
                 opacity: 1,
-                iconSize: 40,
+                iconSize: 70,
                 fillOpacity: 1,
                 // inline svg as leaflet doesn't allow to set icon color
-                html: getNavigationArrowSVG({color})
+                html: !isNil(heading) && speed > this.options.speedThreshold ? getNavigationArrowSVG({color, strokeWidth: 2}) : getNavigationCircleSVG({color, strokeWidth: 2})
             }),
             rotationOrigin: 'center center'
         };
+        this._marker = L.marker(latlng, {
+            ...style,
+            rotationAngle: heading
+        }).addTo(this._layer);
     }
 });
 

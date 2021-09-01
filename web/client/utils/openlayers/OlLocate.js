@@ -20,20 +20,20 @@ import Geolocation from 'ol/Geolocation';
 import {Point, Circle} from 'ol/geom';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import {Style, Fill, Stroke, Icon} from 'ol/style';
-import CircleStyle from 'ol/style/Circle';
+
 import throttle from 'lodash/throttle';
 import isNil from 'lodash/isNil';
-import {getNavigationArrowSVG} from '../LocateUtils';
+import {getNavigationArrowSVG, getNavigationCircleSVG} from '../LocateUtils';
 
 
 const popUp = olPopUp();
-
 
 const OlLocate = function(map, optOptions) {
     BaseObject.call(this, {state: "DISABLED"});
     this.map = map;
     const style = this._getDefaultStyles() || {};
     let defOptions = {
+        speedThreshold: 1, // m/s
         drawCircle: true, // draw accuracy circle
         follow: true, // follow with zoom and pan the user's location
         stopFollowingOnDrag: false, // if follow is true, stop following when map is dragged (deprecated)
@@ -71,9 +71,12 @@ const OlLocate = function(map, optOptions) {
         : this.updateHandler);
     this.geolocate.on('change:heading', () => {
         const heading = this.geolocate.getHeading();
-        this.posFt.setProperties({
-            heading
-        });
+        const speed = this.geolocate.getSpeed(); // unit is m/s
+        if (speed > this.options.speedThreshold) {
+            this.posFt.setProperties({
+                heading
+            });
+        }
     });
     this.popup = popUp;
     this.popup.hidden = true;
@@ -183,6 +186,7 @@ OlLocate.prototype._updatePosFt = function() {
         this.geolocate.setTracking(false);
     }
     // debug
+
     /*
     let div = document.getElementById("OL_LOCATION_DEBUG");
     if (!div) {
@@ -191,12 +195,13 @@ OlLocate.prototype._updatePosFt = function() {
         div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
         document.body.appendChild(div);
     }
+    const speed = this.geolocate.getSpeed(); // unit is m/s
     div.innerHTML = `<pre>
         Position: ${p[0]}, ${p[1]},
         Heading: ${heading}
+        speed: ${speed}
     </pre>`;
     */
-
 };
 
 OlLocate.prototype.updateView = function(point) {
@@ -245,13 +250,15 @@ OlLocate.prototype._getDefaultStyles = function() {
         fill: new Fill({color: 'rgba(19,106,236,0.15)'}),
         stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
     };
-    const navArrow = getNavigationArrowSVG({color, svgAttributes: 'width="100" height="100"'});
+    const circleArrowSVG = getNavigationArrowSVG({color, svgAttributes: 'width="300" height="300"'});
+    const circleSVG = getNavigationCircleSVG({color, svgAttributes: 'width="300" height="300"'});
     return (feature) => {
         const heading = feature.getProperties()?.heading;
-        if (!isNil(heading)) {
+        const speed = this.geolocate.getSpeed(); // m/s
+        if (!isNil(heading) && speed > this.options.speedThreshold) {
             return new Style({
                 image: new Icon({
-                    imgSize: [100, 100],
+                    imgSize: [300, 300],
 
                     anchorXUnits: 'fraction',
                     anchorYUnits: 'fraction',
@@ -259,16 +266,21 @@ OlLocate.prototype._getDefaultStyles = function() {
                     scale: 0.3,
                     rotation: heading ?? 0,
                     opacity: 1,
-                    src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(navArrow)
+                    src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(circleArrowSVG)
                 }),
                 ...circleAccuracyStyle
             });
         }
         return new Style({
-            image: new CircleStyle({
-                radius: 6,
-                fill: new Fill({color}),
-                stroke: new Stroke({color: 'rgba(19,106,236,1)', width: 2})
+            image: new Icon({
+                imgSize: [300, 300],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                anchor: [0.5, 0.5],
+                scale: 0.2,
+                rotation: heading ?? 0,
+                opacity: 1,
+                src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(circleSVG)
             }),
             ...circleAccuracyStyle
         });
