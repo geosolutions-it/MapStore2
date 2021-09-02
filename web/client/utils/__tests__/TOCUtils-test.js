@@ -18,17 +18,17 @@ import {
 
 const groups = [{
     "id": "first",
-    "title": "first",
+    "title": { "default": "first"},
     "name": "first",
     "nodes": [
         {
             "id": "first.second",
-            "title": "second",
+            "title": { "default": "second"},
             "name": "second",
             "nodes": [
                 {
                     "id": "first.second.third",
-                    "title": "third",
+                    "title": { "default": "third"},
                     "name": "third",
                     "nodes": [
                         {
@@ -41,7 +41,7 @@ const groups = [{
                             "name": "topp:states",
                             "opacity": 1,
                             "description": "This is some census data on the states.",
-                            "title": "USA Population",
+                            "title": { "default": "USA Population"},
                             "type": "wms",
                             "url": "https://demo.geo-solutions.it:443/geoserver/wms",
                             "bbox": {
@@ -155,10 +155,10 @@ describe('TOCUtils', () => {
         expect(allGroups[0].label).toBe("first");
         expect(allGroups[1].id).toBe(undefined);
         expect(allGroups[1].value).toBe("first.second");
-        expect(allGroups[1].label).toBe("first/second");
+        expect(allGroups[1].label).toBe("second");
         expect(allGroups[2].id).toBe(undefined);
         expect(allGroups[2].value).toBe("first.second.third");
-        expect(allGroups[2].label).toBe("first/second/third");
+        expect(allGroups[2].label).toBe("third");
     });
     it('test getTitleAndTooltip both', () => {
         const node = {
