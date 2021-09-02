@@ -11,8 +11,9 @@ import L from 'leaflet';
 
 const defaultOpt = {
     follow: true,
-    remainActive: true,
+    speedThreshold: 1,
     stopFollowingOnDrag: true,
+    remainActive: true,
     locateOptions: {
         maximumAge: 2000,
         enableHighAccuracy: false,
@@ -36,9 +37,38 @@ describe('Test the leaflet LLocate utils', () => {
         let llocate = new LLocate(defaultOpt);
         expect(llocate).toBeTruthy();
         expect(llocate.options.followCircleStyle).toBeTruthy();
-        expect(llocate.options.followMarkerStyle).toBeTruthy();
         expect(llocate.options.remainActive).toBeTruthy();
         expect(llocate.options.follow).toBeTruthy();
+    });
+    it('test LLocate setFollowMarkerStyle', () => {
+        let llocate = new LLocate(defaultOpt);
+        expect(llocate).toBeTruthy();
+        const latlng = {x: 3, y: 4};
+        const heading = 1;
+        const speed = 2;
+        llocate.setMap(map);
+        llocate._activate();
+        llocate.setFollowMarkerStyle(latlng, heading, speed);
+        const {rotationAngle, rotationOrigin, icon: {options: markerStyle}} = llocate._marker.options;
+        expect(markerStyle.className).toEqual("div-heading-icon");
+        expect(markerStyle.fillOpacity).toEqual(1);
+        expect(markerStyle.opacity).toEqual(1);
+        expect(markerStyle.iconSize).toEqual(70);
+        expect(markerStyle.html).toEqual(`<svg xmlns="http://www.w3.org/2000/svg" undefined viewBox="0 0 100 100" xml:space="preserve">
+		<g transform="matrix(0.2 0 0 0.2 49.8 50.19)">
+            <linearGradient gradientUnits="userSpaceOnUse" gradientTransform="matrix(1 0 0 1 -65 -65)" x1="65" y1="130" x2="65" y2="0">
+                <stop offset="100%" style="stop-color:rgba(0, 132, 202, 1);"/>
+                <stop offset="100%" style="stop-color:rgba(0, 0, 255, 1);"/>
+            </linearGradient>
+            <circle style="stroke: rgb(255,255,255); stroke-width: 2; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: #2A93EE; fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke" cx="0" cy="0" r="65"/>
+        </g>
+        <g transform="matrix(-0.12 -0.22 0.22 -0.12 47.11 20.53)">
+            <polygon style="stroke: rgb(255,255,255); stroke-width: 2; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: #2A93EE; fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke" points="0,-42.5 50,42.5 -50,42.5 "/>
+        </g>
+    </svg>`);
+        expect(rotationAngle).toEqual(heading);
+        expect(rotationOrigin).toEqual("center center");
+
     });
     it('test LLocate setLocateOptions', () => {
         let llocate = new LLocate(defaultOpt);
@@ -52,10 +82,6 @@ describe('Test the leaflet LLocate utils', () => {
         expect(llocate).toBeTruthy();
         llocate.setMap(map);
         expect(llocate._map).toBeTruthy();
-        expect(llocate.options.followMarkerStyle).toBeTruthy();
-        const {icon: {options: {className}}, rotationOrigin} = llocate.options.followMarkerStyle;
-        expect(className).toBe('div-heading-icon');
-        expect(rotationOrigin).toBe('center center');
     });
     it('test LLocate on location found', () => {
         let llocate = new LLocate(defaultOpt);
