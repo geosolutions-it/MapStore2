@@ -31,6 +31,7 @@ import LocateTool from "../components/mapcontrols/locate/LocateTool";
   * @prop {string} cfg.style CSS to apply to the button
   * @prop {string} cfg.text The button text, if any
   * @prop {number} cfg.maxZoom The maximum zoom for automatic view setting to the user location
+  * @prop {number} cfg.speedThreshold above this value in m/s where the marker shows also an arrow indicating the heading, default is a circle threshold is 0.8 m/s
   * @prop {string} cfg.className the class name for the button
   * @prop {string} cfg.rateControl The rate control for the geolocation update frequency, value in milliseconds
   *

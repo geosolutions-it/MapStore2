@@ -9,6 +9,7 @@
 
 import olPopUp from './OlPopUp';
 import assign from 'object-assign';
+import { getQueryParams } from '../URLUtils';
 
 import {inherits} from 'ol';
 import BaseObject from 'ol/Object';
@@ -33,7 +34,6 @@ const OlLocate = function(map, optOptions) {
     this.map = map;
     const style = this._getDefaultStyles() || {};
     let defOptions = {
-        speedThreshold: 1, // m/s
         drawCircle: true, // draw accuracy circle
         follow: true, // follow with zoom and pan the user's location
         stopFollowingOnDrag: false, // if follow is true, stop following when map is dragged (deprecated)
@@ -52,6 +52,7 @@ const OlLocate = function(map, optOptions) {
             popup: "You are within {distance} {unit} from this point"
         },
         locateOptions: {
+            speedThreshold: 0.8, // m/s
             maximumAge: 2000,
             enableHighAccuracy: false,
             timeout: 10000,
@@ -72,7 +73,7 @@ const OlLocate = function(map, optOptions) {
     this.geolocate.on('change:heading', () => {
         const heading = this.geolocate.getHeading();
         const speed = this.geolocate.getSpeed(); // unit is m/s
-        if (speed > this.options.speedThreshold) {
+        if (speed > this.options.locateOptions.speedThreshold) {
             this.posFt.setProperties({
                 heading
             });
@@ -187,21 +188,22 @@ OlLocate.prototype._updatePosFt = function() {
     }
     // debug
 
-    /*
-    let div = document.getElementById("OL_LOCATION_DEBUG");
-    if (!div) {
-        div = document.createElement("div");
-        div.setAttribute('id', "OL_LOCATION_DEBUG");
-        div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
-        document.body.appendChild(div);
+    let params = getQueryParams(window.location.search);
+    if (params.locateDebug === "true") {
+        let div = document.getElementById("OL_LOCATION_DEBUG");
+        if (!div) {
+            div = document.createElement("div");
+            div.setAttribute('id', "OL_LOCATION_DEBUG");
+            div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
+            document.body.appendChild(div);
+        }
+        const speed = this.geolocate.getSpeed(); // unit is m/s
+        div.innerHTML = `<pre>
+            Position: ${p[0]}, ${p[1]},
+            Heading: ${heading}
+            speed: ${speed}
+        </pre>`;
     }
-    const speed = this.geolocate.getSpeed(); // unit is m/s
-    div.innerHTML = `<pre>
-        Position: ${p[0]}, ${p[1]},
-        Heading: ${heading}
-        speed: ${speed}
-    </pre>`;
-    */
 };
 
 OlLocate.prototype.updateView = function(point) {
@@ -255,15 +257,14 @@ OlLocate.prototype._getDefaultStyles = function() {
     return (feature) => {
         const heading = feature.getProperties()?.heading;
         const speed = this.geolocate.getSpeed(); // m/s
-        if (!isNil(heading) && speed > this.options.speedThreshold) {
+        if (!isNil(heading) && speed > this.options.locateOptions.speedThreshold) {
             return new Style({
                 image: new Icon({
                     imgSize: [300, 300],
-
                     anchorXUnits: 'fraction',
                     anchorYUnits: 'fraction',
                     anchor: [0.5, 0.5],
-                    scale: 0.3,
+                    scale: 0.2,
                     rotation: heading ?? 0,
                     opacity: 1,
                     src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(circleArrowSVG)

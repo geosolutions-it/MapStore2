@@ -12,8 +12,8 @@ const defaultOpt = { // For all configuration options refer to https://github.co
     follow: true,  // follow with zoom and pan the user's location
     remainActive: true,
     stopFollowingOnDrag: true,
-    speedThreshold: 1, // m/s
     locateOptions: {
+        speedThreshold: 0.8, // m/s
         maximumAge: 2000,
         enableHighAccuracy: true, // heading is only defined if the enableHighAccuracy is set to true
         timeout: 10000,
