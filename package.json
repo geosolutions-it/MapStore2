@@ -172,6 +172,7 @@
     "leaflet-extra-markers": "1.0.6",
     "leaflet-minimap": "3.6.0",
     "leaflet-plugins": "3.0.2",
+    "leaflet-rotatedmarker": "0.2.0",
     "leaflet-simple-graticule": "1.0.2",
     "leaflet.gridlayer.googlemutant": "0.6.4",
     "leaflet.locatecontrol": "0.62.0",
