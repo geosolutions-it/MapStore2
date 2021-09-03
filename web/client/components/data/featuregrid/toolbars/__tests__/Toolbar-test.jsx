@@ -334,13 +334,20 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         let zoomAllButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(zoomAllButton)).toBe(true);
-        expect(el.children[2].classList.contains('disabled')).toBe(true);
+        expect(zoomAllButton.classList.contains('disabled')).toBe(true);
         ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false}/>, document.getElementById("container"));
         zoomAllButton = document.getElementById("fg-zoom-all");
-        expect(el.children[2].classList.contains('disabled')).toBe(false);
+        expect(zoomAllButton.classList.contains('disabled')).toBe(false);
     });
     describe('toolbarItems', () => {
         it('render toolbarItems component', () => {
+            const DummyComponent = ({sampleProp}) => <button id="dummy-cmp" className={sampleProp}/>;
+            ReactDOM.render(<Toolbar sampleProp="TEST_SAMPLE_PROP" toolbarItems={[{Component: DummyComponent }]}/>, document.getElementById("container"));
+            const button = document.querySelector('.btn-group #dummy-cmp');
+            expect(button).toExist();
+            expect(button.className).toEqual("TEST_SAMPLE_PROP");
+        });
+        it('toolbarItems inherited disableToolbar', () => {
             const DummyComponent = ({disabled, sampleProp}) => <button id="dummy-cmp" disabled={disabled} className={sampleProp}/>;
             ReactDOM.render(<Toolbar sampleProp="TEST_SAMPLE_PROP" disableToolbar toolbarItems={[{Component: DummyComponent }]}/>, document.getElementById("container"));
             const button = document.querySelector('.btn-group #dummy-cmp');
