@@ -522,6 +522,9 @@ TODO
 
 #### Google
 
+!!! note
+    The use of Google maps tiles in MapStore is not enabled and maintained due to licensing reasons.
+    
 example:
 
 ```json
