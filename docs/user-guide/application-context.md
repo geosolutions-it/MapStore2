@@ -125,52 +125,52 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 
 ## Configure Theme
 
-The last wizard steps allows to configure the theme of the context. In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the theme can be **default**, **dark** or **custom**.
+The last wizard steps allows to configure the theme to use for a context. A dropdown allows to select one of the available themes (see the [Styling and Theming](https://mapstore.readthedocs.io/en/latest/developer-guide/customize-theme/) section of the online documentation to know how to create and include additional themes to MapStore). By default in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) a **default** and a **dark** themes are available.
 
 <img src="../img/application-context/step_four.jpg" class="ms-docimage"/>
 
 ### Default Theme
 
-The **default** theme is automatically applied when the editor clicks the **Save** button <img src="../img/button/save_blue_button.jpg" class="ms-docbutton"/> by skipping the *Configure Theme* page. An example of a default context can be the following:
+The **default** theme is automatically applied when the context editor clicks the **Save** button <img src="../img/button/save_blue_button.jpg" class="ms-docbutton"/> by skipping the *Configure Theme* page. An example of a default context can be the following:
 
 <img src="../img/application-context/default_theme.jpg" class="ms-docimage"/>
 
 ### Dark Theme
 
-To activate the **dark** theme, the editor can click on dark in the drop-down menu.
+MapStore also provides by default an additional theme, the dark one, that can be selected from the drop-down menu to be used as an alternative theme for application contexts.
 
 <img src="../img/application-context/dark_theme.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-An example of a dark context can be the following:
+An example of a **dark** theme applied to a context is the following one:
 
 <img src="../img/application-context/dark_context.jpg" class="ms-docimage"/>
 
 ### Custom Theme
 
-The editor is allows to customize the theme enabling the **Custom Variables**. 
+After selecting a theme from the drop-down, it is also possible to customize it from UI by enabling **Custom Variables**. 
 
 <img src="../img/application-context/custom_variables.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-Once the **Custom Variables** is enable, the editor can choose the color of the different variables by clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> so thet a color picker is displayed to allow the selection of the desire color, as follows:
+Once **Custom Variables** is enabled, the context editor can modify main, primary and secondary colors for both backgrounds and texts (an helper clarifies the UI elements involved for each field in the form). Clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker is displayed to allow the selection of the desire color, as follows:
 
 <img src="../img/application-context/color_picker_theme.gif" class="ms-docimage"/>
 
-The variables to customized are:
+The colors that can be customized are the following ones:
 
 * **Main Text Color** to choose the color used in panel or dialog texts
 
 * **Main Background Color** to choose the color used in panel or dialog backgrounds
 
-* **Primary Text Color** to choose the color used on icons inside toolbar, header and button texts
+* **Primary Text Color** to choose the color used for icons inside toolbar, header and button texts
 
-* **Primary Color** to choose the color used on icons inside toolbar, header and button backgrounds
+* **Primary Color** to choose the color used for icons inside toolbar, header and button backgrounds
 
 * **Secondary Text Color** to choose the color used as button text when a button is active or selected 
 
 * **Secondary Color** to choose the color used as button background when a button is active or selected 
 
 !!! warning
-    Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary).
+    To ensure a good and well readable color contrast between each UI component, make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary).
 
 An example of a custom context can be the following:
 
