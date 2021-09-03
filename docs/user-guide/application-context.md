@@ -131,7 +131,7 @@ The last wizard steps allows to configure the theme to use for a context. A drop
 
 ### Default Theme
 
-The **default** theme is automatically applied when the context editor clicks the **Save** button <img src="../img/button/save_blue_button.jpg" class="ms-docbutton"/> by skipping the *Configure Theme* page. An example of a default context can be the following:
+The **default** theme is always available for a context and it is the MapStore default one. This theme is automatically applied to the context if the *Configure Theme* wizard step is skipped during the context creation or when the theme selection drop-down is cleared. An example of a default context can be the following:
 
 <img src="../img/application-context/default_theme.jpg" class="ms-docimage"/>
 
@@ -141,7 +141,7 @@ MapStore also provides by default an additional theme, the dark one, that can be
 
 <img src="../img/application-context/dark_theme.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-An example of a **dark** theme applied to a context is the following one:
+An example of the **dark** theme applied to a context is the following one:
 
 <img src="../img/application-context/dark_context.jpg" class="ms-docimage"/>
 
@@ -170,7 +170,7 @@ The colors that can be customized are the following ones:
 * **Secondary Color** to choose the color used as button background when a button is active or selected 
 
 !!! warning
-    To ensure a good and well readable color contrast between each UI component, make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary).
+    To ensure a good and well readable color contrast between each UI component, make sure to not use a secondary color too similar to the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary).
 
 An example of a custom context can be the following:
 
