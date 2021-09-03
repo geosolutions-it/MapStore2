@@ -141,7 +141,7 @@ describe('PluginsUtils', () => {
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
         expect(items2.length).toBe(1);
     });
-    describe.only('getPluginItems - containers as array', () => {
+    describe('getPluginItems - containers as array', () => {
         it('supports arrays', () => {
             const plugins = {
                 Test1Plugin: {
