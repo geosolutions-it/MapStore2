@@ -5,6 +5,7 @@ import 'leaflet-rotatedmarker';
 import throttle from 'lodash/throttle';
 import isNil from 'lodash/isNil';
 import { getNavigationArrowSVG, getNavigationCircleSVG } from '../LocateUtils';
+import { getQueryParams } from '../URLUtils';
 
 L.Control.MSLocate = L.Control.Locate.extend({
     setMap: function(map) {
@@ -77,20 +78,23 @@ L.Control.MSLocate = L.Control.Locate.extend({
                 ._popup.setLatLng(latlng);
         }
 
-        /*
+
         // DEBUG
-        let div = document.getElementById("LEAFLET_LOCATION_DEBUG");
-        if (!div) {
-            div = document.createElement("div");
-            div.setAttribute('id', "LEAFLET_LOCATION_DEBUG");
-            div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
-            document.body.appendChild(div);
+        let params = getQueryParams(window.location.search);
+        if (params.locateDebug === "true") {
+            let div = document.getElementById("LEAFLET_LOCATION_DEBUG");
+            if (!div) {
+                div = document.createElement("div");
+                div.setAttribute('id', "LEAFLET_LOCATION_DEBUG");
+                div.setAttribute('style', "position: absolute; bottom: 0; width: 100%; height: 200px; z-index:100000; background: rgba(5,5,5,.5)");
+                document.body.appendChild(div);
+            }
+            div.innerHTML = `<pre>
+                Position: ${latlng},
+                Heading: ${heading}
+                speed: ${speed}
+            </pre>`;
         }
-        div.innerHTML = `<pre>
-            Position: ${latlng},
-            Heading: ${heading}
-            speed: ${speed}
-        </pre>`;*/
     },
     _setClasses: function(state) {
         this._map.fire('locatestatus', {state: state});
@@ -124,7 +128,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
                 iconSize: 70,
                 fillOpacity: 1,
                 // inline svg as leaflet doesn't allow to set icon color
-                html: !isNil(heading) && speed > this.options.speedThreshold ? getNavigationArrowSVG({color, strokeWidth: 2}) : getNavigationCircleSVG({color, strokeWidth: 2})
+                html: !isNil(heading) && speed > this.options.locateOptions.speedThreshold ? getNavigationArrowSVG({color, strokeWidth: 2}) : getNavigationCircleSVG({color, strokeWidth: 2})
             }),
             rotationOrigin: 'center center'
         };

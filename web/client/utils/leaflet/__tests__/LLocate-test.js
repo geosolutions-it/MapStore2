@@ -11,10 +11,10 @@ import L from 'leaflet';
 
 const defaultOpt = {
     follow: true,
-    speedThreshold: 1,
     stopFollowingOnDrag: true,
     remainActive: true,
     locateOptions: {
+        speedThreshold: 0.8, // m/s
         maximumAge: 2000,
         enableHighAccuracy: false,
         timeout: 10000,
