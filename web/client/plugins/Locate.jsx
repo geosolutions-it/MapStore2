@@ -24,6 +24,10 @@ import LocateTool from "../components/mapcontrols/locate/LocateTool";
   * When the user move the map the follow mode deactivates and the locate tool is
   * still active, only showing the user's position on the map. Clicking again on the locate tool
   * will activate the following mode again.
+  *
+  * (if you want to debug the sensor values used by this plugin you can add to the query string `locateDebug=true`)
+  * http://localhost:8081/?locateDebug=true#/viewer/openlayers/MAP_ID
+  *
   * @class  Locate
   * @memberof plugins
   * @static
