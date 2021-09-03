@@ -39,7 +39,7 @@ const standardButtons = {
         visible={mode === "VIEW" && showAdvancedFilterButton}
         onClick={events.showQueryPanel}
         glyph="filter"/>),
-    zoomAll: ({disabled, disableZoomAll = false, mode, events}) => (<TButton
+    zoomAll: ({disabled, disableZoomAll = false, mode, events = {}}) => (<TButton
         id="zoom-all"
         keyProp="zoom-all"
         tooltipId="featuregrid.toolbar.zoomAll"
@@ -63,7 +63,7 @@ const standardButtons = {
         visible={mode === "EDIT" && !hasNewFeatures && !hasChanges && hasSupportedGeometry}
         onClick={events.createFeature}
         glyph="row-add"/>),
-    drawFeature: ({isDrawing = false, disabled, isSimpleGeom, mode, selectedCount, hasGeometry, hasSupportedGeometry = true, events}) => (<TButton
+    drawFeature: ({isDrawing = false, disabled, isSimpleGeom, mode, selectedCount, hasGeometry, hasSupportedGeometry = true, events = {}}) => (<TButton
         id="draw-feature"
         keyProp="draw-feature"
         tooltipId={getDrawFeatureTooltip(isDrawing, isSimpleGeom)}
@@ -72,7 +72,7 @@ const standardButtons = {
         onClick={events.startDrawingFeature}
         active={isDrawing}
         glyph="pencil-add"/>),
-    removeFeature: ({disabled, mode, selectedCount, hasChanges, hasNewFeatures, events}) => (<TButton
+    removeFeature: ({disabled, mode, selectedCount, hasChanges, hasNewFeatures, events = {}}) => (<TButton
         id="remove-features"
         keyProp="remove-features"
         tooltipId="featuregrid.toolbar.deleteSelectedFeatures"
@@ -80,7 +80,7 @@ const standardButtons = {
         visible={mode === "EDIT" && selectedCount > 0 && !hasChanges && !hasNewFeatures}
         onClick={events.deleteFeatures}
         glyph="trash-square"/>),
-    saveFeature: ({saving = false, saved = false, disabled, mode, hasChanges, hasNewFeatures, events}) => (<TButton
+    saveFeature: ({saving = false, saved = false, disabled, mode, hasChanges, hasNewFeatures, events = {}}) => (<TButton
         id="save-feature"
         keyProp="save-feature"
         tooltipId={getSaveMessageId({saving, saved})}
@@ -89,7 +89,7 @@ const standardButtons = {
         active={saved}
         onClick={events.saveChanges}
         glyph="floppy-disk"/>),
-    cancelEditing: ({disabled, mode, hasChanges, hasNewFeatures, events}) => (<TButton
+    cancelEditing: ({disabled, mode, hasChanges, hasNewFeatures, events = {}}) => (<TButton
         id="cancel-editing"
         keyProp="cancel-editing"
         tooltipId="featuregrid.toolbar.cancelChanges"
@@ -105,7 +105,7 @@ const standardButtons = {
         visible={mode === "EDIT" && hasGeometry && selectedCount === 1 && hasSupportedGeometry}
         onClick={events.deleteGeometry}
         glyph="polygon-trash"/>),
-    gridSettings: ({disabled, isColumnsOpen, selectedCount, mode, events}) => (<TButton
+    gridSettings: ({disabled, isColumnsOpen, selectedCount, mode, events = {}}) => (<TButton
         id="grid-settings"
         keyProp="grid-settings"
         tooltipId="featuregrid.toolbar.hideShowColumns"
