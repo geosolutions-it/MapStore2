@@ -84,7 +84,7 @@ In particular:
 
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
-- `geostore` version used is `1.7.0` on release `2021.02.00` (`1.8-SNAPSHOT` on `master` branch)
+- `geostore` version used is `1.7.0` on release `2021.02.00`
 
 Check the changes in `pom.xml` to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
 
