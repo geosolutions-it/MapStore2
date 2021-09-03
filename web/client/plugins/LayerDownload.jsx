@@ -105,6 +105,7 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         FeatureEditor: {
             doNotHide: true,
             name: "LayerDownload",
+            position: 20,
             target: "toolbar",
             Component: connect(createStructuredSelector({
                 isDownloadOpen: state =>  state?.controls?.layerdownload?.enabled

@@ -127,6 +127,7 @@ export default createPlugin('WidgetsBuilder', {
         FeatureEditor: {
             doNotHide: true,
             target: "toolbar",
+            position: 21,
             Component: FeatureEditorButton
         }
     }

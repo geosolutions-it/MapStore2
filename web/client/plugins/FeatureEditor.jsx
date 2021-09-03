@@ -162,6 +162,9 @@ const Dock = connect(createSelector(
   *     containers: {
   *         FeatureEditor: {
   *            doNotHide: true,
+  *            // position 20 to 99, to put buttons before "settings" and "sync" buttons (that should be at the end).
+  *            // <1 to put them on top. > 1000 to but at the end (not suggested because of #7271)
+  *            position: 20,
   *            name: "MyPlugin",
   *            target: "toolbar",
   *            Component: MyComponent
