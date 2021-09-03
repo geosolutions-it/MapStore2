@@ -121,34 +121,6 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].layerMetadata).toBe("meta");
         expect(state.index).toBe(1);
     });
-    it('creates a feature info data from successful request on showInMapPopup', () => {
-        let testAction = {
-            type: 'LOAD_FEATURE_INFO',
-            data: "data",
-            requestParams: "params",
-            layerMetadata: "meta",
-            reqId: 10
-        };
-
-        let state = mapInfo({...appState, showInMapPopup: true}, testAction);
-        expect(state.responses).toExist();
-        expect(state.responses.length).toBe(2);
-        expect(state.responses[0].response).toBe("data");
-        expect(state.responses[0].queryParams).toBe("params");
-        expect(state.responses[0].layerMetadata).toBe("meta");
-        expect(state.index).toBe(0);
-
-        state = mapInfo(assign({}, appState, {responses: [], showInMapPopup: true}), testAction);
-        expect(state.responses).toExist();
-        expect(state.responses.length).toBe(1);
-        expect(state.index).toBe(0);
-
-        state = mapInfo(assign({}, appState, {responses: ["test"], showInMapPopup: true}), {...testAction, reqId: 11});
-        expect(state.responses).toExist();
-        expect(state.responses.length).toBe(2);
-        expect(state.responses[0]).toBeTruthy();
-        expect(state.index).toBe(0);
-    });
     it('creates a feature info with empty data from successful request', () => {
         let testAction = {
             type: 'LOAD_FEATURE_INFO',
