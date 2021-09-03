@@ -40,7 +40,7 @@ import {
     TOGGLE_HIGHLIGHT_FEATURE,
     toggleHighlightFeature,
     SET_MAP_TRIGGER,
-    setMapTrigger
+    setMapTrigger, checkIdentifyIsMounted, IDENTIFY_IS_MOUNTED
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -163,5 +163,11 @@ describe('Test correctness of the map actions', () => {
     });
     it('setMapTrigger', () => {
         expect(setMapTrigger('hover')).toEqual({type: SET_MAP_TRIGGER, trigger: 'hover' });
+    });
+    it('check if Identify plugin is mounted', () => {
+        expect(checkIdentifyIsMounted(true)).toEqual({type: IDENTIFY_IS_MOUNTED, isMounted: true });
+    });
+    it('check if Identify is not mounted', () => {
+        expect(checkIdentifyIsMounted(false)).toEqual({type: IDENTIFY_IS_MOUNTED, isMounted: false });
     });
 });

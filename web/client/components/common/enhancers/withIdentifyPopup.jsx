@@ -139,7 +139,7 @@ export const  withPopupSupport =  branch(({map: {mapInfoControl = false} = {}}) 
         withPropsOnChange(["mapInfo", "popups"], ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}) => {
             const {responses, requests, validResponses} = mapInfo;
             const component = () => (<MapInfoViewer
-                renderEmpty
+                renderValidOnly
                 responses={responses} requests={requests}
                 validResponses={validResponses}
                 format={mapInfoFormat} showEmptyMessageGFI missingResponses={(requests || []).length - (responses || []).length} />);

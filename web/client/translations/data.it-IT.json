@@ -1720,7 +1720,8 @@
                 "nodatainviewport": "Nessun dato per la vista selezionata",
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
                 "genericError": "C'è stato un errore durante la generazione del grafico",
-                "genericErrorWithMessage": "C'è stato un errore durante la generazione del grafico: \"{message}\""
+                "genericErrorWithMessage": "C'è stato un errore durante la generazione del grafico: \"{message}\"",
+                "layerNotAvailable": "Il livello {layerName} non è più disponibile"
             },
             "builder": {
                 "header": {
@@ -2134,6 +2135,12 @@
             "fontWeightBold": "Grassetto",
             "boolTrue": "Si",
             "boolFalse": "No",
+            "colorMapType": {
+              "label": "Tipo di mappa dei colori",
+              "ramp": "Rampa",
+              "intervals": "Intervalli",
+              "values": "Valori"
+            },
             "addRuleBefore": "Aggiungi una nuova voce prima",
             "addRuleAfter": "Aggiungi nuova voce dopo",
             "remove": "Rimuovere",
@@ -2194,6 +2201,7 @@
             "emptyRuleEditor": "Non ci sono regole per questo stile. Aggiungi una nuova regola facendo clic sul tipo di stile desiderato nella barra degli strumenti",
             "classificationError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione",
             "classificationRasterError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione raster",
+            "classificationRasterUniqueIntervalError": "Impossibile eseguire la classificazione di valori univoci su raster di tipo float, sono supportati solo numeri interi. Prova invece un'altra classificazione",
             "classificationUniqueIntervalError": "Superato il limite massimo di intervalli! Stai tentando di generare una classificazione ad intervallo univoco con un attributo che contiene più di {intervalsForUnique} classi diverse. La classificazione ad intervallo univoco dovrebbe essere applicata agli attributi con un insieme limitato di intervalli per consentire una migliore leggibilità dello stile. Puoi provare un metodo diverso per l'attributo selezionato",
             "redChannel": "Canale rosso",
             "greenChannel": "Canale verde",
@@ -2872,7 +2880,7 @@
               "success": "Colore Secondario",
               "successContrast": "Colore Testo Secondario",
               "guidelines": "Assicurati di non utilizzare un colore secondario troppo simile a quello primario e ovviamente il colore primario del testo con la sua controparte (lo stesso vale per le altre coppie di colori: principale, secondario)",
-              "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+              "alternativeTextPrimarySecondary": "<p>Attenzione: il colore secondario selezionato potrebbe non essere leggibile rispetto a quello primario</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
               "tooltips": {
                 "main": "Colore del testo usato nei pannelli, nella toc",
                 "background": "Colore dello sfondo usato nei pannelli, nella toc",

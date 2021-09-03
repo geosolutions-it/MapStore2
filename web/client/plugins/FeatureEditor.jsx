@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
@@ -195,6 +195,11 @@ const FeatureDock = (props = {
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
     // const editors = items.filter(({target}) => target === 'editors');
+
+    useEffect(() => {
+        props.initPlugin({virtualScroll: props.virtualScroll, editingAllowedRoles: props.editingAllowedRoles, maxStoredPages: props.maxStoredPages});
+    }, []);
+
     return (
         <Dock {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
             {props.open &&
@@ -311,6 +316,9 @@ const EditorPlugin = compose(
             const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
             if (!isEqual(newOptions, oldOptions) ) {
                 this.props.onMount(newOptions);
+            }
+            if (this.props.enableMapFilterSync) {
+                this.props.setSyncTool(true);
             }
         }
     }),

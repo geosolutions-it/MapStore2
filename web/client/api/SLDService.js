@@ -220,10 +220,12 @@ const API = {
      * @method getStyleMetadataService
      * @param {object} layer layer configuration object
      * @param {object} params map of classification parameters: they will be used to build parameters for the SLDService classify service
+     * @param {object} styleService style service configuration object
      * @returns {string} url to get a classification metadata JSON
      */
-    getStyleMetadataService: (layer, params) => {
-        const parts = urlParts(getLayerUrl(layer));
+    getStyleMetadataService: (layer, params, styleService) => {
+        const { baseUrl = '', isStatic = false } = styleService || {};
+        const parts = urlParts(isStatic ? baseUrl : getLayerUrl(layer));
         return url.format(assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + layer.name + "/classify.json",
             query: params

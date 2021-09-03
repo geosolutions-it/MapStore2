@@ -149,15 +149,17 @@
 
     .leaflet-popup-content {
         overflow: auto;
-        position: relative; 
+        position: relative;
         display: flex;
         margin: 0;
+        z-index: 10;
     }
 
     a.leaflet-popup-close-button {
         -webkit-tap-highlight-color: transparent;
         .ms-popup-close-button();
         color: transparent;
+        z-index: 10;
         &:hover {
             color: transparent;
             opacity: 0.6;
@@ -169,6 +171,9 @@
             display: block;
             .glyphicon-1-close-content();
         }
+    }
+    .leaflet-popup-tip-container {
+        overflow: unset;
     }
 }
 

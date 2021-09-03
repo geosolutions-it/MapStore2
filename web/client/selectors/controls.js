@@ -31,3 +31,4 @@ export const activeTabSettingsSelector = state => get(state, "controls.layersett
 export const drawerEnabledControlSelector = (state) => get(state, "controls.drawer.enabled", false);
 export const unsavedMapSelector = (state) => get(state, "controls.unsavedMap.enabled", false);
 export const unsavedMapSourceSelector = (state) => get(state, "controls.unsavedMap.source", "");
+export const isIdentifyAvailable = (state) => get(state, "controls.info.available");

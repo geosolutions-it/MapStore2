@@ -164,4 +164,16 @@ describe("test identify enhancers", () => {
         TestUtils.Simulate.click(testComponent);
         expect(spyOnSubmitClickPoint).toHaveBeenCalled();
     });
+    it("test identifyLifecycle checkIdentifyIsMounted", () => {
+        const testHandlers = {
+            checkIdentifyIsMounted: () => {}
+        };
+        const spyIdentifyIsMounted = expect.spyOn(testHandlers, 'checkIdentifyIsMounted');
+        const Component = identifyLifecycle(() => <div id="test-component"></div>);
+        ReactDOM.render(
+            <Component checkIdentifyIsMounted={testHandlers.checkIdentifyIsMounted} />,
+            document.getElementById("container")
+        );
+        expect(spyIdentifyIsMounted.calls.length).toEqual(1);
+    });
 });

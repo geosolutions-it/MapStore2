@@ -98,13 +98,23 @@ class Feature extends React.Component {
         props.container.addLayer(layer);
         layer.on('click', (event) => {
             if (props.onClick) {
+                let rawPos = [event.latlng.lat, event.latlng.lng];
+                /*
+                 * Handle special case for vector features with handleClickOnLayer=true
+                 * Modifies the clicked point coordinates to center the marker
+                 */
+                if (this.props.options.handleClickOnLayer && props.geometry?.type === "Point") {
+                    const {_map: map} = event?.target || {};
+                    const {lat, lng} =  map?.mouseEventToLatLng(event?.originalEvent) || {};
+                    rawPos = [lat, lng];
+                }
                 props.onClick({
                     pixel: {
                         x: event.originalEvent && event.originalEvent.x,
                         y: event.originalEvent && event.originalEvent.y
                     },
                     latlng: event.latlng,
-                    rawPos: [event.latlng.lat, event.latlng.lng]
+                    rawPos
                 }, this.props.options.handleClickOnLayer ? this.props.options.id : null);
             }
         });

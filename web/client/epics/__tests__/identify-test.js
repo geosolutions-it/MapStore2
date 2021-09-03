@@ -695,7 +695,7 @@ describe('identify Epics', () => {
                     projection: 'EPSG:3857'
                 }
             }
-        });
+        }, done());
     });
 
     it('onMapClick do not trigger when mapinfo is not enabled', done => {
@@ -753,7 +753,7 @@ describe('identify Epics', () => {
                     projection: 'EPSG:3857'
                 }
             }
-        });
+        }, done());
 
     });
     it('onMapClick generates geometricFilter', done => {
@@ -801,7 +801,7 @@ describe('identify Epics', () => {
                     projection: 'EPSG:3857'
                 }
             }
-        });
+        }, done());
     });
 
     it('closeFeatureAndAnnotationEditing closes annotations', (done) => {
