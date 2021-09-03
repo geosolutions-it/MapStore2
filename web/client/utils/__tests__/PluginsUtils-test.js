@@ -141,8 +141,8 @@ describe('PluginsUtils', () => {
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
         expect(items2.length).toBe(1);
     });
-    describe('getPluginItems - containers as array', () => {
-        it('getPluginItems supports arrays', () => {
+    describe.only('getPluginItems - containers as array', () => {
+        it('supports arrays', () => {
             const plugins = {
                 Test1Plugin: {
                     Container1: [{
@@ -161,33 +161,122 @@ describe('PluginsUtils', () => {
             expect(items.length).toBe(2);
             expect(items.map(({id}) => id).includes(1, 2));
         });
-        it('getPluginItems priority with arrays', () => {
-            const plugins = {
-                Test1Plugin: {
-                    Container1: [{
-                        id: 1,
-                        priority: 3
-                    }, {
-                        id: 2,
-                        priority: 3
-                    }],
-                    Container2: {
-                        id: 3,
-                        priority: 1
-                    }
-                },
-                Container1Plugin: {},
-                Container2Plugin: {}
-            };
+        describe('priority with arrays', () => {
+            it('Multiple containers [2,2],1', () => {
+                const plugins = {
+                    Test1Plugin: {
+                        Container1: [{
+                            id: 1,
+                            priority: 2
+                        }, {
+                            id: 2,
+                            priority: 2
+                        }],
+                        Container2: {
+                            id: 3,
+                            priority: 1
+                        }
+                    },
+                    Container1Plugin: {},
+                    Container2Plugin: {}
+                };
 
-            const pluginsConfig = [{
-                name: "Test1"
-            }, "Container1", "Container2"];
-            const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
-            expect(items.length).toBe(2);
-            expect(items.map(({id}) => id).includes(1, 2));
+                const pluginsConfig = [{
+                    name: "Test1"
+                }, "Container1", "Container2"];
+                const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+                expect(items.length).toBe(2);
+                expect(items.map(({id}) => id).includes(1, 2));
+            });
+            it('Multiple containers [1,1],2', () => {
+                const plugins = {
+                    Test1Plugin: {
+                        Container1: [{
+                            id: 1,
+                            priority: 1
+                        }, {
+                            id: 2,
+                            priority: 1
+                        }],
+                        Container2: {
+                            id: 3,
+                            priority: 2
+                        }
+                    },
+                    Container1Plugin: {},
+                    Container2Plugin: {}
+                };
+
+                const pluginsConfig = [{
+                    name: "Test1"
+                }, "Container1", "Container2"];
+                const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+                expect(items.length).toBe(0);
+                const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+                expect(items2.length).toBe(1);
+                expect(items2.map(({id}) => id).includes(3));
+            });
+
+            it('Multiple containers [1,2],2', () => {
+                const plugins = {
+                    Test1Plugin: {
+                        Container1: [{
+                            id: 1,
+                            priority: 1
+                        }, {
+                            id: 2,
+                            priority: 2
+                        }],
+                        Container2: {
+                            id: 3,
+                            priority: 2
+                        }
+                    },
+                    Container1Plugin: {},
+                    Container2Plugin: {}
+                };
+
+                const pluginsConfig = [{
+                    name: "Test1"
+                }, "Container1", "Container2"];
+                const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+                expect(items.length).toBe(1);
+                expect(items.map(({id}) => id).includes(2));
+                const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+                expect(items2.length).toBe(1);
+                expect(items2.map(({id}) => id).includes(3));
+            });
+            it('Multiple containers [1,2],3', () => {
+                const plugins = {
+                    Test1Plugin: {
+                        Container1: [{
+                            id: 1,
+                            priority: 1
+                        }, {
+                            id: 2,
+                            priority: 2
+                        }],
+                        Container2: {
+                            id: 3,
+                            priority: 3
+                        }
+                    },
+                    Container1Plugin: {},
+                    Container2Plugin: {}
+                };
+
+                const pluginsConfig = [{
+                    name: "Test1"
+                }, "Container1", "Container2"];
+                const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+                expect(items.length).toBe(0);
+                const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+                expect(items2.length).toBe(1);
+                expect(items2.map(({id}) => id).includes(3));
+            });
         });
     });
+
 
     it('getPluginItems with showIn', () => {
         const plugins = {
