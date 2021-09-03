@@ -102,6 +102,12 @@ When you are running the application locally using `npm start` you can debug the
 http://localhost:8081/?debug=true#/
 ```
 
+for debugging locate position, speed and heading use **locateDebug** query param like so:
+
+```url
+http://localhost:8081/?locateDebug=true#/
+```
+
 It also integrates with the [browser's extension](https://github.com/zalmoxisus/redux-devtools-extension), if installed.
 
 This way you can monitor the application's state evolution and the action triggered by your application.
