@@ -13,8 +13,9 @@ const defaultOpt = { // For all configuration options refer to https://github.co
     remainActive: true,
     stopFollowingOnDrag: true,
     locateOptions: {
+        speedThreshold: 0.8, // m/s
         maximumAge: 2000,
-        enableHighAccuracy: false,
+        enableHighAccuracy: true, // heading is only defined if the enableHighAccuracy is set to true
         timeout: 10000,
         maxZoom: 18,
         watch: true  // if you overwrite this, visualization cannot be updated
