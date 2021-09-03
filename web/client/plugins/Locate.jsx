@@ -24,6 +24,8 @@ import LocateTool from "../components/mapcontrols/locate/LocateTool";
   * When the user move the map the follow mode deactivates and the locate tool is
   * still active, only showing the user's position on the map. Clicking again on the locate tool
   * will activate the following mode again.
+  * note: If you want to debug the sensor values used by this plugin you can add to the query string the parameter `locateDebug=true` (e.g.  `http://localhost:8081/?locateDebug=true#/viewer/openlayers/MAP_ID`)
+  *
   * @class  Locate
   * @memberof plugins
   * @static
@@ -31,6 +33,7 @@ import LocateTool from "../components/mapcontrols/locate/LocateTool";
   * @prop {string} cfg.style CSS to apply to the button
   * @prop {string} cfg.text The button text, if any
   * @prop {number} cfg.maxZoom The maximum zoom for automatic view setting to the user location
+  * @prop {number} cfg.speedThreshold above this value in m/s where the marker shows also an arrow indicating the heading, default is a circle threshold is 0.8 m/s
   * @prop {string} cfg.className the class name for the button
   * @prop {string} cfg.rateControl The rate control for the geolocation update frequency, value in milliseconds
   *
