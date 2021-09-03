@@ -125,7 +125,7 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 
 ## Configure Theme
 
-The last wizard steps allows to configure the theme to use for a context. A dropdown allows to select one of the available themes (see the [Styling and Theming](https://mapstore.readthedocs.io/en/latest/developer-guide/customize-theme/) section of the online documentation to know how to create and include additional themes to MapStore). By default in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) a **default** and a **dark** themes are available.
+The last wizard steps allows to configure the theme to use for a context. A dropdown allows to select one of the available themes (see the [Styling and Theming](../developer-guide/customize-theme.md) section of the online documentation to know how to create and include additional themes to MapStore). By default in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) a **default** and a **dark** themes are available.
 
 <img src="../img/application-context/step_four.jpg" class="ms-docimage"/>
 
