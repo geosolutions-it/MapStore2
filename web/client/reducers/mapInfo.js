@@ -56,10 +56,11 @@ const isIndexValid = (state, responses, requestIndex, isVector) => {
     // Index when first response received is valid
     const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]]);
     const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses);
-    return ((isUndefined(index) && !!validResponse.length)
-        || (!isVector && requests.length === inValidResponse.filter(res=>res).length)
-        || (isUndefined(index) && isVector && requests.filter(r=>isEmpty(r)).length === queryableLayers.length) // Check if all requested layers are vector
-    );
+    const cond1 = isUndefined(index) && !!validResponse.length;
+    const cond2 = !isVector && requests.length === inValidResponse.filter(res => res).length;
+    const cond3 = isUndefined(index) && isVector && requests.filter(r => isEmpty(r)).length === queryableLayers.length;
+    return (cond1 || cond2 || cond3);
+    // Check if all requested layers are vector
 };
 /**
  * Handles responses based on the type ["data"|"exceptions","error","vector"] of the responses received
@@ -107,6 +108,10 @@ function receiveResponse(state, action, type) {
             indexObj = {loaded: true, index: 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
             indexObj = {loaded: true, index: requestIndex};
+        } else if (responses.length === requests.length && !indexObj?.loaded) {
+            // if all responses are empty hence valid but with no valid index
+            // then set loaded to true
+            indexObj = {loaded: true};
         }
         // Set responses and index as first response is received
         return assign({}, state, {
