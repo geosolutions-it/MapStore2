@@ -302,33 +302,40 @@ export const getPluginItems = (state, plugins, pluginsConfig, containerName, con
         .filter((plugin) => {
             return showIn(state, plugins.requires, plugin.config, containerName, containerId, isDefault);
         })
+        // duplicate entries if container is an array
+        .reduce((acc, curr) => {
+            const containers = curr.impl?.[containerName];
+            if (isArray(containers)) {
+                return [...acc, ...containers.map((c) => ({
+                    ...curr,
+                    impl: {
+                        ...curr.impl,
+                        [containerName]: c
+                    }
+                }))];
+            }
+            return [...acc, curr];
+        }, [])
     // include only plugins for which container is the preferred container
         .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config.override, pluginsConfig,
             getPriority(plugin.impl, plugin.config.override, containerName)))
         .map((plugin) => {
             const pluginName = getPluginSimpleName(plugin.name);
             const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);
-            const containerProperties = assign(
-                {},
-                get(pluginImpl, containerName + '.impl') || get(pluginImpl, containerName),
-                get(plugin.config, 'override.' + containerName)
-            );
-            return assign(
-                {
-                    name: pluginName
+            const containerProperties = {
+                ...(get(pluginImpl, containerName + '.impl') || get(pluginImpl, containerName) || {}),
+                ...(get(plugin.config, 'override.' + containerName) ?? {})
+            };
+            return {
+                name: pluginName,
+                ...containerProperties,
+                cfg: {
+                    ...(pluginImpl?.cfg ?? {}),
+                    ...(parsePluginConfig(state, plugins.requires, plugin.config.cfg || {}) ?? {})
                 },
-                containerProperties,
-                {
-                    cfg: assign(
-                        {},
-                        pluginImpl.cfg || {},
-                        parsePluginConfig(state, plugins.requires, plugin.config.cfg || {}) || undefined
-                    )
-                },
-                {
-                    plugin: pluginImpl,
-                    items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
-                });
+                plugin: pluginImpl,
+                items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
+            };
         })
     // filter disabled plugins
         .filter((item) => filterDisabledPlugins(item, state, plugins))
