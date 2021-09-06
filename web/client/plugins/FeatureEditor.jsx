@@ -114,7 +114,8 @@ const Dock = connect(createSelector(
   *         <li> returnFullData: if true it returns the full data given from the response </li>
   *     </ul>
   * </ul>
-  * @example
+  * Example:
+  * ```json
   * {
   *   "name": "FeatureEditor",
   *   "cfg": {
@@ -147,6 +148,30 @@ const Dock = connect(createSelector(
   *   "editingAllowedRoles": ["ADMIN"]
   *   }
   * }
+  * ```
+  * As plugin container, it can render additional components coming from other plugins.
+  * You can render additional buttons to the Toolbar by configuring a container with your component and `"target": 'toolbar'`.
+  * The component will receive as props all the properties passed to the featuregrid Toolbar. Some of them are  :
+  * - `disabled`: tells when the toolbar is completely disabled.
+  * - `mode`: "EDIT" or "VIEW". Tells if the feature grid is in edit mode or in view mode.
+  * - `results`: the results in the table (with virtual scrolling, only the available ones).
+  * - `
+  * Example:
+  * ```javascript
+  * createPlugin('MyPlugin',{
+  *     containers: {
+  *         FeatureEditor: {
+  *            doNotHide: true,
+  *            // position 20 to 99, to put buttons before "settings" and "sync" buttons (that should be at the end).
+  *            // <1 to put them on top. > 1000 to but at the end (not suggested because of #7271)
+  *            position: 20,
+  *            name: "MyPlugin",
+  *            target: "toolbar",
+  *            Component: MyComponent
+  *        },
+  *     }
+  * })
+  * ```
   *
 */
 const FeatureDock = (props = {
@@ -167,6 +192,9 @@ const FeatureDock = (props = {
         zIndex: 1030
     };
     // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
+    const items = props?.items ?? [];
+    const toolbarItems = items.filter(({target}) => target === 'toolbar');
+    // const editors = items.filter(({target}) => target === 'editors');
 
     useEffect(() => {
         props.initPlugin({virtualScroll: props.virtualScroll, editingAllowedRoles: props.editingAllowedRoles, maxStoredPages: props.maxStoredPages});
@@ -182,7 +210,7 @@ const FeatureDock = (props = {
                     className="feature-grid-container"
                     key={"feature-grid-container"}
                     height={height - (62 + 32)}
-                    header={getHeader()}
+                    header={getHeader(toolbarItems)}
                     columns={getPanels(props.tools)}
                     footer={getFooter(props)}>
                     {getDialogs(props.tools)}

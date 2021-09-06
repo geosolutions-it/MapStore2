@@ -1,5 +1,3 @@
-import { toggleControl } from '../../actions/controls';
-
 import {
     toggleTool,
     toggleEditMode,
@@ -17,7 +15,6 @@ import {
     zoomAll
 } from '../../actions/featuregrid';
 
-import { createChart } from '../../actions/widgets';
 import { toggleSyncWms } from '../../actions/wfsquery';
 
 export default {
@@ -26,7 +23,6 @@ export default {
     clearFeatureEditing: () => toggleTool("clearConfirm", true),
     deleteGeometry: () => deleteGeometry(),
     deleteFeatures: () => toggleTool("deleteConfirm", true),
-    download: () => toggleControl("layerdownload"),
     settings: () => toggleTool("settings"),
     switchEditMode: () => toggleEditMode(),
     startEditingFeature: () => startEditingFeature(),
@@ -38,6 +34,5 @@ export default {
     sync: () => toggleSyncWms(),
     setTimeSync,
     hideSyncPopover: () => hideSyncPopover(),
-    toggleShowAgain: () => toggleShowAgain(),
-    chart: () => createChart()
+    toggleShowAgain: () => toggleShowAgain()
 };
