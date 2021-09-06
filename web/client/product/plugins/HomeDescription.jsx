@@ -60,7 +60,7 @@ class HomeDescription extends React.Component {
                         </Col>
                     </Row>
                 </Grid>
-
+                
             </div>
         );
     }

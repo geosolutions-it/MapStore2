@@ -9,7 +9,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-bootstrap';
-import src from "./attribution/geosolutions-brand.png";
+import src from "./attribution/RSE-logo.jpg";
 import HTML from '../../components/I18N/HTML';
 
 /**
@@ -38,9 +38,9 @@ class Footer extends React.Component {
             src,
             width: 140,
             height: 'auto',
-            href: 'https://www.geosolutionsgroup.com/',
-            title: 'GeoSolutions',
-            alt: 'GeoSolutions'
+            href: 'http://www.rse-web.it/home.page',
+            title: 'RSE',
+            alt: 'RSE'
         }
     };
 
