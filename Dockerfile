@@ -1,7 +1,6 @@
 FROM tomcat:9-jdk11-openjdk AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geo-solutions.it>"
-ENV MAPSTORE_WEBAPP_SRC="./.placeholder"
-ARG MAPSTORE_WEBAPP_SRC=""
+ARG MAPSTORE_WEBAPP_SRC="./.placeholder"
 ADD "${MAPSTORE_WEBAPP_SRC}" "/mapstore/"
 
 COPY ./docker/* /mapstore/docker/
