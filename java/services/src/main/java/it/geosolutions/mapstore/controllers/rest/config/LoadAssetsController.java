@@ -53,21 +53,13 @@ public class LoadAssetsController extends BaseConfigController {
      */
     @RequestMapping(value="/load/{resource}", method = RequestMethod.GET)
     public @ResponseBody byte[] loadResource(@PathVariable("resource") String resourceName, @RequestParam(value="overrides", defaultValue="true") boolean applyOverrides) throws IOException {
-    	resourceName = normalizeResource(resourceName, "json");
         if (isAllowed(resourceName)) {
             return toBytes(readResource(resourceName + ".json", applyOverrides, resourceName + ".json.patch"));
         }
         throw new ResourceNotAllowedException("Resource is not allowed");
     }
 
-    private String normalizeResource(String name, String extension) {
-    	if(name.toLowerCase().endsWith("." + extension.toLowerCase())) {
-    		return name.substring(0, name.length() - 1 - extension.length());
-    	}
-    	return name;
-	}
-
-	/**
+    /**
      * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
      * Allows loading externalized assets (javascript bundles, translation files, and so on).
      * The rest of the URL from /loadasset/ is intended to be the path to resource.
