@@ -15,7 +15,6 @@ ENV MAPSTORE_WEBAPP_DST="${CATALINA_BASE}/webapps"
 ENV INITIAL_MEMORY="512m"
 ENV MAXIMUM_MEMORY="512m"
 ARG OVR=""
-ARG PG_CLIENT_VERSION=""
 ENV JAVA_OPTS="${JAVA_OPTS} -Xms${INITIAL_MEMORY} -Xmx${MAXIMUM_MEMORY}"
 ENV GEOSTORE_OVR_OPT="-Dgeostore-ovr=file://${CATALINA_BASE}/conf/${OVR}"
 ENV JAVA_OPTS="${JAVA_OPTS} ${GEOSTORE_OVR_OPT}"
@@ -31,7 +30,7 @@ RUN cp ${CATALINA_BASE}/docker/wait-for-postgres.sh /usr/bin/wait-for-postgres
 RUN cp ${CATALINA_BASE}/docker/${OVR} ${CATALINA_BASE}/conf
 
 RUN apt-get update \
-    && apt-get install --yes postgresql-client-${PG_CLIENT_VERSION} \
+    && apt-get install --yes postgresql-client \
     && apt-get clean \
     && apt-get autoclean \
     && apt-get autoremove -y \
