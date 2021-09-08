@@ -13,24 +13,23 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomcat.version>8.5.69</tomcat.version>
+    <tomcat.version>7.0.86</tomcat.version>
   </properties>
 
   <dependencies>
-    <!-- MapStore services -->
+    <!-- MapStore backend -->
     <dependency>
-        <groupId>it.geosolutions.mapstore</groupId>
-        <artifactId>mapstore-services</artifactId>
-        <version>1.3-SNAPSHOT</version>
+      <groupId>it.geosolutions.mapstore</groupId>
+      <artifactId>mapstore-backend</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
-
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
     <!-- ================================================================ -->
     <dependency>
       <groupId>it.geosolutions.geostore</groupId>
       <artifactId>geostore-webapp</artifactId>
-      <version>1.8-SNAPSHOT</version>
+      <version>1.5-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
@@ -58,9 +57,9 @@
     </dependency>
     <!-- servlet -->
     <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>3.0.1</version>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+          <version>2.5</version>
     </dependency>
     <!-- gzip compression filter -->
     <dependency>
@@ -364,7 +363,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/../MapStore2/web/client/configs</directory>
+                                <directory>${basedir}/../MapStore2/web/client</directory>
                                 <includes>
                                     <include>localConfig.json</include>
                                 </includes>
@@ -383,10 +382,8 @@
                 <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
                 WEB-INF/lib/commons-io-1.1.jar,
                 WEB-INF/lib/commons-logging-1.0.4.jar,
-                WEB-INF/lib/commons-pool-1.3.jar,
-                WEB-INF/lib/slf4j-api-1.5*.jar,
-                WEB-INF/lib/slf4j-log4j12-1.5*.jar,
-                WEB-INF/lib/spring-tx-5.2.15*.jar
+		WEB-INF/lib/commons-pool-1.3.jar,
+		WEB-INF/lib/spring-*-3.1.0*.jar
                 </packagingExcludes>
                 <overlays>
                     <overlay>
@@ -401,37 +398,107 @@
             </configuration>
         </plugin>
 
+        <!-- Run the application using "mvn tomcat7:run-war" -->
         <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven3-plugin</artifactId>
+            <groupId>org.apache.tomcat.maven</groupId>
+            <artifactId>tomcat7-maven-plugin</artifactId>
+            <version>2.2</version>
             <configuration>
-                <container>
-                    <containerId>tomcat8x</containerId>
-                    <zipUrlInstaller>
-                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.69/tomcat-8.5.69.zip</url>
-                    </zipUrlInstaller>
-                </container>
-                <configuration>
-                    <type>standalone</type>
-                    <home>
-                        ${project.build.directory}/apache-tomcat-${tomcat.version}
-                    </home>
-                    <properties>
-                        <cargo.servlet.port>8080</cargo.servlet.port>
-                        <cargo.logging>low</cargo.logging>
-                    </properties>
-                </configuration>
-                <deployables>
-                    <deployable>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>${project.artifactId}</artifactId>
-                        <type>war</type>
-                        <properties>
-                            <context>/mapstore</context>
-                        </properties>
-                    </deployable>
-                </deployables>
+                <path>/__PROJECTNAME__</path>
+                <port>8080</port>
             </configuration>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-core</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-util</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-coyote</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jdbc</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-dbcp</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-servlet-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jsp-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jasper</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jasper-el</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-el-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-catalina</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-tribes</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-catalina-ha</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-annotations-api</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-juli</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-logging-juli</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-logging-log4j</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+            </dependencies>
         </plugin>
     </plugins>
   </build>

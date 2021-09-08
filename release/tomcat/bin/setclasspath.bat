@@ -36,6 +36,7 @@ goto exit
 rem Check if we have a usable JDK
 if "%JAVA_HOME%" == "" goto noJavaHome
 if not exist "%JAVA_HOME%\bin\java.exe" goto noJavaHome
+if not exist "%JAVA_HOME%\bin\javaw.exe" goto noJavaHome
 if not exist "%JAVA_HOME%\bin\jdb.exe" goto noJavaHome
 if not exist "%JAVA_HOME%\bin\javac.exe" goto noJavaHome
 set "JRE_HOME=%JAVA_HOME%"
@@ -54,6 +55,7 @@ set "JRE_HOME=%JAVA_HOME%"
 :gotJreHome
 rem Check if we have a usable JRE
 if not exist "%JRE_HOME%\bin\java.exe" goto noJreHome
+if not exist "%JRE_HOME%\bin\javaw.exe" goto noJreHome
 goto okJava
 
 :noJreHome
@@ -65,10 +67,7 @@ goto exit
 :okJava
 rem Don't override the endorsed dir if the user has set it previously
 if not "%JAVA_ENDORSED_DIRS%" == "" goto gotEndorseddir
-rem Java 9 no longer supports the java.endorsed.dirs
-rem system property. Only try to use it if
-rem CATALINA_HOME/endorsed exists.
-if not exist "%CATALINA_HOME%\endorsed" goto gotEndorseddir
+rem Set the default -Djava.endorsed.dirs argument
 set "JAVA_ENDORSED_DIRS=%CATALINA_HOME%\endorsed"
 :gotEndorseddir
 
