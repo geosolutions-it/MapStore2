@@ -1067,42 +1067,56 @@ describe('Openlayers layer', () => {
         layer.layer.remove();
     });
 
-    it('creates a google layer for openlayers map', () => {
-        var google = {
-            maps: {
-                MapTypeId: {
-                    HYBRID: 'hybrid',
-                    SATELLITE: 'satellite',
-                    ROADMAP: 'roadmap',
-                    TERRAIN: 'terrain'
-                },
-                Map: function() {
-                    this.setMapTypeId = function() {};
-                    this.setCenter = function() {};
-                    this.setZoom = function() {};
-                    this.setTilt = function() {};
-                },
-                LatLng: function() {
+    describe('Google layer', () => {
+        it('layer creator returns null without failing if window.google doesn\'t exist', () => {
+            var options = {
+                "type": "google",
+                "name": "ROADMAP",
+                "visibility": true
+            };
+            window.google = undefined;
+            let layer = ReactDOM.render(
+                <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
+            expect(layer).toBeTruthy(); // no exception on creation
+        });
+        it('creates a google layer for openlayers map', () => {
+            var google = {
+                maps: {
+                    MapTypeId: {
+                        HYBRID: 'hybrid',
+                        SATELLITE: 'satellite',
+                        ROADMAP: 'roadmap',
+                        TERRAIN: 'terrain'
+                    },
+                    Map: function() {
+                        this.setMapTypeId = function() {};
+                        this.setCenter = function() {};
+                        this.setZoom = function() {};
+                        this.setTilt = function() {};
+                    },
+                    LatLng: function() {
 
+                    }
                 }
-            }
-        };
-        var options = {
-            "type": "google",
-            "name": "ROADMAP",
-            "visibility": true
-        };
-        window.google = google;
+            };
+            var options = {
+                "type": "google",
+                "name": "ROADMAP",
+                "visibility": true
+            };
+            window.google = google;
 
-        // create layers
-        let layer = ReactDOM.render(
-            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
+            // create layers
+            let layer = ReactDOM.render(
+                <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
-        // count layers
-        // google maps does not create a real ol layer, it is just injecting a gmaps api layer into DOM
-        expect(map.getLayers().getLength()).toBe(0);
+            expect(layer).toBeTruthy();
+            // count layers
+            // google maps does not create a real ol layer, it is just injecting a gmaps api layer into DOM
+            expect(map.getLayers().getLength()).toBe(0);
+        });
     });
+
 
     it('creates and overlay layer for openlayers map', () => {
         let container = document.createElement('div');
