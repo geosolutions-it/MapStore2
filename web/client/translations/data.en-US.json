@@ -278,7 +278,7 @@
             }
         },
         "home":{
-            "titolo_pagina": "RSE - ART Geoportal",
+            "titolo_pagina": "Energy and Environment Geoportal",
             "open": "Open",
             "shortDescription": "RSE geoportal - version 2021.<br/> <small><a href=\"http://www.rse-web.it\" target='_blank'>Visit RSE web site</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
@@ -287,7 +287,7 @@
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
+            "footerDescription": "<strong>RSE Ricerca sul Sistema Energetico</strong> <a href=\"mailto:rse@legalmail.it\">rse@legalmail.it</a> <strong>Italy</strong>: +39 023992.1",
             "ml": {
                 "title": "Keep in touch and stay up-to-date with the mailing lists",
                 "subscribe_users": "Subscribe Users Mailing List",
@@ -404,7 +404,7 @@
             },
             "dashboards": {
                 "newDashboard": "New dashboard",
-                "title": "Dashboards ({count})",
+                "title": "Links and Dashboards ({count})",
                 "titleNoCount": "Dashboards",
                 "create": "Create dashboard",
                 "noDashboardAvailable": "No dashboard available",

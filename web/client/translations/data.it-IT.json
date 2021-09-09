@@ -278,7 +278,7 @@
             }
         },
         "home":{
-            "titolo_pagina": "Geoportale RSE - ART",
+            "titolo_pagina": "Geoportale Energia e Territorio",
             "open": "Apri",
             "shortDescription": "Il geoportale di RSE - versione 2021 <br/><small><a href=\"http://www.rse-web.it\" target='_blank'>Visita il sito di RSE</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
@@ -287,7 +287,7 @@
             "Examples": "Esempi",
             "LinkedinGroup": "Gruppo Linkedin Mapstore",
             "scrollTop": "Torna all'inizio della pagina",
-            "footerDescription": "<strong>RSE Ricerca sul Sistema Energetico</strong> <a href=\"mailto: rse@legalmail.it\">rse@legalmail.it</a> <strong>Italia</strong>: +39 023992.1",
+            "footerDescription": "<strong>RSE Ricerca sul Sistema Energetico</strong> <a href=\"mailto:rse@legalmail.it\">rse@legalmail.it</a> <strong>Italia</strong>: +39 023992.1",
             "ml": {
                 "title": "Resta in contatto e tieniti aggiornato con le mailing list",
                 "subscribe_users": "Sottoscrivi la mailing list degli utenti",
@@ -404,7 +404,7 @@
             },
             "dashboards": {
                 "newDashboard": "Nuova Dashboard",
-                "title": "Dashboards ({count})",
+                "title": "Link e Dashboards ({count})",
                 "titleNoCount": "Dashboards",
                 "create": "Crea Dashboard",
                 "noDashboardAvailable": "Nessuna dashboard disponibile",

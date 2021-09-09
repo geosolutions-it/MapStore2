@@ -51,12 +51,8 @@ class HomeDescription extends React.Component {
                 </Jumbotron>
                 <Grid>
                     <Row>
-                        <Col md={3}>
-                            <a href="http://atlanteintegrato.rse-web.it/" target="_blank"><img height={150} src={logo} className="d-block mx-auto"/></a>
-                        </Col>
-                        <Col md={7}>
-                            <h3><a href="http://localhost:3001" target="_blank">New Atlante Integrato - Terria</a></h3>
-                            <p>Scopri di più</p>
+                        <Col md={30}>
+                            <p>Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale</p>
                         </Col>
                     </Row>
                 </Grid>
