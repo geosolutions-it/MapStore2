@@ -87,10 +87,10 @@ const Dock = connect(createSelector(
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
-  * <br/>sets the size of loaded pages cache, while vsOverscan and scrollDebounce params determine the behavior of grid scrolling
-  * <br/>and of row loading.
+  * sets the size of loaded pages cache, while vsOverscan and scrollDebounce params determine the behavior of grid scrolling
+  * and of row loading.
   * <br/>Furthermore it can be configured to use custom editor cells for certain layers/columns, specifying the rules to recognize them. If no rule matches, then it will be used the default editor based on the dataType of that column.
-  * Example: 
+  * <br/>Example:
   * ```json
   * {
   *   "name": "FeatureEditor",
