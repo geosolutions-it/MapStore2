@@ -540,7 +540,7 @@ describe('Leaflet layer', () => {
         expect(urls.length).toBe(2);
     });
     describe("GoogleLayer", () => {
-        it('if google lib doesn\'t exist, layer is null',() => {
+        it('if google lib doesn\'t exist, layer is null', () => {
             var options = {
                 "type": "google",
                 "name": "ROADMAP"
