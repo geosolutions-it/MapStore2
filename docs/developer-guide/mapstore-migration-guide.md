@@ -61,7 +61,12 @@ It is suggested to :
 
 ### Project system
 
-During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon.
+During this release MapStore we started an rewrite of the [project system](https://github.com/geosolutions-it/MapStore2/issues/6314), organized in different phases.
+
+The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738) pull request. In this phase we are supporting the backward compatibility as much as possible, introducing the new project system in parallel with the new one (experimental).
+In the future the current script will be deprecated in favor of the new one.
+
+Here below the breaking changes introduced in this release to support this new system:
 
 #### The following key files have been moved to the new `configs` folder
 
@@ -73,16 +78,19 @@ We suggest you to move them as well from root to configs folder
 - `config.json`
 - `simple.json`
 
-Back-end has been reorganized
+#### Back-end has been reorganized
+
 In particular:
 
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
+- `geostore` version used is `1.7.0` on release `2021.02.00`
 
 Check the changes in `pom.xml` to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
 
 - `pom.xml`
 - `java/web/pom.xml`
+
 
 #### Data directory has been reorganized and is now available also for product
 
