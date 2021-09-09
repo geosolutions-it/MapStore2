@@ -590,7 +590,7 @@ describe('Leaflet layer', () => {
             map.eachLayer(function() {lcount++; });
             expect(lcount).toBe(1);
         });
-    })
+    });
 
 
     it('creates a bing layer for leaflet map', () => {
