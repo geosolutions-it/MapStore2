@@ -20,7 +20,7 @@ export default {
         HeaderPlugin: require('./plugins/Header').default,
         HomeDescriptionPlugin: require('./plugins/HomeDescription').default,
         MadeWithLovePlugin: require('./plugins/MadeWithLove').default,
-        MailingListsPlugin: require('./plugins/MailingLists').default,
+        /**MailingListsPlugin: require('./plugins/MailingLists').default,*/
         MapTypePlugin: require('./plugins/MapType').default,
         NavMenu: require('./plugins/NavMenu').default,
         // framework plugins

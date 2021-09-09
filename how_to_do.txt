@@ -7,3 +7,21 @@ web\client\product\plugins\HomeDescription.jsx
 
 il piede è:
 web\client\product\plugins\MailingLists.jsx
+
+
+Tolta la sezione della mailing list commentando la riga 23 in plugins.js
+
+tolto da homedescription.jsx
+                <Grid>
+                    <Row>
+                        <Col md={3}>
+                            <a href="http://atlanteintegrato.rse-web.it/" target="_blank"><img height={150} src={logo} className="d-block mx-auto"/></a>
+                        </Col>
+                        <Col md={7}>
+                            <h3><a href="http://localhost:3001" target="_blank">New Atlante Integrato - Terria</a></h3>
+                            <p>Scopri di più</p>
+                        </Col>
+                    </Row>
+                </Grid>
+
+
