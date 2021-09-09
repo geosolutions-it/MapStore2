@@ -202,7 +202,8 @@ Layers.registerType('google', {
         if (!gmaps[mapId]) {
             return;
         }
-        let google = window.google;
+        let gMapsLib = getGMapsLib();
+
         if (!oldOptions.visibility && newOptions.visibility) {
             let view = map.getView();
             const center = transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
