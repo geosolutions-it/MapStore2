@@ -11,9 +11,9 @@ For more information check the <a href="https://mapstore.readthedocs.io/en/lates
 
 Download
 ------------
-You can download the WAR file from the latest release <a href="https://github.com/geosolutions-it/MapStore2/releases/latest" target="_blank">here</a>
+You can download the WAR file from the latest release [MapStore documentation!](https://mapstore.readthedocs.io/en/latest/)
 
-<a href="https://github.com/geosolutions-it/MapStore2/releases" target="_blank">All the releases</a>
+[All the releases](https://github.com/geosolutions-it/MapStore2/releases)
 
 Quick Start
 ------------
@@ -21,20 +21,57 @@ Quick Start
 There are two quick ways to test out MapStore. Either using <a href="https://www.docker.com/" target="_blank">Docker</a> (all tags are available in the [geosolutions dockerhub](https://hub.docker.com/r/geosolutionsit/mapstore2/tags?page=1&ordering=last_updated)) or a local java web container like <a href="http://tomcat.apache.org/" target="_blank">Apache Tomcat</a>
 
 ### Using Docker
-
+#### * Run Mapstore as standalone container
 Pull the latest image from Docker Hub:
 
 ```
 docker pull geosolutionsit/mapstore2
-docker run --name mapstore -p8080:8080  geosolutionsit/mapstore2
+docker run --name mapstore -p 8080:8080  geosolutionsit/mapstore2
 ```
 
 Then you can access MapStore using the following URL:
 
-<a href="http://localhost:8080/mapstore" target="_blank">http://localhost:8080/mapstore</a>
+[http://localhost:8080/mapstore](http://localhost:8080/mapstore)
 
 
 Use the default credentials (admin / admin) to login and start creating your maps!
+
+#### * Run the Mapstore with PostGIS through docker-compose in the local environment.
+
+---
+**Note**
+
+- To test a different release of MapStore, you should change the `MAPSTORE_WEBAPP_SRC` build argument in the docker-compose file.
+- You should change the value of `POSTGRES_PASSWORD` for more security. 
+- Due to proxy binding on host port 80, you may need to run docker-compose as root.
+
+---
+
+- To spin up the environment run:
+  ```shell
+  docker-compose up -d
+  ```
+
+---
+**Note**
+
+-  Take in consideration due to the requirements of the deployment, you should update the docker-compose to the latest version.
+---
+
+- After the docker-compose finish, you can access to the site using following URL:
+
+  [http://localhost/mapstore](http://localhost/mapstore)
+
+
+- Use the default credentials (**admin** / **admin**) to login and start creating your maps!
+- After finished the test you can stop the environment with the command:
+  ```shell
+  docker-compose down
+  ```
+- To clean the full environment:
+    ```shell
+    docker-compose down --remove-orphans --rmi all -v
+    ```
 
 ### Using the Web Archive (WAR file)
 

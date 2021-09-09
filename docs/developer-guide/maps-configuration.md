@@ -522,6 +522,13 @@ TODO
 
 #### Google
 
+!!! note
+    The use of Google maps tiles in MapStore is not enabled and maintained due to licensing reasons. If your usage conditions respect the google license, you can enable the google layers by:
+    
+    * Adding `<script src="https://maps.google.com/maps/api/js?v=3"></script>` to all `html` files you need it.
+    * Add your API-KEY to the request
+    * Fix the code, if needed.
+    
 example:
 
 ```json

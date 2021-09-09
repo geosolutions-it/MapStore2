@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
 import SideCard from '../SideCard';
+import unknown from "../../../../plugins/background/assets/img/dafault.jpg";
 
 describe('SideCard component', () => {
     beforeEach((done) => {
@@ -146,5 +147,29 @@ describe('SideCard component', () => {
         expect(titleClassName).toExist();
         expect(descClassName).toExist();
         expect(infoExtraClassName).toExist();
+    });
+
+    it('SideCard with infoExtra', () => {
+        ReactDOM.render(<SideCard caption="caption" description="desc" title="title" infoExtra={<div className="side-card-test-infoextra"/>}/>,
+            document.getElementById("container"));
+        const container = document.getElementById('container');
+        let body = container.querySelector('.ms-body');
+        let titleClassName = container.querySelector('.mapstore-side-card-title');
+        let descClassName = container.querySelector('.mapstore-side-card-desc');
+
+        const sideCardLeftContainer = container.getElementsByClassName('mapstore-side-card-left-container')[0];
+        expect(sideCardLeftContainer).toExist();
+        let infoExtraClassName = sideCardLeftContainer.querySelector('.side-card-test-infoextra');
+        expect(body).toNotExist();
+        expect(titleClassName).toExist();
+        expect(descClassName).toExist();
+        expect(infoExtraClassName).toExist();
+    });
+
+    it('SideCard display when "unknown" is passed as a preview props', () => {
+        ReactDOM.render(<SideCard preview={unknown} selected/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let preview = container.querySelector('.mapstore-side-preview');
+        expect(preview).toExist();
     });
 });

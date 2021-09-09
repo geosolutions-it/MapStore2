@@ -34,9 +34,7 @@ describe('Featuregrid toolbar component', () => {
         ReactDOM.render(<Toolbar/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
-        const downloadBtn = document.getElementById("fg-download-grid");
         const editButton = document.getElementById("fg-edit-mode");
-        expect(isVisibleButton(downloadBtn)).toBe(false);
         expect(isVisibleButton(editButton)).toBe(false);
     });
     it('check showAdvancedFilterButton false', () => {
@@ -66,15 +64,6 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         const advFilterButton = document.getElementById("fg-grid-map-filter");
         expect(isVisibleButton(advFilterButton)).toBe(true);
-    });
-    it('check download displayDownload', () => {
-        ReactDOM.render(<Toolbar displayDownload />, document.getElementById("container"));
-        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
-        const downloadBtn = document.getElementById("fg-download-grid");
-        const editButton = document.getElementById("fg-edit-mode");
-        expect(isVisibleButton(downloadBtn)).toBe(true);
-        expect(isVisibleButton(editButton)).toBe(false);
     });
     it('check edit-mode button', () => {
         const events = {
@@ -345,10 +334,27 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         let zoomAllButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(zoomAllButton)).toBe(true);
-        expect(el.children[2].classList.contains('disabled')).toBe(true);
+        expect(zoomAllButton.classList.contains('disabled')).toBe(true);
         ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false}/>, document.getElementById("container"));
         zoomAllButton = document.getElementById("fg-zoom-all");
-        expect(el.children[2].classList.contains('disabled')).toBe(false);
+        expect(zoomAllButton.classList.contains('disabled')).toBe(false);
+    });
+    describe('toolbarItems', () => {
+        it('render toolbarItems component', () => {
+            const DummyComponent = ({sampleProp}) => <button id="dummy-cmp" className={sampleProp}/>;
+            ReactDOM.render(<Toolbar sampleProp="TEST_SAMPLE_PROP" toolbarItems={[{Component: DummyComponent }]}/>, document.getElementById("container"));
+            const button = document.querySelector('.btn-group #dummy-cmp');
+            expect(button).toExist();
+            expect(button.className).toEqual("TEST_SAMPLE_PROP");
+        });
+        it('toolbarItems inherited disableToolbar', () => {
+            const DummyComponent = ({disabled, sampleProp}) => <button id="dummy-cmp" disabled={disabled} className={sampleProp}/>;
+            ReactDOM.render(<Toolbar sampleProp="TEST_SAMPLE_PROP" disableToolbar toolbarItems={[{Component: DummyComponent }]}/>, document.getElementById("container"));
+            const button = document.querySelector('.btn-group #dummy-cmp');
+            expect(button).toExist();
+            expect(button.disabled).toBeTruthy();
+            expect(button.className).toEqual("TEST_SAMPLE_PROP");
+        });
     });
     describe('time sync button', () => {
         it('visibility', () => {
@@ -375,17 +381,5 @@ describe('Featuregrid toolbar component', () => {
             document.getElementById("fg-timeSync-button").click();
             expect(spy.calls[1].arguments[0]).toBe(true);
         });
-    });
-    it('check chart button', () => {
-        const events = {
-            chart: () => {}
-        };
-        spyOn(events, "chart");
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" showChartButton />, document.getElementById("container"));
-        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
-        let chart = document.getElementById("fg-grid-map-chart");
-        expect(isVisibleButton(chart)).toBe(true);
-
     });
 });

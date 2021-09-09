@@ -35,6 +35,7 @@ import AddTileProvider from './buttons/AddTileProvider';
 
 import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
+import unknown from "../../plugins/background/assets/img/dafault.jpg";
 
 class RecordItem extends React.Component {
     static propTypes = {
@@ -290,7 +291,7 @@ class RecordItem extends React.Component {
                 fullText={this.state.fullText}
                 preview={!this.props.hideThumbnail &&
                     this.renderThumb(record && record.thumbnail ||
-                        background && defaultBackgroundThumbs[background.source][background.name], record)}
+                        background && ((background.name || background.source) ? defaultBackgroundThumbs[background.source][background.name] : unknown), record)}
                 title={record && this.getTitle(record.title)}
                 description={<span><div className ref={sideCardDesc => {
                     this.sideCardDesc = sideCardDesc;

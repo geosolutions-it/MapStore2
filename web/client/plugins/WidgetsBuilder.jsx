@@ -25,6 +25,7 @@ import { dependenciesSelector, availableDependenciesForEditingWidgetSelector} fr
 import { toggleConnection } from '../actions/widgets';
 import withMapExitButton from './widgetbuilder/enhancers/withMapExitButton';
 import WidgetTypeBuilder from './widgetbuilder/WidgetTypeBuilder';
+import FeatureEditorButton from './widgetbuilder/FeatureEditorButton';
 const Builder = compose(
     connect(
         createSelector(
@@ -114,6 +115,7 @@ const Plugin = connect(
 
 )(SideBarComponent);
 
+
 export default createPlugin('WidgetsBuilder', {
     component: Plugin,
     epics,
@@ -121,6 +123,12 @@ export default createPlugin('WidgetsBuilder', {
         TOC: {
             doNotHide: true,
             name: "WidgetBuilder"
+        },
+        FeatureEditor: {
+            doNotHide: true,
+            target: "toolbar",
+            position: 21,
+            Component: FeatureEditorButton
         }
     }
 });

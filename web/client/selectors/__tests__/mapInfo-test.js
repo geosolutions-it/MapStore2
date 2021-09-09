@@ -173,7 +173,7 @@ describe('Test mapinfo selectors', () => {
                 enabled: true
             }
         });
-        expect(props).toEqual(false);
+        expect(props).toEqual(true);
     });
     it('test stopGetFeatureInfoSelector when identify is disabled', () => {
         const props = stopGetFeatureInfoSelector({
@@ -234,7 +234,7 @@ describe('Test mapinfo selectors', () => {
                 }
             }
         });
-        expect(stop).toEqual(false); // it should pass
+        expect(stop).toEqual(true); // it should pass
     });
     it('test stopGetFeatureInfoSelector with identify not in context', () => {
         const stop = stopGetFeatureInfoSelector({

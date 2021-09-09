@@ -10,7 +10,6 @@ import expect from 'expect';
 
 import {
     queryPanelSelector,
-    wfsDownloadAvailable,
     wfsDownloadSelector,
     widgetBuilderAvailable,
     widgetBuilderSelector,
@@ -58,11 +57,7 @@ describe('Test controls selectors', () => {
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
-    it('test wfsDownloadAvailable', () => {
-        const retVal = wfsDownloadAvailable(state);
-        expect(retVal).toExist();
-        expect(retVal).toBe(true);
-    });
+
     it('test wfsDownloadSelector', () => {
         const retVal = wfsDownloadSelector(state);
         expect(retVal).toExist();
