@@ -52,7 +52,9 @@ class HomeDescription extends React.Component {
                 <Grid>
                     <Row>
                         <Col md={30}>
-                            <p>Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale - Descrizione del geoportale</p>
+                            <p>
+                            <HTML msgId="home.RSE_Description"/>
+                            </p>
                         </Col>
                     </Row>
                 </Grid>
