@@ -96,15 +96,15 @@ describe('DefaultViewer', () => {
         expect(dom.getElementsByClassName("alert").length).toBe(1);
     });
 
-    it('creates the DefaultViewer component with no results', () => {
+    it('creates the DefaultViewer component with no results and no response', () => {
         const viewer = ReactDOM.render(
             <DefaultViewer emptyResponses/>,
             document.getElementById("container")
         );
 
         expect(viewer).toExist();
-        const dom = ReactDOM.findDOMNode(viewer);
-        expect(dom.getElementsByClassName("alert").length).toBe(1);
+        const defaultViewer = document.querySelector('.mapstore-identify-viewer');
+        expect(defaultViewer.childNodes.length).toBe(0);
     });
 
     it('creates the DefaultViewer component with an empty and an non empty layer results', () => {
@@ -137,6 +137,37 @@ describe('DefaultViewer', () => {
         expect(gfiViewer.childNodes.length).toBe(2);
         expect(gfiViewer.childNodes[0]).toEqual(swipeableView);
         expect(gfiViewer.childNodes[1]).toEqual(alertInfo);
+    });
+    it('creates the DefaultViewer component with an empty body response and an non empty layer results', () => {
+        const responses = [{
+            response: "",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "A",
+            layerMetadata: {
+                title: 'b'
+            }
+        }];
+        const viewer = ReactDOM.render(
+            <DefaultViewer responses={responses}/>,
+            document.getElementById("container")
+        );
+
+        expect(viewer).toExist();
+        const dom = ReactDOM.findDOMNode(viewer);
+        expect(dom.getElementsByClassName("alert").length).toBe(1);
+        expect(dom.getElementsByClassName("panel").length).toBe(2);
+
+        // Desktop view
+        const gfiViewer = document.querySelector('.mapstore-identify-viewer');
+        const emptyReponseAlert = document.querySelector('.alert-danger');
+        const swipeableView = document.querySelector('.swipeable-view');
+        expect(gfiViewer).toBeTruthy();
+        expect(gfiViewer.childNodes.length).toBe(2);
+        expect(gfiViewer.childNodes[0]).toEqual(swipeableView);
+        expect(gfiViewer.childNodes[1]).toEqual(emptyReponseAlert);
     });
 
     it('creates the DefaultViewer component with Identify floating', () => {
