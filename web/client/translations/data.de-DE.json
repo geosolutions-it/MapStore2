@@ -714,6 +714,7 @@
             "title": "Ooops! Etwas ist schiefgelaufen.",
             "text": "Ein Fehler ist während dieser <b>GetFeatureInfo</b> Anfrage aufgetreten"
         },
+        "emptyResponse": "Diese Ebenen <b>{layers}</b> haben eine leere Antwort zurückgegeben.<br/>Mögliche Ursachen sind: <li>die Proxy-Konfiguration</li>",
         "noFeatureInfo": "Zu diesem Punkt sind keine Informationen verfügbar",
         "noInfoForLayers": "Für die folgenden Ebenen gibt es keine Objekte: ",
         "history":{

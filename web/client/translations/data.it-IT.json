@@ -675,6 +675,7 @@
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
         },
+        "emptyResponse": "Questi livelli <b>{layers}</b> hanno ritornato una risposta vuota<br/>Possibili cause sono: <li>la configurazione del proxy</li>",
         "noFeatureInfo": "Non ci sono informazioni disponibili per questo punto",
         "noInfoForLayers": "Non ci sono features per i seguenti layers: ",
         "history":{

@@ -675,6 +675,7 @@
             "title": "Ooops! Something's wrong",
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
         },
+        "emptyResponse": "These layers <b>{layers}</b> have returned an empty response.<br/>Possible causes are: <li>the proxy configuration</li>",
         "noFeatureInfo": "There is no information available for this point",
         "noInfoForLayers": "There are no features for the following layers: ",
         "history":{

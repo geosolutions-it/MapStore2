@@ -675,6 +675,7 @@
             "title": "Ooops! Quelque chose ne fonctionne pas",
             "text": "Une erreur s'est produite au cours de cette requête <b>GetFeatureInfo</b>"
         },
+        "emptyResponse": "Ces couches <b>{layers}</b> ont renvoyé une réponse vide.<br/>Les causes possibles sont : <li>la configuration du proxy</li>",
         "noFeatureInfo": "Aucune information n'est disponible pour ce point",
         "noInfoForLayers": "Il n'y a aucun objet pour les couches suivantes : ",
         "history": {

@@ -675,6 +675,7 @@
             "title": "Ooops! Algo va mal",
             "text": "Un error se ha producido durante esta <b>GetFeatureInfo</b> petición"
         },
+        "emptyResponse": "Estas capas <b>{layers}</b> han devuelto una respuesta vacía. <br/> Las posibles causas son: <li>la configuración del proxy</li>",
         "noFeatureInfo": "No hay información disponible para este punto",
         "noInfoForLayers": "No hay características para las siguientes capas: ",
         "history":{

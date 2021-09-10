@@ -84,13 +84,13 @@ export const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res?.response?.features?.length);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
          */
         getNoValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
+            return responses.filter((res) => res.response === "" || res?.response?.features?.length === 0);
         }
     },
     PROPERTIES: {
@@ -98,13 +98,13 @@ export const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res?.response?.features?.length);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
          */
         getNoValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
+            return responses.filter((res) => res.response === "" || res?.response?.features?.length === 0);
         }
     },
     GML3: {
@@ -126,13 +126,13 @@ export const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res?.response?.features?.length);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
          */
         getNoValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
+            return responses.filter((res) => res.response === "" || res?.response?.features?.length === 0);
         }
     }
 };
