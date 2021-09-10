@@ -85,36 +85,12 @@ const Dock = connect(createSelector(
   * @prop {boolean} cfg.enableMapFilterSync default false. If true, the wms sync tool will be active by default.
   * @prop {number} cfg.maxZoom the maximum zoom level for the "zoom to feature" functionality
   * @classdesc
-  * FeatureEditor Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
+  * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
-  * <br/>sets the size of loaded pages cache, while vsOverscan and scrollDebounce params determine the behavior of grid scrolling
-  * <br/>and of row loading.
-  * <br/>Furthermore it can be configured passing custom editors. Rules are applied in order and the first rule that match the regex wins
-  * <br/>That means that for those conditions it is used the custom editor specified in the editor param.
-  * <br/>All the conditions inside a rule must match to apply the editor.
-  * <br/>If no rule is applied then it will be used the default editor based on the dataType of that column.
-  * <br/>At least one of the three kind of regex must be specified.
-  * <br/>Editor props are optionally.
-  * <br/>Inside localConfig you can specify different rules in an array.
-  * <br/> <li> editor: name of the editor used</li>
-  * <br/> editorProps are props passed to the custom editor and used also to create a custom cqlFilter:
-  * <ul>
-  *     <li> values: force an editor to use a specific list of values </li>
-  *     <li> forceSelection: force the editor to use a defaultOption as value </li>
-  *     <li> defaultOption: value used as default if forceSelection is true </li>
-  *     <li> allowEmpty: if true it accept empty string as value </li>
-  *     <li> filterProps: </li>
-  *     <ul>
-  *         <li> blacklist: array used to exclude some word for the wfs call </li>
-  *         <li> maxFeatures:max number of features fetched for each wfs request </li>
-  *         <li> queriableAttributes: attributes used to create the cql filter </li>
-  *         <li> predicate: predicate used to create the cql_filter </li>
-  *         <li> typeName: layer on which the wfs search is performed </li>
-  *         <li> valueField: property used as value based on the data passed to the editors (from stream)
-  *         <li> returnFullData: if true it returns the full data given from the response </li>
-  *     </ul>
-  * </ul>
-  * Example:
+  * sets the size of loaded pages cache, while vsOverscan and scrollDebounce params determine the behavior of grid scrolling
+  * and of row loading.
+  * <br/>Furthermore it can be configured to use custom editor cells for certain layers/columns, specifying the rules to recognize them. If no rule matches, then it will be used the default editor based on the dataType of that column.
+  * <br/>Example:
   * ```json
   * {
   *   "name": "FeatureEditor",
@@ -129,19 +105,7 @@ const Dock = connect(createSelector(
   *         },
   *         "editor": "DropDownEditor",
   *         "editorProps": {
-  *           "values": ["Opt1", "Opt2"],
-  *           "forceSelection": false,
-  *           "defaultOption": "Opt1",
-  *           "allowEmpty": true,
-  *           "filterProps": {
-  *             "blacklist": ["via", "piazza", "viale"],
-  *             "maxFeatures": 3,
-  *             "queriableAttributes": ["ATTRIBUTE1"],
-  *             "predicate": "ILIKE",
-  *             "typeName": "WORKSPACE:LAYER",
-  *             "valueField": "VALUE",
-  *             "returnFullData": true
-  *           }
+  *           "values": ["Opt1", "Opt2"]
   *         }
   *       }]
   *     },
@@ -149,6 +113,7 @@ const Dock = connect(createSelector(
   *   }
   * }
   * ```
+  *
   * As plugin container, it can render additional components coming from other plugins.
   * You can render additional buttons to the Toolbar by configuring a container with your component and `"target": 'toolbar'`.
   * The component will receive as props all the properties passed to the featuregrid Toolbar. Some of them are  :
