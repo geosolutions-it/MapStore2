@@ -23,7 +23,7 @@ const groups = [{
     "nodes": [
         {
             "id": "first.second",
-            "title": { "default": "second"},
+            "title": "second",
             "name": "second",
             "nodes": [
                 {
@@ -81,7 +81,12 @@ const groups = [{
     ],
     "expanded": true,
     "visibility": true
+}, {
+    "id": "second",
+    "title": "Non object title",
+    "name": "Non object name"
 }];
+
 
 describe('TOCUtils', () => {
     it('test isValidNewGroupOption for General Fragment with value not allowed', () => {
