@@ -75,6 +75,16 @@ export const getTitleAndTooltip = ({node, currentLocale, tooltipOptions = {separ
         tooltipText
     };
 };
+
+/**
+ * Replace characters
+ * @param {string} title string with characters to be replaced
+ * @returns {string} string with characters replaced
+ */
+export const replaceCharacters = (title) => {
+    return title?.replace(/\./g, '/').replace(/\${dot}/g, '.');
+};
+
 /**
  * flatten groups and subgroups in a single array
  * @param {object[]} groups node to get the groups and subgroups
@@ -84,7 +94,7 @@ export const getTitleAndTooltip = ({node, currentLocale, tooltipOptions = {separ
 */
 export const flattenGroups = (groups, idx = 0, wholeGroup = false, locale = 'default') => {
     return groups.filter((group) => group.nodes).reduce((acc, g) => {
-        acc.push(wholeGroup ? g : isObject(g.title) ? {label: g?.title[locale] ? g?.title[locale]?.replace(/\./g, '/').replace(/\${dot}/g, '.') : g?.title?.default?.replace(/\./g, '/').replace(/\${dot}/g, '.'), value: g.id} : {label: g.title.replace(/\./g, '/').replace(/\${dot}/g, '.'), value: g.id});
+        acc.push(wholeGroup ? g : isObject(g?.title) ? {label: g?.title[locale] ? replaceCharacters(g?.title[locale]) : replaceCharacters(g?.title?.default), value: g.id} : {label: replaceCharacters(g.title), value: g.id});
         if (g.nodes.length > 0) {
             return acc.concat(flattenGroups(g.nodes, idx + 1, wholeGroup));
         }
