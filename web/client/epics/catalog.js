@@ -120,9 +120,12 @@ export default (API) => ({
                 const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
-                    .filter((l, i) => !!services[sources[i]] || sources[i].type !== undefined) // check for catalog name or object definition
+                    .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
-                        const { type: format, url, ...service } = services[sources[i]];
+                        const source = sources[i];
+                        const service = typeof source === 'object' ? source : services[source];
+                        const format = service.type.toLowerCase();
+                        const url = service.url;
                         const text = layers[i];
                         return Rx.Observable.defer(() =>
                             API[format].textSearch(url, startPosition, maxRecords, text, {...addLayerOptions, ...service}).catch(() => ({ results: [] }))
