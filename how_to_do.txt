@@ -25,3 +25,21 @@ tolto da homedescription.jsx
                 </Grid>
 
 
+
+
+
+
+Per togliere la selezione delle lingue, togliere le seguenti righe di codice dal file localConfig.json in ....MapStore2\web\client\configs\localConfig.json
+           ,
+            "fr": {
+              "code": "fr-FR",
+              "description": "Français"
+            },
+            "de": {
+              "code": "de-DE",
+              "description": "Deutsch"
+            },
+            "es": {
+              "code": "es-ES",
+              "description": "Español"
+            }
