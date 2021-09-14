@@ -120,7 +120,7 @@ export default (API) => ({
                 const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
-                    .filter((l, i) => !!services[sources[i]]) // ignore wrong catalog name
+                    .filter((l, i) => !!services[sources[i]] || sources[i].type !== undefined) // check for catalog name or object definition
                     .map((l, i) => {
                         const { type: format, url, ...service } = services[sources[i]];
                         const text = layers[i];
