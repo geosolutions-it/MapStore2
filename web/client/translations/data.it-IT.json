@@ -280,7 +280,7 @@
         "home":{
             "titolo_pagina": "Geoportale Energia e Territorio",
             "open": "Apri",
-            "shortDescription": "Il GeoPortale di RSE - versione 2021 <br/><small><a href=\"http://www.rse-web.it\" target='_blank'>Visita il sito di RSE</a></small>",
+            "shortDescription": "Il Geoportale di RSE - versione 2021 <br/><small><a href=\"http://www.rse-web.it\" target='_blank'>Visita il sito di RSE</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> per maggiori dettagli.",
             "Applications": "Applicazioni",

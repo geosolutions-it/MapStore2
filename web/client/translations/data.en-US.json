@@ -280,7 +280,7 @@
         "home":{
             "titolo_pagina": "Energy and Environment Geoportal",
             "open": "Open",
-            "shortDescription": "RSE GeoPortal - version 2021<br/> <small><a href=\"http://www.rse-web.it\" target='_blank'>Visit RSE web site</a></small>",
+            "shortDescription": "RSE Geoportal - version 2021<br/> <small><a href=\"http://www.rse-web.it\" target='_blank'>Visit RSE web site</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
             "Applications": "Applications",
