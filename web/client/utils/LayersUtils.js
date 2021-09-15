@@ -170,7 +170,7 @@ export const flattenArrayOfObjects = (array) => {
 /**
  * Gets group title by id
  * @param {string} id of group
- * @param {array} groups groups of map
+ * @param {object[]} groups groups of map
  * @returns {string} title of the group
  */
 
