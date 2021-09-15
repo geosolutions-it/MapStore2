@@ -539,43 +539,59 @@ describe('Leaflet layer', () => {
         map.eachLayer((l) => {urls = l._urls;});
         expect(urls.length).toBe(2);
     });
+    describe("GoogleLayer", () => {
+        it('if google lib doesn\'t exist, layer is null', () => {
+            var options = {
+                "type": "google",
+                "name": "ROADMAP"
+            };
 
-    it('creates a google layer for leaflet map', () => {
-        var options = {
-            "type": "google",
-            "name": "ROADMAP"
-        };
-        var google = {
-            maps: {
-                MapTypeId: {
-                    HYBRID: 'hybrid',
-                    SATELLITE: 'satellite',
-                    ROADMAP: 'roadmap',
-                    TERRAIN: 'terrain'
-                },
-                Map: function() {
-                    this.setMapTypeId = function() {};
-                    this.setCenter = function() {};
-                    this.setZoom = function() {};
-                    this.setTilt = function() {};
-                },
-                LatLng: function() {
+            window.google = undefined;
 
+            // create layers
+            let layer = ReactDOM.render(
+                <LeafLetLayer type="google" options={options} map={map}/>, document.getElementById("container"));
+
+            expect(layer.layer).toBeFalsy();
+        });
+        it('creates a google layer for leaflet map', () => {
+            var options = {
+                "type": "google",
+                "name": "ROADMAP"
+            };
+            var google = {
+                maps: {
+                    MapTypeId: {
+                        HYBRID: 'hybrid',
+                        SATELLITE: 'satellite',
+                        ROADMAP: 'roadmap',
+                        TERRAIN: 'terrain'
+                    },
+                    Map: function() {
+                        this.setMapTypeId = function() {};
+                        this.setCenter = function() {};
+                        this.setZoom = function() {};
+                        this.setTilt = function() {};
+                    },
+                    LatLng: function() {
+
+                    }
                 }
-            }
-        };
-        window.google = google;
+            };
+            window.google = google;
 
-        // create layers
-        let layer = ReactDOM.render(
-            <LeafLetLayer type="google" options={options} map={map}/>, document.getElementById("container"));
-        let lcount = 0;
+            // create layers
+            let layer = ReactDOM.render(
+                <LeafLetLayer type="google" options={options} map={map}/>, document.getElementById("container"));
+            let lcount = 0;
 
-        expect(layer).toExist();
-        // count layers
-        map.eachLayer(function() {lcount++; });
-        expect(lcount).toBe(1);
+            expect(layer).toExist();
+            // count layers
+            map.eachLayer(function() {lcount++; });
+            expect(lcount).toBe(1);
+        });
     });
+
 
     it('creates a bing layer for leaflet map', () => {
         var options = {
