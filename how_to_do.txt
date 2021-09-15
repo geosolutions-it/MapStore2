@@ -8,6 +8,8 @@ web\client\product\plugins\HomeDescription.jsx
 il piede è:
 web\client\product\plugins\MailingLists.jsx
 
+logo in alto a sinistra modificato nel file ...\MapStore2\web\client\product\plugins\Attribution.jsx
+
 
 Tolta la sezione della mailing list commentando la riga 23 in plugins.js
 
