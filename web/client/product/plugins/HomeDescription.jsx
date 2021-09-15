@@ -53,6 +53,9 @@ class HomeDescription extends React.Component {
                     <Row>
                         <Col md={30}>
                             <p>
+                            <HTML msgId="home.RSE_Descrizione"/>
+                            </p>
+                            <p>
                             <HTML msgId="home.RSE_Description"/>
                             </p>
                         </Col>
