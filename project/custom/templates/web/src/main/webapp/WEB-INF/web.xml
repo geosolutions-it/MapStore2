@@ -22,11 +22,6 @@
       <param-value>/proxy.properties</param-value>
     </context-param>
 
-    <!-- spring context loader -->
-    <listener>
-		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-    </listener>
-
 	<!--
       - Loads the root application context of this web app at startup.
       - The application context is then available via

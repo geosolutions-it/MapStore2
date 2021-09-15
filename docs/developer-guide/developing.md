@@ -154,14 +154,14 @@ MapStore is configured to use a tomcat maven plugin-in to build and run mapstore
 
 * make sure to run at least once `mvn install` in the root directory, to make `mapstore-product` artifact available.
 * `cd product` directory
-* run `mvn tomcat7:run-war`
+* run `mvn cargo:run`
 
 Your local back-end will now start at [http://localhost:8080/mapstore/](http://localhost:8080/mapstore/).
 If you want to change the port you can edit the dedicated entry in `product/pom.xml`, just remember to change also the dev-server proxy configuration on the front-end in the same way.
 
 #### Local tomcat instance
 
-If you prefer, or if you have some problems with `mvn tomcat7:run-war`, you can run MapStore back-end in a tomcat instance instead of using the embedded one.
+If you prefer, or if you have some problems with `mvn cargo:run`, you can run MapStore back-end in a tomcat instance instead of using the embedded one.
 To do so, you can :
 
 * download a tomcat standalone [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) and extract to a folder of your choice
@@ -193,7 +193,7 @@ then start tomcat
 
 ```bash
 cd product
-mvn tomcat7:run-war
+mvn cargo:run
 ```
 
 For your local tomcat, you can follow the standard procedure to debug with tomcat.
