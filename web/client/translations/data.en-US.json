@@ -284,7 +284,7 @@
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
             "Applications": "Applications",
-            "RSE_Description": "<a href=\"http://dbeta.rse-web.it/pagina_standard.html\" target='_blank'>Insights</a>",
+            "RSE_Description": "<a href=\"http://dbeta.rse-web.it/pagina_standard.html\" target='_blank'>For insights click HERE</a>",
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
