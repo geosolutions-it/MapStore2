@@ -154,7 +154,7 @@ export const getNestedGroupTitle = (id, groups = []) => {
 /**
  * Flatten nested array to a one-level array
  * @param {object[]} array of objects
- * @returns {array} flattened array
+ * @returns {object[]} flattened array
  */
 export const flattenArrayOfObjects = (array) => {
     let result = [];
