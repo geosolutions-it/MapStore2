@@ -11,7 +11,7 @@
             classpath*:applicationContext-print.xml
         </param-value>
 	</context-param>
-    <display-name>__PROJECTDESCRIPTION__ - Web App</display-name>
+
 	<context-param>
         <param-name>webAppRootKey</param-name>
         <param-value>geostore.root</param-value>

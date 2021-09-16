@@ -73,7 +73,8 @@ We suggest you to move them as well from root to configs folder
 - `config.json`
 - `simple.json`
 
-Back-end has been reorganized
+# Back-end has been reorganized
+
 In particular:
 
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
@@ -81,8 +82,125 @@ In particular:
 
 Check the changes in `pom.xml` to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
 
-- `pom.xml`
-- `java/web/pom.xml`
+- `pom.xml` (change `mapstore-backend` into `mapstore-services` and version `1.2.0`)
+
+```diff
+<!-- MapStore backend -->
+     <dependency>
+       <groupId>it.geosolutions.mapstore</groupId>
+-      <artifactId>mapstore-backend</artifactId>
+-      <version>1.0-SNAPSHOT</version>
++      <artifactId>mapstore-services</artifactId>
++      <version>1.2.0</version>
+     </dependency>
+```
+
+- `java/web/pom.xml`: align this TODO: check
+
+- Align `web.xml` with the new servlets as changes below (remove `dispatcher` entry in favour of the following). Copy the files `configs-servlet.xml`, `extensions-servlet.xml` and `loadAssets-servlet.xml`.
+
+```diff
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <web-app id="WebApp_ID" version="2.4"
+-    xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++    xmlns:javaee="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+     <!-- pick up all spring application contexts -->
+@@ -19,13 +19,16 @@
+
+     <context-param>
+       <param-name>proxyPropPath</param-name>
+-      <param-value>/proxy.properties</param-value>
++      <param-value>/proxy.properties,${datadir.location}/proxy.properties</param-value>
+     </context-param>
+
+-    <!-- spring context loader -->
+-    <listener>
++    <!-- <context-param> <param-name>log4jConfigLocation</param-name> <param-value>file:${config.dir}/log4j.xml</param-value>
++        </context-param> -->
++
++    <!-- spring context loader -->
++    <listener>
+         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+-    </listener>
++    </listener>
+
+     <!--
+       - Loads the root application context of this web app at startup.
+@@ -33,8 +36,8 @@
+       - WebApplicationContextUtils.getWebApplicationContext(servletContext).
+     -->
+     <listener>
+-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+-    </listener>
++        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
++    </listener>
+
+     <!-- Spring Security Servlet -->
+     <filter>
+@@ -46,7 +49,7 @@
+         <url-pattern>/rest/*</url-pattern>
+     </filter-mapping>
+
+-  <!-- GZip compression -->
++    <!-- GZip compression -->
+     <filter>
+         <filter-name>CompressionFilter</filter-name>
+         <filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>
+@@ -65,17 +68,38 @@
+     </filter-mapping>
+
+     <!--  Backend Spring MVC controllers -->
++    <!--  Backward compatibility -->
+     <servlet>
+-        <servlet-name>dispatcher</servlet-name>
++        <servlet-name>loadAssets</servlet-name>
+         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+         <load-on-startup>1</load-on-startup>
+     </servlet>
+     <servlet-mapping>
+-        <servlet-name>dispatcher</servlet-name>
++        <servlet-name>loadAssets</servlet-name>
+         <url-pattern>/rest/config/*</url-pattern>
+     </servlet-mapping>
++    <!--  Configs -->
++    <servlet>
++        <servlet-name>configs</servlet-name>
++        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
++        <load-on-startup>2</load-on-startup>
++    </servlet>
++    <servlet-mapping>
++        <servlet-name>configs</servlet-name>
++        <url-pattern>/configs/*</url-pattern>
++    </servlet-mapping>
++    <!-- Extensions -->
++    <servlet>
++        <servlet-name>extensions</servlet-name>
++        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
++        <load-on-startup>3</load-on-startup>
++    </servlet>
++    <servlet-mapping>
++        <servlet-name>extensions</servlet-name>
++        <url-pattern>/extensions/*</url-pattern>
++    </servlet-mapping>
+
+-    <!-- CXF Servlet -->
++    <!-- CXF Servlet -->
+     <servlet>
+         <servlet-name>CXFServlet</servlet-name>
+         <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+@@ -97,7 +121,7 @@
+       <url-pattern>/proxy/*</url-pattern>
+     </servlet-mapping>
+
+-   <!-- Printing Servlet -->
++    <!-- Printing Servlet -->
+     <servlet>
+        <servlet-name>mapfish.print</servlet-name>
+        <servlet-class>org.mapfish.print.servlet.MapPrinterServlet</servlet-class>
+```
 
 #### Data directory has been reorganized and is now available also for product
 

@@ -20,8 +20,8 @@
     <!-- MapStore backend -->
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
-      <artifactId>mapstore-backend</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <artifactId>mapstore-services</artifactId>
+      <version>1.2.0</version>
     </dependency>
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
