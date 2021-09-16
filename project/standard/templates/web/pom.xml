@@ -363,7 +363,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/../MapStore2/web/client</directory>
+                                <directory>${basedir}/../MapStore2/web/client/configs</directory>
                                 <includes>
                                     <include>localConfig.json</include>
                                 </includes>

@@ -2,8 +2,8 @@ const path = require("path");
 
 const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
 const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
-const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
 
 const paths = {
     base: __dirname,
@@ -29,12 +29,14 @@ module.exports = require('./MapStore2/build/buildConfig')(
     [
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'indexTemplate.html'),
+            publicPath: 'dist/',
             chunks: ['__PROJECTNAME__'],
             inject: "body",
             hash: true
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'embeddedTemplate.html'),
+            publicPath: 'dist/',
             chunks: ['__PROJECTNAME__-embedded'],
             inject: "body",
             hash: true,
@@ -42,13 +44,15 @@ module.exports = require('./MapStore2/build/buildConfig')(
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'apiTemplate.html'),
+            publicPath: 'dist/',
             chunks: ['__PROJECTNAME__-api'],
-            inject: 'head',
+            inject: 'body',
             hash: true,
             filename: 'api.html'
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'geostory-embedded-template.html'),
+            publicPath: 'dist/',
             chunks: ['geostory-embedded'],
             inject: "body",
             hash: true,
@@ -56,6 +60,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'dashboard-embedded-template.html'),
+            publicPath: 'dist/',
             chunks: ['dashboard-embedded'],
             inject: 'body',
             hash: true,
