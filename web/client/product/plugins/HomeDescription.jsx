@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Jumbotron, Grid, Row, Col } from 'react-bootstrap';
 import HTML from '../../components/I18N/HTML';
-import logo from "./attribution/atlalogo11.png";
+
 
 /**
  * Description of MapStore rendered in the home page.
@@ -53,15 +53,15 @@ class HomeDescription extends React.Component {
                     <Row>
                         <Col md={30}>
                             <p>
-                            <HTML msgId="home.RSE_Descrizione"/>
+                                <HTML msgId="home.RSE_Descrizione"/>
                             </p>
                             <p>
-                            <HTML msgId="home.RSE_Description"/>
+                                <HTML msgId="home.RSE_Description"/>
                             </p>
                         </Col>
                     </Row>
                 </Grid>
-                
+
             </div>
         );
     }

@@ -11,9 +11,14 @@ web\client\product\plugins\MailingLists.jsx
 logo in alto a sinistra modificato nel file ...\MapStore2\web\client\product\plugins\Attribution.jsx
 
 
-Tolta la sezione della mailing list commentando la riga 23 in plugins.js
+Tolta la sezione della mailing list togliendo la riga 23 in plugins.js
+MailingListsPlugin: require('./plugins/MailingLists').default,
+
 
 tolto da homedescription.jsx
+import logo from "./attribution/atlalogo11.png";
+
+
                 <Grid>
                     <Row>
                         <Col md={3}>
