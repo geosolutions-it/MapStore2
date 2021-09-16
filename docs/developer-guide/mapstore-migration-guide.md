@@ -20,7 +20,6 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-
 ## Migration from 2021.01.02 to 2021.02.00
 
 ### Theme updates and CSS variables
@@ -63,41 +62,190 @@ It is suggested to :
 
 During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon.
 
-#### The following key files have been moved to the new `configs` folder
+This section will tell you how to migrate to support the following changes:
 
-We suggest you to move them as well from root to configs folder
+- Minor changes to `prod-webpack.config.js`
+- Move front-end configuration files in `configs` folder
+- Back-end has been reorganized
 
-- `localConfig.json`
-- `new.json`
-- `pluginsConfig.json`
-- `config.json`
-- `simple.json`
+#### Minor changes to `prod-webpack.config.js`
 
-# Back-end has been reorganized
+Minor changes to `prod-webpack.config.js`:
+
+```diff
+diff --git a/project/standard/templates/prod-webpack.config.js b/project/standard/templates/prod-webpack.config.js
+index 175bf3398..6d97e2c0f 100644
+--- a/project/standard/templates/prod-webpack.config.js
++++ b/project/standard/templates/prod-webpack.config.js
+@@ -2,8 +2,8 @@ const path = require("path");
+
+ const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
+ const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
+-const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
+ const HtmlWebpackPlugin = require('html-webpack-plugin');
++const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
+
+ const paths = {
+     base: __dirname,
+@@ -24,17 +24,19 @@ module.exports = require('./MapStore2/build/buildConfig')(
+     paths,
+     [extractThemesPlugin, ModuleFederationPlugin],
+     true,
+-    "dist/",
++    undefined,
+     '.__PROJECTNAME__',
+     [
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'indexTemplate.html'),
++            publicPath: 'dist/',
+             chunks: ['__PROJECTNAME__'],
+             inject: "body",
+             hash: true
+         }),
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'embeddedTemplate.html'),
++            publicPath: 'dist/',
+             chunks: ['__PROJECTNAME__-embedded'],
+             inject: "body",
+             hash: true,
+@@ -42,13 +44,15 @@ module.exports = require('./MapStore2/build/buildConfig')(
+         }),
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'apiTemplate.html'),
++            publicPath: 'dist/',
+             chunks: ['__PROJECTNAME__-api'],
+-            inject: 'head',
++            inject: 'body',
+             hash: true,
+             filename: 'api.html'
+         }),
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'geostory-embedded-template.html'),
++            publicPath: 'dist/',
+             chunks: ['geostory-embedded'],
+             inject: "body",
+             hash: true,
+@@ -56,6 +60,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
+         }),
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'dashboard-embedded-template.html'),
++            publicPath: 'dist/',
+             chunks: ['dashboard-embedded'],
+             inject: 'body',
+             hash: true,
+@@ -63,6 +68,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
+         })
+     ],
+     {
++        "@mapstore/patcher": path.resolve(__dirname, "node_modules", "@mapstore", "patcher"),
+         "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client"),
+         "@js": path.resolve(__dirname, "js")
+     }
+```
+
+#### Move front-end configuration files in `configs` folder
+
+We suggest you to move them as well from root to configs folder, and align your `app.jsx` configuration with the new standard (if you changed the location of configs).
+This will allow to use the data dir in an easy way. So:
+
+- Move the following files in `configs` directory:
+  - `localConfig.json`
+  - `new.json`
+  - `pluginsConfig.json`
+  - `config.json`
+  - `simple.json`
+- If changed something in `app.jsx` about configuration, align to get the files moved in config.
+- To allow MapStore to copy the correct file in the final war, you have to change `web/pom.xml` execution `copy-resources` for id `config files` this way (this only if you didn't customized `localConfig.json`):
+
+```diff
+        <goal>copy-resources</goal>
+                </goals>
+                    <goal>copy-resources</goal>
+                </goals>
+                    <configuration>
+-                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
++                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client/configs</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+-                                <directory>${basedir}/../MapStore2/web/client</directory>
++                                <directory>${basedir}/../MapStore2/web/client/configs</directory>
+                                <includes>
+                                    <include>localConfig.json</include>
+                                </includes>
+```
+
+#### Back-end has been reorganized
 
 In particular:
 
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
+- Some servlets has been added in order to provide native support to data dir and make it work with the new `configs` directory.
 
-Check the changes in `pom.xml` to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
+So you will have to:
 
-- `pom.xml` (change `mapstore-backend` into `mapstore-services` and version `1.2.0`)
+- Align the `pom.xml` to the latest versions of the libs
+- Edit the `web.xml` and change the `*-servlet.xml` files to expose the new services
+
+!!! note
+    Future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, reducing the boilerplate and making
+    migration a lot easier. For this reasons these migration guidelines will change soon.
+
+Here below the details of the changes.
+
+##### Align `pom.xml` files to latest versions of the libs
+
+Here the changes in `pom.xml` and `web/pom.xml to update:
+
+- Change `mapstore-backend` into `mapstore-services` and set the version to `1.2.0`
 
 ```diff
 <!-- MapStore backend -->
-     <dependency>
-       <groupId>it.geosolutions.mapstore</groupId>
+    <dependency>
+    <groupId>it.geosolutions.mapstore</groupId>
 -      <artifactId>mapstore-backend</artifactId>
--      <version>1.0-SNAPSHOT</version>
+-      <version>1.1.2</version>
 +      <artifactId>mapstore-services</artifactId>
 +      <version>1.2.0</version>
-     </dependency>
+    </dependency>
 ```
 
-- `java/web/pom.xml`: align this TODO: check
+- Set `geostore-webapp` version to `1.7.0`
 
-- Align `web.xml` with the new servlets as changes below (remove `dispatcher` entry in favour of the following). Copy the files `configs-servlet.xml`, `extensions-servlet.xml` and `loadAssets-servlet.xml`.
+```diff
+    <dependency>
+    <groupId>it.geosolutions.geostore</groupId>
+    <artifactId>geostore-webapp</artifactId>
+-      <version>1.6.0</version>
++      <version>1.7.0</version>
+    <type>war</type>
+    <scope>runtime</scope>
+    </dependency>
+```
+
+- Set `http_proxy` version to `1.1.0` (should already be there)
+
+```diff
+    <dependency>
+    <!-- ... -->
+    <groupId>proxy</groupId>
+    <artifactId>http_proxy</artifactId>
+-      <version>1.1.0</version>
++      <version>1.2-SNAPSHOT</version>
+    <type>war</type>
+    <scope>runtime</scope>
+    </dependency>
+```
+
+##### Edit the `web.xml` and change the `*-servlet.xml` files to expose the new services
+
+- Copy from mapstore to folder `web/src/main/webapp/WEB-INF/` the files:
+  - `configs-servlet.xml`
+  - `extensions-servlet.xml`
+  - `loadAssets-servlet.xml`
+- Remove the old `dispatcher-servlet.xml` (it has been replaced by `loadAssets-servlet.xml` for backward compatibility)
+- Align `web/src/main/webapp/WEB-INF/web.xml` with the new servlets as changes below (remove `dispatcher` entry in favour of the following).
 
 ```diff
 @@ -1,6 +1,6 @@
