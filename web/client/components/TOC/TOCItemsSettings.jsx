@@ -123,7 +123,7 @@ const TOCItemSettings = (props) => {
                         nodeType={settings.nodeType}
                         settings={settings}
                         retrieveLayerData={onRetrieveLayerData}
-                        onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: value}, realtimeUpdate)}
+                        onChange={(key, event) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: event.target.value, label: event.target.label}, realtimeUpdate)}
                         isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
                         currentLocaleLanguage={currentLocaleLanguage}/>
                 ))}
