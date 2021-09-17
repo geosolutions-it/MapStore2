@@ -150,10 +150,42 @@ export const getNestedGroupTitle = (id, groups = []) => {
         return nodeObj ? nodeObj.title : null;
     }));
 };
+
+/**
+ * Flatten nested array to a one-level array
+ * @param {object[]} array of objects
+ * @returns {object[]} flattened array
+ */
+export const flattenArrayOfObjects = (array) => {
+    let result = [];
+    array?.forEach((a) => {
+        result.push(a);
+        if (Array.isArray(a.nodes)) {
+            result = result.concat(flattenArrayOfObjects(a.nodes));
+        }
+    });
+    return result;
+};
+
+/**
+ * Gets group title by id
+ * @param {string} id of group
+ * @param {object[]} groups groups of map
+ * @returns {string} title of the group
+ */
+
+export const displayTitle = (id, groups) => {
+    for (let group of groups) {
+        if (group?.id === id) {
+            return group.title;
+        }
+    }
+    return 'Default';
+};
 /**
  * adds or update node property in a nested node
  * if propName is an object it overrides a whole group of options instead of one
-*/
+ */
 export const deepChange = (nodes, findValue, propName, propValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
         return nodes.map((node) => {
@@ -176,12 +208,12 @@ export const deepChange = (nodes, findValue, propName, propValue) => {
  */
 export const getSourceId = (layer = {}) => layer.capabilitiesURL || head(castArray(layer.url));
 /**
-* It extracts tile matrix set from sources and add them to the layer
-*
-* @param sources {object} sources object from state or configuration
-* @param layer {object} layer to check
-* @return {object} new layers with tileMatrixSet and matrixIds (if needed)
-*/
+ * It extracts tile matrix set from sources and add them to the layer
+ *
+ * @param sources {object} sources object from state or configuration
+ * @param layer {object} layer to check
+ * @return {object} new layers with tileMatrixSet and matrixIds (if needed)
+ */
 export const  extractTileMatrixFromSources = (sources, layer) => {
     if (!sources || !layer) {
         return {};
@@ -199,12 +231,12 @@ export const  extractTileMatrixFromSources = (sources, layer) => {
 };
 
 /**
-* It extracts tile matrix set from layers and add them to sources map object
-*
-* @param  {object} sourcesFromLayers layers grouped by url
-* @param {object} [sources] current sources map object
-* @return {object} new sources object with data from layers
-*/
+ * It extracts tile matrix set from layers and add them to sources map object
+ *
+ * @param  {object} sourcesFromLayers layers grouped by url
+ * @param {object} [sources] current sources map object
+ * @return {object} new sources object with data from layers
+ */
 export const extractTileMatrixSetFromLayers = (sourcesFromLayers, sources = {}) => {
     return sourcesFromLayers && Object.keys(sourcesFromLayers).reduce((src, url) => {
         const matrixIds = sourcesFromLayers[url].reduce((a, b) => {
@@ -248,11 +280,11 @@ export const extractSourcesFromLayers = layers => {
 };
 
 /**
-* It extracts data from configuration sources and add them to the layers
-*
-* @param mapState {object} state of map, must contains layers array
-* @return {object} new sources object with data from layers
-*/
+ * It extracts data from configuration sources and add them to the layers
+ *
+ * @param mapState {object} state of map, must contains layers array
+ * @return {object} new sources object with data from layers
+ */
 
 export const extractDataFromSources = mapState => {
     if (!mapState || !mapState.layers || !isArray(mapState.layers)) {
@@ -322,7 +354,7 @@ export const normalizeMap = (rawMap = {}) =>
     [
         (map) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
         (map) => map.groups ? map : {...map, groups: {id: "Default", expanded: true}}
-    // this is basically a compose
+        // this is basically a compose
     ].reduce((f, g) => (...args) => f(g(...args)))(rawMap);
 /**
  * @param gid
@@ -342,7 +374,8 @@ export const getLayersByGroup = (configLayers, configGroups) => {
             let group = getGroup(groupId, subGroups);
             const addLayers = idx === array.length - 1;
             if (!group) {
-                const groupTitle = getNestedGroupTitle(groupId, configGroups);
+                const flattenGroups = flattenArrayOfObjects(configGroups);
+                const groupTitle = displayTitle(groupId, flattenGroups);
                 group = createGroup(groupId, groupTitle || groupName, groupName, mapLayers, addLayers);
                 subGroups.push(group);
             } else if (addLayers) {
@@ -446,7 +479,7 @@ export const splitMapAndLayers = (mapState) => {
  * @param {object} geoJSON object to put into features
  * @param {string} id layer id
  * @return {object} vector layer containing the geojson in features array
-*/
+ */
 export const geoJSONToLayer = (geoJSON, id) => {
     const bbox = toBbox(geoJSON);
     let features = [];
@@ -540,9 +573,9 @@ export const saveLayer = (layer) => {
     layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {});
 };
 /**
-* default initial constant regex rule for searching for a /geoserver/ string in a url
-* useful for a reset to an initial state of the rule
-*/
+ * default initial constant regex rule for searching for a /geoserver/ string in a url
+ * useful for a reset to an initial state of the rule
+ */
 export const REG_GEOSERVER_RULE = regGeoServerRule;
 /**
  * Override default REG_GEOSERVER_RULE variable
@@ -556,12 +589,12 @@ export const setRegGeoserverRule = (regex) => {
  */
 export const getRegGeoserverRule = () => regGeoServerRule;
 /**
-* it tests if a url is matched by a regex,
-* if so it returns the matched string
-* otherwise returns null
-* @param object.regex the regex to use for parsing the url
-* @param object.url the url to test
-*/
+ * it tests if a url is matched by a regex,
+ * if so it returns the matched string
+ * otherwise returns null
+ * @param object.regex the regex to use for parsing the url
+ * @param object.url the url to test
+ */
 export const findGeoServerName = ({url, regexRule}) => {
     const regex = regexRule || LayersUtils.getRegGeoserverRule();
     const location = isArray(url) ? url[0] : url;
@@ -572,7 +605,7 @@ export const findGeoServerName = ({url, regexRule}) => {
  * This method search for a /geoserver/  string inside the url
  * if it finds it returns a getCapabilitiesUrl to a single layer if it has a name like WORKSPACE:layerName
  * otherwise it returns the default getCapabilitiesUrl
-*/
+ */
 export const getCapabilitiesUrl = (layer) => {
     const matchedGeoServerName = LayersUtils.findGeoServerName({url: layer.url});
     let reqUrl = getLayerUrl(layer);
@@ -605,7 +638,7 @@ export const invalidateUnsupportedLayer = (layer, maptype) => {
 /**
  * Establish if a layer is supported or not
  * @return {boolean} value
-*/
+ */
 export const isSupportedLayer = (layer, maptype) => {
     return !!isSupportedLayerFunc(layer, maptype);
 };

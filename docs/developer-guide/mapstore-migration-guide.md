@@ -21,6 +21,68 @@ This is a list of things to check if you want to update from a previous version 
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
 
+## Migration from 2021.02.00 to 2021.03.00
+
+This release includes several libraries upgrade on the backend side,
+in particular the following have been migrated to the latest available versions:
+
+| Library      | Old |New|
+| ----------- | ----------- |--|
+| Spring| 3.0.5|5.3.9|
+| Spring-security| 3.0.5        |5.3.10|
+| CXF| 2.3.2        |3.4.4|
+| Hibernate|      3.3.2   |5.5.0|
+| JPA| 1.0        |2.1|
+| hibernate-generic-dao| 0.5.1        |1.3.0-SNAPSHOT|
+| h2| 1.3.168        |1.3.175|
+| servlet-api| 2.5        |3.1|
+
+This requires also an upgrade of Tomcat to at least version 8.5.x
+
+### Updating projects configuration
+
+Projects need the following to update to this MapStore release:
+ 
+ - update dependencies (in web/pom.xml) copying those in MapStore2/java/web/pom.xml, in particular:
+
+| Dependency      | Version| Notes |
+| ----------- | ----------- |---|
+| mapstore-services| 1.3-SNAPSHOT| Replaces mapstore-backend|
+| geostore-webapp| 1.8-SNAPSHOT| |
+| javax.servlet-api| 3.0.1        | Tomcat 8.5 required|
+
+
+ - update packagingExcludes in web/pom.xml to this list:
+
+```
+WEB-INF/lib/commons-codec-1.2.jar,
+WEB-INF/lib/commons-io-1.1.jar,
+WEB-INF/lib/commons-logging-1.0.4.jar,
+WEB-INF/lib/commons-pool-1.3.jar,
+WEB-INF/lib/slf4j-api-1.5*.jar,
+WEB-INF/lib/slf4j-log4j12-1.5*.jar,
+WEB-INF/lib/spring-tx-5.2.15*.jar
+```
+
+ - upgrade Tomcat to 8.5 or greater
+ - update your geostore-spring-security.xml file to add the following setting, needed to disable CSRF validation, that MapStore services do not implement yet:
+
+```xml
+<security:http ... >
+    ...
+    <security:csrf disabled="true"/>
+    ...
+</security:http>
+```
+
+ - remove the spring log4j listener from web.xml
+
+```xml
+ <!-- spring context loader
+    <listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>-->
+```
 ## Migration from 2021.01.02 to 2021.02.00
 
 ### Theme updates and CSS variables
@@ -61,7 +123,12 @@ It is suggested to :
 
 ### Project system
 
-During this release MapStore changed a lot the project system. The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738/files) pull request. In this PR we are supporting the backward compatibility as much as possible. Anyway this migration guidelines will change accordingly to the new system soon.
+During this release MapStore we started an rewrite of the [project system](https://github.com/geosolutions-it/MapStore2/issues/6314), organized in different phases.
+
+The first phase of this migration has been identified by [this](https://github.com/geosolutions-it/MapStore2/pull/6738) pull request. In this phase we are supporting the backward compatibility as much as possible, introducing the new project system in parallel with the new one (experimental).
+In the future the current script will be deprecated in favor of the new one.
+
+Here below the breaking changes introduced in this release to support this new system:
 
 #### The following key files have been moved to the new `configs` folder
 
@@ -73,16 +140,19 @@ We suggest you to move them as well from root to configs folder
 - `config.json`
 - `simple.json`
 
-Back-end has been reorganized
+#### Back-end has been reorganized
+
 In particular:
 
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
+- `geostore` version used is `1.7.0` on release `2021.02.00`
 
 Check the changes in `pom.xml` to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
 
 - `pom.xml`
 - `java/web/pom.xml`
+
 
 #### Data directory has been reorganized and is now available also for product
 

@@ -734,8 +734,8 @@ const checkPluginsEnhancer = branch(
  * @prop {element} cfg.groupNodeComponent render a custom component for group node
  * @prop {element} cfg.layerNodeComponent render a custom component for layer node
  * @prop {object} cfg.layerOptions: options to pass to the layer.
- * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
- * For instance you can pass some styling props to the legend.
+ * @prop {object} cfg.layerOptions.legendOptions default options for legend
+ * Some of the `layerOptions` are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend CSS.
  * this example is to make the legend scrollable horizontally
  * ```
  * "layerOptions": {
@@ -749,25 +749,23 @@ const checkPluginsEnhancer = branch(
  *   }
  *  }
  * ```
- * Another legendOptions entry can be `WMSLegendOptions` it is styling prop for the wms legend.
+ * Other `legendOptions` entries can be:
+ * - `WMSLegendOptions` it is styling prop for the wms legend.
+ * - `legendWidth`: default `width` in pixel to send to the WMS `GetLegendGraphic`. (Can be customized from `LayerSettings`)
+ * - `legendHeight`: default `height` in pixel to send to the WMS `GetLegendGraphic`. (Can be customized from `LayerSettings`)
+ * - `scaleDependent`, this option activates / deactivates scale dependency.
  * example:
  * ```
  * "layerOptions": {
  *  "legendOptions": {
- *   "WMSLegendOptions": "forceLabels:on"
+ *   "scaleDependent": true,
+ *   "WMSLegendOptions": "forceLabels:on",
+ *   "legendWidth": 12,
+ *   "legendHeight": 12
  *  }
  * }
  * ```
- * Another one legendOptions entry is `scaleDependent`, this option activates / deactivates scale dependency.
- * example:
- * ```
- * "layerOptions": {
- *  "legendOptions": {
- *   "scaleDependent": true
- *  }
- * }
- * ```
- * Another layerOptions entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
+ * @prop {object} cfg.layerOptions.indicators Another `layerOptions` entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
  * For the moment only indicators of type `dimension` are supported.
  * example :
  * ```
@@ -790,10 +788,9 @@ const checkPluginsEnhancer = branch(
  *   }]
  * }
  * ```
- *
- * Another layerOptions entry is `tooltipOptions` which contains options for customizing the tooltip
+ * @prop {object} cfg.layerOptions.tooltipOptions Another `layerOptions` entry is `tooltipOptions` which contains options for customizing the tooltip
  * You can customize the max length for the tooltip with `maxLength` (Default is 807)
- * You can change the conjuction string in the "both" case with `separator` (Default is " - ")
+ * You can change the conjunction string in the "both" case with `separator` (Default is " - ")
  * for example
  * ```
  * "layerOptions" : {
