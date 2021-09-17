@@ -14,8 +14,8 @@ import { Col, ControlLabel, FormControl, FormGroup, Grid, InputGroup } from 'rea
 import Select from 'react-select';
 import Spinner from 'react-spinkit';
 
-import { getMessageById, getSupportedLocales } from '../../../../utils/LocaleUtils';
-import { isValidNewGroupOption, flattenGroups, getLabelName } from '../../../../utils/TOCUtils';
+import {getMessageById, getSupportedLocales, getUserLocale} from '../../../../utils/LocaleUtils';
+import {isValidNewGroupOption, getLabelName, flattenGroups} from '../../../../utils/TOCUtils';
 import Message from '../../../I18N/Message';
 import LayerNameEditField from './LayerNameEditField';
 
@@ -64,8 +64,8 @@ class General extends React.Component {
             { value: "right", label: getMessageById(this.context.messages, "layerProperties.tooltip.right") },
             { value: "bottom", label: getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
         ];
-        const groups = this.props.groups && flattenGroups(this.props.groups);
-
+        const locale = getUserLocale();
+        const groups = this.props.groups && flattenGroups(this.props.groups, 0, false, locale);
         const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
 
         return (
@@ -143,10 +143,10 @@ class General extends React.Component {
                                         className: 'Select-create-option-placeholder'
                                     };
                                 }}
-                                value={{ label: getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
+                                value={{ label: getLabelName(this.props.element && this.props.element.label || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
                                 placeholder={getLabelName(this.props.element && this.props.element.group || "Default", groups)}
                                 onChange={(item) => {
-                                    this.updateEntry("group", { target: { value: item.value || "Default" } });
+                                    this.updateEntry("group", { target: { value: item.value || "Default", label: item.label } });
                                 }}
                             />
                         </div> : null}
@@ -182,7 +182,9 @@ class General extends React.Component {
         );
     }
 
-    updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
+    updateEntry = (key, event) => {
+        isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event);
+    }
 
     updateTranslation = (key, event) => {
         const title = (key === 'default' && isString(this.props.element.title))
