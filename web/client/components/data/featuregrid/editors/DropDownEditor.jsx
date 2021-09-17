@@ -13,13 +13,16 @@ import ControlledCombobox from '../../../misc/combobox/ControlledCombobox';
 import { forceSelection } from '../../../../utils/FeatureGridEditorUtils';
 import { head } from 'lodash';
 import assign from 'object-assign';
-
 /**
  * Editor that provides a DropDown menu of a list of elements passed.
  * @memberof components.data.featuregrid.editors
  * @class
  * @name DropDownEditor
- * @prop {string[]} editorProps.values list of valid values
+ * @prop {string[]} values list of valid values
+ * @prop {boolean} forceSelection forces the editor to use a `defaultOption` as value
+ * @prop {string} defaultOption value used as default if forceSelection is true
+ * @prop {boolean} allowEmpty if true it accept empty string as value
+ *
  */
 class DropDownEditor extends AttributeEditor {
     static propTypes = {
@@ -32,7 +35,6 @@ class DropDownEditor extends AttributeEditor {
         isValid: PropTypes.func,
         onBlur: PropTypes.func,
         typeName: PropTypes.string,
-        url: PropTypes.string,
         value: PropTypes.string,
         filter: PropTypes.string,
         values: PropTypes.array,
