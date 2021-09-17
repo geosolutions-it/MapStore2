@@ -3292,7 +3292,7 @@
                     },
                     "extensions": {
                         "title": "Extensions",
-                        "text": "<p>MapStore also supports uploading custom extenion bundles. You can do so by clicking this button.</p>"
+                        "text": "<p>MapStore also supports uploading custom extension bundles. You can do so by clicking this button.</p>"
                     },
                     "extensionsDelete": {
                         "title": "Extensions",
