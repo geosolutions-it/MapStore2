@@ -20,7 +20,7 @@
     <!-- MapStore backend -->
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
-      <artifactId>mapstore-service</artifactId>
+      <artifactId>mapstore-services</artifactId>
       <version>1.2.0</version>
     </dependency>
     <!-- ================================================================ -->
