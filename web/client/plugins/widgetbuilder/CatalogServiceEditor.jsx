@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
 
 import uuid from 'uuid';
+import {set} from "../../utils/ImmutableUtils";
 import CatalogServiceEditorComponent from '../../components/catalog/CatalogServiceEditor';
 import { DEFAULT_ALLOWED_PROVIDERS } from '../MetadataExplorer';
 
@@ -48,7 +49,7 @@ export default ({service: defaultService, catalogServices,
         if (currentData[property]) {
             currentData[property] = typeof value === 'boolean' ? !(currentData[property]) : value;
         } else {
-            currentData = {...currentData, [property]: value};
+            currentData = set(`${property}`, value, currentData);
         }
         setService(currentData);
     };
