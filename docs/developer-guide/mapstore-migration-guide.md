@@ -186,7 +186,7 @@ In particular:
 
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
-- Some servlets has been added in order to provide native support to data dir and make it work with the new `configs` directory.
+- Some servlets have been added in order to provide native support to data dir and make it work with the new `configs` directory.
 
 So you will have to:
 
