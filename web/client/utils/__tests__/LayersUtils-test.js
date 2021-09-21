@@ -1243,5 +1243,16 @@ describe('LayersUtils', () => {
             expect(layers).toBeTruthy();
             expect(layers.groups[0].title).toEqual(localizedGroupMap.groups[0].title);
         });
+
+        it('Display title of deep nested groups', ()=>{
+            const groups = [
+                {id: 'default', title: 'Default', nodes: [{id: 'layer001', title: 'titleLayer001'}, {id: 'layer002', title: 'titleLayer002'}]}
+            ];
+            const id = 'layer001';
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            const groupTitle = LayersUtils.displayTitle(id, flattenedGroups);
+            expect(groupTitle).toExist();
+            expect(groupTitle).toEqual('titleLayer001');
+        });
     });
 });
