@@ -212,7 +212,8 @@ class Timeline extends React.Component {
             selectionOptions = {},
             customTimes,
             animate = true,
-            currentTime
+            currentTime,
+            timelineLayers
         } = this.props;
 
         let timelineOptions = options;
@@ -233,11 +234,27 @@ class Timeline extends React.Component {
             }
         }
 
+        const isTimelineLayerVisible = (layers) => {
+            let list = [];
+
+            for (let layer of layers) {
+                let isVisible = timelineLayers.find(item => item.id === layer.id);
+                let obj = isVisible.visibility;
+                if (obj) {
+                    list.push(layer);
+                }
+
+            }
+            return list;
+        };
+
         this.$el.setOptions(timelineOptions);
 
-        if (groups.length > 0) {
+        const updatedGroups = isTimelineLayerVisible(groups);
+
+        if (updatedGroups.length > 0) {
             const groupsDataset = new vis.DataSet();
-            groupsDataset.add(groups);
+            groupsDataset.add(updatedGroups);
             this.$el.setGroups(groupsDataset);
         }
 

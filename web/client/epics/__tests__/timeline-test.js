@@ -202,13 +202,13 @@ describe('timeline Epics', () => {
             testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), changeLayerProperties('TEST_LAYER', {visibility: false}) ], (actions) => {
                 doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
                 done();
-            }, STATE_TIMELINE);
+            }, STATE_TIMELINE, done());
         });
         it('syncTimelineGuideLayer on removeNode', done => {
             testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER', 'layers') ], (actions) => {
                 doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
                 done();
-            }, STATE_TIMELINE);
+            }, STATE_TIMELINE, done());
         });
         it('syncTimelineGuideLayer on showHiddenLayers', done => {
             testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER1', 'layers') ], (actions) => {
