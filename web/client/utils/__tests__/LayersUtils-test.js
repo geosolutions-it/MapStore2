@@ -1254,5 +1254,27 @@ describe('LayersUtils', () => {
             expect(groupTitle).toExist();
             expect(groupTitle).toEqual('titleLayer001');
         });
+        it('Timeline should not be visible when visibility of all layers is false', ()=>{
+            const layers = [{visibility: false}, {visibility: false}];
+            const isTimelineVisible = LayersUtils.isTimelineVisible(layers);
+            expect(isTimelineVisible).toBe(false);
+        });
+        it('Timeline should be visible when visibility of at least one layer is true', ()=>{
+            const layers = [{visibility: false}, {visibility: true}];
+            const isTimelineVisible = LayersUtils.isTimelineVisible(layers);
+            expect(isTimelineVisible).toBe(true);
+        });
+        it('Only returns a list of layers with visibility set to true', ()=>{
+            const layers = [{id: 0}, {id: 1}];
+            const timelineLayers = [{id: 0, visibility: false}, {id: 1, visibility: true}];
+            const visibleTimelineLayers = LayersUtils.visibleTimelineLayers(layers, timelineLayers);
+            expect(visibleTimelineLayers.length).toBe(1);
+        });
+        it('Should return no layers when all layers have a visibility set to false', ()=>{
+            const layers = [{id: 0}, {id: 1}];
+            const timelineLayers = [{id: 0, visibility: false}, {id: 1, visibility: false}];
+            const visibleTimelineLayers = LayersUtils.visibleTimelineLayers(layers, timelineLayers);
+            expect(visibleTimelineLayers.length).toBe(0);
+        });
     });
 });
