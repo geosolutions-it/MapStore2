@@ -62,6 +62,7 @@ jobs:
         run: npm test -- --reporters mocha,coverage,coveralls
         
       - name: Coveralls
+        if: ${{ false }}
         uses: coverallsapp/github-action@master
         with:
            github-token: ${{ secrets.GITHUB_TOKEN }}
