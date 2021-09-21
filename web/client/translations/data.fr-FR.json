@@ -1422,6 +1422,18 @@
             "format": {
                 "noOption": "Pas d'option",
                 "loading": "Chargement..."
+            },
+            "filter": {
+                "static": {
+                    "label": "Filtre statique",
+                    "info": "Le filtre est toujours appliqué, même dans une recherche vide"
+                },
+                "dynamic": {
+                    "label": "Filtre dynamique",
+                    "info": "Le filtre est utilisé lorsque le texte de recherche est présent et est appliqué dans 'AND' avec un filtre statique",
+                    "helpText": "Utilisez un modèle avec un espace réservé ${searchText} pour capturer la chaîne de recherche"
+                },
+                "error": "Syntaxe xml non valide"
             }
         },
         "uploader": {

@@ -135,8 +135,12 @@ describe('Test the catalog reducer', () => {
     });
     it('CHANGE_SERVICE_PROPERTY', () => {
         let autoload = true;
-        const state = catalog({newService: {}}, {type: CHANGE_SERVICE_PROPERTY, property: "autoload", value: true});
+        let state = catalog({newService: {}}, {type: CHANGE_SERVICE_PROPERTY, property: "autoload", value: true});
         expect(state.newService.autoload).toBe(autoload);
+
+        // Path as property value
+        state = catalog({newService: {}}, {type: CHANGE_SERVICE_PROPERTY, property: "filter.staticFilter", value: "test"});
+        expect(state.newService.filter.staticFilter).toBe("test");
     });
     it('SAVING_SERVICE', () => {
         let saving = true;

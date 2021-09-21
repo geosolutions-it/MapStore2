@@ -1421,6 +1421,18 @@
             "format": {
                 "noOption": "Sin opcion",
                 "loading": "Cargando..."
+            },
+            "filter": {
+                "static": {
+                    "label": "Filtro estático",
+                    "info": "El filtro se aplica siempre, incluso en la búsqueda vacía"
+                },
+                "dynamic": {
+                    "label": "Filtro dinámico",
+                    "info": "El filtro se usa cuando el texto de búsqueda está presente y se aplica en 'AND' con un filtro estático",
+                    "helpText": "Utilice la plantilla con el marcador de posición $ {searchText} para capturar la cadena de búsqueda"
+                },
+                "error": "Sintaxis XML no válida"
             }
         },
         "uploader": {

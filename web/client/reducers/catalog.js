@@ -127,7 +127,7 @@ function catalog(state = {
     case CHANGE_TEXT:
         return set("searchOptions.text", action.text, state);
     case CHANGE_SERVICE_PROPERTY: {
-        return  set(`newService["${action.property}"]`, action.value, state);
+        return  set(`newService.${action.property}`, action.value, state);
     }
     case CHANGE_TITLE:
         return set("newService.title", action.title, state);
