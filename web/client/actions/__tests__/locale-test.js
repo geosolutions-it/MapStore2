@@ -150,7 +150,7 @@ describe('Test locale related actions', () => {
         });
     });
 
-    it.only('loads an existing translation file by default', (done) => {
+    it('loads an existing translation file by default', (done) => {
         const locales = {
             "en": {
                 code: "en-US",
