@@ -20,8 +20,8 @@
     <!-- MapStore backend -->
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
-      <artifactId>mapstore-backend</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <artifactId>mapstore-services</artifactId>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
@@ -29,7 +29,7 @@
     <dependency>
       <groupId>it.geosolutions.geostore</groupId>
       <artifactId>geostore-webapp</artifactId>
-      <version>1.5-SNAPSHOT</version>
+      <version>1.7-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
@@ -363,7 +363,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/../MapStore2/web/client</directory>
+                                <directory>${basedir}/../MapStore2/web/client/configs</directory>
                                 <includes>
                                     <include>localConfig.json</include>
                                 </includes>
