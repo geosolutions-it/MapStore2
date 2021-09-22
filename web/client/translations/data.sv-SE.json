@@ -32,7 +32,7 @@
         "Links": "Länkar",
         "Forbidden": "Förbjudet",
         "layerNameChangeError": {
-            "title": "Fel vid byte av namn",
+            "title": "Fel vid namnbyte",
             "message": "Lagret kunde inte laddas om med det ändrade namnet"
         },
         "version": {
@@ -216,7 +216,7 @@
         "back": "Tillbaka till importören",
         "printbutton": "Skriv ut",
         "printToolTip": "Skriv ut",
-        "annotationsbutton": "Anteckningar",
+        "annotationsbutton": "Karttexter",
         "noresultfound": "Inget resultat hittades",
         "save": "Spara",
 		"saveAs": "Spara som ...",
@@ -420,7 +420,7 @@
             "savedMapTitle": "Sparad karta",
             "savedMapMessage": "Kartan har sparats korrekt.",
             "thumbnailError": {
-                "error403": "Du får inte uppdatera miniatyren",
+                "error403": "Du får inte lov att uppdatera miniatyren",
                 "error404": "Ett fel uppstod när miniatyrbilden skapades",
                 "error409": "En miniatyrbild med detta namn finns redan",
                 "errorDefault": "Nätverksfel"
@@ -644,13 +644,13 @@
                 "iconsSize": "Ikonstorlek:",
                 "dpi": "Dpi:"
             },
-            "layoutWarning": "Inte tillåten layout"
+            "layoutWarning": "Otillåten layout"
         },
         "backgroundSwither": {
             "tooltip": "Välj bakgrund"
         },
         "info":{
-            "tooltip": "Fråga objekt på kartan"
+            "tooltip": "Fråga på objekt på kartan"
         },
         "expandtoolbar": {
             "tooltip": "Fäll upp / Fäll ihop"
@@ -705,13 +705,13 @@
             "resetButtonText": "Återställ",
             "lengthLabel": "Length",
             "areaLabel": "Area",
-            "bearingLabel": "Bärning",
+            "bearingLabel": "Bäring",
             "trueBearingLabel": "Sann bäring",
             "formula": "Formel för avståndsberäkning",
-            "showLabel": "Visa mätningsetikett",
-            "saveMeasure": "Spara mätningar i anteckning",
-            "addAsAnnotation": "Lägg till som anteckning",
-            "newMeasure": "Ny anteckning",
+            "showLabel": "Visa mät-etikett",
+            "saveMeasure": "Spara mätningen som en karttext",
+            "addAsAnnotation": "Lägg till som karttext",
+            "newMeasure": "Ny karttext",
             "selectTool": "Välj ett mätverktyg",
             "exportToGeoJSON": "Exportera till GeoJSON",
             "resetTooltip": "Rensa åtgärder",
@@ -720,7 +720,7 @@
         "search":{
             "layerMustBeVisible": "Målskiktet är inaktivt",
             "decimal": "Decimal",
-            "aeronautical": "Aeronautskt",
+            "aeronautical": "Aeronautiskt",
             "changeSearchInputField": "Ändra sökverktyget",
             "addressSearch": "Sök efter plats",
             "coordinatesSearch": "Sök på koordinater",
@@ -1070,54 +1070,54 @@
             "errorLoadingSymbols": "Det uppstod ett problem när symbollistan skulle laddas. Kontakta administratören för att kontrollera konfigurationsalternativen.",
             "edit": "Redigera",
             "remove": "Ta bort",
-            "save": "Spara anteckning",
+            "save": "Spara karttext",
             "saveGeometry": "Spara geometri",
             "cancel": "Avbryt",
-            "back": "Tillbaka till anteckning",
-            "applyStyle": "Apply Style",
+            "back": "Tillbaka till karttext",
+            "applyStyle": "Tillämpa stil",
             "addGeometry": "Lägg till en ny geometri",
             "styleGeometry": "Ändra stil",
-            "deleteGeometry": "Ta bort alla anteckningsgeometrier",
+            "deleteGeometry": "Ta bort alla karttextsgeometrier",
             "geometries": "Geometrier",
-            "removeeannotation": "Vill du ta bort anteckningen med titel: {title}?",
-            "removegeometry": "Vill du ta bort annoteringsfunktionen?",
+            "removeeannotation": "Vill du ta bort karttexten med titel: {title}?",
+            "removegeometry": "Vill du ta bort karttexten?",
             "confirm": "Bekräfta",
             "mandatory": "Obligatoriskt fält",
             "emptygeometry": "Lägg till minst en giltig geometri",
-            "empty": "Inga anteckningar ännu, klicka på [+] för att lägga till anteckningar",
+            "empty": "Inga karttexter ännu, klicka på [+] för att lägga till en karttext",
             "add": "Ny",
-            "filter": "Filtrera anteckningar ...",
-            "undo": "Är du säker på att du vill lämna redigeringen av anteckninaer?",
+            "filter": "Filtrera karttexter ...",
+            "undo": "Är du säker på att du vill lämna redigeringen av karttexter?",
             "titleUndoGeom": "Geometrin har ändrats",
-            "undoGeom": "Är du säker på att avsluta utan att spara? (Du kommer att förlora ändringar)",
+            "undoGeom": "Är du säker på att avsluta utan att spara? (Du kommer att förlora dina ändringar)",
             "confirmGeom": "Bekräfta",
             "cancelModalGeom": "Avbryt",
             "deleteFeature": "Ta bort det här objektet",
             "undoDeleteFeature": "Vill du radera det här objektet?",
             "enableEdit": "Aktivera redigering",
             "editMeasurement": "Redigera mätning",
-            "title": "Kommentarer",
-            "zoomTo": "Zooma till annotering",
+            "title": "Karttexter",
+            "zoomTo": "Zooma till karttexter",
             "zoomToGeometry": "Zooma till geometri",
             "removeGeometry": "Ta bort",
-            "hide": "Dölj annotering",
-            "show": "Visa annotering",
+            "hide": "Dölj karttext",
+            "show": "Visa karttext",
             "tabCoordinates": "Koordinater",
             "warning": "Varning!",
-            "measureWarningText": "Om du navigerar för att redigera mätpanelen kommer all stilsättning att tas bort",
+            "measureWarningText": "Om du flyttar till redigering av mätpanelen kommer all stilsättning att tas bort",
             "notShowAgain": "Visa inte detta meddelande igen",
-            "tabStyle": "Style",
-            "insertText": "Sätt in textanteckningen",
-            "downloadtooltip": "Ladda ner anteckningar",
-            "downloadcurrenttooltip": "Ladda ner aktuell anteckning",
+            "tabStyle": "Stil",
+            "insertText": "Sätt in karttexten",
+            "downloadtooltip": "Ladda ner karttexter",
+            "downloadcurrenttooltip": "Ladda ner aktuell karttext",
             "downloadError": "Exportfel",
-            "loadtooltip": "Importera anteckningar",
-            "loadtitle": "Importera anteckningar",
-            "selectfiletext": "Släpp din fil här eller klicka för att välja den anteckningsfil som ska importeras. (filer som stöds: JSON)",
-            "loadoverride": "Ersätt anteckningar",
-            "loaderror": "Välj en eller flera anteckningsfiler. (filer som stöds: JSON)",
+            "loadtooltip": "Importera karttexter",
+            "loadtitle": "Importera karttexter",
+            "selectfiletext": "Släpp din fil här eller klicka för att välja den karttextsfil som ska importeras. (filer som stöds: JSON)",
+            "loadoverride": "Ersätt karttexter",
+            "loaderror": "Välj en eller flera textfiler. (filer som stöds: JSON)",
             "defaulttitle": "Redigera standardtitel",
-            "tooltip": "Kommentarer",
+            "tooltip": "Karttexter",
             "field": {
                 "title": "Titel",
                 "description": "Beskrivning"
@@ -1495,7 +1495,7 @@
             "tooltip": "Skapa och redigera rasterlagerstil",
             "paneltitle": "Raster Styler",
             "layerlabel": "Lager",
-            "typelabel": "Style Type",
+            "typelabel": "Stiltyp",
             "opacitylabel": "Opacitet",
             "redtitle": "Röd",
             "greentitle": "Grön",
@@ -2056,11 +2056,11 @@
             "styleNotFound": "Stil hittades inte",
             "noPermission": "Användaren kan inte redigera stilar",
             "deleteStyleSuccessTitle": "Ta bort stil",
-            "deleteStyleSuccessMessage": "Style har tagits bort",
+            "deleteStyleSuccessMessage": "Stilen har tagits bort",
             "deleteStyleErrorTitle": "Radera stilfel",
             "deleteStyleErrorMessage": "Det gick inte att ta bort aktuell stil",
             "savedStyleTitle": "Stil sparad",
-            "savedStyleMessage": "Style har sparats",
+            "savedStyleMessage": "Stilen har sparats",
             "errorTitle": "StyleEditor -fel",
             "parsingCapabilitiesError": "<h4> Möjliga orsaker: </h4> det var inte möjligt att analysera funktionerna och hämta stilarna",
             "globalError": "<h4> Möjliga orsaker: </h4> det var inte möjligt att ansluta till tjänsten",
@@ -2074,7 +2074,7 @@
             "updateStyleErrorTitle": "Redigera stil",
             "updateStyleErrorMessage": "Det gick inte att uppdatera stilen på stiltjänsten. Detta kan bero på format som inte stöds eller anslutningsproblem.",
             "validationErrorTitle": "Valideringsfel",
-            "genericValidationError": "Style är ogiltig och den kunde inte tillämpas.",
+            "genericValidationError": "Stilen är ogiltig och kunde inte tillämpas.",
             "setDefaultStyle": "Ange vald stil som standard för det aktuella lagret",
             "setDefaultStyleSuccessTitle": "Framgång med inställt standardstil",
             "setDefaultStyleSuccessMessage": "Standardstil har tillämpats",
@@ -2333,7 +2333,7 @@
             },
             "navItems": {
                 "main": "Allmän regel",
-                "style": "Style",
+                "style": "Stil",
                 "filter": "Filter",
                 "attribute": "Attributregel"
             },
@@ -2697,11 +2697,11 @@
             "title": "Lägg till lagergrupp"
           },
           "annotations": {
-            "description": "Verktyg för att rita anteckningar på kartan",
-            "title": "Anteckningar"
+            "description": "Verktyg för att rita karttexter",
+            "title": "Karttexter"
           },
           "AutoMapUpdate": {
-            "description": "Tillåter användaren att uppdatera kartan (gammal mapstore -version)",
+            "description": "Tillåter användaren att uppdatera kartan (gammal MapStore-version)",
             "title": "Automatisk kartuppdatering"
           },
           "BackgroundSelector": {
@@ -2809,8 +2809,8 @@
             "title": "Delningsverktyg"
           },
           "StyleEditor": {
-            "description": "Layer's style editor",
-            "title": "Style Editor"
+            "description": "Stileditor för lagret",
+            "title": "Stileditor"
           },
           "TOC": {
             "description": "Ger en lista över lager med möjlighet att sortera dem",
