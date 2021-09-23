@@ -65,7 +65,7 @@ export const SET_FORMAT_OPTIONS = 'CATALOG:SET_FORMAT_OPTIONS';
 /**
  * Adds a list of layers from the given catalogs to the map
  * @param {string[]} layers list with workspace to be added in the map
- * @param {string[]} sources catalog names related to each layer
+ * @param {string[] | object[] } sources catalog names related to each layer
  */
 export function addLayersMapViewerUrl(layers = [], sources = []) {
     return {
