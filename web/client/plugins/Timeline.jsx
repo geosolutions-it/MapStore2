@@ -45,7 +45,7 @@ import {
 import Timeline from './timeline/Timeline';
 import TimelineToggle from './timeline/TimelineToggle';
 import ButtonRB from '../components/misc/Button';
-import {getState} from "../utils/StateUtils";
+import {isTimelineVisible} from "../utils/LayersUtils";
 const Button = tooltip(ButtonRB);
 
 const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
@@ -180,7 +180,8 @@ const TimelinePlugin = compose(
         moveRangeTo,
         compactToolbar,
         showHiddenLayers,
-        onInit = () => {}
+        onInit = () => {},
+        layers
     }) => {
         useEffect(()=>{
             onInit(showHiddenLayers);
@@ -190,15 +191,7 @@ const TimelinePlugin = compose(
 
         const playbackItem = head(items && items.filter(item => item.name === 'playback'));
         const Playback = playbackItem && playbackItem.plugin;
-        const timelineLayers = timelineLayersSelector(getState());
-        const isTimelineVisible = (layers)=>{
-            for (let layer of layers) {
-                if (layer.visibility) {
-                    return true;
-                }
-            }
-            return false;
-        };
+
         const zoomToCurrent = (time, type, view, offsetRange ) => {
             const shift = moment(view.end).diff(view.start) / 2;
             if (type === "time-current" && view) {
@@ -237,7 +230,7 @@ const TimelinePlugin = compose(
                 ...style,
                 right: collapsed ? 'auto' : (style.right || 0)
             }}
-            className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''} ${!isTimelineVisible(timelineLayers) && 'hidden'}`}>
+            className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''} ${!isTimelineVisible(layers) ? 'hidden' : ''}`}>
 
             {offsetEnabled // if range is present and configured, show the floating start point.
                 && <InlineDateTimeSelector
@@ -333,7 +326,7 @@ const TimelinePlugin = compose(
                     offsetEnabled={offsetEnabled}
                     playbackEnabled
                     hideLayersName={hideLayersName}
-                    timelineLayers={timelineLayers}/>}
+                    timelineLayers={layers}/>}
         </div>);
     }
 );

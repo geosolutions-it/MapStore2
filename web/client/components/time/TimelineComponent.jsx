@@ -55,6 +55,7 @@ import {
     omit,
     assign
 } from 'lodash';
+import {visibleTimelineLayers} from "../../utils/LayersUtils";
 
 const noop = () => { };
 
@@ -234,23 +235,9 @@ class Timeline extends React.Component {
             }
         }
 
-        const isTimelineLayerVisible = (layers) => {
-            let list = [];
-
-            for (let layer of layers) {
-                let isVisible = timelineLayers.find(item => item.id === layer.id);
-                let obj = isVisible.visibility;
-                if (obj) {
-                    list.push(layer);
-                }
-
-            }
-            return list;
-        };
-
         this.$el.setOptions(timelineOptions);
 
-        const updatedGroups = isTimelineLayerVisible(groups);
+        const updatedGroups = visibleTimelineLayers(groups, timelineLayers);
 
         if (updatedGroups.length > 0) {
             const groupsDataset = new vis.DataSet();
