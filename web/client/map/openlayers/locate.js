@@ -15,6 +15,7 @@ const defaultOpt = {
     stopFollowingOnDrag: true,
     keepCurrentZoomLevel: false,
     locateOptions: {
+        speedThreshold: 0.8, // m/s
         maximumAge: 2000,
         enableHighAccuracy: true, // heading is only defined if the enableHighAccuracy is set to true
         timeout: 10000,

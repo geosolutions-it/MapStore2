@@ -74,10 +74,20 @@ const PAGE_SIZE = 10;
 /*
  * retrieves data from a catalog service and converts to props
  */
-const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
-    .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text, catalog.type === 'tms' ? {options: {service: catalog}} : {}))
-    .map((result) => ({ result, records: getCatalogRecords(catalog.type, result || [], { url: catalog && catalog.url, service: catalog })}))
-    .map(({records, result}) => resToProps({records, result, catalog}));
+const loadPage = ({text, catalog = {}}, page = 0) => {
+    const type = catalog.type;
+    const _tempOption = {options: {service: catalog}};
+    let options = {};
+    if (type === 'csw') {
+        options = {..._tempOption, filter: catalog.filter};
+    } else if (type === 'tms') {
+        options = _tempOption;
+    }
+    return Rx.Observable
+        .fromPromise(API[type].textSearch(catalog.url, page * PAGE_SIZE + (type === "csw" ? 1 : 0), PAGE_SIZE, text, options))
+        .map((result) => ({ result, records: getCatalogRecords(type, result || [], { url: catalog && catalog.url, service: catalog })}))
+        .map(({records, result}) => resToProps({records, result, catalog}));
+};
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE};
 /**
  * Compat catalog : Reusable catalog component, with infinite scroll.

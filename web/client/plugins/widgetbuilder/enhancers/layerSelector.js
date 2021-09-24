@@ -42,7 +42,7 @@ export default compose(
                         .do(l => setLayer({...l, visibility: !isUndefined(l.visibility) ? l.visibility : true}))
                         .mapTo({ canProceed: true })
                         .catch((error) => Rx.Observable.of({ error, canProceed: false }))
-            ).startWith({})
+            ).startWith({ canProceed: true })
             .combineLatest(props$, ({ canProceed, error } = {}, props) => ({
                 error,
                 canProceed,

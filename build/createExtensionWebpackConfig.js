@@ -2,7 +2,7 @@ const path = require("path");
 
 const shared = require('./moduleFederation').shared;
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
-
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 /**
  * Produces a webpack configuration that allow to create a MapStore extension.
@@ -22,7 +22,14 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
     mode: prod ? "production" : "development",
     entry: {},
     optimization: {
-        minimize: !!prod
+        minimize: !!prod,
+        ...(prod && {
+            minimizer: [
+                // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`)
+                `...`,
+                new CssMinimizerPlugin() // minify css bundle
+            ]
+        })
     },
     resolve: {
         fallback: {
@@ -50,10 +57,7 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
                 use: [
                     prod ? MiniCssExtractPlugin.loader : "style-loader", // because HMR do not work with mini-css plugin
                     {
-                        loader: 'css-loader',
-                        options: {
-                            minimize: true
-                        }
+                        loader: 'css-loader'
                     }
                 ]
             },
@@ -75,14 +79,14 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
                         limit: 8192
                     }
                 }] // inline base64 URLs for <=8k images, direct URLs for the rest
-            },
+            }
         ]
     },
     output: {
         publicPath,
         chunkFilename: 'assets/js/[name].[chunkhash:8].js',
-        path: destination
-
+        path: destination,
+        uniqueName: name
     },
     ...overrides
 });

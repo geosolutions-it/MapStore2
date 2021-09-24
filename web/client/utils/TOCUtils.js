@@ -75,6 +75,16 @@ export const getTitleAndTooltip = ({node, currentLocale, tooltipOptions = {separ
         tooltipText
     };
 };
+
+/**
+ * Replace characters
+ * @param {string} title string with characters to be replaced
+ * @returns {string} string with characters replaced
+ */
+export const replaceCharacters = (title) => {
+    return title?.replace(/\./g, '/').replace(/\${dot}/g, '.');
+};
+
 /**
  * flatten groups and subgroups in a single array
  * @param {object[]} groups node to get the groups and subgroups
@@ -82,15 +92,16 @@ export const getTitleAndTooltip = ({node, currentLocale, tooltipOptions = {separ
  * @params {boolean} wholeGroup, if true it returns the whole node
  * @return {object[]} array of nodes (groups and subgroups)
 */
-export const flattenGroups = (groups, idx = 0, wholeGroup = false) => {
+export const flattenGroups = (groups, idx = 0, wholeGroup = false, locale = 'default') => {
     return groups.filter((group) => group.nodes).reduce((acc, g) => {
-        acc.push(wholeGroup ? g : {label: g.id.replace(/\./g, '/').replace(/\${dot}/g, '.'), value: g.id});
+        acc.push(wholeGroup ? g : isObject(g?.title) ? {label: g?.title[locale] ? replaceCharacters(g?.title[locale]) : replaceCharacters(g?.title?.default), value: g.id} : {label: replaceCharacters(g.title), value: g.id});
         if (g.nodes.length > 0) {
             return acc.concat(flattenGroups(g.nodes, idx + 1, wholeGroup));
         }
         return acc;
     }, []);
 };
+
 export const getLabelName = (groupLabel = "", groups = []) => {
     let label = groupLabel.replace(/[^\.\/]+/g, match => {
         const title = get(getGroupByName(match, groups), 'title');

@@ -68,6 +68,7 @@ describe('catalog Epics', () => {
         testEpic(autoSearchEpic, NUM_ACTIONS, changeText(""), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(TEXT_SEARCH);
+            expect(actions[0].options).toEqual({filter: "test"});
             done();
         }, {
             catalog: {
@@ -76,7 +77,8 @@ describe('catalog Epics', () => {
                 services: {
                     "cswCatalog": {
                         type: "csw",
-                        url: "url"
+                        url: "url",
+                        filter: "test"
                     }
                 },
                 pageSize: 2
