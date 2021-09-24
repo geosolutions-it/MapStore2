@@ -84,8 +84,9 @@ export default (API) => ({
     recordSearchEpic: (action$, store) =>
         action$.ofType(TEXT_SEARCH)
             .switchMap(({ format, url, startPosition, maxRecords, text, options }) => {
+                const filter = get(options, 'service.filter') || get(options, 'filter');
                 return Rx.Observable.defer(() =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, { options, ...catalogSearchInfoSelector(store.getState()) })
+                    API[format].textSearch(url, startPosition, maxRecords, text, { options, filter, ...catalogSearchInfoSelector(store.getState()) })
                 )
                     .switchMap((result) => {
                         if (result.error) {
@@ -121,10 +122,10 @@ export default (API) => ({
                 const actions = layers
                     .filter((l, i) => !!services[sources[i]]) // ignore wrong catalog name
                     .map((l, i) => {
-                        const { type: format, url } = services[sources[i]];
+                        const { type: format, url, ...service } = services[sources[i]];
                         const text = layers[i];
                         return Rx.Observable.defer(() =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({ results: [] }))
+                            API[format].textSearch(url, startPosition, maxRecords, text, {...addLayerOptions, ...service}).catch(() => ({ results: [] }))
                         ).map(r => ({ ...r, format, url, text }));
                     });
                 return Rx.Observable.forkJoin(actions)
@@ -377,8 +378,8 @@ export default (API) => ({
             .switchMap(({ text }) => {
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
-                const { type, url } = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text }));
+                const { type, url, filter } = selectedCatalogSelector(state);
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: {filter}}));
             }),
 
     catalogCloseEpic: (action$, store) =>
