@@ -14,6 +14,24 @@ import WCS from '../api/WCS';
 import {getCapabilitiesUrl, formatCapabitiliesOptions} from '../utils/LayersUtils';
 import { get, head } from 'lodash';
 
+const mapMergingFeatureTypeXMLToJson = {
+    type: {
+        "gml:MultiPolygon": "gml:MultiSurfacePropertyType",
+        "xsd:int": "xsd:long",
+        "xsd:number": "xsd:double"
+    },
+    localType: {
+        "MultiPolygon": "MultiSurfacePropertyType",
+        "int": "long",
+        "number": "double"
+    },
+    namespace: {
+        "gml": "http://www.opengis.net/gml",
+        "xsd": "http://www.w3.org/2001/XMLSchema"
+    }
+};
+
+
 export function getDescribeLayer(url, layer, options) {
     return (dispatch /* , getState */) => {
         return WMS.describeLayer(url, layer.name, options).then((describeLayer) => {
@@ -32,23 +50,6 @@ export function getDescribeLayer(url, layer, options) {
                         });
 
                         let typesToAdd = featureTypes.filter(x => !alreadyInTypes.includes(x));
-
-                        const mapMergingFeatureTypeXMLToJson = {
-                            type: {
-                                "gml:MultiPolygon": "gml:MultiSurfacePropertyType",
-                                "xsd:int": "xsd:long",
-                                "xsd:number": "xsd:double"
-                            },
-                            localType: {
-                                "MultiPolygon": "MultiSurfacePropertyType",
-                                "int": "long",
-                                "number": "double"
-                            },
-                            namespace: {
-                                "gml": "http://www.opengis.net/gml",
-                                "xsd": "http://www.w3.org/2001/XMLSchema"
-                            }
-                        };
 
                         const featureTypeNeedToMerge = (mappingFeatureType, rlocalType, rtype) => {
                             const prefix = rtype.replace(`:${rlocalType}`, '');
