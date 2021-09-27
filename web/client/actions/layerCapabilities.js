@@ -33,26 +33,55 @@ export function getDescribeLayer(url, layer, options) {
 
                         let typesToAdd = featureTypes.filter(x => !alreadyInTypes.includes(x));
 
+                        const mapMergingFeatureTypeXMLToJson = {
+                            type: {
+                                "gml:MultiPolygon": "gml:MultiSurfacePropertyType",
+                                "xsd:int": "xsd:long",
+                                "xsd:number": "xsd:double"
+                            },
+                            localType: {
+                                "MultiPolygon": "MultiSurfacePropertyType",
+                                "int": "long",
+                                "number": "double"
+                            },
+                            namespace: {
+                                "gml": "http://www.opengis.net/gml",
+                                "xsd": "http://www.w3.org/2001/XMLSchema"
+                            }
+                        };
+
+                        const featureTypeNeedToMerge = (mappingFeatureType, rlocalType, rtype) => {
+                            const prefix = rtype.replace(`:${rlocalType}`, '');
+                            const   localPart = mappingFeatureType.localType[rlocalType] ? mappingFeatureType.localType[rlocalType] : rlocalType;
+                            const type =  mappingFeatureType.type[rtype] ? mappingFeatureType.localType[rtype] : rtype;
+                            return {
+                                TYPE_NAME: "XSD_1_0.LocalElement",
+                                type: {
+                                    "namespaceURI": mappingFeatureType?.namespace?.[prefix],
+                                    "localPart": localPart,
+                                    "prefix": prefix,
+                                    "key": `${mappingFeatureType.namespace[prefix]}/${localPart}`,
+                                    "string": `${mappingFeatureType.namespace[prefix]}/${type}`
+                                }
+                            };
+                        };
+
+
                         let missingTypes = typesToAdd.length > 0 &&  typesToAdd.reduce((acc, currentValue) => {
                             const { type, ...rest } = currentValue;
-                            rest.TYPE_NAME = "XSD_1_0.LocalElement";
-                            rest.type = {
-                                "namespaceURI": "http://www.w3.org/2001/XMLSchema",
-                                "localPart": "string",
-                                "prefix": "xsd",
-                                "key": "{http://www.w3.org/2001/XMLSchema}string",
-                                "string": "{http://www.w3.org/2001/XMLSchema}xsd:string"
-                            };
+                            const ogcJsonSchemaTypes = featureTypeNeedToMerge(mapMergingFeatureTypeXMLToJson, currentValue.localType, currentValue.type);
                             rest.otherAttributes = currentValue;
-                            return [...acc, rest];
+                            return [...acc, {...rest, ...ogcJsonSchemaTypes}];
                         }, []);
+
                         missingTypes && missingTypes.length > 0 && types.push(...missingTypes);
+
                         let geometryType = head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
                         geometryType = geometryType && geometryType.type.localPart;
                         describeLayer.geometryType = geometryType && geometryType.split("PropertyType")[0];
                         return dispatch(updateNode(layer.id, "id", {describeLayer, describeFeatureType}));
                     }).catch(() => {
-
+                        return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe feature found"}}));
                     });
                 }).catch(() => {
                     return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe feature found"}}));
