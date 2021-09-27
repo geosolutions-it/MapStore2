@@ -46,14 +46,7 @@ export function getDescribeLayer(url, layer, options) {
                             rest.otherAttributes = currentValue;
                             return [...acc, rest];
                         }, []);
-                        // const allTypes = (typesToAdd) ? [...types, ...missingTypes] : types;
-                        //console.log(missingTypes)
-                        //const allTypes = [];
-                        //allTypes.push(types, missingTypes);
-                        //console.log(allTypes)
-
-                        types.push(...missingTypes)
-
+                        missingTypes && missingTypes.length > 0 && types.push(...missingTypes);
                         let geometryType = head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
                         geometryType = geometryType && geometryType.type.localPart;
                         describeLayer.geometryType = geometryType && geometryType.split("PropertyType")[0];
