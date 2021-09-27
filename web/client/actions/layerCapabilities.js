@@ -38,19 +38,15 @@ export function getDescribeLayer(url, layer, options) {
             if (describeLayer && describeLayer.owsType === "WFS") {
                 return WFS.describeFeatureTypeOGCSchemas(url, describeLayer.name).then((describeFeatureType) => {
                     WFS.describeFeatureType(url, layer.name).then( (response ) => {
-
                         // TODO move the management of this geometryType in the proper components, getting the describeFeatureType entry:
                         let featureTypes = response?.featureTypes[0].properties;
                         let types = get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
-
                         let alreadyInTypes = types.map((item) =>{
                             return featureTypes.find(obj => {
                                 return (obj.name === item.name);
                             });
                         });
-
                         let typesToAdd = featureTypes.filter(x => !alreadyInTypes.includes(x));
-
                         const featureTypeNeedToMerge = (mappingFeatureType, rlocalType, rtype) => {
                             const prefix = rtype.replace(`:${rlocalType}`, '');
                             const   localPart = mappingFeatureType.localType[rlocalType] ? mappingFeatureType.localType[rlocalType] : rlocalType;
@@ -66,17 +62,13 @@ export function getDescribeLayer(url, layer, options) {
                                 }
                             };
                         };
-
-
                         let missingTypes = typesToAdd.length > 0 &&  typesToAdd.reduce((acc, currentValue) => {
                             const { type, ...rest } = currentValue;
                             const ogcJsonSchemaTypes = featureTypeNeedToMerge(mapMergingFeatureTypeXMLToJson, currentValue.localType, currentValue.type);
                             rest.otherAttributes = currentValue;
                             return [...acc, {...rest, ...ogcJsonSchemaTypes}];
                         }, []);
-
                         missingTypes && missingTypes.length > 0 && types.push(...missingTypes);
-
                         let geometryType = head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
                         geometryType = geometryType && geometryType.type.localPart;
                         describeLayer.geometryType = geometryType && geometryType.split("PropertyType")[0];
