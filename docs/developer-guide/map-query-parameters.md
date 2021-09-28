@@ -83,14 +83,16 @@ This action allows to add layers directly to the map by taking them from the Cat
 Requirements:
 
 - The number of layers should match the number of sources
-- The source name must match a catalog service name present in the map
+- The source name can be a string that must match a catalog service name present in the map or an object that defines an external catalog (see example)
+
+Supported layer types are WMS, WMTS and WFS.
 
 Example:
 ```
 {
     "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
-    "layers": ["workspace1:layer1", "workspace2:layer2"],
-    "sources": ["catalog1", "catalog2"]
+    "layers": ["workspace1:layer1", "workspace2:layer2", "workspace:externallayername"],
+    "sources": ["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]
 }
-?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2"],"sources":["catalog1", "catalog2"]}]
+?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2", "workspace:externallayername"],"sources":["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]}]
 ```
