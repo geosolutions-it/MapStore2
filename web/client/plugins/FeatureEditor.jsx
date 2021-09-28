@@ -271,6 +271,8 @@ const EditorPlugin = compose(
             this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
             if (this.props.enableMapFilterSync) {
                 this.props.setSyncTool(true);
+            } else {
+                this.props.setSyncTool(false);
             }
         },
         // TODO: fix this in contexts
@@ -284,6 +286,8 @@ const EditorPlugin = compose(
             }
             if (this.props.enableMapFilterSync) {
                 this.props.setSyncTool(true);
+            } else {
+                this.props.setSyncTool(false);
             }
         }
     }),
