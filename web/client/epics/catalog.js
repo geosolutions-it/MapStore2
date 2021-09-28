@@ -63,6 +63,7 @@ import {
     extractOGCServicesReferences,
     getCatalogRecords,
     recordToLayer,
+    wfsToLayer,
     getSupportedFormat
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
@@ -120,9 +121,12 @@ export default (API) => ({
                 const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
-                    .filter((l, i) => !!services[sources[i]]) // ignore wrong catalog name
+                    .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
-                        const { type: format, url, ...service } = services[sources[i]];
+                        const source = sources[i];
+                        const service = typeof source === 'object' ? source : services[source];
+                        const format = service.type.toLowerCase();
+                        const url = service.url;
                         const text = layers[i];
                         return Rx.Observable.defer(() =>
                             API[format].textSearch(url, startPosition, maxRecords, text, {...addLayerOptions, ...service}).catch(() => ({ results: [] }))
@@ -135,8 +139,8 @@ export default (API) => ({
                                 const { format, url, text, ...result } = r;
                                 const locales = currentMessagesSelector(state);
                                 const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
-                                const record = head(records.filter(rec => rec.identifier === text)); // exact match of text and record identifier
-                                const { wms, wmts } = extractOGCServicesReferences(record);
+                                const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
+                                const { wms, wmts, wfs } = extractOGCServicesReferences(record);
                                 let layer = {};
                                 const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
                                 const authkeyParamName = authkeyParamNameSelector(state);
@@ -160,6 +164,8 @@ export default (API) => ({
                                     layer = recordToLayer(record, "wmts", {
                                         removeParams: authkeyParamName
                                     }, layerBaseConfig);
+                                } else if (wfs) {
+                                    layer = wfsToLayer(record);
                                 } else {
                                     const { esri } = extractEsriReferences(record);
                                     if (esri) {
