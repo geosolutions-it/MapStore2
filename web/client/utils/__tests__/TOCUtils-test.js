@@ -13,7 +13,7 @@ import {
     getTooltipFragment,
     flattenGroups,
     getTitleAndTooltip,
-    getLabelName
+    getLabelName, getActiveFeatureInfo
 } from '../TOCUtils';
 
 const groups = [{
@@ -226,5 +226,30 @@ describe('TOCUtils', () => {
         }];
         const label = getLabelName(groupLabel, nodes);
         expect(label).toBe("Group Layer");
+    });
+    it('return event object if event passed does not have target and value key', () => {
+        const event = {
+            format: 'HTML'
+        };
+        const label = getActiveFeatureInfo(event);
+        expect(label).toBe(event);
+    });
+    it('return string if event passed has target and value key', () => {
+        const event = {
+            target: {
+                value: 'event'
+            }
+        };
+        const label = getActiveFeatureInfo(event);
+        expect(label).toBe('event');
+    });
+    it('return string if event passed has target and value key', () => {
+        const event = {
+            target: {
+                label: 'event'
+            }
+        };
+        const label = getActiveFeatureInfo(event, 'label');
+        expect(label).toBe('event');
     });
 });
