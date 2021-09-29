@@ -174,7 +174,7 @@ const featuresToGrid = compose(
         }
     ),
     withPropsOnChange(
-        ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select", "columns"],
+        ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select", "columns", "showCheckbox"],
         props => {
             // bind proper events and setup the columns array
             // bind and get proper grid events from gridEvents object
@@ -190,7 +190,7 @@ const featuresToGrid = compose(
                 ...gridOpts,
                 enableCellSelect: props.mode === "EDIT",
                 rowSelection: {
-                    showCheckbox: props.mode === "EDIT",
+                    showCheckbox: props.showCheckbox || props.mode === "EDIT",
                     selectBy: {
                         keys: {
                             rowKey: '_!_id_!_',

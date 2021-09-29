@@ -50,7 +50,7 @@ import {
     SET_PAGINATION
 } from '../actions/featuregrid';
 
-import { FEATURE_TYPE_LOADED, QUERY_CREATE } from '../actions/wfsquery';
+import { FEATURE_TYPE_LOADED, QUERY_CREATE, UPDATE_QUERY } from '../actions/wfsquery';
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
 import uuid from 'uuid';
 import { getApi } from '../api/userPersistedStorage';
@@ -75,7 +75,6 @@ const emptyResultsState = {
         size: 20
     },
     select: [],
-    multiselect: false,
     drawing: false,
     newFeatures: [],
     features: [],
@@ -197,7 +196,7 @@ function featuregrid(state = emptyResultsState, action) {
             select: state.select.filter(f1 => !isPresent(f1, action.features))
         });
     case SET_SELECTION_OPTIONS: {
-        return assign({}, state, {multiselect: action.multiselect});
+        return assign({}, state, {multiselect: action.multiselect ?? state.multiselect, showCheckbox: action.showCheckbox ?? state.showCheckbox});
     }
     case UPDATE_EDITORS_OPTIONS:
         return assign({}, state, { customEditorsOptions: action.payload });
@@ -403,6 +402,12 @@ function featuregrid(state = emptyResultsState, action) {
             filters: {
             }
         });
+    }
+    case UPDATE_QUERY: {
+        return {
+            ...state,
+            useLayerFilter: action.useLayerFilter ?? state.useLayerFilter // if not present, keep current
+        };
     }
     case SIZE_CHANGE : {
         const maxDockSize = action.dockProps && action.dockProps.maxDockSize;
