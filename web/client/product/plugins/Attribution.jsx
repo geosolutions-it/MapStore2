@@ -25,7 +25,7 @@ class Attribution extends React.Component {
             left: 0,
             bottom: 0
         }
-    };
+     };
 
     render() {
         return null;
@@ -51,6 +51,7 @@ export default {
                 img: props.src && <img className="customer-logo" src={props.src} height="30" /> || <img className="customer-logo" src={src} height="30" />,
                 logo: true
             })
-        }
+ 
+         }
     })
 };
