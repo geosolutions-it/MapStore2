@@ -34,7 +34,8 @@ import {
     handlePendingGeoStoryChanges,
     loadStoryOnHistoryPop,
     scrollOnLoad,
-    hideCarouselItemsOnUpdateCurrentPage
+    hideCarouselItemsOnUpdateCurrentPage,
+    urlUpdateOnScroll
 } from '../geostory';
 import {
     ADD,
@@ -63,7 +64,9 @@ import {
     SET_PENDING_CHANGES,
     LOAD_GEOSTORY,
     update,
-    HIDE_CAROUSEL_ITEMS
+    HIDE_CAROUSEL_ITEMS,
+    updateCurrentPage,
+    geostoryScrolling
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -1763,6 +1766,36 @@ describe('Geostory Epics', () => {
                 done();
             });
         });
+    });
+    it('urlUpdateOnScroll', (done)=> {
+        const NUM_ACTIONS = 1;
+        testEpic(addTimeoutEpic(urlUpdateOnScroll), NUM_ACTIONS, [ updateCurrentPage({}), geostoryScrolling(true)],
+            (actions) => {
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            }
+        );
+    });
+    it('urlUpdateOnScrol, push state to history', (done)=> {
+        const NUM_ACTIONS = 1;
+        const oldHash = window.location.hash;
+        window.location.hash = "#/shared/5";
+        testEpic(addTimeoutEpic(urlUpdateOnScroll), NUM_ACTIONS, [ updateCurrentPage({sectionId: 1}), geostoryScrolling(true)],
+            (actions) => {
+                expect(window.location.href).toContain('shared/5/section/1');
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                window.location.hash = oldHash;
+                done();
+            }, {
+                geostory: {
+                    updateUrlOnScroll: true,
+                    mode: "show",
+                    resource: {
+                        id: 5
+                    }
+                }
+            }
+        );
     });
     it('scrollOnLoad', (done) => {
         const NUM_ACTIONS = 2;

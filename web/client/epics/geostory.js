@@ -572,7 +572,7 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
                 .map(a => !a.status)
                 .startWith(true)
         ))
-        .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
+        .debounceTime(100) // little delay if too many UPDATE_CURRENT_PAGE actions come
         .switchMap(({sectionId, columnId}) => {
             if (
                 modeSelector(getState()) !== 'edit' && (!!columnId || !!sectionId)
