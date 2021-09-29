@@ -120,6 +120,7 @@ const FeatureDock = (props = {
     dialogs: EMPTY_OBJ,
     select: EMPTY_ARR
 }) => {
+    const virtualScroll  = props.virtualScroll ?? true;
     const maxZoom  = props?.pluginCfg?.maxZoom;
     const dockProps = {
         dimMode: "none",
@@ -135,7 +136,7 @@ const FeatureDock = (props = {
     // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
 
     useEffect(() => {
-        props.initPlugin({virtualScroll: props.virtualScroll, editingAllowedRoles: props.editingAllowedRoles, maxStoredPages: props.maxStoredPages});
+        props.initPlugin({virtualScroll, editingAllowedRoles: props.editingAllowedRoles, maxStoredPages: props.maxStoredPages});
     }, []);
 
     return (
@@ -177,7 +178,7 @@ const FeatureDock = (props = {
                         tools={props.gridTools}
                         pagination={props.pagination}
                         pages={props.pages}
-                        virtualScroll={props.virtualScroll}
+                        virtualScroll={virtualScroll}
                         maxStoredPages={props.maxStoredPages}
                         vsOverScan={props.vsOverScan}
                         scrollDebounce={props.scrollDebounce}
