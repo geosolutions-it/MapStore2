@@ -208,7 +208,7 @@ describe('search Epics', () => {
     });
 
 
-    it('produces the selectSearchItem epic and GFI for single layer', (done) => {
+    it.only('produces the selectSearchItem epic and GFI for single layer', (done) => {
         let action = selectSearchItem({
             "id": "Feature_1",
             "type": "Feature",
@@ -235,13 +235,12 @@ describe('search Epics', () => {
         });
 
         const NUM_ACTIONS = 6;
-        testEpic(addTimeoutEpic(searchItemSelected, 100), NUM_ACTIONS, action, (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
+        testEpic(addTimeoutEpic(searchItemSelected, 0), NUM_ACTIONS, action, (actions) => {
             expect(actions[0].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
             expect(actions[1].type).toBe(FEATURE_INFO_CLICK);
             expect(actions[1].itemId).toEqual("Feature_1");
             expect(actions[1].filterNameList).toEqual(["gs:layername"]);
-            expect(actions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1"}});
+            expect(actions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1", CQL_FILTER: undefined}}); // forces CQL FILTER to undefined (server do not support featureid + CQL_FILTER)
             expect(actions[2].type).toBe(SHOW_MAPINFO_MARKER);
             expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
             expect(actions[4].type).toBe(TEXT_SEARCH_ADD_MARKER);
@@ -621,7 +620,7 @@ describe('search Epics', () => {
                     }
                 }
             });
-        const NUM_ACTIONS = 4;
+        const NUM_ACTIONS = 3;
         testEpic(addTimeoutEpic(textSearchShowGFIEpic, 100), NUM_ACTIONS, action, (actions) => {
             expect(actions).toExist();
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -629,8 +628,7 @@ describe('search Epics', () => {
             expect(actions[0].overrideParams.layerName.info_format).toBe("text/html");
             expect(actions[0].overrideParams.layerName.featureid).toBe("layer_01");
             expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
-            expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
-            expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+            expect(actions[2].type).toBe(TEXT_SEARCH_ADD_MARKER);
             done();
         }, {layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
     });
