@@ -208,7 +208,7 @@ describe('search Epics', () => {
     });
 
 
-    it.only('produces the selectSearchItem epic and GFI for single layer', (done) => {
+    it('produces the selectSearchItem epic and GFI for single layer', (done) => {
         let action = selectSearchItem({
             "id": "Feature_1",
             "type": "Feature",
