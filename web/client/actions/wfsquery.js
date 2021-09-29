@@ -107,11 +107,19 @@ export function queryError(error) {
         error
     };
 }
-export function updateQuery(updates, reason) {
+/**
+ * Triggers a new query updating some parameters.
+ * @param {object} [param.updates] updates to apply to the filter object (merged with the original filter)
+ * @param {string} [param.reason] "geometry" or undefined. If "geometry", triggers selection of features.
+ * @param {boolean} [param.useLayerFilter] enable/disable the usage of the current layer filter
+ * @returns
+ */
+export function updateQuery({updates, reason, useLayerFilter} = {}) {
     return {
         type: UPDATE_QUERY,
         updates,
-        reason
+        reason,
+        useLayerFilter
     };
 }
 export function loadFeature(baseUrl, typeName) {
