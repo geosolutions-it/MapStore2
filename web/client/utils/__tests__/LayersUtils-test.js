@@ -1254,5 +1254,15 @@ describe('LayersUtils', () => {
             expect(groupTitle).toExist();
             expect(groupTitle).toEqual('titleLayer001');
         });
+        it('Return an empty array if there is no array of objects', ()=>{
+            const groups = { id: 'default', title: 'Default', nodes: [{id: 'layer001', title: 'titleLayer001'}, {id: 'layer002', title: 'titleLayer002'}]};
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            expect(flattenedGroups.length).toBe(0);
+        });
+        it('Return title as default if group contains no totle', ()=>{
+            const groups = [];
+            const flattenedGroups = LayersUtils.displayTitle(groups);
+            expect(flattenedGroups).toBe('Default');
+        });
     });
 });
