@@ -119,7 +119,7 @@ export const getLabelName = (groupLabel = "", groups = []) => {
 /**
  * Returns value of selected settings card
  * @param {(string|object)} event
- * @param {string=} key
+ * @param {string=} key, default is 'value'
  * @returns {object}
  */
 export const getActiveFeatureInfo = (event, key = 'value')=>{
