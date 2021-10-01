@@ -38,7 +38,7 @@
             "label": "Version"
         },
         "errorPage": {
-            "title":"Oups, quelque chose a mal tourné.",
+            "title":"Oups, quelque chose a mal tourné...",
             "subtitle":"Veuillez cliquer sur l'icône ci-dessous pour recharger MapStore",
             "description":"Si vous souhaitez signaler cette erreur, vous pouvez envoyer un e-mail à notre liste de diffusion",
             "descriptionAdmin":"Veuillez contacter l'administrateur"

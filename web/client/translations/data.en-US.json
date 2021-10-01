@@ -38,7 +38,7 @@
             "label": "Version"
         },
         "errorPage": {
-            "title":"Ops, Something has gone wrong.",
+            "title":"Oops, something has gone wrong...",
             "subtitle":"Please click the icon below to reload MapStore",
             "description":"If you want to report this error you can send an email our mailing list",
             "descriptionAdmin":"Please contact the administrator"
