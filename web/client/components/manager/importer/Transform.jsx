@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import Button from '../misc/Button';
+import Button from '../../misc/Button';
 import PropTypes from 'prop-types';
 import { Panel, Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../misc/OverlayTrigger';
