@@ -12,7 +12,7 @@ import { Grid, Col, Row, Panel, Label, Alert } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 import { DropdownList } from 'react-widgets';
 
-import Button from '../misc/Button';
+import Button from '../../misc/Button';
 import { Message } from '../../I18N/I18N';
 import { getbsStyleForState } from '../../../utils/ImporterUtils';
 import Layer from './Layer';
