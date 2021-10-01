@@ -23,7 +23,7 @@ import {
 import { changeMapView } from '../../actions/map';
 import { set, compose } from '../../utils/ImmutableUtils';
 import { selectTime, LOADING, RANGE_DATA_LOADED, RANGE_CHANGED, enableOffset, SELECT_LAYER, autoselect, selectLayer } from '../../actions/timeline';
-import { changeLayerProperties, removeNode } from '../../actions/layers';
+import { removeNode } from '../../actions/layers';
 import { SET_CURRENT_TIME, SET_OFFSET_TIME, updateLayerDimensionData } from '../../actions/dimension';
 
 
