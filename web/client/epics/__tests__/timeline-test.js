@@ -198,18 +198,6 @@ describe('timeline Epics', () => {
                 flat: [{...STATE_TIMELINE.layers.flat[0], visibility: true}]
             }});
         });
-        it('syncTimelineGuideLayer on changeLayerProperties', done => {
-            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), changeLayerProperties('TEST_LAYER', {visibility: false}) ], (actions) => {
-                doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
-                done();
-            }, STATE_TIMELINE, done());
-        });
-        it('syncTimelineGuideLayer on removeNode', done => {
-            testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER', 'layers') ], (actions) => {
-                doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER1');
-                done();
-            }, STATE_TIMELINE, done());
-        });
         it('syncTimelineGuideLayer on showHiddenLayers', done => {
             testEpic(syncTimelineGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER2'), removeNode('TEST_LAYER1', 'layers') ], (actions) => {
                 doAssertion(NUM_ACTIONS, actions, 'TEST_LAYER');

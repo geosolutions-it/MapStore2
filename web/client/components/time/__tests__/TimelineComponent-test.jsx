@@ -11,9 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Timeline from '../TimelineComponent';
 import expect from 'expect';
-
 const TEST_ITEMS = [{ id: '1', start: new Date(0), end: new Date(0), type: 'point', content: '' }, { id: '2', start: new Date(970821881894), end: new Date(970821881894), type: 'point', content: '' }];
-
 describe('test TimelineComponent module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -84,4 +82,6 @@ describe('test TimelineComponent module component', () => {
         expect(document.querySelector('.TEST_RANGE')).toExist();
 
     });
+
+
 });

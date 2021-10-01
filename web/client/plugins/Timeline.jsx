@@ -326,7 +326,8 @@ const TimelinePlugin = compose(
                     offsetEnabled={offsetEnabled}
                     playbackEnabled
                     hideLayersName={hideLayersName}
-                    timelineLayers={layers}/>}
+                    timelineLayers={layers}
+                />}
         </div>);
     }
 );
