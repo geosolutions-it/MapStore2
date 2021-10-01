@@ -13,7 +13,7 @@ import { Panel, Table, Glyphicon, Tooltip } from 'react-bootstrap';
 
 import Message from '../../I18N/Message';
 import OverlayTrigger from '../../misc/OverlayTrigger';
-import Button from '../misc/Button';
+import Button from '../../misc/Button';
 
 class TransformsGrid extends React.Component {
     static propTypes = {
