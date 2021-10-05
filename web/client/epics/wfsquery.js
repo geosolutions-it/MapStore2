@@ -32,7 +32,6 @@ import {
 import { paginationInfo, isDescribeLoaded, layerDescribeSelector } from '../selectors/query';
 import { mapSelector } from '../selectors/map';
 import { authkeyParamNameSelector } from '../selectors/catalog';
-import { getSelectedLayer } from '../selectors/layers';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import { addTimeParameter } from '../utils/WFSTimeUtils';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -177,14 +176,13 @@ export const wfsQueryEpic = (action$, store) =>
             const totalFeatures = paginationInfo.totalFeatures(store.getState());
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             // getSelected Layer and merge layerFilter and cql_filter in params  with action filter
-            const layer = getSelectedLayer(store.getState()) || {};
-            const selectedLayer = selectedLayerSelector(store.getState());
+            const layer = selectedLayerSelector(store.getState());
 
-            const {layerFilter, params} = layer;
+            const {layerFilter, params} = layer ?? {};
             const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
 
             // use original filter if the selected layer is vector type
-            const ogcFilter = layer && layer.type === "vector" ?
+            const ogcFilter = layer?.type === "vector" ?
                 action.filterObj
                 : mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, action.filterObj);
             const { url, options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
@@ -193,16 +191,16 @@ export const wfsQueryEpic = (action$, store) =>
                 totalFeatures,
                 sortOptions,
                 ...queryOptions,
-                layer: selectedLayer
+                layer
             };
 
             // TODO refactor, the layer that should be used should be the used when the feature grid is opened from the toc, see #6430
             return Rx.Observable.merge(
-                getLayerJSONFeature({...layer, name: action.filterObj.featureTypeName || layer.name, search: {...layer.search, url}}, ogcFilter, options)
+                getLayerJSONFeature({...layer, name: action.filterObj.featureTypeName || layer?.name, search: {...(layer?.search ?? {}), url}}, ogcFilter, options)
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions, action.reason))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
-                    .concat(Rx.Observable.of(featureLoading(false)), Rx.Observable.of(layerLoad(layer.id)))
+                    .concat(Rx.Observable.of(featureLoading(false)), Rx.Observable.of(layerLoad(layer?.id)))
             ).takeUntil(action$.ofType(UPDATE_QUERY));
         });
 

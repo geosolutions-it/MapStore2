@@ -68,6 +68,7 @@ describe('catalog Epics', () => {
         testEpic(autoSearchEpic, NUM_ACTIONS, changeText(""), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(TEXT_SEARCH);
+            expect(actions[0].options).toEqual({filter: "test"});
             done();
         }, {
             catalog: {
@@ -76,7 +77,8 @@ describe('catalog Epics', () => {
                 services: {
                     "cswCatalog": {
                         type: "csw",
-                        url: "url"
+                        url: "url",
+                        filter: "test"
                     }
                 },
                 pageSize: 2
@@ -314,6 +316,39 @@ describe('catalog Epics', () => {
                 selectedService: "cswCatalog",
                 services: {
                     "cswCatalog": {
+                        type: "wmts",
+                        url: "base/web/client/test-resources/wmts/GetCapabilities-1.0.0.xml"
+                    }
+                },
+                pageSize: 2
+            }
+        });
+    });
+    it('addLayersFromCatalogsEpic wmts via object definion', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(addLayersFromCatalogsEpic, 0), NUM_ACTIONS, addLayersMapViewerUrl(["topp:tasmania_cities_hidden"], [{"type": "wmts", "url": "base/web/client/test-resources/wmts/GetCapabilities-1.0.0.xml"}]), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case ADD_LAYER:
+                    expect(action.layer.name).toBe("topp:tasmania_cities_hidden");
+                    expect(action.layer.title).toBe("tasmania_cities");
+                    expect(action.layer.type).toBe("wmts");
+                    expect(action.layer.url).toBe("http://sample.server/geoserver/gwc/service/wmts");
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, {
+            catalog: {
+                delayAutoSearch: 50,
+                selectedService: "externalService",
+                services: {
+                    "externalService": {
                         type: "wmts",
                         url: "base/web/client/test-resources/wmts/GetCapabilities-1.0.0.xml"
                     }

@@ -72,11 +72,6 @@ describe('wfsquery Epics', () => {
                 }
             });
             done();
-        }, {
-            layers: {
-                selected: ['layerId'],
-                flat: [{id: 'layerId'}]
-            }
         });
     });
     it('wfsQueryEpic passing query options and default sort', (done) => {
@@ -102,11 +97,7 @@ describe('wfsquery Epics', () => {
             });
             done();
         }, {
-            query: { typeName: 'layer1', featureTypes: {layer1: {attributes: [{attribute: 'NAME'}]}}},
-            layers: {
-                selected: ['layerId'],
-                flat: [{id: 'layerId'}]
-            }
+            query: { typeName: 'layer1', featureTypes: {layer1: {attributes: [{attribute: 'NAME'}]}}}
         });
     });
     it('wfsQueryEpic passing filter object with valid sort options', (done) => {
@@ -132,11 +123,6 @@ describe('wfsquery Epics', () => {
                 }
             });
             done();
-        }, {
-            layers: {
-                selected: ['layerId'],
-                flat: [{id: 'layerId'}]
-            }
         });
     });
     // required to load a featuretype when the layer to use is not the layer selected in TOC
@@ -163,9 +149,43 @@ describe('wfsquery Epics', () => {
                 }
             });
             done();
+        });
+    });
+    it('wfsQueryEpic passing filter merged', (done) => {
+        const expectedResult = require('../../test-resources/wfs/museam.json');
+        mockAxios.onPost().reply(config => {
+            expect(config.data).toContain('<ogc:PropertyName>NAME</ogc:PropertyName>');
+            expect(config.data).toContain('<wfs:SortOrder>DESC</wfs:SortOrder>');
+            return [200, expectedResult];
+        });
+        testEpic(wfsQueryEpic, 2, query("base/web/client/test-resources/wfs/museam.json", { pagination: {maxFeatures: 20, startIndex: 0}, sortOptions: {sortBy: "NAME", sortOrder: "DESC"}, featureTypeName: "layerId"}, {}), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                case QUERY_RESULT:
+                    expect(action.result).toEqual(expectedResult);
+                    expect(action.filterObj.pagination).toEqual({maxFeatures: 20, startIndex: 0});
+                    expect(action.filterObj.sortOptions).toEqual({sortBy: "NAME", sortOrder: "DESC"});
+                    break;
+                case FEATURE_LOADING:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
         }, {
             layers: {
-                flat: [{id: 'layerId'}]
+                flat: [{id: 'TEST_LAYER', filter: {}}]
+            },
+            featuregrid: {
+                timeSync: true,
+                pagination: {
+                    size: 10
+                },
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                changes: []
             }
         });
     });
@@ -174,7 +194,6 @@ describe('wfsquery Epics', () => {
         const DATE = "20180101T00:00:00";
         const BASE_TIME_TEST_STATE = {
             layers: {
-                selected: ['TEST_LAYER'],
                 flat: [{
                     id: "TEST_LAYER",
                     title: "Test Layer",
@@ -290,11 +309,6 @@ describe('wfsquery Epics', () => {
                 }
             });
             done();
-        }, {
-            layers: {
-                selected: ['layerId'],
-                flat: [{id: 'layerId'}]
-            }
         });
     });
 
@@ -356,7 +370,6 @@ describe('wfsquery Epics', () => {
                         expanded: false,
                         maskLoading: false
                     },
-                    selected: ['layer1'],
                     settings: {
                         expanded: false,
                         node: null,

@@ -35,7 +35,7 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
-            <Toolbar stepButtons={stepButtons} canProceed={canProceed} onProceed={() => onLayerChoice(layer)} />
+            <Toolbar stepButtons={stepButtons} canProceed={canProceed && selected} onProceed={() => onLayerChoice(layer)} />
             {selected && !canProceed && error ? <InfoPopover
                 trigger={false}
                 glyph="warning-sign"

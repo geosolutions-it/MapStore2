@@ -25,10 +25,12 @@ describe('FeatureEditor Plugin', () => {
         setTimeout(done);
     });
     it('render FeatureEditor plugin', () => {
-        const {Plugin} = getPluginForTest(FeatureEditor, {featuregrid: {...featuregrid, open: true}});
+        const {Plugin, store} = getPluginForTest(FeatureEditor, {featuregrid: {...featuregrid, open: true}});
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
         const container = document.querySelector('.feature-grid-container');
         expect(container).toBeTruthy();
+        const state = store.getState().featuregrid;
+        expect(state.virtualScroll).toBe(true);
     });
     it('onInit FeatureEditor plugin', () => {
         const props = {

@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import { head, last } from 'lodash';
+import { head, last, template } from 'lodash';
 import assign from 'object-assign';
 
 import axios from '../libs/ajax';
@@ -25,22 +25,8 @@ const parseUrl = (url) => {
     }));
 };
 
-export const constructXMLBody = (startPosition, maxRecords, searchText) => {
-    if (!searchText) {
-        return `<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
-        xmlns:ogc="http://www.opengis.net/ogc"
-        xmlns:gml="http://www.opengis.net/gml"
-        xmlns:dc="http://purl.org/dc/elements/1.1/"
-        xmlns:dct="http://purl.org/dc/terms/"
-        xmlns:gmd="http://www.isotc211.org/2005/gmd"
-        xmlns:gco="http://www.isotc211.org/2005/gco"
-        xmlns:gmi="http://www.isotc211.org/2005/gmi"
-        xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${startPosition}" maxRecords="${maxRecords}">
-        <csw:Query typeNames="csw:Record">
-            <csw:ElementSetName>full</csw:ElementSetName>
-            <csw:Constraint version="1.1.0">
-        <ogc:Filter>
-            <ogc:Or>
+const defaultStaticFilter =
+    `<ogc:Or>
             <ogc:PropertyIsEqualTo>
                 <ogc:PropertyName>dc:type</ogc:PropertyName>
                 <ogc:Literal>dataset</ogc:Literal>
@@ -49,45 +35,50 @@ export const constructXMLBody = (startPosition, maxRecords, searchText) => {
                 <ogc:PropertyName>dc:type</ogc:PropertyName>
                 <ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal>
             </ogc:PropertyIsEqualTo>
-           </ogc:Or>
-        </ogc:Filter>
-            </csw:Constraint>
-        </csw:Query>
-    </csw:GetRecords>`;
-    }
-    return `<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
-    xmlns:ogc="http://www.opengis.net/ogc"
-    xmlns:gml="http://www.opengis.net/gml"
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:dct="http://purl.org/dc/terms/"
-    xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:gco="http://www.isotc211.org/2005/gco"
-    xmlns:gmi="http://www.isotc211.org/2005/gmi"
-    xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${startPosition}" maxRecords="${maxRecords}">
-    <csw:Query typeNames="csw:Record">
-        <csw:ElementSetName>full</csw:ElementSetName>
-        <csw:Constraint version="1.1.0">
-            <ogc:Filter>
-            <ogc:And>
-                <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                    <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
-                    <ogc:Literal>%${searchText}%</ogc:Literal>
-                </ogc:PropertyIsLike>
-                <ogc:Or>
-                <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>dc:type</ogc:PropertyName>
-                    <ogc:Literal>dataset</ogc:Literal>
-                </ogc:PropertyIsEqualTo>
-                <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>dc:type</ogc:PropertyName>
-                    <ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal>
-                </ogc:PropertyIsEqualTo>
-               </ogc:Or>
-            </ogc:And>
-            </ogc:Filter>
-        </csw:Constraint>
-    </csw:Query>
-</csw:GetRecords>`;
+       </ogc:Or>`;
+
+const defaultDynamicFilter = "<ogc:PropertyIsLike wildCard='%' singleChar='_' escapeChar='\\'>" +
+    "<ogc:PropertyName>csw:AnyText</ogc:PropertyName> " +
+    "<ogc:Literal>%${searchText}%</ogc:Literal> " +
+    "</ogc:PropertyIsLike> ";
+
+export const cswGetRecordsXml = '<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" ' +
+    'xmlns:ogc="http://www.opengis.net/ogc" ' +
+    'xmlns:gml="http://www.opengis.net/gml" ' +
+    'xmlns:dc="http://purl.org/dc/elements/1.1/" ' +
+    'xmlns:dct="http://purl.org/dc/terms/" ' +
+    'xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
+    'xmlns:gco="http://www.isotc211.org/2005/gco" ' +
+    'xmlns:gmi="http://www.isotc211.org/2005/gmi" ' +
+    'xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${startPosition}" maxRecords="${maxRecords}"> ' +
+    '<csw:Query typeNames="csw:Record"> ' +
+    '<csw:ElementSetName>full</csw:ElementSetName> ' +
+    '<csw:Constraint version="1.1.0"> ' +
+    '<ogc:Filter> ' +
+    '${filterXml} ' +
+    '</ogc:Filter> ' +
+    '</csw:Constraint> ' +
+    '</csw:Query> ' +
+    '</csw:GetRecords>';
+
+/**
+ * Construct XML body to get records from the CSW service
+ * @param {object} [options] the options to pass to withIntersectionObserver enhancer.
+ * @param {number} startPosition
+ * @param {number} maxRecords
+ * @param {string} searchText
+ * @param {object} filter object holds static and dynamic filter configured for the CSW service
+ * @param {object} filter.staticFilter filter to fetch all record applied always i.e even when no search text is present
+ * @param {object} filter.dynamicFilter filter when search text is present and is applied in conjunction with static filter
+ * @return {string} constructed xml string
+ */
+export const constructXMLBody = (startPosition, maxRecords, searchText, {filter} = {}) => {
+    const staticFilter = filter?.staticFilter || defaultStaticFilter;
+    const dynamicFilter = `<ogc:And>
+        ${template(filter?.dynamicFilter || defaultDynamicFilter)({searchText})}
+        ${staticFilter}
+    </ogc:And>`;
+    return template(cswGetRecordsXml)({filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords});
 };
 
 /**
@@ -148,7 +139,7 @@ var Api = {
             });
         });
     },
-    getRecords: function(url, startPosition, maxRecords, filter) {
+    getRecords: function(url, startPosition, maxRecords, filter, options) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
                 const {CSW, marshaller, unmarshaller } = require('../utils/ogc/CSW');
@@ -157,7 +148,7 @@ var Api = {
                     value: CSW.getRecords(startPosition, maxRecords, typeof filter !== "string" && filter)
                 });
                 if (!filter || typeof filter === "string") {
-                    body = constructXMLBody(startPosition, maxRecords, filter);
+                    body = constructXMLBody(startPosition, maxRecords, filter, options);
                 }
                 resolve(axios.post(parseUrl(url), body, { headers: {
                     'Content-Type': 'application/xml'
@@ -270,9 +261,9 @@ var Api = {
             });
         });
     },
-    textSearch: function(url, startPosition, maxRecords, text) {
+    textSearch: function(url, startPosition, maxRecords, text, options) {
         return new Promise((resolve) => {
-            resolve(Api.getRecords(url, startPosition, maxRecords, text));
+            resolve(Api.getRecords(url, startPosition, maxRecords, text, options));
         });
     },
     workspaceSearch: function(url, startPosition, maxRecords, text, workspace) {

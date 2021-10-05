@@ -38,7 +38,7 @@
             "label": "Versione"
         },
         "errorPage": {
-            "title":"Ops, Qualcosa è andato storto",
+            "title":"Ops, qualcosa è andato storto...",
             "subtitle":"Per favore clicca sull'icona qui sotto per ricaricare MapStore",
             "description":"Se vuoi segnalare questo problema, puoi mandare una mail alla nostra lista email per utenti",
             "descriptionAdmin":"Per favore contatta l'amministratore"
@@ -1422,6 +1422,18 @@
             "format": {
                 "noOption": "Nessuna opzione",
                 "loading": "Caricamento in corso..."
+            },
+            "filter": {
+                "static": {
+                    "label": "Filtro statico",
+                    "info": "Il filtro viene applicato sempre, anche nella ricerca vuota"
+                },
+                "dynamic": {
+                    "label": "Filtro dinamico",
+                    "info": "Il filtro viene utilizzato quando è presente il testo di ricerca e viene applicato in 'AND' con filtro statico",
+                    "helpText": "Usa il segnaposto ${searchText} nel modello per inserire la stringa di ricerca"
+                },
+                "error": "Sintassi xml non valida"
             }
         },
         "uploader": {

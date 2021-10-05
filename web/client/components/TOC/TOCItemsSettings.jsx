@@ -16,6 +16,7 @@ import tooltip from '../misc/enhancers/tooltip';
 const NavItemT = tooltip(NavItem);
 import { head, isObject, isString } from 'lodash';
 import Message from '../I18N/Message';
+import { getActiveFeatureInfo } from "../../utils/TOCUtils";
 
 /**
  * Component for rendering TOC Settings as tabs inside a Dockable contanier
@@ -123,7 +124,7 @@ const TOCItemSettings = (props) => {
                         nodeType={settings.nodeType}
                         settings={settings}
                         retrieveLayerData={onRetrieveLayerData}
-                        onChange={(key, event) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: event.target.value, label: event.target.label}, realtimeUpdate)}
+                        onChange={(key, event) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: getActiveFeatureInfo(event), label: getActiveFeatureInfo(event, 'label')}, realtimeUpdate)}
                         isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
                         currentLocaleLanguage={currentLocaleLanguage}/>
                 ))}

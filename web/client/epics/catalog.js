@@ -63,6 +63,7 @@ import {
     extractOGCServicesReferences,
     getCatalogRecords,
     recordToLayer,
+    wfsToLayer,
     getSupportedFormat
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
@@ -84,8 +85,9 @@ export default (API) => ({
     recordSearchEpic: (action$, store) =>
         action$.ofType(TEXT_SEARCH)
             .switchMap(({ format, url, startPosition, maxRecords, text, options }) => {
+                const filter = get(options, 'service.filter') || get(options, 'filter');
                 return Rx.Observable.defer(() =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, { options, ...catalogSearchInfoSelector(store.getState()) })
+                    API[format].textSearch(url, startPosition, maxRecords, text, { options, filter, ...catalogSearchInfoSelector(store.getState()) })
                 )
                     .switchMap((result) => {
                         if (result.error) {
@@ -119,12 +121,15 @@ export default (API) => ({
                 const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
-                    .filter((l, i) => !!services[sources[i]]) // ignore wrong catalog name
+                    .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
-                        const { type: format, url } = services[sources[i]];
+                        const source = sources[i];
+                        const service = typeof source === 'object' ? source : services[source];
+                        const format = service.type.toLowerCase();
+                        const url = service.url;
                         const text = layers[i];
                         return Rx.Observable.defer(() =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({ results: [] }))
+                            API[format].textSearch(url, startPosition, maxRecords, text, {...addLayerOptions, ...service}).catch(() => ({ results: [] }))
                         ).map(r => ({ ...r, format, url, text }));
                     });
                 return Rx.Observable.forkJoin(actions)
@@ -134,8 +139,8 @@ export default (API) => ({
                                 const { format, url, text, ...result } = r;
                                 const locales = currentMessagesSelector(state);
                                 const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
-                                const record = head(records.filter(rec => rec.identifier === text)); // exact match of text and record identifier
-                                const { wms, wmts } = extractOGCServicesReferences(record);
+                                const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
+                                const { wms, wmts, wfs } = extractOGCServicesReferences(record);
                                 let layer = {};
                                 const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
                                 const authkeyParamName = authkeyParamNameSelector(state);
@@ -159,6 +164,8 @@ export default (API) => ({
                                     layer = recordToLayer(record, "wmts", {
                                         removeParams: authkeyParamName
                                     }, layerBaseConfig);
+                                } else if (wfs) {
+                                    layer = wfsToLayer(record);
                                 } else {
                                     const { esri } = extractEsriReferences(record);
                                     if (esri) {
@@ -377,8 +384,8 @@ export default (API) => ({
             .switchMap(({ text }) => {
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
-                const { type, url } = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text }));
+                const { type, url, filter } = selectedCatalogSelector(state);
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: {filter}}));
             }),
 
     catalogCloseEpic: (action$, store) =>

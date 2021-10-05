@@ -24,6 +24,17 @@ describe("test identify enhancers", () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+    const sampleComponentDidMount = (onMount) => {
+        let checkIdentifyIsMounted = false;
+        const {enabled, showInMapPopup} = onMount;
+        if (enabled || showInMapPopup) {
+            checkIdentifyIsMounted = true;
+        } else {
+            checkIdentifyIsMounted = false;
+        }
+        return {checkIdentifyIsMounted};
+    };
+
 
     it('test identifyLifecycle component changes mousepointer on enable / disable', () => {
 
@@ -175,5 +186,21 @@ describe("test identify enhancers", () => {
             document.getElementById("container")
         );
         expect(spyIdentifyIsMounted.calls.length).toEqual(1);
+    });
+    it("Identify should run when enabled prop is true and showInMapPopup prop is false", () => {
+        let run = sampleComponentDidMount({enabled: true, showInMapPopup: false});
+        expect(run.checkIdentifyIsMounted).toBe(true);
+    });
+    it("Identify should run when enabled prop is false and showInMapPopup prop is true", () => {
+        let run = sampleComponentDidMount({enabled: false, showInMapPopup: true});
+        expect(run.checkIdentifyIsMounted).toBe(true);
+    });
+    it("Identify should run when both enabled and showInMapPopup prop are true", () => {
+        let run = sampleComponentDidMount({enabled: true, showInMapPopup: true});
+        expect(run.checkIdentifyIsMounted).toBe(true);
+    });
+    it("Identify should NOT run when both enabled and showInMapPopup prop are false", () => {
+        let run = sampleComponentDidMount({enabled: false, showInMapPopup: false});
+        expect(run.checkIdentifyIsMounted).toBe(false);
     });
 });
