@@ -69,6 +69,7 @@ const buildDependencies = (map, deps, originalWidgetId) => {
         const dependenciesGenerated = Object.keys(map).reduce((ret, k) => {
             if (k === "dependenciesMap" && deps[map[k]] && deps[map.mapSync] &&
                 deps[map[k]][k] && deps[map[k]][k].indexOf(originalWidgetId) === -1 // avoiding loop
+                && !ret.mapSync
             ) {
                 // go recursively until we get the dependencies from table ancestors
                 return {
