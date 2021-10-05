@@ -680,6 +680,7 @@ const checkPluginsEnhancer = branch(
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
  * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
+ * @prop {boolean} cfg.activateMetedataTool activate metadata tool in the toolbar, to retrieve metadata from original catalog (WMS and/or CSW), default `false`
  * @prop {boolean} cfg.checkPlugins if true, check if AddLayer, AddGroup ... plugins are present to auto-configure the toolbar
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `true`
  * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
