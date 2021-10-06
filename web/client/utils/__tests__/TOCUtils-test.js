@@ -13,7 +13,7 @@ import {
     getTooltipFragment,
     flattenGroups,
     getTitleAndTooltip,
-    getLabelName, getActiveFeatureInfo
+    getLabelName, getActiveFeatureInfo, getLabelLanguage
 } from '../TOCUtils';
 
 const groups = [{
@@ -212,6 +212,7 @@ describe('TOCUtils', () => {
         const label = getLabelName(groupLabel, nodes);
         expect(label).toBe("Layer");
     });
+    // { default: '', it-IT: 'mand'}
     it('test localized value getLabelName from object', () => {
         const groupLabel = "Default";
         const nodes = [{
@@ -227,7 +228,25 @@ describe('TOCUtils', () => {
         const label = getLabelName(groupLabel, nodes);
         expect(label).toBe("Group Layer");
     });
+    it('test localized value getLabelName where group label is an object and has a language aside the default one', () => {
+        const groupLabel = {
+            'default': 'Group Layer',
+            'it-IT': 'Livello di gruppo'
+        };
+        const nodes = [{
+            name: 'Default',
+            title: {
+                'default': 'Group Layer'
+            },
+            id: "layer00",
+            description: "desc",
+            tooltipOptions: "none"
+        }];
+        const label = getLabelName(groupLabel, nodes);
+        expect(label).toBe("Livello di gruppo");
+    });
     it('return event object if event passed does not have target and value key', () => {
+
         const event = {
             format: 'HTML'
         };
@@ -251,5 +270,20 @@ describe('TOCUtils', () => {
         };
         const label = getActiveFeatureInfo(event, 'label');
         expect(label).toBe('event');
+    });
+    it('return key of set language', () => {
+        const labelLanguage = {
+            'default': '',
+            'it-IT': 'Italiano'
+        };
+        const language = getLabelLanguage(labelLanguage);
+        expect(language).toBe('it-IT');
+    });
+    it('return default if no other language is passed', () => {
+        const labelLanguage = {
+            'default': ''
+        };
+        const language = getLabelLanguage(labelLanguage);
+        expect(language).toBe('default');
     });
 });
