@@ -183,7 +183,6 @@ export const displayTitle = (id, groups) => {
                 return group.title;
             }
         }
-        return 'Default';
     }
     return 'Default';
 };
