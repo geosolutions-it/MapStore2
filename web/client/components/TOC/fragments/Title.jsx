@@ -12,6 +12,7 @@ import React from 'react';
 import { Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../misc/OverlayTrigger';
 import { getTitleAndTooltip } from '../../../utils/TOCUtils';
+import { isObject } from 'lodash';
 import './css/toctitle.css';
 
 class Title extends React.Component {
@@ -38,8 +39,10 @@ class Title extends React.Component {
     };
 
     getFilteredTitle = (title) => {
-        const splitTitle = title.toLowerCase().split(this.props.filterText.toLowerCase());
-
+        if (isObject(title)) {
+            return title?.target?.value ?  title.target.value : '';
+        }
+        const splitTitle =  !isObject(title) ? title.toLowerCase().split(this.props.filterText.toLowerCase()) : title.target.value;
         return this.props.filterText ? splitTitle.reduce((a, b, idx) => {
             if (idx === splitTitle.length - 1) {
                 return [...a, b];

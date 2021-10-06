@@ -9,7 +9,7 @@
 import { isObject, get } from 'lodash';
 
 import {getGroupByName} from './LayersUtils';
-import {getLocale} from './LocaleUtils';
+import {getLocale, getSupportedLocales} from './LocaleUtils';
 
 export const isValidNewGroupOption = function({ label }) {
     const filterWrongGroupRegex = RegExp('^\/|\/$|\/{2,}');
@@ -66,7 +66,7 @@ export const getTooltip = (node, currentLocale, separator = " - ") => {
 */
 export const getTitleAndTooltip = ({node, currentLocale, tooltipOptions = {separator: " - ", maxLength: 807}}) => {
     let tooltipText = getTooltip(node, currentLocale, tooltipOptions.separator) || "";
-    tooltipText = tooltipText && tooltipText.substring(0, tooltipOptions.maxLength);
+    tooltipText = isObject(tooltipText) ? '' : (tooltipText && tooltipText.substring(0, tooltipOptions.maxLength));
     if (tooltipText.length === tooltipOptions.maxLength) {
         tooltipText += "...";
     }
@@ -102,18 +102,47 @@ export const flattenGroups = (groups, idx = 0, wholeGroup = false, locale = 'def
     }, []);
 };
 
-export const getLabelName = (groupLabel = "", groups = []) => {
-    let label = groupLabel.replace(/[^\.\/]+/g, match => {
-        const title = get(getGroupByName(match, groups), 'title');
-        if (isObject(title)) {
-            const locale = getLocale();
-            return title[locale] || title.default;
+/**
+ * Picks language of label from language list
+ * @param {Object} labelLanguage
+ * @returns {string}
+ */
+export const getLabelLanguage = (labelLanguage)=> {
+    const locale = getSupportedLocales();
+    let language = '';
+    Object.entries(locale).forEach(
+        ([key, value]) => {
+            if (key && labelLanguage[value.code]) {
+                language = value.code;
+            }
         }
-        return groups && title || match;
-    });
-    label = label.replace(/\./g, '/');
-    label = label.replace(/\${dot}/g, '.');
-    return label;
+    );
+    return language ? language : 'default';
+};
+
+/**
+ * Returns label name according to language
+ * @param ({string|number|Object}) groupLabel
+ * @param {Object[]} groups
+ * @returns {string|*}
+ */
+export const getLabelName = (groupLabel = "", groups = []) => {
+    if (!isObject(groupLabel)) {
+        const groupLabelItem = groupLabel.toString();
+        let label = groupLabelItem.replace(/[^\.\/]+/g, match => {
+            const title = get(getGroupByName(match, groups), 'title');
+            if (isObject(title)) {
+                const locale = getLocale();
+                return title[locale] || title.default;
+            }
+            return groups && title || match;
+        });
+        label = label.replace(/\./g, '/');
+        label = label.replace(/\${dot}/g, '.');
+        return label;
+    }
+    const language = getLabelLanguage(groupLabel);
+    return groupLabel[language];
 };
 
 /**

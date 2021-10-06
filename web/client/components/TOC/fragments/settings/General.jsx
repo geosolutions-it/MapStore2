@@ -109,7 +109,7 @@ class General extends React.Component {
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :
                             <FormControl
-                                defaultValue={this.props.element.description || ''}
+                                defaultValue={isObject(this.props.element.description) ? '' : this.props.element.description || ''}
                                 key="description"
                                 rows="2"
                                 componentClass="textarea"
