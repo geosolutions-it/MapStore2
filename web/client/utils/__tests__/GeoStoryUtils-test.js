@@ -109,6 +109,13 @@ describe("GeoStory Utils", () => {
             size: "medium"
         }); // with custom params
         expect(classes).toBe(" ms-dark ms-align-left ms-size-medium");
+
+        classes = getClassNameFromProps({
+            theme: "dark",
+            align: "left",
+            size: "h-medium,v-small"
+        }); // with custom params
+        expect(classes).toBe(" ms-dark ms-align-left ms-size-h-medium ms-size-v-small");
     });
 
     it('should not apply theme value if object', () => {

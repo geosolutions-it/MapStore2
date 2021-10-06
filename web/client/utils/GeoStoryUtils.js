@@ -80,13 +80,13 @@ export const lists = {
  * @prop {object} theme theme object
  * @prop {string} theme.value one of 'bright', 'dark', 'dark-transparent' or 'bright-transparent'
  * @prop {string} align one of 'center', 'left' or 'right'
- * @prop {string} size one of 'full', 'large', 'medium' or 'small'
+ * @prop {string} size one of 'full', 'large', 'medium', 'small' or 'h-{size},v-{size}'
  */
 export const getClassNameFromProps = ({ theme = {}, align = 'center', size = 'full' }) => {
     const themeValue = theme?.value || isString(theme) && theme;
     const themeClassName = themeValue && themeValue !== 'custom' && isString(themeValue) && ` ms-${themeValue}` || '';
     const alignClassName = ` ms-align-${align}`;
-    const sizeClassName = ` ms-size-${size}`;
+    const sizeClassName = size.split(',').map(sClass=> ` ms-size-${sClass}`).join(''); // when size has both horizontal and vertical classes
     return `${themeClassName}${alignClassName}${sizeClassName}`;
 };
 
@@ -310,7 +310,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     contents: [{
                         id: uuid(),
                         type: ContentTypes.WEBPAGE,
-                        size: 'medium',
+                        size: 'h-medium,v-medium', // Webpage has both horizontal and vertical size button
                         align: 'center'
                     }]
                 }
@@ -359,7 +359,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             id: uuid(),
             type,
             title: localize("geostory.builder.defaults.titleWebPage"),
-            size: 'medium',
+            size: 'h-full,v-medium',
             align: 'center'
         };
     }
