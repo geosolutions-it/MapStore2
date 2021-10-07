@@ -77,7 +77,7 @@ export const identifyLifecycle = compose(
                 checkIdentifyIsMounted = () => {}
             } = this.props;
 
-            if (enabled) {
+            if (enabled || showInMapPopup) {
                 changeMousePointer('pointer');
                 checkIdentifyIsMounted(true);
             } else {

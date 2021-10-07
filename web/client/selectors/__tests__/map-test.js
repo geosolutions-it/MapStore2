@@ -173,4 +173,12 @@ describe('Test map selectors', () => {
         const renderValidOnly = identifyFloatingToolSelector({mode: "embedded"});
         expect(renderValidOnly).toBe(true);
     });
+    it('test identifyFloatingToolSelector should display mapPopUp data if identify is enabled for pop up maps', () => {
+        const renderValidOnly = identifyFloatingToolSelector({mapPopups: {popups: [{component: 'identify'}]}});
+        expect(renderValidOnly).toBe(true);
+    });
+    it('test identifyFloatingToolSelector should non display mapPopUp data if identify is not enabled for pop up maps', () => {
+        const renderValidOnly = identifyFloatingToolSelector({mapPopups: {popups: [{component: 'sampleComponent'}]}});
+        expect(renderValidOnly).toBe(false);
+    });
 });
