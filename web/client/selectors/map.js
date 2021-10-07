@@ -10,6 +10,7 @@ import CoordinatesUtils from '../utils/CoordinatesUtils';
 
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
+import {detectIdentifyInMapPopUp} from "../utils/MapUtils";
 
 /**
  * selects map state
@@ -106,6 +107,6 @@ export const isMouseMoveIdentifyActiveSelector = (state) => {
 };
 
 export const identifyFloatingToolSelector = (state) => {
-    return mouseMoveListenerSelector(state).includes('identifyFloatingTool') || state.mode === "embedded";
+    return mouseMoveListenerSelector(state).includes('identifyFloatingTool') || state.mode === "embedded" || (state.mapPopups?.popups && detectIdentifyInMapPopUp(state));
 };
 
