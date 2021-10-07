@@ -1254,7 +1254,6 @@ describe('LayersUtils', () => {
             expect(groupTitle).toExist();
             expect(groupTitle).toEqual('titleLayer001');
         });
-
         it('Timeline should not be visible when visibility of all layers is false', ()=>{
             const layers = [{visibility: false}, {visibility: false}];
             const isTimelineVisible = LayersUtils.isTimelineVisible(layers);
