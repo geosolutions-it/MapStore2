@@ -13,7 +13,7 @@ import { FormControl, Alert } from 'react-bootstrap';
 
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
-import Button from '../misc/Button';
+import Button from '../../misc/Button';
 
 export default class extends React.Component {
     static propTypes = {
