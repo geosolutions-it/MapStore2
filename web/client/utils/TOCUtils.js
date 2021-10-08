@@ -115,13 +115,3 @@ export const getLabelName = (groupLabel = "", groups = []) => {
     label = label.replace(/\${dot}/g, '.');
     return label;
 };
-
-/**
- * Returns value of selected settings card
- * @param {(string|object)} event
- * @param {string=} key, default is 'value'
- * @returns {object}
- */
-export const getActiveFeatureInfo = (event, key = 'value')=>{
-    return isObject(event) && event && event.target && event.target[key]  ? event.target[key] : event;
-};
