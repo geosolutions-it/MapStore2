@@ -18,7 +18,7 @@ import {
 
 const groups = [{
     "id": "first",
-    "title": { "default": "first"},
+    "title": "first",
     "name": "first",
     "nodes": [
         {
@@ -28,7 +28,7 @@ const groups = [{
             "nodes": [
                 {
                     "id": "first.second.third",
-                    "title": { "default": "third"},
+                    "title": "third",
                     "name": "third",
                     "nodes": [
                         {
@@ -41,7 +41,7 @@ const groups = [{
                             "name": "topp:states",
                             "opacity": 1,
                             "description": "This is some census data on the states.",
-                            "title": { "default": "USA Population"},
+                            "title": "USA Population",
                             "type": "wms",
                             "url": "https://demo.geo-solutions.it:443/geoserver/wms",
                             "bbox": {
@@ -81,12 +81,7 @@ const groups = [{
     ],
     "expanded": true,
     "visibility": true
-}, {
-    "id": "second",
-    "title": "Non object title",
-    "name": "Non object name"
 }];
-
 
 describe('TOCUtils', () => {
     it('test isValidNewGroupOption for General Fragment with value not allowed', () => {
@@ -160,10 +155,10 @@ describe('TOCUtils', () => {
         expect(allGroups[0].label).toBe("first");
         expect(allGroups[1].id).toBe(undefined);
         expect(allGroups[1].value).toBe("first.second");
-        expect(allGroups[1].label).toBe("second");
+        expect(allGroups[1].label).toBe("first/second");
         expect(allGroups[2].id).toBe(undefined);
         expect(allGroups[2].value).toBe("first.second.third");
-        expect(allGroups[2].label).toBe("third");
+        expect(allGroups[2].label).toBe("first/second/third");
     });
     it('test getTitleAndTooltip both', () => {
         const node = {
