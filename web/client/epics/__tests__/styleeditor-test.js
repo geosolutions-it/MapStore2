@@ -1396,20 +1396,22 @@ describe('Test styleeditor epics, with mock axios', () => {
         mockAxios.onGet(/\/rest\/layers/).reply(() => {
             return [ 200, { layer: {
                 defaultStyle: {
-                    name: 'wrksp:style_01'
+                    name: 'layerWorkspace:style_01',
+                    workspace: 'layerWorkspace'
                 },
                 styles: {
                     style: [{
-                        name: 'wrksp:style_01'
+                        name: 'layerWorkspace:style_01',
+                        workspace: 'layerWorkspace'
                     }, {
-                        name: 'wrksp:style_02'
+                        name: 'layerWorkspace:style_02',
+                        workspace: 'layerWorkspace'
+                    }, {
+                        name: 'notLayerWorkspace:style_03',
+                        workspace: 'notLayerWorkspace'
                     }]
                 }
             }}];
-        });
-
-        mockAxios.onGet(/\/layerWorkspace/).reply(() => {
-            return [ 200, ''];
         });
 
         const state = {
@@ -1461,8 +1463,8 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(updateSettingsParamsAction.type).toBe(UPDATE_SETTINGS_PARAMS);
                 expect(updateSettingsParamsAction.newParams).toEqual({
                     availableStyles: [
-                        { name: 'wrksp:style_01' },
-                        { name: 'wrksp:style_02' }
+                        { name: 'layerWorkspace:style_01', workspace: 'layerWorkspace' },
+                        { name: 'layerWorkspace:style_02', workspace: 'layerWorkspace' }
                     ]
                 });
             } catch (e) {

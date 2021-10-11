@@ -263,12 +263,14 @@ export const toggleStyleEditorEpic = (action$, store) =>
                                 LayersAPI.getLayer(baseUrl + 'rest/', layer.name)
                             )
                                 .switchMap((layerConfig) => {
+                                    const { workspace: layerWorkspace } = getNameParts(layer.name);
                                     const stylesConfig = layerConfig?.styles?.style || [];
                                     const layerConfigAvailableStyles = uniqBy([
                                         layerConfig.defaultStyle,
                                         ...stylesConfig
-                                    ], 'name').filter(({ name } = {}) => name);
-
+                                    ], 'name')
+                                        // show only styles included in the same workspace
+                                        .filter((style) => style?.name && style?.workspace === layerWorkspace);
                                     if (layerConfigAvailableStyles.length === 0) {
                                         return Rx.Observable.of(
                                             errorStyle('availableStyles', { status: 401 }),
@@ -277,12 +279,35 @@ export const toggleStyleEditorEpic = (action$, store) =>
                                     }
 
                                     return Rx.Observable.defer(() =>
-                                        StylesAPI.getStylesInfo({
-                                            baseUrl,
-                                            styles: layerConfigAvailableStyles
-                                        })
+                                        Promise.all([
+                                            StylesAPI.getStylesInfo({
+                                                baseUrl,
+                                                styles: layerConfigAvailableStyles
+                                            }),
+                                            getLayerCapabilities(layer)
+                                                .toPromise()
+                                                .then(cap => cap)
+                                                .catch(() => null)
+                                        ])
                                     )
-                                        .switchMap(availableStyles => {
+                                        .switchMap(([availableStylesRest, capabilities]) => {
+                                            const layerCapabilities = capabilities && formatCapabitiliesOptions(capabilities);
+                                            const availableStylesCap = (layerCapabilities?.availableStyles || [])
+                                                .map((style) => ({ ...style, ...getNameParts(style.name) }))
+                                                .filter(({ name } = {}) => name);
+
+                                            // get title information from capabilities
+                                            const availableStyles = availableStylesCap.length > 0
+                                                ? availableStylesRest.map(restStyle => {
+                                                    const parts = getNameParts(restStyle.name);
+                                                    const { name, workspace, ...capStyle} = availableStylesCap.find(style => style.name === parts.name) || {};
+                                                    if (capStyle) {
+                                                        return { ...capStyle, ...restStyle };
+                                                    }
+                                                    return restStyle;
+                                                })
+                                                : availableStylesRest;
+
                                             return Rx.Observable.of(
                                                 updateAdditionalLayer(layer.id, STYLE_OWNER_NAME, 'override', {}),
                                                 updateSettingsParams({ availableStyles }),
