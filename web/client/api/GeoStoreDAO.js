@@ -452,7 +452,7 @@ const Api = {
         // accessToken is actually the sessionID
         const url = "session/refresh/" + accessToken + "/" + refreshToken;
         return axios.post(url, null, this.addBaseUrl(parseOptions(options))).then(function(response) {
-            return response.data;
+            return response.data?.sessionToken ?? response.data;
         });
     },
     /**

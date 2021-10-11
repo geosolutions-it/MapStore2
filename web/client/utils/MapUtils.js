@@ -705,6 +705,20 @@ export const createRegisterHooks = () => {
         }
     };
 };
+
+/**
+ * Detects if state has enabled Identify plugin for mapPopUps
+ * @param {object} state
+ * @returns {boolean}
+ */
+export const detectIdentifyInMapPopUp = (state)=>{
+    if (state.mapPopups?.popups) {
+        let hasIdentify = state.mapPopups.popups.filter(plugin =>plugin?.component?.toLowerCase() === 'identify');
+        return hasIdentify && hasIdentify.length > 0 ? true : false;
+    }
+    return false;
+};
+
 export default {
     createRegisterHooks,
     EXTENT_TO_ZOOM_HOOK,

@@ -178,9 +178,11 @@ export const flattenArrayOfObjects = (groupDetails) => {
  */
 
 export const displayTitle = (id, groups) => {
-    for (let group of groups) {
-        if (group?.id === id) {
-            return group.title;
+    if (groups && Array.isArray(groups)) {
+        for (let group of groups) {
+            if (group?.id === id) {
+                return group.title;
+            }
         }
     }
     return 'Default';
