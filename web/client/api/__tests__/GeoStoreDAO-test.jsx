@@ -152,6 +152,13 @@ describe('Test correctness of the GeoStore APIs', () => {
             done();
         });
     });
+    it("test refresh session", (done) => {
+        mockAxios.onPost().reply(200, { sessionToken: {access_token: "token"} });
+        API.refreshToken("access", "refresh", {}).then(response => {
+            expect(response.access_token).toBe("token");
+            done();
+        });
+    });
     it("test generateMetadata default", () => {
         const metadata = API.generateMetadata();
         const name = "";
