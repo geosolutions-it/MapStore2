@@ -223,8 +223,8 @@ export const getStylesInfo = ({baseUrl: geoserverBaseUrl, styles = []}) => {
         if (!styles || styles.length === 0) {
             resolve([]);
         } else {
-            styles.forEach(({name}, idx) =>
-                axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
+            styles.forEach(({ name, href }, idx) =>
+                axios.get(href || getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
                     .then(({data}) => {
                         responses[idx] = assign({}, styles[idx], data && data.style && {
                             ...data.style,
