@@ -263,14 +263,11 @@ export const toggleStyleEditorEpic = (action$, store) =>
                                 LayersAPI.getLayer(baseUrl + 'rest/', layer.name)
                             )
                                 .switchMap((layerConfig) => {
-                                    const { workspace: layerWorkspace } = getNameParts(layer.name);
                                     const stylesConfig = layerConfig?.styles?.style || [];
                                     const layerConfigAvailableStyles = uniqBy([
                                         layerConfig.defaultStyle,
                                         ...stylesConfig
-                                    ], 'name')
-                                        // show only styles included in the same workspace
-                                        .filter((style) => style?.name && style?.workspace === layerWorkspace);
+                                    ], 'name');
                                     if (layerConfigAvailableStyles.length === 0) {
                                         return Rx.Observable.of(
                                             errorStyle('availableStyles', { status: 401 }),

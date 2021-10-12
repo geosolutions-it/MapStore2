@@ -1407,8 +1407,8 @@ describe('Test styleeditor epics, with mock axios', () => {
                         name: 'layerWorkspace:style_02',
                         workspace: 'layerWorkspace'
                     }, {
-                        name: 'notLayerWorkspace:style_03',
-                        workspace: 'notLayerWorkspace'
+                        name: 'style_03',
+                        workspace: ''
                     }]
                 }
             }}];
@@ -1464,7 +1464,8 @@ describe('Test styleeditor epics, with mock axios', () => {
                 expect(updateSettingsParamsAction.newParams).toEqual({
                     availableStyles: [
                         { name: 'layerWorkspace:style_01', workspace: 'layerWorkspace' },
-                        { name: 'layerWorkspace:style_02', workspace: 'layerWorkspace' }
+                        { name: 'layerWorkspace:style_02', workspace: 'layerWorkspace' },
+                        { name: 'style_03', workspace: '' }
                     ]
                 });
             } catch (e) {
