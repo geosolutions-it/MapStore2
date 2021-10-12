@@ -15,7 +15,8 @@ import Select from 'react-select';
 import Spinner from 'react-spinkit';
 
 import { getMessageById, getSupportedLocales } from '../../../../utils/LocaleUtils';
-import { isValidNewGroupOption, flattenGroups, getLabelName } from '../../../../utils/TOCUtils';
+import { isValidNewGroupOption, flattenGroups,
+    getLabelName as _getLabelName, getTitle as _getTitle } from '../../../../utils/TOCUtils';
 import Message from '../../../I18N/Message';
 import LayerNameEditField from './LayerNameEditField';
 
@@ -32,7 +33,8 @@ class General extends React.Component {
         pluginCfg: PropTypes.object,
         showTooltipOptions: PropTypes.bool,
         allowNew: PropTypes.bool,
-        enableLayerNameEditFeedback: PropTypes.bool
+        enableLayerNameEditFeedback: PropTypes.bool,
+        currentLocale: PropTypes.string
     };
 
     static contextTypes = {
@@ -45,8 +47,12 @@ class General extends React.Component {
         nodeType: 'layers',
         showTooltipOptions: true,
         pluginCfg: {},
-        allowNew: false
+        allowNew: false,
+        currentLocale: 'en-US'
     };
+
+    getTitle = (label) => _getTitle(label, this.props.currentLocale);
+    getLabelName = (label, groups) => _getLabelName(this.getTitle(label), groups);
 
     render() {
         const locales = getSupportedLocales();
@@ -65,6 +71,7 @@ class General extends React.Component {
             { value: "bottom", label: getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
         ];
         const groups = this.props.groups && flattenGroups(this.props.groups);
+        const eleGroupLabel = this.findGroupLabel(this.props.element && this.props.element.group || "Default");
 
         const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
 
@@ -127,9 +134,9 @@ class General extends React.Component {
                                         { value: 'Default', label: 'Default' },
                                         ...(groups || (this.props.element && this.props.element.group) || []).map(item => {
                                             if (isObject(item)) {
-                                                return {...item, label: getLabelName(item.label, groups)};
+                                                return {...item, label: this.getLabelName(item.label, groups)};
                                             }
-                                            return { label: getLabelName(item, groups), value: item };
+                                            return { label: this.getLabelName(item, groups), value: item };
                                         })
                                     ], 'value')
                                 }
@@ -143,8 +150,8 @@ class General extends React.Component {
                                         className: 'Select-create-option-placeholder'
                                     };
                                 }}
-                                value={{ label: getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
-                                placeholder={getLabelName(this.props.element && this.props.element.group || "Default", groups)}
+                                value={{ label: this.getLabelName(eleGroupLabel, groups), value: eleGroupLabel}}
+                                placeholder={this.getLabelName(eleGroupLabel, groups)}
                                 onChange={(item) => {
                                     this.updateEntry("group", { target: { value: item.value || "Default" } });
                                 }}
@@ -191,6 +198,13 @@ class General extends React.Component {
 
         this.props.onChange('title', title);
     };
+
+    findGroupLabel = () => {
+        const wholeGroups = this.props.groups && flattenGroups(this.props.groups, 0, true);
+        const eleGroupName = this.props.element && this.props.element.group || "Default";
+        const group = find(wholeGroups, (gp)=> gp.id === eleGroupName) || {};
+        return this.getTitle(group.title);
+    }
 }
 
 export default General;

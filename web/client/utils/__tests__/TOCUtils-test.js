@@ -13,7 +13,8 @@ import {
     getTooltipFragment,
     flattenGroups,
     getTitleAndTooltip,
-    getLabelName
+    getLabelName,
+    getTitle
 } from '../TOCUtils';
 
 const groups = [{
@@ -155,10 +156,29 @@ describe('TOCUtils', () => {
         expect(allGroups[0].label).toBe("first");
         expect(allGroups[1].id).toBe(undefined);
         expect(allGroups[1].value).toBe("first.second");
-        expect(allGroups[1].label).toBe("first/second");
+        expect(allGroups[1].label).toBe("second");
         expect(allGroups[2].id).toBe(undefined);
         expect(allGroups[2].value).toBe("first.second.third");
-        expect(allGroups[2].label).toBe("first/second/third");
+        expect(allGroups[2].label).toBe("third");
+    });
+    it('test flattenGroups, wholeGroup false with translation', () => {
+        const title = {
+            "default": "first",
+            "en-US": 'first-en'
+        };
+        const _groups = [{...groups[0], title}];
+        const allGroups = flattenGroups(_groups);
+        expect(allGroups.length).toBe(3);
+        expect(allGroups[0].id).toBe(undefined);
+        expect(allGroups[0].value).toBe("first");
+        expect(allGroups[0].label).toBeTruthy();
+        expect(allGroups[0].label.default).toBe(title.default);
+        expect(allGroups[1].id).toBe(undefined);
+        expect(allGroups[1].value).toBe("first.second");
+        expect(allGroups[1].label).toBe("second");
+        expect(allGroups[2].id).toBe(undefined);
+        expect(allGroups[2].value).toBe("first.second.third");
+        expect(allGroups[2].label).toBe("third");
     });
     it('test getTitleAndTooltip both', () => {
         const node = {
@@ -195,31 +215,32 @@ describe('TOCUtils', () => {
     it('test default value getLabelName from object', () => {
         const groupLabel = "Default";
         const nodes = [{
-            name: 'Default',
-            title: {
-                'default': 'Layer',
-                'no-exist': 'Label of an unknown language'
-            },
-            id: "layer00",
-            description: "desc",
-            tooltipOptions: "none"
+            value: 'Layer',
+            label: 'Default'
+        }, {
+            value: 'Layer_1',
+            label: 'Default_1'
         }];
         const label = getLabelName(groupLabel, nodes);
-        expect(label).toBe("Layer");
+        expect(label).toBe("Default");
     });
-    it('test localized value getLabelName from object', () => {
-        const groupLabel = "Default";
-        const nodes = [{
-            name: 'Default',
-            title: {
-                'default': 'Group Layer',
-                'en-US': 'Group Layer'
-            },
-            id: "layer00",
-            description: "desc",
-            tooltipOptions: "none"
-        }];
-        const label = getLabelName(groupLabel, nodes);
-        expect(label).toBe("Group Layer");
+    it('test parsed title getTitle', () => {
+        const title = "Default.Livello";
+        expect(getTitle(title)).toBe("Default/Livello");
+    });
+    it('test localized title getTitle from object', () => {
+        const title = {
+            'default': 'Layer',
+            'it-IT': 'Livello'
+        };
+        expect(getTitle(title)).toBe("Layer");
+    });
+    it('test localized title getTitle with locale', () => {
+        const locale = 'it-IT';
+        const title = {
+            'default': 'Layer',
+            [locale]: 'Livello'
+        };
+        expect(getTitle(title, locale)).toBe("Livello");
     });
 });
