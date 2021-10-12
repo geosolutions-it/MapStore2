@@ -78,7 +78,7 @@ const StyleList = ({
         }>
         <SideGrid
             size="sm"
-            onItemClick={({ name }) => onSelect({ style: defaultStyle === name ? '' : name }, true)}
+            onItemClick={({ name }) => onSelect({ style: name }, true)}
             items={availableStyles
                 .filter(({name = '', title = '', _abstract = '', metadata = {} }) => !filterText
                     || filterText && (
