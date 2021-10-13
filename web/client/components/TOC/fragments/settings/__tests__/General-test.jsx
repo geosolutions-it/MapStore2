@@ -140,4 +140,60 @@ describe('test  Layer Properties General module component', () => {
         expect(labels.length).toBe(5);
         expect(labels[4].innerText).toBe("layerProperties.group");
     });
+    it('TEST layer group dropdown', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            group: 'first'
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+        const groups = [{
+            "id": "first",
+            "title": "First",
+            "name": "first",
+            "nodes": [
+                {
+                    "id": "first.second",
+                    "title": "second",
+                    "name": "second",
+                    "nodes": [
+                        {
+                            "id": "first.second.third",
+                            "title": "third",
+                            "name": "third",
+                            "nodes": [
+                                {
+                                    "id": "topp:states__6",
+                                    "name": "topp:states",
+                                    "title": "USA Population"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }];
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} groups={groups} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
+        expect(labels.length).toBe(5);
+        expect(labels[4].innerText).toBe("layerProperties.group");
+        const cmp = document.getElementById('container');
+        let selectValue = cmp.querySelector('.Select-value-label');
+        let input = cmp.querySelector('.Select-input > input');
+        expect(selectValue.innerText).toBe("First");
+
+        ReactTestUtils.act(() => {
+            ReactTestUtils.Simulate.focus(input);
+            ReactTestUtils.Simulate.keyDown(input, { key: 'ArrowDown', keyCode: 40 });
+        });
+        const selectMenuOptionNodes = cmp.querySelectorAll('.Select-option');
+        expect(selectMenuOptionNodes.length).toBe(4);
+    });
 });
