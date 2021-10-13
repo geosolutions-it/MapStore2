@@ -25,7 +25,10 @@ module.exports = {
                 buffer: props.buffer || 2,
                 units: props.map && props.map.units,
                 rowViewer: layer.rowViewer,
-                viewer: layer.viewer
+                viewer: layer.viewer,
+                layerId: layer.id,
+                excludeInfoProperties: layer.excludeInfoProperties,
+                includeInfoProperties: layer.includeInfoProperties
             },
             url: ""
         };
