@@ -1269,5 +1269,37 @@ describe('LayersUtils', () => {
             expect(groupTitle).toExist();
             expect(groupTitle).toEqual('Default');
         });
+        it('Get the length of a an object with nodes', ()=>{
+            const groups = {
+                id: 'default',
+                title: 'Default',
+                nodes: [
+                    {id: 'layer001', title: 'titleLayer001'},
+                    {id: 'layer002', title: 'titleLayer002'}
+                ]
+            };
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            expect(flattenedGroups.length).toBe(1);
+        });
+        it('Get the length of the nested array', ()=>{
+            const groups = [{
+                id: 'default',
+                title: 'Default',
+                nodes: [
+                    {id: 'layer001', title: 'titleLayer001'},
+                    {id: 'layer002', title: 'titleLayer002'}
+                ]
+            }, {
+                id: 'default-1',
+                title: 'Default-1',
+                nodes: [
+                    {id: 'layer003', title: 'titleLayer003'},
+                    {id: 'layer004', title: 'titleLayer004'},
+                    {id: 'layer005', title: 'titleLayer005'}
+                ]
+            }];
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            expect(flattenedGroups.length).toBe(7);
+        });
     });
 });
