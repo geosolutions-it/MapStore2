@@ -58,7 +58,7 @@ const {
     setAnnotationStyleEpic, restoreStyleEpic, highlightAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
     editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, hideAnnotationGroupEpic, highlightGeometryEpic
-} = annotationsEpics({});
+} = annotationsEpics;
 
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, setEditingFeatureEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic,

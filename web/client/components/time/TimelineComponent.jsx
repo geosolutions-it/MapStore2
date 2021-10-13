@@ -55,6 +55,7 @@ import {
     omit,
     assign
 } from 'lodash';
+import {visibleTimelineLayers} from "../../utils/LayersUtils";
 
 const noop = () => { };
 
@@ -212,7 +213,8 @@ class Timeline extends React.Component {
             selectionOptions = {},
             customTimes,
             animate = true,
-            currentTime
+            currentTime,
+            timelineLayers
         } = this.props;
 
         let timelineOptions = options;
@@ -235,9 +237,11 @@ class Timeline extends React.Component {
 
         this.$el.setOptions(timelineOptions);
 
-        if (groups.length > 0) {
+        const updatedGroups = visibleTimelineLayers(groups, timelineLayers);
+
+        if (updatedGroups.length > 0) {
             const groupsDataset = new vis.DataSet();
-            groupsDataset.add(groups);
+            groupsDataset.add(updatedGroups);
             this.$el.setGroups(groupsDataset);
         }
 

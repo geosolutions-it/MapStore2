@@ -294,7 +294,7 @@ export const startFeatureExportDownload = (action$, store) =>
                 dataFilter: action.downloadOptions.downloadFilteredDataSet ? {
                     type: 'TEXT',
                     data: {
-                        mimeType: 'text/plain; subtype=filter/1.0',
+                        mimeType: 'text/xml; subtype=filter/1.1',
                         data: mergeFiltersToOGC({
                             ogcVersion: '1.0.0',
                             addXmlnsToRoot: true,
