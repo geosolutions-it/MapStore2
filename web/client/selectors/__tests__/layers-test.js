@@ -596,7 +596,7 @@ describe('Test layers selectors', () => {
                 nodes: [
                     {
                         id: 'first.second',
-                        title: {'default': 'second'},
+                        title: 'second',
                         name: 'second',
                         nodes: [
                             {
@@ -625,7 +625,7 @@ describe('Test layers selectors', () => {
         };
         let element = {
             "id": "first.second",
-            "title": {"default": "second" },
+            "title": "second",
             "name": "second",
             "nodes": [
                 {

@@ -8,8 +8,8 @@
 
 import { isObject, get } from 'lodash';
 
-import {getGroupByName} from './LayersUtils';
 import {getLocale} from './LocaleUtils';
+import head from "lodash/head";
 
 export const isValidNewGroupOption = function({ label }) {
     const filterWrongGroupRegex = RegExp('^\/|\/$|\/{2,}');
@@ -77,14 +77,28 @@ export const getTitleAndTooltip = ({node, currentLocale, tooltipOptions = {separ
 };
 
 /**
- * Replace characters
- * @param {string} title string with characters to be replaced
- * @returns {string} string with characters replaced
+ * Returns a matched group object for the given group name.
+ * @param {string} groupName
+ * @param {array} groups
  */
-export const replaceCharacters = (title) => {
-    return title?.replace(/\./g, '/').replace(/\${dot}/g, '.');
+export const getGroupByLabel = (groupName, groups = []) => {
+    const result = head(groups.filter(g => g.label === groupName));
+    return result || groups.reduce((prev, g) => prev || !!g.nodes && getGroupByLabel(groupName, g.nodes), undefined);
 };
 
+/**
+ * Returns a parsed title
+ * @param {string/object} title title of the group
+ * @param {string} locale
+ */
+export const getTitle = (title, locale = '') => {
+    let _title = title || '';
+    if (isObject(title)) {
+        const _locale = locale || getLocale();
+        _title = title[_locale] || title.default;
+    }
+    return _title.replace(/\./g, '/').replace(/\${dot}/g, '.');
+};
 /**
  * flatten groups and subgroups in a single array
  * @param {object[]} groups node to get the groups and subgroups
@@ -92,36 +106,21 @@ export const replaceCharacters = (title) => {
  * @params {boolean} wholeGroup, if true it returns the whole node
  * @return {object[]} array of nodes (groups and subgroups)
 */
-export const flattenGroups = (groups, idx = 0, wholeGroup = false, locale = 'default') => {
+export const flattenGroups = (groups, idx = 0, wholeGroup = false) => {
     return groups.filter((group) => group.nodes).reduce((acc, g) => {
-        acc.push(wholeGroup ? g : isObject(g?.title) ? {label: g?.title[locale] ? replaceCharacters(g?.title[locale]) : replaceCharacters(g?.title?.default), value: g.id} : {label: replaceCharacters(g.title), value: g.id});
+        acc.push(wholeGroup ? g : {label: g.title, value: g.id});
         if (g.nodes.length > 0) {
             return acc.concat(flattenGroups(g.nodes, idx + 1, wholeGroup));
         }
         return acc;
     }, []);
 };
-
 export const getLabelName = (groupLabel = "", groups = []) => {
     let label = groupLabel.replace(/[^\.\/]+/g, match => {
-        const title = get(getGroupByName(match, groups), 'title');
-        if (isObject(title)) {
-            const locale = getLocale();
-            return title[locale] || title.default;
-        }
+        const title = get(getGroupByLabel(match, groups), 'label');
         return groups && title || match;
     });
     label = label.replace(/\./g, '/');
     label = label.replace(/\${dot}/g, '.');
     return label;
-};
-
-/**
- * Returns value of selected settings card
- * @param {(string|object)} event
- * @param {string=} key
- * @returns {object}
- */
-export const getActiveFeatureInfo = (event, key = 'value')=>{
-    return isObject(event) && event && event.target && event.target[key]  ? event.target[key] : event;
 };

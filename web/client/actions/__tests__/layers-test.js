@@ -312,7 +312,7 @@ describe('Test correctness of the layers actions', () => {
     });
 
     it('update settings params', () => {
-        const newParams = { group: "xyz", label: "Modena" };
+        const newParams = { style: 'new_style' };
         const update = true;
         const action = updateSettingsParams(newParams, update);
         expect(action.type).toBe(UPDATE_SETTINGS_PARAMS);
