@@ -135,7 +135,7 @@ describe('Timeline Plugin', () => {
             expect(document.querySelector('.timeline-plugin.hidden')).toBeTruthy();
         });
         it('Timeline plugin is not visible when there are no layers with dimension data', ()=>{
-            const { Plugin } = getPluginForTest(TimelinePlugin, [SAMPLE_STATE]);
+            const { Plugin } = getPluginForTest(TimelinePlugin, {});
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.timeline-plugin')).toBeFalsy();
         });
