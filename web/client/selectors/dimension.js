@@ -42,12 +42,7 @@ export const timeDataSelector = state => layersSelector(state).reduce((timeDataM
  * @param {object} state application state
  */
 export const layersWithTimeDataSelector = state => layersSelector(state).filter(l => {
-    const showHiddenLayers = get(state, 'timeline.settings.showHiddenLayers');
-    const layerStaticDimension = getLayerStaticDimension(l, "time");
-    if (!showHiddenLayers) {
-        return l.visibility && layerStaticDimension;
-    }
-    return layerStaticDimension;
+    return getLayerStaticDimension(l, "time");
 });
 export const currentTimeSelector = state => {
     const currentTime = get(state, 'dimension.currentTime');

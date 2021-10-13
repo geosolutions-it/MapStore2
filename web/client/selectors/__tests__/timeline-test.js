@@ -142,7 +142,7 @@ describe('timeline selector', () => {
             {id: "test2", visibility: false, dimensions }]}
         };
         it('timelineLayersSelector with default settings', ()=>{
-            expect(timelineLayersSelector(state).length).toBe(1);
+            expect(timelineLayersSelector(state).length).toBe(2);
         });
         it('timelineLayersSelector with showHiddenLayers', ()=>{
             const _state = {...state, timeline: {...state, settings: SHOW_HIDDEN_LAYER}};

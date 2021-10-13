@@ -691,6 +691,33 @@ export const isInsideResolutionsLimits = (layer, resolution) => {
         : true;
 };
 
+/**
+ * Filter array of layers to return layers with visibility key set to true
+ * @param {Array} layers
+ * @param {Array} timelineLayers
+ * @returns {Array}
+ */
+export const visibleTimelineLayers = (layers, timelineLayers) => {
+    return layers.filter(layer => {
+        let timelineLayer = timelineLayers?.find(item => item.id === layer.id);
+        return timelineLayer?.visibility ? layer : null;
+    });
+};
+
+/**
+ * Loop through array of timeline layers to determine if any of the layers is visible
+ * @param {Array} layers
+ * @returns {boolean}
+ */
+export const isTimelineVisible = (layers)=>{
+    for (let layer of layers) {
+        if (layer?.visibility) {
+            return true;
+        }
+    }
+    return false;
+};
+
 LayersUtils = {
     getGroupByName,
     getLayerId,
@@ -701,5 +728,6 @@ LayersUtils = {
     reorder: reorderFunc,
     getRegGeoserverRule,
     findGeoServerName,
-    isInsideResolutionsLimits
+    isInsideResolutionsLimits,
+    visibleTimelineLayers
 };

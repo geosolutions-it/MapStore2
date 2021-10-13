@@ -45,6 +45,7 @@ import {
 import Timeline from './timeline/Timeline';
 import TimelineToggle from './timeline/TimelineToggle';
 import ButtonRB from '../components/misc/Button';
+import {isTimelineVisible} from "../utils/LayersUtils";
 const Button = tooltip(ButtonRB);
 
 const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
@@ -179,7 +180,8 @@ const TimelinePlugin = compose(
         moveRangeTo,
         compactToolbar,
         showHiddenLayers,
-        onInit = () => {}
+        onInit = () => {},
+        layers
     }) => {
         useEffect(()=>{
             onInit(showHiddenLayers);
@@ -228,7 +230,7 @@ const TimelinePlugin = compose(
                 ...style,
                 right: collapsed ? 'auto' : (style.right || 0)
             }}
-            className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''}`}>
+            className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''} ${!isTimelineVisible(layers) ? 'hidden' : ''}`}>
 
             {offsetEnabled // if range is present and configured, show the floating start point.
                 && <InlineDateTimeSelector
@@ -323,7 +325,9 @@ const TimelinePlugin = compose(
                 <Timeline
                     offsetEnabled={offsetEnabled}
                     playbackEnabled
-                    hideLayersName={hideLayersName} />}
+                    hideLayersName={hideLayersName}
+                    timelineLayers={layers}
+                />}
         </div>);
     }
 );
