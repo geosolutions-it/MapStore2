@@ -129,13 +129,13 @@ describe('Timeline Plugin', () => {
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.timeline-plugin')).toBeTruthy();
         });
-        it('Timeline plugin is not visible when all layers have visibility set to false', ()=>{
+        it('Timeline plugin is not visible when all layers with dimension data have visibility set to false', ()=>{
             const { Plugin } = getPluginForTest(TimelinePlugin, FALSY_STATE);
             ReactDOM.render(<Plugin />, document.getElementById("container"));
-            expect(document.querySelector('.hidden')).toBeTruthy();
+            expect(document.querySelector('.timeline-plugin.hidden')).toBeTruthy();
         });
-        it('Timeline plugin is not visible when there are no layers', ()=>{
-            const { Plugin } = getPluginForTest(TimelinePlugin, []);
+        it('Timeline plugin is not visible when there are no layers with dimension data', ()=>{
+            const { Plugin } = getPluginForTest(TimelinePlugin, [SAMPLE_STATE]);
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.timeline-plugin')).toBeFalsy();
         });
