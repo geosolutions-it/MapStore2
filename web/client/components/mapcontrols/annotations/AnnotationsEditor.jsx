@@ -139,7 +139,6 @@ import { getApi } from '../../../api/userPersistedStorage';
  * @prop {function} onInitPlugin triggered when annotation editor is mounted
  * @prop {function} onGeometryHighlight triggered onMouseEnter and onMouseLeave of the geometry card
  * @prop {function} onUnSelectFeature triggered on unselecting a geometry card
- * @prop {boolean} hideToolbar hide toolbar
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -244,8 +243,7 @@ class AnnotationsEditor extends React.Component {
         onToggleShowAgain: PropTypes.func,
         onInitPlugin: PropTypes.func,
         onGeometryHighlight: PropTypes.func,
-        onUnSelectFeature: PropTypes.func,
-        hideToolbar: PropTypes.bool
+        onUnSelectFeature: PropTypes.func
     };
 
     static defaultProps = {
@@ -648,7 +646,7 @@ class AnnotationsEditor extends React.Component {
         return (
             <div style={{display: "flex"}} className={"mapstore-annotations-info-viewer" + (this.props.mouseHoverEvents ? " hover-background" : "")} {...mouseHoverEvents}>
                 <div style={{flex: 1}}>
-                    {!this.props.hideToolbar && this.renderButtons(editing)}
+                    {this.renderButtons(editing)}
                     {this.renderError(editing)}
                     {this.renderModals()}
                     {this.renderBody(editing)}
