@@ -26,9 +26,7 @@ module.exports = {
                 units: props.map && props.map.units,
                 rowViewer: layer.rowViewer,
                 viewer: layer.viewer,
-                layerId: layer.id,
-                excludeInfoProperties: layer.excludeInfoProperties,
-                includeInfoProperties: layer.includeInfoProperties
+                layerId: layer.id
             },
             url: ""
         };
