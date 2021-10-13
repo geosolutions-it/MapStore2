@@ -37,6 +37,10 @@
         .color-var(@theme-vars[main-color], true);
         .background-color-var(@theme-vars[main-bg], true);
     }
+
+    .ms-properties-viewer {
+        .border-top-color-var(@theme-vars[main-border-color]);
+    }
 }
 
 // **************
@@ -271,36 +275,37 @@
 .ms-properties-viewer {
     width: 100%;
     min-width: 256px;
+    padding: 8px;
     + .ms-properties-viewer {
         margin-top: 8px;
+        border-top-width: 1px;
+        border-top-style: solid;
     }
     &:last-child {
         padding-bottom: 8px;
     }
-    thead {
-        font-size: 1.1em;
-        margin-bottom: 4px;
-        th {
-            padding: 0 4px 4px;
-            font-weight: normal;
-            word-break: break-word;
+    .ms-properties-viewer-title {
+        padding: 8px 4px;
+        font-size: @font-size-small;
+        font-style: italic;
+    }
+    .ms-properties-viewer-body {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        li {
+            margin-top: 4px;
+        }
+        li > div > p {
+            margin: 0;
         }
     }
-    tbody {
-        font-size: 1em;
+    .ms-properties-viewer-key {
+        font-weight: bold;
     }
-    td {
-        padding: 2px 4px 0;
-        &:first-child {
-            font-weight: bold;
-        }
-        &:last-child {
-            text-align: right;
-        }
-    }
-    tr + tr {
-        border-top-width: 1px;
-        border-top-style: solid;
+    .ms-properties-viewer-key,
+    .ms-properties-viewer-value {
+        padding: 0 4px;
     }
 }
 

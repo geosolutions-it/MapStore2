@@ -212,7 +212,7 @@ const createNewFeature = (action) => {
 };
 
 
-export default (viewer) => ({
+export default {
     addAnnotationsLayerEpic: (action$, store) => action$.ofType(MAP_CONFIG_LOADED)
         .switchMap(() => {
             const annotationsLayer = annotationsLayerSelector(store.getState());
@@ -241,7 +241,6 @@ export default (viewer) => ({
                 });
 
                 return Rx.Observable.of(updateNode(ANNOTATIONS, 'layer', {
-                    rowViewer: viewer,
                     features,
                     style: {},
                     visibility
@@ -370,7 +369,6 @@ export default (viewer) => ({
                     visibility: true,
                     id: ANNOTATIONS,
                     name: "Annotations",
-                    rowViewer: viewer,
                     hideLoading: true,
                     style: action.style,
                     features: [createNewFeature(action)],
@@ -587,7 +585,6 @@ export default (viewer) => ({
                 visibility: true,
                 id: ANNOTATIONS,
                 name: "Annotations",
-                rowViewer: viewer,
                 hideLoading: true,
                 features: newFeatures,
                 handleClickOnLayer: true
@@ -850,4 +847,4 @@ export default (viewer) => ({
                 .concat(Rx.Observable.of(loading(false)));
         })
 
-});
+};
