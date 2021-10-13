@@ -25,6 +25,7 @@ The Story content is organized in Sections, that can be added with the <img src=
 * [Banner Section](banner-section.md)
 * [Paragraph Section](paragraph-section.md)
 * [Immersive Section](immersive-section.md)
+* [GeoCarousel Section](geocarousel-section.md)
 * [Media Section](media-section.md)
 * [Web Page Section](web-section.md)
 

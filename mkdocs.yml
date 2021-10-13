@@ -87,6 +87,7 @@ pages:
       - Banner Section: 'user-guide/banner-section.md'
       - Paragraph Section: 'user-guide/paragraph-section.md'
       - Immersive Section: 'user-guide/immersive-section.md'
+      - GeoCarousel Section: 'user-guide/geocarousel-section.md'
       - Media Section: 'user-guide/media-section.md'
       - Web Page section: 'user-guide/web-section.md'
       - Text Editor Toolbar: 'user-guide/text-editor-toolbar.md'
