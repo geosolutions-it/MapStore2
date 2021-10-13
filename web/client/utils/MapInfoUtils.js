@@ -270,6 +270,15 @@ export const filterRequestParams = (layer, includeOptions, excludeParams) => {
     return options;
 };
 
+let rowViewers = {};
+
+export const registerRowViewer = (name, options) => {
+    rowViewers[name] = options;
+};
+
+export const getRowViewer = (name) => {
+    return rowViewers[name];
+};
 
 MapInfoUtils = {
     AVAILABLE_FORMAT,
@@ -281,6 +290,8 @@ MapInfoUtils = {
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfoViewer,
     getLayerFeatureInfo,
-    VIEWERS: {}
+    VIEWERS: {},
+    registerRowViewer,
+    getRowViewer
 };
 
