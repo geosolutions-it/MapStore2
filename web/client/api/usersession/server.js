@@ -9,8 +9,7 @@
 import {Observable} from "rxjs";
 import isString from "lodash/isString";
 import { error } from '../../actions/notifications';
-import { createResource, createCategory, updateResource, getResourceDataByName, getResourceIdByName, deleteResource }
-    from '../persistence';
+import { createResource, createCategory, updateResource, getResourceDataByName, getResourceIdByName, deleteResource } from '../persistence';
 
 const buildResource = (name, user, session) => ({
     category: 'USERSESSION',
