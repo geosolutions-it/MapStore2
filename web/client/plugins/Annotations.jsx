@@ -83,6 +83,9 @@ import { setAnnotationMeasurement } from '../actions/measurement';
 import { zoomToExtent } from '../actions/map';
 import { annotationsInfoSelector, annotationsListSelector } from '../selectors/annotations';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import { ANNOTATIONS } from '../utils/AnnotationsUtils';
+import { registerRowViewer } from '../utils/MapInfoUtils';
+
 const commonEditorActions = {
     onUpdateSymbols: updateSymbols,
     onSetErrorSymbol: setErrorSymbol,
@@ -219,6 +222,15 @@ class AnnotationsPanel extends React.Component {
         dockStyle: {}
     };
 
+    componentDidMount() {
+        // register the viewer using the constant layer id of annotation
+        registerRowViewer(ANNOTATIONS, AnnotationsInfoViewer);
+    }
+
+    componentWillUnmount() {
+        registerRowViewer(ANNOTATIONS, undefined);
+    }
+
     render() {
         return this.props.active ? (
             <ContainerDimensions>
@@ -319,5 +331,5 @@ export default createPlugin('Annotations', {
     reducers: {
         annotations: annotationsReducer
     },
-    epics: annotationsEpics(AnnotationsInfoViewer)
+    epics: annotationsEpics
 });
