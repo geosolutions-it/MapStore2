@@ -10,8 +10,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
-
-import dependenciesToWidget from '../dependenciesToWidget';
+import dependenciesToWidget, {buildDependencies} from '../dependenciesToWidget';
 
 describe('dependenciesToWidget enhancer', () => {
     beforeEach((done) => {
@@ -79,5 +78,188 @@ describe('dependenciesToWidget enhancer', () => {
             dependencies={dependencies}
         />, document.getElementById("container"));
     });
-
+    it('Return dependencies if there is no map', () => {
+        const deps = {
+            "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].mapSync": false,
+            "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].map.viewport": {
+                "bounds": {
+                    "minx": 993171.584961808,
+                    "miny": 5118063.5547720585,
+                    "maxx": 1506828.4150381924,
+                    "maxy": 5621936.44522794
+                },
+                "crs": "EPSG:3857",
+                "rotation": 0
+            },
+            "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].map.center": {
+                "x": 11.22894105149402,
+                "y": 43.380053862794,
+                "crs": "EPSG:4326"
+            },
+            "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].map.zoom": 5,
+            "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].map.layers": [
+                {
+                    "type": "osm",
+                    "title": "Open Street Map",
+                    "name": "mapnik",
+                    "source": "osm",
+                    "group": "background",
+                    "visibility": true,
+                    "id": "mapnik__0"
+                },
+                {
+                    "type": "tileprovider",
+                    "title": "NASAGIBS Night 2012",
+                    "provider": "NASAGIBS.ViirsEarthAtNight2012",
+                    "name": "Night2012",
+                    "source": "nasagibs",
+                    "group": "background",
+                    "visibility": false,
+                    "id": "Night2012__1"
+                },
+                {
+                    "type": "tileprovider",
+                    "title": "OpenTopoMap",
+                    "provider": "OpenTopoMap",
+                    "name": "OpenTopoMap",
+                    "source": "OpenTopoMap",
+                    "group": "background",
+                    "visibility": false,
+                    "id": "OpenTopoMap__2"
+                },
+                {
+                    "format": "image/jpeg",
+                    "group": "background",
+                    "name": "s2cloudless:s2cloudless",
+                    "opacity": 1,
+                    "title": "Sentinel 2 Cloudless",
+                    "type": "wms",
+                    "url": [
+                        "https://1maps.geo-solutions.it/geoserver/wms",
+                        "https://2maps.geo-solutions.it/geoserver/wms",
+                        "https://3maps.geo-solutions.it/geoserver/wms",
+                        "https://4maps.geo-solutions.it/geoserver/wms",
+                        "https://5maps.geo-solutions.it/geoserver/wms",
+                        "https://6maps.geo-solutions.it/geoserver/wms"
+                    ],
+                    "source": "s2cloudless",
+                    "visibility": false,
+                    "singleTile": false,
+                    "id": "s2cloudless:s2cloudless__3"
+                },
+                {
+                    "source": "ol",
+                    "group": "background",
+                    "title": "Empty Background",
+                    "fixed": true,
+                    "type": "empty",
+                    "visibility": false,
+                    "args": [
+                        "Empty Background",
+                        {
+                            "visibility": false
+                        }
+                    ],
+                    "id": "undefined__4"
+                }
+            ],
+            "widgets[abce1200-2826-11ec-b226-3528a82f37ea].dependenciesMap": {
+                "center": "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].map.center",
+                "zoom": "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].map.zoom",
+                "filter": "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].filter",
+                "quickFilters": "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].quickFilters",
+                "layer": "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].layer",
+                "options": "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].options",
+                "mapSync": "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].mapSync",
+                "dependenciesMap": "widgets[a51221e0-2826-11ec-b226-3528a82f37ea].dependenciesMap"
+            },
+            "widgets[abce1200-2826-11ec-b226-3528a82f37ea].mapSync": true,
+            "widgets[abce1200-2826-11ec-b226-3528a82f37ea].map.viewport": {
+                "bounds": {
+                    "minx": 993171.584961808,
+                    "miny": 5118063.5547720585,
+                    "maxx": 1506828.4150381924,
+                    "maxy": 5621936.44522794
+                },
+                "crs": "EPSG:3857",
+                "rotation": 0
+            },
+            "widgets[abce1200-2826-11ec-b226-3528a82f37ea].map.center": {
+                "x": 11.22894105149402,
+                "y": 43.380053862794,
+                "crs": "EPSG:4326"
+            },
+            "widgets[abce1200-2826-11ec-b226-3528a82f37ea].map.zoom": 5,
+            "widgets[abce1200-2826-11ec-b226-3528a82f37ea].map.layers": [
+                {
+                    "type": "osm",
+                    "title": "Open Street Map",
+                    "name": "mapnik",
+                    "source": "osm",
+                    "group": "background",
+                    "visibility": true,
+                    "id": "mapnik__0"
+                },
+                {
+                    "type": "tileprovider",
+                    "title": "NASAGIBS Night 2012",
+                    "provider": "NASAGIBS.ViirsEarthAtNight2012",
+                    "name": "Night2012",
+                    "source": "nasagibs",
+                    "group": "background",
+                    "visibility": false,
+                    "id": "Night2012__1"
+                },
+                {
+                    "type": "tileprovider",
+                    "title": "OpenTopoMap",
+                    "provider": "OpenTopoMap",
+                    "name": "OpenTopoMap",
+                    "source": "OpenTopoMap",
+                    "group": "background",
+                    "visibility": false,
+                    "id": "OpenTopoMap__2"
+                },
+                {
+                    "format": "image/jpeg",
+                    "group": "background",
+                    "name": "s2cloudless:s2cloudless",
+                    "opacity": 1,
+                    "title": "Sentinel 2 Cloudless",
+                    "type": "wms",
+                    "url": [
+                        "https://1maps.geo-solutions.it/geoserver/wms",
+                        "https://2maps.geo-solutions.it/geoserver/wms",
+                        "https://3maps.geo-solutions.it/geoserver/wms",
+                        "https://4maps.geo-solutions.it/geoserver/wms",
+                        "https://5maps.geo-solutions.it/geoserver/wms",
+                        "https://6maps.geo-solutions.it/geoserver/wms"
+                    ],
+                    "source": "s2cloudless",
+                    "visibility": false,
+                    "singleTile": false,
+                    "id": "s2cloudless:s2cloudless__3"
+                },
+                {
+                    "source": "ol",
+                    "group": "background",
+                    "title": "Empty Background",
+                    "fixed": true,
+                    "type": "empty",
+                    "visibility": false,
+                    "args": [
+                        "Empty Background",
+                        {
+                            "visibility": false
+                        }
+                    ],
+                    "id": "undefined__4"
+                }
+            ],
+            "layers": []
+        };
+        const originalWidgetId = 'abce1200-2826-11ec-b226-3528a82f37ea';
+        const response = buildDependencies(null, deps, originalWidgetId);
+        expect(response).toBe(deps);
+    });
 });
