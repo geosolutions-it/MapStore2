@@ -1254,15 +1254,27 @@ describe('LayersUtils', () => {
             expect(groupTitle).toExist();
             expect(groupTitle).toEqual('titleLayer001');
         });
-        it('Return an empty array if there is no array of objects', ()=>{
-            const groups = { id: 'default', title: 'Default', nodes: [{id: 'layer001', title: 'titleLayer001'}, {id: 'layer002', title: 'titleLayer002'}]};
-            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
-            expect(flattenedGroups.length).toBe(0);
+        it('Timeline should not be visible when visibility of all layers is false', ()=>{
+            const layers = [{visibility: false}, {visibility: false}];
+            const isTimelineVisible = LayersUtils.isTimelineVisible(layers);
+            expect(isTimelineVisible).toBe(false);
         });
-        it('Return title as default if group contains no totle', ()=>{
-            const groups = [];
-            const flattenedGroups = LayersUtils.displayTitle(groups);
-            expect(flattenedGroups).toBe('Default');
+        it('Timeline should be visible when visibility of at least one layer is true', ()=>{
+            const layers = [{visibility: false}, {visibility: true}];
+            const isTimelineVisible = LayersUtils.isTimelineVisible(layers);
+            expect(isTimelineVisible).toBe(true);
+        });
+        it('Only returns a list of layers with visibility set to true', ()=>{
+            const layers = [{id: 0}, {id: 1}];
+            const timelineLayers = [{id: 0, visibility: false}, {id: 1, visibility: true}];
+            const visibleTimelineLayers = LayersUtils.visibleTimelineLayers(layers, timelineLayers);
+            expect(visibleTimelineLayers.length).toBe(1);
+        });
+        it('Should return no layers when all layers have a visibility set to false', ()=>{
+            const layers = [{id: 0}, {id: 1}];
+            const timelineLayers = [{id: 0, visibility: false}, {id: 1, visibility: false}];
+            const visibleTimelineLayers = LayersUtils.visibleTimelineLayers(layers, timelineLayers);
+            expect(visibleTimelineLayers.length).toBe(0);
         });
     });
 });

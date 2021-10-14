@@ -47,6 +47,57 @@ const SAMPLE_STATE = {
     }
 };
 
+const FALSY_STATE = {
+    timeline: {
+        selectedLayer: "TEST_LAYER",
+        range: {
+            start: "2000-01-01T00:00:00.000Z",
+            end: "2020-12-31T00:00:00.000Z"
+        }
+    },
+    layers: {
+        flat: [{
+            id: 'TEST_LAYER',
+            name: 'TEST_LAYER',
+            type: 'wms',
+            url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+            dimensions: [
+                {
+                    source: {
+                        type: 'multidim-extension',
+                        // this forces to load fixed values from the test file, ignoring parameters
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                    },
+                    name: 'time'
+                }
+            ],
+            params: {
+                time: '2000-06-08T00:00:00.000Z'
+            },
+            visibility: false
+        }, {
+            id: 'TEST_LAYER_2',
+            name: 'TEST_LAYER_2',
+            type: 'wms',
+            url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+            dimensions: [
+                {
+                    source: {
+                        type: 'multidim-extension',
+                        // this forces to load fixed values from the test file, ignoring parameters
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                    },
+                    name: 'time'
+                }
+            ],
+            params: {
+                time: '2000-06-08T00:00:00.000Z'
+            },
+            visibility: false
+        }]
+    }
+};
+
 describe('Timeline Plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -77,6 +128,16 @@ describe('Timeline Plugin', () => {
             const { Plugin} = getPluginForTest(TimelinePlugin, _state);
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('.timeline-plugin')).toBeTruthy();
+        });
+        it('Timeline plugin is not visible when all layers with dimension data have visibility set to false', ()=>{
+            const { Plugin } = getPluginForTest(TimelinePlugin, FALSY_STATE);
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.querySelector('.timeline-plugin.hidden')).toBeTruthy();
+        });
+        it('Timeline plugin is not visible when there are no layers with dimension data', ()=>{
+            const { Plugin } = getPluginForTest(TimelinePlugin, {});
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.querySelector('.timeline-plugin')).toBeFalsy();
         });
     });
 });
