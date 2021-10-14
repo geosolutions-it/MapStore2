@@ -8,7 +8,7 @@
 
 import Rx from 'rxjs';
 
-import { get, head, isArray, template } from 'lodash';
+import { get, head, isArray, template, uniqBy } from 'lodash';
 import { success, error } from '../actions/notifications';
 import { UPDATE_NODE, updateNode, updateSettingsParams } from '../actions/layers';
 import { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } from '../actions/additionallayers';
@@ -174,6 +174,39 @@ const updateLayerSettingsObservable = (action$, store, filter = () => true, star
                 .takeUntil(action$.ofType(LOADED_STYLE))
         );
 
+
+function getAvailableStylesFromLayerCapabilities(layer, reset) {
+    if (!reset && layer.availableStyles) {
+        return Rx.Observable.of(
+            updateSettingsParams({ availableStyles: layer.availableStyles  }),
+            loadedStyle()
+        );
+    }
+    return getLayerCapabilities(layer)
+        .switchMap((capabilities) => {
+            const layerCapabilities = formatCapabitiliesOptions(capabilities);
+            if (!layerCapabilities.availableStyles) {
+                return Rx.Observable.of(
+                    errorStyle('availableStyles', { status: 401 }),
+                    loadedStyle()
+                );
+            }
+
+            return Rx.Observable.of(
+                updateSettingsParams({ availableStyles: layerCapabilities.availableStyles  }),
+                updateNode(layer.id, 'layer', { ...layerCapabilities }),
+                loadedStyle()
+            );
+
+        })
+        .catch((err) => {
+            const errorType = err.message.indexOf("could not be unmarshalled") !== -1 ? "parsingCapabilities" : "global";
+            return Rx.Observable.of(errorStyle(errorType, err), loadedStyle());
+        })
+        .startWith(loadingStyle('global'));
+}
+
+
 /**
  * Epics for Style Editor
  * @name epics.styleeditor
@@ -206,73 +239,87 @@ export const toggleStyleEditorEpic = (action$, store) =>
 
             const geoserverName = findGeoServerName(layer);
             if (!geoserverName) {
-                if (layer.availableStyles) {
-                    return Rx.Observable.of(
-                        updateSettingsParams({ availableStyles: layer.availableStyles  }),
-                        loadedStyle()
-                    );
-                }
-                return getLayerCapabilities(layer)
-                    .switchMap((capabilities) => {
-                        const layerCapabilities = formatCapabitiliesOptions(capabilities);
-                        if (!layerCapabilities.availableStyles) {
-                            return Rx.Observable.of(
-                                errorStyle('availableStyles', { status: 401 }),
-                                loadedStyle()
-                            );
-                        }
-
-                        return Rx.Observable.of(
-                            updateSettingsParams({ availableStyles: layerCapabilities.availableStyles  }),
-                            updateNode(layer.id, 'layer', { ...layerCapabilities }),
-                            loadedStyle()
-                        );
-
-                    }).startWith(loadingStyle('global'));
+                return getAvailableStylesFromLayerCapabilities(layer);
             }
 
             const layerUrl = layer.url.split(geoserverName);
             const baseUrl = `${layerUrl[0]}${geoserverName}`;
             const lastStyleService = styleServiceSelector(state);
 
-            return Rx.Observable
-                .defer(() => updateStyleService({
+            return Rx.Observable.concat(
+                Rx.Observable.of(
+                    loadingStyle('global'),
+                    resetStyleEditor()
+                ),
+                Rx.Observable.defer(() => updateStyleService({
                     baseUrl,
                     styleService: lastStyleService
                 }))
-                .switchMap((styleService) => {
-                    const initialAction = [ initStyleService(styleService) ];
-                    return getLayerCapabilities(layer)
-                        .switchMap((capabilities) => {
-                            const layerCapabilities = formatCapabitiliesOptions(capabilities);
-                            if (!layerCapabilities.availableStyles) {
-                                return Rx.Observable.of(
-                                    errorStyle('availableStyles', { status: 401 }),
-                                    loadedStyle()
-                                );
-                            }
-                            const setAdditionalLayers = (availableStyles = []) =>
-                                Rx.Observable.of(
-                                    updateAdditionalLayer(layer.id, STYLE_OWNER_NAME, 'override', {}),
-                                    updateSettingsParams({ availableStyles }),
-                                    updateNode(layer.id, 'layer', {...layerCapabilities, availableStyles}),
-                                    loadedStyle()
-                                );
-                            return Rx.Observable.defer(() =>
-                                StylesAPI.getStylesInfo({
-                                    baseUrl,
-                                    styles: layerCapabilities && layerCapabilities.availableStyles || []
-                                })
+                    .switchMap((styleService) => {
+                        return Rx.Observable.concat(
+                            Rx.Observable.of(initStyleService(styleService)),
+                            Rx.Observable.defer(() =>
+                                // use rest API to get the correct name and workspace of the styles
+                                LayersAPI.getLayer(baseUrl + 'rest/', layer.name)
                             )
-                                .switchMap(availableStyles => setAdditionalLayers(availableStyles));
-                        })
-                        .startWith(...initialAction)
-                        .catch((err) => {
-                            const errorType = err.message.indexOf("could not be unmarshalled") !== -1 ? "parsingCapabilities" : "global";
-                            return Rx.Observable.of(errorStyle(errorType, err), loadedStyle());
-                        });
-                })
-                .startWith(loadingStyle('global'), resetStyleEditor());
+                                .switchMap((layerConfig) => {
+                                    const stylesConfig = layerConfig?.styles?.style || [];
+                                    const layerConfigAvailableStyles = uniqBy([
+                                        layerConfig.defaultStyle,
+                                        ...stylesConfig
+                                    ], 'name');
+                                    if (layerConfigAvailableStyles.length === 0) {
+                                        return Rx.Observable.of(
+                                            errorStyle('availableStyles', { status: 401 }),
+                                            loadedStyle()
+                                        );
+                                    }
+
+                                    return Rx.Observable.defer(() =>
+                                        Promise.all([
+                                            StylesAPI.getStylesInfo({
+                                                baseUrl,
+                                                styles: layerConfigAvailableStyles
+                                            }),
+                                            getLayerCapabilities(layer)
+                                                .toPromise()
+                                                .then(cap => cap)
+                                                .catch(() => null)
+                                        ])
+                                    )
+                                        .switchMap(([availableStylesRest, capabilities]) => {
+                                            const layerCapabilities = capabilities && formatCapabitiliesOptions(capabilities);
+                                            const availableStylesCap = (layerCapabilities?.availableStyles || [])
+                                                .map((style) => ({ ...style, ...getNameParts(style.name) }))
+                                                .filter(({ name } = {}) => name);
+
+                                            // get title information from capabilities
+                                            const availableStyles = availableStylesCap.length > 0
+                                                ? availableStylesRest.map(restStyle => {
+                                                    const parts = getNameParts(restStyle.name);
+                                                    const { name, workspace, ...capStyle} = availableStylesCap.find(style => style.name === parts.name) || {};
+                                                    if (capStyle) {
+                                                        return { ...capStyle, ...restStyle };
+                                                    }
+                                                    return restStyle;
+                                                })
+                                                : availableStylesRest;
+
+                                            return Rx.Observable.of(
+                                                updateAdditionalLayer(layer.id, STYLE_OWNER_NAME, 'override', {}),
+                                                updateSettingsParams({ availableStyles }),
+                                                updateNode(layer.id, 'layer', { availableStyles }),
+                                                loadedStyle()
+                                            );
+                                        });
+                                })
+                                .catch(() => {
+                                    // fallback to get capabilities to get list of styles
+                                    return getAvailableStylesFromLayerCapabilities(layer, true);
+                                })
+                        );
+                    })
+            );
         });
 /**
  * Gets every `UPDATE_STATUS` event.
@@ -711,4 +758,3 @@ export default {
     deleteStyleEpic,
     setDefaultStyleEpic
 };
-
