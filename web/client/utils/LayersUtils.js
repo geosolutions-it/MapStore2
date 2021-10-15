@@ -152,20 +152,18 @@ export const getNestedGroupTitle = (id, groups = []) => {
 };
 
 /**
- * Flatten nested array to a one-level array
- * @param {Object[]} array of objects
- * @returns {Object[]} flattened array
+ * Flatten nested groupDetails to a one-level groupDetails
+ * @param {(Object[]|Object)} groupDetails of objects
+ * @returns {Object[]} flattened groupDetails
  */
-export const flattenArrayOfObjects = (arrayOfObj) => {
+export const flattenArrayOfObjects = (groupDetails) => {
     let result = [];
-    if (arrayOfObj && Array.isArray(arrayOfObj)) {
-        arrayOfObj?.forEach((array) => {
-            result.push(array);
-            if (Array.isArray(array.nodes)) {
-                result = result.concat(flattenArrayOfObjects(array.nodes));
-            }
-        });
-    }
+    groupDetails && castArray(groupDetails).forEach((a) => {
+        result.push(a);
+        if (a.nodes && Array.isArray(groupDetails) && Array.isArray(a.nodes)) {
+            result = result.concat(flattenArrayOfObjects(a.nodes));
+        }
+    });
     return result;
 };
 

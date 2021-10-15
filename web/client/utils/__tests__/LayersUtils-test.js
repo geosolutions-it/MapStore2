@@ -1244,7 +1244,7 @@ describe('LayersUtils', () => {
             expect(layers.groups[0].title).toEqual(localizedGroupMap.groups[0].title);
         });
 
-        it('Display title of deep nested groups', ()=>{
+        it('Display title of deep nested groups in an array', ()=>{
             const groups = [
                 {id: 'default', title: 'Default', nodes: [{id: 'layer001', title: 'titleLayer001'}, {id: 'layer002', title: 'titleLayer002'}]}
             ];
@@ -1254,27 +1254,52 @@ describe('LayersUtils', () => {
             expect(groupTitle).toExist();
             expect(groupTitle).toEqual('titleLayer001');
         });
-        it('Timeline should not be visible when visibility of all layers is false', ()=>{
-            const layers = [{visibility: false}, {visibility: false}];
-            const isTimelineVisible = LayersUtils.isTimelineVisible(layers);
-            expect(isTimelineVisible).toBe(false);
+        it('Display title of deep nested groups not in an array', ()=>{
+            const groups = {
+                id: 'default',
+                title: 'Default',
+                nodes: [
+                    {id: 'layer001', title: 'titleLayer001'},
+                    {id: 'layer002', title: 'titleLayer002'}
+                ]
+            };
+            const id = 'layer001';
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            const groupTitle = LayersUtils.displayTitle(id, flattenedGroups);
+            expect(groupTitle).toExist();
+            expect(groupTitle).toEqual('Default');
         });
-        it('Timeline should be visible when visibility of at least one layer is true', ()=>{
-            const layers = [{visibility: false}, {visibility: true}];
-            const isTimelineVisible = LayersUtils.isTimelineVisible(layers);
-            expect(isTimelineVisible).toBe(true);
+        it('Get the length of a an object with nodes', ()=>{
+            const groups = {
+                id: 'default',
+                title: 'Default',
+                nodes: [
+                    {id: 'layer001', title: 'titleLayer001'},
+                    {id: 'layer002', title: 'titleLayer002'}
+                ]
+            };
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            expect(flattenedGroups.length).toBe(1);
         });
-        it('Only returns a list of layers with visibility set to true', ()=>{
-            const layers = [{id: 0}, {id: 1}];
-            const timelineLayers = [{id: 0, visibility: false}, {id: 1, visibility: true}];
-            const visibleTimelineLayers = LayersUtils.visibleTimelineLayers(layers, timelineLayers);
-            expect(visibleTimelineLayers.length).toBe(1);
-        });
-        it('Should return no layers when all layers have a visibility set to false', ()=>{
-            const layers = [{id: 0}, {id: 1}];
-            const timelineLayers = [{id: 0, visibility: false}, {id: 1, visibility: false}];
-            const visibleTimelineLayers = LayersUtils.visibleTimelineLayers(layers, timelineLayers);
-            expect(visibleTimelineLayers.length).toBe(0);
+        it('Get the length of the nested array', ()=>{
+            const groups = [{
+                id: 'default',
+                title: 'Default',
+                nodes: [
+                    {id: 'layer001', title: 'titleLayer001'},
+                    {id: 'layer002', title: 'titleLayer002'}
+                ]
+            }, {
+                id: 'default-1',
+                title: 'Default-1',
+                nodes: [
+                    {id: 'layer003', title: 'titleLayer003'},
+                    {id: 'layer004', title: 'titleLayer004'},
+                    {id: 'layer005', title: 'titleLayer005'}
+                ]
+            }];
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            expect(flattenedGroups.length).toBe(7);
         });
     });
 });
