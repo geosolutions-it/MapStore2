@@ -84,6 +84,7 @@ class CesiumMap extends React.Component {
     componentDidMount() {
         const creditContainer = document.querySelector(this.props.mapOptions?.attribution?.container || '#footer-attribution-container');
         let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
+            imageryProvider: Cesium.createOpenStreetMapImageryProvider(), // redefining to avoid to use default bing (that queries the bing API without any reason, because baseLayerPicker is false, anyway)
             baseLayerPicker: false,
             animation: false,
             fullscreenButton: false,

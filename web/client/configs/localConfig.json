@@ -8,7 +8,9 @@
           "https://nominatim.openstreetmap.org",
           "http://cloudsdi.geo-solutions.it",
           "https://gs-stable.geo-solutions.it/geoserver",
-          "https://gs-stable.geo-solutions.it:443/geoserver"
+          "https://gs-stable.geo-solutions.it:443/geoserver",
+          "http://gs-stable.geo-solutions.it/geoserver",
+          "http://gs-stable.geo-solutions.it:443/geoserver"
         ]
     },
     "geoStoreUrl": "rest/geostore/",
