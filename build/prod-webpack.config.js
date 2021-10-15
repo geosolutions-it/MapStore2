@@ -11,8 +11,8 @@ const paths = {
     code: path.join(__dirname, "..", "web", "client")
 };
 
-module.exports = require('./buildConfig')(
-    {
+module.exports = require('./buildConfig')({
+    bundles: {
         "mapstore2": path.join(paths.code, "product", "app"),
         "embedded": path.join(paths.code, "product", "embedded"),
         "ms2-api": path.join(paths.code, "product", "api"),
@@ -21,11 +21,11 @@ module.exports = require('./buildConfig')(
     },
     themeEntries,
     paths,
-    [extractThemesPlugin, ModuleFederationPlugin],
-    true,
-    undefined,
-    undefined,
-    [
+    plugins: [extractThemesPlugin, ModuleFederationPlugin],
+    prod: true,
+    cssPrefix: undefined,
+    publicPath: undefined,
+    prodPlugins: [
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'indexTemplate.html'),
             publicPath: 'dist/',
@@ -65,5 +65,5 @@ module.exports = require('./buildConfig')(
             hash: true,
             filename: 'dashboard-embedded.html'
         })
-    ]
+    ]}
 );
