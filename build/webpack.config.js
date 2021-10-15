@@ -21,29 +21,6 @@ const config = require('./buildConfig')({
     plugins: [extractThemesPlugin, moduleFederationPlugin],
     prod: false,
     publicPath: undefined,
-    cssPrefix: undefined,
-    proxy: {
-        '/rest': {
-            target: "http://localhost:8080/mapstore"
-        },
-        '/proxy': {
-            target: "http://localhost:8080/mapstore"
-        },
-        '/extensions.json': {
-            target: "http://localhost:8080/mapstore"
-        },
-        '/dist/extensions': {
-            target: "http://localhost:8080/mapstore"
-        },
-        '/pdf': {
-            target: "http://localhost:8080/mapstore"
-        },
-        '/mapstore/pdf': {
-            target: "http://localhost:8080"
-        },
-        '/geofence': {
-            target: "http://localhost:8080"
-        }
-    }
+    cssPrefix: undefined
 });
 module.exports = config;
