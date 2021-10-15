@@ -73,6 +73,16 @@ Use the default credentials (admin / admin) to login and start creating your map
     docker-compose down --remove-orphans --rmi all -v
     ```
 
+### Using the local Backend
+
+One option for the backend is to start it locally without using a java web container and a war file.
+The only thing to do is to run this command in one terminal:
+```shell
+    npm run backend
+```
+
+The project will point to this backend by default (check `build/webpack.config.js`)
+
 ### Using the Web Archive (WAR file)
 
 After downloading the MapStore war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
