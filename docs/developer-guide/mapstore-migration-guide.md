@@ -540,6 +540,30 @@ const appStore = (
 
 ## Migration from 2020.01.00 to 2020.02.00
 
+### New authentication rule for internal services
+
+With this new version the support for uploading extensions has been introduced. A new entry point needs administration authorization to allow the upload of new plugins by the administrator. So:
+
+- In `localConfig.json` add the following entry in the `authenticationRules` array:
+```json
+{
+    "urlPattern": ".*rest/config.*",
+    "method": "bearer"
+  }
+
+```
+the final entry should look like this 
+
+```json
+ "authenticationRules": [{
+        "urlPattern": ".*geostore.*",
+        "method": "bearer"
+      }, {
+        "urlPattern": ".*rest/config.*",
+        "method": "bearer"
+      }, ...],
+```
+
 ### Translation files
 
 - The translations file extension has been changed into JSON. Now translation files has been renamed from `data.<locale>` to `data.<locale>.json`. This change makes the `.json` extension mandatory for all translation files. This means that depending projects with custom translation files should be renabled in the same name. E.g. `data.it-IT` have to be renamed as `data.it-IT.json`

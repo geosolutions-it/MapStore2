@@ -64,11 +64,12 @@ import { pick } from 'lodash';
  * // the enhancer will pass to the component of dependencies={counterDependencies}
  */
 
-const buildDependencies = (map, deps, originalWidgetId) => {
+export const buildDependencies = (map, deps, originalWidgetId) => {
     if (map) {
         const dependenciesGenerated = Object.keys(map).reduce((ret, k) => {
             if (k === "dependenciesMap" && deps[map[k]] && deps[map.mapSync] &&
                 deps[map[k]][k] && deps[map[k]][k].indexOf(originalWidgetId) === -1 // avoiding loop
+                && !ret.mapSync
             ) {
                 // go recursively until we get the dependencies from table ancestors
                 return {

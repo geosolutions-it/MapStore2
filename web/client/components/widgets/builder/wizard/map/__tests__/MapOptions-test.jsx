@@ -53,7 +53,7 @@ describe('MapOptions component', () => {
     it('MapOptions rendering node editor', () => {
         ReactDOM.render(<MapOptions
             map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }] }}
-            nodes={[{ id: 'GGG', nodes: [{ id: "LAYER", group: "GGG", name: "LAYER", title: { 'default': 'default'}, options: {}}]}]}
+            nodes={[{ id: 'GGG', nodes: [{ id: "LAYER", group: "GGG", name: "LAYER", options: {}}]}]}
             layers={[{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }]}
             editNode={"LAYER"} />, document.getElementById("container"));
         const container = document.getElementById('container');

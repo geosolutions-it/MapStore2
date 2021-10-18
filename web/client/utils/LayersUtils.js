@@ -152,15 +152,15 @@ export const getNestedGroupTitle = (id, groups = []) => {
 };
 
 /**
- * Flatten nested array to a one-level array
- * @param {object[]} array of objects
- * @returns {object[]} flattened array
+ * Flatten nested groupDetails to a one-level groupDetails
+ * @param {(Object[]|Object)} groupDetails of objects
+ * @returns {Object[]} flattened groupDetails
  */
-export const flattenArrayOfObjects = (array) => {
+export const flattenArrayOfObjects = (groupDetails) => {
     let result = [];
-    array?.forEach((a) => {
+    groupDetails && castArray(groupDetails).forEach((a) => {
         result.push(a);
-        if (Array.isArray(a.nodes)) {
+        if (a.nodes && Array.isArray(groupDetails) && Array.isArray(a.nodes)) {
             result = result.concat(flattenArrayOfObjects(a.nodes));
         }
     });
@@ -175,9 +175,11 @@ export const flattenArrayOfObjects = (array) => {
  */
 
 export const displayTitle = (id, groups) => {
-    for (let group of groups) {
-        if (group?.id === id) {
-            return group.title;
+    if (groups && Array.isArray(groups)) {
+        for (let group of groups) {
+            if (group?.id === id) {
+                return group.title;
+            }
         }
     }
     return 'Default';
@@ -724,6 +726,33 @@ export const isInsideResolutionsLimits = (layer, resolution) => {
         : true;
 };
 
+/**
+ * Filter array of layers to return layers with visibility key set to true
+ * @param {Array} layers
+ * @param {Array} timelineLayers
+ * @returns {Array}
+ */
+export const visibleTimelineLayers = (layers, timelineLayers) => {
+    return layers.filter(layer => {
+        let timelineLayer = timelineLayers?.find(item => item.id === layer.id);
+        return timelineLayer?.visibility ? layer : null;
+    });
+};
+
+/**
+ * Loop through array of timeline layers to determine if any of the layers is visible
+ * @param {Array} layers
+ * @returns {boolean}
+ */
+export const isTimelineVisible = (layers)=>{
+    for (let layer of layers) {
+        if (layer?.visibility) {
+            return true;
+        }
+    }
+    return false;
+};
+
 LayersUtils = {
     getGroupByName,
     getLayerId,
@@ -734,5 +763,6 @@ LayersUtils = {
     reorder: reorderFunc,
     getRegGeoserverRule,
     findGeoServerName,
-    isInsideResolutionsLimits
+    isInsideResolutionsLimits,
+    visibleTimelineLayers
 };
