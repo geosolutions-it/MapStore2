@@ -50,12 +50,16 @@ const sampleProps = {
 };
 
 
-export const isChartOptionsValid = (options = {}, { hasAggregateProcess }) =>
-    options.aggregationAttribute
+export const isChartOptionsValid = (options = {}, { hasAggregateProcess }) => {
+
+    return (
+        options.aggregationAttribute
     && options.groupByAttributes
     && (!hasAggregateProcess // if aggregate process is not present, the aggregateFunction is not necessary. if present, is mandatory
-        || hasAggregateProcess && options.aggregateFunction);
-
+|| hasAggregateProcess && options.aggregateFunction)
+|| options.classificationAttribute);
+};
+// || hasAggregateProcess && options.classificationAttribute)
 const Wizard = wizardHandlers(WizardContainer);
 
 
@@ -98,6 +102,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
 
 const enhanceWizard = compose(lifecycle({
     UNSAFE_componentWillReceiveProps: ({ data = {}, valid, setValid = () => { }, hasAggregateProcess } = {}) => {
+
         if (valid && !isChartOptionsValid(data.options, { hasAggregateProcess })) {
             setValid(false);
         }
