@@ -280,31 +280,31 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         publicPath: "/dist/",
         proxy: proxy || {
             '/rest': {
-                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
+                target: "https://qa-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev-mapstore.geosolutionsgroup.com"
+                    host: "qa-mapstore.geosolutionsgroup.com"
                 }
             },
             '/pdf': {
-                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
+                target: "https://qa-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev-mapstore.geosolutionsgroup.com"
+                    host: "qa-mapstore.geosolutionsgroup.com"
                 }
             },
             '/mapstore/pdf': {
-                target: "https://dev-mapstore.geosolutionsgroup.com",
+                target: "https://qa-mapstore.geosolutionsgroup.com",
                 secure: false,
                 headers: {
-                    host: "dev-mapstore.geosolutionsgroup.com"
+                    host: "qa-mapstore.geosolutionsgroup.com"
                 }
             },
             '/proxy': {
-                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
+                target: "https://qa-mapstore.geosolutionsgroup.com/mapstore",
                 secure: false,
                 headers: {
-                    host: "dev-mapstore.geosolutionsgroup.com"
+                    host: "qa-mapstore.geosolutionsgroup.com"
                 }
             },
             '/docs': {
@@ -316,4 +316,3 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
 
     devtool: !prod ? 'eval' : undefined
 }));
-
