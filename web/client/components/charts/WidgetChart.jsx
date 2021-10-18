@@ -26,14 +26,9 @@ export const defaultColorGenerator = (total, colorOptions) => {
 
 function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel }) {
 
-    console.log('getData');
-    console.log(data);
-
-    console.log(classificationAttr);
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     let y2 = data.map(d => d[classificationAttr]);
-    console.log(y2);
     switch (type) {
     case 'pie':
 
@@ -78,7 +73,6 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
 
         const allData = classificationAttr ? [trace1, trace2] : trace1;
 
-        console.log(allData);
         return allData;
     }
 }
@@ -157,9 +151,6 @@ export const toPlotly = (props) => {
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
     const classificationAttr = classifications?.dataKey;
-    console.log('toPlotly')
-    console.log(props)
-    console.log(series)
     return {
         layout: {
             showlegend: legend,
@@ -176,8 +167,6 @@ export const toPlotly = (props) => {
         },
         data: series.map(({ dataKey: yDataKey }) => {
             let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel})
-            console.log('allData');
-            console.log(allData);
             return  allData;
         }),
         config: {
