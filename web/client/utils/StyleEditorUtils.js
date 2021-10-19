@@ -40,13 +40,15 @@ const EDITOR_MODES = {
 };
 
 const getGeometryType = (geomProperty = {}) => {
-    const localPart = geomProperty.type && geomProperty.type.localPart && geomProperty.type.localPart.toLowerCase() || '';
-    if (localPart.indexOf('polygon') !== -1
-        || localPart.indexOf('surface') !== -1) {
+    const localType = geomProperty.localType && geomProperty.localType.toLowerCase() || '';
+    if (localType.indexOf('polygon') !== -1
+        || localType.indexOf('surface') !== -1
+        || localType.indexOf('multiPolygon') !== -1
+    ) {
         return 'polygon';
-    } else if (localPart.indexOf('linestring') !== -1) {
+    } else if (localType.indexOf('linestring') !== -1) {
         return 'linestring';
-    } else if (localPart.indexOf('point') !== -1) {
+    } else if (localType.indexOf('point') !== -1) {
         return 'point';
     }
     return 'vector';
@@ -75,17 +77,19 @@ export const generateStyleId = ({title = ''}) => `${title.toLowerCase().replace(
  */
 export const extractFeatureProperties = ({describeLayer = {}, describeFeatureType = {}} = {}) => {
 
-    const owsType = describeLayer && describeLayer.owsType || null;
-    const descProperties = get(describeFeatureType, 'complexType[0].complexContent.extension.sequence.element') || null;
-    const geomProperty = descProperties && head(descProperties.filter(({ type }) => type && type.prefix === 'gml'));
+    const owsType = describeLayer?.owsType;
+    const descProperties = get(describeFeatureType, 'featureTypes[0].properties') || null;
+    const geomProperty = descProperties && head(descProperties.filter(({ type, localType }) => {
+        return type && type.includes('gml') && localType;
+    }));
     const geometryType = owsType === 'WCS' && 'raster' || geomProperty && owsType === 'WFS' && getGeometryType(geomProperty) || null;
     const properties = geometryType === 'raster'
         ? describeLayer.bands
-        : descProperties && descProperties.reduce((props, { name, type = {} }) => ({
+        : descProperties && descProperties.reduce((props, { name, type = {}, localType }) => ({
             ...props,
             [name]: {
-                localPart: type.localPart,
-                prefix: type.prefix
+                localType: localType,
+                prefix: type.replace(`:${localType}`, '')
             }
         }), {});
     return {

@@ -52,54 +52,35 @@ describe('StyleEditorUtils test', () => {
             describeLayer: {
                 owsType: 'WFS'
             },
-            describeFeatureType: {
-                complexType: [{
-                    complexContent: {
-                        extension: {
-                            sequence: {
-                                element: [{
-                                    TYPE_NAME: "XSD_1_0.LocalElement",
-                                    maxOccurs: "1",
-                                    minOccurs: 0,
-                                    name: "RANK",
-                                    nillable: true,
-                                    otherAttributes: {},
-                                    type: {
-                                        key: "{http://www.w3.org/2001/XMLSchema}short",
-                                        localPart: "short",
-                                        namespaceURI: "http://www.w3.org/2001/XMLSchema",
-                                        prefix: "xsd",
-                                        string: "{http://www.w3.org/2001/XMLSchema}xsd:short"
-                                    }
-                                }, {
-                                    TYPE_NAME: "XSD_1_0.LocalElement",
-                                    maxOccurs: "1",
-                                    minOccurs: 0,
-                                    name: "geom",
-                                    nillable: true,
-                                    otherAttributes: {},
-                                    type: {
-                                        key: "{http://www.opengis.net/gml}PointPropertyType",
-                                        localPart: "PointPropertyType",
-                                        namespaceURI: "http://www.opengis.net/gml",
-                                        prefix: "gml",
-                                        string: "{http://www.opengis.net/gml}gml:PointPropertyType"
-                                    }
-                                }]
+            "describeFeatureType": {
+                "elementFormDefault": "qualified",
+                "targetPrefix": "gs",
+                "featureTypes": [
+                    {
+                        "typeName": "us_states",
+                        "properties": [
+                            {
+                                "name": "the_geom",
+                                "maxOccurs": 1,
+                                "minOccurs": 0,
+                                "nillable": true,
+                                "type": "gml:MultiPolygon",
+                                "localType": "MultiPolygon"
+                            },
+                            {
+                                "name": "STATE_NAME",
+                                "maxOccurs": 1,
+                                "minOccurs": 0,
+                                "nillable": true,
+                                "type": "xsd:string",
+                                "localType": "string"
                             }
-                        }
+                        ]
                     }
-                }]
+                ]
             }
         };
-        expect(extractFeatureProperties(layer)).toEqual({
-            geometryType: 'point',
-            properties: {
-                RANK: { localPart: 'short', prefix: 'xsd' },
-                geom: { localPart: 'PointPropertyType', prefix: 'gml' }
-            },
-            owsType: 'WFS'
-        });
+        expect(extractFeatureProperties(layer)).toEqual({ geometryType: 'polygon', properties: { the_geom: { localType: 'MultiPolygon', prefix: 'gml' }, STATE_NAME: { localType: 'string', prefix: 'xsd' } }, owsType: 'WFS' });
 
     });
     it('test getEditorMode', () => {

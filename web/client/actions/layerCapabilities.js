@@ -12,73 +12,21 @@ import WMS from '../api/WMS';
 import * as WFS from '../api/WFS';
 import WCS from '../api/WCS';
 import {getCapabilitiesUrl, formatCapabitiliesOptions} from '../utils/LayersUtils';
-import { get, head } from 'lodash';
-
-const mapMergingFeatureTypeXMLToJson = {
-    type: {
-        "gml:MultiPolygon": "gml:MultiSurfacePropertyType",
-        "xsd:int": "xsd:long",
-        "xsd:number": "xsd:double"
-    },
-    localType: {
-        "MultiPolygon": "MultiSurfacePropertyType",
-        "int": "long",
-        "number": "double"
-    },
-    namespace: {
-        "gml": "http://www.opengis.net/gml",
-        "xsd": "http://www.w3.org/2001/XMLSchema"
-    }
-};
-
+import { get } from 'lodash';
+import { extractGeometryType } from '../utils/WFSLayerUtils';
 
 export function getDescribeLayer(url, layer, options) {
     return (dispatch /* , getState */) => {
         return WMS.describeLayer(url, layer.name, options).then((describeLayer) => {
             if (describeLayer && describeLayer.owsType === "WFS") {
-                return WFS.describeFeatureTypeOGCSchemas(url, describeLayer.name).then((describeFeatureType) => {
-                    WFS.describeFeatureType(url, layer.name).then( (response ) => {
-                        // TODO move the management of this geometryType in the proper components, getting the describeFeatureType entry:
-                        let featureTypes = response?.featureTypes[0].properties;
-                        let types = get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
-                        let alreadyInTypes = types.map((item) =>{
-                            return featureTypes.find(obj => {
-                                return (obj.name === item.name);
-                            });
-                        });
-                        let typesToAdd = featureTypes.filter(x => !alreadyInTypes.includes(x));
-                        const featureTypeNeedToMerge = (mappingFeatureType, rlocalType, rtype) => {
-                            const prefix = rtype.replace(`:${rlocalType}`, '');
-                            const   localPart = mappingFeatureType.localType[rlocalType] ? mappingFeatureType.localType[rlocalType] : rlocalType;
-                            const type =  mappingFeatureType.type[rtype] ? mappingFeatureType.localType[rtype] : rtype;
-                            return {
-                                TYPE_NAME: "XSD_1_0.LocalElement",
-                                type: {
-                                    "namespaceURI": mappingFeatureType?.namespace?.[prefix],
-                                    "localPart": localPart,
-                                    "prefix": prefix,
-                                    "key": `${mappingFeatureType.namespace[prefix]}/${localPart}`,
-                                    "string": `${mappingFeatureType.namespace[prefix]}/${type}`
-                                }
-                            };
-                        };
-                        let missingTypes = typesToAdd.length > 0 &&  typesToAdd.reduce((acc, currentValue) => {
-                            const { type, ...rest } = currentValue;
-                            const ogcJsonSchemaTypes = featureTypeNeedToMerge(mapMergingFeatureTypeXMLToJson, currentValue.localType, currentValue.type);
-                            rest.otherAttributes = currentValue;
-                            return [...acc, {...rest, ...ogcJsonSchemaTypes}];
-                        }, []);
-                        missingTypes && missingTypes.length > 0 && types.push(...missingTypes);
-                        let geometryType = head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
-                        geometryType = geometryType && geometryType.type.localPart;
-                        describeLayer.geometryType = geometryType && geometryType.split("PropertyType")[0];
-                        return dispatch(updateNode(layer.id, "id", {describeLayer, describeFeatureType}));
-                    }).catch(() => {
-                        return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe feature found"}}));
+                return WFS.describeFeatureType(url, describeLayer.name)
+                    .then( (describeFeatureType) => {
+                        describeLayer.geometryType = extractGeometryType(describeFeatureType);
+                        return dispatch(updateNode(layer.id, "id", { describeLayer, describeFeatureType }));
+                    })
+                    .catch(() => {
+                        return dispatch(updateNode(layer.id, "id", { describeLayer: describeLayer || { "error": "no describe feature found" }}));
                     });
-                }).catch(() => {
-                    return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe feature found"}}));
-                });
             } else if ( describeLayer && describeLayer.owsType === "WCS" ) {
                 WCS.describeCoverage(url, describeLayer.name).then((describeCoverage) => {
                     // TODO move the management of this bands in the proper components, getting the describeFeatureType entry:
