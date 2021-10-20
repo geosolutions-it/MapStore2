@@ -121,7 +121,7 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .switchMap(() =>
             action$.ofType(CHANGE_MAP_VIEW)
-                .take(1)
+                .take(2)
                 .switchMap(() => {
                     const state = store.getState();
                     const search = get(state, 'router.location.search') || '';
