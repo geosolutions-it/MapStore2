@@ -154,9 +154,6 @@ class OpenlayersMap extends React.Component {
         });
 
         this.map = map;
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
         this.map.disabledListeners = {};
         this.map.disableEventListener = (event) => {
             this.map.disabledListeners[event] = true;
