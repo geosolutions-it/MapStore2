@@ -23,7 +23,7 @@ const useMapTool = (mapType, tool) => {
         return () => {
             isMounted.current = false;
         };
-    });
+    }, []);
     useEffect(() => {
         if (mapType && !impl.current) {
             setLoaded(false);
