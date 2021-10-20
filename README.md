@@ -139,7 +139,7 @@ Build the deployable war:
 
 Where version_identifier is an optional identifier of the generated war that will be shown in the settings panel of the application.
 
-Deploy the generated mapstore.war file (in java/web/target) to your favorite J2EE container (e.g. Tomcat).
+Deploy the generated mapstore.war file (in product/target) to your favorite J2EE container (e.g. Tomcat).
 
 Read more on the <a href="https://mapstore.readthedocs.io/en/latest/" target="_blank">documentation site</a>.
 
