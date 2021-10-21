@@ -70,18 +70,20 @@ class CoordinatesRow extends React.Component {
         }
     }
 
-    onChangeLatLon = (coord, val) => {
+    onChangeLatLon = (coord, val) => {        
+        
         this.setState({...this.state, [coord]: parseFloat(val)}, ()=>{
             const changeLat = parseFloat(this.state.lat) !== parseFloat(this.props.component.lat);
-            const changeLon = parseFloat(this.state.lon) !== parseFloat(this.props.component.lon);
+            const changeLon = parseFloat(this.state.lon) !== parseFloat(this.props.component.lon);            
             this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon)}, ()=> {
+                this.props.setIsValidFeature()
                 // Auto save on coordinate change for annotations
                 this.props.renderer === "annotations" &&  this.props.onSubmit(this.props.idx, this.state);
             });
         });
     };
 
-    onSubmit = () => {
+    onSubmit = () => {        
         this.props.onSubmit(this.props.idx, this.state);
     };
 

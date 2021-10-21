@@ -1152,8 +1152,9 @@
                 "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
                 "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)",
-                "newFeature": "New"
-            }
+                "newFeature": "New"                
+            },
+            "geometryError": "Geometry Configration is Inavlid."
         },
         "user":{
             "login": "Login",
