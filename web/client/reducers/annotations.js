@@ -61,7 +61,8 @@ import {
     TOGGLE_SHOW_AGAIN,
     INIT_PLUGIN,
     UNSELECT_FEATURE,
-    START_DRAWING
+    START_DRAWING,
+    SET_IS_VALID_FEATURE
 } from '../actions/annotations';
 
 import {
@@ -72,7 +73,8 @@ import {
     validateFeature,
     getComponents,
     updateAllStyles,
-    getBaseCoord
+    getBaseCoord,
+    getGeometryError
 } from '../utils/AnnotationsUtils';
 
 import { set } from '../utils/ImmutableUtils';
@@ -196,7 +198,9 @@ function annotations(state = {validationErrors: {}}, action) {
         });
     }
     case FEATURES_SELECTED: {
-        let newState = state;
+        let newState = state;  
+        
+      
         let selected = head(action.features) || null;
         if (!selected) {
             return state;
@@ -211,12 +215,18 @@ function annotations(state = {validationErrors: {}}, action) {
         }
 
         let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === selected.properties.id);
-        let selectedGeoJSON = selected;
-        if (selected && selected.properties && selected.properties.isCircle) {
-            selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
+        let selectedGeoJSON = selected;        
+        if (selected && selected.properties && selected.properties.isCircle) {            
+            if(selected.properties.polygonGeom){
+                selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
+            } else {
+                selectedGeoJSON = set("geometry.coordinates",[], selectedGeoJSON);
+                selectedGeoJSON = set("geometry.type",'Polygon', selectedGeoJSON);
+            }
+                        
         } else if (selected && selected.properties && selected.properties.isText) {
             selectedGeoJSON = set("geometry.type", "Point", selectedGeoJSON);
-        }
+        }        
         newState = set(`editing.features`, state.editing.features.map(f => {
             return set("properties.canEdit", false, f);
         }), state);
@@ -230,6 +240,8 @@ function annotations(state = {validationErrors: {}}, action) {
             newState = set(`editing.features[${ftChangedIndex}]`, selectedGeoJSON, newState);
             selected = set("style", newState.editing.features[ftChangedIndex].style, selected);
         }
+
+        
         return assign({}, newState, {
             selected,
             coordinateEditorEnabled: !!selected,
@@ -329,7 +341,8 @@ function annotations(state = {validationErrors: {}}, action) {
         }
         return assign({}, newState, {
             selected,
-            unsavedChanges: true
+            unsavedChanges: true,
+            circleCoordinates: action.components[0]
         });
     }
     case CHANGE_TEXT: {
@@ -627,12 +640,12 @@ function annotations(state = {validationErrors: {}}, action) {
             canEdit: true
         };
         if (type === "Text") {
-            properties = set("isText", true, properties);
+            properties = set("isText", true, properties);            
         }
         if (type === "Circle") {
             properties = set("isCircle", true, properties);
-            properties = set("isDrawing", true, properties);
-        }
+            properties = set("isDrawing", true, properties);            
+        }        
         let selected = {type: "Feature", geometry: {type, coordinates: getBaseCoord(type)}, properties,
             style: {...(state.config?.defaultPointType === 'symbol' ? state.defaultStyles?.POINT?.symbol : state.defaultStyles?.POINT.marker), id: uuid.v1()}};
 
@@ -642,7 +655,7 @@ function annotations(state = {validationErrors: {}}, action) {
         // Reset highlight properties of other features except the selected feature
         const editingFeatures = state.editing.features.filter(({properties: prop})=> prop?.id !== selected?.properties?.id)?.map((ft = {})=>{ ft.style = ft?.style?.map(s=> {s.highlight = false; return s;}) || []; return ft;});
         let newState = set(`editing.tempFeatures`, editingFeatures, state);
-
+       
         return assign({}, state, {
             drawing: !newState.drawing,
             featureType: type,
@@ -749,6 +762,23 @@ function annotations(state = {validationErrors: {}}, action) {
     }
     case START_DRAWING:
         return {...state, config: {...state.config, geodesic: get(action.options, 'geodesic', false)}};
+    case SET_IS_VALID_FEATURE:
+                       
+        let updatedFeatures = state.editing.features        
+        updatedFeatures.map((f) => { 
+            
+            const isFeatureValid = validateFeature({
+                properties: f.properties,
+                components: getComponents(f.geometry),
+                type: f.geometry.type
+            })                           
+            f.properties.isValidFeature = isFeatureValid                    
+                         
+        })
+     
+        return assign({}, state, {
+            editing: {...state.editing, features:updatedFeatures },          
+        });
     default:
         return state;
 

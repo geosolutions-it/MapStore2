@@ -1172,7 +1172,7 @@
                 "notValidPolyline": "Alle coördinaten moeten geldig zijn (+ | - 90 ° lat, + | -180 ° lon)",
                 "notValidText": "Voeg een tekstwaarde en een geldige coördinaat in (+ | - 90 ° lat, + | -180 ° lon)",
                 "notValidCircle": "Voeg een straalwaarde en een geldige coördinaat in (+ | - 90 ° lat, + | -180 ° lon)",
-                "newFeature": "Nieuw"
+                "newFeature": "Nieuw"                
             }
         },
         "user":{

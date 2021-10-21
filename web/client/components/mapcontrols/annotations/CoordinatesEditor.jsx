@@ -138,7 +138,8 @@ class CoordinatesEditor extends React.Component {
                         value={this.props.properties.radius}
                         projection={this.props.mapProjection}
                         name="radius"
-                        onChange={(radius, uom) => {
+                        onChange={(radius, uom) => {          
+                            this.props.setIsValidFeature()
                             if (this.isValid(this.props.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray), uom);
                             } else if (radius !== "") {
@@ -267,7 +268,7 @@ class CoordinatesEditor extends React.Component {
                                 {this.renderLabelTexts(idx, {textLabels, featurePropValue})}
                             </span>
                         </div>
-                        }
+                        }                        
                         <CoordinatesRow
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
@@ -326,7 +327,8 @@ class CoordinatesEditor extends React.Component {
                                 } else if (this.props.properties.isValidFeature) {
                                     this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
                                 }
-                            }}/>
+                            }}
+                            setIsValidFeature={this.props.setIsValidFeature}/>
                     </>
                     )}
                 </div>
@@ -376,7 +378,7 @@ class CoordinatesEditor extends React.Component {
         }
         return components;
     }
-    change = (id, value) => {
+    change = (id, value) => {        
         let tempComps = this.props.components;
         const lat = isNaN(parseFloat(value.lat)) ? "" : parseFloat(value.lat);
         const lon = isNaN(parseFloat(value.lon)) ? "" : parseFloat(value.lon);
@@ -392,7 +394,7 @@ class CoordinatesEditor extends React.Component {
             if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
                 this.props.onHighlightPoint(tempComps[id]);
             }
-        }
+        }            
     }
 }
 
