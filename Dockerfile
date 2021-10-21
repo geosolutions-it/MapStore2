@@ -1,7 +1,8 @@
 FROM tomcat:9-jdk11-openjdk AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geo-solutions.it>"
-ARG MAPSTORE_WEBAPP_SRC="./.placeholder"
+ARG MAPSTORE_WEBAPP_SRC="https://github.com/geosolutions-it/MapStore2/releases/latest/download/mapstore.war"
 ADD "${MAPSTORE_WEBAPP_SRC}" "/mapstore/"
+
 
 COPY ./docker/* /mapstore/docker/
 WORKDIR /mapstore
@@ -13,9 +14,11 @@ ENV CATALINA_BASE "$CATALINA_HOME"
 ENV MAPSTORE_WEBAPP_DST="${CATALINA_BASE}/webapps"
 ENV INITIAL_MEMORY="512m"
 ENV MAXIMUM_MEMORY="512m"
-ARG OVR=""
+ARG OVR="geostore-datasource-ovr.properties"
 ENV JAVA_OPTS="${JAVA_OPTS} -Xms${INITIAL_MEMORY} -Xmx${MAXIMUM_MEMORY}"
-ENV GEOSTORE_OVR_OPT="-Dgeostore-ovr=file://${CATALINA_BASE}/conf/${OVR}"
+# ENV GEOSTORE_OVR_OPT="-Dgeostore-ovr=file://${CATALINA_BASE}/conf/${OVR}"
+ENV GEOSTORE_OVR_OPT=""
+
 ENV JAVA_OPTS="${JAVA_OPTS} ${GEOSTORE_OVR_OPT}"
 ENV TERM xterm
 
