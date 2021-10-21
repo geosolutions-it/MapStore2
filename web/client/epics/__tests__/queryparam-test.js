@@ -13,6 +13,7 @@ import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap } from '../.
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
+import {layerLoad} from "../../actions/layers";
 
 describe('queryparam epics', () => {
     it('test readQueryParamsOnMapEpic without params in url search', (done) => {
@@ -59,7 +60,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -184,7 +185,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -215,7 +216,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -252,7 +253,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -290,7 +291,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -321,7 +322,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
