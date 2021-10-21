@@ -351,7 +351,6 @@ class AnnotationsEditor extends React.Component {
     };
 
     renderEditingCoordButtons = () => {
-
         const allGeometryIsValid = this.allGeometryIsValid();
         return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
             <Row className="text-center noTopMargin">

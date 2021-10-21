@@ -63,6 +63,7 @@ export const HIDE_MEASURE_WARNING = 'ANNOTATIONS:HIDE_MEASURE_WARNING';
 export const TOGGLE_SHOW_AGAIN = 'ANNOTATIONS:TOGGLE_SHOW_AGAIN';
 export const GEOMETRY_HIGHLIGHT = 'ANNOTATIONS:GEOMETRY_HIGHLIGHT';
 export const UNSELECT_FEATURE = 'ANNOTATIONS:UNSELECT_FEATURE';
+export const SET_IS_VALID_FEATURE = 'ANNOTATIONS:SET_IS_VALID_FEATURE';
 
 export const initPlugin = () => ({
     type: INIT_PLUGIN
@@ -421,3 +422,8 @@ export const hideMeasureWarning = () => ({
 export const toggleShowAgain = () => ({
     type: TOGGLE_SHOW_AGAIN
 });
+
+export const setIsValidFeature = () => ({
+    type: SET_IS_VALID_FEATURE
+});
+
