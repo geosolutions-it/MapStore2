@@ -11,7 +11,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined, inRange} from 'lodash';
 import url from 'url';
 
-import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView } from '../actions/map';
+import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView} from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker } from '../actions/search';
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
@@ -24,6 +24,7 @@ import { getBbox } from "../utils/MapUtils";
 import { mapSelector } from '../selectors/map';
 import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
 import { shareSelector } from "../selectors/controls";
+import {LAYER_LOAD} from "../actions/layers";
 
 /*
 it maps params key to function.
@@ -112,15 +113,16 @@ const paramActions = {
 
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
- * It needs to wait the first `CHANGE_MAP_VIEW` to ensure that width and height of map are in the state.
- * @param {external:Observable} action$ manages `LOCATION_CHANGE` and `CHANGE_MAP_VIEW`
+ * It needs to wait the first `LAYER_LOAD` to ensure that width and height of map are in the state as well as the final bbox bounds data.
+ * @param {external:Observable} action$ manages `LOCATION_CHANGE` and `LAYER_LOAD`
  * @memberof epics.share
  * @return {external:Observable}
  */
 export const readQueryParamsOnMapEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .switchMap(() =>
-            action$.ofType(CHANGE_MAP_VIEW)
+            // action$.ofType(CHANGE_MAP_VIEW)
+            action$.ofType(LAYER_LOAD)
                 .take(1)
                 .switchMap(() => {
                     const state = store.getState();
