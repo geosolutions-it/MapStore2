@@ -32,7 +32,6 @@ import {
 import { paginationInfo, isDescribeLoaded, layerDescribeSelector } from '../selectors/query';
 import { mapSelector } from '../selectors/map';
 import { authkeyParamNameSelector } from '../selectors/catalog';
-import { getSelectedLayer } from '../selectors/layers';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import { addTimeParameter } from '../utils/WFSTimeUtils';
 import ConfigUtils from '../utils/ConfigUtils';
