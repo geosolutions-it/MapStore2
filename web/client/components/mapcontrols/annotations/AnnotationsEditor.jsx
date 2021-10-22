@@ -352,14 +352,13 @@ class AnnotationsEditor extends React.Component {
 
     renderEditingCoordButtons = () => {
 
-        let allValidGemotry = true
-        
-        if(this.props?.editing?.features && this.props.editing?.features?.length > 0){            
-            this.props.editing.features.map((p) => {        
-                if(!p?.properties?.isValidFeature) { allValidGemotry = false }
-            })
-        }        
-        
+        let allValidGemotry = true;
+        if (this.props?.editing?.features && this.props.editing?.features?.length > 0) {
+            this.props.editing.features.map((p) => {
+                if (!p?.properties?.isValidFeature) { allValidGemotry = false; }
+            });
+        }
+
         return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
             <Row className="text-center noTopMargin">
                 <Col xs={12}>
@@ -508,7 +507,7 @@ class AnnotationsEditor extends React.Component {
                     geodesic={this.props.geodesic}
                     defaultPointType={this.getConfig().defaultPointType}
                     defaultStyles={this.props.defaultStyles}
-                    setIsValidFeature={this.props.setIsValidFeature}                    
+                    setIsValidFeature={this.props.setIsValidFeature}
                 />
                 }
             </div>
@@ -643,6 +642,7 @@ class AnnotationsEditor extends React.Component {
     }
 
     render() {
+
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
         let mouseHoverEvents = this.props.mouseHoverEvents ? {
             onMouseEnter: () => {

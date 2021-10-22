@@ -49,18 +49,17 @@ const FeaturesList = (props) => {
         type === "Text" && onAddText();
         onSetStyle(style);
         onStartDrawing({geodesic});
-        setTabValue('coordinates');      
-        setIsValidFeature()  
+        setTabValue('coordinates');
+        setIsValidFeature();
     };
     const circleCenterStyles = defaultPointType === "symbol" ? defaultStyles.POINT?.[defaultPointType] : DEFAULT_ANNOTATIONS_STYLES.Point;
 
     const linePointStyles = defaultPointType === "symbol" ?  [{...defaultStyles.POINT?.[defaultPointType], highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "StartPoint Style", geometry: "startPoint", filtering: false, id: uuidv1()},
         {...defaultStyles.POINT?.[defaultPointType], highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "EndPoint Style", geometry: "endPoint", filtering: false, id: uuidv1()}] : getStartEndPointsForLinestring();
 
-    
 
     return (
-        <>        
+        <>
             <div className={'geometries-toolbar'}>
                 <ControlLabel><Message msgId={"annotations.geometries"}/></ControlLabel>
                 <Toolbar
@@ -156,21 +155,17 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
     const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
     const unselect = selected?.properties?.id === properties?.id;
-    
+
     const selectedIsValidFeature = get(feature, "properties.isValidFeature", true);
     const isValidFeature = selectedIsValidFeature || properties?.isValidFeature;
     const allowCardMouseEvent = !unselect && selectedIsValidFeature;
-    let inValidError = null;
-    if(!isValidFeature){           
-      
-    }        
     return (
         <div
             className={cs('geometry-card', {'ms-selected': unselect})}
             onMouseEnter={() => allowCardMouseEvent && onGeometryHighlight(properties.id)}
             onMouseLeave={() => allowCardMouseEvent && onGeometryHighlight(properties.id, false)}
-            onClick={() =>{                
-                
+            onClick={() =>{
+
                 if (unselect) {
                     onUnselectFeature();
                     onGeometryHighlight(properties.id);
@@ -178,8 +173,8 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                     onSelectFeature([feature]);
                     setTabValue(isMeasureEditDisabled ? 'coordinates' : 'style');
                     onStyleGeometry(!isMeasureEditDisabled);
-                }                
-                setIsValidFeature()
+                }
+                setIsValidFeature();
             } }
         >
             <div className="geometry-card-preview">
@@ -193,35 +188,36 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                     className: 'square-button-md no-border'
                 }}
                 buttons={[
-                    {                        
+                    {
                         Element: () => {
-                            if(!isValidFeature){
-                                if(feature?.properties?.isCircle){
-                                    return <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidCircle"/></Tooltip>}>
-                                                <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />                            
-                                            </OverlayTrigger>                                    
-                                } else if(feature?.properties?.isText){
-                                    return <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidText"/></Tooltip>}>
-                                                <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />                            
-                                            </OverlayTrigger>                                    
-                                } else if (feature?.geometry?.type === 'Polygon'){
-                                    return <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidPolyline"/></Tooltip>}>
-                                                <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />                            
-                                            </OverlayTrigger>                                                                        
-                                } else if (feature?.geometry?.type === 'Point'){
-                                    return <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidMarker"/></Tooltip>}>
-                                                <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />                            
-                                            </OverlayTrigger>                                                                                                            
-                                } else if (feature?.geometry?.type === 'LineString'){                                    
-                                    return <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidPolyline"/></Tooltip>}>
-                                                <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />                            
-                                            </OverlayTrigger>                                                                                                            
+                            if (!isValidFeature) {
+                                if (feature?.properties?.isCircle) {
+                                    return (<OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidCircle"/></Tooltip>}>
+                                        <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />
+                                    </OverlayTrigger>);
+                                } else if (feature?.properties?.isText) {
+                                    return (<OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidText"/></Tooltip>}>
+                                        <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />
+                                    </OverlayTrigger>);
+                                } else if (feature?.geometry?.type === 'Polygon') {
+                                    return (<OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidPolyline"/></Tooltip>}>
+                                        <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />
+                                    </OverlayTrigger>);
+                                } else if (feature?.geometry?.type === 'Point') {
+                                    return (<OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidMarker"/></Tooltip>}>
+                                        <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />
+                                    </OverlayTrigger>);
+                                } else if (feature?.geometry?.type === 'LineString') {
+                                    return (<OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.editor.notValidPolyline"/></Tooltip>}>
+                                        <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />
+                                    </OverlayTrigger>);
                                 }
-                                
-                            }else{
-                                return <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />                                                         
-                            }                             
-                        }                                                                       
+
+                            } else {
+                                return <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")} />;
+                            }
+                            return null;
+                        }
                     },
                     {
                         glyph: 'zoom-to',
@@ -234,7 +230,7 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                         }
                     },
                     {
-                        glyph: 'trash',                        
+                        glyph: 'trash',
                         tooltip: <Message msgId="annotations.removeGeometry"/>,
                         onClick: (event) => {
                             event.stopPropagation();
