@@ -128,7 +128,7 @@ describe('Test styleeditor reducer', () => {
             canEdit: false,
             error: {
                 parsingCapabilities: {
-                    status: 404,
+                    status: 400,
                     message: 'could not be unmarshalled'
                 }
             }
