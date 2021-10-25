@@ -18,7 +18,7 @@ COPY ./product/target/mapstore.war "${CATALINA_BASE}/webapps/"
 ENV DATA_DIR="/data"
 RUN mkdir -p ${DATA_DIR}/configs
 #add all files you want to copy to the external dir
-COPY newext.json /data/configs/new.json 
+# COPY newext.json /data/configs/new.json 
 
 # Geostore externalization template. Disabled by default
 COPY docker/geostore-datasource-ovr.properties "${CATALINA_BASE}/conf/"
