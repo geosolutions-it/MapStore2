@@ -16,7 +16,7 @@ import {newContextSelector, resourceSelector, creationStepSelector, reloadConfir
     validationStatusSelector, cfgErrorSelector, templatesSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
     availablePluginsFilterTextSelector, availableTemplatesFilterTextSelector, enabledPluginsFilterTextSelector,
     enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector, tutorialStepSelector, selectedThemeSelector,
-    customVariablesEnabledSelector} from '../selectors/contextcreator';
+    customVariablesEnabledSelector, isNewContext} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {tutorialSelector} from '../selectors/tutorial';
 import {init, setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
@@ -63,7 +63,8 @@ export const contextCreatorSelector = createStructuredSelector({
     pluginsConfig: () => ConfigUtils.getConfigProp('plugins'),
     showBackToPageConfirmation: showBackToPageConfirmationSelector,
     selectedTheme: selectedThemeSelector,
-    customVariablesEnabled: customVariablesEnabledSelector
+    customVariablesEnabled: customVariablesEnabledSelector,
+    enableClickOnStep: state => !isNewContext(state)
 });
 
 /**
