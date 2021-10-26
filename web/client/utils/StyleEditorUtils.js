@@ -43,7 +43,6 @@ const getGeometryType = (geomProperty = {}) => {
     const localType = geomProperty.localType && geomProperty.localType.toLowerCase() || '';
     if (localType.indexOf('polygon') !== -1
         || localType.indexOf('surface') !== -1
-        || localType.indexOf('multiPolygon') !== -1
     ) {
         return 'polygon';
     } else if (localType.indexOf('linestring') !== -1) {
@@ -77,7 +76,7 @@ export const generateStyleId = ({title = ''}) => `${title.toLowerCase().replace(
  */
 export const extractFeatureProperties = ({describeLayer = {}, describeFeatureType = {}} = {}) => {
 
-    const owsType = describeLayer?.owsType;
+    const owsType = describeLayer?.owsType || null;
     const descProperties = get(describeFeatureType, 'featureTypes[0].properties') || null;
     const geomProperty = descProperties && head(descProperties.filter(({ type, localType }) => {
         return type && type.includes('gml') && localType;

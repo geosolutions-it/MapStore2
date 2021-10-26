@@ -187,65 +187,6 @@ describe('Test styleeditor selector', () => {
             layers: {
                 "flat": [
                     {
-                        "type": "osm",
-                        "title": "Open Street Map",
-                        "name": "mapnik",
-                        "source": "osm",
-                        "group": "background",
-                        "visibility": true,
-                        "id": "mapnik__0",
-                        "loading": false,
-                        "previousLoadingError": false,
-                        "loadingError": false
-                    },
-                    {
-                        "type": "tileprovider",
-                        "title": "NASAGIBS Night 2012",
-                        "provider": "NASAGIBS.ViirsEarthAtNight2012",
-                        "name": "Night2012",
-                        "source": "nasagibs",
-                        "group": "background",
-                        "visibility": false,
-                        "id": "Night2012__1"
-                    },
-                    {
-                        "type": "tileprovider",
-                        "title": "OpenTopoMap",
-                        "provider": "OpenTopoMap",
-                        "name": "OpenTopoMap",
-                        "source": "OpenTopoMap",
-                        "group": "background",
-                        "visibility": false,
-                        "id": "OpenTopoMap__2"
-                    },
-                    {
-                        "format": "image/jpeg",
-                        "group": "background",
-                        "name": "s2cloudless:s2cloudless",
-                        "opacity": 1,
-                        "title": "Sentinel 2 Cloudless",
-                        "type": "wms",
-                        "source": "s2cloudless",
-                        "visibility": false,
-                        "singleTile": false,
-                        "id": "s2cloudless:s2cloudless__3"
-                    },
-                    {
-                        "source": "ol",
-                        "group": "background",
-                        "title": "Empty Background",
-                        "fixed": true,
-                        "type": "empty",
-                        "visibility": false,
-                        "args": [
-                            "Empty Background",
-                            {
-                                "visibility": false
-                            }
-                        ],
-                        "id": "undefined__4"
-                    },
-                    {
                         "type": "wms",
                         "style": "pophade",
                         "format": "image/png",
