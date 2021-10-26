@@ -10,7 +10,8 @@ import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
-
+import { isNumber, isDate } from 'lodash';
+import moment from 'moment';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
@@ -24,11 +25,40 @@ export const defaultColorGenerator = (total, colorOptions) => {
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
 };
 
+const colorNumbers = value => {
+    let color;
+
+    if (value < 1000) {
+        color = "red";
+    } else if (value > 1000 && value < 2000) {
+        color = "blue";
+    } else if (value > 2000 && value < 3000) {
+        color = "grey";
+    } else if (value > 3000 && value < 4000) {
+        color = "pink";
+    } else if (value > 4000 && value < 5000) {
+        color = "yellow";
+    } else if (value > 5000 && value < 6000) {
+        color = "orange";
+    }
+
+    return color;
+};
+
+const colorDate = value => {
+    const date = new Date(value).getFullYear();
+    const color = (date === 2019 ) ? 'red' : (date === 2020) ?  "blue" : 'black';
+    return color;
+
+};
+
+
 function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel }) {
 
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
-    let y2 = data.map(d => d[classificationAttr]);
+    let classifications = data.map(d => d[classificationAttr]);
+
     switch (type) {
     case 'pie':
 
@@ -53,15 +83,38 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
 
         }
 
+        const colorCategories = {
+
+            "Production Water Slick": "red",
+            "Anomalous Asset Slick": "blue",
+            "SENTINEL-1A": "pink",
+            "SENTINEL-1B": "yellow"
+
+        };
+
+
+        let classificationColors = classifications.map(item => {
+
+            if (isNumber(item)) {
+                return colorNumbers(item);
+            } else if (moment(item, moment.ISO_8601, true).isValid()) {
+                return colorDate(item);
+            }
+            return colorCategories[item];
+
+        });
+
         const trace1 = {
             hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x: x,
             y: y,
             type,
-            name: yAxisLabel || yDataKey
+            name: yAxisLabel || yDataKey,
+            marker: {color: classificationColors}
 
         };
 
+        /*
         const trace2 = {
             hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x: x,
@@ -70,8 +123,8 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             name: classificationAttr,
             marker: {color: '#' +  Math.floor(Math.random() * 16777215).toString(16)}
         };
-
-        const allData = classificationAttr ? [trace1, trace2] : trace1;
+        */
+        const allData = trace1;
 
         return allData;
     }
@@ -166,7 +219,7 @@ export const toPlotly = (props) => {
             width
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel})
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel});
             return  allData;
         }),
         config: {
