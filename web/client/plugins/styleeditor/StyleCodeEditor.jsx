@@ -58,16 +58,18 @@ const styleUpdateTypes = {
 };
 
 function getAttributes(hintProperties, geometryType) {
-    const typeToCheck = ['integer', 'long', 'double', 'float', 'bigdecimal', 'string', 'decimal', 'number', 'int'];
+    const stringTypeToCheck = [ 'string'];
+    const numberTypeToCcheck = ['integer', 'long', 'double', 'float', 'bigdecimal', 'decimal', 'number', 'int'];
+
     return hintProperties && geometryType !== 'raster' && Object.keys(hintProperties)
-        .filter((key) => typeToCheck
+        .filter((key) => [...stringTypeToCheck, ...numberTypeToCcheck]
             .indexOf(hintProperties[key].localType.toLowerCase()) !== -1)
         .map((key) => {
             const { localType } = hintProperties[key];
             return {
                 attribute: key,
                 label: key,
-                type: typeToCheck
+                type: numberTypeToCcheck
                     .indexOf(localType.toLowerCase()) !== -1
                     ? 'number'
                     : 'string'
