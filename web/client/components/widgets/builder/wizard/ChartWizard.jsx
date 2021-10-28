@@ -110,54 +110,54 @@ const enhanceWizard = compose(lifecycle({
 }),
 setDisplayName('ChartWizard')
 );
-const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies, hasAggregateProcess }) =>
-    (<Wizard
-        step={step}
-        setPage={setPage}
-        onFinish={onFinish}
-        isStepValid={n =>
-            n === 0
-                ? data.chartType
-                : n === 1
-                    ? isChartOptionsValid(data.options, { hasAggregateProcess })
-                    : true
-        } hideButtons>
-        <ChartType
-            key="type"
-            featureTypeProperties={featureTypeProperties}
-            type={data.type}
-            onSelect={i => {
-                onChange("type", i);
-            }} />
-        <ChartOptions
-            hasAggregateProcess={hasAggregateProcess}
-            dependencies={dependencies}
-            key="chart-options"
-            featureTypeProperties={featureTypeProperties}
-            types={types}
-            data={data}
-            onChange={onChange}
-            layer={data.layer || layer}
-            sampleChart={renderPreview({
-                hasAggregateProcess,
-                data,
-                layer: data.layer || layer,
-                dependencies,
-                setValid: v => setValid(v && isChartOptionsValid(data.options, {hasAggregateProcess})) })
-            }
-        />
-        <WidgetOptions
-            key="widget-options"
-            data={data}
-            onChange={onChange}
-            layer={data.layer || layer}
-            sampleChart={renderPreview({
-                hasAggregateProcess,
-                data,
-                layer: data.layer || layer,
-                dependencies,
-                setValid: v => setValid(v && isChartOptionsValid(data.options, {hasAggregateProcess})) })
-            }
-        />
-    </Wizard>);
+
+const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies, hasAggregateProcess }) => (<Wizard
+    step={step}
+    setPage={setPage}
+    onFinish={onFinish}
+    isStepValid={n =>
+        n === 0
+            ? data.chartType
+            : n === 1
+                ? isChartOptionsValid(data.options, { hasAggregateProcess })
+                : true
+    } hideButtons>
+    <ChartType
+        key="type"
+        featureTypeProperties={featureTypeProperties}
+        type={data.type}
+        onSelect={i => {
+            onChange("type", i);
+        }} />
+    <ChartOptions
+        hasAggregateProcess={hasAggregateProcess}
+        dependencies={dependencies}
+        key="chart-options"
+        featureTypeProperties={featureTypeProperties}
+        types={types}
+        data={data}
+        onChange={onChange}
+        layer={data.layer || layer}
+        sampleChart={renderPreview({
+            hasAggregateProcess,
+            data,
+            layer: data.layer || layer,
+            dependencies,
+            setValid: v => setValid(v && isChartOptionsValid(data.options, {hasAggregateProcess})) })
+        }
+    />
+    <WidgetOptions
+        key="widget-options"
+        data={data}
+        onChange={onChange}
+        layer={data.layer || layer}
+        sampleChart={renderPreview({
+            hasAggregateProcess,
+            data,
+            layer: data.layer || layer,
+            dependencies,
+            setValid: v => setValid(v && isChartOptionsValid(data.options, {hasAggregateProcess})) })
+        }
+    />
+</Wizard>);
 export default enhanceWizard(ChartWizard);

@@ -5,7 +5,7 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-import React from 'react';
+import React, {useState} from 'react';
 import { head, get} from 'lodash';
 import { Row, Col, Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import Message from '../../../../I18N/Message';
@@ -39,7 +39,15 @@ const COLORS = [{
     name: 'global.colors.purple',
     schema: 'sequencial',
     options: {base: 300, range: 4}
-}];
+},
+{
+    name: <Message msgId={'global.custom'} />,
+    schema: 'sequencial',
+    options: {base: 0, range: 0},
+    ramp: "#fff",
+    custom: true
+}
+];
 
 
 const getColorRangeItems = (type) => {
@@ -66,6 +74,9 @@ export default ({
     },
     aggregationOptions = [],
     sampleChart}) => {
+
+    const [customColor, setCustomColor] = useState(false);
+
 
     return (
         <Row>
@@ -124,23 +135,6 @@ export default ({
                         </Col>
                     </FormGroup> : null}
 
-                    <FormGroup controlId="classificationAttribute" className="mapstore-block-width">
-                        <Col componentClass={ControlLabel} sm={6}>
-                            <Message msgId={"Classification attribute"} />
-                        </Col>
-                        <Col sm={6}>
-                            <Select
-                                value={data.options && data.options.classificationAttribute}
-                                options={options}
-                                placeholder={placeHolder}
-                                onChange={(val) => {
-                                    onChange("options.classificationAttribute", val && val.value);
-                                }}
-                            />
-                        </Col>
-                    </FormGroup>
-
-
                     {formOptions.showUom ?
                         <FormGroup controlId="uom">
                             <Col componentClass={ControlLabel} sm={6}>
@@ -160,9 +154,28 @@ export default ({
                                     items={getColorRangeItems(data.type)}
                                     value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                                     samples={data.type === "pie" ? 5 : 1}
-                                    onChange={v => { onChange("autoColorOptions", {...v.options, name: v.name}); }}/>
+                                    onChange={v => { onChange("autoColorOptions", {...v.options, name: v.name}); setCustomColor(v?.custom); }  }/>
                             </Col>
                         </FormGroup> : null}
+
+                    { customColor &&
+                    <FormGroup controlId="classificationAttribute" className="mapstore-block-width">
+                        <Col componentClass={ControlLabel} sm={6}>
+                            <Message msgId={"Classification attribute"} />
+                        </Col>
+                        <Col sm={6}>
+                            <Select
+                                value={data.options && data.options.classificationAttribute}
+                                options={options}
+                                placeholder={placeHolder}
+                                onChange={(val) => {
+                                    onChange("options.classificationAttribute", val && val.value);
+                                }}
+                            />
+                        </Col>
+                    </FormGroup>
+                    }
+
                     {formOptions.showLegend ?
                         <FormGroup controlId="displayLegend">
                             <Col componentClass={ControlLabel} sm={6}>
