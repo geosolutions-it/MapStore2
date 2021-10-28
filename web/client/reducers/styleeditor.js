@@ -113,7 +113,8 @@ function styleeditor(state = {}, action) {
             error: {
                 ...state.error,
                 [action.status || 'global']: {
-                    status: action.error && action.error.status || 404,
+                    // use 400 as default eg: CORS error
+                    status: action.error && action.error.status || 400,
                     ...errorInfo
                 }
             }
