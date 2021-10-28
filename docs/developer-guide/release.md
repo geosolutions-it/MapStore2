@@ -33,7 +33,7 @@ Replacing:
 - [ ] Verify if it is needed to release a new version of http-proxy or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process)
 - [ ] If major release (YYYY.XX.00), create a branch `YYYY.XX.xx`  (`xx` is really `xx`, example: 2018.01.xx)
 - [ ]  If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy by updating the `branch` parameter in the build configuration page to `YYYY.XX.xx`
-- [ ] Increment version in `package.json`. (as for semantinc versioning the major have to be 0 until the npm package has not a stable API).  (**updated**)
+- [ ] Increment version in `package.json`. (as for semantic versioning the major have to be 0 until the npm package has not a stable API).
     - [ ] Commit on master 0.&lt;x-incremented&gt;.0
     - [ ] Make sure on YYYY.XX.xx we have the 0.x.&lt;number-of-minor-version&gt;
 - [ ] Update `CHANGELOG.md`. [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation) - both master and stable
