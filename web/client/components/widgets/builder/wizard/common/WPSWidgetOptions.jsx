@@ -5,7 +5,7 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-import React from 'react';
+import React, {useState} from 'react';
 import { head, get} from 'lodash';
 import { Row, Col, Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import Message from '../../../../I18N/Message';
@@ -39,7 +39,15 @@ const COLORS = [{
     name: 'global.colors.purple',
     schema: 'sequencial',
     options: {base: 300, range: 4}
-}];
+},
+{
+    name: <Message msgId={'global.custom'} />,
+    schema: 'sequencial',
+    options: {base: 0, range: 0},
+    ramp: "#fff",
+    custom: true
+}
+];
 
 
 const getColorRangeItems = (type) => {
@@ -65,101 +73,128 @@ export default ({
         advancedOptions: true
     },
     aggregationOptions = [],
-    sampleChart}) => (
-    <Row>
-        <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
-        {/* this sticky style helps to keep showing chart when scrolling*/}
-        <Col xs={12} style={{ position: "sticky", top: 0, zIndex: 1}}>
-            <div style={{marginBottom: "30px"}}>
-                {sampleChart}
-            </div>
-        </Col>
-        <Col xs={12}>
-            <Form className="chart-options-form" horizontal>
-                {formOptions.showGroupBy ? (
-                    <FormGroup controlId="groupByAttributes" className="mapstore-block-width">
+    sampleChart}) => {
+
+    const [customColor, setCustomColor] = useState(false);
+
+
+    return (
+        <Row>
+            <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
+            {/* this sticky style helps to keep showing chart when scrolling*/}
+            <Col xs={12} style={{ position: "sticky", top: 0, zIndex: 1}}>
+                <div style={{marginBottom: "30px"}}>
+                    {sampleChart}
+                </div>
+            </Col>
+            <Col xs={12}>
+                <Form className="chart-options-form" horizontal>
+                    {formOptions.showGroupBy ? (
+                        <FormGroup controlId="groupByAttributes" className="mapstore-block-width">
+                            <Col componentClass={ControlLabel} sm={6}>
+                                <Message msgId={getLabelMessageId("groupByAttributes", data)} />
+                            </Col>
+                            <Col sm={6}>
+                                <Select
+                                    value={data.options && data.options.groupByAttributes}
+                                    options={options}
+                                    placeholder={placeHolder}
+                                    onChange={(val) => {
+                                        onChange("options.groupByAttributes", val && val.value);
+                                    }}
+                                />
+                            </Col>
+                        </FormGroup>) : null}
+                    <FormGroup controlId="aggregationAttribute" className="mapstore-block-width">
                         <Col componentClass={ControlLabel} sm={6}>
-                            <Message msgId={getLabelMessageId("groupByAttributes", data)} />
+                            <Message msgId={getLabelMessageId("aggregationAttribute", data)} />
                         </Col>
                         <Col sm={6}>
                             <Select
-                                value={data.options && data.options.groupByAttributes}
+                                value={data.options && data.options.aggregationAttribute}
                                 options={options}
                                 placeholder={placeHolder}
                                 onChange={(val) => {
-                                    onChange("options.groupByAttributes", val && val.value);
+                                    onChange("options.aggregationAttribute", val && val.value);
                                 }}
                             />
                         </Col>
-                    </FormGroup>) : null}
-                <FormGroup controlId="aggregationAttribute" className="mapstore-block-width">
-                    <Col componentClass={ControlLabel} sm={6}>
-                        <Message msgId={getLabelMessageId("aggregationAttribute", data)} />
-                    </Col>
-                    <Col sm={6}>
-                        <Select
-                            value={data.options && data.options.aggregationAttribute}
-                            options={options}
-                            placeholder={placeHolder}
-                            onChange={(val) => {
-                                onChange("options.aggregationAttribute", val && val.value);
-                            }}
-                        />
-                    </Col>
-                </FormGroup>
-                {hasAggregateProcess ? <FormGroup controlId="aggregateFunction" className="mapstore-block-width">
-                    <Col componentClass={ControlLabel} sm={6}>
-                        <Message msgId={getLabelMessageId("aggregateFunction", data)} />
-                    </Col>
-                    <Col sm={6}>
-                        <Select
-                            value={data.options && data.options.aggregateFunction}
-                            options={aggregationOptions}
-                            placeholder={placeHolder}
-                            onChange={(val) => { onChange("options.aggregateFunction", val && val.value); }}
-                        />
-                    </Col>
-                </FormGroup> : null}
-                {formOptions.showUom ?
-                    <FormGroup controlId="uom">
+                    </FormGroup>
+
+                    {hasAggregateProcess ? <FormGroup controlId="aggregateFunction" className="mapstore-block-width">
                         <Col componentClass={ControlLabel} sm={6}>
-                            <Message msgId={getLabelMessageId("uom", data)} />
+                            <Message msgId={getLabelMessageId("aggregateFunction", data)} />
                         </Col>
                         <Col sm={6}>
-                            <FormControl value={get(data, `options.seriesOptions[0].uom`)} type="text" onChange={e => onChange("options.seriesOptions.[0].uom", e.target.value)} />
-                        </Col>
-                    </FormGroup> : null}
-                {formOptions.showColorRampSelector ?
-                    <FormGroup controlId="colorRamp" className="mapstore-block-width">
-                        <Col componentClass={ControlLabel} sm={6}>
-                            <Message msgId={getLabelMessageId("colorRamp", data)} />
-                        </Col>
-                        <Col sm={6}>
-                            <ColorRamp
-                                items={getColorRangeItems(data.type)}
-                                value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
-                                samples={data.type === "pie" ? 5 : 1}
-                                onChange={v => { onChange("autoColorOptions", {...v.options, name: v.name}); }}/>
-                        </Col>
-                    </FormGroup> : null}
-                {formOptions.showLegend ?
-                    <FormGroup controlId="displayLegend">
-                        <Col componentClass={ControlLabel} sm={6}>
-                            <Message msgId={getLabelMessageId("displayLegend", data)} />
-                        </Col>
-                        <Col sm={6}>
-                            <SwitchButton
-                                checked={data.legend}
-                                onChange={(val) => { onChange("legend", val); }}
+                            <Select
+                                value={data.options && data.options.aggregateFunction}
+                                options={aggregationOptions}
+                                placeholder={placeHolder}
+                                onChange={(val) => { onChange("options.aggregateFunction", val && val.value); }}
                             />
                         </Col>
                     </FormGroup> : null}
-                {formOptions.advancedOptions && data.widgetType === "chart" && (data.type === "bar" || data.type === "line")
-                    ? <ChartAdvancedOptions data={data} onChange={onChange} />
-                    : null}
 
-            </Form>
+                    {formOptions.showUom ?
+                        <FormGroup controlId="uom">
+                            <Col componentClass={ControlLabel} sm={6}>
+                                <Message msgId={getLabelMessageId("uom", data)} />
+                            </Col>
+                            <Col sm={6}>
+                                <FormControl value={get(data, `options.seriesOptions[0].uom`)} type="text" onChange={e => onChange("options.seriesOptions.[0].uom", e.target.value)} />
+                            </Col>
+                        </FormGroup> : null}
+                    {formOptions.showColorRampSelector ?
+                        <FormGroup controlId="colorRamp" className="mapstore-block-width">
+                            <Col componentClass={ControlLabel} sm={6}>
+                                <Message msgId={getLabelMessageId("colorRamp", data)} />
+                            </Col>
+                            <Col sm={6}>
+                                <ColorRamp
+                                    items={getColorRangeItems(data.type)}
+                                    value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
+                                    samples={data.type === "pie" ? 5 : 1}
+                                    onChange={v => { onChange("autoColorOptions", {...v.options, name: v.name}); setCustomColor(v?.custom); }  }/>
+                            </Col>
+                        </FormGroup> : null}
 
-        </Col>
-    </Row>
-);
+                    { customColor &&
+                    <FormGroup controlId="classificationAttribute" className="mapstore-block-width">
+                        <Col componentClass={ControlLabel} sm={6}>
+                            <Message msgId={"Classification attribute"} />
+                        </Col>
+                        <Col sm={6}>
+                            <Select
+                                value={data.options && data.options.classificationAttribute}
+                                options={options}
+                                placeholder={placeHolder}
+                                onChange={(val) => {
+                                    onChange("options.classificationAttribute", val && val.value);
+                                }}
+                            />
+                        </Col>
+                    </FormGroup>
+                    }
+
+                    {formOptions.showLegend ?
+                        <FormGroup controlId="displayLegend">
+                            <Col componentClass={ControlLabel} sm={6}>
+                                <Message msgId={getLabelMessageId("displayLegend", data)} />
+                            </Col>
+                            <Col sm={6}>
+                                <SwitchButton
+                                    checked={data.legend}
+                                    onChange={(val) => { onChange("legend", val); }}
+                                />
+                            </Col>
+                        </FormGroup> : null}
+                    {formOptions.advancedOptions && data.widgetType === "chart" && (data.type === "bar" || data.type === "line")
+                        ? <ChartAdvancedOptions data={data} onChange={onChange} />
+                        : null}
+
+                </Form>
+
+            </Col>
+        </Row>
+    );
+};

@@ -22,6 +22,7 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.groupByAttributes === o2.groupByAttributes
+    && o1.classificationAttribute === o2.classificationAttribute
     && o1.viewParams === o2.viewParams;
 
 
@@ -42,13 +43,23 @@ const dataStreamFactory = ($props) =>
                 getLayerJSONFeature(
                     layer,
                     filter,
-                    { propertyName: [...castArray(options.aggregationAttribute), ...castArray(options.groupByAttributes)] }
+                    { propertyName: options.classificationAttribute ? [
+                        ...castArray(options.aggregationAttribute),
+                        ...castArray(options.groupByAttributes),
+                        ...castArray(options.classificationAttribute)
+                    ] :
+                        [
+                            ...castArray(options.aggregationAttribute),
+                            ...castArray(options.groupByAttributes)
+                        ]
+                    }
                 ).map((response) => ({
                     loading: false,
                     isAnimationActive: false,
                     error: undefined,
                     data: wfsToChartData(response, options),
-                    series: [{ dataKey: options.aggregationAttribute}],
+                    series: [{ dataKey: options.aggregationAttribute }],
+                    classifications: {dataKey: options.classificationAttribute},
                     xAxis: { dataKey: options.groupByAttributes}
                 }))
                     .do(onLoad)

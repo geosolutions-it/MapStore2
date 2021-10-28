@@ -49,7 +49,7 @@ function ColorRamp({
     const items = propItems.map(({options = {}, ...item}) => ({
         ...item,
         options,
-        ramp: rampFunction
+        ramp: item.ramp ? [item.ramp] : rampFunction
             ? rampFunction(item, options)
             // TODO: replace with tynicolor
             : (sameToneRangeColors(options.base, options.range, samples + 1, options.options) || ["#AAA"]).splice(1)
