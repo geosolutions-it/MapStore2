@@ -11,7 +11,10 @@ import { error, success } from '../actions/notifications';
 import { SAVE_USER_SESSION, LOAD_USER_SESSION, REMOVE_USER_SESSION, USER_SESSION_REMOVED,
     USER_SESSION_START_SAVING, USER_SESSION_STOP_SAVING,
     userSessionSaved, userSessionLoaded, loading, saveUserSession, userSessionRemoved,
-    userSessionStartSaving, userSessionStopSaving } from "../actions/usersession";
+    userSessionStartSaving, userSessionStopSaving
+} from "../actions/usersession";
+import { closeFeatureGrid } from '../actions/featuregrid';
+import { resetSearch } from '../actions/search';
 import { LOCATION_CHANGE } from "connected-react-router";
 import UserSession from "../api/usersession";
 import {loadMapConfig} from "../actions/config";
@@ -126,12 +129,16 @@ export const loadUserSessionEpicCreator = (nameSelector = userSessionNameSelecto
  *
  * const idSelector = (state) => ({state.usersession.id})
  * const epic = removeUserSessionEpicCreator(idSelector)
+ *
+ * In order to clean up all plugins state as and where expected,
+ * closeFeatureGrid and resetSearch actions are included in the stream
  */
 export const removeUserSessionEpicCreator = (idSelector = userSessionIdSelector) => (action$, store) =>
     action$.ofType(REMOVE_USER_SESSION).switchMap(() => {
         const state = store.getState();
         const sessionId = idSelector(state);
-        return removeSession(sessionId).switchMap(() => Rx.Observable.of(userSessionRemoved(), success({
+
+        return removeSession(sessionId).switchMap(() => Rx.Observable.of(userSessionRemoved(), closeFeatureGrid(), resetSearch(), success({
             title: "success",
             message: "userSession.successRemoved"
         }))).let(wrapStartStop(
