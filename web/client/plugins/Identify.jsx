@@ -35,7 +35,8 @@ import {
     toggleShowCoordinateEditor,
     updateCenterToMarker,
     updateFeatureInfoClickPoint,
-    checkIdentifyIsMounted
+    checkIdentifyIsMounted,
+    onInitPlugin
 } from '../actions/mapInfo';
 import DefaultViewerComp from '../components/data/identify/DefaultViewer';
 import { defaultViewerDefaultProps, defaultViewerHandlers } from '../components/data/identify/enhancers/defaultViewer';
@@ -202,6 +203,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
  * @prop cfg.showMoreInfo {boolean} if true shows the more info icon which allow user to show/hide Geocode viewer as popup (true by default)
  * @prop cfg.showEdit {boolean} if true, and when the FeatureEditor plugin is present, shows and edit button to edit the current feature(s) clicked in the grid.
+ * @prop cfg.enableInfoForSelectedLayers {boolean} if true, if some layer is selected in the TOC, the feature info is performed only on the selected ones. if false, the info is queried for all the layers, independently from selection. (default is true).
  *
  * @example
  * {
@@ -220,6 +222,7 @@ const identifyDefaultProps = defaultProps({
  */
 const IdentifyPlugin = compose(
     connect(selector, {
+        onInitPlugin,
         purgeResults: purgeMapInfoResults,
         closeIdentify,
         onSubmitClickPoint: updateFeatureInfoClickPoint,

@@ -531,6 +531,110 @@ describe('identify Epics', () => {
             }
         }, state);
     });
+    it('getFeatureInfoOnFeatureInfoClick with enableInfoForSelectedLayers set to true', (done) => {
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } },
+                highlight: true,
+                enableInfoForSelectedLayers: true
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }, {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }],
+                selected: ["TEST"]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, (actions) => {
+            try {
+                const [a0, a1, a2] = actions;
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a2).toExist();
+                expect(a2.type).toBe(LOAD_FEATURE_INFO);
+                expect(a2.data).toExist();
+                expect(a2.requestParams).toExist();
+                expect(a2.reqId).toExist();
+                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
+    });
+    it('getFeatureInfoOnFeatureInfoClick with enableInfoForSelectedLayers set to false', (done) => {
+        const NUM_ACTIONS = 5;
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } },
+                highlight: true,
+                enableInfoForSelectedLayers: false
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }, {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }],
+                selected: ["TEST"]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, NUM_ACTIONS, sentActions, (actions) => {
+            try {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case PURGE_MAPINFO_RESULTS:
+                        break;
+                    case NEW_MAPINFO_REQUEST:
+                        expect(action.reqId).toBeTruthy();
+                        expect(action.request).toBeTruthy();
+                        break;
+                    case LOAD_FEATURE_INFO:
+                        expect(action.data).toBeTruthy();
+                        expect(action.requestParams).toBeTruthy();
+                        expect(action.reqId).toBeTruthy();
+                        expect([state.layers.flat[0].title, state.layers.flat[1].title].includes(action.layerMetadata.title)).toBeTruthy();
+                        break;
+                    default:
+                        expect(true).toBe(false);
+
+                    }
+                });
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
+    });
     it('handleMapInfoMarker show', done => {
         testEpic(handleMapInfoMarker, 1, featureInfoClick({}), ([ a ]) => {
             expect(a.type).toBe(SHOW_MAPINFO_MARKER);
