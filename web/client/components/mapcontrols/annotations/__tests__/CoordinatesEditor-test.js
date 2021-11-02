@@ -59,6 +59,8 @@ describe("test the CoordinatesEditor Panel", () => {
             />, document.getElementById("container")
         );
         expect(editor).toExist();
+        const mainContainer = TestUtils.scryRenderedDOMComponentsWithClass(editor, "coordinates-editor");
+        expect(mainContainer).toExist();
         const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
         expect(hamburgerMenus.length).toBe(0);
 
@@ -427,7 +429,28 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(inputs1[1].value).toBe("20.4");
         expect(inputs1[2].value).toBe("5.09");
     });
+    it('CoordinatesEditor as Circle editor, check component classes', () => {
+        const components = [{
+            lat: 10,
+            lon: 10
+        }];
+        const mapProjection = "EPSG:3857";
 
+        const editor = ReactDOM.render(
+            <CoordinatesEditor
+                mapProjection={mapProjection}
+                isMouseEnterEnabled
+                type="Circle"
+                format="decimal"
+                properties={{ radius: 1000 }}
+                components={components}
+            />, document.getElementById("container")
+        );
+        expect(editor).toBeTruthy();
+        const center = document.querySelector('.coordinates-row-type-Circle');
+        expect(center).toBeTruthy();
+        expect(center.classList.contains('coordinates-row-container')).toBeTruthy();
+    });
     it('CoordinatesEditor as Circle editor, valid input coordinate, changing coords, isMouseLeaveEnabled=false', () => {
         const components = [{
             lat: 10,
