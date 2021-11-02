@@ -840,7 +840,7 @@ export const cqlStringField = function(attribute, operator, value) {
     if (!isNil(value)) {
         if (operator === "isNull") {
             fieldFilter = "isNull(" + wrappedAttr + ")=true";
-        } else if (operator === "=") {
+        } else if (["<>", "="].includes(operator)) {
             let val = "'" + escapeCQLStrings(value) + "'";
             fieldFilter = wrappedAttr + operator + val;
         } else if (operator === "ilike") {
