@@ -1,7 +1,7 @@
 import {isNaN, round} from 'lodash';
 import { compose, withHandlers, withProps } from 'recompose';
 
-const convertDDToDMS = (D, lng, {seconds}) => {
+const convertDDToDMS = (D, lng, {seconds} = {}) => {
 
     // round to the smaller absolute integer value
     let d = D >= 0 ? Math.floor(D) : Math.ceil(D);
