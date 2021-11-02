@@ -38,7 +38,7 @@ describe('Stepper component', () => {
         expect(footerStepBar.childElementCount).toBe(1);
     });
 
-    it('Stepper clickable on edit', () => {
+    it('Stepper clickable on edit', (done) => {
         const container = document.getElementById("container");
         const enableClickOnStep = true;
         const steps = [{
@@ -59,6 +59,8 @@ describe('Stepper component', () => {
                     currentStep = steps[i];
                 }
             }
+            expect(currentStep.id).toBe('test2');
+            done();
         };
         ReactDOM.render(<Stepper steps={steps} currentStepId={currentStep.id} enableClickOnStep={enableClickOnStep} onSetStep={onSetStep} />, container);
         const footerStepBar = container.getElementsByClassName('footer-step-bar')[0];
@@ -66,8 +68,6 @@ describe('Stepper component', () => {
         const stepButton = footerStepBar.children[2];
 
         TestUtils.Simulate.click(stepButton);
-
-        expect(currentStep.id).toBe('test2');
     });
 });
 
