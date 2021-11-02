@@ -11,7 +11,8 @@ import {
     newContextSelector,
     creationStepSelector,
     selectedThemeSelector,
-    customVariablesEnabledSelector
+    customVariablesEnabledSelector,
+    isNewContext
 } from '../contextcreator';
 
 const testState = {
@@ -20,7 +21,8 @@ const testState = {
             name: 'name'
         },
         stepId: 'step',
-        customVariablesEnabled: true
+        customVariablesEnabled: true,
+        contextId: 'new'
     }
 };
 
@@ -51,5 +53,8 @@ describe('contextcreator selectors', () => {
                 selectedTheme: themeDark
             }
         })).toEqual(themeDark);
+    });
+    it('isNewContext', () => {
+        expect(isNewContext(testState)).toBe(true);
     });
 });
