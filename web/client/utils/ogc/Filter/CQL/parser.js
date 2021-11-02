@@ -101,11 +101,11 @@ const tryToken = (text, pattern) => {
     return pattern(text);
 };
 const sanitize = (text, token) => {
-    if(token === "PROPERTY") {
-        return text.replaceAll('"',''); // remove intercepted do
+    if (token === "PROPERTY") {
+        return text.replaceAll('"', ''); // remove intercepted do
     }
     return text;
-}
+};
 const nextToken = (text, tokens) => {
     let i;
     let token;
