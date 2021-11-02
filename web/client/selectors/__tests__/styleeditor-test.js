@@ -185,59 +185,121 @@ describe('Test styleeditor selector', () => {
     it('test geometryTypeSelector', () => {
         const state = {
             layers: {
-                flat: [
+                "flat": [
                     {
-                        id: 'layerId',
-                        name: 'layerName',
-                        style: 'point',
-                        describeLayer: {
-                            owsType: 'WFS'
+                        "type": "wms",
+                        "style": "pophade",
+                        "format": "image/png",
+                        "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                        "visibility": true,
+                        "dimensions": [],
+                        "name": "gs:us_states",
+                        "title": "States of US",
+                        "description": "States of US",
+                        "bbox": {
+                            "crs": "EPSG:4326",
+                            "bounds": {
+                                "minx": "-124.73142200000001",
+                                "miny": "24.955967",
+                                "maxx": "-66.969849",
+                                "maxy": "49.371735"
+                            }
                         },
-                        describeFeatureType: {
-                            complexType: [{
-                                complexContent: {
-                                    extension: {
-                                        sequence: {
-                                            element: [{
-                                                TYPE_NAME: "XSD_1_0.LocalElement",
-                                                maxOccurs: "1",
-                                                minOccurs: 0,
-                                                name: "geom",
-                                                nillable: true,
-                                                otherAttributes: {},
-                                                type: {
-                                                    key: "{http://www.opengis.net/gml}PointPropertyType",
-                                                    localPart: "PointPropertyType",
-                                                    namespaceURI: "http://www.opengis.net/gml",
-                                                    prefix: "gml",
-                                                    string: "{http://www.opengis.net/gml}gml:PointPropertyType"
-                                                }
-                                            }]
-                                        }
-                                    }
+                        "links": [],
+                        "params": {},
+                        "allowedSRS": {
+                            "EPSG:3857": true,
+                            "EPSG:900913": true,
+                            "EPSG:4326": true
+                        },
+                        "catalogURL": null,
+                        "version": "1.3.0",
+                        "infoFormats": [
+                            "text/plain",
+                            "text/html",
+                            "application/json"
+                        ],
+                        "id": "gs:us_states__5",
+                        "loading": false,
+                        "search": {
+                            "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+                            "type": "wfs"
+                        },
+                        "previousLoadingError": false,
+                        "loadingError": false,
+                        "opacity": 1,
+                        "describeLayer": {
+                            "TYPE_NAME": "WMS_1_1_1.LayerDescription",
+                            "name": "gs:us_states",
+                            "wfs": "https://gs-stable.geo-solutions.it/geoserver/wfs?authkey=609779ca-0790-4ca3-8c75-f1cc957bb822&",
+                            "owsURL": "https://gs-stable.geo-solutions.it/geoserver/wfs?authkey=609779ca-0790-4ca3-8c75-f1cc957bb822&",
+                            "owsType": "WFS",
+                            "query": [
+                                {
+                                    "TYPE_NAME": "WMS_1_1_1.Query",
+                                    "typeName": "gs:us_states"
                                 }
-                            }]
+                            ],
+                            "geometryType": "MultiPolygon"
+                        },
+                        "describeFeatureType": {
+                            "elementFormDefault": "qualified",
+                            "targetNamespace": "https://gs-stable.geo-solutions.it/geoserver/geoserver",
+                            "targetPrefix": "gs",
+                            "featureTypes": [
+                                {
+                                    "typeName": "us_states",
+                                    "properties": [
+                                        {
+                                            "name": "the_geom",
+                                            "maxOccurs": 1,
+                                            "minOccurs": 0,
+                                            "nillable": true,
+                                            "type": "gml:MultiPolygon",
+                                            "localType": "MultiPolygon"
+                                        },
+                                        {
+                                            "name": "STATE_NAME",
+                                            "maxOccurs": 1,
+                                            "minOccurs": 0,
+                                            "nillable": true,
+                                            "type": "xsd:string",
+                                            "localType": "string"
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     }
                 ],
-                selected: [
-                    'layerId'
-                ],
-                settings: {
-                    expanded: true,
-                    node: 'layerId',
-                    nodeType: 'layers',
-                    options: {
-                        opacity: 1,
-                        style: 'generic'
+                "groups": [
+                    {
+                        "id": "Default",
+                        "title": "Default",
+                        "name": "Default",
+                        "nodes": [
+                            "gs:us_states__5"
+                        ],
+                        "expanded": true
                     }
-                }
+                ],
+                "selected": [
+                    "gs:us_states__5"
+                ],
+                "layerMetadata": {
+                    "expanded": false,
+                    "metadataRecord": {},
+                    "maskLoading": false
+                },
+                "editLayerName": false,
+                "layerNameIsBeingChecked": false,
+                "layerNameChangeError": false
             }
         };
         const retval = geometryTypeSelector(state);
 
         expect(retval).toExist();
-        expect(retval).toBe('point');
+        expect(retval).toBe('polygon');
     });
 
     it('test layerPropertiesSelector', () => {
@@ -251,32 +313,35 @@ describe('Test styleeditor selector', () => {
                         describeLayer: {
                             owsType: 'WFS'
                         },
-                        describeFeatureType: {
-                            complexType: [{
-                                complexContent: {
-                                    extension: {
-                                        sequence: {
-                                            element: [{
-                                                TYPE_NAME: "XSD_1_0.LocalElement",
-                                                maxOccurs: "1",
-                                                minOccurs: 0,
-                                                name: "RANK",
-                                                nillable: true,
-                                                otherAttributes: {},
-                                                type: {
-                                                    key: "{http://www.w3.org/2001/XMLSchema}short",
-                                                    localPart: "short",
-                                                    namespaceURI: "http://www.w3.org/2001/XMLSchema",
-                                                    prefix: "xsd",
-                                                    string: "{http://www.w3.org/2001/XMLSchema}xsd:short"
-                                                }
-                                            }]
+                        "describeFeatureType": {
+                            "elementFormDefault": "qualified",
+                            "targetPrefix": "gs",
+                            "featureTypes": [
+                                {
+                                    "typeName": "us_states",
+                                    "properties": [
+                                        {
+                                            "name": "the_geom",
+                                            "maxOccurs": 1,
+                                            "minOccurs": 0,
+                                            "nillable": true,
+                                            "type": "gml:MultiPolygon",
+                                            "localType": "MultiPolygon"
+                                        },
+                                        {
+                                            "name": "STATE_NAME",
+                                            "maxOccurs": 1,
+                                            "minOccurs": 0,
+                                            "nillable": true,
+                                            "type": "xsd:string",
+                                            "localType": "string"
                                         }
-                                    }
+                                    ]
                                 }
-                            }]
+                            ]
                         }
                     }
+
                 ],
                 selected: [
                     'layerId'
@@ -295,7 +360,7 @@ describe('Test styleeditor selector', () => {
         const retval = layerPropertiesSelector(state);
 
         expect(retval).toExist();
-        expect(retval).toEqual({ RANK: { localPart: 'short', prefix: 'xsd' } });
+        expect(retval).toEqual({ the_geom: { localType: 'MultiPolygon', prefix: 'gml' }, STATE_NAME: { localType: 'string', prefix: 'xsd' } });
     });
     it('test enabledStyleEditorSelector', () => {
         const state = {
