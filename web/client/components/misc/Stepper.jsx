@@ -81,7 +81,7 @@ export default ({
                                     }}/>
                             </div>}
                             <div key={'label' + step.id}
-                                style={{ padding: 8, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                                style={{ padding: 8, display: 'flex', alignItems: 'center', cursor: enableClickOnStep  ? 'pointer' : 'default' }}
                                 onClick={() => enableClickOnStep && onSetStep(step.id)}
                                 role="button" tabIndex="0"
                                 onKeyDown={(event) => (event.key === ' ' || event.key === 'Enter' || event.key === 'Spacebar') && enableClickOnStep && onSetStep(step.id)}>
