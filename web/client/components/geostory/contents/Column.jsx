@@ -23,10 +23,11 @@ const ColumnContent = compose(
  * has (sub) contents to render like a page.
  */
 
-const size = (pullRight) => ({
+const size = (pullRight, props = {}) => ({
     id: 'size',
     filterOptions: ({ value }) => value !== 'full',
-    pullRight
+    pullRight,
+    ...props
 });
 
 export default ({
@@ -73,7 +74,12 @@ export default ({
             [ContentTypes.TEXT]: ['remove'],
             [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
-            [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
+            [ContentTypes.WEBPAGE]: [
+                size(true, {sizeType: 'horizontal'}), // Horizontal size button
+                'editURL',
+                size(true, {sizeType: 'vertical', filterOptions: ({ value }) => value !== 'v-full'}), // Vertical size button
+                'remove'
+            ],
             [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove']
         })}
         addButtons={[{

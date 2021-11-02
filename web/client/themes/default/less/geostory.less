@@ -943,7 +943,6 @@
         }
 
         &.ms-section-paragraph {
-            padding: 0 15%;
             background-color: inherit;
             /*
             overrides for themes of text content
@@ -991,12 +990,22 @@
                         }
                     }
                 }
-                .ms-content.ms-content-webPage {
-                    width: 100%;
-                    height: @ms-web-page-size-height-small;
-                    &.ms-size-large { height: @ms-web-page-size-height-large; }
-                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
-                    &.ms-size-small { height: @ms-web-page-size-height-small; }
+                .ms-column-contents {
+                    .ms-content {
+                        padding: 0 15%;
+                        &.ms-content-webPage {
+                            padding: 0;
+                            width: 100%;
+                            height: @ms-web-page-size-height-small;
+                            &.ms-size-h-large { width: @ms-story-size-large; }
+                            &.ms-size-h-medium { width: @ms-story-size-medium; }
+                            &.ms-size-h-small {width: @ms-story-size-small;}
+                            &.ms-size-h-full {width: @ms-story-size-full;}
+                            &.ms-size-v-large {height: @ms-web-page-size-height-large;}
+                            &.ms-size-v-medium {height: @ms-web-page-size-height-medium;}
+                            &.ms-size-v-small {height: @ms-web-page-size-height-small;}
+                        }
+                    }
                 }
                 .ms-content.ms-content-video {
                     width: 100%;
@@ -1133,9 +1142,13 @@
                 .ms-content.ms-content-webPage {
                     width: 100%;
                     height: @ms-web-page-size-height-small;
-                    &.ms-size-large { height: @ms-web-page-size-height-large; }
-                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
-                    &.ms-size-small { height: @ms-web-page-size-height-small; }
+                    &.ms-size-h-large { width: @ms-story-size-large; }
+                    &.ms-size-h-medium { width: @ms-story-size-medium; }
+                    &.ms-size-h-small { width: @ms-story-size-small; }
+                    &.ms-size-h-full { width: @ms-story-size-full; }
+                    &.ms-size-v-large { height: @ms-web-page-size-height-large; }
+                    &.ms-size-v-medium { height: @ms-web-page-size-height-medium; }
+                    &.ms-size-v-small { height: @ms-web-page-size-height-small; }
                 }
                 .ms-content.ms-content-video {
                     width: 100%;

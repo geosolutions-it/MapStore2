@@ -64,4 +64,40 @@ describe('ToolbarDropdownButton component', () => {
         dropdownMenuNode = container.querySelector('.dropdown.open');
         expect(dropdownMenuNode).toBeFalsy();
     });
+    it('show selected glyph in title of dropdown', () => {
+        ReactDOM.render(<ToolbarDropdownButton
+            glyph="small"
+            value={'value'}
+            showSelectionInTitle
+            options={[{
+                glyph: 'large',
+                value: 'value',
+                label: 'Label'
+            }]}
+        />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const buttonNode = container.querySelector('.square-button-md.no-border');
+        expect(buttonNode).toBeTruthy();
+        const glyph = buttonNode.querySelector('.glyphicon-large');
+        expect(glyph).toBeTruthy();
+    });
+    it('show default glyph instead of selected glyph in title of dropdown', () => {
+        ReactDOM.render(<ToolbarDropdownButton
+            glyph="small"
+            value={'value'}
+            showSelectionInTitle={false}
+            options={[{
+                glyph: 'large',
+                value: 'value',
+                label: 'Label'
+            }]}
+        />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const buttonNode = container.querySelector('.square-button-md.no-border');
+        expect(buttonNode).toBeTruthy();
+        const glyphLarge = buttonNode.querySelector('.glyphicon-large');
+        const glyphDef = buttonNode.querySelector('.glyphicon-small');
+        expect(glyphLarge).toBeFalsy();
+        expect(glyphDef).toBeTruthy();
+    });
 });
