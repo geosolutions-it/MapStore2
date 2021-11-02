@@ -66,6 +66,20 @@ describe("test the Annotations enahncers", () => {
             coordinate="lon"
         />), document.getElementById("container"));
     });
+    it('decimalToAeronautical conversion with defaults', (done) => {
+        const Sink = decimalToAeronautical(createSink( props => {
+            expect(props).toExist();
+            expect(props.degrees).toBe(1);
+            expect(props.minutes).toBe(33);
+            expect(props.seconds).toBe(18.9193);
+            done();
+        }));
+        ReactDOM.render((<Sink
+            value = {1.55525535}
+            aeronauticalOptions={{}}
+            coordinate="lon"
+        />), document.getElementById("container"));
+    });
     it('decimalToAeronautical conversion to 4 decimals as seconds', (done) => {
         const Sink = decimalToAeronautical(createSink( props => {
             expect(props).toExist();
