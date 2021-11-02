@@ -31,7 +31,8 @@ export default function ToolbarDropdownButton({
     disabled,
     noTooltipWhenDisabled = false,
     hideMenuItem = () => false,
-    shouldClose
+    shouldClose,
+    showSelectionInTitle = true
 }) {
     const [open, setOpen] = useState(false);
     const [active, setActive] = useState(false);
@@ -56,7 +57,7 @@ export default function ToolbarDropdownButton({
             pullRight={pullRight}
             className={className}
             disabled={disabled}
-            title={<Glyphicon glyph={glyphOption || glyph}/>}
+            title={<Glyphicon glyph={showSelectionInTitle && glyphOption || glyph}/>}
             onToggle={(isOpen, event, eventDetails) => {
                 if (active
                 || eventDetails?.source === 'select'
