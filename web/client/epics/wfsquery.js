@@ -100,7 +100,7 @@ export const featureTypeSelectedEpic = (action$, store) =>
             if (isDescribeLoaded(state, action.typeName)) {
                 const info = extractInfo(layerDescribeSelector(state, action.typeName));
                 const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
-                return Rx.Observable.of(changeSpatialAttribute(geometry));
+                return Rx.Observable.of(featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry), Rx.Scheduler.async);
             }
 
             const selectedLayer = selectedLayerSelector(state);
