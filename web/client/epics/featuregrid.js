@@ -261,10 +261,7 @@ const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
         filterType: 'OGC',
         ogcVersion: '1.1.0'
     });
-    // This optimization causes a bug when the current feature type is different from the previous
-    // if (isDescribeLoaded(store.getState(), name)) {
-    //     return Rx.Observable.of(createInitialQuery(), featureTypeSelected(url, name));
-    // }
+
     return Rx.Observable.of(featureTypeSelected(url, name)).merge(
         action$.ofType(FEATURE_TYPE_LOADED).filter(({typeName} = {}) => typeName === name)
             .map(createInitialQuery)
