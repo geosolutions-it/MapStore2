@@ -322,7 +322,14 @@ describe('wfsquery Epics', () => {
             type: 'vector',
             features: expectedResult
         }];
-        const mockStore = {
+        const wmsLayer = [{
+            id: 'layer2',
+            name: 'poi',
+            title: 'layer2 title',
+            description: 'layer2 description',
+            type: 'wms'
+        }];
+        const mockState = {
             query: {
                 data: {},
                 featureTypes: [],
@@ -377,51 +384,46 @@ describe('wfsquery Epics', () => {
                 });
                 done();
             },
-            mockStore
+            mockState
             );
         });
 
         it('featureTypeSelectedEpic', (done) => {
+            mockState.layers.flat = wmsLayer;
             const wfsResults = require('../../test-resources/wfs/describe-pois.json');
             mockAxios.onGet().reply(() => [200, wfsResults]);
-            testEpic(featureTypeSelectedEpic, 1, [
-                featureTypeSelected('/dummy', 'poi')
-            ], async(actions) => {
-                try {
-                    actions.map((action) => {
-                        switch (action.type) {
-                        case CHANGE_SPATIAL_ATTRIBUTE:
-                            break;
-                        case FEATURE_TYPE_LOADED:
-                            expect(action.featureType.attributes).toEqual([{
-                                label: "NAME",
-                                attribute: "NAME",
-                                type: "string",
-                                valueId: "id",
-                                valueLabel: "name",
-                                values: []
-                            },
-                            {
-                                label: "THUMBNAIL",
-                                attribute: "THUMBNAIL",
-                                type: "string",
-                                valueId: "id",
-                                valueLabel: "name",
-                                values: []
-                            },
-                            {
-                                label: "MAINPAGE", attribute: "MAINPAGE", type: "string", valueId: "id", valueLabel: "name", values: []
-                            }]);
-                            break;
-                        default:
-                            expect(true).toBe(true);
-                        }
-                    });
-                } catch (error) {
-                    done(error);
-                }
-                done();
-            }, mockStore);
+            testEpic(featureTypeSelectedEpic, 2,
+                featureTypeSelected('/dummy', 'poi'), ([changeSpatialAttribute, featureTypeLoaded]) => {
+                    try {
+                        expect(featureTypeLoaded.type).toBe(FEATURE_TYPE_LOADED);
+
+                        expect(changeSpatialAttribute.type).toBe(CHANGE_SPATIAL_ATTRIBUTE);
+
+                        expect(featureTypeLoaded.featureType.attributes).toEqual([{
+                            label: "NAME",
+                            attribute: "NAME",
+                            type: "string",
+                            valueId: "id",
+                            valueLabel: "name",
+                            values: []
+                        },
+                        {
+                            label: "THUMBNAIL",
+                            attribute: "THUMBNAIL",
+                            type: "string",
+                            valueId: "id",
+                            valueLabel: "name",
+                            values: []
+                        },
+                        {
+                            label: "MAINPAGE", attribute: "MAINPAGE", type: "string", valueId: "id", valueLabel: "name", values: []
+                        }]);
+
+                    } catch (error) {
+                        done(error);
+                    }
+                    done();
+                }, mockState);
         });
     });
 });
