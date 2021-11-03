@@ -15,7 +15,7 @@ import {INIT, SET_CREATION_STEP, SET_WAS_TUTORIAL_SHOWN, SET_TUTORIAL_STEP, MAP_
     CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE, LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG,
     SET_VALIDATION_STATUS, SET_PARSED_CFG, SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR, ADD_PLUGIN_TO_UPLOAD,
     REMOVE_PLUGIN_TO_UPLOAD, PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
-    BACK_TO_PAGE_SHOW_CONFIRMATION, SET_SELECTED_THEME, ON_TOGGLE_CUSTOM_VARIABLES} from "../actions/contextcreator";
+    BACK_TO_PAGE_SHOW_CONFIRMATION, SET_SELECTED_THEME, ON_TOGGLE_CUSTOM_VARIABLES, LOAD_CONTEXT} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
 
@@ -272,6 +272,12 @@ export default (state = {}, action) => {
     }
     case CLEAR_CONTEXT_CREATOR: {
         return {};
+    }
+    case LOAD_CONTEXT: {
+        return {
+            ...state,
+            contextId: action.id
+        };
     }
     case SET_FILTER_TEXT: {
         return set(`filterText.${action.propName}`, action.text, state);

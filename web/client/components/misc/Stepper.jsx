@@ -24,7 +24,8 @@ export default ({
     onShowBackToPageConfirmation = () => { },
     showBackToPageConfirmation = false,
     backToPageConfirmationMessage = 'contextCreator.undo',
-    onConfirmBackToPage = () => { }
+    onConfirmBackToPage = () => { },
+    enableClickOnStep = false
 }) => {
     const curStepIndex = steps.findIndex(step => step.id === currentStepId);
 
@@ -79,7 +80,11 @@ export default ({
                                         width: '100%'
                                     }}/>
                             </div>}
-                            <div key={'label' + step.id} style={{ padding: 8, display: 'flex', alignItems: 'center' }}>
+                            <div key={'label' + step.id}
+                                style={{ padding: 8, display: 'flex', alignItems: 'center', cursor: enableClickOnStep  ? 'pointer' : 'default' }}
+                                onClick={() => enableClickOnStep && onSetStep(step.id)}
+                                role="button" tabIndex="0"
+                                onKeyDown={(event) => (event.key === ' ' || event.key === 'Enter' || event.key === 'Spacebar') && enableClickOnStep && onSetStep(step.id)}>
                                 <Label
                                     bsStyle={idx === curStepIndex ? 'success' : 'primary'}
                                     style={idx <= curStepIndex ? {} : { backgroundColor: '#aaa'}}>
