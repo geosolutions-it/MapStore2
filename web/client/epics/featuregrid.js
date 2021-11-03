@@ -140,7 +140,6 @@ import { error, warning } from '../actions/notifications';
 
 import {
     describeSelector,
-    isDescribeLoaded,
     getFeatureById,
     wfsURL,
     wfsFilter,
@@ -263,9 +262,6 @@ const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
         ogcVersion: '1.1.0'
     });
 
-    if (isDescribeLoaded(store.getState(), name)) {
-        return Rx.Observable.of(createInitialQuery(), featureTypeSelected(url, name));
-    }
     return Rx.Observable.of(featureTypeSelected(url, name)).merge(
         action$.ofType(FEATURE_TYPE_LOADED).filter(({typeName} = {}) => typeName === name)
             .map(createInitialQuery)
