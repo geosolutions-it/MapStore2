@@ -7,26 +7,33 @@
  */
 
 import React from 'react';
-import { Col, Glyphicon, Grid, Row } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import Button from '../../misc/Button';
 
 
 export default (props = {
     onDownloadToggle: () => {}
 }) => {
-    return (<Grid className="bg-body data-grid-top-toolbar" fluid style={{width: "100%"}}>
-        <Row className="flex-center">
-            <Col xs={4}>
+    return (
+        <div
+            className="data-grid-top-toolbar"
+        >
+            <div className="data-grid-top-toolbar-left">
                 {props.children}
-            </Col>
-            <Col xs={4}>
-                <div className="text-center text-primary"><strong>{props.title}</strong></div>
-            </Col>
-            <Col xs={4}>
-                <Button onClick={props.onClose} style={{"float": "right"}} className="square-button no-border featuregrid-top-toolbar-margin">
+            </div>
+            {!props.hideLayerTitle && <div
+                className="data-grid-top-toolbar-title"
+            >
+                {props.title}
+            </div>}
+            <div className="data-grid-top-toolbar-right">
+                {!props.hideCloseButton && <Button
+                    onClick={props.onClose}
+                    className="square-button-md no-border featuregrid-top-toolbar-margin"
+                >
                     <Glyphicon glyph="1-close"/>
-                </Button>
-            </Col>
-        </Row>
-    </Grid>);
+                </Button>}
+            </div>
+        </div>
+    );
 };
