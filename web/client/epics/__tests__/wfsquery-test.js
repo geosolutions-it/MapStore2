@@ -329,37 +329,37 @@ describe('wfsquery Epics', () => {
             description: 'layer2 description',
             type: 'wms'
         }];
-        const mockState = {
-            query: {
-                data: {},
-                featureTypes: [],
-                typeName: 'layer1',
-                url: '/dummy'},
-            featuregrid: {
-                timeSync: true,
-                pagination: {
-                    size: 10
-                },
-                open: true,
-                selectedLayer: "layer1",
-                changes: [],
-                mode: 'VIEW'
-            },
-            layers: {
-                flat: flatLayers,
-                layerMetadata: {
-                    expanded: false,
-                    maskLoading: false
-                },
-                settings: {
-                    expanded: false,
-                    node: null,
-                    nodeType: null,
-                    options: {}
-                }
-            }
-        };
         it('vector layer', (done) => {
+            const mockState = {
+                query: {
+                    data: {},
+                    featureTypes: [],
+                    typeName: 'layer1',
+                    url: '/dummy'},
+                featuregrid: {
+                    timeSync: true,
+                    pagination: {
+                        size: 10
+                    },
+                    open: true,
+                    selectedLayer: "layer1",
+                    changes: [],
+                    mode: 'VIEW'
+                },
+                layers: {
+                    flat: flatLayers,
+                    layerMetadata: {
+                        expanded: false,
+                        maskLoading: false
+                    },
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    }
+                }
+            };
             mockAxios.onPost().reply(() => {return [200, expectedResult];});
             testEpic(addTimeoutEpic(wfsQueryEpic, 500), 4, [
                 query("base/web/client/test-resources/vector/feature-collection-vector.json", {pagination: {} }),
@@ -389,16 +389,43 @@ describe('wfsquery Epics', () => {
         });
 
         it('featureTypeSelectedEpic', (done) => {
-            mockState.layers.flat = wmsLayer;
+            const mockState = {
+                query: {
+                    data: {},
+                    featureTypes: [],
+                    typeName: 'layer1',
+                    url: '/dummy'},
+                featuregrid: {
+                    timeSync: true,
+                    pagination: {
+                        size: 10
+                    },
+                    open: true,
+                    selectedLayer: "layer1",
+                    changes: [],
+                    mode: 'VIEW'
+                },
+                layers: {
+                    flat: wmsLayer,
+                    layerMetadata: {
+                        expanded: false,
+                        maskLoading: false
+                    },
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    }
+                }
+            };
             const wfsResults = require('../../test-resources/wfs/describe-pois.json');
             mockAxios.onGet().reply(() => [200, wfsResults]);
             testEpic(featureTypeSelectedEpic, 2,
                 featureTypeSelected('/dummy', 'poi'), ([changeSpatialAttribute, featureTypeLoaded]) => {
                     try {
                         expect(featureTypeLoaded.type).toBe(FEATURE_TYPE_LOADED);
-
                         expect(changeSpatialAttribute.type).toBe(CHANGE_SPATIAL_ATTRIBUTE);
-
                         expect(featureTypeLoaded.featureType.attributes).toEqual([{
                             label: "NAME",
                             attribute: "NAME",
