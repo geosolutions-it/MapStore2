@@ -18,6 +18,7 @@ class DetailsPanel extends React.Component {
         id: PropTypes.string,
         active: PropTypes.bool,
         panelStyle: PropTypes.object,
+        dockStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         style: PropTypes.object,
         onClose: PropTypes.func
@@ -51,7 +52,7 @@ class DetailsPanel extends React.Component {
                 title={<Message msgId="details.title"/>}
                 onClose={() => this.props.onClose()}
                 glyph="sheet"
-                style={{height: 'calc(100% - 30px)'}}
+                style={this.props.dockStyle}
             >
                 <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
                     <BorderLayout>
