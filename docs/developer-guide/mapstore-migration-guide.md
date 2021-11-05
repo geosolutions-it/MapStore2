@@ -83,7 +83,7 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>-->
 ```
-## Migration from 2021.01.02 to 2021.02.00
+## Migration from 2021.01.04 to 2021.02.00
 
 ### Theme updates and CSS variables
 
