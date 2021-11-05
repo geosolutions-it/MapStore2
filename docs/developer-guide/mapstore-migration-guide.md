@@ -20,7 +20,7 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2021.01.02 to 2021.02.00
+## Migration from 2021.01.04 to 2021.02.00
 
 ### Theme updates and CSS variables
 
