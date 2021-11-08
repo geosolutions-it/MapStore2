@@ -65,7 +65,7 @@ const ScrollMenu = ({
      */
     const selectedItem = (itemId, selectedId, type) => {
         if (type === SectionTypes.CAROUSEL) {
-            return currentPage.sectionId === itemId;
+            return currentPage && currentPage.sectionId === itemId;
         }
         return selectedId === itemId;
     };
