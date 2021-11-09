@@ -83,6 +83,10 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>-->
 ```
+
+### Upgrading CesiumJS
+CesiumJS has been upgraded to version 1.42 (from 1.17), with no breaking changes, so you should replace all the instances of  `https://cesium.com/downloads/cesiumjs/releases/1.17` in your projects HTML files with `https://cesium.com/downloads/cesiumjs/releases/1.42`. The new release is needed to implement Bearer based authentication to WMS services.
+
 ## Migration from 2021.01.04 to 2021.02.00
 
 ### Theme updates and CSS variables

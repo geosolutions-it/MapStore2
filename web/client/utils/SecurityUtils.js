@@ -142,6 +142,26 @@ export function getAuthKeyParameter(url) {
     return foundRule?.authkeyParamName ?? 'authkey';
 }
 
+export function getAuthenticationHeaders(url, securityToken) {
+    if (!url || !isAuthenticationActivated()) {
+        return null;
+    }
+    switch (getAuthenticationMethod(url)) {
+    case 'bearer': {
+        const token = !isNil(securityToken) ? securityToken : getToken();
+        if (!token) {
+            return null;
+        }
+        return {
+            "Authorization": `Bearer ${token}`
+        };
+    }
+    default:
+        // we cannot handle the required authentication method
+        return null;
+    }
+}
+
 /**
  * This method will add query parameter based authentications to an object
  * containing query parameters.
@@ -231,7 +251,8 @@ const SecurityUtils = {
     clearNilValuesForParams,
     addAuthenticationToSLD,
     getAuthKeyParameter,
-    cleanAuthParamsFromURL
+    cleanAuthParamsFromURL,
+    getAuthenticationHeaders
 };
 
 export default SecurityUtils;
