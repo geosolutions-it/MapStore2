@@ -27,8 +27,6 @@ class DownloadDialog extends React.Component {
         closeGlyph: PropTypes.string,
         url: PropTypes.string,
         service: PropTypes.string,
-        onMount: PropTypes.func,
-        onUnmount: PropTypes.func,
         enabled: PropTypes.bool,
         loading: PropTypes.bool,
         checkingWPSAvailability: PropTypes.bool,
@@ -49,8 +47,6 @@ class DownloadDialog extends React.Component {
     };
 
     static defaultProps = {
-        onMount: () => {},
-        onUnmount: () => {},
         onExport: () => {},
         onClose: () => {},
         onCheckWPSAvailability: () => {},
@@ -81,14 +77,6 @@ class DownloadDialog extends React.Component {
         virtualScroll: true,
         downloadOptions: {}
     };
-
-    componentDidMount() {
-        this.props.onMount();
-    }
-
-    componentWillUnmount() {
-        this.props.onUnmount();
-    }
 
     componentDidUpdate(oldProps) {
         if (this.props.enabled !== oldProps.enabled && this.props.enabled) {
