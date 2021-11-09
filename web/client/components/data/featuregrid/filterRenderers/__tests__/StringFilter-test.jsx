@@ -35,51 +35,57 @@ describe('Test for StringFilter component', () => {
         expect(el).toExist();
         expect(el.value).toBe("TEST");
     });
-    it('Test StringFilter onChange', () => {
-        const actions = {
-            onChange: () => {}
-        };
-        const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<StringFilter onChange={actions.onChange} />, document.getElementById("container"));
+    it('Test StringFilter onChange', (done) => {
+        ReactTestUtils.act(()=>{
+            ReactDOM.render(<StringFilter onChange={(input) => {
+                try {
+                    expect(input.value).toBe("test");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }} />, document.getElementById("container"));
+        });
         const input = document.getElementsByClassName("form-control input-sm")[0];
         input.value = "test";
         ReactTestUtils.Simulate.change(input);
-        expect(spyonChange).toHaveBeenCalled();
     });
-    it('Test StringFilter space trim', () => {
-        const actions = {
-            onChange: () => {}
-        };
-        const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<StringFilter onChange={actions.onChange} />, document.getElementById("container"));
+    it('Test StringFilter space trim', (done) => {
+        ReactTestUtils.act(()=>{
+            ReactDOM.render(<StringFilter onChange={(input) => {
+                try {
+                    expect(input.value).toBe("test");
+                    expect(input.rawValue).toBe("test  ");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }} />, document.getElementById("container"));
+        });
         const input = document.getElementsByClassName("form-control input-sm")[0];
         input.value = "test  ";
         ReactTestUtils.Simulate.change(input);
-        expect(spyonChange).toHaveBeenCalled();
-        const args = spyonChange.calls[0].arguments[0];
-        expect(args.value).toBe("test");
-        expect(args.rawValue).toBe( "test  ");
     });
-    it('Test empty string trigger none', () => {
-        const actions = {
-            onChange: () => {}
-        };
-        const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<StringFilter onChange={actions.onChange} />, document.getElementById("container"));
-        const input = document.getElementsByClassName("form-control input-sm")[0];
-        input.value = "test";
-        ReactTestUtils.Simulate.change(input);
-        expect(spyonChange).toHaveBeenCalled();
-
-        input.value = " ";
-        ReactTestUtils.Simulate.change(input);
-        const args = spyonChange.calls[1].arguments[0];
-        expect(args.value).toBe(undefined);
-        expect(args.rawValue).toBe(" ");
-        input.value = "";
-        ReactTestUtils.Simulate.change(input);
-        const args2 = spyonChange.calls[2].arguments[0];
-        expect(args2.value).toBe(undefined);
-        expect(args2.rawValue).toBe("");
+    it('Test empty string trigger none', (done) => {
+        const EXPRESSION_TESTS = [
+            [" ", undefined],
+            ["", undefined]
+        ];
+        EXPRESSION_TESTS.map(([rawValue, value])=> {
+            ReactTestUtils.act(()=>{
+                ReactDOM.render(<StringFilter value={"test"} onChange={(input) => {
+                    try {
+                        expect(input.value).toBe(value);
+                        expect(input.rawValue).toBe(rawValue);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }} />, document.getElementById("container"));
+            });
+            const input = document.getElementsByClassName("form-control input-sm")[0];
+            input.value = rawValue;
+            ReactTestUtils.Simulate.change(input);
+        });
     });
 });

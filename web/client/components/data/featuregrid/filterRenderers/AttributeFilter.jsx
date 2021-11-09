@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { getMessageById } from '../../../../utils/LocaleUtils';
 import { Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../../misc/OverlayTrigger';
+import _debounce from "lodash/debounce";
 
 class AttributeFilter extends React.PureComponent {
     static propTypes = {
@@ -41,7 +42,7 @@ class AttributeFilter extends React.PureComponent {
         }
         const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Search";
         let inputKey = 'header-filter-' + this.props.column.key;
-        return (<input disabled={this.props.disabled} key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={this.props.value} onChange={this.handleChange}/>);
+        return (<input disabled={this.props.disabled} key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={this.state?.value ?? this.props.value} onChange={this.handleChange}/>);
     }
     renderTooltip = (cmp) => {
         if (this.props.tooltipMsgId && getMessageById(this.context.messages, this.props.tooltipMsgId)) {
@@ -60,9 +61,11 @@ class AttributeFilter extends React.PureComponent {
             </div>
         );
     }
+    debounce = _debounce(this.props.onChange, 1000);
     handleChange = (e) => {
         const value = e.target.value;
-        this.props.onChange({value, attribute: this.props.column && this.props.column.key});
+        this.setState({value});
+        this.debounce({value, attribute: this.props.column && this.props.column.key});
     }
 }
 

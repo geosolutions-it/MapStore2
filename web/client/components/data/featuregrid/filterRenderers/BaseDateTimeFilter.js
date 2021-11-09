@@ -38,7 +38,8 @@ class DateFilter extends AttributeFilter {
         value: null,
         type: "date-time",
         column: {},
-        placeholderMsgId: "featuregrid.filter.placeholders.default"
+        placeholderMsgId: "featuregrid.filter.placeholders.default",
+        onChange: () => {}
     };
     renderInput = () => {
         if (this.props.column.filterable === false) {
