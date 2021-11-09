@@ -18,7 +18,7 @@ import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
-import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
 import MapUtils from '../../../../utils/MapUtils';
@@ -39,7 +39,7 @@ import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/Vect
 import { generateEnvString } from '../../../../utils/LayerLocalizationUtils';
 
 
-const loadFunction = (options) => function(image, src) {
+const loadFunction = (options, headers) => function(image, src) {
     // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
     var img = image.getImage();
 
@@ -50,7 +50,8 @@ const loadFunction = (options) => function(image, src) {
         // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
         axios.post(url, "&" + dataEntries.join("&"), {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+                "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+                ...headers
             },
             responseType: 'arraybuffer'
         }).then(response => {
@@ -70,9 +71,23 @@ const loadFunction = (options) => function(image, src) {
         }).catch(e => {
             console.error(e);
         });
-
     } else {
-        img.src = src;
+        if (headers) {
+            axios.get(src, {
+                headers,
+                responseType: 'blob'
+            }).then(response => {
+                if (response.status === 200 && response.data) {
+                    image.getImage().src = URL.createObjectURL(response.data);
+                } else {
+                    console.error("Status code: " + response.status);
+                }
+            }).catch(e => {
+                console.error(e);
+            });
+        } else {
+            img.src = src;
+        }
     }
 };
 /**
@@ -178,7 +193,7 @@ const createLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmsToOpenlayersOptions(options) || {};
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
-
+    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
     const vectorFormat = isVectorFormat(options.format);
 
     if (options.singleTile && !vectorFormat) {
@@ -195,7 +210,7 @@ const createLayer = (options, map) => {
                 attributions: toOLAttributions(options.credits),
                 params: queryParameters,
                 ratio: options.ratio || 1,
-                imageLoadFunction: loadFunction(options)
+                imageLoadFunction: loadFunction(options, headers)
             })
         });
     }
@@ -212,7 +227,7 @@ const createLayer = (options, map) => {
             tileSize: options.tileSize ? options.tileSize : 256,
             origin: options.origin ? options.origin : [extent[0], extent[1]]
         }),
-        tileLoadFunction: loadFunction(options)
+        tileLoadFunction: loadFunction(options, headers)
     }, options);
     const wmsSource = new TileWMS({ ...sourceOptions });
     const layerConfig = {
