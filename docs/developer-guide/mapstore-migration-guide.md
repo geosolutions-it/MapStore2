@@ -21,7 +21,7 @@ This is a list of things to check if you want to update from a previous version 
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
 
-## Migration from 2021.02.00 to 2021.03.00
+## Migration from 2021.02.00 to 2022.01.00
 
 This release includes several libraries upgrade on the backend side,
 in particular the following have been migrated to the latest available versions:
