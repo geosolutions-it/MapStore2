@@ -31,7 +31,7 @@ class GeometryEditor extends React.Component {
         aeronauticalOptions: PropTypes.object,
         onChangeText: PropTypes.func,
         renderer: PropTypes.string,
-        setIsValidFeature: PropTypes.func
+        onFeatureValidationCheck: PropTypes.func
     };
 
     static defaultProps = {
@@ -51,7 +51,7 @@ class GeometryEditor extends React.Component {
             transitionEnterTimeout: 300,
             transitionLeaveTimeout: 300
         },
-        setIsValidFeature: () => {}
+        onFeatureValidationCheck: () => {}
     };
 
     render() {
@@ -72,11 +72,11 @@ class GeometryEditor extends React.Component {
             onSetInvalidSelected={this.props.onSetInvalidSelected}
             onChangeText={this.props.onChangeText}
             renderer={this.props.renderer}
-            setIsValidFeature={this.props.setIsValidFeature}
+            onFeatureValidationCheck={this.props.onFeatureValidationCheck}
             onChange={(components, radius, text, crs) => {
                 let coords = components.map(c => [c.lon, c.lat]);
                 this.props.onChange(coords, radius, text, crs);
-                this.props.setIsValidFeature();
+                this.props.onFeatureValidationCheck();
             }}/>);
 
     }

@@ -75,7 +75,7 @@ import {
     initPlugin,
     geometryHighlight,
     unSelectFeature,
-    setIsValidFeature
+    featureValidationCheck
 } from '../actions/annotations';
 
 import annotationsEpics from '../epics/annotations';
@@ -136,7 +136,7 @@ const commonEditorActions = {
     onToggleShowAgain: toggleShowAgain,
     onInitPlugin: initPlugin,
     onUnSelectFeature: unSelectFeature,
-    setIsValidFeature: setIsValidFeature
+    onFeatureValidationCheck: featureValidationCheck
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
     {
