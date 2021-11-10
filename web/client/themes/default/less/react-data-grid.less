@@ -127,6 +127,11 @@
     .feature-grid-container .ms2-border-layout-body {
         .background-color-var(@theme-vars[main-variant-bg]);
     }
+
+    .data-grid-top-toolbar {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
 }
 
 // **************
@@ -247,8 +252,25 @@
 }
 
 .data-grid-top-toolbar {
-    height: 62px;
+    height: 42px;
     overflow: hidden;
+    padding: 0 8px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+    .data-grid-top-toolbar-title {
+        padding: 0 8px;
+        font-weight: bold;
+    }
+    > div:not(.data-grid-top-toolbar-title) {
+        min-width: 30%;
+    }
+    .data-grid-top-toolbar-right {
+        display: flex;
+        flex-direction: row-reverse;
+    }
 }
 
 .data-grid-bottom-toolbar {
@@ -265,23 +287,6 @@
 
     .data-grid-bottom-toolbar .col-md-6 {
         width: 100%;
-    }
-
-    .data-grid-top-toolbar > .flex-center .col-xs-4:nth-child(1) {
-        width: ~"calc(100% - @{square-btn-size})";
-        padding: 0;
-        margin-left: 5px;
-    }
-
-    .data-grid-top-toolbar > .flex-center .col-xs-4:nth-child(2) {
-        width: 0;
-        display: none;
-    }
-
-    .data-grid-top-toolbar > .flex-center .col-xs-4:nth-child(3) {
-        width: @square-btn-size + 10;
-        padding: 0;
-        margin-right: 5px;
     }
 }
 

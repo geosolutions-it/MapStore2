@@ -158,8 +158,8 @@ export const getPanels = (tools = {}) =>
             const Panel = panels[t];
             return <Panel key={t} {...(panelDefaultProperties[t] || {})} />;
         });
-export const getHeader = (toolbarItems) => {
-    return <Header ><Toolbar toolbarItems={toolbarItems}/></Header>;
+export const getHeader = ({ hideCloseButton, hideLayerTitle, toolbarItems }) => {
+    return <Header hideCloseButton={hideCloseButton} hideLayerTitle={hideLayerTitle} ><Toolbar toolbarItems={toolbarItems}/></Header>;
 };
 export const getFooter = (props) => {
     return ( props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;
