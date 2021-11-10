@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import axios from 'axios';
 import Rx from 'rxjs';
-import { get, find, findIndex, pick, toPairs } from 'lodash';
+import { get, find, findIndex, pick, toPairs, castArray } from 'lodash';
 import { saveAs } from 'file-saver';
 import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
@@ -62,17 +61,17 @@ import {
     userSelector
 } from '../selectors/security';
 
-import { getLayerWFSCapabilities } from '../observables/wfs';
+import { getLayerWFSCapabilities, getXMLFeature } from '../observables/wfs';
 import { describeProcess } from '../observables/wps/describe';
 import { download } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
-import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
-import { toOGCFilter, mergeFiltersToOGC } from '../utils/FilterUtils';
+import { mergeFiltersToOGC } from '../utils/FilterUtils';
 import { getByOutputFormat } from '../utils/FileFormatUtils';
 import { getLayerTitle } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
+import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 
 const DOWNLOAD_FORMATS_LOOKUP = {
     "gml3": "GML3.1",
@@ -94,6 +93,9 @@ const DOWNLOAD_FORMATS_LOOKUP = {
     "excel2007": "excel2007"
 };
 
+const { getFeature: getFilterFeature, query, sortBy, propertyName } = requestBuilder({ wfsVersion: "1.1.0" });
+
+
 const hasOutputFormat = (data) => {
     const operation = get(data, "WFS_Capabilities.OperationsMetadata.Operation");
     const getFeature = find(operation, function(o) { return o.name === 'GetFeature'; });
@@ -103,15 +105,18 @@ const hasOutputFormat = (data) => {
     return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
 };
 
-const getWFSFeature = ({url, filterObj = {}, downloadOptions = {}} = {}) => {
-    const data = toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, false, null, null, downloadOptions.selectedSrs);
-    return Rx.Observable.defer( () =>
-        axios.post(cleanDuplicatedQuestionMarks(url + `?service=WFS&outputFormat=${downloadOptions.selectedFormat}`), data, {
-            timeout: 60000,
-            responseType: 'arraybuffer',
-            headers: {'Content-Type': 'application/xml'}
-        }));
+const getWFSFeature = ({ url, filterObj = {}, layerFilter, downloadOptions = {}, options } = {}) => {
+    const { sortOptions, propertyName: pn } = options;
+
+    const data = mergeFiltersToOGC({ ogcVersion: '1.0.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj);
+
+    return getXMLFeature(url, getFilterFeature(query(
+        filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(pn ? [propertyName(pn)] : []), ...(data ? castArray(data) : [])],
+        { srsName: downloadOptions.selectedSrs })
+    ), options, downloadOptions.selectedFormat);
+
 };
+
 const getFileName = action => {
     const name = get(action, "filterObj.featureTypeName");
     const format = getByOutputFormat(get(action, "downloadOptions.selectedFormat"));
@@ -233,45 +238,49 @@ export const startFeatureExportDownload = (action$, store) =>
         const mapBbox = mapBboxSelector(state);
         const currentLocale = currentLocaleSelector(state);
 
+        const { layerFilter } = layer;
+
         const wfsFlow = () => getWFSFeature({
             url: action.url,
             downloadOptions: action.downloadOptions,
-            filterObj: {
-                ...action.filterObj,
+            filterObj: action.filterObj,
+            layerFilter,
+            options: {
                 pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
             }
         })
-            .do(({data, headers}) => {
+            .do(({ data, headers }) => {
                 if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
                     let xml = String.fromCharCode.apply(null, new Uint8Array(data));
-                    if (xml.indexOf("<ows:ExceptionReport") === 0 ) {
+                    if (xml.indexOf("<ows:ExceptionReport") === 0) {
                         throw xml;
                     }
                 }
             })
-            .catch( () => {
+            .catch(() => {
                 return getWFSFeature({
                     url: action.url,
                     downloadOptions: action.downloadOptions,
-                    filterObj: {
-                        ...action.filterObj,
+                    filterObj: action.filterObj,
+                    layerFilter,
+                    options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                         sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
                     }
-                }).do(({data, headers}) => {
+                }).do(({ data, headers }) => {
                     if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
                         let xml = String.fromCharCode.apply(null, new Uint8Array(data));
-                        if (xml.indexOf("<ows:ExceptionReport") === 0 ) {
+                        if (xml.indexOf("<ows:ExceptionReport") === 0) {
                             throw xml;
                         }
                     }
-                    saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
+                    saveAs(new Blob([data], { type: headers && headers["content-type"] }), getFileName(action));
                 });
-            }).do(({data, headers}) => {
-                saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
+            }).do(({ data, headers }) => {
+                saveAs(new Blob([data], { type: headers && headers["content-type"] }), getFileName(action));
             })
-            .map( () => onDownloadFinished() )
-            .catch( (e) => Rx.Observable.of(
+            .map(() => onDownloadFinished())
+            .catch((e) => Rx.Observable.of(
                 error({
                     error: e,
                     title: "layerdownload.error.title",
