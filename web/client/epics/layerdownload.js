@@ -247,7 +247,7 @@ export const startFeatureExportDownload = (action$, store) =>
             }
         })
             .do(({ data, headers }) => {
-                if (headers && headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
+                if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
                     let xml = String.fromCharCode.apply(null, new Uint8Array(data));
                     if (xml.indexOf("<ows:ExceptionReport") === 0) {
                         throw xml;
@@ -265,7 +265,7 @@ export const startFeatureExportDownload = (action$, store) =>
                         sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
                     }
                 }).do(({ data, headers }) => {
-                    if (headers && headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
+                    if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
                         let xml = String.fromCharCode.apply(null, new Uint8Array(data));
                         if (xml.indexOf("<ows:ExceptionReport") === 0) {
                             throw xml;
