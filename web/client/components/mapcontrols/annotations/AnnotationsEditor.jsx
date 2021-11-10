@@ -243,7 +243,8 @@ class AnnotationsEditor extends React.Component {
         onToggleShowAgain: PropTypes.func,
         onInitPlugin: PropTypes.func,
         onGeometryHighlight: PropTypes.func,
-        onUnSelectFeature: PropTypes.func
+        onUnSelectFeature: PropTypes.func,
+        setIsValidFeature: PropTypes.func
     };
 
     static defaultProps = {
@@ -350,6 +351,8 @@ class AnnotationsEditor extends React.Component {
     };
 
     renderEditingCoordButtons = () => {
+
+        const allGeometryIsValid = this.allGeometryIsValid();
         return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
             <Row className="text-center noTopMargin">
                 <Col xs={12}>
@@ -391,8 +394,8 @@ class AnnotationsEditor extends React.Component {
                                 }
                             }, {
                                 glyph: 'floppy-disk',
-                                tooltipId: !isEmpty(this.props.selected) ? "annotations.saveGeometry" : "annotations.save",
-                                disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
+                                tooltipId: !allGeometryIsValid ? "annotations.geometryError" : !isEmpty(this.props.selected) ? "annotations.saveGeometry" : "annotations.save",
+                                disabled: (this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature) || !allGeometryIsValid,
                                 onClick: () => this.save()
                             },
                             {
@@ -498,6 +501,8 @@ class AnnotationsEditor extends React.Component {
                     geodesic={this.props.geodesic}
                     defaultPointType={this.getConfig().defaultPointType}
                     defaultStyles={this.props.defaultStyles}
+                    setIsValidFeature={this.props.setIsValidFeature}
+                    allGeometryIsValid={this.allGeometryIsValid}
                 />
                 }
             </div>
@@ -730,6 +735,7 @@ class AnnotationsEditor extends React.Component {
                                 onSetInvalidSelected={this.props.onSetInvalidSelected}
                                 onChangeText={this.props.onChangeText}
                                 renderer={"annotations"}
+                                setIsValidFeature={this.props.setIsValidFeature}
                             />
                             }
                             {this.state.tabValue === 'style' &&
@@ -763,6 +769,16 @@ class AnnotationsEditor extends React.Component {
             </div>
         );
     }
+
+    allGeometryIsValid = () => {
+        let allGeometryIsValid = true;
+        if (this.props?.editing?.features && this.props.editing?.features?.length > 0) {
+            this.props.editing.features.map((p) => {
+                if (!p?.properties?.isValidFeature) { allGeometryIsValid = false; }
+            });
+        }
+        return allGeometryIsValid;
+    };
 
     change = (field, value) => {
         this.props.onChangeProperties(field, value);
