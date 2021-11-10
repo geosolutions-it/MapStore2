@@ -17,17 +17,28 @@ const useMapTool = (mapType, tool) => {
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState(null);
     const impl = useRef();
+    const isMounted = useRef();
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
     useEffect(() => {
         if (mapType && !impl.current) {
             setLoaded(false);
             setError(null);
             import("../" + mapType + "/" + tool)
                 .then(toolImpl => {
-                    impl.current = toolImpl.default;
-                    setLoaded(true);
+                    if (isMounted.current) {
+                        impl.current = toolImpl.default;
+                        setLoaded(true);
+                    }
                 })
                 .catch((e) => {
-                    setError(e);
+                    if (isMounted.current) {
+                        setError(e);
+                    }
                 });
         }
         return () => {};

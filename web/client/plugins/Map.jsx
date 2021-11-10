@@ -280,12 +280,17 @@ class MapPlugin extends React.Component {
 
         }
         this.updatePlugins(this.props);
+        this._isMounted = true;
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
             this.updatePlugins(newProps);
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     getHighlightLayer = (projection, index, env) => {
@@ -434,7 +439,7 @@ class MapPlugin extends React.Component {
         pluginsCreator(props.mapType, props.actions).then((plugins) => {
             // #6652 fix mismatch on multiple concurrent plugins loading
             // to make the last mapType match the list of plugins
-            if (plugins.mapType === this.currentMapType) {
+            if (this._isMounted && plugins.mapType === this.currentMapType) {
                 this.setState({plugins});
                 props.onLoadingMapPlugins(false, props.mapType);
                 props.onMapTypeLoaded(true, props.mapType);
