@@ -38,7 +38,7 @@ const FeaturesList = (props) => {
         geodesic,
         defaultStyles,
         defaultPointType,
-        setIsValidFeature,
+        onFeatureValidationCheck,
         allGeometryIsValid
     } = props;
     const {features = []} = editing || {};
@@ -52,7 +52,7 @@ const FeaturesList = (props) => {
         onSetStyle(style);
         onStartDrawing({geodesic});
         setTabValue('coordinates');
-        setIsValidFeature();
+        onFeatureValidationCheck();
     };
     const circleCenterStyles = defaultPointType === "symbol" ? defaultStyles.POINT?.[defaultPointType] : DEFAULT_ANNOTATIONS_STYLES.Point;
 
@@ -139,7 +139,7 @@ const FeaturesList = (props) => {
             {features && features.length === 0 && <div style={{ textAlign: 'center' }}><Message msgId="annotations.addGeometry"/></div>}
             {features?.map((feature, key) => {
                 return (
-                    <FeatureCard disabled={!allFeaturesAreValid} setIsValidFeature={setIsValidFeature} feature={feature} key={key} {...props}/>
+                    <FeatureCard disabled={!allFeaturesAreValid} onFeatureValidationCheck={onFeatureValidationCheck} feature={feature} key={key} {...props}/>
                 );
             })}
         </>
@@ -164,7 +164,7 @@ const FeatureCard = ({
     isMeasureEditDisabled,
     onStyleGeometry,
     onGeometryHighlight,
-    setIsValidFeature
+    onFeatureValidationCheck
 }) => {
     const type = getGeometryType(feature);
     const {properties} = feature;
@@ -196,7 +196,7 @@ const FeatureCard = ({
                     setTabValue(isMeasureEditDisabled ? 'coordinates' : 'style');
                     onStyleGeometry(!isMeasureEditDisabled);
                 }
-                setIsValidFeature();
+                onFeatureValidationCheck();
             } }
         >
             <div className="geometry-card-preview">
@@ -250,7 +250,8 @@ FeaturesList.defaultProps = {
     isMeasureEditDisabled: true,
     defaultPointType: 'marker',
     defaultStyles: {},
-    setIsValidFeature: () => {}
+    onFeatureValidationCheck: () => {},
+    allGeometryIsValid: () => { return true; }
 };
 
 export default FeaturesList;

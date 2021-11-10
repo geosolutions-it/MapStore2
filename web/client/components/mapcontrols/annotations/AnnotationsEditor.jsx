@@ -244,7 +244,7 @@ class AnnotationsEditor extends React.Component {
         onInitPlugin: PropTypes.func,
         onGeometryHighlight: PropTypes.func,
         onUnSelectFeature: PropTypes.func,
-        setIsValidFeature: PropTypes.func
+        onFeatureValidationCheck: PropTypes.func
     };
 
     static defaultProps = {
@@ -500,7 +500,7 @@ class AnnotationsEditor extends React.Component {
                     geodesic={this.props.geodesic}
                     defaultPointType={this.getConfig().defaultPointType}
                     defaultStyles={this.props.defaultStyles}
-                    setIsValidFeature={this.props.setIsValidFeature}
+                    onFeatureValidationCheck={this.props.onFeatureValidationCheck}
                     allGeometryIsValid={this.allGeometryIsValid}
                 />
                 }
@@ -734,7 +734,7 @@ class AnnotationsEditor extends React.Component {
                                 onSetInvalidSelected={this.props.onSetInvalidSelected}
                                 onChangeText={this.props.onChangeText}
                                 renderer={"annotations"}
-                                setIsValidFeature={this.props.setIsValidFeature}
+                                onFeatureValidationCheck={this.props.onFeatureValidationCheck}
                             />
                             }
                             {this.state.tabValue === 'style' &&

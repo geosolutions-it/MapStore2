@@ -26,7 +26,9 @@ const actions = {
     onSetAnnotationMeasurement: () => {},
     onDownload: () => {},
     onHideMeasureWarning: () => {},
-    onSelectFeature: () => {}
+    onSelectFeature: () => {},
+    onUnSelectFeature: () => {},
+    onFeatureValidationCheck: () => {}
 };
 describe("test the AnnotationsEditor Panel", () => {
     beforeEach((done) => {
@@ -162,7 +164,9 @@ describe("test the AnnotationsEditor Panel", () => {
             selected={null}
             editing={{
                 properties: feature,
-                features: [{}],
+                features: [{ properties: {
+                    isValidFeature: true
+                } }],
                 visibility: true
             }}
             onSave={testHandlers.onSaveHandler}
@@ -199,7 +203,9 @@ describe("test the AnnotationsEditor Panel", () => {
             selected={{features: [], properties: {isValidFeature: true}}}
             editing={{
                 properties: feature,
-                features: [{}]
+                features: [{ properties: {
+                    isValidFeature: true
+                } }]
             }}
             defaultStyles={defaultStyles}
             onAddNewFeature={testHandlers.onAddNewFeature}

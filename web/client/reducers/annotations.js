@@ -47,7 +47,7 @@ import {
     SET_DEFAULT_STYLE,
     SET_EDITING_FEATURE,
     SET_INVALID_SELECTED,
-    SET_IS_VALID_FEATURE,
+    VALIDATE_FEATURE,
     SET_STYLE,
     SHOW_ANNOTATION,
     START_DRAWING,
@@ -754,7 +754,7 @@ function annotations(state = {validationErrors: {}}, action) {
     }
     case START_DRAWING:
         return {...state, config: {...state.config, geodesic: get(action.options, 'geodesic', false)}};
-    case SET_IS_VALID_FEATURE:
+    case VALIDATE_FEATURE:
 
         let updatedFeatures = state.editing.features;
         updatedFeatures.map((f) => {
