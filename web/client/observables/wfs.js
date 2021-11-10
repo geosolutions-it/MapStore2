@@ -163,11 +163,11 @@ const getFeatureUtilities = (searchUrl, filterObj, options = {}, downloadOption 
  */
 export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption) => {
 
-    const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
-
     if (options.layer && options.layer.type === 'vector') {
         return getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
     }
+
+    const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
 
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
@@ -185,11 +185,12 @@ export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
 export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
-    const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options);
 
     if (options.layer && options.layer.type === 'vector') {
         return getFeatureUtilities(searchUrl, filterObj, options);
     }
+
+    const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options);
 
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
