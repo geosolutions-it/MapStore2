@@ -1154,8 +1154,8 @@
                 "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)",
                 "newFeature": "New"
             },
-          "geometryError": "Geometry Configuration is invalid",
-          "resolveAllErrors": "Please fix any validation errors before editing other geometries"
+            "geometryError": "Geometry configuration is invalid",
+            "resolveAllErrors": "Please fix any validation errors before editing other geometries"
         },
         "user":{
             "login": "Login",

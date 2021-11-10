@@ -1152,9 +1152,10 @@
                 "notValidPolyline": "Tutte le coordinate devono essere valide (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Inserisci un testo ed una coordinata valida (+|- 90° lat, +|-180° lon)",
                 "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)",
-                "newFeature": "Nuovo"                
+                "newFeature": "Nuovo"
             },
-            "geometryError": "La configurazione della geometria non è valida."
+            "geometryError": "La configurazione della geometria non è valida",
+            "resolveAllErrors": "Si prega di correggere eventuali errori di convalida prima di modificare altre geometrie"
         },
         "user":{
             "login": "Login",

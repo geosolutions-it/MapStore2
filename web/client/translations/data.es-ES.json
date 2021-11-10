@@ -1152,9 +1152,10 @@
                 "notValidPolyline": "Todas las coordenadas deben ser válidas (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insertar un valor de texto y una coordenada válida (+|- 90° lat, +|-180° lon)",
                 "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)",
-                "newFeature": "Nuevo"                
+                "newFeature": "Nuevo"
             },
-            "geometryError": "La configuración de geometría no es válida."
+            "geometryError": "La configuración de geometría no es válida",
+            "resolveAllErrors": "Corrija los errores de validación antes de editar otras geometrías"
         },
         "user":{
             "login": "Iniciar sesión",
