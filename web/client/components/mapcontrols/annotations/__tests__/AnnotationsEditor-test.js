@@ -303,7 +303,9 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
             properties: feature,
-            features: [{}]
+            features: [{ properties: {
+                isValidFeature: true
+            } }]
         }} onSave={testHandlers.onSaveHandler}
         onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
