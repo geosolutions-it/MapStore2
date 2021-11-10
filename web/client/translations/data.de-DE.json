@@ -1191,9 +1191,10 @@
                 "notValidPolyline": "Alle Koordinaten müssen gültig sein (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
                 "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
-                "newFeature": "Neu"                
+                "newFeature": "Neu"
             },
-            "geometryError": "La configración de geometría no es válida."
+            "geometryError": "Geometriekonfiguration ist ungültig",
+            "resolveAllErrors": "Bitte beheben Sie alle Validierungsfehler, bevor Sie andere Geometrien bearbeiten"
         },
         "user":{
             "login": "Login",
