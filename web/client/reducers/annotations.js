@@ -259,7 +259,13 @@ function annotations(state = {validationErrors: {}}, action) {
         let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === selected.properties.id);
         let selectedGeoJSON = selected;
         if (selected && selected.properties && selected.properties.isCircle) {
-            selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
+            if (selected.properties.polygonGeom ) {
+                selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
+            } else {
+                selectedGeoJSON = set("geometry.coordinates", [], selectedGeoJSON);
+                selectedGeoJSON = set("geometry.type", 'Polygon', selectedGeoJSON);
+            }
+
         } else if (selected && selected.properties && selected.properties.isText) {
             selectedGeoJSON = set("geometry.type", "Point", selectedGeoJSON);
         }

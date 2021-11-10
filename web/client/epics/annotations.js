@@ -7,7 +7,7 @@
  */
 
 import Rx from 'rxjs';
-import { head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined, get } from 'lodash';
+import { head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined, get, includes } from 'lodash';
 import assign from 'object-assign';
 import axios from 'axios';
 import uuidv1 from 'uuid/v1';
@@ -593,6 +593,7 @@ export default {
         }),
     onChangedSelectedFeatureEpic: (action$, {getState}) => action$.ofType(CHANGED_SELECTED )
         .switchMap(({}) => {
+            const featureTypes = ["LineString", "MultiPoint", "Polygon", "Point"];
             const state = getState();
             let feature = state.annotations.editing;
             let selected = state.annotations.selected;
@@ -610,7 +611,10 @@ export default {
                 selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
             }
             }
-            let method = selected.properties.isCircle ? "Circle" : selected.geometry.type;
+
+            let method = selected.geometry.type;
+            if (selected.properties?.isCircle) method = "Circle";
+            if (selected.properties?.isText) method = "Text";
 
             if (selected.properties && selected.properties.isCircle) {
                 selected = set("geometry", selected.properties.polygonGeom, selected);
@@ -619,14 +623,14 @@ export default {
             // TODO update selected feature in editing features
 
             let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
-            if (selected.properties.isValidFeature || selected.geometry.type === "LineString" || selected.geometry.type === "MultiPoint" || selected.geometry.type === "Polygon") {
+            if (selected.properties.isValidFeature || includes(featureTypes, selected.geometry.type)) {
                 if (selectedIndex === -1) {
                     feature = set(`features`, feature.features.concat([selected]), feature);
                 } else {
                     feature = set(`features[${selectedIndex}]`, selected, feature);
                 }
             }
-            if (selectedIndex !== -1 && !selected.properties.isValidFeature && (selected.geometry.type !== "MultiPoint" && selected.geometry.type !== "LineString" && selected.geometry.type !== "Polygon")) {
+            if (selectedIndex !== -1 && !selected.properties.isValidFeature && !includes(featureTypes, selected.geometry.type)) {
                 feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
             }
             const multiGeometry = multiGeometrySelector(state);
