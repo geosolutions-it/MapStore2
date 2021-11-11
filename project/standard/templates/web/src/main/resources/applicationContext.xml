@@ -28,4 +28,30 @@
         <!-- The default password encoder -->
         <property name="passwordEncoder" ref="${passwordEncoderUsed}"></property>
     </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="0"/>
+        <property name="locations">
+            <list>
+                <value>classpath:geostore.properties</value>
+                <value>classpath*:geostore.properties</value>
+                <value>classpath:mapstore.properties</value>
+                <value>classpath:ldap.properties</value>
+                <value>file:${datadir.location:}/mapstore.properties</value>
+                <value>file:${datadir.location:}/ldap.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+    <!-- Allows getting database configuration also from the data-dir -->
+    <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="order" value="10"/>
+        <property name="locations">
+            <list>
+                <value>file:${datadir.location:}/geostore-datasource-ovr.properties</value>
+                <value>file:${datadir.location:}/mapstore-ovr.properties</value>
+            </list>
+        </property>
+    </bean>
 </beans>
