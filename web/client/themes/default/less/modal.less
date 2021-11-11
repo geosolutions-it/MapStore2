@@ -137,7 +137,9 @@
         }
 
         & > .modal-header {
-            height: @square-btn-size;
+            @media (min-width: @screen-xs-max) {
+                height: @square-btn-size;
+            }
             padding: ((@square-btn-size - @font-size-h4) / 2);
             border: none;
             flex-shrink: 0;
@@ -145,10 +147,12 @@
                 display: flex;
                 .ms-title {
                     flex: 1;
-                    height: @font-size-h4;
-                    line-height: @font-size-h4;
                     text-overflow: ellipsis;
-                    white-space: nowrap;
+                    @media (min-width: @screen-xs-max) {
+                        white-space: nowrap;
+                        height: @font-size-h4;
+                        line-height: @font-size-h4;
+                    }
                 }
                 .ms-header-btn {
                     cursor: pointer;
