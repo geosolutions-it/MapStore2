@@ -70,7 +70,7 @@ import {
     convertGeoJSONToInternalModel,
     getAvailableStyler,
     getBaseCoord,
-    getComponents,
+    getComponents, getGeometryType,
     updateAllStyles,
     validateCoordsArray,
     validateFeature
@@ -761,7 +761,7 @@ function annotations(state = {validationErrors: {}}, action) {
             f.properties.isValidFeature = validateFeature({
                 properties: f.properties,
                 components: getComponents(f.geometry),
-                type: f.geometry.type
+                type: getGeometryType(f)
             });
 
         });
