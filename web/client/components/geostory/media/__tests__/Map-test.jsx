@@ -75,4 +75,28 @@ describe('Map component', () => {
             />,
             document.getElementById("container"));
     });
+    it('should remove the pointer events and touch actions if not active and expandable', (done) => {
+        const MAP = {
+            layers: [],
+            mapInfoControl: true
+        };
+        ReactDOM.render(
+            <Map
+                id="map"
+                mapType="openlayers"
+                map={MAP}
+                expandable
+                onMapTypeLoaded={() => {
+                    const container = document.getElementById('container');
+                    const mediaMapNode = container.querySelector('.ms-media-map');
+                    expect(mediaMapNode).toBeTruthy();
+                    const mapContainer = container.querySelector('#media-map');
+                    expect(mapContainer).toBeTruthy();
+                    expect(mapContainer.style.pointerEvents).toBe('none');
+                    expect(mapContainer.style.touchAction).toBe('none');
+                    done();
+                }}
+            />,
+            document.getElementById("container"));
+    });
 });
