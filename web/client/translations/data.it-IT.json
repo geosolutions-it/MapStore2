@@ -1153,7 +1153,10 @@
                 "notValidText": "Inserisci un testo ed una coordinata valida (+|- 90° lat, +|-180° lon)",
                 "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)",
                 "newFeature": "Nuovo"
-            }
+            },
+            "geometryError": "La configurazione della geometria non è valida",
+            "annotationSaveGeometryError": "Il salvataggio è disabilitato a causa di una geometria non valida, correggilo per salvare l'annotazione",
+            "resolveAllErrors": "Si prega di correggere gli errori prima di modificare altre geometrie"
         },
         "user":{
             "login": "Login",

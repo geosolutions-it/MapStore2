@@ -120,10 +120,9 @@ describe("test FeatureList component", () => {
         expect(cardTitle.innerText).toBe('Polygon');
 
         const glyphIcons = document.querySelectorAll('.btn-group .glyphicon');
-        expect(glyphIcons.length).toBe(8);
-        expect(glyphIcons[5].className).toContain('ok-sign');
-        expect(glyphIcons[6].className).toContain('zoom-to');
-        expect(glyphIcons[7].className).toContain('trash');
+        expect(glyphIcons.length).toBe(7);
+        expect(glyphIcons[5].className).toContain('zoom-to');
+        expect(glyphIcons[6].className).toContain('trash');
     });
 
     it('test actions on feature card', () => {

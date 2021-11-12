@@ -1192,7 +1192,10 @@
                 "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
                 "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
                 "newFeature": "Neu"
-            }
+            },
+            "geometryError": "Geometriekonfiguration ist ungültig",
+            "annotationSaveGeometryError": "Das Speichern ist aufgrund einer ungültigen Geometrie deaktiviert. Bitte korrigieren Sie dies, um die Anmerkung zu speichern",
+            "resolveAllErrors": "Bitte beheben Sie alle Validierungsfehler, bevor Sie andere Geometrien bearbeiten"
         },
         "user":{
             "login": "Login",
