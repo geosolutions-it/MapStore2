@@ -90,6 +90,23 @@ describe('Test for NumberFilter component', () => {
         ReactTestUtils.Simulate.change(input);
         expect( document.getElementsByClassName("has-error").length > 0).toBe(true);
     });
+
+    it('Test NumberFilter allow filter update only when expression is valid', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<NumberFilter onChange={actions.onChange} />, document.getElementById("container"));
+
+        let input = document.getElementsByTagName("input")[0];
+        input.value = "<0.2,>";
+        ReactTestUtils.Simulate.change(input);
+        expect( document.getElementsByClassName("has-error").length > 0).toBe(true);
+        input.value = "<0.2,";
+        ReactTestUtils.Simulate.change(input);
+        expect( document.getElementsByClassName("has-error").length > 0).toBe(true);
+        expect(spyonChange).toNotHaveBeenCalled();
+    });
     it('Test NumberFilter expressions', () => {
         const actions = {
             onChange: () => {},

@@ -41,7 +41,7 @@ class AttributeFilter extends React.PureComponent {
         }
         const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Search";
         let inputKey = 'header-filter-' + this.props.column.key;
-        return (<input disabled={this.props.disabled} key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={this.props.value} onChange={this.handleChange}/>);
+        return (<input disabled={this.props.disabled} key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={this.state?.value ?? this.props.value} onChange={this.handleChange}/>);
     }
     renderTooltip = (cmp) => {
         if (this.props.tooltipMsgId && getMessageById(this.context.messages, this.props.tooltipMsgId)) {
@@ -62,6 +62,7 @@ class AttributeFilter extends React.PureComponent {
     }
     handleChange = (e) => {
         const value = e.target.value;
+        this.setState({value});
         this.props.onChange({value, attribute: this.props.column && this.props.column.key});
     }
 }

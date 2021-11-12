@@ -36,21 +36,24 @@ export default compose(
                     attribute
                 });
             } else {
-                const multipleValues = value?.split(",").filter(identity) || [];
-                const isValid = multipleValues.reduce((valid, v) => {
-                    let {newVal} = getOperatorAndValue(v);
-                    return valid && !(isNaN(newVal) && trim(v) !== "");
-                }, true);
-                props.setValid(isValid);
-                props.onChange({
-                    value: value,
-                    rawValue: value,
-                    operator: "=",
-                    type: 'number',
-                    attribute
-                });
+                if (/,\s*$/.exec(value)) { // Expression ending with comma
+                    props.setValid(false);
+                } else {
+                    const multipleValues = value?.split(",").filter(identity) || [];
+                    const isValid = multipleValues.reduce((valid, v) => {
+                        let {newVal} = getOperatorAndValue(v);
+                        return valid && !(isNaN(newVal) && trim(v) !== "");
+                    }, true);
+                    props.setValid(isValid);
+                    isValid && props.onChange({
+                        value,
+                        rawValue: value,
+                        operator: "=",
+                        type: 'number',
+                        attribute
+                    });
+                }
             }
-
         }
     }),
     defaultProps({

@@ -8,7 +8,7 @@
 
 import { get } from 'lodash';
 import { compose, withPropsOnChange } from 'recompose';
-
+import debounce from 'lodash/debounce';
 import deleteWidget from './deleteWidget';
 import { defaultIcons, editableWidget, withHeaderTools } from './tools';
 
@@ -23,15 +23,18 @@ const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, 
  * Moreover enhances it to allow delete.
 */
 export default compose(
-    withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => {} } = {}) => ({
-        gridEvents: {
-            ...gridEvents,
-            onAddFilter: (widgetFilter) => updateProperty(`quickFilters.${widgetFilter.attribute}`, widgetFilter),
-            onColumnResize:
+    withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => {} } = {}) => {
+        const _debounceOnAddFilter = debounce((...args) => updateProperty(...args), 500);
+        return {
+            gridEvents: {
+                ...gridEvents,
+                onAddFilter: (widgetFilter) => _debounceOnAddFilter(`quickFilters.${widgetFilter.attribute}`, widgetFilter),
+                onColumnResize:
                 (colIdx, width, rg, d, a, columns) =>
                     updateProperty(`options.columnSettings["${get(columns.filter(c => !c.hide)[colIdx], "name")}"].width`, width)
-        }
-    })),
+            }
+        };
+    }),
     deleteWidget,
     editableWidget(),
     defaultIcons(),
