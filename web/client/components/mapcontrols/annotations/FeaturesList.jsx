@@ -38,12 +38,12 @@ const FeaturesList = (props) => {
         geodesic,
         defaultStyles,
         defaultPointType,
-        onFeatureValidationCheck,
-        allGeometryIsValid
+        onValidateFeature,
+        validateFeatures
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);
-    const allFeaturesAreValid = allGeometryIsValid();
+    const areAllFeaturesValid = validateFeatures();
 
     const onClickGeometry = (type, style) => {
         onStyleGeometry(false);
@@ -52,7 +52,7 @@ const FeaturesList = (props) => {
         onSetStyle(style);
         onStartDrawing({geodesic});
         setTabValue('coordinates');
-        onFeatureValidationCheck();
+        onValidateFeature();
     };
     const circleCenterStyles = defaultPointType === "symbol" ? defaultStyles.POINT?.[defaultPointType] : DEFAULT_ANNOTATIONS_STYLES.Point;
 
@@ -139,7 +139,7 @@ const FeaturesList = (props) => {
             {features && features.length === 0 && <div style={{ textAlign: 'center' }}><Message msgId="annotations.addGeometry"/></div>}
             {features?.map((feature, key) => {
                 return (
-                    <FeatureCard disabled={!allFeaturesAreValid} onFeatureValidationCheck={onFeatureValidationCheck} feature={feature} key={key} {...props}/>
+                    <FeatureCard disabled={!areAllFeaturesValid} onValidateFeature={onValidateFeature} feature={feature} key={key} {...props}/>
                 );
             })}
         </>
@@ -164,7 +164,7 @@ const FeatureCard = ({
     isMeasureEditDisabled,
     onStyleGeometry,
     onGeometryHighlight,
-    onFeatureValidationCheck
+    onValidateFeature
 }) => {
     const type = getGeometryType(feature);
     const {properties} = feature;
@@ -196,7 +196,7 @@ const FeatureCard = ({
                     setTabValue(isMeasureEditDisabled ? 'coordinates' : 'style');
                     onStyleGeometry(!isMeasureEditDisabled);
                 }
-                onFeatureValidationCheck();
+                onValidateFeature();
             } }
         >
             <div className="geometry-card-preview">
@@ -250,8 +250,8 @@ FeaturesList.defaultProps = {
     isMeasureEditDisabled: true,
     defaultPointType: 'marker',
     defaultStyles: {},
-    onFeatureValidationCheck: () => {},
-    allGeometryIsValid: () => { return true; }
+    onValidateFeature: () => {},
+    validateFeatures: () => { return true; }
 };
 
 export default FeaturesList;

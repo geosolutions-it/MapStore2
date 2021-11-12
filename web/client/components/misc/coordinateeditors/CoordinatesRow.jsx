@@ -42,7 +42,7 @@ class CoordinatesRow extends React.Component {
         removeEnabled: PropTypes.bool,
         renderer: PropTypes.string,
         disabled: PropTypes.bool,
-        onFeatureValidationCheck: PropTypes.func
+        onValidateFeature: PropTypes.func
     };
 
     static defaultProps = {
@@ -50,7 +50,7 @@ class CoordinatesRow extends React.Component {
         formatVisible: false,
         onMouseEnter: () => {},
         onMouseLeave: () => {},
-        onFeatureValidationCheck: () => {},
+        onValidateFeature: () => {},
         showToolButtons: true,
         disabled: false
     };
@@ -77,7 +77,7 @@ class CoordinatesRow extends React.Component {
             const changeLat = parseFloat(this.state.lat) !== parseFloat(this.props.component.lat);
             const changeLon = parseFloat(this.state.lon) !== parseFloat(this.props.component.lon);
             this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon)}, ()=> {
-                this.props.onFeatureValidationCheck();
+                this.props.onValidateFeature();
                 // Auto save on coordinate change for annotations
                 this.props.renderer === "annotations" &&  this.props.onSubmit(this.props.idx, this.state);
             });

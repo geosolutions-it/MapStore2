@@ -198,8 +198,6 @@ function annotations(state = {validationErrors: {}}, action) {
     }
     case FEATURES_SELECTED: {
         let newState = state;
-
-
         let selected = head(action.features) || null;
         if (!selected) {
             return state;
@@ -755,15 +753,13 @@ function annotations(state = {validationErrors: {}}, action) {
     case START_DRAWING:
         return {...state, config: {...state.config, geodesic: get(action.options, 'geodesic', false)}};
     case VALIDATE_FEATURE:
-
-        let updatedFeatures = state.editing.features;
-        updatedFeatures.map((f) => {
-            f.properties.isValidFeature = validateFeature({
+        let updatedFeatures = state.editing.features.map((f) => {
+            const isValidFeature = validateFeature({
                 properties: f.properties,
                 components: getComponents(f.geometry),
                 type: getGeometryType(f)
             });
-
+            return set(`properties.isValidFeature`, isValidFeature, f);
         });
 
         return assign({}, state, {
