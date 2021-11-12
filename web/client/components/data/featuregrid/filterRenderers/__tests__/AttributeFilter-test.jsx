@@ -56,21 +56,16 @@ describe('Test for AttributeFilter component', () => {
         expect(input.value).toBe("TEST");
         expect( document.getElementsByClassName("has-error").length > 0).toBe(true);
     });
-    it('Test AttributeFilter onChange', (done) => {
-        let cmp;
-        ReactTestUtils.act(() => {
-            cmp = ReactDOM.render(<AttributeFilter onChange={(input) => {
-                try {
-                    expect(input.value).toBe("test");
-                } catch (e) {
-                    done(e);
-                }
-                done();
-            }} />, document.getElementById("container"));
-        });
+    it('Test AttributeFilter onChange', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        const cmp = ReactDOM.render(<AttributeFilter onChange={actions.onChange} />, document.getElementById("container"));
         expect(cmp).toExist();
         const input = ReactTestUtils.findRenderedDOMComponentWithTag(cmp, "input");
         input.value = "test";
         ReactTestUtils.Simulate.change(input);
+        expect(spyonChange).toHaveBeenCalled();
     });
 });

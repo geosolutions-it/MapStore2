@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 import { getMessageById } from '../../../../utils/LocaleUtils';
 import { Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../../misc/OverlayTrigger';
-import _debounce from "lodash/debounce";
 
 class AttributeFilter extends React.PureComponent {
     static propTypes = {
@@ -61,11 +60,10 @@ class AttributeFilter extends React.PureComponent {
             </div>
         );
     }
-    debounce = _debounce(this.props.onChange, 1000);
     handleChange = (e) => {
         const value = e.target.value;
         this.setState({value});
-        this.debounce({value, attribute: this.props.column && this.props.column.key});
+        this.props.onChange({value, attribute: this.props.column && this.props.column.key});
     }
 }
 

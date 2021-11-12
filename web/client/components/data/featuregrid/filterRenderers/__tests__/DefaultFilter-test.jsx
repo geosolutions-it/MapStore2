@@ -35,19 +35,15 @@ describe('Test for DefaultFilter component', () => {
         expect(el).toExist();
         expect(el.value).toBe("TEST");
     });
-    it('Test DefaultFilter onChange', (done) => {
-        ReactTestUtils.act(()=> {
-            ReactDOM.render(<DefaultFilter onChange={(input) => {
-                try {
-                    expect(input.value).toBe("test");
-                } catch (e) {
-                    done(e);
-                }
-                done();
-            }}/>, document.getElementById("container"));
-        });
+    it('Test DefaultFilter onChange', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<DefaultFilter onChange={actions.onChange} />, document.getElementById("container"));
         const input = document.getElementsByClassName("form-control input-sm")[0];
         input.value = "test";
         ReactTestUtils.Simulate.change(input);
+        expect(spyonChange).toHaveBeenCalled();
     });
 });
