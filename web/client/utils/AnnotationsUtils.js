@@ -563,7 +563,6 @@ export const coordToArray = (c = {}) => [c.lon, c.lat];
 export const validateCoordinates = ({components = [], remove = false, type } = {}) => {
     if (components && components.length) {
         const validComponents = components.filter(AnnotationsUtils.validateCoords);
-
         if (remove) {
             return validComponents.length > AnnotationsUtils.COMPONENTS_VALIDATION[type].min && validComponents.length === components.length;
         }
@@ -622,8 +621,11 @@ export const isAMissingSymbol = (style) => {
  * @return {boolean} true if it is a valid polygon, false otherwise
 */
 export const isCompletePolygon = (coords = [[[]]]) => {
-    const validCoords = coords[0].filter(AnnotationsUtils.validateCoordsArray);
-    return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
+    if (coords && coords[0]) {
+        const validCoords = coords[0].filter(AnnotationsUtils.validateCoordsArray);
+        return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
+    }
+    return false;
 };
 /**
  * utility to check if the GeoJSON has the annotation model structure i.e. {"type": "ms2-annotations", "features": [list of FeatureCollection]}

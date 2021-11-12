@@ -14,7 +14,7 @@
     .annotations-edit-error {
         .color-var(@theme-vars[danger]);
     }
-    
+
     .ms-marker-shape-content,
     .ms-marker-icon-content,
     #mapstore-annotations-panel {
@@ -42,6 +42,10 @@
             .geometry-card {
                 &.ms-selected {
                     .border-color-var(@theme-vars[focus-color]);
+                }
+                &.ms-disabled {
+                    cursor: not-allowed;
+                    .background-color-var(@theme-vars[disabled-bg]);
                 }
             }
         }
@@ -371,7 +375,6 @@
 .mapstore-annotations-info-viewer > .annotations-edit-error {
     height: 22px;
     border-bottom-width: 1px;
-    border-bottom-style: 1px;
     margin-bottom: 10px;
 }
 

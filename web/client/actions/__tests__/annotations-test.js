@@ -94,7 +94,8 @@ import {
     INIT_PLUGIN, initPlugin,
     TOGGLE_SHOW_AGAIN, toggleShowAgain,
     HIDE_MEASURE_WARNING, hideMeasureWarning,
-    UNSELECT_FEATURE, unSelectFeature
+    UNSELECT_FEATURE, unSelectFeature,
+    VALIDATE_FEATURE, validateFeature
 } from '../annotations';
 
 describe('Test correctness of the annotations actions', () => {
@@ -436,5 +437,9 @@ describe('Test correctness of the annotations actions', () => {
     it('unSelectFeature ', () => {
         const result = unSelectFeature();
         expect(result.type).toBe(UNSELECT_FEATURE);
+    });
+    it('validateFeature ', () => {
+        const result = validateFeature();
+        expect(result.type).toBe(VALIDATE_FEATURE);
     });
 });

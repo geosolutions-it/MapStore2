@@ -1152,8 +1152,7 @@
                 "notValidMarker": "Infoga en giltig koordinat ( +|- 90 ° lat, +| -180 ° lon)",
                 "notValidPolyline": "All koordinat måste vara giltig ( +|- 90 ° lat, +| -180 ° lon)",
                 "notValidText": "Infoga ett textvärde och en giltig koordinat ( +|- 90 ° lat, +| -180 ° lon)",
-                "notValidCircle": "Infoga ett radievärde och en giltig koordinat ( +|- 90 ° lat, +| -180 ° lon)",
-                "newFeature": "Ny"
+                "notValidCircle": "Infoga ett radievärde och en giltig koordinat ( +|- 90 ° lat, +| -180 ° lon)"
             }
         },
         "user":{
