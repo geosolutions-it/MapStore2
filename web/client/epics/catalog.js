@@ -34,9 +34,9 @@ import {
     formatsLoading,
     setSupportedFormats
 } from '../actions/catalog';
-import { showLayerMetadata, addLayer } from '../actions/layers';
+import { showLayerMetadata, addLayer, SELECT_NODE } from '../actions/layers';
 import { error, success } from '../actions/notifications';
-import { SET_CONTROL_PROPERTY, setControlProperties } from '../actions/controls';
+import { SET_CONTROL_PROPERTY, setControlProperties, setControlProperty } from '../actions/controls';
 import { closeFeatureGrid } from '../actions/featuregrid';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
 import { allowBackgroundsDeletion } from '../actions/backgroundselector';
@@ -50,11 +50,12 @@ import {
     selectedCatalogSelector,
     searchOptionsSelector,
     catalogSearchInfoSelector,
-    getFormatUrlUsedSelector
+    getFormatUrlUsedSelector,
+    activeSelector
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
-import { getSelectedLayer } from '../selectors/layers';
+import { getSelectedLayer, selectedNodesSelector } from '../selectors/layers';
 
 import {
     buildSRSMap,
@@ -422,5 +423,25 @@ export default (API) => ({
                             }
                         )
                     );
-            })
+            }),
+
+    /**
+    * Sets control property to currently selected group when catalogue is open
+    * Sets the currently selected group as the detination of new layers in catalogue
+    * if a layer instead of a group is selected it resets the groupId to Default
+    *  Action performed: setControlProperty (only if catalogue is open)
+    * @memberof epics.layers
+    * @param {external:Observable} action$ manages `SELECT_NODE`
+    * @return {external:Observable}
+    */
+    updateGroupSelectedMetadataExplorerEpic: (action$, store) => action$.ofType(SELECT_NODE)
+        .filter(() => activeSelector(store.getState()))
+        .switchMap(({ nodeType, id }) => {
+            const state = store.getState();
+            const selectedNodes = selectedNodesSelector(state);
+            const groupId = (selectedNodes.length === 0 || nodeType !== 'group')
+                ? 'Default'
+                : id;
+            return Rx.Observable.of(setControlProperty('metadataexplorer', "group", groupId));
+        })
 });
