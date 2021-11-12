@@ -225,8 +225,7 @@ class SharePanel extends React.Component {
                 show={this.props.isVisible}
                 draggable={this.props.draggable}
                 style={{zIndex: 1993}}
-                onClose={this.props.onClose}
-                >
+                onClose={this.props.onClose}>
                 <span role="header">
                     <span className="share-panel-title">
                         <Message msgId="share.title"/>
