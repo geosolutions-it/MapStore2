@@ -554,7 +554,7 @@
             "filterIconEnabled": "Schakel laagfilter uit",
             "filterIconDisabled": "Schakel laagfilter in",
 	    "notVisibleZoomIn": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom in om de laag te tonen",
-            "notVisibleZoomOut": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom uit om de laag weer te geven",	
+            "notVisibleZoomOut": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom uit om de laag weer te geven",
             "refreshOptions": {
                 "bbox": "BBOX bijwerken",
                 "search": "De zoekopties bijwerken",
@@ -1171,8 +1171,7 @@
                 "notValidMarker": "Voer een geldige coördinaat in (+ | - 90 ° lat, + | -180 ° lon)",
                 "notValidPolyline": "Alle coördinaten moeten geldig zijn (+ | - 90 ° lat, + | -180 ° lon)",
                 "notValidText": "Voeg een tekstwaarde en een geldige coördinaat in (+ | - 90 ° lat, + | -180 ° lon)",
-                "notValidCircle": "Voeg een straalwaarde en een geldige coördinaat in (+ | - 90 ° lat, + | -180 ° lon)",
-                "newFeature": "Nieuw"
+                "notValidCircle": "Voeg een straalwaarde en een geldige coördinaat in (+ | - 90 ° lat, + | -180 ° lon)"
             }
         },
         "user":{

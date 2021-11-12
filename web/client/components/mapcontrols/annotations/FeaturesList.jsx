@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
-import {Glyphicon, ControlLabel} from 'react-bootstrap';
+import {Glyphicon, ControlLabel, Tooltip } from 'react-bootstrap';
 import uuidv1 from 'uuid/v1';
 import bbox from '@turf/bbox';
 import Toolbar from '../../misc/toolbar/Toolbar';
+import OverlayTrigger from '../../misc/OverlayTrigger';
 import cs from 'classnames';
 import Message from '../../I18N/Message';
 import {get} from 'lodash';
@@ -36,10 +37,13 @@ const FeaturesList = (props) => {
         setPopupWarning,
         geodesic,
         defaultStyles,
-        defaultPointType
+        defaultPointType,
+        onValidateFeature,
+        validateFeatures
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);
+    const areAllFeaturesValid = validateFeatures();
 
     const onClickGeometry = (type, style) => {
         onStyleGeometry(false);
@@ -48,6 +52,7 @@ const FeaturesList = (props) => {
         onSetStyle(style);
         onStartDrawing({geodesic});
         setTabValue('coordinates');
+        onValidateFeature();
     };
     const circleCenterStyles = defaultPointType === "symbol" ? defaultStyles.POINT?.[defaultPointType] : DEFAULT_ANNOTATIONS_STYLES.Point;
 
@@ -134,7 +139,7 @@ const FeaturesList = (props) => {
             {features && features.length === 0 && <div style={{ textAlign: 'center' }}><Message msgId="annotations.addGeometry"/></div>}
             {features?.map((feature, key) => {
                 return (
-                    <FeatureCard feature={feature} key={key} {...props}/>
+                    <FeatureCard disabled={!areAllFeaturesValid} onValidateFeature={onValidateFeature} feature={feature} key={key} {...props}/>
                 );
             })}
         </>
@@ -146,29 +151,52 @@ const FeaturesList = (props) => {
  * @function
  *
  */
-const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature, setTabValue, isMeasureEditDisabled, onStyleGeometry, onGeometryHighlight}) => {
+const FeatureCard = ({
+    feature,
+    selected,
+    disabled,
+    onDeleteGeometry,
+    onZoom,
+    maxZoom,
+    onSelectFeature,
+    onUnselectFeature,
+    setTabValue,
+    isMeasureEditDisabled,
+    onStyleGeometry,
+    onGeometryHighlight,
+    onValidateFeature
+}) => {
     const type = getGeometryType(feature);
     const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
-    const unselect = selected?.properties?.id === properties?.id;
-    const selectedIsValidFeature = get(selected, "properties.isValidFeature", true);
-    const isValidFeature = selectedIsValidFeature || properties?.isValidFeature;
-    const allowCardMouseEvent = !unselect && selectedIsValidFeature;
+    const isSelected = selected?.properties?.id === properties?.id;
 
-    return (
+    const selectedIsValidFeature = get(selected, "properties.isValidFeature", true);
+    const isValidFeature = properties?.isValidFeature;
+    const allowCardMouseEvent = !isSelected && selectedIsValidFeature;
+
+    const overlayWrapper = (content) => (
+        <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.resolveAllErrors"/></Tooltip>}>
+            {content}
+        </OverlayTrigger>
+    );
+
+    const content = (
         <div
-            className={cs('geometry-card', {'ms-selected': unselect})}
+            className={cs('geometry-card', {'ms-selected': isSelected, 'ms-disabled': disabled && !isSelected})}
             onMouseEnter={() => allowCardMouseEvent && onGeometryHighlight(properties.id)}
             onMouseLeave={() => allowCardMouseEvent && onGeometryHighlight(properties.id, false)}
             onClick={() =>{
-                if (unselect) {
+
+                if (isSelected && isValidFeature) {
                     onUnselectFeature();
                     onGeometryHighlight(properties.id);
-                } else {
+                } else if (!disabled) {
                     onSelectFeature([feature]);
                     setTabValue(isMeasureEditDisabled ? 'coordinates' : 'style');
                     onStyleGeometry(!isMeasureEditDisabled);
                 }
+                onValidateFeature();
             } }
         >
             <div className="geometry-card-preview">
@@ -183,11 +211,9 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                 }}
                 buttons={[
                     {
-                        Element: () => <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")}/>
-                    },
-                    {
                         glyph: 'zoom-to',
                         visible: isValidFeature,
+                        className: cs({'inactive': disabled && !isSelected, 'square-button-md no-border': true}),
                         tooltip: <Message msgId="annotations.zoomToGeometry"/>,
                         onClick: (event) => {
                             event.stopPropagation();
@@ -197,7 +223,7 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                     },
                     {
                         glyph: 'trash',
-                        visible: isValidFeature,
+                        className: cs({'inactive': disabled && !isSelected, 'square-button-md no-border': true}),
                         tooltip: <Message msgId="annotations.removeGeometry"/>,
                         onClick: (event) => {
                             event.stopPropagation();
@@ -208,6 +234,8 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
             />
         </div>
     );
+
+    return disabled && !isSelected ? overlayWrapper(content) : content;
 };
 
 FeaturesList.defaultProps = {
@@ -221,7 +249,9 @@ FeaturesList.defaultProps = {
     setTabValue: () => {},
     isMeasureEditDisabled: true,
     defaultPointType: 'marker',
-    defaultStyles: {}
+    defaultStyles: {},
+    onValidateFeature: () => {},
+    validateFeatures: () => { return true; }
 };
 
 export default FeaturesList;

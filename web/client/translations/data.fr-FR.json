@@ -1153,7 +1153,10 @@
                 "notValidText": "Insérer une valeur de texte et une coordonnée valide (+|- 90° lat, +|-180° lon)",
                 "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)",
                 "newFeature": "Nouveau"
-            }
+            },
+            "geometryError": "La configuration de la géométrie n'est pas valide",
+            "annotationSaveGeometryError": "L'enregistrement est désactivé en raison d'une géométrie non valide, veuillez le corriger pour enregistrer l'annotation",
+            "resolveAllErrors": "Veuillez corriger les erreurs de validation avant de modifier d'autres géométries"
         },
         "user": {
             "login": "Connexion",
