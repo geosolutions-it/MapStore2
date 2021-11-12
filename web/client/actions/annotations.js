@@ -423,7 +423,7 @@ export const toggleShowAgain = () => ({
     type: TOGGLE_SHOW_AGAIN
 });
 
-export const featureValidationCheck = () => ({
+export const validateFeature = () => ({
     type: VALIDATE_FEATURE
 });
 

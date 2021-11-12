@@ -28,7 +28,7 @@ const actions = {
     onHideMeasureWarning: () => {},
     onSelectFeature: () => {},
     onUnSelectFeature: () => {},
-    onFeatureValidationCheck: () => {}
+    onValidateFeature: () => {}
 };
 describe("test the AnnotationsEditor Panel", () => {
     beforeEach((done) => {

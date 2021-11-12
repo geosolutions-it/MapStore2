@@ -1155,7 +1155,8 @@
                 "newFeature": "Nuovo"
             },
             "geometryError": "La configurazione della geometria non è valida",
-            "resolveAllErrors": "Si prega di correggere eventuali errori di convalida prima di modificare altre geometrie"
+            "annotationSaveGeometryError": "Il salvataggio è disabilitato a causa di una geometria non valida, correggilo per salvare l'annotazione",
+            "resolveAllErrors": "Si prega di correggere gli errori prima di modificare altre geometrie"
         },
         "user":{
             "login": "Login",

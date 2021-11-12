@@ -1194,6 +1194,7 @@
                 "newFeature": "Neu"
             },
             "geometryError": "Geometriekonfiguration ist ungültig",
+            "annotationSaveGeometryError": "Das Speichern ist aufgrund einer ungültigen Geometrie deaktiviert. Bitte korrigieren Sie dies, um die Anmerkung zu speichern",
             "resolveAllErrors": "Bitte beheben Sie alle Validierungsfehler, bevor Sie andere Geometrien bearbeiten"
         },
         "user":{
