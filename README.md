@@ -192,3 +192,4 @@ Here below is a small list of organizations using MapStore either directly or th
 * [Austrocontrol - Austria](https://sdimd-free.austrocontrol.at/mapstore/)
 * Earth-i - UK
 * MapStand - UK
+* [County of Milan - Italy](https://inlineainfrastrutture.cittametropolitana.mi.it/mapstore)
