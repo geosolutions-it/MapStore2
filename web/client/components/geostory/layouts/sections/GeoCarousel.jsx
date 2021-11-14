@@ -168,16 +168,24 @@ const GeoCarousel = ({
 
     const contentsLayer = getVectorLayerFromContents({
         id,
-        contents,
-        featureStyle: ({ content, feature }, idx) => {
-            const isHighlighted = contentId === content.id;
-            return ({
-                ...(isHighlighted ? {...defaultMarkerStyle, iconColor: 'red'} : defaultMarkerStyle),
-                iconText: `${idx + 1}`,
-                ...feature.style,
-                highlight: isHighlighted
-            });
-        }
+        contents: contents.filter(content => content.id !== contentId),
+        featureStyle: ({ content, feature }) => ({
+            ...defaultMarkerStyle,
+            iconText: `${contents.indexOf(content) + 1}`,
+            ...feature.style,
+            highlight: contentId === content.id
+        })
+    });
+
+    const highlightedContentsLayer = getVectorLayerFromContents({
+        id: `${id}-highlighted`,
+        contents : contents.filter(content => content.id === contentId),
+        featureStyle: ({ content, feature }) => ({
+            ...{...defaultMarkerStyle, iconColor: 'red'},
+            iconText: `${contents.indexOf(content) + 1}`,
+            ...feature.style,
+            highlight: contentId === content.id
+        })
     });
 
     return (<section
@@ -218,7 +226,7 @@ const GeoCarousel = ({
             mediaViewer={mediaViewer}
             contentToolbar={contentToolbar}
             inView={inView}
-            layers={[ contentsLayer ]}
+            layers={[ contentsLayer, highlightedContentsLayer ]}
             isDrawEnabled={isDrawEnabled}
             onEnableDraw={onEnableDraw}
             contentToolbarChildren={!isMapBackground && mode === Modes.EDIT && <InfoCarousel type={'addMap'}/>}
