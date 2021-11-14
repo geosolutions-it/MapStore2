@@ -169,12 +169,15 @@ const GeoCarousel = ({
     const contentsLayer = getVectorLayerFromContents({
         id,
         contents,
-        featureStyle: ({ content, feature }, idx) => ({
-            ...defaultMarkerStyle,
-            iconText: `${idx + 1}`,
-            ...feature.style,
-            highlight: contentId === content.id
-        })
+        featureStyle: ({ content, feature }, idx) => {
+            const isHighlighted = contentId === content.id;
+            return ({
+                ...(isHighlighted ? {...defaultMarkerStyle, iconColor: 'red'} : defaultMarkerStyle),
+                iconText: `${idx + 1}`,
+                ...feature.style,
+                highlight: isHighlighted
+            });
+        }
     });
 
     return (<section
