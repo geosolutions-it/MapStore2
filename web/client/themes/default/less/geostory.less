@@ -993,8 +993,12 @@
                 .ms-column-contents {
                     .ms-content {
                         padding: 0 15%;
+                        &:not(.ms-content-text) {
+                            padding-bottom: 16px;
+                            padding-top: 16px;
+                        }
                         &.ms-content-webPage {
-                            padding: 0;
+                            padding: 16px 0;
                             width: 100%;
                             height: @ms-web-page-size-height-small;
                             &.ms-size-h-large { width: @ms-story-size-large; }

@@ -68,5 +68,32 @@ describe('TableWidget component', () => {
         const el = container.querySelector('.react-grid-Empty');
         expect(el).toExist();
     });
-
+    it('TableWidget onAddFilter', (done) => {
+        const _d = {...describePois, featureTypes: [{...describePois.featureTypes[0], properties: [...describePois.featureTypes[0].properties, {
+            "name": "FLOAT",
+            "maxOccurs": 1,
+            "minOccurs": 0,
+            "nillable": true,
+            "type": "xsd:number",
+            "localType": "number"
+        }]}]};
+        ReactTestUtils.act(()=>{
+            ReactDOM.render(<TableWidget enableColumnFilters updateProperty={(path, attribute)=>{
+                try {
+                    expect(path).toBe("quickFilters.FLOAT");
+                    expect(attribute.value).toBe(12);
+                    expect(attribute.rawValue).toBe('> 12');
+                    expect(attribute.operator).toBe('>');
+                    expect(attribute.type).toBe('number');
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }} describeFeatureType={_d} features={[]} />, document.getElementById("container"));
+        });
+        const container = document.getElementById('container');
+        const filterFields = container.querySelectorAll("input");
+        expect(filterFields.length).toBe(4);
+        ReactTestUtils.Simulate.change(filterFields[3], {target: {value: '> 12'}});
+    });
 });

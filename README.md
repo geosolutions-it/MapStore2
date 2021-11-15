@@ -166,3 +166,30 @@ We welcome contributions in any form:
 * funding for any combination of the above
 
 For more information check <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md" target="_blank">this</a> page.
+
+Who uses MapStore
+------------
+Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add (or remove :( ) your organization from this list, please, contact simone.giannecchini@geosolutionsgroup.com.
+* [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
+* City of Bozen - Italy
+* City of Florence - Italy
+* City of Minuch - Germany
+* Rennes Metropole - France
+* [CRAIG - France](https://ids.craig.fr/mapstore/#/)
+* Compagnie Nationale du Rhone - France
+* [Urban Brussles (BruGIS) - Belgium](https://gis.urban.brussels/brugis/#/)
+* [Unesco IHP Wins - France / UN](http://ihp-wins.unesco.org/#/), this is based on GeoNode
+* [Atlas Horizon 2020](http://www.atlas-horizon2020.eu/), this is based on GeoNode
+* [Whanganui District Council - New Zealand](https://data.whanganui.govt.nz/mapstore2-whanganuidc/#/)
+* Cleveland Metroparks - USA
+* Minerva - Canada
+* [Moldova National GeoPortal](http://www.moldova-map.md/)
+* [Region of Tuscany, Hydrologic Service - Italy](https://webgis.sir.toscana.it/mapstore/#/)
+* Neftex Halliburton - UK
+* Dhiantus - Sweden
+* [LaMMa Consortium - Italy](https://geoportale.lamma.rete.toscana.it/difesa_suolo/#/)
+* [Arno River Authority - Italy](https://geodata.appenninosettentrionale.it/mapstore/)
+* [Austrocontrol - Austria](https://sdimd-free.austrocontrol.at/mapstore/)
+* Earth-i - UK
+* MapStand - UK
+* [County of Milan - Italy](https://inlineainfrastrutture.cittametropolitana.mi.it/mapstore)
