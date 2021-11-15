@@ -1082,6 +1082,10 @@ Openlayers:
 <ol:opacity xmlns:ol="http://openlayers.org/context">1</ol:opacity>
 ```
 
+Cesium:
+
+- `noCors` forces a tiled layer (singleTile: false) to be loaded as simple images, instead of using ajax (may be useful if the WMS services has issues with CORS)
+
 MapStore specific:
 
 - `group` specifies to which group, among listed in "GroupList" element, the layer belongs to

@@ -685,6 +685,7 @@ describe('Cesium layer', () => {
         // expect(map.imageryLayers.length).toBe(1);
         expect(layer.layer._tileProvider._url).toNotExist();
         expect(layer.layer._tileProvider._resource.headers.Authorization).toBe("Bearer ########-####-####-####-###########");
+        expect(layer.layer._tileProvider._tileDiscardPolicy).toExist();
     });
     it('test wms security token', () => {
         const options = {
@@ -742,7 +743,34 @@ describe('Cesium layer', () => {
         expect(layer.layer._tileProvider._resource._queryParameters["ms2-authkey"]).toBe("########-####-$$$$-####-###########");
 
     });
+    it("test wms noCors option", () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            noCors: true,
+            url: "http://sample.server/geoserver/wms"
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }
+        ]);
 
+        let layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={options}
+            map={map}/>, document.getElementById("container"));
+        expect(layer).toExist();
+        // expect(map.imageryLayers.length).toBe(1);
+        expect(layer.layer._tileProvider._resource._url).toExist();
+        expect(layer.layer._tileProvider._tileDiscardPolicy).toNotExist();
+    });
     it('test wmts security token', () => {
         const options = {
             "type": "wmts",
