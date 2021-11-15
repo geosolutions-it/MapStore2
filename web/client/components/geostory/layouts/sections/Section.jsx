@@ -63,7 +63,8 @@ class Section extends React.Component {
         isDrawEnabled: PropTypes.bool,
         onEnableDraw: PropTypes.func,
         background: PropTypes.object,
-        defaultMarkerStyle: PropTypes.object
+        defaultMarkerStyle: PropTypes.object,
+        highlightedMarkerStyle: PropTypes.object
     };
 
     static defaultProps = {
@@ -120,6 +121,7 @@ class Section extends React.Component {
                 background={this.props.background}
                 onEnableDraw={this.props.onEnableDraw}
                 defaultMarkerStyle={this.props.defaultMarkerStyle}
+                highlightedMarkerStyle={this.props.highlightedMarkerStyle}
             />
         );
     }
