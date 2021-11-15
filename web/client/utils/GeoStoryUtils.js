@@ -656,3 +656,17 @@ export function getVectorLayerFromContents({
         ], []).reverse()
     };
 }
+
+export const getContentsFeatureStyle = (
+    contents,
+    content,
+    contentId,
+    feature,
+    iconColor='cyan'
+    ) => ({
+    iconShape: 'circle',
+    iconColor,
+    iconText: `${contents.indexOf(content) + 1}`,
+    ...feature.style,
+    highlight: contentId === content.id
+})

@@ -22,6 +22,7 @@ import {
     Modes,
     SectionTemplates,
     getVectorLayerFromContents,
+    getContentsFeatureStyle,
     getDefaultSectionTemplate
 } from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
@@ -69,10 +70,6 @@ const GeoCarousel = ({
     onSort = () => {},
     onEnableDraw = () => {},
     isDrawEnabled,
-    defaultMarkerStyle = {
-        iconColor: 'cyan',
-        iconShape: 'circle'
-    }
 }) => {
 
     const innerBackgroundNode = useRef();
@@ -169,23 +166,13 @@ const GeoCarousel = ({
     const contentsLayer = getVectorLayerFromContents({
         id,
         contents: contents.filter(content => content.id !== contentId),
-        featureStyle: ({ content, feature }) => ({
-            ...defaultMarkerStyle,
-            iconText: `${contents.indexOf(content) + 1}`,
-            ...feature.style,
-            highlight: contentId === content.id
-        })
+        featureStyle: ({ content, feature }) => getContentsFeatureStyle(contents, content, contentId, feature)
     });
 
     const highlightedContentsLayer = getVectorLayerFromContents({
         id: `${id}-highlighted`,
         contents : contents.filter(content => content.id === contentId),
-        featureStyle: ({ content, feature }) => ({
-            ...{...defaultMarkerStyle, iconColor: 'red'},
-            iconText: `${contents.indexOf(content) + 1}`,
-            ...feature.style,
-            highlight: contentId === content.id
-        })
+        featureStyle: ({ content, feature }) => getContentsFeatureStyle(contents, content, contentId, feature, 'red')
     });
 
     return (<section
