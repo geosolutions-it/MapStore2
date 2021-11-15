@@ -597,6 +597,7 @@ export default {
             const state = getState();
             let feature = state.annotations.editing;
             let selected = state.annotations.selected;
+            let nullGeometryModifier = false;
             switch (selected.geometry.type) {
             case "Polygon": {
                 selected = set("geometry.coordinates", [selected.geometry.coordinates[0].filter(validateCoordsArray)], selected);
@@ -609,6 +610,7 @@ export default {
             // point
             default: {
                 selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
+                if (!selected.geometry.coordinates.length) nullGeometryModifier = true;
             }
             }
 
@@ -624,10 +626,11 @@ export default {
 
             let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
             if (selected.properties.isValidFeature || includes(featureTypes, selected.geometry.type)) {
+                const tempSelected = nullGeometryModifier ? set('geometry', null, selected) : selected;
                 if (selectedIndex === -1) {
-                    feature = set(`features`, feature.features.concat([selected]), feature);
+                    feature = set(`features`, feature.features.concat([tempSelected]), feature);
                 } else {
-                    feature = set(`features[${selectedIndex}]`, selected, feature);
+                    feature = set(`features[${selectedIndex}]`, tempSelected, feature);
                 }
             }
             if (selectedIndex !== -1 && !selected.properties.isValidFeature && !includes(featureTypes, selected.geometry.type)) {

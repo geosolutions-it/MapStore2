@@ -838,10 +838,7 @@ describe('Test the annotations reducer', () => {
             type: TOGGLE_ADD,
             featureType: "Point"
         });
-        testAllProperty(state.editing.features[0].geometry, {
-            type: "Point",
-            coordinates: []
-        });
+        expect(state.editing.features[0].geometry).toBe(null);
     });
     it('toggle add text, check geometry', ()=>{
         let state = annotations({
@@ -851,10 +848,8 @@ describe('Test the annotations reducer', () => {
             type: TOGGLE_ADD,
             featureType: "Text"
         });
-        testAllProperty(state.editing.features[0].geometry, {
-            type: "Point",
-            coordinates: []
-        });
+        expect(state.editing.features[0].geometry).toBe(null);
+        expect(state.editing.features[0].properties.isText).toBe(true);
     });
     it('toggle add line, check geometry', ()=>{
         let state = annotations({

@@ -641,6 +641,7 @@ function annotations(state = {validationErrors: {}}, action) {
 
         let geojsonFt = set("geometry.type", type === "Text" ? "Point" : type === "Circle" ? "Polygon" : type, selected);
         geojsonFt = set("geometry.coordinates", type === "Circle" ? [[]] : [], geojsonFt);
+        geojsonFt = set("geometry", type === "Point" || type === "Text" ? null : geojsonFt.geometry, geojsonFt);
 
         // Reset highlight properties of other features except the selected feature
         const editingFeatures = state.editing.features.filter(({properties: prop})=> prop?.id !== selected?.properties?.id)?.map((ft = {})=>{ ft.style = ft?.style?.map(s=> {s.highlight = false; return s;}) || []; return ft;});
