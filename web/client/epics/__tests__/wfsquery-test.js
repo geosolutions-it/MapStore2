@@ -189,7 +189,7 @@ describe('wfsquery Epics', () => {
             }
         });
     });
-    it('wfsQueryEpic passing filter merged with cql filter', (done) => {
+    it('wfsQueryEpic passing mixes params.cql_filter and layerFilter from layer', (done) => {
         let filterObj = {
             filterFields: [{
                 groupId: 1,
