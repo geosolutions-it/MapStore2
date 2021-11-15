@@ -13,7 +13,6 @@ import Spinner from 'react-spinkit';
 
 import Message from '../../../I18N/Message';
 import OverlayTrigger from '../../../misc/OverlayTrigger';
-import { debug } from 'util';
 
 const LayerNameEditField = ({
     enableOverlayTrigger,
@@ -54,11 +53,11 @@ const LayerNameEditField = ({
         </InputGroup.Addon>
     );
 
-    const overlayTriggerNameEdit = (button, isGroup) => (
+    const overlayTriggerNameEdit = button => (
         <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-layer-name-edit">
-            { isGroup ? 
-            (<Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}GroupName`}/>) : 
-            (<Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}LayerName`}/>) } 
+            { isGroup ?
+                (<Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}GroupName`}/>) :
+                (<Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}LayerName`}/>) }
         </Tooltip>}>
             {button}
         </OverlayTrigger>
@@ -74,7 +73,7 @@ const LayerNameEditField = ({
                     type="text"
                     disabled={!editingLayerName}
                     onChange={evt => setLayerName(evt.target.value)} />
-                {enableOverlayTrigger ? overlayTriggerNameEdit(editButton, isGroup) : editButton}
+                {enableOverlayTrigger ? overlayTriggerNameEdit(editButton) : editButton}
             </InputGroup>
         </FormGroup>
     );
@@ -106,7 +105,7 @@ export default compose(
     lifecycle({
         componentDidMount() {
             this.props.setLayerName(this.props.element?.name);
-            this.props.setIsGroup(this.props.groups.some(group => group.value === this.props.element.id))
+            this.props.setIsGroup(this.props.groups.some(group => group.value === this.props.element.id));
         },
         componentDidUpdate() {
             const {
