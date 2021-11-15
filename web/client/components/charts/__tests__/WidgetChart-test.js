@@ -22,6 +22,7 @@ describe('WidgetChart', () => {
             expect(layout.showLegend).toBeFalsy();
             expect(layout.autosize).toBeFalsy();
             expect(layout.automargin).toBeFalsy();
+            expect(layout.legend).toBeFalsy();
             expect(data.length).toEqual(1);
             // use yAxis dataKey as default label
             expect(data[0].name).toEqual(DATASET_1.series[0].dataKey);
@@ -39,6 +40,7 @@ describe('WidgetChart', () => {
             expect(layout.showLegend).toBeFalsy();
             expect(layout.autosize).toBeFalsy();
             expect(layout.automargin).toBeFalsy();
+            expect(layout.hovermode).toBe('x unified');
             expect(data.length).toEqual(1);
             // use yAxis dataKey as default label
             expect(data[0].name).toEqual(DATASET_1.series[0].dataKey);
@@ -56,6 +58,7 @@ describe('WidgetChart', () => {
             expect(layout.showLegend).toBeFalsy();
             expect(layout.autosize).toBeFalsy();
             expect(layout.automargin).toBeFalsy();
+            expect(layout.hovermode).toBe('x unified');
             expect(data.length).toEqual(1);
             // use yAxis dataKey as default label
             expect(data[0].name).toEqual(DATASET_1.series[0].dataKey);
@@ -135,6 +138,27 @@ describe('Widget Chart: data conversions ', () => {
             expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
             // colors generated are the defaults, generated on data (1 color for each entry)
             expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, COLOR_DEFAULTS));
+        });
+        it('Pie chart with modified options', () => {
+            const { data, layout } = toPlotly({
+                type: 'pie',
+                width: 500,
+                ...DATASET_1
+            });
+            // DATA
+            expect(data.length).toBe(1);
+            expect(data[0].type).toBe('pie');
+            expect(data[0].textposition).toEqual('inside');
+            // data values mapped
+            data[0].values.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.series[0].dataKey]));
+            // data labels mapped
+            data[0].labels.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.xAxis.dataKey]));
+            // LAYOUT
+            expect(layout.margin).toEqual({t: 20, b: 5, l: 2, r: 2, pad: 4}); // Modified margin based on width
+            // colors generated are the defaults, generated on data (1 color for each entry)
+            expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, COLOR_DEFAULTS));
+            expect(layout.legend).toBeTruthy();
+            expect(layout.legend).toEqual({x: 1.05, y: 0.5}); // Legend option to right and centered based on width
         });
         it('custom colors', () => {
             const autoColorOptions = { base: 190, range: 20 };

@@ -208,7 +208,7 @@
     "ogc-schemas": "2.6.1",
     "ol": "5.3.0",
     "pdfviewer": "0.3.2",
-    "plotly.js-cartesian-dist": "1.57.1",
+    "plotly.js-cartesian-dist": "2.5.1",
     "prop-types": "15.7.2",
     "qrcode.react": "0.9.3",
     "query-string": "6.9.0",

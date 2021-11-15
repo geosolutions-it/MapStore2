@@ -51,7 +51,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts }) {
 
         }
         return {
-            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
+            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'd'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x,
             y
         };
@@ -133,16 +133,16 @@ export const toPlotly = (props) => {
     return {
         layout: {
             showlegend: legend,
-            // legend: { "orientation": "h" },
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
             ...getLayoutOptions({ ...props }),
             margin: getMargins({ ...props, isModeBarVisible}),
             autosize: false,
-            automargin: false,
             height,
-            width
+            width,
+            ...(type === 'pie' && isModeBarVisible && {legend: {x: 1.05, y: 0.5}}), // Position legend to right and centered vertically
+            hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
             return {
