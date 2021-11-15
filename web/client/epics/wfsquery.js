@@ -178,9 +178,8 @@ export const wfsQueryEpic = (action$, store) =>
             // getSelected Layer and merge layerFilter and cql_filter in params  with action filter
             const layer = selectedLayerSelector(store.getState());
 
-            const {layerFilter, params} = layer ?? {};
-            const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
-
+            const {layerFilter, params = {}} = layer ?? {};
+            const cqlFilter = params?.[find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter")];
             // use original filter if the selected layer is vector type
             const ogcFilter = layer?.type === "vector" ?
                 action.filterObj

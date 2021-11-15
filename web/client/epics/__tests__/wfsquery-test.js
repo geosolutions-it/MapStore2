@@ -189,6 +189,65 @@ describe('wfsquery Epics', () => {
             }
         });
     });
+    it('wfsQueryEpic passing mixes params.cql_filter and layerFilter from layer', (done) => {
+        let filterObj = {
+            filterFields: [{
+                groupId: 1,
+                attribute: "attribute1",
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "list",
+                value: "value1"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }]
+        };
+        const expectedResult = require('../../test-resources/wfs/museam.json');
+        mockAxios.onPost().reply(config => {
+            expect(config.data).toContain('<ogc:PropertyName>NAME</ogc:PropertyName>');
+            expect(config.data).toContain('<wfs:SortOrder>DESC</wfs:SortOrder>');
+            expect(config.data).toContain("<ogc:Filter>"
+            + "<ogc:And>"
+                + "<ogc:PropertyIsEqualTo><ogc:PropertyName>attribute2</ogc:PropertyName><ogc:Literal>value2</ogc:Literal></ogc:PropertyIsEqualTo>"
+                + "<ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>attribute1</ogc:PropertyName><ogc:Literal>value1</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or>"
+            + "</ogc:And></ogc:Filter>");
+            return [200, expectedResult];
+        });
+        testEpic(wfsQueryEpic, 2, query("base/web/client/test-resources/wfs/museam.json", { pagination: {maxFeatures: 20, startIndex: 0}, sortOptions: {sortBy: "NAME", sortOrder: "DESC"}, featureTypeName: "layerId"}, {}), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                case QUERY_RESULT:
+                    expect(action.result).toEqual(expectedResult);
+                    expect(action.filterObj.pagination).toEqual({maxFeatures: 20, startIndex: 0});
+                    expect(action.filterObj.sortOptions).toEqual({sortBy: "NAME", sortOrder: "DESC"});
+                    break;
+                case FEATURE_LOADING:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, {
+            layers: {
+                flat: [{id: 'TEST_LAYER', layerFilter: filterObj, params: {cql_filter: "attribute2 = 'value2'"}}]
+            },
+            featuregrid: {
+                timeSync: true,
+                pagination: {
+                    size: 10
+                },
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                changes: []
+            }
+        });
+    });
     describe('wfsQueryEpic timedimension', () => {
         const BASE_URL = "/WFS";
         const DATE = "20180101T00:00:00";
