@@ -179,7 +179,7 @@ export const wfsQueryEpic = (action$, store) =>
             const layer = selectedLayerSelector(store.getState());
             const useLayerFilter = useLayerFilterSelector(store.getState());
 
-            const {layerFilter, params} = (layer) ?? {};
+            const {layerFilter, params} = layer ?? {};
             const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
 
             // use original filter if the selected layer is vector type
