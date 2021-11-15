@@ -186,8 +186,8 @@ const FeatureDock = (props = {
                     footer={getFooter(props)}>
                     {getDialogs(props.tools)}
                     <Grid
+                        showCheckbox={props.showCheckbox}
                         editingAllowedRoles={props.editingAllowedRoles}
-                        initPlugin={props.initPlugin}
                         customEditorsOptions={props.customEditorsOptions}
                         autocompleteEnabled={props.autocompleteEnabled}
                         url={props.url}

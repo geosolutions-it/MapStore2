@@ -184,3 +184,4 @@ export const isEditingAllowedSelector = state => {
     return (editingAllowedRoles.indexOf(role) !== -1 || canEdit) && !isCesium(state);
 };
 export const paginationSelector = state => get(state, "featuregrid.pagination");
+export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);

@@ -84,10 +84,10 @@ import {
     setPagination
 } from '../../actions/featuregrid';
 
-import { paginationSelector } from '../../selectors/featuregrid';
+import { paginationSelector, useLayerFilterSelector } from '../../selectors/featuregrid';
 
 
-import { featureTypeLoaded, createQuery } from '../../actions/wfsquery';
+import { featureTypeLoaded, createQuery, updateQuery } from '../../actions/wfsquery';
 import { changeDrawingStatus } from '../../actions/draw';
 import museam from '../../test-resources/wfs/museam.json';
 describe('Test the featuregrid reducer', () => {
@@ -279,7 +279,7 @@ describe('Test the featuregrid reducer', () => {
         expect(state.drawing).toBe(false);
     });
     it('setSelectionOptions({multiselect= false} = {})', () => {
-        let state = featuregrid( {}, setSelectionOptions({}));
+        let state = featuregrid( {}, setSelectionOptions({multiselect: false}));
         expect(state.multiselect).toBe(false);
     });
     it('changePage', () => {
@@ -392,5 +392,53 @@ describe('Test the featuregrid reducer', () => {
     it('setPagination', () => {
         const newState = featuregrid(undefined, setPagination(10000));
         expect(paginationSelector({ featuregrid: newState })).toEqual({page: 0, size: 10000});
+    });
+    describe('updateQuery', () => {
+        it('when useLayerFilter is specified, update it', () => {
+            expect(
+                useLayerFilterSelector({
+                    featuregrid: featuregrid(undefined, updateQuery({useLayerFilter: true}))
+                })
+            ).toEqual(true); // default is true from selector
+            expect(
+                useLayerFilterSelector({
+                    featuregrid: featuregrid(undefined, updateQuery({useLayerFilter: false}))
+                })
+            ).toEqual(false); // from the default is set to false
+            expect(
+                useLayerFilterSelector({
+                    featuregrid: featuregrid({useLayerFilter: false}, updateQuery({useLayerFilter: true}))
+                })
+            ).toEqual(true); // remains true
+            expect(
+                useLayerFilterSelector({
+                    featuregrid: featuregrid({useLayerFilter: true}, updateQuery({useLayerFilter: false}))
+                })
+            ).toEqual(false); // changes to false
+            expect(
+                useLayerFilterSelector({
+                    featuregrid: featuregrid({useLayerFilter: false}, updateQuery({useLayerFilter: false}))
+                })
+            ).toEqual(false); // remains false
+
+        });
+        it('when useLayerFilter is not specified, nothing changes', () => {
+            expect(
+                useLayerFilterSelector({
+                    featuregrid: featuregrid(undefined, updateQuery())
+                })
+            ).toEqual(true); // default is true from selector
+            expect(
+                useLayerFilterSelector({
+                    featuregrid: featuregrid({useLayerFilter: true}, updateQuery())
+                })
+            ).toEqual(true); // remains true
+            expect(
+                useLayerFilterSelector({
+                    featuregrid: featuregrid({useLayerFilter: false}, updateQuery())
+                })
+            ).toEqual(false); // remains false
+        });
+
     });
 });

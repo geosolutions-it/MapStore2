@@ -302,13 +302,13 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
         }
         const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", spatialFieldOperator);
         const filter = {...filterObj, ...composedFilterFields};
-        return updateQuery(filter, update.type);
+        return updateQuery({updates: filter, reason: update?.type});
     }
     let u = update;
     if (append && !!update?.attribute) {
         u = getAttributeFilters(store.getState())[update?.attribute];
     }
-    return updateQuery(gridUpdateToQueryUpdate(u, wfsFilter(store.getState())), u?.type);
+    return updateQuery({updates: gridUpdateToQueryUpdate(u, wfsFilter(store.getState())), reason: u?.type});
 };
 
 
@@ -488,7 +488,7 @@ export const disableMultiSelect = (action$) =>
     action$.ofType(UPDATE_FILTER)
         .filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
         .switchMap(() => {
-            return Rx.Observable.of(setSelectionOptions());
+            return Rx.Observable.of(setSelectionOptions({multiselect: false}));
         });
 export const handleClickOnMap = (action$, store) =>
     action$.ofType(UPDATE_FILTER)
@@ -504,7 +504,7 @@ export const handleClickOnMap = (action$, store) =>
                 const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
 
                 return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
-                    setSelectionOptions({multiselect: ctrl || metaKey}),
+                    setSelectionOptions({multiselect: (ctrl || metaKey) ?? false}),
                     updateFilter({
                         ...currentFilter,
                         value: {
@@ -537,7 +537,7 @@ export const handleBoxSelectionDrawEnd =  (action$, store) =>
                 const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
                 return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
-                    setSelectionOptions({multiselect: ctrl || metaKey}),
+                    setSelectionOptions({multiselect: (ctrl || metaKey) ?? false}),
                     updateFilter({
                         ...currentFilter,
                         value: {
@@ -647,7 +647,7 @@ export const featureGridChangePage = (action$, store) =>
                     let features = get(ra, "result.features", []);
                     const multipleSelect = multiSelect(store.getState());
                     const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-                    if (multipleSelect && geometryFilter.enabled) {
+                    if (multipleSelect && geometryFilter?.enabled) {
                         features = selectedFeaturesSelector(store.getState());
                     }
                     // TODO: Handle pagination when multi-select due to control
