@@ -31,7 +31,8 @@ import {
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
     SET_MAP_TRIGGER,
-    SET_SHOW_IN_MAP_POPUP
+    SET_SHOW_IN_MAP_POPUP,
+    INIT_PLUGIN
 } from '../actions/mapInfo';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -477,6 +478,9 @@ function mapInfo(state = initState, action) {
             };
         }
         return state;
+    }
+    case INIT_PLUGIN: {
+        return { ...state, ...action.cfg };
     }
     default:
         return state;

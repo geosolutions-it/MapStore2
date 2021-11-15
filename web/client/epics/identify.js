@@ -33,11 +33,13 @@ import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
 import { cancelSelectedItem } from '../actions/search';
-import { stopGetFeatureInfoSelector, identifyOptionsSelector,
+import {
+    stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
-    currentEditFeatureQuerySelector, mapTriggerSelector } from '../selectors/mapInfo';
+    currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector
+} from '../selectors/mapInfo';
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
@@ -126,7 +128,8 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             // Reverse - To query layer in same order as in TOC
             let queryableLayers = reverse(queryableLayersSelector(getState()));
             const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
-            if (queryableSelectedLayers.length) {
+            const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(getState());
+            if (enableInfoForSelectedLayers && queryableSelectedLayers.length) {
                 queryableLayers = queryableSelectedLayers;
             }
 

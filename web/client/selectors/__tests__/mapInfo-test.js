@@ -29,7 +29,8 @@ import {
     hoverEnabledSelector,
     currentFeatureSelector,
     mapInfoEnabledSelector,
-    mapInfoDisabledSelector
+    mapInfoDisabledSelector,
+    enableInfoForSelectedLayersSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -387,5 +388,10 @@ describe('Test mapinfo selectors', () => {
         const state = { mapInfo: { enabled: true}};
         const mapInfoEnabled = mapInfoDisabledSelector(state);
         expect(mapInfoEnabled).toBeFalsy();
+    });
+    it('test enableInfoForSelectedLayersSelector ', () => {
+        const state = { mapInfo: { enableInfoForSelectedLayers: false}};
+        const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(state);
+        expect(enableInfoForSelectedLayers).toBeFalsy();
     });
 });

@@ -40,7 +40,11 @@ import {
     TOGGLE_HIGHLIGHT_FEATURE,
     toggleHighlightFeature,
     SET_MAP_TRIGGER,
-    setMapTrigger, checkIdentifyIsMounted, IDENTIFY_IS_MOUNTED
+    setMapTrigger,
+    checkIdentifyIsMounted,
+    IDENTIFY_IS_MOUNTED,
+    onInitPlugin,
+    INIT_PLUGIN
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -169,5 +173,8 @@ describe('Test correctness of the map actions', () => {
     });
     it('check if Identify is not mounted', () => {
         expect(checkIdentifyIsMounted(false)).toEqual({type: IDENTIFY_IS_MOUNTED, isMounted: false });
+    });
+    it('onInitPlugin', () => {
+        expect(onInitPlugin({cfg1: false})).toEqual({type: INIT_PLUGIN, cfg: {cfg1: false} });
     });
 });

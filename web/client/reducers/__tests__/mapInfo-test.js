@@ -18,7 +18,8 @@ import {
     changePage,
     toggleHighlightFeature,
     setMapTrigger,
-    setShowInMapPopup
+    setShowInMapPopup,
+    onInitPlugin
 } from '../../actions/mapInfo';
 import {changeMapType} from '../../actions/maptype';
 
@@ -913,5 +914,10 @@ describe('Test the mapInfo reducer', () => {
         const initialState = { configuration: {} };
         const state = mapInfo(initialState, setShowInMapPopup(true));
         expect(state.showInMapPopup).toBeTruthy();
+    });
+    it('onInitPlugin', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, onInitPlugin({cfg1: "test"}));
+        expect(state.cfg1).toBe("test");
     });
 });

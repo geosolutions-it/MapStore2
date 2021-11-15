@@ -195,3 +195,4 @@ export const currentEditFeatureQuerySelector = state => state.mapInfo?.currentEd
 
 export const mapTriggerSelector = state => get(state, "mapInfo.configuration.trigger", "click");
 export const hoverEnabledSelector = state => isCesium(state) ? false : true;
+export const enableInfoForSelectedLayersSelector = state => get(state, "mapInfo.enableInfoForSelectedLayers", true);

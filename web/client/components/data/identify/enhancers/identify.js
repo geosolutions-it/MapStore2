@@ -72,10 +72,15 @@ export const identifyLifecycle = compose(
                 showInMapPopup,
                 changeMousePointer = () => {},
                 disableCenterToMarker,
+                enableInfoForSelectedLayers = true,
                 onEnableCenterToMarker = () => {},
                 setShowInMapPopup = () => {},
-                checkIdentifyIsMounted = () => {}
+                checkIdentifyIsMounted = () => {},
+                onInitPlugin = () => {}
             } = this.props;
+
+            // Initialize plugin configuration
+            onInitPlugin({enableInfoForSelectedLayers});
 
             if (enabled || showInMapPopup) {
                 changeMousePointer('pointer');
