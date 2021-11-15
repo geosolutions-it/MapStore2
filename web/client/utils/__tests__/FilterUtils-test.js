@@ -1190,6 +1190,8 @@ describe('FilterUtils', () => {
         expect(cqlStringField("attribute_1", "=", "Alabama")).toBe("\"attribute_1\"='Alabama'");
         // test escape single quotes
         expect(cqlStringField("attribute_1", "=", "PRE'")).toBe("\"attribute_1\"='PRE'''");
+        // test <>
+        expect(cqlStringField("attribute_1", "<>", "Alabama")).toBe("\"attribute_1\"<>'Alabama'");
         // test isNull
         expect(cqlStringField("attribute_1", "isNull", "")).toBe("isNull(\"attribute_1\")=true");
         // test ilike
