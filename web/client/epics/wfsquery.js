@@ -52,7 +52,7 @@ import { describeFeatureTypeToAttributes } from '../utils/FeatureTypeUtils';
 import * as notifications from '../actions/notifications';
 import { find } from 'lodash';
 
-import {selectedLayerSelector} from '../selectors/featuregrid';
+import {selectedLayerSelector, useLayerFilterSelector} from '../selectors/featuregrid';
 import {layerLoad} from '../actions/layers';
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
@@ -177,13 +177,14 @@ export const wfsQueryEpic = (action$, store) =>
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             // getSelected Layer and merge layerFilter and cql_filter in params  with action filter
             const layer = selectedLayerSelector(store.getState());
+            const useLayerFilter = useLayerFilterSelector(store.getState());
 
             const {layerFilter, params = {}} = layer ?? {};
             const cqlFilter = params?.[find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter")];
             // use original filter if the selected layer is vector type
             const ogcFilter = layer?.type === "vector" ?
                 action.filterObj
-                : mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, action.filterObj);
+                : mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, useLayerFilter ? layerFilter : null, action.filterObj);
             const { url, options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
             const options = {
                 ...action.filterObj.pagination,
