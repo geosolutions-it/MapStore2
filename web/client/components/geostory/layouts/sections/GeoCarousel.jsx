@@ -70,6 +70,14 @@ const GeoCarousel = ({
     onSort = () => {},
     onEnableDraw = () => {},
     isDrawEnabled,
+    defaultMarkerStyle = {
+        iconColor: 'cyan',
+        iconShape: 'circle'
+    },
+    highlightedMarkerStyle = {
+        iconColor: 'red',
+        iconShape: 'circle'
+    }
 }) => {
 
     const innerBackgroundNode = useRef();
@@ -166,13 +174,13 @@ const GeoCarousel = ({
     const contentsLayer = getVectorLayerFromContents({
         id,
         contents: contents.filter(content => content.id !== contentId),
-        featureStyle: ({ content, feature }) => getContentsFeatureStyle(contents, content, contentId, feature)
+        featureStyle: ({ content, feature }) => getContentsFeatureStyle(defaultMarkerStyle, contents, content, contentId, feature)
     });
 
     const highlightedContentsLayer = getVectorLayerFromContents({
         id: `${id}-highlighted`,
         contents : contents.filter(content => content.id === contentId),
-        featureStyle: ({ content, feature }) => getContentsFeatureStyle(contents, content, contentId, feature, 'red')
+        featureStyle: ({ content, feature }) => getContentsFeatureStyle(highlightedMarkerStyle, contents, content, contentId, feature)
     });
 
     return (<section

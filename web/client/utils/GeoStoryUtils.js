@@ -658,14 +658,13 @@ export function getVectorLayerFromContents({
 }
 
 export const getContentsFeatureStyle = (
+    markerStyle,
     contents,
     content,
     contentId,
     feature,
-    iconColor='cyan'
     ) => ({
-    iconShape: 'circle',
-    iconColor,
+    ...markerStyle,
     iconText: `${contents.indexOf(content) + 1}`,
     ...feature.style,
     highlight: contentId === content.id
