@@ -179,7 +179,7 @@ const GeoCarousel = ({
 
     const highlightedContentsLayer = getVectorLayerFromContents({
         id: `${id}-highlighted`,
-        contents : contents.filter(content => content.id === contentId),
+        contents: contents.filter(content => content.id === contentId),
         featureStyle: ({ content, feature }) => getContentsFeatureStyle(highlightedMarkerStyle, contents, content, contentId, feature)
     });
 
