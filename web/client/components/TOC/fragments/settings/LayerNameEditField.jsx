@@ -13,6 +13,7 @@ import Spinner from 'react-spinkit';
 
 import Message from '../../../I18N/Message';
 import OverlayTrigger from '../../../misc/OverlayTrigger';
+import { debug } from 'util';
 
 const LayerNameEditField = ({
     enableOverlayTrigger,
@@ -23,6 +24,7 @@ const LayerNameEditField = ({
     layerError,
     waitingForLayerLoading = false,
     waitingForLayerLoad = false,
+    isGroup = false,
     setLayerName = () => {},
     setWaitingForLayerLoading = () => {},
     setEditingLayerName = () => {},
@@ -52,9 +54,11 @@ const LayerNameEditField = ({
         </InputGroup.Addon>
     );
 
-    const overlayTriggerNameEdit = button => (
+    const overlayTriggerNameEdit = (button, isGroup) => (
         <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-layer-name-edit">
-            <Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}LayerName`}/>
+            { isGroup ? 
+            (<Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}GroupName`}/>) : 
+            (<Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}LayerName`}/>) } 
         </Tooltip>}>
             {button}
         </OverlayTrigger>
@@ -70,7 +74,7 @@ const LayerNameEditField = ({
                     type="text"
                     disabled={!editingLayerName}
                     onChange={evt => setLayerName(evt.target.value)} />
-                {enableOverlayTrigger ? overlayTriggerNameEdit(editButton) : editButton}
+                {enableOverlayTrigger ? overlayTriggerNameEdit(editButton, isGroup) : editButton}
             </InputGroup>
         </FormGroup>
     );
@@ -84,6 +88,7 @@ export default compose(
     withState('waitingForLayerLoading', 'setWaitingForLayerLoading', false),
     withState('waitingForLayerLoad', 'setWaitingForLayerLoad', false),
     withState('layerError', 'setLayerError'),
+    withState('isGroup', 'setIsGroup', false),
     withHandlers({
         setEditingLayerName: ({ editingLayerName = false, overlayTriggerDelayID, setEditingLayerName = () => {}, setOverlayTriggerDelayID = () => {}, setEnableOverlayTrigger = () => {} }) => editing => {
             if (editingLayerName !== editing) {
@@ -101,6 +106,7 @@ export default compose(
     lifecycle({
         componentDidMount() {
             this.props.setLayerName(this.props.element?.name);
+            this.props.setIsGroup(this.props.groups.some(group => group.value === this.props.element.id))
         },
         componentDidUpdate() {
             const {

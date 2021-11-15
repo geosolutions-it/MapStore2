@@ -72,9 +72,7 @@ class General extends React.Component {
         ];
         const groups = this.props.groups && flattenGroups(this.props.groups);
         const eleGroupLabel = this.findGroupLabel(this.props.element && this.props.element.group || "Default");
-
         const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
-
         return (
             <Grid fluid style={{ paddingTop: 15, paddingBottom: 15 }}>
                 <form ref="settings">
@@ -109,6 +107,7 @@ class General extends React.Component {
                         )}
                     </FormGroup>)}
                     <LayerNameEditField
+                        groups={groups}
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
                         onUpdateEntry={this.updateEntry.bind(null)}/>

@@ -138,7 +138,9 @@
                 "bottom": "Bottom",
                 "top": "Top",
                 "editLayerName": "Edit layer name",
-                "confirmLayerName": "Confirm layer name change"
+                "confirmLayerName": "Confirm layer name change",
+                "editGroupName": "Edit group name",
+                "confirmGroupName": "Confirm group name change"
             },
             "legendOptions": {
               "title": "Legend",
