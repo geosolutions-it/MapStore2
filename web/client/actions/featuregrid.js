@@ -181,7 +181,7 @@ export function toggleSelection(features) {
  * Changes the selection options for the feature grid. It allows to set independently the possibility
  * to do multiple selection and to show/hide the checkboxes.
  * @memberof actions.featuregrid
- * @param {boolean} [options.multiselect=false] if true, allows multiple feature selection
+ * @param {boolean} [options.multiselect] if true, allows multiple feature selection
  * @param {boolean} [showCheckbox] allow to show/hide checkboxes.
  * @returns
  */
