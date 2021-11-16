@@ -44,7 +44,6 @@ class FeatureGrid extends React.PureComponent {
         columnSettings: PropTypes.object,
         gridOptions: PropTypes.object,
         actionOpts: PropTypes.object,
-        initPlugin: PropTypes.func,
         tools: PropTypes.array,
         gridEvents: PropTypes.object,
         virtualScroll: PropTypes.bool,
@@ -57,7 +56,6 @@ class FeatureGrid extends React.PureComponent {
     };
     static defaultProps = {
         editingAllowedRoles: ["ADMIN"],
-        initPlugin: () => {},
         autocompleteEnabled: false,
         gridComponent: AdaptiveGrid,
         changes: {},
