@@ -51,8 +51,6 @@ class General extends React.Component {
         currentLocale: 'en-US'
     };
 
-    supportedNameEditLayerTypes = ['wms'];
-
     getTitle = (label) => _getTitle(label, this.props.currentLocale);
     getLabelName = (label, groups) => _getLabelName(this.getTitle(label), groups);
 
@@ -110,7 +108,7 @@ class General extends React.Component {
                         }
                         )}
                     </FormGroup>)}
-                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) && 
+                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) &&
                     <LayerNameEditField
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
@@ -191,6 +189,8 @@ class General extends React.Component {
             </Grid>
         );
     }
+
+    supportedNameEditLayerTypes = ['wms'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
 
