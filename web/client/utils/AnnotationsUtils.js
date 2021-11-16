@@ -12,7 +12,7 @@ import {getMessageById} from './LocaleUtils';
 import MarkerUtils from './MarkerUtils';
 import { geometryFunctions, fetchStyle, hashAndStringify } from './VectorStyleUtils';
 import { set } from './ImmutableUtils';
-import { values, isNil, slice, head, castArray, last, isArray, findIndex, isString, get } from 'lodash';
+import { values, isNil, slice, head, castArray, last, isArray, findIndex, isString, get, includes } from 'lodash';
 import uuid from 'uuid';
 import turfCenter from '@turf/center';
 import assign from 'object-assign';
@@ -636,6 +636,55 @@ export const isCompletePolygon = (coords = [[[]]]) => {
  */
 export const isAnnotation = (json) => json?.type === ANNOTATION_TYPE || json?.name === "Annotations";
 
+/**
+ * utility to validate and fix coordinates for selected feature and update corresponding entry in editingFeatures array
+ * @param selectedFeature
+ * @param editingFeatures
+ * @returns {{feature, selected: null}|{feature, selected: ({properties}|*)}}
+ */
+export const modifySelectedInEdited = (selectedFeature, editingFeatures) => {
+    if (selectedFeature === null) return { selected: null, feature: editingFeatures};
+
+    const featureTypes = ["LineString", "MultiPoint", "Polygon", "Point"];
+    let selected = selectedFeature;
+    let feature = editingFeatures;
+    let nullGeometryModifier = false;
+    switch (selected.geometry.type) {
+    case "Polygon": {
+        selected = set("geometry.coordinates", [selected.geometry.coordinates[0].filter(validateCoordsArray)], selected);
+        break;
+    }
+    case "LineString": case "MultiPoint": {
+        selected = set("geometry.coordinates", selected.geometry.coordinates.filter(validateCoordsArray), selected);
+        break;
+    }
+    // point
+    default: {
+        selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
+        if (!selected.geometry.coordinates.length) nullGeometryModifier = true;
+    }
+    }
+
+    if (selected.properties && selected.properties.isCircle) {
+        selected = set("geometry", selected.properties.polygonGeom, selected);
+    }
+
+    let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
+    if (selected.properties.isValidFeature || includes(featureTypes, selected.geometry.type)) {
+        const tempSelected = nullGeometryModifier ? set('geometry', null, selected) : selected;
+        if (selectedIndex === -1) {
+            feature = set(`features`, feature.features.concat([tempSelected]), feature);
+        } else {
+            feature = set(`features[${selectedIndex}]`, tempSelected, feature);
+        }
+    }
+    if (selectedIndex !== -1 && !selected.properties.isValidFeature && !includes(featureTypes, selected.geometry.type)) {
+        feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
+    }
+
+    return { selected, feature };
+};
+
 AnnotationsUtils = {
     ANNOTATION_TYPE,
     convertGeoJSONToInternalModel,
@@ -683,7 +732,8 @@ AnnotationsUtils = {
     isAMissingSymbol,
     isCompletePolygon,
     getDashArrayFromStyle,
-    isAnnotation
+    isAnnotation,
+    modifySelectedInEdited
 };
 
 export default AnnotationsUtils;
