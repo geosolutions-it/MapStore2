@@ -23,7 +23,6 @@ const LayerNameEditField = ({
     layerError,
     waitingForLayerLoading = false,
     waitingForLayerLoad = false,
-    isGroup = false,
     setLayerName = () => {},
     setWaitingForLayerLoading = () => {},
     setEditingLayerName = () => {},
@@ -55,9 +54,7 @@ const LayerNameEditField = ({
 
     const overlayTriggerNameEdit = button => (
         <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-layer-name-edit">
-            { isGroup ?
-                (<Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}GroupName`}/>) :
-                (<Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}LayerName`}/>) }
+            <Message msgId={`layerProperties.tooltip.${editingLayerName ? 'confirm' : 'edit'}LayerName`}/>
         </Tooltip>}>
             {button}
         </OverlayTrigger>
@@ -87,7 +84,6 @@ export default compose(
     withState('waitingForLayerLoading', 'setWaitingForLayerLoading', false),
     withState('waitingForLayerLoad', 'setWaitingForLayerLoad', false),
     withState('layerError', 'setLayerError'),
-    withState('isGroup', 'setIsGroup', false),
     withHandlers({
         setEditingLayerName: ({ editingLayerName = false, overlayTriggerDelayID, setEditingLayerName = () => {}, setOverlayTriggerDelayID = () => {}, setEnableOverlayTrigger = () => {} }) => editing => {
             if (editingLayerName !== editing) {
@@ -105,7 +101,6 @@ export default compose(
     lifecycle({
         componentDidMount() {
             this.props.setLayerName(this.props.element?.name);
-            this.props.setIsGroup(this.props.groups.some(group => group.value === this.props.element.id));
         },
         componentDidUpdate() {
             const {

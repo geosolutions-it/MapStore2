@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { find, isObject, isString, uniqBy } from 'lodash';
+import { find, includes, isObject, isString, uniqBy } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -51,6 +51,8 @@ class General extends React.Component {
         currentLocale: 'en-US'
     };
 
+    supportedNameEditLayerTypes = ['wms'];
+
     getTitle = (label) => _getTitle(label, this.props.currentLocale);
     getLabelName = (label, groups) => _getLabelName(this.getTitle(label), groups);
 
@@ -72,7 +74,9 @@ class General extends React.Component {
         ];
         const groups = this.props.groups && flattenGroups(this.props.groups);
         const eleGroupLabel = this.findGroupLabel(this.props.element && this.props.element.group || "Default");
+
         const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
+
         return (
             <Grid fluid style={{ paddingTop: 15, paddingBottom: 15 }}>
                 <form ref="settings">
@@ -106,11 +110,11 @@ class General extends React.Component {
                         }
                         )}
                     </FormGroup>)}
+                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) && 
                     <LayerNameEditField
-                        groups={groups}
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
-                        onUpdateEntry={this.updateEntry.bind(null)}/>
+                        onUpdateEntry={this.updateEntry.bind(null)}/>}
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :
