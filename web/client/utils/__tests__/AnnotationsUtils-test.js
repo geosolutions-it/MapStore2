@@ -534,6 +534,8 @@ describe('Test the AnnotationsUtils', () => {
         expect(getComponents(point).length).toBe(1);
         expect(getComponents(point)[0].lon).toBe(1);
         expect(getComponents(point)[0].lat).toBe(1);
+        expect(getComponents(null)[0].lat).toBe(undefined);
+        expect(getComponents(null)[0].lon).toBe(undefined);
     });
     it('test addIds defaults', () => {
         const features = [{properties: {id: "some id"}}, {properties: {}}];
