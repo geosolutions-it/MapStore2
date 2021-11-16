@@ -69,11 +69,12 @@ import {
     removeDuplicate,
     validateCoordsArray,
     getStartEndPointsForLinestring,
+    modifySelectedInEdited,
     DEFAULT_ANNOTATIONS_STYLES,
     STYLE_POINT_MARKER,
     STYLE_POINT_SYMBOL,
     DEFAULT_SHAPE,
-    DEFAULT_PATH, ANNOTATIONS, modifySelectedInEdited
+    DEFAULT_PATH, ANNOTATIONS
 } from '../utils/AnnotationsUtils';
 import { MEASURE_TYPE } from '../utils/MeasurementUtils';
 import { createSvgUrl } from '../utils/VectorStyleUtils';
