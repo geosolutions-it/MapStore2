@@ -12,7 +12,7 @@ import {getMessageById} from './LocaleUtils';
 import MarkerUtils from './MarkerUtils';
 import { geometryFunctions, fetchStyle, hashAndStringify } from './VectorStyleUtils';
 import { set } from './ImmutableUtils';
-import { values, isNil, slice, head, castArray, last, isArray, findIndex, isString } from 'lodash';
+import { values, isNil, slice, head, castArray, last, isArray, findIndex, isString, get } from 'lodash';
 import uuid from 'uuid';
 import turfCenter from '@turf/center';
 import assign from 'object-assign';
@@ -529,8 +529,9 @@ export const getBaseCoord = (type) => {
     default: return [[{lat: "", lon: ""}]];
     }
 };
-export const getComponents = ({type, coordinates}) => {
-    switch (type) {
+export const getComponents = (geometry) => {
+    const coordinates = get(geometry, 'coordinates', []);
+    switch (geometry?.type) {
     case "Polygon": {
         return AnnotationsUtils.isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
     }
