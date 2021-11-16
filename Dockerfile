@@ -24,7 +24,7 @@ ENV TERM xterm
 ENV DATA_DIR="/data"
 RUN mkdir -p ${DATA_DIR}/configs
 #add all files you want to copy to the external dir
-COPY newext.json /data/configs/new.json 
+# COPY newext.json /data/configs/new.json 
 COPY --from=mother "/mapstore/mapstore.war" "${MAPSTORE_WEBAPP_DST}/mapstore.war"
 COPY --from=mother "/mapstore/docker" "${CATALINA_BASE}/docker/"
 
