@@ -643,7 +643,7 @@ export const isAnnotation = (json) => json?.type === ANNOTATION_TYPE || json?.na
  * @returns {{feature, selected: null}|{feature, selected: ({properties}|*)}}
  */
 export const modifySelectedInEdited = (selectedFeature, editingFeatures) => {
-    if (selectedFeature === null) return { selected: null, feature: editingFeatures};
+    if (isNil(selectedFeature)) return { selected: selectedFeature, feature: editingFeatures };
 
     const featureTypes = ["LineString", "MultiPoint", "Polygon", "Point"];
     let selected = selectedFeature;
