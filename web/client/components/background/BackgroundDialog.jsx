@@ -140,7 +140,7 @@ export default class BackgroundDialog extends React.Component {
         if (this.props.layer.type === "wms") {
             return (<React.Fragment>
                 <FormGroup controlId="formControlsSelect">
-                    <ControlLabel><Message msgId="layerProperties.format" /></ControlLabel>
+                    <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
                     <Select
                         onChange={event => this.setState({ format: event && event.value })}
                         value={this.state.format || this.props.defaultFormat}
