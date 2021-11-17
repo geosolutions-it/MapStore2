@@ -637,17 +637,17 @@ export const isCompletePolygon = (coords = [[[]]]) => {
 export const isAnnotation = (json) => json?.type === ANNOTATION_TYPE || json?.name === "Annotations";
 
 /**
- * utility to validate and fix coordinates for selected feature and update corresponding entry in editingFeatures array
+ * utility to validate and fix coordinates for selected feature and update corresponding entry in editingFeatures object
  * @param selectedFeature
  * @param editingFeatures
  * @returns {{feature, selected: null}|{feature, selected: ({properties}|*)}}
  */
 export const modifySelectedInEdited = (selectedFeature, editingFeatures) => {
-    if (isNil(selectedFeature)) return { selected: selectedFeature, feature: editingFeatures };
+    if (isNil(selectedFeature)) return { selected: selectedFeature, editing: editingFeatures };
 
     const featureTypes = ["LineString", "MultiPoint", "Polygon", "Point"];
     let selected = selectedFeature;
-    let feature = editingFeatures;
+    let editing = editingFeatures;
     let nullGeometryModifier = false;
     switch (selected.geometry.type) {
     case "Polygon": {
@@ -669,20 +669,20 @@ export const modifySelectedInEdited = (selectedFeature, editingFeatures) => {
         selected = set("geometry", selected.properties.polygonGeom, selected);
     }
 
-    let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
+    let selectedIndex = findIndex(editing.features, (f) => f.properties.id === selected.properties.id);
     if (selected.properties.isValidFeature || includes(featureTypes, selected.geometry.type)) {
         const tempSelected = nullGeometryModifier ? set('geometry', null, selected) : selected;
         if (selectedIndex === -1) {
-            feature = set(`features`, feature.features.concat([tempSelected]), feature);
+            editing = set(`features`, editing.features.concat([tempSelected]), editing);
         } else {
-            feature = set(`features[${selectedIndex}]`, tempSelected, feature);
+            editing = set(`features[${selectedIndex}]`, tempSelected, editing);
         }
     }
     if (selectedIndex !== -1 && !selected.properties.isValidFeature && !includes(featureTypes, selected.geometry.type)) {
-        feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
+        editing = set(`features`, editing.features.filter((f, i) => i !== selectedIndex ), editing);
     }
 
-    return { selected, feature };
+    return { selected, editing };
 };
 
 AnnotationsUtils = {

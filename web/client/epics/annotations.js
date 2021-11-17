@@ -313,7 +313,7 @@ export default {
         .switchMap((action) => {
             if (action.attribute === 'geometry') {
                 let state = store.getState();
-                let { feature } = modifySelectedInEdited(state.annotations.selected, state.annotations.editing);
+                let { editing: feature } = modifySelectedInEdited(state.annotations.selected, state.annotations.editing);
                 const type = state.annotations.featureType;
                 const multiGeom = multiGeometrySelector(state);
                 const drawOptions = {
@@ -596,7 +596,7 @@ export default {
     onChangedSelectedFeatureEpic: (action$, {getState}) => action$.ofType(CHANGED_SELECTED )
         .switchMap(({}) => {
             const state = getState();
-            let { selected, feature } = modifySelectedInEdited(state.annotations.selected, state.annotations.editing);
+            let { selected, editing: feature } = modifySelectedInEdited(state.annotations.selected, state.annotations.editing);
 
             let method = selected.geometry.type;
             if (selected.properties?.isCircle) method = "Circle";
