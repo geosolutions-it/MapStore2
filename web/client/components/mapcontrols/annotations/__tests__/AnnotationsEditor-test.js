@@ -26,7 +26,9 @@ const actions = {
     onSetAnnotationMeasurement: () => {},
     onDownload: () => {},
     onHideMeasureWarning: () => {},
-    onSelectFeature: () => {}
+    onSelectFeature: () => {},
+    onUnSelectFeature: () => {},
+    onValidateFeature: () => {}
 };
 describe("test the AnnotationsEditor Panel", () => {
     beforeEach((done) => {
@@ -162,7 +164,9 @@ describe("test the AnnotationsEditor Panel", () => {
             selected={null}
             editing={{
                 properties: feature,
-                features: [{}],
+                features: [{ properties: {
+                    isValidFeature: true
+                } }],
                 visibility: true
             }}
             onSave={testHandlers.onSaveHandler}
@@ -199,7 +203,9 @@ describe("test the AnnotationsEditor Panel", () => {
             selected={{features: [], properties: {isValidFeature: true}}}
             editing={{
                 properties: feature,
-                features: [{}]
+                features: [{ properties: {
+                    isValidFeature: true
+                } }]
             }}
             defaultStyles={defaultStyles}
             onAddNewFeature={testHandlers.onAddNewFeature}
@@ -297,7 +303,9 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
             properties: feature,
-            features: [{}]
+            features: [{ properties: {
+                isValidFeature: true
+            } }]
         }} onSave={testHandlers.onSaveHandler}
         onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();

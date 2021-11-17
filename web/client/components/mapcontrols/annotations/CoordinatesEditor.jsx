@@ -80,7 +80,8 @@ class CoordinatesEditor extends React.Component {
         isMouseEnterEnabled: PropTypes.bool,
         isMouseLeaveEnabled: PropTypes.bool,
         showLengthAndBearingLabel: PropTypes.bool,
-        renderer: PropTypes.string
+        renderer: PropTypes.string,
+        onValidateFeature: PropTypes.func
     };
 
     static contextTypes = {
@@ -97,6 +98,7 @@ class CoordinatesEditor extends React.Component {
         onChangeText: () => {},
         onChangeCurrentFeature: () => {},
         onSetInvalidSelected: () => {},
+        onValidateFeature: () => {},
         componentsValidation: {
             "Bearing": {min: 2, max: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
@@ -139,6 +141,7 @@ class CoordinatesEditor extends React.Component {
                         projection={this.props.mapProjection}
                         name="radius"
                         onChange={(radius, uom) => {
+                            this.props.onValidateFeature();
                             if (this.isValid(this.props.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray), uom);
                             } else if (radius !== "") {
@@ -326,7 +329,8 @@ class CoordinatesEditor extends React.Component {
                                 } else if (this.props.properties.isValidFeature) {
                                     this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
                                 }
-                            }}/>
+                            }}
+                            onValidateFeature={this.props.onValidateFeature}/>
                     </>
                     )}
                 </div>

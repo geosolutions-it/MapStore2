@@ -45,7 +45,8 @@ import {
     isCompletePolygon,
     getDashArrayFromStyle,
     getGeometryType,
-    getGeometryGlyphInfo
+    getGeometryGlyphInfo,
+    modifySelectedInEdited
 } from '../AnnotationsUtils';
 
 const featureCollection = {
@@ -54,15 +55,40 @@ const featureCollection = {
         geometry: {
             type: "Point",
             coordinates: [1, 1]
+        },
+        properties: {
+            id: 1
         }
     },
     {
         type: "Feature",
         geometry: {
             type: "LineString",
-            coordinates: [1, 1]
+            coordinates: [[1, 1], [2, 2]]
+        },
+        properties: {
+            id: 2
         }
-    }],
+    },
+    {
+        type: "Feature",
+        geometry: {
+            type: "Polygon",
+            coordinates: [
+                [
+                    [1, 45],
+                    [2, 45],
+                    [2, 44],
+                    [1, 44],
+                    [1, 45]
+                ]
+            ]
+        },
+        properties: {
+            id: 3
+        }
+    }
+    ],
     type: "FeatureCollection"
 };
 const circle1 = {
@@ -635,9 +661,10 @@ describe('Test the AnnotationsUtils', () => {
     it('test annotationsToPrint from featureCollection', () => {
         let fts = annotationsToPrint([featureCollection]);
         expect(fts).toExist();
-        expect(fts.length).toBe(2);
+        expect(fts.length).toBe(3);
         expect(fts[0].geometry.type).toBe("Point");
         expect(fts[1].geometry.type).toBe("LineString");
+        expect(fts[2].geometry.type).toBe("Polygon");
     });
     it('test annotationsToPrint from array of geometryCollection', () => {
         let fts = annotationsToPrint([feature]);
@@ -811,15 +838,19 @@ describe('Test the AnnotationsUtils', () => {
     });
 
     it('test isCompletePolygon defaults', () => {
-        const polygonCoords1 = [[[1, 1], [2, 2]]];
-        const polygonCoords2 = [[[1, 1], [2, 2], [1, 1]]];
-        const polygonCoords3 = [[[1, 1], [2, 2], [3, 3], [1, 1]]];
-        const polygonCoords4 = [[[1, 1], [2, undefined], [3, 3], [1, 1]]];
+        const polygonCoords0 = [];
+        const polygonCoords1 = [[[1, 1]]];
+        const polygonCoords2 = [[[1, 1], [2, 2]]];
+        const polygonCoords3 = [[[1, 1], [2, 2], [1, 1]]];
+        const polygonCoords4 = [[[1, 1], [2, 2], [3, 3], [1, 1]]];
+        const polygonCoords5 = [[[1, 1], [2, undefined], [3, 3], [1, 1]]];
         expect(isCompletePolygon()).toBe(false);
+        expect(isCompletePolygon(polygonCoords0)).toBe(false);
         expect(isCompletePolygon(polygonCoords1)).toBe(false);
         expect(isCompletePolygon(polygonCoords2)).toBe(false);
-        expect(isCompletePolygon(polygonCoords3)).toBe(true);
-        expect(isCompletePolygon(polygonCoords4)).toBe(false);
+        expect(isCompletePolygon(polygonCoords3)).toBe(false);
+        expect(isCompletePolygon(polygonCoords4)).toBe(true);
+        expect(isCompletePolygon(polygonCoords5)).toBe(false);
     });
     it('test getDashArrayFromStyle', () => {
         // default
@@ -920,5 +951,58 @@ describe('Test the AnnotationsUtils', () => {
         expect(fts.length).toBe(1);
         expect(fts[0].properties.ms_style).toExist();
         expect(fts[0].properties.ms_style.labelOutlineColor).toExist();
+    });
+
+    it('test modifySelectedInEdited', () => {
+        const selectedPoint = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: ['', 1]
+            },
+            properties: {
+                id: 1
+            }
+        };
+        const selectedPolygon = {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [
+                    [
+                        [1, 45],
+                        ['', 45],
+                        [2, 44],
+                        [1, 44],
+                        [1, 45]
+                    ]
+                ]
+            },
+            properties: {
+                id: 3
+            }
+        };
+
+        const { selected: pointSelected, editing: editingWithPoint } = modifySelectedInEdited(selectedPoint, featureCollection);
+        const { selected: nullSelected, editing: editingWithNull } = modifySelectedInEdited(null, featureCollection);
+        const { selected: polygonSelected, editing: editingWithPolygon } = modifySelectedInEdited(selectedPolygon, featureCollection);
+
+        expect(Array.isArray(pointSelected.geometry.coordinates)).toBe(true);
+        expect(pointSelected.geometry.coordinates.length).toBe(0);
+        expect(editingWithPoint.features[0].geometry).toBe(null);
+        expect(editingWithPoint.features[0].properties.id).toBe(1);
+        expect(editingWithPoint.features[1].geometry.coordinates.length).toBe(2);
+        expect(editingWithPoint.features[2].geometry.coordinates[0].length).toBe(5);
+
+        expect(nullSelected).toBe(null);
+        expect(editingWithNull.features[0].geometry.coordinates.length).toBe(2);
+        expect(editingWithNull.features[1].geometry.coordinates.length).toBe(2);
+        expect(editingWithNull.features[2].geometry.coordinates[0].length).toBe(5);
+
+        expect(polygonSelected.geometry.coordinates[0].length).toBe(4);
+        expect(editingWithPolygon.features[2].geometry.coordinates[0].length).toBe(4);
+        expect(editingWithPolygon.features[0].geometry.coordinates.length).toBe(2);
+        expect(editingWithPolygon.features[1].geometry.coordinates.length).toBe(2);
+
     });
 });
