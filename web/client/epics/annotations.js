@@ -7,7 +7,7 @@
  */
 
 import Rx from 'rxjs';
-import { head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined, get, includes } from 'lodash';
+import { head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined, get } from 'lodash';
 import assign from 'object-assign';
 import axios from 'axios';
 import uuidv1 from 'uuid/v1';
@@ -69,11 +69,13 @@ import {
     removeDuplicate,
     validateCoordsArray,
     getStartEndPointsForLinestring,
+    modifySelectedInEdited,
     DEFAULT_ANNOTATIONS_STYLES,
     STYLE_POINT_MARKER,
     STYLE_POINT_SYMBOL,
     DEFAULT_SHAPE,
-    DEFAULT_PATH, ANNOTATIONS } from '../utils/AnnotationsUtils';
+    DEFAULT_PATH, ANNOTATIONS
+} from '../utils/AnnotationsUtils';
 import { MEASURE_TYPE } from '../utils/MeasurementUtils';
 import { createSvgUrl } from '../utils/VectorStyleUtils';
 
@@ -311,7 +313,7 @@ export default {
         .switchMap((action) => {
             if (action.attribute === 'geometry') {
                 let state = store.getState();
-                const feature = state.annotations.editing;
+                let { editing: feature } = modifySelectedInEdited(state.annotations.selected, state.annotations.editing);
                 const type = state.annotations.featureType;
                 const multiGeom = multiGeometrySelector(state);
                 const drawOptions = {
@@ -593,46 +595,13 @@ export default {
         }),
     onChangedSelectedFeatureEpic: (action$, {getState}) => action$.ofType(CHANGED_SELECTED )
         .switchMap(({}) => {
-            const featureTypes = ["LineString", "MultiPoint", "Polygon", "Point"];
             const state = getState();
-            let feature = state.annotations.editing;
-            let selected = state.annotations.selected;
-            switch (selected.geometry.type) {
-            case "Polygon": {
-                selected = set("geometry.coordinates", [selected.geometry.coordinates[0].filter(validateCoordsArray)], selected);
-                break;
-            }
-            case "LineString": case "MultiPoint": {
-                selected = set("geometry.coordinates", selected.geometry.coordinates.filter(validateCoordsArray), selected);
-                break;
-            }
-            // point
-            default: {
-                selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
-            }
-            }
+            let { selected, editing: feature } = modifySelectedInEdited(state.annotations.selected, state.annotations.editing);
 
             let method = selected.geometry.type;
             if (selected.properties?.isCircle) method = "Circle";
             if (selected.properties?.isText) method = "Text";
 
-            if (selected.properties && selected.properties.isCircle) {
-                selected = set("geometry", selected.properties.polygonGeom, selected);
-            }
-
-            // TODO update selected feature in editing features
-
-            let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
-            if (selected.properties.isValidFeature || includes(featureTypes, selected.geometry.type)) {
-                if (selectedIndex === -1) {
-                    feature = set(`features`, feature.features.concat([selected]), feature);
-                } else {
-                    feature = set(`features[${selectedIndex}]`, selected, feature);
-                }
-            }
-            if (selectedIndex !== -1 && !selected.properties.isValidFeature && !includes(featureTypes, selected.geometry.type)) {
-                feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
-            }
             const multiGeometry = multiGeometrySelector(state);
             const style = feature.style;
             const action = changeDrawingStatus("drawOrEdit", method, ANNOTATIONS, [feature], {
