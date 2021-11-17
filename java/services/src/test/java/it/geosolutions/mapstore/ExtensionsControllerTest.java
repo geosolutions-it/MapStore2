@@ -9,7 +9,6 @@ package it.geosolutions.mapstore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +23,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.HandlerMapping;
 
-import it.geosolutions.mapstore.controllers.BaseConfigController.ResourceNotAllowedException;
 import it.geosolutions.mapstore.controllers.extensions.ExtensionsController;
 
 public class ExtensionsControllerTest {
@@ -46,7 +44,7 @@ public class ExtensionsControllerTest {
     	MockHttpServletRequest request = new MockHttpServletRequest("GET", "/index.js");
     	MockHttpServletResponse response = new MockHttpServletResponse();
     	request.setAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE, "index.js");
-        controller.loadAsset(request, response);
+    	controller.loadAsset(request, response);
         assertEquals(response.getContentType(), "application/javascript");
         assertEquals("console.log('hello')\n", response.getContentAsString()); // \n should not be there, but is not a mess
         tempResource.delete();

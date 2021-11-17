@@ -113,4 +113,19 @@ public class ConfigControllerTest {
         tempResource.delete();
         tempPatch.delete();
     }
+    @Test
+    public void testPatchWithNoExtension() throws IOException {
+        File dataDir = TestUtils.getDataDir();
+        controller.setDataDir(dataDir.getAbsolutePath());
+        File tempResource = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json"), dataDir, "configs/pluginsConfig.json");
+        File tempPatch = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json.patch"), dataDir,
+                "configs/pluginsConfig.json.patch");
+        ServletContext context = Mockito.mock(ServletContext.class);
+        Mockito.when(context.getRealPath(Mockito.endsWith(".json"))).thenReturn(tempResource.getAbsolutePath());
+        controller.setContext(context);
+        String resource = new String(controller.loadResource("pluginsConfig", true), "UTF-8");
+        assertEquals("{\"plugins\":[{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}]}", resource.trim());
+        tempResource.delete();
+        tempPatch.delete();
+    }
 }
