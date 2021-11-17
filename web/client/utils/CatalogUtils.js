@@ -72,12 +72,13 @@ const extractWMSParamsFromURL = wms => {
         lowerCaseParams.append(name.toLocaleLowerCase(), value);
     }
     const layerName = lowerCaseParams.get('layers');
+    const wmsVersion = lowerCaseParams.get('version');
     if (layerName) {
         return {
             ...wms,
             protocol: 'OGC:WMS',
             name: layerName,
-            value: wms.value.split('?')[0]
+            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERIVCE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
         };
     }
     return false;
@@ -107,7 +108,7 @@ const converters = {
                             uri.protocol.match(/serviceType\/ogc\/wms/g));
                     }));
                 }
-                if (wms && wms.protocol.match(/serviceType\/ogc\/wms/g).length && wms.description === "access point") {
+                if (wms && wms.protocol.match(/serviceType\/ogc\/wms/g) && wms.description === "access point") {
                     wms = extractWMSParamsFromURL(wms);
                 }
                 // look in references objects
