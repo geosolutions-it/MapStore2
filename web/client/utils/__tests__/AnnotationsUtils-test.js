@@ -663,9 +663,10 @@ describe('Test the AnnotationsUtils', () => {
     it('test annotationsToPrint from featureCollection', () => {
         let fts = annotationsToPrint([featureCollection]);
         expect(fts).toExist();
-        expect(fts.length).toBe(2);
+        expect(fts.length).toBe(3);
         expect(fts[0].geometry.type).toBe("Point");
         expect(fts[1].geometry.type).toBe("LineString");
+        expect(fts[2].geometry.type).toBe("Polygon");
     });
     it('test annotationsToPrint from array of geometryCollection', () => {
         let fts = annotationsToPrint([feature]);
