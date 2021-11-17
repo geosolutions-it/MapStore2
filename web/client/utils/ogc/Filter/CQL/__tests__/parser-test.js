@@ -70,6 +70,14 @@ const COMPARISON_TESTS = [
         }
     }
 ];
+const VARIANTS = [{
+    cql: "\"PROP\" = 'a'",
+    expected: {
+        property: "PROP",
+        type: "=",
+        value: 'a'
+    }
+}];
 
 const LOGICAL = [
     // and
@@ -158,6 +166,9 @@ describe('cql parser', () => {
     it('test logical operators', () => {
         testRules(LOGICAL);
 
+    });
+    it('test variants of operators', () => {
+        testRules(VARIANTS);
     });
     it('test more real world examples', () => {
         testRules(REAL_WORLD);
