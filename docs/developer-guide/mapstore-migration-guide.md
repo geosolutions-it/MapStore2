@@ -212,7 +212,7 @@ Here the changes in `pom.xml` and `web/pom.xml to update:
 -      <artifactId>mapstore-backend</artifactId>
 -      <version>1.1.2</version>
 +      <artifactId>mapstore-services</artifactId>
-+      <version>1.2.0</version>
++      <version>1.2.1</version>
     </dependency>
 ```
 
@@ -753,7 +753,7 @@ With this new version the support for uploading extensions has been introduced. 
   }
 
 ```
-the final entry should look like this 
+the final entry should look like this
 
 ```json
  "authenticationRules": [{

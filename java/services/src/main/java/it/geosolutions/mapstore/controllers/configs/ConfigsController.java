@@ -44,6 +44,12 @@ public class ConfigsController extends BaseConfigController {
      */
     @RequestMapping(value="/{resource}", method = RequestMethod.GET) // TODO: search in configs directory base
     public @ResponseBody byte[] loadResource(@PathVariable("resource") String resourceName, @RequestParam(value="overrides", defaultValue="true") boolean applyOverrides) throws IOException {
-        return toBytes(readResource( Paths.get(getConfigsFolder(),  resourceName + ".json").toString(), applyOverrides, Paths.get(getConfigsFolder(),  resourceName + ".json.patch").toString()));
+        return toBytes(readResource( Paths.get(getConfigsFolder(),  normalizeExtension(resourceName, "json")).toString(), applyOverrides, Paths.get(getConfigsFolder(),  normalizeExtension(resourceName, "patch")).toString()));
+    }
+
+    private String normalizeExtension(String name, String extension) {
+        if (name.toLowerCase().endsWith("." + extension.toLowerCase()))
+            return name;
+        return name + "." + extension;
     }
 }
