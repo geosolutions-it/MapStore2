@@ -64,6 +64,25 @@ const getThumb = (dc) => {
     }));
 };
 
+// Extract the relevant information from the wms URL for (RNDT / INSPIRE)
+const extractWMSParamsFromURL = wms => {
+    const params = new URLSearchParams(wms.value);
+    const lowerCaseParams = new URLSearchParams();
+    for (const [name, value] of params) {
+        lowerCaseParams.append(name.toLocaleLowerCase(), value);
+    }
+    const layerName = lowerCaseParams.get('layers');
+    if (layerName) {
+        return {
+            ...wms,
+            protocol: 'OGC:WMS',
+            name: layerName,
+            value: wms.value.split('?')[0]
+        };
+    }
+    return false;
+};
+
 const converters = {
     csw: (records, options, locales = {}) => {
         let result = records;
@@ -79,7 +98,17 @@ const converters = {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
                     let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) ) || head([].filter.call(URI, (uri) => !uri.name && uri.protocol?.indexOf('image/') > -1));
                     thumbURL = thumb ? thumb.value : null;
-                    wms = head([].filter.call(URI, (uri) => { return uri.protocol && (uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) || uri.protocol.match(/^OGC:WMS/g)); }));
+                    wms = head([].filter.call(URI, (uri) => {
+                        return uri.protocol && (
+                            /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
+                            uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) ||
+                            uri.protocol.match(/^OGC:WMS/g) ||
+                            /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
+                            uri.protocol.match(/serviceType\/ogc\/wms/g));
+                    }));
+                }
+                if (wms && wms.protocol.match(/serviceType\/ogc\/wms/g).length && wms.description === "access point") {
+                    wms = extractWMSParamsFromURL(wms);
                 }
                 // look in references objects
                 if (!wms && dc && dc.references && dc.references.length) {

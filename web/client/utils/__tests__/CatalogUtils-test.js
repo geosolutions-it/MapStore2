@@ -541,6 +541,24 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
     });
 
+    it('csw with DC references with implicit name in wms URI (RNDT / INSPIRE)', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    URI: [
+                        {
+                            TYPE_NAME: 'DC_1_1.URI',
+                            protocol: 'http://www.opengis.net/def/serviceType/ogc/wms',
+                            description: 'access point',
+                            value: 'http://geoserver/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=workspace:layer'
+                        }
+                    ]
+                }
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+    });
+
     it('wms check for reference url', () => {
         const records = CatalogUtils.getCatalogRecords('wms', {
             records: [{
