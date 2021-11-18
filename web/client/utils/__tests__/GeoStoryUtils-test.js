@@ -663,7 +663,7 @@ describe("GeoStory Utils", () => {
     });
     it('getContentsFeatureStyle with highlightedMarkerStyle', () => {
         const defaultMarkerStyle = {
-            iconColor: 'red',
+            iconColor: 'green',
             iconShape: 'circle'
         };
         const contents = [
@@ -679,7 +679,7 @@ describe("GeoStory Utils", () => {
         };
         const markerStyle = getContentsFeatureStyle(defaultMarkerStyle, contents, content, contentId, feature);
         expect(markerStyle).toEqual({
-            iconColor: 'red',
+            iconColor: 'green',
             iconShape: 'circle',
             iconText: '1',
             highlight: true
