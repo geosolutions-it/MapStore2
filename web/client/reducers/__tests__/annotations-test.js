@@ -830,6 +830,64 @@ describe('Test the annotations reducer', () => {
         expect(state.featureType).toBe("Text");
         expect(state.drawing).toBe(true);
     });
+    it('toggle add point, check geometry', ()=>{
+        let state = annotations({
+            editing: {
+                features: []
+            }}, {
+            type: TOGGLE_ADD,
+            featureType: "Point"
+        });
+        expect(state.editing.features[0].geometry).toBe(null);
+    });
+    it('toggle add text, check geometry', ()=>{
+        let state = annotations({
+            editing: {
+                features: []
+            }}, {
+            type: TOGGLE_ADD,
+            featureType: "Text"
+        });
+        expect(state.editing.features[0].geometry).toBe(null);
+        expect(state.editing.features[0].properties.isText).toBe(true);
+    });
+    it('toggle add line, check geometry', ()=>{
+        let state = annotations({
+            editing: {
+                features: []
+            }}, {
+            type: TOGGLE_ADD,
+            featureType: "LineString"
+        });
+        testAllProperty(state.editing.features[0].geometry, {
+            type: "LineString",
+            coordinates: []
+        });
+    });
+    it('toggle add polygon, check geometry', ()=>{
+        let state = annotations({
+            editing: {
+                features: []
+            }}, {
+            type: TOGGLE_ADD,
+            featureType: "Polygon"
+        });
+        testAllProperty(state.editing.features[0].geometry, {
+            type: "Polygon",
+            coordinates: []
+        });
+    });
+    it('toggle add circle, check geometry', ()=>{
+        let state = annotations({
+            editing: {
+                features: []
+            }}, {
+            type: TOGGLE_ADD,
+            featureType: "Circle"
+        });
+        expect(state.editing.features[0].geometry.type).toBe("Polygon");
+        expect(state.editing.features[0].geometry.coordinates).toEqual([[]]);
+    });
     it('validate error', () => {
         const state = annotations({validationErrors: {}}, {
             type: VALIDATION_ERROR,
