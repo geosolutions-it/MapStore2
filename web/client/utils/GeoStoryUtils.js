@@ -657,6 +657,9 @@ export function getVectorLayerFromContents({
     };
 }
 
+/**
+ * Applies to the contents style passed the iconText (1, 2, 3), merges the default marker style with the specific feature style and adds the `highlighted` flag.
+ */
 export const getContentsFeatureStyle = (markerStyle, contents, content, contentId, feature) => ({
     ...markerStyle,
     iconText: `${findIndex(contents, ({id: _id}) => content.id === _id) + 1}`,
