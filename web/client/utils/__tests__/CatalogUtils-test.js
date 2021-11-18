@@ -584,6 +584,25 @@ describe('Test the CatalogUtils', () => {
         expect(records[0].metadata.uri[0]).toBe(resourceLink);
     });
 
+    it('csw with DC references with implicit name in wms URI (RNDT / INSPIRE) - download link - value only', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    title: 'Test Layer',
+                    URI: [
+                        {
+                            value: 'http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1'
+                        }
+                    ]
+                }
+            }]
+        }, {});
+        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1">Test Layer - WMS</a></li></ul>';
+        expect(records.length).toBe(1);
+        expect(records[0].metadata.uri.length).toBe(1);
+        expect(records[0].metadata.uri[0]).toBe(resourceLink);
+    });
+
     it('wms check for reference url', () => {
         const records = CatalogUtils.getCatalogRecords('wms', {
             records: [{

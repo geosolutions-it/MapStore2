@@ -84,7 +84,7 @@ const extractWMSParamsFromURL = wms => {
     return false;
 };
 
-const getMetaDataDownloadFormat = (protocol, value) => {
+const getMetaDataDownloadFormat = (protocol = '', value = '') => {
     let format = '';
     const formatsMap = [
         {
