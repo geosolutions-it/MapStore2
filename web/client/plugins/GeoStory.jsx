@@ -148,8 +148,8 @@ GeoStory.defaultProps = {
  *       "iconShape": "square" // 'circle', 'square', 'star' or 'penta'
  *     },
  *     "highlightedMarkerStyle": {
- *       "iconColor": "red", // 'orange', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'blue', 'cyan', ->
- *           // -> 'purple', 'violet', 'pink', 'green-dark', 'green', 'green-light' or 'black'
+ *       "iconColor": "green", // 'orange', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'blue', 'cyan', ->
+ *           // -> 'purple', 'violet', 'pink', 'green-dark', 'red', 'green-light' or 'black'
  *       "iconShape": "circle" // 'circle', 'square', 'star' or 'penta'
  *     },
  *     "mediaEditorSettings": {
