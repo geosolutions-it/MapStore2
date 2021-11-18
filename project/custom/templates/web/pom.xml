@@ -21,7 +21,7 @@
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
       <artifactId>mapstore-services</artifactId>
-      <version>1.2.0</version>
+      <version>1.2.1</version>
     </dependency>
     <!-- ================================================================ -->
     <!-- GeoStore modules -->

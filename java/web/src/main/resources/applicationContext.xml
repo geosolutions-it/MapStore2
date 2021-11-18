@@ -30,7 +30,7 @@
     </bean>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="order" value="10"/>
+        <property name="order" value="0"/>
         <property name="locations">
             <list>
                 <value>classpath:geostore.properties</value>
