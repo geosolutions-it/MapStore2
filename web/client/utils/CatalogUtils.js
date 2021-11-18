@@ -84,6 +84,43 @@ const extractWMSParamsFromURL = wms => {
     return false;
 };
 
+const getMetaDataDownloadFormat = (protocol, value) => {
+    let format = '';
+    const formatsMap = [
+        {
+            protocol: /www-download/g,
+            value: /shp\/.*\.zip/g,
+            displayValue: 'shapefile'
+        },
+        {
+            protocol: /www-download/g,
+            value: /grid\/.*\.zip/g,
+            displayValue: 'grid'
+        },
+        {
+            value: /wms\?/g,
+            displayValue: 'WMS'
+        },
+        {
+            protocol: /TR\/xlink/g,
+            value: /kml\/.*\.kmz/g,
+            displayValue: 'KML file'
+        }
+    ];
+    format = formatsMap.filter(formatItem => (formatItem.protocol ? protocol.match(formatItem.protocol) : true) && value.match(formatItem.value))[0]?.displayValue || protocol;
+    return format;
+};
+
+const getURILinkNames = (metadata, locales, uriItem) => {
+    let itemName = uriItem.name;
+    if (itemName === undefined) {
+        itemName = metadata.title ? metadata.title.join(' ') : getMessageById(locales, "catalog.notAvailable");
+        const downloadFormat = getMetaDataDownloadFormat(uriItem.protocol, uriItem.value);
+        itemName = `${downloadFormat ? `${itemName} - ${downloadFormat}` : itemName}`;
+    }
+    return (`<li><a target="_blank" href="${uriItem.value}">${itemName}</a></li>`);
+};
+
 const converters = {
     csw: (records, options, locales = {}) => {
         let result = records;
@@ -198,7 +235,7 @@ const converters = {
                 }
                 // parsing URI
                 if (dc && dc.URI && castArray(dc.URI) && castArray(dc.URI).length) {
-                    metadata = {...metadata, uri: ["<ul>" + castArray(dc.URI).map(u => `<li><a target="_blank" href="${u.value}">${u.name}</a></li>`).join("") + "</ul>"]};
+                    metadata = {...metadata, uri: ["<ul>" + castArray(dc.URI).map(getURILinkNames.bind(this, metadata, locales)).join("") + "</ul>"]};
                 }
                 if (dc && dc.subject && castArray(dc.subject) && castArray(dc.subject).length) {
                     metadata = {...metadata, subject: ["<ul>" + castArray(dc.subject).map(s => `<li>${s}</li>`).join("") + "</ul>"]};
