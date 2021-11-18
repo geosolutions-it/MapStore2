@@ -270,7 +270,7 @@ Here below the details of the changes.
 
 Here the changes in `pom.xml` and `web/pom.xml to update:
 
-- Change `mapstore-backend` into `mapstore-services` and set the version to `1.2.0`
+- Change `mapstore-backend` into `mapstore-services` and set the version to `1.2.1`
 
 ```diff
 <!-- MapStore backend -->
@@ -279,7 +279,7 @@ Here the changes in `pom.xml` and `web/pom.xml to update:
 -      <artifactId>mapstore-backend</artifactId>
 -      <version>1.1.2</version>
 +      <artifactId>mapstore-services</artifactId>
-+      <version>1.2.0</version>
++      <version>1.2.1</version>
     </dependency>
 ```
 
