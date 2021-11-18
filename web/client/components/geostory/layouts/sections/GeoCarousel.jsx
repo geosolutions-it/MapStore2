@@ -75,7 +75,7 @@ const GeoCarousel = ({
         iconShape: 'circle'
     },
     highlightedMarkerStyle = {
-        iconColor: 'red',
+        iconColor: 'green',
         iconShape: 'circle'
     }
 }) => {
