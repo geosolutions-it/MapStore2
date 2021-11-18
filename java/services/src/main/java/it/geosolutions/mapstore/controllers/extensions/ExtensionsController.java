@@ -21,6 +21,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import it.geosolutions.mapstore.controllers.BaseConfigController;
 
+
 /**
  * REST service for Extensions.
  * Provides extensions resources from the extensions directory from webapp or data-dir.
@@ -34,10 +35,20 @@ public class ExtensionsController extends BaseConfigController {
      */
     @RequestMapping(value="**", method = RequestMethod.GET)
     public void loadAsset(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	// sometimes it returns "/extensions.json", sometimes  "/extensions/extensions.json" (TODO: verify the cause to see if we can clean up code)
     	String resourcePath = ((String) request.getAttribute(
-    	        HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE)).split("/extensions/")[0];
+    	        HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+    	if(resourcePath.contains("/extensions/")) {
+    		resourcePath = resourcePath.split("/extensions/")[0];
+		
+    	} else if(resourcePath.startsWith("/")) { 
+    		resourcePath = resourcePath.substring(1);
+    	}
     	if (Paths.get(resourcePath).isAbsolute()) {
     		throw new IOException("Absolute paths are not allowed!");
+    	}
+    	if(resourcePath.contains("..")) {
+    		throw new IOException("Directory traversal detected!");
     	}
         Resource resource = readResource(Paths.get(getExtensionsFolder(), resourcePath).toString() , false, "");
         response.setContentType(resource.type);
