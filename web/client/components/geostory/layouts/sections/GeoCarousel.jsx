@@ -22,6 +22,7 @@ import {
     Modes,
     SectionTemplates,
     getVectorLayerFromContents,
+    getContentsFeatureStyle,
     getDefaultSectionTemplate
 } from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
@@ -71,6 +72,10 @@ const GeoCarousel = ({
     isDrawEnabled,
     defaultMarkerStyle = {
         iconColor: 'cyan',
+        iconShape: 'circle'
+    },
+    highlightedMarkerStyle = {
+        iconColor: 'green',
         iconShape: 'circle'
     }
 }) => {
@@ -168,13 +173,14 @@ const GeoCarousel = ({
 
     const contentsLayer = getVectorLayerFromContents({
         id,
-        contents,
-        featureStyle: ({ content, feature }, idx) => ({
-            ...defaultMarkerStyle,
-            iconText: `${idx + 1}`,
-            ...feature.style,
-            highlight: contentId === content.id
-        })
+        contents: contents.filter(content => content.id !== contentId),
+        featureStyle: ({ content, feature }) => getContentsFeatureStyle(defaultMarkerStyle, contents, content, contentId, feature)
+    });
+
+    const highlightedContentsLayer = getVectorLayerFromContents({
+        id: `${id}-highlighted`,
+        contents: contents.filter(content => content.id === contentId),
+        featureStyle: ({ content, feature }) => getContentsFeatureStyle(highlightedMarkerStyle, contents, content, contentId, feature)
     });
 
     return (<section
@@ -215,7 +221,7 @@ const GeoCarousel = ({
             mediaViewer={mediaViewer}
             contentToolbar={contentToolbar}
             inView={inView}
-            layers={[ contentsLayer ]}
+            layers={[ contentsLayer, highlightedContentsLayer ]}
             isDrawEnabled={isDrawEnabled}
             onEnableDraw={onEnableDraw}
             contentToolbarChildren={!isMapBackground && mode === Modes.EDIT && <InfoCarousel type={'addMap'}/>}

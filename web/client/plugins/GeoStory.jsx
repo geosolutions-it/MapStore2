@@ -127,6 +127,7 @@ GeoStory.defaultProps = {
  * @prop {numeric} cfg.interceptionTime default 100, the debounce before calculations of currentPage active section
  * @prop {object[]} cfg.fontFamilies: A list of objects with font family names and sources where to load them from e.g. [{"family": "Comic sans", "src": "link to source"}]
  * @prop {object} cfg.defaultMarkerStyle define the default marker style used by geo carousel section
+ * @prop {object} cfg.highlightedMarkerStyle define the highlighted marker style used by geo carousel section
  * @prop {object} cfg.mediaEditorSettings settings for media editor services divided by media type
  * @prop {string} cfg.mediaEditorSettings.sourceId selected service identifier used when the modal shows up
  * @prop {object} cfg.mediaEditorSettings.mediaTypes configuration of source options for each media type: image, video and map
@@ -145,6 +146,11 @@ GeoStory.defaultProps = {
  *       "iconColor": "orange", // 'red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'blue', 'cyan', ->
  *           // -> 'purple', 'violet', 'pink', 'green-dark', 'green', 'green-light' or 'black'
  *       "iconShape": "square" // 'circle', 'square', 'star' or 'penta'
+ *     },
+ *     "highlightedMarkerStyle": {
+ *       "iconColor": "green", // 'orange', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'blue', 'cyan', ->
+ *           // -> 'purple', 'violet', 'pink', 'green-dark', 'red', 'green-light' or 'black'
+ *       "iconShape": "circle" // 'circle', 'square', 'star' or 'penta'
  *     },
  *     "mediaEditorSettings": {
  *       "sourceId": "geostory",

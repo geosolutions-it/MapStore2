@@ -127,7 +127,8 @@ const Cascade = ({
     onSort = () => {},
     isDrawEnabled = false,
     onEnableDraw = () => {},
-    defaultMarkerStyle
+    defaultMarkerStyle,
+    highlightedMarkerStyle
 }) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
@@ -194,6 +195,7 @@ const Cascade = ({
                                     onEnableDraw={onEnableDraw}
                                     background={background}
                                     defaultMarkerStyle={defaultMarkerStyle}
+                                    highlightedMarkerStyle={highlightedMarkerStyle}
                                 />
                             );
                         })
