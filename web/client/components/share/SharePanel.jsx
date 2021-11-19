@@ -28,6 +28,7 @@ import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
 import { getLonLatFromPoint } from '../../utils/CoordinatesUtils';
+import { getMessageById } from '../../utils/LocaleUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
@@ -112,6 +113,10 @@ class SharePanel extends React.Component {
         isScrollPosition: false,
         hideMarker: () => {},
         addMarker: () => {}
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
     state = {
@@ -220,20 +225,13 @@ class SharePanel extends React.Component {
         let sharePanel =
             (<ResizableModal
                 id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
+                title={getMessageById(this.context.messages, "share.title")}
                 dialogClassName=" share-win"
                 bodyClassName="share-panel-modal-body"
                 show={this.props.isVisible}
                 draggable={this.props.draggable}
                 style={{zIndex: 1993}}
                 onClose={this.props.onClose}>
-                <span role="header">
-                    <span className="share-panel-title">
-                        <Message msgId="share.title"/>
-                    </span>
-                    <button onClick={this.props.onClose} className="share-panel-close close">
-                        {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
-                    </button>
-                </span>
                 <div role="body" className="share-panels">
                     {tabs}
                     {this.props.advancedSettings
