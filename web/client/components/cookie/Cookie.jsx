@@ -97,7 +97,7 @@ class Cookie extends React.Component {
         return this.props.show ? (
             <div className={this.props.seeMore ? "mapstore-cookie-panel see-more" : "mapstore-cookie-panel not-see-more"}>
                 <div role="header" className="cookie-header" style={{height: this.props.seeMore ? "44px" : "0px"}}>
-                    {this.props.seeMore ? <Glyphicon className="btn cookie-close-btn" glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
+                    {this.props.seeMore ? <Glyphicon className="cookie-close-btn" glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
                 </div>
                 <div role="body" className="cookie-body-container">
                     {!this.props.externalCookieUrl && this.props.seeMore ? (

@@ -13,18 +13,17 @@
 
     .mapstore-cookie-panel,
     .cookie-body-container {
-        .color-var(@theme-vars[main-color]);
         .background-color-var(@theme-vars[main-bg]);
     }
 
     .cookie-title,
     .cookie-header {
         .color-var(@theme-vars[primary-contrast]);
+        .cookie-close-btn {
+            .color-var(@theme-vars[main-color]);
+        }
     }
 
-    .cookie-close-btn {
-        .color-var(@theme-vars[main-color]);
-    }
 }
 
 // **************
@@ -149,6 +148,6 @@
 .cookie-header > .cookie-close-btn {
     float: right;
     cursor: pointer;
-    font-size: 30px;
+    font-size: 40px;
     width: 44px;
 }
