@@ -29,6 +29,509 @@ const testFeatures = {
     }
 };
 
+const testValidFeatures = {
+    polygon: {
+        type: 'Feature',
+        geometry: {
+            coordinates: [
+                [
+                    [1, 1],
+                    [2, 2],
+                    [1, 2],
+                    [1, 1]
+                ]
+            ],
+            type: 'Polygon'
+        },
+        properties: {
+            id: '1',
+            isValidFeature: true
+        },
+        style: DEFAULT_ANNOTATIONS_STYLES.Polygon
+    },
+    line: {
+        type: 'Feature',
+        geometry: {
+            coordinates: [
+                [1, 1],
+                [1, 2]
+            ],
+            type: 'LineString'
+        },
+        properties: {
+            id: '2',
+            isValidFeature: true,
+            canEdit: false
+        },
+        style: DEFAULT_ANNOTATIONS_STYLES.LineString
+    },
+    point: {
+        type: 'Feature',
+        geometry: {
+            coordinates: [1, 1],
+            type: 'Point'
+        },
+        properties: {
+            id: '3',
+            isValidFeature: true,
+            canEdit: false
+        },
+        style: DEFAULT_ANNOTATIONS_STYLES.Point
+    },
+    text: {
+        type: 'Feature',
+        geometry: {
+            coordinates: [1, 1],
+            type: 'Point'
+        },
+        properties: {
+            id: '4',
+            isValidFeature: true,
+            canEdit: false,
+            isText: true,
+            valueText: 'New'
+        },
+        style: DEFAULT_ANNOTATIONS_STYLES.Text
+    },
+    circle: {
+        type: 'Feature',
+        geometry: {
+            type: 'Polygon',
+            coordinates: [
+                [
+                    [-6, 45]
+                ]
+            ]
+        },
+        properties: {
+            isCircle: true,
+            radius: 50000,
+            center: [
+                -6,
+                45
+            ],
+            id: '5',
+            crs: 'EPSG:3857',
+            isGeodesic: true,
+            polygonGeom: {
+                type: 'Polygon',
+                coordinates: [
+                    [
+                        [
+                            -5,
+                            45.44966018186227
+                        ],
+                        [
+                            -5.040245511619825,
+                            45.44876585012077
+                        ],
+                        [
+                            -5.080328396601316,
+                            45.44608646929481
+                        ],
+                        [
+                            -5.120086731957861,
+                            45.441632866923904
+                        ],
+                        [
+                            -5.1593599981818405,
+                            45.43542303680628
+                        ],
+                        [
+                            -5.197989771457299,
+                            45.427482061146456
+                        ],
+                        [
+                            -5.235820404536013,
+                            45.41784200215722
+                        ],
+                        [
+                            -5.272699692655688,
+                            45.4065417637049
+                        ],
+                        [
+                            -5.308479521010984,
+                            45.39362692374563
+                        ],
+                        [
+                            -5.343016490449034,
+                            45.37914953845281
+                        ],
+                        [
+                            -5.376172518248709,
+                            45.36316791908023
+                        ],
+                        [
+                            -5.40781541105422,
+                            45.34574638274048
+                        ],
+                        [
+                            -5.437819407265617,
+                            45.3269549784032
+                        ],
+                        [
+                            -5.466065686438008,
+                            45.306869189532485
+                        ],
+                        [
+                            -5.492442843504256,
+                            45.28556961488434
+                        ],
+                        [
+                            -5.516847325909057,
+                            45.263141629076216
+                        ],
+                        [
+                            -5.539183832021936,
+                            45.2396750246182
+                        ],
+                        [
+                            -5.559365669479263,
+                            45.21526363716062
+                        ],
+                        [
+                            -5.577315072387576,
+                            45.190004955765446
+                        ],
+                        [
+                            -5.59296347659886,
+                            45.163999720048984
+                        ],
+                        [
+                            -5.606251752540127,
+                            45.1373515060707
+                        ],
+                        [
+                            -5.6171303953418725,
+                            45.11016630285947
+                        ],
+                        [
+                            -5.625559672260242,
+                            45.082552081472535
+                        ],
+                        [
+                            -5.6315097276241515,
+                            45.05461835847661
+                        ],
+                        [
+                            -5.634960645759172,
+                            45.02647575572444
+                        ],
+                        [
+                            -5.6359024725435924,
+                            44.99823555827448
+                        ],
+                        [
+                            -5.6343351964375135,
+                            44.97000927226758
+                        ],
+                        [
+                            -5.630268689992574,
+                            44.94190818453314
+                        ],
+                        [
+                            -5.623722612997641,
+                            44.91404292564889
+                        ],
+                        [
+                            -5.614726278544349,
+                            44.886523038124345
+                        ],
+                        [
+                            -5.603318483406369,
+                            44.85945655131865
+                        ],
+                        [
+                            -5.589547304217897,
+                            44.83294956464031
+                        ],
+                        [
+                            -5.573469861011175,
+                            44.807105840508896
+                        ],
+                        [
+                            -5.555152049730721,
+                            44.782026408489386
+                        ],
+                        [
+                            -5.534668245384498,
+                            44.757809181937965
+                        ],
+                        [
+                            -5.5121009775208725,
+                            44.73454858842438
+                        ],
+                        [
+                            -5.487540579736171,
+                            44.71233521512217
+                        ],
+                        [
+                            -5.4610848149224624,
+                            44.6912554702829
+                        ],
+                        [
+                            -5.4328384779602645,
+                            44.67139126183614
+                        ],
+                        [
+                            -5.402912977547861,
+                            44.652819694082375
+                        ],
+                        [
+                            -5.37142589883906,
+                            44.635612783372125
+                        ],
+                        [
+                            -5.338500548536219,
+                            44.619837193591955
+                        ],
+                        [
+                            -5.304265484056409,
+                            44.60555399220591
+                        ],
+                        [
+                            -5.268854028357189,
+                            44.592818427530354
+                        ],
+                        [
+                            -5.2324037719756475,
+                            44.58167972785065
+                        ],
+                        [
+                            -5.195056063801597,
+                            44.57218092292017
+                        ],
+                        [
+                            -5.156955492073779,
+                            44.56435868831458
+                        ],
+                        [
+                            -5.118249357057942,
+                            44.55824321304914
+                        ],
+                        [
+                            -5.079087136838294,
+                            44.55385809080196
+                        ],
+                        [
+                            -5.03961994762993,
+                            44.55122023502192
+                        ],
+                        [
+                            -5,
+                            44.55033981813773
+                        ],
+                        [
+                            -4.96038005237007,
+                            44.55122023502192
+                        ],
+                        [
+                            -4.920912863161706,
+                            44.55385809080196
+                        ],
+                        [
+                            -4.881750642942057,
+                            44.55824321304914
+                        ],
+                        [
+                            -4.84304450792622,
+                            44.56435868831458
+                        ],
+                        [
+                            -4.804943936198402,
+                            44.57218092292017
+                        ],
+                        [
+                            -4.7675962280243525,
+                            44.58167972785065
+                        ],
+                        [
+                            -4.731145971642811,
+                            44.592818427530354
+                        ],
+                        [
+                            -4.695734515943591,
+                            44.60555399220591
+                        ],
+                        [
+                            -4.661499451463782,
+                            44.619837193591955
+                        ],
+                        [
+                            -4.62857410116094,
+                            44.635612783372125
+                        ],
+                        [
+                            -4.597087022452139,
+                            44.652819694082375
+                        ],
+                        [
+                            -4.5671615220397355,
+                            44.67139126183614
+                        ],
+                        [
+                            -4.5389151850775376,
+                            44.6912554702829
+                        ],
+                        [
+                            -4.512459420263829,
+                            44.71233521512217
+                        ],
+                        [
+                            -4.4878990224791275,
+                            44.73454858842438
+                        ],
+                        [
+                            -4.465331754615501,
+                            44.757809181937965
+                        ],
+                        [
+                            -4.444847950269279,
+                            44.782026408489386
+                        ],
+                        [
+                            -4.426530138988825,
+                            44.807105840508896
+                        ],
+                        [
+                            -4.410452695782103,
+                            44.83294956464031
+                        ],
+                        [
+                            -4.39668151659363,
+                            44.85945655131865
+                        ],
+                        [
+                            -4.385273721455651,
+                            44.886523038124345
+                        ],
+                        [
+                            -4.376277387002359,
+                            44.91404292564889
+                        ],
+                        [
+                            -4.369731310007426,
+                            44.94190818453314
+                        ],
+                        [
+                            -4.3656648035624865,
+                            44.97000927226758
+                        ],
+                        [
+                            -4.364097527456407,
+                            44.99823555827448
+                        ],
+                        [
+                            -4.365039354240828,
+                            45.02647575572444
+                        ],
+                        [
+                            -4.368490272375849,
+                            45.05461835847661
+                        ],
+                        [
+                            -4.374440327739758,
+                            45.082552081472535
+                        ],
+                        [
+                            -4.3828696046581275,
+                            45.11016630285947
+                        ],
+                        [
+                            -4.393748247459873,
+                            45.1373515060707
+                        ],
+                        [
+                            -4.407036523401141,
+                            45.163999720048984
+                        ],
+                        [
+                            -4.422684927612423,
+                            45.190004955765446
+                        ],
+                        [
+                            -4.440634330520736,
+                            45.21526363716062
+                        ],
+                        [
+                            -4.460816167978063,
+                            45.2396750246182
+                        ],
+                        [
+                            -4.483152674090942,
+                            45.263141629076216
+                        ],
+                        [
+                            -4.507557156495745,
+                            45.28556961488434
+                        ],
+                        [
+                            -4.533934313561992,
+                            45.306869189532485
+                        ],
+                        [
+                            -4.562180592734383,
+                            45.3269549784032
+                        ],
+                        [
+                            -4.59218458894578,
+                            45.34574638274048
+                        ],
+                        [
+                            -4.623827481751291,
+                            45.36316791908023
+                        ],
+                        [
+                            -4.656983509550966,
+                            45.37914953845281
+                        ],
+                        [
+                            -4.691520478989017,
+                            45.39362692374563
+                        ],
+                        [
+                            -4.727300307344311,
+                            45.4065417637049
+                        ],
+                        [
+                            -4.764179595463987,
+                            45.41784200215722
+                        ],
+                        [
+                            -4.802010228542701,
+                            45.427482061146456
+                        ],
+                        [
+                            -4.8406400018181595,
+                            45.43542303680628
+                        ],
+                        [
+                            -4.879913268042139,
+                            45.441632866923904
+                        ],
+                        [
+                            -4.919671603398683,
+                            45.44608646929481
+                        ],
+                        [
+                            -4.959754488380175,
+                            45.44876585012077
+                        ],
+                        [
+                            -5,
+                            45.44966018186227
+                        ]
+                    ]
+                ]
+            },
+            isValidFeature: true,
+            canEdit: true
+        },
+        style: DEFAULT_ANNOTATIONS_STYLES.Circle
+    }
+};
+
+
 import {
     REMOVE_ANNOTATION,
     CONFIRM_REMOVE_ANNOTATION,
@@ -75,7 +578,8 @@ import {
     hideMeasureWarning,
     toggleShowAgain,
     unSelectFeature,
-    startDrawing
+    startDrawing,
+    validateFeature
 } from '../../actions/annotations';
 
 import { PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
@@ -334,10 +838,7 @@ describe('Test the annotations reducer', () => {
             type: TOGGLE_ADD,
             featureType: "Point"
         });
-        testAllProperty(state.editing.features[0].geometry, {
-            type: "Point",
-            coordinates: []
-        });
+        expect(state.editing.features[0].geometry).toBe(null);
     });
     it('toggle add text, check geometry', ()=>{
         let state = annotations({
@@ -347,10 +848,8 @@ describe('Test the annotations reducer', () => {
             type: TOGGLE_ADD,
             featureType: "Text"
         });
-        testAllProperty(state.editing.features[0].geometry, {
-            type: "Point",
-            coordinates: []
-        });
+        expect(state.editing.features[0].geometry).toBe(null);
+        expect(state.editing.features[0].properties.isText).toBe(true);
     });
     it('toggle add line, check geometry', ()=>{
         let state = annotations({
@@ -1838,4 +2337,101 @@ describe('Test the annotations reducer', () => {
         expect(annotationsState.config).toBeTruthy();
         expect(annotationsState.config.geodesic).toBe(true);
     });
+    it('validate features - valid geometries', () => {
+        const features = Object.values(testValidFeatures);
+        let state = annotations({
+            editing: {
+                features
+            },
+            selected: null
+        }, validateFeature());
+        expect(state.editing.features[0].properties.isValidFeature).toBe(true);
+        expect(state.editing.features[1].properties.isValidFeature).toBe(true);
+        expect(state.editing.features[2].properties.isValidFeature).toBe(true);
+        expect(state.editing.features[3].properties.isValidFeature).toBe(true);
+        expect(state.editing.features[4].properties.isValidFeature).toBe(true);
+    });
+    it('validate features - invalid geometries', () => {
+        const features = Object.values(testValidFeatures);
+        features[0].geometry.coordinates = [
+            [
+                [1, null]
+            ]
+        ];
+        features[1].geometry.coordinates = [
+            [
+                [1, null]
+            ]
+        ];
+        features[2].geometry.coordinates = [1, null];
+        features[3].geometry.coordinates = [1, null];
+        features[4].geometry.coordinates = [
+            [
+                [1, null]
+            ]
+        ];
+        features[4].properties.center = [null, 45];
+        features[4].properties.radius = null;
+        let state = annotations({
+            editing: {
+                features
+            },
+            selected: null
+        }, validateFeature());
+        expect(state.editing.features[0].properties.isValidFeature).toBe(false);
+        expect(state.editing.features[1].properties.isValidFeature).toBe(false);
+        expect(state.editing.features[2].properties.isValidFeature).toBe(false);
+        expect(state.editing.features[3].properties.isValidFeature).toBe(false);
+        expect(state.editing.features[4].properties.isValidFeature).toBe(false);
+    });
+    it('validate features - invalid text, missing coordinates', () => {
+        const features = [testValidFeatures.text];
+        features[0].geometry.coordinates = [1, null];
+        let state = annotations({
+            editing: {
+                features
+            },
+            selected: null
+        }, validateFeature());
+        expect(state.editing.features[0].properties.isValidFeature).toBe(false);
+    });
+    it('validate features - invalid text, missing text value', () => {
+        const features = [testValidFeatures.text];
+        features[0].properties.valueText = null;
+        let state = annotations({
+            editing: {
+                features
+            },
+            selected: null
+        }, validateFeature());
+        expect(state.editing.features[0].properties.isValidFeature).toBe(false);
+    });
+    it('validate features - invalid circle, missing radius', () => {
+        const features = [testValidFeatures.circle];
+        features[0].properties.radius = null;
+        let state = annotations({
+            editing: {
+                features
+            },
+            selected: null
+        }, validateFeature());
+        expect(state.editing.features[0].properties.isValidFeature).toBe(false);
+    });
+    it('validate features - invalid circle, missing center', () => {
+        const features = [testValidFeatures.circle];
+        features[0].geometry.coordinates = [
+            [
+                [null, 45]
+            ]
+        ];
+        features[0].properties.center = [null, 45];
+        let state = annotations({
+            editing: {
+                features
+            },
+            selected: null
+        }, validateFeature());
+        expect(state.editing.features[0].properties.isValidFeature).toBe(false);
+    });
+
 });

@@ -45,12 +45,34 @@
 // see https://github.com/geosolutions-it/MapStore2/issues/6728
 .ms-details-preview {
     p{
-        margin: 1em;
+        margin: 1rem;
+    }
+    img, h1, h2, h3, h4, h5, h6, blockquote {
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
     p, h1, h2, h3, h4, h5, h6, blockquote{
         &:empty::after {
             content: "\a";
             white-space: pre;
+        }
+    }
+}
+
+// Make wysiwyg editor of map details use same margin rule for floating images
+// so that user actually see that margin between floating image and text.
+.ms-details-draftjs-editor {
+    .ms-text-editor-main {
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+        .rdw-image-alignment {
+            &.rdw-image-left {
+                margin-right: 1rem;
+            }
+            &.rdw-image-right {
+                margin-left: 1rem;
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ import {
 } from '../../actions/search';
 
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
-import { FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER } from '../../actions/mapInfo';
+import { FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER, loadFeatureInfo, UPDATE_CENTER_TO_MARKER } from '../../actions/mapInfo';
 import { ZOOM_TO_EXTENT, ZOOM_TO_POINT } from '../../actions/map';
 import { UPDATE_ADDITIONAL_LAYER } from '../../actions/additionallayers';
 import { searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic, textSearchShowGFIEpic } from '../search';
@@ -235,13 +235,12 @@ describe('search Epics', () => {
         });
 
         const NUM_ACTIONS = 6;
-        testEpic(addTimeoutEpic(searchItemSelected, 100), NUM_ACTIONS, action, (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
+        testEpic(addTimeoutEpic(searchItemSelected, 0), NUM_ACTIONS, action, (actions) => {
             expect(actions[0].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
             expect(actions[1].type).toBe(FEATURE_INFO_CLICK);
             expect(actions[1].itemId).toEqual("Feature_1");
             expect(actions[1].filterNameList).toEqual(["gs:layername"]);
-            expect(actions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1"}});
+            expect(actions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1", CQL_FILTER: undefined}}); // forces CQL FILTER to undefined (server do not support featureid + CQL_FILTER)
             expect(actions[2].type).toBe(SHOW_MAPINFO_MARKER);
             expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
             expect(actions[4].type).toBe(TEXT_SEARCH_ADD_MARKER);
@@ -593,7 +592,7 @@ describe('search Epics', () => {
     it('searchOnStartEpic, that sends a Getfeature and a GFI requests', (done) => {
         let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
         const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(searchOnStartEpic, 100), NUM_ACTIONS, action, (actions) => {
+        testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
             expect(actions).toExist();
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
@@ -622,16 +621,53 @@ describe('search Epics', () => {
                 }
             });
         const NUM_ACTIONS = 4;
-        testEpic(addTimeoutEpic(textSearchShowGFIEpic, 100), NUM_ACTIONS, action, (actions) => {
+        testEpic(textSearchShowGFIEpic, NUM_ACTIONS, [action, loadFeatureInfo()], (actions) => {
             expect(actions).toExist();
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
             expect(actions[0].overrideParams.layerName.info_format).toBe("text/html");
             expect(actions[0].overrideParams.layerName.featureid).toBe("layer_01");
             expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
-            expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
-            expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+            expect(actions[2].type).toBe(TEXT_SEARCH_ADD_MARKER);
+            expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
             done();
         }, {layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
+    });
+    it('textSearchShowGFIEpic, temporary disable center to marker', (done) => {
+        let action = showGFI(
+            {
+                layer: "layerName",
+                type: "Feature",
+                bbox: [125, 10, 126, 11],
+                geometry: {
+                    type: "Point",
+                    coordinates: [125.6, 10.1]
+                },
+                id: "layer_01",
+                "__SERVICE__": {
+                    launchInfoPanel: "single_layer",
+                    openFeatureInfoButtonEnabled: true,
+                    options: {
+                        typeName: "layerName",
+                        maxZoomLevel: 20
+                    }
+                }
+            });
+        const NUM_ACTIONS = 6;
+        testEpic(textSearchShowGFIEpic, NUM_ACTIONS, [action, loadFeatureInfo()], (actions) => {
+            expect(actions).toExist();
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(UPDATE_CENTER_TO_MARKER);
+            expect(actions[0].status).toBe(false);
+            expect(actions[1].type).toBe(FEATURE_INFO_CLICK);
+            expect(actions[1].overrideParams.layerName.info_format).toBe("text/html");
+            expect(actions[1].overrideParams.layerName.featureid).toBe("layer_01");
+            expect(actions[2].type).toBe(SHOW_MAPINFO_MARKER);
+            expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+            expect(actions[4].type).toBe(ZOOM_TO_EXTENT);
+            expect(actions[5].type).toBe(UPDATE_CENTER_TO_MARKER);
+            expect(actions[5].status).toBe(true);
+            done();
+        }, { mapInfo: {centerToMarker: true}, layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
     });
 });

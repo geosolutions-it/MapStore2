@@ -17,7 +17,7 @@ import {isArray, isEqual} from 'lodash';
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
 import {getAuthenticationParam, getURLs} from '../../../../utils/LayersUtils';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
-import {addAuthenticationToSLD} from '../../../../utils/SecurityUtils';
+import {addAuthenticationToSLD, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
@@ -71,9 +71,14 @@ function wmsToCesiumOptionsSingleTile(options) {
         srs: "EPSG:4326"
     }, params || {}, getAuthenticationParam(options));
 
+    const url = (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
+        + getQueryString(addAuthenticationToSLD(parameters, options));
+    const headers = getAuthenticationHeaders(url, options.securityToken);
     return {
-        url: (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
-            + getQueryString(addAuthenticationToSLD(parameters, options))
+        url: new Cesium.Resource({
+            url,
+            headers
+        })
     };
 }
 
@@ -88,11 +93,17 @@ function wmsToCesiumOptions(options) {
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
+    const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
+    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
+
     return assign({
-        url: "{s}",
+        url: new Cesium.Resource({
+            url: "{s}",
+            headers,
+            proxy: proxy && new WMSProxy(proxy) || new NoProxy()
+        }),
         credit,
-        subdomains: getURLs(isArray(options.url) ? options.url : [options.url]),
-        proxy: proxy && new WMSProxy(proxy) || new NoProxy(),
+        subdomains: urls,
         layers: options.name,
         enablePickFeatures: false,
         parameters: assign({
@@ -121,9 +132,13 @@ function wmsToCesiumOptionsBIL(options) {
     if (proxyUrl) {
         proxy = options.noCors || needProxy(url);
     }
+    const headers = getAuthenticationHeaders(url, options.securityToken);
     return assign({
-        url,
-        proxy: proxy ? new WMSProxy(proxyUrl) : new NoProxy(),
+        url: new Cesium.Resource({
+            url,
+            headers,
+            proxy: proxy ? new WMSProxy(proxyUrl) : new NoProxy()
+        }),
         littleEndian: options.littleendian || false,
         layerName: options.name
     });

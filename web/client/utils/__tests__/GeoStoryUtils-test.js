@@ -34,7 +34,8 @@ import {
     parseHashUrlScrollUpdate,
     createWebFontLoaderConfig,
     extractFontNames,
-    getVectorLayerFromContents
+    getVectorLayerFromContents,
+    getContentsFeatureStyle
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -634,6 +635,54 @@ describe("GeoStory Utils", () => {
                     contentRefId: 'content-1'
                 }
             ]
+        });
+    });
+    it('getContentsFeatureStyle with defaultMarkerStyle', () => {
+        const defaultMarkerStyle = {
+            iconColor: 'cyan',
+            iconShape: 'circle'
+        };
+        const contents = [
+            {id: 'cd29a263-d36a-4459-8821-8dce4c761bcc'},
+            {id: 'ef332a5b-3405-4f33-b470-5673cc146fea'}
+        ];
+        const content = {id: 'ef332a5b-3405-4f33-b470-5673cc146fea'};
+        const contentId = '3513848d-07e4-41bc-a029-5f68802a663c';
+        const feature = {
+            type: 'Feature',
+            geometry: {},
+            properties: {}
+        };
+        const markerStyle = getContentsFeatureStyle(defaultMarkerStyle, contents, content, contentId, feature);
+        expect(markerStyle).toEqual({
+            iconColor: 'cyan',
+            iconShape: 'circle',
+            iconText: '2',
+            highlight: false
+        });
+    });
+    it('getContentsFeatureStyle with highlightedMarkerStyle', () => {
+        const defaultMarkerStyle = {
+            iconColor: 'green',
+            iconShape: 'circle'
+        };
+        const contents = [
+            {id: 'cd29a263-d36a-4459-8821-8dce4c761bcc'},
+            {id: 'ef332a5b-3405-4f33-b470-5673cc146fea'}
+        ];
+        const content = {id: 'cd29a263-d36a-4459-8821-8dce4c761bcc'};
+        const contentId = 'cd29a263-d36a-4459-8821-8dce4c761bcc';
+        const feature = {
+            type: 'Feature',
+            geometry: {},
+            properties: {}
+        };
+        const markerStyle = getContentsFeatureStyle(defaultMarkerStyle, contents, content, contentId, feature);
+        expect(markerStyle).toEqual({
+            iconColor: 'green',
+            iconShape: 'circle',
+            iconText: '1',
+            highlight: true
         });
     });
 });

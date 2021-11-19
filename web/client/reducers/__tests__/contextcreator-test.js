@@ -51,7 +51,8 @@ import {
     setTemplates,
     changeTemplatesKey,
     setSelectedTheme,
-    onToggleCustomVariables
+    onToggleCustomVariables,
+    loadContext
 } from '../../actions/contextcreator';
 const themeDark = {
     id: 'dark',
@@ -580,5 +581,10 @@ describe('contextcreator reducer', () => {
         const state = contextcreator(undefined, onToggleCustomVariables(themeDark));
         expect(state).toExist();
         expect(customVariablesEnabledSelector({contextcreator: state})).toEqual(true);
+    });
+    it('loadContext', () => {
+        const state = contextcreator(undefined, loadContext('testId'));
+        expect(state).toExist();
+        expect(state.contextId).toBe('testId');
     });
 });

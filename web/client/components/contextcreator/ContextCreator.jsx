@@ -154,7 +154,8 @@ export default class ContextCreator extends React.Component {
         selectedTheme: PropTypes.string,
         basicVariables: PropTypes.object,
         customVariablesEnabled: PropTypes.bool,
-        onToggleCustomVariables: PropTypes.func
+        onToggleCustomVariables: PropTypes.func,
+        enableClickOnStep: PropTypes.bool
     };
 
     static contextTypes = {
@@ -264,6 +265,7 @@ export default class ContextCreator extends React.Component {
 
         return (
             <Stepper
+                enableClickOnStep={this.props.enableClickOnStep}
                 loading={this.props.loading && this.props.loadFlags.contextSaving}
                 currentStepId={this.props.curStepId}
                 onSetStep={this.props.onSetStep}

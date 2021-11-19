@@ -25,7 +25,7 @@ describe('test  Layer Properties General module component', () => {
         setTimeout(done);
     });
 
-    it('tests General component', () => {
+    it('tests General component show LayerNameEditField = FALSE', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -44,8 +44,29 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(17);
+        expect(inputs.length).toBe(16);
+    });
 
+    it('tests General component show LayerNameEditField = TRUE', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+
+        // wrap in a stateful component, stateless components render return null
+        // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
+        const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
+        expect(comp).toExist();
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
+        expect(inputs).toExist();
+        expect(inputs.length).toBe(17);
     });
     it('tests Layer Properties Display component events', () => {
         const l = {

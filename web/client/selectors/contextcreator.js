@@ -42,3 +42,4 @@ export const wasTutorialShownSelector = stepId => state => state.contextcreator?
 export const tutorialStepSelector = state => state.contextcreator?.tutorialStep;
 export const selectedThemeSelector = state => get(state, 'contextcreator.selectedTheme');
 export const customVariablesEnabledSelector = state => get(state, 'contextcreator.customVariablesEnabled', false);
+export const isNewContext = state => state.contextcreator?.contextId === 'new';

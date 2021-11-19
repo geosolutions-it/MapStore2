@@ -9,24 +9,20 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import Message from '../I18N/Message';
-import { Glyphicon, Panel } from 'react-bootstrap';
-import Dock from 'react-dock';
+import { Panel } from 'react-bootstrap';
 import BorderLayout from '../layout/BorderLayout';
-import ResizeDetector from 'react-resize-detector';
+import DockPanel from "../misc/panels/DockPanel";
 
 class DetailsPanel extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         active: PropTypes.bool,
-        closeGlyph: PropTypes.string,
         panelStyle: PropTypes.object,
+        dockStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         style: PropTypes.object,
-        onClose: PropTypes.func,
-        dockProps: PropTypes.object,
-        width: PropTypes.number,
-        dockStyle: PropTypes.object
-    }
+        onClose: PropTypes.func
+    };
 
     static contextTypes = {
         messages: PropTypes.object
@@ -36,53 +32,34 @@ class DetailsPanel extends React.Component {
         id: "mapstore-details",
         panelStyle: {
             zIndex: 100,
-            overflow: "hidden",
-            height: "100%",
-            marginBottom: 0
+            marginBottom: 0,
+            minHeight: '100%'
         },
-        onClose: () => {},
+        style: {},
+        onClose: () => {
+        },
         active: false,
-        panelClassName: "details-panel",
-        width: 658,
-        closeGlyph: "1-close",
-        dockProps: {
-            dimMode: "none",
-            size: 0.30,
-            fluid: true,
-            position: "right",
-            zIndex: 1030,
-            bottom: 0
-        },
-        dockStyle: {}
-    }
+        panelClassName: "details-panel"
+    };
 
     render() {
-        const panelHeader = (
-            <span>
-                <Glyphicon glyph="sheet"/>
-                <span className="details-panel-title">
-                    <Message msgId="details.title"/>
-                </span>
-                <button onClick={() => this.props.onClose()} className="details-close close">
-                    {this.props.closeGlyph ?
-                        <Glyphicon glyph={this.props.closeGlyph} /> :
-                        <span>×</span>}</button>
-            </span>);
-
         return (
-            <ResizeDetector handleWidth>
-                { ({ width }) =>
-                    <div className="react-dock-no-resize">
-                        <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} fluid size={this.props.width / width > 1 ? 1 : this.props.width / width}>
-                            <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
-                                <BorderLayout>
-                                    {this.props.children}
-                                </BorderLayout>
-                            </Panel>
-                        </Dock>
-                    </div>
-                }
-            </ResizeDetector>
+            <DockPanel
+                open={this.props.active}
+                size={660}
+                position="right"
+                bsStyle="primary"
+                title={<Message msgId="details.title"/>}
+                onClose={() => this.props.onClose()}
+                glyph="sheet"
+                style={this.props.dockStyle}
+            >
+                <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    <BorderLayout>
+                        {this.props.children}
+                    </BorderLayout>
+                </Panel>
+            </DockPanel>
         );
     }
 }

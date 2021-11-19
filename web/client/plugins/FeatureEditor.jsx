@@ -84,6 +84,8 @@ const Dock = connect(createSelector(
   * @prop {boolean} cfg.timeSync default false. If true, the timeSync is active by default.
   * @prop {boolean} cfg.enableMapFilterSync default false. If true, the wms sync tool will be active by default.
   * @prop {number} cfg.maxZoom the maximum zoom level for the "zoom to feature" functionality
+  * @prop {boolean} cfg.hideCloseButton hide the close button from the header
+  * @prop {boolean} cfg.hideLayerTitle hide the layer title from the header
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
@@ -175,14 +177,18 @@ const FeatureDock = (props = {
                 <BorderLayout
                     className="feature-grid-container"
                     key={"feature-grid-container"}
-                    height={height - (62 + 32)}
-                    header={getHeader(toolbarItems)}
+                    height={height - (42 + 32)}
+                    header={getHeader({
+                        toolbarItems,
+                        hideCloseButton: props.hideCloseButton,
+                        hideLayerTitle: props.hideLayerTitle
+                    })}
                     columns={getPanels(props.tools)}
                     footer={getFooter(props)}>
                     {getDialogs(props.tools)}
                     <Grid
+                        showCheckbox={props.showCheckbox}
                         editingAllowedRoles={props.editingAllowedRoles}
-                        initPlugin={props.initPlugin}
                         customEditorsOptions={props.customEditorsOptions}
                         autocompleteEnabled={props.autocompleteEnabled}
                         url={props.url}

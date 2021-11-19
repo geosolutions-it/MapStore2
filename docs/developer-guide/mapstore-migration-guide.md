@@ -21,7 +21,7 @@ This is a list of things to check if you want to update from a previous version 
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
 
-## Migration from 2021.02.00 to 2021.03.00
+## Migration from 2021.02.00 to 2022.01.00
 
 This release includes several libraries upgrade on the backend side,
 in particular the following have been migrated to the latest available versions:
@@ -42,7 +42,7 @@ This requires also an upgrade of Tomcat to at least version 8.5.x
 ### Updating projects configuration
 
 Projects need the following to update to this MapStore release:
- 
+
  - update dependencies (in web/pom.xml) copying those in MapStore2/java/web/pom.xml, in particular:
 
 | Dependency      | Version| Notes |
@@ -83,7 +83,11 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>-->
 ```
-## Migration from 2021.01.02 to 2021.02.00
+
+### Upgrading CesiumJS
+CesiumJS has been upgraded to version 1.42 (from 1.17), with no breaking changes, so you should replace all the instances of  `https://cesium.com/downloads/cesiumjs/releases/1.17` in your projects HTML files with `https://cesium.com/downloads/cesiumjs/releases/1.42`. The new release is needed to implement Bearer based authentication to WMS services.
+
+## Migration from 2021.01.04 to 2021.02.00
 
 ### Theme updates and CSS variables
 
@@ -130,15 +134,118 @@ In the future the current script will be deprecated in favor of the new one.
 
 Here below the breaking changes introduced in this release to support this new system:
 
-#### The following key files have been moved to the new `configs` folder
+This section will tell you how to migrate to support the following changes:
 
-We suggest you to move them as well from root to configs folder
+- Minor changes to `prod-webpack.config.js`
+- Move front-end configuration files in `configs` folder
+- Back-end has been reorganized
 
-- `localConfig.json`
-- `new.json`
-- `pluginsConfig.json`
-- `config.json`
-- `simple.json`
+#### Minor changes to `prod-webpack.config.js`
+
+Minor changes to `prod-webpack.config.js`:
+
+```diff
+diff --git a/project/standard/templates/prod-webpack.config.js b/project/standard/templates/prod-webpack.config.js
+index 175bf3398..6d97e2c0f 100644
+--- a/project/standard/templates/prod-webpack.config.js
++++ b/project/standard/templates/prod-webpack.config.js
+@@ -2,8 +2,8 @@ const path = require("path");
+
+ const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
+ const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
+-const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
+ const HtmlWebpackPlugin = require('html-webpack-plugin');
++const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
+
+ const paths = {
+     base: __dirname,
+@@ -24,17 +24,19 @@ module.exports = require('./MapStore2/build/buildConfig')(
+     paths,
+     [extractThemesPlugin, ModuleFederationPlugin],
+     true,
+-    "dist/",
++    undefined,
+     '.__PROJECTNAME__',
+     [
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'indexTemplate.html'),
++            publicPath: 'dist/',
+             chunks: ['__PROJECTNAME__'],
+             inject: "body",
+             hash: true
+         }),
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'embeddedTemplate.html'),
++            publicPath: 'dist/',
+             chunks: ['__PROJECTNAME__-embedded'],
+             inject: "body",
+             hash: true,
+@@ -42,13 +44,15 @@ module.exports = require('./MapStore2/build/buildConfig')(
+         }),
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'apiTemplate.html'),
++            publicPath: 'dist/',
+             chunks: ['__PROJECTNAME__-api'],
+-            inject: 'head',
++            inject: 'body',
+             hash: true,
+             filename: 'api.html'
+         }),
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'geostory-embedded-template.html'),
++            publicPath: 'dist/',
+             chunks: ['geostory-embedded'],
+             inject: "body",
+             hash: true,
+@@ -56,6 +60,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
+         }),
+         new HtmlWebpackPlugin({
+             template: path.join(__dirname, 'dashboard-embedded-template.html'),
++            publicPath: 'dist/',
+             chunks: ['dashboard-embedded'],
+             inject: 'body',
+             hash: true,
+@@ -63,6 +68,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
+         })
+     ],
+     {
++        "@mapstore/patcher": path.resolve(__dirname, "node_modules", "@mapstore", "patcher"),
+         "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client"),
+         "@js": path.resolve(__dirname, "js")
+     }
+```
+
+#### Move front-end configuration files in `configs` folder
+
+We suggest you to move them as well from root to configs folder, and align your `app.jsx` configuration with the new standard (if you changed the location of configs).
+This will allow to use the data dir in an easy way. So:
+
+- Move the following files in `configs` directory:
+  - `localConfig.json`
+  - `new.json`
+  - `pluginsConfig.json`
+  - `config.json`
+  - `simple.json`
+- If changed something in `app.jsx` about configuration, align to get the files moved in config.
+- To allow MapStore to copy the correct file in the final war, you have to change `web/pom.xml` execution `copy-resources` for id `config files` this way (this only if you didn't customized `localConfig.json`):
+
+```diff
+        <goal>copy-resources</goal>
+                </goals>
+                    <goal>copy-resources</goal>
+                </goals>
+                    <configuration>
+-                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
++                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client/configs</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+-                                <directory>${basedir}/../MapStore2/web/client</directory>
++                                <directory>${basedir}/../MapStore2/web/client/configs</directory>
+                                <includes>
+                                    <include>localConfig.json</include>
+                                </includes>
+```
 
 #### Back-end has been reorganized
 
@@ -146,13 +253,174 @@ In particular:
 
 - all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
-- `geostore` version used is `1.7.0` on release `2021.02.00`
+- Some servlets have been added in order to provide native support to data dir and make it work with the new `configs` directory.
 
-Check the changes in `pom.xml` to update. (future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, for this reasons these migration guidelines will change soon.)
+So you will have to:
 
-- `pom.xml`
-- `java/web/pom.xml`
+- Align the `pom.xml` to the latest versions of the libs
+- Edit the `web.xml` and change the `*-servlet.xml` files to expose the new services
 
+!!! note
+    Future evolution of the project will avoid you to keep your own copies of the pom files as much as possible, reducing the boilerplate and making
+    migration a lot easier. For this reasons these migration guidelines will change soon.
+
+Here below the details of the changes.
+
+##### Align `pom.xml` files to latest versions of the libs
+
+Here the changes in `pom.xml` and `web/pom.xml to update:
+
+- Change `mapstore-backend` into `mapstore-services` and set the version to `1.2.1`
+
+```diff
+<!-- MapStore backend -->
+    <dependency>
+    <groupId>it.geosolutions.mapstore</groupId>
+-      <artifactId>mapstore-backend</artifactId>
+-      <version>1.1.2</version>
++      <artifactId>mapstore-services</artifactId>
++      <version>1.2.1</version>
+    </dependency>
+```
+
+- Set `geostore-webapp` version to `1.7.0`
+
+```diff
+    <dependency>
+    <groupId>it.geosolutions.geostore</groupId>
+    <artifactId>geostore-webapp</artifactId>
+-      <version>1.6.0</version>
++      <version>1.7.0</version>
+    <type>war</type>
+    <scope>runtime</scope>
+    </dependency>
+```
+
+- Set `http_proxy` version to `1.1.0` (should already be there)
+
+```diff
+    <dependency>
+    <!-- ... -->
+    <groupId>proxy</groupId>
+    <artifactId>http_proxy</artifactId>
+-      <version>1.1.0</version>
++      <version>1.2-SNAPSHOT</version>
+    <type>war</type>
+    <scope>runtime</scope>
+    </dependency>
+```
+
+##### Edit the `web.xml` and change the `*-servlet.xml` files to expose the new services
+
+- Copy from mapstore to folder `web/src/main/webapp/WEB-INF/` the files:
+  - `configs-servlet.xml`
+  - `extensions-servlet.xml`
+  - `loadAssets-servlet.xml`
+- Remove the old `dispatcher-servlet.xml` (it has been replaced by `loadAssets-servlet.xml` for backward compatibility)
+- Align `web/src/main/webapp/WEB-INF/web.xml` with the new servlets as changes below (remove `dispatcher` entry in favour of the following).
+
+```diff
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <web-app id="WebApp_ID" version="2.4"
+-    xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++    xmlns:javaee="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+     <!-- pick up all spring application contexts -->
+@@ -19,13 +19,16 @@
+
+     <context-param>
+       <param-name>proxyPropPath</param-name>
+-      <param-value>/proxy.properties</param-value>
++      <param-value>/proxy.properties,${datadir.location}/proxy.properties</param-value>
+     </context-param>
+
+-    <!-- spring context loader -->
+-    <listener>
++    <!-- <context-param> <param-name>log4jConfigLocation</param-name> <param-value>file:${config.dir}/log4j.xml</param-value>
++        </context-param> -->
++
++    <!-- spring context loader -->
++    <listener>
+         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+-    </listener>
++    </listener>
+
+     <!--
+       - Loads the root application context of this web app at startup.
+@@ -33,8 +36,8 @@
+       - WebApplicationContextUtils.getWebApplicationContext(servletContext).
+     -->
+     <listener>
+-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+-    </listener>
++        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
++    </listener>
+
+     <!-- Spring Security Servlet -->
+     <filter>
+@@ -46,7 +49,7 @@
+         <url-pattern>/rest/*</url-pattern>
+     </filter-mapping>
+
+-  <!-- GZip compression -->
++    <!-- GZip compression -->
+     <filter>
+         <filter-name>CompressionFilter</filter-name>
+         <filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>
+@@ -65,17 +68,38 @@
+     </filter-mapping>
+
+     <!--  Backend Spring MVC controllers -->
++    <!--  Backward compatibility -->
+     <servlet>
+-        <servlet-name>dispatcher</servlet-name>
++        <servlet-name>loadAssets</servlet-name>
+         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+         <load-on-startup>1</load-on-startup>
+     </servlet>
+     <servlet-mapping>
+-        <servlet-name>dispatcher</servlet-name>
++        <servlet-name>loadAssets</servlet-name>
+         <url-pattern>/rest/config/*</url-pattern>
+     </servlet-mapping>
++    <!--  Configs -->
++    <servlet>
++        <servlet-name>configs</servlet-name>
++        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
++        <load-on-startup>2</load-on-startup>
++    </servlet>
++    <servlet-mapping>
++        <servlet-name>configs</servlet-name>
++        <url-pattern>/configs/*</url-pattern>
++    </servlet-mapping>
++    <!-- Extensions -->
++    <servlet>
++        <servlet-name>extensions</servlet-name>
++        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
++        <load-on-startup>3</load-on-startup>
++    </servlet>
++    <servlet-mapping>
++        <servlet-name>extensions</servlet-name>
++        <url-pattern>/extensions/*</url-pattern>
++    </servlet-mapping>
+
+-    <!-- CXF Servlet -->
++    <!-- CXF Servlet -->
+     <servlet>
+         <servlet-name>CXFServlet</servlet-name>
+         <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+@@ -97,7 +121,7 @@
+       <url-pattern>/proxy/*</url-pattern>
+     </servlet-mapping>
+
+-   <!-- Printing Servlet -->
++    <!-- Printing Servlet -->
+     <servlet>
+        <servlet-name>mapfish.print</servlet-name>
+        <servlet-class>org.mapfish.print.servlet.MapPrinterServlet</servlet-class>
+```
 
 #### Data directory has been reorganized and is now available also for product
 
@@ -552,7 +820,7 @@ With this new version the support for uploading extensions has been introduced. 
   }
 
 ```
-the final entry should look like this 
+the final entry should look like this
 
 ```json
  "authenticationRules": [{

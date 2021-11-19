@@ -12,11 +12,11 @@ import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 import { parse } from 'url';
 import { head } from 'lodash';
-import { UPDATE_GEOMETRY } from '../../actions/queryform';
+import { UPDATE_GEOMETRY, CHANGE_SPATIAL_ATTRIBUTE } from '../../actions/queryform';
 import { changeMapView } from '../../actions/map';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
-import { QUERY_RESULT, FEATURE_LOADING, query, updateQuery, featureTypeSelected } from '../../actions/wfsquery';
-import { viewportSelectedEpic, wfsQueryEpic } from '../wfsquery';
+import { QUERY_RESULT, FEATURE_LOADING, query, updateQuery, featureTypeSelected, FEATURE_TYPE_LOADED } from '../../actions/wfsquery';
+import { viewportSelectedEpic, wfsQueryEpic, featureTypeSelectedEpic } from '../wfsquery';
 import { LAYER_LOAD } from '../../actions/layers';
 
 
@@ -189,6 +189,65 @@ describe('wfsquery Epics', () => {
             }
         });
     });
+    it('wfsQueryEpic passing mixes params.cql_filter and layerFilter from layer', (done) => {
+        let filterObj = {
+            filterFields: [{
+                groupId: 1,
+                attribute: "attribute1",
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "list",
+                value: "value1"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }]
+        };
+        const expectedResult = require('../../test-resources/wfs/museam.json');
+        mockAxios.onPost().reply(config => {
+            expect(config.data).toContain('<ogc:PropertyName>NAME</ogc:PropertyName>');
+            expect(config.data).toContain('<wfs:SortOrder>DESC</wfs:SortOrder>');
+            expect(config.data).toContain("<ogc:Filter>"
+            + "<ogc:And>"
+                + "<ogc:PropertyIsEqualTo><ogc:PropertyName>attribute2</ogc:PropertyName><ogc:Literal>value2</ogc:Literal></ogc:PropertyIsEqualTo>"
+                + "<ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>attribute1</ogc:PropertyName><ogc:Literal>value1</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or>"
+            + "</ogc:And></ogc:Filter>");
+            return [200, expectedResult];
+        });
+        testEpic(wfsQueryEpic, 2, query("base/web/client/test-resources/wfs/museam.json", { pagination: {maxFeatures: 20, startIndex: 0}, sortOptions: {sortBy: "NAME", sortOrder: "DESC"}, featureTypeName: "layerId"}, {}), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                case QUERY_RESULT:
+                    expect(action.result).toEqual(expectedResult);
+                    expect(action.filterObj.pagination).toEqual({maxFeatures: 20, startIndex: 0});
+                    expect(action.filterObj.sortOptions).toEqual({sortBy: "NAME", sortOrder: "DESC"});
+                    break;
+                case FEATURE_LOADING:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, {
+            layers: {
+                flat: [{id: 'TEST_LAYER', layerFilter: filterObj, params: {cql_filter: "attribute2 = 'value2'"}}]
+            },
+            featuregrid: {
+                timeSync: true,
+                pagination: {
+                    size: 10
+                },
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                changes: []
+            }
+        });
+    });
     describe('wfsQueryEpic timedimension', () => {
         const BASE_URL = "/WFS";
         const DATE = "20180101T00:00:00";
@@ -312,7 +371,7 @@ describe('wfsquery Epics', () => {
         });
     });
 
-    describe('featureTypeSelectedEpic', ()=>  {
+    describe('featureTypeSelectedEpic', () => {
         const expectedResult = require('../../test-resources/vector/feature-collection-vector.json');
         const flatLayers = [{
             id: 'layer1',
@@ -322,7 +381,44 @@ describe('wfsquery Epics', () => {
             type: 'vector',
             features: expectedResult
         }];
+        const wmsLayer = [{
+            id: 'layer2',
+            name: 'poi',
+            title: 'layer2 title',
+            description: 'layer2 description',
+            type: 'wms'
+        }];
         it('vector layer', (done) => {
+            const mockState = {
+                query: {
+                    data: {},
+                    featureTypes: [],
+                    typeName: 'layer1',
+                    url: '/dummy'},
+                featuregrid: {
+                    timeSync: true,
+                    pagination: {
+                        size: 10
+                    },
+                    open: true,
+                    selectedLayer: "layer1",
+                    changes: [],
+                    mode: 'VIEW'
+                },
+                layers: {
+                    flat: flatLayers,
+                    layerMetadata: {
+                        expanded: false,
+                        maskLoading: false
+                    },
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    }
+                }
+            };
             mockAxios.onPost().reply(() => {return [200, expectedResult];});
             testEpic(addTimeoutEpic(wfsQueryEpic, 500), 4, [
                 query("base/web/client/test-resources/vector/feature-collection-vector.json", {pagination: {} }),
@@ -347,13 +443,17 @@ describe('wfsquery Epics', () => {
                 });
                 done();
             },
-            {
+            mockState
+            );
+        });
+
+        it('featureTypeSelectedEpic', (done) => {
+            const mockState = {
                 query: {
                     data: {},
                     featureTypes: [],
                     typeName: 'layer1',
-                    url: '/dummy'
-                },
+                    url: '/dummy'},
                 featuregrid: {
                     timeSync: true,
                     pagination: {
@@ -365,7 +465,7 @@ describe('wfsquery Epics', () => {
                     mode: 'VIEW'
                 },
                 layers: {
-                    flat: flatLayers,
+                    flat: wmsLayer,
                     layerMetadata: {
                         expanded: false,
                         maskLoading: false
@@ -377,7 +477,39 @@ describe('wfsquery Epics', () => {
                         options: {}
                     }
                 }
-            });
+            };
+            const wfsResults = require('../../test-resources/wfs/describe-pois.json');
+            mockAxios.onGet().reply(() => [200, wfsResults]);
+            testEpic(featureTypeSelectedEpic, 2,
+                featureTypeSelected('/dummy', 'poi'), ([changeSpatialAttribute, featureTypeLoaded]) => {
+                    try {
+                        expect(featureTypeLoaded.type).toBe(FEATURE_TYPE_LOADED);
+                        expect(changeSpatialAttribute.type).toBe(CHANGE_SPATIAL_ATTRIBUTE);
+                        expect(featureTypeLoaded.featureType.attributes).toEqual([{
+                            label: "NAME",
+                            attribute: "NAME",
+                            type: "string",
+                            valueId: "id",
+                            valueLabel: "name",
+                            values: []
+                        },
+                        {
+                            label: "THUMBNAIL",
+                            attribute: "THUMBNAIL",
+                            type: "string",
+                            valueId: "id",
+                            valueLabel: "name",
+                            values: []
+                        },
+                        {
+                            label: "MAINPAGE", attribute: "MAINPAGE", type: "string", valueId: "id", valueLabel: "name", values: []
+                        }]);
+
+                    } catch (error) {
+                        done(error);
+                    }
+                    done();
+                }, mockState);
         });
     });
 });

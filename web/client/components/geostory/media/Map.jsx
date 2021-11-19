@@ -106,7 +106,14 @@ export default compose(
                     style: {
                         // removed width and height from style and added to .less
                         // to use different sizes in story sections
-                        cursor: isMapInfoControlActive ? 'pointer' : 'default'
+                        cursor: isMapInfoControlActive ? 'pointer' : 'default',
+
+                        // openlayers map does not propagate the events even if if the interactions are set to false
+                        // we need to disable all the pointer and touch events to make the geostory scrollable also on mobile devices
+                        ...((expandable && !active) && {
+                            pointerEvents: 'none',
+                            touchAction: 'none'
+                        })
                     }
                 }} // if map id is passed as number, the resource id, ol throws an error
                 layers={geoStoryLayers ? [ ...layers, ...geoStoryLayers ] : layers}

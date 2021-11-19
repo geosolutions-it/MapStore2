@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { find, isObject, isString, uniqBy } from 'lodash';
+import { find, includes, isObject, isString, uniqBy } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -108,10 +108,11 @@ class General extends React.Component {
                         }
                         )}
                     </FormGroup>)}
+                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) &&
                     <LayerNameEditField
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
-                        onUpdateEntry={this.updateEntry.bind(null)}/>
+                        onUpdateEntry={this.updateEntry.bind(null)}/>}
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :
@@ -188,6 +189,8 @@ class General extends React.Component {
             </Grid>
         );
     }
+
+    supportedNameEditLayerTypes = ['wms'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
 

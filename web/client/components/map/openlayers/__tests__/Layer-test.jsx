@@ -1827,6 +1827,49 @@ describe('Openlayers layer', () => {
 
         expect(layer.layer.getSource().getParams().STYLES).toBe("");
     });
+    it("test wms security token as bearer header", (done) => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms"
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                method: 'bearer'
+            }
+        ]);
+
+        setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        mockAxios.onGet().reply((config) => {
+            expect(config.headers.Authorization).toBe("Bearer ########-####-####-####-###########");
+            done();
+            return [200, {data: {}}, {"content-type": "image/png"}];
+        });
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########" />, document.getElementById("container"));
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()['ms2-authkey']).toNotExist();
+    });
     it('test wms security token on SLD param', () => {
         const options = {
             type: "wms",

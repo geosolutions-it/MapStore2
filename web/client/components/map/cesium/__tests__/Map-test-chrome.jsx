@@ -143,7 +143,7 @@ describe('CesiumMap', () => {
         const cesiumMap = map.map;
         cesiumMap.camera.moveEnd.addEventListener(() => {
             // check arguments
-            expect(spy.calls[0].arguments.length).toEqual(7);
+            expect(spy.calls[0].arguments.length).toEqual(8);
             expect(spy.calls.length).toBe(expectedCalls);
             // check camera moved
             expect(Math.round(spy.calls[0].arguments[0].y * precision) / precision).toBe(30);

@@ -20,7 +20,11 @@
     .cookie-title,
     .cookie-header {
         .color-var(@theme-vars[primary-contrast]);
+        .cookie-close-btn {
+            .color-var(@theme-vars[main-color]);
+        }
     }
+
 }
 
 // **************
@@ -142,7 +146,7 @@
     height: 44px;
 }
 
-.cookie-header > span {
+.cookie-header > .cookie-close-btn {
     float: right;
     cursor: pointer;
     font-size: 40px;
