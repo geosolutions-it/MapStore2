@@ -63,6 +63,11 @@ This is the main structure:
   "unsavedMapChangesDialog": false,
   // optional flag to set default coordinate format (decimal, aeronautical)
   "defaultCoordinateFormat": "aeronautical",
+  // optionals misc settings
+  "miscSettings": {
+      // Use POST requests for each WMS length URL highter than this value.
+      "maxURLLength": 5000
+  },
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {
       // default initial state for every mode (will override initialState imposed by plugins reducers)
