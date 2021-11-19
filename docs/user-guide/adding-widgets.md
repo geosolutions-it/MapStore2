@@ -19,7 +19,7 @@ In particular, it is possible to choose between:
 
 Creating *Chart*, *Text*, *Table* and *Counter* widgets the procedure is almost the same as that described for [create widgets in maps](widgets.md). The only minor differences are the following:
 
-* In dashboards as soon as the user select the widget type, a panel appears in order to select the layer from which the widget will be created. [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to select the layer to be used in the widget by choosing between CSW to WMS and WMTS GeoSolutions Services, present by default, or by accessing WMS, WFS, CSW, WMTS and TMS Remote Services as explained in the [Managing Remote Services](catalog.md#managing-remote-services) section
+* In dashboards as soon as the user selects the widget type, a panel appears to select the layer from which the widget will be created. [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to choose between CSW, WMS and WMTS GeoSolutions Services, present by default, or by accessing WMS, WFS, CSW, WMTS and TMS Remote Services as explained in the [Managing Remote Services](catalog.md#managing-remote-services) section
 
 <img src="../img/adding-widgets/default-services.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
