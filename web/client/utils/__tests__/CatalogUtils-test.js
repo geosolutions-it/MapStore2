@@ -542,6 +542,14 @@ describe('Test the CatalogUtils', () => {
     });
 
     it('csw with DC references with implicit name in wms URI (RNDT / INSPIRE)', () => {
+        const wmsReferences = [{
+            type: "OGC:WMS",
+            url: "http://geoserver/wms?SERIVCE=WMS&VERSION=1.3.0",
+            SRS: [],
+            params: {
+                name: "workspace:layer"
+            }
+        }];
         const records = CatalogUtils.getCatalogRecords('csw', {
             records: [{
                 dc: {
@@ -557,6 +565,7 @@ describe('Test the CatalogUtils', () => {
             }]
         }, {});
         expect(records.length).toBe(1);
+        expect(records[0].references).toEqual(wmsReferences);
     });
 
     it('csw with DC references with implicit name in wms URI (RNDT / INSPIRE) - download link - no title', () => {
@@ -578,7 +587,7 @@ describe('Test the CatalogUtils', () => {
                 }
             }]
         }, {}, locales);
-        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/shp/test_layer.zip">Not Available - shapefile</a></li></ul>';
+        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/shp/test_layer.zip">Not Available - Download</a></li></ul>';
         expect(records.length).toBe(1);
         expect(records[0].metadata.uri.length).toBe(1);
         expect(records[0].metadata.uri[0]).toBe(resourceLink);
@@ -597,7 +606,7 @@ describe('Test the CatalogUtils', () => {
                 }
             }]
         }, {});
-        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1">Test Layer - WMS</a></li></ul>';
+        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1">Test Layer - Link</a></li></ul>';
         expect(records.length).toBe(1);
         expect(records[0].metadata.uri.length).toBe(1);
         expect(records[0].metadata.uri[0]).toBe(resourceLink);

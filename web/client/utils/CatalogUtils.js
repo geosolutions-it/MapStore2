@@ -84,34 +84,26 @@ const extractWMSParamsFromURL = wms => {
     return false;
 };
 
-const getMetaDataDownloadFormat = (protocol = '', value = '') => {
-    let format = '';
+const getMetaDataDownloadFormat = (protocol) => {
     const formatsMap = [
         {
-            protocol: /www-download/g,
-            value: /shp\/.*\.zip/g,
-            displayValue: 'shapefile'
+            protocol: 'https://registry.geodati.gov.it/metadata-codelist/ProtocolValue/www-download',
+            displayValue: 'Download'
         },
         {
-            protocol: /www-download/g,
-            value: /grid\/.*\.zip/g,
-            displayValue: 'grid'
-        },
-        {
-            value: /wms\?/g,
+            protocol: 'http://www.opengis.net/def/serviceType/ogc/wms',
             displayValue: 'WMS'
         },
         {
-            protocol: /TR\/xlink/g,
-            value: /kml\/.*\.kmz/g,
-            displayValue: 'KML file'
-        }
+            protocol: 'http://www.opengis.net/def/serviceType/ogc/wfs',
+            displayValue: 'WFS'
+        },
     ];
-    format = formatsMap.filter(formatItem => (formatItem.protocol ? protocol.match(formatItem.protocol) : true) && value.match(formatItem.value))[0]?.displayValue || protocol;
-    return format;
+    const format = formatsMap.filter(formatItem => (formatItem.protocol === protocol))[0]?.displayValue;
+    return format ?? 'Link';
 };
 
-const getURILinkNames = (metadata, locales, uriItem) => {
+const getURILinks = (metadata, locales, uriItem) => {
     let itemName = uriItem.name;
     if (itemName === undefined) {
         itemName = metadata.title ? metadata.title.join(' ') : getMessageById(locales, "catalog.notAvailable");
@@ -145,9 +137,8 @@ const converters = {
                             uri.protocol.match(/serviceType\/ogc\/wms/g));
                     }));
                 }
-                if (wms && wms.protocol.match(/serviceType\/ogc\/wms/g) && wms.description === "access point") {
-                    wms = extractWMSParamsFromURL(wms);
-                }
+                /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
+                wms = (wms && wms.protocol.match(/serviceType\/ogc\/wms/g) && extractWMSParamsFromURL(wms));
                 // look in references objects
                 if (!wms && dc && dc.references && dc.references.length) {
                     let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
@@ -235,7 +226,7 @@ const converters = {
                 }
                 // parsing URI
                 if (dc && dc.URI && castArray(dc.URI) && castArray(dc.URI).length) {
-                    metadata = {...metadata, uri: ["<ul>" + castArray(dc.URI).map(getURILinkNames.bind(this, metadata, locales)).join("") + "</ul>"]};
+                    metadata = {...metadata, uri: ["<ul>" + castArray(dc.URI).map(getURILinks.bind(this, metadata, locales)).join("") + "</ul>"]};
                 }
                 if (dc && dc.subject && castArray(dc.subject) && castArray(dc.subject).length) {
                     metadata = {...metadata, subject: ["<ul>" + castArray(dc.subject).map(s => `<li>${s}</li>`).join("") + "</ul>"]};
@@ -250,7 +241,7 @@ const converters = {
                 }
 
                 if (dc && dc.temporal) {
-                    let elements = dc.temporal.split("; ");
+                    let elements = isString(dc.temporal) ? dc.temporal.split("; ") : [];
                     if (elements.length) {
                         // finding scheme or using default
                         let scheme = elements.filter(e => e.indexOf("scheme=") !== -1).map(e => {
