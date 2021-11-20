@@ -97,7 +97,7 @@ const getMetaDataDownloadFormat = (protocol) => {
         {
             protocol: 'http://www.opengis.net/def/serviceType/ogc/wfs',
             displayValue: 'WFS'
-        },
+        }
     ];
     const format = formatsMap.filter(formatItem => (formatItem.protocol === protocol))[0]?.displayValue;
     return format ?? 'Link';
