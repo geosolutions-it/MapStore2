@@ -461,6 +461,11 @@ describe('PrintUtils', () => {
         expect(printSpec.layers.length).toBe(1);
         expect(printSpec.geodetic).toBe(false);
     });
+    it('getMapfishPrintSpecification custom params', () => {
+        const printSpec = getMapfishPrintSpecification({...testSpec, params: {custom: "customvalue"}});
+        expect(printSpec).toExist();
+        expect(printSpec.custom).toBe("customvalue");
+    });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
         expect(rgb).toExist();

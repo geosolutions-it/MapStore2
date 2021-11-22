@@ -32,6 +32,15 @@ describe('Test the print reducer', () => {
         expect(state.spec.param).toBe('val');
     });
 
+    it('set a nested printing parameter', () => {
+        const state = print({spec: {}}, {
+            type: SET_PRINT_PARAMETER,
+            name: 'path.param',
+            value: 'val'
+        });
+        expect(state.spec.path.param).toBe('val');
+    });
+
     it('load capabilities', () => {
         const state = print({capabilities: {}, spec: {}}, {
             type: PRINT_CAPABILITIES_LOADED,

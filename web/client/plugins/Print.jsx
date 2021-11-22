@@ -12,7 +12,7 @@ import { head } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Accordion, Col, Glyphicon, Grid, Panel, Row } from 'react-bootstrap';
+import { PanelGroup, Col, Glyphicon, Grid, Panel, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
@@ -30,6 +30,7 @@ import { reprojectBbox } from '../utils/CoordinatesUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
+import { getPluginItems } from "../utils/PluginsUtils";
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -81,20 +82,7 @@ export default {
         loadPlugin: (resolve) => {
             require.ensure('./print/index', () => {
                 const {
-                    Name,
-                    Description,
-                    Resolution,
-                    DefaultBackgroundOption,
-                    Sheet,
-                    LegendOption,
-                    MultiPageOption,
-                    LandscapeOption,
-                    ForceLabelsOption,
-                    AntiAliasingOption,
-                    IconSizeOption,
-                    LegendDpiOption,
-                    Font,
-                    MapPreview,
+                    defaultItems,
                     PrintSubmit,
                     PrintPreview
                 } = require('./print/index').default;
@@ -151,11 +139,14 @@ export default {
                         currentLocaleLanguage: PropTypes.string,
                         overrideOptions: PropTypes.object,
                         isLocalizedLayerStylesEnabled: PropTypes.bool,
-                        localizedLayerStylesEnv: PropTypes.object
+                        localizedLayerStylesEnv: PropTypes.object,
+                        items: PropTypes.array
                     };
 
                     static contextTypes = {
-                        messages: PropTypes.object
+                        messages: PropTypes.object,
+                        plugins: PropTypes.object,
+                        loadedPlugins: PropTypes.object
                     };
 
                     static defaultProps = {
@@ -177,19 +168,6 @@ export default {
                         mapType: "leaflet",
                         minZoom: 1,
                         maxZoom: 23,
-                        alternatives: [{
-                            name: "legend",
-                            component: LegendOption,
-                            regex: /legend/
-                        }, {
-                            name: "2pages",
-                            component: MultiPageOption,
-                            regex: /2_pages/
-                        }, {
-                            name: "landscape",
-                            component: LandscapeOption,
-                            regex: /landscape/
-                        }],
                         usePreview: true,
                         mapPreviewOptions: {
                             enableScalebox: false,
@@ -213,10 +191,19 @@ export default {
                         },
                         style: {},
                         currentLocale: 'en-US',
-                        overrideOptions: {}
+                        overrideOptions: {},
+                        items: []
                     };
 
+                    state = {
+                        items: [],
+                        activeAccordionPanel: 0
+                    }
+
                     UNSAFE_componentWillMount() {
+                        this.setState({
+                            items: getPluginItems({}, this.context.plugins, defaultItems, "Print", "", true, this.context.loadedPlugins)
+                        });
                         this.configurePrintMap();
                     }
 
@@ -228,7 +215,11 @@ export default {
                             this.configurePrintMap(nextProps);
                         }
                     }
-
+                    getItems = (target) => {
+                        return [...this.props.items, ...this.state.items]
+                            .filter(i => !target || i.target === target)
+                            .sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
+                    };
                     getMapSize = (layout) => {
                         const currentLayout = layout || this.getLayout();
                         return {
@@ -241,15 +232,6 @@ export default {
                         const { getLayoutName: getLayoutNameProp, printSpec, capabilities } = props || this.props;
                         const layoutName = getLayoutNameProp(printSpec);
                         return head(capabilities.layouts.filter((l) => l.name === layoutName));
-                    };
-
-                    renderLayoutsAlternatives = () => {
-                        return this.props.alternatives.map((alternative) =>
-                            (<alternative.component key={"printoption_" + alternative.name}
-                                label={getMessageById(this.context.messages, "print.alternatives." + alternative.name)}
-                                enableRegex={alternative.regex}
-                            />)
-                        );
                     };
 
                     renderPreviewPanel = () => {
@@ -269,48 +251,49 @@ export default {
                         }
                         return null;
                     };
-
+                    renderItem = (item, options) => {
+                        const Comp = item.plugin;
+                        return <Comp {...this.props} {...item.cfg} {...options}/>;
+                    };
+                    renderItems = (target, options) => {
+                        return this.getItems(target)
+                            .map(item => this.renderItem(item, options));
+                    };
+                    renderAccordion = (target, options) => {
+                        const items = this.getItems(target);
+                        return (<PanelGroup accordion activeKey={this.state.activeAccordionPanel} onSelect={(key) => {
+                            this.setState({
+                                activeAccordionPanel: key
+                            });
+                        }}>
+                            {items.map((item, pos) => (
+                                <Panel header={getMessageById(this.context.messages, item.cfg.title)} eventKey={pos} collapsible>
+                                    {this.renderItem(item, options)}
+                                </Panel>
+                            ))}
+                        </PanelGroup>);
+                    };
                     renderPrintPanel = () => {
                         const layout = this.getLayout();
-                        const layoutName = this.props.getLayoutName(this.props.printSpec);
-                        const mapSize = this.getMapSize(layout);
+                        const options = {
+                            layout,
+                            layoutName: this.props.getLayoutName(this.props.printSpec),
+                            mapSize: this.getMapSize(layout),
+                            resolutions: getResolutions(),
+                            onRefresh: () => this.configurePrintMap(),
+                            notAllowedLayers: this.isBackgroundIgnored()
+                        };
                         return (
                             <Grid fluid role="body">
                                 {this.renderError()}
                                 {this.renderWarning(layout)}
                                 <Row>
                                     <Col xs={12} md={6}>
-                                        <Name label={getMessageById(this.context.messages, 'print.title')} placeholder={getMessageById(this.context.messages, 'print.titleplaceholder')} />
-                                        <Description label={getMessageById(this.context.messages, 'print.description')} placeholder={getMessageById(this.context.messages, 'print.descriptionplaceholder')} />
-                                        <Accordion defaultActiveKey="1">
-                                            <Panel className="print-layout" header={getMessageById(this.context.messages, "print.layout")} eventKey="1" collapsible>
-                                                <Sheet key="sheetsize"
-                                                    layouts={this.props.capabilities.layouts}
-                                                    label={getMessageById(this.context.messages, "print.sheetsize")}
-                                                />
-                                                {this.renderLayoutsAlternatives()}
-                                            </Panel>
-                                            <Panel className="print-legend-options" header={getMessageById(this.context.messages, "print.legendoptions")} eventKey="2" collapsible>
-                                                <Font label={getMessageById(this.context.messages, "print.legend.font")}/>
-                                                <ForceLabelsOption label={getMessageById(this.context.messages, "print.legend.forceLabels")}/>
-                                                <AntiAliasingOption label={getMessageById(this.context.messages, "print.legend.antiAliasing")}/>
-                                                <IconSizeOption label={getMessageById(this.context.messages, "print.legend.iconsSize")}/>
-                                                <LegendDpiOption label={getMessageById(this.context.messages, "print.legend.dpi")}/>
-                                            </Panel>
-                                        </Accordion>
+                                        {this.renderItems("left-panel", options)}
+                                        {this.renderAccordion("left-panel-accordion", options)}
                                     </Col>
                                     <Col xs={12} md={6} style={{textAlign: "center"}}>
-                                        <Resolution label={getMessageById(this.context.messages, "print.resolution")}/>
-                                        <MapPreview width={mapSize.width} height={mapSize.height} mapType={this.props.mapType}
-                                            onMapRefresh={() => this.configurePrintMap()}
-                                            layout={layoutName}
-                                            layoutSize={layout && layout.map || {width: 10, height: 10}}
-                                            resolutions={getResolutions()}
-                                            useFixedScales={this.props.useFixedScales}
-                                            env={this.props.localizedLayerStylesEnv}
-                                            {...this.props.mapPreviewOptions}
-                                        />
-                                        {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
+                                        {this.renderItems("right-panel", options)}
                                         <PrintSubmit {...this.props.submitConfig} disabled={!layout} onPrint={this.print}/>
                                         {this.renderDownload()}
                                     </Col>

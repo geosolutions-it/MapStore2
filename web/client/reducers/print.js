@@ -23,6 +23,8 @@ import { TOGGLE_CONTROL } from '../actions/controls';
 import { isObject, get } from 'lodash';
 import assign from 'object-assign';
 
+import set from "lodash/set";
+
 const initialSpec = {
     antiAliasing: true,
     iconSize: 24,
@@ -64,10 +66,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         });
     }
     case SET_PRINT_PARAMETER: {
-        return assign({}, state, {
-            spec: assign({}, state.spec, {[action.name]: action.value})
-        }
-        );
+        return {...state, spec: set({...state.spec}, action.name, action.value)};
     }
     case CONFIGURE_PRINT_MAP: {
 
