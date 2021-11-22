@@ -600,13 +600,14 @@ describe('Test the CatalogUtils', () => {
                     title: 'Test Layer',
                     URI: [
                         {
+                            protocol: 'http://www.opengis.net/def/serviceType/ogc/wms',
                             value: 'http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1'
                         }
                     ]
                 }
             }]
         }, {});
-        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1">Test Layer - Link</a></li></ul>';
+        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1">Test Layer - WMS</a></li></ul>';
         expect(records.length).toBe(1);
         expect(records[0].metadata.uri.length).toBe(1);
         expect(records[0].metadata.uri[0]).toBe(resourceLink);
