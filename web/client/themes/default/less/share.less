@@ -93,9 +93,11 @@
 }
 
 .ms-resizable-modal > .modal-content.share-win {
-    top: -10%;
     @media (min-width: @screen-sm-min) {
-        height: 50%;
+        height: 60%;
+    }
+    &.modal-dialog-draggable {
+        top: -10%;
     }
     .modal-body > .share-panel-modal-body {
         overflow-x: hidden;
