@@ -32,7 +32,7 @@
 // **************
 .share-win {
     border: none;
-    @media (min-width: 768px) {
+    @media (min-width: @screen-sm-min) {
         & {
             width: 550px;
         }
@@ -92,12 +92,20 @@
     .mapstore-switch-panel::-webkit-scrollbar { width: 8px; }
 }
 
-.ms-resizable-modal > .modal-content.share-win > .modal-body > .share-panel-modal-body {
-    padding: 8px;
-    .share-panels {
-        padding-top: 8px;
+.ms-resizable-modal > .modal-content.share-win {
+    @media (min-width: @screen-xs-min) {
+        height: 50%;
+        .share-panel-modal-body {
+            overflow-x: hidden;
+        }
     }
-}
+    .modal-body > .share-panel-modal-body {
+        padding: 8px;
+        .share-panels {
+            padding-top: 8px;
+        }
+    }
+} 
 
 #share-container {
     .coordinateRow > div:first-child{
