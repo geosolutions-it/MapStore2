@@ -128,17 +128,16 @@ const converters = {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
                     let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) ) || head([].filter.call(URI, (uri) => !uri.name && uri.protocol?.indexOf('image/') > -1));
                     thumbURL = thumb ? thumb.value : null;
-                    wms = head([].filter.call(URI, (uri) => {
+                    wms = head(URI.map( uri => {
                         return uri.protocol && (
                             /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
                             uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) ||
                             uri.protocol.match(/^OGC:WMS/g) ||
                             /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
-                            uri.protocol.match(/serviceType\/ogc\/wms/g));
-                    }));
+                            uri.protocol.match(/serviceType\/ogc\/wms/g) && extractWMSParamsFromURL(uri)
+                        );
+                    }).filter(item => item));
                 }
-                /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
-                wms = (wms && wms.protocol.match(/serviceType\/ogc\/wms/g) && extractWMSParamsFromURL(wms));
                 // look in references objects
                 if (!wms && dc && dc.references && dc.references.length) {
                     let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
