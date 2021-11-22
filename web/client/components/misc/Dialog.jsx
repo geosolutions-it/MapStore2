@@ -37,7 +37,7 @@ class Dialog extends React.Component {
         backgroundStyle: {
             background: "rgba(0,0,0,.5)"
         },
-        start: {x: 0, y: 40},
+        start: {x: 0, y: 150},
         className: "modal-dialog modal-content",
         maskLoading: false,
         containerClassName: "",
