@@ -175,4 +175,14 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(spyOnChange).toHaveBeenCalled();
         expect(parseFloat(spyOnChange.calls[0].arguments[0])).toBe(160);
     });
+    it('Works with empty aeronauticalOptions', () => {
+        ReactDOM.render(<AeronauticalCoordinateEditor
+            aeronauticalOptions={{}}
+            coordinate="lon"
+            value={80}  />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let elements = container.querySelectorAll('input');
+
+        expect(elements.length).toBe(3);
+    });
 });

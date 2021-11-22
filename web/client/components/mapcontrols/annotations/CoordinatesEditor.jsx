@@ -81,6 +81,7 @@ class CoordinatesEditor extends React.Component {
         isMouseLeaveEnabled: PropTypes.bool,
         showLengthAndBearingLabel: PropTypes.bool,
         renderer: PropTypes.string,
+        style: PropTypes.object,
         onValidateFeature: PropTypes.func
     };
 
@@ -118,7 +119,8 @@ class CoordinatesEditor extends React.Component {
         isMouseEnterEnabled: false,
         isMouseLeaveEnabled: false,
         properties: {},
-        type: "Point"
+        type: "Point",
+        style: {display: 'flex', flexDirection: 'column', flex: 1}
     };
 
     getValidationStateRadius = (radius) => {
@@ -219,7 +221,7 @@ class CoordinatesEditor extends React.Component {
             }
         ];
         return (
-            <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+            <div className="coordinates-editor" style={this.props.style}>
                 <div className={"measure-feature-selector"}>
                     <div>
                         {this.props.showFeatureSelector ? <Select
@@ -263,7 +265,7 @@ class CoordinatesEditor extends React.Component {
                         </div>
                     </div>
                 }
-                <div className={"coordinates-row-container"}>
+                <div className={`coordinates-row-container coordinates-row-type-${type}`}>
                     {this.props.components.map((component, idx) =><>
                         {this.props.showLengthAndBearingLabel && <div className={'label-texts'}>
                             <span>
