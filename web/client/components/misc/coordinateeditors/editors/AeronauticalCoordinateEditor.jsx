@@ -143,7 +143,7 @@ class AeronauticalCoordinateEditor extends React.Component {
             width: 0,
             height: 0
         };
-        const {step: stepSeconds} = this.props.aeronauticalOptions.seconds;
+        const {step: stepSeconds} = this?.props?.aeronauticalOptions?.seconds ?? {};
         return (
             <FormGroup style={{display: "inline-flex"}}>
                 <div className={DEGREES} style={{width: 40, display: 'flex'}}>
