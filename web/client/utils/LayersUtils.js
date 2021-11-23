@@ -18,8 +18,9 @@ import isEmpty from 'lodash/isEmpty';
 import findIndex from 'lodash/findIndex';
 import pick from 'lodash/pick';
 import isNil from 'lodash/isNil';
-let LayersUtils;
 import {addAuthenticationParameter} from './SecurityUtils';
+
+let LayersUtils;
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
@@ -381,7 +382,13 @@ export const getLayersByGroup = (configLayers, configGroups) => {
                 group = createGroup(groupId, groupTitle || groupName, groupName, mapLayers, addLayers);
                 subGroups.push(group);
             } else if (addLayers) {
-                group.nodes = group.nodes.concat(getLayersId(groupId, mapLayers));
+                group.nodes = getLayersId(groupId, mapLayers).concat(group.nodes)
+                    .reduce((arr, cur) => {
+                        isObject(cur)
+                            ? arr.push({node: cur, order: mapLayers.find((el) => el.group === cur.id).storeIndex})
+                            : arr.push({node: cur, order: mapLayers.find((el) => el.id === cur).storeIndex});
+                        return arr;
+                    }, []).sort((a, b) => b.order - a.order).map(e => e.node);
             }
             return group.nodes;
         }, groups);
