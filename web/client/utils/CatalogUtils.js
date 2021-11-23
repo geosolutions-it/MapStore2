@@ -31,6 +31,7 @@ import * as WMTSUtils from './WMTSUtils';
 import { cleanAuthParamsFromURL } from './SecurityUtils';
 import WMS from '../api/WMS';
 import { getAvailableInfoFormat } from "./MapInfoUtils";
+import { getResolutionObject } from "./MapUtils";
 
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
@@ -493,7 +494,7 @@ const toURLArray = (url) => {
  *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
  *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
  */
-export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url, formats = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
+export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url, formats = {}, map = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
         return null;
@@ -524,7 +525,9 @@ export const recordToLayer = (record, type = "wms", {removeParams = [], format, 
     const layerURL = toLayerURL(url || originalUrl);
 
     const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
-    return {
+    const { MaxScaleDenominator: maxScaleDenominator, MinScaleDenominator: minScaleDenominator }
+        = record?.capabilities ?? {};
+    let layer = {
         type: type,
         requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
         style: record.style,
@@ -555,9 +558,21 @@ export const recordToLayer = (record, type = "wms", {removeParams = [], format, 
         catalogURL,
         ...baseConfig,
         ...record.layerOptions,
-        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
-        ...(type === 'wms' && !isEmpty(formats) && {imageFormats: formats.imageFormats, infoFormats: formats.infoFormats})
+        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined
     };
+    if (type === "wms") {
+        if (!isEmpty(formats)) {
+            layer = {...layer, imageFormats: formats.imageFormats, infoFormats: formats.infoFormats};
+        }
+        if (!isEmpty(map) && (maxScaleDenominator || minScaleDenominator)) {
+            const {resolution: minResolution} = !isNil(minScaleDenominator)
+            && getResolutionObject(minScaleDenominator, 'scale', map) || {};
+            const {resolution: maxResolution} = !isNil(maxScaleDenominator)
+            && getResolutionObject(maxScaleDenominator, 'scale', map) || {};
+            layer = {...layer, minResolution, maxResolution};
+        }
+    }
+    return layer;
 };
 export const getCatalogRecords = (format, records, options, locales) => {
     return converters[format] && converters[format](records, options, locales) || null;

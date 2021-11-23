@@ -21,7 +21,8 @@ import {
     getResolutions,
     getZoomFromResolution,
     dpi2dpu,
-    DEFAULT_SCREEN_DPI
+    DEFAULT_SCREEN_DPI,
+    getResolutionObject as _getResolutionObject
 } from '../../../../utils/MapUtils';
 
 const ReactSelectCreatable = localizedProps(['placeholder', 'noResultsText'])(Select.Creatable);
@@ -122,19 +123,7 @@ function VisibilityLimitsForm({
     }
 
     function getResolutionObject(value, type) {
-        if (type === 'scale') {
-            const resolution = value / dpu;
-            return {
-                resolution: resolution,
-                scale: value,
-                zoom: getZoomFromResolution(resolution, resolutions)
-            };
-        }
-        return {
-            resolution: value,
-            scale: value * dpu,
-            zoom: getZoomFromResolution(value, resolutions)
-        };
+        return _getResolutionObject(value, type, { projection, resolutions });
     }
 
     const [options, setOptions] = useState([]);
@@ -165,17 +154,31 @@ function VisibilityLimitsForm({
         setMessage(undefined);
     }
 
-    function getCapabilitiesMessageId({ maxScaleDenominator, minScaleDenominator }) {
-        if (isNil(maxScaleDenominator) && isNil(minScaleDenominator)) {
+    function getCapabilitiesMessageId(maxDenominator, minDenominator) {
+        if (isNil(maxDenominator) && isNil(minDenominator)) {
             return 'layerProperties.visibilityLimits.serverValuesUpdateUndefined';
         }
-        if (isNil(maxScaleDenominator) && !isNil(minScaleDenominator)) {
+        if (isNil(maxDenominator) && !isNil(minDenominator)) {
             return 'layerProperties.visibilityLimits.serverValuesUpdateMinScale';
         }
-        if (!isNil(maxScaleDenominator) && isNil(minScaleDenominator)) {
+        if (!isNil(maxDenominator) && isNil(minDenominator)) {
             return 'layerProperties.visibilityLimits.serverValuesUpdateMaxScale';
         }
         return 'layerProperties.visibilityLimits.serverValuesUpdate';
+    }
+
+    function setCapabilitiesMessage(maxScaleDenominator, minScaleDenominator) {
+        const newMessageId = getCapabilitiesMessageId(
+            maxScaleDenominator,
+            minScaleDenominator
+        );
+        setMessage(newMessageId);
+    }
+
+    function setRangeError(_maxResolution, _minResolution) {
+        if (_maxResolution < _minResolution) {
+            setError('layerProperties.visibilityLimits.rangeError');
+        }
     }
 
     function handleGetCapabilities() {
@@ -194,11 +197,7 @@ function VisibilityLimitsForm({
                             && getResolutionObject(maxScaleDenominator, 'scale');
                         const newMinValue = !isNil(minScaleDenominator)
                             && getResolutionObject(minScaleDenominator, 'scale');
-                        const newMessageId = getCapabilitiesMessageId({
-                            maxScaleDenominator,
-                            minScaleDenominator
-                        });
-                        setMessage(newMessageId);
+                        setCapabilitiesMessage(maxScaleDenominator, minScaleDenominator);
                         if (newMinValue) {
                             setMinValue(newMinValue);
                         }
@@ -211,9 +210,7 @@ function VisibilityLimitsForm({
                         });
                         const newMinResolution = (newMinValue || minValue)?.resolution || -Infinity;
                         const newMaxResolution = (newMaxValue || maxValue)?.resolution || Infinity;
-                        if (newMaxResolution < newMinResolution) {
-                            setError('layerProperties.visibilityLimits.rangeError');
-                        }
+                        setRangeError(newMaxResolution, newMinResolution);
                         setLoading(false);
                     }
                 })
@@ -254,6 +251,13 @@ function VisibilityLimitsForm({
         setOptions(newOptions);
         clearMessages();
     }, [ dpu,  resolutionString ]);
+
+    useEffect(() => {
+        if (isMounted.current && (!isNil(maxResolution) || !isNil(minResolution))) {
+            setCapabilitiesMessage(maxResolution, minResolution);
+            setRangeError(maxResolution, minResolution);
+        }
+    }, [isMounted]);
 
     return (
         <div className="ms-visibility-limits-form">
