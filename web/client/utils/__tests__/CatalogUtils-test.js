@@ -541,6 +541,78 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
     });
 
+    it('csw with DC references with implicit name in wms URI (RNDT / INSPIRE)', () => {
+        const wmsReferences = [{
+            type: "OGC:WMS",
+            url: "http://geoserver/wms?SERIVCE=WMS&VERSION=1.3.0",
+            SRS: [],
+            params: {
+                name: "workspace:layer"
+            }
+        }];
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    URI: [
+                        {
+                            TYPE_NAME: 'DC_1_1.URI',
+                            protocol: 'http://www.opengis.net/def/serviceType/ogc/wms',
+                            description: 'access point',
+                            value: 'http://geoserver/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=workspace:layer'
+                        }
+                    ]
+                }
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].references).toEqual(wmsReferences);
+    });
+
+    it('csw with DC references with implicit name in wms URI (RNDT / INSPIRE) - download link - no title', () => {
+        const locales = {
+            catalog: {
+                notAvailable: "Not Available"
+            }
+        };
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    URI: [
+                        {
+                            protocol: 'https://registry.geodati.gov.it/metadata-codelist/ProtocolValue/www-download',
+                            description: 'access point',
+                            value: 'http://gisdata.provider.host/shp/test_layer.zip'
+                        }
+                    ]
+                }
+            }]
+        }, {}, locales);
+        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/shp/test_layer.zip">Not Available - Download</a></li></ul>';
+        expect(records.length).toBe(1);
+        expect(records[0].metadata.uri.length).toBe(1);
+        expect(records[0].metadata.uri[0]).toBe(resourceLink);
+    });
+
+    it('csw with DC references with implicit name in wms URI (RNDT / INSPIRE) - download link - value only', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    title: 'Test Layer',
+                    URI: [
+                        {
+                            protocol: 'http://www.opengis.net/def/serviceType/ogc/wms',
+                            value: 'http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1'
+                        }
+                    ]
+                }
+            }]
+        }, {});
+        const resourceLink = '<ul><li><a target="_blank" href="http://gisdata.provider.host/geoserver/wms?tiled=true&version=1.1.1">Test Layer - WMS</a></li></ul>';
+        expect(records.length).toBe(1);
+        expect(records[0].metadata.uri.length).toBe(1);
+        expect(records[0].metadata.uri[0]).toBe(resourceLink);
+    });
+
     it('wms check for reference url', () => {
         const records = CatalogUtils.getCatalogRecords('wms', {
             records: [{
