@@ -14,6 +14,7 @@ import ColorRamp from '../../../../styleeditor/ColorRamp';
 import StepHeader from '../../../../misc/wizard/StepHeader';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import ChartAdvancedOptions from './ChartAdvancedOptions';
+import ColorClassModal from '../chart/ColorClassModal';
 
 const COLORS = [{
     name: 'global.colors.random',
@@ -39,15 +40,15 @@ const COLORS = [{
     name: 'global.colors.purple',
     schema: 'sequencial',
     options: {base: 300, range: 4}
-},
-{
-    name: <Message msgId={'global.custom'} />,
+}, {
+    name: 'global.colors.custom',
     schema: 'sequencial',
     options: {base: 0, range: 0},
     ramp: "#fff",
     custom: true
-}
-];
+}];
+
+const CLASSIFIED_COLORS = [{title: '', color: '#fff7ec', type: 'Polygon', unique: ''}];
 
 
 const getColorRangeItems = (type) => {
@@ -76,7 +77,7 @@ export default ({
     sampleChart}) => {
 
     const [customColor, setCustomColor] = useState(false);
-
+    const [classificationAttribute, setClassificationAttribute] = useState();
 
     return (
         <Row>
@@ -154,26 +155,25 @@ export default ({
                                     items={getColorRangeItems(data.type)}
                                     value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                                     samples={data.type === "pie" ? 5 : 1}
-                                    onChange={v => { onChange("autoColorOptions", {...v.options, name: v.name}); setCustomColor(v?.custom); }  }/>
+                                    onChange={v => {
+                                        onChange("autoColorOptions", {...v.options, name: v.name});
+                                        setCustomColor(v?.custom);
+                                    }}/>
                             </Col>
                         </FormGroup> : null}
 
                     { customColor &&
-                    <FormGroup controlId="classificationAttribute" className="mapstore-block-width">
-                        <Col componentClass={ControlLabel} sm={6}>
-                            <Message msgId={"Classification attribute"} />
-                        </Col>
-                        <Col sm={6}>
-                            <Select
-                                value={data.options && data.options.classificationAttribute}
-                                options={options}
-                                placeholder={placeHolder}
-                                onChange={(val) => {
-                                    onChange("options.classificationAttribute", val && val.value);
-                                }}
-                            />
-                        </Col>
-                    </FormGroup>
+                    <ColorClassModal
+                        modalClassName="chart-color-class-modal"
+                        show={customColor}
+                        onClose={() => setCustomColor(false)}
+                        onSaveStyle={() => { classificationAttribute && onChange("options.classificationAttribute", classificationAttribute); }}
+                        onChange={(value) => setClassificationAttribute(value)}
+                        classificationAttribute={classificationAttribute}
+                        options={options}
+                        placeHolder={placeHolder}
+                        classification={CLASSIFIED_COLORS}
+                    />
                     }
 
                     {formOptions.showLegend ?
