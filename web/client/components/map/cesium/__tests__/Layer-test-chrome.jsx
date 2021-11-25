@@ -743,7 +743,7 @@ describe('Cesium layer', () => {
         expect(layer.layer._tileProvider._resource._queryParameters["ms2-authkey"]).toBe("########-####-$$$$-####-###########");
 
     });
-    it("test wms noCors option", () => {
+    it("test wms tileDiscardPolicy none option", () => {
         const options = {
             type: "wms",
             visibility: true,
@@ -751,7 +751,7 @@ describe('Cesium layer', () => {
             group: "Meteo",
             format: "image/png",
             opacity: 1.0,
-            noCors: true,
+            tileDiscardPolicy: "none",
             url: "http://sample.server/geoserver/wms"
         };
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
@@ -770,6 +770,37 @@ describe('Cesium layer', () => {
         // expect(map.imageryLayers.length).toBe(1);
         expect(layer.layer._tileProvider._resource._url).toExist();
         expect(layer.layer._tileProvider._tileDiscardPolicy).toNotExist();
+    });
+    it("test wms custom tileDiscardPolicy option", () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            tileDiscardPolicy: {
+                isReady: () => true,
+                shouldDiscardImage: () => false
+            },
+            url: "http://sample.server/geoserver/wms"
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }
+        ]);
+
+        let layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={options}
+            map={map}/>, document.getElementById("container"));
+        expect(layer).toExist();
+        // expect(map.imageryLayers.length).toBe(1);
+        expect(layer.layer._tileProvider._resource._url).toExist();
+        expect(layer.layer._tileProvider._tileDiscardPolicy).toExist();
     });
     it('test wmts security token', () => {
         const options = {

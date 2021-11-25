@@ -104,7 +104,9 @@ function wmsToCesiumOptions(options) {
         }),
         // #7516 this helps Cesium to use CORS requests in a proper way, even when headers are not
         // present in the Resource
-        tileDiscardPolicy: options.noCors ? undefined : new Cesium.NeverTileDiscardPolicy(),
+        tileDiscardPolicy: options.tileDiscardPolicy === "none" ?
+            undefined :
+            (options.tileDiscardPolicy ?? new Cesium.NeverTileDiscardPolicy()),
         credit,
         subdomains: urls,
         layers: options.name,

@@ -1084,7 +1084,7 @@ Openlayers:
 
 Cesium:
 
-- `noCors` forces a tiled layer (singleTile: false) to be loaded as simple images, instead of using ajax (may be useful if the WMS services has issues with CORS)
+- `tileDiscardPolicy` sets a policy for discarding (missing/broken) tiles (https://cesium.com/learn/cesiumjs/ref-doc/TileDiscardPolicy.html). If it is not specified the NeverTileDiscardPolicy will be used. If "none" is specified, no policy at all will be set.
 
 MapStore specific:
 
