@@ -67,7 +67,14 @@ export default ({
             </Row>
             <Row xs={12}>
                 <Col xs={12}>
-                    { classificationAttribute && <ThemaClassesEditor classification={classification}  onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}/> }
+                    { classificationAttribute &&
+                        <ThemaClassesEditor
+                            noEmptyIndex
+                            classification={classification}
+                            onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
+                            allowEmpty={false}
+                        />
+                    }
                 </Col>
             </Row>
         </ResizableModal>

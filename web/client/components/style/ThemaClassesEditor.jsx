@@ -23,13 +23,15 @@ class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
         onUpdateClasses: PropTypes.func,
-        className: PropTypes.string
+        className: PropTypes.string,
+        allowEmpty: PropTypes.bool
     };
 
     static defaultProps = {
         classification: [],
         onUpdateClasses: () => {},
-        className: ""
+        className: "",
+        allowEmpty: true
     };
 
     renderFieldByClassification = (classItem, index) => {
@@ -96,7 +98,7 @@ class ThemaClassesEditor extends React.Component {
                     {[
                         {labelId: 'styleeditor.addRuleBefore', glyph: 'add-row-before', value: "before"},
                         {labelId: 'styleeditor.addRuleAfter', glyph: 'add-row-after', value: "after"},
-                        {labelId: 'styleeditor.remove', glyph: 'trash', value: "remove"}
+                        ...(!this.props.allowEmpty && !index ? [] : [{labelId: 'styleeditor.remove', glyph: 'trash', value: "remove"}])
                     ]
                         .map((option) => {
                             return  (

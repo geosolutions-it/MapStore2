@@ -57,7 +57,8 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
 
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
-    let classifications = data.map(d => d[classificationAttr]);
+    let classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
+    let colorCategories = autoColorOptions?.classification || [];
 
     switch (type) {
     case 'pie':
@@ -83,17 +84,6 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
 
         }
 
-        const colorCategories = {
-
-            "N Eng": "red",
-            "Mtn": "blue",
-            "S Atl": "pink",
-            "E N Cen": "yellow",
-            "W N Cen": "green"
-
-        };
-
-
         let classificationColors = classifications.map(item => {
 
             if (isNumber(item)) {
@@ -101,7 +91,8 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             } else if (moment(item, moment.ISO_8601, true).isValid()) {
                 return colorDate(item);
             }
-            return colorCategories[item] || defaultColorGenerator(1, autoColorOptions)[0];
+            const matchedColor = colorCategories.filter(colorCategory => colorCategory.value === item)[0];
+            return matchedColor ? matchedColor.color : defaultColorGenerator(1, autoColorOptions)[0];
         });
 
         const trace1 = {
@@ -110,8 +101,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             y: y,
             type,
             name: yAxisLabel || yDataKey,
-            marker: {color: classificationColors}
-
+            ...(classifications.length && classificationColors.length ? {marker: {color: classificationColors}} : {})
         };
 
         /*

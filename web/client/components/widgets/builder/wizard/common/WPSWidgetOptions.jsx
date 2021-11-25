@@ -43,7 +43,12 @@ const COLORS = [{
 }, {
     name: 'global.colors.custom',
     schema: 'sequencial',
-    options: {base: 0, range: 0},
+    options: {
+        base: 190,
+        range: 0,
+        s: 0.95,
+        v: 0.63
+    },
     ramp: "#fff",
     custom: true
 }];
