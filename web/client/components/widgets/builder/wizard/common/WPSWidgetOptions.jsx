@@ -48,7 +48,7 @@ const COLORS = [{
     custom: true
 }];
 
-const CLASSIFIED_COLORS = [{title: '', color: '#fff7ec', type: 'Polygon', unique: ''}];
+const CLASSIFIED_COLORS = [{title: '', color: '#ffffff', type: 'Polygon', unique: ''}];
 
 
 const getColorRangeItems = (type) => {
@@ -78,6 +78,7 @@ export default ({
 
     const [customColor, setCustomColor] = useState(false);
     const [classificationAttribute, setClassificationAttribute] = useState();
+    const [classification, setClassification] = useState(CLASSIFIED_COLORS);
 
     return (
         <Row>
@@ -167,12 +168,15 @@ export default ({
                         modalClassName="chart-color-class-modal"
                         show={customColor}
                         onClose={() => setCustomColor(false)}
-                        onSaveStyle={() => { classificationAttribute && onChange("options.classificationAttribute", classificationAttribute); }}
+                        onSaveStyle={() => { classificationAttribute && classificationAttribute?.value && onChange("options.classificationAttribute", classificationAttribute?.value); }}
                         onChange={(value) => setClassificationAttribute(value)}
                         classificationAttribute={classificationAttribute}
+                        onUpdateClasses={(newClassification) => {
+                            setClassification(newClassification);
+                        }}
                         options={options}
                         placeHolder={placeHolder}
-                        classification={CLASSIFIED_COLORS}
+                        classification={classification}
                     />
                     }
 

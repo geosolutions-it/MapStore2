@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {Col, Form, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Row, Col, Form, FormGroup, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
 
 import Message from '../../../../../components/I18N/Message';
@@ -15,7 +15,18 @@ import Portal from '../../../../../components/misc/Portal';
 import ResizableModal from '../../../../../components/misc/ResizableModal';
 import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 
-export default ({ modalClassName, show, onClose, onSaveStyle, onChange, classificationAttribute, options, placeHolder, classification }) => (
+export default ({
+    modalClassName,
+    show,
+    onClose,
+    onSaveStyle,
+    onChange,
+    classificationAttribute,
+    onUpdateClasses,
+    options,
+    placeHolder,
+    classification
+}) => (
     <Portal>
         <ResizableModal
             modalClassName={modalClassName}
@@ -35,7 +46,7 @@ export default ({ modalClassName, show, onClose, onSaveStyle, onChange, classifi
                     onClick: () => onSaveStyle()
                 }
             ]}>
-            <Col xs={12}>
+            <Row xs={12}>
                 <Form id="chart-color-class-form" horizontal>
                     <FormGroup controlId="classificationAttribute" className="chart-color-class-form-group">
                         <Col componentClass={ControlLabel} xs={6}>
@@ -52,9 +63,13 @@ export default ({ modalClassName, show, onClose, onSaveStyle, onChange, classifi
                             />
                         </Col>
                     </FormGroup>
-                    { classificationAttribute && <ThemaClassesEditor classification={classification} /> }
                 </Form>
-            </Col>
+            </Row>
+            <Row xs={12}>
+                <Col xs={12}>
+                    { classificationAttribute && <ThemaClassesEditor classification={classification}  onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}/> }
+                </Col>
+            </Row>
         </ResizableModal>
     </Portal>
 );

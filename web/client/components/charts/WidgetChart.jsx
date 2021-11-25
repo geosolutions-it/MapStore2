@@ -10,7 +10,7 @@ import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
-import { isNumber, isDate } from 'lodash';
+import { isNumber } from 'lodash';
 import moment from 'moment';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
@@ -85,10 +85,11 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
 
         const colorCategories = {
 
-            "Production Water Slick": "red",
-            "Anomalous Asset Slick": "blue",
-            "SENTINEL-1A": "pink",
-            "SENTINEL-1B": "yellow"
+            "N Eng": "red",
+            "Mtn": "blue",
+            "S Atl": "pink",
+            "E N Cen": "yellow",
+            "W N Cen": "green"
 
         };
 
@@ -101,7 +102,6 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
                 return colorDate(item);
             }
             return colorCategories[item];
-
         });
 
         const trace1 = {
