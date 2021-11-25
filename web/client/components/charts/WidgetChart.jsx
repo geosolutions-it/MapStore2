@@ -53,7 +53,7 @@ const colorDate = value => {
 };
 
 
-function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel }) {
+function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel, autoColorOptions}) {
 
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
@@ -101,7 +101,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             } else if (moment(item, moment.ISO_8601, true).isValid()) {
                 return colorDate(item);
             }
-            return colorCategories[item];
+            return colorCategories[item] || defaultColorGenerator(1, autoColorOptions)[0];
         });
 
         const trace1 = {
@@ -199,7 +199,8 @@ export const toPlotly = (props) => {
         height,
         width,
         legend,
-        classifications
+        classifications,
+        autoColorOptions = COLOR_DEFAULTS
     } = props;
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
@@ -219,7 +220,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel});
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions });
             return  allData;
         }),
         config: {

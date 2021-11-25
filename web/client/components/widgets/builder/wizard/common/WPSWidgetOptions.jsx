@@ -61,6 +61,18 @@ const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type ||
 
 const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
 
+const getAutoColorOptionsClassification = (classification) => (
+    classification.reduce((acc, curr) => ([
+        ...acc,
+        {
+            color: curr.color,
+            value: curr.unique
+        }
+    ]
+    ), [])
+);
+
+
 export default ({
     hasAggregateProcess,
     data = { options: {} },
@@ -76,6 +88,7 @@ export default ({
     aggregationOptions = [],
     sampleChart}) => {
 
+    const [showModal, setShowModal] = useState(false);
     const [customColor, setCustomColor] = useState(false);
     const [classificationAttribute, setClassificationAttribute] = useState();
     const [classification, setClassification] = useState(CLASSIFIED_COLORS);
@@ -159,6 +172,7 @@ export default ({
                                     onChange={v => {
                                         onChange("autoColorOptions", {...v.options, name: v.name});
                                         setCustomColor(v?.custom);
+                                        setShowModal(true);
                                     }}/>
                             </Col>
                         </FormGroup> : null}
@@ -166,9 +180,18 @@ export default ({
                     { customColor &&
                     <ColorClassModal
                         modalClassName="chart-color-class-modal"
-                        show={customColor}
-                        onClose={() => setCustomColor(false)}
-                        onSaveStyle={() => { classificationAttribute && classificationAttribute?.value && onChange("options.classificationAttribute", classificationAttribute?.value); }}
+                        show={showModal}
+                        onClose={() => {
+                            setShowModal(false);
+                            setCustomColor(false);
+                        }}
+                        onSaveStyle={() => {
+                            setShowModal(false);
+                            if (classificationAttribute && classificationAttribute?.value) {
+                                onChange("options.classificationAttribute", classificationAttribute?.value);
+                                onChange("autoColorOptions.classification", getAutoColorOptionsClassification(classification));
+                            }
+                        }}
                         onChange={(value) => setClassificationAttribute(value)}
                         classificationAttribute={classificationAttribute}
                         onUpdateClasses={(newClassification) => {
