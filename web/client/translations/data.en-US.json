@@ -2824,6 +2824,10 @@
             "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
             "title": "Share Tool"
           },
+          "StreetView": {
+            "title": "Street View",
+            "description": "Street view tool for browsing Google street view images from the map"
+          },
           "StyleEditor": {
             "description": "Layer's style editor",
             "title": "Style Editor"
@@ -3382,6 +3386,17 @@
           "successRemoved": "User session removed",
           "remove": "Reset User Session",
           "confirmRemove": "Are you sure you want to restore the default configuration?"
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Street view tool for browsing Google street view images from the map",
+          "tooltip": "Open street view tool",
+          "emptyTitle": "Street View",
+          "emptyDescription": "Click on the map to start browsing the images of street view",
+          "messages": {
+            "noDataForPosition": "no street-view data for this position",
+            "unknownError": "unknown error, see console"
+          }
         }
     }
 }

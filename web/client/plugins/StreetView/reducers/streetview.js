@@ -1,5 +1,5 @@
 
-import { CONFIGURE, SET_LOCATION, SET_POV, API_LOADING, API_LOADED, RESET } from '../actions/streetview';
+import { CONFIGURE, SET_LOCATION, SET_POV, API_LOADING, API_LOADED, RESET } from '../actions/streetView';
 
 const INITIAL_STATE = {};
 export default function streetView(state = INITIAL_STATE, action) {

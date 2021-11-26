@@ -1,20 +1,20 @@
 
 import Rx from 'rxjs';
 
-import { RESET_CONTROLS, TOGGLE_CONTROL } from "../../actions/controls";
-import { info, error } from '../../actions/notifications';
+import { RESET_CONTROLS, TOGGLE_CONTROL } from "../../../actions/controls";
+import { info, error } from '../../../actions/notifications';
 
-import { updateAdditionalLayer, removeAdditionalLayer } from '../../actions/additionallayers';
-import { CLICK_ON_MAP } from '../../actions/map';
+import { updateAdditionalLayer, removeAdditionalLayer } from '../../../actions/additionallayers';
+import { CLICK_ON_MAP } from '../../../actions/map';
 
 
-import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from '../../actions/mapInfo';
-import { mapInfoEnabledSelector } from "../../selectors/mapInfo";
+import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from '../../../actions/mapInfo';
+import { mapInfoEnabledSelector } from "../../../selectors/mapInfo";
 
-import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "./constants";
-import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "./selectors";
-import { setLocation, SET_LOCATION, SET_POV } from './actions/streetview';
-import { getLocation } from './api/gMaps';
+import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "../constants";
+import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "../selectors/streetView";
+import { setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
+import { getLocation } from '../api/gMaps';
 
 const getNavigationArrowSVG = function({rotation = 0}) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">
@@ -137,12 +137,12 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
                 .catch((e) => {
                     if (e.code === "ZERO_RESULTS") {
                         return Rx.Observable.of(
-                            info({title: "street view", message: "no street-view data for this position"}) // LOCALIZE
+                            info({title: "streetView.title", message: "streetView.messages.noDataForPosition"}) // LOCALIZE
                         );
                     }
                     console.error(e); //
                     return Rx.Observable.of(
-                        error({title: "street view error", message: "unknown error, see console"})
+                        error({title: "streetView.title", message: "streetView.messages.unknownError"})
                     );
                 });
         });

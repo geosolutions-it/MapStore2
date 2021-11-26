@@ -2,10 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { setLocation, setPov } from '../actions/streetview';
+import { setLocation, setPov } from '../actions/streetView';
 
 import GStreetView from '../components/GStreetView';
-import { apiLoadedSelector, locationSelector } from '../selectors';
+import { apiLoadedSelector, locationSelector } from '../selectors/streetView';
 import { getAPI } from '../api/gMaps';
 
 const GStreetViewPanel = connect(createStructuredSelector({

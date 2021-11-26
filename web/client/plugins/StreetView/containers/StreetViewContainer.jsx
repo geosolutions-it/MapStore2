@@ -7,9 +7,9 @@ import Message from '../../../components/I18N/Message';
 import Dialog from "../../../components/misc/Dialog";
 import {Resizable} from 'react-resizable';
 
-import { enabledSelector, layoutSelector } from '../selectors';
+import { enabledSelector } from '../selectors/streetView';
 import GStreetViewPanel from './GStreetViewPanel';
-import { toggleStreetView } from '../actions/streetview';
+import { toggleStreetView } from '../actions/streetView';
 
 
 /**
@@ -74,7 +74,6 @@ function Panel({enabled, onClose = () => {}}) {
 }
 
 const SVPanel = connect(createStructuredSelector({
-    mapLayout: layoutSelector,
     enabled: enabledSelector
 }), {
     onClose: () => toggleStreetView()

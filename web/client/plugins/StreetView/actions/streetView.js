@@ -2,7 +2,7 @@ import { toggleControl } from "../../../actions/controls";
 
 import { loadGoogleMapsAPI } from "../api/gMaps";
 import { CONTROL_NAME } from "../constants";
-import { apiLoadedSelector } from "../selectors";
+import { apiLoadedSelector, googleAPIKeySelector } from "../selectors/streetView";
 
 
 export const TOGGLE_STREET_VIEW = "STREET_VIEW:TOGGLE";
@@ -29,7 +29,8 @@ export function toggleStreetView() {
     return (dispatch, getState) => {
         if (!apiLoadedSelector(getState())) {
             setAPILoading(true);
-            loadGoogleMapsAPI().then(() => {
+            const apiKey = googleAPIKeySelector(getState());
+            loadGoogleMapsAPI({apiKey}).then(() => {
                 setAPILoading(false);
                 dispatch(gMapsAPILoaded());
                 dispatch(toggleControl(CONTROL_NAME, "enabled"));

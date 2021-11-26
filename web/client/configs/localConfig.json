@@ -281,7 +281,7 @@
             },
             "FeedbackMask"
         ],
-        "desktop": ["Details", "StreetView",
+        "desktop": ["Details",
           {
             "name": "Map",
             "cfg": {

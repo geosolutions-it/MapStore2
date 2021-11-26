@@ -2810,6 +2810,10 @@
             "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
             "title": "Strumento di condivisione"
           },
+          "StreetView": {
+            "title": "Street View",
+            "description": "Strumento Street view, per visualizzare le immagini di Google Street View dalla mappa"
+          },
           "StyleEditor": {
             "description": "Editor degli stili dei layer",
             "title": "Editor degli Stili"
@@ -3367,6 +3371,17 @@
           "successRemoved": "Sessione utente cancellata",
           "remove": "Reset Sessione Utente",
           "confirmRemove": "Sei sicuro di voler ripristinare la configurazione di default?"
-        }
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Strumento Street view, per visualizzare le immagini di Google Street View dalla mappa",
+          "tooltip": "Apri Street View",
+          "emptyTitle": "Street View",
+          "emptyDescription": "Clicca sulla mappa per cominciare a visualizzare le immagini di Street View",
+          "messages": {
+            "noDataForPosition": "Non ci sono dati Street View per questa posizione",
+            "unknownError": "Errore sconosciuto"
+          }
+      }
     }
 }

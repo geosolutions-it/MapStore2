@@ -2809,6 +2809,10 @@
             "description": "Permite compartir el mapa de varias maneras (enlace, código QR, incrustar, redes sociales ...)",
             "title": "Compartir herramienta"
           },
+          "StreetView": {
+            "title": "Street View",
+          "description": "Herramienta para buscar imágenes de Google Street View desde el mapa"
+          },
           "StyleEditor": {
             "description": "Editor de estilo de capa",
             "title": "Editor de estilo"
@@ -3367,6 +3371,17 @@
           "successRemoved": "Sesión de usuario eliminada",
           "remove": "Restablecer sesión de usuario",
           "confirmRemove": "¿Está seguro de que desea restaurar la configuración predeterminada?"
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Herramienta para buscar imágenes de Google Street View desde el mapa",
+          "tooltip": "Abrir la herramienta Street View",
+          "emptyTitle": "Street View",
+          "emptyDescription": "Haga clic en el mapa para comenzar a navegar por las imágenes de Street View",
+          "messages": {
+            "noDataForPosition": "no hay datos de Street View para esta",
+            "unknownError": "error desconocido, ver consola"
+          }
         }
     }
 }

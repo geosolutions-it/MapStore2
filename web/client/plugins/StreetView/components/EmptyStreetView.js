@@ -1,7 +1,8 @@
 import React from 'react';
+import Message from '../../../components/I18N/Message';
 
 import EmptyView from '../../../components/misc/EmptyView';
 const EmptyStreetView = () => {
-    return <EmptyView iconFit={false} glyph="road" title="Street View" description="Click on the map to start browsing the images of street view" />;
+    return <EmptyView iconFit={false} glyph="road" title={<Message msgId="streetView.emptyTitle"/>} description={<Message msgId="streetView.emptyDescription"/>} />;
 };
 export default EmptyStreetView;
