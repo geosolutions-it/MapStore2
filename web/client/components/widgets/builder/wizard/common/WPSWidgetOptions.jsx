@@ -15,6 +15,14 @@ import StepHeader from '../../../../misc/wizard/StepHeader';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import ChartAdvancedOptions from './ChartAdvancedOptions';
 import ColorClassModal from '../chart/ColorClassModal';
+import { defaultColorGenerator } from '../../../../charts/WidgetChart';
+
+const DEFAULT_CUSTOM_COLOR_OPTIONS = {
+    base: 190,
+    range: 0,
+    s: 0.95,
+    v: 0.63
+};
 
 const COLORS = [{
     name: 'global.colors.random',
@@ -43,12 +51,7 @@ const COLORS = [{
 }, {
     name: 'global.colors.custom',
     schema: 'sequencial',
-    options: {
-        base: 190,
-        range: 0,
-        s: 0.95,
-        v: 0.63
-    },
+    options: DEFAULT_CUSTOM_COLOR_OPTIONS,
     ramp: "#fff",
     custom: true
 }];
@@ -97,6 +100,7 @@ export default ({
     const [customColor, setCustomColor] = useState(false);
     const [classificationAttribute, setClassificationAttribute] = useState();
     const [classification, setClassification] = useState(CLASSIFIED_COLORS);
+    const [defaultCustomColor, setDefaultCustomColor] = useState(defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1');
 
     return (
         <Row>
@@ -188,10 +192,13 @@ export default ({
                         show={showModal}
                         onClose={() => {
                             setShowModal(false);
-                            setCustomColor(false);
+                            onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
+                            onChange("options.classificationAttribute", false);
+                            onChange("autoColorOptions.classification", getAutoColorOptionsClassification([]));
                         }}
                         onSaveStyle={() => {
                             setShowModal(false);
+                            onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
                             if (classificationAttribute && classificationAttribute?.value) {
                                 onChange("options.classificationAttribute", classificationAttribute?.value);
                                 onChange("autoColorOptions.classification", getAutoColorOptionsClassification(classification));
@@ -205,6 +212,8 @@ export default ({
                         options={options}
                         placeHolder={placeHolder}
                         classification={classification}
+                        defaultCustomColor={defaultCustomColor}
+                        onChangeColor={(color) => setDefaultCustomColor(color)}
                     />
                     }
 

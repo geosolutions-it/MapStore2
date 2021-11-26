@@ -53,7 +53,7 @@ const colorDate = value => {
 };
 
 
-function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel, autoColorOptions}) {
+function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel, autoColorOptions, customColorEnabled }) {
 
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
@@ -64,6 +64,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
     case 'pie':
 
         return {
+            type,
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
             values: y,
             labels: x
@@ -85,14 +86,17 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
         }
 
         let classificationColors = classifications.map(item => {
-
             if (isNumber(item)) {
                 return colorNumbers(item);
             } else if (moment(item, moment.ISO_8601, true).isValid()) {
                 return colorDate(item);
             }
             const matchedColor = colorCategories.filter(colorCategory => colorCategory.value === item)[0];
-            return matchedColor ? matchedColor.color : defaultColorGenerator(1, autoColorOptions)[0];
+            return matchedColor ?
+                matchedColor.color :
+                customColorEnabled ?
+                    autoColorOptions.classDefaultColor :
+                    defaultColorGenerator(1, autoColorOptions)[0];
         });
 
         const trace1 = {
@@ -141,16 +145,16 @@ function getMargins({ type, isModeBarVisible}) {
     }
 }
 
-function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS} ) {
+function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled } ) {
     switch (type) {
     case 'pie':
         return {
-            colorway: defaultColorGenerator(data.length, autoColorOptions)
+            colorway: customColorEnabled && [autoColorOptions.classDefaultColor] || defaultColorGenerator(data.length, autoColorOptions)
         };
     // line / bar
     default :
         return {
-            colorway: defaultColorGenerator(series.length, autoColorOptions),
+            colorway: customColorEnabled && [autoColorOptions.classDefaultColor] || defaultColorGenerator(series.length, autoColorOptions),
             yaxis: {
                 type: yAxisOpts?.type,
                 automargin: true,
@@ -195,13 +199,14 @@ export const toPlotly = (props) => {
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
     const classificationAttr = classifications?.dataKey;
+    const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     return {
         layout: {
             showlegend: legend,
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
-            ...getLayoutOptions({ ...props }),
+            ...getLayoutOptions({ ...props, customColorEnabled }),
             margin: getMargins({ ...props, isModeBarVisible}),
             autosize: false,
             height,
@@ -210,7 +215,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled });
             return  allData;
         }),
         config: {

@@ -10,6 +10,7 @@ import React from 'react';
 import {Row, Col, Form, FormGroup, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
 
+import ColorSelector from '../../../../style/ColorSelector';
 import Message from '../../../../../components/I18N/Message';
 import Portal from '../../../../../components/misc/Portal';
 import ResizableModal from '../../../../../components/misc/ResizableModal';
@@ -25,7 +26,9 @@ export default ({
     onUpdateClasses,
     options,
     placeHolder,
-    classification
+    classification,
+    defaultCustomColor,
+    onChangeColor
 }) => (
     <Portal>
         <ResizableModal
@@ -46,6 +49,20 @@ export default ({
                     onClick: () => onSaveStyle()
                 }
             ]}>
+            <Row xs={12}>
+                <Col componentClass={ControlLabel} xs={6}>
+                    <Message msgId={classificationAttribute ? "Default Color" : "Color"} />
+                </Col>
+                <Col xs={6}>
+                    <ColorSelector
+                        key={0}
+                        color={defaultCustomColor}
+                        disableAlpha
+                        format="hex"
+                        onChangeColor={(color) => onChangeColor(color)}
+                    />
+                </Col>
+            </Row>
             <Row xs={12}>
                 <Form id="chart-color-class-form" horizontal>
                     <FormGroup controlId="classificationAttribute" className="chart-color-class-form-group">
