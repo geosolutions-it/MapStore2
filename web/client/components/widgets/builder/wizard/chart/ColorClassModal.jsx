@@ -41,7 +41,7 @@ export default ({
                     onClick: () => onClose()
                 },
                 {
-                    text: <Message msgId="ok" />,
+                    text: <Message msgId="confirm" />,
                     bsSize: 'sm',
                     onClick: () => onSaveStyle()
                 }
