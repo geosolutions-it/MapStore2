@@ -26,7 +26,7 @@ function Panel({enabled, onClose = () => {}}) {
     return (<Dialog bodyClassName={"street-view-window-body"} draggable
         style={{
             zIndex: 10000,
-
+            position: "absolute",
             left: "17%",
             top: "50px",
             margin: 0,

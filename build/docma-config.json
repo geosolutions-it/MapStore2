@@ -293,6 +293,7 @@
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/Settings.jsx",
                 "web/client/plugins/Share.jsx",
+                "web/client/plugins/StreetView/StreetView.jsx",
                 "web/client/plugins/StyleEditor.jsx",
                 "web/client/plugins/Swipe.jsx",
                 "web/client/plugins/ThematicLayer.jsx",
