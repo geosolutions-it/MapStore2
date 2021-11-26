@@ -1439,7 +1439,7 @@
             },
            "autoSetVisibilityLimits": {
                 "label": "Set Visibility Limit",
-                "tooltip": "Automatically set visibility limits of the layer from capabilities"
+                "tooltip": "Automatically applies the visibility limits suggested by the server"
            }
         },
         "uploader": {
