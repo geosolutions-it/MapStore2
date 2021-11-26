@@ -1437,6 +1437,10 @@
                     "helpText": "Usa il segnaposto ${searchText} nel modello per inserire la stringa di ricerca"
                 },
                 "error": "Sintassi xml non valida"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Imposta limite di visibilità",
+                "tooltip": "Applica automaticamente i limiti di visibilità suggeriti dal server"
             }
         },
         "uploader": {

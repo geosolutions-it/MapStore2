@@ -47,6 +47,8 @@ describe('VisibilityLimitsForm', () => {
             '1 : 37795',
             'layerProperties.visibilityLimits.scale'
         ]);
+        const message = document.querySelector('.alert-success');
+        expect(message.textContent).toBe('layerProperties.visibilityLimits.serverValuesUpdate');
     });
     it('should render maxResolution and minResolution labels as resolution', () => {
         const layer = {

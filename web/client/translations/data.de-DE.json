@@ -1474,6 +1474,10 @@
                     "helpText": "Verwenden Sie eine Vorlage mit dem Platzhalter ${searchText}, um die Suchzeichenfolge zu erfassen"
                 },
               "error": "Ungültige XML-Syntax"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Sichtbarkeitslimit festlegen",
+                "tooltip": "Wendet automatisch die vom Server vorgeschlagenen Sichtbarkeitsgrenzen an"
             }
         },
         "uploader": {

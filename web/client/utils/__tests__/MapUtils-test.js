@@ -38,7 +38,8 @@ import {
     mergeMapConfigs,
     addRootParentGroup,
     mapUpdated,
-    getZoomFromResolution
+    getZoomFromResolution,
+    getResolutionObject
 } from '../MapUtils';
 
 const POINT = "Point";
@@ -3115,5 +3116,16 @@ describe('Test the MapUtils', () => {
     it('addRootParentGroup', () => {
         const resolution = 1000; // ~zoom 7 in Web Mercator
         expect(getZoomFromResolution(resolution)).toBe(7);
+    });
+    describe("getResolutionObject tests", () => {
+        const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
+        it('getResolutionObject for visibility limit type scale', ()=> {
+            expect(getResolutionObject(9028, 'scale', {projection: "EPSG:900913", resolutions}))
+                .toEqual({ resolution: 2.3886583333333333, scale: 9028, zoom: 7 });
+        });
+        it('getResolutionObject for visibility limit type other than scale', ()=> {
+            expect(getResolutionObject(9028, 'scale1', {projection: "EPSG:900913", resolutions}))
+                .toEqual({ resolution: 9028, scale: 34121574.80314961, zoom: 4 });
+        });
     });
 });
