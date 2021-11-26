@@ -1,0 +1,81 @@
+import React from 'react';
+import {connect} from 'react-redux';
+import {Glyphicon} from 'react-bootstrap';
+import { createStructuredSelector } from 'reselect';
+
+import { setControlProperty } from '../../../actions/controls';
+import Message from '../../../components/I18N/Message';
+import Dialog from "../../../components/misc/Dialog";
+import {Resizable} from 'react-resizable';
+
+import { enabledSelector, layoutSelector } from '../selectors';
+import { CONTROL_NAME } from '../constants';
+import GStreetViewPanel from './GStreetViewPanel';
+
+
+/**
+ * Main panel of StreetView Plugin.
+ * @param {*} param0
+ * @returns
+ */
+function Panel({enabled, setEnabled = () => {}}) {
+    const margin = 10;
+    const [size, setSize] = React.useState({width: 400, height: 200});
+    return (<Dialog bodyClassName={"street-view-window-body"} draggable
+        style={{
+            zIndex: 10000,
+            visibility: enabled ? "visible" : "hidden",
+            left: "17%",
+            top: "50px",
+            margin: 0,
+            width: size.width}}>
+        <span
+            role="header"
+            style={{ display: "flex", justifyContent: "space-between" }}
+        >
+            <span>
+                <Message msgId={"streetView.title"} />
+            </span>
+            <button onClick={() => setEnabled(false)} className="close">
+                <Glyphicon glyph="1-close" />
+            </button>
+        </span>
+        <div
+            role="body"
+            style={ { height: size.height }}
+        >
+            <Resizable
+                width={size.width}
+                height={size.height}
+                onResize={(event, {size: newSize}) => {setSize(newSize);}}
+            >
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: size.width,
+                    height: size.height
+                }}>
+                    <GStreetViewPanel
+                        enabled={enabled}
+                        size={size}
+                        style={{
+                            flex: 1,
+                            margin: margin,
+                            height: `calc(100% - ${2 * margin}px)`,
+                            width: `calc(100% - ${2 * margin}px)`
+                        }}/>
+                </div>
+            </Resizable>
+        </div>
+    </Dialog>);
+
+}
+
+const SVPanel = connect(createStructuredSelector({
+    mapLayout: layoutSelector,
+    enabled: enabledSelector
+}), {
+    setEnabled: (value) => setControlProperty(CONTROL_NAME, "enabled", value)
+})(Panel);
+
+export default SVPanel;
