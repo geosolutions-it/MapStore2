@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { setLocation, setPov } from '../actions';
+import { setLocation, setPov } from '../actions/streetview';
 
 import GStreetView from '../components/GStreetView';
 import { apiLoadedSelector, locationSelector } from '../selectors';

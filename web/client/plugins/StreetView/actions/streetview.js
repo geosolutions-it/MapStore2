@@ -1,8 +1,8 @@
-import { toggleControl } from "../../actions/controls";
+import { toggleControl } from "../../../actions/controls";
 
-import { loadGoogleMapsAPI } from "./api/gMaps";
-import { CONTROL_NAME } from "./constants";
-import { apiLoadedSelector } from "./selectors";
+import { loadGoogleMapsAPI } from "../api/gMaps";
+import { CONTROL_NAME } from "../constants";
+import { apiLoadedSelector } from "../selectors";
 
 
 export const TOGGLE_STREET_VIEW = "STREET_VIEW:TOGGLE";
@@ -11,6 +11,8 @@ export const API_LOADED = "STREET_VIEW:API_LOADED";
 
 export const SET_LOCATION = "STREET_VIEW:SET_LOCATION";
 export const SET_POV = "STREET_VIEW:SET_POV";
+export const CONFIGURE = "STREET_VIEW:CONFIGURE";
+export const RESET = "STREET_VIEW:RESET";
 
 export function setAPILoading(loading) {
     return {
@@ -51,5 +53,24 @@ export function setPov(pov) {
     return {
         type: SET_POV,
         pov
+    };
+}
+/**
+ * Sets the plugin configuration.
+ * @param {object} configuration . Can contain :
+ * @param {string} configuration.googleAPIKey the API key to use.
+ */
+export function configure(configuration) {
+    return {
+        type: CONFIGURE,
+        configuration
+    };
+}
+/**
+ * Resets the plugin on unmount
+ */
+export function reset() {
+    return {
+        type: RESET
     };
 }

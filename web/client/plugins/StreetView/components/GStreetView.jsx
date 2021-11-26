@@ -1,6 +1,8 @@
 import { isEqual } from "lodash";
 import React, { useRef, useState, useEffect } from "react";
 import { googleToMapStoreLocation } from "../googleMapsUtils";
+import EmptyStreetView from './EmptyStreetView';
+
 
 const registerEvents = (panorama, {location, setLocation, setPov}) => {
     const handles = [];
@@ -36,17 +38,23 @@ const GStreetViewPanel = (props) => {
     const [panorama, setPanorama] = useState();
     // initialize components
     useEffect(() => {
-        if (google) {
-            setPanorama(new google.maps.StreetViewPanorama(
+        if (google && location && !panorama) {
+            console.log("New panorama instance created. This is billed"); // this is billed.
+            const streetViewPanorama = new google.maps.StreetViewPanorama(
                 divRef.current,
                 {
                     position,
                     pov,
                     zoom: 1
                 }
-            ));
+            );
+            // first panorama initialization.
+            if (location.pano) {
+                streetViewPanorama.setPano(location.pano);
+            }
+            setPanorama(streetViewPanorama);
         }
-    }, [google]);
+    }, [google, location, panorama]);
 
     // register and unregister events
     const [handles, setHandles] = useState();
@@ -56,20 +64,23 @@ const GStreetViewPanel = (props) => {
         }
         return unregisterEvents(panorama, handles);
     }, [panorama]);
-
+    // handle resize events to resize the panorama
     useEffect(() => {
         if (google) {
             google.maps.event.trigger(panorama, 'resize');
         }
     }, [size]);
+    // update panorama on panorama change
     useEffect(() => {
         if (panorama && location.pano) {
             panorama.setPano(location.pano);
         }
     }, [location?.pano]);
-    return (
-        <div className={className} style={style} ref={divRef}></div>
-    );
+    return (<>
+        <div className={className} style={{display: !panorama ? "block" : "none", ...style}} ><EmptyStreetView /></div>
+        <div className={className} style={{display: panorama ? "block" : "none", ...style}} ref={divRef}></div>
+    </>);
+
 
 };
 

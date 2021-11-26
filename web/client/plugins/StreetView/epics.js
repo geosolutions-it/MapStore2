@@ -13,25 +13,24 @@ import { mapInfoEnabledSelector } from "../../selectors/mapInfo";
 
 import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "./constants";
 import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "./selectors";
-import { setLocation, SET_LOCATION, SET_POV } from './actions';
+import { setLocation, SET_LOCATION, SET_POV } from './actions/streetview';
 import { getLocation } from './api/gMaps';
 
 const getNavigationArrowSVG = function({rotation = 0}) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">
 		<g transform="translate(50,50) scale(2)">
-            <circle style="stroke: #228D4F; stroke-width: 2; fill: #5bA640; fill-opacity:0.6; opacity: 1;" vector-effect="non-scaling-stroke" cx="0" cy="0" r="13"/>
+            <circle style="stroke: #a5ff91; stroke-width: 2; fill: #5bA640; fill-opacity:0.6; opacity: 1;" vector-effect="non-scaling-stroke" cx="0" cy="0" r="13"/>
         </g>
         <g transform="translate(50,50) scale(2) rotate(${rotation})">
-            <polygon style="stroke: #228D4F; stroke-width: 2; fill: #228D4F; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke" points="0,-12 5,-5 0,-8 -5,-5 "/>
+            <polygon style="stroke: #a5ff91; stroke-width: 2; fill: #228D4F; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke" points="0,-12 5,-5 0,-8 -5,-5 "/>
         </g>
         <g transform="translate(50,50) translate(0,-5) scale(1.5)">
-            <circle style="stroke: #3100aa; stroke-width: 2; fill: #0000FF; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke" cx="0" cy="0" r="3"/>
+            <circle style="stroke: #3100aa; stroke-width: 2; fill: #037dff; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke" cx="0" cy="0" r="3"/>
         </g>
         <g transform="translate(50,50) scale(2) translate(5,5) rotate(180)">
-            <path d="M0,0 a1,1 0 0,0 10,0" style="stroke: #3100aa; stroke-width: 2; fill: #0000FF; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke"/>
+            <path d="M0,0 a1,1 0 0,0 10,0" style="stroke: #3100aa; stroke-width: 2; fill: #037dff; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke"/>
         </g>
-scale(1)
-    </svg>`;
+</svg>`;
 };
 
 /**
@@ -181,11 +180,12 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
             }]
         };
     };
-    return Rx.Observable
-        .merge(
-            action$.ofType(SET_LOCATION).map(() => locationToFeature(locationSelector(getState(), povSelector(getState())))),
-            action$.ofType(SET_POV).map(() => locationToFeature(locationSelector(getState()), povSelector(getState())))
-        )
+    return action$.ofType(SET_LOCATION, SET_POV).map(() => {
+        const state = getState();
+        const location = locationSelector(state);
+        const pov = povSelector(state);
+        return locationToFeature(location, pov);
+    })
         .map((feature) => {
             const options = getStreetViewMarkerLayer(getState());
             return updateAdditionalLayer(

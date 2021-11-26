@@ -1,3 +1,4 @@
+/* css for react-resizable */
 .street-view-window-body .react-resizable-handle {
         position: absolute;
         width: 20px;
@@ -13,6 +14,9 @@
         cursor: se-resize;
     }
 .street-view-window-body .react-resizable {
-        position: relative;
-    }
-
+    position: relative;
+}
+/* override the standard justify */
+.street-view-window-body .empty-state-container .empty-state-main-view .empty-state-description {
+    text-align: center;
+}

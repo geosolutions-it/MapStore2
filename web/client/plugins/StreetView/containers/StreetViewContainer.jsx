@@ -1,16 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {Glyphicon} from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
-import { setControlProperty } from '../../../actions/controls';
 import Message from '../../../components/I18N/Message';
 import Dialog from "../../../components/misc/Dialog";
 import {Resizable} from 'react-resizable';
 
 import { enabledSelector, layoutSelector } from '../selectors';
-import { CONTROL_NAME } from '../constants';
 import GStreetViewPanel from './GStreetViewPanel';
+import { toggleStreetView } from '../actions/streetview';
 
 
 /**
@@ -18,13 +17,16 @@ import GStreetViewPanel from './GStreetViewPanel';
  * @param {*} param0
  * @returns
  */
-function Panel({enabled, setEnabled = () => {}}) {
+function Panel({enabled, onClose = () => {}}) {
     const margin = 10;
-    const [size, setSize] = React.useState({width: 400, height: 200});
+    const [size, setSize] = useState({width: 400, height: 300});
+    if (!enabled) {
+        return null;
+    }
     return (<Dialog bodyClassName={"street-view-window-body"} draggable
         style={{
             zIndex: 10000,
-            visibility: enabled ? "visible" : "hidden",
+
             left: "17%",
             top: "50px",
             margin: 0,
@@ -36,7 +38,7 @@ function Panel({enabled, setEnabled = () => {}}) {
             <span>
                 <Message msgId={"streetView.title"} />
             </span>
-            <button onClick={() => setEnabled(false)} className="close">
+            <button onClick={() => onClose()} className="close">
                 <Glyphicon glyph="1-close" />
             </button>
         </span>
@@ -75,7 +77,7 @@ const SVPanel = connect(createStructuredSelector({
     mapLayout: layoutSelector,
     enabled: enabledSelector
 }), {
-    setEnabled: (value) => setControlProperty(CONTROL_NAME, "enabled", value)
+    onClose: () => toggleStreetView()
 })(Panel);
 
 export default SVPanel;
