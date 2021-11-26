@@ -1439,7 +1439,7 @@
             },
             "autoSetVisibilityLimits": {
                 "label": "Establecer límite de visibilidad",
-                "tooltip": "Establezca automáticamente los límites de visibilidad de la capa a partir de las capacidades."
+                "tooltip": "Aplica automáticamente los límites de visibilidad sugeridos por el servidor"
             }
         },
         "uploader": {
