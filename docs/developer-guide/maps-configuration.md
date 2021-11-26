@@ -1082,6 +1082,10 @@ Openlayers:
 <ol:opacity xmlns:ol="http://openlayers.org/context">1</ol:opacity>
 ```
 
+Cesium:
+
+- `tileDiscardPolicy` sets a policy for discarding (missing/broken) tiles (https://cesium.com/learn/cesiumjs/ref-doc/TileDiscardPolicy.html). If it is not specified the NeverTileDiscardPolicy will be used. If "none" is specified, no policy at all will be set.
+
 MapStore specific:
 
 - `group` specifies to which group, among listed in "GroupList" element, the layer belongs to
