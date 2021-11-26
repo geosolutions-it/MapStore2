@@ -1477,7 +1477,7 @@
             },
             "autoSetVisibilityLimits": {
                 "label": "Sichtbarkeitslimit festlegen",
-                "tooltip": "Legen Sie automatisch Sichtbarkeitsgrenzen des Layers aus den Funktionen fest"
+                "tooltip": "Wendet automatisch die vom Server vorgeschlagenen Sichtbarkeitsgrenzen an"
             }
         },
         "uploader": {
