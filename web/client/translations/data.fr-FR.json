@@ -1437,6 +1437,10 @@
                     "helpText": "Utilisez un modèle avec un espace réservé ${searchText} pour capturer la chaîne de recherche"
                 },
                 "error": "Syntaxe xml non valide"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Définir la limite de visibilité",
+                "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
             }
         },
         "uploader": {
