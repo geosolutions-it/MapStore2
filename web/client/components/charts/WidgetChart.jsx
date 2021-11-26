@@ -7,7 +7,7 @@
  */
 
 import React, { Suspense } from 'react';
-import { sameToneRangeColors } from '../../utils/ColorUtils';
+import { sameToneRangeColors, hexToHsv } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
 import { isNumber } from 'lodash';
@@ -23,6 +23,19 @@ export const COLOR_DEFAULTS = {
 export const defaultColorGenerator = (total, colorOptions) => {
     const { base, range, ...opts } = colorOptions;
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
+};
+
+const customColorRampGenerator = (color, total) => {
+    const hsvDefaultColor = hexToHsv(color);
+    const defaultAutoColorOptions = {
+        base: color,
+        range: 30,
+        s: hsvDefaultColor[1],
+        v: hsvDefaultColor[2]
+    };
+    return hsvDefaultColor[0] > 80 && hsvDefaultColor[0] < 250 ?
+        defaultColorGenerator(total, defaultAutoColorOptions).reverse() :
+        defaultColorGenerator(total, defaultAutoColorOptions);
 };
 
 const colorNumbers = value => {
@@ -149,7 +162,9 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
     switch (type) {
     case 'pie':
         return {
-            colorway: customColorEnabled && [autoColorOptions.classDefaultColor] || defaultColorGenerator(data.length, autoColorOptions)
+            colorway: customColorEnabled && autoColorOptions.classDefaultColor ?
+                customColorRampGenerator(autoColorOptions.classDefaultColor, data.length) :
+                defaultColorGenerator(data.length, autoColorOptions)
         };
     // line / bar
     default :
