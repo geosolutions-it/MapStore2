@@ -1436,7 +1436,11 @@
                     "helpText": "Use template with ${searchText} placeholder to capture search string"
                 },
                 "error": "Invalid xml syntax"
-            }
+            },
+           "autoSetVisibilityLimits": {
+                "label": "Set Visibility Limit",
+                "tooltip": "Automatically applies the visibility limits suggested by the server"
+           }
         },
         "uploader": {
             "filename": "File Name",

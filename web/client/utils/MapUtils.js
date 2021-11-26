@@ -719,6 +719,32 @@ export const detectIdentifyInMapPopUp = (state)=>{
     return false;
 };
 
+/**
+ * Derive resolution object with scale and zoom info
+ * based on visibility limit's type
+ * @param value {number} computed with dots per map unit to get resolution
+ * @param type {string} of visibility limit ex. scale
+ * @param projection {string} map projection
+ * @param resolutions {array} map resolutions
+ * @return {object} resolution object
+ */
+export const getResolutionObject = (value, type, {projection, resolutions} = {}) => {
+    const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
+    if (type === 'scale') {
+        const resolution = value / dpu;
+        return {
+            resolution: resolution,
+            scale: value,
+            zoom: getZoomFromResolution(resolution, resolutions)
+        };
+    }
+    return {
+        resolution: value,
+        scale: value * dpu,
+        zoom: getZoomFromResolution(value, resolutions)
+    };
+};
+
 export default {
     createRegisterHooks,
     EXTENT_TO_ZOOM_HOOK,
@@ -758,5 +784,6 @@ export default {
     prepareMapObjectToCompare,
     updateObjectFieldKey,
     compareMapChanges,
-    clearHooks
+    clearHooks,
+    getResolutionObject
 };

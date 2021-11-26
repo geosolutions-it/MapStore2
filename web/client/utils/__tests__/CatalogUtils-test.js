@@ -128,6 +128,22 @@ describe('Test the CatalogUtils', () => {
         expect(layer.tileSize).toBe(512);
     });
 
+    it('wms layer with visibility limits', () => {
+        const records = CatalogUtils.getCatalogRecords('wms', {
+            records: [{
+                MaxScaleDenominator: "78271",
+                MinScaleDenominator: "1222"
+            }]
+        }, {
+            url: 'http://sample'
+        });
+        const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
+        expect(records.length).toBe(1);
+        const layer = CatalogUtils.recordToLayer(records[0], "wms", {map: {projection: "EPSG:900913", resolutions}});
+        expect(Math.ceil(layer.minResolution)).toBe(1);
+        expect(Math.ceil(layer.maxResolution)).toBe(21);
+    });
+
     it('wms with no ogcServiceReference.url', () => {
         const records = CatalogUtils.getCatalogRecords(
             'wms',
