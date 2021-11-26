@@ -1440,7 +1440,7 @@
             },
             "autoSetVisibilityLimits": {
                 "label": "Définir la limite de visibilité",
-                "tooltip": "Définir automatiquement les limites de visibilité de la couche à partir des capacités"
+                "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
             }
         },
         "uploader": {
