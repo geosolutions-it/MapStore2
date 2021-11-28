@@ -74,7 +74,7 @@ class SharePanel extends React.Component {
         getCount: PropTypes.func,
         closeGlyph: PropTypes.string,
         version: PropTypes.string,
-        bbox: PropTypes.object,
+        bbox: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
         advancedSettings: PropTypes.shape({
             bbox: PropTypes.bool,
             homeButton: PropTypes.bool,

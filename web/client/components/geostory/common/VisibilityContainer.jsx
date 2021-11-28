@@ -68,7 +68,7 @@ VisibilityContainer.propTypes = {
     debounceTime: PropTypes.number,
     loading: PropTypes.bool,
     onLoad: PropTypes.func,
-    loaderComponent: PropTypes.element
+    loaderComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
 };
 
 VisibilityContainer.defaultProps = {
