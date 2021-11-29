@@ -13,7 +13,6 @@ import { createPlugin } from '../../utils/PluginsUtils';
 import { CONTROL_NAME } from './constants';
 
 import StreetViewContainer from './containers/StreetViewContainer';
-import { enabledSelector } from './selectors/streetView';
 import {toggleStreetView, configure, reset} from './actions/streetView';
 import streetView from './reducers/streetview';
 import * as epics from './epics/streetView';
@@ -58,16 +57,15 @@ export default createPlugin(
         },
         component: StreetViewPluginContainer,
         containers: {
-            Toolbar: {
+            BurgerMenu: {
+                position: 40,
+                priority: 2,
+                doNotHide: true,
                 name: CONTROL_NAME,
-                position: 6,
+                text: <Message msgId="streetView.title"/>,
                 tooltip: "streetView.tooltip",
                 icon: <Glyphicon glyph="road" />,
-                action: () => toggleStreetView(),
-                selector: (state) => ({
-                    bsStyle: enabledSelector(state) ? "success" : "primary",
-                    active: enabledSelector(state)
-                })
+                action: () => toggleStreetView()
             }
         }
     }
