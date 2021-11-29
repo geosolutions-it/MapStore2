@@ -54,7 +54,7 @@ class PrintPreview extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id="mapstore-print-preview-panel">
                 <div style={this.props.style}>
                     <Document file={this.props.url}
                         onLoadSuccess={this.onDocumentComplete}>

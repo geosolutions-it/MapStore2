@@ -85,6 +85,7 @@ export default {
         MetadataExplorerPlugin: require('../plugins/MetadataExplorer').default,
         MousePositionPlugin: require('../plugins/MousePosition').default,
         NotificationsPlugin: require('../plugins/Notifications').default,
+        NullPlugin: require('../plugins/Null').default,
         OmniBarPlugin: require('../plugins/OmniBar').default,
         PlaybackPlugin: require('../plugins/Playback.jsx').default,
         PrintPlugin: require('../plugins/Print').default,

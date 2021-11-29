@@ -35,6 +35,30 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
  * Please look at mapstore documentation about how to add and configure the printing module in your installation.
  *
+ * It also works as a container for other plugins, usable to customize the UI of the parameters dialog.
+ *
+ * The UI supports different targets for adding new plugins:
+ *  - left-panel (controls/widgets to be added to the left column, before the accordion)
+ *  - left-panel-accordion (controls/widgets to be added to the left column, as subpanels of the accordion)
+ *  - right-panel (controls/widgets to be added to the right column, before the buttons bar)
+ *  - buttons (controls/widgets to be added to the right column, in the buttons bar)
+ *  - preview-panel (controls/widgets to be added to the printed pdf preview panel)
+ *
+ * In addition it is also possibile to use specific targets that override a standard widget, to replace it
+ * with a custom one. They are (in order, from left to right and top to bottom in the UI):
+ *  - name (left-panel, position: 1)
+ *  - description (left-panel, position: 2)
+ *  - layout (left-panel-accordion, position: 1)
+ *  - legendoptions (left-panel-accordion, position: 2)
+ *  - resolution (right-panel, position: 1)
+ *  - mappreview (right-panel, position: 2)
+ *  - defaultbackgroundignore (right-panel, position: 3)
+ *  - submit (buttons, position: 1)
+ *  - printpreview (preview-panel, position: 1)
+ *
+ * To remove a widget, you have to include a Null plugin with the desired target.
+ * You can use the position to sort existing and custom items.
+ *
  * @class Print
  * @memberof plugins
  * @static
@@ -74,7 +98,79 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  *       }
  *    }
  * }
+ *
+ * @example
+ * // Custom plugin added to the left-panel target
+ * {
+ *   "name": "PrintTextInput",
+ *   "id", "ExtraParam",
+ *   "override": {
+ *       "Print": {
+ *          "target": "left-panel",
+ *          "position": 1.5
+ *       }
+ *   },
+ *   "cfg": {
+ *       "property": "extra",
+ *       "label": "Extra stuff",
+ *       "placeholder": "Inserisci cose..."
+ *   }
+ * }
+ *
+ * @example
+ * // Custom plugin replacing an existing target
+ * {
+ *   "name": "PrintTextInput",
+ *   "id", "ExtraParam",
+ *   "override": {
+ *       "Print": {
+ *          "target": "name",
+ *          "position": 1
+ *       }
+ *   },
+ *   "cfg": {
+ *       "property": "extra",
+ *       "label": "Extra stuff",
+ *       "placeholder": "Inserisci cose..."
+ *   }
+ * }
+  *
+ * @example
+ * // Removal of an existing target
+ * {
+ *   "name": "Null",
+ *   "override": {
+ *       "Print": {
+ *          "target": "name",
+ *          "position": 1
+ *       }
+ *   },
+ *   "cfg": {
+ *   }
+ * }
  */
+
+function overrideItem(item, overrides = []) {
+    const replacement = overrides.find(i => i.target === item.id);
+    return replacement ?? item;
+}
+
+const EmptyComponent = () => {
+    return null;
+};
+
+function handleRemoved(item) {
+    return item.plugin ? item : {
+        ...item,
+        plugin: EmptyComponent
+    };
+}
+
+function mergeItems(standard, overrides) {
+    return standard
+        .map(item => overrideItem(item, overrides))
+        .map(handleRemoved);
+}
 
 export default {
     PrintPlugin: assign({
@@ -210,8 +306,13 @@ export default {
                         }
                     }
                     getItems = (target) => {
-                        return [...standardItems[target], ...this.props.items]
-                            .filter(i => !target || i.target === target)
+                        const filtered = this.props.items.filter(i => !target || i.target === target);
+                        const merged = mergeItems(standardItems[target], this.props.items)
+                            .map(item => ({
+                                ...item,
+                                target
+                            }));
+                        return [...merged, ...filtered]
                             .sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
                     };
                     getMapSize = (layout) => {

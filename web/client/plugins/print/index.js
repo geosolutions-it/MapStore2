@@ -119,57 +119,57 @@ export const PrintPreview = connect((state) => ({
 
 export const standardItems = {
     "left-panel": [{
+        id: "name",
         plugin: Name,
         cfg: {},
-        target: "left-panel",
         position: 1
     }, {
+        id: "description",
         plugin: Description,
         cfg: {},
-        target: "left-panel",
         position: 2
     }],
     "left-panel-accordion": [{
+        id: "layout",
         plugin: Layout,
         cfg: {
             "title": "print.layout"
         },
-        target: "left-panel-accordion",
         position: 1
     }, {
+        id: "legendoptions",
         plugin: LegendOptions,
         cfg: {
             "title": "print.legendoptions"
         },
-        target: "left-panel-accordion",
         position: 2
     }],
     "right-panel": [{
+        id: "resolution",
         plugin: Resolution,
         cfg: {},
-        target: "right-panel",
         position: 1
     }, {
+        id: "mappreview",
         plugin: MapPreview,
         cfg: {},
-        target: "right-panel",
         position: 2
     }, {
+        id: "defaultbackgroundignore",
         plugin: DefaultBackgrounOption,
         cfg: {},
-        target: "right-panel",
         position: 3
     }],
     "buttons": [{
+        id: "submit",
         plugin: PrintSubmit,
         cfg: {},
-        target: "buttons",
         position: 1
     }],
     "preview-panel": [{
+        id: "printpreview",
         plugin: PrintPreview,
         cfg: {},
-        target: "preview-panel",
         position: 1
     }]
 };
