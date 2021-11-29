@@ -192,7 +192,7 @@ export default ({
                         onClose={() => {
                             setShowModal(false);
                             onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
-                            onChange("options.classificationAttribute", false);
+                            onChange("options.classificationAttribute", undefined);
                             onChange("autoColorOptions.classification", getAutoColorOptionsClassification([]));
                         }}
                         onSaveStyle={() => {
