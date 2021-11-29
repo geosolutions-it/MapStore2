@@ -39,7 +39,7 @@ const GStreetViewPanel = (props) => {
     // initialize components
     useEffect(() => {
         if (google && location && !panorama) {
-            console.log("New panorama instance created. This is billed"); // this is billed.
+            // console.log("New panorama instance created. This is billed"); // this is billed.
             const streetViewPanorama = new google.maps.StreetViewPanorama(
                 divRef.current,
                 {
