@@ -14,11 +14,11 @@ export const Option = (props, context) => {
     const {spec, property, label, onChangeParameter, enabled = true, actions, path = "params.", additionalProperty = true} = props;
     const fullProperty = path + property;
     useEffect(() => {
-        if (additionalProperty) actions.addParameter(property, get(spec, fullProperty) ?? "");
+        if (additionalProperty) actions.addParameter(property, get(spec, fullProperty) ?? false);
     }, []);
-    return handleExpression({}, {...props}, "{" + enabled + "}") ? (<PrintOptionComp checked={!!spec[fullProperty]}
+    return handleExpression({}, {...props}, "{" + enabled + "}") ? (<PrintOptionComp checked={!!get(spec, fullProperty)}
         label={getMessageById(context.messages, label)}
-        onChange={v => onChangeParameter(property, v)}/>) : null;
+        onChange={v => onChangeParameter(fullProperty, v)}/>) : null;
 };
 
 Option.contextTypes = {
