@@ -25,6 +25,7 @@ const DEFAULT_CUSTOM_COLOR_OPTIONS = {
 };
 
 const COLORS = [{
+    showWhen: (chartType) => chartType === 'pie',
     name: 'global.colors.random',
     schema: 'qualitative',
     options: {base: 190, range: 360, options: {}}
@@ -49,6 +50,7 @@ const COLORS = [{
     schema: 'sequencial',
     options: {base: 300, range: 4}
 }, {
+    showWhen: (chartType) => chartType === 'bar' || chartType === 'pie',
     name: 'global.colors.custom',
     schema: 'sequencial',
     options: DEFAULT_CUSTOM_COLOR_OPTIONS,
@@ -60,10 +62,7 @@ const CLASSIFIED_COLORS = [{title: '', color: '#ffffff', type: 'Polygon', unique
 
 
 const getColorRangeItems = (type) => {
-    if ( type !== "pie") {
-        return COLORS.filter( c => c.schema !== 'qualitative');
-    }
-    return COLORS;
+    return COLORS.filter(c => c.showWhen ? c.showWhen(type) : c);
 };
 const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type || data.widgetType || "default"}`;
 

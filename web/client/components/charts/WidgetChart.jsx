@@ -10,8 +10,7 @@ import React, { Suspense } from 'react';
 import { sameToneRangeColors, hexToHsv } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
-import { isNumber } from 'lodash';
-import moment from 'moment';
+import { isNumber, isString } from 'lodash';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
@@ -38,49 +37,33 @@ const customColorRampGenerator = (color, total) => {
         defaultColorGenerator(total, defaultAutoColorOptions);
 };
 
-const colorNumbers = value => {
-    let color;
-
-    if (value < 1000) {
-        color = "red";
-    } else if (value > 1000 && value < 2000) {
-        color = "blue";
-    } else if (value > 2000 && value < 3000) {
-        color = "grey";
-    } else if (value > 3000 && value < 4000) {
-        color = "pink";
-    } else if (value > 4000 && value < 5000) {
-        color = "yellow";
-    } else if (value > 5000 && value < 6000) {
-        color = "orange";
-    }
-
-    return color;
-};
-
-const colorDate = value => {
-    const date = new Date(value).getFullYear();
-    const color = (date === 2019 ) ? 'red' : (date === 2020) ?  "blue" : 'black';
-    return color;
-
-};
-
+const getClassificationColors = (classifications, colorCategories, customColorEnabled, autoColorOptions) => (
+    classifications.map(item => {
+        if (isString(item) || isNumber(item)) {
+            const matchedColor = colorCategories.filter(colorCategory => colorCategory.value === item)[0];
+            return matchedColor ? matchedColor.color : customColorEnabled ? autoColorOptions.classDefaultColor : defaultColorGenerator(1, autoColorOptions)[0];
+        }
+        return  defaultColorGenerator(1, autoColorOptions)[0];
+    })
+);
 
 function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel, autoColorOptions, customColorEnabled }) {
 
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
-    let classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
-    let colorCategories = autoColorOptions?.classification || [];
+    const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
+    const colorCategories = autoColorOptions?.classification || [];
+    const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
 
     switch (type) {
-    case 'pie':
 
+    case 'pie':
         return {
             type,
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
             values: y,
-            labels: x
+            labels: x,
+            ...(classifications.length && classificationColors.length && customColorEnabled ? {marker: {colors: classificationColors}} : {})
         };
 
     default:
@@ -98,20 +81,6 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
 
         }
 
-        let classificationColors = classifications.map(item => {
-            if (isNumber(item)) {
-                return colorNumbers(item);
-            } else if (moment(item, moment.ISO_8601, true).isValid()) {
-                return colorDate(item);
-            }
-            const matchedColor = colorCategories.filter(colorCategory => colorCategory.value === item)[0];
-            return matchedColor ?
-                matchedColor.color :
-                customColorEnabled ?
-                    autoColorOptions.classDefaultColor :
-                    defaultColorGenerator(1, autoColorOptions)[0];
-        });
-
         const trace1 = {
             hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x: x,
@@ -121,16 +90,6 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             ...(classifications.length && classificationColors.length ? {marker: {color: classificationColors}} : {})
         };
 
-        /*
-        const trace2 = {
-            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
-            x: x,
-            y: y2,
-            type,
-            name: classificationAttr,
-            marker: {color: '#' +  Math.floor(Math.random() * 16777215).toString(16)}
-        };
-        */
         const allData = trace1;
 
         return allData;
@@ -221,7 +180,7 @@ export const toPlotly = (props) => {
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
-            ...getLayoutOptions({ ...props, customColorEnabled }),
+            ...getLayoutOptions({ ...props, customColorEnabled, classificationAttr }),
             margin: getMargins({ ...props, isModeBarVisible}),
             autosize: false,
             height,
