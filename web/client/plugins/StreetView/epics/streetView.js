@@ -60,7 +60,7 @@ export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =
                     .filter(() => !enabledSelector(getState()))
                     .filter(() => !mapInfoEnabledSelector(getState()))
                     .mapTo(toggleMapInfoState())
-                    .takeUntil(RESET_CONTROLS)
+                    .takeUntil(action$.ofType(RESET_CONTROLS))
             );
         });
 /**
