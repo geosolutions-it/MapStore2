@@ -3,18 +3,18 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {createPlugin} from "../../utils/PluginsUtils";
 
-import MapPreview from "../../components/print/MapPreview";
+import MapPreviewComp from "../../components/print/MapPreview";
 import {
     changeMapPrintPreview,
     changePrintZoomLevel
 } from '../../actions/print';
 
-const PrintMapPreview = ({mapSize, layout, layoutName, resolutions, useFixedScales,
+export const MapPreview = ({mapSize, layout, layoutName, resolutions, useFixedScales,
     localizedLayerStylesEnv, mapPreviewOptions, mapType,
     map, capabilities, onRefresh, ...rest}) => {
     const scales = capabilities.scales.slice(0).reverse().map((scale) => parseFloat(scale.value)) || [];
     return (
-        <MapPreview
+        <MapPreviewComp
             map={map}
             layers={map?.layers ?? []}
             scales={scales}
@@ -31,7 +31,7 @@ const PrintMapPreview = ({mapSize, layout, layoutName, resolutions, useFixedScal
     );
 };
 
-PrintMapPreview.contextTypes = {
+MapPreview.contextTypes = {
     messages: PropTypes.object
 };
 
@@ -44,7 +44,7 @@ export default createPlugin("PrintMapPreview", {
             onChangeZoomLevel: changePrintZoomLevel,
             onMapViewChanges: changeMapPrintPreview
         }
-    )(PrintMapPreview),
+    )(MapPreview),
     containers: {
         Print: {
             priority: 1

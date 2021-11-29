@@ -58,7 +58,7 @@ function renderLayoutsAlternatives(alternatives, context) {
     );
 }
 
-const PrintLayout = ({layouts, spec, onChangeParameter, alternatives}, context) => {
+export const Layout = ({layouts, spec, onChangeParameter, alternatives}, context) => {
     return (
         <>
             <Sheet key="sheetsize"
@@ -72,7 +72,7 @@ const PrintLayout = ({layouts, spec, onChangeParameter, alternatives}, context) 
     );
 };
 
-PrintLayout.contextTypes = {
+Layout.contextTypes = {
     messages: PropTypes.object
 };
 
@@ -84,7 +84,7 @@ export default createPlugin("PrintLayout", {
         }), {
             onChangeParameter: setPrintParameter
         }
-    )(PrintLayout),
+    )(Layout),
     containers: {
         Print: {
             priority: 1

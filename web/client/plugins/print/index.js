@@ -10,17 +10,100 @@ import { connect } from 'react-redux';
 
 import { setControlProperty } from '../../actions/controls';
 import {
-    printCancel
+    printCancel,
+    setPrintParameter,
+    changeMapPrintPreview,
+    changePrintZoomLevel
 } from '../../actions/print';
 
 import PrintPreviewComp from '../../components/print/PrintPreview';
-import PrintSubmitComp from '../../components/print/PrintSubmit';
 import ConfigUtils from '../../utils/ConfigUtils';
 
+import {TextInput} from "./TextInput";
+import {Option} from "./Option";
+import {ActionButton} from './ActionButton';
+
+import {Layout as LayoutComp} from "./Layout";
+import {LegendOptions as LegendOptionsComp} from "./LegendOptions";
+import {Resolution as ResolutionComp} from "./Resolution";
+import {MapPreview as MapPreviewComp} from "./MapPreview";
+
+export const Name = connect((state) => ({
+    spec: state.print?.spec || {},
+    additionalProperty: false,
+    property: "name",
+    path: "",
+    type: "text",
+    label: "print.title",
+    placeholder: "print.titleplaceholder"
+}), {
+    onChangeParameter: setPrintParameter
+})(TextInput);
+
+export const Description = connect((state) => ({
+    spec: state.print?.spec || {},
+    additionalProperty: false,
+    property: "description",
+    path: "",
+    type: "textarea",
+    label: "print.description",
+    placeholder: "print.descriptionplaceholder"
+}), {
+    onChangeParameter: setPrintParameter
+})(TextInput);
+
+export const Layout = connect((state) => ({
+    spec: state.print?.spec || {},
+    layouts: state?.print?.capabilities?.layouts || []
+}), {
+    onChangeParameter: setPrintParameter
+})(LayoutComp);
+
+export const LegendOptions = connect((state) => ({
+    spec: state.print?.spec || {}
+}), {
+    onChangeParameter: setPrintParameter
+})(LegendOptionsComp);
+
+export const Resolution = connect((state) => ({
+    spec: state.print?.spec || {},
+    items: state?.print?.capabilities?.dpis?.map((dpi) => ({
+        name: dpi.name + ' dpi',
+        value: dpi.value
+    })) ?? []
+}), {
+    onChangeParameter: setPrintParameter
+})(ResolutionComp);
+
+export const MapPreview = connect(
+    (state) => ({
+        map: state.print?.map,
+        capabilities: state.print?.capabilities ?? {}
+    }), {
+        onChangeZoomLevel: changePrintZoomLevel,
+        onMapViewChanges: changeMapPrintPreview
+    }
+)(MapPreviewComp);
+
+export const DefaultBackgrounOption = connect((state) => ({
+    spec: state?.print?.spec || {},
+    enabled: "context.notAllowedLayers",
+    path: "",
+    property: "defaultBackground",
+    additionalProperty: false,
+    label: "print.defaultBackground"
+}), {
+    onChangeParameter: setPrintParameter
+})(Option);
 
 export const PrintSubmit = connect((state) => ({
-    loading: state.print && state.print.isLoading || false
-}))(PrintSubmitComp);
+    spec: state?.print?.spec || {},
+    loading: state.print && state.print.isLoading || false,
+    text: "print.submit",
+    action: "print",
+    enabled: "context.layout",
+    className: "print-submit"
+}))(ActionButton);
 
 export const PrintPreview = connect((state) => ({
     url: state.print && ConfigUtils.getProxiedUrl(state.print.pdfUrl),
@@ -34,93 +117,64 @@ export const PrintPreview = connect((state) => ({
     setScale: setControlProperty.bind(null, 'print', 'viewScale')
 })(PrintPreviewComp);
 
-export const defaultItems = [{
-    "name": "PrintTextInput",
-    "id": "PrintTitle",
-    "override": {
-        "Print": {
-            "target": "left-panel",
-            "position": 1
-        }
-    },
-    "cfg": {
-        "property": "name",
-        "path": "",
-        "label": "print.title",
-        "placeholder": "print.titleplaceholder"
-    }
-}, {
-    "name": "PrintTextInput",
-    "id": "PrintDescription",
-    "override": {
-        "Print": {
-            "target": "left-panel",
-            "position": 2
-        }
-    },
-    "cfg": {
-        "property": "description",
-        "path": "",
-        "label": "print.description",
-        "placeholder": "print.descriptionplaceholder",
-        "type": "textarea"
-    }
-}, {
-    "name": "PrintLayout",
-    "override": {
-        "Print": {
-            "target": "left-panel-accordion",
-            "position": 1
-        }
-    },
-    "cfg": {
-        "title": "print.layout"
-    }
-}, {
-    "name": "PrintLegendOptions",
-    "override": {
-        "Print": {
-            "target": "left-panel-accordion",
-            "position": 2
-        }
-    },
-    "cfg": {
-        "title": "print.legendoptions"
-    }
-}, {
-    "name": "PrintResolution",
-    "override": {
-        "Print": {
-            "target": "right-panel",
-            "position": 1
-        }
-    }
-}, {
-    "name": "PrintMapPreview",
-    "override": {
-        "Print": {
-            "target": "right-panel",
-            "position": 2
-        }
-    }
-}, {
-    "name": "PrintOption",
-    "id": "DefaultBackgrounOption",
-    "override": {
-        "Print": {
-            "target": "right-panel",
-            "position": 3
-        }
-    },
-    "cfg": {
-        "enabled": "context.notAllowedLayers",
-        "property": "defaultBackground",
-        "label": "print.defaultBackground"
-    }
-}];
+export const standardItems = {
+    "left-panel": [{
+        plugin: Name,
+        cfg: {},
+        target: "left-panel",
+        position: 1
+    }, {
+        plugin: Description,
+        cfg: {},
+        target: "left-panel",
+        position: 2
+    }],
+    "left-panel-accordion": [{
+        plugin: Layout,
+        cfg: {
+            "title": "print.layout"
+        },
+        target: "left-panel-accordion",
+        position: 1
+    }, {
+        plugin: LegendOptions,
+        cfg: {
+            "title": "print.legendoptions"
+        },
+        target: "left-panel-accordion",
+        position: 2
+    }],
+    "right-panel": [{
+        plugin: Resolution,
+        cfg: {},
+        target: "right-panel",
+        position: 1
+    }, {
+        plugin: MapPreview,
+        cfg: {},
+        target: "right-panel",
+        position: 2
+    }, {
+        plugin: DefaultBackgrounOption,
+        cfg: {},
+        target: "right-panel",
+        position: 3
+    }],
+    "buttons": [{
+        plugin: PrintSubmit,
+        cfg: {},
+        target: "buttons",
+        position: 1
+    }],
+    "preview-panel": [{
+        plugin: PrintPreview,
+        cfg: {},
+        target: "preview-panel",
+        position: 1
+    }]
+};
 
 export default {
-    defaultItems,
-    PrintSubmit,
+    standardItems,
     PrintPreview
 };

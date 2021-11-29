@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import { setControlProperty, toggleControl } from '../actions/controls';
-import { configurePrintMap, printError, printSubmit, printSubmitting } from '../actions/print';
+import { configurePrintMap, printError, printSubmit, printSubmitting, addPrintParameter } from '../actions/print';
 import Message from '../components/I18N/Message';
 import Dialog from '../components/misc/Dialog';
 import printReducers from '../reducers/print';
@@ -30,7 +30,6 @@ import { reprojectBbox } from '../utils/CoordinatesUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
-import { getPluginItems } from "../utils/PluginsUtils";
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -82,9 +81,7 @@ export default {
         loadPlugin: (resolve) => {
             require.ensure('./print/index', () => {
                 const {
-                    defaultItems,
-                    PrintSubmit,
-                    PrintPreview
+                    standardItems
                 } = require('./print/index').default;
 
                 const {
@@ -140,7 +137,8 @@ export default {
                         overrideOptions: PropTypes.object,
                         isLocalizedLayerStylesEnabled: PropTypes.bool,
                         localizedLayerStylesEnv: PropTypes.object,
-                        items: PropTypes.array
+                        items: PropTypes.array,
+                        addPrintParameter: PropTypes.func
                     };
 
                     static contextTypes = {
@@ -196,14 +194,10 @@ export default {
                     };
 
                     state = {
-                        items: [],
                         activeAccordionPanel: 0
                     }
 
                     UNSAFE_componentWillMount() {
-                        this.setState({
-                            items: getPluginItems({}, this.context.plugins, defaultItems, "Print", "", true, this.context.loadedPlugins)
-                        });
                         this.configurePrintMap();
                     }
 
@@ -216,7 +210,7 @@ export default {
                         }
                     }
                     getItems = (target) => {
-                        return [...this.props.items, ...this.state.items]
+                        return [...standardItems[target], ...this.props.items]
                             .filter(i => !target || i.target === target)
                             .sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
                     };
@@ -235,7 +229,7 @@ export default {
                     };
 
                     renderPreviewPanel = () => {
-                        return <PrintPreview {...this.props.previewOptions} role="body" prevPage={this.prevPage} nextPage={this.nextPage}/>;
+                        return this.renderItems("preview-panel", this.props.previewOptions);
                     };
 
                     renderError = () => {
@@ -253,7 +247,8 @@ export default {
                     };
                     renderItem = (item, options) => {
                         const Comp = item.plugin;
-                        return <Comp {...this.props} {...item.cfg} {...options}/>;
+                        const {style, ...other} = this.props;
+                        return <Comp role="body" {...other} {...item.cfg} {...options}/>;
                     };
                     renderItems = (target, options) => {
                         return this.getItems(target)
@@ -281,7 +276,12 @@ export default {
                             mapSize: this.getMapSize(layout),
                             resolutions: getResolutions(),
                             onRefresh: () => this.configurePrintMap(),
-                            notAllowedLayers: this.isBackgroundIgnored()
+                            notAllowedLayers: this.isBackgroundIgnored(),
+                            actionConfig: this.props.submitConfig,
+                            actions: {
+                                print: this.print,
+                                addParameter: this.addParameter
+                            }
                         };
                         return (
                             <Grid fluid role="body">
@@ -294,7 +294,7 @@ export default {
                                     </Col>
                                     <Col xs={12} md={6} style={{textAlign: "center"}}>
                                         {this.renderItems("right-panel", options)}
-                                        <PrintSubmit {...this.props.submitConfig} disabled={!layout} onPrint={this.print}/>
+                                        {this.renderItems("buttons", options)}
                                         {this.renderDownload()}
                                     </Col>
                                 </Row>
@@ -333,7 +333,9 @@ export default {
                         }
                         return null;
                     }
-
+                    addParameter = (name, value) => {
+                        this.props.addPrintParameter("params." + name, value);
+                    };
                     isAllowed = (layer) => {
                         return this.props.ignoreLayers.indexOf(layer.type) === -1;
                     };
@@ -451,7 +453,8 @@ export default {
                     printError: printError,
                     onBeforePrint: printSubmitting,
                     setPage: setControlProperty.bind(null, 'print', 'currentPage'),
-                    configurePrintMap
+                    configurePrintMap,
+                    addPrintParameter
                 })(Print);
                 resolve(PrintPlugin);
             });

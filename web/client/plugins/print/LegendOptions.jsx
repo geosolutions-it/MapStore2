@@ -9,7 +9,7 @@ import Font from "../../components/print/Font";
 import PrintOption from "../../components/print/PrintOption";
 import { TextInput } from "./TextInput";
 
-const PrintLegendOptions = ({spec, onChangeParameter}, context) => {
+export const LegendOptions = ({spec, onChangeParameter, actions}, context) => {
     return (
         <>
             <Font
@@ -34,21 +34,27 @@ const PrintLegendOptions = ({spec, onChangeParameter}, context) => {
                 label={getMessageById(context.messages, "print.legend.iconsSize")}
                 spec={spec}
                 type="number"
+                additionalProperty={false}
                 property="iconSize"
+                path=""
                 onChangeParameter={onChangeParameter}
+                actions={actions}
             />
             <TextInput
                 label={getMessageById(context.messages, "print.legend.dpi")}
                 spec={spec}
                 type="number"
+                additionalProperty={false}
                 property="legendDpi"
+                path=""
                 onChangeParameter={onChangeParameter}
+                actions={actions}
             />
         </>
     );
 };
 
-PrintLegendOptions.contextTypes = {
+LegendOptions.contextTypes = {
     messages: PropTypes.object
 };
 
@@ -59,7 +65,7 @@ export default createPlugin("PrintLegendOptions", {
         }), {
             onChangeParameter: setPrintParameter
         }
-    )(PrintLegendOptions),
+    )(LegendOptions),
     containers: {
         Print: {
             priority: 1

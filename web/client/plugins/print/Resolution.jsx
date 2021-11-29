@@ -7,12 +7,12 @@ import { getMessageById } from '../../utils/LocaleUtils';
 import { setPrintParameter } from "../../actions/print";
 import Choice from "../../components/print/Choice";
 
-const Resolution = ({items, spec, onChangeParameter}, context) => {
+export const Resolution = ({items, spec, onChangeParameter}, context) => {
     return (
         <>
             <Choice
                 selected={spec?.resolution}
-                onChange={(e) => onChangeParameter("resolution", e.target.value)}
+                onChange={(dpi) => onChangeParameter("resolution", dpi)}
                 items={items}
                 label={getMessageById(context.messages, "print.resolution")}
             />

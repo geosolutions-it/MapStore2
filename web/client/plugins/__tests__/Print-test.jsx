@@ -1,15 +1,9 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ReactDOM from "react-dom";
 import expect from "expect";
 
 import Print from "../Print";
 import { getLazyPluginForTest } from './pluginsTestUtils';
-import TextInput from "../print/TextInput";
-import Layout from "../print/Layout";
-import LegendOptions from "../print/LegendOptions";
-import Resolution from "../print/Resolution";
-import MapPreview from "../print/MapPreview";
-import Option from "../print/Option";
 
 function getByXPath(xpath) {
     return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -31,7 +25,10 @@ const initialState = {
     }
 };
 
-const CustomComponent = () => {
+const CustomComponent = ({actions}) => {
+    useEffect(() => {
+        actions.addParameter("custom", "");
+    }, []);
     return <div>print.mycustomplugin</div>;
 };
 
@@ -50,6 +47,7 @@ function expectDefaultItems() {
     expect(getByXPath("//*[text()='print.legend.iconsSize']")).toExist();
     expect(getByXPath("//*[text()='print.legend.dpi']")).toExist();
     expect(getByXPath("//*[text()='print.resolution']")).toExist();
+    expect(getByXPath("//*[text()='print.submit']")).toExist();
 }
 
 function getPrintPlugin({items = [], layers = []} = {}) {
@@ -65,14 +63,6 @@ function getPrintPlugin({items = [], layers = []} = {}) {
                     layers
                 }
             }
-        },
-        additionalPlugins: {
-            PrintTextInputPlugin: TextInput,
-            PrintLayoutPlugin: Layout,
-            PrintLegendOptionsPlugin: LegendOptions,
-            PrintResolution: Resolution,
-            PrintMapPreview: MapPreview,
-            PrintOption: Option
         },
         items
     });
@@ -126,6 +116,21 @@ describe('Print Plugin', () => {
                 ReactDOM.render(<Plugin />, document.getElementById("container"));
                 expectDefaultItems();
                 expect(getByXPath("//*[text()='print.mycustomplugin']")).toExist();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('custom plugin sets initial state', (done) => {
+        getPrintPlugin({items: [{
+            plugin: CustomComponent,
+            target: "left-panel"
+        }]}).then(({ Plugin, store }) => {
+            try {
+                ReactDOM.render(<Plugin />, document.getElementById("container"));
+                expect(store.getState()?.print?.spec?.params?.custom).toNotBe(undefined);
                 done();
             } catch (ex) {
                 done(ex);

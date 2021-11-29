@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {createPlugin, handleExpression} from "../../utils/PluginsUtils";
@@ -8,14 +8,20 @@ import { setPrintParameter } from "../../actions/print";
 
 import PrintOptionComp from "../../components/print/PrintOption";
 
-export const PrintOption = (props, context) => {
-    const {spec, property, label, onChangeParameter, enabled = true} = props;
-    return handleExpression({}, {...props}, "{" + enabled + "}") ? (<PrintOptionComp checked={!!spec[property]}
+import get from "lodash/get";
+
+export const Option = (props, context) => {
+    const {spec, property, label, onChangeParameter, enabled = true, actions, path = "params.", additionalProperty = true} = props;
+    const fullProperty = path + property;
+    useEffect(() => {
+        if (additionalProperty) actions.addParameter(property, get(spec, fullProperty) ?? "");
+    }, []);
+    return handleExpression({}, {...props}, "{" + enabled + "}") ? (<PrintOptionComp checked={!!spec[fullProperty]}
         label={getMessageById(context.messages, label)}
         onChange={v => onChangeParameter(property, v)}/>) : null;
 };
 
-PrintOption.contextTypes = {
+Option.contextTypes = {
     messages: PropTypes.object
 };
 
@@ -26,7 +32,7 @@ export default createPlugin("PrintOption", {
         }), {
             onChangeParameter: setPrintParameter
         }
-    )(PrintOption),
+    )(Option),
     containers: {
         Print: {
             priority: 1
