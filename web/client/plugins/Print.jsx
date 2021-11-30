@@ -38,11 +38,11 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  * It also works as a container for other plugins, usable to customize the UI of the parameters dialog.
  *
  * The UI supports different targets for adding new plugins:
- *  - left-panel (controls/widgets to be added to the left column, before the accordion)
- *  - left-panel-accordion (controls/widgets to be added to the left column, as subpanels of the accordion)
- *  - right-panel (controls/widgets to be added to the right column, before the buttons bar)
- *  - buttons (controls/widgets to be added to the right column, in the buttons bar)
- *  - preview-panel (controls/widgets to be added to the printed pdf preview panel)
+ *  - `left-panel` (controls/widgets to be added to the left column, before the accordion)
+ *  - `left-panel-accordion` (controls/widgets to be added to the left column, as subpanels of the accordion)
+ *  - `right-panel` (controls/widgets to be added to the right column, before the buttons bar)
+ *  - `buttons` (controls/widgets to be added to the right column, in the buttons bar)
+ *  - `preview-panel` (controls/widgets to be added to the printed pdf preview panel)
  *
  * In addition it is also possibile to use specific targets that override a standard widget, to replace it
  * with a custom one. They are (in order, from left to right and top to bottom in the UI):
