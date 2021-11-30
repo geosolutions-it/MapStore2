@@ -10,7 +10,7 @@ import React, { Suspense } from 'react';
 import { sameToneRangeColors, hexToHsv } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
-import { isNumber, isString } from 'lodash';
+import { includes, isNumber, isString } from 'lodash';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
@@ -48,12 +48,12 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
 );
 
 function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel, autoColorOptions, customColorEnabled }) {
-
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
     const colorCategories = autoColorOptions?.classification || [];
     const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
+    let traces;
 
     switch (type) {
 
@@ -77,11 +77,30 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
                     return v;
                 }
             });
-
-
         }
 
-        const trace1 = {
+        /** Bar chart is classified coloured */
+        if (classificationAttr && classifications.length && classificationColors.length && customColorEnabled) {
+            let legendItems = [];
+            traces = x.map((item, index) => {
+                const legendLabel = includes(colorCategories.map(colorCat => colorCat.value), classifications[index]) ? classifications[index] : 'Default';
+                const trace = {
+                    hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
+                    x: [item],
+                    y: [y[index]],
+                    type,
+                    name: `${yAxisLabel || yDataKey} - ${legendLabel}`,
+                    showlegend: !includes(legendItems, legendLabel),
+                    marker: {color: [classificationColors[index]] }
+                };
+                legendItems.push(legendLabel);
+                return trace;
+            });
+            return traces;
+        }
+
+        /** Bar chart is evenly coloured */
+        traces = {
             hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x: x,
             y: y,
@@ -89,10 +108,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             name: yAxisLabel || yDataKey,
             ...(classifications.length && classificationColors.length ? {marker: {color: classificationColors}} : {})
         };
-
-        const allData = trace1;
-
-        return allData;
+        return traces;
     }
 }
 function getMargins({ type, isModeBarVisible}) {
