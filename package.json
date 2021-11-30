@@ -302,7 +302,7 @@
     "i18n": "node  utility/translations/findMissingTranslations.js",
     "postinstall": "node utility/build/postInstall.js",
     "clean": "rimraf ./web/client/dist",
-    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=3072 ./node_modules/webpack/bin/webpack.js --progress --color --config build/prod-webpack.config.js",
+    "compile": "npm run clean && mkdirp ./web/client/dist && webpack --progress --color --config build/prod-webpack.config.js",
     "analyze": "npm run clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
     "start": "webpack serve --progress --color --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
     "startprod": "webpack serve --progress --color --port 8081 --hot --inline --content-base web/client  --config build/prod-webpack.config.js",
