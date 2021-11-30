@@ -47,7 +47,7 @@ class GridCard extends React.Component {
             style={this.props.style}
             className={"gridcard" + (this.props.className ? " " + this.props.className : "")}
             onClick={this.props.onClick}>
-            <div style={this.props.titleStyle} className="gridcard-title bg-primary">{this.props.header}</div>
+            {this.props.header ? <div style={this.props.titleStyle} className="gridcard-title bg-primary">{this.props.header}</div> : null}
             {this.props.children}
             {this.renderActions()}
         </div>)
