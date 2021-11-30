@@ -85,7 +85,6 @@ export default {
         MetadataExplorerPlugin: require('../plugins/MetadataExplorer').default,
         MousePositionPlugin: require('../plugins/MousePosition').default,
         NotificationsPlugin: require('../plugins/Notifications').default,
-        NullPlugin: require('../plugins/Null').default,
         OmniBarPlugin: require('../plugins/OmniBar').default,
         PlaybackPlugin: require('../plugins/Playback.jsx').default,
         PrintPlugin: require('../plugins/Print').default,
@@ -125,13 +124,7 @@ export default {
         WidgetsTrayPlugin: require('../plugins/WidgetsTray').default,
         ZoomAllPlugin: require('../plugins/ZoomAll').default,
         ZoomInPlugin: require('../plugins/ZoomIn').default,
-        ZoomOutPlugin: require('../plugins/ZoomOut').default,
-        PrintTextInputPlugin: require('../plugins/print/TextInput').default,
-        PrintLayoutPlugin: require('../plugins/print/Layout').default,
-        PrintLegendOptionsPlugin: require('../plugins/print/LegendOptions').default,
-        PrintResolutionPlugin: require('../plugins/print/Resolution').default,
-        PrintMapPreviewPlugin: require('../plugins/print/MapPreview').default,
-        PrintOptionPlugin: require('../plugins/print/Option').default
+        ZoomOutPlugin: require('../plugins/ZoomOut').default
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

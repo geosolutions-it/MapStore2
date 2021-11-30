@@ -101,53 +101,39 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  *
  * @example
  * // Custom plugin added to the left-panel target
- * {
- *   "name": "PrintTextInput",
- *   "id", "ExtraParam",
- *   "override": {
- *       "Print": {
- *          "target": "left-panel",
- *          "position": 1.5
+ * export default createPlugin("PluginCustomization", {
+ *    component: MyCustomization,
+ *    containers: {
+ *       Print: {
+ *           target: "left-panel",
+ *           position: 1.5
  *       }
- *   },
- *   "cfg": {
- *       "property": "extra",
- *       "label": "Extra stuff",
- *       "placeholder": "Inserisci cose..."
- *   }
- * }
+ *    }
+ * });
  *
  * @example
- * // Custom plugin replacing an existing target
- * {
- *   "name": "PrintTextInput",
- *   "id", "ExtraParam",
- *   "override": {
- *       "Print": {
- *          "target": "name",
- *          "position": 1
+ * // Custom plugin replacing an existing target ("name", the widget for entering the title for the map)
+ * export default createPlugin("PluginCustomization", {
+ *    component: MyCustomization,
+ *    containers: {
+ *       Print: {
+ *           target: "name",
+ *           position: 1.5
  *       }
- *   },
- *   "cfg": {
- *       "property": "extra",
- *       "label": "Extra stuff",
- *       "placeholder": "Inserisci cose..."
- *   }
- * }
+ *    }
+ * });
   *
  * @example
- * // Removal of an existing target
- * {
- *   "name": "Null",
- *   "override": {
- *       "Print": {
- *          "target": "name",
- *          "position": 1
+ * // Removal of an existing target (using the Null component)
+ * export default createPlugin("PluginCustomization", {
+ *    component: Null,
+ *    containers: {
+ *       Print: {
+ *           target: "name",
+ *           position: 1.5
  *       }
- *   },
- *   "cfg": {
- *   }
- * }
+ *    }
+ * });
  */
 
 function overrideItem(item, overrides = []) {

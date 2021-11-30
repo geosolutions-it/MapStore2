@@ -4,7 +4,7 @@ import expect from "expect";
 
 import Print from "../Print";
 import { getLazyPluginForTest } from './pluginsTestUtils';
-import {NullComponent} from "../Null";
+import {Null} from "../print/Null";
 
 function getByXPath(xpath) {
     return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -174,7 +174,7 @@ describe('Print Plugin', () => {
 
     it('custom plugin removes existing', (done) => {
         getPrintPlugin({items: [{
-            plugin: NullComponent,
+            plugin: Null,
             target: "name"
         }]}).then(({ Plugin }) => {
             try {
