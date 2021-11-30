@@ -46,15 +46,15 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  *
  * In addition it is also possibile to use specific targets that override a standard widget, to replace it
  * with a custom one. They are (in order, from left to right and top to bottom in the UI):
- *  - name (left-panel, position: 1)
- *  - description (left-panel, position: 2)
- *  - layout (left-panel-accordion, position: 1)
- *  - legendoptions (left-panel-accordion, position: 2)
- *  - resolution (right-panel, position: 1)
- *  - mappreview (right-panel, position: 2)
- *  - defaultbackgroundignore (right-panel, position: 3)
- *  - submit (buttons, position: 1)
- *  - printpreview (preview-panel, position: 1)
+ *  - `name` (`left-panel`, `position`: `1`)
+ *  - `description` (`left-panel`, `position`: `2`)
+ *  - `layout` (`left-panel-accordion`, `position`: `1`)
+ *  - `legendoptions` (`left-panel-accordion`, `position`: `2`)
+ *  - `resolution` (`right-panel`, `position`: `1`)
+ *  - `mappreview` (`right-panel`, `position`: `2`)
+ *  - `defaultbackgroundignore` (`right-panel`, `position`: `3`)
+ *  - `submit` (`buttons`, `position`: `1`)
+ *  - `printpreview` (`preview-panel`, `position`: `1`)
  *
  * To remove a widget, you have to include a Null plugin with the desired target.
  * You can use the position to sort existing and custom items.
