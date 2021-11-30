@@ -64,7 +64,7 @@ export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =
             );
         });
 /**
- * Intercept street view open/lose event. Adds / Removes the additional layer from the map
+ * Intercept street view open/close event. Adds / Removes the additional layer from the map
  * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
  * @param getState
  * @return {external:Observable}
