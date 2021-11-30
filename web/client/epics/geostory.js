@@ -619,7 +619,7 @@ export const loadStoryOnHistoryPop = (action$) =>
     action$.ofType(LOCATION_CHANGE)
         .switchMap(({payload}) => {
             const hasGeostory = payload?.location?.pathname.includes('/geostory/');
-            if (hasGeostory && payload.action === 'POP') {
+            if (hasGeostory && payload.action === 'POP' && !payload.isFirstRendering) {
                 const separatedUrl = words(payload?.location?.pathname);
                 return separatedUrl.find(i=> i === 'shared')
                     ? Observable.of(loadGeostory(separatedUrl[2])).delay(500)

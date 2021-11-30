@@ -1436,6 +1436,10 @@
                     "helpText": "Utilice la plantilla con el marcador de posición $ {searchText} para capturar la cadena de búsqueda"
                 },
                 "error": "Sintaxis XML no válida"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Establecer límite de visibilidad",
+                "tooltip": "Aplica automáticamente los límites de visibilidad sugeridos por el servidor"
             }
         },
         "uploader": {

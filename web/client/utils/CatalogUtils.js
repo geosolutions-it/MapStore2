@@ -31,6 +31,7 @@ import * as WMTSUtils from './WMTSUtils';
 import { cleanAuthParamsFromURL } from './SecurityUtils';
 import WMS from '../api/WMS';
 import { getAvailableInfoFormat } from "./MapInfoUtils";
+import { getResolutionObject } from "./MapUtils";
 
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
@@ -64,6 +65,55 @@ const getThumb = (dc) => {
     }));
 };
 
+// Extract the relevant information from the wms URL for (RNDT / INSPIRE)
+const extractWMSParamsFromURL = wms => {
+    const params = new URLSearchParams(wms.value);
+    const lowerCaseParams = new URLSearchParams();
+    for (const [name, value] of params) {
+        lowerCaseParams.append(name.toLocaleLowerCase(), value);
+    }
+    const layerName = lowerCaseParams.get('layers');
+    const wmsVersion = lowerCaseParams.get('version');
+    if (layerName) {
+        return {
+            ...wms,
+            protocol: 'OGC:WMS',
+            name: layerName,
+            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERIVCE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
+        };
+    }
+    return false;
+};
+
+const getMetaDataDownloadFormat = (protocol) => {
+    const formatsMap = [
+        {
+            protocol: 'https://registry.geodati.gov.it/metadata-codelist/ProtocolValue/www-download',
+            displayValue: 'Download'
+        },
+        {
+            protocol: 'http://www.opengis.net/def/serviceType/ogc/wms',
+            displayValue: 'WMS'
+        },
+        {
+            protocol: 'http://www.opengis.net/def/serviceType/ogc/wfs',
+            displayValue: 'WFS'
+        }
+    ];
+    const format = formatsMap.filter(formatItem => (formatItem.protocol === protocol))[0]?.displayValue;
+    return format ?? 'Link';
+};
+
+const getURILinks = (metadata, locales, uriItem) => {
+    let itemName = uriItem.name;
+    if (itemName === undefined) {
+        itemName = metadata.title ? metadata.title.join(' ') : getMessageById(locales, "catalog.notAvailable");
+        const downloadFormat = getMetaDataDownloadFormat(uriItem.protocol, uriItem.value);
+        itemName = `${downloadFormat ? `${itemName} - ${downloadFormat}` : itemName}`;
+    }
+    return (`<li><a target="_blank" href="${uriItem.value}">${itemName}</a></li>`);
+};
+
 const converters = {
     csw: (records, options, locales = {}) => {
         let result = records;
@@ -79,7 +129,15 @@ const converters = {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
                     let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) ) || head([].filter.call(URI, (uri) => !uri.name && uri.protocol?.indexOf('image/') > -1));
                     thumbURL = thumb ? thumb.value : null;
-                    wms = head([].filter.call(URI, (uri) => { return uri.protocol && (uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) || uri.protocol.match(/^OGC:WMS/g)); }));
+                    wms = head(URI.map( uri => {
+                        return uri.protocol && (
+                            /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
+                            uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) ||
+                            uri.protocol.match(/^OGC:WMS/g) ||
+                            /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
+                            uri.protocol.match(/serviceType\/ogc\/wms/g) && extractWMSParamsFromURL(uri)
+                        );
+                    }).filter(item => item));
                 }
                 // look in references objects
                 if (!wms && dc && dc.references && dc.references.length) {
@@ -168,7 +226,7 @@ const converters = {
                 }
                 // parsing URI
                 if (dc && dc.URI && castArray(dc.URI) && castArray(dc.URI).length) {
-                    metadata = {...metadata, uri: ["<ul>" + castArray(dc.URI).map(u => `<li><a target="_blank" href="${u.value}">${u.name}</a></li>`).join("") + "</ul>"]};
+                    metadata = {...metadata, uri: ["<ul>" + castArray(dc.URI).map(getURILinks.bind(this, metadata, locales)).join("") + "</ul>"]};
                 }
                 if (dc && dc.subject && castArray(dc.subject) && castArray(dc.subject).length) {
                     metadata = {...metadata, subject: ["<ul>" + castArray(dc.subject).map(s => `<li>${s}</li>`).join("") + "</ul>"]};
@@ -183,7 +241,7 @@ const converters = {
                 }
 
                 if (dc && dc.temporal) {
-                    let elements = dc.temporal.split("; ");
+                    let elements = isString(dc.temporal) ? dc.temporal.split("; ") : [];
                     if (elements.length) {
                         // finding scheme or using default
                         let scheme = elements.filter(e => e.indexOf("scheme=") !== -1).map(e => {
@@ -493,7 +551,7 @@ const toURLArray = (url) => {
  *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
  *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
  */
-export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url, formats = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
+export const recordToLayer = (record, type = "wms", {removeParams = [], format, catalogURL, url, formats = {}, map = {}} = {}, baseConfig = {}, localizedLayerStyles) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
         return null;
@@ -524,7 +582,9 @@ export const recordToLayer = (record, type = "wms", {removeParams = [], format, 
     const layerURL = toLayerURL(url || originalUrl);
 
     const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
-    return {
+    const { MaxScaleDenominator: maxScaleDenominator, MinScaleDenominator: minScaleDenominator }
+        = record?.capabilities ?? {};
+    let layer = {
         type: type,
         requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
         style: record.style,
@@ -555,9 +615,21 @@ export const recordToLayer = (record, type = "wms", {removeParams = [], format, 
         catalogURL,
         ...baseConfig,
         ...record.layerOptions,
-        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
-        ...(type === 'wms' && !isEmpty(formats) && {imageFormats: formats.imageFormats, infoFormats: formats.infoFormats})
+        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined
     };
+    if (type === "wms") {
+        if (!isEmpty(formats)) {
+            layer = {...layer, imageFormats: formats.imageFormats, infoFormats: formats.infoFormats};
+        }
+        if (!isEmpty(map) && (maxScaleDenominator || minScaleDenominator)) {
+            const {resolution: minResolution} = !isNil(minScaleDenominator)
+            && getResolutionObject(minScaleDenominator, 'scale', map) || {};
+            const {resolution: maxResolution} = !isNil(maxScaleDenominator)
+            && getResolutionObject(maxScaleDenominator, 'scale', map) || {};
+            layer = {...layer, minResolution, maxResolution};
+        }
+    }
+    return layer;
 };
 export const getCatalogRecords = (format, records, options, locales) => {
     return converters[format] && converters[format](records, options, locales) || null;
