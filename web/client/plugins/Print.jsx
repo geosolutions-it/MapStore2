@@ -49,15 +49,18 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  *  - `name` (`left-panel`, `position`: `1`)
  *  - `description` (`left-panel`, `position`: `2`)
  *  - `layout` (`left-panel-accordion`, `position`: `1`)
- *  - `legendoptions` (`left-panel-accordion`, `position`: `2`)
+ *  - `legend-options` (`left-panel-accordion`, `position`: `2`)
  *  - `resolution` (`right-panel`, `position`: `1`)
- *  - `mappreview` (`right-panel`, `position`: `2`)
- *  - `defaultbackgroundignore` (`right-panel`, `position`: `3`)
+ *  - `map-preview` (`right-panel`, `position`: `2`)
+ *  - `default-background-ignore` (`right-panel`, `position`: `3`)
  *  - `submit` (`buttons`, `position`: `1`)
- *  - `printpreview` (`preview-panel`, `position`: `1`)
+ *  - `print-preview` (`preview-panel`, `position`: `1`)
  *
  * To remove a widget, you have to include a Null plugin with the desired target.
  * You can use the position to sort existing and custom items.
+ *
+ * You can customize Print plugin by creating one custom plugin (or more) that modifies the existing
+ * components with your ones. You can configure this plugin in localConfig.json as usual.
  *
  * @class Print
  * @memberof plugins
@@ -100,39 +103,39 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  * }
  *
  * @example
- * // Custom plugin added to the left-panel target
- * export default createPlugin("PluginCustomization", {
- *    component: MyCustomization,
- *    containers: {
- *       Print: {
- *           target: "left-panel",
- *           position: 1.5
- *       }
- *    }
- * });
+ * // customize the printing UI via plugin(s)
+ * import React from "react";
+ * import {createPlugin} from "../../utils/PluginsUtils";
+ * import { connect } from "react-redux";
  *
- * @example
- * // Custom plugin replacing an existing target ("name", the widget for entering the title for the map)
- * export default createPlugin("PluginCustomization", {
- *    component: MyCustomization,
- *    containers: {
- *       Print: {
- *           target: "name",
- *           position: 1.5
- *       }
- *    }
- * });
-  *
- * @example
- * // Removal of an existing target (using the Null component)
- * export default createPlugin("PluginCustomization", {
- *    component: Null,
- *    containers: {
- *       Print: {
- *           target: "name",
- *           position: 1.5
- *       }
- *    }
+ * const MyCustomPanel = () => <div>Hello, I am a custom component</div>;
+ *
+ * const MyCustomLayout = ({sheet}) => <div>Hello, I am a custom layout, the sheet is {sheet}</div>;
+ * const MyConnectedCustomLayout = connect((state) => ({sheet: state.print?.spec.sheet}))(MyCustomLayout);
+ *
+ * export default createPlugin('PrintCustomizations', {
+ *     component: () => null,
+ *     containers: {
+ *         Print: [
+ *             // this entry add a panel between title and description
+ *             {
+ *                 target: "left-panel",
+ *                 position: 1.5,
+ *                 component: MyCustomPanel
+ *             },
+ *             // this entry replaces the layout panel
+ *             {
+ *                 target: "layout",
+ *                 component: MyConnectedCustomLayout,
+ *                 title: "MyLayout"
+ *             },
+ *             // To remove one component, simply create a component that returns null.
+ *             {
+ *                 target: "map-preview",
+ *                 component: () => null
+ *             }
+ *         ]
+ *     }
  * });
  */
 
@@ -333,7 +336,7 @@ export default {
                         return null;
                     };
                     renderItem = (item, options) => {
-                        const Comp = item.plugin;
+                        const Comp = item.component ?? item.plugin;
                         const {style, ...other} = this.props;
                         return <Comp role="body" {...other} {...item.cfg} {...options}/>;
                     };
@@ -349,7 +352,7 @@ export default {
                             });
                         }}>
                             {items.map((item, pos) => (
-                                <Panel header={getMessageById(this.context.messages, item.cfg.title)} eventKey={pos} collapsible>
+                                <Panel header={getMessageById(this.context.messages, item.cfg?.title ?? item.title ?? "")} eventKey={pos} collapsible>
                                     {this.renderItem(item, options)}
                                 </Panel>
                             ))}

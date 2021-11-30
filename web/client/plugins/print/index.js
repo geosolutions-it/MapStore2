@@ -137,7 +137,7 @@ export const standardItems = {
         },
         position: 1
     }, {
-        id: "legendoptions",
+        id: "legend-options",
         plugin: LegendOptions,
         cfg: {
             "title": "print.legendoptions"
@@ -150,12 +150,12 @@ export const standardItems = {
         cfg: {},
         position: 1
     }, {
-        id: "mappreview",
+        id: "map-preview",
         plugin: MapPreview,
         cfg: {},
         position: 2
     }, {
-        id: "defaultbackgroundignore",
+        id: "default-background-ignore",
         plugin: DefaultBackgrounOption,
         cfg: {},
         position: 3
