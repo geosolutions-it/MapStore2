@@ -24,14 +24,16 @@ class ThemaClassesEditor extends React.Component {
         classification: PropTypes.array,
         onUpdateClasses: PropTypes.func,
         className: PropTypes.string,
-        allowEmpty: PropTypes.bool
+        allowEmpty: PropTypes.bool,
+        customLabels: PropTypes.bool
     };
 
     static defaultProps = {
         classification: [],
         onUpdateClasses: () => {},
         className: "",
-        allowEmpty: true
+        allowEmpty: true,
+        customLabels: false
     };
 
     renderFieldByClassification = (classItem, index) => {
@@ -88,6 +90,13 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
+                { this.props.customLabels &&
+                    <FormControl
+                        value={classItem.title}
+                        type="text"
+                        onChange={e => this.updateCustomLabel(index, e.target.value)}
+                    />
+                }
                 { this.renderFieldByClassification(classItem, index) }
                 <DropdownButton
                     style={{flex: 0}}
@@ -228,6 +237,17 @@ class ThemaClassesEditor extends React.Component {
         }
         newClassification.splice(...args);
         this.props.onUpdateClasses(newClassification, 'interval');
+    }
+
+    updateCustomLabel = (classIndex, value) => {
+        if (value) {
+            const newClassification = this.props.classification.map((classItem, index) => {
+                return index === classIndex ? assign({}, classItem, {
+                    title: value
+                }) : classItem;
+            });
+            this.props.onUpdateClasses(newClassification, 'title');
+        }
     }
 }
 

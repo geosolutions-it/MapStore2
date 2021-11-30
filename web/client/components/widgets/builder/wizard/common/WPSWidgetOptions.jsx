@@ -72,6 +72,7 @@ const getAutoColorOptionsClassification = (classification) => (
     classification.reduce((acc, curr) => ([
         ...acc,
         {
+            ...( {title: curr.title ?? curr.unique }),
             color: curr.color,
             value: curr.unique
         }
@@ -100,6 +101,7 @@ export default ({
     const [classificationAttribute, setClassificationAttribute] = useState();
     const [classification, setClassification] = useState(CLASSIFIED_COLORS);
     const [defaultCustomColor, setDefaultCustomColor] = useState(defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1');
+    const [defaultClassLabel, setDefaultClassLabel] = useState('Default');
 
     return (
         <Row>
@@ -198,6 +200,7 @@ export default ({
                         onSaveStyle={() => {
                             setShowModal(false);
                             onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
+                            onChange("autoColorOptions.classDefaultLabel", classificationAttribute ? defaultClassLabel : '');
                             if (classificationAttribute && classificationAttribute?.value) {
                                 onChange("options.classificationAttribute", classificationAttribute?.value);
                                 onChange("autoColorOptions.classification", getAutoColorOptionsClassification(classification));
@@ -213,6 +216,8 @@ export default ({
                         classification={classification}
                         defaultCustomColor={defaultCustomColor}
                         onChangeColor={(color) => setDefaultCustomColor(color)}
+                        defaultClassLabel={defaultClassLabel}
+                        onChangeDefaultClassLabel={(value) => setDefaultClassLabel(value)}
                     />
                     }
 

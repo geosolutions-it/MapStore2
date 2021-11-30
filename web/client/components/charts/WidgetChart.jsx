@@ -47,12 +47,24 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
     })
 );
 
+const getLegendLabel = (value, colorCategories, defaultClassLabel) => {
+    let displayValue = defaultClassLabel;
+    if (includes(colorCategories.map(colorCat => colorCat.value), value)) {
+        displayValue = colorCategories.filter(item => item.value === value)[0].title || value;
+        if (!displayValue ?? /^\s*$/.test(displayValue)) {
+            displayValue = 'Default';
+        }
+    }
+    return displayValue;
+};
+
 function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel, autoColorOptions, customColorEnabled }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
     const colorCategories = autoColorOptions?.classification || [];
     const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
+    const defaultClassLabel = autoColorOptions.classDefaultLabel ?? 'Default';
     let traces;
 
     switch (type) {
@@ -83,13 +95,14 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
         if (classificationAttr && classifications.length && classificationColors.length && customColorEnabled) {
             let legendItems = [];
             traces = x.map((item, index) => {
-                const legendLabel = includes(colorCategories.map(colorCat => colorCat.value), classifications[index]) ? classifications[index] : 'Default';
+                const xValue = classifications[index];
+                const legendLabel = getLegendLabel(xValue, colorCategories, defaultClassLabel);
                 const trace = {
                     hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
                     x: [item],
                     y: [y[index]],
                     type,
-                    name: `${yAxisLabel || yDataKey} - ${legendLabel}`,
+                    name: `${yAxisLabel || yDataKey}${legendLabel && ` - ${legendLabel}`}`,
                     showlegend: !includes(legendItems, legendLabel),
                     marker: {color: [classificationColors[index]] }
                 };

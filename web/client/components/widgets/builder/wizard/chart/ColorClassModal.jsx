@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {Row, Col, Form, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Row, Col, Form, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
 
 import ColorSelector from '../../../../style/ColorSelector';
@@ -28,7 +28,9 @@ export default ({
     placeHolder,
     classification,
     defaultCustomColor,
-    onChangeColor
+    defaultClassLabel,
+    onChangeColor,
+    onChangeDefaultClassLabel
 }) => (
     <Portal>
         <ResizableModal
@@ -51,7 +53,7 @@ export default ({
             ]}>
             <Row xs={12}>
                 <Col componentClass={ControlLabel} xs={6}>
-                    <Message msgId={classificationAttribute ? "Default Color" : "Color"} />
+                    <Message msgId={classificationAttribute ? "Default color" : "Color"} />
                 </Col>
                 <Col xs={6}>
                     <ColorSelector
@@ -63,6 +65,20 @@ export default ({
                     />
                 </Col>
             </Row>
+            { classificationAttribute &&
+                <Row xs={12}>
+                    <Col componentClass={ControlLabel} xs={6}>
+                        <Message msgId={"Default class label"} />
+                    </Col>
+                    <Col xs={6}>
+                        <FormControl
+                            value={defaultClassLabel}
+                            type="text"
+                            onChange={e => onChangeDefaultClassLabel(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+            }
             <Row xs={12}>
                 <Form id="chart-color-class-form" horizontal>
                     <FormGroup controlId="classificationAttribute" className="chart-color-class-form-group">
@@ -85,12 +101,20 @@ export default ({
             <Row xs={12}>
                 <Col xs={12}>
                     { classificationAttribute &&
+                    <>
+                        <Row xs={12}>
+                            <Col xs={4}><Message msgId={"Class Color"}/></Col>
+                            <Col xs={4}><Message msgId={"Class Label"}/></Col>
+                            <Col xs={4}><Message msgId={"Class Value"}/></Col>
+                        </Row>
                         <ThemaClassesEditor
                             noEmptyIndex
                             classification={classification}
                             onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
                             allowEmpty={false}
+                            customLabels
                         />
+                    </>
                     }
                 </Col>
             </Row>
