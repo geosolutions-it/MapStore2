@@ -14,6 +14,8 @@ import { CONTROL_NAME } from './constants';
 
 import StreetViewContainer from './containers/StreetViewContainer';
 import {toggleStreetView, configure, reset} from './actions/streetView';
+import Message from '../../components/I18N/Message';
+
 import streetView from './reducers/streetview';
 import * as epics from './epics/streetView';
 import './css/style.css';
