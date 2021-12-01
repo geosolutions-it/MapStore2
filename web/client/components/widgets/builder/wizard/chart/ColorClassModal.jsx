@@ -17,8 +17,11 @@ import ResizableModal from '../../../../../components/misc/ResizableModal';
 import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 
 const getColorSelectorMessage = (chartType, classificationAttribute)  => (
-    (chartType === 'pie' && !classificationAttribute) ? 'Default Color Ramp' :
-        (chartType === 'bar' && !classificationAttribute) ? 'Color' : 'Default Color'
+    (chartType === 'pie' && !classificationAttribute) ?
+        "widgets.builder.wizard.classAttributes.defaultColorRamp" :
+        (chartType === 'bar' && !classificationAttribute) ?
+            "widgets.builder.wizard.classAttributes.color" :
+            "widgets.builder.wizard.classAttributes.defaultColor"
 );
 
 export default ({
@@ -41,6 +44,7 @@ export default ({
     <Portal>
         <ResizableModal
             modalClassName={modalClassName}
+            title={<Message msgId="widgets.builder.wizard.classAttributes.title" />}
             show={show}
             clickOutEnabled={false}
             showClose={false}
@@ -75,7 +79,7 @@ export default ({
             { classificationAttribute &&
                 <Row xs={12}>
                     <Col componentClass={ControlLabel} xs={6}>
-                        <Message msgId={"Default class label"} />
+                        <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
                     </Col>
                     <Col xs={6}>
                         <FormControl
@@ -90,7 +94,7 @@ export default ({
                 <Form id="chart-color-class-form" horizontal>
                     <FormGroup controlId="classificationAttribute" className="chart-color-class-form-group">
                         <Col componentClass={ControlLabel} xs={6}>
-                            <Message msgId={"Classification attribute"} />
+                            <Message msgId="widgets.builder.wizard.classAttributes.classificationAttribute" />
                         </Col>
                         <Col xs={6}>
                             <Select
@@ -111,9 +115,9 @@ export default ({
                     { classificationAttribute &&
                     <>
                         <Row xs={12}>
-                            <Col xs={4}><Message msgId={"Class Color"}/></Col>
-                            <Col xs={4}><Message msgId={"Class Label"}/></Col>
-                            <Col xs={4}><Message msgId={"Class Value"}/></Col>
+                            <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></Col>
+                            <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></Col>
+                            <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/></Col>
                         </Row>
                         <ThemaClassesEditor
                             noEmptyIndex

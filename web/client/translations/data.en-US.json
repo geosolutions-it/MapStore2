@@ -1771,7 +1771,18 @@
                     "connectToAMap": "Connect to another widget",
                     "connectToTheMap": "Connect to the other widget",
                     "selectMapToConnect": "Select the widget to connect",
-                    "clearConnection": "Clear connection"
+                    "clearConnection": "Clear connection",
+                    "classAttributes": {
+                        "classColor": "Class Color",
+                        "classLabel": "Class Label",
+                        "classValue": "Class Value",
+                        "color": "Color",
+                        "classificationAttribute": "Classification Attribute",
+                        "defaultClassLabel": "Default Class Label",
+                        "defaultColorRamp": "Default Color Ramp",
+                        "defaultColor": "Default Color",
+                        "title": "Custom chart colors"
+                    }
                 },
                 "errors": {
                     "noAttributesTitle": "No attributes to show",

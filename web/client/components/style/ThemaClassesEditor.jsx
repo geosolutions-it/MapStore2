@@ -90,6 +90,7 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
+                { this.renderFieldByClassification(classItem, index) }
                 { this.props.customLabels &&
                     <FormControl
                         value={classItem.title}
@@ -97,7 +98,6 @@ class ThemaClassesEditor extends React.Component {
                         onChange={e => this.updateCustomLabel(index, e.target.value)}
                     />
                 }
-                { this.renderFieldByClassification(classItem, index) }
                 <DropdownButton
                     style={{flex: 0}}
                     className="square-button-md no-border add-rule"

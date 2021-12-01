@@ -1771,7 +1771,18 @@
                     "connectToAMap": "Se connecter à un autre widget",
                     "connectToTheMap": "Connectez-vous à l'autre widget",
                     "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
-                    "clearConnection": "Effacer la connexion"
+                    "clearConnection": "Effacer la connexion",
+                    "classAttributes": {
+                        "classColor": "Couleur de la Classe",
+                        "classLabel": "Étiquette de la Classe",
+                        "classValue": "Valeur de la Classe",
+                        "color": "Couleur",
+                        "classificationAttribute": "Attribut de Classification",
+                        "defaultClassLabel": "Étiquette de Classe par Défaut",
+                        "defaultColorRamp": "Rampe de Couleur par Défaut",
+                        "defaultColor": "Couleur par Défaut",
+                        "title": "Couleurs de Graphique Personnalisées"
+                    }
                 },
                 "errors": {
                     "noAttributesTitle": "Aucun attribut à afficher",

@@ -1808,7 +1808,18 @@
                     "connectToAMap": "Stellen Sie eine Verbindung zu einem anderen Widget her",
                     "connectToTheMap": "Stellen Sie eine Verbindung mit dem anderen Widget her",
                     "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
-                    "clearConnection": "Verbindung löschen"
+                    "clearConnection": "Verbindung löschen",
+                    "classAttributes": {
+                        "classColor": "Klasse Farbe",
+                        "classLabel": "Klassenbezeichnung",
+                        "classValue": "Klassenwert",
+                        "color": "Farbe",
+                        "classificationAttribute": "Klassifizierungsattribut",
+                        "defaultClassLabel": "Standardklassenbezeichnung",
+                        "defaultColorRamp": "Standard-Farbrampe",
+                        "defaultColor": "Standardfarbe",
+                        "title": "Benutzerdefinierte Diagrammfarben"
+                    }
                 },
                 "errors": {
                     "noAttributesTitle": "Keine Attribute zum Anzeigen",
