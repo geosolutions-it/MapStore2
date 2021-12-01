@@ -173,7 +173,7 @@
     "fs-extra": "3.0.1",
     "geostyler-geocss-parser": "https://github.com/allyoucanmap/geostyler-geocss-parser/tarball/build",
     "geostyler-openlayers-parser": "1.1.4",
-    "geostyler-sld-parser": "2.0.1",
+    "geostyler-sld-parser": "https://github.com/geosolutions-it/geostyler-sld-parser/tarball/release_v2.0.1_opacity_fix",
     "history": "4.6.1",
     "html-to-draftjs": "npm:@geosolutions/html-to-draftjs@1.5.1",
     "html2canvas": "0.5.0-beta4",
