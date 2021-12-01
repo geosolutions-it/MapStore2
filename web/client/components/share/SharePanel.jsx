@@ -75,13 +75,16 @@ class SharePanel extends React.Component {
         closeGlyph: PropTypes.string,
         version: PropTypes.string,
         bbox: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-        advancedSettings: PropTypes.shape({
-            bbox: PropTypes.bool,
-            homeButton: PropTypes.bool,
-            centerAndZoom: PropTypes.bool,
-            defaultEnabled: PropTypes.bool,
-            hideInTab: PropTypes.string
-        }),
+        advancedSettings: PropTypes.oneOfType([
+            PropTypes.shape({
+                bbox: PropTypes.bool,
+                homeButton: PropTypes.bool,
+                centerAndZoom: PropTypes.bool,
+                defaultEnabled: PropTypes.bool,
+                hideInTab: PropTypes.string
+            }),
+            PropTypes.bool
+        ]),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
         selectedTab: PropTypes.string,
