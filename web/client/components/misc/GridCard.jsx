@@ -9,6 +9,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import isNil from 'lodash/isNil';
 import Toolbar from './toolbar/Toolbar';
 import './style/gridcard.css';
 
@@ -47,7 +48,7 @@ class GridCard extends React.Component {
             style={this.props.style}
             className={"gridcard" + (this.props.className ? " " + this.props.className : "")}
             onClick={this.props.onClick}>
-            {this.props.header ? <div style={this.props.titleStyle} className="gridcard-title bg-primary">{this.props.header}</div> : null}
+            {!isNil(this.props.header) ? <div style={this.props.titleStyle} className="gridcard-title bg-primary">{this.props.header}</div> : null}
             {this.props.children}
             {this.renderActions()}
         </div>)
