@@ -21,7 +21,7 @@ export default ({
     show,
     onClose,
     onSaveStyle,
-    onChange,
+    onChangeClassAttribute,
     classificationAttribute,
     onUpdateClasses,
     options,
@@ -90,8 +90,9 @@ export default ({
                                 value={classificationAttribute}
                                 options={options}
                                 placeholder={placeHolder}
-                                onChange={(val) => {
-                                    onChange(val);
+                                onChange={ val => {
+                                    const value = val && val.value || undefined;
+                                    onChangeClassAttribute(value);
                                 }}
                             />
                         </Col>

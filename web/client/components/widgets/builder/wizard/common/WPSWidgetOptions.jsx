@@ -83,7 +83,7 @@ const getAutoColorOptionsClassification = (classification) => (
 
 export default ({
     hasAggregateProcess,
-    data = { options: {} },
+    data = { options: {}, autoColorOptions: {} },
     onChange = () => { },
     options = [],
     formOptions = {
@@ -98,10 +98,10 @@ export default ({
 
     const [showModal, setShowModal] = useState(false);
     const [customColor, setCustomColor] = useState(false);
-    const [classificationAttribute, setClassificationAttribute] = useState();
+    const [classificationAttribute, setClassificationAttribute] = useState(data.options?.classificationAttribute);
     const [classification, setClassification] = useState(CLASSIFIED_COLORS);
-    const [defaultCustomColor, setDefaultCustomColor] = useState(defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1');
-    const [defaultClassLabel, setDefaultClassLabel] = useState('Default');
+    const [defaultCustomColor, setDefaultCustomColor] = useState(data.autoColorOptions?.classDefaultColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1');
+    const [defaultClassLabel, setDefaultClassLabel] = useState(data.autoColorOptions?.classDefaultLabel || 'Default');
 
     return (
         <Row>
@@ -200,13 +200,13 @@ export default ({
                         onSaveStyle={() => {
                             setShowModal(false);
                             onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
-                            onChange("autoColorOptions.classDefaultLabel", classificationAttribute ? defaultClassLabel : '');
-                            if (classificationAttribute && classificationAttribute?.value) {
-                                onChange("options.classificationAttribute", classificationAttribute?.value);
+                            onChange("options.classificationAttribute", classificationAttribute);
+                            if (classificationAttribute) {
+                                onChange("autoColorOptions.classDefaultLabel", defaultClassLabel || '');
                                 onChange("autoColorOptions.classification", getAutoColorOptionsClassification(classification));
                             }
                         }}
-                        onChange={(value) => setClassificationAttribute(value)}
+                        onChangeClassAttribute={(value) => setClassificationAttribute(value)}
                         classificationAttribute={classificationAttribute}
                         onUpdateClasses={(newClassification) => {
                             setClassification(newClassification);
