@@ -240,7 +240,7 @@ class ThemaClassesEditor extends React.Component {
     }
 
     updateCustomLabel = (classIndex, value) => {
-        if (value) {
+        if (value !== undefined) {
             const newClassification = this.props.classification.map((classItem, index) => {
                 return index === classIndex ? assign({}, classItem, {
                     title: value

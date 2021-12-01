@@ -10,7 +10,7 @@ import React, { Suspense } from 'react';
 import { sameToneRangeColors, hexToHsv } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
-import { includes, isNumber, isString } from 'lodash';
+import { includes, isNumber, isString, union } from 'lodash';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
@@ -58,6 +58,24 @@ const getLegendLabel = (value, colorCategories, defaultClassLabel) => {
     return displayValue;
 };
 
+const getGroupedTraceValues = (classValues, filteredClassValues, classColors, xValues, yValues) => {
+    const groupedXValues = filteredClassValues.map(v => classValues.map((c, i) => c === v ? xValues[i] : null).filter(z => z));
+    const groupedYValues = filteredClassValues.map(v => classValues.map((c, i) => c === v ? yValues[i] : null).filter(z => z));
+    const groupedColors = filteredClassValues.map(v => classValues.map((c, i) => c === v ? classColors[i] : null).filter(z => z));
+    return [groupedXValues, groupedYValues, groupedColors];
+};
+
+const preProcessValues = (formula, values) => (
+    values.map(v => {
+        const value = v;
+        try {
+            return parseExpression(formula, {value});
+        } catch {
+            // if error (e.g. null values), return the value itself
+            return v;
+        }
+    }));
+
 function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel, autoColorOptions, customColorEnabled }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
@@ -65,63 +83,79 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
     const colorCategories = autoColorOptions?.classification || [];
     const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
     const defaultClassLabel = autoColorOptions.classDefaultLabel ?? 'Default';
-    let traces;
 
     switch (type) {
 
     case 'pie':
-        return {
+        let pieChartTrace = {
             type,
-            textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
-            values: y,
-            labels: x,
-            ...(classifications.length && classificationColors.length && customColorEnabled ? {marker: {colors: classificationColors}} : {})
+            textposition: 'inside',
+            values: y
         };
-
-    default:
-        if (formula) {
-            y = y.map(v => {
-                const value = v;
-                try {
-                    return parseExpression(formula, {value});
-                } catch {
-                    // if error (e.g. null values), return the value itself
-                    return v;
+        if (classificationAttr && classifications.length && classificationColors.length && customColorEnabled) {
+            const legendLabels = classifications.map((item, index) => `${x[index]} - ${getLegendLabel(item, colorCategories, defaultClassLabel)}`);
+            pieChartTrace = {
+                ...pieChartTrace,
+                text: x,
+                labels: legendLabels,
+                marker: {colors: classificationColors},
+                legendgrouptitle: {
+                    text: `${xDataKey} - ${classificationAttr}`
                 }
-            });
+            };
+        } else {
+            pieChartTrace = {
+                ...pieChartTrace,
+                labels: x
+            };
         }
+        return pieChartTrace;
 
+    case 'bar':
+        if (formula) {
+            y = preProcessValues(formula, y);
+        }
+        let barChartTrace = {
+            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`,
+            type
+        };
         /** Bar chart is classified coloured */
         if (classificationAttr && classifications.length && classificationColors.length && customColorEnabled) {
-            let legendItems = [];
-            traces = x.map((item, index) => {
-                const xValue = classifications[index];
-                const legendLabel = getLegendLabel(xValue, colorCategories, defaultClassLabel);
+            const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel));
+            const filteredLegendLabels = union(legendLabels);
+            const [groupedXValues, groupedYValues, groupedColors] = getGroupedTraceValues(legendLabels, filteredLegendLabels, classificationColors, x, y);
+            const barChartTraces = filteredLegendLabels.map((item, index) => {
                 const trace = {
-                    hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
-                    x: [item],
-                    y: [y[index]],
-                    type,
-                    name: `${yAxisLabel || yDataKey}${legendLabel && ` - ${legendLabel}`}`,
-                    showlegend: !includes(legendItems, legendLabel),
-                    marker: {color: [classificationColors[index]] }
+                    ...barChartTrace,
+                    x: groupedXValues[index],
+                    y: groupedYValues[index],
+                    name: `${yAxisLabel || yDataKey}${item && ` - ${item}`}`,
+                    marker: { color: groupedColors[index] }
                 };
-                legendItems.push(legendLabel);
                 return trace;
             });
-            return traces;
+            return barChartTraces;
         }
 
         /** Bar chart is evenly coloured */
-        traces = {
-            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
+        barChartTrace = {
+            ...barChartTrace,
             x: x,
             y: y,
-            type,
             name: yAxisLabel || yDataKey,
             ...(classifications.length && classificationColors.length ? {marker: {color: classificationColors}} : {})
         };
-        return traces;
+        return barChartTrace;
+
+    default:
+        if (formula) {
+            y = preProcessValues(formula, y);
+        }
+        return {
+            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'd'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
+            x,
+            y
+        };
     }
 }
 function getMargins({ type, isModeBarVisible}) {
