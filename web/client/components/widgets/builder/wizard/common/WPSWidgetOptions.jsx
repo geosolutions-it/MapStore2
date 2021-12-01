@@ -68,18 +68,19 @@ const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type ||
 
 const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
 
-const getAutoColorOptionsClassification = (classification) => (
+/** Backup to class value (unique) if label (title) is not provided */
+const formatAutoColorOptions = (classification) => (
     classification.reduce((acc, curr) => ([
         ...acc,
         {
             ...( {title: curr.title ?? curr.unique }),
             color: curr.color,
-            value: curr.unique
+            value: curr.unique,
+            unique: curr.unique
         }
     ]
     ), [])
 );
-
 
 export default ({
     hasAggregateProcess,
@@ -99,7 +100,7 @@ export default ({
     const [showModal, setShowModal] = useState(false);
     const [customColor, setCustomColor] = useState(false);
     const [classificationAttribute, setClassificationAttribute] = useState(data.options?.classificationAttribute);
-    const [classification, setClassification] = useState(CLASSIFIED_COLORS);
+    const [classification, setClassification] = useState(data.autoColorOptions?.classification || CLASSIFIED_COLORS);
     const [defaultCustomColor, setDefaultCustomColor] = useState(data.autoColorOptions?.classDefaultColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1');
     const [defaultClassLabel, setDefaultClassLabel] = useState(data.autoColorOptions?.classDefaultLabel || 'Default');
 
@@ -191,11 +192,12 @@ export default ({
                     <ColorClassModal
                         modalClassName="chart-color-class-modal"
                         show={showModal}
+                        chartType={data.type}
                         onClose={() => {
                             setShowModal(false);
                             onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
                             onChange("options.classificationAttribute", undefined);
-                            onChange("autoColorOptions.classification", getAutoColorOptionsClassification([]));
+                            onChange("autoColorOptions.classification", []);
                         }}
                         onSaveStyle={() => {
                             setShowModal(false);
@@ -203,7 +205,7 @@ export default ({
                             onChange("options.classificationAttribute", classificationAttribute);
                             if (classificationAttribute) {
                                 onChange("autoColorOptions.classDefaultLabel", defaultClassLabel || '');
-                                onChange("autoColorOptions.classification", getAutoColorOptionsClassification(classification));
+                                onChange("autoColorOptions.classification", formatAutoColorOptions(classification));
                             }
                         }}
                         onChangeClassAttribute={(value) => setClassificationAttribute(value)}

@@ -16,9 +16,15 @@ import Portal from '../../../../../components/misc/Portal';
 import ResizableModal from '../../../../../components/misc/ResizableModal';
 import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 
+const getColorSelectorMessage = (chartType, classificationAttribute)  => (
+    (chartType === 'pie' && !classificationAttribute) ? 'Default Color Ramp' :
+        (chartType === 'bar' && !classificationAttribute) ? 'Color' : 'Default Color'
+);
+
 export default ({
     modalClassName,
     show,
+    chartType,
     onClose,
     onSaveStyle,
     onChangeClassAttribute,
@@ -53,7 +59,7 @@ export default ({
             ]}>
             <Row xs={12}>
                 <Col componentClass={ControlLabel} xs={6}>
-                    <Message msgId={classificationAttribute ? "Default color" : "Color"} />
+                    <Message msgId={getColorSelectorMessage(chartType, classificationAttribute)} />
                 </Col>
                 <Col xs={6}>
                     <ColorSelector
@@ -61,6 +67,7 @@ export default ({
                         color={defaultCustomColor}
                         disableAlpha
                         format="hex"
+                        colorRamp={chartType === 'pie' && !classificationAttribute}
                         onChangeColor={(color) => onChangeColor(color)}
                     />
                 </Col>
