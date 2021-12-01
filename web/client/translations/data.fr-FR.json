@@ -2815,6 +2815,10 @@
             "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
             "title": "Outil de partage"
           },
+          "StreetView": {
+            "title": "Street View",
+            "description": "Outil pour parcourir les images Google Street View à partir de la carte"
+          },
           "StyleEditor": {
             "description": "Éditeur de style de couche",
             "title": "Éditeur de style"
@@ -3372,6 +3376,17 @@
           "successRemoved": "Session utilisateur supprimée",
           "remove": "Réinitialiser la session utilisateur",
           "confirmRemove": "Êtes-vous sûr de vouloir restaurer la configuration par défaut?"
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Outil pour parcourir les images Google Street View à partir de la carte",
+          "tooltip": "Ouvrir l'outil Street View",
+          "emptyTitle": "Vue sur la rue",
+          "emptyDescription": "Cliquez sur la carte pour commencer à parcourir les images de Street View",
+          "messages": {
+            "noDataForPosition": "pas de données Street View pour cette position",
+            "unknownError": "erreur inconnue, voir console"
+          }
         }
     }
 }

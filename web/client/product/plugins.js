@@ -106,6 +106,7 @@ export default {
         SharePlugin: require('../plugins/Share'),
         SnapshotPlugin: require('../plugins/Snapshot').default,
         StyleEditorPlugin: require('../plugins/StyleEditor').default,
+        StreetView: require('../plugins/StreetView').default,
         SwipePlugin: require('../plugins/Swipe').default,
         TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings').default,
         TOCPlugin: require('../plugins/TOC').default,
