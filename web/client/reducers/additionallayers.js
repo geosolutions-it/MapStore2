@@ -8,10 +8,11 @@
  */
 
 import {
-    UPDATE_ADDITIONAL_LAYER,
+    ADD_ADDITIONAL_LAYERS,
     REMOVE_ADDITIONAL_LAYER,
-    UPDATE_OPTIONS_BY_OWNER,
-    REMOVE_ALL_ADDITIONAL_LAYERS
+    REMOVE_ALL_ADDITIONAL_LAYERS,
+    UPDATE_ADDITIONAL_LAYER,
+    UPDATE_OPTIONS_BY_OWNER
 } from '../actions/additionallayers';
 
 import { head, pickBy, identity, isObject, isArray } from 'lodash';
@@ -38,6 +39,9 @@ function additionallayers(state = [], action) {
             newLayerItem
         ];
     }
+    case ADD_ADDITIONAL_LAYERS: {
+        return state.concat(action.layers);
+    }
     case UPDATE_OPTIONS_BY_OWNER: {
         const {options, owner} = action;
         return state.map((layerItem, idx) => layerItem.owner === owner ? {
@@ -50,7 +54,7 @@ function additionallayers(state = [], action) {
         return owner ? state.filter(layerItem => layerItem.owner !== owner) : state.filter(layerItem => layerItem.id !== id);
     }
     case REMOVE_ALL_ADDITIONAL_LAYERS: {
-        return [];
+        return action.owner ? state.filter(layer => layer.owner !== action.owner) : [];
     }
     default:
         return state;
