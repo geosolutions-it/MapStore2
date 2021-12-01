@@ -59,6 +59,8 @@ class DataGrid extends Grid {
             // force scroll top
             if (scrollToTopCounter !== oldProps.scrollToTopCounter && this.canvas) {
                 this.canvas.scrollTop = 0;
+            } else if (this.canvas) {
+                this.canvas.scrollLeft = this.header.scrollLeft; // makes sure header x-scroll matches canvas x-scroll
             }
         }
     }
@@ -75,6 +77,7 @@ class DataGrid extends Grid {
     }
     setCanvasListener = () => {
         this.canvas = ReactDOM.findDOMNode(this).querySelector('.react-grid-Canvas');
+        this.header = ReactDOM.findDOMNode(this).querySelector('.react-grid-HeaderRow');
         if (this.canvas) {
             this.canvas.addEventListener('scroll', this.scrollListener);
         }
