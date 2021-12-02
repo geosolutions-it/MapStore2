@@ -213,12 +213,15 @@ export const navigableItemsSelectorCreator = ({withImmersiveSection = false, inc
  * @param {Object} state
  * @returns {number} index of currentPage position or -1
  */
-const getPageIndex = (state) => findIndex(navigableItemsSelectorCreator({ includeAlways: true })(state), {
-    id: currentPageSelector(state).columns &&
-        currentPageSelector(state).columns[currentPageSelector(state).sectionId]
-        ? currentPageSelector(state).columns[currentPageSelector(state).sectionId]
-        : currentPageSelector(state).sectionId || ""
-});
+export const getPageIndex = (state) => {
+    const currentPage = currentPageSelector(state);
+    return findIndex(navigableItemsSelectorCreator({ includeAlways: true })(state), {
+        id: currentPage.columns &&
+            currentPage.columns[currentPage.sectionId]
+            ? currentPage.columns[currentPage.sectionId]
+            : currentPage.sectionId || ""
+    });
+};
 /**
  * gets the current position of currentPage
  * @returns {function} function that returns a selector
