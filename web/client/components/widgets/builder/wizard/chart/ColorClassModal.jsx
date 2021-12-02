@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Row, Col, Form, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
 
@@ -24,7 +25,7 @@ const getColorSelectorMessage = (chartType, classificationAttribute)  => (
             "widgets.builder.wizard.classAttributes.defaultColor"
 );
 
-export default ({
+const ColorClassModal = ({
     modalClassName,
     show,
     chartType,
@@ -133,3 +134,37 @@ export default ({
         </ResizableModal>
     </Portal>
 );
+
+ColorClassModal.propTypes = {
+    modalClassName: PropTypes.string,
+    show: PropTypes.boolean,
+    chartType: PropTypes.string,
+    onClose: PropTypes.func,
+    onSaveStyle: PropTypes.func,
+    onChangeClassAttribute: PropTypes.func,
+    classificationAttribute: PropTypes.string,
+    onUpdateClasses: PropTypes.func,
+    options: PropTypes.array,
+    placeHolder: PropTypes.string,
+    classification: PropTypes.array,
+    defaultCustomColor: PropTypes.string,
+    defaultClassLabel: PropTypes.string,
+    onChangeColor: PropTypes.func,
+    onChangeDefaultClassLabel: PropTypes.func
+};
+
+ColorClassModal.defaultProps = {
+    onClose: () => {},
+    onSaveStyle: () => {},
+    onChangeClassAttribute: () => {},
+    classificationAttribute: '',
+    onUpdateClasses: () => {},
+    options: [],
+    classification: [{title: '', color: '#ffffff', type: 'Polygon', unique: ''}],
+    defaultCustomColor: '#0888A1',
+    defaultClassLabel: '',
+    onChangeColor: () => {},
+    onChangeDefaultClassLabel: () => {}
+};
+
+export default ColorClassModal;

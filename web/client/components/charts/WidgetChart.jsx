@@ -24,7 +24,7 @@ export const defaultColorGenerator = (total, colorOptions) => {
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
 };
 
-const customColorRampGenerator = (color, total) => {
+export const customColorRampGenerator = (color, total) => {
     const hsvDefaultColor = hexToHsv(color);
     const defaultAutoColorOptions = {
         base: color,
@@ -106,6 +106,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
         } else {
             pieChartTrace = {
                 ...pieChartTrace,
+                name: yAxisLabel || yDataKey,
                 labels: x
             };
         }
@@ -154,7 +155,8 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
         return {
             hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'd'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x,
-            y
+            y,
+            name: yAxisLabel || yDataKey
         };
     }
 }

@@ -1,10 +1,10 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
+import WidgetChart, { customColorRampGenerator, toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
 
 import expect from 'expect';
-import { DATASET_1 } from './sample_data';
+import { DATASET_1, DATASET_2 } from './sample_data';
 
 describe('WidgetChart', () => {
     beforeEach((done) => {
@@ -168,6 +168,69 @@ describe('Widget Chart: data conversions ', () => {
                 ...DATASET_1
             });
             expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, autoColorOptions));
+        });
+        it('custom classified colors', () => {
+            const classifications = {
+                dataKey: 'classValue'
+            };
+            const classification = [
+                {
+                    title: 'Class 1',
+                    color: '#ff0000',
+                    value: 'class1',
+                    unique: 'class1'
+                },
+                {
+                    title: 'Class 2',
+                    color: '#0000ff',
+                    value: 'class2',
+                    unique: 'class2'
+                }
+            ];
+            const autoColorOptions = { classDefaultColor: "#00ff00", classDefaultLabel: "Default", classification, name: 'global.colors.custom' };
+            const { data, layout } = toPlotly({
+                type: 'pie',
+                autoColorOptions,
+                classifications,
+                ...DATASET_2
+            });
+            expect(data.length).toBe(1);
+            expect(data[0].type).toBe('pie');
+            expect(data[0].textposition).toEqual('inside');
+            // data values mapped
+            data[0].values.map((v, i) => expect(v).toBe(DATASET_2.data[i][DATASET_2.series[0].dataKey]));
+            // data labels mapped
+            data[0].labels.map((v, i) => {
+                const classLabel = classification.filter(item => item.value === DATASET_2.data[i][classifications.dataKey])[0].title;
+                expect(v).toBe(`${DATASET_2.data[i][DATASET_2.xAxis.dataKey]} - ${classLabel}`);
+            });
+            // colors are those defined by the user
+            data[0].marker.colors.map((v, i) => {
+                const classColor = classification.filter(item => item.value === DATASET_2.data[i][classifications.dataKey])[0].color;
+                expect(v).toBe(classColor);
+            });
+            // LAYOUT
+            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+        });
+        it('custom color ramp', () => {
+            const autoColorOptions = {
+                classDefaultColor: "#0888A1",
+                classDefaultLabel: "Default",
+                name: 'global.colors.custom',
+                base: 190,
+                range: 0,
+                s: 0.95,
+                v: 0.63
+            };
+            const { data, layout } = toPlotly({
+                type: 'pie',
+                autoColorOptions,
+                ...DATASET_2
+            });
+            expect(data.length).toBe(1);
+            expect(data[0].type).toBe('pie');
+            expect(data[0].textposition).toEqual('inside');
+            expect(layout.colorway).toEqual(customColorRampGenerator(autoColorOptions.classDefaultColor, DATASET_2.data.length));
         });
     });
     describe('Line/Bar chart', () => {

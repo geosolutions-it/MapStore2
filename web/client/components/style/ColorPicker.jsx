@@ -391,6 +391,7 @@ ColorPicker.propTypes = {
 ColorPicker.defaultProps = {
     disabled: false,
     line: false,
+    colorRamp: false,
     onChangeColor: () => {},
     pickerProps: {},
     onOpen: () => {},
