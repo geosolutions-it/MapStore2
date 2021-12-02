@@ -38,6 +38,16 @@ const uniqueClassification = {
     }]
 };
 
+const uniqueClassificationCustomLabels = [{
+    color: '#FF0000',
+    unique: 'pcfc',
+    title: 'Pacific'
+}, {
+    color: '#00FF00',
+    unique: 'satl',
+    title: 'South Atlantic'
+}];
+
 describe("Test the ThemaClassesEditor component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -61,6 +71,12 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(cmp).toExist();
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode.getElementsByClassName('ms-color-picker-swatch').length).toBe(2);
+    });
+    it('creates component with custom labels allowed', () => {
+        const cmp = ReactDOM.render(<ThemaClassesEditor classification={uniqueClassificationCustomLabels} customLabels />, document.getElementById("container"));
+        expect(cmp).toExist();
+        const domNode = ReactDOM.findDOMNode(cmp);
+        expect(domNode.getElementsByClassName('form-control').length).toBe(4);
     });
     it('on update value', () => {
         const actions = {
@@ -292,5 +308,27 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(arg1).toBeTruthy();
         expect(arg1.length).toBe(3);
         expect(arg1[0]).toEqual({"color": "#ffffff", "unique": '', "title": ''});
+    });
+    it('removal of all rules is not allowed', () => {
+        const actions = { onUpdateClasses: () => { } };
+        const spyUpdate = expect.spyOn(actions, 'onUpdateClasses');
+        const cmp = ReactDOM.render(
+            <ThemaClassesEditor classification={uniqueClassificationCustomLabels}
+                onUpdateClasses={actions.onUpdateClasses}
+                allowEmpty={false}
+            />, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(cmp);
+        const buttons = domNode.getElementsByClassName('add-rule');
+        expect(buttons.length).toBe(2);
+        const menuItemButton = domNode.querySelectorAll('.dropdown-menu')[0];
+        const menuItem = domNode.querySelectorAll('.dropdown-menu > li > a');
+        expect(menuItem.length).toBe(5);
+        expect(menuItemButton.children.length).toBe(2);
+        TestUtils.Simulate.click(menuItem[4]);
+        expect(spyUpdate).toHaveBeenCalled();
+        const [arg1, arg2] = spyUpdate.calls[0].arguments;
+        expect(arg2).toBe('interval');
+        expect(arg1).toBeTruthy();
+        expect(arg1.length).toBe(1);
     });
 });
