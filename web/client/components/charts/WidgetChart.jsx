@@ -58,11 +58,12 @@ const getLegendLabel = (value, colorCategories, defaultClassLabel) => {
     return displayValue;
 };
 
-const getGroupedTraceValues = (classValues, filteredClassValues, classColors, xValues, yValues) => {
-    const groupedXValues = filteredClassValues.map(v => classValues.map((c, i) => c === v ? xValues[i] : null).filter(z => z));
-    const groupedYValues = filteredClassValues.map(v => classValues.map((c, i) => c === v ? yValues[i] : null).filter(z => z));
-    const groupedColors = filteredClassValues.map(v => classValues.map((c, i) => c === v ? classColors[i] : null).filter(z => z));
-    return [groupedXValues, groupedYValues, groupedColors];
+export const getGroupedTraceValues = (classValues, filteredClassValues, ungroupedValues) => {
+    const groupedValues = ungroupedValues
+        .map(ungroupedValue => filteredClassValues
+            .map(item => classValues
+                .reduce((acc, cur, index) => (cur === item ? [...acc, ungroupedValue[index]] : acc), [])));
+    return groupedValues;
 };
 
 const preProcessValues = (formula, values) => (
@@ -124,7 +125,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
         if (classificationAttr && classifications.length && classificationColors.length && customColorEnabled) {
             const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel));
             const filteredLegendLabels = union(legendLabels);
-            const [groupedXValues, groupedYValues, groupedColors] = getGroupedTraceValues(legendLabels, filteredLegendLabels, classificationColors, x, y);
+            const [groupedColors, groupedXValues, groupedYValues] = getGroupedTraceValues(legendLabels, filteredLegendLabels, [classificationColors, x, y]);
             const barChartTraces = filteredLegendLabels.map((item, index) => {
                 const trace = {
                     ...barChartTrace,

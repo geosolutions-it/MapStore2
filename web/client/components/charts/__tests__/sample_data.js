@@ -21,6 +21,21 @@ export const DATASET_2 = {
     series: [{ dataKey: "value" }]
 };
 
+export const SPLIT_DATASET_2 = {
+    data: [
+        [
+            { name: 'Page A', value: 0, classValue: 'class1'},
+            { name: 'Page D', value: 3, classValue: 'class1'}
+        ],
+        [
+            { name: 'Page B', value: 1, classValue: 'class2'},
+            { name: 'Page C', value: 2, classValue: 'class2'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
 export const DATASET_3 = {
     data: [
         ...DATASET_2.data,
@@ -30,6 +45,19 @@ export const DATASET_3 = {
     xAxis: { dataKey: "name" },
     series: [{ dataKey: "value" }]
 };
+
+export const SPLIT_DATASET_3 = {
+    data: [
+        ...SPLIT_DATASET_2.data,
+        [
+            { name: 'Page E', value: 4, classValue: 'class3'},
+            { name: 'Page F', value: 5, classValue: 'class3'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
 
 export const CLASSIFICATIONS = {
     dataKey: 'classValue'
