@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, GeoSolutions Sas.
+ * Copyright 2021, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -145,6 +145,7 @@ ColorClassModal.propTypes = {
 };
 
 ColorClassModal.defaultProps = {
+    modalClassName: 'chart-color-class-modal',
     onClose: () => {},
     onSaveStyle: () => {},
     onChangeClassAttribute: () => {},
