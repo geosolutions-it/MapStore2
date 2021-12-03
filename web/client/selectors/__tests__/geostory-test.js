@@ -38,7 +38,8 @@ import {
     isGeoCarouselSection,
     getAllCarouselContentsOfSection,
     isDrawControlEnabled,
-    geoCarouselSettings
+    geoCarouselSettings,
+    getPageIndex
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -115,6 +116,28 @@ describe('geostory selectors', () => { // TODO: check default
     it('currentPositionSelector ', () => expect(currentPositionSelector({ geostory: { currentStory: TEST_STORY, currentPage: {
         sectionId: "SomeID"
     } } })).toBe(0));
+    it('currentPositionSelector works correctly for geocarousel ', () => {
+        const state = {
+            geostory: {
+                currentStory: TEST_STORY,
+                currentPage: {
+                    sectionId: "SomeID_carousel",
+                    SomeID_carousel: {columnId: "carouselID"}
+                }
+            }
+        };
+        expect(currentPositionSelector(state)).toBe(5);
+    });
+    it('getPageIndex ', () => {
+        const state = {
+            geostory: {
+                currentStory: TEST_STORY, currentPage: {
+                    sectionId: "SomeID"
+                }
+            }
+        };
+        expect(getPageIndex(state)).toBe(0);
+    });
     it('totalItemsSelector ', () => expect(totalItemsSelector({ geostory: { currentStory: TEST_STORY } })).toBe(6));
     it('settingsSelector ', () => expect(settingsSelector({ geostory: { currentStory: {...TEST_STORY, settings: {
         checked: ["col2"]
