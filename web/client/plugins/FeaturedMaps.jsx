@@ -49,12 +49,17 @@ class FeaturedMaps extends React.Component {
         enableFeaturedMaps: PropTypes.func,
         version: PropTypes.string,
         showAPIShare: PropTypes.bool,
-        shareOptions: PropTypes.object
+        shareOptions: PropTypes.object,
+        shareToolEnabled: PropTypes.bool
     };
 
     static contextTypes = {
         router: PropTypes.object
     };
+
+    static defaultProps = {
+        shareToolEnabled: true
+    }
 
     UNSAFE_componentWillMount() {
         this.props.enableFeaturedMaps(true);
@@ -98,6 +103,7 @@ class FeaturedMaps extends React.Component {
                 viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
                 getShareUrl={this.makeShareUrl}
                 shareOptions={this.getShareOptions} // TODO: share options depending on the content type
+                shareToolEnabled={this.props.shareToolEnabled}
                 bottom={this.props.bottom}
                 style={items.length === 0 ? {display: 'none'} : {}}/>
         );
@@ -167,6 +173,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
  * @name FeaturedMaps
  * @prop {string} cfg.pageSize change the page size (only desktop)
  * @prop {boolean} cfg.shareOptions configuration applied to share panel grouped by category name
+ * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
  * @memberof plugins
  * @class
  * @example
@@ -174,6 +181,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
  *   "name": "FeaturedMaps",
  *   "cfg": {
  *     "shareOptions": {
+ *       "pageSize": 6,
  *       "dashboard": {
  *         "embedPanel": false
  *       }
