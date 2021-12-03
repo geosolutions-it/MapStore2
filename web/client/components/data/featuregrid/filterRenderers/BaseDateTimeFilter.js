@@ -26,7 +26,7 @@ const UTCDateTimePicker = utcDateWrapper({
 class DateFilter extends AttributeFilter {
     static propTypes = {
         type: PropTypes.string,
-        disabled: PropTypes.boolean,
+        disabled: PropTypes.bool,
         onChange: PropTypes.func,
         intl: intlShape
     };
