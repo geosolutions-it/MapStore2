@@ -172,7 +172,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
  * Typically used in the {@link #pages.Maps|home page}.
  * @name FeaturedMaps
  * @prop {string} cfg.pageSize change the page size (only desktop)
- * @prop {boolean} cfg.shareOptions configuration applied to share panel grouped by category name
+ * @prop {object} cfg.shareOptions configuration applied to share panel grouped by category name
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
  * @memberof plugins
  * @class

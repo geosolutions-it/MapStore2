@@ -40,7 +40,7 @@ const dashboardsCountSelector = createSelector(
  * @memberof plugins
  * @class
  * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
- * @prop {boolean} cfg.shareOptions configuration applied to share panel
+ * @prop {object} cfg.shareOptions configuration applied to share panel
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
  */
 class Dashboards extends React.Component {

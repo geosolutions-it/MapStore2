@@ -39,7 +39,7 @@ const geostoriesCountSelector = createSelector(
  * @class
  * @memberof plugins
  * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
- * @prop {boolean} cfg.shareOptions configuration applied to share panel
+ * @prop {object} cfg.shareOptions configuration applied to share panel
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
  */
 class Geostories extends React.Component {
