@@ -1,7 +1,7 @@
 import {isNaN, round} from 'lodash';
 import { compose, withHandlers, withProps } from 'recompose';
 
-const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
+const convertDDToDMS = (D, lng, {seconds} = {}) => {
 
     // round to the smaller absolute integer value
     let d = D >= 0 ? Math.floor(D) : Math.ceil(D);
@@ -9,7 +9,7 @@ const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
     let minFloat = Math.abs((D - d) * 60);
     let m = Math.floor(minFloat);
     let secFloat = (minFloat - m) * 60;
-    let s = round(secFloat, seconds.decimals);
+    let s = round(secFloat, seconds?.decimals ?? 4);
     d = Math.abs(d);
 
     if (s === 60) {
