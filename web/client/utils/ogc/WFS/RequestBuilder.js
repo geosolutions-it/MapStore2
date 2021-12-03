@@ -98,7 +98,7 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS = "
         sortBy: (property, order = "ASC") =>
             `<${wfsNS}:SortBy><${wfsNS}:SortProperty>${propertyName(property)}<${wfsNS}:SortOrder>${order}</${wfsNS}:SortOrder></${wfsNS}:SortProperty></${wfsNS}:SortBy>`,
         query: (featureName, content, {srsName = "EPSG:4326"} = {}) =>
-            `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" srsName="${srsName}">`
+            `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" ${srsName !== 'native' ? `srsName="${srsName}"` : ''}>`
             + `${Array.isArray(content) ? content.join("") : content}`
             + `</${wfsNS}:Query>`
     };
