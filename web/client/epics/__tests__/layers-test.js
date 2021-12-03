@@ -20,14 +20,13 @@ import {
     CHANGE_LAYER_PARAMS,
     updateSettingsParams,
     UPDATE_SETTINGS,
-    layerLoad,
-    selectNode
+    layerLoad
 } from '../../actions/layers';
 
-import { SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES } from '../../actions/controls';
+import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { testEpic } from './epicTestUtils';
-import { refresh, updateDimension, updateSettingsParamsEpic, updateGroupSelectedMetadataExplorerEpic } from '../layers';
+import { refresh, updateDimension, updateSettingsParamsEpic } from '../layers';
 const rootEpic = combineEpics(refresh);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -327,44 +326,5 @@ describe('layers Epics', () => {
                 expect(actions[3].type).toBe(SHOW_NOTIFICATION);
                 expect(actions[3].level).toBe('error');
             }, state, done);
-    });
-
-    it('updateGroupSelectedMetadataExplorerEpic allows clicking on group to set destination to current group', done => {
-        const state = {
-            layers: {
-                settings: {
-                    expanded: true,
-                    node: 'layerId',
-                    nodeType: 'group'
-                },
-                groups: [{
-                    id: 'layerId',
-                    name: 'layerName'
-                }],
-                selected: ['layerId']
-            },
-            controls: {
-                toolbar: {
-                    active: 'metadataexplorer'
-                },
-                metadataexplorer: {
-                    enabled: true,
-                    group: 'layerId'
-                }
-            }
-        };
-        const id = state.layers.groups[0].id;
-        const nodeType = state.layers.settings.nodeType;
-
-        testEpic(updateGroupSelectedMetadataExplorerEpic, 1, selectNode(id, nodeType), actions => {
-            try {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe(SET_CONTROL_PROPERTIES);
-                expect(actions[0].control).toBe("metadataexplorer");
-                expect(actions[0].properties).toEqual({ enabled: true, group: "layerId" });
-            } catch (error) {
-                done(error);
-            }
-        }, state, done);
     });
 });

@@ -19,14 +19,12 @@ import {
     updateNode,
     updateSettings,
     layersRefreshError,
-    changeLayerParams,
-    SELECT_NODE
+    changeLayerParams
 } from '../actions/layers';
 
-import { getLayersWithDimension, layerSettingSelector, getLayerFromId, selectedNodesSelector } from '../selectors/layers';
-import { setControlProperty, setControlProperties } from '../actions/controls';
+import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '../selectors/layers';
+import { setControlProperty } from '../actions/controls';
 import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
-import { activeSelector } from '../selectors/catalog';
 import { basicError } from '../utils/NotificationUtils';
 import { getCapabilitiesUrl, getLayerTitleTranslations} from '../utils/LayersUtils';
 import assign from 'object-assign';
@@ -170,41 +168,8 @@ export const updateSettingsParamsEpic = (action$, store) =>
                 Rx.Observable.empty());
         });
 
-/**
- * Sets control properties to currently selected group when catalogue is open
- * Sets the currently selected group as the detination of new layers in catalogue
- * Keeps a record of previously selected group to set the groupId in setControlProperties to default
- * if the current group is deselected it resets the groupId to Default
- *  Action performed: setControlProperties (only if nodeType is group, catalogue is open)
- * @memberof epics.layers
- * @param {external:Observable} action$ manages `SELECT_NODE`
- * @return {external:Observable}
- */
-export const updateGroupSelectedMetadataExplorerEpic = (action$, store) => {
-    let selectedGroups = [];
-    return action$.ofType(SELECT_NODE)
-        .switchMap(({ nodeType, id }) => {
-            const state = store.getState();
-            const catalogueActive = activeSelector(state);
-            const selectedNodes = selectedNodesSelector(state);
-            if (selectedGroups.length > 1) {
-                selectedGroups = [selectedGroups[1]];
-            }
-            // reset selectedGroups if layer was deselected
-            if (selectedNodes.length === 0) {
-                selectedGroups = [];
-            } else selectedGroups.push(id);
-            const previousId = selectedGroups.length > 1 ? selectedGroups[0] : '';
-            const groupId = selectedNodes?.length > 0 && previousId !== id ? id : 'Default';
-            return (
-                nodeType === 'group' && catalogueActive)
-                ? Rx.Observable.of(setControlProperties('metadataexplorer', "enabled", true, "group", groupId))
-                : Rx.Observable.empty();
-        });
-};
 export default {
     refresh,
     updateDimension,
-    updateSettingsParamsEpic,
-    updateGroupSelectedMetadataExplorerEpic
+    updateSettingsParamsEpic
 };
