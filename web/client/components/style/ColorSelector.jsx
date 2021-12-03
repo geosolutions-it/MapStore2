@@ -27,7 +27,6 @@ function ColorSelector({
     color,
     format,
     line,
-    colorRamp,
     onChangeColor,
     disableAlpha,
     containerNode,
@@ -44,7 +43,6 @@ function ColorSelector({
                 text={<Glyphicon glyph="dropper" />}
                 format={format}
                 line={line}
-                colorRamp={colorRamp}
                 value={color}
                 onChangeColor={onChangeColor}
                 pickerProps={{

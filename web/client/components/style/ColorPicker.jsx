@@ -32,7 +32,6 @@ function ColorPicker({
     onChangeColor,
     text,
     line,
-    colorRamp,
     disabled,
     pickerProps,
     containerNode: containerNodeProp,
@@ -272,12 +271,6 @@ function ColorPicker({
         const textColor = newColor === 'transparent'
             ? '#000000'
             : tinycolor.mostReadable(rgbaColor, ['#000000'], { includeFallbackColors: true }).toHexString();
-        if (colorRamp) {
-            return {
-                color: '#000000',
-                background: `linear-gradient(to right, rgba(0, 0, 0, 1), ${rgbaColor}, rgba(255, 255, 255, 1))`
-            };
-        }
         return {
             color: textColor,
             backgroundColor: rgbaColor
@@ -380,7 +373,6 @@ ColorPicker.propTypes = {
     onChangeColor: PropTypes.func,
     text: PropTypes.string,
     line: PropTypes.bool,
-    colorRamp: PropTypes.bool,
     disabled: PropTypes.bool,
     pickerProps: PropTypes.object,
     containerNode: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]),
@@ -391,7 +383,6 @@ ColorPicker.propTypes = {
 ColorPicker.defaultProps = {
     disabled: false,
     line: false,
-    colorRamp: false,
     onChangeColor: () => {},
     pickerProps: {},
     onOpen: () => {},

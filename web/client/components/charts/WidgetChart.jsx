@@ -89,6 +89,9 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
 
     case 'pie':
         let pieChartTrace = {
+            name: yAxisLabel || yDataKey,
+            hovertemplate: `%{label}<br>${yDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
+            text: x,
             type,
             textposition: 'inside',
             values: y
@@ -97,7 +100,6 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             const legendLabels = classifications.map((item, index) => `${x[index]} - ${getLegendLabel(item, colorCategories, defaultClassLabel)}`);
             pieChartTrace = {
                 ...pieChartTrace,
-                text: x,
                 labels: legendLabels,
                 marker: {colors: classificationColors},
                 legendgrouptitle: {
@@ -106,9 +108,13 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             };
         } else {
             pieChartTrace = {
+                ...(yDataKey && { legendgroup: yDataKey}),
+                legendgrouptitle: {
+                    text: `${yDataKey}`
+                },
                 ...pieChartTrace,
-                name: yAxisLabel || yDataKey,
-                labels: x
+                labels: x,
+                ...(customColorEnabled ? {marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.classDefaultColor || autoColorOptions.classDefaultColor]), [])}} : {})
             };
         }
         return pieChartTrace;
@@ -187,9 +193,7 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
     switch (type) {
     case 'pie':
         return {
-            colorway: customColorEnabled && autoColorOptions.classDefaultColor ?
-                customColorRampGenerator(autoColorOptions.classDefaultColor, data.length) :
-                defaultColorGenerator(data.length, autoColorOptions)
+            ...(!customColorEnabled && {colorway: defaultColorGenerator(data.length, autoColorOptions)})
         };
     // line / bar
     default :

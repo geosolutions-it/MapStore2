@@ -47,13 +47,6 @@ describe("Test the ColorPicker style component", () => {
         expect(swatchNode.style.color).toBe('rgb(0, 0, 0)');
         expect(swatchNode.style.backgroundColor).toBe('rgba(255, 255, 255, 0.5)');
     });
-    it('color swatch should render as color gradient when color ramp is requested', () => {
-        ReactDOM.render(<ColorPicker value="#FF00FF" colorRamp />, document.getElementById("container"));
-        const swatchNode = document.querySelector('.ms-color-picker-swatch');
-        expect(swatchNode).toBeTruthy();
-        expect(swatchNode.style.color).toBe('rgb(0, 0, 0)');
-        expect(swatchNode.style.background).toBe('linear-gradient(to right, rgb(0, 0, 0), rgb(255, 0, 255), rgb(255, 255, 255))');
-    });
     it('should return color value based on format', (done) => {
         const OLD_COLOR = '0000ff';
         const COLOR = 'ff0000';

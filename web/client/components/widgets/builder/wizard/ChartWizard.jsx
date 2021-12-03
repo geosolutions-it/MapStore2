@@ -51,7 +51,6 @@ const sampleProps = {
 
 
 export const isChartOptionsValid = (options = {}, { hasAggregateProcess }) => {
-
     return (
         options.aggregationAttribute
     && options.groupByAttributes
@@ -59,9 +58,8 @@ export const isChartOptionsValid = (options = {}, { hasAggregateProcess }) => {
 || hasAggregateProcess && options.aggregateFunction)
 || options.classificationAttribute);
 };
-// || hasAggregateProcess && options.classificationAttribute)
-const Wizard = wizardHandlers(WizardContainer);
 
+const Wizard = wizardHandlers(WizardContainer);
 
 const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { }, hasAggregateProcess }) => isChartOptionsValid(data.options, { hasAggregateProcess })
     ? (<PreviewChart

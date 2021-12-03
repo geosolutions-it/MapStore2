@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import WidgetChart, { customColorRampGenerator, toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
+import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
 
 import expect from 'expect';
 import { CLASSIFICATIONS, DATASET_1, DATASET_2, DATASET_3, LABELLED_CLASSIFICATION, UNLABELLED_CLASSIFICATION, SPLIT_DATASET_2, SPLIT_DATASET_3 } from './sample_data';
@@ -223,7 +223,7 @@ describe('Widget Chart: data conversions ', () => {
         });
         it('custom color ramp', () => {
             const autoColorOptions = {
-                classDefaultColor: "#0888A1",
+                classDefaultColor: "#00FF00",
                 classDefaultLabel: "Default",
                 name: 'global.colors.custom',
                 base: 190,
@@ -231,7 +231,7 @@ describe('Widget Chart: data conversions ', () => {
                 s: 0.95,
                 v: 0.63
             };
-            const { data, layout } = toPlotly({
+            const { data } = toPlotly({
                 type: 'pie',
                 autoColorOptions,
                 ...DATASET_2
@@ -239,7 +239,9 @@ describe('Widget Chart: data conversions ', () => {
             expect(data.length).toBe(1);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            expect(layout.colorway).toEqual(customColorRampGenerator(autoColorOptions.classDefaultColor, DATASET_2.data.length));
+            data[0].marker.colors.map((v) => {
+                expect(v).toBe(autoColorOptions.classDefaultColor);
+            });
         });
     });
     describe('Line/Bar chart common features', () => {

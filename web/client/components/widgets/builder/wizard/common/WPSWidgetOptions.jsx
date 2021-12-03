@@ -181,7 +181,7 @@ export default ({
                                     value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                                     samples={data.type === "pie" ? 5 : 1}
                                     onChange={v => {
-                                        onChange("autoColorOptions", {...v.options, name: v.name});
+                                        onChange("autoColorOptions", {...v.options, name: v.name, ...(classification ?? { classification: formatAutoColorOptions(classification)} ) });
                                         setCustomColor(v?.custom);
                                         setShowModal(true);
                                     }}/>
@@ -197,7 +197,7 @@ export default ({
                             setShowModal(false);
                             onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
                             onChange("options.classificationAttribute", undefined);
-                            onChange("autoColorOptions.classification", []);
+                            onChange("autoColorOptions.classification", formatAutoColorOptions(CLASSIFIED_COLORS));
                         }}
                         onSaveStyle={() => {
                             setShowModal(false);

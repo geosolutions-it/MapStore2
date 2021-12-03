@@ -17,18 +17,9 @@ import Portal from '../../../../../components/misc/Portal';
 import ResizableModal from '../../../../../components/misc/ResizableModal';
 import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 
-const getColorSelectorMessage = (chartType, classificationAttribute)  => (
-    (chartType === 'pie' && !classificationAttribute) ?
-        "widgets.builder.wizard.classAttributes.defaultColorRamp" :
-        (chartType === 'bar' && !classificationAttribute) ?
-            "widgets.builder.wizard.classAttributes.color" :
-            "widgets.builder.wizard.classAttributes.defaultColor"
-);
-
 const ColorClassModal = ({
     modalClassName,
     show,
-    chartType,
     onClose,
     onSaveStyle,
     onChangeClassAttribute,
@@ -64,7 +55,9 @@ const ColorClassModal = ({
             ]}>
             <Row xs={12}>
                 <Col componentClass={ControlLabel} xs={6}>
-                    <Message msgId={getColorSelectorMessage(chartType, classificationAttribute)} />
+                    <Message msgId={!classificationAttribute ?
+                        "widgets.builder.wizard.classAttributes.color" :
+                        "widgets.builder.wizard.classAttributes.defaultColor"} />
                 </Col>
                 <Col xs={6}>
                     <ColorSelector
@@ -72,7 +65,6 @@ const ColorClassModal = ({
                         color={defaultCustomColor}
                         disableAlpha
                         format="hex"
-                        colorRamp={chartType === 'pie' && !classificationAttribute}
                         onChangeColor={(color) => onChangeColor(color)}
                     />
                 </Col>
@@ -138,7 +130,6 @@ const ColorClassModal = ({
 ColorClassModal.propTypes = {
     modalClassName: PropTypes.string,
     show: PropTypes.boolean,
-    chartType: PropTypes.string,
     onClose: PropTypes.func,
     onSaveStyle: PropTypes.func,
     onChangeClassAttribute: PropTypes.func,

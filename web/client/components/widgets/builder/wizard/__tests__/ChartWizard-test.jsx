@@ -52,5 +52,12 @@ describe('ChartWizard component', () => {
                 groupByAttributes: "B"
             }, { hasAggregateProcess: false })).toBeTruthy();
         });
+        it('only classification attribute present ', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B",
+                classificationAttribute: "C"
+            }, {hasAggregateProcess: false})).toBeTruthy();
+        });
     });
 });
