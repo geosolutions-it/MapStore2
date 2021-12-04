@@ -210,7 +210,6 @@ describe('Custom Colors Classification modal', () => {
         expect(spyonUpdate).toHaveBeenCalled();
         expect(spyonUpdate.calls[0].arguments[0][0].color.toLowerCase()).toBe(CLASSIFICATION[1].color);
     });
-
     it('Test Color Class Modal on change value for class', () => {
         const spyonUpdate = expect.spyOn(testHandlers, 'onUpdateClasses');
         ReactDOM.render(
@@ -230,7 +229,6 @@ describe('Custom Colors Classification modal', () => {
         expect(spyonUpdate).toHaveBeenCalled();
         expect(spyonUpdate.calls[0].arguments[0][1].unique).toBe(CLASSIFICATION[1].unique);
     });
-
     it('Test Color Class Modal on change label for class', () => {
         const spyonUpdate = expect.spyOn(testHandlers, 'onUpdateClasses');
         ReactDOM.render(
