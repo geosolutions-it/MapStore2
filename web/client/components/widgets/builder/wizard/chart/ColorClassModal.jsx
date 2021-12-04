@@ -21,7 +21,7 @@ const ColorClassModal = ({
     modalClassName,
     show,
     onClose,
-    onSaveStyle,
+    onSaveClassification,
     onChangeClassAttribute,
     classificationAttribute,
     onUpdateClasses,
@@ -50,7 +50,7 @@ const ColorClassModal = ({
                 {
                     text: <Message msgId="confirm" />,
                     bsSize: 'sm',
-                    onClick: () => onSaveStyle()
+                    onClick: () => onSaveClassification()
                 }
             ]}>
             <Row xs={12}>
@@ -69,20 +69,6 @@ const ColorClassModal = ({
                     />
                 </Col>
             </Row>
-            { classificationAttribute &&
-                <Row xs={12}>
-                    <Col componentClass={ControlLabel} xs={6}>
-                        <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
-                    </Col>
-                    <Col xs={6}>
-                        <FormControl
-                            value={defaultClassLabel}
-                            type="text"
-                            onChange={e => onChangeDefaultClassLabel(e.target.value)}
-                        />
-                    </Col>
-                </Row>
-            }
             <Row xs={12}>
                 <Form id="chart-color-class-form" horizontal>
                     <FormGroup controlId="classificationAttribute" className="chart-color-class-form-group">
@@ -103,6 +89,20 @@ const ColorClassModal = ({
                     </FormGroup>
                 </Form>
             </Row>
+            { classificationAttribute &&
+                <Row xs={12}>
+                    <Col componentClass={ControlLabel} xs={6}>
+                        <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
+                    </Col>
+                    <Col xs={6}>
+                        <FormControl
+                            value={defaultClassLabel}
+                            type="text"
+                            onChange={e => onChangeDefaultClassLabel(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+            }
             <Row xs={12}>
                 <Col xs={12}>
                     { classificationAttribute &&
@@ -131,7 +131,7 @@ ColorClassModal.propTypes = {
     modalClassName: PropTypes.string,
     show: PropTypes.boolean,
     onClose: PropTypes.func,
-    onSaveStyle: PropTypes.func,
+    onSaveClassification: PropTypes.func,
     onChangeClassAttribute: PropTypes.func,
     classificationAttribute: PropTypes.string,
     onUpdateClasses: PropTypes.func,
@@ -147,7 +147,7 @@ ColorClassModal.propTypes = {
 ColorClassModal.defaultProps = {
     modalClassName: 'chart-color-class-modal',
     onClose: () => {},
-    onSaveStyle: () => {},
+    onSaveClassification: () => {},
     onChangeClassAttribute: () => {},
     classificationAttribute: '',
     onUpdateClasses: () => {},

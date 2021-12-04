@@ -199,7 +199,7 @@ export default ({
                             onChange("options.classificationAttribute", undefined);
                             onChange("autoColorOptions.classification", formatAutoColorOptions(CLASSIFIED_COLORS));
                         }}
-                        onSaveStyle={() => {
+                        onSaveClassification={() => {
                             setShowModal(false);
                             onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
                             onChange("options.classificationAttribute", classificationAttribute);
