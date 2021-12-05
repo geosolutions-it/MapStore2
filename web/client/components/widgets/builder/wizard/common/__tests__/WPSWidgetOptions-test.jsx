@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {get} from 'lodash';
 import describeStates from '../../../../../../test-resources/wfs/describe-states.json';
+import { CLASSIFICATION, DEFAULT_CUSTOM_COLOR, DEFAULT_CUSTOM_LABEL } from '../../chart/__tests__/sample_data';
 import ReactTestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import wfsChartOptions from '../wfsChartOptions';
@@ -82,6 +83,97 @@ describe('WPSWidgetOptions component', () => {
         ReactTestUtils.Simulate.change(inputs[3]);
         expect(spyonChange.calls[2].arguments[0]).toBe("legend");
         expect(spyonChange.calls[2].arguments[1]).toBe(true);
+    });
+    it('Test WPSWidgetOptions onChange for color classifications on save', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<WPSWidgetOptions
+            hasAggregateProcess
+            featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
+            data={{
+                type: 'bar',
+                autoColorOptions: {
+                    classification: CLASSIFICATION
+                },
+                options: {
+                    classificationAttribute: 'class2'
+                }
+            }}
+            onChange={actions.onChange}
+            dependencies={{ viewport: {} }} />,
+        document.getElementById("container"));
+        const inputs = document.querySelectorAll('input');
+        expect(inputs.length).toBe(5); // operation is visible
+
+        ReactTestUtils.Simulate.change(inputs[3], { target: { value: 'Custom' } });
+        ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 9, key: 'Tab' });
+        expect(spyonChange.calls[0].arguments[0]).toBe("autoColorOptions");
+        expect(spyonChange.calls[0].arguments[1].name).toBe("global.colors.custom");
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        expect(colorClassMd).toExist();
+        const colorClassMdSaveButton = colorClassMd.getElementsByClassName('btn-save')[0];
+        ReactTestUtils.Simulate.click(colorClassMdSaveButton);
+        expect(spyonChange).toHaveBeenCalled();
+        expect(spyonChange.calls[1].arguments[0]).toBe('autoColorOptions.classDefaultColor');
+        expect(spyonChange.calls[1].arguments[1]).toBe(DEFAULT_CUSTOM_COLOR[0]);
+
+        expect(spyonChange.calls[2].arguments[0]).toBe('options.classificationAttribute');
+        expect(spyonChange.calls[2].arguments[1]).toBe('class2');
+
+        expect(spyonChange.calls[3].arguments[0]).toBe('autoColorOptions');
+        expect(spyonChange.calls[3].arguments[1]).toEqual({
+            classification: CLASSIFICATION,
+            classDefaultLabel: DEFAULT_CUSTOM_LABEL[0]
+        });
+        const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
+        expect(colorClassMdBody).toNotExist();
+    });
+    it('Test WPSWidgetOptions onChange for color classifications on cancel', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<WPSWidgetOptions
+            hasAggregateProcess
+            featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
+            data={{
+                type: 'bar',
+                autoColorOptions: {
+                    classification: CLASSIFICATION
+                },
+                options: {
+                    classificationAttribute: 'class2'
+                }
+            }}
+            onChange={actions.onChange}
+            dependencies={{ viewport: {} }} />,
+        document.getElementById("container"));
+        const inputs = document.querySelectorAll('input');
+        expect(inputs.length).toBe(5); // operation is visible
+
+        ReactTestUtils.Simulate.change(inputs[3], { target: { value: 'Custom' } });
+        ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 9, key: 'Tab' });
+        expect(spyonChange.calls[0].arguments[0]).toBe("autoColorOptions");
+        expect(spyonChange.calls[0].arguments[1].name).toBe("global.colors.custom");
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        expect(colorClassMd).toExist();
+        const colorClassMdCloseButton = colorClassMd.getElementsByClassName('btn-cancel')[0];
+        ReactTestUtils.Simulate.click(colorClassMdCloseButton);
+        expect(spyonChange).toHaveBeenCalled();
+
+        expect(spyonChange.calls[1].arguments[0]).toBe('autoColorOptions');
+        expect(spyonChange.calls[1].arguments[1]).toEqual({
+            classification: [ { title: "", color: "#ffffff", value: "", unique: "" } ],
+            classDefaultColor: DEFAULT_CUSTOM_COLOR[0]
+        });
+
+        expect(spyonChange.calls[2].arguments[0]).toBe('options.classificationAttribute');
+        expect(spyonChange.calls[2].arguments[1]).toBe(undefined);
+
+        const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
+        expect(colorClassMdBody).toNotExist();
     });
     it('Test WPSWidgetOptions onChange for counter context', () => {
         const actions = {

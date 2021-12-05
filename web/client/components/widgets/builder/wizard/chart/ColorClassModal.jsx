@@ -43,11 +43,13 @@ const ColorClassModal = ({
             onClose={() => onClose()}
             buttons={[
                 {
+                    className: "btn-cancel",
                     text: <Message msgId="cancel" />,
                     bsSize: 'sm',
                     onClick: () => onClose()
                 },
                 {
+                    className: "btn-save",
                     text: <Message msgId="confirm" />,
                     bsSize: 'sm',
                     onClick: () => onSaveClassification()

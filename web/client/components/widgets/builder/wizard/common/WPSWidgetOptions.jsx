@@ -181,7 +181,12 @@ export default ({
                                     value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                                     samples={data.type === "pie" ? 5 : 1}
                                     onChange={v => {
-                                        onChange("autoColorOptions", {...v.options, name: v.name, ...(classification ?? { classification: formatAutoColorOptions(classification)} ) });
+                                        onChange("autoColorOptions", {
+                                            ...v.options,
+                                            name: v.name,
+                                            ...(classification ? { classification: formatAutoColorOptions(classification) } : {} ),
+                                            defaultCustomColor: defaultCustomColor ?? '#0888A1'
+                                        });
                                         setCustomColor(v?.custom);
                                         setShowModal(true);
                                     }}/>
@@ -195,17 +200,23 @@ export default ({
                         chartType={data.type}
                         onClose={() => {
                             setShowModal(false);
-                            onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
+                            onChange("autoColorOptions", {
+                                ...data.autoColorOptions,
+                                classDefaultColor: defaultCustomColor,
+                                classification: formatAutoColorOptions(CLASSIFIED_COLORS)
+                            });
                             onChange("options.classificationAttribute", undefined);
-                            onChange("autoColorOptions.classification", formatAutoColorOptions(CLASSIFIED_COLORS));
                         }}
                         onSaveClassification={() => {
                             setShowModal(false);
                             onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
                             onChange("options.classificationAttribute", classificationAttribute);
                             if (classificationAttribute) {
-                                onChange("autoColorOptions.classDefaultLabel", defaultClassLabel || '');
-                                onChange("autoColorOptions.classification", formatAutoColorOptions(classification));
+                                onChange("autoColorOptions", {
+                                    ...data.autoColorOptions,
+                                    classDefaultLabel: (defaultClassLabel || ''),
+                                    classification: (classification ? formatAutoColorOptions(classification) : [])
+                                });
                             }
                         }}
                         onChangeClassAttribute={(value) => setClassificationAttribute(value)}

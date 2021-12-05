@@ -248,5 +248,47 @@ describe('Custom Colors Classification modal', () => {
         expect(spyonUpdate).toHaveBeenCalled();
         expect(spyonUpdate.calls[0].arguments[0][1].title).toBe(CLASSIFICATION[1].title);
     });
+    it('Test Color Class Modal on confirm color classification', () => {
+        const spyonSave = expect.spyOn(testHandlers, 'onSaveClassification');
+        ReactDOM.render(
+            <ColorClassModal
+                show
+                classification={CLASSIFICATION}
+                classificationAttribute={CLASSIFICATION_ATTRIBUTE}
+                onSaveClassification={testHandlers.onSaveClassification}
+                defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
+                defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
+                options={OPTIONS}
+            />, document.getElementById("container"));
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        const colorClassMdSaveButton = colorClassMd.getElementsByClassName('btn-save')[0];
+        expect(colorClassMd).toExist();
+        expect(colorClassMdSaveButton).toExist();
+        ReactTestUtils.Simulate.click(colorClassMdSaveButton);
+        expect(spyonSave).toHaveBeenCalled();
+        const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
+        expect(colorClassMdBody).toNotExist();
+    });
+    it('Test Color Class Modal on cancel', () => {
+        const spyonClose = expect.spyOn(testHandlers, 'onClose');
+        ReactDOM.render(
+            <ColorClassModal
+                show
+                classification={CLASSIFICATION}
+                classificationAttribute={CLASSIFICATION_ATTRIBUTE}
+                onClose={testHandlers.onClose}
+                defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
+                defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
+                options={OPTIONS}
+            />, document.getElementById("container"));
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        const colorClassMdCloseButton = colorClassMd.getElementsByClassName('btn-cancel')[0];
+        expect(colorClassMd).toExist();
+        expect(colorClassMdCloseButton).toExist();
+        ReactTestUtils.Simulate.click(colorClassMdCloseButton);
+        expect(spyonClose).toHaveBeenCalled();
+        const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
+        expect(colorClassMdBody).toNotExist();
+    });
 
 });

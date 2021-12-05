@@ -41,7 +41,12 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
     classifications.map(item => {
         if (isString(item) || isNumber(item)) {
             const matchedColor = colorCategories.filter(colorCategory => colorCategory.value === item)[0];
-            return matchedColor ? matchedColor.color : customColorEnabled ? autoColorOptions.classDefaultColor : defaultColorGenerator(1, autoColorOptions)[0];
+            // color is exactly matched to a user defined class/color
+            return matchedColor ? matchedColor.color :
+                // color is not exactly matched and default is chosen (if default exists)
+                customColorEnabled && autoColorOptions.classDefaultColor ? autoColorOptions.classDefaultColor :
+                    // class default color may not be defined and fall back to default color
+                    autoColorOptions.defaultCustomColor ? autoColorOptions.defaultCustomColor : defaultColorGenerator(1, COLOR_DEFAULTS)[0];
         }
         return  defaultColorGenerator(1, autoColorOptions)[0];
     })
@@ -58,10 +63,33 @@ const getLegendLabel = (value, colorCategories, defaultClassLabel) => {
     return displayValue;
 };
 
+/**
+ * Splits ungrouped data in arrays on the basis of values of another array
+ * containing unique values.
+ * @param {number[]|string[]} classValues - the array of non unique values used to map every single value of the ungrouped arrays
+ * to the filteredClassValues array
+ * @param {number[]|string[]} filteredClassValues : classValues unduplicated items (no duplicates) upon which the splitting is based
+ * @param {Array<Array<number|string>>} ungroupedValues -
+ * the data shaped as two dimensional array containing the arrays that needs splitting and every single item mapped
+ * to filteredClassValues
+ * @returns {Array<Array<number|string>>} data shaped as two dimensional containing the same number of arrays of
+ * the number of items in the filteredClassValues array.
+ * example:
+ * classValues = [['A', 'B', 'B', 'C', 'A', 'D', 'C', 'C'], [...], [...]]
+ * filteredClassValues = ['A', 'B', 'C', 'D']
+ * ungroupedValues = [[1, 2, 3, 4, 5, 6, 7, 8],['Foo','Foo','Bar','Bar','Baz','Foo','Baz','Baz']]
+ * result = [ [[1,5],['Foo', 'Baz']], [[2,3],['Foo', 'Bar']], [[4,7,8],['Bar', 'Baz', 'Baz']], [[6],['Foo']] ]
+ */
 export const getGroupedTraceValues = (classValues, filteredClassValues, ungroupedValues) => {
+    // iterate over our base data, for every array
     const groupedValues = ungroupedValues
+        // iterate over our filtered base data
         .map(ungroupedValue => filteredClassValues
+            // iterate over single values in the classValues array
             .map(item => classValues
+                // if the current classValue value of the item mathces the value of the filteredClassValues
+                // it means it belongs to the same group and push it in the groupedValues array, the map between
+                // ungroupedValue and classValues arrays is the index since the length of both arrays have the same length
                 .reduce((acc, cur, index) => (cur === item ? [...acc, ungroupedValue[index]] : acc), [])));
     return groupedValues;
 };
@@ -114,7 +142,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
                 },
                 ...pieChartTrace,
                 labels: x,
-                ...(customColorEnabled ? {marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.classDefaultColor || autoColorOptions.classDefaultColor]), [])}} : {})
+                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.classDefaultColor || autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
             };
         }
         return pieChartTrace;
