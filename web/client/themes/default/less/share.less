@@ -93,9 +93,12 @@
 }
 
 .ms-resizable-modal > .modal-content.share-win {
-    @media (min-width: @screen-sm-min) {
-        height: 60%;
+    @media (max-width: 505px) {
+        width: 90%;
+        left: 5%;
     }
+    height: auto;
+    max-height: 70%;
     &.modal-dialog-draggable {
         top: -10%;
     }
@@ -105,6 +108,9 @@
         .share-panels {
             padding-top: 8px;
         }
+    }
+    .modal-footer {
+        display: none;
     }
 } 
 
