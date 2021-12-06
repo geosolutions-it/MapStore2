@@ -179,7 +179,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             x: x,
             y: y,
             name: yAxisLabel || yDataKey,
-            ...(classifications.length && classificationColors.length ? {marker: {color: classificationColors}} : {})
+            ...(classificationColors && classificationColors.length && customColorEnabled ? {marker: {color: classificationColors}} : {})
         };
         return barChartTrace;
 
