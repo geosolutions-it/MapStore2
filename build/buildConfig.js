@@ -316,3 +316,4 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
 
     devtool: !prod ? 'eval' : undefined
 }));
+
