@@ -18,11 +18,22 @@
 .ms-wizard {
     position: absolute;
     width: 100%;
-    .form-horizontal .control-label {
-        text-align: left;
-        font-weight: normal;
-        > span:after {
-            content: ":"
+    .form-horizontal {
+        .form-group {
+            .custom-color-btn {
+                margin-left: -8px;
+                margin-top: 2px;
+            }
+            .custom-color {
+                padding-left: 10px;
+            }
+        }
+        .control-label {
+            text-align: left;
+            font-weight: normal;
+            > span:after {
+                content: ":"
+            }
         }
     }
 }

@@ -226,7 +226,7 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
     // line / bar
     default :
         return {
-            colorway: customColorEnabled && [autoColorOptions.classDefaultColor] || defaultColorGenerator(series.length, autoColorOptions),
+            colorway: customColorEnabled ? [autoColorOptions?.defaultCustomColor] || [autoColorOptions?.classDefaultColor] || ['#0888A1'] : defaultColorGenerator(series.length, autoColorOptions),
             yaxis: {
                 type: yAxisOpts?.type,
                 automargin: true,

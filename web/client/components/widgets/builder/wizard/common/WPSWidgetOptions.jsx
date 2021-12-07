@@ -7,15 +7,17 @@
   */
 import React, {useState} from 'react';
 import { head, get} from 'lodash';
-import { Row, Col, Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import { Row, Col, Form, FormGroup, FormControl, ControlLabel, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Message from '../../../../I18N/Message';
 import Select from 'react-select';
 import ColorRamp from '../../../../styleeditor/ColorRamp';
+import Button from '../../../../misc/Button';
 import StepHeader from '../../../../misc/wizard/StepHeader';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import ChartAdvancedOptions from './ChartAdvancedOptions';
 import ColorClassModal from '../chart/ColorClassModal';
 import { defaultColorGenerator } from '../../../../charts/WidgetChart';
+import classNames from 'classnames';
 
 const DEFAULT_CUSTOM_COLOR_OPTIONS = {
     base: 190,
@@ -98,7 +100,7 @@ export default ({
     sampleChart}) => {
 
     const [showModal, setShowModal] = useState(false);
-    const [customColor, setCustomColor] = useState(false);
+    const customColor = data.autoColorOptions?.name === 'global.colors.custom';
     const [classificationAttribute, setClassificationAttribute] = useState(data.options?.classificationAttribute);
     const [classification, setClassification] = useState(data.autoColorOptions?.classification || CLASSIFIED_COLORS);
     const [defaultCustomColor, setDefaultCustomColor] = useState(data.autoColorOptions?.classDefaultColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1');
@@ -172,28 +174,41 @@ export default ({
                         </FormGroup> : null}
                     {formOptions.showColorRampSelector ?
                         <FormGroup controlId="colorRamp" className="mapstore-block-width">
-                            <Col componentClass={ControlLabel} sm={6}>
+                            <Col componentClass={ControlLabel} sm={customColor ? 5 : 6}>
                                 <Message msgId={getLabelMessageId("colorRamp", data)} />
                             </Col>
-                            <Col sm={6}>
-                                <ColorRamp
-                                    items={getColorRangeItems(data.type)}
-                                    value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
-                                    samples={data.type === "pie" ? 5 : 1}
-                                    onChange={v => {
-                                        onChange("autoColorOptions", {
-                                            ...v.options,
-                                            name: v.name,
-                                            ...(classification ? { classification: formatAutoColorOptions(classification) } : {} ),
-                                            defaultCustomColor: defaultCustomColor ?? '#0888A1'
-                                        });
-                                        setCustomColor(v?.custom);
-                                        setShowModal(true);
-                                    }}/>
+                            <Col sm={customColor ? 7 : 6}>
+                                <FormGroup>
+                                    {customColor && (
+                                        <Col xs={2}>
+                                            <OverlayTrigger
+                                                key="customColors"
+                                                placement="top"
+                                                overlay={<Tooltip id="wizard-tooltip-customColors"><Message msgId={"Custom Color Settings"} /></Tooltip>}>
+                                                <Button bsStyle="primary" bsSize="sm" className="custom-color-btn" onClick={() => setShowModal(true)}>
+                                                    <Glyphicon glyph="cog" />
+                                                </Button>
+                                            </OverlayTrigger>
+                                        </Col>
+                                    )}
+                                    <Col xs={customColor ? 10 : 12} className={classNames({ 'custom-color': customColor })}>
+                                        <ColorRamp
+                                            items={getColorRangeItems(data.type)}
+                                            value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
+                                            samples={data.type === "pie" ? 5 : 1}
+                                            onChange={v => {
+                                                onChange("autoColorOptions", {
+                                                    ...v.options,
+                                                    name: v.name,
+                                                    ...(classification ? { classification: formatAutoColorOptions(classification) } : {} ),
+                                                    defaultCustomColor: defaultCustomColor ?? '#0888A1'
+                                                });
+                                            }}/>
+                                    </Col>
+                                </FormGroup>
                             </Col>
                         </FormGroup> : null}
 
-                    { customColor &&
                     <ColorClassModal
                         modalClassName="chart-color-class-modal"
                         show={showModal}
@@ -202,6 +217,7 @@ export default ({
                             setShowModal(false);
                             onChange("autoColorOptions", {
                                 ...data.autoColorOptions,
+                                defaultCustomColor: defaultCustomColor,
                                 classDefaultColor: defaultCustomColor,
                                 classification: formatAutoColorOptions(CLASSIFIED_COLORS)
                             });
@@ -209,11 +225,12 @@ export default ({
                         }}
                         onSaveClassification={() => {
                             setShowModal(false);
-                            onChange("autoColorOptions.classDefaultColor", defaultCustomColor);
+                            onChange("autoColorOptions.defaultCustomColor", defaultCustomColor);
                             onChange("options.classificationAttribute", classificationAttribute);
                             if (classificationAttribute) {
                                 onChange("autoColorOptions", {
                                     ...data.autoColorOptions,
+                                    classDefaultColor: defaultCustomColor ?? '#0888A1',
                                     classDefaultLabel: (defaultClassLabel || ''),
                                     classification: (classification ? formatAutoColorOptions(classification) : [])
                                 });
@@ -232,7 +249,6 @@ export default ({
                         defaultClassLabel={defaultClassLabel}
                         onChangeDefaultClassLabel={(value) => setDefaultClassLabel(value)}
                     />
-                    }
 
                     {formOptions.showLegend ?
                         <FormGroup controlId="displayLegend">
