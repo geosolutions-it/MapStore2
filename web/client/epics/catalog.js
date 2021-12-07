@@ -117,7 +117,7 @@ export default (API) => ({
             .filter(({ layers, sources }) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
             // maxRecords is 4 (by default), but there can be a possibility that the record desired is not among
             // the results. In that case a more detailed search with full record name can be helpful
-            .switchMap(({ layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
+            .switchMap(({ layers, sources, filters, options, startPosition = 1, maxRecords = 4 }) => {
                 const state = store.getState();
                 const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
@@ -129,15 +129,16 @@ export default (API) => ({
                         const format = service.type.toLowerCase();
                         const url = service.url;
                         const text = layers[i];
+                        const filter = filters[i];
                         return Rx.Observable.defer(() =>
                             API[format].textSearch(url, startPosition, maxRecords, text, {...addLayerOptions, ...service}).catch(() => ({ results: [] }))
-                        ).map(r => ({ ...r, format, url, text }));
+                        ).map(r => ({ ...r, format, url, text, filter }));
                     });
                 return Rx.Observable.forkJoin(actions)
                     .switchMap((results) => {
                         if (isArray(results) && results.length) {
                             return Rx.Observable.of(results.map(r => {
-                                const { format, url, text, ...result } = r;
+                                const { format, url, text, filter, ...result } = r;
                                 const locales = currentMessagesSelector(state);
                                 const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
                                 const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
@@ -174,9 +175,9 @@ export default (API) => ({
                                     }
                                 }
                                 if (!record) {
-                                    return text;
+                                    return { text };
                                 }
-                                return layer;
+                                return { layer, filter };
                             }));
                         }
                         return Rx.Observable.empty();
@@ -184,14 +185,25 @@ export default (API) => ({
             })
             .mergeMap(results => {
                 if (results) {
-                    const allRecordsNotFound = results.filter(r => isString(r)).join(" ");
+                    const allRecordsNotFound = results.filter(r => r.text).join(" ");
                     let actions = [];
                     if (allRecordsNotFound) {
                         // return one notification for all records that have not been found
                         actions = [recordsNotFound(allRecordsNotFound)];
                     }
                     // add all layers found to the map
-                    actions = [...actions, ...results.filter(r => isObject(r)).map(r => addLayer(r))];
+                    actions = [
+                        ...actions,
+                        ...results.filter(r => isObject(r.layer)).map(r => {
+                            if (r.filter) {
+                                r.layer.params = {
+                                    ...r.layer.params,
+                                    CQL_FILTER: r.filter
+                                };
+                            }
+                            return addLayer(r.layer);
+                        })
+                    ];
                     return Rx.Observable.from(actions);
                 }
                 return Rx.Observable.empty();
