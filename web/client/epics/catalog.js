@@ -175,9 +175,9 @@ export default (API) => ({
                                     }
                                 }
                                 if (!record) {
-                                    return { text };
+                                    return [text];
                                 }
-                                return { layer, filter };
+                                return [layer, filter];
                             }));
                         }
                         return Rx.Observable.empty();
@@ -185,7 +185,7 @@ export default (API) => ({
             })
             .mergeMap(results => {
                 if (results) {
-                    const allRecordsNotFound = results.filter(r => r.text).join(" ");
+                    const allRecordsNotFound = results.filter(r => isString(r[0])).join(" ");
                     let actions = [];
                     if (allRecordsNotFound) {
                         // return one notification for all records that have not been found
@@ -194,14 +194,14 @@ export default (API) => ({
                     // add all layers found to the map
                     actions = [
                         ...actions,
-                        ...results.filter(r => isObject(r.layer)).map(r => {
-                            if (r.filter) {
-                                r.layer.params = {
-                                    ...r.layer.params,
-                                    CQL_FILTER: r.filter
+                        ...results.filter(r => isObject(r[0])).map(r => {
+                            if (r[1]) {
+                                r[0].params = {
+                                    ...r[0].params,
+                                    CQL_FILTER: r[1]
                                 };
                             }
-                            return addLayer(r.layer);
+                            return addLayer(r[0]);
                         })
                     ];
                     return Rx.Observable.from(actions);
