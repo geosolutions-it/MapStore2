@@ -5,7 +5,7 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { head, get} from 'lodash';
 import { Row, Col, Form, FormGroup, FormControl, ControlLabel, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Message from '../../../../I18N/Message';
@@ -63,7 +63,8 @@ const COLORS = [{
 const CLASSIFIED_COLORS = [{title: '', color: '#ffffff', type: 'Polygon', unique: ''}];
 
 
-const getColorRangeItems = (type) => {
+const getColorRangeItems = (type, classification, classificationAttribute, defaultCustomColor) => {
+    COLORS.filter(item => item.custom)[0].ramp = !classificationAttribute ? defaultCustomColor : [...classification.map(item => item.color), defaultCustomColor];
     return COLORS.filter(c => c.showWhen ? c.showWhen(type) : c);
 };
 const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type || data.widgetType || "default"}`;
@@ -101,10 +102,21 @@ export default ({
 
     const [showModal, setShowModal] = useState(false);
     const customColor = data.autoColorOptions?.name === 'global.colors.custom';
-    const [classificationAttribute, setClassificationAttribute] = useState(data.options?.classificationAttribute);
-    const [classification, setClassification] = useState(data.autoColorOptions?.classification || CLASSIFIED_COLORS);
-    const [defaultCustomColor, setDefaultCustomColor] = useState(data.autoColorOptions?.classDefaultColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1');
-    const [defaultClassLabel, setDefaultClassLabel] = useState(data.autoColorOptions?.classDefaultLabel || 'Default');
+    const { classificationAttribute = undefined } = data?.options || {};
+    const { classification = CLASSIFIED_COLORS } = data?.autoColorOptions || {};
+    const { defaultClassLabel = 'Default' } = data?.autoColorOptions || {};
+    const defaultCustomColor = data?.autoColorOptions?.defaultCustomColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1';
+
+    /** line charts do not support custom colors ATM and blue is preselected */
+    useEffect(() => {
+        if (data.type === 'line' && (!data?.autoColorOptions?.name || customColor)) {
+            onChange("autoColorOptions", {
+                name: 'global.colors.blue',
+                base: 190,
+                range: 20
+            });
+        }
+    }, [data.type]);
 
     return (
         <Row>
@@ -184,8 +196,8 @@ export default ({
                                             <OverlayTrigger
                                                 key="customColors"
                                                 placement="top"
-                                                overlay={<Tooltip id="wizard-tooltip-customColors"><Message msgId={"Custom Color Settings"} /></Tooltip>}>
-                                                <Button bsStyle="primary" bsSize="sm" className="custom-color-btn" onClick={() => setShowModal(true)}>
+                                                overlay={<Tooltip id="wizard-tooltip-customColors"><Message msgId="widgets.builder.wizard.classAttributes.title" /></Tooltip>}>
+                                                <Button bsStyle="primary" bsSize="sm" className={`custom-color-btn ${data.type}`} onClick={() => setShowModal(true)}>
                                                     <Glyphicon glyph="cog" />
                                                 </Button>
                                             </OverlayTrigger>
@@ -193,8 +205,8 @@ export default ({
                                     )}
                                     <Col xs={customColor ? 10 : 12} className={classNames({ 'custom-color': customColor })}>
                                         <ColorRamp
-                                            items={getColorRangeItems(data.type)}
-                                            value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
+                                            items={getColorRangeItems(data.type, classification, classificationAttribute, defaultCustomColor)}
+                                            value={head(getColorRangeItems(data.type, classification, classificationAttribute, defaultCustomColor).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                                             samples={data.type === "pie" ? 5 : 1}
                                             onChange={v => {
                                                 onChange("autoColorOptions", {
@@ -217,8 +229,7 @@ export default ({
                             setShowModal(false);
                             onChange("autoColorOptions", {
                                 ...data.autoColorOptions,
-                                defaultCustomColor: defaultCustomColor,
-                                classDefaultColor: defaultCustomColor,
+                                defaultCustomColor: defaultCustomColor ?? '#0888A1',
                                 classification: formatAutoColorOptions(CLASSIFIED_COLORS)
                             });
                             onChange("options.classificationAttribute", undefined);
@@ -230,24 +241,23 @@ export default ({
                             if (classificationAttribute) {
                                 onChange("autoColorOptions", {
                                     ...data.autoColorOptions,
-                                    classDefaultColor: defaultCustomColor ?? '#0888A1',
-                                    classDefaultLabel: (defaultClassLabel || ''),
+                                    defaultClassLabel: (defaultClassLabel || ''),
                                     classification: (classification ? formatAutoColorOptions(classification) : [])
                                 });
                             }
                         }}
-                        onChangeClassAttribute={(value) => setClassificationAttribute(value)}
+                        onChangeClassAttribute={(value) => onChange("options.classificationAttribute", value)}
                         classificationAttribute={classificationAttribute}
                         onUpdateClasses={(newClassification) => {
-                            setClassification(newClassification);
+                            onChange("autoColorOptions.classification", formatAutoColorOptions(newClassification) || []);
                         }}
                         options={options}
                         placeHolder={placeHolder}
                         classification={classification}
                         defaultCustomColor={defaultCustomColor}
-                        onChangeColor={(color) => setDefaultCustomColor(color)}
+                        onChangeColor={(color) => onChange("autoColorOptions.defaultCustomColor", color)}
                         defaultClassLabel={defaultClassLabel}
-                        onChangeDefaultClassLabel={(value) => setDefaultClassLabel(value)}
+                        onChangeDefaultClassLabel={(value) => onChange("autoColorOptions.defaultClassLabel", value)}
                     />
 
                     {formOptions.showLegend ?

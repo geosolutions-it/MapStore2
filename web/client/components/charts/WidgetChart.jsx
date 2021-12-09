@@ -10,7 +10,7 @@ import React, { Suspense } from 'react';
 import { sameToneRangeColors, hexToHsv } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
-import { includes, isNumber, isString, union } from 'lodash';
+import { every, includes, isNumber, isString, union } from 'lodash';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
@@ -44,9 +44,9 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
             // color is exactly matched to a user defined class/color
             return matchedColor ? matchedColor.color :
                 // color is not exactly matched and default is chosen (if default exists)
-                customColorEnabled && autoColorOptions.classDefaultColor ? autoColorOptions.classDefaultColor :
+                customColorEnabled && autoColorOptions.defaultCustomColor ? autoColorOptions.defaultCustomColor :
                     // class default color may not be defined and fall back to default color
-                    autoColorOptions.defaultCustomColor ? autoColorOptions.defaultCustomColor : defaultColorGenerator(1, COLOR_DEFAULTS)[0];
+                    defaultColorGenerator(1, COLOR_DEFAULTS)[0];
         }
         return  defaultColorGenerator(1, autoColorOptions)[0];
     })
@@ -105,13 +105,24 @@ const preProcessValues = (formula, values) => (
         }
     }));
 
-function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classificationAttr, yAxisLabel, autoColorOptions, customColorEnabled }) {
+function getData({
+    type,
+    xDataKey,
+    yDataKey,
+    data,
+    formula,
+    yAxisOpts,
+    classificationAttr,
+    yAxisLabel,
+    autoColorOptions,
+    customColorEnabled,
+    isClassifiedChart }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
     const colorCategories = autoColorOptions?.classification || [];
     const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
-    const defaultClassLabel = autoColorOptions.classDefaultLabel ?? 'Default';
+    const { defaultClassLabel = 'Default'} = autoColorOptions;
 
     switch (type) {
 
@@ -124,7 +135,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             textposition: 'inside',
             values: y
         };
-        if (classificationAttr && classifications.length && classificationColors.length && customColorEnabled) {
+        if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => `${x[index]} - ${getLegendLabel(item, colorCategories, defaultClassLabel)}`);
             pieChartTrace = {
                 ...pieChartTrace,
@@ -142,7 +153,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
                 },
                 ...pieChartTrace,
                 labels: x,
-                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.classDefaultColor || autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
+                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
             };
         }
         return pieChartTrace;
@@ -156,7 +167,7 @@ function getData({ type, xDataKey, yDataKey, data, formula, yAxisOpts, classific
             type
         };
         /** Bar chart is classified coloured */
-        if (classificationAttr && classifications.length && classificationColors.length && customColorEnabled) {
+        if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel));
             const filteredLegendLabels = union(legendLabels);
             const [groupedColors, groupedXValues, groupedYValues] = getGroupedTraceValues(legendLabels, filteredLegendLabels, [classificationColors, x, y]);
@@ -226,7 +237,7 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
     // line / bar
     default :
         return {
-            colorway: customColorEnabled ? [autoColorOptions?.defaultCustomColor] || [autoColorOptions?.classDefaultColor] || ['#0888A1'] : defaultColorGenerator(series.length, autoColorOptions),
+            colorway: customColorEnabled ? [autoColorOptions?.defaultCustomColor] || ['#0888A1'] : defaultColorGenerator(series.length, autoColorOptions),
             yaxis: {
                 type: yAxisOpts?.type,
                 automargin: true,
@@ -272,6 +283,7 @@ export const toPlotly = (props) => {
     const isModeBarVisible = width > 350;
     const classificationAttr = classifications?.dataKey;
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
+    const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
     return {
         layout: {
             showlegend: legend,
@@ -287,7 +299,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart });
             return  allData;
         }),
         config: {

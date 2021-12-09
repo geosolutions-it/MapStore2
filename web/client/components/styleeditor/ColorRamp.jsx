@@ -10,15 +10,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {sameToneRangeColors} from '../../utils/ColorUtils';
 import Select from 'react-select';
-import find from 'lodash/find';
+import { find, isArray } from 'lodash';
 import Message from '../I18N/Message';
 
 const ColorRampItem = ({ ramp, name, label }) => {
     const tick = 1 / ramp.length;
-    const linearGradient = (ramp || [])
-        .reduce((acc, color, idx) =>
-            `${acc}, ${color} ${idx / ramp.length * 100}%, ${color} ${(idx / ramp.length + tick) * 100}%`,
-        'linear-gradient(to right');
+    let linearGradient = 'linear-gradient(to right';
+    if (name === 'global.colors.custom' && isArray(ramp[0])) {
+        linearGradient = (ramp[0] || [])
+            .reduce((acc, color, idx) => {
+                const percentage = 100 / ramp[0].length;
+                const initialStop = `${Math.ceil(percentage * idx)}%`;
+                const finalStop = `${Math.ceil(percentage * (idx + 1))}%`;
+                return `${acc}, ${color} ${initialStop}, ${color} ${finalStop}`;
+            }, linearGradient);
+    } else {
+        linearGradient = (ramp || [])
+            .reduce((acc, color, idx) =>
+                `${acc}, ${color} ${idx / ramp.length * 100}%, ${color} ${(idx / ramp.length + tick) * 100}%`,
+            linearGradient);
+    }
     return (<div
         style={{
             backgroundImage: `${linearGradient})`,
