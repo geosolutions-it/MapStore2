@@ -42,9 +42,11 @@ New vertices can be also added using the <img src="../img/button/++.jpg" class="
 
 <img src="../img/annotations/add_vertex_button.jpg" class="ms-docimage" style="max-width:500px;" />
 
-Invalid vertices are notified with a red exclamation point icon.
-
-<img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
+!!! note
+    If the vertices are invalid, they are notified with a red exclamation point.
+    <img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
+    In this case, it is not possible to add new geometry or save the annotation until a valid value is entered. It is still possible to interact with the geometries already present in the annotation, by zooming in on it or deleting it, as follows:
+    <img src="../img/annotations/invalid_vertex2.gif" class="ms-docimage" style="max-width:500px;" />
 
 * **Click** the *Style* tab of the annotation viewer (optional) to manage the annotation style (see the next paragraph).
 
