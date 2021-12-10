@@ -7,7 +7,7 @@
  */
 
 import React, { Suspense } from 'react';
-import { sameToneRangeColors, hexToHsv } from '../../utils/ColorUtils';
+import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
 import { every, includes, isNumber, isString, union } from 'lodash';
@@ -19,22 +19,10 @@ export const COLOR_DEFAULTS = {
     s: 0.95,
     v: 0.63
 };
+
 export const defaultColorGenerator = (total, colorOptions) => {
     const { base, range, ...opts } = colorOptions;
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
-};
-
-export const customColorRampGenerator = (color, total) => {
-    const hsvDefaultColor = hexToHsv(color);
-    const defaultAutoColorOptions = {
-        base: color,
-        range: 30,
-        s: hsvDefaultColor[1],
-        v: hsvDefaultColor[2]
-    };
-    return hsvDefaultColor[0] > 80 && hsvDefaultColor[0] < 250 ?
-        defaultColorGenerator(total, defaultAutoColorOptions).reverse() :
-        defaultColorGenerator(total, defaultAutoColorOptions);
 };
 
 const getClassificationColors = (classifications, colorCategories, customColorEnabled, autoColorOptions) => (
@@ -88,8 +76,8 @@ export const getGroupedTraceValues = (classValues, filteredClassValues, ungroupe
             // iterate over single values in the classValues array
             .map(item => classValues
                 // if the current classValue value of the item mathces the value of the filteredClassValues
-                // it means it belongs to the same group and push it in the groupedValues array, the map between
-                // ungroupedValue and classValues arrays is the index since the length of both arrays have the same length
+                // it means it belongs to the same group and push it to the groupedValues array, the map between
+                // ungroupedValue and classValues arrays is the index since both arrays have the same length
                 .reduce((acc, cur, index) => (cur === item ? [...acc, ungroupedValue[index]] : acc), [])));
     return groupedValues;
 };

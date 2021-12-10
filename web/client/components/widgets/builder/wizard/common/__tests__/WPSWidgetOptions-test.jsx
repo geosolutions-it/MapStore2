@@ -95,7 +95,8 @@ describe('WPSWidgetOptions component', () => {
             data={{
                 type: 'bar',
                 autoColorOptions: {
-                    classification: CLASSIFICATION
+                    classification: CLASSIFICATION,
+                    name: 'global.colors.custom'
                 },
                 options: {
                     classificationAttribute: 'class2'
@@ -111,12 +112,15 @@ describe('WPSWidgetOptions component', () => {
         ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 9, key: 'Tab' });
         expect(spyonChange.calls[0].arguments[0]).toBe("autoColorOptions");
         expect(spyonChange.calls[0].arguments[1].name).toBe("global.colors.custom");
+        const customColorsSettingsButton = document.getElementsByClassName('custom-color-btn')[0];
+        expect(customColorsSettingsButton).toExist();
+        ReactTestUtils.Simulate.click(customColorsSettingsButton);
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         expect(colorClassMd).toExist();
         const colorClassMdSaveButton = colorClassMd.getElementsByClassName('btn-save')[0];
         ReactTestUtils.Simulate.click(colorClassMdSaveButton);
         expect(spyonChange).toHaveBeenCalled();
-        expect(spyonChange.calls[1].arguments[0]).toBe('autoColorOptions.classDefaultColor');
+        expect(spyonChange.calls[1].arguments[0]).toBe('autoColorOptions.defaultCustomColor');
         expect(spyonChange.calls[1].arguments[1]).toBe(DEFAULT_CUSTOM_COLOR[0]);
 
         expect(spyonChange.calls[2].arguments[0]).toBe('options.classificationAttribute');
@@ -125,7 +129,8 @@ describe('WPSWidgetOptions component', () => {
         expect(spyonChange.calls[3].arguments[0]).toBe('autoColorOptions');
         expect(spyonChange.calls[3].arguments[1]).toEqual({
             classification: CLASSIFICATION,
-            classDefaultLabel: DEFAULT_CUSTOM_LABEL[0]
+            defaultClassLabel: DEFAULT_CUSTOM_LABEL[0],
+            name: 'global.colors.custom'
         });
         const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
         expect(colorClassMdBody).toNotExist();
@@ -141,7 +146,8 @@ describe('WPSWidgetOptions component', () => {
             data={{
                 type: 'bar',
                 autoColorOptions: {
-                    classification: CLASSIFICATION
+                    classification: CLASSIFICATION,
+                    name: "global.colors.custom"
                 },
                 options: {
                     classificationAttribute: 'class2'
@@ -157,6 +163,9 @@ describe('WPSWidgetOptions component', () => {
         ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 9, key: 'Tab' });
         expect(spyonChange.calls[0].arguments[0]).toBe("autoColorOptions");
         expect(spyonChange.calls[0].arguments[1].name).toBe("global.colors.custom");
+        const customColorsSettingsButton = document.getElementsByClassName('custom-color-btn')[0];
+        expect(customColorsSettingsButton).toExist();
+        ReactTestUtils.Simulate.click(customColorsSettingsButton);
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         expect(colorClassMd).toExist();
         const colorClassMdCloseButton = colorClassMd.getElementsByClassName('btn-cancel')[0];
@@ -166,7 +175,8 @@ describe('WPSWidgetOptions component', () => {
         expect(spyonChange.calls[1].arguments[0]).toBe('autoColorOptions');
         expect(spyonChange.calls[1].arguments[1]).toEqual({
             classification: [ { title: "", color: "#ffffff", value: "", unique: "" } ],
-            classDefaultColor: DEFAULT_CUSTOM_COLOR[0]
+            defaultCustomColor: DEFAULT_CUSTOM_COLOR[0],
+            name: "global.colors.custom"
         });
 
         expect(spyonChange.calls[2].arguments[0]).toBe('options.classificationAttribute');

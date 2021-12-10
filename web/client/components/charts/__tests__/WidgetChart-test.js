@@ -170,7 +170,7 @@ describe('Widget Chart: data conversions ', () => {
             expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, autoColorOptions));
         });
         it('custom classified colors - using custom labels and colors only', () => {
-            const autoColorOptions = { classDefaultColor: "#00ff00", classDefaultLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
             const { data, layout } = toPlotly({
                 type: 'pie',
                 autoColorOptions,
@@ -196,7 +196,7 @@ describe('Widget Chart: data conversions ', () => {
             expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
         });
         it('custom classified colors - using default labels and colors', () => {
-            const autoColorOptions = { classDefaultColor: "#00ff00", classDefaultLabel: "Default", classification: UNLABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: UNLABELLED_CLASSIFICATION, name: 'global.colors.custom' };
             const { data, layout } = toPlotly({
                 type: 'pie',
                 autoColorOptions,
@@ -210,12 +210,12 @@ describe('Widget Chart: data conversions ', () => {
             data[0].values.map((v, i) => expect(v).toBe(DATASET_3.data[i][DATASET_3.series[0].dataKey]));
             // data labels mapped
             data[0].labels.map((v, i) => {
-                const classLabel = UNLABELLED_CLASSIFICATION.filter(item => item.value === DATASET_3.data[i][CLASSIFICATIONS.dataKey])[0]?.value ?? autoColorOptions.classDefaultLabel;
+                const classLabel = UNLABELLED_CLASSIFICATION.filter(item => item.value === DATASET_3.data[i][CLASSIFICATIONS.dataKey])[0]?.value ?? autoColorOptions.defaultClassLabel;
                 expect(v).toBe(`${DATASET_3.data[i][DATASET_3.xAxis.dataKey]} - ${classLabel}`);
             });
             // colors are those defined by the user
             data[0].marker.colors.map((v, i) => {
-                const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === DATASET_3.data[i][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.classDefaultColor;
+                const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === DATASET_3.data[i][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
                 expect(v).toBe(classColor);
             });
             // LAYOUT
@@ -223,8 +223,8 @@ describe('Widget Chart: data conversions ', () => {
         });
         it('custom color ramp', () => {
             const autoColorOptions = {
-                classDefaultColor: "#00FF00",
-                classDefaultLabel: "Default",
+                defaultCustomColor: "#00FF00",
+                defaultClassLabel: "Default",
                 name: 'global.colors.custom',
                 base: 190,
                 range: 0,
@@ -240,7 +240,7 @@ describe('Widget Chart: data conversions ', () => {
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
             data[0].marker.colors.map((v) => {
-                expect(v).toBe(autoColorOptions.classDefaultColor);
+                expect(v).toBe(autoColorOptions.defaultCustomColor);
             });
         });
     });
@@ -332,7 +332,7 @@ describe('Widget Chart: data conversions ', () => {
     });
     describe('color coded/custom classified Bar chart', () => {
         it('custom classified colors - using custom labels and colors only', () => {
-            const autoColorOptions = { classDefaultColor: "#00ff00", classDefaultLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
             const { data, layout } = toPlotly({
                 type: 'bar',
                 autoColorOptions,
@@ -358,7 +358,7 @@ describe('Widget Chart: data conversions ', () => {
         });
     });
     it('custom classified colors - using default labels and colors', () => {
-        const autoColorOptions = { classDefaultColor: "#00ff00", classDefaultLabel: "Default", classification: UNLABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: UNLABELLED_CLASSIFICATION, name: 'global.colors.custom' };
         const { data, layout } = toPlotly({
             type: 'bar',
             autoColorOptions,
@@ -374,18 +374,18 @@ describe('Widget Chart: data conversions ', () => {
             trace.y.map((v, j) => expect(v).toBe(SPLIT_DATASET_3.data[i][j][SPLIT_DATASET_3.series[0].dataKey]));
             trace.x.map((v, j) => expect(v).toBe(SPLIT_DATASET_3.data[i][j][SPLIT_DATASET_3.xAxis.dataKey]));
             // data labels mapped
-            const classLabel = UNLABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.value ?? autoColorOptions.classDefaultLabel;
+            const classLabel = UNLABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.value ?? autoColorOptions.defaultClassLabel;
             expect(trace.name).toBe(`${SPLIT_DATASET_3.series[0].dataKey} - ${classLabel}`);
             // colors are those defined by the user
-            const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.classDefaultColor;
+            const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
             trace.marker.color.forEach(item => expect(item).toBe(classColor));
             expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
         });
     });
     it('custom bar color', () => {
         const autoColorOptions = {
-            classDefaultColor: "#0888A1",
-            classDefaultLabel: "Default",
+            defaultCustomColor: "#0888A1",
+            defaultClassLabel: "Default",
             name: 'global.colors.custom',
             base: 190,
             range: 0,
@@ -399,6 +399,6 @@ describe('Widget Chart: data conversions ', () => {
         });
         expect(data.length).toBe(1);
         expect(data[0].type).toBe('bar');
-        expect(layout.colorway).toEqual([autoColorOptions.classDefaultColor]);
+        expect(layout.colorway).toEqual([autoColorOptions.defaultCustomColor]);
     });
 });
