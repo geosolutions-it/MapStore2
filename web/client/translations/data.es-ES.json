@@ -1780,6 +1780,7 @@
                         "defaultClassLabel": "Etiqueta de Clase Predeterminada",
                         "defaultColorRamp": "Rampa de Color Predeterminada",
                         "defaultColor": "Color Predeterminado",
+                        "editCustomColors": "Editar Colores Personalizados",
                         "title": "Configuración de Colores Personalizados"
                     }
                 },

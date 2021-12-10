@@ -196,9 +196,9 @@ export default ({
                                             <OverlayTrigger
                                                 key="customColors"
                                                 placement="top"
-                                                overlay={<Tooltip id="wizard-tooltip-customColors"><Message msgId="widgets.builder.wizard.classAttributes.title" /></Tooltip>}>
-                                                <Button bsStyle="primary" bsSize="sm" className={`custom-color-btn ${data.type}`} onClick={() => setShowModal(true)}>
-                                                    <Glyphicon glyph="cog" />
+                                                overlay={<Tooltip id="wizard-tooltip-customColors"><Message msgId="widgets.builder.wizard.classAttributes.editCustomColors" /></Tooltip>}>
+                                                <Button bsSize="sm" className={`custom-color-btn btn btn-default ${data.type}`} onClick={() => setShowModal(true)}>
+                                                    <Glyphicon glyph="pencil" />
                                                 </Button>
                                             </OverlayTrigger>
                                         </Col>
