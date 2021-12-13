@@ -2840,6 +2840,10 @@
             "description": "Allows time travel for data with time dimension",
             "title": "Timeline"
           },
+          "TimeSeriesPlots": {
+              "description": "Will plot time series chart over time bound data",
+              "title": "Time Series Plots"
+          },
           "Tutorial": {
             "description": "Adds a tutorial to explain the various functionalities",
             "title": "Tutorial"
