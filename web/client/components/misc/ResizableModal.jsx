@@ -8,6 +8,7 @@
 
 import React from 'react';
 
+import classnames from 'classnames';
 import { Glyphicon } from 'react-bootstrap';
 import Dialog from './Dialog';
 import Toolbar from './toolbar/Toolbar';
@@ -98,7 +99,7 @@ const ResizableModalComp = ({
                 containerClassName="ms-resizable-modal"
                 draggable={draggable}
                 modal
-                className={'modal-dialog modal-content' + sizeClassName + fullscreenClassName + dialogClassName + (fitContent ? ' ms-fit-content' : '')}>
+                className={classnames('modal-dialog modal-content', sizeClassName, fullscreenClassName, dialogClassName, {'ms-fit-content': fitContent})}>
                 <span role="header">
                     <h4 className="modal-title">
                         <div className="ms-title">{title}</div>
