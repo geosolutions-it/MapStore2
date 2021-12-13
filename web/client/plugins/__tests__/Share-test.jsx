@@ -32,7 +32,7 @@ describe('Share Plugin', () => {
         const controls = {};
         const { Plugin } = getPluginForTest(SharePlugin, { controls });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toNotExist();
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toNotExist();
     });
 
     it('creates a Share plugin with share control enabled', (done) => {
@@ -43,7 +43,7 @@ describe('Share Plugin', () => {
         };
         const { Plugin } = getPluginForTest(SharePlugin, { controls });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toExist();
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
         done();
     });
 
@@ -71,13 +71,13 @@ describe('Share Plugin', () => {
         };
         const { Plugin, actions } = getPluginForTest(SharePlugin, { controls });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toExist();
-        const closeButton = document.getElementsByClassName('share-panel-close')[0];
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
+        const closeButton = document.getElementsByClassName('ms-header-btn glyphicon-1-close')[0];
         ReactTestUtils.Simulate.click(closeButton);
         expect(actions[0].type).toBe(TOGGLE_CONTROL);
         expect(actions[1].type).toBe(HIDE_MAPINFO_MARKER);
         expect(actions[2].type).toBe(PURGE_MAPINFO_RESULTS);
-        expect(document.getElementById('share-panel-dialog')).toNotExist();
+        expect(document.getElementsByClassName('share-panel-modal-body').length).toBe(0);
         done();
     });
 
@@ -109,7 +109,7 @@ describe('Share Plugin', () => {
             };
             const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
             ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
-            expect(document.getElementById('share-panel-dialog')).toExist();
+            expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
             const inputLink = document.querySelector('input[type=\'text\']');
             const shareUrl = inputLink.value;
             const splitUrl = shareUrl.split('?');
@@ -149,7 +149,7 @@ describe('Share Plugin', () => {
         const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
 
-        expect(document.getElementById('share-panel-dialog')).toExist();
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
         const inputLink = document.querySelector('input[type=\'text\']');
         const shareUrl = inputLink.value;
         const splitUrl = shareUrl.split('?');
@@ -204,7 +204,7 @@ describe('Share Plugin', () => {
         };
         const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toExist();
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
         const inputLink = document.querySelector('input[type=\'text\']');
         const shareUrl = inputLink.value;
         const splitUrl = shareUrl.split('?');
@@ -233,7 +233,7 @@ describe('Share Plugin', () => {
             };
             const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
             ReactDOM.render(<Plugin />, document.getElementById("container"));
-            const sharePanelDialog = document.getElementById('share-panel-dialog');
+            const sharePanelDialog = document.getElementsByClassName('share-panel-modal-body')[0];
             expect(sharePanelDialog).toExist();
             const switchButton = sharePanelDialog.querySelector('.mapstore-switch-btn input[type=\'checkbox\']');
             expect(switchButton).toExist();
@@ -268,7 +268,7 @@ describe('Share Plugin', () => {
             };
             const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
             ReactDOM.render(<Plugin />, document.getElementById("container"));
-            let sharePanelDialog = document.getElementById('share-panel-dialog');
+            let sharePanelDialog = document.getElementsByClassName('share-panel-modal-body')[0];
             expect(sharePanelDialog).toExist();
             let switchButton = sharePanelDialog.querySelector('.mapstore-switch-btn input[type=\'checkbox\']');
             expect(switchButton).toExist();
@@ -291,7 +291,7 @@ describe('Share Plugin', () => {
             };
             const { Plugin: PluginModified } = getPluginForTest(SharePlugin, { controls, map });
             ReactDOM.render(<PluginModified />, document.getElementById("container"));
-            sharePanelDialog = document.getElementById('share-panel-dialog');
+            sharePanelDialog = document.getElementsByClassName('share-panel-modal-body')[0];
             expect(sharePanelDialog).toExist();
             switchButton = sharePanelDialog.querySelector('.mapstore-switch-btn input[type=\'checkbox\']');
             expect(switchButton).toExist();
@@ -333,7 +333,7 @@ describe('Share Plugin', () => {
         const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
 
-        expect(document.getElementById('share-panel-dialog')).toExist();
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
         const inputLink = document.querySelector('input[type=\'text\']');
         const shareUrl = inputLink.value;
         const splitUrl = shareUrl.split('?');
@@ -375,7 +375,7 @@ describe('Share Plugin', () => {
         const {Plugin} = getPluginForTest(SharePlugin, {controls, map});
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
 
-        expect(document.getElementById('share-panel-dialog')).toExist();
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
         const inputLink = document.querySelector('input[type=\'text\']');
         const shareUrl = inputLink.value;
         const splitUrl = shareUrl.split('?');
@@ -413,7 +413,7 @@ describe('Share Plugin', () => {
         const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
 
-        expect(document.getElementById('share-panel-dialog')).toExist();
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
         const inputLink = document.querySelectorAll('input.form-control');
         let lat = inputLink[1];
         let lon = inputLink[2];
@@ -434,7 +434,7 @@ describe('Share Plugin', () => {
         ReactTestUtils.Simulate.focus(lon);
         ReactTestUtils.Simulate.change(lon, {target: {value: -89.01}});
         const button = document.querySelectorAll('button');
-        ReactTestUtils.Simulate.click(button[3]);
+        ReactTestUtils.Simulate.click(button[2]);
         const inputLinks = document.querySelectorAll('input.form-control');
         expect(toNumber(inputLinks[1].value)).toBe(42.01);
         expect(toNumber(inputLinks[2].value)).toBe(-89.01);
@@ -474,7 +474,7 @@ describe('Share Plugin', () => {
         }}, storeState);
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
 
-        expect(document.getElementById('share-panel-dialog')).toExist();
+        expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
         let inputLink = document.querySelectorAll('input.form-control');
         let lat = inputLink[1];
         let lon = inputLink[2];
