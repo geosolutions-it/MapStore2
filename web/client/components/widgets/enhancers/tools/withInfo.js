@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {compose, withProps} from 'recompose';
+import {slug} from "@geosolutions/mocha/lib/utils";
 
 /**
  * Add widget info tool to show widget description.
@@ -22,7 +23,8 @@ export default () =>
                         popover: { // text widget should not show info popover
                             title,
                             trigger: true,
-                            text: description
+                            text: description,
+                            id: slug(title)
                         },
                         target: 'icons'
                     }]

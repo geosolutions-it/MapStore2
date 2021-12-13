@@ -13,6 +13,7 @@ import { Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import Message from '../../components/I18N/Message';
 import ConfirmModal from '../../components/misc/ResizableModal';
+import {pick} from "lodash/object";
 
 class Home extends React.Component {
     static propTypes = {
@@ -49,7 +50,7 @@ class Home extends React.Component {
                         bsStyle="primary"
                         onClick={this.checkUnsavedChanges}
                         tooltip={tooltip}
-                        {...restProps}
+                        {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children'])}
                     >{this.props.icon}</Button>
                 </OverlayTrigger>
                 <ConfirmModal

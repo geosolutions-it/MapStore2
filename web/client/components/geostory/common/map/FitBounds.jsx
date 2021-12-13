@@ -112,12 +112,12 @@ FitBounds.propTypes = {
     id: PropTypes.string,
     map: PropTypes.object,
     mapType: PropTypes.string,
-    active: PropTypes.boolean,
+    active: PropTypes.bool,
     geometry: PropTypes.array,
     geometryProjection: PropTypes.string,
     padding: PropTypes.object,
     maxZoom: PropTypes.number,
-    fixedZoom: PropTypes.boolean,
+    fixedZoom: PropTypes.bool,
     duration: PropTypes.number
 };
 
