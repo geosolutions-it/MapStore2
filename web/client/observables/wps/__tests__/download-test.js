@@ -381,4 +381,144 @@ describe('WPS download tests', () => {
             }
         );
     });
+    it('should use the resultOutput property', (done) => {
+
+        const options = {
+            layerName: 'layer',
+            resultOutput: 'application/zip',
+            outputFormat: 'application/json',
+            asynchronous: true,
+            outputAsReference: true,
+            notifyDownloadEstimatorSuccess: true
+        };
+
+        const expectedDataPayload = `<?xml version="1.0" encoding="UTF-8"?>` +
+            `<wps:Execute version="1.0.0" service="WPS" ` +
+            `xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ` +
+            `xmlns="http://www.opengis.net/wps/1.0.0" ` +
+            `xmlns:wfs="http://www.opengis.net/wfs" ` +
+            `xmlns:wps="http://www.opengis.net/wps/1.0.0" ` +
+            `xmlns:ows="http://www.opengis.net/ows/1.1" ` +
+            `xmlns:gml="http://www.opengis.net/gml" ` +
+            `xmlns:ogc="http://www.opengis.net/ogc" ` +
+            `xmlns:wcs="http://www.opengis.net/wcs/1.1.1" ` +
+            `xmlns:dwn="http://geoserver.org/wps/download" ` +
+            `xmlns:xlink="http://www.w3.org/1999/xlink" ` +
+            `xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">` +
+            `<ows:Identifier>gs:Download</ows:Identifier>` +
+            `<wps:DataInputs>` +
+                `<wps:Input>` +
+                    `<ows:Identifier>layerName</ows:Identifier>` +
+                    `<wps:Data>` +
+                        `<wps:LiteralData>layer</wps:LiteralData>` +
+                    `</wps:Data>` +
+                `</wps:Input>` +
+                `<wps:Input>` +
+                    `<ows:Identifier>outputFormat</ows:Identifier>` +
+                    `<wps:Data>` +
+                        `<wps:LiteralData>application/json</wps:LiteralData>` +
+                    `</wps:Data>` +
+                `</wps:Input>` +
+                `<wps:Input>` +
+                    `<ows:Identifier>cropToROI</ows:Identifier>` +
+                    `<wps:Data>` +
+                        `<wps:LiteralData>false</wps:LiteralData>` +
+                    `</wps:Data>` +
+                `</wps:Input>` +
+            `</wps:DataInputs>` +
+            `<wps:ResponseForm>` +
+                `<wps:ResponseDocument storeExecuteResponse="true" status="true">` +
+                    `<wps:Output mimeType="application/zip" asReference="true">` +
+                        `<ows:Identifier>result</ows:Identifier>` +
+                    `</wps:Output>` +
+                `</wps:ResponseDocument>` +
+            `</wps:ResponseForm>` +
+            `</wps:Execute>`;
+
+        mockAxios
+            .onPost()
+            .replyOnce(200, downloadEstimatorSucceededResponse, {'content-type': 'application/xml'})
+            .onPost()
+            .replyOnce((config) => {
+                try {
+                    expect(config.data).toBe(expectedDataPayload);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+                return [200, responseWithComplexDataOutput, {'content-type': 'application/xml'}];
+            });
+
+        download('http://testserver', options, {executeStatusUpdateInterval: 0}).subscribe();
+    });
+
+    it('should use the outputFormat if resultOutput is undefined as output format', (done) => {
+
+        const options = {
+            layerName: 'layer',
+            outputFormat: 'application/json',
+            asynchronous: true,
+            outputAsReference: true,
+            notifyDownloadEstimatorSuccess: true
+        };
+
+        const expectedDataPayload = `<?xml version="1.0" encoding="UTF-8"?>` +
+            `<wps:Execute version="1.0.0" service="WPS" ` +
+            `xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ` +
+            `xmlns="http://www.opengis.net/wps/1.0.0" ` +
+            `xmlns:wfs="http://www.opengis.net/wfs" ` +
+            `xmlns:wps="http://www.opengis.net/wps/1.0.0" ` +
+            `xmlns:ows="http://www.opengis.net/ows/1.1" ` +
+            `xmlns:gml="http://www.opengis.net/gml" ` +
+            `xmlns:ogc="http://www.opengis.net/ogc" ` +
+            `xmlns:wcs="http://www.opengis.net/wcs/1.1.1" ` +
+            `xmlns:dwn="http://geoserver.org/wps/download" ` +
+            `xmlns:xlink="http://www.w3.org/1999/xlink" ` +
+            `xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">` +
+            `<ows:Identifier>gs:Download</ows:Identifier>` +
+            `<wps:DataInputs>` +
+                `<wps:Input>` +
+                    `<ows:Identifier>layerName</ows:Identifier>` +
+                    `<wps:Data>` +
+                        `<wps:LiteralData>layer</wps:LiteralData>` +
+                    `</wps:Data>` +
+                `</wps:Input>` +
+                `<wps:Input>` +
+                    `<ows:Identifier>outputFormat</ows:Identifier>` +
+                    `<wps:Data>` +
+                        `<wps:LiteralData>application/json</wps:LiteralData>` +
+                    `</wps:Data>` +
+                `</wps:Input>` +
+                `<wps:Input>` +
+                    `<ows:Identifier>cropToROI</ows:Identifier>` +
+                    `<wps:Data>` +
+                        `<wps:LiteralData>false</wps:LiteralData>` +
+                    `</wps:Data>` +
+                `</wps:Input>` +
+            `</wps:DataInputs>` +
+            `<wps:ResponseForm>` +
+                `<wps:ResponseDocument storeExecuteResponse="true" status="true">` +
+                    `<wps:Output mimeType="application/json" asReference="true">` +
+                        `<ows:Identifier>result</ows:Identifier>` +
+                    `</wps:Output>` +
+                `</wps:ResponseDocument>` +
+            `</wps:ResponseForm>` +
+            `</wps:Execute>`;
+
+        mockAxios
+            .onPost()
+            .replyOnce(200, downloadEstimatorSucceededResponse, {'content-type': 'application/xml'})
+            .onPost()
+            .replyOnce((config) => {
+                try {
+                    expect(config.data).toBe(expectedDataPayload);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+                return [200, responseWithComplexDataOutput, {'content-type': 'application/xml'}];
+            });
+
+        download('http://testserver', options, {executeStatusUpdateInterval: 0}).subscribe();
+    });
 });

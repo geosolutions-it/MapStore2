@@ -116,10 +116,16 @@ export const download = (url, downloadOptions, executeOptions) => {
             dataFilter: downloadOptions.dataFilter,
             targetCRS: downloadOptions.targetCRS
         }), {outputsExtractor: makeOutputsExtractor(literalDataOutputExtractor)});
+
+        // use the same format of outputFormat for result
+        // if resultOutput param is undefined
+        const resultOutput = downloadOptions.resultOutput || downloadOptions.outputFormat || 'application/zip';
+
         const executeProcess$ = executeProcess(url, downloadXML({
             ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess'),
-            outputAsReference: downloadOptions.asynchronous ? downloadOptions.outputAsReference : false
-        }), executeOptions, {headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, ${downloadOptions.resultOutput || 'application/zip'}`}});
+            outputAsReference: downloadOptions.asynchronous ? downloadOptions.outputAsReference : false,
+            resultOutput
+        }), executeOptions, {headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, ${resultOutput}`}});
 
         return downloadEstimator$
             .catch(() => {
