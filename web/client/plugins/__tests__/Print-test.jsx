@@ -4,7 +4,13 @@ import expect from "expect";
 
 import Print from "../Print";
 import { getLazyPluginForTest } from './pluginsTestUtils';
+
 import {Null} from "../print/Null";
+import {setStore} from "../../utils/StateUtils";
+
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+import {addTransformer, resetTransformers} from "../../utils/PrintUtils";
 
 function getByXPath(xpath) {
     return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -17,9 +23,18 @@ const initialState = {
         }
     },
     print: {
-        spec: {},
+        spec: {
+            sheet: "A4"
+        },
         capabilities: {
-            layouts: [],
+            createURL: "http://fakeservice",
+            layouts: [{
+                name: "A4_no_legend",
+                map: {
+                    width: 100,
+                    height: 100
+                }
+            }],
             dpis: [],
             scales: []
         }
@@ -63,6 +78,7 @@ function getPrintPlugin({items = [], layers = [], preview = false} = {}) {
                 pdfUrl: preview ? "http://fakepreview" : undefined,
                 ...initialState.print,
                 map: {
+                    projection: "EPSG:3857",
                     center: {x: 0, y: 0},
                     layers
                 }
@@ -73,7 +89,9 @@ function getPrintPlugin({items = [], layers = [], preview = false} = {}) {
 }
 
 describe('Print Plugin', () => {
+    let mockAxios;
     beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
@@ -81,6 +99,8 @@ describe('Print Plugin', () => {
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        mockAxios.restore();
+        resetTransformers();
         setTimeout(done);
     });
 
@@ -181,6 +201,81 @@ describe('Print Plugin', () => {
                 ReactDOM.render(<Plugin />, document.getElementById("container"));
                 expect(getByXPath("//*[text()='print.title']")).toNotExist();
                 done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it("print using default printing service", (done) => {
+        getPrintPlugin().then(({ Plugin, store }) => {
+            try {
+                setStore(store);
+
+                mockAxios.onPost().reply(({url, data }) => {
+                    try {
+                        expect(url).toContain("fakeservice");
+                        const spec = JSON.parse(data);
+                        expect(spec.layout).toBe("A4_no_legend");
+                        done();
+                    } catch (ex) {
+                        done(ex);
+                    }
+                });
+
+                ReactDOM.render(<Plugin/>, document.getElementById("container"));
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                submit.click();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it("print with custom transformer", (done) => {
+        getPrintPlugin().then(({ Plugin, store }) => {
+            try {
+                setStore(store);
+                addTransformer("custom", (state, spec) => Promise.resolve({
+                    ...spec,
+                    custom: "mycustomvalue"
+                }));
+                mockAxios.onPost().reply(({ data }) => {
+                    try {
+                        const spec = JSON.parse(data);
+                        expect(spec.custom).toBe("mycustomvalue");
+                        done();
+                    } catch (ex) {
+                        done(ex);
+                    }
+                });
+
+                ReactDOM.render(<Plugin/>, document.getElementById("container"));
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                submit.click();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it("print using custom printing service", (done) => {
+        const printingService = {
+            print() {}
+        };
+        let spy = expect.spyOn(printingService, "print");
+        getPrintPlugin().then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin printingService={printingService}/>, document.getElementById("container"));
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                submit.click();
+                setTimeout(() => {
+                    expect(spy.calls.length).toBe(1);
+                    done();
+                }, 0);
             } catch (ex) {
                 done(ex);
             }

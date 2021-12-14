@@ -23,6 +23,11 @@ import { getFeature } from '../api/WFS';
 import { generateEnvString } from './LayerLocalizationUtils';
 import url from 'url';
 
+import { getStore } from "./StateUtils";
+import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
+import { currentLocaleLanguageSelector } from '../selectors/locale';
+import { printSpecificationSelector } from "../selectors/print";
+
 const defaultScales = getGoogleMercatorScales(0, 21);
 let PrintUtils;
 import assign from 'object-assign';
@@ -87,9 +92,7 @@ export const preloadData = (spec) => {
             };
         });
     }
-    return new Promise((resolve) => {
-        resolve(spec);
-    });
+    return Promise.resolve(spec);
 };
 /**
  * Given a static resource, returns the resource's absolute
@@ -204,6 +207,7 @@ export const getMapSize = (layout, maxWidth) => {
         height: 100
     };
 };
+
 /**
  * Creates the mapfish print specification from the current configuration
  * @param  {object} spec the current configuration
@@ -233,6 +237,79 @@ export const getMapfishPrintSpecification = (spec) => {
         ],
         "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend'),
         ...spec.params
+    };
+};
+
+export const localizationFilter = (state, spec) => {
+    const localizationEnabled = isLocalizedLayerStylesEnabledSelector(state);
+    const localizationEnv = localizedLayerStylesEnvSelector(state);
+    const localizedSpec = localizationEnabled ? {
+        ...spec,
+        env: localizationEnv,
+        currentLanguage: currentLocaleLanguageSelector(state)
+    } : spec;
+
+    return Promise.resolve(localizedSpec);
+};
+export const wfsPreloaderFilter = (state, spec) => preloadData(spec);
+export const toMapfish = (state, spec) => Promise.resolve(getMapfishPrintSpecification(spec));
+
+const defaultPrintingServiceTransformerChain = {
+    localization: localizationFilter,
+    wfspreloader: wfsPreloaderFilter,
+    mapfishSpecCreator: toMapfish
+};
+
+let userTransformerChain = {};
+
+function getTransformerChain() {
+    return [...Object.values(defaultPrintingServiceTransformerChain), ...Object.values(userTransformerChain)];
+}
+
+/**
+ * Resets the list of user spec transformers.
+ */
+export function resetTransformers() {
+    userTransformerChain = {};
+}
+
+/**
+ * Adds/Updates a user custom transformer for the default printing service spec transformer chain.
+ *
+ * @param {function} transformer (state, spec) => Promise<spec>
+ */
+export function addTransformer(name, transformer) {
+    userTransformerChain = {...userTransformerChain, [name]: transformer};
+}
+
+/**
+ * Returns the default printing service.
+ *
+ * A printing service implements the print function, whose goal is to transform the Print plugin
+ * specification object into a specification for the chosen printing engine.
+ *
+ * This service is compatible with the mapfish-2 printing engine and works by applying a chain of transformers,
+ * summing up the defaultPrintingServiceTransformerChain list, to eventual custom transformers,
+ * added with addTransformer.
+ *
+ * Each transformer is a function reiceiving two parameters, the redux global state and the print
+ * specification object returned by the previous chain step, and returning a Promise of the transformed
+ * specification:
+ *
+ *  (state, spec) => Promise.resolve(<transformed spec>)
+ *
+ * Project specific transformers can be added to the end of the chain using the addTransformer function.
+ * @returns the default printint service.
+ */
+export const getDefaultPrintingService = () => {
+    return {
+        print: () => {
+            const state = getStore().getState();
+            const intialSpec = printSpecificationSelector(state);
+            return getTransformerChain().reduce((previous, f) => {
+                return previous.then(spec=> f(state, spec));
+            }, Promise.resolve(intialSpec));
+        }
     };
 };
 /**
