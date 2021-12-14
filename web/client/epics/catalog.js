@@ -215,6 +215,7 @@ export default (API) => ({
                 const newService = newServiceSelector(state);
                 return Rx.Observable.of(newService)
                     // validate
+                    .switchMap((service) => API[service.type]?.preprocess?.(service) ?? ( Rx.Observable.of(service)))
                     .switchMap((service) => API[service.type]?.validate?.(service) ?? ( Rx.Observable.of(service)))
                     .switchMap((service) => API[service.type]?.testService?.(service) ?? (Rx.Observable.of(service)))
                     .switchMap(() => {
