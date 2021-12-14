@@ -8,6 +8,7 @@
 
 import {
     SET_PRINT_PARAMETER,
+    ADD_PRINT_PARAMETER,
     PRINT_CAPABILITIES_LOADED,
     PRINT_CAPABILITIES_ERROR,
     CONFIGURE_PRINT_MAP,
@@ -22,6 +23,8 @@ import {
 import { TOGGLE_CONTROL } from '../actions/controls';
 import { isObject, get } from 'lodash';
 import assign from 'object-assign';
+
+import set from "lodash/set";
 
 const initialSpec = {
     antiAliasing: true,
@@ -64,10 +67,14 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         });
     }
     case SET_PRINT_PARAMETER: {
-        return assign({}, state, {
-            spec: assign({}, state.spec, {[action.name]: action.value})
+        return {...state, spec: set({...state.spec}, action.name, action.value)};
+    }
+    case ADD_PRINT_PARAMETER: {
+        const exists = get(state.spec, action.name);
+        if (!exists) {
+            return {...state, spec: set({...state.spec}, action.name, action.value)};
         }
-        );
+        return state;
     }
     case CONFIGURE_PRINT_MAP: {
 

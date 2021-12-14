@@ -231,7 +231,8 @@ export const getMapfishPrintSpecification = (spec) => {
                 "rotation": 0
             }
         ],
-        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend')
+        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend'),
+        ...spec.params
     };
 };
 /**

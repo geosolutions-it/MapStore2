@@ -9,6 +9,7 @@ export const PRINT_CAPABILITIES_LOADED = 'PRINT_CAPABILITIES_LOADED';
 export const PRINT_CAPABILITIES_ERROR = 'PRINT_CAPABILITIES_ERROR';
 
 export const SET_PRINT_PARAMETER = 'SET_PRINT_PARAMETER';
+export const ADD_PRINT_PARAMETER = 'ADD_PRINT_PARAMETER';
 export const CONFIGURE_PRINT_MAP = 'CONFIGURE_PRINT_MAP';
 export const CHANGE_PRINT_ZOOM_LEVEL = 'CHANGE_PRINT_ZOOM_LEVEL';
 export const CHANGE_MAP_PRINT_PREVIEW = 'CHANGE_MAP_PRINT_PREVIEW';
@@ -100,6 +101,14 @@ export function loadPrintCapabilities(url) {
 export function setPrintParameter(name, value) {
     return {
         type: SET_PRINT_PARAMETER,
+        name,
+        value
+    };
+}
+
+export function addPrintParameter(name, value) {
+    return {
+        type: ADD_PRINT_PARAMETER,
         name,
         value
     };

@@ -136,11 +136,18 @@ const getPluginSimpleName = plugin => endsWith(plugin, 'Plugin') && plugin.subst
 
 const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
 
-export const getPluginConfiguration = (cfg, plugin) => {
+export const getPluginsConfiguration = (cfg, plugin) => {
     const pluginName = getPluginSimpleName(plugin);
-    return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName).map(cfgObj => isString(cfgObj) ? {
-        name: cfgObj
-    } : cfgObj)) || {};
+    return cfg
+        .filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName)
+        .map(cfgObj => isString(cfgObj) ? {
+            name: cfgObj
+        } : cfgObj);
+}
+
+export const getPluginConfiguration = (cfg, plugin) => {
+    const matches = getPluginsConfiguration(cfg, plugin);
+    return head(matches) || {}
 };
 
 /* eslint-disable */
@@ -279,12 +286,12 @@ const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && is
     ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
     pluginImpl;
 
-export const getPluginItems = (state, plugins, pluginsConfig, containerName, containerId, isDefault, loadedPlugins, filter) => {
+export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containerName, containerId, isDefault, loadedPlugins = {}, filter) => {
     return Object.keys(plugins)
-    // extract basic info for each plugins (name, implementation and config)
-        .map(pluginName => {
-            const config = getPluginConfiguration(pluginsConfig, pluginName);
-            return {
+        // extract basic info for each plugins (name, implementation and config)
+        .reduce((acc, pluginName) => {
+            const configs = getPluginsConfiguration(pluginsConfig, pluginName);
+            const configuredPlugins = configs.map(config => ({
                 name: pluginName,
                 impl: executeDeferredProp(
                     includeLoaded(getPluginSimpleName(pluginName), loadedPlugins, plugins[pluginName]),
@@ -292,13 +299,14 @@ export const getPluginItems = (state, plugins, pluginsConfig, containerName, con
                     containerName
                 ),
                 config
-            };
-        })
-    // include only plugins that are configured for the current mode
+            }));
+            return [...acc, ...configuredPlugins];
+        }, [])
+        // include only plugins that are configured for the current mode
         .filter((plugin) => isValidConfiguration(plugin.config))
-    // include only plugins that support container as a parent
+        // include only plugins that support container as a parent
         .filter((plugin) => canContain(containerName, plugin.impl, plugin.config.override))
-    // include only plugins that are configured to be shown in container (use showIn and hideFrom to customize the behaviour)
+        // include only plugins that are configured to be shown in container (use showIn and hideFrom to customize the behaviour)
         .filter((plugin) => {
             return showIn(state, plugins.requires, plugin.config, containerName, containerId, isDefault);
         })
