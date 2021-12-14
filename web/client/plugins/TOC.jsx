@@ -219,6 +219,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: PropTypes.bool,
         activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
+        activateTimeSeriesPlotsTool: PropTypes.bool,
         activateLayerInfoTool: PropTypes.bool,
         maxDepth: PropTypes.number,
         visibilityCheckType: PropTypes.string,
@@ -299,6 +300,7 @@ class LayerTree extends React.Component {
         activateQueryTool: true,
         activateDownloadTool: true,
         activateWidgetTool: false,
+        activateTimeSeriesPlotsTool: false,
         activateLayerFilterTool: false,
         activateLayerInfoTool: true,
         maxDepth: 3,
@@ -437,6 +439,7 @@ class LayerTree extends React.Component {
                                 includeDeleteButtonInSettings: false,
                                 activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool,
+                                activateTimeSeriesPlotsTool: this.props.activateTimeSeriesPlotsTool,
                                 activateLayerFilterTool: this.props.activateLayerFilterTool,
                                 activateLayerInfoTool: this.props.updatableLayersCount > 0 && this.props.activateLayerInfoTool
                             }}
@@ -466,6 +469,7 @@ class LayerTree extends React.Component {
                                 addGroupTooltip: <Message msgId="toc.addGroup" />,
                                 addSubGroupTooltip: <Message msgId="toc.addSubGroup" />,
                                 createWidgetTooltip: <Message msgId="toc.createWidget"/>,
+                                timeSeriesPlotsTooltip: <Message msgId="toc.timeSeriesPlots" />,
                                 zoomToTooltip: {
                                     LAYER: <Message msgId="toc.toolZoomToLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolZoomToLayersTooltip"/>
@@ -609,6 +613,7 @@ const checkPluginsEnhancer = branch(
             activateSettingsTool = true,
             activateLayerFilterTool = true,
             activateWidgetTool = true,
+            activateTimeSeriesPlotsTool = true,
             activateLayerInfoTool = true,
             activateDownloadTool = true
         }) => ({
@@ -620,6 +625,7 @@ const checkPluginsEnhancer = branch(
             // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approach
             // the button should hide if also widgets plugins is not available. Maybe is a good idea to merge the two plugins
             activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) && !!find(items, { name: "Widgets" }),
+            activateTimeSeriesPlotsTool: activateTimeSeriesPlotsTool && !!find(items, {name: "TimeSeriesPlots"}) || false,
             activateLayerInfoTool: activateLayerInfoTool && !!find(items, { name: "LayerInfo" }) || false,
             activateDownloadTool: activateDownloadTool && !!find(items, { name: "LayerDownload" }) || false
         })

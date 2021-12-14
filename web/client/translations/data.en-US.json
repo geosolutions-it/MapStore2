@@ -509,6 +509,7 @@
             "grabGroupIcon": "Grab and sort group",
             "toggleLayerVisibilityWarning": "Toggle layer visibility. Warning: layer didn't load correctly",
             "createWidget": "Create a widget for the selected layer",
+            "timeSeriesPlots": "Plots time bound data for the selected layer",
             "editLayerProperties": "Edit layer properties",
             "browseData": "Open Attribute Table",
             "removeLayer": "Remove layer",
@@ -2841,7 +2842,7 @@
             "title": "Timeline"
           },
           "TimeSeriesPlots": {
-              "description": "Will plot time series chart over time bound data",
+              "description": "Plots time series chart over time bound data",
               "title": "Time Series Plots"
           },
           "Tutorial": {

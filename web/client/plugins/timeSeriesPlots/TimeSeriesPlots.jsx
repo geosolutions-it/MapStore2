@@ -11,14 +11,14 @@ import {connect} from 'react-redux';
 import { createPlugin } from '../../utils/PluginsUtils';
 
 import TimeSeriesPlotsContainer from './containers/TimeSeriesPlotsContainer';
-import {toggleStreetView, configure, reset} from './actions/streetView';
-import Message from '../../components/I18N/Message';
+// import {toggleStreetView, configure, reset} from './actions/streetView';
+// import Message from '../../components/I18N/Message';
 
-import streetView from './reducers/streetview';
-import * as epics from './epics/streetView';
-import './css/style.css';
+// import streetView from './reducers/streetview';
+// import * as epics from './epics/streetView';
+// import './css/style.css';
 
-const TimeSeriesPlotsComponent =({onMount, onUnmount, ...props}) => {
+const TimeSeriesPlotsPluginComponent =({onMount, onUnmount, ...props}) => {
     useEffect(() => {
         onMount(props);
         return () => {
@@ -28,9 +28,9 @@ const TimeSeriesPlotsComponent =({onMount, onUnmount, ...props}) => {
     return <TimeSeriesPlotsContainer />;
 };
 
-const TimeSeriesPlotsContainer = connect(() => ({}), {
-    onMount: configure, onUnmount: reset
-})(TimeSeriesPlotsComponent);
+const TimeSeriesPlotsPluginContainer = connect(() => ({}), {
+    // onMount: configure, onUnmount: reset
+})(TimeSeriesPlotsPluginComponent);
 
 /**
  * TimeSeriesPlots Plugin. Plot charts with time related data.
@@ -39,17 +39,16 @@ const TimeSeriesPlotsContainer = connect(() => ({}), {
  * @class
  */
 export default createPlugin(
-    'TimeSeriesPlots',
+    "TimeSeriesPlots",
     {
-        options: {},
-        epics: {},
-        reducers: {},
-        component: TimeSeriesPlotsContainer,
+        component: TimeSeriesPlotsPluginContainer,
         containers: {
             TOC: {
                 doNotHide: true,
                 name: "TimeSeriesPlots"
             }
-        }
+        },
+        // epics: {},
+        // reducers: {},
     }
 );

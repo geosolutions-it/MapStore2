@@ -535,9 +535,6 @@
       "glyph": "time",
       "title": "plugins.TimeSeriesPlots.title",
       "description": "plugins.TimeSeriesPlots.description",
-      "dependencies": [
-        "WidgetsBuilder"
-      ]
     },
     {
       "name": "Playback",

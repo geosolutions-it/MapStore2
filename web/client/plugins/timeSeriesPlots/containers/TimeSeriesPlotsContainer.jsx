@@ -21,7 +21,7 @@ import {Resizable} from 'react-resizable';
  * @returns
  */
 
-const TimeSeriesPlotsContainer = ({enabled, onClose = () => {}}) => {
+const Panel = ({enabled, onClose = () => {}}) => {
     const margin = 10;
     const [size, setSize] = useState({width: 400, height: 300});
 
@@ -35,3 +35,5 @@ const TimeSeriesPlotsContainer = ({enabled, onClose = () => {}}) => {
         draggable
     />);
 }
+
+export default Panel;
