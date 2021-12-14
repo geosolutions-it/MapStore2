@@ -36,6 +36,7 @@ export const FILTER_LAYERS = 'LAYERS:FILTER_LAYERS';
 export const SHOW_LAYER_METADATA = 'LAYERS:SHOW_LAYER_METADATA';
 export const HIDE_LAYER_METADATA = 'LAYERS:HIDE_LAYER_METADATA';
 export const UPDATE_SETTINGS_PARAMS = 'LAYERS:UPDATE_SETTINGS_PARAMS';
+export const TIME_SERIES_PLOTS = 'LAYERS:TIME_SERIES_PLOTS';
 
 export function showSettings(node, nodeType, options) {
     return {
@@ -300,4 +301,11 @@ export function updateSettingsParams(newParams, update) {
         newParams,
         update
     };
+}
+
+export function timeSeriesPlots(layer) {
+    return {
+        type: TIME_SERIES_PLOTS,
+        layer
+    }
 }

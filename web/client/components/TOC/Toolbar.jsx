@@ -62,7 +62,8 @@ class Toolbar extends React.Component {
             onGetMetadataRecord: () => {},
             onHideLayerMetadata: () => {},
             onShow: () => {},
-            onLayerInfo: () => {}
+            onLayerInfo: () => {},
+            onShowTimeSeriesPlotsPlugin: () => {}
         },
         maxDepth: 3,
         text: {
@@ -313,7 +314,7 @@ class Toolbar extends React.Component {
                         key="timeSeriesPlots"
                         placement="top"
                         overlay={<Tooltip id="toc-tooltip-timeSeriesPlots">{this.props.text.timeSeriesPlotsTooltip}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={() => {console.log('time series plots')}}>
+                        <Button bsStyle="primary" className="square-button-md" onClick={this.showTimeSeriesPlotsPlugin}>
                             <Glyphicon glyph="time" />
                         </Button>
                     </OverlayTrigger>
@@ -444,6 +445,14 @@ class Toolbar extends React.Component {
             showDeleteDialog: true
         });
     };
+
+    showTimeSeriesPlotsPlugin = () => {
+        this.props.onToolsActions.onShowTimeSeriesPlotsPlugin({
+            url: this.props.selectedLayers[0].search?.url || this.props.selectedLayers[0].url,
+            name: this.props.selectedLayers[0].name,
+            id: this.props.selectedLayers[0].id
+        });
+    }
 
 }
 

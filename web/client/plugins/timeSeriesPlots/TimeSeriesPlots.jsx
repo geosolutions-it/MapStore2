@@ -18,7 +18,7 @@ import TimeSeriesPlotsContainer from './containers/TimeSeriesPlotsContainer';
 // import * as epics from './epics/streetView';
 // import './css/style.css';
 
-const TimeSeriesPlotsPluginComponent =({onMount, onUnmount, ...props}) => {
+const TimeSeriesPlotsPluginComponent =({onMount = () => { }, onUnmount = () => { }, ...props}) => {
     useEffect(() => {
         onMount(props);
         return () => {
@@ -48,7 +48,7 @@ export default createPlugin(
                 name: "TimeSeriesPlots"
             }
         },
-        // epics: {},
-        // reducers: {},
+        epics: {},
+        reducers: {},
     }
 );

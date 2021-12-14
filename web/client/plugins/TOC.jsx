@@ -29,7 +29,8 @@ import {
     filterLayers,
     refreshLayerVersion,
     hideLayerMetadata,
-    download
+    download,
+    timeSeriesPlots
 } from '../actions/layers';
 
 import { openQueryBuilder } from '../actions/layerFilter';
@@ -260,7 +261,8 @@ class LayerTree extends React.Component {
         onSetSwipeActive: PropTypes.func,
         updatableLayersCount: PropTypes.number,
         onSetSwipeMode: PropTypes.func,
-        resolutions: PropTypes.func
+        resolutions: PropTypes.func,
+        onShowTimeSeriesPlotsPlugin: PropTypes.func
     };
 
     static contextTypes = {
@@ -513,7 +515,8 @@ class LayerTree extends React.Component {
                                 onGetMetadataRecord: this.props.onGetMetadataRecord,
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler,
-                                onLayerInfo: this.props.onLayerInfo
+                                onLayerInfo: this.props.onLayerInfo,
+                                onShowTimeSeriesPlotsPlugin: this.props.onShowTimeSeriesPlotsPlugin
                             }}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
@@ -907,7 +910,8 @@ const TOCPlugin = connect(tocSelector, {
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion,
-    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false)
+    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false),
+    onShowTimeSeriesPlotsPlugin: timeSeriesPlots
 })(compose(
     securityEnhancer,
     checkPluginsEnhancer
