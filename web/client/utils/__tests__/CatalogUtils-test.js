@@ -984,4 +984,26 @@ describe('Test the CatalogUtils', () => {
         expect(layer.provider).toBe(RECORD.provider);
         expect(layer.name).toBe(RECORD.provider);
     });
+    it('buildServiceUrl', ( ) => {
+        const WMSService = {
+            type: "wms",
+            url: "https://a.example.com/wms",
+            domainAliases: [
+                "https://b.example.com/wms",
+                "https://c.example.com/wms"
+            ]
+        };
+        const otherService = {
+            type: "wfs",
+            url: "https://a.example.com/wfs",
+            domainAliases: [
+                "https://b.example.com/wfs",
+                "https://c.example.com/wfs"
+            ]
+        };
+        const mergedURL1 = CatalogUtils.buildServiceUrl(WMSService);
+        const mergedURL2 = CatalogUtils.buildServiceUrl(otherService);
+        expect(mergedURL1).toBe("https://a.example.com/wms,https://b.example.com/wms,https://c.example.com/wms");
+        expect(mergedURL2).toBe("https://a.example.com/wfs");
+    });
 });
